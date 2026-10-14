@@ -9,6 +9,8 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 ; increments wStepTriggerFlag; returns if wStepTriggerFlag is 0; may return early; branches on
 ; hMapId; branches on hMapScreenX; branches on hMapScreenY; branches on hPlayerX; branches on
 ; hPlayerY; then 7 more steps (see the code) (E-0347)
+; why: a helper of FieldState_WalkATalks; FieldState_WalkATalks: field state 0: walking on a map
+; (E-0352, E-0339)
 FieldState_WalkATalks_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03

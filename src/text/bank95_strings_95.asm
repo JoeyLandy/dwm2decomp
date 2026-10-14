@@ -72,6 +72,8 @@ Map92Attrs0_Y0X0::
     db $00, $02
 
 ; called from BeginStringDisplay_Bank08: sets wStringCategory; calls BeginStringDisplay (E-0347)
+; why: a helper of BeginStringDisplay_Bank08; BeginStringDisplay_Bank08: if wStringCategory < 9,
+; BeginStringDisplay with DE = StringDatabase (E-0352)
 BeginStringDisplay_Bank08_BeginStringDisplay::
     ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]
@@ -81,6 +83,8 @@ BeginStringDisplay_Bank08_BeginStringDisplay::
     ret
 
 ; called from CopyStringToBuffer_Bank08: sets wStringCategory; calls CopyStringToBuffer (E-0347)
+; why: a helper of CopyStringToBuffer_Bank08; CopyStringToBuffer_Bank08: if wStringCategory < 9,
+; CopyStringToBuffer with DE = StringDatabase (E-0352)
 CopyStringToBuffer_Bank08_CopyStringToBuffer::
     ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

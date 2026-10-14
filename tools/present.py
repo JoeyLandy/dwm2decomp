@@ -92,6 +92,47 @@ class Names:
                             break
                         entries.append(mm.group(1))
                     self.tables.setdefault(cur, []).append(entries)
+        # E-0352: what each label is part of, for the purpose line of a generated comment
+        self.note_of: dict[str, str] = {}      # label -> its written note (the comments present keeps)
+        self.parent_of: dict[str, tuple[str, int | None]] = {}  # label -> (jumptable owner, entry) or (only caller, None)
+        self.callers_of: dict[str, list[str]] = {}
+        self.dispatch_var: dict[str, str] = {}  # jumptable owner -> the RAM byte it dispatches on
+        for t in texts.values():
+            block: list[str] = []
+            cur, last_ld = None, None
+            for ln in t.split("\n"):
+                st = ln.strip()
+                if ln.startswith(";"):
+                    block.append(st)
+                    continue
+                m = LABEL.match(ln)
+                if m and "::" in ln and "address name" not in ln:
+                    cur, last_ld = m.group(1), None
+                    kept = [c[1:].strip() for c in block if not DROP_COMMENT.match(c)]
+                    if kept:
+                        self.note_of[cur] = " ".join(kept)
+                    for c in block:
+                        mm = re.search(r"entry (\d+) of the `rst \$00` table in (\w+)", c)
+                        if mm:
+                            self.parent_of.setdefault(cur, (mm.group(2), int(mm.group(1))))
+                        mm = re.search(r"only called from (\w+)", c)
+                        if mm and mm.group(1) not in ("routine", "routines"):
+                            self.parent_of.setdefault(cur, (mm.group(1), None))
+                        mm = re.search(r"call sites? from \d+ routines? \(e\.g\. ([^)]*)\)", c)
+                        if mm:
+                            self.callers_of[cur] = [x.strip() for x in mm.group(1).split(",") if x.strip() != "..."]
+                    block = []
+                    continue
+                if st and not ALIAS.match(ln):
+                    block = []
+                code = split_code(ln)[0].strip()
+                ml = re.match(r"ld a, \[(\w+(?: \+ \$\w+)?)\]$", code)
+                if ml:
+                    last_ld = ml.group(1)
+                elif code == "rst $00" and cur and last_ld and cur not in self.dispatch_var:
+                    self.dispatch_var[cur] = last_ld
+                elif code:
+                    last_ld = None if not code.startswith(("and ", "add ", "dec ", "cp ")) else last_ld
         self.referrer: dict[str, str] = {}  # label -> the first label whose code or data names it
         for t in texts.values():
             cur = None
@@ -135,6 +176,67 @@ class Names:
             if not k.startswith("_") and isinstance(v, dict):
                 for old in re.findall(r"\bwas (\w+)", v.get("note", "")):
                     self.history.setdefault(old, v["name"])
+
+    def _clause(self, note: str) -> str:
+        """The first clause of a written note, without its evidence, for a purpose line; names in it are the
+        current labels (the listing's notes can still use address names or earlier names)."""
+        note = self.sub(note)
+        note = re.sub(r"\s*\((?:[ED]-\d{4}[^)]*|C\d[^)]*)\)", "", note)
+        note = note.split("; ")[0].strip().rstrip(".")
+        if len(note) > 140:
+            note = note[:140].rsplit(" ", 1)[0] + " ..."
+        return note
+
+    def purpose(self, label: str) -> str:
+        """E-0352: why a routine with no written note exists, from what it is part of: the step of a jumptable
+        (and the RAM byte that picks it), the routine that alone calls it, or its callers, up to the first one
+        whose note was written by reading. Empty when nothing documented is found."""
+        chain, cur, seen = [], label, set()
+        while cur not in seen and len(chain) < 6:
+            seen.add(cur)
+            par, n = self.parent_of.get(cur, (None, None))
+            par = (self.resolve(par) or par) if par else None
+            if par not in self.labels:  # no recorded parent, or one under a name that no longer exists
+                par = None
+            if par is None:  # a label inside a routine, named after it (Parent_Skip): part of that routine
+                parts = cur.split("_")
+                par = next(("_".join(parts[:k]) for k in range(len(parts) - 1, 0, -1)
+                            if "_".join(parts[:k]) in self.labels), None)
+                if not par:
+                    break
+                n = -1
+            if n is None:
+                chain.append(f"a helper of {par}")
+            elif n == -1:
+                chain.append(f"part of {par}")
+            else:
+                var = self.dispatch_var.get(par)
+                chain.append(f"step {n} of {par}" + (f" (when {var} = {n})" if var else ""))
+            note = self.note_of.get(par, "")
+            if note and not note.rstrip().endswith("(E-0347)") and "; code:" not in note:
+                ids = list(dict.fromkeys(re.findall(r"[ED]-\d{4}", note)))[:2]
+                return (f"{', in '.join(chain)}; {par}: {self._clause(note)}"
+                        + (f" ({', '.join(['E-0352'] + ids)})"))
+            cur = par
+        callers = [self.resolve(c) or c for c in self.callers_of.get(label, [])]
+        known = [(c, self.note_of[c]) for c in callers if c in self.note_of and
+                 not self.note_of[c].rstrip().endswith("(E-0347)")][:2]
+        if known:
+            parts = [f"{c} ({self._clause(n)})" for c, n in known]
+            ids = list(dict.fromkeys(i for _, n in known for i in re.findall(r"[ED]-\d{4}", n)))[:2]
+            return f"used by {' and '.join(parts)}" + f" ({', '.join(['E-0352'] + ids)})"
+        base = re.sub(r"_Bank[0-9A-F]{2}(?:_\d+)?$", "", label)
+        if base != label:  # a per-bank copy: a documented copy says what they all do
+            sib = next((x for x in sorted(self.note_of) if x != label and re.sub(r"_Bank[0-9A-F]{2}(?:_\d+)?$", "", x)
+                        == base and not self.note_of[x].rstrip().endswith("(E-0347)")), None)
+            if sib:
+                ids = list(dict.fromkeys(re.findall(r"[ED]-\d{4}", self.note_of[sib])))[:2]
+                return f"a copy of {sib}; {sib}: {self._clause(self.note_of[sib])} ({', '.join(['E-0352'] + ids)})"
+        return ""
+
+    @staticmethod
+    def _lower(text: str) -> str:
+        return text[:1].lower() + text[1:] if text[:2].isalpha() and not text[:2].isupper() else text
 
     def resolve(self, w: str, bank: int | None = None, depth: int = 0) -> str | None:
         if w in self.labels:
@@ -331,6 +433,9 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
                 if not documented:
                     out.extend(wrap("", "; " + describe.summarize(label, body, dropped_at.get(label, []), labels)
                                     + " (E-0347)"))
+                    why = names.purpose(label)
+                    if why:
+                        out.extend(wrap("", "; why: " + why))
                 else:  # a note that says the body was not read gets the restatement too
                     k = len(out)
                     while k > 0 and out[k - 1].startswith(";"):

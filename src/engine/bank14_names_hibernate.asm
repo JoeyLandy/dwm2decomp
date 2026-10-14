@@ -17,6 +17,9 @@ CloseHibernateMenu::
 ; step 0 of CloseHibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
 ; CopyLow3BitsToWRAMBank2_Bank14; calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; increments wScreenList (E-0347)
+; why: step 0 of CloseHibernateMenu (when wScreenList = 0); CloseHibernateMenu: implements script
+; command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseHibernateMenu_CopyBytesDEToHL_Bank14::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -44,6 +47,9 @@ CloseHibernateMenu_CopyBytesDEToHL_Bank14::
 ; wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; sets wGlyphListPos to 0; sets
 ; wGlyphListStart to 0; sets wScreenState to 0; sets wScreenStep to 0; sets wMenuState to 0;
 ; increments wScreenList; then 2 more steps (see the code) (E-0347)
+; why: step 1 of CloseHibernateMenu (when wScreenList = 1); CloseHibernateMenu: implements script
+; command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseHibernateMenu_LoadTileListSixPerCall::
     ld a, $9c
     ld [wArg1], a
@@ -75,6 +81,9 @@ CloseHibernateMenu_LoadTileListSixPerCall::
 
 ; step 2 of CloseHibernateMenu: calls FillTilesBxC; sets wTextWindowTileLo to $12; increments
 ; wScreenList (E-0347)
+; why: step 2 of CloseHibernateMenu (when wScreenList = 2); CloseHibernateMenu: implements script
+; command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseHibernateMenu_FillTilesBxC::
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -95,6 +104,9 @@ CloseHibernateMenu_FillTilesBxC::
 ; step 3 of CloseHibernateMenu: calls DrawRecordListNameTiles_Bank1D; sets wMessageMode to 0; sets
 ; wScreenList to 0; sets hSpriteHideTile to $80; calls WritePlayerNameWithFlag0SuffixToTextBuf0;
 ; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 3 of CloseHibernateMenu (when wScreenList = 3); CloseHibernateMenu: implements script
+; command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseHibernateMenu_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     xor a
@@ -141,6 +153,9 @@ HibernateMenu::
 ; step 0 of HibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
 ; CopyLow3BitsToWRAMBank2_Bank14; sets wMessageMode to 4; sets hSpriteHideTile to $70; advances
 ; wScreenState; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 0 of HibernateMenu (when wScreenState = 0); HibernateMenu: implements script command
+; type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I
+; wake up?' (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_CopyBytesDEToHL_Bank14::
     ld hl, wScreenState
     ld bc, $006f
@@ -188,12 +203,16 @@ HibernateMenu_SetupPartyList::
     dw HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14
 
 ; step 0 of HibernateMenu_SetupPartyList: calls SetupTileMapAtBGMap1 (E-0347)
+; why: step 0 of HibernateMenu_SetupPartyList (when wScreenStep = 0); HibernateMenu_SetupPartyList:
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries (E-0352)
 HibernateMenu_SetupPartyList_ToSetupTileMapAtBGMap1::
     farcall SetupTileMapAtBGMap1
     ret
 
 ; step 1 of HibernateMenu_SetupPartyList: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
 ; may return early; advances wScreenStep (E-0347)
+; why: step 1 of HibernateMenu_SetupPartyList (when wScreenStep = 1); HibernateMenu_SetupPartyList:
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries (E-0352)
 HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     ld hl, NamingScreenTileDestListA
     ld de, HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopySrcList
@@ -206,6 +225,8 @@ HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
 
 ; step 2 of HibernateMenu_SetupPartyList: calls ListPartyRecordsWithState2ToListEntries; increments
 ; wScreenStep (E-0347)
+; why: step 2 of HibernateMenu_SetupPartyList (when wScreenStep = 2); HibernateMenu_SetupPartyList:
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries (E-0352)
 HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -217,6 +238,8 @@ HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
 ; CopyScreenBufferRectAt0280_Bank14; calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets wScreenStep to 0; increments
 ; wScreenState (E-0347)
+; why: step 3 of HibernateMenu_SetupPartyList (when wScreenStep = 3); HibernateMenu_SetupPartyList:
+; by wScreenStep: the tile map, the glyph list and ListPartyRecordsWithState2ToListEntries (E-0352)
 HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -240,6 +263,9 @@ HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14::
 ; sets wGridCursorX to 3; calls HibernateMenu_WriteGridCursorY; plays sound $69; sets wGridCursorX;
 ; sets wListCursor to 0; sets wChoiceCursor to 0; sets wListPageIndex to 0; then 21 more steps (see
 ; the code) (E-0347)
+; why: step 2 of HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command
+; type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I
+; wake up?' (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -345,6 +371,10 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 ; HibernateMenu_ReadGridCursorX; increments wGridCursorY; may continue in
 ; HibernateMenu_ReadGridCursorX; may continue in HibernateMenu_ReadGridCursorX_2; sets wGridCursorY
 ; to 0 (E-0347)
+; why: a helper of HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of
+; HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command type EB
+; (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?'
+; (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -361,22 +391,39 @@ HibernateMenu_WriteGridCursorY::
 
 ; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: changes B; continues in
 ; HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX (E-0347)
+; why: a helper of HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of
+; HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command type EB
+; (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?'
+; (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_ReadGridCursorX::
     ld b, $bb
     jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
 ; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: changes B; continues in
 ; HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX (E-0347)
+; why: a helper of HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of
+; HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command type EB
+; (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?'
+; (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_ReadGridCursorX_2::
     ld b, $c3
     jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
 ; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: takes BC; changes B
 ; (E-0347)
+; why: a helper of HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of
+; HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command type EB
+; (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?'
+; (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_BGMapAddressAtScroll_Bank14::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank14 (E-0347)
+; why: part of HibernateMenu_BGMapAddressAtScroll_Bank14, in a helper of
+; HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of HibernateMenu (when
+; wScreenState = 2); HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE): monster
+; hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352, E-0038,
+; E-0244)
 HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
@@ -406,6 +453,9 @@ HibernateMenu_BGMapAddressAtScroll_Bank14_Data::
 ; LoadRecordCapacityFromFarmLevelTable; branches on wArg5; sets wScreenStep to $1e; sets
 ; wTwoChoiceCursor to 0; sets wListPageIndex to 0; sets wListCursor to 0; then 50 more steps (see
 ; the code) (E-0347)
+; why: step 3 of HibernateMenu (when wScreenState = 3); HibernateMenu: implements script command
+; type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I
+; wake up?' (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wGridCursorX]
     and a
@@ -601,6 +651,8 @@ StartRecordListOrNoneMessage::
 ; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80; sets wTwoChoiceCursor to 0; sets wScreenState; sets wScriptCommandType
 ; to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: part of StartRecordListOrNoneMessage; StartRecordListOrNoneMessage: lists the records
+; (E-0352, E-0127)
 StartRecordListOrNoneMessage_CallCountFlaggedSRAMRecords::
     farcall CountFlaggedSRAMRecords
     ld a, [wArg5]
@@ -713,6 +765,9 @@ HibernateMenu_ChooseRecords::
 ; ListRecordsState1NotEggs; sets wSelectedRecord; copies wListCursor to wItemGridX; copies
 ; wListPageIndex to wItemGridY; calls HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf; sets
 ; wListCursor to 0; sets wListPageIndex to 0 (E-0347)
+; why: step 50 of HibernateMenu_ChooseRecords (when wScreenStep = 50); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep::
     call DrawBoxAndMenuAndStep
     farcall ListRecordsState1NotEggs
@@ -740,6 +795,9 @@ HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep::
 ; HibernateMenu_ClampRecordListPageCursor5; calls EraseFiveTableEntries; calls FillTilesBxC; sets
 ; wTwoChoiceCursor to 1; sets wScreenStep to $20; sets wTextWindowTileLo to $12; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 60 of HibernateMenu_ChooseRecords (when wScreenStep = 60); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetListCursor::
     call BGMapAddressAtScroll_Bank14
     push hl
@@ -805,6 +863,9 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Data::
 ; HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK; calls
 ; HibernateMenu_WriteSVBK; calls StoreBAtWordTableEntry_Bank14; sets wTwoChoiceCursor to 1; sets
 ; wScreenStep to $3b; sets wScreenSubStep to 0; then 2 more steps (see the code) (E-0347)
+; why: step 62 of HibernateMenu_ChooseRecords (when wScreenStep = 62); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -846,6 +907,9 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2::
 ; to 0; copies wSelectedRecord to wArg1; sets rRAMG2 to 0; sets wArg2 to 0; copies L to wArg3;
 ; copies H to wArg4; calls PackRecordFieldsToBank1Slot; returns unless wArg5 is $ff; copies
 ; wSelectedRecord to wArg1; sets wArg2 to 0; then 18 more steps (see the code) (E-0347)
+; why: step 63 of HibernateMenu_ChooseRecords (when wScreenStep = 63); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
     ld a, [wScreenSubStep]
     and a
@@ -937,6 +1001,9 @@ HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
 ; rRAMB to 1; sets rRAMG2 to 0; sets wItemGridX to 0; sets wItemGridY to 0; sets wSelectedRecord to
 ; 0; calls ListPartyRecordsWithState2ToListEntries; calls DrawBoxAndMenuAndStep; sets wListCursor to
 ; 0; sets wChoiceCursor to 0; sets wListPageIndex to 0; then 2 more steps (see the code) (E-0347)
+; why: step 64 of HibernateMenu_ChooseRecords (when wScreenStep = 64); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_Multiply8::
     ld a, $0a
     ld [rRAMG2], a
@@ -983,6 +1050,9 @@ HibernateMenu_ChooseRecords_Multiply8::
 
 ; step 5 of HibernateMenu_ChooseRecords: calls FillTilesBxC; sets wTextWindowTileLo to $12; advances
 ; wScreenStep (E-0347)
+; why: step 5 of HibernateMenu_ChooseRecords (when wScreenStep = 5); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -1005,6 +1075,9 @@ HibernateMenu_ChooseRecords_FillTilesBxC::
 ; step 7 of HibernateMenu_ChooseRecords: calls StoreBAtWordTableEntry_Bank14; calls
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls
 ; StoreBAtWordTableEntry_Bank14; increments wScreenStep (E-0347)
+; why: step 7 of HibernateMenu_ChooseRecords (when wScreenStep = 7); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
     ld a, [wListCursor]
     ld b, $bb
@@ -1025,6 +1098,9 @@ HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
 
 ; step 9 of HibernateMenu_ChooseRecords: sets wArg1 to 0; sets wArg2 to $0c; calls
 ; CopyScreenBufferRectWithAttrs_Bank14; increments wScreenStep (E-0347)
+; why: step 9 of HibernateMenu_ChooseRecords (when wScreenStep = 9); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
     ld c, $0d
     ld hl, $01d4
@@ -1041,6 +1117,9 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
 
 ; step 10 of HibernateMenu_ChooseRecords: calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; increments wScreenStep (E-0347)
+; why: step 10 of HibernateMenu_ChooseRecords (when wScreenStep = 10); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -1053,6 +1132,9 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
 
 ; step 11 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
 ; may return early; advances wScreenStep (E-0347)
+; why: step 11 of HibernateMenu_ChooseRecords (when wScreenStep = 11); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopySrcList
@@ -1065,6 +1147,9 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
 
 ; step 45 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
 ; may return early; advances wScreenStep (E-0347)
+; why: step 45 of HibernateMenu_ChooseRecords (when wScreenStep = 45); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopySrcList
@@ -1078,6 +1163,9 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Adv
 ; step 46 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; plays sound $6c; sets
 ; wChoiceCursor to 0; sets wCursorBlinkAE to 0; increments wScreenStep (E-0347)
+; why: step 46 of HibernateMenu_ChooseRecords (when wScreenStep = 46); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor::
     ld de, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1113,6 +1201,9 @@ HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor_TileRect
 ; DrawBlankTileC3_Bank14; branches on wChoiceCursor; plays sound $69; calls
 ; HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2; then 31 more steps (see the code)
 ; (E-0347)
+; why: step 47 of HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -1281,10 +1372,19 @@ DrawBlankTileC3_Bank14::
     jr HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor
 
 ; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: takes BC; changes B (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank14 (E-0347)
+; why: part of HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2, in a helper of
+; HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of HibernateMenu_ChooseRecords
+; (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu screen state 5, by
+; wScreenStep: paged record lists with two-choice confirmations and UnpackRecordFromBank1Slot
+; (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
@@ -1345,6 +1445,9 @@ DrawBoxAndMenuAndStep_TileRect::
 ; CopyRectTo20ByteRows_Bank14; calls StoreBAtWordTableEntry_Bank14; calls
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; increments wScreenStep; sets
 ; wTwoChoiceCursor to 0 (E-0347)
+; why: step 27 of HibernateMenu_ChooseRecords (when wScreenStep = 27); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_SetScreenStep::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
@@ -1389,6 +1492,9 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_SetScreenStep_TileRect::
 ; sets wScriptStartRequest to $80; branches on wTwoChoiceCursor; calls
 ; HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3; then 4 more steps (see the code)
 ; (E-0347)
+; why: step 28 of HibernateMenu_ChooseRecords (when wScreenStep = 28); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -1436,6 +1542,10 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3::
 ; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; branches on wIsCGB; sets rSVBK; calls
 ; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; sets rSVBK; calls BGMapAddressAtScroll_Bank14;
 ; calls DrawScreenBufferRect_Bank14 (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3, in step 28 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 28); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -1464,6 +1574,9 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
 
 ; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14
 ; (E-0347)
+; why: part of HibernateMenu_ChooseRecords; HibernateMenu_ChooseRecords: HibernateMenu screen state
+; 5, by wScreenStep: paged record lists with two-choice confirmations and UnpackRecordFromBank1Slot
+; (E-0352)
 HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14::
     push hl
     push de
@@ -1491,6 +1604,9 @@ HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14::
 ; step 0 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; sets wListPageIndex to 0; sets
 ; wCursorBlinkAE to 0; increments wScreenStep (E-0347)
+; why: step 0 of HibernateMenu_ChooseRecords (when wScreenStep = 0); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14::
     ld de, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1568,6 +1684,9 @@ ClearTilesAndDrawRectAndStep::
 
 ; step 31 of HibernateMenu_ChooseRecords: calls ListRecordsState1NotEggs; continues in
 ; HibernateMenu_ClampRecordListPageCursor5 (E-0347)
+; why: step 31 of HibernateMenu_ChooseRecords (when wScreenStep = 31); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_ListRecordsState1NotEggs::
     farcall ListRecordsState1NotEggs
     jr HibernateMenu_ClampRecordListPageCursor5
@@ -1577,6 +1696,9 @@ HibernateMenu_ChooseRecords_ListRecordsState1NotEggs::
 ; calls StoreC5BEC6AtHLStride2_Bank14; copies D to wArg1; copies E to wArg2; calls
 ; DrawPageOfPagesAtScrollOffset; copies H to wArg1; copies L to wArg2; calls
 ; DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
+; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
+; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
+; E-0038, E-0244)
 HibernateMenu_ClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -1606,6 +1728,9 @@ HibernateMenu_ClampRecordListPageCursor5::
     ret
 
 ; step 32 of HibernateMenu_ChooseRecords: calls DrawRecordListPageNames (E-0347)
+; why: step 32 of HibernateMenu_ChooseRecords (when wScreenStep = 32); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_ToDrawRecordListPageNames::
     farcall DrawRecordListPageNames
     ret
@@ -1613,6 +1738,9 @@ HibernateMenu_ChooseRecords_ToDrawRecordListPageNames::
 ; step 33 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; calls
 ; LoadFamilyIconTileForRecordB_Bank14; calls CopyRectTo20ByteRows_Bank14; sets wArg1; calls
 ; DrawRecordStatsBoxForArg1; increments wScreenStep (E-0347)
+; why: step 33 of HibernateMenu_ChooseRecords (when wScreenStep = 33); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_LoadFamilyIconTileForRecordB_Bank14::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1637,6 +1765,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_LoadFamilyIconTileForRecor
 
 ; step 35 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
 ; DrawRecordNameAndSpeciesNameTiles; increments wScreenStep (E-0347)
+; why: step 35 of HibernateMenu_ChooseRecords (when wScreenStep = 35); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1656,6 +1787,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNa
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank14;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
 ; 1 more step (see the code) (E-0347)
+; why: step 37 of HibernateMenu_ChooseRecords (when wScreenStep = 37); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult::
     xor a
     ld [wMenuInputResult], a
@@ -1719,6 +1853,9 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult::
 
 ; step 13 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
 ; may return early; increments wScreenStep (E-0347)
+; why: step 13 of HibernateMenu_ChooseRecords (when wScreenStep = 13); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_WriteScreenStep::
     ld hl, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopySrcList
@@ -1732,6 +1869,9 @@ HibernateMenu_ChooseRecords_WriteScreenStep::
 
 ; step 14 of HibernateMenu_ChooseRecords: calls DrawRecordListNameTiles_Bank1D; calls
 ; ListPartyRecordsWithState2ToListEntries; increments wScreenStep (E-0347)
+; why: step 14 of HibernateMenu_ChooseRecords (when wScreenStep = 14); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     farcall ListPartyRecordsWithState2ToListEntries
@@ -1745,6 +1885,9 @@ HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets
 ; wScreenStep to $1b; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 44 of HibernateMenu_ChooseRecords (when wScreenStep = 44); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14_SetScreenStep::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1773,6 +1916,9 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14_SetScreenStep::
 ; step 49 of HibernateMenu_ChooseRecords: calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; sets wScreenStep to $25; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 49 of HibernateMenu_ChooseRecords (when wScreenStep = 49); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -1791,6 +1937,9 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetScreenStep::
 ; DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets wScreenStep to 0; sets wScreenState to
 ; 2; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets wScriptStartRequest to $80
 ; (E-0347)
+; why: step 15 of HibernateMenu_ChooseRecords (when wScreenStep = 15); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1898,12 +2047,18 @@ HibernateMenu_ChooseToHibernate::
 
 ; step 2 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteListCountAndRAMG2Etc; continues in
 ; HibernateMenu_ClampRecordListPageCursor5 (E-0347)
+; why: step 2 of HibernateMenu_ChooseRecords (when wScreenStep = 2); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc::
     farcall HibernateMenu_WriteListCountAndRAMG2Etc
     jp HibernateMenu_ClampRecordListPageCursor5
 
 ; step 3 of HibernateMenu_ChooseRecords: calls HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2
 ; (E-0347)
+; why: step 3 of HibernateMenu_ChooseRecords (when wScreenStep = 3); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc::
     farcall HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2
     ret
@@ -1911,6 +2066,9 @@ HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc::
 ; step 4 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
 ; LoadFamilyIconTileForArg1Record; calls CopyRectTo20ByteRows_Bank14; sets wArg1; calls
 ; HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D; increments wScreenStep (E-0347)
+; why: step 4 of HibernateMenu_ChooseRecords (when wScreenStep = 4); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1936,6 +2094,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
 
 ; step 6 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
 ; HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_2; increments wScreenStep (E-0347)
+; why: step 6 of HibernateMenu_ChooseRecords (when wScreenStep = 6); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1955,6 +2116,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2::
 ; HibernateMenu_WriteSVBK; sets wTwoChoiceCursor to 1; sets wScreenStep to $28; sets wScreenSubStep
 ; to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on wTwoChoiceCursor
 ; (E-0347)
+; why: step 49 of HibernateMenu_ChooseToHibernate (when wScreenStep = 49);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -1991,6 +2155,10 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D::
 
 ; Calls HibernateMenu_WriteSVBK; increments wScreenStep; sets wScreenSubStep to 0; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: part of HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D, in step 49 of
+; HibernateMenu_ChooseToHibernate (when wScreenStep = 49); HibernateMenu_ChooseToHibernate: screen
+; state 4, reached from menu option 0: the list of farm records that are not eggs
+; (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK::
     call HibernateMenu_WriteSVBK
     ld a, [wScreenStep]
@@ -2007,6 +2175,9 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_W
 ; Calls HibernateMenu_CopyBytesDEToHL_Bank14_2; branches on wIsCGB; sets rSVBK; calls
 ; HibernateMenu_CopyBytesDEToHL_Bank14_2; sets rSVBK; calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; calls CopyFromBankWaitVRAM (E-0347)
+; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
+; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
+; E-0038, E-0244)
 HibernateMenu_WriteSVBK::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -2059,6 +2230,9 @@ HibernateMenu_WriteSVBK_Data2::
     db $00, $00, $00, $00, $00, $00
 
 ; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_CopyBytesDEToHL_Bank14_2 (E-0347)
+; why: part of HibernateMenu_CopyBytesDEToHL_Bank14, in step 0 of HibernateMenu (when wScreenState =
+; 0); HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE): monster hibernation:
+; 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_CopyBytesDEToHL_Bank14_2::
     push hl
     push de
@@ -2086,6 +2260,9 @@ HibernateMenu_CopyBytesDEToHL_Bank14_2::
 ; step 16 of HibernateMenu_ChooseRecords: calls CopyFromBankWaitVRAM; plays sound $6c; calls
 ; CopyRectTo20ByteRows_Bank14; calls CopyFromBankWaitVRAM; calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; increments wScreenStep; sets wTwoChoiceCursor to 0 (E-0347)
+; why: step 16 of HibernateMenu_ChooseRecords (when wScreenStep = 16); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
@@ -2139,6 +2316,9 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_TileRect::
 ; HibernateMenu_ClampRecordListPageCursor5; sets wTwoChoiceCursor to 1; sets wScreenStep to $20;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80
 ; (E-0347)
+; why: step 60 of HibernateMenu_ChooseToHibernate (when wScreenStep = 60);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2168,6 +2348,9 @@ HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc::
 ; SetArg5ToListEntriesCell5; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; branches on the
 ; byte at sRecords; branches on C; sets rRAMG2 to 0; increments wScreenStep; sets wScriptCommandType
 ; to 0; sets wScriptStartRequest to $80; then 7 more steps (see the code) (E-0347)
+; why: step 18 of HibernateMenu_ChooseRecords (when wScreenStep = 18); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_3::
     ld a, $0a
     ld [rRAMG2], a
@@ -2251,6 +2434,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_3::
 ; UnpackRecordFromBank1Slot; returns unless wArg5 is $ff; sets rRAMG2 to $0a; copies wMenuWordBuf to
 ; rRAMB; branches on wArg5; sets rRAMG2 to 0; calls SetArg5ToListEntriesCell5; sets wArg1; then 5
 ; more steps (see the code) (E-0347)
+; why: step 19 of HibernateMenu_ChooseRecords (when wScreenStep = 19); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
     ld a, [wListEntries2]
     ld [wArg1], a
@@ -2303,6 +2489,9 @@ HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
 ; step 20 of HibernateMenu_ChooseToHibernate: calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; sets wScreenStep to 8; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 20 of HibernateMenu_ChooseToHibernate (when wScreenStep = 20);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2321,6 +2510,9 @@ HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14::
 ; to 0; increments wScreenStep; sets rRAMG2 to 0; increments wScreenStep; calls
 ; ListPartyRecordsWithState2ToListEntries; calls DrawBoxAndMenuAndStep; sets wListCursor to 0; sets
 ; wChoiceCursor to 0; then 3 more steps (see the code) (E-0347)
+; why: step 21 of HibernateMenu_ChooseToHibernate (when wScreenStep = 21);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5::
     ld a, $0a
     ld [rRAMG2], a
@@ -2365,6 +2557,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5::
 ; returns unless wArg5 is $ff; sets rRAMG2 to $0a; sets rRAMB to 0; calls SetArg5ToListEntriesCell5;
 ; copies the byte at wListEntries to wArg1; sets rRAMG2 to 0; sets wArg2 to 0; then 8 more steps
 ; (see the code) (E-0347)
+; why: step 22 of HibernateMenu_ChooseToHibernate (when wScreenStep = 22);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot::
     ld a, [wArg5]
     ld [wArg2], a
@@ -2419,6 +2614,9 @@ HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot::
 ; wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; calls
 ; EraseFiveTableEntries; calls StoreBAtWordTableEntry_Bank14; then 4 more steps (see the code)
 ; (E-0347)
+; why: step 8 of HibernateMenu_ChooseRecords (when wScreenStep = 8); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -2485,6 +2683,9 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor::
 ; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets
 ; wScreenStep to $1e; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 47 of HibernateMenu_ChooseToHibernate (when wScreenStep = 47);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2515,6 +2716,9 @@ HibernateMenu_ChooseToHibernate_CopyScreenBufferRectAt0280_Bank14::
 ; SetArg5ToListEntriesCell5; sets wSelectedRecord; copies wListPageIndex to wItemGridY; sets
 ; wListCursor to 0; sets wListPageIndex to 0; calls ListRecordsState1NotEggs; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 50 of HibernateMenu_ChooseToHibernate (when wScreenStep = 50);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2549,6 +2753,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetScreenStep::
 ; wScreenStep; branches on wScreenState; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0;
 ; sets wScriptStartRequest to $80; calls StoreBAtWordTableEntry_Bank14; increments wScreenStep; then
 ; 6 more steps (see the code) (E-0347)
+; why: step 59 of HibernateMenu_ChooseRecords (when wScreenStep = 59); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult_2::
     xor a
     ld [wMenuInputResult], a
@@ -2630,6 +2837,9 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult_2::
 ; step 65 of HibernateMenu_ChooseToHibernate: calls BGMapAddressAtScroll_Bank14; calls
 ; DrawScreenBufferRect_Bank14; sets wScreenStep to $3b; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 65 of HibernateMenu_ChooseToHibernate (when wScreenStep = 65);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2647,6 +2857,9 @@ HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_SetScreenStep::
 ; rRAMB to 0; calls SetArg5ToListEntriesCell5; sets wArg1; sets rRAMG2 to 0; sets wArg2 to 0; copies
 ; L to wArg3; copies H to wArg4; calls PackRecordFieldsToBank1Slot; branches on wArg5; sets wArg1;
 ; then 16 more steps (see the code) (E-0347)
+; why: step 66 of HibernateMenu_ChooseToHibernate (when wScreenStep = 66);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetArg1::
     ld a, [wScreenSubStep]
     and a
@@ -2736,6 +2949,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetArg1::
 ; rRAMB to 1; sets rRAMG2 to 0; sets wItemGridX to 0; sets wItemGridY to 0; sets wSelectedRecord to
 ; 0; calls ListPartyRecordsWithState2ToListEntries; calls DrawBoxAndMenuAndStep; sets wListCursor to
 ; 0; sets wChoiceCursor to 0; sets wListPageIndex to 0; then 2 more steps (see the code) (E-0347)
+; why: step 67 of HibernateMenu_ChooseToHibernate (when wScreenStep = 67);
+; HibernateMenu_ChooseToHibernate: screen state 4, reached from menu option 0: the list of farm
+; records that are not eggs (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_Multiply8::
     ld a, $0a
     ld [rRAMG2], a
@@ -2807,6 +3023,9 @@ HibernateMenu_ChooseWithStats::
 ; LoadFamilyIconTileForRecordB_Bank14; calls CopyRectTo20ByteRows_Bank14; sets wArg1 to 0; calls
 ; MarkPartyMembersInRecordListPage; calls SetArg5ToListEntriesCell5; copies the byte at
 ; wWindowTileBuffer + $6c to wArg1; calls DrawRecordStatsBoxForArg1; increments wScreenStep (E-0347)
+; why: step 4 of HibernateMenu_ChooseWithStats (when wScreenStep = 4);
+; HibernateMenu_ChooseWithStats: screen state 6: a paged record list that marks party members
+; (MarkPartyMembersInRecordListPage) and shows a stats box ... (E-0352)
 HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2841,6 +3060,9 @@ HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank14;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
 ; 1 more step (see the code) (E-0347)
+; why: step 8 of HibernateMenu_ChooseWithStats (when wScreenStep = 8);
+; HibernateMenu_ChooseWithStats: screen state 6: a paged record list that marks party members
+; (MarkPartyMembersInRecordListPage) and shows a stats box ... (E-0352)
 HibernateMenu_ChooseWithStats_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -2933,6 +3155,9 @@ DrawBox1D4AndCopyRect_TileRect::
 ; step 16 of HibernateMenu_ChooseWithStats: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
 ; may return early; sets wReturnScreenState to 6; sets wReturnScreenStep to 8; sets wScreenStep to
 ; 0; sets wScreenSubStep to 0; sets wScreenState to 9; calls SaveAndHideSpriteState_Bank1E (E-0347)
+; why: step 16 of HibernateMenu_ChooseWithStats (when wScreenStep = 16);
+; HibernateMenu_ChooseWithStats: screen state 6: a paged record list that marks party members
+; (MarkPartyMembersInRecordListPage) and shows a stats box ... (E-0352)
 HibernateMenu_ChooseWithStats_SaveAndHideSpriteState_Bank1E::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopySrcList
@@ -2990,6 +3215,9 @@ HibernateMenu_IndexListEntry::
 ; HibernateMenu_WriteSVBK; calls StoreBAtWordTableEntry_Bank14; sets wTwoChoiceCursor to 1; sets
 ; wScreenStep to 8; sets wScreenSubStep to 0; sets wScriptCommandType to 0; then 1 more step (see
 ; the code) (E-0347)
+; why: step 17 of HibernateMenu_ChooseRecords (when wScreenStep = 17); HibernateMenu_ChooseRecords:
+; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3029,6 +3257,9 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
 ; step 18 of HibernateMenu_IndexListEntry: sets rRAMG2 to $0a; calls SetArg5ToListEntriesCell5; sets
 ; rRAMB to 1; sets rRAMG2 to 0; calls SetArg5ToListEntriesCell5; copies the byte at sRecords to
 ; wArg1; sets wArg2 to 0; calls HibernateMenu_Multiply8; increments wScreenStep (E-0347)
+; why: step 18 of HibernateMenu_IndexListEntry (when wScreenStep = 18);
+; HibernateMenu_IndexListEntry: screen state 7: takes the chosen list entry
+; (SetArg5ToListEntriesCell5) and computes its index (Multiply8) (E-0352)
 HibernateMenu_IndexListEntry_SetArg5ToListEntriesCell5::
     ld a, $0a
     ld [rRAMG2], a
@@ -3078,6 +3309,9 @@ HibernateMenu_IndexListEntry_SetArg5ToListEntriesCell5::
     ret
 
 ; step 8 of HibernateMenu: sets wAreaGraphicsIndex to 1; calls SwapMonstersMenu (E-0347)
+; why: step 8 of HibernateMenu (when wScreenState = 8); HibernateMenu: implements script command
+; type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I
+; wake up?' (mode ... (E-0352, E-0038, E-0244)
 HibernateMenu_SwapMonstersMenu::
     ld a, $01
     ld [wAreaGraphicsIndex], a
@@ -3087,6 +3321,10 @@ HibernateMenu_SwapMonstersMenu::
 ; called from HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep: sets rRAMG2 to $0a; sets rRAMB to
 ; 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
 ; branches on C (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep, in step 50 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 50); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
     push bc
     ld a, $0a
@@ -3133,6 +3371,10 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
 ; Calls SetArg5ToListEntriesCell5; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1
 ; to 0; calls LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; branches on C; returns if
 ; wTextBuf1 is below $e0; sets wTextBuf1 to $f0 (E-0347)
+; why: part of HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5, in step 4 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 4); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3194,6 +3436,10 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
 ; SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf; branches on
 ; C (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3236,6 +3482,10 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
 ; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1 to 0; calls
 ; LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; branches on C; returns if wTextBuf0
 ; is below $e0 (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_LoadRecordNameEntry0::
     ld a, [wSelectedRecord]
     cp $1d
@@ -3443,6 +3693,9 @@ DrawScreenBufferRect_Bank14::
 ; Sets wGlyphListPos to 0; calls CopyFromBankWaitVRAM; increments wGlyphListStart; increments
 ; wGlyphListPos; branches on wGlyphListPos; sets wGlyphListStart to 0; sets wGlyphListPos to 0
 ; (E-0347)
+; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
+; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
+; E-0038, E-0244)
 HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     xor a
     ld [wGlyphListPos], a
@@ -3680,6 +3933,10 @@ StoreC5BEC6AtHLStride2_Bank14::
 ; sCompactRecords; branches on C; sets rRAMB to 1; branches on the byte at sRecords; branches on C;
 ; copies L to wArg6; copies H to wArg7; sets wArg5 to 0; copies L to wArg6; copies H to wArg7; sets
 ; wArg5 to 1 (E-0347)
+; why: a helper of HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5, in step 21 of
+; HibernateMenu_ChooseToHibernate (when wScreenStep = 21); HibernateMenu_ChooseToHibernate: screen
+; state 4, reached from menu option 0: the list of farm records that are not eggs
+; (ListRecordsState1NotEggs) after a capacity check (E-0352)
 HibernateMenu_ChooseToHibernate_WriteRAMBAndArg6Etc::
     ld hl, sCompactRecords
     ld c, $00
@@ -3869,6 +4126,9 @@ RunNameEntryStateWhenNotFading_Setup::
 ; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to
 ; $20; sets wArg7 to 0; calls FillTileRectWithArg1Tile; sets hScrollY to 0; sets hScrollX to 0;
 ; copies hSpriteWindowClipMode to wSavedSpriteClipMode; then 5 more steps (see the code) (E-0347)
+; why: step 0 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 0);
+; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
+; wNameEntrySubState and reads the record (E-0352)
 RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_2::
     ld hl, wNameEntryState
     ld bc, $001d
@@ -3946,6 +4206,9 @@ RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_2::
 ; step 1 of RunNameEntryStateWhenNotFading_Setup: calls
 ; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; increments
 ; wNameEntrySubState; sets wArg5 to 0 (E-0347)
+; why: step 1 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 1);
+; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
+; wNameEntrySubState and reads the record (E-0352)
 RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
     ld hl, NameEntryTileDestList
     ld de, NameEntryTileSrcListA
@@ -3966,6 +4229,9 @@ RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
 ; $12; sets wArg7 to 0; calls DrawTileRectFromArg1Params; calls BGMapAddressAtScroll_Bank14_2; calls
 ; CopyTileBytesToVRAM_Bank14; increments wNameEntrySubState; then 1 more step (see the code)
 ; (E-0347)
+; why: step 2 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 2);
+; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
+; wNameEntrySubState and reads the record (E-0352)
 RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params::
     ld a, [wArg2]
     push af
@@ -4143,6 +4409,9 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs_SpriteSlotsInit::
 ; RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter; branches on C; sets wNameEntryCursorX
 ; to 0; sets wNameEntryCursorY to 0; checks EVENT_NEVER_SET; sets wNameEntryLength to 4; then 4 more
 ; steps (see the code) (E-0347)
+; why: step 4 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 4);
+; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
+; wNameEntrySubState and reads the record (E-0352)
 RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
     call RunNameEntryStateWhenNotFading_ClearNameEntryText
     ld a, [wArg1]
@@ -4234,6 +4503,9 @@ RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
 
 ; step 1 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntrySubState (E-0347)
+; why: step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntrySubState]
@@ -4259,6 +4531,10 @@ RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
 ; RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte; calls DrawBlankTileC3; branches on
 ; wNameEntryCursorY; sets wNameEntryCursorY to 4; branches on wNameEntryCursorX; then 28 more steps
 ; (see the code) (E-0347)
+; why: step 0 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag::
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
     ld b, $55
@@ -4395,6 +4671,11 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data::
 ; wNameEntryCursorY; branches on wNameEntryCursorX; sets wNameEntryCursorX to 5; decrements
 ; wNameEntryCursorX; calls RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte; plays sound $69;
 ; sets wArg5 to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
     call DrawBlankTileC3
     ld a, [wNameEntryCursorX]
@@ -4433,6 +4714,11 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
 
 ; Plays sound $69; calls RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2; increments
 ; wNameEntrySubState; sets wArg5 to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect::
     ld a, $69
     call QueueSoundEffect
@@ -4447,6 +4733,11 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect:
 
 ; Plays sound $69; calls RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte; increments
 ; wNameEntrySubState; sets wArg5 to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2::
     ld a, $69
     call QueueSoundEffect
@@ -4460,6 +4751,11 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2
 
 ; Plays sound $69; calls DrawBlankTileC3; sets wNameEntryCursorX to $0d; sets wNameEntryCursorY to
 ; 4; sets wArg5 to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect3::
     ld a, $69
     call QueueSoundEffect
@@ -4585,6 +4881,10 @@ ToggleVoicingMarkOnNameEntry::
 ; wNameEntryCursorByte; branches on wNameEntryCursorByte; may continue in DrawBlankTileC3; sets
 ; wNameEntryCursorByte to 0; continues in
 ; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte::
     ld a, [wNameEntryCursorByte]
     inc a
@@ -4608,12 +4908,21 @@ DrawBlankTileC3::
     jr RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY
 
 ; called from RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag: changes B (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2::
     ld b, $55
 
 ; Branches on wNameEntryCursorY; calls BGMapAddressAtScroll_Bank14_2; returns unless
 ; wNameEntryCursorX is $0d; branches on wNameEntryCursorY; returns unless wNameEntryCursorY is $03
 ; (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyPositions
@@ -4689,6 +4998,10 @@ NameEntryKeyPositions::
 ; CopyTileForNameEntryLength; branches on wNameEntryMarkPending; sets wNameEntryMarkPending to 0;
 ; decrements wNameEntryLength; decrements wNameEntrySubState; then 1 more step (see the code)
 ; (E-0347)
+; why: step 1 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 1),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
     ld b, $55
     call WriteTileBAtScrollOffset47PlusNameEntryLength
@@ -4775,6 +5088,10 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
 ; step 2 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: changes HL, DE and A; branches on
 ; wNameEntryCursorY; may continue in RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter
 ; (E-0347)
+; why: step 2 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 2),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyboard
@@ -5033,6 +5350,10 @@ RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter::
 ; step 3 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
 ; RunNameEntryStateWhenNotFading_CheckArg1; calls RunNameEntryStateWhenNotFading_WriteNameEntryFlag;
 ; increments wNameEntryState; sets wArg5 to 0 (E-0347)
+; why: step 3 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 3),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
     call RunNameEntryStateWhenNotFading_CheckArg1
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
@@ -5046,6 +5367,10 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
 ; step 4 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
 ; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; increments
 ; wNameEntrySubState; calls OrFromBankWaitVRAM; sets wArg5 to 0 (E-0347)
+; why: step 4 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 4),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListB
@@ -5069,6 +5394,10 @@ RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
 ; step 9 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
 ; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; sets wNameEntrySubState to
 ; 0; sets wArg5 to 0 (E-0347)
+; why: step 9 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 9),
+; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListA
@@ -5085,6 +5414,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
 
 ; step 2 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
+; why: step 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5097,6 +5429,10 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep::
 ; step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: copies L to wTextWindowTileLo; copies
 ; H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; increments wNameEntryStep; sets wArg5 to 0 (E-0347)
+; why: step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 0), in step
+; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
+; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
+; E-0122)
 RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ld hl, vTiles2 + $5c0
     ld a, l
@@ -5120,6 +5456,10 @@ RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
 ; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
 ; sets wArg4 to 1; sets wArg7 to 0; calls DrawTileRectFromArg1Params; increments wNameEntryStep;
 ; sets wArg5 to 0 (E-0347)
+; why: step 1 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 1), in step
+; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
+; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
+; E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01e0
@@ -5151,6 +5491,10 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
 ; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
 ; sets wArg4 to 3; sets wArg7 to 0; calls DrawTileRectFromArg1Params; increments wNameEntryStep;
 ; sets wArg5 to 0 (E-0347)
+; why: step 2 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 2), in step
+; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
+; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
+; E-0122)
 RunNameEntryStateWhenNotFading_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01c0
@@ -5182,6 +5526,10 @@ RunNameEntryStateWhenNotFading_SetArg5::
 ; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
 ; sets wArg4 to 5; sets wArg7 to 0; calls DrawTileRectFromArg1Params; sets wNameEntryStep to 0;
 ; increments wNameEntryState; sets wArg5 to 0 (E-0347)
+; why: step 3 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 3), in step
+; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
+; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
+; E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01a0
@@ -5213,6 +5561,9 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
 
 ; step 3 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
+; why: step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5229,6 +5580,11 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
 ; sets wStringCategory to 0; sets wStringIndex to 3; calls
 ; RunNameEntryStateWhenNotFading_FillTilesFromRequest; may return early; sets wNameEntryState; sets
 ; wNameEntryMenuCursor to 0; sets wArg5 to 0 (E-0347)
+; why: step 5 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 5), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -5254,6 +5610,11 @@ RunNameEntryStateWhenNotFading_SetStringCategory::
 ; RunNameEntryStateWhenNotFading_ScanNameEntryText; sets wNameEntryStep; sets wArg5 to 0; calls
 ; RunNameEntryStateWhenNotFading_ReadArg1; calls RunNameEntryStateWhenNotFading_ScanNameEntryText;
 ; then 4 more steps (see the code) (E-0347)
+; why: step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
     ld a, [wArg1]
     and a
@@ -5316,6 +5677,11 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
 ; sets wStringCategory to 0; sets wStringIndex to 2; calls
 ; RunNameEntryStateWhenNotFading_FillTilesFromRequest; increments wNameEntryStep; sets wArg5 to 0
 ; (E-0347)
+; why: step 1 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 1), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
     xor a
     ld [wStringCategory], a
@@ -5338,6 +5704,11 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
 ; increments wNameEntryStep; continues in RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2
 ; (E-0347)
+; why: step 2 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 2), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_SetNameEntryStep::
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
@@ -5348,6 +5719,11 @@ RunNameEntryStateWhenNotFading_SetNameEntryStep::
 ; step 3 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
 ; branches on the byte at wNameEntryText; increments wNameEntryStep; sets wArg5 to 0 (E-0347)
+; why: step 3 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 3), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
     ld hl, wNameEntryText
     ld de, wTextBuf0
@@ -5378,6 +5754,11 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
 ; sets wStringCategory to 0; sets wStringIndex to 0; calls
 ; RunNameEntryStateWhenNotFading_FillTilesFromRequest; may return early; sets wNameEntryStep to 0;
 ; increments wNameEntryState; sets wArg5 to 0 (E-0347)
+; why: step 4 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 4), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -5399,6 +5780,9 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCat
 ; to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to 6; sets wArg4 to
 ; 5; sets wArg7 to 0; calls DrawTileRectFromArg1Params; increments wNameEntryState; plays sound $6c;
 ; then 1 more step (see the code) (E-0347)
+; why: step 4 of RunNameEntryStateWhenNotFading (when wNameEntryState = 4);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5435,6 +5819,9 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
 ; wNameEntryState; sets wNameEntryMenuCursor to 0; sets wArg5 to 0; branches on
 ; wNameEntryMenuCursor; increments wNameEntryState; sets wNameEntryMenuCursor to 0; sets wArg5 to 0
 ; (E-0347)
+; why: step 5 of RunNameEntryStateWhenNotFading (when wNameEntryState = 5);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14
@@ -5470,6 +5857,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
 
 ; step 6 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
+; why: step 6 of RunNameEntryStateWhenNotFading (when wNameEntryState = 6);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5482,6 +5872,11 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
 ; calls BGMapAddressAtScroll_Bank14_2; copies H to wArg5; copies L to wArg6; copies D to wArg1;
 ; copies E to wArg2; sets wArg3 to $20; sets wArg4 to $20; sets wArg7 to 0; calls
 ; FillTileRectWithArg1Tile; increments wNameEntryStep; sets wArg5 to 0 (E-0347)
+; why: step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2
+; (when wNameEntryStep = 0), in step 6 of RunNameEntryStateWhenNotFading (when wNameEntryState = 6);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank14_2
     ld a, h
@@ -5559,6 +5954,9 @@ RunNameEntryStateWhenNotFading_FinishNameEntry::
 ; to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14; sets wArg4
 ; to $0a; sets wArg7 to 0; calls DrawTileRectFromArg1Params; sets wNameEntryState to 1; sets
 ; wNameEntryStep to 0; then 5 more steps (see the code) (E-0347)
+; why: step 7 of RunNameEntryStateWhenNotFading (when wNameEntryState = 7);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5603,6 +6001,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenN
 ; Branches on wArg1; calls UpdateAndDrawSpriteSlots; copies wArg4 to wArg1; copies wArg5 to wArg2;
 ; sets wArg3 to 0; sets wArg4 to $10; sets wArg5 to $18; sets wArg6 to 0; calls DrawMetaSpritePartC0
 ; (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
+; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -5745,6 +6145,10 @@ IsHLByteInList_2_Data::
 ; wNameEntryMenuCursor to 1; calls DrawBlankTileC3_3; branches on wNameEntryMenuCursor; sets
 ; wNameEntryMenuCursor to 0; sets wNameEntryBlink to 0; calls BlinkCursorNameEntryBlink_Bank14; then
 ; 6 more steps (see the code) (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc, in
+; step 5 of RunNameEntryStateWhenNotFading (when wNameEntryState = 5);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5835,10 +6239,21 @@ DrawBlankTileC3_3::
     jr RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor
 
 ; Takes BC; changes B (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank14_2 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2, in part of
+; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor::
     ld a, [wNameEntryMenuCursor]
     add a
@@ -5885,6 +6300,8 @@ CopyTileBytesToVRAM_Bank14::
 
 ; Returns if the byte at wNameEntryText is $f0; copies the byte at wNameEntryText to wNameEntryFlag;
 ; calls CopyFromBankWaitVRAM (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
+; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryFlag::
     ld hl, wNameEntryText
     ld bc, $0000
@@ -5980,6 +6397,11 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
 ; rRAMB to 0; branches on the byte at sRecords; branches on the byte at wNameEntryText; branches on
 ; the byte at sRecords; branches on C; branches on the byte at sRecords; branches on wArg1; branches
 ; on C (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
     ld hl, sRecords
     ld a, $0a
@@ -6073,6 +6495,11 @@ RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
 ; and A; branches on the byte at RejectedNameList; branches on the byte at wNameEntryText; branches
 ; on the byte at RejectedNameList; branches on C; branches on the byte at RejectedNameList; branches
 ; on wArg1 (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5, in step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
+; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
+; (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_ReadArg1::
     ld hl, RejectedNameList
     ld c, $00
@@ -6239,6 +6666,8 @@ RunNameEntryStateWhenNotFading_ScanNameEntryText::
 ; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; increments
 ; wNameEntryDrawStep; branches on wArg1; calls BeginStringDisplay; increments wNameEntryDrawStep;
 ; branches on wTextFlags; sets wNameEntryDrawStep to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
+; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_FillTilesFromRequest::
     ld a, [wNameEntryDrawStep]
     and a
@@ -6332,6 +6761,8 @@ BGMapAddressAtScroll_Bank14_2::
 ; Calls CopyFromBankWaitVRAM; increments wNameEntryTimer; continues in
 ; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; sets wNameEntryTimer to 0;
 ; sets wNameEntryTimer2 to 0 (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
+; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2::
     push hl
     push de
@@ -6409,6 +6840,10 @@ CopyTileForNameEntryLength_Data2::
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5: may continue in
 ; CopyF0StringAndRedrawNameEntry_CheckArg2; branches on B; calls CopyF0StringAndRedrawNameEntry
 ; (E-0347)
+; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5, in step 3 of
+; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 3), in step 1 of
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
+; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
 RunNameEntryStateWhenNotFading_CheckArg1::
     ld a, [wArg1]
     or a
@@ -6507,6 +6942,9 @@ CopyF0StringAndRedrawNameEntry::
 ; Calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; sets
 ; wNameEntryMarkPending to 1; branches on C; sets wNameEntryLength to 4; calls
 ; WriteTileBAtScrollOffset47PlusNameEntryLength (E-0347)
+; why: part of CopyF0StringAndRedrawNameEntry; CopyF0StringAndRedrawNameEntry: copies the
+; $F0-terminated string at HL to DE, then erases the name-entry cursor tile and redraws
+; wNameEntryText glyph by glyph (handling ... (E-0352, E-0175)
 CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL::
     ld b, $c3
     call WriteTileBAtScrollOffset47PlusNameEntryLength
@@ -6547,6 +6985,9 @@ CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL::
 
 ; Changes HL and A; branches on wArg2; continues in
 ; CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL (E-0347)
+; why: part of CopyF0StringAndRedrawNameEntry; CopyF0StringAndRedrawNameEntry: copies the
+; $F0-terminated string at HL to DE, then erases the name-entry cursor tile and redraws
+; wNameEntryText glyph by glyph (handling ... (E-0352, E-0175)
 CopyF0StringAndRedrawNameEntry_CheckArg2::
     ld a, [wArg2]
     or a
@@ -7795,6 +8236,9 @@ SuggestedName_8B::
 ; rRAMB to 0; branches on the byte at sCompactRecords; branches on the byte at sCompactRecords +
 ; $6f; branches on C; sets rRAMB to 0; branches on the byte at sCompactRecords; branches on C; then
 ; 18 more steps (see the code) (E-0347)
+; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
+; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
+; E-0038, E-0244)
 HibernateMenu_Multiply8::
     ld a, [wArg1]
     cp $1e
@@ -8187,6 +8631,9 @@ DeleteSRAMRecordAndCompact::
     ret
 
 ; Changes HL, DE, BC and A; branches on the byte at DefaultMonsterNameTable (E-0347)
+; why: part of CreateMonsterRecordOfKindTemp1; CreateMonsterRecordOfKindTemp1: with SRAM enabled
+; creates a record from the template CreateMonsterRecordOfKindTemp1_Data[hTemp1] (wBattleArg1 =
+; hTemp1, level hTemp2) (E-0352, E-0124)
 CreateMonsterRecordOfKindTemp1_ReadWorkBuf::
     ld a, [wWorkBuf]
     ld c, a

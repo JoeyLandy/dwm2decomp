@@ -10,6 +10,8 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
 ; FieldState_StepChecks_LoadSRAMRecordByte_2; calls FieldState_StepChecks_LoadSRAMRecordByte; sets
 ; rRAMG to 0; sets wTalkEventGroup to 4; sets wTalkEventIndex to 0; then 4 more steps (see the code)
 ; (E-0347)
+; why: a helper of FieldState_StepChecks; FieldState_StepChecks: field state 7: after a step: the
+; trigger marker, the random encounter counter, step triggers and warps (E-0352, E-0339)
 FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
     call FieldState_StepChecks_QueueSoundEffect
     ld a, [wMenuState]
@@ -58,6 +60,8 @@ FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
 
 ; May return early; calls LoadSRAMRecordByte; calls LoadSRAMRecordWord; calls SRAMRecordAddress
 ; (E-0347)
+; why: part of FieldState_StepChecks; FieldState_StepChecks: field state 7: after a step: the
+; trigger marker, the random encounter counter, step triggers and warps (E-0352, E-0339)
 FieldState_StepChecks_LoadSRAMRecordByte::
     ld a, [wStatusStepFlags]
     and $01
@@ -117,6 +121,9 @@ SetFieldStepFlagsBit7::
 
 ; Calls LoadSRAMRecordByte; calls LoadSRAMRecordWord; calls SetFieldStepFlagsBit7; sets
 ; wStatusFieldStep; calls SRAMRecordAddress (E-0347)
+; why: part of FieldState_StepChecks_LoadSRAMRecordByte, in part of FieldState_StepChecks;
+; FieldState_StepChecks: field state 7: after a step: the trigger marker, the random encounter
+; counter, step triggers and warps (E-0352, E-0339)
 FieldState_StepChecks_LoadSRAMRecordByte_2::
     ld a, [wPartyCount]
     ld b, a
@@ -198,6 +205,9 @@ FieldState_StepChecks_LoadSRAMRecordByte_2::
 ; Calls LoadSRAMRecordByte; calls LoadSRAMRecordWord; branches on wStatusFieldStep; sets
 ; wFieldStepFlags to $40; branches on wMapType; branches on hMapId; calls SetFieldStepFlagsBit7;
 ; sets wStatusFieldStep; calls SRAMRecordAddress (E-0347)
+; why: part of FieldState_StepChecks_LoadSRAMRecordByte, in part of FieldState_StepChecks;
+; FieldState_StepChecks: field state 7: after a step: the trigger marker, the random encounter
+; counter, step triggers and warps (E-0352, E-0339)
 FieldState_StepChecks_LoadSRAMRecordByte_3::
     ld a, [wPartyCount]
     ld b, a
@@ -294,6 +304,8 @@ FieldState_StepChecks_LoadSRAMRecordByte_3::
 
 ; Branches on wMenuState; plays sound $66; branches on wIsCGB; calls CopyBytes; branches on wIsCGB;
 ; calls CopyBytes; branches on wIsCGB; sets wBGPaletteUploadRequest to $7f (E-0347)
+; why: part of FieldState_StepChecks; FieldState_StepChecks: field state 7: after a step: the
+; trigger marker, the random encounter counter, step triggers and warps (E-0352, E-0339)
 FieldState_StepChecks_QueueSoundEffect::
     ld a, [wMenuState]
     or a
@@ -382,12 +394,16 @@ RunPlayerMoveTypeMapMoveType::
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2
 
 ; step 0 of RunPlayerMoveTypeMapMoveType: returns at once (E-0347)
+; why: step 0 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 0); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_Return::
     ret
 
 ; step 6 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $50; sets wStatusFieldStep to $80; sets
 ; wFieldStepFlags to $40; continues in
 ; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 6 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 6); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld a, $50
     ldh [hTemp1], a
@@ -399,6 +415,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
 
 ; step 7 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $52; sets wStatusFieldStep to 0; continues
 ; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 7 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 7); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
     ld a, $52
     ldh [hTemp1], a
@@ -408,6 +426,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
 
 ; step 1 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
 ; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 1 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 1); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ld a, $44
     ldh [hTemp1], a
@@ -417,6 +437,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
 
 ; step 2 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $56; sets wStatusFieldStep to 0; continues
 ; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 2 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 2); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
     ld a, $56
     ldh [hTemp1], a
@@ -426,6 +448,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
 
 ; step 3 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
 ; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 3 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 3); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
     ld a, $44
     ldh [hTemp1], a
@@ -436,6 +460,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
 ; step 4 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to $80; sets
 ; wFieldStepFlags to $40; continues in
 ; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 4 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 4); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
     ld a, $44
     ldh [hTemp1], a
@@ -447,6 +473,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
 
 ; step 5 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
 ; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; why: step 5 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 5); RunPlayerMoveTypeMapMoveType:
+; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
     ld a, $44
     ldh [hTemp1], a
@@ -457,6 +485,9 @@ RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
 ; Returns unless wFadeState is 0; returns unless wScriptRunning is 0; returns unless wTalkCountdown
 ; is 0; calls ReadTileBuffer2x2AtPixel_Bank0A; branches on wTilesUnderPoint; sets wModeState to 7;
 ; sets wMenuState to 0; sets wMenuSubState to 0 (E-0347)
+; why: part of RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A, in step 5 of
+; RunPlayerMoveTypeMapMoveType (when wMapMoveType = 5); RunPlayerMoveTypeMapMoveType: runs the
+; movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState::
     ld a, [wFadeState]
     or a
@@ -943,6 +974,9 @@ RunBattleIntroKindCase::
 ; RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1 to hTemp1; calls NextRandomSeed; branches
 ; on wKeyRandomHi & $0f; sets wEncounterKind to 2; sets wBattleKind to 6; branches on wKeyRandomHi &
 ; $0f (E-0347)
+; why: step 6 of RunBattleIntroKindCase (when wBattleIntroKind = 6); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_ComputePartyStrengthForKey::
     ld a, [wPendingFieldEvent]
     and $0f
@@ -1042,6 +1076,9 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2::
 ; step 5 of RunBattleIntroKindCase: calls ComputePartyStrengthLevelPartyStrength; branches on
 ; wPartyStrength; copies C to wEncounterMonsters; sets wEncounterKind to 0; sets wBattleKind to 2
 ; (E-0347)
+; why: step 5 of RunBattleIntroKindCase (when wBattleIntroKind = 5); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength::
     farcall ComputePartyStrengthLevelPartyStrength
     ld c, $76
@@ -1388,6 +1425,9 @@ ScriptedEncounterTable::
 ; ReadMapCellWordForScreenXY; calls RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; calls
 ; ReadMapCellWordForScreenXY; branches on hPlayerStateFlags; calls ReadMapCellWordForScreenXY; calls
 ; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; then 7 more steps (see the code) (E-0347)
+; why: step 0 of RunBattleIntroKindCase (when wBattleIntroKind = 0); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
@@ -1851,6 +1891,10 @@ ReadMapCellWordForScreenXY::
 ; sets hTemp1; sets hTemp2; sets hTemp3; sets hTemp4; sets hTemp5; calls NextTableByte; branches on
 ; hTemp0; branches on hTemp1; branches on hTemp2; branches on hTemp3; then 7 more steps (see the
 ; code) (E-0347)
+; why: a helper of RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags, in step 0 of
+; RunBattleIntroKindCase (when wBattleIntroKind = 0); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc::
     ld a, [de]
     inc de
@@ -1957,6 +2001,9 @@ RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc::
 ; ReadMapCellWordForScreenXY_2; calls LoadEncounterMonsterIdsToWorkBuf; calls
 ; ReadMapCellWordForScreenXY_2; branches on hPlayerStateFlags; calls ReadMapCellWordForScreenXY_2;
 ; calls LoadEncounterMonsterIdsToWorkBuf; then 3 more steps (see the code) (E-0347)
+; why: a helper of CollectUniqueEncounterIdsToWorkBuf2; CollectUniqueEncounterIdsToWorkBuf2: for
+; special maps copies the eight monster entries of the current screen
+; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, ... (E-0352, E-0129, E-0340)
 CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
@@ -2479,6 +2526,9 @@ LoadEncounterMonsterIdsToWorkBuf::
     ret
 
 ; step 2 of RunBattleIntroKindCase: sets wBattleKind to 2 (E-0347)
+; why: step 2 of RunBattleIntroKindCase (when wBattleIntroKind = 2); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_SetBattleKindTo02::
     ld a, $02
     ld [wBattleKind], a
@@ -2488,6 +2538,9 @@ RunBattleIntroKindCase_SetBattleKindTo02::
 ; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1 to wEncounterKind; branches on wMapType
 ; & $07; calls RunBattleIntroKindCase_NextRandomSeed; sets wBattleKind to 1; calls
 ; RunBattleIntroKindCase_NextRandomSeed; sets wBattleKind to 1 (E-0347)
+; why: step 1 of RunBattleIntroKindCase (when wBattleIntroKind = 1); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_NextTableByte::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2564,6 +2617,9 @@ RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2::
 
 ; called from RunBattleIntroKindCase_NextTableByte: branches on hPlayerStateFlags; calls
 ; NextRandomSeed (E-0347)
+; why: a helper of RunBattleIntroKindCase_NextTableByte, in step 1 of RunBattleIntroKindCase (when
+; wBattleIntroKind = 1); RunBattleIntroKindCase: clears wBattleIntroFlag and runs the routine for
+; wBattleIntroKind & 7 (jump table of eight) (E-0352, E-0122)
 RunBattleIntroKindCase_NextRandomSeed::
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2662,6 +2718,9 @@ RunBattleIntroKindCase_NextRandomSeed::
 
 ; step 3 of RunBattleIntroKindCase: branches on wMapType; sets wBattleIntroFlag to 1; sets
 ; wBattleKind to 3 (E-0347)
+; why: step 3 of RunBattleIntroKindCase (when wBattleIntroKind = 3); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind::
     ld a, [wMapType]
     cp $82
@@ -2675,12 +2734,18 @@ RunBattleIntroKindCase_WriteBattleIntroFlagAndBattleKind::
     ret
 
 ; step 4 of RunBattleIntroKindCase: sets wBattleKind to 4 (E-0347)
+; why: step 4 of RunBattleIntroKindCase (when wBattleIntroKind = 4); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_SetBattleKindTo04::
     ld a, $04
     ld [wBattleKind], a
     ret
 
 ; step 7 of RunBattleIntroKindCase: sets wBattleKind to 5 (E-0347)
+; why: step 7 of RunBattleIntroKindCase (when wBattleIntroKind = 7); RunBattleIntroKindCase: clears
+; wBattleIntroFlag and runs the routine for wBattleIntroKind & 7 (jump table of eight) (E-0352,
+; E-0122)
 RunBattleIntroKindCase_SetBattleKindTo05::
     ld a, $05
     ld [wBattleKind], a
@@ -2698,6 +2763,8 @@ RunBattleTransitionStep::
 ; sets hSpriteWindowClipMode to 3; copies E to wTransitionBGPtrLo; copies D to wTransitionBGPtrHi;
 ; sets wTransitionCounter to 0; sets wTransitionStage to 0; sets wTransitionWork to 0; advances
 ; wBattleTransitionStep (E-0347)
+; why: step 0 of RunBattleTransitionStep (when wBattleTransitionStep = 0); RunBattleTransitionStep:
+; runs the routine for wBattleTransitionStep (jump table of three) (E-0352, E-0122)
 RunBattleTransitionStep_QueueMusic::
     ld a, [wCurrentMusic]
     ld [wTransitionMusic], a
@@ -2751,6 +2818,8 @@ RunBattleTransitionStep_QueueMusic::
 ; RunBattleIntroKindCase; calls StartPaletteFade; sets wGameMode to 4; sets wModeState to 0; sets
 ; wWorldMapState to 0; sets wGameMode2Arg to 0; increments wModeChangeRequest; increments
 ; wBGFillFlag (E-0347)
+; why: step 2 of RunBattleTransitionStep (when wBattleTransitionStep = 2); RunBattleTransitionStep:
+; runs the routine for wBattleTransitionStep (jump table of three) (E-0352, E-0122)
 RunBattleTransitionStep_WriteGameModeAndModeStateEtc::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
@@ -2811,6 +2880,9 @@ RunBattleTransitionStep_CheckStage::
 ; step 0 of RunBattleTransitionStep_CheckStage: branches on wTransitionStage; increments
 ; wTransitionCounter; calls WriteTileC4AtTransitionBGPtrLoAndClearAttr; increments wTransitionStage
 ; (E-0347)
+; why: step 0 of RunBattleTransitionStep_CheckStage (when wTransitionCounter = 0);
+; RunBattleTransitionStep_CheckStage: reads the transition stage, then advances the step (E-0352,
+; E-0345)
 RunBattleTransitionStep_CheckStage_ReadTransitionStage::
     ld a, [wTransitionStage]
     cp $14
@@ -2866,6 +2938,9 @@ RunBattleTransitionStep_CheckStage_ReadTransitionStage::
     ret
 
 ; step 1 of RunBattleTransitionStep_CheckStage: advances wBattleTransitionStep (E-0347)
+; why: step 1 of RunBattleTransitionStep_CheckStage (when wTransitionCounter = 1);
+; RunBattleTransitionStep_CheckStage: reads the transition stage, then advances the step (E-0352,
+; E-0345)
 RunBattleTransitionStep_CheckStage_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
@@ -2891,6 +2966,10 @@ WriteTileC4AtTransitionBGPtrLoAndClearAttr::
 
 ; called from WriteTileC4AtTransitionBGPtrLoAndClearAttr: calls AddHLToTransitionBGPtrLoInBGMap;
 ; calls NextBGMapColumn_Bank0A (E-0347)
+; why: a helper of WriteTileC4AtTransitionBGPtrLoAndClearAttr;
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr: writes tile $C4 at the BG map address from
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap and, on CGB, ...
+; (E-0352, E-0122)
 WriteTileC4AtTransitionBGPtrLoAndClearAttr_AddHLToTransitionBGPtrLoInBGMap::
     push bc
     ld b, l
@@ -2946,10 +3025,17 @@ AddHLToTransitionBGPtrLoInBGMap::
     ret
 
 ; step 1 of RunBattleTransitionStep_StagedSteps: changes B (E-0347)
+; why: step 1 of RunBattleTransitionStep_StagedSteps (when wBattleTransitionSubStep = 1);
+; RunBattleTransitionStep_StagedSteps: by its sub-step: CheckStage, the transition counter,
+; SetCounts (E-0352)
 RunBattleTransitionStep_StagedSteps_ReadTransitionCounter::
     ld b, $06
 
 ; Dispatches on wTransitionCounter (E-0347)
+; why: part of RunBattleTransitionStep_StagedSteps_ReadTransitionCounter, in step 1 of
+; RunBattleTransitionStep_StagedSteps (when wBattleTransitionSubStep = 1);
+; RunBattleTransitionStep_StagedSteps: by its sub-step: CheckStage, the transition counter,
+; SetCounts (E-0352)
 RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter::
     ld a, [wTransitionCounter]
     jumptable
@@ -2975,6 +3061,9 @@ RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter:
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may continue
 ; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; then 8
 ; more steps (see the code) (E-0347)
+; why: step 0 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc::
     push bc
     ld a, [wTransitionStage]
@@ -3032,6 +3121,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc::
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may continue
 ; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; then 8 more
 ; steps (see the code) (E-0347)
+; why: step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2::
     push bc
     ld a, [wTransitionStage]
@@ -3075,6 +3167,10 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2::
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 ; (E-0347)
+; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
+; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip::
     or a
     jr nz, .read_transition_count_a
@@ -3104,6 +3200,10 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Sk
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 ; (E-0347)
+; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
+; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2::
     or a
     jr nz, .read_transition_count_a
@@ -3132,6 +3232,10 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Sk
 ; Calls WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 ; (E-0347)
+; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
+; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA::
     ld a, [wTransitionCountA]
     ld l, a
@@ -3149,6 +3253,10 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 
 ; Calls WriteTileC4AtTransitionBGPtrLoAndClearAttr (E-0347)
+; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
+; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2::
     ld a, [wTransitionCountA]
     ld l, a
@@ -3168,6 +3276,10 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
 ; branches on wTransitionStage; increments wTransitionCounter; sets wTransitionStage to 0; may
 ; continue in RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
 ; (E-0347)
+; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
+; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA::
     ld a, l
     ld [wTransitionCountA], a
@@ -3190,6 +3302,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Se
     ret
 
 ; step 2 of AddHLToTransitionBGPtrLoInBGMap: advances wBattleTransitionStep (E-0347)
+; why: step 2 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
+; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
+; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
 AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
@@ -3209,6 +3324,9 @@ RunBattleTransitionStep_SetCounts::
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr; copies L to wTransitionCountA; copies H to
 ; wTransitionCountB; increments wTransitionStage; increments wTransitionCounter; returns unless
 ; wTransitionStage is $09; increments wTransitionCounter (E-0347)
+; why: step 0 of RunBattleTransitionStep_SetCounts (when wTransitionCounter = 0);
+; RunBattleTransitionStep_SetCounts: sets the transition counts from the stage record, then advances
+; (E-0352, E-0345)
 RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ld a, [wTransitionStage]
     or a
@@ -3332,12 +3450,18 @@ RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ret
 
 ; step 1 of RunBattleTransitionStep_SetCounts: decrements wTransitionCounter (E-0347)
+; why: step 1 of RunBattleTransitionStep_SetCounts (when wTransitionCounter = 1);
+; RunBattleTransitionStep_SetCounts: sets the transition counts from the stage record, then advances
+; (E-0352, E-0345)
 RunBattleTransitionStep_SetCounts_ReturnAfterSetup::
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
 ; step 2 of RunBattleTransitionStep_SetCounts: advances wBattleTransitionStep (E-0347)
+; why: step 2 of RunBattleTransitionStep_SetCounts (when wTransitionCounter = 2);
+; RunBattleTransitionStep_SetCounts: sets the transition counts from the stage record, then advances
+; (E-0352, E-0345)
 RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
@@ -3619,6 +3743,8 @@ AdvanceStepCounterAndUpdateStoredRecords::
 ; return early; returns if wPartyCount is 0; sets rRAMG to $0a; calls LoadSRAMRecordByte; calls
 ; LoadSRAMRecordWord; branches on hTemp0; branches on hTemp1; calls SRAMRecordAddress; sets rRAMG to
 ; 0 (E-0347)
+; why: part of UpdatePlayerMovement; UpdatePlayerMovement: does nothing during a fade or while the
+; map is loading (E-0352)
 UpdatePlayerMovement_TestFlagBit::
     ld a, [wEncounterRate]
     and $7f
@@ -3706,6 +3832,8 @@ UpdatePlayerMovement_TestFlagBit::
 ; Returns unless bit 7 of hPlayerSpriteOverride is set; returns unless wScriptRunning is 0; copies L
 ; to hPlayerSpriteTimerLo; copies H to hPlayerSpriteTimerHi; returns unless bit 7 of H is set; sets
 ; wTalkEventGroup to $0a; sets wTalkEventIndex to 0; calls DispatchTalkEvent (E-0347)
+; why: part of UpdatePlayerMovement; UpdatePlayerMovement: does nothing during a fade or while the
+; map is loading (E-0352)
 UpdatePlayerMovement_WaitPlayerSpriteOverride::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a

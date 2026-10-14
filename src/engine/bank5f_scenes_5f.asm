@@ -286,6 +286,9 @@ RunMessageBox::
 ; wTextWindowState to 1; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on
 ; hPlayerY; sets wTextWindowState to $81; sets hSpriteWindowClipMode to 1; then 1 more step (see the
 ; code) (E-0347)
+; why: step 0 of RunMessageBox; RunMessageBox: wMessageState ($FF = idle) steps a message: 0 opens
+; the message window (unless wMessageGroup bit 7) at the bottom, or at the top when ... (E-0352,
+; E-0079)
 RunMessageBox_SetBit1OfPlayerAndObjectFlags::
     ld a, [wStepPtrLo]
     or a
@@ -323,6 +326,9 @@ RunMessageBox_SetBit1OfPlayerAndObjectFlags::
 
 ; step 1 of RunMessageBox: branches on wMessageGroup; returns if bit 7 of wMessageGroup is set;
 ; calls ShowMessageFromMessageIndex; advances wMessageState (E-0347)
+; why: step 1 of RunMessageBox; RunMessageBox: wMessageState ($FF = idle) steps a message: 0 opens
+; the message window (unless wMessageGroup bit 7) at the bottom, or at the top when ... (E-0352,
+; E-0079)
 RunMessageBox_ShowMessageFromMessageIndex::
     ld a, [wMessageGroup]
     bit 7, a
@@ -340,6 +346,9 @@ RunMessageBox_ShowMessageFromMessageIndex::
 ; step 2 of RunMessageBox: returns if bit 0 of wTextFlags is set; branches on wMessageGroup; plays
 ; sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 0;
 ; branches on hPlayerY; sets wTextWindowState to $82; advances wMessageState (E-0347)
+; why: step 2 of RunMessageBox; RunMessageBox: wMessageState ($FF = idle) steps a message: 0 opens
+; the message window (unless wMessageGroup bit 7) at the bottom, or at the top when ... (E-0352,
+; E-0079)
 RunMessageBox_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -368,6 +377,9 @@ RunMessageBox_QueueSoundEffect::
 
 ; step 3 of RunMessageBox: branches on wMessageGroup; branches on wStepPtrLo; calls
 ; ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff (E-0347)
+; why: step 3 of RunMessageBox; RunMessageBox: wMessageState ($FF = idle) steps a message: 0 opens
+; the message window (unless wMessageGroup bit 7) at the bottom, or at the top when ... (E-0352,
+; E-0079)
 RunMessageBox_WriteMessageState::
     ld a, [wMessageGroup]
     bit 6, a
@@ -431,66 +443,93 @@ ShowMessageHL::
     dw ShowMessageHL_ToBeginStringDisplay_Bank89
 
 ; step 0 of ShowMessageHL: calls BeginStringDisplay_Bank28 (E-0347)
+; why: step 0 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
 ; step 1 of ShowMessageHL: calls BeginStringDisplay_Bank29 (E-0347)
+; why: step 1 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
 ; step 2 of ShowMessageHL: calls BeginStringDisplay_Bank2A (E-0347)
+; why: step 2 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; step 3 of ShowMessageHL: calls BeginStringDisplay_Bank2B (E-0347)
+; why: step 3 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; step 4 of ShowMessageHL: calls BeginStringDisplay_Bank2C (E-0347)
+; why: step 4 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; step 5 of ShowMessageHL: calls BeginStringDisplay_Bank2D (E-0347)
+; why: step 5 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; step 6 of ShowMessageHL: calls BeginStringDisplay_Bank2E (E-0347)
+; why: step 6 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; step 8 of ShowMessageHL: calls BeginStringDisplay_Bank7C (E-0347)
+; why: step 8 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; step 9 of ShowMessageHL: calls BeginStringDisplay_Bank80 (E-0347)
+; why: step 9 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
 ; step 11 of ShowMessageHL: calls BeginStringDisplay_Bank82 (E-0347)
+; why: step 11 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
 ; step 12 of ShowMessageHL: calls BeginStringDisplay_Bank86 (E-0347)
+; why: step 12 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
 ; step 13 of ShowMessageHL: calls BeginStringDisplay_Bank89 (E-0347)
+; why: step 13 of ShowMessageHL; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F
+; = message group, which selects one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
 ; Copies L to wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank28 (E-0347)
+; why: part of ShowMessageHL_ToBeginStringDisplay_Bank89, in step 13 of ShowMessageHL;
+; ShowMessageHL: L = string index (wStringIndex, category 0), H & $3F = message group, which selects
+; one of 12 table entries (rst $00) (E-0352, E-0079)
 ShowMessageHL_ToBeginStringDisplay_Bank89_SetStringIndex::
     ld a, l
     ld [wStringIndex], a
@@ -913,6 +952,9 @@ SetWStepArrivedIfPartyHasField55Bit7::
 
 ; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; branches on hTemp0; sets
 ; wStepArrived to 0; sets rRAMG to 0; sets wStepArrived to 1; sets rRAMG to 0 (E-0347)
+; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
+; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
+; scenes ... (E-0352, E-0286, E-0038)
 GreatLogFieldEvents_LoadSRAMRecordByte::
     ld a, $0a
     ld [rRAMG], a
@@ -949,6 +991,9 @@ GreatLogFieldEvents_LoadSRAMRecordByte::
 
 ; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; branches on hTemp0; sets
 ; wStepArrived to 0; sets rRAMG to 0; sets wStepArrived to 1; sets rRAMG to 0 (E-0347)
+; why: part of GreatLogFieldEvents_LoadSRAMRecordByte, in part of GreatLogFieldEvents;
+; GreatLogFieldEvents: implements script command type 82 (SCRIPT_GREATLOG_FIELD_EVENT): talk
+; category 8: jumps by wPendingFieldEvent & $0F to 13 scripted scenes ... (E-0352, E-0286, E-0038)
 GreatLogFieldEvents_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
@@ -1148,6 +1193,8 @@ RedrawColumnsBesideScreen::
     ret
 
 ; called from RedrawColumnsBesideScreen: calls WriteVRAMByte (E-0347)
+; why: a helper of RedrawColumnsBesideScreen; RedrawColumnsBesideScreen: DE = the BG map row at
+; hScrollY (& $F8) (E-0352, E-0121)
 RedrawColumnsBesideScreen_WriteVRAMByte::
     srl a
     srl a
@@ -1199,6 +1246,9 @@ SceneDancing_DanceSteps::
 
 ; step 11 of SceneDancing_DanceSteps: sets hPlayerFacing to 0; sets wFollowerRecords to 0; advances
 ; wScriptSubStep (E-0347)
+; why: step 11 of SceneDancing_DanceSteps (when wScriptSubStep = 11); SceneDancing_DanceSteps: by
+; its step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
     xor a
     ldh [hPlayerFacing], a
@@ -1211,23 +1261,35 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
 
 ; step 8 of SceneDancing_DanceSteps: changes A; continues in
 ; SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing (E-0347)
+; why: step 8 of SceneDancing_DanceSteps (when wScriptSubStep = 8); SceneDancing_DanceSteps: by its
+; step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_2::
     ld a, $02
     jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
 ; step 5 of SceneDancing_DanceSteps: changes A; continues in
 ; SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing (E-0347)
+; why: step 5 of SceneDancing_DanceSteps (when wScriptSubStep = 5); SceneDancing_DanceSteps: by its
+; step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3::
     ld a, $01
     jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
 ; step 2 of SceneDancing_DanceSteps: changes A (E-0347)
+; why: step 2 of SceneDancing_DanceSteps (when wScriptSubStep = 2); SceneDancing_DanceSteps: by its
+; step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, $03
 
 ; Sets hPlayerFacing; sets wFollowerRecords; copies hPlayerStateFlags & $fd to hPlayerStateFlags;
 ; increments wScriptParam0; returns unless wScriptParam0 is $40; sets hPlayerStateFlags; sets
 ; wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: part of SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc, in step 2 of
+; SceneDancing_DanceSteps (when wScriptSubStep = 2); SceneDancing_DanceSteps: by its step: changes
+; the player's facing and the follower records between short waits (wScriptParam0) (E-0352)
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing::
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -1272,6 +1334,9 @@ SceneMermaidSong2_MoveSteps::
 
 ; step 16 of SceneDancing_DanceSteps: copies hPlayerStateFlags & $fd to hPlayerStateFlags; advances
 ; wScriptStep (E-0347)
+; why: step 16 of SceneDancing_DanceSteps (when wScriptSubStep = 16); SceneDancing_DanceSteps: by
+; its step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WritePlayerStateFlags::
     ldh a, [hPlayerStateFlags]
     and $fd
@@ -1285,6 +1350,9 @@ SceneDancing_DanceSteps_WritePlayerStateFlags::
 ; AddStepDeltaToPointedByte; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; then 4 more steps (see the code) (E-0347)
+; why: step 12 of SceneDancing_DanceSteps (when wScriptSubStep = 12); SceneDancing_DanceSteps: by
+; its step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
     ld de, hPlayerY
     ld a, e
@@ -1325,6 +1393,9 @@ SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
 ; step 7 of SceneMermaidSong2_MoveSteps: increments wScriptParam0; may return early; copies
 ; hPlayerFacing & $03 to hPlayerFacing; copies hPlayerFacing & $03 to wFollowerRecords; returns
 ; unless hPlayerFacing & $03 is 0; sets wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 7 of SceneMermaidSong2_MoveSteps (when wScriptSubStep = 7); SceneMermaidSong2_MoveSteps:
+; by its step: waits, moves two objects by table and changes the player's facing and followers
+; (E-0352)
 SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
     ld a, [wScriptParam0]
     inc a
@@ -1351,6 +1422,9 @@ SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
 ; wFollowerRecords + $1; increments hPlayerX; branches on hPlayerFacing & $03; branches on
 ; wScriptParam0; sets wScriptParam0 to 0; advances wScriptSubStep; sets hPlayerStateFlags;
 ; increments wScriptParam0 (E-0347)
+; why: step 4 of SceneMermaidSong2_MoveSteps (when wScriptSubStep = 4); SceneMermaidSong2_MoveSteps:
+; by its step: waits, moves two objects by table and changes the player's facing and followers
+; (E-0352)
 SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, [wScriptParam0]
     and $07
@@ -1423,6 +1497,9 @@ SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
 ; step 3 of SceneMermaidSong2_MoveSteps: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte (E-0347)
+; why: step 3 of SceneMermaidSong2_MoveSteps (when wScriptSubStep = 3); SceneMermaidSong2_MoveSteps:
+; by its step: waits, moves two objects by table and changes the player's facing and followers
+; (E-0352)
 SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte::
     ld de, wFollowerRecords + $7
     ld a, e
@@ -1439,6 +1516,9 @@ SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte::
 
 ; step 0 of SceneDancing_DanceSteps: increments wScriptParam0; returns unless wScriptParam0 is $20;
 ; sets wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 0 of SceneDancing_DanceSteps (when wScriptSubStep = 0); SceneDancing_DanceSteps: by its
+; step: changes the player's facing and the follower records between short waits (wScriptParam0)
+; (E-0352)
 SceneDancing_DanceSteps_WriteScriptParam0::
     ld a, [wScriptParam0]
     inc a
@@ -1454,6 +1534,9 @@ SceneDancing_DanceSteps_WriteScriptParam0::
 ; step 2 of SceneMermaidSong2_MoveSteps: copies hPlayerFacing & $03 to hPlayerFacing; branches on
 ; hPlayerFacing & $03; copies hPlayerFacing & $03 & $03 to wFollowerRecords; increments
 ; wFollowerRecords + $1; decrements hPlayerX; calls ScriptStepMoveTwoObjectsByTable (E-0347)
+; why: step 2 of SceneMermaidSong2_MoveSteps (when wScriptSubStep = 2); SceneMermaidSong2_MoveSteps:
+; by its step: waits, moves two objects by table and changes the player's facing and followers
+; (E-0352)
 SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable::
     ld a, [wScriptParam0]
     and $07
@@ -1547,6 +1630,8 @@ RunScriptSubStep::
 ; step 7 of RunScriptSubStep: sets wFollowerRecords to 1; increments wScriptParam0; may return
 ; early; sets hPlayerFacing to 0; sets wFollowerRecords to 0; copies hPlayerStateFlags & $fb to
 ; hPlayerStateFlags; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
+; why: step 7 of RunScriptSubStep (when wScriptSubStep = 7); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
     ld a, $01
     ld [wFollowerRecords], a
@@ -1594,6 +1679,8 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
 ; unless wScriptParam0 is $20; sets wObject5 to 0; copies hPlayerStateFlags & $fd to
 ; hPlayerStateFlags; sets hPlayerFacing to 2; sets wScriptParam0 to 0; advances wScriptSubStep
 ; (E-0347)
+; why: step 6 of RunScriptSubStep (when wScriptSubStep = 6); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
@@ -1626,6 +1713,8 @@ RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
 ; step 5 of RunScriptSubStep: sets hPlayerStateFlags; sets wFollowerRecords to 0; increments
 ; wScriptParam0; returns unless wScriptParam0 is $3c; sets wScriptParam0 to 0; advances
 ; wScriptSubStep (E-0347)
+; why: step 5 of RunScriptSubStep (when wScriptSubStep = 5); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
     ldh a, [hPlayerStateFlags]
     or $02
@@ -1648,6 +1737,8 @@ RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
 ; step 4 of RunScriptSubStep: copies L to wScriptTemp2; copies H to wScriptTemp3; sets wScriptParam0
 ; to 0; advances wScriptSubStep; branches on the byte at wScriptMsgSelect; branches on hPlayerY
 ; (E-0347)
+; why: step 4 of RunScriptSubStep (when wScriptSubStep = 4); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc::
     ld a, [wScriptTemp2]
     ld l, a
@@ -1789,6 +1880,8 @@ RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data::
 ; wScriptParam0 to 0; sets hPlayerStateFlags; sets wScriptMsgSelect to 0; sets wScriptTemp0 to 1;
 ; sets wScriptTemp1 to 3; copies L to wScriptTemp2; copies H to wScriptTemp3; advances
 ; wScriptSubStep (E-0347)
+; why: step 3 of RunScriptSubStep (when wScriptSubStep = 3); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
     ld a, [wScriptParam0]
     inc a
@@ -1818,6 +1911,8 @@ RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
 ; step 2 of RunScriptSubStep: sets wObject5 to $80; copies E to wStepPtrLo; copies D to wStepPtrHi;
 ; calls AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_Y; increments wScriptParam0;
 ; returns unless wScriptParam0 is $20; sets wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 2 of RunScriptSubStep (when wScriptSubStep = 2); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_AddStepDeltaToPointedByte::
     ld a, $80
     ld [wObject5], a
@@ -1846,6 +1941,8 @@ RunScriptSubStep_AddStepDeltaToPointedByte::
 ; early; sets hPlayerFacing to 0; sets wFollowerRecords to 0; sets hTemp0 to $0b; calls
 ; RunFieldCommandTemp0; sets hPlayerStateFlags; sets wScriptParam0 to 0; advances wScriptSubStep
 ; (E-0347)
+; why: step 1 of RunScriptSubStep (when wScriptSubStep = 1); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
     ld a, $03
     ld [wFollowerRecords], a
@@ -1897,6 +1994,8 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
 ; step 0 of RunScriptSubStep: sets hPlayerStateFlags; calls UpdateFollowersOnStep_Bank5F; increments
 ; wScriptParam0; returns unless wScriptParam0 is $3c; sets wScriptParam0 to 0; advances
 ; wScriptSubStep (E-0347)
+; why: step 0 of RunScriptSubStep (when wScriptSubStep = 0); RunScriptSubStep: runs the routine for
+; wScriptSubStep (jump table of eight) (E-0352, E-0122)
 RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
     ldh a, [hPlayerStateFlags]
     or $04
@@ -1938,6 +2037,8 @@ RunSceneScriptSubStep::
     dw RunSceneScriptSubStep_AdvanceScriptStep
 
 ; step 17 of RunSceneScriptSubStep: advances wScriptStep (E-0347)
+; why: step 17 of RunSceneScriptSubStep (when wScriptSubStep = 17); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
@@ -1975,6 +2076,8 @@ StartMessage5AndAdvanceScriptSubStep::
 ; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; increments wSpriteSlots + $b;
 ; increments wScriptParam0; branches on wScriptParam0; calls CycleSpriteFloatYDown; sets hTemp0 to
 ; 1; calls DrawAnimatedMetaSprite1B; plays sound $72; then 5 more steps (see the code) (E-0347)
+; why: step 15 of RunSceneScriptSubStep (when wScriptSubStep = 15); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
     ld a, [wScriptParam0]
     or a
@@ -2039,6 +2142,8 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
 
 ; step 14 of RunSceneScriptSubStep: calls RunMessageBoxCarryWhenIdle_Bank5F; may return early; sets
 ; wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 14 of RunSceneScriptSubStep (when wScriptSubStep = 14); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2053,6 +2158,8 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0::
 ; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; increments wScriptParam0; returns unless wScriptParam0 is $20; calls
 ; StartMessageFromTable; advances wScriptSubStep (E-0347)
+; why: step 13 of RunSceneScriptSubStep (when wScriptSubStep = 13); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2080,6 +2187,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
 ; wObject5 to 0; sets wObject5 to $80; returns if wScriptParam1 is below $30; sets wObject5 to 0;
 ; sets wObject5 + SCRIPTOBJ_Y to $30; sets wScriptParam0 to 0; then 2 more steps (see the code)
 ; (E-0347)
+; why: step 12 of RunSceneScriptSubStep (when wScriptSubStep = 12); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2132,6 +2241,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
 ; AddStepDeltaToPointedByte; branches on wScriptParam0; increments wObject5 + SCRIPTOBJ_Y;
 ; increments wScriptParam0; returns unless wScriptParam0 is $20; sets wScriptParam0 to 0; sets
 ; wScriptParam1 to 0; then 1 more step (see the code) (E-0347)
+; why: step 11 of RunSceneScriptSubStep (when wScriptSubStep = 11); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2166,6 +2277,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
 ; RunSceneScriptSubStep_NextTableByte; sets wObject5 + SCRIPTOBJ_X; increments wScriptParam0;
 ; returns unless wScriptParam0 is $b4; sets wObject5 + SCRIPTOBJ_X to $40; plays sound $72; sets
 ; wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 10 of RunSceneScriptSubStep (when wScriptSubStep = 10); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_NextTableByte::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2193,6 +2306,8 @@ RunSceneScriptSubStep_NextTableByte::
 ; step 9 of RunSceneScriptSubStep: calls RunMessageBoxCarryWhenIdle_Bank5F; may return early; sets
 ; wScriptParam0 to 0; advances wScriptSubStep; checks EVENT_SCENE_DARCK_DEFEATED; may return early;
 ; sets wScriptSubStep to $11 (E-0347)
+; why: step 9 of RunSceneScriptSubStep (when wScriptSubStep = 9); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2213,6 +2328,8 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
 ; AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_X; increments wObject5 + SCRIPTOBJ_Y;
 ; increments wScriptParam0; returns unless wScriptParam0 is $20; calls StartMessageFromTable; sets
 ; wScriptParam0 to 0; then 1 more step (see the code) (E-0347)
+; why: step 8 of RunSceneScriptSubStep (when wScriptSubStep = 8); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2246,6 +2363,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
 ; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; increments wScriptParam0; returns unless wScriptParam0 is $20; sets
 ; wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 7 of RunSceneScriptSubStep (when wScriptSubStep = 7); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CycleSpriteFloatYDown::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2278,6 +2397,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown::
 
 ; step 6 of RunSceneScriptSubStep: calls RunMessageBoxCarryWhenIdle_Bank5F; may return early; calls
 ; DecompressToVRAM; advances wScriptSubStep (E-0347)
+; why: step 6 of RunSceneScriptSubStep (when wScriptSubStep = 6); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2296,6 +2417,8 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
 ; AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_Y; increments wScriptParam0; returns
 ; unless wScriptParam0 is $20; calls StartMessageFromTable; sets wScriptParam0 to 0; advances
 ; wScriptSubStep (E-0347)
+; why: step 5 of RunSceneScriptSubStep (when wScriptSubStep = 5); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_AddStepDeltaToPointedByte::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
@@ -2322,6 +2445,8 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
 ; step 4 of RunSceneScriptSubStep: calls RunMessageBoxCarryWhenIdle_Bank5F; may return early; sets
 ; wObject5 to $80; copies wPartyCount to wScriptTemp4; sets wPartyCount to 1; advances
 ; wScriptSubStep (E-0347)
+; why: step 4 of RunSceneScriptSubStep (when wScriptSubStep = 4); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
@@ -2340,6 +2465,8 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5::
 ; hFieldDrawFlags to $0e; calls FullyHealParty; calls MoveIncapacitatedPartyMembersBack; calls
 ; LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest
 ; to $7f; sets hFieldDrawFlags to 0; sets wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 3 of RunSceneScriptSubStep (when wScriptSubStep = 3); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_FullyHealParty::
     ld a, [wScriptParam0]
     or a
@@ -2369,6 +2496,8 @@ RunSceneScriptSubStep_FullyHealParty::
 ; step 2 of RunSceneScriptSubStep: branches on wIsCGB; calls CopyBytes; branches on wIsCGB; sets
 ; wBGPaletteUploadRequest to $7f; increments wScriptParam0; returns unless wScriptParam0 is $1e;
 ; calls StartMessageFromTable; sets wScriptParam0 to 0; advances wScriptSubStep (E-0347)
+; why: step 2 of RunSceneScriptSubStep (when wScriptSubStep = 2); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_CopyBytes::
     ld a, [wScriptParam0]
     srl a
@@ -2435,6 +2564,8 @@ RunSceneScriptSubStep_CopyBytes::
 ; step 1 of RunSceneScriptSubStep: sets hPlayerFacing to 3; calls RunMessageBoxCarryWhenIdle_Bank5F;
 ; may return early; branches on wIsCGB; calls CopyBytes; plays sound $7a; advances wScriptSubStep
 ; (E-0347)
+; why: step 1 of RunSceneScriptSubStep (when wScriptSubStep = 1); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2463,6 +2594,8 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
 ; EVENT_SCENE_MERMAID_KINGDOM_022; sets wScriptMsgSelect to 1; sets hTemp0 to 8; checks
 ; EVENT_SCENE_SHIELD2_023; sets wScriptMsgSelect to 2; sets hTemp0 to $0a; sets wScriptMsgSelect to
 ; 3; then 5 more steps (see the code) (E-0347)
+; why: step 0 of RunSceneScriptSubStep (when wScriptSubStep = 0); RunSceneScriptSubStep: runs the
+; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
 RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0::
     ld a, $01
     ldh [hTemp0], a
@@ -2854,6 +2987,9 @@ RunOneTimeTreasure::
 ; wScriptStep; sets wScriptParam0; calls TestFlagBit; increments wScriptParam0; sets wScriptParam1
 ; to 0; branches on the byte at wInventory; sets wInventorySortFlags; calls SetFlagBit; sets
 ; wScriptParam1 to 0; increments wScriptParam0; then 3 more steps (see the code) (E-0347)
+; why: step 0 of RunOneTimeTreasure (when wScriptStep = 0); RunOneTimeTreasure: implements script
+; command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest
+; with a Magic Key), ... (E-0352, E-0038, E-0269)
 RunOneTimeTreasure_CopyItemNameToDE::
     ld a, [wScriptParam0]
     cp $03
@@ -2944,6 +3080,9 @@ RunOneTimeTreasure_CopyItemNameToDE::
 ; calls FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1;
 ; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on hPlayerY; sets
 ; wTextWindowState to $81; sets hSpriteWindowClipMode to 1; advances wScriptStep (E-0347)
+; why: step 1 of RunOneTimeTreasure (when wScriptStep = 1); RunOneTimeTreasure: implements script
+; command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest
+; with a Magic Key), ... (E-0352, E-0038, E-0269)
 RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 7, a
@@ -2976,6 +3115,9 @@ RunOneTimeTreasure_SetBit1OfPlayerAndObjectFlags::
 
 ; step 2 of RunOneTimeTreasure: branches on wScriptParam1; returns if bit 7 of wScriptParam1 is set;
 ; calls ShowMessageHL; advances wScriptStep (E-0347)
+; why: step 2 of RunOneTimeTreasure (when wScriptStep = 2); RunOneTimeTreasure: implements script
+; command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest
+; with a Magic Key), ... (E-0352, E-0038, E-0269)
 RunOneTimeTreasure_ShowMessageHL::
     ld a, [wScriptParam1]
     bit 7, a
@@ -2996,6 +3138,9 @@ RunOneTimeTreasure_ShowMessageHL::
 ; step 3 of RunOneTimeTreasure: returns if bit 0 of wTextFlags is set; branches on wScriptParam1;
 ; plays sound $69; sets hSpriteWindowClipMode to 0; sets wTextWindowState to 2; sets wTextWindowStep
 ; to 0; branches on hPlayerY; sets wTextWindowState to $82; advances wScriptStep (E-0347)
+; why: step 3 of RunOneTimeTreasure (when wScriptStep = 3); RunOneTimeTreasure: implements script
+; command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest
+; with a Magic Key), ... (E-0352, E-0038, E-0269)
 RunOneTimeTreasure_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -3025,6 +3170,9 @@ RunOneTimeTreasure_QueueSoundEffect::
 ; step 4 of RunOneTimeTreasure: may return early; calls ApplyMapScreenFlagEvents; calls
 ; DrawFullScreenBufferAtScroll; calls ClearBit1OfPlayerAndObjectFlags; sets wScriptCommandType to 0;
 ; sets wScriptRunning to 0; sets wModeState to 0 (E-0347)
+; why: step 4 of RunOneTimeTreasure (when wScriptStep = 4); RunOneTimeTreasure: implements script
+; command type 0A, a one-time treasure: wScriptParam0 = kind (0 chest, 1 vase, 2 barrel, 3 chest
+; with a Magic Key), ... (E-0352, E-0038, E-0269)
 RunOneTimeTreasure_ApplyMapScreenFlagEvents::
     ld a, [wTextWindowState]
     and $03
@@ -3112,12 +3260,16 @@ ScriptCommand0E_Run::
     dw ScriptCommand0E_Run_Return
 
 ; step 30 of ScriptCommand0E_Run: sets wSpriteSlotCount to 0 (E-0347)
+; why: step 30 of ScriptCommand0E_Run (when wScriptParam0 = 30); ScriptCommand0E_Run: implements
+; script command type 0E (E-0352, E-0038)
 ScriptCommand0E_Run_SetSpriteSlotCount::
     xor a
     ld [wSpriteSlotCount], a
     ret
 
 ; step 0 of ScriptCommand0E_Run: returns at once (E-0347)
+; why: step 0 of ScriptCommand0E_Run (when wScriptParam0 = 0); ScriptCommand0E_Run: implements
+; script command type 0E (E-0352, E-0038)
 ScriptCommand0E_Run_Return::
     ret
     ds $4bf, $00

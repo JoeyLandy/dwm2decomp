@@ -107,6 +107,8 @@ GameMode8_Update::
     dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
 
 ; step 0 of GameMode8_Update: calls GameMode8_Update_TestFlagBit; increments wScreenSubStep (E-0347)
+; why: step 0 of GameMode8_Update (when wScreenSubStep = 0); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_WriteScreenSubStep::
     call GameMode8_Update_TestFlagBit
     ld a, [wScreenSubStep]
@@ -116,6 +118,8 @@ GameMode8_Update_WriteScreenSubStep::
 
 ; step 1 of GameMode8_Update: increments wScreenCounter; returns if wScreenCounter is below $10;
 ; sets wScreenCounter to 0; increments wScreenSubStep (E-0347)
+; why: step 1 of GameMode8_Update (when wScreenSubStep = 1); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_WriteScreenCounterAndScreenSubStep::
     ld a, [wScreenCounter]
     inc a
@@ -132,6 +136,8 @@ GameMode8_Update_WriteScreenCounterAndScreenSubStep::
 ; step 2 of GameMode8_Update: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1
 ; + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X to $58; sets wObject1
 ; + OBJ_FLAGS; increments wScreenSubStep (E-0347)
+; why: step 2 of GameMode8_Update (when wScreenSubStep = 2); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -154,6 +160,8 @@ GameMode8_Update_WriteObject1AndScreenSubStep::
 
 ; step 4 of GameMode8_Update: sets wObject5 to $80; sets wArg1 to 1; increments wScreenSubStep
 ; (E-0347)
+; why: step 4 of GameMode8_Update (when wScreenSubStep = 4); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_SetObject5::
     ld a, $80
     ld [wObject5], a
@@ -165,6 +173,8 @@ GameMode8_Update_SetObject5::
     ret
 
 ; step 5 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
+; why: step 5 of GameMode8_Update (when wScreenSubStep = 5); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -185,6 +195,8 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
 
 ; step 8 of GameMode8_Update: sets wObject5 to 0; sets wArg1 to 0; increments wScreenSubStep
 ; (E-0347)
+; why: step 8 of GameMode8_Update (when wScreenSubStep = 8); GameMode8_Update: per-frame routine for
+; wGameMode = 8 (E-0352)
 GameMode8_Update_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
@@ -195,6 +207,8 @@ GameMode8_Update_SetObject5_SetObject5::
     ret
 
 ; step 11 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
+; why: step 11 of GameMode8_Update (when wScreenSubStep = 11); GameMode8_Update: per-frame routine
+; for wGameMode = 8 (E-0352)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -218,6 +232,8 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
 ; step 12 of GameMode8_Update: calls GameMode8_Update_CopyStringMaxC; calls
 ; CopyMonsterNameToBuffer_BF2; calls GameMode8_Update_CopyStringMaxC; sets wStringIndex to $0e; sets
 ; wStringCategory to 0; calls BeginStringDisplay_BankF0_2; advances wScreenSubStep (E-0347)
+; why: step 12 of GameMode8_Update (when wScreenSubStep = 12); GameMode8_Update: per-frame routine
+; for wGameMode = 8 (E-0352)
 GameMode8_Update_ShowHeroReceivedGsEgg::
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -259,6 +275,8 @@ GameMode8_Update_CopyStringMaxC::
     ret
 
 ; step 13 of GameMode8_Update: calls GameMode8_Update_WriteLinkSceneAndGameModeEtc (E-0347)
+; why: step 13 of GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: per-frame routine
+; for wGameMode = 8 (E-0352)
 GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc::
     call GameMode8_Update_WriteLinkSceneAndGameModeEtc
     ret
@@ -317,6 +335,9 @@ RunTextUntilTextWindowStateDone_BankF2::
 
 ; called from GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc: sets wLinkScene to
 ; 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; why: a helper of GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc, in step 13 of
+; GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: per-frame routine for wGameMode = 8
+; (E-0352)
 GameMode8_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
@@ -343,6 +364,8 @@ GameMode8_Update_WriteLinkSceneAndGameModeEtc::
 ; EVENT_NEVER_SET; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; branches on
 ; wLinkHatchData; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; sets hTemp0
 ; to $0d; calls RunFieldCommandTemp0; then 6 more steps (see the code) (E-0347)
+; why: a helper of GameMode8_Update_WriteScreenSubStep, in step 0 of GameMode8_Update (when
+; wScreenSubStep = 0); GameMode8_Update: per-frame routine for wGameMode = 8 (E-0352)
 GameMode8_Update_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -537,6 +560,7 @@ DrawScreenBufferRectToBGMap_1B_BankF2::
     ret
 
 ; called from GameMode8_Update: calls UpdateAndDrawSpriteSlots; calls DrawFieldSprites (E-0347)
+; why: a helper of GameMode8_Update; GameMode8_Update: per-frame routine for wGameMode = 8 (E-0352)
 GameMode8_Update_UpdateAndDrawSpriteSlots::
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
@@ -1110,6 +1134,8 @@ RunF2::
 ; CopyShortStringToNameGlyphBuf_BankF2; calls CopyGlyphTilesToVRAM; sets wArg1 to $92; sets wArg2 to
 ; $50; copies the byte at vTiles2 + $200 to wArg3; calls ShowRecordBufBEntryStringAtArg1; calls
 ; CopyShortStringToNameGlyphBuf_BankF2; then 13 more steps (see the code) (E-0347)
+; why: a helper of RunF2; RunF2: runs RunF2_LoadTemp0WordFromRecordBufB and
+; RunF2_LoadTemp0WordFromRecordBufB_2 (E-0352, E-0126, E-0344)
 RunF2_LoadTemp0WordFromRecordBufB::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
@@ -1280,6 +1306,8 @@ RunF2_LoadTemp0WordFromRecordBufB_Data2::
 ; wArg1; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; sets wArg3 to $6a; sets wArg4
 ; to $6c; calls DrawSpeciesIconForRecordBufBEntry; calls PickNameBufferForFirstByte_BankF2; calls
 ; BGMapAddressAtScroll_BankF2_2; then 13 more steps (see the code) (E-0347)
+; why: a helper of RunF2; RunF2: runs RunF2_LoadTemp0WordFromRecordBufB and
+; RunF2_LoadTemp0WordFromRecordBufB_2 (E-0352, E-0126, E-0344)
 RunF2_LoadTemp0WordFromRecordBufB_2::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
@@ -1914,6 +1942,8 @@ DrawFamilyIconAndCountForRecordBufBFamily::
 
 ; Branches on the byte at wRecordBufB; calls BGMapAddressAtScroll_BankF2_2; calls
 ; StepBGMapAddressBackOnScrollWrap; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F (E-0347)
+; why: part of DrawFamilyIconAndCountForRecordBufBFamily; DrawFamilyIconAndCountForRecordBufBFamily:
+; loads the family icon of wRecordBufB + $D & $0F into tile wArg4 (E-0352, E-0127, E-0340)
 DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     ld a, [wArg1]
     ld hl, wRecordBufB
@@ -3634,6 +3664,10 @@ ReturnStub_3::
 ; called from KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor: calls
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf; calls CopyWorkBuf1ToKeyList; sets
 ; wScreenStep to 0 (E-0347)
+; why: a helper of KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, in step 5 of
+; KeyAppraisalMenu_ChooseKey (when wScreenStep = 5); KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu
+; screen state 3, by wScreenStep: the paged key list (BuildKeyListIndexListEntries), a two-choice
+; confirmation and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList::
     call KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf
     call CopyWorkBuf1ToKeyList
@@ -3660,6 +3694,9 @@ CopyWorkBuf1ToKeyList::
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2; calls KeyAppraisalMenu_ChooseKey_WriteKeyGenCount;
 ; sets wWorkBuf to 0; calls KeyAppraisalMenu_ChooseKey_WriteKeyGenCount; calls
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2 (E-0347)
+; why: part of KeyAppraisalMenu_ChooseKey; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state
+; 3, by wScreenStep: the paged key list (BuildKeyListIndexListEntries), a two-choice confirmation
+; and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ld hl, wWorkBuf + $1
     ld c, $c0
@@ -3694,11 +3731,17 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ret
 
 ; Changes BC (E-0347)
+; why: part of KeyAppraisalMenu_ChooseKey; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state
+; 3, by wScreenStep: the paged key list (BuildKeyListIndexListEntries), a two-choice confirmation
+; and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount::
     ld b, $00
     ld c, $20
 
 ; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
+; why: part of KeyAppraisalMenu_ChooseKey_WriteKeyGenCount, in part of KeyAppraisalMenu_ChooseKey;
+; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state 3, by wScreenStep: the paged key list
+; (BuildKeyListIndexListEntries), a two-choice confirmation and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
     ld a, [hl]
     cp $ff
@@ -3762,6 +3805,9 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
 
 ; Takes HL and BC; changes HL, BC and A; may continue in
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop (E-0347)
+; why: part of KeyAppraisalMenu_ChooseKey_WriteKeyGenCount, in part of KeyAppraisalMenu_ChooseKey;
+; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state 3, by wScreenStep: the paged key list
+; (BuildKeyListIndexListEntries), a two-choice confirmation and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     ld a, $04
     add_a_to_hl
@@ -3771,6 +3817,9 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     ret
 
 ; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
+; why: part of KeyAppraisalMenu_ChooseKey_WriteKeyGenCount, in part of KeyAppraisalMenu_ChooseKey;
+; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state 3, by wScreenStep: the paged key list
+; (BuildKeyListIndexListEntries), a two-choice confirmation and saving (E-0352)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2::
     ld b, $00
     ld c, $20
@@ -3851,6 +3900,9 @@ RunUnlessScreenStateIs3::
 
 ; called from VaultMenu_Store_ReadScreenState: branches on wCounterPtr0Lo; calls
 ; VaultMenu_Store_MapItemsToInventory (E-0347)
+; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
+; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
+; (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     ld hl, wWorkBuf
     ld b, $18
@@ -3874,6 +3926,10 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     ret
 
 ; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0 (E-0347)
+; why: part of VaultMenu_Store_VaultMenu_Store_MapItemsToInventory, in a helper of
+; VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep = 14);
+; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
+; (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip::
     ld hl, wWorkBuf
     ld b, $18
@@ -3952,6 +4008,8 @@ VaultMenu_Store_MapItemsToInventory::
 
 ; called from RunUnlessScreenStateIs3: branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0;
 ; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage (E-0347)
+; why: a helper of RunUnlessScreenStateIs3; RunUnlessScreenStateIs3: in state 3 continues at
+; VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip (E-0352, E-0126, E-0344)
 RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
     ld hl, wWorkBuf
     ld b, $c8

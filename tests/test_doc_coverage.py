@@ -32,7 +32,7 @@ class Coverage(unittest.TestCase):
 
     def test_notes_that_admit_a_gap_restate_the_code(self):
         gaps = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)
-                if kind == "code" and doc_coverage.GAP.search(comment) and "; code:" not in comment]
+                if kind == "code" and doc_coverage.GAP.search(comment.split("; why: ")[0]) and "; code:" not in comment]
         self.assertEqual(gaps[:10], [])
 
     def test_comments_name_only_labels_symbols_and_constants(self):
@@ -55,11 +55,44 @@ class Coverage(unittest.TestCase):
                         missing.append(f"{f.name}:{line} {name}")
         self.assertEqual(missing[:10], [], f"{len(missing)} comments cite no evidence")
 
+    def test_every_restated_routine_says_what_it_is_for(self):
+        """E-0352: a routine documented by a restatement (E-0347) also has a `why:` line: the jumptable step, helper,
+        part or copy it is, and what the documented routine it serves does."""
+        missing = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)
+                   if kind == "code" and comment.rstrip().endswith("(E-0347)") and "; code:" not in comment
+                   and "; why: " not in comment]
+        self.assertEqual(missing[:10], [], f"{len(missing)} restated routines without a purpose")
+
     def test_no_operand_is_a_bare_address(self):
         """E-0350: no `ld rr, $XXXX`, `call $XXXX` or `jp $XXXX` with an address-like number is left: pointers name
         their label, values are written as what they are (lb pairs, signed or decimal numbers, named constants)."""
         import readability
         self.assertEqual(readability.measure()["raw_pointer_operands"], 0)
+
+
+class Purposes(unittest.TestCase):
+    """tools/present.py Names.purpose: why a routine without a written note exists (E-0352)."""
+
+    TEXT = ("; runs the inn (E-0001)\nInn::\n    ld a, [wScreenState]\n    rst $00\n    dw Inn_Step\n\n"
+            "; entry 0 of the `rst $00` table in Inn\nInn_Step::\n    call Inn_Step_Helper\n    ret\n\n"
+            "; only called from Inn_Step (E-0047)\nInn_Step_Helper::\n    ret\n\nInn_Step_Skip::\n    ret\n")
+
+    def setUp(self):
+        import present
+        self.names = present.Names({"bank01.asm": self.TEXT})
+
+    def test_a_step_names_its_dispatch_byte_and_its_documented_owner(self):
+        self.assertEqual(self.names.purpose("Inn_Step"),
+                         "step 0 of Inn (when wScreenState = 0); Inn: runs the inn (E-0352, E-0001)")
+
+    def test_helpers_and_parts_follow_the_chain_to_a_written_note(self):
+        self.assertEqual(self.names.purpose("Inn_Step_Helper"),
+                         "a helper of Inn_Step, in step 0 of Inn (when wScreenState = 0); Inn: runs the inn "
+                         "(E-0352, E-0001)")
+        self.assertTrue(self.names.purpose("Inn_Step_Skip").startswith("part of Inn_Step, in step 0 of Inn"))
+
+    def test_nothing_documented_means_no_purpose(self):
+        self.assertEqual(self.names.purpose("Unrelated"), "")
 
 
 class Summaries(unittest.TestCase):

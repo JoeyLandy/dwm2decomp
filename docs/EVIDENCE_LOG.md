@@ -2431,6 +2431,29 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0352 — What each restated routine is for
+
+- Kind: presentation rule. Each purpose is drawn from evidence already recorded; nothing is newly read.
+- **The gap.** E-0347 gave the 4,710 routines without a written note a restatement of their instructions: what the code does, not what it is for.
+- **The rule (tools/present.py, Names.purpose).** Each such routine now has a second line, `; why: ...`. It follows what the routine is part of until it reaches a routine whose note was written by reading, and quotes that note's first clause and evidence ids. The links it follows, in order:
+  - the jumptable it is an entry of, with the RAM byte that picks the entry ("step 5 of InnMenu (when wScreenState = 5)");
+  - the one routine that calls it ("a helper of InnMenu_Pay");
+  - the routine it continues, by its name prefix ("part of WriteTargetNameOrTheMonsters");
+  - its callers ("used by ...");
+  - for a per-bank copy, the note of a documented sibling copy ("a copy of ClearBattleStatusBitsWithMaskD_Bank05").
+- Example:
+  ```
+  ; called from InnMenu_Pay: sets wGoldHi; copies B to wGoldMid; copies C to wGoldLo (E-0347)
+  ; why: a helper of InnMenu_Pay; InnMenu_Pay: checks the price against the gold
+  ; (IsAmountInArg1AboveGold) and redraws the gold (E-0352, E-0276)
+  ```
+- Names in the quoted clause go through the same resolution as every comment. A recorded parent whose name no longer exists is skipped in favour of the name prefix.
+- **Result.** All 4,710 restated routines have a purpose line. tests/test_doc_coverage.py checks this, and checks the purpose search on a synthetic listing.
+- **Limits.**
+  - A purpose is only as good as the documented note it quotes; some parent notes are themselves short ("runs the routine for wScreenStep").
+  - The line says what the routine serves. It does not reason about each instruction's intent.
+- Binary verification: build/run544 PASS, 0 differing bytes.
+
 ### E-0351 — Names read before per-name evidence ids
 
 - Kind: OBSERVATION about the record, not a new reading.

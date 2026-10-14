@@ -11,6 +11,9 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
 ; returns if the byte at wLoadSlot is 0; increments wBattleArg0; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls SetEffectSpriteXForTargets; calls
 ; DrawEffectSpriteAtEffectSpriteX_Bank3F; then 6 more steps (see the code) (E-0347)
+; why: a helper of DrawEffectSpriteForEffectTileOffsetRange;
+; DrawEffectSpriteForEffectTileOffsetRange: draws the effect sprite from bank $3E, $3F, $3D, $3B or
+; $92 by wEffectTileOffset (< $0E, $20, $2D, $33, or more) (E-0352, E-0124)
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot::
     ld a, [wEffectTileOffset]
     cp $15

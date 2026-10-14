@@ -257,6 +257,8 @@ TargetRandomOtherSlot::
 
 ; Calls CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls AdvanceRandom; branches on wRandomLo
 ; (E-0347)
+; why: part of TargetRandomOtherSlot; TargetRandomOtherSlot: target = a random slot (wRandomLo & 7
+; after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7 (E-0352, E-0061)
 TargetRandomOtherSlot_Skip::
     ld c, a
     ld b, $03
@@ -2902,6 +2904,9 @@ ChooseTarget_Heal::
 ; Copies E to wBattleArg3; copies D to wNameSlot; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleMaxHP_Bank39; may continue in ChooseTarget_Heal_Loop; calls
 ; ChooseTarget_Heal_WriteTemp0AndTemp1Etc (E-0347)
+; why: part of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of ChooseActionTarget
+; (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by action id) for ...
+; (E-0352, E-0086)
 ChooseTarget_Heal_Loop::
     ld a, e
     ld [wBattleArg3], a
@@ -7049,6 +7054,8 @@ TargetAllyWithStatusBit20::
 ; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; increments hTemp0; may continue in PickWeightedTargetCandidate
 ; (E-0347)
+; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
+; with mask $20 (E-0352, E-0219)
 TargetAllyWithStatusBit20_CallAddAx9ToHL::
     ld c, a
     ld b, $03
@@ -7097,6 +7104,8 @@ TargetAllyWithStatusBit20_CallAddAx9ToHL::
 ; CarryUnlessBattleSlotOutSlotEmpty; calls JumpToHL; branches on H; branches on L; increments
 ; hTemp0; branches on L; may continue in TargetFoeWeightedBySlotOrder; calls
 ; PickWeightedTargetCandidate (E-0347)
+; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
+; with mask $20 (E-0352, E-0219)
 TargetAllyWithStatusBit20_CheckBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -7564,6 +7573,9 @@ EstimateThreeTargets::
 
 ; called from ChooseTarget_Heal: sets hTemp0 to 0; sets hTemp1 to 1; sets hTemp2 to 2; copies hTemp1
 ; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget (E-0347)
+; why: a helper of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of
+; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
+; action id) for ... (E-0352, E-0086)
 ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
     ld a, $00
     ldh [hTemp0], a
@@ -7794,6 +7806,9 @@ SetActorTargetFromHRAMChoice4::
 
 ; called from ChooseTarget_Cover: changes HL, A and E; branches on hTemp0; branches on hTemp5;
 ; branches on hTemp4 (E-0347)
+; why: a helper of ChooseTarget_Cover; ChooseTarget_Cover: per-action target routine of
+; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
+; action id) for ... (E-0352, E-0086)
 ChooseTarget_Cover_ReadBattleActorAndTemp0Etc::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -7990,6 +8005,9 @@ TargetRandomFoeOfFamilyD::
     ret
 
 ; called from ChooseTarget_Blaze: takes A; changes HL and A (E-0347)
+; why: a helper of ChooseTarget_Blaze; ChooseTarget_Blaze: per-action target routine of
+; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
+; action id) for ... (E-0352, E-0086)
 ChooseTarget_Blaze_Multiply8By16::
     push af
     ldh a, [hTemp8]
@@ -8024,6 +8042,9 @@ ChooseTarget_Blaze_Multiply8By16::
     ret
 
 ; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39 (E-0347)
+; why: a helper of ChooseTarget_MegaMagic; ChooseTarget_MegaMagic: per-action target routine of
+; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
+; action id) for ... (E-0352, E-0086)
 ChooseTarget_MegaMagic_GetBattleMP_Bank39::
     push af
     ld a, [wBattleActor]
@@ -8137,6 +8158,8 @@ ReadSlotAIModeIndexed_Bank39::
     ret
 
 ; Takes HL and A; changes HL and A (E-0347)
+; why: part of ReadSlotAIModeIndexed_Bank39; ReadSlotAIModeIndexed_Bank39: A = the byte at
+; wSlotAIMode + A (E-0352)
 ReadSlotAIModeIndexed_Bank39_Skip::
     add a
     add_a_to_hl
@@ -8191,6 +8214,8 @@ TargetOnLocalSide_Bank39::
     ret
 
 ; Takes DE; changes HL, A and D (E-0347)
+; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
+; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
 ClearBattleStatusBitsWithMaskD_Bank39::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data

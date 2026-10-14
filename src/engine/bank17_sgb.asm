@@ -7,6 +7,9 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
 ; called from SendSGBPaletteSetPacket: returns if wSGBActive is 0; branches on wSGBPacketIndex;
 ; returns if wSGBPacketIndex is $ff; branches on d; returns unless bit 0 of d is set; calls
 ; SpinDelay (E-0347)
+; why: a helper of SendSGBPaletteSetPacket; SendSGBPaletteSetPacket: when the Super Game Boy is
+; active, builds a PAL_SET ($51) packet from SGBPaletteSets[wSGBPaletteSet] (also kept in
+; wSGBPaletteNum0Lo), ... (E-0352, E-0125)
 SendSGBPaletteSetPacket_WaitSGBActive::
     ld a, [wSGBActive]
     or a

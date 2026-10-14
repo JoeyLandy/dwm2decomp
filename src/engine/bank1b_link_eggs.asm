@@ -37,6 +37,9 @@ RunLinkSession::
 ; LinkCheckScreenCounterState; branches on wMenuState; sets wMenuOption to 2; copies wScreenSubStep
 ; to wGlyphListStart; sets wLinkRole; calls LinkCheckScreenCounterState; then 96 more steps (see the
 ; code) (E-0347)
+; why: step 0 of RunLinkSession (when wLinkSession = 0); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_WaitSerialTransferDone::
     ld a, $ff
     ld [wGlyphListPos], a
@@ -533,6 +536,9 @@ SendLinkByteForMenuOption_Bank1B_Data::
 
 ; step 1 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession1Exchange (E-0347)
+; why: step 1 of RunLinkSession (when wLinkSession = 1); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_1Exchange::
     ld a, [wLinkMode]
     or a
@@ -553,6 +559,8 @@ RunLinkSession1Exchange::
     dw RunLinkSession1Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession1Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession1Exchange (when wLinkExchangeState = 0); RunLinkSession1Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession1Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -560,6 +568,8 @@ RunLinkSession1Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession1Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunBattlePhase; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession1Exchange (when wLinkExchangeState = 1); RunLinkSession1Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession1Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -574,6 +584,9 @@ RunLinkSession1Exchange_LinkReceiveStepWithBuffer::
 
 ; step 2 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession2Exchange (E-0347)
+; why: step 2 of RunLinkSession (when wLinkSession = 2); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_2Exchange::
     ld a, [wLinkMode]
     or a
@@ -594,6 +607,8 @@ RunLinkSession2Exchange::
     dw RunLinkSession2Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession2Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession2Exchange (when wLinkExchangeState = 0); RunLinkSession2Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession2Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -601,6 +616,8 @@ RunLinkSession2Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession2Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunScreenStateWhenNotFading_F1; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession2Exchange (when wLinkExchangeState = 1); RunLinkSession2Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession2Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -615,6 +632,9 @@ RunLinkSession2Exchange_LinkReceiveStepWithBuffer::
 
 ; step 3 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession3Exchange (E-0347)
+; why: step 3 of RunLinkSession (when wLinkSession = 3); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_3Exchange::
     ld a, [wLinkMode]
     or a
@@ -635,6 +655,8 @@ RunLinkSession3Exchange::
     dw RunLinkSession3Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession3Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession3Exchange (when wLinkExchangeState = 0); RunLinkSession3Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession3Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -642,6 +664,8 @@ RunLinkSession3Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession3Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunScreenStateWhenNotFading_1B; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession3Exchange (when wLinkExchangeState = 1); RunLinkSession3Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession3Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -656,6 +680,9 @@ RunLinkSession3Exchange_LinkReceiveStepWithBuffer::
 
 ; step 4 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession4Exchange (E-0347)
+; why: step 4 of RunLinkSession (when wLinkSession = 4); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_4Exchange::
     ld a, [wLinkMode]
     or a
@@ -676,6 +703,8 @@ RunLinkSession4Exchange::
     dw RunLinkSession4Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession4Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession4Exchange (when wLinkExchangeState = 0); RunLinkSession4Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession4Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -683,6 +712,8 @@ RunLinkSession4Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession4Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunLinkSession4ScreenState; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession4Exchange (when wLinkExchangeState = 1); RunLinkSession4Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession4Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -697,6 +728,9 @@ RunLinkSession4Exchange_LinkReceiveStepWithBuffer::
 
 ; step 5 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession5Exchange (E-0347)
+; why: step 5 of RunLinkSession (when wLinkSession = 5); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_5Exchange::
     ld a, [wLinkMode]
     or a
@@ -717,6 +751,8 @@ RunLinkSession5Exchange::
     dw RunLinkSession5Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession5Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession5Exchange (when wLinkExchangeState = 0); RunLinkSession5Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -724,6 +760,8 @@ RunLinkSession5Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession5Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunLinkSession5Exchange_WaitFadeState; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession5Exchange (when wLinkExchangeState = 1); RunLinkSession5Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -738,6 +776,9 @@ RunLinkSession5Exchange_LinkReceiveStepWithBuffer::
 
 ; step 6 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession6Exchange (E-0347)
+; why: step 6 of RunLinkSession (when wLinkSession = 6); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_6Exchange::
     ld a, [wLinkMode]
     or a
@@ -758,6 +799,8 @@ RunLinkSession6Exchange::
     dw RunLinkSession6Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession6Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession6Exchange (when wLinkExchangeState = 0); RunLinkSession6Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession6Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -766,6 +809,8 @@ RunLinkSession6Exchange_ToLinkSendStepWithBuffer::
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc; clears bit 1 of
 ; wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession6Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -780,6 +825,9 @@ RunLinkSession6Exchange_LinkReceiveStepWithBuffer::
 
 ; step 7 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession7Exchange (E-0347)
+; why: step 7 of RunLinkSession (when wLinkSession = 7); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_7Exchange::
     ld a, [wLinkMode]
     or a
@@ -800,6 +848,8 @@ RunLinkSession7Exchange::
     dw RunLinkSession7Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession7Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession7Exchange (when wLinkExchangeState = 0); RunLinkSession7Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession7Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -807,6 +857,8 @@ RunLinkSession7Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession7Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunBattlePhaseWhenTextIdle_A0; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession7Exchange (when wLinkExchangeState = 1); RunLinkSession7Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession7Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -821,6 +873,9 @@ RunLinkSession7Exchange_LinkReceiveStepWithBuffer::
 
 ; step 8 of RunLinkSession: branches on wLinkMode; branches on wLinkRole; calls
 ; RunLinkSession8Exchange (E-0347)
+; why: step 8 of RunLinkSession (when wLinkSession = 8); RunLinkSession: unless wLinkStatus bit 7 is
+; set (then it sets bit 6 and returns), runs the routine for wLinkSession (0: wait for the serial
+; transfer (E-0352, E-0259)
 RunLinkSession_8Exchange::
     ld a, [wLinkMode]
     or a
@@ -841,6 +896,8 @@ RunLinkSession8Exchange::
     dw RunLinkSession8Exchange_LinkReceiveStepWithBuffer
 
 ; step 0 of RunLinkSession8Exchange: calls LinkSendStepWithBuffer (E-0347)
+; why: step 0 of RunLinkSession8Exchange (when wLinkExchangeState = 0); RunLinkSession8Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession8Exchange_ToLinkSendStepWithBuffer::
     call LinkSendStepWithBuffer
     ret
@@ -848,6 +905,8 @@ RunLinkSession8Exchange_ToLinkSendStepWithBuffer::
 ; step 1 of RunLinkSession8Exchange: calls LinkReceiveStepWithBuffer; clears bit 7 of wVBlankFlags;
 ; returns if bit 7 of wVBlankFlags is set; calls RunFrameTickFadeAndCounter_Bank1B; calls
 ; RunLinkSession8Exchange_WriteTitleScreenState; clears bit 1 of wVBlankFlags (E-0347)
+; why: step 1 of RunLinkSession8Exchange (when wLinkExchangeState = 1); RunLinkSession8Exchange:
+; runs the routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession8Exchange_LinkReceiveStepWithBuffer::
     call LinkReceiveStepWithBuffer
     ld hl, wVBlankFlags
@@ -890,6 +949,8 @@ LinkExchangeJoypadByte::
 
 ; Sets bit 2 of wVBlankFlags; sets wLinkExchangeState to 1; continues in
 ; StartSerialTransferInternalClock (E-0347)
+; why: part of LinkExchangeJoypadByte; LinkExchangeJoypadByte: link: sends $F9 when not connected
+; (E-0352, E-0125)
 LinkExchangeJoypadByte_Skip::
     ld a, $20
 
@@ -940,6 +1001,8 @@ LinkReceiveJoypadByte::
 ; Copies wLinkSavedJoypadHeld to wJoypadHeld; copies wLinkSavedJoypadHeldPrev to wJoypadHeldPrev;
 ; branches on wLinkSendByte; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkExchangeState to 0;
 ; sets bit 7 of wVBlankFlags (E-0347)
+; why: part of LinkReceiveJoypadByte; LinkReceiveJoypadByte: link: reads the received byte into
+; wLinkJoypadHeld and updates the joypad state (E-0352, E-0127)
 LinkReceiveJoypadByte_ReadLinkSavedJoypadHeld::
     ld a, [wLinkSavedJoypadHeld]
     ld [wJoypadHeld], a
@@ -980,6 +1043,8 @@ LinkHandshakeSendFAOrFB::
 
 ; Clears bit 2 of wVBlankFlags; sets wLinkExchangeState to 0; calls SerialSendByte; sets bit 7 of
 ; wVBlankFlags (E-0347)
+; why: part of LinkHandshakeSendFAOrFB; LinkHandshakeSendFAOrFB: link: with bit 2 of wVBlankFlags
+; clear sends $FA and runs a frame (E-0352, E-0124)
 LinkHandshakeSendFAOrFB_Skip::
     ld hl, wVBlankFlags
     res 2, [hl]
@@ -1847,6 +1912,8 @@ LinkKeyTrade_Start::
 
 ; step 0 of LinkKeyTrade_Start: calls CopyBytesDEToHL_Bank1B; branches on wIsCGB; calls
 ; CopyLow3BitsToWRAMBank2_Bank1B; calls CopyFromBankWaitVRAM; increments wScreenStep (E-0347)
+; why: step 0 of LinkKeyTrade_Start (when wScreenStep = 0); LinkKeyTrade_Start: by wScreenStep:
+; 'Starting key trade', 'Please wait.', 'Please choose the key to trade.' (E-0352)
 LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -1878,6 +1945,8 @@ LinkKeyTrade_Start_CopyBytesDEToHL_Bank1B::
 
 ; step 1 of LinkKeyTrade_Start: calls BeginString_Bank1B_Cat0; increments wScreenStep; sets
 ; wLinkSendByte to 0; advances wTitleScreenState (E-0347)
+; why: step 1 of LinkKeyTrade_Start (when wScreenStep = 1); LinkKeyTrade_Start: by wScreenStep:
+; 'Starting key trade', 'Please wait.', 'Please choose the key to trade.' (E-0352)
 LinkKeyTrade_Start_ShowStartingKeyTrade::
     ld a, $01 ; 'Starting key trade…'
     call BeginString_Bank1B_Cat0
@@ -1892,6 +1961,8 @@ LinkKeyTrade_Start_ShowStartingKeyTrade::
 
 ; step 2 of LinkKeyTrade_Start: returns unless wTextFlags is 0; calls BeginString_Bank1B_Cat0;
 ; increments wScreenStep (E-0347)
+; why: step 2 of LinkKeyTrade_Start (when wScreenStep = 2); LinkKeyTrade_Start: by wScreenStep:
+; 'Starting key trade', 'Please wait.', 'Please choose the key to trade.' (E-0352)
 LinkKeyTrade_Start_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1905,6 +1976,8 @@ LinkKeyTrade_Start_ShowPleaseWait::
 
 ; step 3 of LinkKeyTrade_Start: returns unless wTextFlags is 0; increments wScreenStep; sets
 ; wLinkSendByte to 1 (E-0347)
+; why: step 3 of LinkKeyTrade_Start (when wScreenStep = 3); LinkKeyTrade_Start: by wScreenStep:
+; 'Starting key trade', 'Please wait.', 'Please choose the key to trade.' (E-0352)
 LinkKeyTrade_Start_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1918,6 +1991,8 @@ LinkKeyTrade_Start_WaitTextFlags::
 
 ; step 4 of LinkKeyTrade_Start: returns unless wLinkMessage is $01; sets wLinkSendByte to 0; calls
 ; BeginString_Bank1B_Cat0; sets wScreenStep to 0; increments wScreenState (E-0347)
+; why: step 4 of LinkKeyTrade_Start (when wScreenStep = 4); LinkKeyTrade_Start: by wScreenStep:
+; 'Starting key trade', 'Please wait.', 'Please choose the key to trade.' (E-0352)
 LinkKeyTrade_Start_ShowPleaseChooseTheKey::
     ld a, [wLinkMessage]
     cp $01
@@ -1981,6 +2056,9 @@ LinkKeyTrade::
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; calls ShowString_Bank1B; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; then 7 more steps (see the code) (E-0347)
+; why: step 0 of LinkKeyTrade (when wScreenStep = 0); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_BuildKeyListIndexListEntries::
     ld a, [wTextFlags]
     and a
@@ -2032,6 +2110,9 @@ LinkKeyTrade_BuildKeyListIndexListEntries::
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; calls FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; then 3 more steps (see the code) (E-0347)
+; why: step 1 of LinkKeyTrade (when wScreenStep = 1); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_FillTilesFromRequest::
     ld hl, vTiles2 + $100
     ld a, l
@@ -2075,6 +2156,9 @@ LinkKeyTrade_FillTilesFromRequest::
 ; StoreC5BEC6AtHLStride2_Bank1B; copies D to wArg1; copies E to wArg2; calls
 ; DrawPageOfPagesAtScrollOffset; copies H to wArg1; copies L to wArg2; calls
 ; DrawPageOfPagesAtArg1_Bank1E; then 4 more steps (see the code) (E-0347)
+; why: step 2 of LinkKeyTrade (when wScreenStep = 2); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ClampKeyListPageCursor::
     ld de, LinkKeyTrade_ClampKeyListPageCursor_TileRect
     ld hl, wWindowTileBuffer + $c9
@@ -2119,6 +2203,9 @@ LinkKeyTrade_ClampKeyListPageCursor::
 
 ; step 3 of LinkKeyTrade: sets wArg5 to 2; calls DrawKeyListPageNames; sets wArg5 to 1; calls
 ; DrawKeyListPageMarks; increments wScreenStep (E-0347)
+; why: step 3 of LinkKeyTrade (when wScreenStep = 3); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_DrawKeyListPageNames::
     ld a, $02
     ld [wArg5], a
@@ -2133,6 +2220,9 @@ LinkKeyTrade_DrawKeyListPageNames::
 
 ; step 4 of LinkKeyTrade: calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B;
 ; calls StoreBAtWordTableEntry_Bank1B; increments wScreenStep (E-0347)
+; why: step 4 of LinkKeyTrade (when wScreenStep = 4); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_BGMapAddressAtScroll_Bank1B::
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -2152,6 +2242,9 @@ LinkKeyTrade_BGMapAddressAtScroll_Bank1B::
 ; returns if wMenuInputResult is 0; branches on wMenuInputResult; calls ReturnStub_3; sets
 ; wScreenStep; increments wScreenStep; sets wLinkSendByte to $fe; then 7 more steps (see the code)
 ; (E-0347)
+; why: step 5 of LinkKeyTrade (when wScreenStep = 5); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -2236,6 +2329,8 @@ LinkKeyTrade_WaitForPartner::
 ; step 0 of LinkKeyTrade_WaitForPartner: branches on wLinkMessage; returns unless wLinkMessage is
 ; $fe; branches on wLinkSendByte; branches on wLinkRole; sets wLinkSendByte to 0; calls
 ; BeginString_Bank1B_Cat0; increments wScreenSubStep (E-0347)
+; why: step 0 of LinkKeyTrade_WaitForPartner (when wScreenSubStep = 0); LinkKeyTrade_WaitForPartner:
+; by its step: 'Please wait.' and the partner's link message (E-0352)
 LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0::
     ld a, [wLinkMessage]
     cp $fd
@@ -2269,6 +2364,8 @@ LinkKeyTrade_WaitForPartner_BeginString_Bank1B_Cat0::
 
 ; step 1 of LinkKeyTrade_WaitForPartner: returns unless wTextFlags is 0; calls
 ; BeginString_Bank1B_Cat0; increments wScreenSubStep (E-0347)
+; why: step 1 of LinkKeyTrade_WaitForPartner (when wScreenSubStep = 1); LinkKeyTrade_WaitForPartner:
+; by its step: 'Please wait.' and the partner's link message (E-0352)
 LinkKeyTrade_WaitForPartner_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -2282,6 +2379,8 @@ LinkKeyTrade_WaitForPartner_ShowPleaseWait::
 
 ; step 2 of LinkKeyTrade_WaitForPartner: returns unless wTextFlags is 0; sets wLinkSendByte to 1;
 ; increments wScreenSubStep (E-0347)
+; why: step 2 of LinkKeyTrade_WaitForPartner (when wScreenSubStep = 2); LinkKeyTrade_WaitForPartner:
+; by its step: 'Please wait.' and the partner's link message (E-0352)
 LinkKeyTrade_WaitForPartner_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -2295,6 +2394,8 @@ LinkKeyTrade_WaitForPartner_WaitTextFlags::
 
 ; step 3 of LinkKeyTrade_WaitForPartner: returns unless wLinkMessage is $01; sets wLinkSendByte to
 ; 0; increments wScreenSubStep (E-0347)
+; why: step 3 of LinkKeyTrade_WaitForPartner (when wScreenSubStep = 3); LinkKeyTrade_WaitForPartner:
+; by its step: 'Please wait.' and the partner's link message (E-0352)
 LinkKeyTrade_WaitForPartner_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -2308,6 +2409,8 @@ LinkKeyTrade_WaitForPartner_WaitLinkMessage::
 
 ; step 4 of LinkKeyTrade_WaitForPartner: returns if bit 0 of wTextFlags is set; branches on
 ; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; why: step 4 of LinkKeyTrade_WaitForPartner (when wScreenSubStep = 4); LinkKeyTrade_WaitForPartner:
+; by its step: 'Please wait.' and the partner's link message (E-0352)
 LinkKeyTrade_WaitForPartner_WaitTextFlags_2::
     ld a, [wTextFlags]
     bit 0, a
@@ -2333,6 +2436,9 @@ LinkKeyTrade_WaitForPartner_WaitTextFlags_2::
 ; step 7 of LinkKeyTrade: returns unless wTextFlags is 0; plays sound $6c; calls
 ; CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B;
 ; sets wTwoChoiceCursor to 0; increments wScreenStep (E-0347)
+; why: step 7 of LinkKeyTrade (when wScreenStep = 7); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_QueueSoundEffect::
     ld a, [wTextFlags]
     and a
@@ -2359,6 +2465,9 @@ LinkKeyTrade_QueueSoundEffect::
 ; wMenuInputResult; increments wScreenStep; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; branches on
 ; wTwoChoiceCursor; then 5 more steps (see the code) (E-0347)
+; why: step 8 of LinkKeyTrade (when wScreenStep = 8); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep::
     ld a, [wLinkMessage]
     cp $fe
@@ -2417,6 +2526,9 @@ LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep::
 
 ; step 9 of LinkKeyTrade: calls LinkKeyTrade_CopyRectTo20ByteRows; calls BeginString_Bank1B_Cat0;
 ; increments wScreenStep (E-0347)
+; why: step 9 of LinkKeyTrade (when wScreenStep = 9); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ShowPleaseChooseTheKey::
     call LinkKeyTrade_CopyRectTo20ByteRows
     ld a, $06 ; 'Please choose the key to trade.'
@@ -2428,6 +2540,9 @@ LinkKeyTrade_ShowPleaseChooseTheKey::
 
 ; step 10 of LinkKeyTrade: returns unless wTextFlags is 0; calls EraseCEntriesOfWordTable_Bank1B;
 ; sets wScreenStep to 5 (E-0347)
+; why: step 10 of LinkKeyTrade (when wScreenStep = 10); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_EraseCEntriesOfWordTable_Bank1B::
     ld a, [wTextFlags]
     and a
@@ -2448,6 +2563,9 @@ LinkKeyTrade_KeyCannotBeTraded::
 
 ; step 1 of LinkKeyTrade_KeyCannotBeTraded: returns unless wTextFlags is 0; sets wScreenSubStep to
 ; 0; sets wScreenStep (E-0347)
+; why: step 1 of LinkKeyTrade_KeyCannotBeTraded (when wScreenSubStep = 1);
+; LinkKeyTrade_KeyCannotBeTraded: by its step: 'That key cannot be traded.' and 'Please wait.'
+; (E-0352)
 LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -2462,6 +2580,9 @@ LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
 ; step 0 of LinkKeyTrade_KeyCannotBeTraded: calls KeyEntryAddressForListEntriesCell4; calls
 ; BeginString_Bank1B_Cat0; increments wScreenSubStep; branches on hMapId; branches on wMapType;
 ; calls BeginString_Bank1B_Cat0; increments wScreenStep; branches on wScreenStep (E-0347)
+; why: step 0 of LinkKeyTrade_KeyCannotBeTraded (when wScreenSubStep = 0);
+; LinkKeyTrade_KeyCannotBeTraded: by its step: 'That key cannot be traded.' and 'Please wait.'
+; (E-0352)
 LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4::
     call KeyEntryAddressForListEntriesCell4
     push hl
@@ -2611,6 +2732,9 @@ LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4::
 
 ; step 12 of LinkKeyTrade: returns unless wTextFlags is 0; increments wScreenStep; sets
 ; wLinkSendByte to 1 (E-0347)
+; why: step 12 of LinkKeyTrade (when wScreenStep = 12); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -2624,6 +2748,9 @@ LinkKeyTrade_WaitTextFlags::
 
 ; step 28 of LinkKeyTrade: returns unless wTextFlags is 0; calls DrawThreeTilesAtBGMap20FFromDE;
 ; sets wLinkSendByte to 2; increments wScreenStep (E-0347)
+; why: step 28 of LinkKeyTrade (when wScreenStep = 28); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE::
     ld a, [wTextFlags]
     and a
@@ -2640,6 +2767,9 @@ LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE::
 ; step 13 of LinkKeyTrade: branches on wLinkMessage; returns unless wLinkMessage is $fe; sets
 ; wScreenStep to 6; sets wLinkSendByte to $fd; sets wLinkSendByte to 0; increments wScreenStep
 ; (E-0347)
+; why: step 13 of LinkKeyTrade (when wScreenStep = 13); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteScreenStepAndLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
@@ -2665,6 +2795,9 @@ LinkKeyTrade_WriteScreenStepAndLinkSendByte::
 ; wLinkBufferCountHi; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to
 ; wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to $ff; sets wLinkReady to 1
 ; (E-0347)
+; why: step 14 of LinkKeyTrade (when wScreenStep = 14); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_KeyEntryAddressForListEntriesCell4::
     ld a, [wScreenStep]
     inc a
@@ -2715,6 +2848,9 @@ LinkKeyTrade_KeyEntryAddressForListEntriesCell4::
 
 ; step 35 of LinkKeyTrade: returns unless wTextFlags is 0; sets wLinkSendByte to 5; increments
 ; wScreenStep (E-0347)
+; why: step 35 of LinkKeyTrade (when wScreenStep = 35); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     and a
@@ -2728,6 +2864,9 @@ LinkKeyTrade_WaitTextFlags_SetLinkSendByte::
 
 ; step 15 of LinkKeyTrade: returns unless wLinkMessage is $f0; sets wLinkSendByte to 0; sets
 ; wLinkReady to 0; increments wScreenStep (E-0347)
+; why: step 15 of LinkKeyTrade (when wScreenStep = 15); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $f0
@@ -2745,6 +2884,9 @@ LinkKeyTrade_WaitLinkMessage::
 ; LinkKeyTrade_ReadRandomSeed2Lo; branches on C; increments wScreenStep; sets wSelectedRecord to 0;
 ; increments wScreenStep; sets wScreenSubStep to 0; sets wSelectedRecord to $fe; increments
 ; wScreenStep; sets wScreenSubStep to 0; sets wSelectedRecord to $ff (E-0347)
+; why: step 16 of LinkKeyTrade (when wScreenStep = 16); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc::
     call LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc
     cp $ff
@@ -2783,6 +2925,9 @@ LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc::
 ; called from LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc: changes HL, DE, BC and A; branches
 ; on the byte at wKeyList; branches on wRandomSeed2Lo; branches on wLinkPartnerName & $0f; branches
 ; on wRandomSeed2Lo; branches on wLinkPartnerByte1; branches on wLinkPartnerByte2 (E-0347)
+; why: a helper of LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc, in step 16 of LinkKeyTrade
+; (when wScreenStep = 16); LinkKeyTrade: by wScreenStep: builds the key list, exchanges bytes and
+; messages over the link (sending a byte and waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc::
     ld hl, wKeyList
     ld de, wLinkPartnerName
@@ -2852,6 +2997,9 @@ LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc::
 ; called from LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc: branches on the byte at wKeyList;
 ; returns if C is below $14; calls KeyEntryAddressForListEntriesCell4; branches on the byte at
 ; wKeyList; branches on wRandomSeed2Lo (E-0347)
+; why: a helper of LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc, in step 16 of LinkKeyTrade
+; (when wScreenStep = 16); LinkKeyTrade: by wScreenStep: builds the key list, exchanges bytes and
+; messages over the link (sending a byte and waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_ReadRandomSeed2Lo::
     ld hl, wKeyList
     ld b, $20
@@ -2919,6 +3067,9 @@ LinkKeyTrade_KeysSameName::
 
 ; step 0 of LinkKeyTrade_KeysSameName: branches on wSelectedRecord; sets wLinkSendByte to 2;
 ; increments wScreenSubStep (E-0347)
+; why: step 0 of LinkKeyTrade_KeysSameName (when wScreenSubStep = 0); LinkKeyTrade_KeysSameName: by
+; wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
+; (E-0352)
 LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep::
     ld a, [wSelectedRecord]
     and a
@@ -2944,6 +3095,9 @@ LinkKeyTrade_KeysSameName_WriteLinkSendByteAndScreenSubStep::
 
 ; step 1 of LinkKeyTrade_KeysSameName: branches on wLinkMessage; copies wLinkMessage to wItemGridX;
 ; sets wLinkSendByte to 0; increments wScreenSubStep (E-0347)
+; why: step 1 of LinkKeyTrade_KeysSameName (when wScreenSubStep = 1); LinkKeyTrade_KeysSameName: by
+; wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
+; (E-0352)
 LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $02
@@ -2966,6 +3120,9 @@ LinkKeyTrade_KeysSameName_WriteItemGridXAndLinkSendByteEtc::
 ; step 2 of LinkKeyTrade_KeysSameName: branches on wItemGridX; branches on wSelectedRecord; sets
 ; wScreenSubStep to 0; increments wScreenStep; branches on wScreenStep; branches on wSelectedRecord;
 ; calls BeginString_Bank1B_Cat0; increments wScreenSubStep (E-0347)
+; why: step 2 of LinkKeyTrade_KeysSameName (when wScreenSubStep = 2); LinkKeyTrade_KeysSameName: by
+; wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
+; (E-0352)
 LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep::
     ld a, [wItemGridX]
     cp $03
@@ -3022,6 +3179,9 @@ LinkKeyTrade_KeysSameName_WriteScreenSubStepAndScreenStep::
 
 ; step 3 of LinkKeyTrade_KeysSameName: returns unless wTextFlags is 0; increments wScreenSubStep
 ; (E-0347)
+; why: step 3 of LinkKeyTrade_KeysSameName (when wScreenSubStep = 3); LinkKeyTrade_KeysSameName: by
+; wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
+; (E-0352)
 LinkKeyTrade_KeysSameName_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -3033,6 +3193,9 @@ LinkKeyTrade_KeysSameName_WaitTextFlags::
 
 ; step 4 of LinkKeyTrade_KeysSameName: calls LinkKeyTrade_CopyRectTo20ByteRows; calls
 ; BeginString_Bank1B_Cat0; sets wScreenSubStep to 0; sets wScreenStep to $0a (E-0347)
+; why: step 4 of LinkKeyTrade_KeysSameName (when wScreenSubStep = 4); LinkKeyTrade_KeysSameName: by
+; wScreenSubStep: "Keys can't have the same name.", then back to 'Please choose the key to trade.'
+; (E-0352)
 LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
     call LinkKeyTrade_CopyRectTo20ByteRows
     ld a, $06 ; 'Please choose the key to trade.'
@@ -3046,6 +3209,9 @@ LinkKeyTrade_KeysSameName_ShowPleaseChooseTheKey::
 ; step 18 of LinkKeyTrade: calls LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc; calls
 ; CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B;
 ; increments wScreenStep; calls BeginString_Bank1B_Cat0 (E-0347)
+; why: step 18 of LinkKeyTrade (when wScreenStep = 18); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ShowIsItOKTo::
     call LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc
     ld de, LinkKeyTrade_BuildKeyListIndexListEntries_TileRect
@@ -3074,6 +3240,9 @@ LinkKeyTrade_ShowIsItOKTo::
 ; step 19 of LinkKeyTrade: returns unless wTextFlags is 0; plays sound $6c; calls
 ; CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B;
 ; sets wTwoChoiceCursor to 0; increments wScreenStep (E-0347)
+; why: step 19 of LinkKeyTrade (when wScreenStep = 19); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor::
     ld a, [wTextFlags]
     and a
@@ -3100,6 +3269,9 @@ LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor::
 ; 6; sets wLinkSendByte to $fd; calls UpdateTwoChoiceCursor_Bank1B; returns if wMenuInputResult is
 ; 0; branches on wMenuInputResult; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi;
 ; then 12 more steps (see the code) (E-0347)
+; why: step 20 of LinkKeyTrade (when wScreenStep = 20); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -3200,6 +3372,9 @@ ShowTwoChoiceBoxWhenTextIdle::
 ; wMenuInputResult; increments wScreenStep; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; BeginString_Bank1B_Cat0; then 6 more steps (see the code) (E-0347)
+; why: step 22 of LinkKeyTrade (when wScreenStep = 22); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -3261,6 +3436,9 @@ LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep_2::
 ; step 23 of LinkKeyTrade: returns unless wTextFlags is 0; plays sound $6c; calls
 ; CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B;
 ; sets wScreenStep (E-0347)
+; why: step 23 of LinkKeyTrade (when wScreenStep = 23); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_QueueSoundEffect_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -3281,6 +3459,9 @@ LinkKeyTrade_QueueSoundEffect_SetScreenStep::
     ret
 
 ; step 24 of LinkKeyTrade: calls BeginString_Bank1B_Cat0; increments wScreenStep (E-0347)
+; why: step 24 of LinkKeyTrade (when wScreenStep = 24); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank1B_Cat0
@@ -3290,6 +3471,9 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
     ret
 
 ; step 27 of LinkKeyTrade: calls BeginString_Bank1B_Cat0; increments wScreenStep (E-0347)
+; why: step 27 of LinkKeyTrade (when wScreenStep = 27); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait::
     ld a, $0b ; 'Readying trade… Please wait.'
     call BeginString_Bank1B_Cat0
@@ -3302,6 +3486,9 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait::
 ; wScreenCounter to 0; sets wGlyphListStart to 0; calls KeyEntryAddressForListEntriesCell4; sets
 ; rRAMG2 to $0a; sets rRAMB to 2; calls CopyBytes; sets rRAMG2 to 0; sets rRAMB to 0; calls
 ; FillBytes; copies L to wLinkTimeoutLo; then 2 more steps (see the code) (E-0347)
+; why: step 29 of LinkKeyTrade (when wScreenStep = 29); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep::
     ld a, [wLinkMessage]
     cp $02
@@ -3369,6 +3556,9 @@ LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep::
 ; RunScreenCounterStep; copies L to wWorkBuf; copies L to wLinkBufferCountLo; copies H to
 ; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte
 ; to $ff; sets wLinkReady to 1 (E-0347)
+; why: step 30 of LinkKeyTrade (when wScreenStep = 30); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_RunScreenCounterStep::
     ld a, [wLinkMessage]
     cp $01
@@ -3403,6 +3593,9 @@ LinkKeyTrade_RunScreenCounterStep::
 
 ; step 31 of LinkKeyTrade: returns unless wLinkMessage is $f0; sets wLinkReady to 0; sets
 ; wLinkSendByte to 1; increments wScreenStep (E-0347)
+; why: step 31 of LinkKeyTrade (when wScreenStep = 31); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
@@ -3420,6 +3613,9 @@ LinkKeyTrade_WaitLinkMessage_SetLinkReady::
 ; wWorkBuf; copies L to wLinkBufferCountLo; copies H to wLinkBufferCountHi; decrements wScreenStep;
 ; calls RunScreenCounterStep; sets wLinkSendByte to $ff; sets wLinkReady to 1; sets wLinkSendByte to
 ; 0; sets wLinkReady to 0; increments wScreenStep (E-0347)
+; why: step 32 of LinkKeyTrade (when wScreenStep = 32); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
     ld a, [wLinkMessage]
     cp $01
@@ -3478,6 +3674,9 @@ LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
 ; SetArg5ToListEntriesCell4; sets hTemp0; calls DeleteKeyEntryTemp0; branches on the byte at
 ; wKeyList; branches on C; increments wScreenStep; branches on wRandomSeed2Lo; then 16 more steps
 ; (see the code) (E-0347)
+; why: step 33 of LinkKeyTrade (when wScreenStep = 33); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_KeyEntryAddressForListEntriesCell4::
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data_2
     call DrawThreeTilesAtBGMap20FFromDE
@@ -3679,6 +3878,9 @@ LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_KeyEntryAddressForListEntriesCell4::
 ; step 34 of LinkKeyTrade: returns unless wTextFlags is 0; calls RunSaveGameSteps; returns unless
 ; bit 7 of wSaveStep is set; increments wScreenStep; sets wScreenCounter to 0; calls
 ; BeginString_Bank1B_Cat0 (E-0347)
+; why: step 34 of LinkKeyTrade (when wScreenStep = 34); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -3699,6 +3901,9 @@ LinkKeyTrade_ShowPleaseWait::
 ; step 36 of LinkKeyTrade: returns unless wLinkMessage is $05; sets wLinkSendByte to 0; branches on
 ; wLinkMessage; sets hDecompressLock to 0; sets wGameMode to 5; sets wModeState to 1; sets
 ; wModeChangeRequest to 1 (E-0347)
+; why: step 36 of LinkKeyTrade (when wScreenStep = 36); LinkKeyTrade: by wScreenStep: builds the key
+; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
+; message) and ... (E-0352)
 LinkKeyTrade_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $05
@@ -3752,6 +3957,9 @@ ClearLinkExchangeBuffer1Bit7AndFourSlots::
 ; CopyDataBankStringToTextBuf0; branches on the byte at wTextBuf0; sets wDataBank to 9; calls
 ; CopyDataBankStringToTextBuf0; may continue in LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip
 ; (E-0347)
+; why: a helper of LinkKeyTrade_ShowIsItOKTo, in step 18 of LinkKeyTrade (when wScreenStep = 18);
+; LinkKeyTrade: by wScreenStep: builds the key list, exchanges bytes and messages over the link
+; (sending a byte and waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc::
     ld a, [wLinkPartnerName]
     cp $fe
@@ -3823,6 +4031,10 @@ LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc::
     jr .skip2
 
 ; Sets wArg5 to 3 (E-0347)
+; why: part of LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc, in a helper of
+; LinkKeyTrade_ShowIsItOKTo, in step 18 of LinkKeyTrade (when wScreenStep = 18); LinkKeyTrade: by
+; wScreenStep: builds the key list, exchanges bytes and messages over the link (sending a byte and
+; waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip::
     ld a, $5b
     ld [hli], a
@@ -3835,6 +4047,10 @@ LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip::
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringIndex to
 ; $27; sets wStringCategory to 0; calls ShowString_Bank1B; copies L to wTextWindowTileLo; copies H
 ; to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth (E-0347)
+; why: part of LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc, in a helper of
+; LinkKeyTrade_ShowIsItOKTo, in step 18 of LinkKeyTrade (when wScreenStep = 18); LinkKeyTrade: by
+; wScreenStep: builds the key list, exchanges bytes and messages over the link (sending a byte and
+; waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip2::
     ld hl, wTextBuf0
     ld de, wNameGlyphBuf
@@ -3895,6 +4111,8 @@ CopyDataBankStringToTextBuf0::
 ; Sets wDataBank to 9; calls ReadWordFromDataBank; sets wDataBank; calls CopyFromBankWaitVRAM;
 ; branches on the byte at wNameGlyphBuf; continues in
 ; LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip (E-0347)
+; why: part of CopyDataBankStringToTextBuf0; CopyDataBankStringToTextBuf0: copies the 16-byte string
+; named by the word table $4078 + 2 * A (in bank 9) to wTextBuf0 (E-0352, E-0127, E-0344)
 CopyDataBankStringToTextBuf0_CheckLinkPartnerName::
     ld a, [wLinkPartnerName]
     and $3f
@@ -4024,11 +4242,15 @@ RunScreenCounterStep::
 
 ; step 0 of RunScreenCounterStep: changes B; continues in WriteTileBAtBGMap20FPlusGlyphListStart
 ; (E-0347)
+; why: step 0 of RunScreenCounterStep (when wScreenCounter = 0); RunScreenCounterStep: runs the
+; routine for wScreenCounter (jump table of six (E-0352, E-0122, E-0344)
 RunScreenCounterStep_WriteScreenCounter::
     ld b, $c3
     jr WriteTileBAtBGMap20FPlusGlyphListStart
 
 ; step 1 of RunScreenCounterStep: takes BC; changes B (E-0347)
+; why: step 1 of RunScreenCounterStep (when wScreenCounter = 1); RunScreenCounterStep: runs the
+; routine for wScreenCounter (jump table of six (E-0352, E-0122, E-0344)
 WriteTileBAtBGMap20FPlusGlyphListStartWithBBC::
     ld b, $bc
 
@@ -4051,6 +4273,8 @@ WriteTileBAtBGMap20FPlusGlyphListStart::
 ; step 5 of RunScreenCounterStep: calls WriteTileBAtBGMap20FPlusGlyphListStart; sets wScreenCounter
 ; to 0; increments wGlyphListStart; returns if wGlyphListStart is below $03; sets wGlyphListStart to
 ; 0; calls DrawThreeTilesAtBGMap20FFromDE (E-0347)
+; why: step 5 of RunScreenCounterStep (when wScreenCounter = 5); RunScreenCounterStep: runs the
+; routine for wScreenCounter (jump table of six (E-0352, E-0122, E-0344)
 RunScreenCounterStep_WriteTileBAtBGMap20FPlusGlyphListStart::
     ld b, $bb
     call WriteTileBAtBGMap20FPlusGlyphListStart
@@ -4078,6 +4302,8 @@ BeginString_Bank1B_Cat0::
 ; Sets wArg1 to 0; sets wArg2 to 6; calls LinkKeyTrade_CopyBytesDEToHL_Bank1B; calls
 ; CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls DrawScreenBufferRectToBGMap_1B
 ; (E-0347)
+; why: part of LinkKeyTrade; LinkKeyTrade: by wScreenStep: builds the key list, exchanges bytes and
+; messages over the link (sending a byte and waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_CopyRectTo20ByteRows::
     ld b, $00
     ld c, $05
@@ -4376,6 +4602,8 @@ CopyTileBytesToVRAM_Bank1B::
 
 ; Calls CopyBytesDEToHL_Bank1B; branches on wIsCGB; calls CopyLow3BitsToWRAMBank2_Bank1B; may
 ; continue in LinkKeyTrade_CopyBytesDEToHL_Bank1B (E-0347)
+; why: part of LinkKeyTrade; LinkKeyTrade: by wScreenStep: builds the key list, exchanges bytes and
+; messages over the link (sending a byte and waiting for the partner's message) and ... (E-0352)
 LinkKeyTrade_CopyBytesDEToHL_Bank1B::
     push bc
     push hl
@@ -4517,6 +4745,9 @@ UpdateTwoChoiceCursor_Bank1B::
 ; UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor; increments wScreenCounter; may continue in
 ; UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor; may continue in
 ; UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2; sets wScreenCounter to 0 (E-0347)
+; why: a helper of UpdateTwoChoiceCursor_Bank1B; UpdateTwoChoiceCursor_Bank1B: the same instructions
+; as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up
+; and Down each toggle ... (E-0352, E-0068)
 UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -4533,21 +4764,34 @@ UpdateTwoChoiceCursor_Bank1B_WriteScreenCounter::
 
 ; called from UpdateTwoChoiceCursor_Bank1B: changes B; continues in
 ; UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (E-0347)
+; why: a helper of UpdateTwoChoiceCursor_Bank1B; UpdateTwoChoiceCursor_Bank1B: the same instructions
+; as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up
+; and Down each toggle ... (E-0352, E-0068)
 UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor::
     ld b, $bb
     jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
 ; called from UpdateTwoChoiceCursor_Bank1B: changes B; continues in
 ; UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (E-0347)
+; why: a helper of UpdateTwoChoiceCursor_Bank1B; UpdateTwoChoiceCursor_Bank1B: the same instructions
+; as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up
+; and Down each toggle ... (E-0352, E-0068)
 UpdateTwoChoiceCursor_Bank1B_ReadTwoChoiceCursor_2::
     ld b, $c3
     jr UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
 ; called from UpdateTwoChoiceCursor_Bank1B: takes BC; changes B (E-0347)
+; why: a helper of UpdateTwoChoiceCursor_Bank1B; UpdateTwoChoiceCursor_Bank1B: the same instructions
+; as UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up
+; and Down each toggle ... (E-0352, E-0068)
 UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank1B; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; why: part of UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap, in a helper of
+; UpdateTwoChoiceCursor_Bank1B; UpdateTwoChoiceCursor_Bank1B: the same instructions as
+; UpdateTwoChoiceCursor_Bank1D, calling this bank's own helpers: wTwoChoiceCursor (0 or 1): Up and
+; Down each toggle ... (E-0352, E-0068)
 UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     sla a
@@ -4650,6 +4894,9 @@ LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data_2::
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; sets wTextWindowState to 1; sets wTextWindowStep to 0; sets
 ; hSpriteWindowClipMode to 0; calls StepTextWindowOpenClose (E-0347)
+; why: a helper of RunLinkSession4ScreenState_DecompressToVRAMAndStep, in step 6 of
+; RunLinkSession4ScreenState (when wTitleScreenState = 6); RunLinkSession4ScreenState: runs the
+; routine for wTitleScreenState (jump table of nine states) (E-0352, E-0122)
 RunLinkSession4ScreenState_DecompressToVRAM::
     ld hl, wScreenState
     ld bc, $006f
@@ -4713,6 +4960,9 @@ EggServiceMenu_Bank1B::
 
 ; step 0 of EggServiceMenu_Bank1B: sets hSpriteHideTile to $c0; sets wStringCategory to 0; calls
 ; ShowStringA10_Bank1B; calls ClearTileRowsFromPickCount; increments wScreenState (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B (when wScreenState = 0); EggServiceMenu_Bank1B: the same
+; instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this
+; bank's own routines and tables (E-0352, E-0107)
 EggServiceMenu_Bank1B_ShowStringA10_Bank1B::
     ld a, $c0
     ldh [hSpriteHideTile], a
@@ -4726,6 +4976,9 @@ EggServiceMenu_Bank1B_ShowStringA10_Bank1B::
     ret
 
 ; step 1 of EggServiceMenu_Bank1B: returns unless wTextFlags is 0; increments wScreenState (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B (when wScreenState = 1); EggServiceMenu_Bank1B: the same
+; instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this
+; bank's own routines and tables (E-0352, E-0107)
 EggServiceMenu_Bank1B_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -4748,6 +5001,9 @@ EggServiceMenu_Bank1B_WaitForPartner::
 
 ; step 0 of EggServiceMenu_Bank1B_WaitForPartner: returns unless wLinkMessage is $fe; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 0);
+; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
+; (E-0352)
 EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
@@ -4761,6 +5017,9 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage::
 
 ; step 1 of EggServiceMenu_Bank1B_WaitForPartner: returns unless wTextFlags is 0; calls
 ; ShowStringA10_Bank1B; increments wScreenStep (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 1);
+; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
+; (E-0352)
 EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -4774,6 +5033,9 @@ EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait::
 
 ; step 2 of EggServiceMenu_Bank1B_WaitForPartner: returns unless wTextFlags is 0; sets wLinkSendByte
 ; to 1; increments wScreenStep (E-0347)
+; why: step 2 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 2);
+; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
+; (E-0352)
 EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -4787,6 +5049,9 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
 
 ; step 3 of EggServiceMenu_Bank1B_WaitForPartner: returns unless wLinkMessage is $01; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
+; why: step 3 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 3);
+; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
+; (E-0352)
 EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
@@ -4800,6 +5065,9 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte::
 
 ; step 4 of EggServiceMenu_Bank1B_WaitForPartner: returns if bit 0 of wTextFlags is set; branches on
 ; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; why: step 4 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 4);
+; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
+; (E-0352)
 EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2::
     ld a, [wTextFlags]
     bit 0, a
@@ -4823,6 +5091,9 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2::
     ret
 
 ; step 3 of EggServiceMenu_Bank1B: increments wScreenState (E-0347)
+; why: step 3 of EggServiceMenu_Bank1B (when wScreenState = 3); EggServiceMenu_Bank1B: the same
+; instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this
+; bank's own routines and tables (E-0352, E-0107)
 EggServiceMenu_Bank1B_AdvanceScreenState::
     ld a, [wScreenState]
     inc a
@@ -4850,6 +5121,9 @@ EggServiceMenu_Bank1B_PickRecords::
 
 ; step 1 of EggServiceMenu_Bank1B_PickRecords: returns unless wTextFlags is 0; calls BreedMenu
 ; (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 1);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_BreedMenu_2::
     ld a, [wTextFlags]
     and a
@@ -4859,6 +5133,9 @@ EggServiceMenu_Bank1B_PickRecords_BreedMenu_2::
 
 ; step 0 of EggServiceMenu_Bank1B_PickRecords: returns unless wTextFlags is 0; calls BreedMenu
 ; (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 0);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -4984,6 +5261,9 @@ DrawRuleBoxByLinkRuleTurnLimit1Bit7::
 ; StoreBAtWordTableEntry_Bank1B; calls BGMapAddressAtScroll_Bank1B; calls
 ; DrawScreenBufferRectToBGMap_1B; calls StoreBAtWordTableEntry_Bank1B; calls
 ; SetDefaultStringWindow_Bank1B; increments wScreenStep (E-0347)
+; why: step 7 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 7);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
     ld a, [wTextFlags]
     and a
@@ -5011,6 +5291,9 @@ EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
 ; $fe; sets wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0;
 ; branches on wMenuInputResult; sets wScreenStep; branches on wPickCount; then 21 more steps (see
 ; the code) (E-0347)
+; why: step 8 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 8);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -5131,6 +5414,9 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
 ; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B;
 ; plays sound $6c; calls CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls
 ; DrawScreenBufferRectToBGMap_1B; then 6 more steps (see the code) (E-0347)
+; why: step 9 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 9);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -5182,6 +5468,9 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
 ; $fe; sets wArg5 to 0; calls HandleTwoChoiceCursorInput_0D; returns if wArg5 is 0; branches on
 ; wArg5; increments wScreenStep; branches on wChoiceCursor; then 17 more steps (see the code)
 ; (E-0347)
+; why: step 10 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -5273,6 +5562,9 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
 ; EraseCEntriesOfWordTable_Bank1B; continues in
 ; EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServiceMenu_Bank1B_PickRecords_CopyRe
 ; (E-0347)
+; why: step 11 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 11);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
     ld a, [wTextFlags]
     and a
@@ -5284,6 +5576,10 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
 
 ; called from EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo: calls
 ; EraseCEntriesOfWordTable_Bank1B; calls StoreBAtWordTableEntry_Bank1B (E-0347)
+; why: a helper of EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step
+; 10 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2::
     ld c, $05
     ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
@@ -5295,6 +5591,10 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2::
 
 ; Calls EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B;
 ; calls DrawScreenBufferRectToBGMap_1B; sets wScreenStep (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServiceMenu_Bank1B_PickRecords_CopyRe::
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
@@ -5311,6 +5611,9 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServi
 ; EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls
 ; DrawScreenBufferRectToBGMap_1B; increments wPickCount; calls ClearTileRowsFromPickCount; calls
 ; DrawPickedRecordsRecordNamesAndIcons; increments wScreenStep (E-0347)
+; why: step 12 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 12);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount::
     call EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc
     cp $ff
@@ -5333,6 +5636,9 @@ EggServiceMenu_Bank1B_PickRecords_ClearTileRowsFromPickCount::
 ; step 13 of EggServiceMenu_Bank1B_PickRecords: branches on wLinkMessage; sets wScreenState to 2;
 ; sets wScreenStep to 0; sets wScreenSubStep to 0; calls ShowStringA10_Bank1B; sets wLinkSendByte to
 ; $fe; dispatches on wScreenSubStep (E-0347)
+; why: step 13 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 13);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -5363,6 +5669,10 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo_2::
 ; step 0 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2: branches on
 ; wPickCount; calls ListAvailableRecordsForSelection; branches on wListCount; calls
 ; ShowStringA10_Bank1B; increments wScreenSubStep; sets wScreenSubStep (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowChooseOneMoreMember::
     ld a, [wPickCount]
     cp $03
@@ -5388,6 +5698,10 @@ EggServiceMenu_Bank1B_PickRecords_ShowChooseOneMoreMember::
 ; wTextFlags is 0; plays sound $6c; calls CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B;
 ; calls DrawScreenBufferRectToBGMap_1B; branches on wScreenSubStep; branches on wPickCount; sets
 ; wTwoChoiceCursor to 0; increments wScreenSubStep (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_QueueSoundEffect::
     ld a, [wTextFlags]
     and a
@@ -5426,6 +5740,10 @@ EggServiceMenu_Bank1B_PickRecords_QueueSoundEffect::
 ; ShowStringA10_Bank1B; sets wLinkSendByte to $fe; calls UpdateTwoChoiceCursor_Bank1D; returns if
 ; wMenuInputResult is 0; branches on wMenuInputResult; calls DrawChoiceBoxByLinkRuleTurnLimit1Bit7;
 ; sets wScreenSubStep; branches on wTwoChoiceCursor; then 3 more steps (see the code) (E-0347)
+; why: step 2 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -5473,6 +5791,10 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_2::
 
 ; step 3 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2: returns unless
 ; wTextFlags is 0; sets wScreenStep to 0; sets wScreenSubStep to 0 (E-0347)
+; why: step 3 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -5488,6 +5810,10 @@ EggServiceMenu_Bank1B_PickRecords_WaitTextFlags::
 ; increments wScreenSubStep; calls ShowStringA10_Bank1B; calls PadPickedRecordsWithFFToThree; copies
 ; wPickCount to wSelectedRecord; sets wPickCount to 3; sets wScreenSubStep; then 1 more step (see
 ; the code) (E-0347)
+; why: step 4 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_ShowPleaseWait::
     ld a, [wLinkRules + $9]
     bit 7, a
@@ -5527,6 +5853,10 @@ EggServiceMenu_Bank1B_PickRecords_ShowPleaseWait::
 
 ; step 5 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2: returns unless
 ; wTextFlags is 0; calls FinishPickedRecordsEntryAndAdvance; calls ShowStringA10_Bank1B (E-0347)
+; why: step 5 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_PleaseWait::
     ld a, [wTextFlags]
     and a
@@ -5541,6 +5871,10 @@ EggServiceMenu_Bank1B_PickRecords_PleaseWait::
 ; ShowStringA10_Bank1B; sets wLinkSendByte to $fe; calls UpdateTwoChoiceCursor_Bank1D; returns if
 ; wMenuInputResult is 0; branches on wMenuInputResult; calls DrawChoiceBoxByLinkRuleTurnLimit1Bit7;
 ; sets wPickCount to 4; sets wPackWork to $ff; then 5 more steps (see the code) (E-0347)
+; why: step 7 of EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2, in a helper of
+; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
+; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
+; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -5619,6 +5953,9 @@ EggServiceMenu_Bank1B_StartLinkBattle::
 
 ; step 17 of EggServiceMenu_Bank1B_StartLinkBattle: calls ShowStringA10_Bank1B; increments
 ; wScreenStep (E-0347)
+; why: step 17 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 17);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBattle::
     ld a, $09 ; 'Starting battle…'
     call ShowStringA10_Bank1B
@@ -5629,6 +5966,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBatt
 
 ; step 9 of EggServiceMenu_Bank1B_StartLinkBattle: calls ShowStringA10_Bank1B; increments
 ; wScreenStep (E-0347)
+; why: step 9 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 9);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
     ld a, $0c ; 'Please wait.'
     call ShowStringA10_Bank1B
@@ -5639,6 +5979,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep::
 
 ; step 10 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wTextFlags is 0; increments
 ; wScreenStep (E-0347)
+; why: step 10 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 10);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -5650,6 +5993,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep::
 
 ; step 0 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wTextFlags is 0; calls
 ; DrawPickedRecordsRecordNamesAndIcons; increments wScreenStep (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 0);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons::
     ld a, [wTextFlags]
     and a
@@ -5663,6 +6009,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_DrawPickedRecordsRecordNamesAndIcons::
 ; step 1 of EggServiceMenu_Bank1B_StartLinkBattle: branches on wPackWork; calls FillBytes; sets
 ; rRAMG2 to $0a; sets rRAMB to 0; sets rRAMG2 to $0a; sets rRAMB to 0; increments wScreenStep
 ; (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 1);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_FillBytes::
     ld a, [wPackWork]
     cp $ff
@@ -5705,6 +6054,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_FillBytes::
 
 ; step 2 of EggServiceMenu_Bank1B_StartLinkBattle: increments wScreenStep; sets wLinkSendByte to 1
 ; (E-0347)
+; why: step 2 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 2);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -5717,6 +6069,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep::
 ; wLinkMessage is $fe; sets wScreenState to 2; sets wScreenStep to 0; sets wScreenSubStep to 0;
 ; calls ShowStringA10_Bank1B; sets wLinkSendByte to $fe; sets wLinkSendByte to 0; increments
 ; wScreenStep (E-0347)
+; why: step 3 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 3);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $01
@@ -5746,6 +6101,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
 ; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferCountLo; copies H to
 ; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte
 ; to $ff; sets wLinkReady to 1 (E-0347)
+; why: step 4 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 4);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
     ld a, [wScreenStep]
     inc a
@@ -5773,6 +6131,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
 
 ; step 16 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wLinkMessage is $f0; sets
 ; wLinkReady to 0; sets wLinkSendByte to 0; increments wScreenStep (E-0347)
+; why: step 16 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 16);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
@@ -5789,6 +6150,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady::
 ; step 5 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wLinkMessage is $f0; sets
 ; wLinkReady to 0; sets wLinkSendByte to 0; increments wScreenStep; calls ShowStringA10_Bank1B
 ; (E-0347)
+; why: step 5 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 5);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
     ld a, [wLinkMessage]
     cp $f0
@@ -5809,6 +6173,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
 ; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1f; calls ShowString_Bank1B;
 ; plays sound $6c; calls CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B; calls
 ; DrawScreenBufferRectToBGMap_1B; then 3 more steps (see the code) (E-0347)
+; why: step 6 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 6);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     ld a, [wTextFlags]
     and a
@@ -5851,6 +6218,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
 ; $fe; calls HandleThreeChoiceCursorInput_F1; returns if wMenuInputResult is 0; branches on
 ; wMenuInputResult; sets wScreenState to 2; calls ShowStringA10_Bank1B; sets wScreenStep to 0; then
 ; 18 more steps (see the code) (E-0347)
+; why: step 7 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 7);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -5945,6 +6315,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo::
 
 ; step 8 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wTextFlags is 0; decrements
 ; wScreenStep (E-0347)
+; why: step 8 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 8);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -5958,6 +6331,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
 ; wLinkMessage is $fe; sets wScreenState to 2; sets wScreenStep to 0; sets wScreenSubStep to 0;
 ; calls ShowStringA10_Bank1B; sets wLinkSendByte to $fe; sets wLinkSendByte to 0; increments
 ; wScreenStep (E-0347)
+; why: step 12 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 12);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2::
     ld a, [wLinkMessage]
     cp $01
@@ -5988,6 +6364,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2::
 ; H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; increments
 ; wScreenStep; sets wLinkScene to 1; calls EggServiceMenu_Bank1B_StartLinkBattle_WriteRAMG2AndRAMB;
 ; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; then 3 more steps (see the code) (E-0347)
+; why: step 13 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 13);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc::
     ld a, [wLinkRole]
     bit 1, a
@@ -6032,6 +6411,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc::
 ; step 15 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wLinkMessage is $01; increments
 ; wScreenStep; copies L to wLinkBufferCountLo; copies H to wLinkBufferCountHi; sets wLinkSendByte to
 ; $ff; sets wLinkReady to 1 (E-0347)
+; why: step 15 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 15);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -6053,6 +6435,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
 ; step 21 of EggServiceMenu_Bank1B_StartLinkBattle: sets wGameMode to 4; sets wModeState to 0; sets
 ; wWorldMapState to 0; sets wGameMode2Arg to 0; sets wModeChangeRequest to 1; sets wLinkSession to
 ; 1; sets wLinkExchangeState to 0; sets wLinkSendByte to 0; sets wLinkMessage to 0 (E-0347)
+; why: step 21 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 21);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
     ld a, $04
     ld [wGameMode], a
@@ -6074,6 +6459,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
 
 ; step 6 of EggServiceMenu_Bank1B: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
+; why: step 6 of EggServiceMenu_Bank1B (when wScreenState = 6); EggServiceMenu_Bank1B: the same
+; instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this
+; bank's own routines and tables (E-0352, E-0107)
 EggServiceMenu_Bank1B_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -6090,6 +6478,9 @@ EggServiceMenu_Bank1B_SwapMonstersMenu::
 ; step 13 of EggServiceMenu_Bank1B: calls RunScreenStateWhenNotFading_F1; returns unless
 ; wScreenState is $0e; copies wItemGridX to wListCursor; copies wItemGridY to wListPageIndex
 ; (E-0347)
+; why: step 13 of EggServiceMenu_Bank1B (when wScreenState = 13); EggServiceMenu_Bank1B: the same
+; instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer to this
+; bank's own routines and tables (E-0352, E-0107)
 EggServiceMenu_Bank1B_RunScreenStateWhenNotFading_F1::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
@@ -6119,6 +6510,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
 ; to 0; sets wStringIndex to $1f; calls ShowString_Bank1B; calls CopyRectTo20ByteRows; calls
 ; SetDefaultStringWindow_Bank1B; sets wTwoChoiceCursor to 1; increments wScreenStep (E-0347)
+; why: step 6 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 6);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
     ld hl, vTiles2 + $300
     ld a, l
@@ -6162,6 +6556,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords2::
 
 ; step 0 of EggServiceMenu_Bank1B_ListAvailableRecords: calls ClearRecordPanelTiles; calls
 ; CopyRectTo20ByteRows; calls StoreBAtWordTableEntry_Bank1B; increments wScreenStep (E-0347)
+; why: step 0 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 0);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
     call ClearRecordPanelTiles
     ld de, EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles_TileRect
@@ -6181,6 +6578,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
 ; calls ClampRecordListPageCursor5; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank1B;
 ; copies H to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep
 ; (E-0347)
+; why: step 1 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 1);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection::
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
@@ -6204,6 +6604,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection::
 
 ; step 2 of EggServiceMenu_Bank1B_ListAvailableRecords: calls DrawRecordListPageNames; sets wArg1 to
 ; 0; calls MarkPartyMembersInRecordListPage (E-0347)
+; why: step 2 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 2);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -6213,18 +6616,27 @@ EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
 
 ; step 3 of EggServiceMenu_Bank1B_ListAvailableRecords: calls DrawListEntriesCell5RecordPanel
 ; (E-0347)
+; why: step 3 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 3);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
     call DrawListEntriesCell5RecordPanel
     ret
 
 ; step 4 of EggServiceMenu_Bank1B_ListAvailableRecords: calls
 ; ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0347)
+; why: step 4 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 4);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780::
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; step 5 of EggServiceMenu_Bank1B_ListAvailableRecords: calls DrawRuleBoxByLinkRuleTurnLimit1Bit7
 ; (E-0347)
+; why: step 5 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 5);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7::
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
@@ -6234,6 +6646,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
 ; to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; calls CopyListEntriesCell5NameToTextBuf0;
 ; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
 ; H to wTextWindowWidth; then 7 more steps (see the code) (E-0347)
+; why: step 6 of EggServiceMenu_Bank1B_ListAvailableRecords2 (when wScreenStep = 6);
+; EggServiceMenu_Bank1B_ListAvailableRecords2: the EggServiceMenu_Bank1B_ListAvailableRecords steps
+; again (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
     ld hl, vTiles2 + $700
     ld a, l
@@ -6292,6 +6707,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
 ; wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth (E-0347)
+; why: step 7 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 7);
+; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
+; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -6328,6 +6746,10 @@ EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
 ; SRAMRecordAddress; calls CopyEBytesBCToHL; calls SRAMRecordAddress; calls CopyEBytesBCToHL; calls
 ; SRAMRecordAddress; calls CopyEBytesBCToHL; calls SRAMRecordAddress; calls CopyEBytesBCToHL; then 5
 ; more steps (see the code) (E-0347)
+; why: a helper of EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc, in step
+; 13 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 13);
+; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
+; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WriteRAMG2AndRAMB::
     ld hl, wBattlerRecords
     ld a, [wLinkRole]
@@ -6521,6 +6943,10 @@ ClearRecordPanelTiles::
 
 ; called from EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo: calls
 ; SetArg5ToListEntriesCell5; branches on the byte at wPartyList (E-0347)
+; why: a helper of EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step
+; 10 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10);
+; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
+; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -6569,6 +6995,8 @@ PadPickedRecordsWithFFToThree::
 
 ; Sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; sets rRAMB to 0
 ; (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords; EggServiceMenu_Bank1B_PickRecords: by wScreenStep:
+; record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte::
     ld hl, wPickedRecords
     add_a_to_hl
@@ -6586,6 +7014,8 @@ EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte::
 ; Branches on wPickCount; calls EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte; sets rRAMG2 to
 ; $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; branches on the byte at wArg1
 ; (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords; EggServiceMenu_Bank1B_PickRecords: by wScreenStep:
+; record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_WriteRAMG2AndRAMB::
     ld a, [wPickCount]
     and a
@@ -6680,6 +7110,8 @@ DrawChoiceBoxByLinkRuleTurnLimit1Bit7::
     ret
 
 ; Calls CopyRectTo20ByteRows (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords; EggServiceMenu_Bank1B_PickRecords: by wScreenStep:
+; record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows::
     ld a, [wLinkRules + $9]
     bit 7, a
@@ -6865,6 +7297,9 @@ LoadFamilyIconTileForRecordB_Bank1B::
 ; called from DrawListEntriesCell5RecordPanel: sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; LoadSRAMRecordByte; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F; calls
 ; LoadSRAMRecordByte (E-0347)
+; why: a helper of DrawListEntriesCell5RecordPanel; DrawListEntriesCell5RecordPanel: for the record
+; at WD789 cell 5: draws its graphics (LoadFamilyIconTileForRecordB_Bank1B with wArg1 = $C7), copies
+; two rectangles to ... (E-0352, E-0121)
 DrawListEntriesCell5RecordPanel_HLToDecimalDigits::
     ld a, [wArg1]
     ld b, a
@@ -7081,6 +7516,8 @@ DrawListEntriesCell5RecordNameAtTiles1780::
     ret
 
 ; Calls SetArg5ToListEntriesCell5 (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords; EggServiceMenu_Bank1B_PickRecords: by wScreenStep:
+; record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -7103,6 +7540,8 @@ EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5::
 ; branches on L; calls SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; LoadSRAMRecordByte; sets rRAMG2 to 0; sets rRAMG to 0; branches on hTemp0; calls
 ; ShowStringA10_Bank1B; then 7 more steps (see the code) (E-0347)
+; why: part of EggServiceMenu_Bank1B_PickRecords; EggServiceMenu_Bank1B_PickRecords: by wScreenStep:
+; record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc::
     ld a, [wPickCount]
     cp $03

@@ -87,6 +87,9 @@ LoadSkillRecordPart::
 ; called from ComputeDamageEstimateForAction: branches on wLinkMode; branches on wBattleActor;
 ; branches on the byte at wSlotAIMode; copies the byte at wSlotAIMode to wBattleDamageLo; copies the
 ; byte at wSlotAIMode to wBattleDamageHi (E-0347)
+; why: a helper of ComputeDamageEstimateForAction; ComputeDamageEstimateForAction: fills the damage
+; for wBattleActionId: the effect handler for 0 or ids from $48 (except $66),
+; ComputeDamageEstimateForAction_Multiply8By16 ... (E-0352, E-0124)
 ComputeDamageEstimateForAction_Multiply8By16::
     ld a, [wBattleActionId]
     ld c, a
@@ -2010,10 +2013,16 @@ FindNewlyLearnableSkills::
     ldh [hTemp4], a
 
 ; Returns at once (E-0347)
+; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
+; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
+; (E-0352, E-0131)
 FindNewlyLearnableSkills_Return::
     ret
 
 ; Copies C to hTemp3; sets hTemp4 to 0; continues in FindNewlyLearnableSkills_Return (E-0347)
+; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
+; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
+; (E-0352, E-0131)
 FindNewlyLearnableSkills_Skip::
     ld a, $ff
     ld [de], a
@@ -2029,6 +2038,9 @@ FindNewlyLearnableSkills_Skip::
 
 ; Copies hTemp6 to hTemp5; copies C to hTemp3; sets hTemp4 to 1; continues in
 ; FindNewlyLearnableSkills_Return (E-0347)
+; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
+; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
+; (E-0352, E-0131)
 FindNewlyLearnableSkills_ReadTemp6::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2042,6 +2054,9 @@ FindNewlyLearnableSkills_ReadTemp6::
     jr FindNewlyLearnableSkills_Return
 
 ; Copies C to hTemp3; sets hTemp4 to 2; continues in FindNewlyLearnableSkills_Return (E-0347)
+; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
+; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
+; (E-0352, E-0131)
 FindNewlyLearnableSkills_Restore::
     pop bc
     pop hl
@@ -2095,6 +2110,7 @@ FindCInWorkBuf38::
 ; called from BattleEnd_Step3: calls FillBytes; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi;
 ; calls LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
 ; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2150,6 +2166,7 @@ BattleEnd_Step3_LoadSpeciesRecord::
 
 ; Calls BattleEnd_Step3_RecordKnowsSkill; branches on the byte at SkillPrerequisitePointers; calls
 ; BattleEnd_Step3_RecordKnowsSkill (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
@@ -2568,6 +2585,9 @@ ComputeLevelUpStatGainsForBattleArg1::
 ; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
 ; $ff; sets wGrowthTemp0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches on e;
 ; sets wGrowthTemp1 (E-0347)
+; why: a helper of ComputeLevelUpStatGainsForBattleArg1; ComputeLevelUpStatGainsForBattleArg1: for
+; record wBattleArg1 below its level cap: computes the stat gains from its species growth rows
+; (table $6616) into ... (E-0352, E-0127)
 ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
     push de
     ld a, [wBattleArg1]

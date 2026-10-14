@@ -26,6 +26,8 @@ RunBattleCommandEntry::
 ; wCommandEntryMonster to 1; calls RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; sets
 ; wCommandEntryMonster to 2; calls RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; sets
 ; wCommandEntryMonster to 3 (E-0347)
+; why: step 0 of RunBattleCommandEntry (when wBattleSubPhase = 0); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_WriteCommandEntryMonster::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -100,6 +102,9 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
 ; called from RunBattleCommandEntry_WriteCommandEntryMonster: calls
 ; CarryUnlessBattleSlotOutSlotEmpty; may continue in
 ; RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2 (E-0347)
+; why: a helper of RunBattleCommandEntry_WriteCommandEntryMonster, in step 0 of
+; RunBattleCommandEntry (when wBattleSubPhase = 0); RunBattleCommandEntry: battle fight step 2:
+; returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -122,6 +127,8 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
 ; branches on the byte at wSlotMarks; copies E to wBattleActor; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; sets
 ; wBattleResolveStep to 0; advances wBattleSubPhase (E-0347)
+; why: step 1 of RunBattleCommandEntry (when wBattleSubPhase = 1); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a
@@ -165,12 +172,16 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; step 2 of RunBattleCommandEntry: calls RunCommandEntryResolveStep (E-0347)
+; why: step 2 of RunBattleCommandEntry (when wBattleSubPhase = 2); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_ToRunCommandEntryResolveStep::
     call RunCommandEntryResolveStep
     ret
 
 ; step 3 of RunBattleCommandEntry: calls ChooseTargetForActor; sets wBattleSubPhase to 1; increments
 ; wBattleActor (E-0347)
+; why: step 3 of RunBattleCommandEntry (when wBattleSubPhase = 3); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_ChooseTargetForActor::
     call ChooseTargetForActor
     ld a, [wBattleActor]
@@ -243,6 +254,8 @@ ChooseTargetForActor::
 ; RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc; increments wLoadSlot; increments
 ; wBattleTempPtrLo; calls RunBattleCommandEntry_WaitBattleItemTarget; then 1 more step (see the
 ; code) (E-0347)
+; why: step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
@@ -306,6 +319,9 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
 
 ; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: calls
 ; AdvanceRandom; calls RandomInRange (E-0347)
+; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
+; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
+; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_AdvanceRandom::
     push de
     call AdvanceRandom
@@ -333,6 +349,9 @@ RunBattleCommandEntry_AdvanceRandom::
 ; wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
 ; LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L to wBattleArg0;
 ; copies H to wBattleArg1; calls AdvanceRandom (E-0347)
+; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
+; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
+; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -423,6 +442,9 @@ RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
 
 ; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: returns if
 ; wBattleItemTarget is $ff; sets wBattleArg0 to $10 (E-0347)
+; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
+; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
+; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_WaitBattleItemTarget::
     ld a, [wBattleItemTarget]
     cp $ff
@@ -443,6 +465,8 @@ RunBattleCommandEntry_WaitBattleItemTarget::
 ; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to wTargetEstimates; branches
 ; on E; increments wBattleTempPtrLo; branches on E; branches on the byte at wBattleArg0; sets
 ; wActionQueuePos to 0; advances wBattleSubPhase (E-0347)
+; why: step 5 of RunBattleCommandEntry (when wBattleSubPhase = 5); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_CompareHLToBC::
     ld d, $08
 
@@ -542,6 +566,8 @@ RunBattleCommandEntry_CompareHLToBC::
 ; calls AddWordAtHLToBC_Bank30; advances wBattleStep; sets wBattleSubPhase to 0; calls FillBytes;
 ; calls SaveActionChoicesAndPickFormations; calls
 ; RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3 (E-0347)
+; why: step 6 of RunBattleCommandEntry (when wBattleSubPhase = 6); RunBattleCommandEntry: battle
+; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
     ld hl, wBattleHP
     ld bc, $0000
@@ -585,6 +611,9 @@ AddWordAtHLToBC_Bank30::
 
 ; called from RunBattleCommandEntry_AddWordAtHLToBC_Bank30: calls CarryUnlessBattleSlotOutSlotEmpty;
 ; branches on the byte at wBattleActionChoice; sets BSTAT6_BERSERK of wBattleStatus6 (E-0347)
+; why: a helper of RunBattleCommandEntry_AddWordAtHLToBC_Bank30, in step 6 of RunBattleCommandEntry
+; (when wBattleSubPhase = 6); RunBattleCommandEntry: battle fight step 2: returns while a message is
+; being drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld c, $00
     ld b, $08
@@ -623,6 +652,9 @@ RunCommandEntryResolveStep::
 ; step 0 of RunCommandEntryResolveStep: calls PersonalityIndexOfSlot_Bank30; sets wPersonalityIndex;
 ; calls ForcedActionForActorStatus; branches on wLinkMode; branches on wBattleActor; branches on
 ; wMenuState & $03; advances wBattleResolveStep (E-0347)
+; why: step 0 of RunCommandEntryResolveStep (when wBattleResolveStep = 0);
+; RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump table of four) (E-0352,
+; E-0122)
 RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
@@ -677,6 +709,9 @@ RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
 ; calls RunCommandEntryResolveStep_GetActorSlotTacticLow2; calls AddPersonalityWeightToBattleArg0;
 ; calls AddActorBattleWordArray3FDiv16ToBattleArg2; calls AddRandom0To63ToBattleArg2; then 13 more
 ; steps (see the code) (E-0347)
+; why: step 1 of RunCommandEntryResolveStep (when wBattleResolveStep = 1);
+; RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump table of four) (E-0352,
+; E-0122)
 RunCommandEntryResolveStep_AddAx9ToHL::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -792,6 +827,9 @@ ActorBattleWordArray3FBand::
 
 ; called from RunCommandEntryResolveStep_AddAx9ToHL: changes HL; continues in
 ; RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor (E-0347)
+; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
+; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep
+; (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_ReadBattleActor::
     ld hl, wSlotTrait
     jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor
@@ -799,6 +837,9 @@ RunCommandEntryResolveStep_ReadBattleActor::
 ; called from RunCommandEntryResolveStep_AddAx9ToHL: calls GetActorSlotTacticLow2; may return early;
 ; calls ReadBattleWordFromArray_Bank30; continues in
 ; RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor (E-0347)
+; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
+; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep
+; (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2::
     call GetActorSlotTacticLow2
     cp $03
@@ -812,6 +853,11 @@ RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
     db $68, $d9, $70, $d9, $78, $d9
 
 ; Takes HL; changes HL and A (E-0347)
+; why: part of RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data, in part of
+; RunCommandEntryResolveStep_GetActorSlotTacticLow2, in a helper of
+; RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep (when
+; wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump
+; table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor::
     ld a, [wBattleActor]
     add_a_to_hl
@@ -874,6 +920,8 @@ AddRandom0To63ToBattleArg2::
     jr AddRandom0To63ToBattleArg2_ReadBattleArg2
 
 ; Sets wBattleArg2; sets wBattleArg3 (E-0347)
+; why: part of AddRandom0To63ToBattleArg2; AddRandom0To63ToBattleArg2: adds a random value 0-63
+; (wRandomLo & $3F) to the word wBattleArg2 (E-0352, E-0122)
 AddRandom0To63ToBattleArg2_ReadBattleArg2::
     ld a, [wBattleArg2]
     add l
@@ -1403,6 +1451,9 @@ AddWeightsForSkillD::
 
 ; called from AddWeightsForSkillD: branches on wLinkMode; branches on wBattleActor; branches on
 ; wMenuState & $03; calls GetActorSlotTacticLow2 (E-0347)
+; why: a helper of AddWeightsForSkillD; AddWeightsForSkillD: for each of the actor's skills equal to
+; D adds weight through AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc to wAIWeights[index]
+; (E-0352, E-0125)
 AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
     push de
     push hl
@@ -1721,6 +1772,8 @@ ScoreActionsWithAIScoreTableA::
 ; EstimateDamageVsEachFoeToAIDamageEstimates; calls ScoreSkillAtHLForAI; calls
 ; DoubleWordAtDEUnlessBit15; calls ScoreSkillForAI; calls DoubleWordAtDEUnlessBit15; calls
 ; ScoreSkillForAI; branches on wBattleActor & $03; then 5 more steps (see the code) (E-0347)
+; why: part of ScoreActionsWithAIScoreTableA; ScoreActionsWithAIScoreTableA: sets wBattleExpAward/C
+; to AIScoreRoutineTableA (E-0352, E-0129)
 ScoreActionsWithAIScoreTableA_CheckBattleActor::
     ld a, [wBattleActor]
     and $03
@@ -2093,6 +2146,9 @@ AddSkillBaseWeightAndLoadSkill::
     ret
 
 ; called from AddSkillBaseWeightAndLoadSkill: calls AdvanceRandom (E-0347)
+; why: a helper of AddSkillBaseWeightAndLoadSkill; AddSkillBaseWeightAndLoadSkill: A = skill number:
+; when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to
+; the word at DE and ... (E-0352, E-0083)
 AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
     push af
     dec de
@@ -2112,6 +2168,9 @@ AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
 
 ; step 3 of RunCommandEntryResolveStep: calls RunActorActionHandlersForAISlots; advances
 ; wBattleSubPhase; sets wBattleResolveStep to 0 (E-0347)
+; why: step 3 of RunCommandEntryResolveStep (when wBattleResolveStep = 3);
+; RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump table of four) (E-0352,
+; E-0122)
 RunCommandEntryResolveStep_RunActorActionHandlersForAISlots::
     call RunActorActionHandlersForAISlots
     ld hl, wBattleSubPhase
@@ -2543,6 +2602,9 @@ RollSlotTraitLowFlag80::
 ; Calls AdvanceRandom; may return early; may continue in RollSlotTraitLowFlag80_Skip2; may continue
 ; in RollSlotTraitLowFlag80_Skip3; may continue in RollSlotTraitLowFlag80_Skip4; continues in
 ; RollSlotTraitLowFlag80_Skip (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -2562,6 +2624,9 @@ RollSlotTraitLowFlag80_CallAdvanceRandom::
 
 ; Calls AdvanceRandom; may return early; may continue in RollSlotTraitLowFlag80_Skip2; may continue
 ; in RollSlotTraitLowFlag80_Skip3; may continue in RollSlotTraitLowFlag80_Skip4 (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -2579,25 +2644,40 @@ RollSlotTraitLowFlag80_CallAdvanceRandom2::
     jr nc, RollSlotTraitLowFlag80_Skip4
 
 ; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_Skip::
     ld c, $08
     jr RollSlotTraitLowFlag80_Skip5
 
 ; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_Skip2::
     ld c, $01
     jr RollSlotTraitLowFlag80_Skip5
 
 ; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_Skip3::
     ld c, $02
     jr RollSlotTraitLowFlag80_Skip5
 
 ; Changes C (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_Skip4::
     ld c, $04
 
 ; Returns if B is at least c (E-0347)
+; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
+; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
+; $80) (E-0352, E-0125, E-0337)
 RollSlotTraitLowFlag80_Skip5::
     ld a, b
     cp c
@@ -2621,6 +2701,9 @@ RollSlotTraitLowFlag80_Skip5::
 ; wSlotPersonalityHi; branches on wTemp0; calls FilterSkillListByMP; branches on wPauseMenuStep;
 ; calls RunCommandEntryResolveStep_FillBytes; branches on wTemp0; then 7 more steps (see the code)
 ; (E-0347)
+; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
+; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep
+; (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld b, $00
     ld hl, wSlotPersonalityHi
@@ -2715,6 +2798,8 @@ CountIfActorPersonalityHiAtLeastHLEntry::
 ; Branches on the byte at wBattleSkills; copies the byte at wBattleSkills to wRecordBuffer; sets
 ; wBattleArg0 to 3; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
 ; LoadSkillRecordPart (E-0347)
+; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: runs the routine for
+; wBattleResolveStep (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc::
     ld a, [wBattleActor]
     swap a
@@ -2834,6 +2919,8 @@ FilterSkillListByMP::
 
 ; Branches on the byte at wPauseMenuStep; calls RunCommandEntryResolveStep_Cp01; calls FillBytes
 ; (E-0347)
+; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: runs the routine for
+; wBattleResolveStep (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_FillBytes::
     ld hl, wPauseMenuStep
     ld b, $08
@@ -2871,6 +2958,9 @@ RunCommandEntryResolveStep_FillBytes::
     ld de, wTemp0
 
 ; Takes HL and DE; changes HL, DE, A and B (E-0347)
+; why: part of RunCommandEntryResolveStep_FillBytes, in part of RunCommandEntryResolveStep;
+; RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump table of four) (E-0352,
+; E-0122)
 RunCommandEntryResolveStep_FillBytes_Skip::
     ld b, $08
 
@@ -2889,6 +2979,8 @@ RunCommandEntryResolveStep_FillBytes_Skip::
     ret
 
 ; Takes A (E-0347)
+; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: runs the routine for
+; wBattleResolveStep (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_Cp01::
     cp $01
     jr c, .done
@@ -2924,6 +3016,8 @@ RunCommandEntryResolveStep_Cp01::
 ; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on the byte at wTemp1;
 ; copies the byte at wTemp1 to wRecordBuffer; sets wBattleArg0 to 0; sets wBattleArg1 to 1; copies L
 ; to wBattleArg2; copies H to wBattleArg3; then 1 more step (see the code) (E-0347)
+; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: runs the routine for
+; wBattleResolveStep (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_LoadSkillRecordPart::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
@@ -3034,6 +3128,9 @@ ForcedActionForActorStatus::
 ; GetActorSlotTacticLow2; calls ReadBattleWordFromArray_Bank30; calls
 ; CopyFourBytesNegatedByActorSlotTactic; calls RunCommandEntryResolveStep_GetActorSlotTacticLow2_2
 ; (E-0347)
+; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
+; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep
+; (jump table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_WaitLinkMode::
     ld a, [wLinkMode]
     or a
@@ -3124,6 +3221,10 @@ CopyByteNegateIfCBit6::
 
 ; Calls GetActorSlotTacticLow2; branches on hTemp0; calls
 ; AddSignedEToByteAtHLClampedForActorEntryOfHL (E-0347)
+; why: part of RunCommandEntryResolveStep_GetActorSlotTacticLow2, in a helper of
+; RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep (when
+; wBattleResolveStep = 1); RunCommandEntryResolveStep: runs the routine for wBattleResolveStep (jump
+; table of four) (E-0352, E-0122)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_2::
     ld a, [wCommandEntryMonster]
     ld c, a
@@ -3302,6 +3403,8 @@ AIChooseActionForActor::
 ; calls AddCommandWeightToAIChoiceWeights; calls AddActorPersonalityTensToAIChoiceWeights; calls
 ; AddStatusAndHPWeightsToAI; calls AIChooseActionForActor_WriteAIChoiceWeights; calls
 ; AddRandomPersonalityWeights; calls SortThreeAIWeightsRandomTies; sets wLoadSlot to 0 (E-0347)
+; why: a helper of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
+; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
 AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ld hl, wAIWeights
     ld bc, $0014
@@ -3331,6 +3434,8 @@ AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ret
 
 ; Changes HL and A (E-0347)
+; why: part of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
+; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
 AIChooseActionForActor_ReadRecordBufferData::
     ld a, [wRecordBufferData + $3]
     and $f0
@@ -3362,6 +3467,8 @@ AIChooseActionForActor_ReadRecordBufferData::
     ret
 
 ; Sets wAIChoiceWeights (E-0347)
+; why: part of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
+; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
 AIChooseActionForActor_WriteAIChoiceWeights::
     ld a, [wBattleActor]
     rrca
@@ -4145,6 +4252,8 @@ ReadBattleHPOfSlot_Bank30::
     jr ReadBattleWordFromArray_Bank30
 
 ; Changes HL; continues in ReadBattleWordFromArray_Bank30 (E-0347)
+; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
+; at wBattleMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMP_Bank30::
     ld hl, wBattleMP
     jr ReadBattleWordFromArray_Bank30
@@ -4205,6 +4314,8 @@ TargetOnLocalSide_Bank30::
     ret
 
 ; Takes DE; changes HL, A and D (E-0347)
+; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
+; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
 ClearBattleStatusBitsWithMaskD_Bank30::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank30_Data

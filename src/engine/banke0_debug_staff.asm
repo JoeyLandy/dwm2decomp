@@ -21,6 +21,8 @@ RunDebugSubState_E0::
 ; calls RunDebugSubState_E0_WriteVRAMByte_2; calls ShowSkillNumberAndName_BankE0; calls
 ; RunDebugSubState_E0_HLToDecimalDigits; calls RunDebugSubState_E0_WriteVRAMByte; then 2 more steps
 ; (see the code) (E-0347)
+; why: step 0 of RunDebugSubState_E0 (when wDebugSubState = 0); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault::
     ld hl, vTiles1 + $6d0
     ld de, $2101
@@ -71,6 +73,8 @@ RunDebugSubState_E0_ShowStringBank09AtHLSizeDEThenDefault::
 ; step 1 of RunDebugSubState_E0: branches on wJoypadPressed; sets wDebugSubState to 5; branches on
 ; wJoypadPressedRepeat; branches on $04; returns unless bit 7 of $04 is set; sets wDebugCursor;
 ; calls RunDebugSubState_E0_WriteVRAMByte_2; sets wDebugSubState; calls WriteVRAMByte (E-0347)
+; why: step 1 of RunDebugSubState_E0 (when wDebugSubState = 1); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
     ld a, [wJoypadPressed]
     bit 2, a
@@ -118,6 +122,8 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
 ; branches on wDebugValue0; sets wDebugValue0 to $e3; returns unless bit 4 of $e3 is set; branches
 ; on wDebugValue0; sets wDebugValue0 to 0; calls ShowSkillNumberAndName_BankE0; then 2 more steps
 ; (see the code) (E-0347)
+; why: step 2 of RunDebugSubState_E0 (when wDebugSubState = 2); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
     ld a, [wJoypadPressed]
     and $04
@@ -192,6 +198,8 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
 ; branches on $02; branches on $04; decrements wDebugValue1; returns unless bit 4 of wDebugValue1-1
 ; is set; increments wDebugValue1; calls RunDebugSubState_E0_HLToDecimalDigits; sets wDebugSubState;
 ; calls WriteVRAMByte (E-0347)
+; why: step 3 of RunDebugSubState_E0 (when wDebugSubState = 3); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
     ld a, [wJoypadPressed]
     and $04
@@ -246,6 +254,8 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
 ; step 4 of RunDebugSubState_E0: branches on wJoypadPressed; sets wDebugSubState to 5; branches on
 ; wJoypadPressedRepeat; branches on $03; returns unless bit 7 of $03 is set; sets wBattleEndFlag;
 ; calls RunDebugSubState_E0_WriteVRAMByte; sets wDebugSubState; calls WriteVRAMByte (E-0347)
+; why: step 4 of RunDebugSubState_E0 (when wDebugSubState = 4); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag::
     ld a, [wJoypadPressed]
     bit 2, a
@@ -289,6 +299,8 @@ RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag::
     ret
 
 ; step 5 of RunDebugSubState_E0: sets wDebugSubState to 0; sets wDebugState to 3 (E-0347)
+; why: step 5 of RunDebugSubState_E0 (when wDebugSubState = 5); RunDebugSubState_E0: runs the
+; routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_SetDebugSubState::
     xor a
     ld [wDebugSubState], a
@@ -297,6 +309,8 @@ RunDebugSubState_E0_SetDebugSubState::
     ret
 
 ; Calls WriteVRAMByte (E-0347)
+; why: part of RunDebugSubState_E0_WriteVRAMByte, in part of RunDebugSubState_E0;
+; RunDebugSubState_E0: runs the routine for wDebugSubState (jump table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteVRAMByte_2::
     ld a, [wDebugCursor]
     and $01
@@ -349,6 +363,8 @@ ShowSkillNumberAndName_BankE0::
 
 ; Calls HLToDecimalDigits; branches on wDigits; calls WriteVRAMByteInc; branches on c; calls
 ; WriteVRAMByteInc; calls WriteVRAMByte (E-0347)
+; why: part of RunDebugSubState_E0; RunDebugSubState_E0: runs the routine for wDebugSubState (jump
+; table of six) (E-0352, E-0122)
 RunDebugSubState_E0_HLToDecimalDigits::
     ld a, [wDebugValue1]
     ld l, a
@@ -389,6 +405,8 @@ RunDebugSubState_E0_HLToDecimalDigits::
     ret
 
 ; Calls WriteVRAMByte (E-0347)
+; why: part of RunDebugSubState_E0; RunDebugSubState_E0: runs the routine for wDebugSubState (jump
+; table of six) (E-0352, E-0122)
 RunDebugSubState_E0_WriteVRAMByte::
     ld a, [wBattleEndFlag]
     and $01
@@ -510,6 +528,8 @@ RunDebugState_E0::
 ; step 0 of RunDebugState_E0: sets wStringCategory to 2; sets wStringIndex to 4; calls
 ; ShowStringBank09AtTilesHL_BankE0; calls DrawFullScreenFromBankE0; calls WriteVRAMByte; advances
 ; wDebugState (E-0347)
+; why: step 0 of RunDebugState_E0 (when wDebugState = 0); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0::
     ld hl, vTiles1 + $6d0
     ld de, $2301
@@ -536,6 +556,8 @@ RunDebugState_E0_ShowStringBank09AtTilesHL_BankE0_Data::
 
 ; step 1 of RunDebugState_E0: branches on wDebugSubState; calls DrawSlotHPMPStats_BankE0; calls
 ; RunDebugState_E0_WordAtDEToPackedBCD; advances wDebugState (E-0347)
+; why: step 1 of RunDebugState_E0 (when wDebugState = 1); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_DrawSlotHPMPStats_BankE0::
     ld a, [wDebugSubState]
     or a
@@ -644,6 +666,9 @@ DrawSlotHPMPStats_BankE0::
 
 ; called from DrawSlotHPMPStats_BankE0: calls WordAtDEToPackedBCD; continues in
 ; DrawSlotHPMPStats_BankE0_WriteVRAMByte_2 (E-0347)
+; why: a helper of DrawSlotHPMPStats_BankE0; DrawSlotHPMPStats_BankE0: C = slot: unless its
+; wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
+; (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD::
     ld a, c
     add a
@@ -657,6 +682,9 @@ DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD::
     jr DrawSlotHPMPStats_BankE0_WriteVRAMByte_2
 
 ; called from DrawSlotHPMPStats_BankE0: sets wDigits; calls Number24ToPackedBCD (E-0347)
+; why: a helper of DrawSlotHPMPStats_BankE0; DrawSlotHPMPStats_BankE0: C = slot: unless its
+; wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
+; (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_Number24ToPackedBCD::
     ld a, c
     add e
@@ -677,6 +705,9 @@ DrawSlotHPMPStats_BankE0_Number24ToPackedBCD::
     pop hl
 
 ; called from DrawSlotHPMPStats_BankE0: calls DrawSlotHPMPStats_BankE0_WriteVRAMByte_5 (E-0347)
+; why: a helper of DrawSlotHPMPStats_BankE0; DrawSlotHPMPStats_BankE0: C = slot: unless its
+; wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
+; (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WriteVRAMByte_2::
     ld b, $00
     push hl
@@ -700,10 +731,16 @@ DrawSlotHPMPStats_BankE0_IndexWordC::
     inc d
 
 ; called from RunDebugState_E0_DrawSlotHPMPStats_BankE0: calls WordAtDEToPackedBCD (E-0347)
+; why: a helper of RunDebugState_E0_DrawSlotHPMPStats_BankE0, in step 1 of RunDebugState_E0 (when
+; wDebugState = 1); RunDebugState_E0: runs the routine for wDebugState (jump table of fourteen)
+; (E-0352, E-0122)
 RunDebugState_E0_WordAtDEToPackedBCD::
     call WordAtDEToPackedBCD
 
 ; called from DrawSlotHPMPStats_BankE0: calls DrawSlotHPMPStats_BankE0_WriteVRAMByte_4 (E-0347)
+; why: a helper of DrawSlotHPMPStats_BankE0; DrawSlotHPMPStats_BankE0: C = slot: unless its
+; wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
+; (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WriteVRAMByte_3::
     push hl
     call DrawSlotHPMPStats_BankE0_WriteVRAMByte_4
@@ -717,6 +754,9 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte_3::
     ret
 
 ; Branches on hTemp1 & $0f; calls WriteVRAMByte (E-0347)
+; why: part of DrawSlotHPMPStats_BankE0_WriteVRAMByte, in a helper of DrawSlotHPMPStats_BankE0;
+; DrawSlotHPMPStats_BankE0: C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP,
+; MP and max MP words (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WriteVRAMByte_4::
     ld b, $00
     ldh a, [hTemp1]
@@ -733,6 +773,9 @@ DrawSlotHPMPStats_BankE0_WriteVRAMByte_4::
 
 ; Branches on hTemp1 & $0f; branches on b; calls WriteVRAMByte; branches on hTemp0 & $0f; branches
 ; on b; calls WriteVRAMByte (E-0347)
+; why: part of DrawSlotHPMPStats_BankE0_WriteVRAMByte, in a helper of DrawSlotHPMPStats_BankE0;
+; DrawSlotHPMPStats_BankE0: C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP,
+; MP and max MP words (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WriteVRAMByte_5::
     ldh a, [hTemp1]
     and $0f
@@ -806,6 +849,9 @@ DrawSlotHPMPStats_BankE0_DrawAIModeGlyph::
     ret
 
 ; called from DrawSlotHPMPStats_BankE0: calls WriteVRAMByte (E-0347)
+; why: a helper of DrawSlotHPMPStats_BankE0; DrawSlotHPMPStats_BankE0: C = slot: unless its
+; wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
+; (DrawSlotHPMPStats_BankE0_IndexWordC for each) ... (E-0352, E-0112)
 DrawSlotHPMPStats_BankE0_WriteVRAMByte::
     ld a, c
     ld de, wSlotNameSuffix
@@ -845,6 +891,8 @@ DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2::
 ; wDebugSubState to 0; calls DrawHexByteAtBGMap8A; sets wEffectId to $ff; advances wDebugState;
 ; copies wDebugSubState & $01 to wDebugSubState; sets wDebugState to 0; sets wDebugState to 4; then
 ; 2 more steps (see the code) (E-0347)
+; why: step 2 of RunDebugState_E0 (when wDebugState = 2); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_DrawFullScreenFromBankE0_2::
     ld a, [wJoypadPressed]
     and $04
@@ -913,6 +961,8 @@ RunDebugState_E0_DrawFullScreenFromBankE0_2::
 
 ; step 3 of RunDebugState_E0: calls WriteVRAMByteInc; branches on wLinkRole; sets wLevelUpGains to
 ; 7; branches on wLinkRole; sets wDebugValue3 to 0 (E-0347)
+; why: step 3 of RunDebugState_E0 (when wDebugState = 3); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_WriteVRAMByteInc::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -963,11 +1013,15 @@ RunDebugState_E0_WriteVRAMByteInc::
     ret
 
 ; step 4 of RunDebugState_E0: calls DrawTileMapAndStep (E-0347)
+; why: step 4 of RunDebugState_E0 (when wDebugState = 4); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_ToDrawTileMapAndStep::
     call DrawTileMapAndStep
     ret
 
 ; step 5 of RunDebugState_E0: calls DrawPacked2BitFieldsInRows; advances wDebugState (E-0347)
+; why: step 5 of RunDebugState_E0 (when wDebugState = 5); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_DrawPacked2BitFieldsInRows::
     ld hl, vBGMap0 + $61
     ld de, wSlotResistances
@@ -1090,6 +1144,8 @@ DrawBits10OfDEAsDigit::
     ld a, [de]
 
 ; Calls WriteVRAMByteInc (E-0347)
+; why: part of DrawBits10OfDEAsDigit; DrawBits10OfDEAsDigit: writes bits 1-0 of [DE] as digit tile
+; $E0 + value (0-3) at HL (WriteVRAMByteInc) (E-0352, E-0112)
 DrawBits10OfDEAsDigit_CallWriteVRAMByteInc::
     and $03
     add $e0
@@ -1097,6 +1153,8 @@ DrawBits10OfDEAsDigit_CallWriteVRAMByteInc::
     ret
 
 ; step 6 of RunDebugState_E0: may return early; sets wDebugState to 0 (E-0347)
+; why: step 6 of RunDebugState_E0 (when wDebugState = 6); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_WaitJoypadPressed::
     ld a, [wJoypadPressed]
     and $01
@@ -1134,6 +1192,8 @@ DrawTileMapAndStep::
 
 ; step 8 of RunDebugState_E0: calls DrawEightBytesAsHexColumns; calls RunForThreeBattlerRecords;
 ; advances wDebugState (E-0347)
+; why: step 8 of RunDebugState_E0 (when wDebugState = 8); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_DrawEightBytesAsHexColumns::
     ld de, wBattleSkills
     ld hl, vBGMap0 + $62
@@ -1233,6 +1293,9 @@ RunForThreeBattlerRecords::
 ; & $0f; calls WriteVRAMByte; branches on hTemp1 & $0f; branches on b; calls WriteVRAMByte; branches
 ; on hTemp1 & $0f; branches on b; calls WriteVRAMByte; branches on hTemp0 & $0f; branches on b; then
 ; 1 more step (see the code) (E-0347)
+; why: a helper of RunForThreeBattlerRecords; RunForThreeBattlerRecords: runs
+; RunForThreeBattlerRecords_Number24ToPackedBCD for B = 0, 1, 2 on the 78-byte records from
+; wBattlerRecords + $18 + 3 * $4E (E-0352, E-0122, E-0344)
 RunForThreeBattlerRecords_Number24ToPackedBCD::
     push af
     push bc
@@ -1322,6 +1385,8 @@ RunForThreeBattlerRecords_Number24ToPackedBCD_Data::
     db $e2, $99, $e8, $99, $ee, $99
 
 ; step 9 of RunDebugState_E0: may return early; sets wDebugState to 0 (E-0347)
+; why: step 9 of RunDebugState_E0 (when wDebugState = 9); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_WaitJoypadPressed_SetDebugState::
     ld a, [wJoypadPressed]
     and $02
@@ -1369,6 +1434,8 @@ DrawTileMapAndStep_Data::
 ; DrawHexByteAtBGMap8A; continues in DrawHexByteAtBGMap8A; may continue in
 ; DrawHexByteAtBGMap8A_CheckJoypadPressed; decrements wDebugSubState; may continue in
 ; DrawHexByteAtBGMap8A (E-0347)
+; why: step 10 of RunDebugState_E0 (when wDebugState = 10); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_DecompressGraphicsAToTiles0_2::
     ld a, [wEffectId]
     cp $ff
@@ -1441,6 +1508,9 @@ DrawHexByteAtBGMap8A::
 ; byte at wWorkBuf to wBattleTarget; copies the byte at wWorkBuf to wBattleActionId; sets
 ; wDebugState to $0b; sets wDebugSubState to 0; calls DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM;
 ; calls DrawSlotStatusBitsDebug; then 2 more steps (see the code) (E-0347)
+; why: part of DrawHexByteAtBGMap8A; DrawHexByteAtBGMap8A: writes A as two hex-digit tiles (0-9 as
+; $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write is
+; ... (E-0352, E-0112)
 DrawHexByteAtBGMap8A_CheckJoypadPressed::
     ld a, [wJoypadPressed]
     and $01
@@ -1479,6 +1549,9 @@ DrawHexByteAtBGMap8A_CheckJoypadPressed::
 ; wBattleFoeCount; copies the byte at wWorkBuf to wBattleActor; copies the byte at wWorkBuf to
 ; wBattleTarget; copies the byte at wWorkBuf to wBattleActionId; sets wDebugState to 0; sets
 ; wEffectId to $ff (E-0347)
+; why: part of DrawHexByteAtBGMap8A; DrawHexByteAtBGMap8A: writes A as two hex-digit tiles (0-9 as
+; $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write is
+; ... (E-0352, E-0112)
 DrawHexByteAtBGMap8A_CheckJoypadPressed2::
     ld a, [wJoypadPressed]
     and $02
@@ -1505,6 +1578,8 @@ DrawHexByteAtBGMap8A_CheckJoypadPressed2::
 ; ReadBGTileAtDebugCounterCell; calls WriteVRAMByte; branches on the byte at wDebugCounter & $0f &
 ; $0f; calls WriteVRAMByte; branches on the byte at wDebugCounter & $0f & $0f; calls WriteVRAMByte;
 ; calls ReadBGTileAtDebugCounterCell; then 3 more steps (see the code) (E-0347)
+; why: step 11 of RunDebugState_E0 (when wDebugState = 11); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_BlinkTemp0Tile::
     call BlinkTemp0Tile
     ld a, [wJoypadPressed]
@@ -1713,6 +1788,8 @@ BlinkTemp0Tile::
     ret
 
 ; step 12 of RunDebugState_E0: calls RunDebugSubState_E0 (E-0347)
+; why: step 12 of RunDebugState_E0 (when wDebugState = 12); RunDebugState_E0: runs the routine for
+; wDebugState (jump table of fourteen) (E-0352, E-0122)
 RunDebugState_E0_ToRunDebugSubState_E0::
     call RunDebugSubState_E0
     ret
@@ -1733,6 +1810,9 @@ RunDebugState_E0_ChooseActionTargets::
 ; calls ShowStringBank08AtTilesHLThenDefault_BankE0; sets wStringCategory to $0e; sets wStringIndex
 ; to 0; calls ShowStringBank08AtTilesHLThenDefault_BankE0; calls WriteVRAMByteInc; sets wBattleActor
 ; to 0; sets wDebugSubState to 1 (E-0347)
+; why: step 0 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 0);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0::
     ld hl, vTiles2 + $10
     ld de, $1001
@@ -1777,6 +1857,9 @@ RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0
 ; step 1 of RunDebugState_E0_ChooseActionTargets: calls PersonalityIndexOfSlot_BankE0; sets
 ; wPersonalityIndex; calls RunDebugState_E0_ChooseActionTargets_WriteRandomLoAndRandomHiEtc; sets
 ; wDebugSubState to 2 (E-0347)
+; why: step 1 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 1);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
@@ -1788,6 +1871,9 @@ RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0::
 
 ; step 2 of RunDebugState_E0_ChooseActionTargets: calls
 ; RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor; sets wDebugSubState to 3 (E-0347)
+; why: step 2 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 2);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_WriteDebugSubState::
     farcall RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor
     ld a, $03
@@ -1800,6 +1886,9 @@ RunDebugState_E0_ChooseActionTargets_WriteDebugSubState::
 ; to 1; branches on $01; copies wBattleActor & $07 to wBattleActor; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; sets wDebugSubState to 1; then 2 more steps (see the code)
 ; (E-0347)
+; why: step 3 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 3);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_WriteDebugSubStateAndBattleActor::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1862,6 +1951,9 @@ RunDebugState_E0_ChooseActionTargets_WriteDebugSubStateAndBattleActor::
 
 ; step 4 of RunDebugState_E0_ChooseActionTargets: sets wBattleActor to 0; sets wDebugSubState to 0;
 ; sets wDebugState to 3; continues in FillBytes (E-0347)
+; why: step 4 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 4);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_WriteBattleActorAndDebugSubStateEtc::
     xor a
     ld [wBattleActor], a
@@ -1875,6 +1967,9 @@ RunDebugState_E0_ChooseActionTargets_WriteBattleActorAndDebugSubStateEtc::
 
 ; step 5 of RunDebugState_E0_ChooseActionTargets: calls
 ; RunDebugState_E0_ChooseActionTargets_AIChooseActionForActor; sets wDebugSubState to 2 (E-0347)
+; why: step 5 of RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 5);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_2::
     farcall RunDebugState_E0_ChooseActionTargets_AIChooseActionForActor
     ld a, $02
@@ -2093,6 +2188,9 @@ DrawSkillRecordFirstByteDigits::
 ; LoadSkillRecord; calls HLToDecimalDigits; calls WriteVRAMByte; calls HLToDecimalDigits; calls
 ; WriteVRAMByte; calls HLToDecimalDigits; calls WriteVRAMByte; calls HLToDecimalDigits; calls
 ; WriteVRAMByte (E-0347)
+; why: a helper of DrawSkillDebugDigitsAndRecord; DrawSkillDebugDigitsAndRecord:
+; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_LoadSkillRecord, then far-calls ...
+; (E-0352, E-0122, E-0345)
 DrawSkillDebugDigitsAndRecord_LoadSkillRecord::
     ld a, [wDebugValue0]
     ld [wRecordBuffer], a
@@ -2194,6 +2292,9 @@ DrawFullScreenFromBankE0_2::
     ret
 
 ; called from DrawHexByteAtBGMap8A: calls CopyRectFromBankToVRAM (E-0347)
+; why: a helper of DrawHexByteAtBGMap8A; DrawHexByteAtBGMap8A: writes A as two hex-digit tiles (0-9
+; as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write
+; is ... (E-0352, E-0112)
 DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM::
     ld hl, vBGMap0
     ld de, DrawHexByteAtBGMap8A_ToCopyRectFromBankToVRAM_TileRect
@@ -2301,6 +2402,9 @@ ShowStringBank09AtTilesHL_BankE0::
     ret
 
 ; called from DrawHexByteAtBGMap8A: calls QueueSoundEffect (E-0347)
+; why: a helper of DrawHexByteAtBGMap8A; DrawHexByteAtBGMap8A: writes A as two hex-digit tiles (0-9
+; as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write
+; is ... (E-0352, E-0112)
 DrawHexByteAtBGMap8A_QueueSoundEffect::
     ld a, [wDebugSubState]
     ld hl, DebugSoundEffectList
@@ -2454,6 +2558,10 @@ EffectTestEntries::
 ; wLinkMode; calls AIChooseActionResolveStep; calls ChooseTargetIfUnset; copies L to wRandomLo;
 ; copies H to wRandomHi; copies L to wRandomSeed2Lo; copies H to wRandomSeed2Hi; calls
 ; AIChooseActionResolveStep; calls ChooseTargetIfUnset (E-0347)
+; why: a helper of RunDebugState_E0_ChooseActionTargets_PersonalityIndexOfSlot_BankE0, in step 1 of
+; RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 1);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_WriteRandomLoAndRandomHiEtc::
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -2515,6 +2623,10 @@ ChooseTargetIfUnset::
 ; wBattleActor & $03; sets wStringIndex; sets wStringCategory to $0e; calls
 ; ShowStringBank08AtTilesHLThenDefault_BankE0_2; calls WriteVRAMByte; then 34 more steps (see the
 ; code) (E-0347)
+; why: a helper of RunDebugState_E0_ChooseActionTargets_WriteDebugSubState, in step 2 of
+; RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 2);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor::
     call DisplayedSlotOfActor
     ld hl, RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor_Data
@@ -3023,6 +3135,10 @@ RunDebugState_E0_ChooseActionTargets_DisplayedSlotOfActor_Data_Entry07::
 ; calls AIChooseActionForActor; calls ChooseActionTarget; copies L to wRandomLo; copies H to
 ; wRandomHi; copies L to wRandomSeed2Lo; copies H to wRandomSeed2Hi; calls AIChooseActionForActor;
 ; calls ChooseActionTarget (E-0347)
+; why: a helper of RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_2, in step 5 of
+; RunDebugState_E0_ChooseActionTargets (when wDebugSubState = 5);
+; RunDebugState_E0_ChooseActionTargets: debug battle state $0D: shows a string, reads the slot's
+; personality and, for an actor without a target, far-calls ChooseActionTarget (E-0352)
 RunDebugState_E0_ChooseActionTargets_AIChooseActionForActor::
     ld a, [wLinkMode]
     or a
@@ -3108,6 +3224,9 @@ ShowStringBank09AtHLSizeDEThenDefault_BankE0::
 ; DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7_CheckWorkBuf; calls
 ; RunFieldEventFieldEventKind; calls IncrementSpriteSlotCounters; dispatches through the table that
 ; follows (E-0347)
+; why: a helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the
+; screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_RunFieldEventFieldEventKind::
     ld a, [wWorkBuf]
     or a
@@ -3149,6 +3268,9 @@ DebugStaffRoll_Scene00::
 ; wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM;
 ; calls DrawFullScreenBufferToBGMap; sets wSpriteSlotCount to 3; sets wFieldEventKind to 1; calls
 ; ResetScreenPalettes_E0; calls StartPaletteFade; then 1 more step (see the code) (E-0347)
+; why: step 0 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 0); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DecompressToVRAM::
     ld b, $7d
     ld de, FieldSpriteGfx00
@@ -3293,6 +3415,9 @@ DebugStaffRoll_Scene00_DecompressToVRAM::
 ; step 1 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; returns unless wFadeState is 0; sets
 ; wSpriteSlotCount to 4; calls StepSpriteSlotToward; may return early; calls SetSpriteSlotByte5;
 ; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 1); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3316,6 +3441,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots::
 ; step 2 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 2 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 2); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
@@ -3337,6 +3465,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward::
 
 ; step 3 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 3 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 3); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_2::
     call DrawSpriteSlots
     ld a, $03
@@ -3351,6 +3482,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; step 4 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 4 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 4); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_3::
     call DrawSpriteSlots
     ld a, $00
@@ -3372,6 +3506,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_3::
 ; step 5 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf +
 ; $1 (E-0347)
+; why: step 5 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 5); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_4::
     call DrawSpriteSlots
     ld a, $03
@@ -3389,6 +3526,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_4::
 
 ; step 6 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotTowardDE; may return
 ; early; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 6 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 6); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE::
     call DrawSpriteSlots
     ld a, $02
@@ -3405,6 +3545,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotTowardDE::
 
 ; step 9 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 9 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 9); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_5::
     call DrawSpriteSlots
     ld a, $02
@@ -3428,6 +3571,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_5::
 ; step 10 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; calls SetSpriteSlotByte5; increments wWorkBuf +
 ; $1 (E-0347)
+; why: step 10 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 10); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_6::
     call DrawSpriteSlots
     ld a, $01
@@ -3455,6 +3601,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_6::
 ; step 11 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; calls
 ; SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 11 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 11); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_7::
     call DrawSpriteSlots
     ld a, $02
@@ -3484,6 +3633,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_7::
 
 ; step 12 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 12 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 12); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_8::
     call DrawSpriteSlots
     ld a, $01
@@ -3503,6 +3655,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_8::
 ; step 13 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf +
 ; $1 (E-0347)
+; why: step 13 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 13); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_9::
     call DrawSpriteSlots
     ld a, $00
@@ -3526,6 +3681,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_9::
 
 ; step 14 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepWorkBuf5Mod15; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 14 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 14); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15::
     call DrawSpriteSlots
     call StepWorkBuf5Mod15
@@ -3540,6 +3698,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepWorkBuf5Mod15::
 ; step 15 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; sets wFieldEventKind to 0; calls
 ; StartPaletteFade; sets wWorkBuf to 0 (E-0347)
+; why: step 15 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 15); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_10::
     call DrawSpriteSlots
     ld a, $00
@@ -3563,6 +3724,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_10::
 
 ; step 7 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 7 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 7); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_11::
     call DrawSpriteSlots
     ld a, $02
@@ -3581,6 +3745,9 @@ DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_11::
 ; step 8 of DebugStaffRoll_Scene00: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 8 of DebugStaffRoll_Scene00 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene00: by
+; wWorkBuf+1: decompresses the scene's graphics, then one DrawSpriteSlots step per frame step
+; (E-0352)
 DebugStaffRoll_Scene00_DrawSpriteSlots_StepSpriteSlotToward_12::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $a]
@@ -3636,6 +3803,8 @@ DebugStaffRoll_Scene01::
 ; wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM;
 ; calls DrawFullScreenBufferToBGMap; sets wSpriteSlotCount to 2; sets wFieldEventKind to 1; calls
 ; ResetScreenPalettes_E0; calls StartPaletteFade; then 1 more step (see the code) (E-0347)
+; why: step 0 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 0); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DecompressToVRAM::
     ld b, $7d
     ld de, FieldSpriteGfx00
@@ -3755,6 +3924,8 @@ DebugStaffRoll_Scene01_DecompressToVRAM::
 ; step 1 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; returns unless wFadeState is 0; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 1); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -3775,6 +3946,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots::
 
 ; step 2 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls SetSpriteSlotByte5; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 2 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 2); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -3821,6 +3994,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Data2::
 
 ; step 3 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; sets wSpriteSlotCount to 3; calls
 ; StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 3 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 3); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15::
     call DrawSpriteSlots
     ld a, $03
@@ -3833,6 +4008,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepWorkBuf5Mod15::
 
 ; step 4 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; calls
 ; StepWorkBuf5Mod15; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 4 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 4); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld d, $60
@@ -3871,6 +4048,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_Data::
 
 ; step 5 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod30; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 5 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 5); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_2::
     call DrawSpriteSlots
     ld a, $02
@@ -3885,6 +4064,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; step 22 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls SetSpriteSlotByte5; calls
 ; StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 22 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 22); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2::
     call DrawSpriteSlots
     ld a, $02
@@ -3918,6 +4099,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_2::
 ; step 20 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls SetSpriteSlotByte5; calls
 ; StepSpriteSlotToward; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1
 ; (E-0347)
+; why: step 20 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 20); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_3::
     call DrawSpriteSlots
     ld a, $02
@@ -3942,6 +4125,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_3::
 
 ; step 21 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 21 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 21); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_3::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -3963,6 +4148,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_3::
 ; wObject1 + OBJ_SPRITE_ID; sets wSpriteSlotCount to 2; calls SetSpriteSlotByte5; calls
 ; StepWorkBuf5Mod15; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1; sets
 ; wObject1 + OBJ_SPRITE_ID; increments wObject1 + OBJ_STATE (E-0347)
+; why: step 24 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 24); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_4::
     call DrawSpriteSlots
     ld a, $02
@@ -3999,6 +4186,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_SetSpriteSlotByte5_4::
 ; step 25 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; sets wSpriteSlotCount to 2; calls
 ; StepWorkBuf5Mod15; may return early; sets wFieldEventKind to 0; calls StartPaletteFade; sets
 ; wWorkBuf to 0 (E-0347)
+; why: step 25 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 25); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_2::
     call DrawSpriteSlots
     ld a, [wSpriteSlots + $2]
@@ -4038,6 +4227,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_2::
 
 ; step 6 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 6 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 6); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_4::
     call DrawSpriteSlots
     ld d, $50
@@ -4067,6 +4258,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_4::
 
 ; step 9 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 9 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 9); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_5::
     call DrawSpriteSlots
     ld d, $60
@@ -4096,6 +4289,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_5::
 
 ; step 7 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 7 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 7); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_6::
     call DrawSpriteSlots
     ld d, $40
@@ -4125,6 +4320,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_6::
 
 ; step 8 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepSpriteSlotToward; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 8 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_7::
     call DrawSpriteSlots
     ld d, $50
@@ -4154,6 +4351,8 @@ DebugStaffRoll_Scene01_DrawSpriteSlots_StepSpriteSlotToward_7::
 
 ; step 23 of DebugStaffRoll_Scene01: calls DrawSpriteSlots; calls StepWorkBuf5Mod15; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 23 of DebugStaffRoll_Scene01 (when wWorkBuf + $1 = 23); DebugStaffRoll_Scene01: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene01_DrawSpriteSlots_3::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4227,6 +4426,8 @@ DebugStaffRoll_Scene02::
 ; wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM;
 ; calls DrawFullScreenBufferToBGMap; sets wSpriteSlotCount to 2; calls ResetScreenPalettes_E0; calls
 ; StartPaletteFade; increments wWorkBuf + $1 (E-0347)
+; why: step 0 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 0); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DecompressToVRAM::
     ld b, $7d
     ld de, FieldSpriteGfx00
@@ -4419,6 +4620,8 @@ DebugStaffRoll_Scene02_DecompressToVRAM::
 ; step 1 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; returns unless wFadeState is 0; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 1); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -4439,6 +4642,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots::
 
 ; step 2 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls SetSpriteSlotByte5; may return
 ; early; calls SetSpriteSlotByte5; sets wSpriteSlotCount to 3; increments wWorkBuf + $1 (E-0347)
+; why: step 2 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 2); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4487,6 +4692,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_Data2::
 
 ; step 3 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; sets wSpriteSlotCount to 4; increments wWorkBuf + $1 (E-0347)
+; why: step 3 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 3); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, $02
@@ -4501,6 +4708,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward::
 
 ; step 4 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 4 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 4); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_2::
     call DrawSpriteSlots
     ld a, $02
@@ -4525,6 +4734,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; step 10 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; sets wSpriteSlotCount to 6; increments wWorkBuf + $1 (E-0347)
+; why: step 10 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 10); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_3::
     call DrawSpriteSlots
     ld a, $04
@@ -4539,6 +4750,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_3::
 
 ; step 11 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 11 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 11); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_4::
     call DrawSpriteSlots
     ld a, $04
@@ -4557,6 +4770,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_4::
 
 ; step 17 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls SetSpriteSlotByte5; calls
 ; StepWorkBuf5Mod15; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 17 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 17); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4592,6 +4807,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_2::
 
 ; step 22 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; sets wObject2 + OBJ_X; calls
 ; StepWorkBuf5Mod30; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 22 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 22); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_3::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4630,6 +4847,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_3::
 
 ; step 23 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; sets wSpriteSlotCount to 5; increments wWorkBuf + $1 (E-0347)
+; why: step 23 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 23); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_5::
     call DrawSpriteSlots
     ld a, $04
@@ -4652,6 +4871,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_5::
 ; step 24 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; sets wSpriteSlotCount to 4; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 24 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 24); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_6::
     call DrawSpriteSlots
     ld a, $04
@@ -4682,6 +4903,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_6::
 
 ; step 25 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 25 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 25); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_7::
     call DrawSpriteSlots
     ld a, $00
@@ -4706,6 +4929,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_7::
 
 ; step 5 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 5 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 5); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_8::
     call DrawSpriteSlots
     ld a, $02
@@ -4727,6 +4952,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_8::
 
 ; step 6 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 6 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 6); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_9::
     call DrawSpriteSlots
     ld a, $02
@@ -4745,6 +4972,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_9::
 
 ; step 7 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 7 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 7); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_10::
     call DrawSpriteSlots
     ld a, $02
@@ -4763,6 +4992,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_10::
 
 ; step 8 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 8 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_11::
     call DrawSpriteSlots
     ld a, $02
@@ -4779,6 +5010,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_11::
 ; step 9 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; sets wSpriteSlotCount
 ; to 5; increments wWorkBuf + $1 (E-0347)
+; why: step 9 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 9); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_12::
     call DrawSpriteSlots
     ld a, $02
@@ -4807,6 +5040,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_12::
 
 ; step 12 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 12 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 12); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_13::
     call DrawSpriteSlots
     ld a, $04
@@ -4828,6 +5063,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_13::
 
 ; step 13 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 13 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 13); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_14::
     call DrawSpriteSlots
     ld a, $04
@@ -4846,6 +5083,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_14::
 
 ; step 14 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 14 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 14); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_15::
     call DrawSpriteSlots
     ld a, $04
@@ -4864,6 +5103,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_15::
 
 ; step 15 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 15 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 15); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_16::
     call DrawSpriteSlots
     ld a, $04
@@ -4880,6 +5121,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_16::
 ; step 16 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; increments wWorkBuf +
 ; $1 (E-0347)
+; why: step 16 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 16); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_17::
     call DrawSpriteSlots
     ld a, $04
@@ -4901,6 +5144,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_17::
 ; step 26 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod15; may return early; calls
 ; StartPaletteFade; sets wWorkBuf to 0 (E-0347)
+; why: step 26 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 26); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_18::
     call DrawSpriteSlots
     ld a, $01
@@ -4928,6 +5173,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_18::
 
 ; step 18 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; sets wObject2 + OBJ_X; calls
 ; StepWorkBuf5Mod60; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 18 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 18); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_4::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -4960,6 +5207,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_4::
 
 ; step 19 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepWorkBuf5Mod60; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 19 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 19); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -4976,6 +5225,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod60::
 
 ; step 20 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; calls StepWorkBuf5Mod30; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 20 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 20); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30::
     call DrawSpriteSlots
     call StepWorkBuf5Mod30
@@ -4986,6 +5237,8 @@ DebugStaffRoll_Scene02_DrawSpriteSlots_StepWorkBuf5Mod30::
 
 ; step 21 of DebugStaffRoll_Scene02: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 21 of DebugStaffRoll_Scene02 (when wWorkBuf + $1 = 21); DebugStaffRoll_Scene02: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene02_DrawSpriteSlots_StepSpriteSlotToward_19::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5032,6 +5285,8 @@ DebugStaffRoll_Scene03::
 ; wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM;
 ; calls DrawFullScreenBufferToBGMap; sets wSpriteSlotCount to 6; calls ResetScreenPalettes_E0; calls
 ; StartPaletteFade; increments wWorkBuf + $1 (E-0347)
+; why: step 0 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 0); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DecompressToVRAM::
     ld b, $7d
     ld de, FieldSpriteGfx00
@@ -5254,6 +5509,8 @@ DebugStaffRoll_Scene03_DecompressToVRAM::
 ; step 1 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; returns unless wFadeState is 0; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 1); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5274,6 +5531,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots::
 
 ; step 2 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls SetSpriteSlotByte5; may return
 ; early; calls SetSpriteSlotByte5; sets wSpriteSlotCount to 7; increments wWorkBuf + $1 (E-0347)
+; why: step 2 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 2); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5315,6 +5574,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5::
 
 ; step 3 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls StepWorkBuf5Mod45; may return
 ; early; calls SetSpriteSlotByte5; sets wSpriteSlotCount to 6; increments wWorkBuf + $1 (E-0347)
+; why: step 3 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 3); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45::
     call DrawSpriteSlots
     call StepWorkBuf5Mod45
@@ -5330,6 +5591,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepWorkBuf5Mod45::
 
 ; step 4 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod30; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 4 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 4); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, $00
@@ -5348,6 +5611,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward::
 ; step 5 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; sets wObject2 + OBJ_X; sets wObject2 +
 ; OBJ_FLAGS; sets wSpriteSlotCount to 5; sets wObject1 + OBJ_X; calls StepWorkBuf5Mod15; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 5 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 5); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5391,6 +5656,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Data::
 
 ; step 6 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; sets wSpriteSlotCount to 4; calls
 ; StepWorkBuf5Mod30; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 6 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 6); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_3::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5435,6 +5702,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_Data_2::
 ; step 7 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls SetSpriteSlotByte5; calls
 ; StepSpriteSlotToward; may return early; calls SetSpriteSlotByte5; increments wWorkBuf + $1
 ; (E-0347)
+; why: step 7 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 7); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5_2::
     call DrawSpriteSlots
     ld a, $02
@@ -5469,6 +5738,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_SetSpriteSlotByte5_2::
 ; step 8 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; calls StepWorkBuf5Mod30; may return early; increments wWorkBuf +
 ; $1 (E-0347)
+; why: step 8 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_2::
     call DrawSpriteSlots
     ld a, $02
@@ -5492,6 +5763,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_2::
 
 ; step 9 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 9 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 9); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_3::
     call DrawSpriteSlots
     ld a, $00
@@ -5511,6 +5784,8 @@ DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_3::
 ; step 10 of DebugStaffRoll_Scene03: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; calls StartPaletteFade; sets wWorkBuf to 0
 ; (E-0347)
+; why: step 10 of DebugStaffRoll_Scene03 (when wWorkBuf + $1 = 10); DebugStaffRoll_Scene03: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene03_DrawSpriteSlots_StepSpriteSlotToward_4::
     call DrawSpriteSlots
     ld a, $00
@@ -5554,6 +5829,8 @@ DebugStaffRoll_Scene04::
 ; wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM;
 ; calls DrawFullScreenBufferToBGMap; sets wSpriteSlotCount to 4; calls ResetScreenPalettes_E0; calls
 ; StartPaletteFade; increments wWorkBuf + $1 (E-0347)
+; why: step 0 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 0); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DecompressToVRAM::
     ld b, $7d
     ld de, FieldSpriteGfx00
@@ -5696,6 +5973,8 @@ DebugStaffRoll_Scene04_DecompressToVRAM::
 ; step 1 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; returns unless wFadeState is 0; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod30; may return early; calls
 ; SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 1); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots::
     call DrawSpriteSlots
     ld a, [wFadeState]
@@ -5722,6 +6001,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots::
 
 ; step 2 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 2 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 2); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5751,6 +6032,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward::
 ; step 3 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; increments wWorkBuf + $1; calls SetSpriteSlotByte5
 ; (E-0347)
+; why: step 3 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 3); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5791,6 +6074,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_2::
 ; step 9 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepSpriteSlotToward; sets wObject1
 ; + OBJ_X; calls StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod30; may return early;
 ; increments wWorkBuf + $1 (E-0347)
+; why: step 9 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 9); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_2::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5878,6 +6163,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_Data::
 
 ; step 10 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; increments wWorkBuf + $1 (E-0347)
+; why: step 10 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 10); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_3::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -5921,6 +6208,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_3::
 
 ; step 11 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepWorkBuf5Mod60; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 11 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 11); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -5931,6 +6220,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60::
 
 ; step 13 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 13 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 13); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_3::
     call DrawSpriteSlots
     ld a, $00
@@ -5950,6 +6241,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_3::
 ; step 14 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; calls StepWorkBuf5Mod15; may return early; calls StartPaletteFade; sets wWorkBuf to 0
 ; (E-0347)
+; why: step 14 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 14); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_4::
     call DrawSpriteSlots
     ld a, $00
@@ -5971,6 +6264,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_4::
 
 ; step 5 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepWorkBuf5Mod60; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 5 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 5); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_2::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -5988,6 +6283,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_2::
 ; step 12 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; calls
 ; SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 12 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 12); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_5::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6015,6 +6312,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_5::
 
 ; step 4 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepWorkBuf5Mod60; may return
 ; early; calls SetSpriteSlotByte5; increments wWorkBuf + $1 (E-0347)
+; why: step 4 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 4); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_3::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6031,6 +6330,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_3::
 
 ; step 6 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepWorkBuf5Mod60; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 6 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 6); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_4::
     call DrawSpriteSlots
     call StepWorkBuf5Mod60
@@ -6042,6 +6343,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepWorkBuf5Mod60_4::
 ; step 7 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; may return early; calls
 ; StepSpriteSlotToward; may return early; calls StepWorkBuf5Mod15; may return early; increments
 ; wWorkBuf + $1 (E-0347)
+; why: step 7 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 7); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_6::
     call DrawSpriteSlots
     ld a, [wWorkBuf + $6]
@@ -6066,6 +6369,8 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_6::
 
 ; step 8 of DebugStaffRoll_Scene04: calls DrawSpriteSlots; calls StepSpriteSlotToward; may return
 ; early; increments wWorkBuf + $1 (E-0347)
+; why: step 8 of DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene04: as
+; DebugStaffRoll_Scene00 (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7::
     call DrawSpriteSlots
     ld a, $02
@@ -6080,6 +6385,9 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7::
     ret
 
 ; Dispatches through the table that follows (E-0347)
+; why: part of DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7, in step 8 of
+; DebugStaffRoll_Scene04 (when wWorkBuf + $1 = 8); DebugStaffRoll_Scene04: as DebugStaffRoll_Scene00
+; (E-0352)
 DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7_CheckWorkBuf::
     ld a, [wWorkBuf + $2]
     or a
@@ -6103,6 +6411,10 @@ DebugStaffRoll_Scene04_DrawSpriteSlots_StepSpriteSlotToward_7_CheckWorkBuf::
 ; WorkBufSequenceTable; calls ShowString_BankE0; branches on C; calls FillTilesRequest; sets
 ; wStringCategory to 1; copies the byte at WorkBufSequenceTable to wStringIndex; then 32 more steps
 ; (see the code) (E-0347)
+; why: step 0 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 0), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_FillTilesRequest::
     ld a, [wWorkBuf + $4]
     or a
@@ -6496,6 +6808,10 @@ DebugStaffRoll_Update_FillTilesRequest::
 ; hMapScreenX to 1; sets hMapScreenY to 0; sets hPlayerX to $b0; sets hPlayerY to $40; sets
 ; hPlayerFacing to 3; copies wPartyCount to wScriptTemp4; sets EVENT_STAFF_ROLL_PARTY_SAVED; sets
 ; wGameMode to 1; then 5 more steps (see the code) (E-0347)
+; why: step 1 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 1), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_2::
     ld hl, wWorkBuf + $5
     ld a, [hli]
@@ -6565,6 +6881,10 @@ DebugStaffRoll_Update_2::
 
 ; step 2 of DebugStaffRoll_Update_RunFieldEventFieldEventKind: returns unless wFadeState is 0;
 ; branches on wFadeState; increments wWorkBuf + $2; increments wWorkBuf (E-0347)
+; why: step 2 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 2), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_3::
     ld a, [wFadeState]
     or a
@@ -6591,6 +6911,10 @@ DebugStaffRoll_Update_3::
 ; CopyFromBankWaitVRAM; sets rVBK to 1; calls FillBGMapRectWithAWrapped; sets rVBK to 0; calls
 ; FillBGMapRectWithAWrapped; calls FillVRAMRectWithTileSequence; branches on wSGBActive; then 3 more
 ; steps (see the code) (E-0347)
+; why: step 0 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 0), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_FillTilesRequest_2::
     ld hl, vTiles2 + $7f0
     ld de, $0101
@@ -6650,6 +6974,10 @@ DebugStaffRoll_Update_FillTilesRequest_2::
 
 ; step 1 of DebugStaffRoll_Update_RunFieldEventFieldEventKind: may return early; calls
 ; StartPaletteFade; increments wWorkBuf + $1 (E-0347)
+; why: step 1 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 1), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_StartPaletteFade::
     ld a, [wWorkBuf + $5]
     sub $01
@@ -6669,6 +6997,10 @@ DebugStaffRoll_Update_StartPaletteFade::
 
 ; step 2 of DebugStaffRoll_Update_RunFieldEventFieldEventKind: returns unless wFadeState is 0;
 ; increments wWorkBuf + $2; increments wWorkBuf (E-0347)
+; why: step 2 of DebugStaffRoll_Update_RunFieldEventFieldEventKind (when wWorkBuf + $2 = 2), in a
+; helper of DebugStaffRoll_Update; DebugStaffRoll_Update: update for debug-mode state 8: the screen
+; shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI HORII, ENIX, TOSE, FUMINORI ISHIKAWA)
+; (E-0352, E-0041)
 DebugStaffRoll_Update_AdvanceWorkBuf::
     ld a, [wFadeState]
     or a
@@ -7312,32 +7644,44 @@ GetBattleATK_BankE0:: ; configured code entry (E-0213); C0
     jr GetBattleMP_BankE0_Skip
 
 ; Changes HL; continues in GetBattleMP_BankE0_Skip (E-0347)
+; why: part of GetBattleDEF; GetBattleDEF: A = battle slot: HL = the word for that slot in the array
+; at wBattleDEF (ReadBattleWordFromArray) (E-0352)
 GetBattleDEF_BankE0::
     ld hl, wBattleDEF
     jr GetBattleMP_BankE0_Skip
 
 ; Changes HL; continues in GetBattleMP_BankE0_Skip (E-0347)
+; why: part of GetBattleMaxHP; GetBattleMaxHP: A = battle slot: HL = the word for that slot in the
+; array at wBattleMaxHP (ReadBattleWordFromArray) (E-0352)
 GetBattleMaxHP_BankE0::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankE0_Skip
 
 ; Changes HL; continues in GetBattleMP_BankE0_Skip (E-0347)
+; why: part of GetBattleMaxMP; GetBattleMaxMP: A = battle slot: HL = the word for that slot in the
+; array at wBattleMaxMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMaxMP_BankE0::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankE0_Skip
 
 ; Changes HL; continues in GetBattleMP_BankE0_Skip (E-0347)
+; why: part of GetBattleHP; GetBattleHP: A = battle slot: HL = the word for that slot in the array
+; at wBattleHP (ReadBattleWordFromArray) (E-0352)
 GetBattleHP_BankE0::
     ld hl, wBattleHP
     jr GetBattleMP_BankE0_Skip
 
 ; Changes HL; continues in GetBattleMP_BankE0_Skip (E-0347)
+; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
+; at wBattleMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMP_BankE0::
     ld hl, wBattleMP
     jr GetBattleMP_BankE0_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 ; Takes HL and A; changes HL and A (E-0347)
+; why: part of GetBattleMP_BankE0, in part of GetBattleMP; GetBattleMP: A = battle slot: HL = the
+; word for that slot in the array at wBattleMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMP_BankE0_Skip::
     add a
     add_a_to_hl
@@ -7392,6 +7736,8 @@ TargetOnLocalSide_BankE0::
     ret
 
 ; Takes DE; changes HL, A and D (E-0347)
+; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
+; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
 ClearBattleStatusBitsWithMaskD_BankE0::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE0_Data

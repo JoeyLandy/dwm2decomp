@@ -298,6 +298,9 @@ MetaSprites25Attrs::
 ; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; increments
 ; hOamNextEntry; branches on hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches
 ; on the byte at hMetaSpriteXLo; branches on B; then 18 more steps (see the code) (E-0347)
+; why: a helper of DrawMetaSpriteSet_Bank25; DrawMetaSpriteSet_Bank25: ORs the attribute bits from
+; MetaSprites25Attrs[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the
+; sprite from ... (E-0352, E-0124)
 DrawMetaSpriteSet_Bank25_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

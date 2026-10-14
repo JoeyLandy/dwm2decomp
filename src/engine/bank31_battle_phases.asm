@@ -158,6 +158,8 @@ BattlePhase0_Step2::
     dw BattlePhase0_Step2_CopyFiveGlyphsPlusMarks
 
 ; step 0 of BattlePhase0_Step2: increments wArg1; sets wLinkSendByte to $d2 (E-0347)
+; why: step 0 of BattlePhase0_Step2 (when wArg1 = 0); BattlePhase0_Step2: wBattlePhase 0,
+; wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_SetArg1::
     ld a, [wArg1]
     inc a
@@ -168,6 +170,8 @@ BattlePhase0_Step2_SetArg1::
 
 ; step 1 of BattlePhase0_Step2: returns unless wLinkMessage is $d2; sets wLinkSendByte to 0;
 ; increments wArg1 (E-0347)
+; why: step 1 of BattlePhase0_Step2 (when wArg1 = 1); BattlePhase0_Step2: wBattlePhase 0,
+; wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $d2
@@ -183,6 +187,8 @@ BattlePhase0_Step2_WaitLinkMessage::
 ; wLinkTimeoutHi; copies L to wLinkBufferCountLo; copies H to wLinkBufferCountHi; copies L to
 ; wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to $ff; sets wLinkReady to 1
 ; (E-0347)
+; why: step 2 of BattlePhase0_Step2 (when wArg1 = 2); BattlePhase0_Step2: wBattlePhase 0,
+; wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc::
     ld a, [wArg1]
     inc a
@@ -211,6 +217,8 @@ BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc::
 ; step 3 of BattlePhase0_Step2: returns unless wLinkMessage is $f0; sets wLinkSendByte to 0; sets
 ; wLinkReady to 0; sets wArg1 to 0; sets wBattleTextWork2 to $f0; calls CopyFiveGlyphsPlusMarks;
 ; continues in BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip (E-0347)
+; why: step 3 of BattlePhase0_Step2 (when wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0,
+; wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks::
     ld a, [wLinkMessage]
     cp $f0
@@ -236,6 +244,8 @@ BattlePhase0_Step2_CopyFiveGlyphsPlusMarks::
 ; BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip4; continues in
 ; BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip5; continues in
 ; BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_ReadBattlePictureIds::
     ld a, [wBattlePictureIds]
     ld l, a
@@ -304,32 +314,44 @@ BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_ReadBattlePictureIds::
     jr BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex
 
 ; Changes HL and A; continues in BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip::
     ld hl, wTextBuf0
     ld a, $01
     jr BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex
 
 ; Changes A; continues in BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip2::
     ld a, $02
     jr BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex
 
 ; Changes A; continues in BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip3::
     ld a, $03
     jr BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex
 
 ; Changes A; continues in BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip4::
     ld a, $04
     jr BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex
 
 ; Changes A (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_Skip5::
     ld a, $05
 
 ; Sets wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank2F; advances
 ; wBattleStep (E-0347)
+; why: part of BattlePhase0_Step2_CopyFiveGlyphsPlusMarks, in step 3 of BattlePhase0_Step2 (when
+; wArg1 = 3); BattlePhase0_Step2: wBattlePhase 0, wBattleStep 2 (E-0352, E-0044)
 BattlePhase0_Step2_CopyFiveGlyphsPlusMarks_SetStringIndex::
     ld [wStringIndex], a ; 'Monsters appear!'
     ld a, $00
@@ -432,6 +454,8 @@ BattlePhase0_Step3::
 ; BattlePhase0_Step3_CopyStringHLToDE; sets wTextBuf0 to $16; sets wTextBuf0 to $32; sets wTextBuf0
 ; to $31; sets wTextBuf0 to $36; sets wTextBuf0 to $37; sets wTextBuf0 to $28; sets wTextBuf0 to
 ; $35; sets wTextBuf0 to $36; sets wTextBuf0 to $f0; branches on wStringIndex (E-0347)
+; why: a helper of BattlePhase0_Step3; BattlePhase0_Step3: wBattlePhase 0, wBattleStep 3 (E-0352,
+; E-0044)
 BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
     ld a, [wBattlePictureIds]
     ld e, a
@@ -525,6 +549,8 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
 
 ; Calls CopyStringHLToDE; branches on the byte at wTextBuf0; copies E to wStringCategory; copies D
 ; to wStringIndex (E-0347)
+; why: part of BattlePhase0_Step3; BattlePhase0_Step3: wBattlePhase 0, wBattleStep 3 (E-0352,
+; E-0044)
 BattlePhase0_Step3_CopyStringHLToDE::
     ld a, [wStringCategory]
     ld l, a
@@ -719,6 +745,7 @@ BattleEnd_Step2::
     ret
 
 ; called from BattleEnd_Step2: decrements wBattleEndTimer; may return early (E-0347)
+; why: a helper of BattleEnd_Step2; BattleEnd_Step2: wBattlePhase 2, wBattleStep 2 (E-0352, E-0044)
 BattleEnd_Step2_WriteBattleEndTimer::
     ld a, [wBattleEndTimer]
     dec a
@@ -908,6 +935,7 @@ BattleEnd_Step3_WriteUnknownName::
 
 ; called from BattleEnd_Step3: sets wBattleExpAward to 0; branches on the byte at wBattleSlotOut;
 ; sets wBattleExpAward; branches on the byte at wBattleSlotOut (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_WriteBattleExpAward::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -957,6 +985,7 @@ BattleEnd_Step3_WriteBattleExpAward_Data::
 ; hTemp1; sets wDisplaySlot to 4; branches on H; branches on L; calls
 ; BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC_2; branches on L; then 3 more steps (see the
 ; code) (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_WaitBattleKind::
     ld a, [wBattleKind]
     cp $02
@@ -1046,6 +1075,8 @@ BattleEnd_Step3_WaitBattleKind::
     ret
 
 ; Calls BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC (E-0347)
+; why: part of BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC, in part of BattleEnd_Step3;
+; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC_2::
     ldh a, [hTemp0]
     ld e, a
@@ -1090,6 +1121,7 @@ BattleEnd_Step4::
     ret
 
 ; called from BattleEnd_Step4: decrements wBattleEndTimer; may return early (E-0347)
+; why: a helper of BattleEnd_Step4; BattleEnd_Step4: wBattlePhase 2, wBattleStep 4 (E-0352, E-0044)
 BattleEnd_Step4_WriteBattleEndTimer::
     ld a, [wBattleEndTimer]
     dec a
@@ -1112,6 +1144,8 @@ BattleEnd_Step5::
 ; calls ClearAttributesAndScreenBuffer_Bank31; calls CopyRectRecordForBattlePartyCount_Bank31; calls
 ; DrawPartySlotStatusPanels; calls ClearWindowAndCopyRectFar; plays sound $6c; advances
 ; wBattleSubPhase; sets wBattleResolveStep to 0; then 1 more step (see the code) (E-0347)
+; why: step 0 of BattleEnd_Step5 (when wBattleSubPhase = 0); BattleEnd_Step5: wBattlePhase 2,
+; wBattleStep 5 (E-0352, E-0044)
 BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc::
     farcall BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc
     ld a, [wDisplaySlot]
@@ -1157,6 +1191,8 @@ BattleEnd_Step5_DrawThenAskToJoin::
 ; LoadBattleMonsterPictureAndTitle; calls LayoutTileBlocksForBattleFoeCount; calls
 ; LoadBattleMonsterPictureAttributes; calls CopyRect32StrideToVRAM; advances wBattleResolveStep
 ; (E-0347)
+; why: step 0 of BattleEnd_Step5_DrawThenAskToJoin (when wBattleResolveStep = 0);
+; BattleEnd_Step5_DrawThenAskToJoin: copies a rectangle to VRAM, then BattleEnd_AskToJoin (E-0352)
 BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM::
     ld de, wScreenTileBuffer
     ld hl, vBGMap0
@@ -1174,6 +1210,8 @@ BattleEnd_Step5_DrawThenAskToJoin_CopyRect32StrideToVRAM::
     ret
 
 ; step 1 of BattleEnd_Step5_DrawThenAskToJoin: calls BattleEnd_AskToJoin (E-0347)
+; why: step 1 of BattleEnd_Step5_DrawThenAskToJoin (when wBattleResolveStep = 1);
+; BattleEnd_Step5_DrawThenAskToJoin: copies a rectangle to VRAM, then BattleEnd_AskToJoin (E-0352)
 BattleEnd_Step5_DrawThenAskToJoin_ToBattleEnd_AskToJoin::
     farcall BattleEnd_AskToJoin
     ret
@@ -1183,6 +1221,8 @@ BattleEnd_Step5_DrawThenAskToJoin_ToBattleEnd_AskToJoin::
 ; wSavedFieldDrawFlags to hFieldDrawFlags; copies wSavedSpriteSlotCount to wSpriteSlotCount; calls
 ; BuildBattleScreenBuffer; calls DecompressToVRAM; decrements wBattleSubPhase; advances
 ; wBattleSubStep (E-0347)
+; why: step 2 of BattleEnd_Step5 (when wBattleSubPhase = 2); BattleEnd_Step5: wBattlePhase 2,
+; wBattleStep 5 (E-0352, E-0044)
 BattleEnd_Step5_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1213,6 +1253,8 @@ BattleEnd_Step5_SwapMonstersMenu::
 
 ; step 3 of BattleEnd_Step5: calls BuildAndDrawBattleScreen; calls RunBattleEndStep5SubSteps; calls
 ; LoadBattleMonsterPictureAndTitle (E-0347)
+; why: step 3 of BattleEnd_Step5 (when wBattleSubPhase = 3); BattleEnd_Step5: wBattlePhase 2,
+; wBattleStep 5 (E-0352, E-0044)
 BattleEnd_Step5_BuildAndDrawBattleScreen::
     ld a, [wBattleSubStep]
     cp $03
@@ -1235,6 +1277,8 @@ BuildAndDrawBattleScreen::
 
 ; step 4 of BattleEnd_Step5: calls BattleEnd_AddJoinedMonster; calls
 ; LoadBattleMonsterPictureAndTitle (E-0347)
+; why: step 4 of BattleEnd_Step5 (when wBattleSubPhase = 4); BattleEnd_Step5: wBattlePhase 2,
+; wBattleStep 5 (E-0352, E-0044)
 BattleEnd_Step5_BattleEnd_AddJoinedMonster::
     farcall BattleEnd_AddJoinedMonster
     ld a, [wBattleScreenFlags]
@@ -1314,6 +1358,8 @@ BattleEnd_Step6::
 ; step 0 of BattleEnd_Step6: returns unless wTextFlags is 0; branches on wCurrentMusic; plays music
 ; $02; sets hSpriteWindowClipMode to 0; sets hSpriteHideTile to $80; calls StartPaletteFade;
 ; advances wBattleSubPhase (E-0347)
+; why: step 0 of BattleEnd_Step6 (when wBattleSubPhase = 0); BattleEnd_Step6: wBattlePhase 2,
+; wBattleStep 6 (E-0352, E-0044)
 BattleEnd_Step6_QueueMusic::
     ld a, [wTextFlags]
     or a
@@ -1337,6 +1383,8 @@ BattleEnd_Step6_QueueMusic::
     ret
 
 ; step 1 of BattleEnd_Step6: returns unless wFadeState is 0; advances wBattleSubPhase (E-0347)
+; why: step 1 of BattleEnd_Step6 (when wBattleSubPhase = 1); BattleEnd_Step6: wBattlePhase 2,
+; wBattleStep 6 (E-0352, E-0044)
 BattleEnd_Step6_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -1349,6 +1397,8 @@ BattleEnd_Step6_WaitFadeState::
 ; calls SetFollowersToPlayer; sets wGameMode to 1; sets wModeState to 0; sets wWorldMapState to 0;
 ; sets wGameMode2Arg to 0; sets wNewRecordFamily to 0; sets wScreenState to 0; calls
 ; DecompressToVRAM; calls ExitPauseMenuToField; then 2 more steps (see the code) (E-0347)
+; why: step 2 of BattleEnd_Step6 (when wBattleSubPhase = 2); BattleEnd_Step6: wBattlePhase 2,
+; wBattleStep 6 (E-0352, E-0044)
 BattleEnd_Step6_QueueMusic_2::
     ld a, [wCurrentMusic]
     ld hl, wTransitionMusic
@@ -1412,6 +1462,8 @@ BattleEnd_Step7::
 
 ; step 0 of BattleEnd_Step7: returns unless wSoundChannelSlots is $ff; returns unless wTextFlags is
 ; 0; sets wLinkSendByte to 1; advances wBattleSubPhase (E-0347)
+; why: step 0 of BattleEnd_Step7 (when wBattleSubPhase = 0); BattleEnd_Step7: wBattlePhase 2,
+; wBattleStep 7 (E-0352, E-0044)
 BattleEnd_Step7_WriteLinkSendByte::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannelSlots + $1
@@ -1448,6 +1500,8 @@ BattleEnd_Step7_WriteLinkSendByte::
     ret
 
 ; step 1 of BattleEnd_Step7: returns unless wLinkMessage is $01; advances wBattleSubPhase (E-0347)
+; why: step 1 of BattleEnd_Step7 (when wBattleSubPhase = 1); BattleEnd_Step7: wBattlePhase 2,
+; wBattleStep 7 (E-0352, E-0044)
 BattleEnd_Step7_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -1460,6 +1514,8 @@ BattleEnd_Step7_WaitLinkMessage::
 ; sets wGameMode to 6; sets wModeState to 0; sets wWorldMapState to 0; sets wGameMode2Arg to 0; sets
 ; wScreenState to 0; increments wModeChangeRequest; increments wBGFillFlag; sets wLinkSession to 0;
 ; sets wLinkExchangeState to 0; sets wLinkRole to 0; then 5 more steps (see the code) (E-0347)
+; why: step 2 of BattleEnd_Step7 (when wBattleSubPhase = 2); BattleEnd_Step7: wBattlePhase 2,
+; wBattleStep 7 (E-0352, E-0044)
 BattleEnd_Step7_StartPaletteFade::
     ld a, $04
     call StartPaletteFade
@@ -1515,6 +1571,7 @@ BattleEnd_Step9::
 ; BattleEnd_Step1_CopyStringHLToDE_Skip2; calls BattleEnd_Step1_CopyStringHLToDE; branches on the
 ; byte at wTextBuf0; sets wTextBuf0 to $f0; continues in BattleEnd_Step1_CopyStringHLToDE_Return
 ; (E-0347)
+; why: a helper of BattleEnd_Step1; BattleEnd_Step1: wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_WriteBattleArg0::
     ld a, [wLinkMode]
     or a
@@ -1564,6 +1621,7 @@ BattleEnd_Step1_WriteBattleArg0::
     jr BattleEnd_Step1_CopyStringHLToDE_Return
 
 ; Calls CopyStringHLToDE; continues in BattleEnd_Step1_CopyStringHLToDE_Return (E-0347)
+; why: part of BattleEnd_Step1; BattleEnd_Step1: wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_CopyStringHLToDE::
     ld l, e
     ld a, d
@@ -1575,6 +1633,8 @@ BattleEnd_Step1_CopyStringHLToDE::
 
 ; Branches on the byte at wBattleTextWork; sets wTextBuf0 to $f0; sets wBattleArg0 to 0; continues
 ; in BattleEnd_Step1_CopyStringHLToDE_Return (E-0347)
+; why: part of BattleEnd_Step1_CopyStringHLToDE, in part of BattleEnd_Step1; BattleEnd_Step1:
+; wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_CopyStringHLToDE_Skip::
     ld de, wBattleTextWork
     ld hl, wTextBuf0
@@ -1596,6 +1656,8 @@ BattleEnd_Step1_CopyStringHLToDE_Skip::
     jr BattleEnd_Step1_CopyStringHLToDE_Return
 
 ; Sets wTextBuf0 to $f0; sets wBattleArg0 to 2 (E-0347)
+; why: part of BattleEnd_Step1_CopyStringHLToDE, in part of BattleEnd_Step1; BattleEnd_Step1:
+; wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_CopyStringHLToDE_Skip2::
     ld hl, wTextBuf0
     ld a, $30
@@ -1619,6 +1681,8 @@ BattleEnd_Step1_CopyStringHLToDE_Skip2::
     ld [wBattleArg0], a
 
 ; Returns at once (E-0347)
+; why: part of BattleEnd_Step1_CopyStringHLToDE, in part of BattleEnd_Step1; BattleEnd_Step1:
+; wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_CopyStringHLToDE_Return::
     ret
 
@@ -1679,6 +1743,8 @@ IncrementPlayTime_Bank31::
 ; to $ff; sets wBattleItemId to $ff; sets wMenuState to 0; branches on wLinkMode; branches on
 ; wLinkRole; branches on the byte at wSlotMarks; branches on C; advances wBattleStep; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock (E-0347)
+; why: a helper of BattleFight_Step0; BattleFight_Step0: wBattlePhase 1, wBattleStep 0 (E-0352,
+; E-0044)
 BattleFight_Step0_FillBytes::
     ld hl, wSideControl
     ld b, $08
@@ -1824,6 +1890,9 @@ RunBattleSetup_FleeCommand::
     dw RunBattleSetup_FleeCommand_WaitTextFlags_SetBattleResolveStep
 
 ; step 0 of RunBattleSetup_FleeCommand: branches on wLinkMode; advances wBattleResolveStep (E-0347)
+; why: step 0 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 0);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole::
     ld a, [wLinkMode]
     or a
@@ -1870,6 +1939,9 @@ RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole::
 ; DrawScreenTileBufferRow11Col4RowsToBGMapRow7; sets wStringCategory to 2; sets wStringIndex to 0;
 ; calls ShowStringBank09AtTilesHL_Bank31; calls
 ; RunBattleSetup_FleeCommand_CopyRectRecordToScreenBuffer_2; advances wBattleResolveStep (E-0347)
+; why: step 1 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 1);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld a, [wLinkRole]
     rlca
@@ -1900,6 +1972,9 @@ RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
 
 ; step 2 of RunBattleSetup_FleeCommand: calls RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM;
 ; calls WriteVRAMByte; advances wBattleResolveStep (E-0347)
+; why: step 2 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 2);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_AdvanceBattleResolveStep::
     call RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM
     ld hl, RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Data
@@ -1922,6 +1997,9 @@ RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_AdvanceBattleResolveStep::
 ; wJoypadPressed; plays sound $69; calls FillBytes; calls
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; advances
 ; wBattleResolveStep (E-0347)
+; why: step 3 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 3);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink::
     ld de, RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Data
     ld hl, wMenuState
@@ -1945,6 +2023,9 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink::
 
 ; step 4 of RunBattleSetup_FleeCommand: calls RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM;
 ; advances wBattleResolveStep (E-0347)
+; why: step 4 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 4);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAMAndStep::
     call RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM
     ld hl, wBattleResolveStep
@@ -1957,6 +2038,9 @@ RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAMAndStep::
 ; wBattleResolveStep to 0; branches on the byte at wSlotMarks; sets wStringCategory to 0; sets
 ; wStringIndex to $2d; advances wBattleResolveStep; copies C to wCommandMonster; sets
 ; wBattleSubPhase to 1; then 18 more steps (see the code) (E-0347)
+; why: step 5 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 5);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc::
     ld a, [wMenuState]
     and $03
@@ -2079,6 +2163,10 @@ RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc::
 
 ; called from RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc: changes HL and A
 ; (E-0347)
+; why: a helper of RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc, in step 5 of
+; RunBattleSetup_FleeCommand (when wBattleResolveStep = 5); RunBattleSetup_FleeCommand: by
+; wBattleResolveStep: the flee/retire command ('Retire now?', '0 fled!', 'But the escape route was
+; cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ReadLinkRole::
     ld a, [wLinkRole]
     and $02
@@ -2097,6 +2185,10 @@ RunBattleSetup_FleeCommand_ReadLinkRole::
 
 ; called from RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc: changes HL, DE, BC and
 ; A; branches on wLinkMode (E-0347)
+; why: a helper of RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc, in step 5 of
+; RunBattleSetup_FleeCommand (when wBattleResolveStep = 5); RunBattleSetup_FleeCommand: by
+; wBattleResolveStep: the flee/retire command ('Retire now?', '0 fled!', 'But the escape route was
+; cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole_2::
     ld a, [wLinkMode]
     or a
@@ -2139,6 +2231,9 @@ RunBattleSetup_FleeCommand_ReadLinkModeAndLinkRole_2::
 ; step 6 of RunBattleSetup_FleeCommand: calls ClearWindowAndCopyRectFar; calls
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; calls BeginStringDisplay_Bank2F; advances
 ; wBattleResolveStep (E-0347)
+; why: step 6 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 6);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ClearWindowAndCopyRectFarAndStep::
     call ClearWindowAndCopyRectFar
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
@@ -2151,6 +2246,9 @@ RunBattleSetup_FleeCommand_ClearWindowAndCopyRectFarAndStep::
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; calls
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; calls
 ; RunBattleSetup_FleeCommand_CopyRectRecordToScreenBuffer_2; sets wBattleResolveStep to 2 (E-0347)
+; why: step 7 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 7);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTileBlocksForBattleFoeCount::
     ld a, [wTextFlags]
     or a
@@ -2167,6 +2265,9 @@ RunBattleSetup_FleeCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTile
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets wTextBuf0 to $f0; sets wStringCategory to 1;
 ; sets wStringIndex to $d8; calls BeginStringDisplay_Bank2F; plays sound $82; advances
 ; wBattleResolveStep (E-0347)
+; why: step 8 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 8);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ClearWindowAndCopyRectFar::
     call ClearWindowAndCopyRectFar
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
@@ -2198,6 +2299,9 @@ RunBattleSetup_FleeCommand_ClearWindowAndCopyRectFar::
 ; byte at wBattleLevel + $4; calls NextTableByte; branches on wBattleTurn; branches on $07; calls
 ; RunBattleSetup_FleeCommand_CheckSlotStatusBlockWide_Bank31; sets wStringCategory to 0; then 11
 ; more steps (see the code) (E-0347)
+; why: step 9 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 9);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wTextFlags]
     or a
@@ -2301,6 +2405,10 @@ RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty: calls
 ; CheckSlotStatusBlockWide_Bank31 (E-0347)
+; why: a helper of RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty, in step 9 of
+; RunBattleSetup_FleeCommand (when wBattleResolveStep = 9); RunBattleSetup_FleeCommand: by
+; wBattleResolveStep: the flee/retire command ('Retire now?', '0 fled!', 'But the escape route was
+; cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_CheckSlotStatusBlockWide_Bank31::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -2324,6 +2432,10 @@ RunBattleSetup_FleeCommand_CheckSlotStatusBlockWide_Bank31::
 ; called from RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty: calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleLevel; branches on the byte at
 ; wSlotTrait; calls RunBattleSetup_FleeCommand_SubtractFloor0 (E-0347)
+; why: a helper of RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty, in step 9 of
+; RunBattleSetup_FleeCommand (when wBattleResolveStep = 9); RunBattleSetup_FleeCommand: by
+; wBattleResolveStep: the flee/retire command ('Retire now?', '0 fled!', 'But the escape route was
+; cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -2407,6 +2519,9 @@ RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_Data2::
 ; step 10 of RunBattleSetup_FleeCommand: returns unless wTextFlags is 0; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; sets wSlotMarks to 3; sets wSlotMarks to $ff; sets
 ; wBattleSubPhase to 3; sets wBattleResolveStep to 0 (E-0347)
+; why: step 10 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 10);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld a, [wTextFlags]
     or a
@@ -2440,6 +2555,9 @@ RunBattleSetup_FleeCommand_CarryUnlessBattleSlotOutSlotEmpty_3::
 ; step 11 of RunBattleSetup_FleeCommand: calls ClearWindowAndCopyRectFar; calls
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets wStringCategory to 0; sets wStringIndex to
 ; $27; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
+; why: step 11 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 11);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ShowRetireNow::
     call ClearWindowAndCopyRectFar
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
@@ -2455,6 +2573,9 @@ RunBattleSetup_FleeCommand_ShowRetireNow::
 ; step 12 of RunBattleSetup_FleeCommand: returns unless wTextFlags is 0; calls
 ; LoadCursorTileAndRect; sets wMenuSubState to 1; calls CopyRect32StrideToVRAM; advances
 ; wBattleResolveStep (E-0347)
+; why: step 12 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 12);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_LoadCursorTileAndRect::
     ld a, [wTextFlags]
     or a
@@ -2477,6 +2598,9 @@ RunBattleSetup_FleeCommand_LoadCursorTileAndRect::
 ; LayoutTileBlocksForBattleFoeCount; calls DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7; sets
 ; wBattleResolveStep to 1; sets wBattleSubPhase to 0; sets wStringCategory to 0; sets wStringIndex
 ; to $60; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
+; why: step 13 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 13);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_SetBattleResolveStep::
     ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Data2
     ld hl, wMenuSubState
@@ -2521,6 +2645,9 @@ RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Data1::
 ; step 14 of RunBattleSetup_FleeCommand: returns unless wTextFlags is 0; sets wBattleScene to 3;
 ; sets wBattlePhase to 2; sets wBattleStep to 6; sets wBattleSubPhase to 0; sets wBattleResolveStep
 ; to 0; copies wDataBankSave to wDataBank; sets wDataBankSave to 0 (E-0347)
+; why: step 14 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 14);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -2543,6 +2670,9 @@ RunBattleSetup_FleeCommand_WaitTextFlags::
 ; step 15 of RunBattleSetup_FleeCommand: calls ClearWindowAndCopyRectFar; calls
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets wStringCategory to 0; sets wStringIndex to
 ; $20; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
+; why: step 15 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 15);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ShowNoFleeingFromThis::
     call ClearWindowAndCopyRectFar
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
@@ -2557,6 +2687,9 @@ RunBattleSetup_FleeCommand_ShowNoFleeingFromThis::
 
 ; step 16 of RunBattleSetup_FleeCommand: returns unless wTextFlags is 0; sets wBattleResolveStep to
 ; 1 (E-0347)
+; why: step 16 of RunBattleSetup_FleeCommand (when wBattleResolveStep = 16);
+; RunBattleSetup_FleeCommand: by wBattleResolveStep: the flee/retire command ('Retire now?', '0
+; fled!', 'But the escape route was cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_WaitTextFlags_SetBattleResolveStep::
     ld a, [wTextFlags]
     or a
@@ -2612,6 +2745,9 @@ RunBattleSetup_CommandMenu::
 ; ShowStringBank09AtTilesHL_Bank31; sets wCommandPageCount to 0; sets wCommandCursorMax to 3; sets
 ; wCommandCursor to 0; calls CopyRectRecordToScreenBufferFar; calls WriteFiveTilesFromTable;
 ; advances wBattleResolveStep (E-0347)
+; why: step 0 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 0);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31::
     ld hl, vTiles1 + $6d0
     ld de, $2001
@@ -2648,6 +2784,9 @@ RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31::
 ; step 1 of RunBattleSetup_CommandMenu: copies the byte at wBattleLoadWork to wMenuSubState; calls
 ; DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7; calls WriteVRAMByte; advances
 ; wBattleResolveStep; sets wListLastPageSize to 3 (E-0347)
+; why: step 1 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 1);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_SetMenuSubState::
     ld a, [wCommandMonster]
     and $03
@@ -2680,6 +2819,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Set
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; advances
 ; wBattleResolveStep; sets wBattleArg1 to 0; branches on $00; decrements wCommandMonster; then 9
 ; more steps (see the code) (E-0347)
+; why: step 2 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 2);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
     ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Data
     ld hl, wMenuSubState
@@ -2778,6 +2920,9 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor::
 
 ; step 3 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7;
 ; sets wBattleResolveStep to 1; sets wBattleSubPhase to 0 (E-0347)
+; why: step 3 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 3);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7::
     call DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7
     ld a, $01
@@ -2791,6 +2936,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7::
 ; ShowStringBank09AtTilesHL_Bank31; calls CopyRectRecordToScreenBufferFar_2; calls
 ; WriteFiveTilesFromTable; copies the byte at wSideControl & $03 to wMenuSelectedMember; advances
 ; wBattleResolveStep (E-0347)
+; why: step 4 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 4);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_ShowStringBank09AtTilesHL_Bank31::
     ld a, [wBattleArg1]
     or a
@@ -2822,6 +2970,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Sho
 
 ; step 5 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2; calls
 ; WriteVRAMByte; advances wBattleResolveStep (E-0347)
+; why: step 5 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 5);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2
     ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_Data
@@ -2847,6 +2998,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2::
 ; wMenuSelectedMember & $03; calls CountPresentFoesOfLinkRoleSide_Bank31; branches on D; calls
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; then 15 more
 ; steps (see the code) (E-0347)
+; why: step 6 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 6);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_Data
     ld hl, wMenuSelectedMember
@@ -2952,6 +3106,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31::
 
 ; step 7 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2;
 ; branches on wBattleArg1; sets wBattleResolveStep to $20 (E-0347)
+; why: step 7 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 7);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_2::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2
     ld a, [wBattleArg1]
@@ -2965,6 +3122,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_2::
 
 ; step 8 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2; calls
 ; ClearWindowAndCopyRectFar; advances wBattleResolveStep (E-0347)
+; why: step 8 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 8);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2AndStep::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2
     call ClearWindowAndCopyRectFar
@@ -2975,6 +3135,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2AndStep
 ; step 9 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wStringCategory to 0; sets wStringIndex to $29; calls BeginStringDisplay_Bank2F; advances
 ; wBattleResolveStep (E-0347)
+; why: step 9 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 9);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ShowItHasNoUsable::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $00
@@ -2989,6 +3152,9 @@ RunBattleSetup_CommandMenu_ShowItHasNoUsable::
 ; step 10 of RunBattleSetup_CommandMenu: returns unless wTextFlags is 0; calls
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; advances
 ; wBattleResolveStep (E-0347)
+; why: step 10 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 10);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTileBlocksForBattleFoeCount::
     ld a, [wTextFlags]
     or a
@@ -3001,6 +3167,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTile
 
 ; step 11 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wBattleResolveStep to 4 (E-0347)
+; why: step 11 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 11);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $04
@@ -3011,6 +3180,9 @@ RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
 ; CopyRectRecordToScreenBufferFar_6; sets wBattleArg1 to 0; calls
 ; RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2; sets wBattleArg1 to 0; advances
 ; wBattleResolveStep (E-0347)
+; why: step 12 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 12);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2AndStep_2::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2
     call CopyRectRecordToScreenBufferFar_6
@@ -3026,6 +3198,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2AndStep
 ; step 13 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow17Col12RectToBGMapRow11; sets
 ; wNameSlot to 0; calls RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty; calls WriteVRAMByte;
 ; advances wBattleResolveStep (E-0347)
+; why: step 13 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 13);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_2::
     call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     xor a
@@ -3060,6 +3235,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_2::
 ; $00; plays sound $69; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; then 2 more steps (see the code) (E-0347)
+; why: step 14 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 14);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_2::
     ld a, [wLinkRole]
     sla a
@@ -3114,6 +3292,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_2::
 
 ; step 15 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow17Col12RectToBGMapRow11;
 ; branches on wBattleArg0; sets wBattleResolveStep to 4 (E-0347)
+; why: step 15 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 15);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_3::
     call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wBattleArg0]
@@ -3135,6 +3316,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_3::
 ; RunBattleSetup_CommandMenu_ClearBit6AndCursorEntryTile_Bank31; calls
 ; CopyRectRecordsAndToScreenBufferFar; sets wStringCategory to 9; calls
 ; RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31; advances wBattleResolveStep (E-0347)
+; why: step 16 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 16);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_SetBattleArg1::
     ld a, [wBattleArg1]
     or a
@@ -3182,6 +3366,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_2_SetBat
 ; step 17 of RunBattleSetup_CommandMenu: calls
 ; DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects; calls WriteVRAMByte; calls
 ; DrawInventoryPageIndicator; advances wBattleResolveStep; sets wListLastPageSize to 3 (E-0347)
+; why: step 17 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 17);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_WriteListLastPageSize::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     ld hl, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Data
@@ -3209,6 +3396,9 @@ RunBattleSetup_CommandMenu_WriteListLastPageSize::
 ; branches on wRecordBufferData; branches on h; branches on wRecordBuffer; advances
 ; wBattleResolveStep; calls CountPresentFoesOfLinkRoleSide_Bank31; then 23 more steps (see the code)
 ; (E-0347)
+; why: step 18 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 18);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_MoveBattleCommandCursor_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Data
     ld hl, wMenuCursor
@@ -3413,6 +3603,9 @@ RunBattleSetup_CommandMenu_MoveBattleCommandCursor_FillScreenTileBufferRow11Col4
 ; step 19 of RunBattleSetup_CommandMenu: calls
 ; DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects; copies wBattleArg1 to
 ; wBattleResolveStep; sets wBattleArg1 to 0 (E-0347)
+; why: step 19 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 19);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_WriteBattleResolveStepAndBattleArg1::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     ld a, [wBattleArg1]
@@ -3425,6 +3618,9 @@ RunBattleSetup_CommandMenu_WriteBattleResolveStepAndBattleArg1::
 ; LayoutTileBlocksForBattleFoeCount; calls
 ; DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects; calls ClearWindowAndCopyRectFar;
 ; advances wBattleResolveStep (E-0347)
+; why: step 20 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 20);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31AndStep::
     call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
@@ -3436,6 +3632,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31AndStep::
 
 ; step 21 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wStringCategory to 0; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
+; why: step 21 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 21);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     xor a
@@ -3448,6 +3647,9 @@ RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep:
 ; step 22 of RunBattleSetup_CommandMenu: returns unless wTextFlags is 0; calls
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; advances
 ; wBattleResolveStep (E-0347)
+; why: step 22 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 22);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTileBlocksForBattleFoeCount_2::
     ld a, [wTextFlags]
     or a
@@ -3460,6 +3662,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_LayoutTile
 
 ; step 23 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wBattleResolveStep to $10 (E-0347)
+; why: step 23 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 23);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_SetBattleResolveStep::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $10
@@ -3469,6 +3674,9 @@ RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_SetBatt
 ; step 24 of RunBattleSetup_CommandMenu: sets wStringCategory to 2; sets wStringIndex to 3; calls
 ; ShowStringBank09AtTilesHL_Bank31; calls RunBattleSetup_CommandMenu_ReadRecordBufferAndLinkRoleEtc;
 ; sets wSubMenuCursor2 to 0; advances wBattleResolveStep (E-0347)
+; why: step 24 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 24);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep::
     ld hl, vTiles1 + $6d0
     ld de, $0801
@@ -3488,6 +3696,9 @@ RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep::
 ; branches on wRecordBuffer; sets wNameSlot to 0; calls
 ; RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty; calls WriteVRAMByte; advances wBattleResolveStep
 ; (E-0347)
+; why: step 25 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 25);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_3::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wRecordBuffer]
@@ -3528,6 +3739,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_3::
 ; on $10; plays sound $69; branches on wRecordBuffer; branches on wSubMenuCursor2 & $03; calls
 ; FillScreenTileBufferRow11Col4WithC3_Bank31; calls LayoutTileBlocksForBattleFoeCount; then 8 more
 ; steps (see the code) (E-0347)
+; why: step 26 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 26);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_3::
     ld a, [wLinkRole]
     sla a
@@ -3604,6 +3818,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_3::
 
 ; step 27 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow14Col8LeftToBGMapRow9; copies
 ; wBattleArg0 to wBattleResolveStep (E-0347)
+; why: step 27 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 27);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
@@ -3613,6 +3830,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
 ; step 28 of RunBattleSetup_CommandMenu: calls CopyRectRecordToScreenBufferFar_6; branches on
 ; wRecordBuffer; sets wBattleArg1 to 0; calls RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2;
 ; sets wBattleArg1 to 0; sets wSubMenuCursor2 to 0; advances wBattleResolveStep (E-0347)
+; why: step 28 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 28);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_CopyRectRecordToScreenBufferFar_6::
     call CopyRectRecordToScreenBufferFar_6
     ld a, [wRecordBuffer]
@@ -3637,6 +3857,9 @@ RunBattleSetup_CommandMenu_CopyRectRecordToScreenBufferFar_6::
 ; branches on wRecordBuffer; sets wNameSlot to 0; calls
 ; RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty; calls WriteVRAMByte; advances wBattleResolveStep
 ; (E-0347)
+; why: step 29 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 29);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_4::
     call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wRecordBuffer]
@@ -3678,6 +3901,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11_4::
 ; on $10; plays sound $69; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; then 2 more steps (see the code) (E-0347)
+; why: step 30 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 30);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_4::
     ld a, [wLinkRole]
     sla a
@@ -3730,6 +3956,9 @@ RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31_4::
 
 ; step 31 of RunBattleSetup_CommandMenu: calls DrawScreenTileBufferRow17Col12RectToBGMapRow11;
 ; copies wBattleArg0 to wBattleResolveStep (E-0347)
+; why: step 31 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 31);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
     call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wBattleArg0]
@@ -3739,6 +3968,9 @@ RunBattleSetup_CommandMenu_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
 ; step 32 of RunBattleSetup_CommandMenu: increments wCommandMonster; branches on wCommandMonster;
 ; branches on the byte at wSlotMarks; sets wBattleResolveStep to 0; sets wBattleSubPhase to 3
 ; (E-0347)
+; why: step 32 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 32);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_WriteCommandMonsterAndBattleResolveStepEtc::
     ld a, [wCommandMonster]
     and $04
@@ -3771,6 +4003,9 @@ RunBattleSetup_CommandMenu_WriteCommandMonsterAndBattleResolveStepEtc::
 
 ; step 33 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wStringCategory to 0; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
+; why: step 33 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 33);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep_BeginStringDisplay_Bank2F::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     xor a
@@ -3782,6 +4017,9 @@ RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep_
 
 ; step 35 of RunBattleSetup_CommandMenu: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets
 ; wBattleResolveStep to $18 (E-0347)
+; why: step 35 of RunBattleSetup_CommandMenu (when wBattleResolveStep = 35);
+; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws the command windows, moves the command
+; cursor (MoveBattleCommandCursor) and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_SetBattleResolveStep_2::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld a, $18
@@ -3820,6 +4058,8 @@ RunBattleSetup_ItemCommand::
 ; RunBattleSetup_ItemCommand_ClearBit6AndCursorEntryTile_Bank31; calls
 ; CopyRectRecordToScreenBufferFar_3; sets wStringCategory to 6; copies the byte at wInventory to
 ; wStringIndex; calls ShowStringBank08AtTilesHL_Bank31; advances wBattleResolveStep (E-0347)
+; why: step 0 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 0);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
     call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
@@ -3854,6 +4094,8 @@ RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31::
 ; step 1 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow14Col8RowsToBGMapRow9; returns
 ; if wBattleArg0 is 0; sets wBattleArg0 to 0; calls WriteVRAMByte; calls DrawInventoryPageIndicator;
 ; advances wBattleResolveStep; sets wListLastPageSize to 3 (E-0347)
+; why: step 1 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 1);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_SetBattleArg0::
     call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     ld a, [wBattleArg0]
@@ -3886,6 +4128,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_SetBattl
 ; copies wItemId to wBattleItemId; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; sets wBattleResolveStep to $10; sets wStringIndex to $1e; then
 ; 26 more steps (see the code) (E-0347)
+; why: step 2 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 2);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
     ld de, RunBattleSetup_CommandMenu_DrawScreenTileBufferRow11Col4Rect12x11ToBGMapRow7_Data
     ld hl, wMenuOption
@@ -4004,6 +4248,8 @@ RunBattleSetup_ItemCommand_MoveBattleCommandCursor::
 
 ; step 3 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow14Col8RowsToBGMapRow9; sets
 ; wBattleResolveStep to 0; sets wBattleSubPhase to 0 (E-0347)
+; why: step 3 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 3);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9::
     call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     xor a
@@ -4016,6 +4262,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9::
 ; DrawScreenTileBufferRow14Col8RowsToBGMapRow9; sets wBattleArg1 to 0; sets wStringCategory to 2;
 ; sets wStringIndex to 3; calls ShowStringBank09AtTilesHL_Bank31; calls
 ; CopyRectRecordToScreenBufferFar_5; advances wBattleResolveStep (E-0347)
+; why: step 4 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 4);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_SetSubMenuCursor::
     ld a, [wSubMenuCursor]
     and $01
@@ -4039,6 +4287,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9_SetSubMe
 
 ; step 5 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11;
 ; calls WriteVRAMByte; advances wBattleResolveStep (E-0347)
+; why: step 5 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 5);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11::
     call DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11
     ld hl, RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM_Data
@@ -4062,6 +4312,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11::
 ; copies B to wBattleItemTarget; copies wSubMenuCursor & $01 to wBattleItemTarget; sets
 ; wBattleSubPhase to 3; sets wBattleResolveStep to 0; sets wBattleArg0 to 1; branches on $01; sets
 ; wSubMenuCursor to 0; then 4 more steps (see the code) (E-0347)
+; why: step 6 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 6);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
     ld de, RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink_Data
     ld hl, wSubMenuCursor
@@ -4139,6 +4391,8 @@ RunBattleSetup_ItemCommand_ToggleEntryBitsByJoypadAndBlink::
 
 ; step 7 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11;
 ; branches on wBattleArg0; sets wBattleResolveStep (E-0347)
+; why: step 7 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 7);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11_2::
     call DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11
     ld a, [wBattleArg0]
@@ -4157,6 +4411,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12Rect8x7ToBGMapRow11_2::
 ; step 8 of RunBattleSetup_ItemCommand: sets wStringCategory to 2; sets wStringIndex to 3; calls
 ; ShowStringBank09AtTilesHL_Bank31; calls RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc;
 ; advances wBattleResolveStep (E-0347)
+; why: step 8 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 8);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep::
     ld hl, vTiles1 + $6d0
     ld de, $0801
@@ -4173,6 +4429,8 @@ RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep::
 ; step 9 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow14Col8LeftToBGMapRow9; branches
 ; on wItemId; sets wNameSlot to 0; calls RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty; calls
 ; WriteVRAMByte; advances wBattleResolveStep (E-0347)
+; why: step 9 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 9);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wItemId]
@@ -4211,6 +4469,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9::
 ; $00; plays sound $69; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; copies wSubMenuCursor2 & $03 to wBattleItemTarget; sets
 ; wBattleArg0 to 1; then 1 more step (see the code) (E-0347)
+; why: step 10 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 10);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_2::
     ld a, [wLinkRole]
     sla a
@@ -4253,6 +4513,8 @@ RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_2::
 ; branches on wBattleArg0; calls LoadSelectedInventoryItemRecord; sets wBattleResolveStep to 0; sets
 ; wBattleSubPhase to 3; sets wBattleResolveStep to 0; sets wBattleResolveStep to 4; sets wBattleArg0
 ; to 0 (E-0347)
+; why: step 11 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 11);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_LoadSelectedInventoryItemRecord::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
@@ -4287,6 +4549,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_LoadSele
 ; step 12 of RunBattleSetup_ItemCommand: calls CopyRectRecordToScreenBufferFar_6; branches on
 ; wItemId; sets wBattleArg1 to 0; calls RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2; sets
 ; wBattleArg1 to 0; advances wBattleResolveStep (E-0347)
+; why: step 12 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 12);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_CopyRectRecordToScreenBufferFar_6::
     call CopyRectRecordToScreenBufferFar_6
     ld a, [wItemId]
@@ -4306,6 +4570,8 @@ RunBattleSetup_ItemCommand_CopyRectRecordToScreenBufferFar_6::
 ; step 13 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow17Col12RectToBGMapRow11;
 ; branches on wItemId; sets wNameSlot to 0; calls RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty;
 ; calls WriteVRAMByte; advances wBattleResolveStep (E-0347)
+; why: step 13 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 13);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
     call DrawScreenTileBufferRow17Col12RectToBGMapRow11
     ld a, [wItemId]
@@ -4345,6 +4611,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow17Col12RectToBGMapRow11::
 ; $00; plays sound $69; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount; copies wSubMenuCursor2 & $03 to wBattleItemTarget; sets
 ; wBattleArg0 to 1; then 1 more step (see the code) (E-0347)
+; why: step 14 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 14);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_3::
     ld a, [wLinkRole]
     sla a
@@ -4389,6 +4657,8 @@ RunBattleSetup_ItemCommand_FillScreenTileBufferRow11Col4WithC3_Bank31_3::
 ; branches on wBattleArg0; calls LoadSelectedInventoryItemRecord; sets wBattleResolveStep to 0; sets
 ; wBattleSubPhase to 3; sets wBattleResolveStep to 0; sets wBattleResolveStep to 4; sets wBattleArg0
 ; to 0 (E-0347)
+; why: step 15 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 15);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_LoadSelectedInventoryItemRecord_2::
     call DrawScreenTileBufferRow14Col8LeftToBGMapRow9
     ld a, [wBattleArg0]
@@ -4422,6 +4692,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8LeftToBGMapRow9_LoadSele
 
 ; step 16 of RunBattleSetup_ItemCommand: calls DrawScreenTileBufferRow14Col8RowsToBGMapRow9; calls
 ; ClearWindowAndCopyRectFar; advances wBattleResolveStep (E-0347)
+; why: step 16 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 16);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9AndStep::
     call DrawScreenTileBufferRow14Col8RowsToBGMapRow9
     call ClearWindowAndCopyRectFar
@@ -4431,6 +4703,8 @@ RunBattleSetup_ItemCommand_DrawScreenTileBufferRow14Col8RowsToBGMapRow9AndStep::
 
 ; step 17 of RunBattleSetup_ItemCommand: calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13;
 ; advances wBattleResolveStep (E-0347)
+; why: step 17 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 17);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     ld hl, wBattleResolveStep
@@ -4440,6 +4714,8 @@ RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep:
 ; step 18 of RunBattleSetup_ItemCommand: sets wStringCategory to 0; calls BeginStringDisplay_Bank2F;
 ; advances wBattleResolveStep; calls FillScreenTileBufferRow11Col4WithC3_Bank31; calls
 ; LayoutTileBlocksForBattleFoeCount (E-0347)
+; why: step 18 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 18);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_BeginStringDisplay_Bank2F::
     xor a
     ld [wStringCategory], a
@@ -4452,6 +4728,8 @@ RunBattleSetup_ItemCommand_BeginStringDisplay_Bank2F::
 
 ; step 19 of RunBattleSetup_ItemCommand: returns unless wTextFlags is 0; calls
 ; DrawWindowTileBufferRow2Col16RowsToBGMapRow13; sets wBattleResolveStep to 0 (E-0347)
+; why: step 19 of RunBattleSetup_ItemCommand (when wBattleResolveStep = 19);
+; RunBattleSetup_ItemCommand: by wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
     ld a, [wTextFlags]
     or a
@@ -4466,6 +4744,9 @@ RunBattleSetup_ItemCommand_DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
 ; calls LayoutTileBlocksForBattleFoeCount; calls ClearWindowAndCopyRectFar; calls
 ; DrawScreenTileBufferRow11Col4RowsToBGMapRow7; advances wBattleSubPhase; sets wLinkSendByte to 0
 ; (E-0347)
+; why: step 3 of RunBattleSetup (when wBattleSubPhase = 3); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld b, $08
     ld hl, wSlotMarks
@@ -4495,6 +4776,9 @@ RunBattleSetup_FillScreenTileBufferRow11Col4WithC3_Bank31::
 ; step 4 of RunBattleSetup: branches on wLinkMode; calls CopyFiveGlyphsPlusMarks; sets
 ; wStringCategory to 0; sets wStringIndex to $22; calls BeginStringDisplay_Bank2F; sets
 ; wLinkSendByte to 0; advances wBattleSubPhase (E-0347)
+; why: step 4 of RunBattleSetup (when wBattleSubPhase = 4); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_ShowSelectingHeroSMove::
     ld a, [wLinkMode]
     or a
@@ -4517,6 +4801,9 @@ RunBattleSetup_ShowSelectingHeroSMove::
 
 ; step 5 of RunBattleSetup: branches on wLinkMode; sets wLinkSendByte to 1; advances wBattleSubPhase
 ; (E-0347)
+; why: step 5 of RunBattleSetup (when wBattleSubPhase = 5); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_WriteLinkSendByte::
     ld a, [wLinkMode]
     or a
@@ -4533,6 +4820,9 @@ RunBattleSetup_WriteLinkSendByte::
 ; wLinkSendByte to 0; branches on wLinkRole; sets wLinkBufferCountLo to $13; sets wLinkBufferCountHi
 ; to 0; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies
 ; H to wLinkBufferPtrHi; advances wBattleSubPhase (E-0347)
+; why: step 6 of RunBattleSetup (when wBattleSubPhase = 6); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc::
     ld a, [wLinkMode]
     or a
@@ -4642,6 +4932,9 @@ RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc::
 
 ; step 7 of RunBattleSetup: advances wBattleSubPhase; branches on wLinkMode; sets wLinkSendByte to
 ; $ff; sets wLinkReady to 1 (E-0347)
+; why: step 7 of RunBattleSetup (when wBattleSubPhase = 7); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_WriteLinkSendByteAndLinkReady::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -4662,6 +4955,9 @@ RunBattleSetup_WriteLinkSendByteAndLinkReady::
 ; branches on wLinkRole; copies wRandomLo to wRandomSeed2Lo; copies wRandomHi to wRandomSeed2Hi;
 ; copies wMenuState to wLinkPartnerCommandA; copies wMenuState to wSlotCommands; then 6 more steps
 ; (see the code) (E-0347)
+; why: step 8 of RunBattleSetup (when wBattleSubPhase = 8); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc::
     ld a, [wLinkMode]
     or a
@@ -4799,6 +5095,9 @@ RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc::
 ; step 9 of RunBattleSetup: branches on wLinkMode; branches on wRandomSeed2Lo; branches on
 ; wRandomSeed2Hi; sets wLinkSendByte to $22; sets wCounterPtr0Lo to $22; sets wLinkSendByte to $33;
 ; sets wCounterPtr0Lo to $33; advances wBattleSubPhase (E-0347)
+; why: step 9 of RunBattleSetup (when wBattleSubPhase = 9); RunBattleSetup: battle fight step 1: one
+; sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the battle
+; screen and loads ... (E-0352)
 RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo::
     ld a, [wLinkMode]
     and a
@@ -4838,6 +5137,9 @@ RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo::
 
 ; step 10 of RunBattleSetup: branches on wLinkMode; branches on wLinkMessage; copies wLinkMessage to
 ; wCounterPtr0Hi; sets wLinkSendByte to 0; advances wBattleSubPhase (E-0347)
+; why: step 10 of RunBattleSetup (when wBattleSubPhase = 10); RunBattleSetup: battle fight step 1:
+; one sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the
+; battle screen and loads ... (E-0352)
 RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte::
     ld a, [wLinkMode]
     and a
@@ -4861,6 +5163,9 @@ RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte::
 
 ; step 11 of RunBattleSetup: branches on wLinkMode; branches on wCounterPtr0Lo; branches on
 ; wCounterPtr0Hi; sets wBattleSubPhase to 5; advances wBattleSubPhase (E-0347)
+; why: step 11 of RunBattleSetup (when wBattleSubPhase = 11); RunBattleSetup: battle fight step 1:
+; one sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the
+; battle screen and loads ... (E-0352)
 RunBattleSetup_WriteBattleSubPhase::
     ld a, [wLinkMode]
     and a
@@ -4885,6 +5190,9 @@ RunBattleSetup_WriteBattleSubPhase::
 
 ; step 12 of RunBattleSetup: calls FillTilesFromRequest; advances wBattleStep; sets wBattleSubPhase
 ; to 0 (E-0347)
+; why: step 12 of RunBattleSetup (when wBattleSubPhase = 12); RunBattleSetup: battle fight step 1:
+; one sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first battle) that builds the
+; battle screen and loads ... (E-0352)
 RunBattleSetup_FillTilesFromRequest::
     call FillTilesFromRequest
     ld hl, wBattleStep
@@ -4945,6 +5253,10 @@ ToggleEntryBitsByJoypadAndBlink::
 ; SetBit6AndBlankEntryTile_Bank31; calls ClearBit6AndCursorEntryTile_Bank31; plays sound $69; calls
 ; ClearBit6AndCursorEntryTile_Bank31; calls SetBit6AndBlankEntryTile_Bank31; copies wFrameCounterLo
 ; & $f0 to wFrameCounterLo (E-0347)
+; why: a helper of RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31, in step 6
+; of RunBattleSetup_CommandMenu (when wBattleResolveStep = 6); RunBattleSetup_CommandMenu: by
+; wBattleResolveStep: draws the command windows, moves the command cursor (MoveBattleCommandCursor)
+; and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_SetBit6AndBlankEntryTile_Bank31::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -5253,6 +5565,10 @@ WriteFiveTilesFromTable_Data::
 ; wBattleArg2; copies H to wBattleArg3; branches on the byte at wBattleSkills; branches on C; sets
 ; wCommandPageCount to 0; branches on C; copies C & $03 & $03 to wCommandCursorMax; sets
 ; wCommandCursor to 0 (E-0347)
+; why: a helper of RunBattleSetup_CommandMenu_FillScreenTileBufferRow11Col4WithC3_Bank31, in step 6
+; of RunBattleSetup_CommandMenu (when wBattleResolveStep = 6); RunBattleSetup_CommandMenu: by
+; wBattleResolveStep: draws the command windows, moves the command cursor (MoveBattleCommandCursor)
+; and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_WriteBattleArg2AndBattleArg3Etc::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
@@ -5359,6 +5675,9 @@ ReturnZero::
 ; wMenuCursor; sets wStringCategory to 9; calls
 ; RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31; calls WriteVRAMByteInc; calls
 ; WriteVRAMByte (E-0347)
+; why: part of RunBattleSetup_CommandMenu; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws
+; the command windows, moves the command cursor (MoveBattleCommandCursor) and shows 'It has no
+; usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ClearBit6AndCursorEntryTile_Bank31::
     ld a, [wCommandCursor]
     bit 7, a
@@ -5411,6 +5730,10 @@ RunBattleSetup_CommandMenu_ClearBit6AndCursorEntryTile_Bank31::
 ; at wInventory; sets wCommandPageCount; branches on C; calls
 ; RunBattleSetup_FleeCommand_WriteCommandPageCount; sets wCommandCursorMax; sets wCommandCursor to 0
 ; (E-0347)
+; why: a helper of RunBattleSetup_FleeCommand_WriteBattleSetupDBAndStringIndexEtc, in step 5 of
+; RunBattleSetup_FleeCommand (when wBattleResolveStep = 5); RunBattleSetup_FleeCommand: by
+; wBattleResolveStep: the flee/retire command ('Retire now?', '0 fled!', 'But the escape route was
+; cut', 'No fleeing from this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_WriteCommandPageCountAndCommandCursorMaxEtc::
     ld hl, wInventory
     ld bc, $1800
@@ -5462,6 +5785,9 @@ RunBattleSetup_FleeCommand_WriteCommandPageCountAndCommandCursorMaxEtc::
     ret
 
 ; Decrements wCommandPageCount (E-0347)
+; why: part of RunBattleSetup_FleeCommand; RunBattleSetup_FleeCommand: by wBattleResolveStep: the
+; flee/retire command ('Retire now?', '0 fled!', 'But the escape route was cut', 'No fleeing from
+; this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_WriteCommandPageCount::
     push af
     ld a, [wCommandPageCount]
@@ -5508,6 +5834,8 @@ ReturnZero_2::
 ; ShowInventoryPageItemNames; sets bit 7 of wMenuOption; returns unless bit 7 of wMenuOption is set;
 ; sets wMenuOption; sets wStringCategory to 6; copies the byte at wInventory to wStringIndex; calls
 ; ShowStringBank08AtTilesHL_Bank31 (E-0347)
+; why: part of RunBattleSetup_ItemCommand; RunBattleSetup_ItemCommand: by wBattleResolveStep: the
+; battle item command (E-0352)
 RunBattleSetup_ItemCommand_ClearBit6AndCursorEntryTile_Bank31::
     ld a, [wCommandCursor]
     bit 7, a
@@ -5606,6 +5934,9 @@ ShowStringAAtTiles2080::
 ; Sets wStringIndex; calls ShowStringBank08AtTilesHL_Bank31; sets wRecordBuffer; calls
 ; LoadSkillRecord; branches on wRecordBufferData; calls HLToDecimalDigits; calls
 ; WriteDecimalDigitTiles (E-0347)
+; why: part of RunBattleSetup_CommandMenu; RunBattleSetup_CommandMenu: by wBattleResolveStep: draws
+; the command windows, moves the command cursor (MoveBattleCommandCursor) and shows 'It has no
+; usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ShowStringBank08AtTilesHL_Bank31::
     push af
     ld [wStringIndex], a
@@ -5775,6 +6106,10 @@ CountPresentSlotsOfLinkRoleSide_Bank31::
 ; called from RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep: changes A; may
 ; continue in RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole; continues in
 ; RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole2 (E-0347)
+; why: a helper of RunBattleSetup_CommandMenu_ShowStringBank09AtTilesHL_Bank31AndStep, in step 24 of
+; RunBattleSetup_CommandMenu (when wBattleResolveStep = 24); RunBattleSetup_CommandMenu: by
+; wBattleResolveStep: draws the command windows, moves the command cursor (MoveBattleCommandCursor)
+; and shows 'It has no usable ...' (E-0352)
 RunBattleSetup_CommandMenu_ReadRecordBufferAndLinkRoleEtc::
     ld a, [wRecordBuffer]
     cp $1e
@@ -5785,6 +6120,9 @@ RunBattleSetup_CommandMenu_ReadRecordBufferAndLinkRoleEtc::
 
 ; called from RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep: changes A; may
 ; continue in RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole2 (E-0347)
+; why: a helper of RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep, in step 8 of
+; RunBattleSetup_ItemCommand (when wBattleResolveStep = 8); RunBattleSetup_ItemCommand: by
+; wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc::
     ld a, [wItemId]
     cp ITEM_WORLDLEAF
@@ -5792,6 +6130,10 @@ RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc::
 
 ; Changes HL, DE, A and B; branches on the byte at wBattleSlotOut; continues in
 ; RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_CallCopyRectRecordToScreenBufferFar_4 (E-0347)
+; why: part of RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc, in a helper of
+; RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep, in step 8 of
+; RunBattleSetup_ItemCommand (when wBattleResolveStep = 8); RunBattleSetup_ItemCommand: by
+; wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole::
     ld a, [wLinkRole]
     sla a
@@ -5821,6 +6163,10 @@ RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole::
 
 ; Changes HL, DE, A and B; continues in
 ; RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_CallCopyRectRecordToScreenBufferFar_4 (E-0347)
+; why: part of RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc, in a helper of
+; RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep, in step 8 of
+; RunBattleSetup_ItemCommand (when wBattleResolveStep = 8); RunBattleSetup_ItemCommand: by
+; wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole2::
     ld a, [wLinkRole]
     sla a
@@ -5844,6 +6190,10 @@ RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_ReadLinkRole2::
     jr RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_CallCopyRectRecordToScreenBufferFar_4
 
 ; Calls CopyRectRecordToScreenBufferFar_4; calls FillFiveC3AtHL (E-0347)
+; why: part of RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc, in a helper of
+; RunBattleSetup_ItemCommand_ShowStringBank09AtTilesHL_Bank31AndStep, in step 8 of
+; RunBattleSetup_ItemCommand (when wBattleResolveStep = 8); RunBattleSetup_ItemCommand: by
+; wBattleResolveStep: the battle item command (E-0352)
 RunBattleSetup_ItemCommand_ReadItemIdAndLinkRoleEtc_CallCopyRectRecordToScreenBufferFar_4::
     call CopyRectRecordToScreenBufferFar_4
     ld hl, wWindowTileBuffer + $1a
@@ -5884,6 +6234,8 @@ FillFiveC3AtHL::
 
 ; Branches on wNameSlot; branches on C & $03; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wNameSlot (E-0347)
+; why: part of RunBattleSetup; RunBattleSetup: battle fight step 1: one sub-step per wBattleSubPhase
+; (13 cases, 0-12 observed in the first battle) that builds the battle screen and loads ... (E-0352)
 RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty::
     or a
     jr nz, .skip2
@@ -5942,6 +6294,8 @@ RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty::
 ; calls ClearBit6AndCursorEntryTile_Bank31; calls SetBit6AndBlankEntryTile_Bank31; calls
 ; RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty; calls ClearBit6AndCursorEntryTile_Bank31; calls
 ; SetBit6AndBlankEntryTile_Bank31; copies wFrameCounterLo & $f0 to wFrameCounterLo (E-0347)
+; why: part of RunBattleSetup; RunBattleSetup: battle fight step 1: one sub-step per wBattleSubPhase
+; (13 cases, 0-12 observed in the first battle) that builds the battle screen and loads ... (E-0352)
 RunBattleSetup_SetBit6AndBlankEntryTile_Bank31::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -5998,6 +6352,7 @@ CallRunDebugState_E0InBankE0::
 ; on wBattleKind; calls BattleEnd_Step1_AddAx9ToHL; calls BattleEnd_Step1_CountSlots; branches on D;
 ; branches on wBattleScene; branches on wLinkRole; calls BattleEnd_Step1_AddAx9ToHL; sets
 ; wBattleScene to $80 (E-0347)
+; why: a helper of BattleEnd_Step1; BattleEnd_Step1: wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
     ld a, [wDataBankSave]
     ld [wDataBank], a
@@ -6087,6 +6442,7 @@ BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
 
 ; Takes C; changes HL, BC, A and E; branches on the byte at wBattleSlotOut; branches on
 ; wBattleStatus; may continue in BattleEnd_Step1_AddAx9ToHL (E-0347)
+; why: part of BattleEnd_Step1; BattleEnd_Step1: wBattlePhase 2, wBattleStep 1 (E-0352, E-0044)
 BattleEnd_Step1_AddAx9ToHL::
     ld a, c
     ld hl, wBattleSlotOut
@@ -6139,6 +6495,7 @@ BattleEnd_Step1_CountSlots::
 ; BattleEnd_Step3_AddAx9ToHL; calls BattleEnd_Step3_WriteBattleArg0; calls
 ; BattleEnd_Step3_SubtractBattleMP; calls BattleEnd_Step3_ReadBattleArg0; calls
 ; BattleEnd_Step3_ReadBattleArg0_2; sets rRAMG to 0 (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_SubtractBattleMP_2::
     ld a, [wLinkMode]
     or a
@@ -6175,6 +6532,7 @@ BattleEnd_Step3_SubtractBattleMP_2::
     ret
 
 ; Calls SRAMRecordAddressMapped; copies wMenuState & $03 to wBattleResultByte (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_WriteBattleResultByte::
     push bc
     ld a, c
@@ -6210,6 +6568,7 @@ BattleEnd_Step3_WriteBattleResultByte::
 ; Branches on the byte at wBattleSlotOut; returns if wBattleKind is $04; calls
 ; BattleEnd_Step3_ReturnAfterSetup; calls BattleEnd_Step3_ReturnAfterSetup_2; sets bit 7 of
 ; wBattleStatus (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_AddAx9ToHL::
     ld [hl], $00
     ld a, c
@@ -6243,16 +6602,20 @@ BattleEnd_Step3_AddAx9ToHL::
     ret
 
 ; Takes HL (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_ReturnAfterSetup::
     set 0, [hl]
     ret
 
 ; Takes HL (E-0347)
+; why: part of BattleEnd_Step3_ReturnAfterSetup, in part of BattleEnd_Step3; BattleEnd_Step3:
+; wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_ReturnAfterSetup_2::
     set 2, [hl]
     ret
 
 ; Sets wBattleArg0; branches on h (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_WriteBattleArg0::
     ld a, [hl]
     ld [wBattleArg0], a
@@ -6354,6 +6717,7 @@ BattleEnd_Step3_SubtractBattleMP::
     ret
 
 ; Takes HL and C; changes HL, DE and A; branches on wBattleArg0 (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_ReadBattleArg0::
     ld a, [wBattleArg0]
     bit 7, a
@@ -6383,6 +6747,8 @@ BattleEnd_Step3_ReadBattleArg0::
     ret
 
 ; Takes HL and C; changes HL, DE and A; branches on wBattleArg0 (E-0347)
+; why: part of BattleEnd_Step3_ReadBattleArg0, in part of BattleEnd_Step3; BattleEnd_Step3:
+; wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
 BattleEnd_Step3_ReadBattleArg0_2::
     ld a, [wBattleArg0]
     bit 7, a
@@ -6453,6 +6819,9 @@ BattleEnd_GainExperience::
 ; byte at wBattleSlotOut; copies L to hTemp0; copies L to wBattleExpAward; copies H to hTemp1;
 ; copies E to hTemp2; calls WriteNumber24AsDecimalString; calls ShowStringHL_Bank31; then 1 more
 ; step (see the code) (E-0347)
+; why: step 0 of BattleEnd_GainExperience (when wBattleSubPhase = 0); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc::
     ld a, [wBattleKind]
     cp $04
@@ -6521,6 +6890,9 @@ BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc::
 ; step 1 of BattleEnd_GainExperience: returns unless wTextFlags is 0; sets rRAMG to $0a; sets rRAMB
 ; to 0; calls AddExpToRecordCCapped; sets rRAMG to 0; advances wBattleSubPhase; sets
 ; wBattleResolveStep to 0; sets wBattleArg0 to 0 (E-0347)
+; why: step 1 of BattleEnd_GainExperience (when wBattleSubPhase = 1); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_AddExpToRecordCCapped::
     ld a, [wTextFlags]
     or a
@@ -6604,6 +6976,9 @@ BattleEnd_GainExperience_CheckLevelUp::
 ; returns if wBattleArg0 is below b; advances wBattleSubPhase; sets wBattleEndTimer to $3c;
 ; increments wBattleLevel; calls DrawSlotStatusMarks; calls CopySlotPanelRowToVRAM; advances
 ; wBattleResolveStep (E-0347)
+; why: step 0 of BattleEnd_GainExperience_CheckLevelUp (when wBattleResolveStep = 0);
+; BattleEnd_GainExperience_CheckLevelUp: by its step: RecordReachedNextLevelExp and the record name
+; (E-0352)
 BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp::
     ld a, [wTextFlags]
     or a
@@ -6660,6 +7035,9 @@ BattleEnd_GainExperience_CheckLevelUp_RecordReachedNextLevelExp::
 ; wBattleArg1; calls ComputeLevelUpStatGainsForBattleArg1; calls WriteRecordField4BAndStatsDecimal;
 ; calls ShowStringHL_Bank31; sets rRAMG to 0; advances wBattleSubPhase; sets wBattleResolveStep to 0
 ; (E-0347)
+; why: step 1 of BattleEnd_GainExperience_CheckLevelUp (when wBattleResolveStep = 1);
+; BattleEnd_GainExperience_CheckLevelUp: by its step: RecordReachedNextLevelExp and the record name
+; (E-0352)
 BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0::
     ld a, $0a
     ld [rRAMG], a
@@ -6690,6 +7068,9 @@ BattleEnd_GainExperience_CheckLevelUp_CopyTenByteNameToTextBuf0::
 
 ; step 3 of BattleEnd_GainExperience: calls CountDownBattleEndTimerWhenSoundIdle; dispatches on
 ; wBattleResolveStep (E-0347)
+; why: step 3 of BattleEnd_GainExperience (when wBattleSubPhase = 3); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle::
     call CountDownBattleEndTimerWhenSoundIdle
     ld a, [wBattleResolveStep]
@@ -6701,6 +7082,10 @@ BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle::
 ; step 0 of BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle: returns unless wTextFlags
 ; is 0; calls FillBytes; sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddressMapped; advances
 ; wBattleResolveStep (E-0347)
+; why: step 0 of BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle (when
+; wBattleResolveStep = 0), in step 3 of BattleEnd_GainExperience (when wBattleSubPhase = 3);
+; BattleEnd_GainExperience: by wBattleSubPhase: adds experience to each record
+; (AddExpToRecordCCapped/HLCapped), checks RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_FillBytes::
     ld a, [wTextFlags]
     or a
@@ -6733,6 +7118,10 @@ BattleEnd_GainExperience_FillBytes::
 ; is 0; calls FindNewlyLearnableSkills; branches on hTemp3; calls CopyStringHLToDE; branches on
 ; hTemp4; calls CopyStringHLToDE; calls ShowStringHL_Bank31; branches on the byte at wWorkBuf; calls
 ; ForEachSRAMRecordRun; advances wBattleResolveStep; sets wBattleSubStep to 0 (E-0347)
+; why: step 1 of BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle (when
+; wBattleResolveStep = 1), in step 3 of BattleEnd_GainExperience (when wBattleSubPhase = 3);
+; BattleEnd_GainExperience: by wBattleSubPhase: adds experience to each record
+; (AddExpToRecordCCapped/HLCapped), checks RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_FindNewlyLearnableSkills::
     ld a, [wTextFlags]
     or a
@@ -6796,6 +7185,10 @@ BattleEnd_GainExperience_FindNewlyLearnableSkills::
 
 ; step 2 of BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle: calls
 ; RunBattleEndStep4SubSteps (E-0347)
+; why: step 2 of BattleEnd_GainExperience_CountDownBattleEndTimerWhenSoundIdle (when
+; wBattleResolveStep = 2), in step 3 of BattleEnd_GainExperience (when wBattleSubPhase = 3);
+; BattleEnd_GainExperience: by wBattleSubPhase: adds experience to each record
+; (AddExpToRecordCCapped/HLCapped), checks RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_ToRunBattleEndStep4SubSteps::
     call RunBattleEndStep4SubSteps
     ret
@@ -6804,6 +7197,9 @@ BattleEnd_GainExperience_ToRunBattleEndStep4SubSteps::
 ; StoreWorkBufToRecordSkills; calls ApplyLevelUpToRecordBattleArg0; calls
 ; ShowString0ACat5IfField56AtLeast57; sets rRAMG to 0; decrements wBattleSubPhase; sets
 ; wBattleResolveStep to 0 (E-0347)
+; why: step 4 of BattleEnd_GainExperience (when wBattleSubPhase = 4); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_StoreWorkBufToRecordSkills::
     ld a, $0a
     ld [rRAMG], a
@@ -6923,6 +7319,9 @@ StoreWorkBufToRecordSkills::
 
 ; step 5 of BattleEnd_GainExperience: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
 ; sRecords; calls AddExpToRecordHLCapped; sets rRAMG to 0; advances wBattleSubPhase (E-0347)
+; why: step 5 of BattleEnd_GainExperience (when wBattleSubPhase = 5); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_AddExpToRecordHLCapped::
     call DivideBattleExpAwardByModeFactor
     ld a, $0a
@@ -7048,6 +7447,9 @@ AddExpToRecordHLCapped::
 ; step 6 of BattleEnd_GainExperience: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
 ; sRecords; calls RecordReachedNextLevelExp; branches on c; sets rRAMG to 0; advances
 ; wBattleSubPhase; sets rRAMG to 0; copies C to wBattleArg1; advances wBattleSubPhase (E-0347)
+; why: step 6 of BattleEnd_GainExperience (when wBattleSubPhase = 6); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_RecordReachedNextLevelExp::
     ld hl, sRecords
     ld b, $1e
@@ -7100,6 +7502,9 @@ BattleEnd_GainExperience_RecordReachedNextLevelExp::
 ; step 7 of BattleEnd_GainExperience: sets rRAMG to $0a; sets rRAMB to 0; calls
 ; ComputeLevelUpStatGainsForBattleArg1; calls ApplyLevelUpToRecordBattleArg1; calls
 ; CopyRecordFields5DTo5BAnd61To5F; sets rRAMG to 0; decrements wBattleSubPhase (E-0347)
+; why: step 7 of BattleEnd_GainExperience (when wBattleSubPhase = 7); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_ComputeLevelUpStatGainsForBattleArg1::
     ld a, $0a
     ld [rRAMG], a
@@ -7223,6 +7628,9 @@ CopyRecordFields5DTo5BAnd61To5F::
     ret
 
 ; step 8 of BattleEnd_GainExperience: advances wBattleStep; sets wBattleSubPhase to 0 (E-0347)
+; why: step 8 of BattleEnd_GainExperience (when wBattleSubPhase = 8); BattleEnd_GainExperience: by
+; wBattleSubPhase: adds experience to each record (AddExpToRecordCCapped/HLCapped), checks
+; RecordReachedNextLevelExp, computes level-up ... (E-0352)
 BattleEnd_GainExperience_SetBattleStep::
     ld hl, wBattleStep
     inc [hl]
@@ -7241,6 +7649,8 @@ BattleEnd_GainExperience_LearnSkill::
 ; step 0 of BattleEnd_GainExperience_LearnSkill: may continue in
 ; BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc_Skip; branches on
 ; wLearnSkillState; sets wLearnSkillState to $8f; advances wBattleResolveStep (E-0347)
+; why: step 0 of BattleEnd_GainExperience_LearnSkill (when wBattleResolveStep = 0);
+; BattleEnd_GainExperience_LearnSkill: by its step: '0 learned G!' (E-0352)
 BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc::
     ld a, [wArenaRank]
     cp $05
@@ -7262,6 +7672,9 @@ BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc::
     ret
 
 ; Advances wBattleStep; sets wBattleSubPhase to 0; sets wBattleResolveStep to 0 (E-0347)
+; why: part of BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc, in step
+; 0 of BattleEnd_GainExperience_LearnSkill (when wBattleResolveStep = 0);
+; BattleEnd_GainExperience_LearnSkill: by its step: '0 learned G!' (E-0352)
 BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc_Skip::
     ld hl, wBattleStep
     inc [hl]
@@ -7277,6 +7690,8 @@ BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc_Ski
 ; BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc_Skip; calls
 ; CopyStringHLToDE; calls SRAMRecordAddress; calls CopyFiveGlyphsPlusMarks; calls SRAMRecordAddress;
 ; then 5 more steps (see the code) (E-0347)
+; why: step 1 of BattleEnd_GainExperience_LearnSkill (when wBattleResolveStep = 1);
+; BattleEnd_GainExperience_LearnSkill: by its step: '0 learned G!' (E-0352)
 BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA::
     ld a, [wLearnSkillState]
     ldh [hTemp0], a
@@ -7341,6 +7756,8 @@ BattleEnd_GainExperience_LearnSkill_ClearTemp0AndA::
 
 ; step 2 of BattleEnd_GainExperience_LearnSkill: returns unless wTextFlags is 0; continues in
 ; BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc_Skip (E-0347)
+; why: step 2 of BattleEnd_GainExperience_LearnSkill (when wBattleResolveStep = 2);
+; BattleEnd_GainExperience_LearnSkill: by its step: '0 learned G!' (E-0352)
 BattleEnd_GainExperience_LearnSkill_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -7538,6 +7955,9 @@ ForEachSkillOfRecordBRun::
 
 ; called from ForEachSkillOfRecordBRun: calls SRAMRecordAddress; branches on the byte at
 ; wBattlerRecords + $4 (E-0347)
+; why: a helper of ForEachSkillOfRecordBRun; ForEachSkillOfRecordBRun: runs
+; ForEachSkillOfRecordBRun_SRAMRecordAddress for each of the eight skills (field $34) of record B
+; that is not $FF (E-0352, E-0124, E-0344)
 ForEachSkillOfRecordBRun_SRAMRecordAddress::
     ld d, a
     push de
@@ -7605,6 +8025,8 @@ RunBattleEndStep4SubSteps::
 ; FillTilesFromRequest; calls CopyRectRecordToScreenBuffer; calls WriteVRAMByteInc; sets
 ; wCommandCursorMax; copies B to wCommandPageCount; sets wCommandCursor to 0; then 4 more steps (see
 ; the code) (E-0347)
+; why: step 0 of RunBattleEndStep4SubSteps (when wBattleSubStep = 0); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31::
     call RunBattleEndStep4SubSteps_FillBytes
     cp $09
@@ -7680,6 +8102,8 @@ RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31::
 ; CopyRectRecordsAndPlaySound6C; sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddressMapped;
 ; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; sets rRAMG to 0; calls
 ; ShowSelectedSkillNameAndCost; then 3 more steps (see the code) (E-0347)
+; why: step 1 of RunBattleEndStep4SubSteps (when wBattleSubStep = 1); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_FillScreenTileBufferRow11Col4WithC3_Bank31::
     ld a, [wTextFlags]
     or a
@@ -7723,6 +8147,8 @@ RunBattleEndStep4SubSteps_FillScreenTileBufferRow11Col4WithC3_Bank31::
 ; DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206; may return early; clears bit 7 of
 ; wCommandCursor; calls RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc; calls
 ; DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206; calls DrawCommandCursorPageNumber (E-0347)
+; why: step 2 of RunBattleEndStep4SubSteps (when wBattleSubStep = 2); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
     ld de, RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data
     ld hl, wMenuState
@@ -7772,6 +8198,8 @@ RunBattleEndStep4SubSteps_MoveBattleCommandCursor::
 ; step 3 of RunBattleEndStep4SubSteps: sets RunBattleEndStep4SubSteps_MoveBattleCommandCursor_Data
 ; to $bc; calls CopyRectRecordToScreenBuffer; calls CopyRect32StrideToVRAM; calls
 ; ShowStringHL_Bank31; advances wBattleSubStep (E-0347)
+; why: step 3 of RunBattleEndStep4SubSteps (when wBattleSubStep = 3); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_CopyRectRecordToScreenBuffer::
     ld a, [wMenuState]
     and $0f
@@ -7799,6 +8227,8 @@ RunBattleEndStep4SubSteps_CopyRectRecordToScreenBuffer::
 
 ; step 4 of RunBattleEndStep4SubSteps: returns unless wTextFlags is 0; calls LoadCursorTileAndRect;
 ; calls CopyRect32StrideToVRAM; sets wMenuSubState to 1; advances wBattleSubStep (E-0347)
+; why: step 4 of RunBattleEndStep4SubSteps (when wBattleSubStep = 4); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_LoadCursorTileAndRect::
     ld a, [wTextFlags]
     or a
@@ -7819,6 +8249,8 @@ RunBattleEndStep4SubSteps_LoadCursorTileAndRect::
 ; step 5 of RunBattleEndStep4SubSteps: calls ToggleEntryBitsByJoypadAndBlink; plays sound $69;
 ; branches on wMenuSubState; sets wWorkBuf to $ff; calls ShowStringHL_Bank31; advances
 ; wBattleSubStep; may return early; sets wBattleSubStep to 1 (E-0347)
+; why: step 5 of RunBattleEndStep4SubSteps (when wBattleSubStep = 5); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink::
     ld de, RunBattleSetup_FleeCommand_ToggleEntryBitsByJoypadAndBlink_Data2
     ld hl, wMenuSubState
@@ -7860,6 +8292,8 @@ RunBattleEndStep4SubSteps_ToggleEntryBitsByJoypadAndBlink::
 
 ; step 6 of RunBattleEndStep4SubSteps: returns unless wTextFlags is 0; sets wBattleSubStep to 0
 ; (E-0347)
+; why: step 6 of RunBattleEndStep4SubSteps (when wBattleSubStep = 6); RunBattleEndStep4SubSteps:
+; runs the routine for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -7870,6 +8304,9 @@ RunBattleEndStep4SubSteps_WaitTextFlags::
 
 ; called from RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31: calls FillBytes;
 ; branches on the byte at wWorkBuf (E-0347)
+; why: a helper of RunBattleEndStep4SubSteps_ClearAttributesAndScreenBuffer_Bank31, in step 0 of
+; RunBattleEndStep4SubSteps (when wBattleSubStep = 0); RunBattleEndStep4SubSteps: runs the routine
+; for wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_FillBytes::
     ld hl, wBattlerRecords + $4
     ld bc, $0038
@@ -7911,6 +8348,8 @@ RunBattleEndStep4SubSteps_FillBytes::
 ; RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc_Data; sets wStringIndex to 0;
 ; sets wStringCategory to 4; calls ShowString_Bank08; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi (E-0347)
+; why: part of RunBattleEndStep4SubSteps; RunBattleEndStep4SubSteps: runs the routine for
+; wBattleSubStep (jump table of seven) (E-0352, E-0122)
 RunBattleEndStep4SubSteps_WriteTextWindowRowsAndTextWindowWidthEtc::
     ld hl, $0901
     ld a, l
@@ -8166,6 +8605,8 @@ FillScreenTileBufferRow11Col4WithC3_Bank31::
 
 ; Sets wNameGlyphBuf to $90; calls CopyGlyphTilesToVRAM; branches on wLinkRole; calls
 ; CopyGlyphTilesToVRAM (E-0347)
+; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
+; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
 GameMode4_Init_CopyGlyphTilesToVRAM::
     ld a, $90
     ld [wNameGlyphBuf], a
@@ -8288,6 +8729,8 @@ LayoutTileBlocksForBattleFoeCount_DerefHL::
     deref_hl
 
 ; Takes HL and D; changes HL, BC, A and D (E-0347)
+; why: part of LayoutTileBlocksForBattleFoeCount_DerefHL; LayoutTileBlocksForBattleFoeCount_DerefHL:
+; HL = the word at HL (deref_hl), falling into the next code (E-0352)
 LayoutTileBlocksForBattleFoeCount_DerefHL_Skip::
     ld bc, $0606
 
@@ -8309,6 +8752,8 @@ LayoutTileBlocksForBattleFoeCount_DerefHL_Skip::
     jr nz, .loop
 
 ; Returns at once (E-0347)
+; why: part of LayoutTileBlocksForBattleFoeCount_DerefHL; LayoutTileBlocksForBattleFoeCount_DerefHL:
+; HL = the word at HL (deref_hl), falling into the next code (E-0352)
 LayoutTileBlocksForBattleFoeCount_DerefHL_Return::
     ret
 
@@ -8554,10 +8999,16 @@ DrawWindowTileBufferRow2Col16RowsToBGMapRow13::
     ret
 
 ; Calls CopyRectRecordToScreenBuffer_2 (E-0347)
+; why: part of RunBattleSetup_FleeCommand; RunBattleSetup_FleeCommand: by wBattleResolveStep: the
+; flee/retire command ('Retire now?', '0 fled!', 'But the escape route was cut', 'No fleeing from
+; this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_CopyRectRecordToScreenBuffer_2::
     farcall CopyRectRecordToScreenBuffer_2
 
 ; Calls CopyRect32StrideToVRAM (E-0347)
+; why: part of RunBattleSetup_FleeCommand; RunBattleSetup_FleeCommand: by wBattleResolveStep: the
+; flee/retire command ('Retire now?', '0 fled!', 'But the escape route was cut', 'No fleeing from
+; this battle!', ... (E-0352)
 RunBattleSetup_FleeCommand_ToCopyRect32StrideToVRAM::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
@@ -8887,6 +9338,9 @@ DrawSlotStatusMarks::
     ret
 
 ; called from DrawSlotStatusMarks: takes HL; changes HL and A (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data
@@ -8902,6 +9356,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC::
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data to $c0
 ; (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_2::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data
@@ -8912,6 +9369,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC_2::
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_3 to $c1
 ; (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_3::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_3
@@ -8922,6 +9382,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC_3::
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_3 to $c7
 ; (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_4::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_3
@@ -8932,6 +9395,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC_4::
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_4 to $c8
 ; (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_5::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_4
@@ -8942,6 +9408,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC_5::
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_2 to $c9
 ; (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_6::
     push hl
     ld hl, DrawSlotStatusMarks_ReadWordTableEntryForSlotC_Data_2
@@ -8951,6 +9420,9 @@ DrawSlotStatusMarks_ReadWordTableEntryForSlotC_6::
     ret
 
 ; called from DrawSlotStatusMarks: sets DrawSlotStatusMarks_Data to $ca (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_ReadWordTableEntryForSlotC_7::
     push hl
     ld hl, DrawSlotStatusMarks_Data
@@ -9165,6 +9637,9 @@ DrawSlotMPDigits::
 ; wLinkRole; branches on C; branches on C & $03; sets DrawSlotStatusMarks_DrawSlotLevel_BankA0_Data
 ; to $ea; sets DrawSlotStatusMarks_DrawSlotLevel_BankA0_Data to $af; calls HLToDecimalDigits; calls
 ; WriteTwoDigitTilesFromDigits1 (E-0347)
+; why: a helper of DrawSlotStatusMarks; DrawSlotStatusMarks: C = battle slot, drawn only for the
+; displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and wLinkRole bit 1 is set (E-0352,
+; E-0111)
 DrawSlotStatusMarks_DrawSlotLevel_BankA0::
     ld a, [wLinkMode]
     cp $02
@@ -9553,6 +10028,8 @@ ReadSlotAIModeIndexed_Bank31:: ; configured code entry (E-0212); C0
     ret
 
 ; Takes HL and A; changes HL and A (E-0347)
+; why: part of ReadSlotAIModeIndexed_Bank31; ReadSlotAIModeIndexed_Bank31: A = the byte at
+; wSlotAIMode + A (E-0352)
 ReadSlotAIModeIndexed_Bank31_Skip::
     add a
     add_a_to_hl

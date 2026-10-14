@@ -563,6 +563,9 @@ String_37_01_1C::
 
 ; called from RunLinkSession5Exchange_LinkReceiveStepWithBuffer: returns unless wFadeState is 0;
 ; dispatches on wScreenState (E-0347)
+; why: a helper of RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of
+; RunLinkSession5Exchange (when wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine
+; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_WaitFadeState::
     ld a, [wFadeState]
     and a
@@ -590,6 +593,10 @@ RunLinkSession5Exchange_WaitFadeState::
 
 ; step 0 of RunLinkSession5Exchange_WaitFadeState: calls SwapMonstersMenu; increments wScreenState
 ; (E-0347)
+; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -599,6 +606,10 @@ RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
 
 ; step 1 of RunLinkSession5Exchange_WaitFadeState: returns if bit 0 of wTextFlags is set; branches
 ; on wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -623,6 +634,10 @@ RunLinkSession5Exchange_WaitTextFlags::
 
 ; step 5 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 3; advances wScreenState (E-0347)
+; why: step 5 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 5), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
@@ -635,6 +650,10 @@ RunLinkSession5Exchange_SetLinkSendByte::
 
 ; step 6 of RunLinkSession5Exchange_WaitFadeState: returns unless wLinkMessage is $03; sets
 ; wLinkSendByte to 0; sets wScreenState to 1 (E-0347)
+; why: step 6 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 6), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $03
@@ -647,6 +666,10 @@ RunLinkSession5Exchange_WaitLinkMessage::
 
 ; step 2 of RunLinkSession5Exchange_WaitFadeState: increments wScreenState; sets wLinkSendByte to 2;
 ; advances wTitleScreenState (E-0347)
+; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_SetScreenState::
     ld a, [wScreenState]
     inc a
@@ -668,6 +691,9 @@ RunLinkSession5Exchange_ShowMessages::
 
 ; step 0 of RunLinkSession5Exchange_ShowMessages: returns unless wTextFlags is 0; increments
 ; wScreenStep (E-0347)
+; why: step 0 of RunLinkSession5Exchange_ShowMessages (when wScreenStep = 0);
+; RunLinkSession5Exchange_ShowMessages: text waits around two strings (ShowStringIndexA_Bank37)
+; (E-0352)
 RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -680,6 +706,9 @@ RunLinkSession5Exchange_ShowMessages_WaitTextFlags::
 ; step 1 of RunLinkSession5Exchange_ShowMessages: returns unless wTextFlags is 0; branches on
 ; wLinkMessage; returns unless wLinkMessage is $02; sets wScreenState to 5; sets wScreenStep to 0;
 ; calls ShowStringIndexA_Bank37; increments wScreenStep (E-0347)
+; why: step 1 of RunLinkSession5Exchange_ShowMessages (when wScreenStep = 1);
+; RunLinkSession5Exchange_ShowMessages: text waits around two strings (ShowStringIndexA_Bank37)
+; (E-0352)
 RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_SetScreenState::
     ld a, [wTextFlags]
     and a
@@ -705,6 +734,9 @@ RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37_SetScreenState::
 
 ; step 2 of RunLinkSession5Exchange_ShowMessages: sets wLinkSendByte to 0; calls
 ; ShowStringIndexA_Bank37; increments wScreenStep (E-0347)
+; why: step 2 of RunLinkSession5Exchange_ShowMessages (when wScreenStep = 2);
+; RunLinkSession5Exchange_ShowMessages: text waits around two strings (ShowStringIndexA_Bank37)
+; (E-0352)
 RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37::
     xor a
     ld [wLinkSendByte], a
@@ -717,6 +749,9 @@ RunLinkSession5Exchange_ShowMessages_ShowStringIndexA_Bank37::
 
 ; step 3 of RunLinkSession5Exchange_ShowMessages: returns unless wTextFlags is 0; sets wScreenStep
 ; to 0; increments wScreenState (E-0347)
+; why: step 3 of RunLinkSession5Exchange_ShowMessages (when wScreenStep = 3);
+; RunLinkSession5Exchange_ShowMessages: text waits around two strings (ShowStringIndexA_Bank37)
+; (E-0352)
 RunLinkSession5Exchange_ShowMessages_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -771,6 +806,9 @@ RunLinkSession5Exchange_LinkBreed::
 ; step 14 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; branches on
 ; wLinkMessage; sets wScreenStep to 9; calls ShowStringIndexA_Bank37; sets wLinkSendByte to $fd;
 ; sets wAIFlag to 1; calls BreedMenu (E-0347)
+; why: step 14 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 14);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -796,6 +834,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep::
 ; wLinkMessage; sets wScreenStep to 9; calls ShowStringIndexA_Bank37; sets wLinkSendByte to $fd;
 ; sets wAIFlag to 1; calls BreedMenu; returns unless wMenuInputResult is $fe; sets wScreenStep to 9;
 ; calls ShowStringIndexA_Bank37; sets wLinkSendByte to $fd; sets wAIFlag to 0 (E-0347)
+; why: step 8 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 8);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37::
     ld a, [wTextFlags]
     and a
@@ -830,6 +871,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37::
 
 ; step 0 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; calls BreedMenu
 ; (E-0347)
+; why: step 0 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 0);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -840,6 +884,9 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu::
 ; step 16 of RunLinkSession5Exchange_LinkBreed: branches on wSelectedRecord; returns unless
 ; wTextFlags is 0; calls BreedMenu; calls ShowStringIndexA_Bank37; dispatches on wScreenSubStep
 ; (E-0347)
+; why: step 16 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 16);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
     ld a, [wSelectedRecord]
     cp $ff
@@ -869,6 +916,10 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
 
 ; step 0 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 0; increments wScreenSubStep; calls ShowStringIndexA_Bank37 (E-0347)
+; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37::
     ld a, [wTextFlags]
     and a
@@ -884,6 +935,10 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37::
 
 ; step 1 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; increments
 ; wScreenSubStep; sets wLinkSendByte to 1 (E-0347)
+; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
@@ -897,6 +952,10 @@ RunLinkSession5Exchange_SetScreenSubStep::
 
 ; step 2 of RunLinkSession5Exchange_WaitFadeState: returns unless wLinkMessage is $01; sets
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
+; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
     ld a, [wLinkMessage]
     cp $01
@@ -912,6 +971,10 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
 
 ; step 3 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; calls BreedMenu;
 ; sets wSelectedRecord to 0; sets wScreenSubStep to 0 (E-0347)
+; why: step 3 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 3), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -924,6 +987,10 @@ RunLinkSession5Exchange_BreedMenu::
 
 ; step 9 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
+; why: step 9 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 9), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
     ld a, [wTextFlags]
     or a
@@ -940,6 +1007,9 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
 ; step 12 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; branches on
 ; wScreenSubStep; calls ShowStringIndexA_Bank37; increments wScreenSubStep; calls BreedMenu; calls
 ; CopyFromBankWaitVRAM; sets wScreenSubStep to 0 (E-0347)
+; why: step 12 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 12);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
@@ -974,6 +1044,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenSubStep::
 ; calls LoadFamilyIconTileForRecordB_Bank37; calls CopyRectToScreenBufferAndClearAttributes_37; sets
 ; wArg1; copies L to wArg2; copies H to wArg3; calls DrawRecordField0EMarkAndField56Digits;
 ; increments wScreenStep (E-0347)
+; why: step 4 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 4);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1004,6 +1077,9 @@ RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     ret
 
 ; step 15 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0 (E-0347)
+; why: step 15 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 15);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
@@ -1033,6 +1109,9 @@ RunCopyScreenBufferRectWithAttrs_37At0278AndStep::
 ; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; branches on hTemp0;
 ; sets rRAMG2 to 0; decrements wScreenStep; calls ShowStringIndexA_Bank37; branches on the byte at
 ; wPartyList; sets rRAMG2 to 0; decrements wScreenStep; then 7 more steps (see the code) (E-0347)
+; why: step 17 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 17);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -1115,6 +1194,9 @@ RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_SetScreenStep::
 ; sets rRAMB to 0; sets rRAMG2 to 0; calls UnpackLinkRecordToWorkBuf; calls ShowStringIndexA_Bank37;
 ; calls RunCopyScreenBufferRectWithAttrs_37At0278AndStep; calls BGMapAddressAtScroll_Bank37; calls
 ; DrawScreenBufferRectToBGMap_37 (E-0347)
+; why: step 18 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 18);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
     ld a, [wTextFlags]
     and a
@@ -1151,6 +1233,9 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToWorkBuf::
 
 ; step 19 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; increments
 ; wScreenStep; sets wLinkSendByte to 1 (E-0347)
+; why: step 19 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 19);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -1166,6 +1251,9 @@ RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
 ; wLinkBufferCountHi to 0; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to
 ; wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to $ff; sets wLinkReady to 1;
 ; increments wScreenStep (E-0347)
+; why: step 31 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 31);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc::
     ld a, $64
     ld [wLinkBufferCountLo], a
@@ -1195,6 +1283,9 @@ RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc:
 ; $fd; sets wAIFlag to 1; increments wScreenStep; sets wLinkBufferCountLo to $95; sets
 ; wLinkBufferCountHi to 0; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to
 ; wLinkBufferPtrLo; then 3 more steps (see the code) (E-0347)
+; why: step 20 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 20);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_2::
     ld a, [wLinkMessage]
     cp $01
@@ -1237,6 +1328,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_2::
 
 ; step 21 of RunLinkSession5Exchange_LinkBreed: returns unless wLinkMessage is $f0; sets wLinkReady
 ; to 0; calls UnpackLinkRecordToRecordBufB; increments wScreenStep (E-0347)
+; why: step 21 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 21);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
     ld a, [wLinkMessage]
     cp $f0
@@ -1254,6 +1348,9 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
 ; wScreenSubStep to 8; sets wSelectedRecord to $ff; sets wLinkSendByte to 0; sets wStringIndex to
 ; $0f; sets wStringCategory to 0; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi;
 ; copies L to wTextWindowRows; then 8 more steps (see the code) (E-0347)
+; why: step 22 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 22);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_3::
     ld a, [wTextFlags]
     and a
@@ -1315,6 +1412,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_3::
 ; ComputeBreedingChild; increments wScreenStep; calls StoreReceivedRecordIntoSRAM; branches on
 ; wScreenStep; continues in
 ; RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc (E-0347)
+; why: step 29 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 29);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild::
     ld a, [wLinkRole]
     bit 1, a
@@ -1343,6 +1443,9 @@ RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild::
 ; wTextWindowWidth; sets wTwoChoiceCursor to 0; plays sound $6c; calls
 ; CopyRectToScreenBufferAndClearAttributes_37; calls BGMapAddressAtScroll_Bank37; calls
 ; DrawScreenBufferRectToBGMap_37; increments wScreenStep (E-0347)
+; why: step 23 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 23);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
     ld a, [wTextFlags]
     and a
@@ -1379,6 +1482,9 @@ RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
 ; ShowStringIndexA_Bank37; sets wLinkSendByte to $fe; sets wAIFlag to 1; calls
 ; HandleThreeChoiceCursorInput_37; may return early; calls CopyScreenBufferRectAt024FAndDrawBox_37;
 ; sets wScreenStep to $21; calls ShowStringIndexA_Bank37; then 15 more steps (see the code) (E-0347)
+; why: step 24 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 24);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
     ld a, [wTextFlags]
     and a
@@ -1458,6 +1564,9 @@ RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
 ; CopyFromBankWaitVRAM; sets wTwoChoiceCursor to 0; calls
 ; CopyRectToScreenBufferAndClearAttributes_37; calls BGMapAddressAtScroll_Bank37; calls
 ; DrawScreenBufferRectToBGMap_37; increments wScreenStep (E-0347)
+; why: step 25 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 25);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
     ld a, [wTextFlags]
     and a
@@ -1501,6 +1610,9 @@ RunLinkSession5Exchange_LinkBreed_CopyFromBankWaitVRAM::
 ; UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0; branches on wMenuInputResult;
 ; calls ShowStringIndexA_Bank37; sets wScreenStep to $17; branches on wTwoChoiceCursor; increments
 ; wScreenStep; sets wScreenSubStep to 0; calls ShowStringIndexA_Bank37 (E-0347)
+; why: step 26 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 26);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
     ld a, [wTextFlags]
     and a
@@ -1625,6 +1737,9 @@ StoreReceivedRecordIntoSRAM::
 ; wLinkMessage is $fe; sets wScreenStep to $21; calls ShowStringIndexA_Bank37; sets wLinkSendByte to
 ; $fe; sets wAIFlag to 1; increments wScreenStep; continues in
 ; RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild (E-0347)
+; why: step 28 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 28);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_4::
     ld a, [wLinkMessage]
     cp $01
@@ -1649,6 +1764,9 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_4::
 
 ; step 9 of RunLinkSession5Exchange_LinkBreed: returns unless wLinkMessage is $fd; increments
 ; wScreenStep; continues in RunLinkSession5Exchange_LinkBreed_WaitTextFlags (E-0347)
+; why: step 9 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 9);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $fd
@@ -1661,6 +1779,9 @@ RunLinkSession5Exchange_LinkBreed_WaitLinkMessage::
 ; step 33 of RunLinkSession5Exchange_LinkBreed: returns unless wLinkMessage is $fe; sets
 ; wLinkSendByte to 0; sets wScreenStep to $0a; continues in
 ; RunLinkSession5Exchange_LinkBreed_WaitTextFlags (E-0347)
+; why: step 33 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 33);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $fe
@@ -1673,6 +1794,9 @@ RunLinkSession5Exchange_LinkBreed_WaitLinkMessage_SetLinkSendByte::
 
 ; step 10 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; increments
 ; wScreenStep; sets wScreenSubStep to 0 (E-0347)
+; why: step 10 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 10);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1695,6 +1819,9 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
 ; wLinkBufferCountLo; sets wLinkBufferCountHi to 0; copies L to wLinkTimeoutLo; copies H to
 ; wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to
 ; $ff; sets wLinkReady to 1 (E-0347)
+; why: step 0 of RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner (when wScreenSubStep = 0);
+; RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner: waits for the text, then for the partner's
+; link message (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1736,6 +1863,9 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
 ; step 1 of RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner: returns unless wLinkMessage is
 ; $f0; sets wLinkReady to 0; branches on wLinkMessage; sets wGameMode to 5; sets wModeState to 1;
 ; sets wModeChangeRequest to 1; sets wLinkSendByte to 0 (E-0347)
+; why: step 1 of RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner (when wScreenSubStep = 1);
+; RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner: waits for the text, then for the partner's
+; link message (E-0352)
 RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $f0
@@ -1764,6 +1894,9 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
 
 ; step 32 of RunLinkSession5Exchange_LinkBreed: branches on wLinkMessage; sets wLinkSendByte to 0;
 ; sets wLinkScene to 1; sets wLinkBreedResult to 1 (E-0347)
+; why: step 32 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 32);
+; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
+; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
 RunLinkSession5Exchange_LinkBreed_WriteLinkSendByteAndLinkSceneEtc::
     ld a, [wLinkMessage]
     cp $f0
@@ -1781,6 +1914,10 @@ RunLinkSession5Exchange_LinkBreed_WriteLinkSendByteAndLinkSceneEtc::
 
 ; step 12 of RunLinkSession5Exchange_WaitFadeState: calls SwapMonstersMenu; returns unless
 ; wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
+; why: step 12 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 12), in a helper of
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
+; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
+; table of two) (E-0352, E-0122)
 RunLinkSession5Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1810,11 +1947,17 @@ RunLinkSession5Exchange_ShowChosenRecord::
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
 
 ; step 2 of RunLinkSession5Exchange_ShowChosenRecord: calls BreedMenu (E-0347)
+; why: step 2 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 2);
+; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; (E-0352)
 RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu::
     farcall BreedMenu
     ret
 
 ; step 0 of RunLinkSession5Exchange_ShowChosenRecord: increments wScreenStep (E-0347)
+; why: step 0 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 0);
+; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; (E-0352)
 RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -1834,6 +1977,9 @@ ShowString0EAndStep_Bank37::
 ; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
 ; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; then 3 more steps (see the code) (E-0347)
+; why: step 6 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 6);
+; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; (E-0352)
 RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
     ld hl, vTiles1 + $270
     ld a, l
@@ -1873,6 +2019,9 @@ RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
 
 ; step 7 of RunLinkSession5Exchange_ShowChosenRecord: calls SetArg5ToListEntriesCell5; sets wArg1;
 ; calls DrawRecordNameAndSpeciesNameTiles; increments wScreenStep (E-0347)
+; why: step 7 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 7);
+; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
+; (E-0352)
 RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1928,11 +2077,17 @@ RunLinkSession5Exchange_ShowRecordStats::
     dw RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3
 
 ; step 8 of RunLinkSession5Exchange_ShowRecordStats: returns at once (E-0347)
+; why: step 8 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 8);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_Return::
     ret
 
 ; step 0 of RunLinkSession5Exchange_ShowRecordStats: calls ClearBGMapAndLoadFrameTiles; increments
 ; wScreenStep (E-0347)
+; why: step 0 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 0);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ToClearBGMapAndLoadFrameTilesAndStep::
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
@@ -1942,12 +2097,18 @@ RunLinkSession5Exchange_ShowRecordStats_ToClearBGMapAndLoadFrameTilesAndStep::
 
 ; step 1 of RunLinkSession5Exchange_ShowRecordStats: calls ShowString10Bank0EAtTiles2020ThenDefault;
 ; calls LoadSixteenGlyphTilesFromTable; calls DrawRecordBufBNameNameAtTiles1500 (E-0347)
+; why: step 1 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 1);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ShowString10Bank0EAtTiles2020ThenDefault::
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     farcall LoadSixteenGlyphTilesFromTable
     call DrawRecordBufBNameNameAtTiles1500
 
 ; step 2 of RunLinkSession5Exchange_ShowRecordStats: increments wScreenStep (E-0347)
+; why: step 2 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 2);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -1977,6 +2138,9 @@ DrawRecordBufBNameNameAtTiles1500::
 ; step 3 of RunLinkSession5Exchange_ShowRecordStats: calls BGMapAddressAtScroll_Bank37; sets wArg3
 ; to $14; sets wArg4 to $12; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_Bank37; increments
 ; wScreenStep (E-0347)
+; why: step 3 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 3);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37::
     call BGMapAddressAtScroll_Bank37
     ld de, RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_TileRect
@@ -1994,6 +2158,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37::
 
 ; step 4 of RunLinkSession5Exchange_ShowRecordStats: calls DrawRecordBufBStatsScreen; increments
 ; wScreenStep (E-0347)
+; why: step 4 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 4);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ToDrawRecordBufBStatsScreenAndStep::
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
@@ -2003,6 +2170,9 @@ RunLinkSession5Exchange_ShowRecordStats_ToDrawRecordBufBStatsScreenAndStep::
 
 ; step 5 of RunLinkSession5Exchange_ShowRecordStats: calls
 ; DrawRecordBufBSpeciesMonsterPictureInTwoSteps (E-0347)
+; why: step 5 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 5);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
@@ -2011,6 +2181,9 @@ RunLinkSession5Exchange_ShowRecordStats_CallDrawRecordBufBSpeciesMonsterPictureI
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
 ; wMenuInputResult; increments wScreenStep; calls BGMapAddressAtScroll_Bank37; sets wArg3 to 6; sets
 ; wArg4 to 6; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_Bank37; sets wScreenStep to $0e (E-0347)
+; why: step 6 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 6);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2054,6 +2227,9 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
 ; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to
 ; $20; sets wArg7 to 0; calls FillTileRectWithArg1Tile; sets wScreenStep to 0; sets wScreenSubStep
 ; to 0; increments wScreenState (E-0347)
+; why: step 7 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 7);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank37
     ld a, h
@@ -2083,6 +2259,9 @@ RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
 ; step 14 of RunLinkSession5Exchange_ShowRecordStats: copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; increments wScreenStep (E-0347)
+; why: step 14 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 14);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
     ld hl, vTiles2 + $200
     ld a, l
@@ -2105,6 +2284,9 @@ RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
 ; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
 ; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; increments wScreenStep
 ; (E-0347)
+; why: step 15 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 15);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles1 + $270
     ld a, l
@@ -2135,6 +2317,9 @@ RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_SetTextWindowTileLo
 
 ; step 16 of RunLinkSession5Exchange_ShowRecordStats: calls
 ; DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37; increments wScreenStep (E-0347)
+; why: step 16 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 16);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37
     ld a, [wScreenStep]
@@ -2145,6 +2330,9 @@ RunLinkSession5Exchange_ShowRecordStats_WriteScreenStep::
 ; step 17 of RunLinkSession5Exchange_ShowRecordStats: calls BGMapAddressAtScroll_Bank37; sets wArg3
 ; to $0c; sets wArg4 to $0f; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_Bank37; increments
 ; wScreenStep (E-0347)
+; why: step 17 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 17);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_SetArg3::
     call BGMapAddressAtScroll_Bank37
     ld de, $0068
@@ -2164,6 +2352,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_SetArg3::
 
 ; step 18 of RunLinkSession5Exchange_ShowRecordStats: calls
 ; ShowPersonalityNameAndRecordBufBMasterNameName; increments wScreenStep (E-0347)
+; why: step 18 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 18);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_WriteScreenStepAndArg1Etc::
     farcall ShowPersonalityNameAndRecordBufBMasterNameName
     ld a, [wScreenStep]
@@ -2173,6 +2364,9 @@ RunLinkSession5Exchange_ShowRecordStats_WriteScreenStepAndArg1Etc::
 ; step 19 of RunLinkSession5Exchange_ShowRecordStats: sets wArg1 to $6d; sets wArg2 to 0; sets wArg3
 ; to $ea; sets wArg4 to $c7; calls DrawFamilyIconAndCountForRecordBufBFamily; calls
 ; DrawRecordBufBExpExpAndToNextLevel; increments wScreenStep (E-0347)
+; why: step 19 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 19);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc::
     ld a, $6d
     ld [wArg1], a
@@ -2193,6 +2387,9 @@ RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc::
 ; DecompressGraphicsArg1ToArg4; sets hSpriteHideTile to $f0; calls
 ; ShowRecordBufBItemCategory11StringAtTiles2320; calls BGMapAddressAtScroll_Bank37; sets wArg3 to 8;
 ; sets wArg4 to 7; sets wArg7 to 0; then 2 more steps (see the code) (E-0347)
+; why: step 20 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 20);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -2227,6 +2424,9 @@ RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
 ; wMenuInputResult; sets hSpriteHideTile to 0; increments wScreenStep; sets hSpriteHideTile to 0;
 ; calls DrawRects; sets wScreenStep to 4 (E-0347)
+; why: step 21 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 21);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2263,6 +2463,9 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRe
 
 ; step 22 of RunLinkSession5Exchange_ShowRecordStats: calls DrawLevelAndStatusRowForRecordBufBLevel;
 ; sets wScreenStep to $0f (E-0347)
+; why: step 22 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 22);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld a, $0f
@@ -2271,6 +2474,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel:
 
 ; step 23 of RunLinkSession5Exchange_ShowRecordStats: calls DrawRects_2; increments wScreenStep
 ; (E-0347)
+; why: step 23 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 23);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ToDrawRects_2AndStep::
     farcall DrawRects_2
     ld a, [wScreenStep]
@@ -2280,6 +2486,9 @@ RunLinkSession5Exchange_ShowRecordStats_ToDrawRects_2AndStep::
 
 ; step 24 of RunLinkSession5Exchange_ShowRecordStats: calls ClearTilesAndDrawRects; increments
 ; wScreenStep (E-0347)
+; why: step 24 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 24);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ToClearTilesAndDrawRectsAndStep::
     farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
@@ -2289,6 +2498,9 @@ RunLinkSession5Exchange_ShowRecordStats_ToClearTilesAndDrawRectsAndStep::
 
 ; step 25 of RunLinkSession5Exchange_ShowRecordStats: calls ShowRecordBufBSkillNamesOrNone;
 ; increments wScreenStep (E-0347)
+; why: step 25 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 25);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone::
     farcall ShowRecordBufBSkillNamesOrNone
     ld a, [wScreenStep]
@@ -2297,6 +2509,9 @@ RunLinkSession5Exchange_ShowRecordStats_ShowRecordBufBSkillNamesOrNone::
 
 ; step 26 of RunLinkSession5Exchange_ShowRecordStats: calls ShowSpeciesCategory13StringAtTiles2680;
 ; increments wScreenStep (E-0347)
+; why: step 26 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 26);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]
@@ -2309,6 +2524,9 @@ RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
 ; wMenuInputResult; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
 ; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; increments wScreenStep;
 ; calls CopyFromBankWaitVRAM; then 3 more steps (see the code) (E-0347)
+; why: step 27 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 27);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_2::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2359,6 +2577,9 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRe
 ; step 28 of RunLinkSession5Exchange_ShowRecordStats: branches on wScreenSubStep; calls DrawRects_3;
 ; increments wScreenSubStep; calls ShowString10Bank0EAtTiles2020ThenDefault; calls
 ; ShowString0EAndStep_Bank37; sets wScreenSubStep to 0 (E-0347)
+; why: step 28 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 28);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawRects_3::
     ld a, [wScreenSubStep]
     and a
@@ -2382,6 +2603,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawRects_3::
 ; DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37; calls CopyFromBankWaitVRAM; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; then 1 more step (see the code) (E-0347)
+; why: step 29 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 29);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
@@ -2418,6 +2642,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_
 ; step 30 of RunLinkSession5Exchange_ShowRecordStats: calls BGMapAddressAtScroll_Bank37; sets wArg3
 ; to $0c; sets wArg4 to $12; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_Bank37; calls
 ; DecompressRecordBufBSpeciesGraphics; increments wScreenStep (E-0347)
+; why: step 30 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 30);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_DecompressRecordBufBSpeciesGraphics::
     call BGMapAddressAtScroll_Bank37
     ld de, $0008
@@ -2438,6 +2665,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Decompress
 
 ; step 31 of RunLinkSession5Exchange_ShowRecordStats: calls RunF2; sets hSpriteHideTile to $f0;
 ; increments wScreenStep (E-0347)
+; why: step 31 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 31);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_RunF2::
     farcall RunF2
     ld a, $f0
@@ -2451,6 +2681,9 @@ RunLinkSession5Exchange_ShowRecordStats_RunF2::
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets
 ; hSpriteHideTile to 0; sets wScreenStep to $17; sets hSpriteHideTile to 0; sets wScreenStep to 7
 ; (E-0347)
+; why: step 32 of RunLinkSession5Exchange_ShowRecordStats (when wScreenStep = 32);
+; RunLinkSession5Exchange_ShowRecordStats: by wScreenStep: the stats screens of record buffer B, as
+; RunScreenStateWhenNotFading_F1_ShowRecordStats (E-0352)
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2501,6 +2734,9 @@ RunLinkSession5Exchange_ResetListAndShowString::
 
 ; step 0 of RunLinkSession5Exchange_ResetListAndShowString: copies wItemGridX to wListCursor; copies
 ; wItemGridY to wListPageIndex; increments wScreenStep (E-0347)
+; why: step 0 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 0);
+; RunLinkSession5Exchange_ResetListAndShowString: as
+; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
 RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2513,6 +2749,9 @@ RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
 
 ; step 9 of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11; calls
 ; BreedMenu (E-0347)
+; why: step 9 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 9);
+; RunLinkSession5Exchange_ResetListAndShowString: as
+; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
 RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState::
     ld a, [wScreenState]
     push af
@@ -2524,6 +2763,9 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState::
 
 ; step 2 of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11; calls
 ; BreedMenu; sets wScreenState (E-0347)
+; why: step 2 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 2);
+; RunLinkSession5Exchange_ResetListAndShowString: as
+; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
 RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
     ld a, [wScreenState]
     push af
@@ -2540,6 +2782,9 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 ; H to wTextWindowWidth; calls ShowString_Bank0E; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; then 1 more step
 ; (see the code) (E-0347)
+; why: step 8 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 8);
+; RunLinkSession5Exchange_ResetListAndShowString: as
+; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
 RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37::
     ld de, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect
     ld hl, wWindowTileBuffer + $e7
@@ -2830,6 +3075,9 @@ DrawArrowTileBCAtTwoChoiceEntry_Bank37::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank37; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; why: part of DrawArrowTileBCAtTwoChoiceEntry_Bank37; DrawArrowTileBCAtTwoChoiceEntry_Bank37: B =
+; $BC, then writes B at the scroll position +
+; DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data[wTwoChoiceCursor] (E-0352, E-0124)
 DrawArrowTileBCAtTwoChoiceEntry_Bank37_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     sla a
@@ -3370,6 +3618,8 @@ CopyBBytesHLToDE_Bank37::
     ret
 
 ; called from ConvertEightBytesAndPadF0: takes A; changes A (E-0347)
+; why: a helper of ConvertEightBytesAndPadF0; ConvertEightBytesAndPadF0: converts 8 bytes from DE
+; through ConvertEightBytesAndPadF0_Cp5C into HL, then appends two $F0 bytes (E-0352, E-0122)
 ConvertEightBytesAndPadF0_Cp5C::
     cp $5c
     jr z, .skip

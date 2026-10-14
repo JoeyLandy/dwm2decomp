@@ -39,6 +39,8 @@ CopyMonsterTableBytes::
     ret
 
 ; called from LoadMonsterRecordTo: takes DE; changes HL, DE, BC and A (E-0347)
+; why: a helper of LoadMonsterRecordTo; LoadMonsterRecordTo: DE = destination: like
+; LoadMonsterRecord but copies the 26-byte record to [DE] (E-0352)
 LoadMonsterRecordTo_Multiply8By16::
     push de
     ld a, [wMonsterId]
@@ -1763,6 +1765,8 @@ MonsterTableA2::
     db $01 ; personality axis $72
 
 ; called from BeginStringDisplay_BankE0: sets wStringCategory; calls BeginStringDisplay (E-0347)
+; why: a helper of BeginStringDisplay_BankE0; BeginStringDisplay_BankE0: if wStringCategory < 1,
+; BeginStringDisplay with DE = $76FC (E-0352)
 BeginStringDisplay_BankE0_BeginStringDisplay::
     ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

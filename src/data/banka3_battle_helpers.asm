@@ -10,32 +10,44 @@ GetBattleATK_BankA3::
     jr GetBattleMP_BankA3_Skip
 
 ; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
+; why: part of GetBattleDEF; GetBattleDEF: A = battle slot: HL = the word for that slot in the array
+; at wBattleDEF (ReadBattleWordFromArray) (E-0352)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA3_Skip
 
 ; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
+; why: part of GetBattleMaxHP; GetBattleMaxHP: A = battle slot: HL = the word for that slot in the
+; array at wBattleMaxHP (ReadBattleWordFromArray) (E-0352)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA3_Skip
 
 ; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
+; why: part of GetBattleMaxMP; GetBattleMaxMP: A = battle slot: HL = the word for that slot in the
+; array at wBattleMaxMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA3_Skip
 
 ; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
+; why: part of GetBattleHP; GetBattleHP: A = battle slot: HL = the word for that slot in the array
+; at wBattleHP (ReadBattleWordFromArray) (E-0352)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleMP_BankA3_Skip
 
 ; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
+; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
+; at wBattleMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleMP_BankA3_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
 ; Takes HL and A; changes HL and A (E-0347)
+; why: part of GetBattleMP_BankA3, in part of GetBattleMP; GetBattleMP: A = battle slot: HL = the
+; word for that slot in the array at wBattleMP (ReadBattleWordFromArray) (E-0352)
 GetBattleMP_BankA3_Skip::
     add a
     add_a_to_hl
@@ -820,6 +832,9 @@ PersonalityCompatibility::
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
 ; called from SaveActionChoicesAndPickFormations: takes DE and BC; changes DE, BC and A (E-0347)
+; why: a helper of SaveActionChoicesAndPickFormations; SaveActionChoicesAndPickFormations: copies 16
+; bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and outside link
+; battles sets the formation for ... (E-0352, E-0125)
 SaveActionChoicesAndPickFormations_DivideBByA::
     push bc
     push de
@@ -967,6 +982,9 @@ PersonalityIndexOfSlot_BankA3_2::
 
 ; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor; copies the
 ; byte at wBattleMonsterId to hTemp0 (E-0347)
+; why: a helper of RollRandomLoBelowChance; RollRandomLoBelowChance: farcalls
+; RollRandomLoBelowChance_WriteTemp0 (not read) and returns the comparison of wRandomLo with hTemp0
+; (taken as 4 when hTemp0 is 3): ... (E-0352, E-0052)
 RollRandomLoBelowChance_WriteTemp0::
     ld a, [wLinkMode]
     or a
@@ -1118,6 +1136,9 @@ PickDuckBehindAlly::
 ; called from ActionEffect_Chance: calls AdvanceRandom; branches on wLinkMode; branches on
 ; wBattleKind; returns unless bit 2 of wBattleActor is set; may continue in
 ; ActionEffect_Chance_AdvanceRandom (E-0347)
+; why: a helper of ActionEffect_Chance; ActionEffect_Chance: effect routine reached through
+; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 60 Chance
+; (E-0352, E-0084)
 ActionEffect_Chance_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]

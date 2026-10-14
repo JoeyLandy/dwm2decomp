@@ -17,6 +17,9 @@ CloseBreedMenu::
 ; step 0 of CloseBreedMenu: calls CopyBytesDEToHL_Bank15; branches on wIsCGB; calls
 ; CopyLow3BitsToWRAMBank2_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; increments wScreenList (E-0347)
+; why: step 0 of CloseBreedMenu (when wScreenList = 0); CloseBreedMenu: implements script command
+; type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseBreedMenu_CopyBytesDEToHL_Bank15::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -44,6 +47,9 @@ CloseBreedMenu_CopyBytesDEToHL_Bank15::
 ; wGlyphListStart to 0; sets wScreenState to 0; sets wScreenStep to 0; sets wMenuState to 0;
 ; increments wScreenList; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 1 of CloseBreedMenu (when wScreenList = 1); CloseBreedMenu: implements script command
+; type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15::
     ld hl, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
     ld de, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
@@ -73,6 +79,9 @@ CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15::
 
 ; step 2 of CloseBreedMenu: calls FillTilesBxC; calls CopyFromBankWaitVRAM; increments wScreenList
 ; (E-0347)
+; why: step 2 of CloseBreedMenu (when wScreenList = 2); CloseBreedMenu: implements script command
+; type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseBreedMenu_FillTilesBxC::
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -101,6 +110,9 @@ CloseBreedMenu_FillTilesBxC::
 ; sets wMessageMode to 0; sets wScreenList to 0; calls WritePlayerNameWithFlag0SuffixToTextBuf0;
 ; sets hSpriteHideTile to $80; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 3 of CloseBreedMenu (when wScreenList = 3); CloseBreedMenu: implements script command
+; type EE (SCRIPT_BREED_CLOSE): ends the breeding (and medal prize) session and clears wMessageMode
+; (E-0352, E-0038, E-0244)
 CloseBreedMenu_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
@@ -267,6 +279,8 @@ DrawGoldBoxAndStep_Bank15::
 
 ; step 2 of BreedMenu_Setup: calls CopyRectTo20ByteRows_Bank15; calls BGMapAddressAtScroll_Bank15;
 ; calls DrawScreenBufferRect_Bank15; sets wScreenStep to 0; increments wScreenState (E-0347)
+; why: step 2 of BreedMenu_Setup (when wScreenStep = 2); BreedMenu_Setup: draws the two boxes and
+; the gold box (E-0352, E-0277)
 BreedMenu_Setup_CopyRectTo20ByteRows_Bank15::
     ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -284,6 +298,9 @@ BreedMenu_Setup_CopyRectTo20ByteRows_Bank15::
     ret
 
 ; step 2 of BreedMenu: calls HandleThreeOptionMenuInput_15 (E-0347)
+; why: step 2 of BreedMenu (when wScreenState = 2); BreedMenu: implements script command type ED
+; (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5,
+; bank ... (E-0352, E-0038, E-0244)
 BreedMenu_ToHandleThreeOptionMenuInput_15::
     call HandleThreeOptionMenuInput_15
     ret
@@ -292,6 +309,9 @@ BreedMenu_ToHandleThreeOptionMenuInput_15::
 ; ListRecordsInUseEggs; branches on wRecordsFlagged; sets wTwoChoiceCursor to 1; sets wScreenState
 ; to 2; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; sets wTwoChoiceCursor to 0;
 ; increments wScreenState; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 3 of BreedMenu (when wScreenState = 3); BreedMenu: implements script command type ED
+; (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5,
+; bank ... (E-0352, E-0038, E-0244)
 BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wGridCursorX]
     and a
@@ -409,6 +429,9 @@ BreedMenu_ChooseParents::
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wListCursor to 0; sets
 ; wListPageIndex to 0; sets wCursorBlinkAE to 0; sets wChoiceCursor to 0; increments wScreenStep
 ; (E-0347)
+; why: step 0 of BreedMenu_ChooseParents (when wScreenStep = 0); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15::
     ld c, $0b
     ld hl, $01cc
@@ -454,6 +477,9 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Ba
 
 ; step 1 of BreedMenu_ChooseParents: calls ClearTileAreas1240_1700_14E0; calls
 ; CopyRectTo20ByteRows_Bank15; increments wScreenStep (E-0347)
+; why: step 1 of BreedMenu_ChooseParents (when wScreenStep = 1); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0::
     call ClearTileAreas1240_1700_14E0
     ld de, BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0_TileRect
@@ -466,6 +492,9 @@ BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0::
     ret
 
 ; step 2 of BreedMenu_ChooseParents: calls ListRecordsInUseNotEggs (E-0347)
+; why: step 2 of BreedMenu_ChooseParents (when wScreenStep = 2); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ListRecordsInUseNotEggs::
     farcall ListRecordsInUseNotEggs
 
@@ -473,6 +502,10 @@ BreedMenu_ChooseParents_ListRecordsInUseNotEggs::
 ; calls StoreC5BEC6AtHLStride2_Bank15; copies D to wArg1; copies E to wArg2; calls
 ; DrawPageOfPagesAtScrollOffset; copies H to wArg1; copies L to wArg2; calls
 ; DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
+; why: part of BreedMenu_ChooseParents_ListRecordsInUseNotEggs, in step 2 of BreedMenu_ChooseParents
+; (when wScreenStep = 2); BreedMenu_ChooseParents: BreedMenu screen state 4, by wScreenStep: lists
+; the records in use, takes two monsters from paged lists, then ComputeBreedingChild and the ...
+; (E-0352)
 BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -503,6 +536,9 @@ BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
 
 ; step 3 of BreedMenu_ChooseParents: calls DrawRecordListPageNames; sets wArg1 to 0; calls
 ; MarkPartyMembersInRecordListPage (E-0347)
+; why: step 3 of BreedMenu_ChooseParents (when wScreenStep = 3); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -514,6 +550,9 @@ BreedMenu_ChooseParents_DrawRecordListPageNames::
 ; LoadFamilyIconTileForRecordB_Bank15; calls CopyRectTo20ByteRows_Bank15; sets wArg1; copies L to
 ; wArg2; copies H to wArg3; calls DrawRecordField0EMarkAndField56Digits; increments wScreenStep
 ; (E-0347)
+; why: step 4 of BreedMenu_ChooseParents (when wScreenStep = 4); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [hl]
@@ -541,6 +580,9 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5::
 
 ; step 5 of BreedMenu_ChooseParents: calls FillTilesBxC; sets wTextWindowTileLo to $12; advances
 ; wScreenStep (E-0347)
+; why: step 5 of BreedMenu_ChooseParents (when wScreenStep = 5); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -562,6 +604,9 @@ BreedMenu_ChooseParents_FillTilesBxC::
 
 ; step 6 of BreedMenu_ChooseParents: calls SetArg5ToListEntriesCell5; sets wArg1; calls
 ; DrawRecordNameAndSpeciesNameTiles; increments wScreenStep (E-0347)
+; why: step 6 of BreedMenu_ChooseParents (when wScreenStep = 6); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -591,6 +636,9 @@ DrawScreenBufferAtScrollAndIncScreenStep::
 
 ; step 7 of BreedMenu_ChooseParents: calls StoreBAtWordTableEntry_Bank15; calls
 ; DrawScreenBufferAtScrollAndIncScreenStep; calls StoreBAtWordTableEntry_Bank15 (E-0347)
+; why: step 7 of BreedMenu_ChooseParents (when wScreenStep = 7); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep::
     ld a, [wListCursor]
     ld b, $bb
@@ -608,6 +656,9 @@ BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep::
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank15;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
 ; 1 more step (see the code) (E-0347)
+; why: step 8 of BreedMenu_ChooseParents (when wScreenStep = 8); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -673,6 +724,9 @@ BreedMenu_ChooseParents_UpdatePagedListCursor::
 ; BreedMenu_CopyBytesDEToHL_Bank15; sets wArg1 to 0; sets wArg2 to $0c; calls
 ; BreedMenu_CopyBytesDEToHL_Bank15; calls CopyRectTo20ByteRows_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; increments wScreenStep (E-0347)
+; why: step 9 of BreedMenu_ChooseParents (when wScreenStep = 9); BreedMenu_ChooseParents: BreedMenu
+; screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists,
+; then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_2::
     ld c, $0b
     ld hl, $01cc
@@ -707,6 +761,9 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Ba
 ; calls StoreBAtWordTableEntry_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 10 of BreedMenu_ChooseParents (when wScreenStep = 10); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawPairAndStep_2_SetTwoChoiceCursor::
     call DrawPairAndStep_2
     ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
@@ -731,6 +788,9 @@ BreedMenu_ChooseParents_DrawPairAndStep_2_SetTwoChoiceCursor::
 
 ; step 12 of BreedMenu_ChooseParents: calls CopyRectTo20ByteRows_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; increments wScreenStep (E-0347)
+; why: step 12 of BreedMenu_ChooseParents (when wScreenStep = 12); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15::
     ld de, BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -749,6 +809,9 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15::
 ; calls CopyRectTo20ByteRows_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; sets wTwoChoiceCursor to 0; sets wChoiceCursor to 0; increments
 ; wScreenStep (E-0347)
+; why: step 13 of BreedMenu_ChooseParents (when wScreenStep = 13); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15::
     ld a, $6c
     call QueueSoundEffect
@@ -773,6 +836,9 @@ BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15::
 
 ; step 15 of BreedMenu_ChooseParents: calls CopyRectTo20ByteRows_Bank15; increments wScreenStep
 ; (E-0347)
+; why: step 15 of BreedMenu_ChooseParents (when wScreenStep = 15); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep::
     ld de, BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep_Data
     ld hl, wWindowTileBuffer + $10c
@@ -786,6 +852,9 @@ BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep::
 ; step 16 of BreedMenu_ChooseParents: calls BlankWordTableTargets; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wScreenStep to 8; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 16 of BreedMenu_ChooseParents (when wScreenStep = 16); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep::
     ld c, $05
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
@@ -807,6 +876,9 @@ BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep::
 ; LoadSRAMRecordByte; branches on wArg5; branches on wListCount; sets wTwoChoiceCursor to 3; sets
 ; rRAMG2 to 0; decrements wScreenStep; sets wScriptCommandType to 0; then 26 more steps (see the
 ; code) (E-0347)
+; why: step 17 of BreedMenu_ChooseParents (when wScreenStep = 17); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetArg5::
     ld a, $0a
     ld [rRAMG2], a
@@ -941,6 +1013,9 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetArg5::
 ; step 18 of BreedMenu_ChooseParents: calls CopyRectTo20ByteRows_Bank15; calls
 ; BlankWordTableTargets; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15;
 ; increments wScreenStep (E-0347)
+; why: step 18 of BreedMenu_ChooseParents (when wScreenStep = 18); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2::
     ld a, $b6
     ld [wWindowTileBuffer + $78], a
@@ -967,12 +1042,18 @@ BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2::
     ret
 
 ; step 19 of BreedMenu_ChooseParents: calls BreedMenu_ChooseParents_WriteArg1AndArg2Etc (E-0347)
+; why: step 19 of BreedMenu_ChooseParents (when wScreenStep = 19); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc::
     call BreedMenu_ChooseParents_WriteArg1AndArg2Etc
     ret
 
 ; step 20 of BreedMenu_ChooseParents: calls ClearThreeTileRows; calls CopyRectTo20ByteRows_Bank15;
 ; increments wScreenStep (E-0347)
+; why: step 20 of BreedMenu_ChooseParents (when wScreenStep = 20); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ClearThreeTileRows::
     call ClearThreeTileRows
     ld de, BreedMenu_ChooseParents_ClearThreeTileRows_TileRect
@@ -990,6 +1071,9 @@ BreedMenu_ChooseParents_ClearThreeTileRows::
 
 ; step 21 of BreedMenu_ChooseParents: calls FillTilesBxC; calls CopyRectTo20ByteRows_Bank15;
 ; increments wScreenStep (E-0347)
+; why: step 21 of BreedMenu_ChooseParents (when wScreenStep = 21); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_FillTilesBxC_SetScreenStep::
     ld hl, vTiles1 + $240
     ld bc, $0301
@@ -1012,6 +1096,9 @@ BreedMenu_ChooseParents_FillTilesBxC_SetScreenStep::
 ; step 22 of BreedMenu_ChooseParents: calls LoadSelectedRecordSex; calls
 ; BreedMenu_WriteListCountAndRAMG2Etc; continues in
 ; BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5 (E-0347)
+; why: step 22 of BreedMenu_ChooseParents (when wScreenStep = 22); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_LoadSelectedRecordSex::
     call LoadSelectedRecordSex
     call BreedMenu_WriteListCountAndRAMG2Etc
@@ -1041,6 +1128,9 @@ DrawListEntriesCell5IconAndLevelAndStep::
     ret
 
 ; step 25 of BreedMenu_ChooseParents: calls ClearThreeTileRows; increments wScreenStep (E-0347)
+; why: step 25 of BreedMenu_ChooseParents (when wScreenStep = 25); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ToClearThreeTileRowsAndStep::
     call ClearThreeTileRows
     ld a, [wScreenStep]
@@ -1070,6 +1160,9 @@ DrawListEntriesCell5RecordNamesAndStep::
 
 ; step 27 of BreedMenu_ChooseParents: calls BreedMenu_SetArg5ToListEntriesCell5; sets
 ; wNameEntryState to 0; sets wNameEntrySubState to 0; increments wScreenStep (E-0347)
+; why: step 27 of BreedMenu_ChooseParents (when wScreenStep = 27); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WriteNameEntryStateAndNameEntrySubStateEtc::
     call BreedMenu_SetArg5ToListEntriesCell5
     xor a
@@ -1084,6 +1177,9 @@ BreedMenu_ChooseParents_WriteNameEntryStateAndNameEntrySubStateEtc::
 ; wArg5 is $ff; branches on wArg7; branches on wArg6; copies wArg6 to wArg1; copies wArg6 to
 ; wSpeciesIdLo; copies wArg7 to wArg2; copies wArg7 to wSpeciesIdHi; copies E to wArg3; copies D to
 ; wArg4; calls TestBitInFieldAtArg3; then 17 more steps (see the code) (E-0347)
+; why: step 28 of BreedMenu_ChooseParents (when wScreenStep = 28); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ComputeBreedingChild::
     xor a
     ld [wArg1], a
@@ -1184,6 +1280,9 @@ BreedMenu_ChooseParents_ComputeBreedingChild::
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank15;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
 ; 1 more step (see the code) (E-0347)
+; why: step 30 of BreedMenu_ChooseParents (when wScreenStep = 30); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_UpdatePagedListCursor_SetMenuInputResult::
     xor a
     ld [wMenuInputResult], a
@@ -1250,6 +1349,9 @@ BreedMenu_ChooseParents_UpdatePagedListCursor_SetMenuInputResult::
 ; CopyRectTo20ByteRows_Bank15; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15;
 ; sets wTextWindowTileLo to $12; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 31 of BreedMenu_ChooseParents (when wScreenStep = 31); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15::
     ld c, $03
     ld hl, $01fc
@@ -1307,6 +1409,9 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_TileRect::
 ; wListCursor; copies wItemGridY to wListPageIndex; sets wTwoChoiceCursor to 0; sets wChoiceCursor
 ; to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then 1 more step (see the
 ; code) (E-0347)
+; why: step 32 of BreedMenu_ChooseParents (when wScreenStep = 32); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_LoadTileListSixPerCall::
     ld a, $9d
     ld [wArg1], a
@@ -1342,6 +1447,9 @@ BreedMenu_ChooseParents_LoadTileListSixPerCall::
 ; CopyRectTo20ByteRows_Bank15; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15;
 ; calls DrawListEntriesCell5IconAndLevelAndStep; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; sets wScreenStep to $25; then 3 more steps (see the code) (E-0347)
+; why: step 36 of BreedMenu_ChooseParents (when wScreenStep = 36); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
     ld de, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1385,6 +1493,9 @@ BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
 ; step 37 of BreedMenu_ChooseParents: calls BlankWordTableTargets; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wScreenStep to $1e; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 37 of BreedMenu_ChooseParents (when wScreenStep = 37); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_3::
     ld c, $05
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
@@ -1405,6 +1516,9 @@ BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_3::
 ; rRAMB to 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; branches on hTemp0; sets wTwoChoiceCursor
 ; to 3; sets wScreenStep to $24; sets wScriptCommandType to 0; sets wScriptStartRequest to $80;
 ; branches on wPartyCount; branches on wPartyList; then 12 more steps (see the code) (E-0347)
+; why: step 38 of BreedMenu_ChooseParents (when wScreenStep = 38); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1505,6 +1619,9 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
 ; byte at wChildRecord + MON_SPECIES to wSpeciesIdHi; calls TestSpeciesFlag; branches on C; copies
 ; the byte at wChildRecord + MON_SPECIES to wArg1; copies the byte at wChildRecord + MON_SPECIES to
 ; wArg2; copies L to wArg3; then 14 more steps (see the code) (E-0347)
+; why: step 39 of BreedMenu_ChooseParents (when wScreenStep = 39); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_TestBitInFieldAtArg3::
     ld hl, wChildRecord + MON_SPECIES
     ld a, [hli]
@@ -1620,6 +1737,9 @@ BreedMenu_ChooseParents_TestBitInFieldAtArg3::
 ; byte at wChildRecord + MON_SPECIES to wSpeciesIdHi; calls TestSpeciesFlag; branches on C; sets
 ; wTwoChoiceCursor to 1; sets wTwoChoiceCursor to 0; increments wScreenStep; then 2 more steps (see
 ; the code) (E-0347)
+; why: step 40 of BreedMenu_ChooseParents (when wScreenStep = 40); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_TestBitInFieldAtArg3_SetArg1::
     ld hl, wChildRecord + MON_SPECIES
     ld a, [hli]
@@ -1678,6 +1798,9 @@ DrawRectIfLinkModeAndStep::
 
 ; step 43 of BreedMenu_ChooseParents: branches on wLinkMode; calls ShowSaveFileInfoWindow;
 ; increments wScreenStep (E-0347)
+; why: step 43 of BreedMenu_ChooseParents (when wScreenStep = 43); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_ShowSaveFileInfoWindow::
     ld a, [wLinkMode]
     and a
@@ -1695,6 +1818,9 @@ BreedMenu_ChooseParents_ShowSaveFileInfoWindow::
 ; branches on wLinkMode; sets wStringIndex to $0d; calls BeginStringDisplay_Bank1B_2; increments
 ; wScreenSubStep; returns unless wTextFlags is 0; sets wScreenSubStep to 0; increments wScreenStep;
 ; sets wScriptCommandType to 0; then 1 more step (see the code) (E-0347)
+; why: step 44 of BreedMenu_ChooseParents (when wScreenStep = 44); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep::
     call BreedMenu_ChooseParents_WaitLinkMode
     ld a, [wScreenSubStep]
@@ -1749,6 +1875,9 @@ BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep::
 ; DrawListEntriesCell5RecordNamesAndStep; calls CopyRectTo20ByteRows_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; then 5 more steps (see the code)
 ; (E-0347)
+; why: step 41 of BreedMenu_ChooseParents (when wScreenStep = 41); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_PrepareCounterPtr0LoCountersAndRequestScript::
     ld a, [wScreenSubStep]
     and a
@@ -1798,6 +1927,9 @@ BreedMenu_ChooseParents_PrepareCounterPtr0LoCountersAndRequestScript::
 ; 1; increments wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; branches
 ; on wTwoChoiceCursor; calls BreedMenu_ChooseParents_WaitLinkMode; sets wScreenStep; sets
 ; wScreenSubStep to 0 (E-0347)
+; why: step 47 of BreedMenu_ChooseParents (when wScreenStep = 47); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D::
     ld a, [wLinkMode]
     and a
@@ -1840,6 +1972,9 @@ BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D::
 ; step 48 of BreedMenu_ChooseParents: calls CopyRectTo20ByteRows_Bank15; calls
 ; DrawRectIfLinkModeAndStep; calls LoadPlayerAndFollowerSpriteGraphics; sets
 ; wOBJPaletteUploadRequest to $7f (E-0347)
+; why: step 48 of BreedMenu_ChooseParents (when wScreenStep = 48); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep::
     ld de, BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -1854,6 +1989,9 @@ BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep::
 ; step 50 of BreedMenu_ChooseParents: sets wArg1 to $9d; sets wArg2 to 0; copies D to wArg3; copies
 ; E to wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; increments wScreenStep
 ; (E-0347)
+; why: step 50 of BreedMenu_ChooseParents (when wScreenStep = 50); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_LoadTileListSixPerCall_SetArg1::
     ld a, $9d
     ld [wArg1], a
@@ -1876,6 +2014,9 @@ BreedMenu_ChooseParents_LoadTileListSixPerCall_SetArg1::
 ; step 49 of BreedMenu_ChooseParents: sets wArg1 to 0; sets wArg2 to $14; calls
 ; BreedMenu_CopyBytesDEToHL_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; increments wScreenStep (E-0347)
+; why: step 49 of BreedMenu_ChooseParents (when wScreenStep = 49); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15::
     ld c, $0d
     ld hl, $01cc
@@ -1896,6 +2037,9 @@ BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15::
 
 ; step 51 of BreedMenu_ChooseParents: calls DrawPairAndStep_2; calls DrawGoldBoxAndStep_Bank15;
 ; calls CopyRectTo20ByteRows_Bank15; decrements wScreenStep (E-0347)
+; why: step 51 of BreedMenu_ChooseParents (when wScreenStep = 51); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawPairAndStep_2::
     call DrawPairAndStep_2
     call DrawGoldBoxAndStep_Bank15
@@ -1911,6 +2055,9 @@ BreedMenu_ChooseParents_DrawPairAndStep_2::
 ; step 52 of BreedMenu_ChooseParents: calls StoreBAtWordTableEntry_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wTextWindowTileLo to $12;
 ; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; increments wScreenStep (E-0347)
+; why: step 52 of BreedMenu_ChooseParents (when wScreenStep = 52); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15::
     ld a, [wGridCursorX]
     ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
@@ -1939,6 +2086,9 @@ BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15::
 
 ; step 58 of BreedMenu_ChooseParents: calls DrawPairAndStep_2; calls DrawGoldBoxAndStep_Bank15;
 ; decrements wScreenStep (E-0347)
+; why: step 58 of BreedMenu_ChooseParents (when wScreenStep = 58); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_DrawPairAndStep_2_DrawGoldBoxAndStep_Bank15::
     call DrawPairAndStep_2
     call DrawGoldBoxAndStep_Bank15
@@ -1950,6 +2100,9 @@ BreedMenu_ChooseParents_DrawPairAndStep_2_DrawGoldBoxAndStep_Bank15::
 ; step 59 of BreedMenu_ChooseParents: calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80; increments wScreenStep (E-0347)
+; why: step 59 of BreedMenu_ChooseParents (when wScreenStep = 59); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_SetScriptCommandType::
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
@@ -1975,6 +2128,9 @@ BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_SetScriptCommandType::
 ; step 60 of BreedMenu_ChooseParents: copies the byte at wChildRecord + MON_PLUS to hTemp0; calls
 ; TenTimesTemp0PlusTenToDigits; calls BreedMenu_CopyDigitsToTextBuf; sets wTextWindowTileLo to $12;
 ; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; increments wScreenStep (E-0347)
+; why: step 60 of BreedMenu_ChooseParents (when wScreenStep = 60); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits::
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2004,6 +2160,9 @@ BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits::
 ; BeginStringDisplay_Bank1B_2; increments wScreenSubStep; calls
 ; BreedMenu_ChooseParents_WaitLinkMode; branches on wLinkMode; then 29 more steps (see the code)
 ; (E-0347)
+; why: step 54 of BreedMenu_ChooseParents (when wScreenStep = 54); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc::
     ld a, [wScreenSubStep]
     and a
@@ -2214,6 +2373,9 @@ RemoveRecordBFromParty::
 ; wTwoChoiceCursor; copies the byte at wChildRecord + MON_PLUS to hTemp0; calls
 ; TenTimesTemp0PlusTen; sets wArg3 to 0; copies H to wArg2; then 12 more steps (see the code)
 ; (E-0347)
+; why: step 63 of BreedMenu_ChooseParents (when wScreenStep = 63); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -2283,6 +2445,9 @@ BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_2::
 
 ; step 64 of BreedMenu_ChooseParents: sets wScreenStep to 0; sets wScreenState to $0a; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 64 of BreedMenu_ChooseParents (when wScreenStep = 64); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_SetScreenStep::
     xor a
     ld [wScreenStep], a
@@ -2299,6 +2464,9 @@ BreedMenu_ChooseParents_SetScreenStep::
 ; SubtractArg1AmountFromGold; branches on C; calls ListRecordsInUseEggs; sets wListCursor to 0; sets
 ; wListPageIndex to 0; sets wListLastRow to 0; sets wListPages to 0; then 15 more steps (see the
 ; code) (E-0347)
+; why: step 65 of BreedMenu_ChooseParents (when wScreenStep = 65); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_TenTimesTemp0PlusTen::
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2410,6 +2578,9 @@ BreedMenu_ChooseEgg::
     dw BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_SetArg3
 
 ; step 0 of BreedMenu_ChooseEgg: calls BreedMenu_ChooseEgg_WriteArg1AndArg2Etc (E-0347)
+; why: step 0 of BreedMenu_ChooseEgg (when wScreenStep = 0); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
     call BreedMenu_ChooseEgg_WriteArg1AndArg2Etc
     ret
@@ -2417,6 +2588,9 @@ BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
 ; step 1 of BreedMenu_ChooseEgg: calls CopyRectTo20ByteRows_Bank15; calls
 ; StoreBAtWordTableEntry_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; calls ListRecordsInUseEggs; increments wScreenStep (E-0347)
+; why: step 1 of BreedMenu_ChooseEgg (when wScreenStep = 1); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_ListRecordsInUseEggs::
     ld de, BreedMenu_ChooseEgg_ListRecordsInUseEggs_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -2469,6 +2643,9 @@ ClearTileRowsAndResetWindowAndStep::
 ; DrawPageOfPagesAtScrollOffset; copies H to wArg1; copies L to wArg2; calls
 ; DrawPageOfPagesAtArg1_Bank1E; calls StoreBAtWordTableEntry_Bank15; then 4 more steps (see the
 ; code) (E-0347)
+; why: step 3 of BreedMenu_ChooseEgg (when wScreenStep = 3); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15::
     ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -2515,6 +2692,9 @@ BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15
 
 ; step 4 of BreedMenu_ChooseEgg: sets wArg5 to 1; calls DrawRecordListPageSpeciesNames; increments
 ; wScreenStep (E-0347)
+; why: step 4 of BreedMenu_ChooseEgg (when wScreenStep = 4); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames::
     ld a, $01
     ld [wArg5], a
@@ -2526,6 +2706,9 @@ BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames::
 
 ; step 5 of BreedMenu_ChooseEgg: calls CopyFromBankWaitVRAM; sets wArg1 to 0; sets wArg2 to 1; calls
 ; DrawRecordListPageMarks; increments wScreenStep (E-0347)
+; why: step 5 of BreedMenu_ChooseEgg (when wScreenStep = 5); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_DrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
@@ -2547,6 +2730,9 @@ BreedMenu_ChooseEgg_DrawRecordListPageMarks::
 ; sets wTwoChoiceCursor to 1; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L
 ; to wTextWindowRows; copies H to wTextWindowWidth; sets wTwoChoiceCursor to 0; then 15 more steps
 ; (see the code) (E-0347)
+; why: step 6 of BreedMenu_ChooseEgg (when wScreenStep = 6); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_UpdatePagedListCursor::
     ld a, $02
     ld [wMenuInputResult], a
@@ -2639,6 +2825,9 @@ BreedMenu_ChooseEgg_UpdatePagedListCursor::
 ; BreedMenu_CopyBytesDEToHL_Bank15; branches on wThreeOptionResult; calls
 ; CopyRectTo20ByteRows_Bank15; increments wScreenStep; calls CopyRectTo20ByteRows_Bank15; increments
 ; wScreenStep (E-0347)
+; why: step 7 of BreedMenu_ChooseEgg (when wScreenStep = 7); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
     ld c, $09
     ld hl, $0223
@@ -2675,6 +2864,9 @@ BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
 ; increments wScreenSubStep; sets wArg1 to $9c; sets wArg2 to 0; copies D to wArg3; copies E to
 ; wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; then 4 more steps (see the code)
 ; (E-0347)
+; why: step 8 of BreedMenu_ChooseEgg (when wScreenStep = 8); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15::
     ld a, [wScreenSubStep]
     and a
@@ -2720,6 +2912,9 @@ BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15::
 ; step 11 of BreedMenu_ChooseParents: calls BlankWordTableTargets; sets wScreenStep to 0; sets
 ; wScreenSubStep to 0; sets wScreenState to 2; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 11 of BreedMenu_ChooseParents (when wScreenStep = 11); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BlankWordTableTargets::
     ld c, $03
     ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
@@ -2737,6 +2932,9 @@ BreedMenu_ChooseParents_BlankWordTableTargets::
 
 ; step 10 of BreedMenu_ChooseEgg: calls CopyGlyphTileListFromBank1F_Bank15; increments wScreenStep
 ; (E-0347)
+; why: step 10 of BreedMenu_ChooseEgg (when wScreenStep = 10); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
     ld hl, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
     ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
@@ -2749,6 +2947,9 @@ BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
 ; step 11 of BreedMenu_ChooseEgg: plays sound $6c; calls CopyRectTo20ByteRows_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wMenuChoice to 0; sets
 ; wChoiceCursor to 0; increments wScreenStep (E-0347)
+; why: step 11 of BreedMenu_ChooseEgg (when wScreenStep = 11); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_QueueSoundEffect::
     ld a, $6c
     call QueueSoundEffect
@@ -2774,6 +2975,9 @@ BreedMenu_ChooseEgg_QueueSoundEffect::
 ; DrawBlankTileC3_Bank15; branches on wChoiceCursor; plays sound $69; calls
 ; BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap; then 26 more steps (see the code)
 ; (E-0347)
+; why: step 14 of BreedMenu_ChooseParents (when wScreenStep = 14); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -2930,10 +3134,19 @@ DrawBlankTileC3_Bank15::
     jr BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
 ; called from BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15: takes BC; changes B (E-0347)
+; why: a helper of BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15, in step 14 of
+; BreedMenu_ChooseParents (when wScreenStep = 14); BreedMenu_ChooseParents: BreedMenu screen state
+; 4, by wScreenStep: lists the records in use, takes two monsters from paged lists, then
+; ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank15; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; why: part of BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap, in a helper of
+; BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15, in step 14 of BreedMenu_ChooseParents (when
+; wScreenStep = 14); BreedMenu_ChooseParents: BreedMenu screen state 4, by wScreenStep: lists the
+; records in use, takes two monsters from paged lists, then ComputeBreedingChild and the ...
+; (E-0352)
 BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
@@ -2961,6 +3174,9 @@ BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_Data::
 ; step 14 of BreedMenu_ChooseEgg: calls LoadTilesAndDrawRecordListPageMarks; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wScreenStep to 6; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 14 of BreedMenu_ChooseEgg (when wScreenStep = 14); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_LoadTilesAndDrawRecordListPageMarks::
     call LoadTilesAndDrawRecordListPageMarks
     call BGMapAddressAtScroll_Bank15
@@ -2979,6 +3195,9 @@ BreedMenu_ChooseEgg_LoadTilesAndDrawRecordListPageMarks::
 ; 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; calls TenTimesTemp0PlusTen; sets wArg3 to 0; copies
 ; H to wArg2; copies L to wArg1; calls IsAmountInArg1AboveGold; branches on wArg1; sets
 ; wTwoChoiceCursor to 1; then 7 more steps (see the code) (E-0347)
+; why: step 15 of BreedMenu_ChooseEgg (when wScreenStep = 15); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -3031,6 +3250,9 @@ BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4::
 ; SetArg5ToListEntriesCell4; calls LoadSRAMRecordByte; sets rRAMG2 to 0; calls TenTimesTemp0PlusTen;
 ; sets wArg3 to 0; copies H to wArg2; copies L to wArg1; calls SubtractArg1AmountFromGold; branches
 ; on C; sets wScreenStep to 0; then 3 more steps (see the code) (E-0347)
+; why: step 16 of BreedMenu_ChooseEgg (when wScreenStep = 16); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_SetArg3::
     ld a, $0a
     ld [rRAMG2], a
@@ -3245,6 +3467,9 @@ BreedMenu_ReturnToMap::
 
 ; step 0 of BreedMenu_ReturnToMap: calls DecompressToVRAM; increments wScreenStep; calls
 ; RestorePlayerPositionState (E-0347)
+; why: step 0 of BreedMenu_ReturnToMap (when wScreenStep = 0); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_DecompressToVRAM::
     ld b, $46
     ld de, Tiles1Gfx
@@ -3273,6 +3498,9 @@ DrawPairAndStep_2_2::
 ; calls LoadPlayerAndFollowerSpriteGraphics; calls LoadMapObjectsForScreen; calls
 ; RestorePlayerPositionState; sets hFieldDrawFlags to 0; sets wOBJPaletteUploadRequest to $7f;
 ; increments wScreenStep (E-0347)
+; why: step 2 of BreedMenu_ReturnToMap (when wScreenStep = 2); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_LoadMapHeader::
     ld a, $0d
     ldh [hMapId], a
@@ -3294,6 +3522,9 @@ BreedMenu_ReturnToMap_LoadMapHeader::
 ; CopyLow3BitsToWRAMBank2_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15;
 ; sets hSpriteHideTile to $70; increments wScreenStep (E-0347)
+; why: step 3 of BreedMenu_ReturnToMap (when wScreenStep = 3); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -3335,6 +3566,9 @@ BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15::
 
 ; step 4 of BreedMenu_ReturnToMap: branches on the byte at wNameGlyphBuf; increments wScreenStep;
 ; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 4 of BreedMenu_ReturnToMap (when wScreenStep = 4); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc::
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
@@ -3366,6 +3600,9 @@ BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc::
 ; BreedMenu_ChooseParents_WaitLinkMode; plays sound $6c; calls CopyRectTo20ByteRows_Bank15; calls
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; increments wScreenStep; sets
 ; wTwoChoiceCursor to 0 (E-0347)
+; why: step 62 of BreedMenu_ChooseParents (when wScreenStep = 62); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
@@ -3398,6 +3635,9 @@ BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMod
 ; step 46 of BreedMenu_ChooseParents: may continue in
 ; BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode; increments
 ; wScreenStep; sets wTwoChoiceCursor to 0 (E-0347)
+; why: step 46 of BreedMenu_ChooseParents (when wScreenStep = 46); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WriteScreenStepAndTwoChoiceCursor::
     ld a, [wLinkMode]
     and a
@@ -3415,6 +3655,9 @@ BreedMenu_ChooseParents_WriteScreenStepAndTwoChoiceCursor::
 ; sets wTwoChoiceCursor to 1; increments wScreenStep; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80; branches on wTwoChoiceCursor; sets wScreenStep; sets wScreenSubStep to
 ; 0; sets wScriptCommandType to 0; then 1 more step (see the code) (E-0347)
+; why: step 6 of BreedMenu_ReturnToMap (when wScreenStep = 6); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3457,6 +3700,10 @@ BreedMenu_ReturnToMap_UpdateTwoChoiceCursor_Bank1D::
 ; Calls BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2; branches on wIsCGB; calls
 ; BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15 (E-0347)
+; why: part of BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15, in step 18 of
+; BreedMenu_ReturnToMap (when wScreenStep = 18); BreedMenu_ReturnToMap: reloads the map
+; (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics (E-0352,
+; E-0277)
 BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -3479,6 +3726,9 @@ BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyByte
 
 ; Calls CopyBytesDEToHL_Bank15; may continue in BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2
 ; (E-0347)
+; why: part of BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15, in step 3 of BreedMenu_ReturnToMap
+; (when wScreenStep = 3); BreedMenu_ReturnToMap: reloads the map (LoadMapHeader), the player's
+; position (RestorePlayerPositionState) and sprite graphics (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2::
     push hl
     push de
@@ -3503,6 +3753,8 @@ BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2::
 
 ; Calls CopyLow3BitsToWRAMBank2_Bank15; may continue in
 ; BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15 (E-0347)
+; why: part of BreedMenu_ReturnToMap; BreedMenu_ReturnToMap: reloads the map (LoadMapHeader), the
+; player's position (RestorePlayerPositionState) and sprite graphics (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15::
     push hl
     push de
@@ -3529,6 +3781,9 @@ BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15::
 ; calls StoreBAtWordTableEntry_Bank15; calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; increments wScreenStep; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 8 of BreedMenu_ReturnToMap (when wScreenStep = 8); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyFromBankWaitVRAM::
     ld de, Tiles1Plus2D0Tiles
     ld hl, vTiles1 + $2d0
@@ -3564,6 +3819,9 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM::
 ; step 9 of BreedMenu_ReturnToMap: calls BlankWordTableTargets; sets wScreenStep to 0; sets
 ; wScreenSubStep to 0; sets wScreenState to 2; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 9 of BreedMenu_ReturnToMap (when wScreenStep = 9); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_BlankWordTableTargets::
     ld c, $03
     ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
@@ -3585,6 +3843,9 @@ BreedMenu_ReturnToMap_BlankWordTableTargets::
 ; to 1; sets wScreenStep; calls
 ; BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15;
 ; sets wScriptCommandType to 0; then 6 more steps (see the code) (E-0347)
+; why: step 10 of BreedMenu_ReturnToMap (when wScreenStep = 10); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_SRAMRecordAddress::
     ld a, [wPartyCount]
     cp $03
@@ -3643,6 +3904,9 @@ BreedMenu_ReturnToMap_SRAMRecordAddress::
 ; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; calls
 ; BreedMenu_ReturnToMap_CopySixteenTiles; sets wListPageIndex to 0; sets wListCursor to 0; sets
 ; wCursorBlinkAE to 0; increments wScreenStep (E-0347)
+; why: step 11 of BreedMenu_ReturnToMap (when wScreenStep = 11); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex::
     ld de, BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -3736,6 +4000,9 @@ BreedMenu_ReturnToMap_CopySixteenTiles_Data2::
 
 ; step 12 of BreedMenu_ReturnToMap: calls FillTilesBxC; sets wTextWindowTileLo to $12; calls
 ; CopyRectTo20ByteRows_Bank15; increments wScreenStep (E-0347)
+; why: step 12 of BreedMenu_ReturnToMap (when wScreenStep = 12); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_FillTilesBxC_SetScreenStep::
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -3763,6 +4030,9 @@ BreedMenu_ReturnToMap_FillTilesBxC_SetScreenStep::
 ; step 13 of BreedMenu_ReturnToMap: copies wPartyList to wListEntries; sets wGrid2CursorX; sets
 ; wGrid2CursorY; copies wSelectedRecord to wScreenArea; sets wListCount to 4; calls
 ; ClampRecordListPageCursor5; increments wScreenStep (E-0347)
+; why: step 13 of BreedMenu_ReturnToMap (when wScreenStep = 13); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_ClampRecordListPageCursor5::
     ld a, [wPartyList]
     ld [wListEntries], a
@@ -3781,6 +4051,9 @@ BreedMenu_ReturnToMap_ClampRecordListPageCursor5::
     ret
 
 ; step 14 of BreedMenu_ReturnToMap: calls DrawRecordListPageNames (E-0347)
+; why: step 14 of BreedMenu_ReturnToMap (when wScreenStep = 14); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_ToDrawRecordListPageNames::
     farcall DrawRecordListPageNames
     ret
@@ -3788,6 +4061,9 @@ BreedMenu_ReturnToMap_ToDrawRecordListPageNames::
 ; step 15 of BreedMenu_ReturnToMap: calls SetArg5ToListEntriesCell5; sets wArg1 to $c7; calls
 ; LoadFamilyIconTileForRecordB_Bank15; calls CopyRectTo20ByteRows_Bank15; sets wArg1; calls
 ; DrawRecordStatsBoxForArg1; increments wScreenStep (E-0347)
+; why: step 15 of BreedMenu_ReturnToMap (when wScreenStep = 15); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3814,6 +4090,9 @@ BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5::
 
 ; step 16 of BreedMenu_ReturnToMap: calls FillTilesBxC; sets wTextWindowTileLo to $12; calls
 ; BreedMenu_ReturnToMap_LoadSRAMRecordByte; increments wScreenStep (E-0347)
+; why: step 16 of BreedMenu_ReturnToMap (when wScreenStep = 16); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -3839,6 +4118,9 @@ BreedMenu_ReturnToMap_FillTilesBxC::
 
 ; step 17 of BreedMenu_ReturnToMap: calls SetArg5ToListEntriesCell5; sets wArg1; calls
 ; DrawRecordNameAndSpeciesNameTiles; increments wScreenStep (E-0347)
+; why: step 17 of BreedMenu_ReturnToMap (when wScreenStep = 17); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3855,6 +4137,9 @@ BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTile
 
 ; step 18 of BreedMenu_ReturnToMap: calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; increments wScreenStep (E-0347)
+; why: step 18 of BreedMenu_ReturnToMap (when wScreenStep = 18); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15::
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0b
@@ -3870,6 +4155,9 @@ BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15::
 ; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; sets
 ; wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank15; then 7 more steps
 ; (see the code) (E-0347)
+; why: step 19 of BreedMenu_ReturnToMap (when wScreenStep = 19); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -3942,6 +4230,9 @@ BreedMenu_ReturnToMap_UpdatePagedListCursor::
 ; step 20 of BreedMenu_ReturnToMap: calls CopyFromBankWaitVRAM; sets wArg1 to 0; sets wArg2 to $14;
 ; calls BreedMenu_CopyBytesDEToHL_Bank15; calls CopyRectTo20ByteRows_Bank15; increments wScreenStep
 ; (E-0347)
+; why: step 20 of BreedMenu_ReturnToMap (when wScreenStep = 20); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
@@ -3973,6 +4264,9 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1::
 ; step 21 of BreedMenu_ReturnToMap: calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; calls DrawPairAndStep_2_2; sets wScreenStep to 6; sets
 ; wTwoChoiceCursor to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 21 of BreedMenu_ReturnToMap (when wScreenStep = 21); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_DrawPairAndStep_2_2::
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
@@ -3992,6 +4286,9 @@ BreedMenu_ReturnToMap_DrawPairAndStep_2_2::
 ; step 25 of BreedMenu_ReturnToMap: calls CopyFromBankWaitVRAM; sets wArg1 to 0; sets wArg2 to 8;
 ; calls BreedMenu_CopyBytesDEToHL_Bank15; calls CopyRectTo20ByteRows_Bank15; calls
 ; StoreBAtWordTableEntry_Bank15; calls BlankWordTableTargets; increments wScreenStep (E-0347)
+; why: step 25 of BreedMenu_ReturnToMap (when wScreenStep = 25); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1_2::
     ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
@@ -4034,6 +4331,9 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1_2::
 ; step 26 of BreedMenu_ReturnToMap: calls BGMapAddressAtScroll_Bank15; calls
 ; DrawScreenBufferRect_Bank15; sets wScreenStep to $13; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 26 of BreedMenu_ReturnToMap (when wScreenStep = 26); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_SetScreenStep::
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
@@ -4050,6 +4350,9 @@ BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_SetScreenStep::
 ; step 27 of BreedMenu_ReturnToMap: sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf; increments
 ; wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 27 of BreedMenu_ReturnToMap (when wScreenStep = 27); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_CopyRecordNameToNameGlyphBuf::
     ld a, $0a
     ld [rRAMG2], a
@@ -4093,6 +4396,9 @@ BreedMenu_ReturnToMap_CopyRecordNameToNameGlyphBuf::
 ; sets rRAMG2 to 0; branches on wListCursor; branches on the byte at wListEntries; branches on C;
 ; sets rRAMG2 to $0a; sets rRAMB to 0; calls SRAMRecordAddress; branches on C; sets rRAMG2 to 0;
 ; then 1 more step (see the code) (E-0347)
+; why: step 28 of BreedMenu_ReturnToMap (when wScreenStep = 28); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_SRAMRecordAddress_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -4170,6 +4476,9 @@ BreedMenu_ReturnToMap_SRAMRecordAddress_2::
 
 ; step 29 of BreedMenu_ReturnToMap: calls LoadPlayerAndFollowerSpriteGraphics; sets
 ; wOBJPaletteUploadRequest to $7f; increments wScreenStep (E-0347)
+; why: step 29 of BreedMenu_ReturnToMap (when wScreenStep = 29); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_LoadPlayerAndFollowerSpriteGraphics::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -4182,6 +4491,9 @@ BreedMenu_ReturnToMap_LoadPlayerAndFollowerSpriteGraphics::
 ; step 30 of BreedMenu_ReturnToMap: sets wArg1 to 0; sets wArg2 to $14; calls
 ; BreedMenu_CopyBytesDEToHL_Bank15; calls CopyFromBankWaitVRAM; calls CopyRectTo20ByteRows_Bank15;
 ; calls DrawGoldBoxAndStep_Bank15 (E-0347)
+; why: step 30 of BreedMenu_ReturnToMap (when wScreenStep = 30); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_DrawGoldBoxAndStep_Bank15::
     ld c, $0d
     ld hl, $01cc
@@ -4211,6 +4523,9 @@ BreedMenu_ReturnToMap_DrawGoldBoxAndStep_Bank15::
 ; step 31 of BreedMenu_ReturnToMap: calls DrawPairAndStep_2_2; calls StoreBAtWordTableEntry_Bank15;
 ; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wScriptCommandType to
 ; 0; sets wScriptStartRequest to $80 (E-0347)
+; why: step 31 of BreedMenu_ReturnToMap (when wScreenStep = 31); BreedMenu_ReturnToMap: reloads the
+; map (LoadMapHeader), the player's position (RestorePlayerPositionState) and sprite graphics
+; (E-0352, E-0277)
 BreedMenu_ReturnToMap_DrawPairAndStep_2_2_SetScriptCommandType::
     call DrawPairAndStep_2_2
     ld a, [wGridCursorX]
@@ -4333,6 +4648,9 @@ BreedMenu_RestoreScreen::
 
 ; step 5 of BreedMenu_RestoreScreen: calls DrawGoldBoxAndStep_Bank15; branches on wIsCGB; calls
 ; SendSGBPaletteSetForSGBPaletteSet; calls StartPaletteFade (E-0347)
+; why: step 5 of BreedMenu_RestoreScreen (when wScreenStep = 5); BreedMenu_RestoreScreen: BreedMenu
+; screen state $0B: redraws the window, the map's graphics and palettes
+; (SendSGBPaletteSetForSGBPaletteSet, StartPaletteFade), the ... (E-0352)
 BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15::
     call DrawGoldBoxAndStep_Bank15
     ld a, [wIsCGB]
@@ -4348,6 +4666,9 @@ BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15::
 ; step 0 of BreedMenu_RestoreScreen: calls BGMapAddressAtScroll_Bank15; copies H to wArg5; copies L
 ; to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to $20; sets wArg7
 ; to 0; calls FillTileRectWithArg1Tile; increments wScreenStep (E-0347)
+; why: step 0 of BreedMenu_RestoreScreen (when wScreenStep = 0); BreedMenu_RestoreScreen: BreedMenu
+; screen state $0B: redraws the window, the map's graphics and palettes
+; (SendSGBPaletteSetForSGBPaletteSet, StartPaletteFade), the ... (E-0352)
 BreedMenu_RestoreScreen_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank15
     ld a, h
@@ -4376,6 +4697,9 @@ BreedMenu_RestoreScreen_FillTileRectWithArg1Tile::
 ; wScreenStep; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; sets wScriptCommandType to 0; then 1 more step (see the code) (E-0347)
+; why: step 6 of BreedMenu_RestoreScreen (when wScreenStep = 6); BreedMenu_RestoreScreen: BreedMenu
+; screen state $0B: redraws the window, the map's graphics and palettes
+; (SendSGBPaletteSetForSGBPaletteSet, StartPaletteFade), the ... (E-0352)
 BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
     ld a, [wFadeState]
     and a
@@ -4433,6 +4757,9 @@ BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
 ; wScreenState to 1; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
 ; wTextWindowRows; copies H to wTextWindowWidth; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80 (E-0347)
+; why: step 7 of BreedMenu_RestoreScreen (when wScreenStep = 7); BreedMenu_RestoreScreen: BreedMenu
+; screen state $0B: redraws the window, the map's graphics and palettes
+; (SendSGBPaletteSetForSGBPaletteSet, StartPaletteFade), the ... (E-0352)
 BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc::
     xor a
     ld [wScreenStep], a
@@ -4458,6 +4785,9 @@ BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc::
 ; step 12 of BreedMenu: calls SwapMonstersMenu; returns unless wScreenStep is $0a; branches on
 ; wReturnScreenStep; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState; sets
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
+; why: step 12 of BreedMenu (when wScreenState = 12); BreedMenu: implements script command type ED
+; (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5,
+; bank ... (E-0352, E-0038, E-0244)
 BreedMenu_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -4485,6 +4815,9 @@ BreedMenu_SwapMonstersMenu::
 
 ; step 13 of BreedMenu: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets wScreenStep
 ; to 0; sets wScreenSubStep to 0; increments wScreenState (E-0347)
+; why: step 13 of BreedMenu (when wScreenState = 13); BreedMenu: implements script command type ED
+; (SCRIPT_BREED): breeding: 'Which will be the base monster?', 'And what will its mate be?' (mode 5,
+; bank ... (E-0352, E-0038, E-0244)
 BreedMenu_SwapMonstersMenu_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -4516,6 +4849,9 @@ BreedMenu_RedrawListScreen::
 
 ; step 0 of BreedMenu_RedrawListScreen: calls DecompressToVRAM; calls CopyFromBankWaitVRAM; sets
 ; wBGPaletteUploadRequest to $7f; increments wScreenStep (E-0347)
+; why: step 0 of BreedMenu_RedrawListScreen (when wScreenStep = 0); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_DecompressToVRAM::
     ld hl, vTiles2
     ld de, Map0DTileset
@@ -4535,6 +4871,9 @@ BreedMenu_RedrawListScreen_DecompressToVRAM::
 
 ; step 1 of BreedMenu_RedrawListScreen: calls CopyGlyphTileListFromBank1F_Bank15; calls
 ; DrawPairAndStep_2 (E-0347)
+; why: step 1 of BreedMenu_RedrawListScreen (when wScreenStep = 1); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15::
     ld hl, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
     ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
@@ -4543,6 +4882,9 @@ BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15::
     ret
 
 ; step 2 of BreedMenu_RedrawListScreen: calls ClearTileRowsAndResetWindowAndStep (E-0347)
+; why: step 2 of BreedMenu_RedrawListScreen (when wScreenStep = 2); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
     call ClearTileRowsAndResetWindowAndStep
     ret
@@ -4550,6 +4892,9 @@ BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
 ; step 13 of BreedMenu_ChooseEgg: calls CopyRectTo20ByteRows_Bank15; calls
 ; ClampRecordListPageCursor4; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank15; copies H
 ; to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
+; why: step 13 of BreedMenu_ChooseEgg (when wScreenStep = 13); BreedMenu_ChooseEgg: BreedMenu screen
+; state 5, by wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species
+; names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
     ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -4576,6 +4921,9 @@ BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
 
 ; step 4 of BreedMenu_RedrawListScreen: sets wArg5 to 1; calls DrawRecordListPageSpeciesNames;
 ; increments wScreenStep (E-0347)
+; why: step 4 of BreedMenu_RedrawListScreen (when wScreenStep = 4); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames::
     ld a, $01
     ld [wArg5], a
@@ -4606,6 +4954,9 @@ LoadTilesAndDrawRecordListPageMarks::
 
 ; step 6 of BreedMenu_RedrawListScreen: calls StoreBAtWordTableEntry_Bank15; calls
 ; CopyRectTo20ByteRows_Bank15; increments wScreenStep (E-0347)
+; why: step 6 of BreedMenu_RedrawListScreen (when wScreenStep = 6); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15::
     ld a, [wListCursor]
     ld b, $bc
@@ -4625,6 +4976,9 @@ BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15::
 ; BreedMenu_CopyDigitsToTextBuf; sets wStringCategory to 0; sets wStringIndex to $1b; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; then 3 more steps
 ; (see the code) (E-0347)
+; why: step 7 of BreedMenu_RedrawListScreen (when wScreenStep = 7); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -4668,6 +5022,9 @@ BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4::
 ; calls RestoreSpriteStateFromSavedFieldDrawFlags; sets hSpriteHideTile to $70; sets wScreenSubStep
 ; to 0; copies wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; copies L
 ; to wTextWindowTileLo; then 5 more steps (see the code) (E-0347)
+; why: step 8 of BreedMenu_RedrawListScreen (when wScreenStep = 8); BreedMenu_RedrawListScreen:
+; BreedMenu screen state $0F: decompresses graphics, uploads the palette, loads glyph tiles and
+; draws the record list page (E-0352)
 BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -4725,6 +5082,9 @@ BreedMenu_ClearListMarks::
 
 ; step 2 of BreedMenu_ClearListMarks: calls FillTilesBxC; sets wTextWindowTileLo to $12; increments
 ; wScreenStep (E-0347)
+; why: step 2 of BreedMenu_ClearListMarks (when wScreenStep = 2); BreedMenu_ClearListMarks:
+; BreedMenu screen state $10: blanks the list marks (BlankWordTableTargets), fills tiles and resets
+; the cursor (E-0352)
 BreedMenu_ClearListMarks_FillTilesBxC::
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -4747,6 +5107,9 @@ BreedMenu_ClearListMarks_FillTilesBxC::
 
 ; step 45 of BreedMenu_ChooseParents: may continue in BreedMenu_ChooseParents_CopyFromBankWaitVRAM;
 ; increments wScreenStep (E-0347)
+; why: step 45 of BreedMenu_ChooseParents (when wScreenStep = 45); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WriteScreenStep::
     ld a, [wLinkMode]
     and a
@@ -4758,6 +5121,9 @@ BreedMenu_ChooseParents_WriteScreenStep::
 
 ; step 61 of BreedMenu_ChooseParents: calls BreedMenu_ChooseParents_WaitLinkMode; calls
 ; CopyFromBankWaitVRAM; increments wScreenStep (E-0347)
+; why: step 61 of BreedMenu_ChooseParents (when wScreenStep = 61); BreedMenu_ChooseParents:
+; BreedMenu screen state 4, by wScreenStep: lists the records in use, takes two monsters from paged
+; lists, then ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_CopyFromBankWaitVRAM::
     call BreedMenu_ChooseParents_WaitLinkMode
     ld de, Tiles2Plus700Tiles
@@ -4782,6 +5148,9 @@ BreedMenu_ChooseParents_CopyFromBankWaitVRAM::
 
 ; step 8 of BreedMenu_ClearListMarks: calls BlankWordTableTargets; calls
 ; StoreBAtWordTableEntry_Bank15; calls CopyRectTo20ByteRows_Bank15; increments wScreenStep (E-0347)
+; why: step 8 of BreedMenu_ClearListMarks (when wScreenStep = 8); BreedMenu_ClearListMarks:
+; BreedMenu screen state $10: blanks the list marks (BlankWordTableTargets), fills tiles and resets
+; the cursor (E-0352)
 BreedMenu_ClearListMarks_BlankWordTableTargets::
     ld c, $04
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
@@ -4818,6 +5187,8 @@ BreedMenu_ShowSelectedRecord::
 ; step 7 of BreedMenu_ShowSelectedRecord: calls FillTilesBxC; copies wSelectedRecord to wArg1; calls
 ; DrawRecordNameAndSpeciesNameTiles; calls BreedMenu_SetArg5ToListEntriesCell5; increments
 ; wScreenStep (E-0347)
+; why: step 7 of BreedMenu_ShowSelectedRecord (when wScreenStep = 7); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_DrawRecordNameAndSpeciesNameTiles::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -4838,6 +5209,8 @@ BreedMenu_ShowSelectedRecord_DrawRecordNameAndSpeciesNameTiles::
 ; LoadFamilyIconTileForRecordB_Bank15; calls SetArg5ToListEntriesCell5; sets wArg1 to $ff; calls
 ; LoadFamilyIconTileForRecordB_Bank15; calls CopyRectToWindowTileBufferRow13Col12AndIncScreenStep
 ; (E-0347)
+; why: step 9 of BreedMenu_ShowSelectedRecord (when wScreenStep = 9); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15::
     ld a, $c7
     ld [wArg1], a
@@ -4862,6 +5235,8 @@ BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15::
 ; step 1 of BreedMenu_ShowSelectedRecord: calls LoadSelectedRecordSex; calls
 ; BreedMenu_WriteListCountAndRAMG2Etc; continues in
 ; BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5 (E-0347)
+; why: step 1 of BreedMenu_ShowSelectedRecord (when wScreenStep = 1); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_LoadSelectedRecordSex::
     call LoadSelectedRecordSex
     call BreedMenu_WriteListCountAndRAMG2Etc
@@ -4869,6 +5244,8 @@ BreedMenu_ShowSelectedRecord_LoadSelectedRecordSex::
 
 ; step 4 of BreedMenu_ShowSelectedRecord: calls ClearThreeTileRows; calls
 ; DrawListEntriesCell5RecordNamesAndStep (E-0347)
+; why: step 4 of BreedMenu_ShowSelectedRecord (when wScreenStep = 4); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_ClearThreeTileRows::
     call ClearThreeTileRows
     call DrawListEntriesCell5RecordNamesAndStep
@@ -4891,12 +5268,18 @@ BreedMenu_ListMonsters::
     dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
 ; step 2 of BreedMenu_ListMonsters: calls ListRecordsInUseNotEggs (E-0347)
+; why: step 2 of BreedMenu_ListMonsters (when wScreenStep = 2); BreedMenu_ListMonsters: BreedMenu
+; screen state $11: the list of records that are not eggs (ListRecordsInUseNotEggs) with
+; page-of-pages (E-0352)
 BreedMenu_ListMonsters_ListRecordsInUseNotEggs::
     farcall ListRecordsInUseNotEggs
 
 ; Calls ClampRecordListPageCursor5; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank15;
 ; copies H to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; calls
 ; BlankWordTableTargets; calls StoreBAtWordTableEntry_Bank15; increments wScreenStep (E-0347)
+; why: part of BreedMenu_ListMonsters_ListRecordsInUseNotEggs, in step 2 of BreedMenu_ListMonsters
+; (when wScreenStep = 2); BreedMenu_ListMonsters: BreedMenu screen state $11: the list of records
+; that are not eggs (ListRecordsInUseNotEggs) with page-of-pages (E-0352)
 BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -4925,6 +5308,8 @@ BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     ret
 
 ; step 3 of BreedMenu_ShowSelectedRecord: calls FillTilesBxC; increments wScreenStep (E-0347)
+; why: step 3 of BreedMenu_ShowSelectedRecord (when wScreenStep = 3); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_FillTilesBxC::
     ld hl, vTiles1 + $240
     ld bc, $0c01
@@ -4941,6 +5326,8 @@ BreedMenu_ShowSelectedRecord_FillTilesBxC::
     ret
 
 ; step 6 of BreedMenu_ShowSelectedRecord: calls DrawRecordListPageNames (E-0347)
+; why: step 6 of BreedMenu_ShowSelectedRecord (when wScreenStep = 6); BreedMenu_ShowSelectedRecord:
+; BreedMenu screen state $12: the selected record's sex bit, family icon, name and species (E-0352)
 BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
     farcall DrawRecordListPageNames
     ret
@@ -5027,6 +5414,9 @@ DecompressGraphicsA4ToTiles0::
 ; Returns if wLinkMode is 0; sets rRAMG2 to $0a; sets rRAMB to 1; branches on the byte at
 ; sSavedPlayerName; sets rRAMB to 0; sets rRAMG2 to 0; branches on wScreenState; branches on
 ; wScreenStep (E-0347)
+; why: part of BreedMenu_ChooseParents; BreedMenu_ChooseParents: BreedMenu screen state 4, by
+; wScreenStep: lists the records in use, takes two monsters from paged lists, then
+; ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WaitLinkMode::
     ld a, [wLinkMode]
     and a
@@ -5249,6 +5639,9 @@ DrawArrowTileBCAtGridCursorXEntry_Bank15::
     ld b, $bc
 
 ; Calls BGMapAddressAtScroll_Bank15 (E-0347)
+; why: part of DrawArrowTileBCAtGridCursorXEntry_Bank15; DrawArrowTileBCAtGridCursorXEntry_Bank15: B
+; = $BC, then writes B at the scroll position +
+; DrawArrowTileBCAtGridCursorXEntry_Bank15_Data[wGridCursorX] (E-0352, E-0124)
 DrawArrowTileBCAtGridCursorXEntry_Bank15_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
@@ -5276,6 +5669,9 @@ DrawArrowTileBCAtGridCursorXEntry_Bank15_Data::
 ; called from BreedMenu_ReturnToMap_FillTilesBxC: sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; LoadSRAMRecordByte; sets rRAMB to 0; sets rRAMG2 to 0; branches on hTemp0; branches on rSTAT;
 ; branches on wPartyCount (E-0347)
+; why: a helper of BreedMenu_ReturnToMap_FillTilesBxC, in step 16 of BreedMenu_ReturnToMap (when
+; wScreenStep = 16); BreedMenu_ReturnToMap: reloads the map (LoadMapHeader), the player's position
+; (RestorePlayerPositionState) and sprite graphics (E-0352, E-0277)
 BreedMenu_ReturnToMap_LoadSRAMRecordByte::
     ld b, $00
 
@@ -5561,6 +5957,10 @@ StoreBAtWordTableEntry_Bank15::
 
 ; called from BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc: changes HL and
 ; A; continues in BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1 (E-0347)
+; why: a helper of BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc, in step 19
+; of BreedMenu_ChooseParents (when wScreenStep = 19); BreedMenu_ChooseParents: BreedMenu screen
+; state 4, by wScreenStep: lists the records in use, takes two monsters from paged lists, then
+; ComputeBreedingChild and the ... (E-0352)
 BreedMenu_ChooseParents_WriteArg1AndArg2Etc::
     ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
     ld a, $9d
@@ -5568,6 +5968,10 @@ BreedMenu_ChooseParents_WriteArg1AndArg2Etc::
 
 ; called from BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc: changes HL and A
 ; (E-0347)
+; why: a helper of BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc, in step 0 of
+; BreedMenu_ChooseEgg (when wScreenStep = 0); BreedMenu_ChooseEgg: BreedMenu screen state 5, by
+; wScreenStep: the list of records with the egg flag set (ListRecordsInUseEggs), species names,
+; marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
     ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
     ld a, $9c
@@ -5575,6 +5979,10 @@ BreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
 ; Sets wArg1; sets wArg2 to 0; sets wGlyphListPos to 0; calls CopyTileBytesToVRAM_Bank15; increments
 ; wGlyphListStart; increments wGlyphListPos; branches on wGlyphListPos; sets wGlyphListPos to 0;
 ; sets wGlyphListStart to 0; advances wScreenStep (E-0347)
+; why: part of BreedMenu_ChooseEgg_WriteArg1AndArg2Etc, in a helper of
+; BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc, in step 0 of BreedMenu_ChooseEgg
+; (when wScreenStep = 0); BreedMenu_ChooseEgg: BreedMenu screen state 5, by wScreenStep: the list of
+; records with the egg flag set (ListRecordsInUseEggs), species names, marks, the gold ... (E-0352)
 BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1::
     ld [wArg1], a
     xor a
@@ -5705,6 +6113,9 @@ CopyTileBytesToVRAM_Bank15::
 
 ; Calls CopyBytesDEToHL_Bank15; branches on wIsCGB; calls CopyLow3BitsToWRAMBank2_Bank15; may
 ; continue in BreedMenu_CopyBytesDEToHL_Bank15 (E-0347)
+; why: part of BreedMenu; BreedMenu: implements script command type ED (SCRIPT_BREED): breeding:
+; 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank ... (E-0352, E-0038,
+; E-0244)
 BreedMenu_CopyBytesDEToHL_Bank15::
     push bc
     push hl
@@ -6009,6 +6420,9 @@ TestBitInFieldAtArg3_Data::
 ; the byte at sRecords; branches on the byte at sRecords & $01; increments wRecordsFlagged; branches
 ; on the byte at sRecords & $01; branches on B; copies C to wListCount; sets rRAMG2 to 0; calls
 ; MovePartyRecordsToFrontOfList (E-0347)
+; why: part of BreedMenu; BreedMenu: implements script command type ED (SCRIPT_BREED): breeding:
+; 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank ... (E-0352, E-0038,
+; E-0244)
 BreedMenu_WriteListCountAndRAMG2Etc::
     ld hl, wListEntries
     ld b, $1e
@@ -6210,6 +6624,9 @@ DrawRecordNameAndSpeciesName::
     ret
 
 ; Sets rRAMG2 to $0a; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; sets rRAMG2 to 0 (E-0347)
+; why: part of BreedMenu; BreedMenu: implements script command type ED (SCRIPT_BREED): breeding:
+; 'Which will be the base monster?', 'And what will its mate be?' (mode 5, bank ... (E-0352, E-0038,
+; E-0244)
 BreedMenu_SetArg5ToListEntriesCell5::
     ld a, $0a
     ld [rRAMG2], a
@@ -6847,6 +7264,10 @@ PrepareCounterPtr0LoCountersAndRequestScript::
 ; called from PrepareCounterPtr0LoCountersAndRequestScript: sets hTemp0; branches on the byte at
 ; wItemStorage; branches on L; branches on H; branches on hTemp0; branches on wCounterPtr0Lo;
 ; branches on wCounterPtr0Hi; sets wArg1 to 1; returns unless wArg1 is 0; sets wArg1 to 0 (E-0347)
+; why: a helper of PrepareCounterPtr0LoCountersAndRequestScript;
+; PrepareCounterPtr0LoCountersAndRequestScript: clears wCounterPtr0Lo-wCounterArg1, fills them
+; through PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1 for wRecordBufA + $A4 ...
+; (E-0352, E-0125, E-0340)
 PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1::
     add $3f
     ldh [hTemp0], a
@@ -7421,6 +7842,9 @@ Script_HeroIsGoingTo::
 ; Sets wListCount to 0; sets rRAMG2 to $0a; sets rRAMB to 0; branches on the byte at
 ; sCompactRecords; branches on B; sets rRAMB to 1; branches on the byte at sRecords; copies C to
 ; wListCount; sets rRAMG2 to 0 (E-0347)
+; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
+; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
+; E-0038, E-0244)
 HibernateMenu_WriteListCountAndRAMG2Etc::
     ld hl, wListEntries
     ld b, $1e
@@ -7482,6 +7906,10 @@ HibernateMenu_WriteListCountAndRAMG2Etc::
 ; branches on wListLastRow; branches on wListPages; sets wArg1 to 0; branches on the byte at
 ; wListEntries; sets wArg2 to 0; copies L to wArg3; copies H to wArg4; sets wArg2 to 1; copies L to
 ; wArg3; copies H to wArg4; then 8 more steps (see the code) (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc, in step 3 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 3); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -7607,6 +8035,9 @@ HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_Data::
 ; GlyphCopyArgsForA_Bank15; calls CopyFromBankWaitVRAM; decrements wGlyphListStart; calls
 ; GlyphCopyArgsForA_Bank15; calls OrFromBankWaitVRAM; increments wGlyphListStart; increments
 ; wGlyphListPos; sets wGlyphListStart to 0; sets wGlyphListPos to 0 (E-0347)
+; why: part of HibernateMenu_ChooseRecords; HibernateMenu_ChooseRecords: HibernateMenu screen state
+; 5, by wScreenStep: paged record lists with two-choice confirmations and UnpackRecordFromBank1Slot
+; (E-0352)
 HibernateMenu_ChooseRecords_GlyphCopyArgsForA_Bank15::
     xor a
     ld [wGlyphListPos], a
@@ -7713,6 +8144,10 @@ LoadFamilyIconTileForArg1Record::
 ; RecordAddressWithBank1Slot1D; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F_Bank15_2;
 ; sets wArg1; sets wArg3; sets wArg5; sets wArg7; sets wArg2; sets wArg4; sets wArg6; sets wArg8;
 ; then 4 more steps (see the code) (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5, in step 4 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 4); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D::
     ld a, [wArg1]
     ld b, a
@@ -7851,6 +8286,10 @@ RecordAddressWithBank1Slot1D::
 ; calls LoadRecordNameEntry0; calls CopyGlyphTilesToVRAM; sets wDataBank to 8; calls
 ; ReadWordFromDataBank; sets wDataBank; calls CopyFromBankWaitVRAM; then 2 more steps (see the code)
 ; (E-0347)
+; why: a helper of HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2, in step 6 of
+; HibernateMenu_ChooseRecords (when wScreenStep = 6); HibernateMenu_ChooseRecords: HibernateMenu
+; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
+; UnpackRecordFromBank1Slot (E-0352)
 HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_2::
     ld a, [wArg1]
     ld b, a

@@ -152,36 +152,57 @@ DispatchTalkEvent::
     dw DispatchTalkEvent_ToReadableTalkEvents
 
 ; step 0 of DispatchTalkEvent: calls FieldTalkEvents (E-0347)
+; why: step 0 of DispatchTalkEvent (when wTalkEventIndex = 0); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToFieldTalkEvents::
     farcall FieldTalkEvents
     ret
 
 ; step 10 of DispatchTalkEvent: calls ReadableTalkEvents (E-0347)
+; why: step 10 of DispatchTalkEvent (when wTalkEventIndex = 10); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToReadableTalkEvents::
     farcall ReadableTalkEvents
     ret
 
 ; step 7 of DispatchTalkEvent: calls ElvenVillageTalkEvents (E-0347)
+; why: step 7 of DispatchTalkEvent (when wTalkEventIndex = 7); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToElvenVillageTalkEvents::
     farcall ElvenVillageTalkEvents
     ret
 
 ; step 9 of DispatchTalkEvent: calls KeyWorldTalkEvents (E-0347)
+; why: step 9 of DispatchTalkEvent (when wTalkEventIndex = 9); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToKeyWorldTalkEvents::
     farcall KeyWorldTalkEvents
     ret
 
 ; step 6 of DispatchTalkEvent: calls DarckTalkEvents (E-0347)
+; why: step 6 of DispatchTalkEvent (when wTalkEventIndex = 6); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToDarckTalkEvents::
     farcall DarckTalkEvents
     ret
 
 ; step 2 of DispatchTalkEvent: calls KalkaTalkEvents (E-0347)
+; why: step 2 of DispatchTalkEvent (when wTalkEventIndex = 2); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToKalkaTalkEvents::
     farcall KalkaTalkEvents
     ret
 
 ; step 3 of DispatchTalkEvent: calls YoldTalkEvents (E-0347)
+; why: step 3 of DispatchTalkEvent (when wTalkEventIndex = 3); DispatchTalkEvent: unless wMapType
+; says otherwise (several special values), starts an event: when wTalkEventGroup is not $FD it runs
+; script command $09 with a ... (E-0352, E-0097)
 DispatchTalkEvent_ToYoldTalkEvents::
     farcall YoldTalkEvents
     ret
@@ -480,6 +501,9 @@ Talk_WelcomeToOurInn::
 
 ; step 15 of FhuntTalkEvents: may return early; calls FhuntTalkEvents_WriteRAMGAndTemp0; branches on
 ; hTemp0; shows '…Be gone! If your soul'; starts Script_FineYou (E-0347)
+; why: step 15 of FhuntTalkEvents (when wTalkEventGroup = 15); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_ShowBeGoneIfYour::
     ld a, [wScreenTileBuffer + $d2]
     cp $68
@@ -557,6 +581,9 @@ Talk_Kweeeeh::
 ; EVENT_HERO_CHECKED_BEHIND_THE; calls InventoryHasFreeSlotCheck_Bank13; sets wInventorySortFlags;
 ; shows '0 checked behind the grave. The'; sets EVENT_HERO_CHECKED_BEHIND_THE; shows '0 checked
 ; behind the grave. The'; shows '0 checked behind the grave. There' (E-0347)
+; why: step 21 of FhuntTalkEvents (when wTalkEventGroup = 21); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_ShowHeroCheckedBehindThe::
     ld de, EVENT_SCENE_GRAVE_0A6
     call TestFlagBit
@@ -590,6 +617,9 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
 ; hPlayerSpriteOverride; shows 'Hm? You're a stranger! You'; starts Script_HmYou; sets
 ; EVENT_HM_YOURE_FROM_THE_VILLAGE; shows 'Hm? You're from the village!'; shows 'ZZZZZ… Ssss… ZZZZZ…
 ; Ssss…' (E-0347)
+; why: step 22 of FhuntTalkEvents (when wTalkEventGroup = 22); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_2::
     ld de, EVENT_HM_YOURE_FROM_THE_VILLAGE
     call TestFlagBit
@@ -725,6 +755,9 @@ TalkMsg0425_TheNewMonsterKingMakesOthers::
 
 ; step 31 of FhuntTalkEvents: branches on hPlayerSpriteOverride; starts Script_YouAreYouA; starts
 ; Script_YouAreYouA_2 (E-0347)
+; why: step 31 of FhuntTalkEvents (when wTalkEventGroup = 31); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_2::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -779,6 +812,9 @@ Talk_HowMayWeServeYourMortal_2::
 
 ; step 36 of FhuntTalkEvents: sets wScreenTableIndex to $0d; sets wDataBank to $10; starts
 ; Script_GoodDayHowMay (E-0347)
+; why: step 36 of FhuntTalkEvents (when wTalkEventGroup = 36); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13::
     ld a, $0d
     ld [wScreenTableIndex], a
@@ -826,6 +862,9 @@ Talk_WelcomeToTheTravelersInn::
 
 ; step 41 of FhuntTalkEvents: checks EVENT_SCENE_MADCONDOR; may return early; calls
 ; FhuntTalkEvents_WriteTemp0AndRAMG; returns if hTemp0 is 0; starts Script_Kweeeeeh (E-0347)
+; why: step 41 of FhuntTalkEvents (when wTalkEventGroup = 41); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_Kweeeeeh::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
@@ -840,6 +879,9 @@ FhuntTalkEvents_TestFlagBit_Kweeeeeh::
 
 ; step 42 of FhuntTalkEvents: checks EVENT_WHEN_IPASSED_TOO; shows 'When I passed too close'; sets
 ; EVENT_WHEN_IPASSED_TOO; shows 'I… I didn't take anything!' (E-0347)
+; why: step 42 of FhuntTalkEvents (when wTalkEventGroup = 42); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_ShowWhenIPassedToo::
     ld de, EVENT_WHEN_IPASSED_TOO
     call TestFlagBit
@@ -973,6 +1015,9 @@ TalkMsg0440_HardlyNoOneHasSeenThe::
 ; branches on hTemp0; sets hTemp0 to $3b; calls FindTemp0InInventoryList; branches on hTemp0; checks
 ; EVENT_SCENE_MADCONDOR_CRY; shows 'This is only for army'; then 3 more steps (see the code)
 ; (E-0347)
+; why: step 52 of FhuntTalkEvents (when wTalkEventGroup = 52); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1025,6 +1070,9 @@ FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
 ; hTemp0; sets hTemp0 to $3a; calls FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to
 ; $3b; calls FindTemp0InInventoryList; branches on hTemp0; checks EVENT_SCENE_MADCONDOR_CRY; then 6
 ; more steps (see the code) (E-0347)
+; why: step 53 of FhuntTalkEvents (when wTalkEventGroup = 53); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_2::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1135,6 +1183,9 @@ TalkMsg044A_HearMeOutIfYouWish::
 
 ; step 58 of FhuntTalkEvents: sets wScreenTableIndex to $0e; sets wDataBank to $10; starts
 ; Script_WelcomeHowMayI_4 (E-0347)
+; why: step 58 of FhuntTalkEvents (when wTalkEventGroup = 58); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_WelcomeHowMayI::
     ld a, $0e
     ld [wScreenTableIndex], a
@@ -1277,6 +1328,9 @@ TalkMsg0459_ThoseInsideTheHauntedCastle::
 
 ; step 71 of FhuntTalkEvents: calls FhuntTalkEvents_TestFlagBit_3; branches on hTemp0; shows '0
 ; checked the small hole. It's'; starts Script_HeroCheckedTheSmall (E-0347)
+; why: step 71 of FhuntTalkEvents (when wTalkEventGroup = 71); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_ShowHeroCheckedTheSmall::
     farcall FhuntTalkEvents_TestFlagBit_3
     ldh a, [hTemp0]
@@ -1353,6 +1407,9 @@ ChestItem_Heaven_Flag00AF::
 
 ; step 76 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
 ; Script_LetThePowerOf; shows 'Step once on each of' (E-0347)
+; why: step 76 of FhuntTalkEvents (when wTalkEventGroup = 76); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
@@ -1507,6 +1564,9 @@ TalkMsg046F_WhatYouveGotTheThree::
 ; hTemp0 to $39; calls FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3a; calls
 ; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3b; calls FindTemp0InInventoryList;
 ; branches on hTemp0; shows 'Hm? How did you get'; then 3 more steps (see the code) (E-0347)
+; why: step 90 of FhuntTalkEvents (when wTalkEventGroup = 90); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_3::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1681,6 +1741,9 @@ ChestItem_SteelFang_Flag00BF::
 ; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3a; calls FindTemp0InInventoryList;
 ; branches on hTemp0; sets hTemp0 to $3b; calls FindTemp0InInventoryList; branches on hTemp0; shows
 ; 'Ah, so good of you'; sets hTemp0 to $39; then 10 more steps (see the code) (E-0347)
+; why: step 103 of FhuntTalkEvents (when wTalkEventGroup = 103); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_4::
     ld de, EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     call TestFlagBit
@@ -1752,6 +1815,9 @@ Talk_ThisWayHereHere::
 
 ; step 106 of FhuntTalkEvents: sets wObject1 + OBJ_STATE to 0; returns if hPlayerY is $70; starts
 ; Script_Sound (E-0347)
+; why: step 106 of FhuntTalkEvents (when wTalkEventGroup = 106); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_3::
     xor a
     ld [wObject1 + OBJ_STATE], a
@@ -1788,6 +1854,9 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
 
 ; step 110 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
 ; Script_LetThePowerOf; shows 'The castle's lord summons monsters…' (E-0347)
+; why: step 110 of FhuntTalkEvents (when wTalkEventGroup = 110); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
@@ -1804,6 +1873,9 @@ FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
 
 ; step 111 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
 ; Script_LetThePowerOf; shows 'A button hides behind a' (E-0347)
+; why: step 111 of FhuntTalkEvents (when wTalkEventGroup = 111); FhuntTalkEvents: talk category 5:
+; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
+; (E-0352)
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_3::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
@@ -2197,6 +2269,9 @@ TalkMsg030C_ItsBecomeMuchColderWeMay::
 ; step 11 of NordenTalkEvents: checks EVENT_WHAT_IS_THAT_DIRTY_MEDAL; sets hTemp0 to $32; calls
 ; FindTemp0InInventoryList; branches on hTemp0; shows 'His Majesty is in talks'; starts
 ; Script_WhatIsThatDirty; shows 'Please enter, your envoyship!' (E-0347)
+; why: step 11 of NordenTalkEvents (when wTalkEventGroup = 11); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowHisMajestyIsIn::
     ld de, EVENT_WHAT_IS_THAT_DIRTY_MEDAL
     call TestFlagBit
@@ -2240,6 +2315,9 @@ TalkMsg030F_TheMineOnTheWesternBorder::
 
 ; step 13 of NordenTalkEvents: sets wScreenTableIndex to 7; sets wDataBank to $10; starts
 ; Script_WelcomeHowMayI_3 (E-0347)
+; why: step 13 of NordenTalkEvents (when wTalkEventGroup = 13); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13::
     ld a, $07
     ld [wScreenTableIndex], a
@@ -2309,6 +2387,9 @@ TalkMsg0315_TheBorderIsClosedSoI::
 ; shows 'If you restore this world's'; checks EVENT_SCENE_SHIELD; starts
 ; Script_HeroCheckedTheShield_2; starts Script_SceneShield; sets wJoypadHeld to 0; sets
 ; wJoypadPressed to 0 (E-0347)
+; why: step 20 of NordenTalkEvents (when wTalkEventGroup = 20); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_SHIELD_1E4
     call TestFlagBit
@@ -2422,6 +2503,9 @@ TalkMsg0320_IRememberTheKingToBe::
 ; EVENT_SCENE_REPORT_TO_KING; checks EVENT_SCENE_GOT_TO; checks EVENT_SCENE_SPIRIT_ENVOY; starts
 ; Script_AhYouAreThe; shows 'His Majesty is furious over'; starts Script_WeReportedToThe; shows
 ; 'What? Why are there two'; shows 'Who would've thought that a' (E-0347)
+; why: step 24 of NordenTalkEvents (when wTalkEventGroup = 24); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit_AhYouAreThe::
     ld de, EVENT_SCENE_PLAN_RUINED_094
     call TestFlagBit
@@ -2659,6 +2743,9 @@ TalkMsg0330_DontYouThinkItsTooExpensive::
 
 ; step 41 of NordenTalkEvents: sets wScreenTableIndex to $0a; sets wDataBank to $10; starts
 ; Script_WelcomeWhatCanI (E-0347)
+; why: step 41 of NordenTalkEvents (when wTalkEventGroup = 41); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI::
     ld a, $0a
     ld [wScreenTableIndex], a
@@ -2670,6 +2757,9 @@ NordenTalkEvents_StartScriptAtHL_B13_WelcomeWhatCanI::
 
 ; step 42 of NordenTalkEvents: sets wScreenTableIndex to 8; sets wDataBank to $10; starts
 ; Script_GreetingsHowShallI (E-0347)
+; why: step 42 of NordenTalkEvents (when wTalkEventGroup = 42); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI::
     ld a, $08
     ld [wScreenTableIndex], a
@@ -2681,6 +2771,9 @@ NordenTalkEvents_StartScriptAtHL_B13_GreetingsHowShallI::
 
 ; step 43 of NordenTalkEvents: sets wScreenTableIndex to 9; sets wDataBank to $10; starts
 ; Script_HelloHaveALook (E-0347)
+; why: step 43 of NordenTalkEvents (when wTalkEventGroup = 43); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13_HelloHaveALook::
     ld a, $09
     ld [wScreenTableIndex], a
@@ -3073,6 +3166,9 @@ ChestItem_VITbelt::
 ; checks EVENT_AH_SAVED_AT_LAST; shows 'Ah, saved at last! The'; sets EVENT_AH_SAVED_AT_LAST; shows
 ; 'I want to get out,'; shows 'I'm real! Don't you believe'; then 9 more steps (see the code)
 ; (E-0347)
+; why: step 72 of NordenTalkEvents (when wTalkEventGroup = 72); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowAhSavedAtLast::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
@@ -3153,6 +3249,9 @@ NordenTalkEvents_ShowAhSavedAtLast::
 ; step 73 of NordenTalkEvents: checks EVENT_KAMEHA_WHERES_THE_EXIT; shows 'Kameha: Where's the exit?
 ; We'll starve'; sets EVENT_KAMEHA_WHERES_THE_EXIT; shows 'Kameha: Where's the exit? We'll starve'
 ; (E-0347)
+; why: step 73 of NordenTalkEvents (when wTalkEventGroup = 73); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowKamehaWheresTheExit::
     ld de, EVENT_KAMEHA_WHERES_THE_EXIT
     call TestFlagBit
@@ -3202,6 +3301,9 @@ Talk_ImTheRealKingYouFake::
 ; 'I am real! Don't believe'; sets EVENT_IAM_REAL_DONT; shows 'My regal bearing should be'; sets
 ; EVENT_IAM_REAL_DONT_090; shows 'Look at him! He's grimy!'; sets EVENT_IAM_REAL_DONT_091; shows
 ; 'You suspect me still? Kiki!'; then 3 more steps (see the code) (E-0347)
+; why: step 77 of NordenTalkEvents (when wTalkEventGroup = 77); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowIAmRealDont::
     ld de, EVENT_SCENE_PLAN_RUINED
     call TestFlagBit
@@ -3492,6 +3594,9 @@ NordenTalkEvents_StartScriptAtHL_B13_WelcomeToOurInn_3::
 
 ; step 95 of NordenTalkEvents: sets wScreenTableIndex to $0b; sets wDataBank to $10; starts
 ; Script_HelloHowMayI_3 (E-0347)
+; why: step 95 of NordenTalkEvents (when wTalkEventGroup = 95); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13_HelloHowMayI::
     ld a, $0b
     ld [wScreenTableIndex], a
@@ -3613,6 +3718,9 @@ TalkMsg0393_OhLadyYunaToThinkThat::
 ; step 104 of NordenTalkEvents: checks EVENT_SCENE_PRINCESS_MEDICINE_09D; checks
 ; EVENT_GATHER_FOLLOWERS; starts Script_HeroReadTheSign; shows '0 read the sign. 'Come all'; shows
 ; '0 read the sign. 'Lady Yuna' (E-0347)
+; why: step 104 of NordenTalkEvents (when wTalkEventGroup = 104); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit_HeroReadTheSign::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
@@ -3701,6 +3809,9 @@ TalkMsg039B_BeforeLadyYunaWouldBeUp::
 
 ; step 110 of NordenTalkEvents: branches on hPlayerY; shows 'Oh? How did you get'; shows 'This leads
 ; to Lady Yuna's' (E-0347)
+; why: step 110 of NordenTalkEvents (when wTalkEventGroup = 110); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowOhHowDidYou::
     ldh a, [hPlayerY]
     cp $30
@@ -3719,6 +3830,9 @@ NordenTalkEvents_ShowOhHowDidYou::
 ; branches on wPartyCount; calls SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived;
 ; starts Script_You_10; shows 'You're here to cheer Lady'; shows 'Many have tried to cheer'; shows
 ; 'Lady Yuna locked herself in'; shows 'How could we ever thank' (E-0347)
+; why: step 111 of NordenTalkEvents (when wTalkEventGroup = 111); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowYoureHereToCheer::
     ld de, EVENT_SCENE_PRINCESS_MEDICINE_09D
     call TestFlagBit
@@ -3814,6 +3928,9 @@ TalkMsg03A4_KingSighNotEvenThisYou::
 ; EVENT_YOU_WILL_THANK_YOU_LET; shows '…………'; sets hTemp0 to $33; calls FindTemp0InInventoryList;
 ; branches on hTemp0; starts Script_Message; starts Script_Message_2; shows 'Yuna: Their next target
 ; is Queen'; shows 'Yuna: I heard that you saved' (E-0347)
+; why: step 114 of NordenTalkEvents (when wTalkEventGroup = 114); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit_2::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
@@ -3990,6 +4107,9 @@ TalkMsg03AF_AroundThesePartsThereAre::
 ; FindTemp0InInventoryList; branches on hTemp0; shows 'This is no place for'; branches on hPlayerX;
 ; starts Script_ThisIsNoPlace; starts Script_ThisIsNoPlace_2; shows 'I beg your pardon, please!'
 ; (E-0347)
+; why: step 124 of NordenTalkEvents (when wTalkEventGroup = 124); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowThisIsNoPlace::
     ld de, EVENT_OH_AN_ENVOY_FROM_THE
     call TestFlagBit
@@ -4024,6 +4144,9 @@ NordenTalkEvents_ShowThisIsNoPlace::
 
 ; step 125 of NordenTalkEvents: sets wScreenTableIndex to $0c; sets wDataBank to $10; starts
 ; Script_HelloWhatMayI (E-0347)
+; why: step 125 of NordenTalkEvents (when wTalkEventGroup = 125); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_StartScriptAtHL_B13_HelloWhatMayI::
     ld a, $0c
     ld [wScreenTableIndex], a
@@ -4455,6 +4578,9 @@ Talk_SceneSpiritEnvoy2::
 ; Script_YouStartledMeI_2; starts Script_YouStartledMeI_3; checks EVENT_SCENE_CHEER_YUNA; starts
 ; Script_IDon_2; calls InventoryHasFreeSlotCheck_Bank13; starts Script_IDon_3; starts Script_IDon_4
 ; (E-0347)
+; why: step 153 of NordenTalkEvents (when wTalkEventGroup = 153); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit_YouStartledMeI::
     ld de, EVENT_GIVE_ITEM_BLINK_09A
     call TestFlagBit
@@ -4500,6 +4626,9 @@ NordenTalkEvents_TestFlagBit_YouStartledMeI::
 
 ; step 154 of NordenTalkEvents: branches on wObject1 + OBJ_X; branches on wObject1 + OBJ_Y; shows '0
 ; checked the marionette. It sagged'; starts Script_Message_2 (E-0347)
+; why: step 154 of NordenTalkEvents (when wTalkEventGroup = 154); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowHeroCheckedTheMarionette::
     ld a, [wObject1 + OBJ_X]
     cp $80
@@ -4527,6 +4656,9 @@ TalkMsg0A16_MyMaidIsAngryThatI::
 ; flower. The'; calls InventoryHasFreeSlotCheck_Bank13; sets wInventorySortFlags; shows '0 checked
 ; the blue flower. It'; sets EVENT_HERO_CHECKED_THE_BLUE_FLOWER; shows '0 checked the blue flower.
 ; It' (E-0347)
+; why: step 156 of NordenTalkEvents (when wTalkEventGroup = 156); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_TestFlagBit_3::
     ld de, EVENT_HERO_CHECKED_THE_BLUE_FLOWER
     call TestFlagBit
@@ -4586,6 +4718,9 @@ Talk_SceneShield::
 
 ; step 160 of NordenTalkEvents: calls InventoryHasFreeSlotCheck_Bank13; shows '0 checked the
 ; treasure chest. The'; sets wInventorySortFlags; starts Script_HeroCheckedTheTreasure_2 (E-0347)
+; why: step 160 of NordenTalkEvents (when wTalkEventGroup = 160); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_ShowHeroCheckedTheTreasure::
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_inventory_sort_flags
@@ -4604,6 +4739,9 @@ NordenTalkEvents_ShowHeroCheckedTheTreasure::
 
 ; step 161 of NordenTalkEvents: sets hTemp0 to $32; calls FindTemp0InInventoryList; calls
 ; RemoveInventorySlotShiftDown; starts Script_SceneShield2 (E-0347)
+; why: step 161 of NordenTalkEvents (when wTalkEventGroup = 161); NordenTalkEvents: talk category 4:
+; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
+; $0300-$03BF, $0AB0-$0ACF) (E-0352)
 NordenTalkEvents_FindTemp0InInventoryList::
     ld a, $32
     ldh [hTemp0], a
@@ -5007,6 +5145,9 @@ Talk_SceneTerry::
 ; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_SCENE_VAULT_SETTLED; starts Script_You_3; shows 'Go to
 ; the Vault and'; checks EVENT_DID_YOU_GET_THE_PACKAGE; sets hTemp0 to 1; then 16 more steps (see
 ; the code) (E-0347)
+; why: step 2 of GreatLogTalkEvents (when wTalkEventGroup = 2); GreatLogTalkEvents: talk category 1:
+; jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -5119,6 +5260,9 @@ GreatLogTalkEvents_TestFlagBit::
 ; FindTemp0InInventoryList; branches on hTemp0; shows 'Buy LoveWater for me, OK?'; calls
 ; RemoveInventorySlotShiftDown; starts Script_OhYouBoughtThe; then 35 more steps (see the code)
 ; (E-0347)
+; why: a helper of GreatLogTalkEvents_TestFlagBit, in step 2 of GreatLogTalkEvents (when
+; wTalkEventGroup = 2); GreatLogTalkEvents: talk category 1: jumps by wTalkEventGroup to the talk
+; handlers of the Great Log home island (messages from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_2::
     ld de, EVENT_ILL_GET_YOU_TO_RUN
     call TestFlagBit
@@ -5541,6 +5685,9 @@ TalkMsg0016_ItSeemsToMeThatThe::
 ; checks EVENT_REWARD_ITEM_OR_KEY_2; starts Script_AMadGopherJoinedYou_2; starts
 ; Script_AMadGopherJoinedYou_3; starts Script_AMadGopherJoinedYou; then 2 more steps (see the code)
 ; (E-0347)
+; why: a helper of TalkMsg0016_ItSeemsToMeThatThe; TalkMsg0016_ItSeemsToMeThatThe: tests story flags
+; (flag 0025 then jp c, TalkMsg0016_ItSeemsToMeThatThe.call_total_species_flagged_or_listed (E-0352,
+; E-0268, E-0082)
 TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     ld de, EVENT_REWARD_ITEM_OR_KEY
     call TestFlagBit
@@ -5605,6 +5752,9 @@ TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
 ; step 8 of GreatLogTalkEvents: checks EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_YO_DID_YOU_ENJOY;
 ; shows 'Yo, did you enjoy the'; sets EVENT_YO_DID_YOU_ENJOY; shows 'Slash: If you're in need of';
 ; shows 'Slash: The island's going to sink?' (E-0347)
+; why: step 8 of GreatLogTalkEvents (when wTalkEventGroup = 8); GreatLogTalkEvents: talk category 1:
+; jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowYoDidYouEnjoy::
     ld de, EVENT_SCENE_WARUBOU_FOOD2_00C
     call TestFlagBit
@@ -5872,6 +6022,9 @@ TalkMsg0040_OnThisIslandEveryDayGoes::
 
 ; step 13 of GreatLogTalkEvents: calls InventoryHasFreeSlotCheck_Bank13; sets wInventorySortFlags;
 ; shows 'Hey, that's mine! 0 obtained' (E-0347)
+; why: step 13 of GreatLogTalkEvents (when wTalkEventGroup = 13); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_InventoryHasFreeSlotCheck_Bank13::
     call InventoryHasFreeSlotCheck_Bank13
     jr c, .read_inventory_sort_flags
@@ -6344,6 +6497,9 @@ TalkMsg003F_InsideTheWellIsTheLogs::
 ; shows 'Warubou: Wa-hey! Give me something! Then,'; branches on hMapScreenX; starts
 ; Script_WarubouWhaISmell; sets hTemp0 to 1; calls RunFieldCommandTemp0; sets wObject5 + SCRIPTOBJ_X
 ; to $20; then 2 more steps (see the code) (E-0347)
+; why: step 23 of GreatLogTalkEvents (when wTalkEventGroup = 23); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit::
     ld de, EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT
     call TestFlagBit
@@ -6391,6 +6547,9 @@ GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit::
 
 ; step 24 of GreatLogTalkEvents: checks EVENT_IM_PRINCE_KAMEHA_OF; shows 'I'm Prince Kameha of
 ; GreatLog!'; sets EVENT_IM_PRINCE_KAMEHA_OF; shows 'Kameha: Wahahah! No going by me!' (E-0347)
+; why: step 24 of GreatLogTalkEvents (when wTalkEventGroup = 24); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowImPrinceKamehaOf::
     ld de, EVENT_IM_PRINCE_KAMEHA_OF
     call TestFlagBit
@@ -6412,6 +6571,9 @@ GreatLogTalkEvents_ShowImPrinceKamehaOf::
 ; EVENT_SCENE_OASIS_KEY; checks EVENT_DID_YOU_GET_THE_PACKAGE; checks EVENT_YOURE_THE_KIDS_FROM_THE;
 ; checks EVENT_HERO_RECEIVED_THE_GREAT_LOG; shows 'Warubou: A new plug for the'; sets hTemp0 to 2;
 ; then 36 more steps (see the code) (E-0347)
+; why: step 25 of GreatLogTalkEvents (when wTalkEventGroup = 25); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_3::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -6666,6 +6828,9 @@ TalkMsg001A_IAccidentallyWentOutside::
 ; EVENT_COBI_HERO_WHILE_YOURE; shows 'Cobi: 0, while you're gone, I'll'; checks EVENT_COBI_HI_I;
 ; starts Script_CobiHiI; starts Script_CobiHiHeroWhat; checks EVENT_COBI_HERO_WHAT_WAS; then 9 more
 ; steps (see the code) (E-0347)
+; why: step 27 of GreatLogTalkEvents (when wTalkEventGroup = 27); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowCobiHeroWhileYoure::
     ld a, $1f
     ld [wDataBank], a
@@ -6750,6 +6915,9 @@ GreatLogTalkEvents_ShowCobiHeroWhileYoure::
 ; EVENT_COBI_HERO_WHILE_YOURE; shows 'Tara: Big brother, while you're in'; checks EVENT_COBI_HI_I;
 ; starts Script_TaraI; starts Script_TaraHiHowAre; checks EVENT_COBI_HERO_WHAT_WAS; then 9 more
 ; steps (see the code) (E-0347)
+; why: step 28 of GreatLogTalkEvents (when wTalkEventGroup = 28); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowTaraBigBrotherWhile::
     ld a, $1f
     ld [wDataBank], a
@@ -6885,6 +7053,9 @@ TalkMsg04D0_HeroReadTheSignMonsterArena::
 ; for a monster master?'; shows 'This leads to GreatLog Castle!'; checks EVENT_WHAT; starts
 ; Script_PrinceKamehaHasBeen; shows 'Prince Kameha wandered off like'; checks EVENT_WHAT; then 1
 ; more step (see the code) (E-0347)
+; why: step 32 of GreatLogTalkEvents (when wTalkEventGroup = 32); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_4::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -6941,6 +7112,9 @@ GreatLogTalkEvents_TestFlagBit_4::
 ; step 33 of GreatLogTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
 ; EVENT_TAKE_THIS_SLIDE_AS_A; starts Script_TakeThisSlideAs; sets EVENT_TAKE_THIS_SLIDE_AS_A; shows
 ; 'It's easy to get down,'; shows 'The rope in the farm' (E-0347)
+; why: step 33 of GreatLogTalkEvents (when wTalkEventGroup = 33); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_TakeThisSlideAs::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7037,6 +7211,9 @@ TalkMsg0222_HeyALittleBittyMasterHi::
 ; step 37 of GreatLogTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
 ; EVENT_SCENE_DARCK_DEFEATED; shows 'Well, you're a mighty lively'; shows 'I like my grandchildren
 ; to' (E-0347)
+; why: step 37 of GreatLogTalkEvents (when wTalkEventGroup = 37); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_5::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7068,6 +7245,9 @@ TalkMsg0224_TakeCareToFindTinyMedals::
 ; calls FindPartyIndexOfSpeciesTemp0; branches on hTemp0; shows 'Oh… You're so lucky to'; starts
 ; Script_OhYou_5; shows 'What should I do with'; checks EVENT_SCENE_MASTER_THANKS; shows 'Do we have
 ; to leave'; then 2 more steps (see the code) (E-0347)
+; why: step 39 of GreatLogTalkEvents (when wTalkEventGroup = 39); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_SetTemp0::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7186,6 +7366,9 @@ TalkMsg0006_TheresASpiritInGreatLogThats::
 ; step 47 of GreatLogTalkEvents: checks EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED; calls
 ; StartMessageCommand09HL_B13; branches on $01; starts Script_TaraBigBrotherGreatLog; starts
 ; Script_CobiHeroTheySaid (E-0347)
+; why: step 47 of GreatLogTalkEvents (when wTalkEventGroup = 47); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
@@ -7239,6 +7422,9 @@ TalkMsg000A_WellSoonBeReachingGreatLog::
 ; step 50 of GreatLogTalkEvents: checks EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED; calls
 ; StartMessageCommand09HL_B13; sets EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED; shows 'When our farm gets
 ; established' (E-0347)
+; why: step 50 of GreatLogTalkEvents (when wTalkEventGroup = 50); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2::
     ld de, EVENT_WHEN_OUR_FARM_GETS_ESTABLISHED
     call TestFlagBit
@@ -7261,6 +7447,9 @@ GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2::
 ; step 51 of GreatLogTalkEvents: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
 ; shows 'The farm is full.'; calls StartMessageCommand09HL_B13; sets hTemp1; copies wArg5 to hTemp2;
 ; sets hTemp3 to 1; calls CreateMonsterRecordOfKindTemp1 (E-0347)
+; why: step 51 of GreatLogTalkEvents (when wTalkEventGroup = 51); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowTheFarmIsFull::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -7400,6 +7589,9 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt::
 ; step 62 of GreatLogTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
 ; EVENT_SCENE_THREE_ITEMS; starts Script_HeyLetMeAsk; shows 'If GreatLog were to sink,'; shows 'The
 ; girl next door? Well,' (E-0347)
+; why: step 62 of GreatLogTalkEvents (when wTalkEventGroup = 62); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_HeyLetMeAsk::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7450,6 +7642,9 @@ TalkMsg02B0_HeroPeeredIntoTheBarrelIt::
 ; sink!'; checks EVENT_THE_WAY_YOU_SAVED_GREAT; calls ClearArg5IfAtOrAboveLimitForFarmLevel;
 ; branches on wArg5; shows 'The way you saved GreatLog'; sets hTemp1 to 2; copies wArg5 to hTemp2;
 ; sets hTemp3 to 1; calls CreateMonsterRecordOfKindTemp1; then 3 more steps (see the code) (E-0347)
+; why: step 66 of GreatLogTalkEvents (when wTalkEventGroup = 66); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_DidYouKnowThat::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7526,6 +7721,9 @@ IfFlag134Msg0314_HeroTriedToOpenTheChest::
 
 ; step 70 of GreatLogTalkEvents: sets wDataBank to $96; checks EVENT_WELCOME_IM_THE_CHRISTENER_I;
 ; starts Script_WelcomeI; sets EVENT_WELCOME_IM_THE_CHRISTENER_I; starts Script_WelcomeI_2 (E-0347)
+; why: step 70 of GreatLogTalkEvents (when wTalkEventGroup = 70); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_WelcomeI::
     ld a, $96
     ld [wDataBank], a
@@ -7580,6 +7778,9 @@ TalkMsg08C0_WeGetMoreAndMoreStubborn::
 ; sets wStepPtrLo to $2c; calls AppendItemStepPtrLoToInventory; checks
 ; EVENT_THANKS_FOR_COMING_BY_025; shows 'You have to tamp the'; shows 'GreatLog is a floating
 ; island?' (E-0347)
+; why: step 75 of GreatLogTalkEvents (when wTalkEventGroup = 75); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowHeresThatTinyMedalWait::
     ld de, EVENT_REWARD_ITEM_OR_KEY_1A3
     call TestFlagBit
@@ -7835,6 +8036,9 @@ TalkMsg0291_IIDidntFallForAny::
 ; Script_OhYou_7; starts Script_OhYou_11; checks EVENT_NEVER_SET; starts Script_OhYou_8; starts
 ; Script_OhYou_12; checks EVENT_NEVER_SET; starts Script_OhYou_9; then 5 more steps (see the code)
 ; (E-0347)
+; why: step 97 of GreatLogTalkEvents (when wTalkEventGroup = 97); GreatLogTalkEvents: talk category
+; 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages from
+; $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_OhACuteLittle::
     ld a, [wArenaRank]
     or a
@@ -7959,6 +8163,9 @@ TalkMsg027A_ListenThisIsASecretTheres::
 ; GenerateNewKeyEntry; copies hTemp0 to wArenaOutcome; branches on hTemp0; starts Script_Here;
 ; starts Script_Here_2; branches on wArenaRank; starts Script_WelcomeToTheArena; then 4 more steps
 ; (see the code) (E-0347)
+; why: step 101 of GreatLogTalkEvents (when wTalkEventGroup = 101); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ClearArenaData_Here::
     ld a, $0c
     ld [wDataBank], a
@@ -8021,6 +8228,9 @@ GreatLogTalkEvents_ClearArenaData_Here::
 ; checks EVENT_WHEN_YOU_BREED_THE_OFFSPRING; sets wScreenTableIndex to 0; sets wDataBank to $0e;
 ; checks EVENT_I_LOST_AGAIN_I_NEED; starts Script_ILostAgainI; starts Script_ILostAgainI_2; shows
 ; 'When you breed, the offspring' (E-0347)
+; why: step 102 of GreatLogTalkEvents (when wTalkEventGroup = 102); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_SaveScreenBufferToBGMap1::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -8121,6 +8331,9 @@ TalkMsg04B6_IfYouEatAnyBadMeatLike::
 ; step 105 of GreatLogTalkEvents: sets wDataBank to $96; checks EVENT_THANKS_FOR_COMING_BY_025;
 ; checks EVENT_UM_I; starts Script_UmI; starts Script_I_7; checks EVENT_OH_THE_SAVIOR_OF; starts
 ; Script_OhTheSaviorOf (E-0347)
+; why: step 105 of GreatLogTalkEvents (when wTalkEventGroup = 105); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_UmI::
     ld a, $96
     ld [wDataBank], a
@@ -8151,6 +8364,9 @@ GreatLogTalkEvents_TestFlagBit_UmI::
 ; sets wDataBank to $15; checks EVENT_THANKS_FOR_COMING_BY_025; checks
 ; EVENT_WELCOME_TO_THE_STARRY_SHRINE; starts Script_WelcomeToTheStarry; starts
 ; Script_WelcomeToTheStarry_2; checks EVENT_AREN; starts Script_Aren (E-0347)
+; why: step 106 of GreatLogTalkEvents (when wTalkEventGroup = 106); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_SaveScreenBufferToBGMap1_WelcomeToTheStarry::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -8240,6 +8456,9 @@ TalkMsg02DD_ParentsPassOnAbilitiesTo::
 ; step 114 of GreatLogTalkEvents: sets wDataBank to $0c; checks EVENT_THANKS_FOR_COMING_BY_025;
 ; checks EVENT_YOU_CAN_CALL_ME; starts Script_YouCanCallMe; starts Script_YouCanCallMe_2; checks
 ; EVENT_WELL_WHO_WOULD_HAVE; starts Script_WellWhoWouldHave (E-0347)
+; why: step 114 of GreatLogTalkEvents (when wTalkEventGroup = 114); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_YouCanCallMe::
     ld a, $0c
     ld [wDataBank], a
@@ -8455,6 +8674,9 @@ TalkMsg08BF_MasterOnlyMakesMeChargeIt::
 ; calls FindPartyIndexOfSpeciesTemp0; branches on hTemp0; checks EVENT_REWARD_ITEM_OR_KEY; starts
 ; Script_WaitCouldIGet_2; starts Script_WaitCouldIGet_3; starts Script_WaitCouldIGet; then 10 more
 ; steps (see the code) (E-0347)
+; why: step 127 of GreatLogTalkEvents (when wTalkEventGroup = 127); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_SetFlagBit::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
@@ -9207,6 +9429,9 @@ TalkMsg04CF_HeroPeeredIntoTheVaseIt::
 ; EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_WELCOME_TO_MY_KEY; starts Script_WelcomeToMyKey; sets
 ; EVENT_WELCOME_TO_MY_KEY; starts Script_WelcomeToMyKey_2; checks EVENT_YOU; starts Script_You_7
 ; (E-0347)
+; why: step 146 of GreatLogTalkEvents (when wTalkEventGroup = 146); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowItsExcitingToThink::
     ld a, [wGreatLogEventFlag]
     cp $01
@@ -9261,6 +9486,9 @@ TalkMsg029A_DayAfterDayIExamineKeys::
     ret
 
 ; step 149 of GreatLogTalkEvents: returns at once (E-0347)
+; why: step 149 of GreatLogTalkEvents (when wTalkEventGroup = 149); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_Return_2::
     ret
 
@@ -9574,6 +9802,9 @@ TalkMsg001C_HeroCheckedThePumpItsRusted::
 ; step 164 of GreatLogTalkEvents: calls FullyHealParty; calls MoveIncapacitatedPartyMembersBack;
 ; calls LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets
 ; wOBJPaletteUploadRequest to $7f (E-0347)
+; why: step 164 of GreatLogTalkEvents (when wTalkEventGroup = 164); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_FullyHealParty::
     farcall FullyHealParty
     farcall MoveIncapacitatedPartyMembersBack
@@ -9595,6 +9826,9 @@ TalkMsg0037_HeroTriedToOpenTheChest_13::
 
 ; step 166 of GreatLogTalkEvents: sets wScreenTableIndex to $17; sets wDataBank to $10; starts
 ; Script_HelloWhatCanI (E-0347)
+; why: step 166 of GreatLogTalkEvents (when wTalkEventGroup = 166); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_StartScriptAtHL_B13::
     ld a, $17
     ld [wScreenTableIndex], a
@@ -9606,6 +9840,9 @@ GreatLogTalkEvents_StartScriptAtHL_B13::
 
 ; step 167 of GreatLogTalkEvents: copies L to hTemp0; copies H to hTemp1; calls AddGoldCapped; shows
 ; 'Terry: Here, just take this. 0' (E-0347)
+; why: step 167 of GreatLogTalkEvents (when wTalkEventGroup = 167); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowTerryHereJustTake::
     ld hl, $2710
     ld a, l
@@ -9776,6 +10013,9 @@ TalkMsg02B1_HeroPeeredIntoTheOvenIt::
 ; step 178 of GreatLogTalkEvents: checks EVENT_SCENE_MERMAID_KINGDOM_022; checks
 ; EVENT_SCENE_RIVAL_DEFEATED_021; starts Script_WantToKnowHow; starts Script_WantToKnowHow_2; starts
 ; Script_WantToKnowHow_3 (E-0347)
+; why: step 178 of GreatLogTalkEvents (when wTalkEventGroup = 178); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_TestFlagBit_WantToKnowHow::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
@@ -10138,6 +10378,9 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
 
 ; step 204 of GreatLogTalkEvents: calls GreatLogTalkEvents_WriteTemp1; returns if bit 7 of hTemp1 is
 ; set; copies hTemp1 to wTileActionKind; starts Script_SceneStrongestMaster (E-0347)
+; why: step 204 of GreatLogTalkEvents (when wTalkEventGroup = 204); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1::
     farcall GreatLogTalkEvents_WriteTemp1
     ldh a, [hTemp1]
@@ -10153,6 +10396,9 @@ GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1::
 ; $2c; calls AppendItemStepPtrLoToInventory; starts Script_HereItIsThe; checks
 ; EVENT_THANKS_FOR_COMING_BY_025; shows 'Hup, hup, hup! Heh, this'; shows 'When master's shop starts
 ; making' (E-0347)
+; why: step 205 of GreatLogTalkEvents (when wTalkEventGroup = 205); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowHereItIstheTinyMedal::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2_1A5
     call TestFlagBit
@@ -10392,6 +10638,9 @@ TalkMsg04D1_ThereAreTimesWhenYouHave::
 ; EVENT_DESK_KEY; branches on $01; sets hTemp0 to $0a; calls KeyListHasKindTemp0; branches on
 ; hTemp0; calls CountKeysOrFull; branches on hTemp0; shows '0 found a Magic Key. But'; sets hTemp1
 ; to $0a; checks EVENT_SCENE_CHEST_BATTLE; then 48 more steps (see the code) (E-0347)
+; why: step 219 of GreatLogTalkEvents (when wTalkEventGroup = 219); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld de, EVENT_DESK_KEY_0C8
     call TestFlagBit
@@ -10625,6 +10874,9 @@ TalkMsg0DD5_MonsterSkillsArePassedOn::
 
 ; step 228 of GreatLogTalkEvents: returns unless wGiftRecord is $01; returns unless wObject5 is 0;
 ; sets hTemp0 to $14; calls RunFieldCommandTemp0 (E-0347)
+; why: step 228 of GreatLogTalkEvents (when wTalkEventGroup = 228); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_RunFieldCommandTemp0::
     ld a, [wGiftRecord]
     cp $01
@@ -10639,6 +10891,9 @@ GreatLogTalkEvents_RunFieldCommandTemp0::
 
 ; step 229 of GreatLogTalkEvents: returns unless wGiftRecord is $01; branches on wPendingGiftItem;
 ; starts Script_WhatWillYouGive; calls CopyItemNameToDE; starts Script_YHasBeenGiven (E-0347)
+; why: step 229 of GreatLogTalkEvents (when wTalkEventGroup = 229); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
     ld a, [wGiftRecord]
     cp $01
@@ -10659,6 +10914,9 @@ GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
 
 ; step 230 of GreatLogTalkEvents: branches on hPlayerX; calls StartMessageCommand09HL_B13; calls
 ; LoadSpeciesFlagsPresetC (E-0347)
+; why: step 230 of GreatLogTalkEvents (when wTalkEventGroup = 230); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_StartMessageCommand09HL_B13::
     ldh a, [hPlayerX]
     cp $30
@@ -10684,6 +10942,9 @@ GreatLogTalkEvents_StartMessageCommand09HL_B13::
     ret
 
 ; step 231 of GreatLogTalkEvents: sets wGreatLogEventFlag to 0 (E-0347)
+; why: step 231 of GreatLogTalkEvents (when wTalkEventGroup = 231); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_SetGreatLogEventFlag::
     xor a
     ld [wGreatLogEventFlag], a
@@ -10774,6 +11035,9 @@ ChestItem_MagicBelt::
     ret
 
 ; step 238 of GreatLogTalkEvents: shows '0 checked the bookshelf. 'Magic Keys…' (E-0347)
+; why: step 238 of GreatLogTalkEvents (when wTalkEventGroup = 238); GreatLogTalkEvents: talk
+; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
+; from $0000-$02DF: Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
     ld hl, $055f ; '0 checked the bookshelf. 'Magic Keys…'
     call StartMessageCommand09HL_B13

@@ -5,6 +5,8 @@ SECTION "Bank 97", ROMX[$4000], BANK[$97]
     db $97
 
 ; called from BeginStringDisplay_Bank28: sets wStringIndex; calls BeginStringDisplay (E-0347)
+; why: a helper of BeginStringDisplay_Bank28; BeginStringDisplay_Bank28: if wStringIndex < $DA,
+; BeginStringDisplay with this bank's table (E-0352)
 BeginStringDisplay_Bank28_BeginStringDisplay::
     ld de, MessageStrings_Bank28_Overflow
     ld a, [wStringIndex]
