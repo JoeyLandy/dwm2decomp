@@ -113,7 +113,7 @@ class RealRom(unittest.TestCase):
 class GeneratedText(unittest.TestCase):
     def test_charmap_is_included_before_the_banks_and_defines_each_byte_once(self):
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8").splitlines()
-        first_bank = next(i for i, ln in enumerate(main) if ln.startswith('INCLUDE "banks/bank00'))
+        first_bank = next(i for i, ln in enumerate(main) if ln.startswith('INCLUDE "home/bank00'))
         self.assertLess(main.index('INCLUDE "charmap.inc"'), first_bank)
         codes = re.findall(r'^CHARMAP ".+", \$([0-9A-F]{2})$',
                            (ROOT / "src" / "charmap.inc").read_text(encoding="utf-8"), re.M)

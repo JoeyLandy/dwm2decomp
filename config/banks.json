@@ -1,1027 +1,1283 @@
 {
- "_note": "D-006: a short title per ROM bank, read from the names its labels carry; it names the file src/banks/bankNN_<file>.asm and heads it. It is a guide to the contents, not a claim about every routine in the bank.",
+ "_note": "D-006: a short title per ROM bank, read from the names its labels carry; it names the file src/banks/bankNN_<file>.asm and heads it. It is a guide to the contents, not a claim about every routine in the bank. D-010: `dir` puts the file in a pokered-style directory by what the bank holds: home, engine (mostly code), scripts, text, data, maps, gfx, audio, unused (empty).",
  "00": {
   "file": "home",
-  "title": "home bank: boot, main loop, interrupts, bank switching, text printer, sound driver"
+  "title": "home bank: boot, main loop, interrupts, bank switching, text printer, sound driver",
+  "dir": "home"
  },
  "01": {
   "file": "debug_menu",
-  "title": "debug menu: message test, debug battle set-up, monster creation, results"
+  "title": "debug menu: message test, debug battle set-up, monster creation, results",
+  "dir": "engine"
  },
  "02": {
   "file": "field",
-  "title": "field mode: map play, field states, field menus"
+  "title": "field mode: map play, field states, field menus",
+  "dir": "engine"
  },
  "03": {
   "file": "pause_menu",
-  "title": "pause menu (game mode 2): items, monsters, plan, info"
+  "title": "pause menu (game mode 2): items, monsters, plan, info",
+  "dir": "engine"
  },
  "04": {
   "file": "field_events",
-  "title": "field events: chests, vases and barrels, key-world events, Yold talk"
+  "title": "field events: chests, vases and barrels, key-world events, Yold talk",
+  "dir": "engine"
  },
  "05": {
   "file": "battle_ai_scores",
-  "title": "battle AI: per-skill scoring routines (AIScore_*) and their conditions"
+  "title": "battle AI: per-skill scoring routines (AIScore_*) and their conditions",
+  "dir": "engine"
  },
  "06": {
   "file": "ai_personality",
-  "title": "battle AI: personality table"
+  "title": "battle AI: personality table",
+  "dir": "data"
  },
  "07": {
   "file": "link_title",
-  "title": "link cable sessions and the title screen (game mode 5)"
+  "title": "link cable sessions and the title screen (game mode 5)",
+  "dir": "engine"
  },
  "08": {
   "file": "strings_08",
-  "title": "string tables: system text, monster, skill and item names"
+  "title": "string tables: system text, monster, skill and item names",
+  "dir": "text"
  },
  "09": {
   "file": "strings_09",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "0A": {
   "file": "encounters",
-  "title": "random encounters: encounter groups and grids, battle intro"
+  "title": "random encounters: encounter groups and grids, battle intro",
+  "dir": "engine"
  },
  "0B": {
   "file": "strings_0b",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "0C": {
   "file": "library_arena",
-  "title": "the monster library and the arena; script helpers"
+  "title": "the monster library and the arena; script helpers",
+  "dir": "engine"
  },
  "0D": {
   "file": "medals_eggs_keys",
-  "title": "TinyMedal prizes, egg appraisal and blessing, key appraisal"
+  "title": "TinyMedal prizes, egg appraisal and blessing, key appraisal",
+  "dir": "engine"
  },
  "0E": {
   "file": "breeding_data",
-  "title": "breeding tables: species pair rules and family results; message bank $0E"
+  "title": "breeding tables: species pair rules and family results; message bank $0E",
+  "dir": "data"
  },
  "0F": {
   "file": "scenes_0f",
-  "title": "story scenes: Darck, the homecoming, the mermaid and others"
+  "title": "story scenes: Darck, the homecoming, the mermaid and others",
+  "dir": "engine"
  },
  "10": {
   "file": "scripts",
-  "title": "event script engine: command fetch and handlers, scripts"
+  "title": "event script engine: command fetch and handlers, scripts",
+  "dir": "scripts"
  },
  "11": {
   "file": "maps",
-  "title": "map records and warps"
+  "title": "map records and warps",
+  "dir": "maps"
  },
  "12": {
   "file": "field_objects",
-  "title": "field objects and paths, key-world field code, arena rounds"
+  "title": "field objects and paths, key-world field code, arena rounds",
+  "dir": "engine"
  },
  "13": {
   "file": "talk",
-  "title": "talk events: messages by region (GreatLog, Norden and others), chests"
+  "title": "talk events: messages by region (GreatLog, Norden and others), chests",
+  "dir": "engine"
  },
  "14": {
   "file": "names_hibernate",
-  "title": "name entry, default and suggested names, hibernation"
+  "title": "name entry, default and suggested names, hibernation",
+  "dir": "engine"
  },
  "15": {
   "file": "breed_menu",
-  "title": "the breeding menu"
+  "title": "the breeding menu",
+  "dir": "engine"
  },
  "16": {
   "file": "items_battle_end",
-  "title": "item use (usable and apply routines) and the end of a battle"
+  "title": "item use (usable and apply routines) and the end of a battle",
+  "dir": "engine"
  },
  "17": {
   "file": "sgb",
-  "title": "Super Game Boy packets and border"
+  "title": "Super Game Boy packets and border",
+  "dir": "engine"
  },
  "18": {
   "file": "sgb_border",
-  "title": "Super Game Boy border data"
+  "title": "Super Game Boy border data",
+  "dir": "gfx"
  },
  "19": {
   "file": "battle_load",
-  "title": "battle loading (game mode 4 set-up)"
+  "title": "battle loading (game mode 4 set-up)",
+  "dir": "engine"
  },
  "1A": {
   "file": "skill_prereqs",
-  "title": "skill prerequisites; tile rectangles"
+  "title": "skill prerequisites; tile rectangles",
+  "dir": "data"
  },
  "1B": {
   "file": "link_eggs",
-  "title": "link key exchange, egg service, link screens"
+  "title": "link key exchange, egg service, link screens",
+  "dir": "engine"
  },
  "1C": {
   "file": "shops_vault_inn",
-  "title": "shops, the vault and the inn; item names"
+  "title": "shops, the vault and the inn; item names",
+  "dir": "engine"
  },
  "1D": {
   "file": "vault_scripts",
-  "title": "the vault menu, scripts and glyph tiles"
+  "title": "the vault menu, scripts and glyph tiles",
+  "dir": "engine"
  },
  "1E": {
   "file": "swap_menu",
-  "title": "the monster swap menu"
+  "title": "the monster swap menu",
+  "dir": "engine"
  },
  "1F": {
   "file": "font_scripts",
-  "title": "the font, scripts, strings and SGB data"
+  "title": "the font, scripts, strings and SGB data",
+  "dir": "data"
  },
  "20": {
   "file": "monster_sprites_20",
-  "title": "compressed monster sprites"
+  "title": "compressed monster sprites",
+  "dir": "gfx"
  },
  "21": {
   "file": "monster_sprites_21",
-  "title": "compressed monster sprites"
+  "title": "compressed monster sprites",
+  "dir": "gfx"
  },
  "22": {
   "file": "monster_sprites_22",
-  "title": "compressed monster sprites"
+  "title": "compressed monster sprites",
+  "dir": "gfx"
  },
  "23": {
   "file": "monster_sprites_23",
-  "title": "compressed monster sprites"
+  "title": "compressed monster sprites",
+  "dir": "gfx"
  },
  "24": {
   "file": "link_priest",
-  "title": "link mode (game mode 6), item descriptions, the priest"
+  "title": "link mode (game mode 6), item descriptions, the priest",
+  "dir": "engine"
  },
  "25": {
   "file": "metasprites_25",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "26": {
   "file": "metasprites_26",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "27": {
   "file": "metasprites_27",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "28": {
   "file": "messages_28",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "29": {
   "file": "messages_29",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2A": {
   "file": "messages_2a",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2B": {
   "file": "messages_2b",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2C": {
   "file": "messages_2c",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2D": {
   "file": "messages_2d",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2E": {
   "file": "messages_2e",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "2F": {
   "file": "battle_text",
-  "title": "battle text"
+  "title": "battle text",
+  "dir": "text"
  },
  "30": {
   "file": "battle_commands",
-  "title": "battle commands and personality rolls"
+  "title": "battle commands and personality rolls",
+  "dir": "engine"
  },
  "31": {
   "file": "battle_phases",
-  "title": "battle phases, the end of a battle, slot drawing"
+  "title": "battle phases, the end of a battle, slot drawing",
+  "dir": "engine"
  },
  "32": {
   "file": "battle_actions",
-  "title": "battle action steps and resolve steps"
+  "title": "battle action steps and resolve steps",
+  "dir": "engine"
  },
  "33": {
   "file": "link_33",
-  "title": "link sessions; strings"
+  "title": "link sessions; strings",
+  "dir": "engine"
  },
  "34": {
   "file": "monster_table",
-  "title": "the monster table"
+  "title": "the monster table",
+  "dir": "data"
  },
  "35": {
   "file": "species",
-  "title": "species records"
+  "title": "species records",
+  "dir": "data"
  },
  "36": {
   "file": "battle_effects",
-  "title": "battle action resolution and skill effects (ActionEffect_*)"
+  "title": "battle action resolution and skill effects (ActionEffect_*)",
+  "dir": "engine"
  },
  "37": {
   "file": "link_37",
-  "title": "link sessions; strings"
+  "title": "link sessions; strings",
+  "dir": "engine"
  },
  "38": {
   "file": "monster_pictures",
-  "title": "monster picture and attribute tables"
+  "title": "monster picture and attribute tables",
+  "dir": "gfx"
  },
  "39": {
   "file": "battle_targets",
-  "title": "battle target choice"
+  "title": "battle target choice",
+  "dir": "engine"
  },
  "3A": {
   "file": "battle_effect_steps",
-  "title": "battle effect steps and battle text hooks"
+  "title": "battle effect steps and battle text hooks",
+  "dir": "engine"
  },
  "3B": {
   "file": "battle_misc",
-  "title": "battle helpers; meta-sprites"
+  "title": "battle helpers; meta-sprites",
+  "dir": "data"
  },
  "3C": {
   "file": "battle_effect_gfx",
-  "title": "battle effect graphics"
+  "title": "battle effect graphics",
+  "dir": "gfx"
  },
  "3D": {
   "file": "metasprites_3d",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "3E": {
   "file": "metasprites_3e",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "3F": {
   "file": "metasprites_3f",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "40": {
   "file": "sound_40",
-  "title": "sound tracks"
+  "title": "sound tracks",
+  "dir": "audio"
  },
  "41": {
   "file": "sound_41",
-  "title": "sound tracks"
+  "title": "sound tracks",
+  "dir": "audio"
  },
  "42": {
   "file": "sound_42",
-  "title": "sound tracks"
+  "title": "sound tracks",
+  "dir": "audio"
  },
  "43": {
   "file": "sound_43",
-  "title": "sound tracks"
+  "title": "sound tracks",
+  "dir": "audio"
  },
  "44": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "45": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "46": {
   "file": "maps_46",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "47": {
   "file": "maps_47",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "48": {
   "file": "maps_48",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "49": {
   "file": "maps_49",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4A": {
   "file": "maps_4a",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4B": {
   "file": "maps_4b",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4C": {
   "file": "maps_4c",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4D": {
   "file": "maps_4d",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4E": {
   "file": "maps_4e",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "4F": {
   "file": "maps_4f",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "50": {
   "file": "maps_50",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "51": {
   "file": "maps_51",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "52": {
   "file": "maps_52",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "53": {
   "file": "maps_53",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "54": {
   "file": "maps_54",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "55": {
   "file": "maps_55",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "56": {
   "file": "maps_56",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "57": {
   "file": "maps_57",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "58": {
   "file": "maps_58",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "59": {
   "file": "maps_59",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "5A": {
   "file": "maps_5a",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "5B": {
   "file": "maps_5b",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "5C": {
   "file": "maps_5c",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "5D": {
   "file": "world_map",
-  "title": "the world map"
+  "title": "the world map",
+  "dir": "maps"
  },
  "5E": {
   "file": "maps_5e",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "5F": {
   "file": "scenes_5f",
-  "title": "scene and message scripts; map data"
+  "title": "scene and message scripts; map data",
+  "dir": "engine"
  },
  "60": {
   "file": "key_worlds",
-  "title": "key worlds: random rooms and the debug automap"
+  "title": "key worlds: random rooms and the debug automap",
+  "dir": "engine"
  },
  "61": {
   "file": "special_maps",
-  "title": "special maps, warps and map loading"
+  "title": "special maps, warps and map loading",
+  "dir": "engine"
  },
  "62": {
   "file": "key_world_maps_62",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "63": {
   "file": "key_world_maps_63",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "64": {
   "file": "key_world_maps_64",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "65": {
   "file": "key_world_maps_65",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "66": {
   "file": "key_world_maps_66",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "67": {
   "file": "key_world_data_67",
-  "title": "key-world data"
+  "title": "key-world data",
+  "dir": "maps"
  },
  "68": {
   "file": "key_world_maps_68",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "69": {
   "file": "map_objects",
-  "title": "map object lists and selectors"
+  "title": "map object lists and selectors",
+  "dir": "maps"
  },
  "6A": {
   "file": "special_maps_6a",
-  "title": "special map screens"
+  "title": "special map screens",
+  "dir": "maps"
  },
  "6B": {
   "file": "special_maps_6b",
-  "title": "special map screens"
+  "title": "special map screens",
+  "dir": "maps"
  },
  "6C": {
   "file": "special_maps_6c",
-  "title": "special map screens"
+  "title": "special map screens",
+  "dir": "maps"
  },
  "6D": {
   "file": "key_world_maps_6d",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "6E": {
   "file": "key_world_maps_6e",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "6F": {
   "file": "key_world_maps_6f",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "70": {
   "file": "key_world_maps_70",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "71": {
   "file": "key_world_maps_71",
-  "title": "key-world map screens"
+  "title": "key-world map screens",
+  "dir": "maps"
  },
  "72": {
   "file": "key_world_data_72",
-  "title": "key-world data"
+  "title": "key-world data",
+  "dir": "maps"
  },
  "73": {
   "file": "greatlog_scenes",
-  "title": "GreatLog events and story scenes, reward items"
+  "title": "GreatLog events and story scenes, reward items",
+  "dir": "engine"
  },
  "74": {
   "file": "monster_pics_74",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "75": {
   "file": "monster_pics_75",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "76": {
   "file": "monster_pics_76",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "77": {
   "file": "monster_pics_77",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "78": {
   "file": "monster_pics_78",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "79": {
   "file": "monster_pics_79",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "7A": {
   "file": "monster_pics_7a",
-  "title": "compressed monster pictures"
+  "title": "compressed monster pictures",
+  "dir": "gfx"
  },
  "7B": {
   "file": "monster_pics_7b",
-  "title": "compressed monster pictures and palettes"
+  "title": "compressed monster pictures and palettes",
+  "dir": "gfx"
  },
  "7C": {
   "file": "messages_7c",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "7D": {
   "file": "field_sprites",
-  "title": "field sprites"
+  "title": "field sprites",
+  "dir": "gfx"
  },
  "7E": {
   "file": "field_gfx",
-  "title": "field graphics, sprites and palettes"
+  "title": "field graphics, sprites and palettes",
+  "dir": "gfx"
  },
  "7F": {
   "file": "metasprites_7f",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "80": {
   "file": "messages_80",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "81": {
   "file": "species_pairs",
-  "title": "species pair tables and EXP curves"
+  "title": "species pair tables and EXP curves",
+  "dir": "data"
  },
  "82": {
   "file": "messages_82",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "83": {
   "file": "strings_83",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "84": {
   "file": "key_world_debug",
-  "title": "key-world helpers and debug field code"
+  "title": "key-world helpers and debug field code",
+  "dir": "engine"
  },
  "85": {
   "file": "scenes_85",
-  "title": "story scenes: Limbo, the watch and others"
+  "title": "story scenes: Limbo, the watch and others",
+  "dir": "engine"
  },
  "86": {
   "file": "messages_86",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "87": {
   "file": "map_interactions",
-  "title": "map interactions and steps"
+  "title": "map interactions and steps",
+  "dir": "data"
  },
  "88": {
   "file": "strings_88",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "89": {
   "file": "messages_89",
-  "title": "messages"
+  "title": "messages",
+  "dir": "text"
  },
  "8A": {
   "file": "strings_8a",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "8B": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "8C": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "8D": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "8E": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "8F": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "90": {
   "file": "maps_90",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "91": {
   "file": "sprites_effects",
-  "title": "monster sprites and battle effect graphics"
+  "title": "monster sprites and battle effect graphics",
+  "dir": "gfx"
  },
  "92": {
   "file": "metasprites_92",
-  "title": "meta-sprite frames"
+  "title": "meta-sprite frames",
+  "dir": "gfx"
  },
  "93": {
   "file": "maps_93",
-  "title": "map screens, attributes and tilesets"
+  "title": "map screens, attributes and tilesets",
+  "dir": "maps"
  },
  "94": {
   "file": "special_maps_94",
-  "title": "special map screens"
+  "title": "special map screens",
+  "dir": "maps"
  },
  "95": {
   "file": "strings_95",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "96": {
   "file": "strings_96",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "97": {
   "file": "strings_97",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "98": {
   "file": "strings_98",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "99": {
   "file": "strings_99",
-  "title": "string tables"
+  "title": "string tables",
+  "dir": "text"
  },
  "9A": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "9B": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "9C": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "9D": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "9E": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "9F": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A0": {
   "file": "battle_turns",
-  "title": "battle turns, encounter bands, game mode 7"
+  "title": "battle turns, encounter bands, game mode 7",
+  "dir": "engine"
  },
  "A1": {
   "file": "world_map_code",
-  "title": "the world map and game-mode helpers"
+  "title": "the world map and game-mode helpers",
+  "dir": "engine"
  },
  "A2": {
   "file": "strings_a2",
-  "title": "strings and monster loading"
+  "title": "strings and monster loading",
+  "dir": "text"
  },
  "A3": {
   "file": "battle_helpers",
-  "title": "battle helpers: battler stats, personality index"
+  "title": "battle helpers: battler stats, personality index",
+  "dir": "data"
  },
  "A4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "A9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AD": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "AF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B0": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B1": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B2": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B3": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "B9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BD": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "BF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C0": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C1": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C2": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C3": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "C9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CD": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "CF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D0": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D1": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D2": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D3": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "D9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DD": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "DF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E0": {
   "file": "debug_staff",
-  "title": "debug: staff roll and debug screens"
+  "title": "debug: staff roll and debug screens",
+  "dir": "engine"
  },
  "E1": {
   "file": "screens_e1",
-  "title": "screen graphics, tiles and palettes"
+  "title": "screen graphics, tiles and palettes",
+  "dir": "engine"
  },
  "E2": {
   "file": "battle_ai_scores_b",
-  "title": "battle AI: the second set of scoring routines"
+  "title": "battle AI: the second set of scoring routines",
+  "dir": "engine"
  },
  "E3": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "E9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "EA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "EB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "EC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "ED": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "EE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "EF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F0": {
   "file": "link_gifts",
-  "title": "link sessions, family bands, gift effects"
+  "title": "link sessions, family bands, gift effects",
+  "dir": "engine"
  },
  "F1": {
   "file": "screens_f1",
-  "title": "screens, item lists and pause-menu helpers"
+  "title": "screens, item lists and pause-menu helpers",
+  "dir": "engine"
  },
  "F2": {
   "file": "screens_f2",
-  "title": "screens and game mode 8"
+  "title": "screens and game mode 8",
+  "dir": "engine"
  },
  "F3": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F4": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F5": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F6": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F7": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F8": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "F9": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FA": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FB": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FC": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FD": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FE": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  },
  "FF": {
   "file": "empty",
-  "title": "empty (all bytes $00 or $FF)"
+  "title": "empty (all bytes $00 or $FF)",
+  "dir": "unused"
  }
 }

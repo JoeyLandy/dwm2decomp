@@ -4,7 +4,7 @@
   explore.py play  BUTTON...      boot, then press each button; screenshots in build/shots/
   explore.py modes                boot, force wGameMode = 0..8 and screenshot each (build/shots/)
   explore.py scene BUTTON...      boot, press the buttons, then list the functions that run in
-                                  the next 1.5 million instructions (names from src/banks)
+                                  the next 1.5 million instructions (names from the bank files in src/)
 
 Buttons: right left up down a b select start. Screenshots come from tools/render_frame.py, which
 draws once per frame and ignores per-scanline effects. The reference ROM is read from

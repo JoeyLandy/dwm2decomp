@@ -19,7 +19,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | File | Holds |
 | --- | --- |
 | `src/main.asm` | The include list: definitions first, then the 256 bank files in order. |
-| `src/banks/bankNN_<topic>.asm` | One ROM bank each, named and headed by what it holds (`bank00_home.asm`, `bank36_battle_effects.asm`, `bank2f_battle_text.asm`). The topics are in `config/banks.json`. |
+| `src/<dir>/bankNN_<topic>.asm` | One ROM bank each, named and headed by what it holds and kept in a directory by kind, as in pokered (D-010):<br>`home/` (bank 0);<br>`engine/` (mostly code: `engine/bank36_battle_effects.asm`);<br>`scripts/` (the event scripts);<br>`text/` (messages and strings: `text/bank2f_battle_text.asm`);<br>`data/` (tables);<br>`maps/` (maps, key worlds, map objects);<br>`gfx/` (sprites, pictures, tile sets);<br>`audio/` (sound tracks);<br>`unused/` (the empty banks).<br>The topics and directories are in `config/banks.json`. |
 | `src/ram.asm` | Names for work RAM (`w...`), high RAM (`h...`) and save RAM (`s...`) addresses, each with a note. |
 | `src/records.inc` | Field offsets inside the game's records: `MON_*` (a monster in the save, $A5 bytes), `BATTLER_*` (a monster in battle), `SPECIES_*`, `OBJ_*` (a field object), and `RESIST_*`, the 27 resistances. Code names a field as `ld c, MON_LEVEL` before a record-access routine. |
 | `src/constants.inc` | Named ids made from the ROM's own name tables: `MONSTER_DRACKY`, `SKILL_DEMAGIC`, `ITEM_HERB`, and `ACTION_FIGHT` for the plain attack. Code compares battle actions by name (`cp SKILL_DEMAGIC`), and data tables list skills and monsters by name (`db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills`). |
@@ -27,7 +27,7 @@ This guide explains how `src/` is laid out and how to read it. The style follows
 | `src/charmap.inc` | The text encoding: characters, and the text printer's commands as `<TOKENS>`. |
 | `src/constants.inc` (continued) | Story flags as `EVENT_*`, named after what sets them (`EVENT_THANKS_FOR_COMING_BY` is set by the talk routine that says it; the comment names the setter), and battle status bits as `BSTAT<byte>_<NAME>` (`bit BSTAT0_ASLEEP, [hl]` on `wBattleStatus`). |
 | `src/assets.txt` | The asset files the source includes by name (`INCBIN "gfx/monster_sprites/drak_slime.lz"`, `maps/map00/screens0_y1_x1.bin`, ...): each one's offset and length in the original ROM. The build extracts them from your copy of the ROM into its own directory, so no game data is stored in the repository. `.lz` files are compressed with the game's LZSS scheme (`tools/lzss_gfx.py`). |
-| `src/hardware.inc` | Game Boy hardware register names. |
+| `src/hardware.inc` | Game Boy hardware register names, each with what the register does. |
 
 The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit the config, not `src/`. Every run also writes an annotated listing to `build/listing/bankNN.asm`, with each label's address, the heuristic that found it, its callers, and the RAM it reads and writes. Use it when the source alone is not enough.
 

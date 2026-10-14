@@ -8,10 +8,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 import describe  # noqa: E402
 import doc_coverage  # noqa: E402
 
-FILES = sorted((ROOT / "src/banks").glob("bank*.asm"))
+import present  # noqa: E402
+
+FILES = present.bank_files()
 
 
-@unittest.skipUnless(FILES, "src/banks has not been presented (tools/disasm_all.py)")
+@unittest.skipUnless(FILES, "src/ has not been presented (tools/disasm_all.py)")
 class Coverage(unittest.TestCase):
     def test_every_label_is_documented(self):
         missing = []
@@ -98,7 +100,7 @@ ret"""), [])
 
     def test_registers_are_not_ram(self):
         s = describe.summarize("X", self.body("ld [de], a\nld [hl], a\nret"), [])
-        self.assertEqual(s, "Works on registers only")
+        self.assertEqual(s, "Takes HL, DE and A")  # pointers and a value, but no RAM symbol
 
     def test_a_stale_caller_is_not_cited(self):
         s = describe.summarize("X", self.body("ret"), ["; only called from GoneRoutine (E-0047)"], {"Other"})

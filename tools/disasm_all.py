@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Whole-ROM recursive-descent disassembler: regenerates the annotated listing build/listing/bankNN.asm and,
-through tools/present.py, the reader-facing src/banks/bankNN.asm.
+through tools/present.py, the reader-facing src/<dir>/bankNN_<name>.asm (D-010).
 
 Starts from the reset/interrupt/RST vectors and the cartridge entry in bank 0,
 follows jumps/calls, and mines two game idioms found in bank 0 (C1, local
@@ -15,7 +15,7 @@ execution and names carry no semantics.
 
 Usage: disasm_all.py [--stats] [--quiet] [--no-text] [--export-streams PATH.json]
   --no-text keeps prose as opaque INCBIN data instead of rendering it as db strings.
-Progress goes to stderr. All banks are rendered in memory first; build/listing/*.asm, src/banks/*.asm
+Progress goes to stderr. All banks are rendered in memory first; build/listing/*.asm, src/<dir>/bank*.asm
 and src/main.asm are written only after the whole analysis succeeds, so an
 interrupted run leaves the previous generated tree untouched.
 """
@@ -6584,9 +6584,9 @@ def main() -> int:
     texts, events, nev = name_story_flags(texts, {int(k, 16): v["name"] for k, v in flag_cfg.items()})
     log(f"story flags named: {len(events)}, {nev} uses")
 
-    out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
+    out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/<dir>/ from it
     out.mkdir(parents=True, exist_ok=True)
-    log(f"writing {len(texts)} bank files to build/listing, then src/banks and src/main.asm")
+    log(f"writing {len(texts)} bank files to build/listing, then src/<dir>/ and src/main.asm")
     (out / "step_names.json").write_text(json.dumps(getattr(name_steps_by_text, "renames", {}), indent=0),
                                          encoding="utf-8")
     tot_code = 0

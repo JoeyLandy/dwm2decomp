@@ -1,6 +1,6 @@
 """Readability measures of the presented source (src/): how much of it still reads as machine output.
 
-Counts, over src/banks and src/ram.asm:
+Counts, over the bank files in src/ (src/<dir>/bankNN_*.asm) and src/ram.asm:
 - global labels, and those whose name is structural or mechanical: a `_CaseNN`/`_SubNN`/`_TableN` part, an `Etc`
   suffix, a raw hex address or byte in the name (`..._Data_46EE`, `wResolveByte81`), or a `_BankNN` copy suffix;
 - RAM symbols, and those that spell an address or byte number (`wSlotFlags854`, `wUnk...`, `...ByteNN`);
@@ -26,7 +26,7 @@ RAM_MECH = re.compile(r"[A-Za-z](?=[0-9A-F]{0,3}\d)[0-9A-F]{2,4}(?:$|[A-Z_])|Byt
 
 
 def measure() -> dict:
-    texts = [p.read_text(encoding="utf-8") for p in sorted((ROOT / "src/banks").glob("bank*.asm"))]
+    texts = [p.read_text(encoding="utf-8") for p in sorted(ROOT.glob("src/*/bank[0-9a-f][0-9a-f]_*.asm"))]
     labels = [m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)]
     mech = [n for n in labels if STRUCT.search(n)]
     # no description at all: only a parent and structural parts (Parent_Case05, Parent_Sub01_Table2_Case00)

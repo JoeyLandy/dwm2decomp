@@ -91,7 +91,7 @@ class StatusBitsInBattleTest(unittest.TestCase):
 
     @staticmethod
     def _find(words: str) -> tuple[int, int]:
-        t = next((ROOT / "src" / "banks").glob("bank2f_*.asm")).read_text(encoding="utf-8")
+        t = next(ROOT.glob("src/*/bank2f_*.asm")).read_text(encoding="utf-8")
         for m in re.finditer(r"^String_2F_(\d\d)_([0-9A-F]{2})::\n((?:    db .*\n)+)", t, re.M):
             body = " ".join(re.findall(r'"([^"]*)"', m.group(3)))
             if words in re.sub(r"<[A-Z_0-9]+>", " ", body).replace("  ", " "):

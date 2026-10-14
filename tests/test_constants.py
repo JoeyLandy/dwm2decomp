@@ -38,14 +38,14 @@ class ConstantsTest(unittest.TestCase):
         inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
         self.assertIn("DEF SKILL_DEMAGIC EQU $83", inc)
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8")
-        self.assertLess(main.index('INCLUDE "constants.inc"'), main.index('INCLUDE "banks/bank00'))
-        text = "\n".join(p.read_text(encoding="utf-8") for p in (ROOT / "src" / "banks").glob("bank3*.asm"))
+        self.assertLess(main.index('INCLUDE "constants.inc"'), main.index('INCLUDE "home/bank00'))
+        text = "\n".join(p.read_text(encoding="utf-8") for p in ROOT.glob("src/*/bank3*.asm"))
         self.assertIn("cp SKILL_DEMAGIC", text)  # ResolveStepBranchOnAction: $83 DeMagic
         self.assertIn("db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills", text)
 
     def test_indexed_cases_sit_at_their_id(self):
         """E-0342: ApplyEquipmentEffect_<Item> is entry (item id - $40) of ApplyEquipmentEffectKeepA_ByItem."""
-        text = next((ROOT / "src" / "banks").glob("bank*_items_battle_end.asm")).read_text(encoding="utf-8")
+        text = next(ROOT.glob("src/*/bank*_items_battle_end.asm")).read_text(encoding="utf-8")
         m = re.search(r"^ApplyEquipmentEffectKeepA_ByItem::\n(?:.*\n)*?\s+jumptable\n((?:\s+dw \w+\n)+)", text, re.M)
         entries = re.findall(r"dw (\w+)", m.group(1))
         named = [(k, e) for k, e in enumerate(entries) if e.startswith("ApplyEquipmentEffect_")]

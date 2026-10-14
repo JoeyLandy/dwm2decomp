@@ -1,4 +1,4 @@
-"""Measure how much of src/banks is documented (the pokered baseline: every routine and table has a comment).
+"""Measure how much of the bank files in src/ is documented (the pokered baseline: every routine and table has a comment).
 
 A code label is documented when a `;` comment block sits directly above it. A data label is documented
 when it has its own comment, when its body is text (`db "..."`: the text is its documentation, as in pokered),
@@ -11,9 +11,12 @@ db/dw/INCBIN or a data macro (script_*, objsel_*, ...). Comments that admit a ga
 """
 import argparse
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+import present  # noqa: E402
 DATA_FIRST = re.compile(r"^\s+(?:(?:db|dw|dl|dfar|ds|INCBIN|dbw|dwb|bigdw|dn|d24)\b|(?:script|objsel|text|sound|snd)_\w+)")
 GAP = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")  # in code notes
 
@@ -41,7 +44,7 @@ def main() -> None:
     ap.add_argument("--list", choices=("code", "data", "gaps", "stale"))
     ap.add_argument("--bank")
     args = ap.parse_args()
-    files = sorted((ROOT / "src/banks").glob("bank*.asm"))
+    files = present.bank_files()
     if args.bank:
         files = [f for f in files if f.name.startswith(f"bank{args.bank.lower()}")]
     tot = {"code": [0, 0], "data": [0, 0]}
@@ -77,7 +80,7 @@ def stale_names(files) -> "collections.Counter":
     """Label-like words in comments (CamelCase with an underscore, or three humps) that name nothing in src/."""
     import collections
     known: set[str] = set()
-    for f in (ROOT / "src/banks").glob("bank*.asm"):
+    for f in present.bank_files():
         known |= set(re.findall(r"^([A-Za-z_]\w*)::", f.read_text(encoding="utf-8"), re.M))
     for f in ("ram.asm", "constants.inc", "hardware.inc", "macros.inc", "charmap.inc"):
         q = ROOT / "src" / f
@@ -86,7 +89,7 @@ def stale_names(files) -> "collections.Counter":
             known |= set(re.findall(r"^(?:DEF|MACRO) (\w+)", t, re.M)) | set(re.findall(r"^(\w+)::?", t, re.M))
     # game words (skill, item and monster names, menu text) are not labels: those that appear in the text
     # data or in the id constants' comments
-    for f in (ROOT / "src/banks").glob("bank*.asm"):
+    for f in present.bank_files():
         for q in re.findall(r'db "([^"]*)"', f.read_text(encoding="utf-8")):
             known |= set(re.findall(r"[A-Za-z0-9]+", q))
     known |= set(re.findall(r"; (\w+)$", (ROOT / "src/constants.inc").read_text(encoding="utf-8"), re.M))

@@ -350,9 +350,16 @@ def bank_titles() -> dict[int, dict]:
 
 
 def src_name(listing_name: str, titles: dict[int, dict]) -> str:
-    """bank36.asm -> bank36_battle_effects.asm"""
+    """bank36.asm -> engine/bank36_battle_effects.asm: the file under src/, in its directory (D-006, D-010)."""
     b = int(listing_name[4:6], 16)
-    return f"bank{b:02x}_{titles[b]['file']}.asm" if b in titles else listing_name
+    if b not in titles:
+        return listing_name
+    return f"{titles[b].get('dir', 'banks')}/bank{b:02x}_{titles[b]['file']}.asm"
+
+
+def bank_files(root: Path = ROOT) -> list[Path]:
+    """The presented bank files, wherever their directory puts them (D-010)."""
+    return sorted(root.glob("src/*/bank[0-9a-f][0-9a-f]_*.asm"), key=lambda p: p.name)
 
 
 def header(listing_name: str, titles: dict[int, dict]) -> str:
@@ -363,8 +370,7 @@ def header(listing_name: str, titles: dict[int, dict]) -> str:
 
 def main(argv: list[str]) -> int:
     src = Path(argv[0]) if argv else ROOT / "build/listing"
-    dest = ROOT / "src/banks"
-    dest.mkdir(parents=True, exist_ok=True)
+    dest = ROOT / "src"
     texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(src.glob("bank*.asm"))}
     names = Names(texts)
     titles = bank_titles()
@@ -372,22 +378,29 @@ def main(argv: list[str]) -> int:
     ASSETS.clear()
     for name, text in texts.items():
         out = src_name(name, titles)
+        (dest / out).parent.mkdir(parents=True, exist_ok=True)
         (dest / out).write_text(header(name, titles) + present(text, names, int(name[4:6], 16)), encoding="utf-8", newline="\n")
         written.append(out)
-    for stale in set(p.name for p in dest.glob("bank*.asm")) - set(written):
-        (dest / stale).unlink()  # a bank file under an earlier name
+    for stale in {p.relative_to(dest).as_posix() for p in bank_files()} - set(written):
+        (dest / stale).unlink()  # a bank file under an earlier name or directory
+    old = dest / "banks"  # before D-010 every bank file lived here
+    if old.is_dir():
+        for p in old.glob("bank*.asm"):
+            p.unlink()
+        if not any(old.iterdir()):
+            old.rmdir()
     main_asm = ROOT / "src/main.asm"
     lines = main_asm.read_text(encoding="utf-8").split("\n")
     out_lines = []
     for ln in lines:
-        m = re.match(r'INCLUDE "banks/(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
-        out_lines.append(f'INCLUDE "banks/{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
+        m = re.match(r'INCLUDE "(?:\w+/)?(bank[0-9a-f]{2})(?:_\w+)?\.asm"', ln)
+        out_lines.append(f'INCLUDE "{src_name(m.group(1) + ".asm", titles)}"' if m else ln)
     main_asm.write_text("\n".join(out_lines), encoding="utf-8", newline="\n")
     (ROOT / "src/assets.txt").write_text(
         "# D-008: the asset files src/ includes, as slices of the reference ROM: path, file offset, length.\n"
         "# tools/build.py extracts them from local/roms/ into the build directory; they are never tracked.\n"
         + "".join(f"{p}\t${o:06X}\t${n:X}\n" for p, (o, n) in sorted(ASSETS.items())), encoding="utf-8", newline="\n")
-    print(f"presented {len(texts)} bank files from {src} into {dest}")
+    print(f"presented {len(texts)} bank files from {src} into {dest}/<dir>/")
     return 0
 
 

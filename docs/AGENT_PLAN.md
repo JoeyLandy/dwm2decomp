@@ -1,5 +1,7 @@
 # Agent work plan (from 2026-10-10)
 
+> **Superseded (2026-10-13).** This plan predates D-005 and D-010. Address names such as `Func_BBB_AAAA` now appear only in the annotated listing (`build/listing/bankNN.asm`). The reader-facing source is `src/<dir>/bankNN_<topic>.asm`, where every label is named and documented. For the current state and measures, see [PROJECT_STATUS.md](PROJECT_STATUS.md) and `tools/readability.py` / `tools/doc_coverage.py`. The working habits below still apply; the paths and counts are historical.
+
 This plan is for the agent that continues the naming work. Follow `AGENTS.md` first. This file only covers order of work and working habits.
 
 ## Where things stand

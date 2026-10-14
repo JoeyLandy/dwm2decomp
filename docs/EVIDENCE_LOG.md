@@ -2431,6 +2431,25 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0349 — Bank files in pokered-style directories (D-010); register flow in summaries
+
+- Kind: DECISION (D-010) and presentation. The assembled bytes do not change.
+- **D-010.** pokered keeps its source in directories by kind (home/, engine/, data/, text/, audio/, gfx/, maps/). The 256 bank files now live in `src/<dir>/bankNN_<topic>.asm`.
+  - The directory of each bank is the `dir` field of config/banks.json. It was set once, by script, from the bank's file name and contents:
+    - home: bank 0;
+    - audio: the sound banks;
+    - text: banks named messages, strings or battle text;
+    - engine: at least half code;
+    - scripts: more than 30% script commands;
+    - maps: maps, key worlds, map objects and the world map;
+    - gfx: sprites, pictures, tile sets, the SGB border, or more than 30% INCBIN;
+    - data: everything else;
+    - unused: the 99 empty banks.
+  - Result: home 1, engine 44, scripts 1, text 25, data 10, maps 46, gfx 26, audio 4, unused 99.
+  - tools/present.py writes the files there and updates src/main.asm's INCLUDE lines. `present.bank_files()` lists them for tools and tests. src/banks/ is removed.
+- **Register flow.** A generated summary that names only control flow ("may return early", "continues in X") now says which registers the routine takes and changes, in straight-line order ("takes DE and A; changes A; may return early"). It is the input and output note pokered gives its helpers. A lone `jp X` reads "continues in X".
+- Binary verification: build/run536 PASS, 0 differing bytes.
+
 ### E-0348 — Pointer operands named where their bank is clear; byte pairs written with lb
 
 - Kind: generator rules (C1, same-bank reading) and presentation. The assembled bytes do not change.

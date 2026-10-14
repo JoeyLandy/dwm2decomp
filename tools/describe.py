@@ -44,6 +44,111 @@ def _quote(text: str, words: int = 6) -> str:
     return "'" + " ".join(ws[:words]) + ("...'" if len(ws) > words else "'")
 
 
+PAIRS = {"af": "af", "bc": "bc", "de": "de", "hl": "hl", "sp": ""}
+SINGLE = set("abcdehl")
+
+
+def _regs(operand: str) -> set[str]:
+    """Single registers an operand names (pairs expand), including the pointer inside [..]."""
+    o = operand.strip().lower()
+    out: set[str] = set()
+    for tok in re.findall(r"\b(af|bc|de|hl|hli|hld|sp|[abcdehl])\b", o):
+        tok = {"hli": "hl", "hld": "hl"}.get(tok, tok)
+        out |= set(PAIRS.get(tok, tok)) if len(tok) == 2 else {tok}
+    out.discard("f")
+    out.discard("p")
+    out.discard("s")
+    return out
+
+
+def register_flow(body: list[str]) -> tuple[list[str], list[str]]:
+    """(inputs, outputs): registers read before the routine writes them, and registers it writes, in straight-line
+    order (branches are read as falling through; a call ends the input scan, since its effects are not known)."""
+    written: set[str] = set()
+    inputs: list[str] = []
+    outputs: list[str] = []
+    calls = False
+
+    def read(rs):
+        for r in sorted(rs):
+            if r not in written and r not in inputs and not calls:
+                inputs.append(r)
+
+    def write(rs):
+        for r in sorted(rs):
+            written.add(r)
+            if r not in outputs:
+                outputs.append(r)
+    for ln in body:
+        c = _code(ln)
+        if not c or c.endswith(":"):
+            continue
+        op, _, rest = c.partition(" ")
+        args = [x.strip() for x in rest.split(",")] if rest else []
+        if op in ("ld", "ldh") and len(args) == 2:
+            dst, src = args
+            read(_regs(src))
+            if dst.startswith("["):
+                read(_regs(dst))
+                if re.search(r"\[hl[id+-]", dst + "]") or "hli" in dst or "hld" in dst:
+                    write({"h", "l"})
+            else:
+                write(_regs(dst))
+            if "hli" in src or "hld" in src:
+                write({"h", "l"})
+        elif op == "lb" and args:
+            write(_regs(args[0]))
+        elif op in ("inc", "dec", "swap", "srl", "sla", "sra", "rl", "rr", "rlc", "rrc") and args:
+            read(_regs(args[0]))
+            if not args[0].startswith("["):
+                write(_regs(args[0]))
+        elif op in ("add", "adc", "sub", "sbc", "and", "or", "xor", "cp"):
+            if len(args) == 2 and args[0] == "hl":
+                read({"h", "l"} | _regs(args[1]))
+                write({"h", "l"})
+            else:
+                read({"a"} | (_regs(args[-1]) if args else set()))
+                if op != "cp" and not (op in ("xor", "sub") and args in (["a"], ["a", "a"])):
+                    write({"a"})
+                elif op in ("xor", "sub"):
+                    write({"a"})
+        elif op in ("bit",) and len(args) == 2:
+            read(_regs(args[1]))
+        elif op in ("set", "res") and len(args) == 2:
+            read(_regs(args[1]))
+            if not args[1].startswith("["):
+                write(_regs(args[1]))
+        elif op in ("rla", "rra", "rlca", "rrca", "cpl", "daa"):
+            read({"a"})
+            write({"a"})
+        elif op == "push" and args:
+            read(_regs(args[0]))
+        elif op == "pop" and args:
+            write(_regs(args[0]))
+        elif op == "add_a_to_hl":
+            read({"a", "h", "l"})
+            write({"a", "h", "l"})
+        elif op == "deref_hl":
+            read({"h", "l"})
+            write({"a", "h", "l"})
+        elif op == "jumptable":
+            read({"a"})
+        elif op in ("call", "farcall", "farcall_b", "rst"):
+            calls = True
+    return inputs, outputs
+
+
+def _join_regs(rs: list[str]) -> str:
+    s = set(rs)
+    out = []
+    for pair in ("hl", "de", "bc"):
+        if set(pair) <= s:
+            out.append(pair.upper())
+            s -= set(pair)
+    out += [r.upper() for r in "abcdehl" if r in s]
+    return ", ".join(out[:-1]) + " and " + out[-1] if len(out) > 1 else (out[0] if out else "")
+
+
 REGS = {"a", "b", "c", "d", "e", "h", "l", "af", "bc", "de", "hl", "sp", "hli", "hld", "hl+", "hl-"}
 
 
@@ -191,14 +296,21 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
             add(f"dispatches on {a_src}" if a_src else "dispatches through the table that follows")
         elif op in ("ret", "reti") and not args:
             pass
-    if not clauses:
+    weak = re.compile(r"^(may return early|branches on .*|continues in \w+|may continue in \w+)$")
+    if all(weak.match(c) for c in clauses):  # nothing but control flow: say which registers it takes and changes
         tail = [_code(x) for x in body if _code(x) and not _code(x).endswith(":")]
-        if tail[:1] == ["ret"]:
+        if not clauses and tail[:1] == ["ret"]:
             clauses = ["returns at once"]
         elif not tail:
             clauses = ["falls through into the next routine"]
         else:
-            clauses = ["works on registers only"]
+            ins, outs = register_flow(body)
+            regs = []
+            if ins:
+                regs.append(f"takes {_join_regs(ins)}")
+            if outs:
+                regs.append(f"changes {_join_regs(outs)}")
+            clauses = (regs or ([] if clauses else ["works on registers only"])) + clauses
     more = len(clauses) > MAX_CLAUSES
     text = "; ".join(clauses[:MAX_CLAUSES]) + ("; ..." if more else "")
     return f"{role}: {text}" if role else text[:1].upper() + text[1:]

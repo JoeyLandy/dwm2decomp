@@ -15,7 +15,7 @@ As of **2026-09-12**. Stage: **planning baseline complete; implementation not st
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
 | Working platform | Windows / PowerShell | Observed workspace environment |
 
-Decisions record: **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-009** (2026-10-13) names story flags after their setters and battle status bits from their observed texts; **D-008** (2026-10-13) includes graphics and map data as named asset files extracted at build time; **D-007** (2026-10-13) names ids from the ROM's name tables (`src/constants.inc`); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
+Decisions record: **D-010** (2026-10-13) keeps each bank file in a pokered-style directory by what the bank holds (`config/banks.json` `dir`: home, engine, scripts, text, data, maps, gfx, audio, unused); **D-001** selects Cobi (user-confirmed); **D-002** makes binary identity and explicit confidence mandatory (user requirement); **D-003** recommends RGBDS with opaque slices for unknown bytes (architecture proposal); **D-004** uses Markdown evidence and task records before introducing a database (architecture proposal); **D-009** (2026-10-13) names story flags after their setters and battle status bits from their observed texts; **D-008** (2026-10-13) includes graphics and map data as named asset files extracted at build time; **D-007** (2026-10-13) names ids from the ROM's name tables (`src/constants.inc`); **D-006** (2026-10-13) names each bank file after its contents (`config/banks.json`); **D-005** (2026-10-13) makes `src/` a reader-facing presentation of the annotated listing, which moves to `build/listing/` (user goal: human-readable code in the style of pokered). Revisit proposals if the baseline build exposes a better option; record the reason.
 
 ## Session 2 update (2026-10-09): matching build exists
 
@@ -55,13 +55,13 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-13, after E-0348)
+## Readability state (2026-10-13, after E-0349)
 
-Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run534).
+Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run536).
 
 | Measure | State |
 | --- | --- |
-| Source form | pret style (D-005): no address aliases or machine bookkeeping in `src/`, `xor a` / `cp $10` / `[hli]` spelling, `jumptable` and `lb` macros, wrapped notes; one file per bank named by its contents (D-006) |
+| Source form | pret style (D-005): no address aliases or machine bookkeeping in `src/`, `xor a` / `cp $10` / `[hli]` spelling, `jumptable` and `lb` macros, wrapped notes; one file per bank named by its contents (D-006), in a directory by kind: `home/`, `engine/`, `scripts/`, `text/`, `data/`, `maps/`, `gfx/`, `audio/`, `unused/` (D-010) |
 | Text | 25,715 lines use the printer's command tokens (`<LINE>`, `<NEXT>`, `<PROMPT>`, `@`, ...; E-0336); no control byte is left raw in prose |
 | Ids | 9,278 uses of `MONSTER_*`, `SKILL_*`, `ITEM_*`, `ACTION_*` and `RESIST_*` (D-007, E-0338), in code comparisons and data tables |
 | Story flags and status | 347 story flags named `EVENT_*` (1,573 uses), after their setters, the message the setting routine shows, or (34 flags with no setter found) a routine that tests them, 11 by reading (`config/story_flags.json`); no flag number is left in a flag operand. All 72 battle status bits are named `BSTATn_*`, from forcing each bit in a battle, the skill that sets it, or the masks that treat two bits as one field; 8 with no reader or writer are `UNUSED_*` (D-009, E-0339, E-0346) |

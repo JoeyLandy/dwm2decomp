@@ -1,4 +1,4 @@
-"""tools/present.py: src/banks is the annotated listing written for readers, with the same code and data."""
+"""tools/present.py: the bank files in src/ are the annotated listing written for readers, with the same code and data."""
 import re
 import sys
 import unittest
@@ -9,7 +9,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import present  # noqa: E402
 
 LISTING = ROOT / "build" / "listing"
-SRC = ROOT / "src" / "banks"
+SRC = ROOT / "src"  # bank files are src/<dir>/bankNN_<name>.asm (D-010)
 
 
 def _p(text: str) -> str:
@@ -77,7 +77,7 @@ class PresentedTreeTest(unittest.TestCase):
         titles = present.bank_titles()
         stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
                  != present.header(n, titles) + present.present(t, names, int(n[4:6], 16))]
-        self.assertEqual(stale, [], "src/banks is not tools/present.py's output for build/listing")
+        self.assertEqual(stale, [], "src/ is not tools/present.py's output for build/listing")
 
     def test_no_code_or_data_line_is_lost(self):
         titles = present.bank_titles()
@@ -92,16 +92,16 @@ class PresentedTreeTest(unittest.TestCase):
     def test_every_bank_file_is_named_and_included_once(self):
         titles = present.bank_titles()
         self.assertEqual(len(titles), 256)
-        files = sorted(p.name for p in SRC.glob("bank*.asm"))
+        files = sorted(p.relative_to(SRC).as_posix() for p in present.bank_files())
         self.assertEqual(files, sorted(present.src_name(f"bank{b:02x}.asm", titles) for b in range(256)))
         main = (ROOT / "src" / "main.asm").read_text(encoding="utf-8")
-        self.assertEqual(re.findall(r'^INCLUDE "banks/(bank\w+\.asm)"$', main, re.M), files)
-        self.assertTrue((SRC / files[0x36]).read_text(encoding="utf-8").startswith("; ROM bank $36: "))
+        self.assertEqual(sorted(re.findall(r'^INCLUDE "(\w+/bank\w+\.asm)"$', main, re.M)), files)
+        self.assertTrue((SRC / present.src_name("bank36.asm", titles)).read_text(encoding="utf-8").startswith("; ROM bank $36: "))
 
     def test_assets_are_the_listings_slices_by_name(self):
         """D-008: every INCBIN in src names an asset in src/assets.txt, once, and the manifest holds exactly the
         listing's slices of the reference ROM."""
-        src = "\n".join(p.read_text(encoding="utf-8") for p in SRC.glob("bank*.asm"))
+        src = "\n".join(p.read_text(encoding="utf-8") for p in present.bank_files())
         self.assertNotIn('INCBIN "dwm2-cobi-us.gbc"', src)
         used = re.findall(r'^\s+INCBIN "([^"]+)"', src, re.M)
         rows = [ln.split("\t") for ln in (ROOT / "src" / "assets.txt").read_text(encoding="utf-8").splitlines()
@@ -126,7 +126,8 @@ class PresentedTreeTest(unittest.TestCase):
         self.assertEqual(present.asset_path("SpecialMap06Tileset", True), "maps/special_map06/tileset.lz")
 
     def test_no_address_name_left(self):
-        text = "\n".join(p.read_text(encoding="utf-8") for p in SRC.glob("bank*.asm"))
+        text = "\n".join(p.read_text(encoding="utf-8") for p in present.bank_files())
+        self.assertTrue(text)
         self.assertIsNone(re.search(r"^(?:Func|Jump|Data)_[0-9A-F]{3}_[0-9A-F]{4}::", text, re.M))
         self.assertNotIn("; heuristic:", text)
         self.assertNotIn("; address name", text)

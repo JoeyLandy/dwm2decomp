@@ -41,7 +41,8 @@ docs/decisions/                later architecture decisions
 config/targets/                edition/revision/hash manifests
 config/toolchain.lock.json     exact tested tools and acquisition hashes
 src/main.asm                   explicit includes
-src/banks/                     fixed-address code and data by bank
+src/<dir>/                     one file per ROM bank, by kind (D-010): home, engine,
+                               scripts, text, data, maps, gfx, audio, unused
 src/constants/                 hardware and evidenced game constants
 src/ram/                       RAM definitions with bank and lifetime
 data/                          original schemas and authored data sources
