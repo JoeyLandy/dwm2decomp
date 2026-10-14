@@ -473,7 +473,7 @@ WarpToLinkedMapForCurrentMap_Data2::
 ; wKeyWorldGoalCell & $f0 to hMapScreenX; copies wKeyWorldGoalCell & $0f to hMapScreenY; calls
 ; StartWarpTransition; copies wKeyWorldGoalPos to wWarpDestX; copies wKeyWorldGoalPos2 to
 ; wWarpDestY; copies wKeyWorldGoalScreen & $f0 to hMapScreenX; copies wKeyWorldGoalScreen & $0f to
-; hMapScreenY; then 1 more step (see the code) (E-0347)
+; hMapScreenY; then 2 more steps (see the code) (E-0347)
 ; why: part of WarpToLinkedMapForCurrentMap_Data2, in part of WarpToLinkedMapForCurrentMap;
 ; WarpToLinkedMapForCurrentMap: unless bit 7 of wMapType is set, looks hMapId up in
 ; WarpToLinkedMapForCurrentMap_Data1 (E-0352, E-0125)
@@ -653,7 +653,7 @@ CheckMapExitTable::
 ; hPlayerStateFlags; sets wWarpPending to 1; plays sound $60; copies the byte at
 ; CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data to hMapId; sets hMapScreenX to 0; sets
 ; hMapScreenY to 0; sets wWarpDestX to $40; sets wWarpDestY to $80; sets wLastWarpIndex to 0; sets
-; wFieldTransitionKind to 3; calls StartPaletteFade; then 6 more steps (see the code) (E-0347)
+; wFieldTransitionKind to 3; calls StartPaletteFade; then 7 more steps (see the code) (E-0347)
 ; why: a helper of CheckMapExitTable; CheckMapExitTable: for maps from $20 looks hMapId up in the
 ; 4-byte table CheckMapExitTable_Data and runs CheckMapExitTable_WriteWarpPendingAndMapIdEtc with
 ; ... (E-0352, E-0125, E-0344)

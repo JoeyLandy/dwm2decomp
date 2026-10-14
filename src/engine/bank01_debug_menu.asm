@@ -1155,7 +1155,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
 ; DebugMessageTest_Update_WriteHexByteTilesAtDE; calls
 ; DebugMessageTest_Update_WriteHexByteTilesAtDE_2; calls
 ; DebugMessageTest_Update_WriteHexByteTilesAtDE_3; sets wMenuState to 0; plays sound $69; increments
-; wTemp0; calls DebugMessageTest_Update_WriteTemp1AndMenuRowCount; then 15 more steps (see the code)
+; wTemp0; calls DebugMessageTest_Update_WriteTemp1AndMenuRowCount; then 16 more steps (see the code)
 ; (E-0347)
 ; why: part of DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of
 ; DebugMessageTest_Update (when wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state
@@ -1386,7 +1386,8 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_3::
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
 ; Branches on wMenuState; calls WriteHexByteTilesAtDE; branches on wMenuState; calls
-; WriteHexByteTilesAtDE; branches on wMenuState; calls WriteHexByteTilesAtDE (E-0347)
+; WriteHexByteTilesAtDE; branches on wMenuState; calls WriteHexByteTilesAtDE; also changes DE and A
+; by register arithmetic (E-0347)
 ; why: part of DebugMessageTest_Update_WriteHexByteTilesAtDE_3, in a helper of
 ; DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of DebugMessageTest_Update (when
 ; wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state 11: the screen shows 'LIBNO /
@@ -1420,7 +1421,7 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
 
 ; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on B; branches on the
 ; byte at wTemp0; sets wTemp0 to 0; branches on the byte at wTemp0; branches on wMenuState; calls
-; WriteHexByteTilesAtDE (E-0347)
+; WriteHexByteTilesAtDE; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: a helper of DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of
 ; DebugMessageTest_Update (when wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state
 ; 11: the screen shows 'LIBNO / MESNO' message test (E-0352, E-0041)
@@ -1473,7 +1474,8 @@ DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
     ret
 
 ; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on wMenuState; sets
-; wTemp1 to 0; sets wMenuRowCount to 0; branches on 0; sets wMenuRowCount to 0 (E-0347)
+; wTemp1 to 0; sets wMenuRowCount to 0; branches on 0; sets wMenuRowCount to 0; also changes A by
+; register arithmetic (E-0347)
 ; why: a helper of DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of
 ; DebugMessageTest_Update (when wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state
 ; 11: the screen shows 'LIBNO / MESNO' message test (E-0352, E-0041)
@@ -1998,7 +2000,8 @@ DebugSkillViewer_Update_Number24ToPackedBCD::
     ldh [hTemp0], a
     ret
 
-; called from DebugSkillViewer_Update: calls WriteVRAMByteInc (E-0347)
+; called from DebugSkillViewer_Update: calls WriteVRAMByteInc; also changes DE and A by register
+; arithmetic (E-0347)
 ; why: a helper of DebugSkillViewer_Update; DebugSkillViewer_Update: update for debug-mode state 9:
 ; the screen shows the skill viewer (E-0352, E-0041)
 DebugSkillViewer_Update_WriteVRAMByteInc::
@@ -2093,7 +2096,8 @@ DebugSkillViewer_Update_IndexOfFlagValue::
     ld a, c
     ret
 
-; called from DebugSkillViewer_Update: calls WriteVRAMByte (E-0347)
+; called from DebugSkillViewer_Update: calls WriteVRAMByte; also changes HL, DE, A and B by register
+; arithmetic (E-0347)
 ; why: a helper of DebugSkillViewer_Update; DebugSkillViewer_Update: update for debug-mode state 9:
 ; the screen shows the skill viewer (E-0352, E-0041)
 DebugSkillViewer_Update_WriteVRAMByte::
@@ -2127,7 +2131,8 @@ DebugSkillViewer_Update_WriteVRAMByte_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; called from DebugShowMonsterRecord: copies E to wDigits; calls Number24ToPackedBCD; calls
-; WriteVRAMByteInc; calls WriteVRAMByte (E-0347)
+; WriteVRAMByteInc; calls WriteVRAMByte; also changes HL, DE, BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of DebugShowMonsterRecord; DebugShowMonsterRecord: HL = monster id (the debug
 ; monster viewer wraps it at $02AB): stores it in wDebugCursor/wDebugValue0 and
 ; wMonsterId/wMonsterId + $1, loads ... (E-0352)
@@ -2436,7 +2441,8 @@ DebugResultsDisplay_Update_WriteDebugCounter::
     ld [wDebugCounter], a
 
 ; called from DebugResultsDisplay_Update: branches on wDebugCursor; calls HLToDecimalDigits; calls
-; DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork (E-0347)
+; DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork; also changes HL, A and C by register
+; arithmetic (E-0347)
 ; why: a helper of DebugResultsDisplay_Update; DebugResultsDisplay_Update: update for debug-mode
 ; state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0352, E-0041)
 DebugResultsDisplay_Update_HLToDecimalDigits::
@@ -2740,7 +2746,7 @@ DebugResultsDisplay_Update_WaitForVRAMAccess::
 ; DebugToggleArg1Marker_CheckDebugCursor2; may continue in DebugToggleArg1Marker_CheckDebugCursor3;
 ; may continue in DebugToggleArg1Marker_CheckDebugCursor; branches on wJoypadPressedRepeat; calls
 ; StepDebugCursorDebugCounter; copies wDebugValue0 to wArg2; copies wDebugValue1 to wArg3; copies
-; wArg2 to wSpeciesIdLo; then 10 more steps (see the code) (E-0347)
+; wArg2 to wSpeciesIdLo; then 11 more steps (see the code) (E-0347)
 ; why: part of DebugResultsDisplay_Update_WaitForVRAMAccess, in part of DebugResultsDisplay_Update;
 ; DebugResultsDisplay_Update: update for debug-mode state 7: the screen shows 'RESULTS DISPLAY'
 ; (species, gender) (E-0352, E-0041)
@@ -2953,7 +2959,7 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
 ; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp04; branches on the byte at
 ; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue0; branches
 ; on C; calls StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; continues in
-; DebugToggleArg1Marker_Skip (E-0347)
+; DebugToggleArg1Marker_Skip; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of DebugToggleArg1Marker; DebugToggleArg1Marker: debug: toggles wArg1 between 0 and 2
 ; and writes tile $10 + wArg1 at vBGMap0 + $81 (E-0352, E-0131)
 DebugToggleArg1Marker_CheckDebugCursor2::
@@ -3060,7 +3066,7 @@ DebugToggleArg1Marker_Skip::
 ; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp042; branches on the byte at
 ; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue3; branches
 ; on C; calls StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; continues in
-; DebugToggleArg1Marker_Skip (E-0347)
+; DebugToggleArg1Marker_Skip; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of DebugToggleArg1Marker; DebugToggleArg1Marker: debug: toggles wArg1 between 0 and 2
 ; and writes tile $10 + wArg1 at vBGMap0 + $81 (E-0352, E-0131)
 DebugToggleArg1Marker_CheckDebugCursor3::
@@ -3131,7 +3137,8 @@ DebugToggleArg1Marker_CheckDebugCursor3::
     ld hl, vTiles2 + $300
     jp DebugToggleArg1Marker_Skip
 
-; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter (E-0347)
+; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter; also changes HL, A and
+; C by register arithmetic (E-0347)
 ; why: part of DebugToggleArg1Marker; DebugToggleArg1Marker: debug: toggles wArg1 between 0 and 2
 ; and writes tile $10 + wArg1 at vBGMap0 + $81 (E-0352, E-0131)
 DebugToggleArg1Marker_Cp04::
@@ -3190,7 +3197,8 @@ DebugToggleArg1Marker_Cp04::
     ld c, $1b
     jr .skip3
 
-; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter (E-0347)
+; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter; also changes HL, A and
+; C by register arithmetic (E-0347)
 ; why: part of DebugToggleArg1Marker; DebugToggleArg1Marker: debug: toggles wArg1 between 0 and 2
 ; and writes tile $10 + wArg1 at vBGMap0 + $81 (E-0352, E-0131)
 DebugToggleArg1Marker_Cp042::
@@ -3273,7 +3281,8 @@ DebugToggleArg1Marker_ClearDebugCursor::
 ; Returns if wScreenCounter is below $0a; returns if wGlyphListPos is below $0a; branches on the
 ; byte at wDebugSubState; copies wDebugValue0 to wArg6; copies wDebugValue1 to wArg7; calls
 ; FamilyForSpeciesIdArg6; copies wDebugValue3 to wArg6; copies wDebugState to wArg7; calls
-; FamilyForSpeciesIdArg6; increments wScreenState; sets wNameEntryState to 0 (E-0347)
+; FamilyForSpeciesIdArg6; increments wScreenState; sets wNameEntryState to 0; also changes HL, DE,
+; BC and A by register arithmetic (E-0347)
 ; why: part of DebugToggleArg1Marker; DebugToggleArg1Marker: debug: toggles wArg1 between 0 and 2
 ; and writes tile $10 + wArg1 at vBGMap0 + $81 (E-0352, E-0131)
 DebugToggleArg1Marker_CheckScreenCounter::
@@ -3964,7 +3973,8 @@ LoadKeyEntryFieldsToDebugState::
     ret
 
 ; called from DebugAutomap_Update: branches on wDebugState; branches on wDebugSubState; calls
-; WriteHexByteTilesAtDE; sets wDebugValue1 to 0; calls WriteHexByteTilesAtDE (E-0347)
+; WriteHexByteTilesAtDE; sets wDebugValue1 to 0; calls WriteHexByteTilesAtDE; also changes DE and A
+; by register arithmetic (E-0347)
 ; why: a helper of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the
 ; screen shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
 DebugAutomap_Update_WriteHexByteTilesAtDE::
@@ -3990,7 +4000,8 @@ DebugAutomap_Update_WriteHexByteTilesAtDE::
 ; called from DebugAutomap_Update: sets wNameGlyphBuf to $90; calls CopyGlyphTilesToVRAM; branches
 ; on wDebugSubState; branches on wDebugState; sets wNameGlyphBuf to $29; calls CopyGlyphTilesToVRAM;
 ; branches on wDebugSubState; branches on the byte at DebugMenuNames; calls CopyGlyphTilesToVRAM;
-; calls WriteKeyNameToDE; calls CopyGlyphTilesToVRAM (E-0347)
+; calls WriteKeyNameToDE; calls CopyGlyphTilesToVRAM; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: a helper of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the
 ; screen shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
 DebugAutomap_Update_CopyGlyphTilesToVRAM::
@@ -4948,7 +4959,8 @@ DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return::
     ret
 
 ; called from DebugSoundTest_Update: branches on the byte at wTemp0; sets wTemp0 to 0; branches on
-; the byte at wTemp0; branches on wMenuState; calls WriteHexByteTilesAtDE (E-0347)
+; the byte at wTemp0; branches on wMenuState; calls WriteHexByteTilesAtDE; also changes HL, DE, A
+; and B by register arithmetic (E-0347)
 ; why: a helper of DebugSoundTest_Update; DebugSoundTest_Update: update for debug-mode state 5: the
 ; screen shows '? SOUND ?' (BGM, SE) (E-0352, E-0041)
 DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
@@ -5191,7 +5203,8 @@ DebugBattleSetupLoadWords::
 
 ; Copies the byte at wWorkBuf + $c to wEncounterMonsters; copies the byte at wWorkBuf + $c to
 ; wWildLevel; copies the byte at wWorkBuf + $c to wWildBand; copies the byte at wWorkBuf + $c to
-; wEncounterClass; continues in DebugBattleSetup_Update_ClearMenuState (E-0347)
+; wEncounterClass; continues in DebugBattleSetup_Update_ClearMenuState; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: part of DebugBattleSetupLoadWords; DebugBattleSetupLoadWords: debug battle setup: copies a
 ; word from DE to HL (a zero word becomes 1) (E-0352, E-0131)
 DebugBattleSetupLoadWords_SetEncounterMonsters::
@@ -5221,7 +5234,7 @@ DebugBattleSetupLoadWords_SetEncounterMonsters::
 ; Copies wWorkBuf to wEncounterKind; calls DebugBattleSetupLoadWords; sets wDebugCursor to 0; sets
 ; wDebugValue0 to 0; sets wDebugValue1 to 0; sets wMenuState to 0; sets wModeState to 0; increments
 ; wModeChangeRequest; branches on wJoypadPressedRepeat; calls DrawDebugValueHexForMenuState;
-; branches on wMenuState; sets wMenuState to $0b; then 20 more steps (see the code) (E-0347)
+; branches on wMenuState; sets wMenuState to $0b; then 21 more steps (see the code) (E-0347)
 ; why: part of DebugBattleSetupLoadWords; DebugBattleSetupLoadWords: debug battle setup: copies a
 ; word from DE to HL (a zero word becomes 1) (E-0352, E-0131)
 DebugBattleSetupLoadWords_CheckJoypadPressed::
@@ -5497,7 +5510,8 @@ ClampDebugValueToTableLimit::
 ; called from DebugBattleSetup_Update: branches on wPartyCount; branches on wFarmLevel; branches on
 ; the byte at wPartyList; calls DebugBattleSetup_Update_SRAMRecordAddressMapped_2; calls
 ; CheckSaveData; branches on hTemp0; calls RunSaveSteps; calls
-; DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc (E-0347)
+; DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of DebugBattleSetup_Update; DebugBattleSetup_Update: update for debug-mode state 6:
 ; the screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0352, E-0041)
 DebugBattleSetup_Update_SRAMRecordAddressMapped::
@@ -5808,7 +5822,7 @@ WriteThreeHexDigitsAtDE::
 
 ; Sets hMapId to 0; sets hMapScreenX to 2; sets hMapScreenY to 0; sets hPlayerX to $40; sets
 ; hPlayerY to $40; sets wFollowerRecords to 0; sets wPlayerName to $24; sets wGoldLo to $9f; sets
-; wGoldMid to $86; sets wGoldHi to 1; sets wPartyCount to 3; sets wPartyList to 0; then 6 more steps
+; wGoldMid to $86; sets wGoldHi to 1; sets wPartyCount to 3; sets wPartyList to 0; then 7 more steps
 ; (see the code) (E-0347)
 ; why: part of DebugBattleSetup_Update; DebugBattleSetup_Update: update for debug-mode state 6: the
 ; screen shows '? BATTLE ?' (number of foes, three monsters, skill, levels) (E-0352, E-0041)
@@ -6005,7 +6019,7 @@ PickRandomMonsterSkipping7ETo82::
 ; Copies E to wMonsterId; calls LoadMonsterRecord; calls SRAMRecordAddress; branches on wBattleArg1;
 ; calls CopyBBytesDEToHL_Bank01; calls WriteUnknownNamePlaceholder_Bank01; sets wRecordBufA +
 ; MON_LEVEL; branches on D; branches on wBattleArg2; calls NextTableByte; copies L to wSpeciesIdLo;
-; copies H to wSpeciesIdHi; then 16 more steps (see the code) (E-0347)
+; copies H to wSpeciesIdHi; then 17 more steps (see the code) (E-0347)
 ; why: part of CreateMonsterRecordOfKindTemp1; CreateMonsterRecordOfKindTemp1: with SRAM enabled
 ; creates a record from the template CreateMonsterRecordOfKindTemp1_Data[hTemp1] (wBattleArg1 =
 ; hTemp1, level hTemp2) (E-0352, E-0124)

@@ -30,7 +30,7 @@ LibraryMenu::
     dw LibraryMenu_ShowMonsterEntry
 
 ; step 0 of LibraryMenu: sets wMessageMode to 9; increments wScreenState; sets wScriptCommandType to
-; 0; sets wScriptStartRequest to $80 (E-0347)
+; 0; sets wScriptStartRequest to $80; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 0 of LibraryMenu (when wScreenState = 0); LibraryMenu: implements script command type F6
 ; (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?'
 ; (mode 9, ... (E-0352, E-0038, E-0244)
@@ -158,7 +158,7 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
 
 ; step 4 of LibraryMenu: calls BGMapAddressAtScroll_Bank0C; branches on D; copies E to wArg1; copies
 ; D to wArg2; copies E to wArg3; copies D to wArg4; calls TestBitInFieldAtArg3; branches on wArg5;
-; copies E to wSpeciesIdLo; copies D to wSpeciesIdHi; calls TestSpeciesFlag; branches on C; then 13
+; copies E to wSpeciesIdLo; copies D to wSpeciesIdHi; calls TestSpeciesFlag; branches on C; then 14
 ; more steps (see the code) (E-0347)
 ; why: step 4 of LibraryMenu (when wScreenState = 4); LibraryMenu: implements script command type F6
 ; (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?'
@@ -318,7 +318,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
 ; step 5 of LibraryMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
 ; LibraryMenu_WriteGlyphListStart; branches on wGridCursorY; sets wGridCursorY to 0; branches on 0;
 ; branches on wGridCursorX; decrements wGridCursorX; calls LibraryMenu_ReadGridCursorX; plays sound
-; $69; sets wScreenState; branches on wGridCursorY; then 25 more steps (see the code) (E-0347)
+; $69; sets wScreenState; branches on wGridCursorY; then 26 more steps (see the code) (E-0347)
 ; why: step 5 of LibraryMenu (when wScreenState = 5); LibraryMenu: implements script command type F6
 ; (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?'
 ; (mode 9, ... (E-0352, E-0038, E-0244)
@@ -494,7 +494,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 ; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc: may continue in
 ; LibraryMenu_ReadGridCursorX; increments wGlyphListStart; may continue in
 ; LibraryMenu_ReadGridCursorX; may continue in LibraryMenu_ReadGridCursorX_2; sets wGlyphListStart
-; to 0 (E-0347)
+; to 0; also changes A by register arithmetic (E-0347)
 ; why: a helper of LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc, in step 5 of LibraryMenu (when
 ; wScreenState = 5); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the monster
 ; library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352, E-0038,
@@ -541,7 +541,7 @@ LibraryMenu_ReadGridCursorX_2::
 LibraryMenu_BGMapAddressAtScroll_Bank0C_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank0C (E-0347)
+; Calls BGMapAddressAtScroll_Bank0C; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of LibraryMenu_BGMapAddressAtScroll_Bank0C_2, in a helper of
 ; LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc, in step 5 of LibraryMenu (when wScreenState =
 ; 5); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the monster library: 'Welcome
@@ -780,7 +780,7 @@ LibraryMenu_WriteScreenState::
 ; LibraryMenu_WriteListEntries; calls GridIndexFromGridCursorXGridCursorY; branches on
 ; wGrid2CursorY; sets wGrid2CursorY to 0; calls GridIndexFromGridCursorXGridCursorY; calls
 ; ReadGridCellByteForGridCursorXGridCursorY; branches on wGrid2CursorX; copies B to wGrid2CursorX;
-; sets wScreenState; plays sound $69; then 28 more steps (see the code) (E-0347)
+; sets wScreenState; plays sound $69; then 29 more steps (see the code) (E-0347)
 ; why: step 12 of LibraryMenu (when wScreenState = 12); LibraryMenu: implements script command type
 ; F6 (SCRIPT_LIBRARY): the monster library: 'Welcome to the library. Which family will you check?'
 ; (mode 9, ... (E-0352, E-0038, E-0244)
@@ -969,7 +969,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
 ; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2: may continue in
 ; LibraryMenu_ReadGrid2CursorX; increments wListEntries; may continue in
 ; LibraryMenu_ReadGrid2CursorX; may continue in LibraryMenu_ReadGrid2CursorX_2; sets wListEntries to
-; 0 (E-0347)
+; 0; also changes A by register arithmetic (E-0347)
 ; why: a helper of LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2, in step 12 of LibraryMenu
 ; (when wScreenState = 12); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the
 ; monster library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352,
@@ -1009,7 +1009,7 @@ LibraryMenu_ReadGrid2CursorX_2::
     jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
     db $06, $bc
 
-; Calls BGMapAddressAtScroll_Bank0C (E-0347)
+; Calls BGMapAddressAtScroll_Bank0C; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of LibraryMenu_ReadGrid2CursorX_2, in a helper of
 ; LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2, in step 12 of LibraryMenu (when wScreenState
 ; = 12); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the monster library:
@@ -1136,7 +1136,8 @@ LibraryMenu_ShowMonsterEntry::
 ; LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; calls FillTilesFromRequest; calls CopyTileBytesToVRAM_Bank0C; calls
-; CopyFromBankWaitVRAM; increments wScreenStep; sets wScreenSubStep to 0 (E-0347)
+; CopyFromBankWaitVRAM; increments wScreenStep; sets wScreenSubStep to 0; also changes HL, DE, BC
+; and A by register arithmetic (E-0347)
 ; why: step 0 of LibraryMenu_ShowMonsterEntry (when wScreenStep = 0); LibraryMenu_ShowMonsterEntry:
 ; LibraryMenu screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite
 ; parts of a monster, sets the palette and ... (E-0352)
@@ -1202,7 +1203,7 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
 ; step 1 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; copies L to wTextWindowTileLo;
 ; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; calls DecompressToVRAM; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToVRAM; sets rSVBK to 0; calls LoadBGPalettesFromData; then 16 more steps (see the code)
+; DecompressToVRAM; sets rSVBK to 0; calls LoadBGPalettesFromData; then 17 more steps (see the code)
 ; (E-0347)
 ; why: step 1 of LibraryMenu_ShowMonsterEntry (when wScreenStep = 1); LibraryMenu_ShowMonsterEntry:
 ; LibraryMenu screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite
@@ -1640,7 +1641,8 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2::
 ; step 6 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
 ; GridCellAddressFromGridCursorXAndGrid2CursorX; calls
 ; LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6; calls
-; LibraryMenu_ShowMonsterEntry_ShowString_Bank08; increments wScreenStep (E-0347)
+; LibraryMenu_ShowMonsterEntry_ShowString_Bank08; increments wScreenStep; also changes HL, DE and A
+; by register arithmetic (E-0347)
 ; why: step 6 of LibraryMenu_ShowMonsterEntry (when wScreenStep = 6); LibraryMenu_ShowMonsterEntry:
 ; LibraryMenu screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite
 ; parts of a monster, sets the palette and ... (E-0352)
@@ -2155,7 +2157,7 @@ LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
 
 ; called from LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3: sets wArg6; sets
 ; wArg7; calls FamilyForSpeciesIdArg6; sets wWorkBuf; calls LoadFamilyIconTileForWorkBuf; calls
-; CopyFromBankWaitVRAM (E-0347)
+; CopyFromBankWaitVRAM; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3, in step 6 of
 ; LibraryMenu_ShowMonsterEntry (when wScreenStep = 6); LibraryMenu_ShowMonsterEntry: LibraryMenu
 ; screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite parts of a
@@ -2211,7 +2213,7 @@ LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
 ; wStringCategory; copies L to wStringIndex; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; ShowString_Bank08; sets wStringCategory to 0; sets wStringIndex to 0; copies L to
-; wTextWindowTileLo; then 6 more steps (see the code) (E-0347)
+; wTextWindowTileLo; then 7 more steps (see the code) (E-0347)
 ; why: part of LibraryMenu_GridIndexFromGridCursorXGridCursorY, in step 10 of LibraryMenu (when
 ; wScreenState = 10); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the monster
 ; library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352, E-0038,
@@ -2332,7 +2334,8 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data::
 
 ; Branches on the byte at LibraryMenu_WriteWorkBuf_Data; copies the byte at
 ; LibraryMenu_WriteWorkBuf_Data to wWorkBuf; branches on the byte at LibraryMenu_WriteWorkBuf_Data;
-; calls LoadFamilyIconTileForWorkBuf; branches on C (E-0347)
+; calls LoadFamilyIconTileForWorkBuf; branches on C; also changes DE, BC and A by register
+; arithmetic (E-0347)
 ; why: part of LibraryMenu; LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the
 ; monster library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352,
 ; E-0038, E-0244)
@@ -2428,7 +2431,8 @@ DrawThreeMetaSpritePartsAtGridCursor::
     farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
     ret
 
-; Calls BGMapAddressAtScroll_Bank0C; calls GridIndexFromGridCursorXGridCursorY (E-0347)
+; Calls BGMapAddressAtScroll_Bank0C; calls GridIndexFromGridCursorXGridCursorY; also changes HL, DE,
+; A and B by register arithmetic (E-0347)
 ; why: part of LibraryMenu_GridIndexFromGridCursorXGridCursorY, in step 10 of LibraryMenu (when
 ; wScreenState = 10); LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the monster
 ; library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352, E-0038,
@@ -2514,7 +2518,7 @@ ReadGridCellByteForGridCursorXGridCursorY::
     ret
 
 ; Branches on wGridCursorY; calls HLToDecimalDigits; calls BGMapAddressAtScroll_Bank0C; branches on
-; wArg1; branches on C (E-0347)
+; wArg1; branches on C; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of LibraryMenu; LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the
 ; monster library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352,
 ; E-0038, E-0244)
@@ -2612,7 +2616,8 @@ LibraryMenu_HLToDecimalDigits_Data1::
 LibraryMenu_HLToDecimalDigits_Data2::
     db $7e, $c3, $a6, $c3, $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
-; Branches on wIsCGB; sets rSVBK to 2; branches on wIsCGB; sets rSVBK to 0 (E-0347)
+; Branches on wIsCGB; sets rSVBK to 2; branches on wIsCGB; sets rSVBK to 0; also changes HL, BC and
+; A by register arithmetic (E-0347)
 ; why: part of LibraryMenu; LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the
 ; monster library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352,
 ; E-0038, E-0244)
@@ -2650,7 +2655,7 @@ LibraryMenu_WriteSVBK::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0351)
+; (E-0353)
 CopyTileBytesToVRAM_Bank0C::
     ld c, $10
 
@@ -2670,7 +2675,7 @@ CopyTileBytesToVRAM_Bank0C::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank0C::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -2725,7 +2730,7 @@ LibraryMenu_FillTileRectWithArg1Tile_Tiles::
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0351)
+; same 58 bytes appear in 8 banks) (E-0353)
 CopyRectTo20ByteRows_Bank0C::
     push hl
     push bc
@@ -2837,7 +2842,7 @@ DrawScreenBufferRect_Bank0C::
     ret
 
 ; called from ArenaMenu_BGMapAddressAtScroll_Bank0C: calls StoreBAtWordTableEntry_Bank0C; branches
-; on C (E-0347)
+; on C; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of ArenaMenu_BGMapAddressAtScroll_Bank0C, in step 5 of ArenaMenu (when wScreenState
 ; = 5); ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should
 ; do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038, E-0244)
@@ -2861,7 +2866,7 @@ ArenaMenu_StoreBAtWordTableEntry_Bank0C::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0351)
+; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
 StoreBAtWordTableEntry_Bank0C::
     push bc
     add a
@@ -2952,7 +2957,7 @@ CopyBytesDEToHL_Bank0C::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0351)
+; 19 bytes appear in 5 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank0C::
     ld a, $02
     ldh [rSVBK], a
@@ -3001,7 +3006,7 @@ GridIndexFromGrid2CursorXGrid2CursorY::
 
 ; Copies L to wArg1; copies H to wArg2; copies E to wArg3; copies D to wArg4; calls
 ; TestBitInFieldAtArg3; branches on wArg5; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls
-; TestSpeciesFlag; branches on C (E-0347)
+; TestSpeciesFlag; branches on C; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of LibraryMenu; LibraryMenu: implements script command type F6 (SCRIPT_LIBRARY): the
 ; monster library: 'Welcome to the library. Which family will you check?' (mode 9, ... (E-0352,
 ; E-0038, E-0244)
@@ -3045,7 +3050,8 @@ LibraryMenu_TestBitInFieldAtArg3::
     ret
 
 ; called from LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo: calls
-; GridCellAddressFromGridCursorXAndGrid2CursorX (E-0347)
+; GridCellAddressFromGridCursorXAndGrid2CursorX; also changes HL, DE, A and B by register arithmetic
+; (E-0347)
 ; why: a helper of LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo, in step 1 of
 ; LibraryMenu_ShowMonsterEntry (when wScreenStep = 1); LibraryMenu_ShowMonsterEntry: LibraryMenu
 ; screen state $10, by wScreenStep: decompresses graphics, draws the three meta-sprite parts of a
@@ -5666,8 +5672,8 @@ ArenaMenu::
 ; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; calls GenerateNewKeyEntry; branches on hTemp0; calls
 ; ArenaMenu_AddArg1ToGoldCapped99999; calls ArenaMenu_RandomModulo52_2; calls
 ; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; calls ArenaMenu_AddArg1ToGoldCapped99999; sets
-; wTwoChoiceCursor to 3; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then 1 more
-; step (see the code) (E-0347)
+; wTwoChoiceCursor to 3; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then 2 more
+; steps (see the code) (E-0347)
 ; why: step 39 of ArenaMenu (when wScreenState = 39); ArenaMenu: implements script command type F7
 ; (SCRIPT_ARENA): the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode
 ; 10, ... (E-0352, E-0038, E-0244)
@@ -6093,7 +6099,8 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1::
 
 ; called from ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: may continue in
 ; ArenaMenu_ReadGridCursorX; increments wGridCursorY; may continue in ArenaMenu_ReadGridCursorX; may
-; continue in ArenaMenu_ReadGridCursorX_2; sets wGridCursorY to 0 (E-0347)
+; continue in ArenaMenu_ReadGridCursorX_2; sets wGridCursorY to 0; also changes A by register
+; arithmetic (E-0347)
 ; why: a helper of ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of ArenaMenu
 ; (when wScreenState = 2); ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
@@ -6133,7 +6140,8 @@ ArenaMenu_ReadGridCursorX_2::
     jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
     db $06, $bc
 
-; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE and
+; A by register arithmetic (E-0347)
 ; why: part of ArenaMenu_ReadGridCursorX_2, in a helper of
 ; ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of ArenaMenu (when wScreenState =
 ; 2); ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should
@@ -6706,7 +6714,8 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1::
 
 ; called from ArenaMenu_WriteTextBuf0AndScreenStateEtc: may continue in ArenaMenu_ReadGridCursorX_3;
 ; increments wGridCursorY; may continue in ArenaMenu_ReadGridCursorX_3; may continue in
-; ArenaMenu_ReadGridCursorX_4; sets wGridCursorY to 0 (E-0347)
+; ArenaMenu_ReadGridCursorX_4; sets wGridCursorY to 0; also changes A by register arithmetic
+; (E-0347)
 ; why: a helper of ArenaMenu_WriteTextBuf0AndScreenStateEtc, in step 18 of ArenaMenu (when
 ; wScreenState = 18); ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E
 ; Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038, E-0244)
@@ -6743,7 +6752,8 @@ ArenaMenu_ReadGridCursorX_4::
     jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
     db $06, $bc
 
-; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE and
+; A by register arithmetic (E-0347)
 ; why: part of ArenaMenu_ReadGridCursorX_4, in a helper of ArenaMenu_WriteTextBuf0AndScreenStateEtc,
 ; in step 18 of ArenaMenu (when wScreenState = 18); ArenaMenu: implements script command type F7
 ; (SCRIPT_ARENA): the arena: 'The E Class should do. Which...', 'Congratulations! You did it!' (mode
@@ -7339,7 +7349,7 @@ SetupScreenCountPlusOneFromRecordCapacity::
     ret
 
 ; called from ArenaMenu_CopyRectTo20ByteRows_Bank0C: branches on wArenaRank; returns if wArenaRank
-; is below $05 (E-0347)
+; is below $05; also changes HL and A by register arithmetic (E-0347)
 ; why: a helper of ArenaMenu_CopyRectTo20ByteRows_Bank0C, in step 1 of ArenaMenu (when wScreenState
 ; = 1); ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should
 ; do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038, E-0244)
@@ -7377,7 +7387,8 @@ ArenaMenu_ReadArenaRank::
     ret
 
 ; Calls CopyRectTo20ByteRows_Bank0C; copies wGoldLo to wDigits; calls Number24ToPackedBCD; calls
-; UnpackBCDToDigitsArg1_Bank1E; branches on C (E-0347)
+; UnpackBCDToDigitsArg1_Bank1E; branches on C; also changes HL, DE, BC and A by register arithmetic
+; (E-0347)
 ; why: part of ArenaMenu; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
 ; E-0244)
@@ -7409,7 +7420,7 @@ ArenaMenu_Number24ToPackedBCD::
     jr c, .loop
     ret
 
-; Branches on C; returns if H is 0 (E-0347)
+; Branches on C; returns if H is 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of ArenaMenu; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
 ; E-0244)
@@ -7448,7 +7459,7 @@ ArenaMenu_DivideHLByA::
 ; Sets wArenaEntry to 0; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordWord; calls
 ; AddTemp0WordToHL; calls LoadSRAMRecordWord; calls AddTemp0WordToHL; calls LoadSRAMRecordWord;
 ; calls AddTemp0WordToHL; calls LoadSRAMRecordWord; calls AddTemp0WordToHL; calls
-; LoadSRAMRecordWord; then 22 more steps (see the code) (E-0347)
+; LoadSRAMRecordWord; then 23 more steps (see the code) (E-0347)
 ; why: part of ArenaMenu; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
 ; E-0244)
@@ -7839,7 +7850,7 @@ CopyScreenBufferRectWithAttrs_0C::
     ret
 
 ; Calls RandomModulo52; branches on L; branches on the byte at wArenaList; branches on C; branches
-; on B (E-0347)
+; on B; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of ArenaRounds; ArenaRounds: implements script command type 96 (SCRIPT_ARENA_ROUNDS):
 ; the arena's rounds: messages from ArenaRankMessageTable and foes from ... (E-0352, E-0038, E-0246)
 ArenaRounds_RandomModulo52::
@@ -8051,7 +8062,8 @@ ArenaMenu_DispatchTalkEvent::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-; Sets wBattleIntroKind to 4; sets wEncounterKind to 2 (E-0347)
+; Sets wBattleIntroKind to 4; sets wEncounterKind to 2; also changes HL, DE, A and B by register
+; arithmetic (E-0347)
 ; why: part of ArenaGridBattle; ArenaGridBattle: implements script command type 95
 ; (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
 ; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
@@ -8113,7 +8125,8 @@ ArenaMenu_DispatchTalkEvent_SetScriptReturnBank::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
-; Sets wBattleIntroKind to 4; sets wEncounterKind to 2 (E-0347)
+; Sets wBattleIntroKind to 4; sets wEncounterKind to 2; also changes HL, DE, A and B by register
+; arithmetic (E-0347)
 ; why: part of ArenaGridBattle_WriteBattleIntroKindAndEncounterKind, in part of ArenaGridBattle;
 ; ArenaGridBattle: implements script command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle:
 ; messages from ArenaRankMessageTable (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
@@ -8154,7 +8167,7 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     ret
 
 ; Calls ArenaMenu_AddTemp0WordToHL; calls ArenaMenu_DivideHLByA; branches on L; sets
-; wTwoChoiceCursor to 4 (E-0347)
+; wTwoChoiceCursor to 4; also changes A by register arithmetic (E-0347)
 ; why: part of ArenaMenu; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
 ; E-0244)
@@ -8198,7 +8211,8 @@ ArenaMenu_WriteTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ret
 
-; called from ArenaMenu_RandomModulo52: calls RandomModulo52; branches on C; sets wArg1 (E-0347)
+; called from ArenaMenu_RandomModulo52: calls RandomModulo52; branches on C; sets wArg1; also
+; changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of ArenaMenu_RandomModulo52, in step 39 of ArenaMenu (when wScreenState = 39);
 ; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should do.
 ; Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038, E-0244)
@@ -8240,7 +8254,8 @@ ArenaMenu_RandomModulo52_Data::
     db $5e, $5f, $60, $61
 
 ; called from ArenaMenu_RandomModulo52: branches on the byte at wInventory; calls
-; ArenaMenu_AddArg1ToGoldCapped99999; sets wArg1; calls ArenaMenu_ReadFarPointerAtDEInBankB (E-0347)
+; ArenaMenu_AddArg1ToGoldCapped99999; sets wArg1; calls ArenaMenu_ReadFarPointerAtDEInBankB; also
+; changes HL, A and C by register arithmetic (E-0347)
 ; why: a helper of ArenaMenu_RandomModulo52, in step 39 of ArenaMenu (when wScreenState = 39);
 ; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena: 'The E Class should do.
 ; Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038, E-0244)
@@ -8273,7 +8288,8 @@ ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     xor a
     ret
 
-; Calls ReadFarPointerAtDEInBankB; calls ReadByteInBank; branches on C (E-0347)
+; Calls ReadFarPointerAtDEInBankB; calls ReadByteInBank; branches on C; also changes HL, DE, BC and
+; A by register arithmetic (E-0347)
 ; why: part of ArenaMenu; ArenaMenu: implements script command type F7 (SCRIPT_ARENA): the arena:
 ; 'The E Class should do. Which...', 'Congratulations! You did it!' (mode 10, ... (E-0352, E-0038,
 ; E-0244)

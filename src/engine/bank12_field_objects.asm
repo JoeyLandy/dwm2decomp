@@ -122,7 +122,8 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12::
     ret
 
 ; step 9 of ObjectPath1C: calls ScriptApplyStepDeltaAtDE_Bank12; increments wFollowerRecords + $c;
-; returns unless wScriptParam0 is 0; sets wScriptStep to $0b (E-0347)
+; returns unless wScriptParam0 is 0; sets wScriptStep to $0b; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: step 9 of ObjectPath1C (when wScriptStep = 9); ObjectPath1C: implements script command type
 ; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
 ; deltas with the ... (E-0352)
@@ -1062,7 +1063,7 @@ ArenaRounds_ClearBit2AtHL_Bank12::
 ; step 8 of ArenaRounds: branches on wMessageIndex; increments wMessageIndex; branches on
 ; wMessageIndex; sets wSpriteSlotCount to 2; branches on $02; sets wSpriteSlotCount to 3; branches
 ; on $03; sets wSpriteSlotCount to 4; branches on the byte at wSpriteSlots + $c; sets wSpriteSlots +
-; $c to 1; branches on the byte at wSpriteSlots + $c; sets wSpriteSlots + $c to 0; then 2 more steps
+; $c to 1; branches on the byte at wSpriteSlots + $c; sets wSpriteSlots + $c to 0; then 3 more steps
 ; (see the code) (E-0347)
 ; why: step 8 of ArenaRounds (when wScriptStep = 8); ArenaRounds: implements script command type 96
 ; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
@@ -1841,7 +1842,7 @@ BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12::
 ; copies the byte at wChildRecord to wStringCategory; copies E to wStringDestLo; copies D to
 ; wStringDestHi; calls CopyStringToBuffer_Bank08; branches on the byte at wChildRecord; calls
 ; StartMessageA; branches on B; sets wTextNumber to $f0; calls StartMessageA; copies
-; hSpriteWindowClipMode to wScriptParam0; then 1 more step (see the code) (E-0347)
+; hSpriteWindowClipMode to wScriptParam0; then 2 more steps (see the code) (E-0347)
 ; why: step 25 of BreedChildScene (when wScriptStep = 25); BreedChildScene: implements script
 ; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
 ; ... (E-0352)
@@ -2400,7 +2401,8 @@ WarpWithFollowers::
     dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
 
 ; step 3 of WarpWithFollowers: calls SetBit1AtHL_Bank12; sets wFollowerRecords to 0; branches on
-; hPlayerY; increments hPlayerY; returns unless hPlayerY is $50; advances wScriptStep (E-0347)
+; hPlayerY; increments hPlayerY; returns unless hPlayerY is $50; advances wScriptStep; also changes
+; HL and A by register arithmetic (E-0347)
 ; why: step 3 of WarpWithFollowers (when wScriptStep = 3); WarpWithFollowers: implements script
 ; command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event (group $13: sets an
 ; object flag, fades, then ... (E-0352)
@@ -2551,7 +2553,8 @@ FollowersStep10::
     dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
 
 ; step 2 of FollowersStep14: calls UpdateFollowersOnStep_Bank12; returns unless hPlayerY is c; calls
-; ClearBit1AtHL_Bank12; sets wScriptStartRequest to $80 (E-0347)
+; ClearBit1AtHL_Bank12; sets wScriptStartRequest to $80; also changes HL, A and C by register
+; arithmetic (E-0347)
 ; why: step 2 of FollowersStep14 (when wScriptStep = 2); FollowersStep14: implements script command
 ; type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers,
 ; toggling object ... (E-0352)
@@ -2753,7 +2756,7 @@ PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing::
 ; $b to hPlayerSpriteOverride; copies the byte at wSpriteSlots + $b to hPlayerSpriteStreamLo; copies
 ; the byte at wSpriteSlots + $b to hPlayerSpriteStreamHi; branches on hPlayerSpriteOverride;
 ; branches on hPlayerSpriteStreamLo; branches on hPlayerSpriteStreamHi; sets hPlayerSpriteTimerLo to
-; $64; sets hPlayerSpriteTimerHi to 0; then 2 more steps (see the code) (E-0347)
+; $64; sets hPlayerSpriteTimerHi to 0; then 3 more steps (see the code) (E-0347)
 ; why: step 2 of PlayerSpriteFlash (when wScriptStep = 2); PlayerSpriteFlash: implements script
 ; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
 ; by ... (E-0352)
@@ -2901,7 +2904,8 @@ MapLinkWarp::
 ; step 1 of MapLinkWarp: sets wScriptStartRequest to $80; may continue in
 ; MapExitWarpTable_CheckKeyWorldActive; branches on the byte at MapExitWarpTable; sets hMapId;
 ; branches on wKeyWorldActive; branches on wKeyWorldKey; calls
-; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc (E-0347)
+; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc; also changes HL, DE, BC and A by register arithmetic
+; (E-0347)
 ; why: step 1 of MapLinkWarp (when wScriptStep = 1); MapLinkWarp: implements script command type 8E
 ; (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by ... (E-0352,
 ; E-0238)
@@ -2998,7 +3002,8 @@ MapExitWarpTable::
 
 ; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; calls
 ; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc; copies wKeyWorldGoalPos to wWarpDestX; copies
-; wKeyWorldGoalPos2 to wWarpDestY; calls MapLinkWarp_StartPaletteFade (E-0347)
+; wKeyWorldGoalPos2 to wWarpDestY; calls MapLinkWarp_StartPaletteFade; also changes DE, A and C by
+; register arithmetic (E-0347)
 ; why: part of MapExitWarpTable; MapExitWarpTable: E-0238, or DE = wKeyWorldGoal when a key world is
 ; active and wKeyWorldKey - 1 equals byte 2 (E-0352, E-0238)
 MapExitWarpTable_CheckKeyWorldActive::
@@ -3090,7 +3095,7 @@ MapExitWarp::
 ; wFieldTransitionKind to 1; calls ScriptStartFadeAndAdvanceStep; sets wFieldTransitionStep to $80;
 ; branches on wMapType; copies the byte at wKeyWorldFloorInfo & $0f to hMapScreenX; sets
 ; hMapScreenY; sets wWarpDestX to $40; sets wWarpDestY to $40; sets wWarpDestFacing to 0; copies
-; wKeyWorldWidth to wMapWidthScreens; then 11 more steps (see the code) (E-0347)
+; wKeyWorldWidth to wMapWidthScreens; then 12 more steps (see the code) (E-0347)
 ; why: step 1 of MapExitWarp (when wScriptStep = 1); MapExitWarp: implements script command type 8A
 ; (SCRIPT_MAP_EXIT_WARP): a key-world/field talk event (group $07, dispatched by ... (E-0352,
 ; E-0182)
@@ -3379,7 +3384,8 @@ ReturnWarp_StartReturnWarpByFlag25::
 ; step 0 of MapLinkWarp: branches on hPlayerY; sets hPlayerY; copies wScriptParam0 & $03 to
 ; hPlayerFacing; branches on wScriptParam0; copies hPlayerFacing to wFollowerRecords; branches on
 ; wScriptParam0; calls StepScriptParam0Counter_Bank12; may return early; copies hPlayerStateFlags &
-; $b7 to hPlayerStateFlags; advances wScriptStep (E-0347)
+; $b7 to hPlayerStateFlags; advances wScriptStep; also changes HL, A and B by register arithmetic
+; (E-0347)
 ; why: step 0 of MapLinkWarp (when wScriptStep = 0); MapLinkWarp: implements script command type 8E
 ; (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by ... (E-0352,
 ; E-0238)
@@ -3855,7 +3861,7 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex::
     ret
 
 ; step 0 of PartyDefeatedReturn: copies C to wScriptParam0; copies wStatusFieldStep to
-; wScriptParam1; advances wScriptStep (E-0347)
+; wScriptParam1; advances wScriptStep; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 0 of PartyDefeatedReturn (when wScriptStep = 0); PartyDefeatedReturn: implements script
 ; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
 ; dispatched from ... (E-0352)
@@ -3899,7 +3905,7 @@ KeyWorldBossBattle::
     dw KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest
 
 ; step 7 of KeyWorldBossBattle: sets wKeyWorldFlags; sets wKeyWorldEncounterTable + $3 to 1; sets
-; wScriptStartRequest to $80 (E-0347)
+; wScriptStartRequest to $80; also changes HL, A and B by register arithmetic (E-0347)
 ; why: step 7 of KeyWorldBossBattle (when wScriptStep = 7); KeyWorldBossBattle: implements script
 ; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
 ; + 0..F), a battle ... (E-0352)
@@ -3936,7 +3942,7 @@ KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
 
 ; step 6 of KeyWorldBossBattle: branches on wScriptParam0; sets wSpriteSlotCount to 1; sets
 ; wSpriteSlotCount to 0; increments wScriptParam0; returns unless wScriptParam0 is $78; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
+; wScriptParam0 to 0; advances wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 6 of KeyWorldBossBattle (when wScriptStep = 6); KeyWorldBossBattle: implements script
 ; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
 ; + 0..F), a battle ... (E-0352)
@@ -4037,7 +4043,7 @@ KeyWorldBossBattle_CopyBytes::
 ; step 1 of KeyWorldBossBattle: calls RunMessageBoxFar_Bank12; may return early; advances
 ; wScriptStep; sets wBattleIntroKind to 3; copies L to wEncounterMonsters; sets wWildLevel; sets
 ; wEncounterKind to 0; copies L to wEncounterMonsters; sets wWildLevel; sets wWildBand; sets
-; wEncounterClass; sets wEncounterKind to 2; then 2 more steps (see the code) (E-0347)
+; wEncounterClass; sets wEncounterKind to 2; then 3 more steps (see the code) (E-0347)
 ; why: step 1 of KeyWorldBossBattle (when wScriptStep = 1); KeyWorldBossBattle: implements script
 ; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
 ; + 0..F), a battle ... (E-0352)
@@ -4354,7 +4360,7 @@ RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed::
 
 ; step 3 of RandomGoldOrItem: branches on wIsCGB; branches on wMapType; branches on hMapId; sets
 ; rSVBK to 2; sets rSVBK to 0; calls DrawFullScreenBufferAtScroll; sets hFieldDrawFlags to 0;
-; advances wScriptStep (E-0347)
+; advances wScriptStep; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: step 3 of RandomGoldOrItem (when wScriptStep = 3); RandomGoldOrItem: implements script
 ; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
 ; from ... (E-0352)
@@ -4579,7 +4585,7 @@ SpawnScriptSpriteInFrontOfPlayer::
 ; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
 ; $7f; branches on hPlayerFacing; sets wMessageIndex; copies E to wMessageGroup; copies D to
 ; wMessageIndex; sets wMessageGroup; sets wMessageIndex; copies E to wMessageGroup; copies D to
-; wMessageIndex; then 4 more steps (see the code) (E-0347)
+; wMessageIndex; then 5 more steps (see the code) (E-0347)
 ; why: part of SpawnScriptSpriteInFrontOfPlayer; SpawnScriptSpriteInFrontOfPlayer: decompresses
 ; sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16 pixels in front
 ; of the player and advances ... (E-0352, E-0129)
@@ -4818,7 +4824,7 @@ FieldScene01_AddStepDeltaToPointedByte::
     ret
 
 ; called from FieldScene01: sets wJoypadHeld to 0; sets wJoypadPressed to 0; dispatches on
-; wScriptStep (E-0347)
+; wScriptStep; also changes A by register arithmetic (E-0347)
 ; why: a helper of FieldScene01; FieldScene01: implements script command type 83
 ; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
 ; FieldModeStateDispatch: ... (E-0352)
@@ -4913,7 +4919,8 @@ FieldScene01_SetStepPtrLo::
 ; step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed: calls
 ; DrawScriptMetaSprite21AtScrollOffset; advances wScriptStep; branches on wMapType; returns if the
 ; byte at FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data is $ff; branches on the byte at
-; FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data; plays music $2b (E-0347)
+; FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data; plays music $2b; also changes HL, A and C
+; by register arithmetic (E-0347)
 ; why: step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 7), in a helper of
 ; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
 ; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
@@ -4952,7 +4959,7 @@ FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data::
 ; step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed: calls DecompressToVRAM; calls
 ; CopyFromBank; sets wOBJPaletteUploadRequest to $7f; branches on hPlayerFacing; sets wMessageIndex;
 ; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; sets wMessageIndex;
-; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 4 more steps (see
+; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 5 more steps (see
 ; the code) (E-0347)
 ; why: step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 3), in a helper of
 ; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
@@ -5032,7 +5039,7 @@ FieldScene01_DecompressToVRAM::
     ret
 
 ; called from FieldScene01: sets wJoypadHeld to 0; sets wJoypadPressed to 0; dispatches on
-; wScriptStep (E-0347)
+; wScriptStep; also changes A by register arithmetic (E-0347)
 ; why: a helper of FieldScene01; FieldScene01: implements script command type 83
 ; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
 ; FieldModeStateDispatch: ... (E-0352)
@@ -5180,7 +5187,7 @@ FieldScene01_SetTriggerEnable::
 ; wFieldActionRequest is set; returns if bit 0 of hPlayerStateFlags is set; branches on
 ; hPlayerFacing; sets wJoypadHeld; returns if B is 0; sets wJoypadHeld; returns if C is $80; sets
 ; wJoypadHeld; returns if B is $90; sets wJoypadHeld; returns if C is 0; branches on
-; wSpriteSlotCount; then 9 more steps (see the code) (E-0347)
+; wSpriteSlotCount; then 10 more steps (see the code) (E-0347)
 ; why: step 8 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
 ; 8), in a helper of FieldScene01; FieldScene01: implements script command type 83
 ; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
@@ -5373,7 +5380,8 @@ FieldScene01_AddStepDeltaToPointedByte_3::
 
 ; step 6 of FieldScene01_WriteJoypadHeldAndJoypadPressed: branches on wScriptParam0; calls
 ; DrawScriptMetaSprite21AtScrollOffset; increments wScriptParam0; returns unless wScriptParam0 is
-; $78; sets wScriptParam0 to 0; advances wScriptStep; sets hFieldDrawFlags to $0e (E-0347)
+; $78; sets wScriptParam0 to 0; advances wScriptStep; sets hFieldDrawFlags to $0e; also changes HL
+; and A by register arithmetic (E-0347)
 ; why: step 6 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 6), in a helper of
 ; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
 ; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
@@ -5469,7 +5477,7 @@ DrawScriptMetaSprite21AtScrollOffset::
 ; step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2: calls DecompressToVRAM;
 ; calls CopyFromBank; sets wOBJPaletteUploadRequest to $7f; branches on hPlayerFacing; sets
 ; wMessageIndex; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; sets
-; wMessageIndex; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 4
+; wMessageIndex; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 5
 ; more steps (see the code) (E-0347)
 ; why: step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
 ; 3), in a helper of FieldScene01; FieldScene01: implements script command type 83
@@ -5603,7 +5611,8 @@ KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor::
 
 ; step 2 of KeyWorldDoorItem: sets wScriptStartRequest to $80; branches on L; copies L to
 ; wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls DrawDoorTilesForKeyWorldFloor; calls
-; DrawFullScreenBufferAtScroll; sets wScriptStartRequest to $80 (E-0347)
+; DrawFullScreenBufferAtScroll; sets wScriptStartRequest to $80; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 2 of KeyWorldDoorItem (when wScriptStep = 2); KeyWorldDoorItem: implements script
 ; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
 ; or key entry ... (E-0352)
@@ -5656,7 +5665,7 @@ KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12::
 ; step 0 of KeyWorldDoorItem: advances wScriptStep; calls StartMessageA; branches on L; calls
 ; CopyItemNameToDE; calls StartMessageA; copies L to wScriptParam0; copies H to wScriptParam1; calls
 ; GenerateNewKeyEntry; branches on hTemp0; calls StartMessageA; copies L to wScriptParam0; copies H
-; to wScriptParam1; then 3 more steps (see the code) (E-0347)
+; to wScriptParam1; then 4 more steps (see the code) (E-0347)
 ; why: step 0 of KeyWorldDoorItem (when wScriptStep = 0); KeyWorldDoorItem: implements script
 ; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
 ; or key entry ... (E-0352)
@@ -5790,7 +5799,7 @@ AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12::
 
 ; step 0 of AreaItemEvent: advances wScriptStep; branches on the byte at wScriptStep; calls
 ; StartMessageA; calls CopyItemNameToDE; calls StartMessageA; copies L to wScriptParam0; copies H to
-; wScriptParam1 (E-0347)
+; wScriptParam1; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 0 of AreaItemEvent (when wScriptStep = 0); AreaItemEvent: implements script command type
 ; 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from
 ; FieldModeStateDispatch: ... (E-0352)
@@ -5906,7 +5915,7 @@ StepTriggerReward_AppendItemStepPtrLoToInventory::
 
 ; step 2 of StepTriggerReward: calls StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; copies
 ; L to hTemp0; copies H to hTemp1; calls AddGoldCapped; sets wTriggerKind to $ff; sets
-; wScriptStartRequest to $80 (E-0347)
+; wScriptStartRequest to $80; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 2 of StepTriggerReward (when wScriptStep = 2); StepTriggerReward: implements script
 ; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
 ; by ... (E-0352)
@@ -5956,7 +5965,7 @@ StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12::
 ; StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; branches on the byte at wScriptStep;
 ; calls CopyItemNameToDE; calls StartMessageA; sets wScriptParam0 to 3; calls CopyItemNameToDE;
 ; calls StartMessageA; sets wScriptParam0 to 5; copies L to wDigits; calls Number24ToPackedBCD;
-; calls WritePackedBCDNoLeadingZeros; then 10 more steps (see the code) (E-0347)
+; calls WritePackedBCDNoLeadingZeros; then 11 more steps (see the code) (E-0347)
 ; why: step 0 of StepTriggerReward (when wScriptStep = 0); StepTriggerReward: implements script
 ; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
 ; by ... (E-0352)
@@ -6195,7 +6204,7 @@ ScriptStepFlashScreenNegative::
     ret
 
 ; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear;
-; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0351)
+; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0353)
 StepScriptParam0Counter_Bank12::
     ld a, [wScriptParam0]
     inc a
@@ -6243,28 +6252,28 @@ PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc::
     inc [hl]
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 SetBit1AtHL_Bank12::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit1AtHL_Bank12::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; sets bit 2 of the byte at [HL]; only A is clobbered (E-0351)
+; sets bit 2 of the byte at [HL]; only A is clobbered (E-0353)
 SetBit2AtHL_B12::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit2AtHL_Bank12::
     ld a, [hl]
     and $fb
@@ -6406,8 +6415,8 @@ RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-; step 3 of RunMessageBox_Bank12: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff
-; (E-0347)
+; step 3 of RunMessageBox_Bank12: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff;
+; also changes A by register arithmetic (E-0347)
 ; why: step 3 of RunMessageBox_Bank12; RunMessageBox_Bank12: the bank-$12 message runner: the same
 ; four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state
 ; 0 ... (E-0352, E-0079)
@@ -6653,7 +6662,7 @@ KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc::
     inc [hl]
     ret
 
-; the same 13 bytes as StartMessageHL_B0F (StartMessageHL_B0F) (E-0105)
+; the same 13 bytes as StartMessageHL_B0F (StartMessageHL_B0F) (E-0353)
 StartMessageHL_B0F_Bank12::
     ld a, l
     ld [wMessageIndex], a
@@ -7285,7 +7294,10 @@ DrawAnimatedMetaSprite1B_Data::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
-; runs the field command for hTemp0 (jump table of 22; called from 49 routines) (E-0124)
+; the 22 field commands that scenes and map entry run with hTemp0 = command: each places script
+; object 5 (wObject5) and decompresses its graphics to VRAM, setting up a scripted figure of a scene
+; (E-0354; was: runs the field command for hTemp0 (jump table of 22; called from 49 routines)
+; (E-0124))
 RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
@@ -7314,9 +7326,11 @@ RunFieldCommandTemp0::
 
 ; step 20 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to $80 (E-0347)
-; why: step 20 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to $80; also changes HL and A by register arithmetic
+; (E-0347)
+; why: step 20 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7344,8 +7358,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM::
 ; RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 3; sets wObject5 to 0
 ; (E-0347)
-; why: step 19 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; why: step 19 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_SetObject5::
     call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
     push af
@@ -7361,10 +7376,11 @@ RunFieldCommandTemp0_WriteObject5_SetObject5::
     ret
 
 ; step 18 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 18 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
+; changes HL and A by register arithmetic (E-0347)
+; why: step 18 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7385,10 +7401,11 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2::
     ret
 
 ; step 17 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 17 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
+; changes HL and A by register arithmetic (E-0347)
+; why: step 17 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7412,8 +7429,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to 0
 ; (E-0347)
-; why: step 16 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; why: step 16 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7436,8 +7454,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to 0
 ; (E-0347)
-; why: step 15 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; why: step 15 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7458,10 +7477,11 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5::
 
 ; step 13 of RunFieldCommandTemp0: calls
 ; RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 3; sets wObject5 to $80
-; (E-0347)
-; why: step 13 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 3; sets wObject5 to $80;
+; also changes HL and A by register arithmetic (E-0347)
+; why: step 13 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_SetObject5_2::
     call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
     push af
@@ -7488,10 +7508,11 @@ RunFieldCommandTemp0_WriteObject5_SetObject5_2::
     ret
 
 ; step 12 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 12 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
+; changes HL and A by register arithmetic (E-0347)
+; why: step 12 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7518,10 +7539,11 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6::
     ret
 
 ; step 11 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 11 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
+; changes HL and A by register arithmetic (E-0347)
+; why: step 11 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7551,8 +7573,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to 0
 ; (E-0347)
-; why: step 10 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0
-; (jump table of 22 (E-0352, E-0124)
+; why: step 10 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7575,8 +7598,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to $80
 ; (E-0347)
-; why: step 9 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 9 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7599,8 +7623,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $50; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
 ; (E-0347)
-; why: step 8 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 8 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7623,8 +7648,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to $80
 ; (E-0347)
-; why: step 7 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 7 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7647,8 +7673,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $70; sets wObject5 to $80
 ; (E-0347)
-; why: step 6 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 6 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7676,8 +7703,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 0; sets wObject5 to $80
 ; (E-0347)
-; why: step 5 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 5 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7700,8 +7728,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $50; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
 ; (E-0347)
-; why: step 4 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 4 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7723,8 +7752,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14::
 ; step 3 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
 ; (E-0347)
-; why: step 3 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 3 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7743,8 +7773,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
 ; (E-0347)
-; why: step 2 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 2 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7766,8 +7797,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16::
 ; step 1 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
 ; (E-0347)
-; why: step 1 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 1 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7786,8 +7818,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17::
 ; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
 ; SCRIPTOBJ_TILE_OFFSET to $60; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to $80
 ; (E-0347)
-; why: step 0 of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; why: step 0 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
+; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
+; ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_WriteObject5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7807,9 +7840,10 @@ RunFieldCommandTemp0_WriteObject5::
     ret
 
 ; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
-; $7f (E-0347)
-; why: part of RunFieldCommandTemp0; RunFieldCommandTemp0: runs the field command for hTemp0 (jump
-; table of 22 (E-0352, E-0124)
+; $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: part of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and map
+; entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its ...
+; (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_DecompressToVRAM::
     ldh a, [hTemp0]
     and $7f
@@ -7861,9 +7895,10 @@ RunFieldCommandTemp0_DecompressToVRAM::
     ret
 
 ; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
-; $7f (E-0347)
+; $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of RunFieldCommandTemp0_DecompressToVRAM, in part of RunFieldCommandTemp0;
-; RunFieldCommandTemp0: runs the field command for hTemp0 (jump table of 22 (E-0352, E-0124)
+; RunFieldCommandTemp0: the 22 field commands that scenes and map entry run with hTemp0 = command:
+; each places script object 5 (wObject5) and decompresses its ... (E-0352, E-0354, E-0124)
 RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
     ldh a, [hTemp0]
     and $7f
@@ -7945,7 +7980,8 @@ DrawFieldSprites::
 
 ; Sets hSpriteTileOffset; sets hSpriteSetIndex; calls DrawFieldSprites_WriteSpriteSubIndex; sets
 ; hSpriteSubIndex to 0; sets hSpriteAttrXor; sets hSpriteOriginX; sets hSpriteOriginXHi; sets
-; hSpriteOriginY; sets hSpriteOriginYHi; calls DrawMetaSprite (E-0347)
+; hSpriteOriginY; sets hSpriteOriginYHi; calls DrawMetaSprite; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: part of DrawFieldSprites; DrawFieldSprites: unless the map is loading or wObject5 bit 7 is
 ; clear: reads the sprite entries starting at wObject5 (tile offset, set index with bit 7 ...
 ; (E-0352)
@@ -8108,7 +8144,8 @@ DrawFieldSprites_WriteObject5::
 .return:
     ret
 
-; Increments wObject5 + $7; returns unless the byte at wObject5 + $7 is $ff (E-0347)
+; Increments wObject5 + $7; returns unless the byte at wObject5 + $7 is $ff; also changes HL, A and
+; C by register arithmetic (E-0347)
 ; why: part of DrawFieldSprites_WriteObject5, in part of DrawFieldSprites; DrawFieldSprites: unless
 ; the map is loading or wObject5 bit 7 is clear: reads the sprite entries starting at wObject5 (tile
 ; offset, set index with bit 7 ... (E-0352)
@@ -8356,8 +8393,8 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
     jr FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell
 
 ; Sets wTriggerCell; returns if the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data is
-; 0; copies the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data to wTriggerKind
-; (E-0347)
+; 0; copies the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data to wTriggerKind; also
+; changes HL and A by register arithmetic (E-0347)
 ; why: part of FindTriggerEntryForCurrentScreen_ScreenTriggers;
 ; FindTriggerEntryForCurrentScreen_ScreenTriggers: on maps from $30 (or special map $85) finds the
 ; wScreenTriggers entry for the current screen and sets wTriggerIndex, wTriggerCell and ... (E-0352,
@@ -8382,7 +8419,7 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell::
     ld [wTriggerKind], a
 
 ; Calls DecompressToVRAM; returns if wIsCGB is 0; branches on wIsCGB; calls CopyFromBank; sets
-; wOBJPaletteUploadRequest to $7f (E-0347)
+; wOBJPaletteUploadRequest to $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of RandomGoldOrItem; RandomGoldOrItem: implements script command type 84
 ; (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from ...
 ; (E-0352)
@@ -8751,7 +8788,7 @@ CheckStepTriggerAndDispatchTalk::
 ; set; returns if bit 0 of hPlayerStateFlags is set; returns unless bit 0 of wJoypadPressed is set;
 ; returns unless bit 7 of wMapType is set; branches on wMapType; returns unless wMapType is $86;
 ; branches on hPlayerFacing; calls ReadTileBuffer2x2AtPixel_Bank12; branches on wMapType; branches
-; on wTilesUnderPoint; copies L to wScriptParam0; then 30 more steps (see the code) (E-0347)
+; on wTilesUnderPoint; copies L to wScriptParam0; then 31 more steps (see the code) (E-0347)
 ; why: a helper of FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens
 ; the field menu (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
 FieldState_WalkAMenu_WaitTextWindowState::
@@ -9509,8 +9546,8 @@ TriggerEventForStatusedMemberHP::
 
 ; called from RunPeriodicFieldEventChecks: branches on wEventItemSlot; branches on wGoldHi; branches
 ; on wGoldMid; branches on wGoldLo; sets rRAMG to $0a; calls LoadSRAMRecordWord; sets rRAMG to 0;
-; sets rRAMG to $0a; calls LoadSRAMRecordWord; sets rRAMG to 0; branches on D; branches on E; then 1
-; more step (see the code) (E-0347)
+; sets rRAMG to $0a; calls LoadSRAMRecordWord; sets rRAMG to 0; branches on D; branches on E; then 2
+; more steps (see the code) (E-0347)
 ; why: a helper of RunPeriodicFieldEventChecks; RunPeriodicFieldEventChecks: on town maps, every 100
 ; calls (wTownEventTimer), tries the gold, party-stat and digit events in turn until one sets
 ; wPendingFieldEvent (E-0352, E-0128)
@@ -10107,7 +10144,7 @@ RunPendingFieldEventPendingFieldEvent_Skip::
 ; wPendingFieldEvent & $0f; sets wPendingFieldEvent to 0; sets wTownEventTimer to $63; calls
 ; RunPeriodicFieldEventChecks; calls NextTableByte; calls ReadTileBuffer2x2AtPixel_Bank12; calls
 ; RollFieldEventOnTallTiles; may return early; sets wSpriteSlots to 3; copies wPendingFieldEvent &
-; $bf to wPendingFieldEvent; then 9 more steps (see the code) (E-0347)
+; $bf to wPendingFieldEvent; then 10 more steps (see the code) (E-0347)
 ; why: part of RunPendingFieldEventPendingFieldEvent; RunPendingFieldEventPendingFieldEvent: on town
 ; maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage (E-0352, E-0130)
 RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
@@ -10299,7 +10336,8 @@ RunPendingFieldEventPendingFieldEvent_Data2::
 
 ; called from ClearPendingFieldEventWhenFieldIdle: branches on wMapType; branches on hMapId;
 ; branches on hMapScreenX; branches on hMapScreenY; checks EVENT_SCENE_CRATE; checks
-; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD; sets wPendingFieldEvent to 0 (E-0347)
+; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD; sets wPendingFieldEvent to 0; also changes DE and A by register
+; arithmetic (E-0347)
 ; why: a helper of ClearPendingFieldEventWhenFieldIdle; ClearPendingFieldEventWhenFieldIdle: returns
 ; unless ClearPendingFieldEventWhenFieldIdle_TestFlagBit is 0, wTriggerKind is $FF and no script
 ; runs (E-0352, E-0122)
@@ -10373,7 +10411,7 @@ FindPartyIndexOfSpeciesTemp0::
     ret
 
 ; hTemp0 = the index of the first byte of the 24-entry list at wInventory equal to hTemp0; $FF when
-; an entry is $00 or $FF first or no entry matches (E-0351)
+; an entry is $00 or $FF first or no entry matches (E-0353)
 FindTemp0InInventoryList::
     ldh a, [hTemp0]
     ld c, a

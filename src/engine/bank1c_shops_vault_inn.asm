@@ -425,7 +425,7 @@ SendSGBPaletteSetForSGBPaletteSet::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0351)
+; 19 bytes appear in 5 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank1C::
     ld a, $02
     ldh [rSVBK], a
@@ -673,7 +673,7 @@ IsAmountInArg1AboveGold::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank1C::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -693,7 +693,8 @@ BGMapAddressAtScroll_Bank1C::
     ret
 
 ; called from InnMenu_Init: sets wArg7 to 0; copies H to wArg8; copies L to wMenuInputResult;
-; branches on the byte at wDigits; branches on C (E-0347)
+; branches on the byte at wDigits; branches on C; also changes HL, DE, A and C by register
+; arithmetic (E-0347)
 ; why: a helper of InnMenu_Init; InnMenu_Init: state 0 of InnMenu: clears the screen state (E-0352,
 ; E-0276)
 InnMenu_Init_WriteArg7AndArg8Etc::
@@ -801,7 +802,8 @@ DrawScreenBufferRectToBGMap_1C::
     ldh [c], a
     ret
 
-; called from InnMenu_Pay: sets wGoldHi; copies B to wGoldMid; copies C to wGoldLo (E-0347)
+; called from InnMenu_Pay: sets wGoldHi; copies B to wGoldMid; copies C to wGoldLo; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of InnMenu_Pay; InnMenu_Pay: checks the price against the gold
 ; (IsAmountInArg1AboveGold) and redraws the gold (E-0352, E-0276)
 InnMenu_Pay_WriteGoldHiAndGoldMidEtc::
@@ -850,7 +852,7 @@ InnMenu_Pay_CopyBytesDEToHL_Bank1C::
 
 ; called from InnMenu_Pay: branches on C; calls DrawGoldDigitsAtHLWrapped_1C; branches on
 ; wTextWindowState; calls CopyRectTo20ByteRowsJp_Bank1C; calls BGMapAddressAtScroll_Bank1C; calls
-; DrawScreenBufferRectToBGMap_1C (E-0347)
+; DrawScreenBufferRectToBGMap_1C; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of InnMenu_Pay; InnMenu_Pay: checks the price against the gold
 ; (IsAmountInArg1AboveGold) and redraws the gold (E-0352, E-0276)
 InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C::
@@ -1312,7 +1314,8 @@ ShopMenu_ChooseAction::
 
 ; called from ShopMenu_ChooseAction: may continue in ShopMenu_ChooseAction_ReadListLastRow;
 ; increments wReturnScreenStep; may continue in ShopMenu_ChooseAction_ReadListLastRow; may continue
-; in ShopMenu_ChooseAction_ReadListLastRow_2; sets wReturnScreenStep to 0 (E-0347)
+; in ShopMenu_ChooseAction_ReadListLastRow_2; sets wReturnScreenStep to 0; also changes A by
+; register arithmetic (E-0347)
 ; why: a helper of ShopMenu_ChooseAction; ShopMenu_ChooseAction: the shop's choice menu: Up/Down
 ; move the cursor, A selects, B leaves (E-0352, E-0276)
 ShopMenu_ChooseAction_WriteReturnScreenStep::
@@ -1351,7 +1354,8 @@ ShopMenu_ChooseAction_ReadListLastRow_2::
 ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap, in a helper of
 ; ShopMenu_ChooseAction; ShopMenu_ChooseAction: the shop's choice menu: Up/Down move the cursor, A
 ; selects, B leaves (E-0352, E-0276)
@@ -1403,7 +1407,7 @@ ShopMenu_Buy::
 
 ; step 0 of ShopMenu_Buy: branches on the byte at ShopMenu_Buy_WriteVBKAndScreenStep_Data; branches
 ; on rSTAT; branches on wIsCGB; sets rVBK to 1; branches on rSTAT; sets rVBK to 0; increments
-; wScreenStep (E-0347)
+; wScreenStep; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 0 of ShopMenu_Buy (when wScreenStep = 0); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -1479,7 +1483,7 @@ ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
 ; wSavedSpriteClipMode; copies L to wSavedFieldDrawFlags; branches on wItemGridY; decrements
 ; wItemGridY; sets wMenuChoice; branches on wItemGridX; calls EraseItemGridXCursor; copies B to
 ; wItemGridX; sets wMenuChoice to 3; branches on wSavedFieldDrawFlags; calls
-; DrawC5BEC6AtScroll18E_Bank1C; then 9 more steps (see the code) (E-0347)
+; DrawC5BEC6AtScroll18E_Bank1C; then 10 more steps (see the code) (E-0347)
 ; why: step 2 of ShopMenu_Buy (when wScreenStep = 2); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -1595,7 +1599,7 @@ ShopMenu_Buy_LoadArg1PointerForScreenTableIndex::
 ; byte at ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable; branches on the byte at
 ; ItemNamesCopy_1C; copies the byte at ItemNamesCopy_1C to wListCursorBlink; branches on the byte at
 ; ItemNamesCopy_1C; branches on wListCursorBlink; decrements wGlyphListPos; branches on
-; wListCursorBlink; then 8 more steps (see the code) (E-0347)
+; wListCursorBlink; then 9 more steps (see the code) (E-0347)
 ; why: step 3 of ShopMenu_Buy (when wScreenStep = 3); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -1771,7 +1775,7 @@ ShopMenu_Buy_AdvanceScreenStep::
 ; step 5 of ShopMenu_Buy: calls LoadArg1PointerForScreenTableIndex; sets wArg3 to $e3; sets wArg4 to
 ; $e3; sets wArg5 to $e3; sets wArg6 to $e3; sets wArg7 to $e3; sets wArg8 to $e3; calls
 ; ReadF2FarPointerForScreenTableIndex; calls ShopMenu_Buy_ReadFarPointerAtDEInBankB; calls
-; ReadFarPointerAtDEInBankB; copies L to wDigits; calls Number24ToPackedBCD; then 13 more steps (see
+; ReadFarPointerAtDEInBankB; copies L to wDigits; calls Number24ToPackedBCD; then 14 more steps (see
 ; the code) (E-0347)
 ; why: step 5 of ShopMenu_Buy (when wScreenStep = 5); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
@@ -2072,7 +2076,8 @@ EraseItemGridXCursor::
 DrawItemGridXCursorConfirmed::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of DrawItemGridXCursorConfirmed; DrawItemGridXCursorConfirmed: writes the
 ; confirmed-cursor tile $BC at the position for wItemGridX (0-3 (E-0352, E-0074)
 DrawItemGridXCursorConfirmed_ReadItemGridX::
@@ -2145,8 +2150,8 @@ ShopMenu_Buy_ResetTextCounter0Counters::
 ; step 8 of ShopMenu_Buy: sets wNumberTens to 0; sets wNumberOnes to 1; calls
 ; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB;
 ; branches on C; branches on B; branches on wIsCGB; sets wShopNumberTens; sets wScreenCountPlusOne;
-; calls BGMapAddressAtScroll_Bank1C_2; calls ClearRectSetTextCursorLoPlus1C1_Bank1C; then 1 more
-; step (see the code) (E-0347)
+; calls BGMapAddressAtScroll_Bank1C_2; calls ClearRectSetTextCursorLoPlus1C1_Bank1C; then 2 more
+; steps (see the code) (E-0347)
 ; why: step 8 of ShopMenu_Buy (when wScreenStep = 8); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -2587,7 +2592,8 @@ ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2::
 ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Skip::
     ld b, $cb
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2, in a helper of
 ; ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C, in step 9 of ShopMenu_Buy (when wScreenStep = 9);
 ; ShopMenu_Buy: buying: items from ShopItemListTable for wScreenTableIndex, a gold check
@@ -2663,7 +2669,8 @@ DrawNumberTensOnesAtTableOffsets_Data::
 
 ; called from ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C: calls LoadArg1PointerForScreenTableIndex;
 ; calls ReadF2FarPointerForScreenTableIndex; calls ShopMenu_Buy_ReadFarPointerAtDEInBankB; calls
-; ReadFarPointerAtDEInBankB; copies L to wThreeDigits (E-0347)
+; ReadFarPointerAtDEInBankB; copies L to wThreeDigits; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C, in step 9 of ShopMenu_Buy (when
 ; wScreenStep = 9); ShopMenu_Buy: buying: items from ShopItemListTable for wScreenTableIndex, a gold
 ; check (IsAmountInArg1AboveGold) and SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -2738,7 +2745,7 @@ ShopMenu_Buy_WriteThreeDigits::
 ; the byte at wThreeDigits to wDigits; calls Number24ToPackedBCD; copies hTemp3 & $0f to
 ; wScreenList; copies hTemp2 & $f0 to wListEntries; copies hTemp2 & $0f to wGrid2CursorX; copies
 ; hTemp1 & $f0 to wGrid2CursorY; copies hTemp1 & $0f to wScreenArea; copies hTemp0 & $f0 to
-; wShopNumberTens; copies hTemp0 & $0f to wScreenCountPlusOne; branches on wScreenList; then 17 more
+; wShopNumberTens; copies hTemp0 & $0f to wScreenCountPlusOne; branches on wScreenList; then 18 more
 ; steps (see the code) (E-0347)
 ; why: step 10 of ShopMenu_Buy (when wScreenStep = 10); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
@@ -2858,7 +2865,8 @@ ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetListCursorBlink::
 
 ; step 11 of ShopMenu_Buy: calls BGMapAddressAtScroll_Bank1C_2; calls
 ; StepBGMapAddressBackOnScrollWrap; branches on C; branches on B; calls
-; ClearRectSetTextCursorLoPlus1C1_Bank1C; plays sound $6c; increments wScreenStep (E-0347)
+; ClearRectSetTextCursorLoPlus1C1_Bank1C; plays sound $6c; increments wScreenStep; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: step 11 of ShopMenu_Buy (when wScreenStep = 11); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -2915,7 +2923,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
 ; BlinkCursorBlinkD2_Bank1C; calls DrawBlankTileC3_Bank1C; branches on wShopCursorToggle; sets
 ; wShopCursorToggle to 1; calls BlinkCursorBlinkD2_Bank1C; plays sound $69; calls
 ; DrawBlankTileC3_Bank1C; branches on wShopCursorToggle; plays sound $69; calls
-; ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2; then 21 more steps (see the code) (E-0347)
+; ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2; then 22 more steps (see the code) (E-0347)
 ; why: step 12 of ShopMenu_Buy (when wScreenStep = 12); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -3092,7 +3100,8 @@ DrawBlankTileC3_Bank1C::
 ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2, in a helper of
 ; ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C, in step 12 of ShopMenu_Buy (when wScreenStep = 12);
 ; ShopMenu_Buy: buying: items from ShopItemListTable for wScreenTableIndex, a gold check
@@ -3156,7 +3165,7 @@ ShopMenu_Buy_DrawTwoBoxesAndRequestScript80::
 
 ; step 16 of ShopMenu_Buy: calls BGMapAddressAtScroll_Bank1C_2; calls
 ; StepBGMapAddressBackOnScrollWrap; branches on wItemGridY; sets wScreenStep to 0; sets wItemGridX
-; to 0; sets wItemGridY to 0 (E-0347)
+; to 0; sets wItemGridY to 0; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 16 of ShopMenu_Buy (when wScreenStep = 16); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -3200,7 +3209,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_3::
 ; step 14 of ShopMenu_Buy: sets wArg3; sets wArg2; copies wThreeDigits to wArg1; calls
 ; SubtractArg1AmountFromGold; calls LoadArg1PointerForScreenTableIndex; sets wListCursorBlink;
 ; branches on the byte at wInventory; branches on B; branches on C; sets wScreenState to 1; sets
-; wScreenStep to 1; sets wItemGridX to 0; then 17 more steps (see the code) (E-0347)
+; wScreenStep to 1; sets wItemGridX to 0; then 18 more steps (see the code) (E-0347)
 ; why: step 14 of ShopMenu_Buy (when wScreenStep = 14); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
@@ -3392,7 +3401,7 @@ ShopMenu_Sell::
 ; step 2 of ShopMenu_Sell: branches on the byte at wInventory; branches on B; copies C to
 ; wListPages; calls ListDistinctInventoryItemsToItemGrid; branches on the byte at wItemGrid;
 ; branches on B; copies L to wSavedSpriteSlotCount; branches on wItemGridY; decrements wItemGridY;
-; sets wMenuChoice; branches on wItemGridX; calls EraseItemGridXCursor; then 13 more steps (see the
+; sets wMenuChoice; branches on wItemGridX; calls EraseItemGridXCursor; then 14 more steps (see the
 ; code) (E-0347)
 ; why: step 2 of ShopMenu_Sell (when wScreenStep = 2); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -3538,7 +3547,7 @@ ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid::
 ; wGlyphListPos; sets wGlyphListPos to 0; branches on the byte at ItemNamesCopy_1C; copies the byte
 ; at ItemNamesCopy_1C to wListCursorBlink; branches on the byte at ItemNamesCopy_1C; branches on
 ; wListCursorBlink; decrements wGlyphListPos; branches on wListCursorBlink; calls
-; CopyFromBankWaitVRAM; calls OrFromBankWaitVRAM; then 6 more steps (see the code) (E-0347)
+; CopyFromBankWaitVRAM; calls OrFromBankWaitVRAM; then 7 more steps (see the code) (E-0347)
 ; why: step 3 of ShopMenu_Sell (when wScreenStep = 3); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
 ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc::
@@ -3700,7 +3709,7 @@ ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc::
 ; step 4 of ShopMenu_Sell: calls ComputeSellPrice; copies L to wDigits; calls Number24ToPackedBCD;
 ; copies hTemp1 & $f0 to wSharedMenuWork; copies hTemp1 & $0f to wListEntries2; copies hTemp0 & $f0
 ; to wMenuWordBuf; copies hTemp0 & $0f to wMenuWordBuf1; branches on wSharedMenuWork; sets
-; wSharedMenuWork; branches on wListEntries2; sets wListEntries2; branches on wMenuWordBuf; then 16
+; wSharedMenuWork; branches on wListEntries2; sets wListEntries2; branches on wMenuWordBuf; then 17
 ; more steps (see the code) (E-0347)
 ; why: step 4 of ShopMenu_Sell (when wScreenStep = 4); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -4047,7 +4056,7 @@ ShopMenu_Sell_ResetTextCounter0Counters::
 ; step 7 of ShopMenu_Sell: sets wNumberTens to 0; sets wNumberOnes to 1; calls
 ; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB;
 ; branches on C; branches on B; branches on wIsCGB; sets wShopScrollA; sets wShopScrollB; calls
-; CountItemInInventoryToDigits; branches on wCountTens; then 6 more steps (see the code) (E-0347)
+; CountItemInInventoryToDigits; branches on wCountTens; then 7 more steps (see the code) (E-0347)
 ; why: step 7 of ShopMenu_Sell (when wScreenStep = 7); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
 ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
@@ -4205,7 +4214,7 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
 ; BlinkCursorBlinkCD_Bank1C_2; calls BGMapAddressAtScroll_Bank1C_2; calls
 ; DrawRectBothBanksSetTextCursorLoPlus1C1; sets wTwoChoiceCursor to 1; sets wScreenStep to 5; sets
 ; wTextTimer to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; calls
-; ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2; branches on wNumberEditPos; then 56 more steps (see
+; ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2; branches on wNumberEditPos; then 57 more steps (see
 ; the code) (E-0347)
 ; why: step 8 of ShopMenu_Sell (when wScreenStep = 8); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -4513,7 +4522,8 @@ ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2::
 ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_Skip::
     ld b, $cb
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2, in a helper of
 ; ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2, in step 8 of ShopMenu_Sell (when wScreenStep = 8);
 ; ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice, paid with
@@ -4586,7 +4596,7 @@ DrawNumberTensOnesAtTableOffsets_2_Data::
     db $62, $01
 
 ; called from ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2: calls ComputeSellPrice; copies L to
-; wThreeDigits (E-0347)
+; wThreeDigits; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2, in step 8 of ShopMenu_Sell (when
 ; wScreenStep = 8); ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice,
 ; paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -4651,7 +4661,7 @@ ShopMenu_Sell_WriteThreeDigits::
 ; wThreeDigits to wDigits; calls Number24ToPackedBCD; copies hTemp2 & $f0 to wScreenList; copies
 ; hTemp2 & $0f to wListEntries; copies hTemp1 & $f0 to wGrid2CursorX; copies hTemp1 & $0f to
 ; wGrid2CursorY; copies hTemp0 & $f0 to wScreenArea; copies hTemp0 & $0f to wShopNumberTens;
-; branches on wScreenList; sets wScreenList to $90; branches on wListEntries; then 13 more steps
+; branches on wScreenList; sets wScreenList to $90; branches on wListEntries; then 14 more steps
 ; (see the code) (E-0347)
 ; why: step 9 of ShopMenu_Sell (when wScreenStep = 9); ShopMenu_Sell: selling: items from the
 ; inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -4883,7 +4893,8 @@ DrawBlankTileC3_Bank1C_2::
 ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2, in a helper of
 ; ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2, in step 11 of ShopMenu_Sell (when wScreenStep = 11);
 ; ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice, paid with
@@ -5059,7 +5070,8 @@ ShopMenu_Sell_AddArg1ToGoldCapped99999::
     ld [wScriptStartRequest], a
     ret
 
-; Branches on the byte at wInventory; calls ReadFarPointerAtDEInBankB (E-0347)
+; Branches on the byte at wInventory; calls ReadFarPointerAtDEInBankB; also changes HL, DE, BC and A
+; by register arithmetic (E-0347)
 ; why: part of ShopMenu_Buy; ShopMenu_Buy: buying: items from ShopItemListTable for
 ; wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and SubtractArg1AmountFromGold (E-0352,
 ; E-0276)
@@ -5895,7 +5907,7 @@ ItemName1C_62::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0351)
+; (E-0353)
 CopyTileBytesToVRAM_Bank1C::
     ld c, $10
 
@@ -5915,7 +5927,7 @@ CopyTileBytesToVRAM_Bank1C::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank1C_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -6520,7 +6532,7 @@ ResetTextCounter0Counters::
 ; Branches on wJoypadPressedRepeat; branches on wScreenState; branches on wScreenStep; branches on
 ; wJoypadPressedRepeat; sets wTextCounter0 to 3; sets wTextCounter6 to 1; sets wTextTimer to $3c;
 ; increments wTextTimer; returns if wTextTimer is below $3c; sets wTextTimer to $3c; dispatches on
-; wTextCounter0 (E-0347)
+; wTextCounter0; also changes A by register arithmetic (E-0347)
 ; why: part of ShopMenu; ShopMenu: implements script command type E2 (SCRIPT_SHOP): the shop: 'What
 ; would you like to buy?', 'That comes to 0G. OK?' (E-0352, E-0038, E-0244)
 ShopMenu_WriteTextCounter6AndTextTimerEtc::
@@ -6579,7 +6591,8 @@ ShopMenu_WriteTextCounter6AndTextTimerEtc::
 
 ; step 0 of ShopMenu_WriteTextCounter6AndTextTimerEtc: calls BGMapAddressAtScroll_Bank1C_2; calls
 ; ClearRectSetTextCursorLoPlus1C1_Bank1C; calls CopyTileBytesToVRAM_Bank1C; increments
-; wTextCounter0; continues in ShopMenu_SetTextCounter0 (E-0347)
+; wTextCounter0; continues in ShopMenu_SetTextCounter0; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 0 of ShopMenu_WriteTextCounter6AndTextTimerEtc (when wTextCounter0 = 0), in part of
 ; ShopMenu; ShopMenu: implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you
 ; like to buy?', 'That comes to 0G. OK?' (E-0352, E-0038, E-0244)
@@ -6848,7 +6861,8 @@ VaultMenu_Setup_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep::
     ld [wScreenStep], a
     ret
 
-; step 3 of VaultMenu_Setup: calls CopyFromBankWaitVRAM; increments wScreenStep (E-0347)
+; step 3 of VaultMenu_Setup: calls CopyFromBankWaitVRAM; increments wScreenStep; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: step 3 of VaultMenu_Setup (when wScreenStep = 3); VaultMenu_Setup: screen setup: tile lists,
 ; the item list screen and its box (E-0352, E-0276)
 VaultMenu_Setup_CopyFromBankWaitVRAM::
@@ -7021,7 +7035,8 @@ VaultMenu_ChooseAction::
 ; called from VaultMenu_ChooseAction: branches on wJoypadRepeatTimer; increments wReturnScreenStep;
 ; branches on wReturnScreenStep; may continue in VaultMenu_ChooseAction_ReadListLastRow; sets
 ; wReturnScreenStep to 0; continues in
-; VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_2_ReadListLastRow (E-0347)
+; VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_2_ReadListLastRow; also changes A and B by
+; register arithmetic (E-0347)
 ; why: a helper of VaultMenu_ChooseAction; VaultMenu_ChooseAction: the Vault's choice menu: Up/Down
 ; move the cursor, A selects, B leaves (E-0352, E-0276)
 VaultMenu_ChooseAction_WriteReturnScreenStep::
@@ -7056,7 +7071,7 @@ VaultMenu_ChooseAction_ReadListLastRow::
 VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1C_2 (E-0347)
+; Calls BGMapAddressAtScroll_Bank1C_2; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_ChooseAction_BGMapAddressAtScroll_Bank1C_2, in a helper of
 ; VaultMenu_ChooseAction; VaultMenu_ChooseAction: the Vault's choice menu: Up/Down move the cursor,
 ; A selects, B leaves (E-0352, E-0276)
@@ -7205,7 +7220,7 @@ VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep::
 ; branches on the byte at ItemNamesCopy_1C; copies the byte at ItemNamesCopy_1C to wListCursorBlink;
 ; branches on the byte at ItemNamesCopy_1C; branches on wListCursorBlink; decrements wGlyphListPos;
 ; branches on wListCursorBlink; calls CopyFromBankWaitVRAM; calls OrFromBankWaitVRAM; increments
-; wGlyphListPos; sets wGlyphListPos to 0; then 4 more steps (see the code) (E-0347)
+; wGlyphListPos; sets wGlyphListPos to 0; then 5 more steps (see the code) (E-0347)
 ; why: step 9 of VaultMenu_Store (when wScreenStep = 9); VaultMenu_Store: storing: moves items from
 ; wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc::
@@ -7684,7 +7699,7 @@ InitItemListScreenListAndDraw::
     ret
 
 ; Calls CopyFromBankWaitVRAM; increments wGlyphListPos; branches on wGlyphListPos; sets
-; wGlyphListPos to 0 (E-0347)
+; wGlyphListPos to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_Store; VaultMenu_Store: storing: moves items from wInventory into
 ; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteGlyphListPos::

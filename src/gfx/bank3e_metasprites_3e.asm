@@ -50,7 +50,7 @@ MetaSprites3ETable::
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
 ; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
-; (40 entries) (the same 81 bytes appear in 5 banks) (E-0351)
+; (40 entries) (the same 81 bytes appear in 5 banks) (E-0353)
 BuildOamFromSpriteTable_Bank3E::
     ldh a, [hOamNextEntry]
     cp $28

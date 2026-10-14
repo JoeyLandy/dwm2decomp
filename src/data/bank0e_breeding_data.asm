@@ -678,7 +678,7 @@ MessageBank0E_87::
     db "a monster.<WAIT>"
     db "@"
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank0E::
     ld de, BeginStringDisplay_Bank0E_StringCategories
     call BeginStringDisplay
@@ -686,7 +686,7 @@ BeginStringDisplay_Bank0E::
     db $11, $85, $53, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_Bank0E (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_Bank0E::
     call BeginStringDisplay_Bank0E
     call RunStringDisplayToEnd
@@ -2496,7 +2496,7 @@ CombinedPersonalityLevelIndexOfRecord::
     add b
     ret
 
-; the same 13 bytes as GradeTemp0 (GradeTemp0) (E-0105)
+; the same 13 bytes as GradeTemp0 (GradeTemp0) (E-0353)
 GradeTemp0_Bank0E::
     ldh a, [hTemp0]
     ld c, $00

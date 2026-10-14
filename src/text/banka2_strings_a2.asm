@@ -65,7 +65,7 @@ LoadMonsterRecordTo_Multiply8By16::
     pop de
     ld b, $1a
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_BankA2::
     ld a, [hli]
     ld [de], a

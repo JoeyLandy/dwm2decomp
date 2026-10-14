@@ -284,7 +284,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ret
 
 ; step 0 of SceneWatchOut: sets wNameGlyphBuf to $1c; shows 'Hm, you are quite strong…'; advances
-; wScriptStep (E-0347)
+; wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 0 of SceneWatchOut (when wScriptStep = 0); SceneWatchOut: implements script command type
 ; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
 ; keep ... (E-0352, E-0038, E-0245)
@@ -669,7 +669,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ret
 
 ; step 0 of SceneWaterReward: sets wNameGlyphBuf to $0b; shows 'Cooh, I heard from others'; advances
-; wScriptStep (E-0347)
+; wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 0 of SceneWaterReward (when wScriptStep = 0); SceneWaterReward: implements script
 ; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
 ; shows: 'King This ... (E-0352, E-0038, E-0245)
@@ -767,7 +767,8 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     call WriteVRAMByte
     ret
 
-; Copies wScriptMsgSelect & $03 to wScriptMsgSelect (E-0347)
+; Copies wScriptMsgSelect & $03 to wScriptMsgSelect; also changes HL, A and C by register arithmetic
+; (E-0347)
 ; why: part of SceneWatchOut; SceneWatchOut: implements script command type 2A
 ; (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
 ; keep ... (E-0352, E-0038, E-0245)
@@ -2223,7 +2224,8 @@ ScenePoorChurch::
     dw ScenePoorChurch_NextRandomSeed
 
 ; step 3 of ScenePoorChurch: calls NextRandomSeed; increments wScriptParam0; returns unless
-; wScriptParam0 is $3c; sets wScriptStartRequest to $80 (E-0347)
+; wScriptParam0 is $3c; sets wScriptStartRequest to $80; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 3 of ScenePoorChurch (when wScriptStep = 3); ScenePoorChurch: implements script command
 ; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
 ; ... 'Our church ... (E-0352, E-0038, E-0245)
@@ -2295,7 +2297,8 @@ ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
 
 ; step 1 of ScenePoorChurch: calls DecompressToVRAM; branches on wIsCGB; sets rSVBK to 2; calls
 ; DecompressToVRAM; sets rSVBK to 0; calls DrawFullScreenBufferAtScroll; increments wScriptParam0;
-; returns unless wScriptParam0 is $04; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
+; returns unless wScriptParam0 is $04; sets wScriptParam0 to 0; advances wScriptStep; also changes
+; HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 1 of ScenePoorChurch (when wScriptStep = 1); ScenePoorChurch: implements script command
 ; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
 ; ... 'Our church ... (E-0352, E-0038, E-0245)
@@ -2636,7 +2639,8 @@ SceneYouDidIt::
 
 ; step 0 of SceneYouDidIt: advances wScriptStep; returns if the byte at
 ; SceneYouDidIt_StartMessageHL_B85_Data is $ff; branches on the byte at
-; SceneYouDidIt_StartMessageHL_B85_Data; calls StartMessageHL_B85 (E-0347)
+; SceneYouDidIt_StartMessageHL_B85_Data; calls StartMessageHL_B85; also changes HL, DE, A and C by
+; register arithmetic (E-0347)
 ; why: step 0 of SceneYouDidIt (when wScriptStep = 0); SceneYouDidIt: implements script command type
 ; CD (SCRIPT_SCENE_YOU_DID_IT): a cutscene step named after the scene its only script shows: ...
 ; 'Warubou ... (E-0352, E-0038, E-0245)
@@ -2711,7 +2715,8 @@ GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
 
 ; step 0 of GrowthLimitInfo: advances wScriptStep; sets rRAMG to $0a; calls
 ; CopyRecordNameToNameGlyphBuf; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on hTemp0; calls
-; StartMessageHL_B85; calls HLToDecimalDigits; calls StartMessageHL_B85 (E-0347)
+; StartMessageHL_B85; calls HLToDecimalDigits; calls StartMessageHL_B85; also changes HL, DE, BC and
+; A by register arithmetic (E-0347)
 ; why: step 0 of GrowthLimitInfo (when wScriptStep = 0); GrowthLimitInfo: implements script command
 ; type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone
 ; has a growth ... (E-0352, E-0038, E-0245)
@@ -2815,7 +2820,8 @@ SceneBarrel_ShowRobosterStoppedMoving::
 
 ; step 7 of SceneBarrel: branches on wScriptParam0; sets wObject1 + OBJ_Y to $e0; sets wObject1 +
 ; OBJ_Y to $20; increments wScriptParam0; returns unless wScriptParam0 is $78; sets wObject1 + OBJ_Y
-; to $20; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
+; to $20; sets wScriptParam0 to 0; advances wScriptStep; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 7 of SceneBarrel (when wScriptStep = 7); SceneBarrel: implements script command type C4
 ; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
 ; the ... (E-0352, E-0038, E-0245)
@@ -2949,7 +2955,8 @@ SceneBarrel_SetFlagBit::
     ret
 
 ; step 3 of SceneBarrel: copies the byte at SceneBarrel_StartScriptedEncounterTemp0_Data to hTemp0;
-; calls StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
+; calls StartScriptedEncounterTemp0; advances wScriptStep; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: step 3 of SceneBarrel (when wScriptStep = 3); SceneBarrel: implements script command type C4
 ; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
 ; the ... (E-0352, E-0038, E-0245)
@@ -2974,7 +2981,8 @@ SceneBarrel_StartScriptedEncounterTemp0::
 SceneBarrel_StartScriptedEncounterTemp0_Data::
     db $0d, $0e, $0f, $10
 
-; step 1 of SceneBarrel: calls StartMessageHL_B85; advances wScriptStep (E-0347)
+; step 1 of SceneBarrel: calls StartMessageHL_B85; advances wScriptStep; also changes HL, DE and A
+; by register arithmetic (E-0347)
 ; why: step 1 of SceneBarrel (when wScriptStep = 1); SceneBarrel: implements script command type C4
 ; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
 ; the ... (E-0352, E-0038, E-0245)
@@ -3211,7 +3219,8 @@ SceneFoundMeBattle::
     dw SceneFoundMeBattle_SetFlagBit
 
 ; step 5 of SceneFoundMeBattle: sets wSpriteSlotCount to 0; branches on hMapId; branches on
-; hMapScreenX; sets $00b9; sets wScriptStartRequest to $80 (E-0347)
+; hMapScreenX; sets $00b9; sets wScriptStartRequest to $80; also changes DE and A by register
+; arithmetic (E-0347)
 ; why: step 5 of SceneFoundMeBattle (when wScriptStep = 5); SceneFoundMeBattle: implements script
 ; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
 ; script shows: 'I'm ... (E-0352, E-0038, E-0245)
@@ -3330,7 +3339,8 @@ SceneFoundMeBattle_WriteScriptStepAndTemp0::
 ; step 0 of SceneFoundMeBattle: advances wScriptStep; branches on hPlayerSpriteOverride; sets
 ; wScriptParam1 to 0; shows 'You! I've never seen you'; branches on hPlayerSpriteStreamHi; branches
 ; on hPlayerSpriteStreamLo; sets wScriptParam1 to 1; shows 'Oh, you're the cooking crew.'; sets
-; wScriptParam1 to 2; shows 'Hm? Are you a new' (E-0347)
+; wScriptParam1 to 2; shows 'Hm? Are you a new'; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: step 0 of SceneFoundMeBattle (when wScriptStep = 0); SceneFoundMeBattle: implements script
 ; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
 ; script shows: 'I'm ... (E-0352, E-0038, E-0245)
@@ -3734,7 +3744,7 @@ SceneCanalGate_StepObjectTowardCoord::
     ret
 
 ; step 4 of SceneCanalGate: increments wScriptParam0; may return early; sets wScriptParam0 to 0;
-; advances wScriptStep (E-0347)
+; advances wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 4 of SceneCanalGate (when wScriptStep = 4); SceneCanalGate: implements script command
 ; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
 ; 'What? Open the ... (E-0352, E-0038, E-0245)
@@ -3911,28 +3921,28 @@ SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
     ld [wScriptParam1], a
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 SetBit1AtHL_Bank85::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit1AtHL_Bank85::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; the same 5 bytes as SetBit2AtHL_B0F (SetBit2AtHL_B0F) (E-0105)
+; the same 5 bytes as SetBit2AtHL_B0F (SetBit2AtHL_B0F) (E-0353)
 SetBit2AtHL_B0F_Bank85::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit2AtHL_Bank85::
     ld a, [hl]
     and $fb
@@ -3995,7 +4005,7 @@ ScriptStepAdjust32TimesThenMessage_Bank85::
     inc [hl]
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0351)
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0353)
 StartMessageHL_B85::
     ld a, l
     ld [wMessageIndex], a
@@ -4098,7 +4108,8 @@ PartyHasField6FAtLeastC0Without55Bit7::
 
 ; called from FhuntTalkEvents_ShowBeGoneIfYour: branches on wPartyCount; sets rRAMG to 0; sets
 ; hTemp0 to 0; sets rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls
-; LoadSRAMRecordWord; sets rRAMG to 0; sets hTemp0 to 1 (E-0347)
+; LoadSRAMRecordWord; sets rRAMG to 0; sets hTemp0 to 1; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of FhuntTalkEvents_ShowBeGoneIfYour, in step 15 of FhuntTalkEvents (when
 ; wTalkEventGroup = 15); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
 ; handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
@@ -4153,7 +4164,7 @@ FhuntTalkEvents_WriteRAMGAndTemp0::
 ; called from FhuntTalkEvents_TestFlagBit_Kweeeeeh: branches on hPlayerSpriteOverride; branches on
 ; the byte at TalkEvent29WordList; sets hTemp0 to 1; branches on wPartyCount; sets hTemp0 to 0; sets
 ; rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on
-; the byte at TalkEvent29WordList; sets rRAMG to 0; sets hTemp0 to 0; then 1 more step (see the
+; the byte at TalkEvent29WordList; sets rRAMG to 0; sets hTemp0 to 0; then 2 more steps (see the
 ; code) (E-0347)
 ; why: a helper of FhuntTalkEvents_TestFlagBit_Kweeeeeh, in step 41 of FhuntTalkEvents (when
 ; wTalkEventGroup = 41); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
@@ -4292,7 +4303,8 @@ TalkEvent29WordList::
 
 ; called from FhuntTalkEvents_ShowHeroCheckedTheSmall: checks EVENT_NEVER_SET; branches on
 ; hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteOverride; sets hTemp0 to 0;
-; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2 (E-0347)
+; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2; also changes HL, DE, A and C by
+; register arithmetic (E-0347)
 ; why: a helper of FhuntTalkEvents_ShowHeroCheckedTheSmall, in step 71 of FhuntTalkEvents (when
 ; wTalkEventGroup = 71); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
 ; handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
@@ -4376,7 +4388,7 @@ TalkEvent47WordList::
     dw $0144, $0000
 
 ; Branches on hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteStreamHi; branches
-; on hPlayerSpriteStreamLo; sets hTemp1 to 1 (E-0347)
+; on hPlayerSpriteStreamLo; sets hTemp1 to 1; also changes A by register arithmetic (E-0347)
 ; why: part of FhuntTalkEvents; FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the
 ; talk handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
 FhuntTalkEvents_WriteTemp0AndTemp1::
@@ -4414,7 +4426,7 @@ FhuntTalkEvents_WriteTemp0AndTemp1::
 ; called from Talk04CB_ThatKeyIUsed: returns if wPartyCount is 0; sets rRAMG to $0a; calls
 ; LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on the byte at
 ; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data; sets rRAMG to 0; sets hTemp0 to 0; sets rRAMG to 0;
-; sets hTemp0 to 1 (E-0347)
+; sets hTemp0 to 1; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of Talk04CB_ThatKeyIUsed; Talk04CB_ThatKeyIUsed: talk handler (bank-$04/$13 event
 ; code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story
 ; flags ... (E-0352, E-0097)
@@ -4713,7 +4725,7 @@ SetupMap0BMonsterObjects_Data2::
 ; on wPendingFieldEvent; calls NextRandomSeed; sets wTriggerMarkerFlags to 0; sets
 ; wScriptStartRequest to $80; calls RandomGoldOrItem_NextRandomSeed_2; sets wTriggerMarkerFlags to
 ; $80; calls ComputePartyStrengthLevelPartyStrength; calls NextRandomSeed; sets wTriggerMarkerFlags;
-; sets wTriggerMarkerFlags to $80; calls RandomGoldOrItem_NextRandomSeed_2; then 12 more steps (see
+; sets wTriggerMarkerFlags to $80; calls RandomGoldOrItem_NextRandomSeed_2; then 13 more steps (see
 ; the code) (E-0347)
 ; why: a helper of RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed, in step 4 of RandomGoldOrItem
 ; (when wScriptStep = 4); RandomGoldOrItem: implements script command type 84

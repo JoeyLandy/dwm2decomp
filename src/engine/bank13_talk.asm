@@ -7,7 +7,7 @@ SECTION "Bank 13", ROMX[$4000], BANK[$13]
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
-; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0351)
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0353)
 StartMessageCommand09HL_B13::
     ld a, l
     ld [wScriptParam0], a
@@ -71,7 +71,7 @@ StartScriptAtHL_B13::
 ; byte at wKeyWorldFloorInfo + $1; sets wScriptStartRequest to $80; sets wModeState to 1; branches
 ; on wTalkEventGroup; sets wTalkEventIndex to 9; sets wTalkEventGroup to 1; copies the byte at
 ; wKeyWorldFloorState + $2 to wScriptParam0; sets wScriptParam1 to 0; sets wScriptCommandType to 9;
-; then 4 more steps (see the code) (E-0347)
+; then 5 more steps (see the code) (E-0347)
 DispatchTalkEvent::
     ld a, [wMapType]
     bit 7, a
@@ -500,7 +500,8 @@ Talk_WelcomeToOurInn::
     ret
 
 ; step 15 of FhuntTalkEvents: may return early; calls FhuntTalkEvents_WriteRAMGAndTemp0; branches on
-; hTemp0; shows '…Be gone! If your soul'; starts Script_FineYou (E-0347)
+; hTemp0; shows '…Be gone! If your soul'; starts Script_FineYou; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 15 of FhuntTalkEvents (when wTalkEventGroup = 15); FhuntTalkEvents: talk category 5:
 ; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
 ; (E-0352)
@@ -616,7 +617,7 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
 ; step 22 of FhuntTalkEvents: checks EVENT_HM_YOURE_FROM_THE_VILLAGE; branches on
 ; hPlayerSpriteOverride; shows 'Hm? You're a stranger! You'; starts Script_HmYou; sets
 ; EVENT_HM_YOURE_FROM_THE_VILLAGE; shows 'Hm? You're from the village!'; shows 'ZZZZZ… Ssss… ZZZZZ…
-; Ssss…' (E-0347)
+; Ssss…'; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 22 of FhuntTalkEvents (when wTalkEventGroup = 22); FhuntTalkEvents: talk category 5:
 ; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
 ; (E-0352)
@@ -1327,7 +1328,8 @@ TalkMsg0459_ThoseInsideTheHauntedCastle::
     ret
 
 ; step 71 of FhuntTalkEvents: calls FhuntTalkEvents_TestFlagBit_3; branches on hTemp0; shows '0
-; checked the small hole. It's'; starts Script_HeroCheckedTheSmall (E-0347)
+; checked the small hole. It's'; starts Script_HeroCheckedTheSmall; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: step 71 of FhuntTalkEvents (when wTalkEventGroup = 71); FhuntTalkEvents: talk category 5:
 ; jumps by wTalkEventGroup to the talk handlers of Fhunt village and Pei (messages $0400-$04AF)
 ; (E-0352)
@@ -4625,7 +4627,8 @@ NordenTalkEvents_TestFlagBit_YouStartledMeI::
     ret
 
 ; step 154 of NordenTalkEvents: branches on wObject1 + OBJ_X; branches on wObject1 + OBJ_Y; shows '0
-; checked the marionette. It sagged'; starts Script_Message_2 (E-0347)
+; checked the marionette. It sagged'; starts Script_Message_2; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 154 of NordenTalkEvents (when wTalkEventGroup = 154); NordenTalkEvents: talk category 4:
 ; jumps by wTalkEventGroup to the talk handlers of the Norden kingdom and its port (messages
 ; $0300-$03BF, $0AB0-$0ACF) (E-0352)
@@ -9719,7 +9722,7 @@ Talk04C0_AllRightyWellDo::
 ; constant message(s) depending on story flags and state; the first one in the code is $0276, whose
 ; string begins 'If you want to enter, please'; the branching is not interpreted (E-0097)
 ; code: branches on wArenaRank; shows 'If you want to enter,'; starts Script_WelcomeToTheArena_3;
-; starts Script_WelcomeToTheArena_4 (E-0347)
+; starts Script_WelcomeToTheArena_4; also changes HL and A by register arithmetic (E-0347)
 Talk0276_IfYouWantTo::
     ld a, [wArenaRank]
     cp $05
@@ -10127,7 +10130,7 @@ Talk08D1_TheEvaluatorSaidI::
 ; string begins 'Up ahead is the Starry Shrine'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_MERMAID_KINGDOM_022; branches on
 ; wArenaRank; shows 'Up ahead is the Starry'; shows 'Go down these stairs to'; shows 'The
-; Evaluator's singing is magic.' (E-0347)
+; Evaluator's singing is magic.'; also changes HL, DE and A by register arithmetic (E-0347)
 Talk04D2_UpAheadIsThe::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10913,7 +10916,7 @@ GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
     ret
 
 ; step 230 of GreatLogTalkEvents: branches on hPlayerX; calls StartMessageCommand09HL_B13; calls
-; LoadSpeciesFlagsPresetC (E-0347)
+; LoadSpeciesFlagsPresetC; also changes HL, A and C by register arithmetic (E-0347)
 ; why: step 230 of GreatLogTalkEvents (when wTalkEventGroup = 230); GreatLogTalkEvents: talk
 ; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
 ; from $0000-$02DF: Warubou, Prince ... (E-0352)

@@ -7,7 +7,7 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 ; called from CallInBank81KeepRegs: copies L to wAIWeights; copies L to wSpeciesIdLo; copies H to
 ; wSpeciesIdHi; calls LoadSpeciesFamily; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls
 ; LoadSpeciesFamily; copies E to hTemp0; copies D to hTemp1; copies E to hTemp2; copies D to hTemp3;
-; sets hTemp4; then 14 more steps (see the code) (E-0347)
+; sets hTemp4; then 15 more steps (see the code) (E-0347)
 ; why: a helper of CallInBank81KeepRegs; CallInBank81KeepRegs: far-calls
 ; CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc, preserving all registers (E-0352, E-0122,
 ; E-0344)

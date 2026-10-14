@@ -4,7 +4,7 @@
 SECTION "Bank 37", ROMX[$4000], BANK[$37]
     db $37
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank37::
     ld de, BeginStringDisplay_Bank37_StringCategories
     call BeginStringDisplay
@@ -562,10 +562,11 @@ String_37_01_1C::
     db "@"
 
 ; called from RunLinkSession5Exchange_LinkReceiveStepWithBuffer: returns unless wFadeState is 0;
-; dispatches on wScreenState (E-0347)
+; dispatches on wScreenState; also changes A by register arithmetic (E-0347)
 ; why: a helper of RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession5Exchange (when wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; RunLinkSession5Exchange (when wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5
+; and 6 (RunLinkSession): by wLinkExchangeState it sends and receives one exchange of the session's
+; buffer (E-0352, E-0354, E-0122)
 RunLinkSession5Exchange_WaitFadeState::
     ld a, [wFadeState]
     and a
@@ -595,8 +596,9 @@ RunLinkSession5Exchange_WaitFadeState::
 ; (E-0347)
 ; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -605,11 +607,13 @@ RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
     ret
 
 ; step 1 of RunLinkSession5Exchange_WaitFadeState: returns if bit 0 of wTextFlags is set; branches
-; on wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; on wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -636,8 +640,9 @@ RunLinkSession5Exchange_WaitTextFlags::
 ; wLinkSendByte to 3; advances wScreenState (E-0347)
 ; why: step 5 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 5), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
@@ -652,8 +657,9 @@ RunLinkSession5Exchange_SetLinkSendByte::
 ; wLinkSendByte to 0; sets wScreenState to 1 (E-0347)
 ; why: step 6 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 6), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $03
@@ -668,8 +674,9 @@ RunLinkSession5Exchange_WaitLinkMessage::
 ; advances wTitleScreenState (E-0347)
 ; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_SetScreenState::
     ld a, [wScreenState]
     inc a
@@ -882,8 +889,8 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu::
     ret
 
 ; step 16 of RunLinkSession5Exchange_LinkBreed: branches on wSelectedRecord; returns unless
-; wTextFlags is 0; calls BreedMenu; calls ShowStringIndexA_Bank37; dispatches on wScreenSubStep
-; (E-0347)
+; wTextFlags is 0; calls BreedMenu; calls ShowStringIndexA_Bank37; dispatches on wScreenSubStep;
+; also changes A by register arithmetic (E-0347)
 ; why: step 16 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 16);
 ; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
 ; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
@@ -918,8 +925,9 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
 ; wLinkSendByte to 0; increments wScreenSubStep; calls ShowStringIndexA_Bank37 (E-0347)
 ; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37::
     ld a, [wTextFlags]
     and a
@@ -937,8 +945,9 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37::
 ; wScreenSubStep; sets wLinkSendByte to 1 (E-0347)
 ; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
@@ -954,8 +963,9 @@ RunLinkSession5Exchange_SetScreenSubStep::
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
 ; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
     ld a, [wLinkMessage]
     cp $01
@@ -973,8 +983,9 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
 ; sets wSelectedRecord to 0; sets wScreenSubStep to 0 (E-0347)
 ; why: step 3 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 3), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -989,8 +1000,9 @@ RunLinkSession5Exchange_BreedMenu::
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
 ; why: step 9 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 9), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
     ld a, [wTextFlags]
     or a
@@ -1006,7 +1018,8 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
 
 ; step 12 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; branches on
 ; wScreenSubStep; calls ShowStringIndexA_Bank37; increments wScreenSubStep; calls BreedMenu; calls
-; CopyFromBankWaitVRAM; sets wScreenSubStep to 0 (E-0347)
+; CopyFromBankWaitVRAM; sets wScreenSubStep to 0; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 12 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 12);
 ; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
 ; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
@@ -1411,7 +1424,8 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_3::
 ; step 29 of RunLinkSession5Exchange_LinkBreed: branches on wLinkRole; sets wArg1 to 2; calls
 ; ComputeBreedingChild; increments wScreenStep; calls StoreReceivedRecordIntoSRAM; branches on
 ; wScreenStep; continues in
-; RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc (E-0347)
+; RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc; also changes BC
+; and A by register arithmetic (E-0347)
 ; why: step 29 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 29);
 ; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
 ; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
@@ -1563,7 +1577,8 @@ RunLinkSession5Exchange_LinkBreed_CopyScreenBufferRectAt024FAndDrawBox_37::
 ; step 25 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; calls
 ; CopyFromBankWaitVRAM; sets wTwoChoiceCursor to 0; calls
 ; CopyRectToScreenBufferAndClearAttributes_37; calls BGMapAddressAtScroll_Bank37; calls
-; DrawScreenBufferRectToBGMap_37; increments wScreenStep (E-0347)
+; DrawScreenBufferRectToBGMap_37; increments wScreenStep; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 25 of RunLinkSession5Exchange_LinkBreed (when wScreenStep = 25);
 ; RunLinkSession5Exchange_LinkBreed: by wScreenStep: BreedMenu list steps, unpacks the partner's
 ; record from the link (UnpackLinkRecordToRecordBufB), ComputeBreedingChild and ... (E-0352)
@@ -1648,7 +1663,7 @@ RunLinkSession5Exchange_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 ; when text is idle and not linking: copies the $A5-byte received record at wChildRecord into the
-; record slot at WD789 cell 5 and resets the save counters (E-0128)
+; record slot at wListEntries cell 5 and resets the save counters (E-0128)
 StoreReceivedRecordIntoSRAM::
     ld a, [wTextFlags]
     and a
@@ -1916,8 +1931,9 @@ RunLinkSession5Exchange_LinkBreed_WriteLinkSendByteAndLinkSceneEtc::
 ; wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
 ; why: step 12 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 12), in a helper of
 ; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: runs the routine for wLinkExchangeState (jump
-; table of two) (E-0352, E-0122)
+; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1947,17 +1963,19 @@ RunLinkSession5Exchange_ShowChosenRecord::
     dw RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu
 
 ; step 2 of RunLinkSession5Exchange_ShowChosenRecord: calls BreedMenu (E-0347)
-; why: step 2 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 2);
-; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
-; (E-0352)
+; why: step 2 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 2), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowChosenRecord_ToBreedMenu::
     farcall BreedMenu
     ret
 
 ; step 0 of RunLinkSession5Exchange_ShowChosenRecord: increments wScreenStep (E-0347)
-; why: step 0 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 0);
-; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
-; (E-0352)
+; why: step 0 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 0), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowChosenRecord_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -1977,9 +1995,10 @@ ShowString0EAndStep_Bank37::
 ; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
 ; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; then 3 more steps (see the code) (E-0347)
-; why: step 6 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 6);
-; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
-; (E-0352)
+; why: step 6 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 6), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
     ld hl, vTiles1 + $270
     ld a, l
@@ -2019,9 +2038,10 @@ RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
 
 ; step 7 of RunLinkSession5Exchange_ShowChosenRecord: calls SetArg5ToListEntriesCell5; sets wArg1;
 ; calls DrawRecordNameAndSpeciesNameTiles; increments wScreenStep (E-0347)
-; why: step 7 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 7);
-; RunLinkSession5Exchange_ShowChosenRecord: as RunScreenStateWhenNotFading_F1_ShowChosenRecord
-; (E-0352)
+; why: step 7 of RunLinkSession5Exchange_ShowChosenRecord (when wScreenStep = 7), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ShowChosenRecord_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2734,9 +2754,10 @@ RunLinkSession5Exchange_ResetListAndShowString::
 
 ; step 0 of RunLinkSession5Exchange_ResetListAndShowString: copies wItemGridX to wListCursor; copies
 ; wItemGridY to wListPageIndex; increments wScreenStep (E-0347)
-; why: step 0 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 0);
-; RunLinkSession5Exchange_ResetListAndShowString: as
-; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
+; why: step 0 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 0), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -2749,9 +2770,10 @@ RunLinkSession5Exchange_ResetListAndShowString_SetListCursor::
 
 ; step 9 of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11; calls
 ; BreedMenu (E-0347)
-; why: step 9 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 9);
-; RunLinkSession5Exchange_ResetListAndShowString: as
-; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
+; why: step 9 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 9), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState::
     ld a, [wScreenState]
     push af
@@ -2763,9 +2785,10 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu_SetScreenState::
 
 ; step 2 of RunLinkSession5Exchange_ResetListAndShowString: sets wScreenState to $11; calls
 ; BreedMenu; sets wScreenState (E-0347)
-; why: step 2 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 2);
-; RunLinkSession5Exchange_ResetListAndShowString: as
-; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
+; why: step 2 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 2), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
     ld a, [wScreenState]
     push af
@@ -2782,9 +2805,10 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 ; H to wTextWindowWidth; calls ShowString_Bank0E; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; then 1 more step
 ; (see the code) (E-0347)
-; why: step 8 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 8);
-; RunLinkSession5Exchange_ResetListAndShowString: as
-; RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0352)
+; why: step 8 of RunLinkSession5Exchange_ResetListAndShowString (when wScreenStep = 8), in part of
+; RunLinkSession5Exchange; RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
+; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
+; E-0122)
 RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37::
     ld de, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect
     ld hl, wWindowTileBuffer + $e7
@@ -2863,7 +2887,9 @@ UploadTilesFromData_2_Tiles::
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 4
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
-; rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks) (E-0351)
+; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (E-0353: corrected; was: Copies 16 bytes
+; from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to
+; clear; clobbers A; HL and DE advance) (the same 20 bytes appear in 3 banks)
 CopyTileBytesToVRAM_Bank37::
     xor a
 
@@ -3074,7 +3100,8 @@ DrawBlankTileC3_Bank37::
 DrawArrowTileBCAtTwoChoiceEntry_Bank37::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank37; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank37; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE and
+; A by register arithmetic (E-0347)
 ; why: part of DrawArrowTileBCAtTwoChoiceEntry_Bank37; DrawArrowTileBCAtTwoChoiceEntry_Bank37: B =
 ; $BC, then writes B at the scroll position +
 ; DrawArrowTileBCAtTwoChoiceEntry_Bank37_Data[wTwoChoiceCursor] (E-0352, E-0124)
@@ -3183,7 +3210,7 @@ CopyBytesDEToHL_Bank37::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0351)
+; 19 bytes appear in 5 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank37::
     ld a, $02
     ldh [rSVBK], a
@@ -3347,7 +3374,7 @@ DrawScreenBufferRectToBGMap_37::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank37::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3367,7 +3394,7 @@ BGMapAddressAtScroll_Bank37::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0351)
+; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0353)
 StoreBAtWordTableEntry_Bank37::
     push bc
     sla a

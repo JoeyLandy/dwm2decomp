@@ -4,20 +4,20 @@
 SECTION "Bank 09", ROMX[$4000], BANK[$09]
     db $09
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call BeginStringDisplay
     ret
 
-; ld de, this bank's string table / CopyStringToBuffer (E-0351)
+; ld de, this bank's string table / CopyStringToBuffer (E-0353)
 CopyStringToBuffer_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call CopyStringToBuffer
     ret
 
 ; BeginStringDisplay_Bank09 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_Bank09::
     call BeginStringDisplay_Bank09
     call RunStringDisplayToEnd

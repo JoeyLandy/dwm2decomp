@@ -498,7 +498,7 @@ RunBattleActions_UseItem::
 ; wSlotsOccupiedFlag to 0; branches on wBattleItemTarget; copies wBattleItemTarget & $07 to
 ; wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleItemId; branches on
 ; wLinkRole; calls AllThreeSlotsFromCOccupied; copies C to wBattleTarget; copies wBattleItemId to
-; wBattleActionId; calls ShowActionBattleText; then 1 more step (see the code) (E-0347)
+; wBattleActionId; calls ShowActionBattleText; then 2 more steps (see the code) (E-0347)
 ; why: step 0 of RunBattleActions_UseItem (when wBattleResolveStep = 0); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
@@ -728,7 +728,7 @@ RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
 ; wSlotsOccupiedFlag to 1; sets wEffectFlags to 4; calls SelectEffectByEffectFlags; sets
 ; wEffectFlags2 to 1; calls SelectEffectByEffectFlags2Flags; returns if wBattleActionId is below
 ; SKILL_BLAZE; branches on wBattleActionId; returns if wBattleActionId is below SKILL_CURSEOFF; then
-; 4 more steps (see the code) (E-0347)
+; 5 more steps (see the code) (E-0347)
 ; why: step 5 of RunBattleActions_UseItem (when wBattleResolveStep = 5); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
@@ -867,7 +867,7 @@ RunBattleActions_UseItem_Return::
 ; step 8 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg & $c0;
 ; decrements wBattleResolveStep; sets wBattleSubStep2 to 0; calls
 ; SetBit0OfLevelUpGainsIndexed_Bank3B; calls SetBit1OfLevelUpGainsIndexed_Bank3B; calls
-; SetBit2OfLevelUpGainsIndexed_Bank3B (E-0347)
+; SetBit2OfLevelUpGainsIndexed_Bank3B; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 8 of RunBattleActions_UseItem (when wBattleResolveStep = 8); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
@@ -939,7 +939,7 @@ RunBattleActions_UseItem_ToRunBattleSubStep2_2::
 ; branches on wBattleItemTarget; returns unless wBattleItemTarget is $20; branches on wBattleItemId;
 ; returns if wBattleTarget is below $04; calls GroupTargetsBySpeciesToSpeciesGroups; copies the byte
 ; at wBattleMonsterId to wSpeciesIdLo; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls
-; TestSpeciesFlag; branches on C; calls ShowBattleTextCategory0; then 8 more steps (see the code)
+; TestSpeciesFlag; branches on C; calls ShowBattleTextCategory0; then 9 more steps (see the code)
 ; (E-0347)
 ; why: step 10 of RunBattleActions_UseItem (when wBattleResolveStep = 10); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
@@ -1039,7 +1039,8 @@ RunOnceThenNext::
     ret
 
 ; called from RunOnceThenNext: branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; increments wMultiHitCount; branches on B (E-0347)
+; increments wMultiHitCount; branches on B; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of RunOnceThenNext; RunOnceThenNext: runs
 ; RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount), then
 ; ... (E-0352, E-0122, E-0344)
@@ -1072,7 +1073,8 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from RunOnceThenNext: decrements wMultiHitCount; may return early; calls
-; CarryUnlessBattleSlotOutSlotEmpty; may return early (E-0347)
+; CarryUnlessBattleSlotOutSlotEmpty; may return early; also changes HL, A and C by register
+; arithmetic (E-0347)
 ; why: a helper of RunOnceThenNext; RunOnceThenNext: runs
 ; RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount), then
 ; ... (E-0352, E-0122, E-0344)
@@ -1111,7 +1113,8 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
 ; step 11 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
 ; returns if wSlotsOccupiedFlag is 0; copies wBattleItemId to wItemId; sets wInventorySlot; calls
 ; LoadItemRecord; calls ConsumeSelectedItemByChance; returns unless wItemId is $ff; branches on
-; wBattleItemId; shows battle text 'The W shattered!' (E-0347)
+; wBattleItemId; shows battle text 'The W shattered!'; also changes HL, A, B and D by register
+; arithmetic (E-0347)
 ; why: step 11 of RunBattleActions_UseItem (when wBattleResolveStep = 11); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
@@ -1439,7 +1442,7 @@ RestoreTargetHPByActionAmount::
 
 ; called from RestoreTargetMPIfLow: branches on wBattleActionId; calls SetDamageRandomInRange;
 ; copies E to wBattleDamageLo; copies D to wBattleDamageHi; calls GetBattleMaxMP_Bank3B; calls
-; SetDamageDEMinusBCPlusHL (E-0347)
+; SetDamageDEMinusBCPlusHL; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of RestoreTargetMPIfLow; RestoreTargetMPIfLow: if the target's MP is below its max,
 ; runs RestoreTargetMPIfLow_SetDamageRandomInRange and shows message $C3 (E-0352, E-0124)
 RestoreTargetMPIfLow_SetDamageRandomInRange::
@@ -1731,8 +1734,9 @@ SetDamageRandomInRange::
     ld [wBattleDamageHi], a
     ret
 
-; HL = wBattleStatus8 + 9 * [wBattleTarget] (AddAx9ToHL); A = [wBattleTarget] (the same 10 bytes
-; appear in 2 banks) (E-0351)
+; HL = wBattleStatus8 + 9 * wBattleTarget (AddAx9ToHL); A is clobbered (E-0353: corrected; was: HL =
+; wBattleStatus8 + 9 * [wBattleTarget] (AddAx9ToHL); A = [wBattleTarget]) (the same 10 bytes appear
+; in 2 banks)
 HLToBattleStatus8EntryOfBattleTarget_Bank3B::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
@@ -2600,7 +2604,7 @@ GetBattleMP_Bank3B_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_Bank3B::
     add a
     add_a_to_hl
@@ -2667,7 +2671,7 @@ ClearBattleStatusBitsWithMaskD_Bank3B_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_Bank3B::
     push hl
     ld hl, wLevelUpGains
@@ -2677,7 +2681,7 @@ SetBit0OfLevelUpGainsIndexed_Bank3B::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_Bank3B::
     push hl
     ld hl, wLevelUpGains
@@ -2687,7 +2691,7 @@ SetBit1OfLevelUpGainsIndexed_Bank3B::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_Bank3B::
     push hl
     ld hl, wLevelUpGains
@@ -2884,7 +2888,7 @@ MetaSprites3BTable::
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
 ; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
-; (40 entries) (the same 81 bytes appear in 5 banks) (E-0351)
+; (40 entries) (the same 81 bytes appear in 5 banks) (E-0353)
 BuildOamFromSpriteTable_Bank3B::
     ldh a, [hOamNextEntry]
     cp $28

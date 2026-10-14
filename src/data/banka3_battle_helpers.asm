@@ -55,7 +55,7 @@ GetBattleMP_BankA3_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_BankA3::
     add a
     add_a_to_hl
@@ -130,7 +130,7 @@ ClearBitMaskTable_BankA3::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -140,7 +140,7 @@ SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -150,7 +150,7 @@ SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -981,7 +981,7 @@ PersonalityIndexOfSlot_BankA3_2::
     ret
 
 ; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor; copies the
-; byte at wBattleMonsterId to hTemp0 (E-0347)
+; byte at wBattleMonsterId to hTemp0; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: a helper of RollRandomLoBelowChance; RollRandomLoBelowChance: farcalls
 ; RollRandomLoBelowChance_WriteTemp0 (not read) and returns the comparison of wRandomLo with hTemp0
 ; (taken as 4 when hTemp0 is 3): ... (E-0352, E-0052)
@@ -1135,7 +1135,7 @@ PickDuckBehindAlly::
 
 ; called from ActionEffect_Chance: calls AdvanceRandom; branches on wLinkMode; branches on
 ; wBattleKind; returns unless bit 2 of wBattleActor is set; may continue in
-; ActionEffect_Chance_AdvanceRandom (E-0347)
+; ActionEffect_Chance_AdvanceRandom; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of ActionEffect_Chance; ActionEffect_Chance: effect routine reached through
 ; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 60 Chance
 ; (E-0352, E-0084)

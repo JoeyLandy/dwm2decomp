@@ -277,7 +277,8 @@ ItemUsable_WorldDew::
 
 ; called from ItemUsable_WorldDew: sets wTargetRecord; may return early; calls
 ; SRAMRecordAddressMapped; returns if bit 7 of wPartyCount is set; calls SRAMRecordAddressMapped;
-; may return early; calls SRAMRecordAddressMapped; calls CopyFiveGlyphsPlusMarks (E-0347)
+; may return early; calls SRAMRecordAddressMapped; calls CopyFiveGlyphsPlusMarks; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of ItemUsable_WorldDew; ItemUsable_WorldDew: usability check reached through
 ; CheckItemUsable (indexed by wItemId (E-0352, E-0085)
 ItemUsable_WorldDew_SRAMRecordAddressMapped::
@@ -812,8 +813,8 @@ ItemUsable_Warp::
 ; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
 ; code: branches on wMapType; sets wItemId to $ff; branches on hMapId; sets wItemId to $ff; calls
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; returns unless hTempA is 0; sets wItemId to $fe
-; (E-0347)
+; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; returns unless hTempA is 0; sets wItemId to
+; $fe; also changes A by register arithmetic (E-0347)
 ItemUsable_LogTwig::
     ld a, [wMapType]
     bit 7, a
@@ -932,7 +933,8 @@ ItemUsable_Item2F::
 ; (E-0085)
 ; code: branches on wMapType; branches on hMapId; branches on hMapScreenX; branches on hMapScreenY;
 ; branches on hPlayerX; branches on hPlayerY; branches on hPlayerFacing; branches on hPlayerY;
-; branches on hPlayerFacing; checks EVENT_SCENE_MONSTERS_IN_TOW; sets wItemId to $ff (E-0347)
+; branches on hPlayerFacing; checks EVENT_SCENE_MONSTERS_IN_TOW; sets wItemId to $ff; also changes
+; DE and A by register arithmetic (E-0347)
 ItemUsable_WaterCall::
     ld a, [wMapType]
     bit 7, a
@@ -984,7 +986,8 @@ ItemUsable_WaterCall::
 ; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
 ; code: branches on wMapType; branches on hMapId; branches on hPlayerY; branches on hPlayerFacing;
-; branches on hPlayerX; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff (E-0347)
+; branches on hPlayerX; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff; also
+; changes DE, A and B by register arithmetic (E-0347)
 ItemUsable_MoonRock::
     ld a, [wMapType]
     bit 7, a
@@ -1025,7 +1028,7 @@ ItemUsable_MoonRock::
 ; (E-0085)
 ; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
 ; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_1E4; checks EVENT_SCENE_SHIELD2_1E5; sets
-; wItemId to $ff (E-0347)
+; wItemId to $ff; also changes DE, A and B by register arithmetic (E-0347)
 ItemUsable_Crest::
     ld a, [wMapType]
     bit 7, a
@@ -1073,7 +1076,8 @@ ItemUsable_YunaSoul::
 ; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
 ; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
-; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff (E-0347)
+; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff; also changes
+; DE, A and B by register arithmetic (E-0347)
 ItemUsable_SleepHerb::
     ld a, [wMapType]
     bit 7, a
@@ -1111,7 +1115,7 @@ ItemUsable_SleepHerb::
 ; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
 ; code: branches on wMapType; branches on hMapId; branches on hMapScreenY; returns unless
-; wScreenSavedFlag is 0; sets wItemId to $ff (E-0347)
+; wScreenSavedFlag is 0; sets wItemId to $ff; also changes A by register arithmetic (E-0347)
 ItemUsable_Change::
     ld a, [wMapType]
     bit 7, a
@@ -1371,7 +1375,8 @@ ItemApply_Item00::
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater;
 ; the body is not interpreted beyond the Herb case (E-0089) (C2 from E-0326: a Herb on a record at
 ; 50 of 138 HP leaves 89; at 5 of 21, 21)
-; code: calls NextTableByte; calls AddHLToRecordHPCapped; calls ConsumeSelectedItemByChance (E-0347)
+; code: calls NextTableByte; calls AddHLToRecordHPCapped; calls ConsumeSelectedItemByChance; also
+; changes HL, A and B by register arithmetic (E-0347)
 ItemApply_Herb::
     call NextTableByte
     ld a, [wRandomLo]
@@ -1425,7 +1430,8 @@ ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is
 ; not interpreted beyond the Herb case (E-0089)
-; code: calls NextTableByte; calls AddHLToRecordMPCapped; calls ConsumeSelectedItemByChance (E-0347)
+; code: calls NextTableByte; calls AddHLToRecordMPCapped; calls ConsumeSelectedItemByChance; also
+; changes HL, A and B by register arithmetic (E-0347)
 ItemApply_Potion::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2406,7 +2412,8 @@ SubtractAFromRecordWordFloor1::
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: as
 ; SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before
 ; it (the second half is not read to its end) (E-0103)
-; code: sets hTemp0; calls SRAMRecordAddressMapped; branches on E; returns if D is $03 (E-0347)
+; code: sets hTemp0; calls SRAMRecordAddressMapped; branches on E; returns if D is $03; also changes
+; HL, DE and A by register arithmetic (E-0347)
 SubtractAFromRecordWordPairFloor1::
     ldh [hTemp0], a
     ld a, [wTargetRecord]
@@ -3171,7 +3178,7 @@ MapItemUseFlags::
     db $00 ; id 255
 
 ; called from PauseMenu_Skills_UseFieldSkill_WaitTextFlags: branches on wInventorySlot; sets wItemId
-; to $ff; dispatches on $ff (E-0347)
+; to $ff; dispatches on $ff; also changes A by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of
 ; PauseMenu_Skills_UseFieldSkill (when wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows
 ; the skill's strings, applies it to the SRAM record and leaves the pause menu for the field ('Hero
@@ -3326,7 +3333,7 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
 ; step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Repellent; calls
 ; SetItemMessage14IfItemRefused; may return early; branches on wGoldHi; branches on wGoldMid;
 ; branches on wGoldLo; sets wItemId to $ff; sets wItemMessage to $17; may return early; sets wItemId
-; to $ff; sets wItemMessage to $16 (E-0347)
+; to $ff; sets wItemMessage to $16; also changes A by register arithmetic (E-0347)
 ; why: step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
 ; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
 ; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
@@ -3364,7 +3371,8 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
 
 ; step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Warp; calls
 ; SetItemMessage14IfItemRefused; may return early; branches on wMapObjectCount; branches on
-; wMapObjects; sets wItemId to $ff; sets wItemMessage to $18 (E-0347)
+; wMapObjects; sets wItemId to $ff; sets wItemMessage to $18; also changes HL, A and B by register
+; arithmetic (E-0347)
 ; why: step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
 ; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
 ; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
@@ -3434,7 +3442,7 @@ SetItemMessage14IfItemRefused::
     ret
 
 ; called from PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: returns if wItemId is $ff;
-; dispatches on wInventorySlot (E-0347)
+; dispatches on wInventorySlot; also changes A by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of
 ; PauseMenu_Skills_UseFieldSkill (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows
 ; the skill's strings, applies it to the SRAM record and leaves the pause menu for the field ('Hero
@@ -3645,7 +3653,8 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
     ret
 
 ; step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
-; wItemMessage to 8; sets wLevelUpGains to 1 (E-0347)
+; wItemMessage to 8; sets wLevelUpGains to 1; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 8), in a helper of
 ; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
 ; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
@@ -3830,7 +3839,8 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
 ; step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId: branches on wMapType; branches on
 ; wPendingFieldEvent; sets wSpriteSlotCount to 0; sets wScreenSavedFlag to 0; sets
 ; wPendingFieldEvent to 0; calls NextTableByte; sets wItemId to $ff; calls CopyStringHLToDE; calls
-; CompactInventory; sets wItemMessage to $0e (E-0347)
+; CompactInventory; sets wItemMessage to $0e; also changes HL, DE, A and C by register arithmetic
+; (E-0347)
 ; why: step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 17), in a helper
 ; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
 ; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
@@ -4945,9 +4955,11 @@ CountSpeciesPerFamilyFlaggedOrListed::
     ret
 
 ; Calls FillBytes; sets wSpeciesIdLo to 0; sets wSpeciesIdHi to 0; calls LoadSpeciesFamily; branches
-; on wSpeciesRecord; calls TestSpeciesFlag; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi
-; (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; on wSpeciesRecord; calls TestSpeciesFlag; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; also
+; changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
+; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_LoadSpeciesFamily::
     xor a
     ld hl, wWorkBuf
@@ -5000,10 +5012,11 @@ BattleEnd_Step3_LoadSpeciesFamily::
 ; wFoeJoinClass1; copies the byte at wBattleMonsterId to wSpeciesIdLo; copies the byte at
 ; wBattleMonsterId to wSpeciesIdHi; calls TestSpeciesFlag; calls LoadSpeciesRecord; calls
 ; NextTableByte; branches on wSpeciesRecord + SPECIES_JOIN_CLASS; branches on the byte at
-; JoinChanceByClass; then 8 more steps (see the code) (E-0347)
+; JoinChanceByClass; then 9 more steps (see the code) (E-0347)
 ; why: a helper of BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, in step 0 of
-; BattleEnd_Step5 (when wBattleSubPhase = 0); BattleEnd_Step5: wBattlePhase 2, wBattleStep 5
-; (E-0352, E-0044)
+; BattleEnd_Step5 (when wBattleSubPhase = 0); BattleEnd_Step5: battle end, step 5: offers the
+; defeated monster to join, by wBattleSubPhase (BattleEnd_Step5_DrawThenAskToJoin, the swap menu,
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, $01
     ld [wBattleFoeCount], a
@@ -5389,7 +5402,8 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ret
 
 ; step 5 of BattleEnd_AskToJoin: calls WriteVRAMByte; advances wBattleSubStep; advances
-; wBattleSubPhase; sets wBattleSubStep to 0 (E-0347)
+; wBattleSubPhase; sets wBattleSubStep to 0; also changes HL, A and B by register arithmetic
+; (E-0347)
 ; why: step 5 of BattleEnd_AskToJoin (when wBattleSubStep = 5); BattleEnd_AskToJoin: by
 ; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
 ; join you?' (category 5 string $0B), ... (E-0352)
@@ -5638,8 +5652,8 @@ BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
 ; step 15 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
 ; wBattleSubStep; returns unless bit 0 of wJoypadPressed is set; advances wBattleSubStep; returns
 ; unless bit 1 of wMenuSubState & $01 is set; calls CopyRectRecordToScreenBuffer_11; calls
-; CopyRect32StrideToVRAM_Bank16; copies wSubMenuCursor2 to wListPage; sets wBattleSubStep to $0c
-; (E-0347)
+; CopyRect32StrideToVRAM_Bank16; copies wSubMenuCursor2 to wListPage; sets wBattleSubStep to $0c;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 15 of BattleEnd_AskToJoin (when wBattleSubStep = 15); BattleEnd_AskToJoin: by
 ; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
 ; join you?' (category 5 string $0B), ... (E-0352)
@@ -5772,7 +5786,8 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
 ; step 18 of BattleEnd_AskToJoin: calls WriteVRAMByte; branches on wPartyCount; branches on
 ; wPartyList; sets wStringIndex to $15; calls ShowStringCategory5_Bank16; sets wBattleSubStep to 9;
 ; branches on wPartyCount; branches on wPartyList; branches on the byte at wBattleSlotOut + $1;
-; branches on wPartyList; sets rRAMG to 0; advances wBattleSubStep (E-0347)
+; branches on wPartyList; sets rRAMG to 0; advances wBattleSubStep; then 1 more step (see the code)
+; (E-0347)
 ; why: step 18 of BattleEnd_AskToJoin (when wBattleSubStep = 18); BattleEnd_AskToJoin: by
 ; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
 ; join you?' (category 5 string $0B), ... (E-0352)
@@ -6894,7 +6909,7 @@ ShowRecordNamesListFromHL::
     ld [rRAMG], a
     ret
 
-; for the four entries of WD789 page wListPage runs
+; for the four entries of wListEntries page wListPage runs
 ; DrawFourListEntriesForPageListPage_SRAMRecordAddress with wBattleArg0 = 0-3, draws the page digit,
 ; then restores the default window (E-0121)
 DrawFourListEntriesForPageListPage::
@@ -6945,10 +6960,11 @@ DrawFourListEntriesForPageListPage::
 ; called from DrawFourListEntriesForPageListPage: calls
 ; DrawFourListEntriesForPageListPage_SRAMRecordAddress_2; calls SRAMRecordAddress; calls
 ; ShowStringBCAtTileRowBattleArg0; sets DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data to
-; $c3 (E-0347)
+; $c3; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of DrawFourListEntriesForPageListPage; DrawFourListEntriesForPageListPage: for the
-; four entries of WD789 page wListPage runs DrawFourListEntriesForPageListPage_SRAMRecordAddress
-; with wBattleArg0 = 0-3, draws the ... (E-0352, E-0121)
+; four entries of wListEntries page wListPage runs
+; DrawFourListEntriesForPageListPage_SRAMRecordAddress with wBattleArg0 = 0-3, draws ... (E-0352,
+; E-0121)
 DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     ld a, [hl]
     cp $ff
@@ -7004,8 +7020,8 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
 ; Calls SRAMRecordAddress (E-0347)
 ; why: part of DrawFourListEntriesForPageListPage_SRAMRecordAddress, in a helper of
 ; DrawFourListEntriesForPageListPage; DrawFourListEntriesForPageListPage: for the four entries of
-; WD789 page wListPage runs DrawFourListEntriesForPageListPage_SRAMRecordAddress with wBattleArg0 =
-; 0-3, draws the ... (E-0352, E-0121)
+; wListEntries page wListPage runs DrawFourListEntriesForPageListPage_SRAMRecordAddress with
+; wBattleArg0 = 0-3, draws ... (E-0352, E-0121)
 DrawFourListEntriesForPageListPage_SRAMRecordAddress_2::
     ld c, MON_SPECIES
     call SRAMRecordAddress
@@ -7330,7 +7346,8 @@ RunBattleEndStep5SubSteps_FillBytes::
 ; step 2 of RunBattleEndStep5SubSteps: sets wArg1 to 1; copies the byte at wSlotNameSuffix to wArg2;
 ; copies the byte at wRecordBufA to wArg3; copies the byte at wRecordBufA to wArg4; copies the byte
 ; at wRecordBufA to wArg5; calls RunNameEntryStateWhenNotFading; returns unless wArg5 is $ff; calls
-; DecompressToVRAM; increments wBattleScreenFlags; advances wBattleSubStep (E-0347)
+; DecompressToVRAM; increments wBattleScreenFlags; advances wBattleSubStep; also changes HL, DE, A
+; and B by register arithmetic (E-0347)
 ; why: step 2 of RunBattleEndStep5SubSteps (when wBattleSubStep = 2); RunBattleEndStep5SubSteps:
 ; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
 RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
@@ -7400,7 +7417,7 @@ RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
 ; step 4 of RunBattleEndStep5SubSteps: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
 ; sRecords; copies C to wWorkBuf; sets sRecords to 1; calls CopyBBytesDEToHL_Bank16; calls
 ; SRAMRecordAddressMapped; calls InitSlotFromRecordFlags; branches on wPartyCount; calls
-; SRAMRecordAddressMapped; calls InitSlotFromRecordFlags; branches on wPartyCount; then 5 more steps
+; SRAMRecordAddressMapped; calls InitSlotFromRecordFlags; branches on wPartyCount; then 6 more steps
 ; (see the code) (E-0347)
 ; why: step 4 of RunBattleEndStep5SubSteps (when wBattleSubStep = 4); RunBattleEndStep5SubSteps:
 ; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
@@ -7633,7 +7650,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
     ret
 
 ; step 2 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; plays sound $6c; sets
-; wBattleSubStep to 5; may return early; advances wBattleSubStep (E-0347)
+; wBattleSubStep to 5; may return early; advances wBattleSubStep; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ; why: step 2 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 2); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
@@ -7830,7 +7848,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize_2::
 
 ; step 10 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; sets rRAMG to $0a; sets rRAMB to
 ; 0; calls SRAMRecordAddress; sets wBattleSubStep to $13; may return early; plays sound $69; calls
-; CopyRectRecordAndPlaySound6C; advances wBattleSubStep (E-0347)
+; CopyRectRecordAndPlaySound6C; advances wBattleSubStep; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 10 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 10); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
@@ -8079,7 +8098,8 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
 
 ; step 16 of BattleEnd_AddJoinedMonster: calls LoadCursorTileAndRect; calls
 ; CopyRect32StrideToVRAM_Bank16; sets wStringIndex to $19; calls
-; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1 (E-0347)
+; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ; why: step 16 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 16); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
@@ -8134,7 +8154,7 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_ChooseTheMonsterTo::
 ; step 18 of BattleEnd_AddJoinedMonster: calls RestoreRecordAFully; sets wBattleArg0 to $ff;
 ; branches on the byte at wBattleArg0; calls SetRecordState2; calls LoadRecordListNameTiles; calls
 ; RunForPartyMembers; calls BuildBattleMenuScreen; calls CopyRect32StrideToVRAM_Bank16; sets
-; wBattleSubStep to 4 (E-0347)
+; wBattleSubStep to 4; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 18 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 18); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
@@ -8305,8 +8325,8 @@ RunForPartyMembers::
     ld [rRAMG], a
     ret
 
-; called from RunForPartyMembers: calls SRAMRecordAddress; calls SetBit5AtDE; calls SetBit0AtDE
-; (E-0347)
+; called from RunForPartyMembers: calls SRAMRecordAddress; calls SetBit5AtDE; calls SetBit0AtDE;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunForPartyMembers; RunForPartyMembers: with SRAM enabled runs
 ; RunForPartyMembers_SRAMRecordAddress for each of the first one to three party records (E-0352,
 ; E-0124, E-0344)
@@ -8872,8 +8892,10 @@ BuildBattleMenuScreen::
 ; MON_LEVEL to 1; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord;
 ; branches on wRecordBufA + MON_LEVEL; copies C to wRecordBufA + MON_MAX_LEVEL; branches on
 ; wBattleKind; calls BattleEnd_Step3_Multiply8By16_2; copies L to wRecordBufA + MON_MAX_HP; copies L
-; to wRecordBufA + MON_HP; then 18 more steps (see the code) (E-0347)
-; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; to wRecordBufA + MON_HP; then 19 more steps (see the code) (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
+; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_NextTableByte::
     ld a, [wBattleKind]
     cp $02
@@ -9077,8 +9099,11 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
-; Branches on h; copies C to wBattleTempBuf; calls NextTableByte (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; also changes HL, BC and A by
+; register arithmetic (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
+; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_Multiply8By16::
     ld hl, $03e7
     ld a, l
@@ -9121,9 +9146,11 @@ BattleEnd_Step3_Multiply8By16::
     ld h, a
     ret
 
-; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; returns if H is $03 (E-0347)
-; why: part of BattleEnd_Step3_Multiply8By16, in part of BattleEnd_Step3; BattleEnd_Step3:
-; wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; returns if H is $03; also changes
+; HL, BC and A by register arithmetic (E-0347)
+; why: part of BattleEnd_Step3_Multiply8By16, in part of BattleEnd_Step3; BattleEnd_Step3: battle
+; end, step 3: settles the battle MP (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the
+; next steps for link battles and ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_Multiply8By16_2::
     ld hl, $03e7
     ld a, l
@@ -9325,7 +9352,7 @@ LoadSaveFileSummary::
 .return:
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_Bank16::
     ld a, [hli]
     ld [de], a
@@ -9511,7 +9538,7 @@ DrawTitleSaveSummaryScreen::
 ; Calls LoadSaveFileSummary; branches on wBattlerRecords; branches on wGameMode; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
 ; wTextWindowWidth; sets wStringCategory to 8; sets wStringIndex to $0a; calls ShowString_Bank08;
-; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; then 21 more steps (see the code)
+; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; then 22 more steps (see the code)
 ; (E-0347)
 ; why: part of DrawTitleSaveSummaryScreen; DrawTitleSaveSummaryScreen: loads the summary graphics
 ; and palette, the save file summary, and draws the player name, party icons, names, levels and key
@@ -9967,7 +9994,8 @@ LoadTilesForPartyRecords::
 ; FamilyIconTiles by the low nibble of record byte $0D and copies them on through the shared copy
 ; loop at WriteBytesToVRAMTileWorkBuf1_Skip (not read to its end) (E-0103) (E-0345: record byte $0D
 ; is MON_FAMILY; was LoadTileForRecordFamily)
-; code: calls SRAMRecordAddressMapped; continues in WriteBytesToVRAMTileWorkBuf1_Skip (E-0347)
+; code: calls SRAMRecordAddressMapped; continues in WriteBytesToVRAMTileWorkBuf1_Skip; also changes
+; DE, BC and A by register arithmetic (E-0347)
 LoadTileForRecordFamily::
     push hl
     ld c, MON_FAMILY
@@ -9992,7 +10020,7 @@ LoadTileForRecordFamily::
 WriteBytesToVRAMTileWorkBuf1::
     ld a, [wWorkBuf + $1]
 
-; Calls WriteVRAMByteInc (E-0347)
+; Calls WriteVRAMByteInc; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: part of WriteBytesToVRAMTileWorkBuf1; WriteBytesToVRAMTileWorkBuf1: writes B bytes from DE to
 ; VRAM tile wWorkBuf + $1 ($8000 + 16 * index (E-0352, E-0124, E-0340)
 WriteBytesToVRAMTileWorkBuf1_Skip::

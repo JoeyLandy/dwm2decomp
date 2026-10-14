@@ -75,7 +75,9 @@ GameMode8_Init::
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; per-frame routine for wGameMode = 8 (E-0029)
+; game mode 8, the egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite
+; slots, shows '0 received G's egg' and returns to the game mode the link scene set (E-0354; was:
+; per-frame routine for wGameMode = 8)
 GameMode8_Update::
     ld a, [wFadeState]
     and a
@@ -107,8 +109,9 @@ GameMode8_Update::
     dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
 
 ; step 0 of GameMode8_Update: calls GameMode8_Update_TestFlagBit; increments wScreenSubStep (E-0347)
-; why: step 0 of GameMode8_Update (when wScreenSubStep = 0); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; why: step 0 of GameMode8_Update (when wScreenSubStep = 0); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_WriteScreenSubStep::
     call GameMode8_Update_TestFlagBit
     ld a, [wScreenSubStep]
@@ -118,8 +121,9 @@ GameMode8_Update_WriteScreenSubStep::
 
 ; step 1 of GameMode8_Update: increments wScreenCounter; returns if wScreenCounter is below $10;
 ; sets wScreenCounter to 0; increments wScreenSubStep (E-0347)
-; why: step 1 of GameMode8_Update (when wScreenSubStep = 1); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; why: step 1 of GameMode8_Update (when wScreenSubStep = 1); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_WriteScreenCounterAndScreenSubStep::
     ld a, [wScreenCounter]
     inc a
@@ -136,8 +140,9 @@ GameMode8_Update_WriteScreenCounterAndScreenSubStep::
 ; step 2 of GameMode8_Update: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1
 ; + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X to $58; sets wObject1
 ; + OBJ_FLAGS; increments wScreenSubStep (E-0347)
-; why: step 2 of GameMode8_Update (when wScreenSubStep = 2); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; why: step 2 of GameMode8_Update (when wScreenSubStep = 2); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -160,8 +165,9 @@ GameMode8_Update_WriteObject1AndScreenSubStep::
 
 ; step 4 of GameMode8_Update: sets wObject5 to $80; sets wArg1 to 1; increments wScreenSubStep
 ; (E-0347)
-; why: step 4 of GameMode8_Update (when wScreenSubStep = 4); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; why: step 4 of GameMode8_Update (when wScreenSubStep = 4); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_SetObject5::
     ld a, $80
     ld [wObject5], a
@@ -172,9 +178,11 @@ GameMode8_Update_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-; step 5 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
-; why: step 5 of GameMode8_Update (when wScreenSubStep = 5); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; step 5 of GameMode8_Update: may return early; increments wScreenSubStep; also changes A by
+; register arithmetic (E-0347)
+; why: step 5 of GameMode8_Update (when wScreenSubStep = 5); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -195,8 +203,9 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
 
 ; step 8 of GameMode8_Update: sets wObject5 to 0; sets wArg1 to 0; increments wScreenSubStep
 ; (E-0347)
-; why: step 8 of GameMode8_Update (when wScreenSubStep = 8); GameMode8_Update: per-frame routine for
-; wGameMode = 8 (E-0352)
+; why: step 8 of GameMode8_Update (when wScreenSubStep = 8); GameMode8_Update: game mode 8, the egg
+; hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
@@ -206,9 +215,11 @@ GameMode8_Update_SetObject5_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-; step 11 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
-; why: step 11 of GameMode8_Update (when wScreenSubStep = 11); GameMode8_Update: per-frame routine
-; for wGameMode = 8 (E-0352)
+; step 11 of GameMode8_Update: may return early; increments wScreenSubStep; also changes A by
+; register arithmetic (E-0347)
+; why: step 11 of GameMode8_Update (when wScreenSubStep = 11); GameMode8_Update: game mode 8, the
+; egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -232,8 +243,9 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
 ; step 12 of GameMode8_Update: calls GameMode8_Update_CopyStringMaxC; calls
 ; CopyMonsterNameToBuffer_BF2; calls GameMode8_Update_CopyStringMaxC; sets wStringIndex to $0e; sets
 ; wStringCategory to 0; calls BeginStringDisplay_BankF0_2; advances wScreenSubStep (E-0347)
-; why: step 12 of GameMode8_Update (when wScreenSubStep = 12); GameMode8_Update: per-frame routine
-; for wGameMode = 8 (E-0352)
+; why: step 12 of GameMode8_Update (when wScreenSubStep = 12); GameMode8_Update: game mode 8, the
+; egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_ShowHeroReceivedGsEgg::
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -275,8 +287,9 @@ GameMode8_Update_CopyStringMaxC::
     ret
 
 ; step 13 of GameMode8_Update: calls GameMode8_Update_WriteLinkSceneAndGameModeEtc (E-0347)
-; why: step 13 of GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: per-frame routine
-; for wGameMode = 8 (E-0352)
+; why: step 13 of GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: game mode 8, the
+; egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
+; received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc::
     call GameMode8_Update_WriteLinkSceneAndGameModeEtc
     ret
@@ -334,10 +347,12 @@ RunTextUntilTextWindowStateDone_BankF2::
     ret
 
 ; called from GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc: sets wLinkScene to
-; 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1; also changes HL, BC
+; and A by register arithmetic (E-0347)
 ; why: a helper of GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc, in step 13 of
-; GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: per-frame routine for wGameMode = 8
-; (E-0352)
+; GameMode8_Update (when wScreenSubStep = 13); GameMode8_Update: game mode 8, the egg hand-over
+; scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0 received G's egg'
+; and ... (E-0352, E-0354)
 GameMode8_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
@@ -365,7 +380,8 @@ GameMode8_Update_WriteLinkSceneAndGameModeEtc::
 ; wLinkHatchData; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; sets hTemp0
 ; to $0d; calls RunFieldCommandTemp0; then 6 more steps (see the code) (E-0347)
 ; why: a helper of GameMode8_Update_WriteScreenSubStep, in step 0 of GameMode8_Update (when
-; wScreenSubStep = 0); GameMode8_Update: per-frame routine for wGameMode = 8 (E-0352)
+; wScreenSubStep = 0); GameMode8_Update: game mode 8, the egg hand-over scene: by wScreenSubStep it
+; moves the scene's objects and sprite slots, shows '0 received G's egg' and ... (E-0352, E-0354)
 GameMode8_Update_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -441,7 +457,7 @@ GameMode8_Update_TestFlagBit::
 .return:
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_BankF2::
     ld a, [hli]
     ld [de], a
@@ -481,7 +497,7 @@ Object1Init_3::
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_BankF2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -560,13 +576,15 @@ DrawScreenBufferRectToBGMap_1B_BankF2::
     ret
 
 ; called from GameMode8_Update: calls UpdateAndDrawSpriteSlots; calls DrawFieldSprites (E-0347)
-; why: a helper of GameMode8_Update; GameMode8_Update: per-frame routine for wGameMode = 8 (E-0352)
+; why: a helper of GameMode8_Update; GameMode8_Update: game mode 8, the egg hand-over scene: by
+; wScreenSubStep it moves the scene's objects and sprite slots, shows '0 received G's egg' and ...
+; (E-0352, E-0354)
 GameMode8_Update_UpdateAndDrawSpriteSlots::
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_BankF2::
     ld de, BeginStringDisplay_BankF2_StringCategories
     call BeginStringDisplay
@@ -574,7 +592,7 @@ BeginStringDisplay_BankF2::
     db $11, $e5, $43, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_BankF2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_BankF2::
     call BeginStringDisplay_BankF2
     call RunStringDisplayToEnd
@@ -1133,7 +1151,7 @@ RunF2::
 ; branches on hTemp1; sets wNameGlyphBuf to $98; calls CopyGlyphTilesToVRAM; calls
 ; CopyShortStringToNameGlyphBuf_BankF2; calls CopyGlyphTilesToVRAM; sets wArg1 to $92; sets wArg2 to
 ; $50; copies the byte at vTiles2 + $200 to wArg3; calls ShowRecordBufBEntryStringAtArg1; calls
-; CopyShortStringToNameGlyphBuf_BankF2; then 13 more steps (see the code) (E-0347)
+; CopyShortStringToNameGlyphBuf_BankF2; then 14 more steps (see the code) (E-0347)
 ; why: a helper of RunF2; RunF2: runs RunF2_LoadTemp0WordFromRecordBufB and
 ; RunF2_LoadTemp0WordFromRecordBufB_2 (E-0352, E-0126, E-0344)
 RunF2_LoadTemp0WordFromRecordBufB::
@@ -1305,7 +1323,7 @@ RunF2_LoadTemp0WordFromRecordBufB_Data2::
 ; branches on hTemp1; calls CopyTileBytesToVRAMCounted_BankF2; copies the byte at vTiles2 + $6c0 to
 ; wArg1; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; sets wArg3 to $6a; sets wArg4
 ; to $6c; calls DrawSpeciesIconForRecordBufBEntry; calls PickNameBufferForFirstByte_BankF2; calls
-; BGMapAddressAtScroll_BankF2_2; then 13 more steps (see the code) (E-0347)
+; BGMapAddressAtScroll_BankF2_2; then 14 more steps (see the code) (E-0347)
 ; why: a helper of RunF2; RunF2: runs RunF2_LoadTemp0WordFromRecordBufB and
 ; RunF2_LoadTemp0WordFromRecordBufB_2 (E-0352, E-0126, E-0344)
 RunF2_LoadTemp0WordFromRecordBufB_2::
@@ -1459,7 +1477,7 @@ LoadTemp0WordFromRecordBufB::
     ret
 
 ; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0
-; terminator (the same 19 bytes appear in 2 banks) (E-0351)
+; terminator (the same 19 bytes appear in 2 banks) (E-0353)
 CopyShortStringToNameGlyphBuf_BankF2::
     ld de, wNameGlyphBuf
     ld c, $0a
@@ -1941,7 +1959,8 @@ DrawFamilyIconAndCountForRecordBufBFamily::
     pop bc
 
 ; Branches on the byte at wRecordBufB; calls BGMapAddressAtScroll_BankF2_2; calls
-; StepBGMapAddressBackOnScrollWrap; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F (E-0347)
+; StepBGMapAddressBackOnScrollWrap; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F; also
+; changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of DrawFamilyIconAndCountForRecordBufBFamily; DrawFamilyIconAndCountForRecordBufBFamily:
 ; loads the family icon of wRecordBufB + $D & $0F into tile wArg4 (E-0352, E-0127, E-0340)
 DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
@@ -1994,7 +2013,7 @@ DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_BankF2_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3738,7 +3757,8 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount::
     ld b, $00
     ld c, $20
 
-; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
+; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount; also
+; changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of KeyAppraisalMenu_ChooseKey_WriteKeyGenCount, in part of KeyAppraisalMenu_ChooseKey;
 ; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state 3, by wScreenStep: the paged key list
 ; (BuildKeyListIndexListEntries), a two-choice confirmation and saving (E-0352)
@@ -3816,7 +3836,8 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     jr nz, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop
     ret
 
-; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
+; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount; also
+; changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of KeyAppraisalMenu_ChooseKey_WriteKeyGenCount, in part of KeyAppraisalMenu_ChooseKey;
 ; KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu screen state 3, by wScreenStep: the paged key list
 ; (BuildKeyListIndexListEntries), a two-choice confirmation and saving (E-0352)
@@ -3899,7 +3920,7 @@ RunUnlessScreenStateIs3::
     ret
 
 ; called from VaultMenu_Store_ReadScreenState: branches on wCounterPtr0Lo; calls
-; VaultMenu_Store_MapItemsToInventory (E-0347)
+; VaultMenu_Store_MapItemsToInventory; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
 ; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -3925,7 +3946,8 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     call VaultMenu_Store_MapItemsToInventory
     ret
 
-; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0 (E-0347)
+; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0; also changes HL, DE, A and B by register
+; arithmetic (E-0347)
 ; why: part of VaultMenu_Store_VaultMenu_Store_MapItemsToInventory, in a helper of
 ; VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep = 14);
 ; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
@@ -4007,7 +4029,8 @@ VaultMenu_Store_MapItemsToInventory::
     ret
 
 ; called from RunUnlessScreenStateIs3: branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0;
-; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage (E-0347)
+; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage; also changes HL, DE,
+; BC and A by register arithmetic (E-0347)
 ; why: a helper of RunUnlessScreenStateIs3; RunUnlessScreenStateIs3: in state 3 continues at
 ; VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip (E-0352, E-0126, E-0344)
 RunUnlessScreenStateIs3_WriteCounterPtr0Lo::

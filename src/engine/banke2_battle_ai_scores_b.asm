@@ -5509,7 +5509,7 @@ AIScore_Skill200:: ; configured code entry (E-0316); C0
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to
 ; wAISkillScore; a positive word is added to wAISkillScore; a negative word's magnitude is added to
-; wAISkillScore2 (E-0351)
+; wAISkillScore2 (E-0353)
 AccumulateBank6WordToDA6E::
     call ReadBank6TableWord
     cp $ff
@@ -5541,7 +5541,7 @@ AccumulateBank6WordToDA6E::
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wAISkillScore2,
-; negative words' magnitude goes to wAISkillScore (E-0351)
+; negative words' magnitude goes to wAISkillScore (E-0353)
 AccumulateBank6WordToDA70::
     call ReadBank6TableWord
     cp $ff
@@ -5572,7 +5572,7 @@ AccumulateBank6WordToDA70::
 .return:
     ret
 
-; the 16-bit word at [HL] += BC; HL is unchanged (E-0351)
+; the 16-bit word at [HL] += BC; HL is unchanged (E-0353)
 AddBCToWordAtHL::
     push hl
     deref_hl
@@ -5599,7 +5599,7 @@ ResetAISkillScoreE2::
     ret
 
 ; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wPersonalityIndex (rows of 27 words); A
-; = its low byte; clobbers HL, E (E-0351)
+; = its low byte; clobbers HL, E (E-0353)
 ReadBank6TableWord::
     ld a, $36
     call Multiply8By16
@@ -5621,8 +5621,8 @@ ReadBank6TableWord::
     ret
 
 ; called from AIScore_StrongD: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
-; (E-0347)
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; also
+; changes BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_StrongD; AIScore_StrongD: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 148
 ; ... (E-0352, E-0083)
@@ -5672,8 +5672,8 @@ AIScore_StrongD_HPBandOfSlotTemp0::
     ret
 
 ; called from AIScore_AquaWall: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70
-; (E-0347)
+; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; also
+; changes BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_AquaWall; AIScore_AquaWall: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 155
 ; ... (E-0352, E-0083)
@@ -5723,7 +5723,7 @@ AIScore_AquaWall_HPBandOfSlotTemp0::
     ret
 
 ; called from AIScore_SuckAll: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_SuckAll_HPBandOfSlotTemp0 (E-0347)
+; AIScore_SuckAll_HPBandOfSlotTemp0; also changes BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_SuckAll; AIScore_SuckAll: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 157
 ; ... (E-0352, E-0083)
@@ -5769,8 +5769,8 @@ AIScore_SuckAll_HPBandOfSlotTemp0::
     ret
 
 ; called from AIScore_Meditate: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
-; (E-0347)
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; also
+; changes BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Meditate; AIScore_Meditate: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 159
 ; ... (E-0352, E-0083)
@@ -5819,8 +5819,8 @@ AIScore_Meditate_HPBandOfSlotTemp0::
 .return:
     ret
 
-; Calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls AIScore_HealUs_HPBandOfSlotTemp0
-; (E-0347)
+; Calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls AIScore_HealUs_HPBandOfSlotTemp0; also
+; changes BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_HealUs; AIScore_HealUs: AI scoring routine for 2 skill(s) of the per-skill
 ; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 25 ...
 ; (E-0352, E-0083)
@@ -5844,7 +5844,8 @@ AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E (E-0347)
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E; also changes
+; HL, BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_HealUs; AIScore_HealUs: AI scoring routine for 2 skill(s) of the per-skill
 ; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 25 ...
 ; (E-0352, E-0083)
@@ -5899,7 +5900,7 @@ ForEachPresentSlotOfSideRun::
     ret
 
 ; called from ForEachPresentSlotOfSideRun: calls HPBandOfSlotTemp0; branches on wBattleActor; calls
-; AccumulateBank6WordToDA6E (E-0347)
+; AccumulateBank6WordToDA6E; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of ForEachPresentSlotOfSideRun; ForEachPresentSlotOfSideRun: for the three slots of
 ; the side in A (bit 2), runs ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0 with hTemp0 = slot for
 ; each occupied one (E-0352, E-0122, E-0344)
@@ -5930,8 +5931,8 @@ ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1::
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
-; called from AIScore_Ramming: sets hTemp0; calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E
-; (E-0347)
+; called from AIScore_Ramming: sets hTemp0; calls HPBandOfSlotTemp0; calls
+; AccumulateBank6WordToDA6E; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Ramming; AIScore_Ramming: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 111
 ; ... (E-0352, E-0083)
@@ -5955,7 +5956,7 @@ AIScore_Ramming_HPBandOfSlotTemp0_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
 ; called from AIScore_Cover: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_Cover_HPBandOfSlotTemp0 (E-0347)
+; AIScore_Cover_HPBandOfSlotTemp0; also changes BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Cover; AIScore_Cover: AI scoring routine for 2 skill(s) of the per-skill
 ; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 151 ...
 ; (E-0352, E-0083)
@@ -5979,7 +5980,8 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E (E-0347)
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E; also changes
+; HL, BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_Cover; AIScore_Cover: AI scoring routine for 2 skill(s) of the per-skill far
 ; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 151 ... (E-0352,
 ; E-0083)
@@ -6303,7 +6305,7 @@ GetBattleMP_BankE2_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_BankE2::
     add a
     add_a_to_hl
@@ -6370,7 +6372,7 @@ ClearBattleStatusBitsWithMaskD_BankE2_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6380,7 +6382,7 @@ SetBit0OfLevelUpGainsIndexed_BankE2::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6390,7 +6392,7 @@ SetBit1OfLevelUpGainsIndexed_BankE2::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains

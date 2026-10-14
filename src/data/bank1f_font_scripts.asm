@@ -313,7 +313,7 @@ Tiles2Plus30Tiles::
 ; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex
 ; ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count
 ; is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse,
-; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit (E-0351)
+; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit (E-0353)
 SendSGBPacketSet::
     ld a, [wSGBActive]
     or a
@@ -454,7 +454,7 @@ SgbIconEn_SGBPacketSetTable_19::
 SgbMaskEn_SGBPacketSetTable_20::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank1F::
     ld de, BeginStringDisplay_Bank1F_StringCategories
     call BeginStringDisplay
@@ -1258,7 +1258,7 @@ GlyphCopyArgsForA_Data::
 ; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
 ; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
 ; code: branches on rSTAT; branches on wIsCGB; branches on wArg7; sets rVBK to 1; branches on rSTAT;
-; sets rVBK to 0; branches on rSTAT (E-0347)
+; sets rVBK to 0; branches on rSTAT; also changes HL, DE, BC and A by register arithmetic (E-0347)
 DrawTileRectFromArg1Params::
     ld hl, wArg1
     ld d, [hl]
@@ -2468,7 +2468,7 @@ DrawRects_3::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0351)
+; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
 BGMapAddressAtScroll_Bank1F::
     ldh a, [hScrollY]
     and $f8

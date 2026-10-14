@@ -65,7 +65,7 @@ GreatLogFieldEvents_MajorFacilities_StartMessageHL_B73AndStep::
 
 ; step 3 of GreatLogFieldEvents_MajorFacilities: branches on wBattleScene; shows 'GreatLog's major
 ; facilities are situated'; calls SetFlagBit; advances wScriptStep; calls StartMessageHL_B73; sets
-; wScriptStep to 6 (E-0347)
+; wScriptStep to 6; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 3 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 3);
 ; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
 ; above ...", a barrel message and the gold loss (E-0352)
@@ -518,7 +518,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0::
 ; NextRandomSeed; copies wKeyRandomHi & $07 to wMenuState; calls NextRandomSeed; copies wKeyRandomHi
 ; & $07 to wMenuSubState; calls NextRandomSeed; copies wKeyRandomHi & $07 to wMenuSelectedMember;
 ; sets wMenuCursor to 0; calls GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1;
-; branches on wIsCGB; sets rSVBK to 2; sets rSVBK to 0; then 3 more steps (see the code) (E-0347)
+; branches on wIsCGB; sets rSVBK to 2; sets rSVBK to 0; then 4 more steps (see the code) (E-0347)
 ; why: step 4 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 4);
 ; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
 ; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
@@ -650,7 +650,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_ShowGoHelpYourMother::
 ; May return early; returns if wMenuCursor is $03; branches on wMenuCursor; sets wMenuState; copies
 ; wMenuState & $0f to wMenuState; branches on wMenuCursor; sets wMenuSubState; copies wMenuSubState
 ; & $0f to wMenuSubState; sets wMenuSelectedMember; copies wMenuSelectedMember & $0f to
-; wMenuSelectedMember (E-0347)
+; wMenuSelectedMember; also changes A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents_GoHelpYourMotherScene; GreatLogFieldEvents_GoHelpYourMotherScene:
 ; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a
 ; joypad wait and sprite blinking (E-0352)
@@ -716,7 +716,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo::
 ; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3 to
 ; hTemp0; copies the byte at
 ; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3 to
-; hTemp1; calls DrawSymbolTilesForTemp1 (E-0347)
+; hTemp1; calls DrawSymbolTilesForTemp1; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents_GoHelpYourMotherScene; GreatLogFieldEvents_GoHelpYourMotherScene:
 ; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a
 ; joypad wait and sprite blinking (E-0352)
@@ -1168,7 +1168,7 @@ GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends::
 ; copies wKeyRandomLo & $0f to wDigits; calls Number24ToPackedBCD; calls
 ; WritePackedBCDNoLeadingZeros; branches on wMenuSubState; calls StartMessageHL_B73; branches on
 ; wTextYesNoResult; branches on wMenuSubState; increments wScriptParam1; copies wScriptParam0 to
-; wMenuSelectedMember; then 22 more steps (see the code) (E-0347)
+; wMenuSelectedMember; then 23 more steps (see the code) (E-0347)
 ; why: step 4 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 4);
 ; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
 ; ...' (E-0352)
@@ -1601,7 +1601,8 @@ ProcessRecordFields5DTo69ThenItemString::
     ret
 
 ; called from ProcessRecordFields5DTo69ThenItemString: branches on hTemp1; returns unless hTemp1 is
-; d; returns if hTemp0 is at least e; copies B to hTemp2 (E-0347)
+; d; returns if hTemp0 is at least e; copies B to hTemp2; also changes DE and A by register
+; arithmetic (E-0347)
 ; why: a helper of ProcessRecordFields5DTo69ThenItemString; ProcessRecordFields5DTo69ThenItemString:
 ; for record wPartyList[A]: passes word field $5D and word fields $61, $63, $65, $67, $69 (B = 1-5)
 ; to ... (E-0352, E-0121)
@@ -1641,7 +1642,8 @@ CopyItemStringToTextBuf22::
     farcall CopyStringToBuffer_Bank09
     ret
 
-; Sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0 (E-0347)
+; Sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; also changes HL, DE, BC
+; and A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents_WarubouWhatIsThis; GreatLogFieldEvents_WarubouWhatIsThis: scene
 ; 9: a dresser message, 'Warubou What is this ...' (E-0352)
 GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf::
@@ -1670,7 +1672,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf::
 
 ; Sets rRAMG to $0a; calls LoadSRAMRecordWord; sets hTemp2; sets hTemp3; branches on hTemp3;
 ; branches on hTemp2; copies E to hTemp2; copies D to hTemp3; calls SRAMRecordAddress; sets rRAMG to
-; 0; sets wDigits; calls Number24ToPackedBCD; then 1 more step (see the code) (E-0347)
+; 0; sets wDigits; calls Number24ToPackedBCD; then 2 more steps (see the code) (E-0347)
 ; why: part of GreatLogFieldEvents_WarubouWhatIsThis; GreatLogFieldEvents_WarubouWhatIsThis: scene
 ; 9: a dresser message, 'Warubou What is this ...' (E-0352)
 GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
@@ -2207,7 +2209,8 @@ GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA::
     ret
 
 ; step 2 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; branches on wTextYesNoResult;
-; calls StartMessageHL_B73; advances wScriptStep (E-0347)
+; calls StartMessageHL_B73; advances wScriptStep; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: step 2 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 2);
 ; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
 ; spirit in ...' (E-0352)
@@ -2488,7 +2491,7 @@ ScriptStepBlinkSpritesThenEnd::
     ld [wPendingFieldEvent], a
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0351)
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0353)
 StartMessageHL_B73::
     ld a, l
     ld [wMessageIndex], a
@@ -2615,8 +2618,8 @@ RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-; step 3 of RunMessageBox_Bank73: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff
-; (E-0347)
+; step 3 of RunMessageBox_Bank73: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff;
+; also changes A by register arithmetic (E-0347)
 ; why: step 3 of RunMessageBox_Bank73; RunMessageBox_Bank73: the bank-$73 message runner: returns at
 ; once when wMessageState is $FF (idle), otherwise steps the message (the same opening as ...
 ; (E-0352, E-0116)
@@ -2677,7 +2680,7 @@ ReadBank16TableWord::
 ; calls GreatLogFieldEvents_ReadBank16TableWord; may return early; calls
 ; GreatLogFieldEvents_LoadSRAMRecordByte_2; branches on wStepArrived; sets wScriptParam0 to 8; calls
 ; GreatLogFieldEvents_ReadBank16TableWord; may return early; calls
-; GreatLogFieldEvents_LoadSRAMRecordByte; branches on wStepArrived; then 40 more steps (see the
+; GreatLogFieldEvents_LoadSRAMRecordByte; branches on wStepArrived; then 41 more steps (see the
 ; code) (E-0347)
 ; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
 ; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
@@ -2822,7 +2825,7 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
 
 ; Copies L to hTemp2; copies H to hTemp3; sets rRAMG to $0a; branches on wPartyCount; calls
 ; LoadSRAMRecordWord; copies L to hTemp2; copies H to hTemp3; calls LoadSRAMRecordWord; sets hTemp2;
-; sets hTemp3; sets rRAMG to 0 (E-0347)
+; sets hTemp3; sets rRAMG to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
 ; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
 ; scenes ... (E-0352, E-0286, E-0038)
@@ -2885,7 +2888,7 @@ GreatLogFieldEvents_SetTemp2::
 
 ; Copies L to hTemp2; copies H to hTemp3; sets rRAMG to $0a; branches on wPartyCount; calls
 ; LoadSRAMRecordWord; copies L to hTemp2; copies H to hTemp3; calls LoadSRAMRecordWord; sets hTemp2;
-; sets hTemp3; sets rRAMG to 0 (E-0347)
+; sets hTemp3; sets rRAMG to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
 ; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
 ; scenes ... (E-0352, E-0286, E-0038)
@@ -2946,7 +2949,8 @@ GreatLogFieldEvents_LoadSRAMRecordWord::
     ld [rRAMG], a
     ret
 
-; Calls ReadBank16TableWord; branches on wGoldHi; branches on wGoldMid; branches on wGoldLo (E-0347)
+; Calls ReadBank16TableWord; branches on wGoldHi; branches on wGoldMid; branches on wGoldLo; also
+; changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
 ; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
 ; scenes ... (E-0352, E-0286, E-0038)
@@ -3027,7 +3031,8 @@ SceneChestBattle::
     dw SceneChestBattle_SetFlagBit
 
 ; step 9 of SceneChestBattle: increments wScriptParam0; returns unless wScriptParam0 is $10; calls
-; ClearBit2AtHL_Bank73; advances wScriptStep (E-0347)
+; ClearBit2AtHL_Bank73; advances wScriptStep; also changes HL, A and C by register arithmetic
+; (E-0347)
 ; why: step 9 of SceneChestBattle (when wScriptStep = 9); SceneChestBattle: implements script
 ; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
 ; shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -3050,7 +3055,8 @@ SceneChestBattle_ClearBit2AtHL_Bank73::
     inc [hl]
     ret
 
-; step 7 of SceneChestBattle: calls SetFlagBit; sets wScriptStartRequest to $80 (E-0347)
+; step 7 of SceneChestBattle: calls SetFlagBit; sets wScriptStartRequest to $80; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: step 7 of SceneChestBattle (when wScriptStep = 7); SceneChestBattle: implements script
 ; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
 ; shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -3154,7 +3160,8 @@ SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_2::
     ret
 
 ; step 2 of SceneChestBattle: copies the byte at SceneChestBattle_StartScriptedEncounterTemp0_Data
-; to hTemp0; calls StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
+; to hTemp0; calls StartScriptedEncounterTemp0; advances wScriptStep; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ; why: step 2 of SceneChestBattle (when wScriptStep = 2); SceneChestBattle: implements script
 ; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
 ; shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -3189,7 +3196,8 @@ SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b::
     call SceneChestBattle_StartMessageHL_B73b
     ret
 
-; Calls StartMessageHL_B73b; advances wScriptStep (E-0347)
+; Calls StartMessageHL_B73b; advances wScriptStep; also changes HL, DE and A by register arithmetic
+; (E-0347)
 ; why: part of SceneChestBattle; SceneChestBattle: implements script command type CB
 ; (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script shows: '0
 ; checked the ... (E-0352, E-0038, E-0245)
@@ -3311,7 +3319,8 @@ SceneMilayouForest::
     dw SceneMilayouForest_ClearBit2AtHL_Bank73
 
 ; step 1 of SceneMilayouForest: increments wScriptParam0; returns unless wScriptParam0 is $10; calls
-; ClearBit2AtHL_Bank73; sets wScriptStartRequest to $80 (E-0347)
+; ClearBit2AtHL_Bank73; sets wScriptStartRequest to $80; also changes HL, A and C by register
+; arithmetic (E-0347)
 ; why: step 1 of SceneMilayouForest (when wScriptStep = 1); SceneMilayouForest: implements script
 ; command type C9 (SCRIPT_SCENE_MILAYOU_FOREST): a cutscene step named after the scene its only
 ; script shows: 'Milayou I ... (E-0352, E-0038, E-0245)
@@ -3336,7 +3345,7 @@ SceneMilayouForest_ClearBit2AtHL_Bank73::
 
 ; step 8 of SceneChestBattle: calls SetBit2AtHL_B73; advances wScriptStep; branches on hPlayerX;
 ; branches on hPlayerY; branches on the byte at wFollowerRecords + $1; sets wScriptParam1 to $ff;
-; sets wScriptParam1 to 1 (E-0347)
+; sets wScriptParam1 to 1; also changes HL, A and B by register arithmetic (E-0347)
 ; why: step 8 of SceneChestBattle (when wScriptStep = 8); SceneChestBattle: implements script
 ; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
 ; shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -3548,8 +3557,8 @@ SceneWizstone_StepObjectTowardCoord::
     ret
 
 ; step 0 of SceneWizstone: branches on hPlayerX; branches on hPlayerY; branches on wPartyCount;
-; branches on the byte at wFollowerRecords + $1; sets wScriptStep to 2; advances wScriptStep
-; (E-0347)
+; branches on the byte at wFollowerRecords + $1; sets wScriptStep to 2; advances wScriptStep; also
+; changes HL, A and B by register arithmetic (E-0347)
 ; why: step 0 of SceneWizstone (when wScriptStep = 0); SceneWizstone: implements script command type
 ; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
 ; This stone, ... (E-0352, E-0038, E-0245)
@@ -4026,7 +4035,7 @@ SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc::
     ret
 
 ; step 5 of SceneKamehaStole: increments wFollowerRecords + $c; may return early; advances
-; wScriptStep (E-0347)
+; wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 5 of SceneKamehaStole (when wScriptStep = 5); SceneKamehaStole: implements script
 ; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
 ; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
@@ -4053,7 +4062,7 @@ SceneKamehaStole_WriteFollowerRecords::
     ret
 
 ; step 4 of SceneKamehaStole: may return early; advances wScriptStep; may return early; sets
-; wScriptStep to 6 (E-0347)
+; wScriptStep to 6; also changes HL and A by register arithmetic (E-0347)
 ; why: step 4 of SceneKamehaStole (when wScriptStep = 4); SceneKamehaStole: implements script
 ; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
 ; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
@@ -4090,8 +4099,8 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2::
     ret
 
 ; step 3 of SceneKamehaStole: sets wFollowerRecords to 2; sets wFollowerRecords to 3; may return
-; early; sets wFollowerRecords to 0; advances wScriptStep; may return early; sets wScriptStep to 6
-; (E-0347)
+; early; sets wFollowerRecords to 0; advances wScriptStep; may return early; sets wScriptStep to 6;
+; also changes HL and A by register arithmetic (E-0347)
 ; why: step 3 of SceneKamehaStole (when wScriptStep = 3); SceneKamehaStole: implements script
 ; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
 ; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
@@ -4155,8 +4164,9 @@ ScriptCommand60_Run::
 ; SCRIPTOBJ_Y; calls ScriptApplyStepDeltaAtDE_Bank73; may return early; sets wObject5 to 0; sets
 ; hTemp0 to $2c; calls FindTemp0InInventoryList; calls RemoveInventorySlotShiftDown; sets
 ; wScriptStartRequest to $80 (E-0347)
-; why: step 4 of ScriptCommand60_Run (when wScriptStep = 4); ScriptCommand60_Run: implements script
-; command type 60 (E-0352, E-0038)
+; why: step 4 of ScriptCommand60_Run (when wScriptStep = 4), in part of ScriptCommand60;
+; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_FindTemp0InInventoryList::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
@@ -4177,8 +4187,9 @@ ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_FindTemp0InInventoryList::
 
 ; step 3 of ScriptCommand60_Run: calls StepScriptParam0Counter_Bank73; may return early; advances
 ; wScriptStep (E-0347)
-; why: step 3 of ScriptCommand60_Run (when wScriptStep = 3); ScriptCommand60_Run: implements script
-; command type 60 (E-0352, E-0038)
+; why: step 3 of ScriptCommand60_Run (when wScriptStep = 3), in part of ScriptCommand60;
+; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand60_Run_StepScriptParam0Counter_Bank73::
     ld b, $5a
     call StepScriptParam0Counter_Bank73
@@ -4190,8 +4201,9 @@ ScriptCommand60_Run_StepScriptParam0Counter_Bank73::
 ; step 2 of ScriptCommand60_Run: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; increments wScriptParam0; returns unless wScriptParam0 is $20; sets
 ; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 2 of ScriptCommand60_Run (when wScriptStep = 2); ScriptCommand60_Run: implements script
-; command type 60 (E-0352, E-0038)
+; why: step 2 of ScriptCommand60_Run (when wScriptStep = 2), in part of ScriptCommand60;
+; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand60_Run_AddStepDeltaToPointedByte::
     ld de, wSpriteSlots + $c
     ld a, e
@@ -4213,8 +4225,9 @@ ScriptCommand60_Run_AddStepDeltaToPointedByte::
 ; step 0 of ScriptCommand60_Run: sets hTemp0 to $10; calls RunFieldCommandTemp0; sets wObject5 +
 ; SCRIPTOBJ_X to $50; sets wObject5 + SCRIPTOBJ_Y to $30; sets wObject5 to $80; advances wScriptStep
 ; (E-0347)
-; why: step 0 of ScriptCommand60_Run (when wScriptStep = 0); ScriptCommand60_Run: implements script
-; command type 60 (E-0352, E-0038)
+; why: step 0 of ScriptCommand60_Run (when wScriptStep = 0), in part of ScriptCommand60;
+; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand60_Run_RunFieldCommandTemp0::
     ld a, $10
     ldh [hTemp0], a
@@ -4672,7 +4685,7 @@ ScriptStepMoveObjectCB8AByDirection::
 
 ; step 1 of SceneGravestone: branches on wMaxBlockingTile; calls
 ; ScriptStepMoveObjectCB8AByDirection; advances wScriptStep; calls ClearBit2AtHL_Bank73; sets
-; wScriptStartRequest to $80 (E-0347)
+; wScriptStartRequest to $80; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 1 of SceneGravestone (when wScriptStep = 1); SceneGravestone: implements script command
 ; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
 ; before '0 checked ... (E-0352, E-0038, E-0245)
@@ -4751,7 +4764,7 @@ SceneGravestone_WriteScriptStartRequest::
 ; step 0 of SceneGravestone: copies the byte at SceneGravestone_SetBit2AtHL_B73_Data to
 ; wScriptParam1; copies the byte at SceneGravestone_SetBit2AtHL_B73_Data to wMessageIndex; copies
 ; the byte at SceneGravestone_SetBit2AtHL_B73_Data to wMessageGroup; calls SetBit2AtHL_B73; advances
-; wScriptStep (E-0347)
+; wScriptStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 0 of SceneGravestone (when wScriptStep = 0); SceneGravestone: implements script command
 ; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
 ; before '0 checked ... (E-0352, E-0038, E-0245)
@@ -4869,7 +4882,8 @@ SceneJustice::
     ret
 
 ; called from SceneJustice: calls SceneJustice_StepWrapPosition; returns if wIsCGB is 0; sets rSVBK
-; to 2; calls SceneJustice_SetPosition; sets rSVBK to 0 (E-0347)
+; to 2; calls SceneJustice_SetPosition; sets rSVBK to 0; also changes HL, A and C by register
+; arithmetic (E-0347)
 ; why: a helper of SceneJustice; SceneJustice: implements script command type 53
 ; (SCRIPT_SCENE_JUSTICE): a cutscene step named after the scene its only script shows: 'Let the
 ; power of ... (E-0352, E-0038, E-0245)
@@ -5115,7 +5129,8 @@ SceneMadcondorCry_WriteScriptParam0::
     inc [hl]
     ret
 
-; Copies L to wMessageIndex; copies H to wMessageGroup (E-0347)
+; Copies L to wMessageIndex; copies H to wMessageGroup; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: part of SceneMadcondorCry; SceneMadcondorCry: implements script command type 51
 ; (SCRIPT_SCENE_MADCONDOR_CRY): a cutscene step named after the scene its only script shows:
 ; 'Kweeeeeh!' (E-0352, E-0038, E-0245)
@@ -5216,7 +5231,8 @@ SceneMadcondor_WriteScriptParam0::
     inc [hl]
     ret
 
-; Copies L to wMessageIndex; copies H to wMessageGroup (E-0347)
+; Copies L to wMessageIndex; copies H to wMessageGroup; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: part of SceneMadcondor; SceneMadcondor: implements script command type 50
 ; (SCRIPT_SCENE_MADCONDOR): a cutscene step named after the scene its only script shows: 'Look! A
 ; ... (E-0352, E-0038, E-0245)
@@ -5335,8 +5351,9 @@ ScriptCommand4C_Run::
 ; step 1 of ScriptCommand4C_Run: sets wObject5 to $80; decrements wObject5 + SCRIPTOBJ_Y; calls
 ; StepScriptParam0Counter_Bank73; may return early; sets wObject5 to 0; sets wScriptStartRequest to
 ; $80 (E-0347)
-; why: step 1 of ScriptCommand4C_Run (when wScriptStep = 1); ScriptCommand4C_Run: implements script
-; command type 4C (E-0352, E-0038)
+; why: step 1 of ScriptCommand4C_Run (when wScriptStep = 1), in part of ScriptCommand4C;
+; ScriptCommand4C: runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand4C_Run_StepScriptParam0Counter_Bank73::
     ld a, $80
     ld [wObject5], a
@@ -5360,9 +5377,10 @@ ScriptCommand4C_Run_StepScriptParam0Counter_Bank73::
 ; EVENT_SCENE_DARCK_DEFEATED; branches on the byte at
 ; ScriptCommand4C_Run_RunFieldCommandTemp0_Data2; copies the byte at
 ; ScriptCommand4C_Run_RunFieldCommandTemp0_Data2 & $f0 to wObject5 + SCRIPTOBJ_X; sets wObject5 +
-; SCRIPTOBJ_Y; advances wScriptStep (E-0347)
-; why: step 0 of ScriptCommand4C_Run (when wScriptStep = 0); ScriptCommand4C_Run: implements script
-; command type 4C (E-0352, E-0038)
+; SCRIPTOBJ_Y; advances wScriptStep; also changes HL, DE, A and C by register arithmetic (E-0347)
+; why: step 0 of ScriptCommand4C_Run (when wScriptStep = 0), in part of ScriptCommand4C;
+; ScriptCommand4C: runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand4C_Run_RunFieldCommandTemp0::
     ld a, $11
     ldh [hTemp0], a
@@ -5593,7 +5611,8 @@ SceneStrongestMaster::
     dw SceneStrongestMaster_WriteFieldDrawFlagsAndMapSpriteKindEtc
 
 ; step 3 of SceneStrongestMaster: calls DrawFullScreenBufferAtScroll; sets hFieldDrawFlags to 0;
-; sets wMapSpriteKind to 0; sets wScriptStartRequest to $80 (E-0347)
+; sets wMapSpriteKind to 0; sets wScriptStartRequest to $80; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: step 3 of SceneStrongestMaster (when wScriptStep = 3); SceneStrongestMaster: implements
 ; script command type 3E (SCRIPT_SCENE_STRONGEST_MASTER): a cutscene step named after the scene its
 ; only script shows: 'The ... (E-0352, E-0038, E-0245)
@@ -5834,7 +5853,8 @@ RewardItemOrKey2_LoadListedRecordNameTilesForTemp0::
     inc [hl]
     ret
 
-; step 2 of RewardItemOrKey2: sets wObject3 + OBJ_Y to $50; advances wScriptStep (E-0347)
+; step 2 of RewardItemOrKey2: sets wObject3 + OBJ_Y to $50; advances wScriptStep; also changes HL
+; and A by register arithmetic (E-0347)
 ; why: step 2 of RewardItemOrKey2 (when wScriptStep = 2); RewardItemOrKey2: implements script
 ; command type 3D (SCRIPT_REWARD_ITEM_OR_KEY_2): the same rewards as SCRIPT_REWARD_ITEM_OR_KEY in
 ; another scene: ... (E-0352, E-0038, E-0245)
@@ -5865,7 +5885,8 @@ RewardItemOrKey2_WriteObject3::
     inc [hl]
     ret
 
-; step 1 of RewardItemOrKey2: advances wScriptStep (E-0347)
+; step 1 of RewardItemOrKey2: advances wScriptStep; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: step 1 of RewardItemOrKey2 (when wScriptStep = 1); RewardItemOrKey2: implements script
 ; command type 3D (SCRIPT_REWARD_ITEM_OR_KEY_2): the same rewards as SCRIPT_REWARD_ITEM_OR_KEY in
 ; another scene: ... (E-0352, E-0038, E-0245)
@@ -6009,7 +6030,7 @@ RewardItemOrKey_TestFlagBit_SetScriptStartRequest::
 ; step 17 of RewardItemOrKey: checks EVENT_REWARD_ITEM_OR_KEY_2; shows 'What's wrong, MadGopher? Did
 ; you'; advances wScriptStep; branches on wObject1 + OBJ_X; sets wObject1 + OBJ_STATE to 1; branches
 ; on $01; sets wObject1 + OBJ_STATE to 3; branches on wObject1 + OBJ_Y; sets wObject1 + OBJ_STATE to
-; 0; sets wObject1 + OBJ_STATE to 2 (E-0347)
+; 0; sets wObject1 + OBJ_STATE to 2; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 17 of RewardItemOrKey (when wScriptStep = 17); RewardItemOrKey: implements script
 ; command type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry
 ; (AppendItemStepPtrLoToInventory, ... (E-0352, E-0038, E-0245)
@@ -6137,7 +6158,7 @@ RewardItemOrKey_LoadListedRecordNameTilesForTemp0::
     ret
 
 ; step 11 of RewardItemOrKey: sets wObject1 + OBJ_X to $50; advances wScriptStep; calls
-; RewardItemOrKey_DecAndFace3 (E-0347)
+; RewardItemOrKey_DecAndFace3; also changes HL and A by register arithmetic (E-0347)
 ; why: step 11 of RewardItemOrKey (when wScriptStep = 11); RewardItemOrKey: implements script
 ; command type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry
 ; (AppendItemStepPtrLoToInventory, ... (E-0352, E-0038, E-0245)
@@ -6161,7 +6182,7 @@ RewardItemOrKey_WriteObject1_AdvanceScriptStep::
     ret
 
 ; step 8 of RewardItemOrKey: sets wObject1 + OBJ_Y to $20; advances wScriptStep; calls
-; RewardItemOrKey_DecAndFace2 (E-0347)
+; RewardItemOrKey_DecAndFace2; also changes HL and A by register arithmetic (E-0347)
 ; why: step 8 of RewardItemOrKey (when wScriptStep = 8); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6186,7 +6207,8 @@ RewardItemOrKey_WriteObject1_AdvanceScriptStep_2::
     ret
 
 ; step 6 of RewardItemOrKey: sets wObject1 + OBJ_Y to $30; sets wScriptStep to $0d; calls
-; RewardItemOrKey_IncAndFace0; calls RewardItemOrKey_DecAndFace2 (E-0347)
+; RewardItemOrKey_IncAndFace0; calls RewardItemOrKey_DecAndFace2; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 6 of RewardItemOrKey (when wScriptStep = 6); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6216,7 +6238,7 @@ RewardItemOrKey_WriteObject1AndScriptStep_SetScriptStep::
     ret
 
 ; step 5 of RewardItemOrKey: sets wObject1 + OBJ_X to $70; advances wScriptStep; calls
-; RewardItemOrKey_IncAndFace1 (E-0347)
+; RewardItemOrKey_IncAndFace1; also changes HL and A by register arithmetic (E-0347)
 ; why: step 5 of RewardItemOrKey (when wScriptStep = 5); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6240,7 +6262,7 @@ RewardItemOrKey_WriteObject1_AdvanceScriptStep_3::
     ret
 
 ; step 4 of RewardItemOrKey: advances wScriptStep; calls RewardItemOrKey_IncAndFace0; calls
-; RewardItemOrKey_DecAndFace2 (E-0347)
+; RewardItemOrKey_DecAndFace2; also changes HL and A by register arithmetic (E-0347)
 ; why: step 4 of RewardItemOrKey (when wScriptStep = 4); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6272,7 +6294,8 @@ RewardItemOrKey_ReadMessageIndexAndMessageGroup_2::
     ret
 
 ; step 3 of RewardItemOrKey: sets wObject1 + OBJ_X to $60; sets wScriptStep to $0d; calls
-; RewardItemOrKey_IncAndFace1; calls RewardItemOrKey_DecAndFace3 (E-0347)
+; RewardItemOrKey_IncAndFace1; calls RewardItemOrKey_DecAndFace3; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 3 of RewardItemOrKey (when wScriptStep = 3); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6301,7 +6324,7 @@ RewardItemOrKey_WriteObject1AndScriptStep::
     ret
 
 ; step 2 of RewardItemOrKey: sets wObject1 + OBJ_Y to $40; advances wScriptStep; calls
-; RewardItemOrKey_IncAndFace0 (E-0347)
+; RewardItemOrKey_IncAndFace0; also changes HL and A by register arithmetic (E-0347)
 ; why: step 2 of RewardItemOrKey (when wScriptStep = 2); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6326,7 +6349,7 @@ RewardItemOrKey_WriteObject1::
     ret
 
 ; step 1 of RewardItemOrKey: advances wScriptStep; calls RewardItemOrKey_IncAndFace1; calls
-; RewardItemOrKey_DecAndFace3 (E-0347)
+; RewardItemOrKey_DecAndFace3; also changes HL and A by register arithmetic (E-0347)
 ; why: step 1 of RewardItemOrKey (when wScriptStep = 1); RewardItemOrKey: implements script command
 ; type 3C (SCRIPT_REWARD_ITEM_OR_KEY): gives an item or a key entry (AppendItemStepPtrLoToInventory,
 ; ... (E-0352, E-0038, E-0245)
@@ -6492,7 +6515,8 @@ SceneMasterThanks_AddStepDeltaToPointedByte::
     ret
 
 ; step 10 of SceneMasterThanks: copies L to hTemp0; copies H to hTemp1; calls
-; LoadListedRecordNameTilesForTemp0; sets hFieldDrawFlags to 0; advances wScriptStep (E-0347)
+; LoadListedRecordNameTilesForTemp0; sets hFieldDrawFlags to 0; advances wScriptStep; also changes
+; HL and A by register arithmetic (E-0347)
 ; why: step 10 of SceneMasterThanks (when wScriptStep = 10); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6520,7 +6544,7 @@ SceneMasterThanks_LoadListedRecordNameTilesForTemp0::
     ret
 
 ; step 9 of SceneMasterThanks: sets hFieldDrawFlags to $0e; advances wScriptStep; sets wScriptStep
-; to 1; sets wScriptStep to 3 (E-0347)
+; to 1; sets wScriptStep to 3; also changes HL and A by register arithmetic (E-0347)
 ; why: step 9 of SceneMasterThanks (when wScriptStep = 9); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6562,7 +6586,8 @@ SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags::
     ld [hl], $03
     ret
 
-; step 8 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 0 (E-0347)
+; step 8 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 0; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: step 8 of SceneMasterThanks (when wScriptStep = 8); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6588,7 +6613,8 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep::
     ld [hl], $00
     ret
 
-; step 6 of SceneMasterThanks: sets wScriptStep to 7; sets wScriptStep to 8 (E-0347)
+; step 6 of SceneMasterThanks: sets wScriptStep to 7; sets wScriptStep to 8; also changes HL and A
+; by register arithmetic (E-0347)
 ; why: step 6 of SceneMasterThanks (when wScriptStep = 6); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6614,7 +6640,8 @@ SceneMasterThanks_WriteScriptStep_2::
     ld [wScriptStep], a
     ret
 
-; step 5 of SceneMasterThanks: sets hFieldDrawFlags to $0e; sets wScriptStep to $0a (E-0347)
+; step 5 of SceneMasterThanks: sets hFieldDrawFlags to $0e; sets wScriptStep to $0a; also changes HL
+; and A by register arithmetic (E-0347)
 ; why: step 5 of SceneMasterThanks (when wScriptStep = 5); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6652,7 +6679,8 @@ SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc::
     ld [hl], $03
     ret
 
-; step 4 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 2 (E-0347)
+; step 4 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 2; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: step 4 of SceneMasterThanks (when wScriptStep = 4); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6678,7 +6706,8 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_2::
     ld [hl], $02
     ret
 
-; step 3 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 1 (E-0347)
+; step 3 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 1; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: step 3 of SceneMasterThanks (when wScriptStep = 3); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6702,7 +6731,8 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_3::
     ld [hl], $01
     ret
 
-; step 2 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 2 (E-0347)
+; step 2 of SceneMasterThanks: advances wScriptStep; sets wScriptStep to 2; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: step 2 of SceneMasterThanks (when wScriptStep = 2); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6729,7 +6759,7 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup::
     ret
 
 ; step 1 of SceneMasterThanks: sets wScriptStep to 2; branches on $02; sets wScriptStep to 3; sets
-; wScriptStep to 4 (E-0347)
+; wScriptStep to 4; also changes HL and A by register arithmetic (E-0347)
 ; why: step 1 of SceneMasterThanks (when wScriptStep = 1); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6762,7 +6792,7 @@ SceneMasterThanks_WriteScriptStep::
 ; FindPartyIndexOfSpeciesTemp0; copies L to wMessageIndex; copies H to wMessageGroup; copies the
 ; byte at wFollowerRecords to wSavedPlayerState; branches on hPlayerY; advances wScriptStep;
 ; branches on hPlayerY; sets wScriptStep to 6; branches on wMessageIndex; branches on the byte at
-; wFollowerRecords + $1 (E-0347)
+; wFollowerRecords + $1; then 1 more step (see the code) (E-0347)
 ; why: step 0 of SceneMasterThanks (when wScriptStep = 0); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
@@ -6907,7 +6937,8 @@ SceneKamehaEscape_ScriptStartFadeAndAdvanceStep_SetMapId::
 ; step 17 of SceneKamehaEscape: increments wScriptParam0; branches on wScriptParam0; sets
 ; wScriptParam0 to 0; advances wScriptStep; branches on wScriptParam0; calls
 ; SceneKamehaEscape_DecompressToVRAM; continues in SceneKamehaEscape_DecompressToVRAM_2; calls
-; SceneKamehaEscape_DecompressToVRAM; continues in SceneKamehaEscape_DecompressToVRAM_2 (E-0347)
+; SceneKamehaEscape_DecompressToVRAM; continues in SceneKamehaEscape_DecompressToVRAM_2; also
+; changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 17 of SceneKamehaEscape (when wScriptStep = 17); SceneKamehaEscape: implements script
 ; command type 35 (SCRIPT_SCENE_KAMEHA_ESCAPE): a cutscene step named after the scene its only
 ; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -6956,7 +6987,7 @@ SceneKamehaEscape_WriteMapScreenXAndMapScreenYEtc::
 ; step 10 of SceneKamehaEscape: increments wScriptParam0; branches on wScriptParam0; sets
 ; wScriptParam0 to 0; advances wScriptStep; branches on wScriptParam0; calls
 ; SceneKamehaEscape_DecompressToVRAM; continues in SceneKamehaEscape_DecompressToVRAM_2; calls
-; SceneKamehaEscape_DecompressToVRAM (E-0347)
+; SceneKamehaEscape_DecompressToVRAM; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 10 of SceneKamehaEscape (when wScriptStep = 10); SceneKamehaEscape: implements script
 ; command type 35 (SCRIPT_SCENE_KAMEHA_ESCAPE): a cutscene step named after the scene its only
 ; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -7047,7 +7078,8 @@ SceneKamehaEscape_ScriptStartFadeAndAdvanceStep_SetMapIdTo30::
 
 ; step 3 of SceneKamehaEscape: calls SceneKamehaEscape_DecompressToVRAM_2; calls
 ; SceneKamehaEscape_DecompressToVRAM; calls DrawFullScreenBufferAtScroll; increments wScriptParam0;
-; returns unless wScriptParam0 is $09; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
+; returns unless wScriptParam0 is $09; sets wScriptParam0 to 0; advances wScriptStep; also changes
+; HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 3 of SceneKamehaEscape (when wScriptStep = 3); SceneKamehaEscape: implements script
 ; command type 35 (SCRIPT_SCENE_KAMEHA_ESCAPE): a cutscene step named after the scene its only
 ; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
@@ -7187,7 +7219,8 @@ SceneCrate_WriteFollowerRecords_AdvanceScriptStep::
     inc [hl]
     ret
 
-; step 6 of SceneCrate: may return early; advances wScriptStep (E-0347)
+; step 6 of SceneCrate: may return early; advances wScriptStep; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 6 of SceneCrate (when wScriptStep = 6); SceneCrate: implements script command type 33
 ; (SCRIPT_SCENE_CRATE): a cutscene step named after the scene its only script shows: '0 checked the
 ; ... (E-0352, E-0038, E-0245)
@@ -7207,7 +7240,8 @@ SceneCrate_WriteFollowerRecords_AdvanceScriptStep_2::
     inc [hl]
     ret
 
-; step 5 of SceneCrate: may return early; advances wScriptStep (E-0347)
+; step 5 of SceneCrate: may return early; advances wScriptStep; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 5 of SceneCrate (when wScriptStep = 5); SceneCrate: implements script command type 33
 ; (SCRIPT_SCENE_CRATE): a cutscene step named after the scene its only script shows: '0 checked the
 ; ... (E-0352, E-0038, E-0245)
@@ -7635,8 +7669,9 @@ SceneMermaidSong_ShowHeroReceivedATinyMedal::
 
 ; step 1 of ScriptCommand60_Run: decrements wObject5 + SCRIPTOBJ_Y; calls
 ; ScriptApplyStepDeltaAtDE_Bank73; may return early; plays sound $65; advances wScriptStep (E-0347)
-; why: step 1 of ScriptCommand60_Run (when wScriptStep = 1); ScriptCommand60_Run: implements script
-; command type 60 (E-0352, E-0038)
+; why: step 1 of ScriptCommand60_Run (when wScriptStep = 1), in part of ScriptCommand60;
+; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73::
     ld hl, wObject5 + SCRIPTOBJ_Y
     dec [hl]
@@ -7672,7 +7707,7 @@ SceneMermaidSong_RunMessageBoxFar_Bank73_RunFieldCommandTemp0::
 
 ; step 7 of SceneMermaidSong: calls RunMessageBoxFar_Bank73; may return early; sets wObject1 +
 ; OBJ_STATE to 1; advances wScriptStep; checks EVENT_SCENE_MERMAID_SONG; shows 'Bravo, bravo! You
-; were fabulous!'; advances wScriptStep (E-0347)
+; were fabulous!'; advances wScriptStep; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 7 of SceneMermaidSong (when wScriptStep = 7); SceneMermaidSong: implements script
 ; command type 2B (SCRIPT_SCENE_MERMAID_SONG): a cutscene step named after the scene its only script
 ; shows: 'Then I'll ... (E-0352, E-0038, E-0245)
@@ -8215,8 +8250,9 @@ ScriptCommand20_Run::
 
 ; step 3 of ScriptCommand20_Run: increments wScriptParam0; returns unless wScriptParam0 is $3c;
 ; plays sound $72; sets EVENT_SCRIPT_COMMAND20_TURNED; sets wScriptStartRequest to $80 (E-0347)
-; why: step 3 of ScriptCommand20_Run (when wScriptStep = 3); ScriptCommand20_Run: implements script
-; command type 20 (E-0352, E-0038)
+; why: step 3 of ScriptCommand20_Run (when wScriptStep = 3), in part of ScriptCommand20;
+; ScriptCommand20: runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand20_Run_SetFlagBit::
     ld a, [wScriptParam0]
     inc a
@@ -8239,8 +8275,9 @@ ScriptCommand20_Run_SetFlagBit::
     ret
 
 ; step 2 of ScriptCommand20_Run: may return early; advances wScriptStep (E-0347)
-; why: step 2 of ScriptCommand20_Run (when wScriptStep = 2); ScriptCommand20_Run: implements script
-; command type 20 (E-0352, E-0038)
+; why: step 2 of ScriptCommand20_Run (when wScriptStep = 2), in part of ScriptCommand20;
+; ScriptCommand20: runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand20_Run_WriteFollowerRecords::
     ld a, $01
     ld [wFollowerRecords + $5], a
@@ -8255,9 +8292,10 @@ ScriptCommand20_Run_WriteFollowerRecords::
 
 ; step 1 of ScriptCommand20_Run: branches on wScriptParam0; sets wScriptParam0 to 1; increments
 ; wFollowerRecords + $6; sets wScriptParam0 to 0; advances wScriptStep; increments wFollowerRecords
-; + $7; decrements wFollowerRecords + $7 (E-0347)
-; why: step 1 of ScriptCommand20_Run (when wScriptStep = 1); ScriptCommand20_Run: implements script
-; command type 20 (E-0352, E-0038)
+; + $7; decrements wFollowerRecords + $7; also changes HL and A by register arithmetic (E-0347)
+; why: step 1 of ScriptCommand20_Run (when wScriptStep = 1), in part of ScriptCommand20;
+; ScriptCommand20: runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords::
     ld a, [wScriptParam0]
     or a
@@ -8302,9 +8340,10 @@ ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords::
     ret
 
 ; step 0 of ScriptCommand20_Run: advances wScriptStep; sets wScriptParam0 to 0; sets wScriptParam0
-; to 1 (E-0347)
-; why: step 0 of ScriptCommand20_Run (when wScriptStep = 0); ScriptCommand20_Run: implements script
-; command type 20 (E-0352, E-0038)
+; to 1; also changes HL and A by register arithmetic (E-0347)
+; why: step 0 of ScriptCommand20_Run (when wScriptStep = 0), in part of ScriptCommand20;
+; ScriptCommand20: runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
+; (E-0352, E-0038)
 ScriptCommand20_Run_WriteScriptParam0::
     ld hl, wScriptStep
     inc [hl]
@@ -8744,7 +8783,7 @@ SceneWarubouFood2_ShiftObjectsYByTable_2::
 
 ; step 12 of SceneWarubouFood2: may return early; advances wScriptStep; checks
 ; EVENT_IN_THE_MIDDLE_OF_THE; shows 'Cobi: That's ours! Give it back!'; shows 'Tara: That's ours!
-; Give it back!' (E-0347)
+; Give it back!'; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 12 of SceneWarubouFood2 (when wScriptStep = 12); SceneWarubouFood2: implements script
 ; command type 16 (SCRIPT_SCENE_WARUBOU_FOOD_2): a cutscene step named after the scene its only
 ; script shows: the same ... (E-0352, E-0038, E-0245)
@@ -9710,7 +9749,7 @@ SceneLearnQuick_SetMessageIndex::
 
 ; Branches on wMessageIndex; sets wStepTarget; sets wStepPtrLo to $50; branches on wMessageIndex;
 ; sets wStepTarget; sets wStepPtrLo to $50; branches on wMessageIndex; sets wStepTarget; sets
-; wStepPtrLo to $30; sets wStepTarget; sets wStepPtrLo to $30; sets wStepPtrHi to 1; then 18 more
+; wStepPtrLo to $30; sets wStepTarget; sets wStepPtrLo to $30; sets wStepPtrHi to 1; then 19 more
 ; steps (see the code) (E-0347)
 ; why: part of SceneLearnQuick; SceneLearnQuick: implements script command type 12
 ; (SCRIPT_SCENE_LEARN_QUICK): a cutscene step named after the scene its only script shows: 'Wow, you
@@ -9847,7 +9886,8 @@ SceneLearnQuick_WriteSpriteSlots::
 SceneLearnQuick_WriteSpriteSlots_Data::
     db $01, $00, $03, $02
 
-; Decrements wScriptParam1; sets wScriptParam0 (E-0347)
+; Decrements wScriptParam1; sets wScriptParam0; also changes HL, A and C by register arithmetic
+; (E-0347)
 ; why: part of SceneLearnQuick; SceneLearnQuick: implements script command type 12
 ; (SCRIPT_SCENE_LEARN_QUICK): a cutscene step named after the scene its only script shows: 'Wow, you
 ; kids ... (E-0352, E-0038, E-0245)
@@ -9921,7 +9961,7 @@ SceneFarmKids_StepScriptParam0Counter_Bank73::
     ret
 
 ; wScriptParam0 += 1; if it now equals B it is reset to 0 and carry is set, else carry is clear;
-; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0351)
+; returns A = 0 either way (the same 18 bytes appear in 3 banks) (E-0353)
 StepScriptParam0Counter_Bank73::
     ld a, [wScriptParam0]
     inc a
@@ -9937,28 +9977,28 @@ StepScriptParam0Counter_Bank73::
     scf
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 SetBit1AtHL_Bank73::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit1AtHL_Bank73::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; sets bit 2 of the byte at [HL]; only A is clobbered (E-0351)
+; sets bit 2 of the byte at [HL]; only A is clobbered (E-0353)
 SetBit2AtHL_B73::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0353)
 ClearBit2AtHL_Bank73::
     ld a, [hl]
     and $fb
@@ -10021,7 +10061,7 @@ ScriptStepAdjust32TimesThenMessage_Bank73::
     inc [hl]
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0351)
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0353)
 StartMessageHL_B73b::
     ld a, l
     ld [wMessageIndex], a

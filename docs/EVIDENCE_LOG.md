@@ -2431,6 +2431,60 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0355 — A review of 30 restated routines against their code
+
+- Kind: REVIEW (a human-style reading of generated documentation). Sample: 30 routines with a `; why:` line, drawn with random.seed(2026) from all of them, each read against its instructions.
+- **Accuracy.**
+  - All 30 restatements say what the instructions do: stores, flags, calls, the register copies, and the step a routine advances.
+  - All 30 purpose lines name the right parent, step and dispatch byte, and quote that parent's note correctly.
+  - No claim contradicted the code.
+- **Weaknesses found, and the fixes:**
+  - The dispatch condition dropped a mask: "when wMapType = 3" for a table indexed by wMapType & 7. The condition now keeps an `and $NN` or `dec a` between the load and the jumptable ("when wMapType & $07 = 3").
+  - A routine whose recognised clauses cover little of a long body read as if that were all it did. SceneWatchOut_WriteScriptMsgSelect was "copies wScriptMsgSelect & $03 to wScriptMsgSelect", although most of its body computes a BG map address from the scroll position. When at least 12 instructions carry fewer than one clause per four, the restatement now adds "also changes HL, A and C by register arithmetic", so the omission is visible.
+- **Not changed:**
+  - Some step labels are very long (RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc). That is a naming matter, outside this entry.
+  - Restatements of branchy routines list effects rather than reasoning, as E-0347 says.
+
+### E-0354 — What the dispatchers are for
+
+- Kind: READING (C1) of each dispatcher's steps and callers, and a presentation rule.
+- **The gap.** Purpose lines (E-0352) quoted parent notes that only named a dispatch: "runs the routine for wLinkExchangeState (jump table of two)", "per-frame routine for wGameMode = 5", "wBattlePhase 2, wBattleStep 3". 1,715 purpose lines quoted such a note.
+- **The rule.** tools/present.py THIN_NOTE recognises such notes. The purpose search now climbs past them to an ancestor whose note says what it is for, and uses the thin note only when none is found. That left 35 dispatchers quoted by 392 purpose lines.
+- **35 notes written by reading their steps and callers**, among them:
+  - link sessions 5, 6 and 8;
+  - the name-entry screen: used for the player's name, renaming, a bred child, and a monster that joins;
+  - the world map;
+  - the 22 field commands that place a scene's scripted figure;
+  - game modes 2, 5, 6 and 8;
+  - the field menu;
+  - AI command entry and action resolution;
+  - the debug viewer of bank $E0;
+  - the title screen's opening and link menu;
+  - the warp checks by map type;
+  - the field-return phases;
+  - battle end steps 1-7 (closing message, waiting for the sound, experience, the join offer, music, the link end).
+  - Each keeps the old text after "was:" and cites E-0354.
+- After: no purpose line quotes a thin note. tests/test_doc_coverage.py checks this.
+
+### E-0353 — The readings without entry numbers, re-read
+
+- Kind: REVIEW of existing claims against the code.
+- **Scope.** All 185 names and families whose evidence was "reading" with no entry number (154 config/names.json entries, 31 config/name_families.json families, cited as E-0351).
+- **Method.** Each routine's instructions were read beside its note. These checks were also made:
+  - the 10 bytes InstallOamDmaRoutine copies ($3E $C0 $E0 $46 $3E $28 $3D $20 $FD $C9: ld a, $C0 / ldh [rDMA], a / a 40-count wait / ret);
+  - Multiply8's bit loop;
+  - the SGB and DMG paths of StartPaletteFade.
+- **Result: 177 accurate, 8 corrected.** Each corrected note keeps the old text after "was:".
+  - SetFlagBit with DE >= $0300 never returns (`.skip2` is a `jr` to itself); the note said it did nothing.
+  - StartPaletteFade: the buffer copy and white/black fill is the Super Game Boy path, which sends SGB palette packets, not the DMG path.
+  - CopyScrollToHardware also copies hWindowX/hWindowY to rWX/rWY.
+  - FillTilesRequest: E goes to wTextWindowRows and D to wTextWindowWidth (the note had width and height the other way round).
+  - InitSoundHardware: the steps in their actual order.
+  - The bank-$1B CopyTileBytesToVRAM copy clobbers C as well as A.
+  - HLToBattleStatus8EntryOfBattleTarget: A is clobbered; it is not the target.
+- Their evidence now reads "reading, re-read against the code (E-0353)".
+- **Address names in comments.** Notes written early still named RAM by address (wC5E8, hFFC6, wD0A2, and a capitalised WD789). Comments now show the symbol, or `symbol + $N` up to $3F inside one: wRandomHi, hTemp0, wWorkBuf + $5, wListEntries. A home-bank address after "at" or "table" is its label ("the byte at RandomByteTable + wRandomHi"). No address-form RAM name is left in a comment.
+
 ### E-0352 — What each restated routine is for
 
 - Kind: presentation rule. Each purpose is drawn from evidence already recorded; nothing is newly read.

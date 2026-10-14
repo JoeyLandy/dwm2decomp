@@ -255,8 +255,8 @@ TargetRandomOtherSlot::
     ld [hl], a
     ret
 
-; Calls CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls AdvanceRandom; branches on wRandomLo
-; (E-0347)
+; Calls CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls AdvanceRandom; branches on
+; wRandomLo; also changes HL, BC, A and D by register arithmetic (E-0347)
 ; why: part of TargetRandomOtherSlot; TargetRandomOtherSlot: target = a random slot (wRandomLo & 7
 ; after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7 (E-0352, E-0061)
 TargetRandomOtherSlot_Skip::
@@ -2638,7 +2638,7 @@ ActionTargetRoutines9::
 ; code: calls FillBytes; sets wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; SlotStatus4Bits23; calls EstimateAndPickWeakestTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
 ; calls AnySlotStatusMaskSet; calls EstimateThreeTargets; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls AnySlotStatusMaskSet; calls ComputeDamageEstimateForAction; calls GetBattleHP_Bank39; then 6
+; calls AnySlotStatusMaskSet; calls ComputeDamageEstimateForAction; calls GetBattleHP_Bank39; then 7
 ; more steps (see the code) (E-0347)
 ChooseTarget_SquallHit::
     ld hl, wBattleDamageLo
@@ -2756,7 +2756,7 @@ ChooseTarget_SquallHit::
 ; SlotStatus4Bits23; calls EstimateAndPickWeakestTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
 ; calls AnySlotStatusMaskSet; calls TestSlotStatus2Bit3OrStatus5Bits67; calls EstimateThreeTargets;
 ; calls AnySlotStatusMaskSet; calls TestSlotStatus2Bit3OrStatus5Bits67; calls CheckSlotStatusBlock;
-; then 12 more steps (see the code) (E-0347)
+; then 13 more steps (see the code) (E-0347)
 ChooseTarget_SquallHit_2::
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -2903,7 +2903,8 @@ ChooseTarget_Heal::
 
 ; Copies E to wBattleArg3; copies D to wNameSlot; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleMaxHP_Bank39; may continue in ChooseTarget_Heal_Loop; calls
-; ChooseTarget_Heal_WriteTemp0AndTemp1Etc (E-0347)
+; ChooseTarget_Heal_WriteTemp0AndTemp1Etc; also changes HL, DE, BC and A by register arithmetic
+; (E-0347)
 ; why: part of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of ChooseActionTarget
 ; (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by action id) for ...
 ; (E-0352, E-0086)
@@ -2982,7 +2983,7 @@ ChooseTarget_Heal_Loop::
 ; code: sets wBattleArg0 to 0; copies C to wBattleArg3; copies B to wNameSlot; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; increments wBattleArg0; calls GetBattleMaxHP_Bank39; branches
 ; on the byte at wSlotBodyFlags; sets hTemp0; sets hTemp1; sets hTemp2; copies L to wBattleTempBuf;
-; sets wBattleArg2 to $ff; then 12 more steps (see the code) (E-0347)
+; sets wBattleArg2 to $ff; then 13 more steps (see the code) (E-0347)
 ChooseTarget_Heal_2::
     ld a, [wBattleActor]
     and $04
@@ -3141,7 +3142,8 @@ ChooseTarget_Heal_2::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; branches on
 ; the byte at wBattleSlotOut; increments hTemp0; branches on the byte at wBattleSlotOut; branches on
-; hTemp0; branches on the byte at hTemp1; calls AdvanceRandom; branches on e (E-0347)
+; hTemp0; branches on the byte at hTemp1; calls AdvanceRandom; branches on e; also changes HL, BC, A
+; and E by register arithmetic (E-0347)
 ChooseTarget_Vivify::
     ld a, [wBattleActor]
     and $04
@@ -3226,7 +3228,7 @@ ChooseTarget_Vivify::
 ; code: sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on hTemp1; copies C to hTemp0; branches on hTemp1;
 ; branches on D; calls AdvanceRandom; branches on wRandomLo; branches on hTemp1; copies C to hTemp0;
-; then 9 more steps (see the code) (E-0347)
+; then 10 more steps (see the code) (E-0347)
 ChooseTarget_Antidote::
     ld a, [wBattleActor]
     and $04
@@ -3362,7 +3364,7 @@ ChooseTarget_Antidote::
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus; branches on
 ; wBattleStatus; calls GetBattleATK_Bank39; copies C to hTemp0; copies L to hTemp1; copies H to
-; hTemp2; calls AdvanceRandom; branches on wRandomLo; then 6 more steps (see the code) (E-0347)
+; hTemp2; calls AdvanceRandom; branches on wRandomLo; then 7 more steps (see the code) (E-0347)
 ChooseTarget_TwinHits::
     ld a, [wBattleActor]
     and $04
@@ -3446,7 +3448,8 @@ ChooseTarget_TwinHits::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank39; calls BuffCapOfBaseDEF; copies C to
-; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0 (E-0347)
+; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ChooseTarget_Upper::
     ld a, [wBattleActor]
     and $04
@@ -3638,7 +3641,8 @@ ChooseTarget_Slow::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank39; calls BuffCapOfBaseAGL; copies C to
-; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0 (E-0347)
+; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ChooseTarget_Speed::
     ld a, [wBattleActor]
     and $04
@@ -4509,7 +4513,7 @@ ChooseTarget_Transform::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to 0;
 ; sets hTemp4 to 0; sets hTemp5 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp5;
-; branches on wBattleStatus2; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 22
+; branches on wBattleStatus2; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 23
 ; more steps (see the code) (E-0347)
 ChooseTarget_Beat::
     ld a, [wBattleActor]
@@ -4692,7 +4696,7 @@ ChooseTarget_Beat::
 ; code: copies wBattleActionId to wRecordBuffer; sets wBattleArg1 to 2; copies L to wBattleArg2;
 ; copies H to wBattleArg3; branches on wLinkMode; copies E to wBattleArg0; calls
 ; LoadSkillRecordPart; sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets
-; hTemp3 to $ff; then 22 more steps (see the code) (E-0347)
+; hTemp3 to $ff; then 23 more steps (see the code) (E-0347)
 ChooseTarget_Blaze::
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -4838,7 +4842,7 @@ ChooseTarget_Blaze::
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp3 to $ff; sets hTemp4 to $ff; sets hTemp1 to 0;
 ; sets hTemp2 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; calls
 ; ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp4; calls GetBattleHP_Bank39; copies L to hTemp1;
-; then 18 more steps (see the code) (E-0347)
+; then 19 more steps (see the code) (E-0347)
 ChooseTarget_Ramming::
     ld a, [wBattleActor]
     and $04
@@ -5797,7 +5801,7 @@ ChooseTarget_Watershot::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
 ; sets hTemp4 to $ff; sets hTemp5 to $ff; sets wTargetEstimates to $ff; sets wBattleDamageLo to 0;
-; sets wBattleDamageHi to 0; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; then 14 more
+; sets wBattleDamageHi to 0; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; then 15 more
 ; steps (see the code) (E-0347)
 ChooseTarget_MegaMagic::
     ld a, [wBattleActor]
@@ -5951,7 +5955,7 @@ TargetFoeWeightedBySlotOrder::
 ; code: calls AdvanceRandom; sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3
 ; to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; sets wTargetEstimates to $ff;
 ; sets wEffectTemp0 to $ff; sets wEffectTemp1 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleHP_Bank39; then 14 more steps (see the code) (E-0347)
+; GetBattleHP_Bank39; then 15 more steps (see the code) (E-0347)
 ChooseTarget_SquallHit_3::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -6089,7 +6093,7 @@ ChooseTarget_SquallHit_3::
 ; code: sets wWorkBuf to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank39; calls
 ; GetBattleMaxHP_Bank39; sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0;
 ; sets hTemp4 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; copies L to hTemp5; copies H to hTemp6;
-; then 6 more steps (see the code) (E-0347)
+; then 7 more steps (see the code) (E-0347)
 ChooseTarget_Heal_3::
     ld a, [wBattleActor]
     and $04
@@ -6265,7 +6269,7 @@ ChooseTarget_Heal_3::
 ; code: sets hTemp0 to 0; sets hTemp4 to 0; sets hTemp5 to 0; sets hTemp1 to $ff; sets hTemp2 to
 ; $ff; sets hTemp3 to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; sets
 ; wTargetEstimates to $ff; sets wEffectTemp0 to $ff; sets wEffectTemp1 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; then 15 more steps (see the code) (E-0347)
+; CarryUnlessBattleSlotOutSlotEmpty; then 16 more steps (see the code) (E-0347)
 ChooseTarget_Heal_4::
     ld a, [wBattleActor]
     and $04
@@ -6907,7 +6911,8 @@ ChooseTarget_Antidote_3::
 ; name dropped or read as the label there; was ChooseTarget_Upper_3)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank39; calls BuffCapOfBaseDEF; increments
-; hTemp0; may continue in PickWeightedTargetCandidate (E-0347)
+; hTemp0; may continue in PickWeightedTargetCandidate; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ChooseTarget_Upper_3::
     ld a, [wBattleActor]
     and $04
@@ -6962,7 +6967,8 @@ ChooseTarget_Upper_3::
 ; name dropped or read as the label there; was ChooseTarget_Speed_3)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank39; calls BuffCapOfBaseAGL; increments
-; hTemp0; may continue in PickWeightedTargetCandidate (E-0347)
+; hTemp0; may continue in PickWeightedTargetCandidate; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ChooseTarget_Speed_3::
     ld a, [wBattleActor]
     and $04
@@ -7052,8 +7058,8 @@ TargetAllyWithStatusBit20::
     jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
 ; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; increments hTemp0; may continue in PickWeightedTargetCandidate
-; (E-0347)
+; CarryUnlessBattleSlotOutSlotEmpty; increments hTemp0; may continue in PickWeightedTargetCandidate;
+; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
 ; with mask $20 (E-0352, E-0219)
 TargetAllyWithStatusBit20_CallAddAx9ToHL::
@@ -7103,7 +7109,7 @@ TargetAllyWithStatusBit20_CallAddAx9ToHL::
 ; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls JumpToHL; branches on H; branches on L; increments
 ; hTemp0; branches on L; may continue in TargetFoeWeightedBySlotOrder; calls
-; PickWeightedTargetCandidate (E-0347)
+; PickWeightedTargetCandidate; then 1 more step (see the code) (E-0347)
 ; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
 ; with mask $20 (E-0352, E-0219)
 TargetAllyWithStatusBit20_CheckBattleActor::
@@ -7157,7 +7163,7 @@ TargetAllyWithStatusBit20_CheckBattleActor::
 ; in its name dropped or read as the label there; was ChooseTarget_Heal_5)
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; sets hTemp4 to 0;
 ; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank39; calls GetBattleMaxHP_Bank39;
-; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; copies H to hTemp2; then 4 more
+; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; copies H to hTemp2; then 5 more
 ; steps (see the code) (E-0347)
 ChooseTarget_Heal_5::
     ld a, [wBattleActor]
@@ -7240,7 +7246,7 @@ ChooseTarget_Heal_5::
 ; the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; sets hTemp4 to 0;
 ; branches on wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank39; calls
-; GetBattleMaxMP_Bank39; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; then 6 more
+; GetBattleMaxMP_Bank39; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; then 7 more
 ; steps (see the code) (E-0347)
 ChooseTarget_MPass::
     ld a, [wBattleActor]
@@ -7572,7 +7578,8 @@ EstimateThreeTargets::
     ret
 
 ; called from ChooseTarget_Heal: sets hTemp0 to 0; sets hTemp1 to 1; sets hTemp2 to 2; copies hTemp1
-; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget (E-0347)
+; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ; why: a helper of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of
 ; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
 ; action id) for ... (E-0352, E-0086)
@@ -8041,7 +8048,8 @@ ChooseTarget_Blaze_Multiply8By16::
 .return:
     ret
 
-; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39 (E-0347)
+; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: a helper of ChooseTarget_MegaMagic; ChooseTarget_MegaMagic: per-action target routine of
 ; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
 ; action id) for ... (E-0352, E-0086)
@@ -8089,7 +8097,7 @@ ChooseTarget_MegaMagic_GetBattleMP_Bank39::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in
-; 2 banks) (E-0351)
+; 2 banks) (E-0353)
 ReadByteAtHLPlus4APlus3C_Bank39::
     add a
     add c
@@ -8150,7 +8158,7 @@ GetBattleAGL_Bank39::
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank39_Skip
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
 ReadSlotAIModeIndexed_Bank39::
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -8167,7 +8175,7 @@ ReadSlotAIModeIndexed_Bank39_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_Bank39::
     add a
     add_a_to_hl
@@ -8234,7 +8242,7 @@ ClearBattleStatusBitsWithMaskD_Bank39_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8244,7 +8252,7 @@ SetBit0OfLevelUpGainsIndexed_Bank39::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8254,7 +8262,7 @@ SetBit1OfLevelUpGainsIndexed_Bank39::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains

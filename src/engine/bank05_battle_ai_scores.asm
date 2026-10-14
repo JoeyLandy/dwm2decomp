@@ -39,7 +39,7 @@ GetBattleAGL_Bank05::
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank05_2_Skip
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
 ReadSlotAIModeIndexed_Bank05_2::
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -56,7 +56,7 @@ ReadSlotAIModeIndexed_Bank05_2_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_Bank05::
     add a
     add_a_to_hl
@@ -131,7 +131,7 @@ ClearBitMaskTable_Bank05::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -141,7 +141,7 @@ SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -151,7 +151,7 @@ SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -518,7 +518,7 @@ AnyFoeHasMPReadsWrongOffset::
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleSkillsPrefix; copies the byte at
 ; wBattleSkillsPrefix to wRecordBuffer; sets wBattleArg0 to 7; sets wBattleArg1 to 1; copies L to
 ; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on hTemp0; branches on
-; C; copies L to wRecordBuffer (E-0347)
+; C; copies L to wRecordBuffer; then 1 more step (see the code) (E-0347)
 ; why: a helper of AIScore_TakeMagic_Conditions; AIScore_TakeMagic_Conditions: the conditions of
 ; AIScore_TakeMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
 ; AIScore_TakeMagic_Sub01_Sub01 in turn and tests C ... (E-0352, E-0279)
@@ -721,7 +721,7 @@ AnyFoeHasSkillFlag10::
 
 ; called from AIScore_DanceShut_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus1; calls SlotHasSkillWithFlagD; sets
-; wRecordBuffer (E-0347)
+; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
 ; why: a helper of AIScore_DanceShut_Conditions; AIScore_DanceShut_Conditions: the conditions of
 ; AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
 ; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
@@ -857,7 +857,8 @@ AnyFoeHasDEFAtLeast2::
     ret
 
 ; called from AIScore_SquallHit_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L (E-0347)
+; GetBattleAGL_Bank05; branches on H; branches on L; also changes BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of AIScore_SquallHit_Conditions; AIScore_SquallHit_Conditions: the conditions of
 ; AIScore_SquallHit: calls CheckSkillUsableElseResetAISkillScore, AIScore_SquallHit_Sub01_Sub01, ...
 ; (E-0352, E-0279)
@@ -956,7 +957,8 @@ AnyFoeLacksStatus0MaskCC::
     ret
 
 ; called from AIScore_AquaWall_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer (E-0347)
+; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer; also changes
+; HL, BC, A and D by register arithmetic (E-0347)
 ; why: a helper of AIScore_AquaWall_Conditions; AIScore_AquaWall_Conditions: the conditions of
 ; AIScore_AquaWall: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus0Bit6,
 ; AIScore_AquaWall_Sub01_Sub01 in turn and tests ... (E-0352, E-0279)
@@ -1192,7 +1194,7 @@ AnyFoeNotBlocked::
 
 ; called from AIScore_LegSweep_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wSlotBodyFlags; branches on the byte at wBattleStatus3 & $c0; branches on the byte at
-; wBattleStatus3 & $0c (E-0347)
+; wBattleStatus3 & $0c; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_LegSweep_Conditions; AIScore_LegSweep_Conditions: the conditions of
 ; AIScore_LegSweep: calls AILickSkillUsable, AIScore_LegSweep_Sub01_Sub01 in turn and tests C after
 ; each (zero: stop (E-0352, E-0279)
@@ -1304,7 +1306,8 @@ AIGateFoeStatus1Mask22::
     ret
 
 ; called from AIScore_FireAir: calls ReadSlotAIModeIndexed_Bank05; calls TestRecordBufferData1;
-; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2 & $40 (E-0347)
+; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2 & $40; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_FireAir; AIScore_FireAir: AI scoring routine for 8 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 64
 ; ... (E-0352, E-0083)
@@ -1556,7 +1559,7 @@ AnyAllySlotResistances4Bits2To5NotAllSet::
     and $04
 
 ; Calls ReadByteAtHLPlus4APlus3C_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wSlotResistances + $4 & $3c (E-0347)
+; byte at wSlotResistances + $4 & $3c; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: part of AnyAllySlotResistances4Bits2To5NotAllSet; AnyAllySlotResistances4Bits2To5NotAllSet:
 ; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when
 ; a present slot's entry & $3C is not $3C, ... (E-0352, E-0094, E-0340)
@@ -1694,7 +1697,7 @@ AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
     ret
 
 ; called from AIScore_MetalCut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wSlotBodyFlags (E-0347)
+; wSlotBodyFlags; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_MetalCut_Conditions; AIScore_MetalCut_Conditions: the conditions of
 ; AIScore_MetalCut: calls CheckSkillUsableElseResetAISkillScore, AIScore_MetalCut_Sub01_Sub01 in
 ; turn and tests C after ... (E-0352, E-0279)
@@ -1730,7 +1733,8 @@ AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_UltraDown_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; ReadByteAtHLPlus4APlus3C_Bank05; calls GetBattleDEF_Bank05; branches on L; calls
-; GetBattleAGL_Bank05; branches on L; branches on wBattleStatus1 (E-0347)
+; GetBattleAGL_Bank05; branches on L; branches on wBattleStatus1; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ; why: a helper of AIScore_UltraDown_Conditions; AIScore_UltraDown_Conditions: the conditions of
 ; AIScore_UltraDown: calls ActorCanPayMPCost_Bank05, AIScore_UltraDown_Sub01_Sub01 in turn and tests
 ; C after each (zero: ... (E-0352, E-0279)
@@ -1828,7 +1832,7 @@ AnyFoeOpenToSlotResistances1Field0::
 
 ; called from AIScore_StopSpell_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer (E-0347)
+; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
 ; why: a helper of AIScore_StopSpell_Conditions; AIScore_StopSpell_Conditions: the conditions of
 ; AIScore_StopSpell: calls AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0Bit6,
 ; AnyActiveFoeHasSkillFlag40 in turn and ... (E-0352, E-0279)
@@ -1913,7 +1917,8 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
     ret
 
 ; called from AIScore_Sap_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleDEF_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
+; GetBattleDEF_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Sap_Conditions; AIScore_Sap_Conditions: the conditions of AIScore_Sap:
 ; calls AIUsableAndFoeLacksStatus2And5, AIScore_Sap_Sub01_Sub01 in turn and tests C after each
 ; (zero: stop (E-0352, E-0279)
@@ -1956,7 +1961,8 @@ AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_Slow_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
+; GetBattleAGL_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Slow_Conditions; AIScore_Slow_Conditions: the conditions of AIScore_Slow:
 ; calls AIUsableAndFoeLacksStatus2And5, AnyFoeNotBlocked, AIScore_Slow_Sub01_Sub01 in turn and tests
 ; C after ... (E-0352, E-0279)
@@ -2075,7 +2081,7 @@ AnyFoeOpenToSlotResistances5Field3::
     ret
 
 ; called from AIScore_Curse_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
+; ReadByteAtHLPlus4APlus3C_Bank05; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Curse_Conditions; AIScore_Curse_Conditions: the conditions of
 ; AIScore_Curse: calls ActorCanPayMPCost_Bank05, PassUnlessRecordBufferData5Bit4AndActorStatusBit7,
 ; SkillPassesRepeatCheck ... (E-0352, E-0279)
@@ -2116,7 +2122,7 @@ AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_DanceShut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer (E-0347)
+; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
 ; why: a helper of AIScore_DanceShut_Conditions; AIScore_DanceShut_Conditions: the conditions of
 ; AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
 ; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
@@ -2442,7 +2448,8 @@ AnyAllyMPAtMostThreeQuarters::
     ret
 
 ; called from AIScore_Upper_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Upper_Conditions_GetBattleDEF_Bank05 (E-0347)
+; AIScore_Upper_Conditions_GetBattleDEF_Bank05; also changes BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of AIScore_Upper_Conditions; AIScore_Upper_Conditions: the conditions of
 ; AIScore_Upper: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked,
 ; AIScore_Upper_Sub01_Sub01 in turn and ... (E-0352, E-0279)
@@ -2471,7 +2478,8 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_Speed_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Speed_Conditions_GetBattleAGL_Bank05 (E-0347)
+; AIScore_Speed_Conditions_GetBattleAGL_Bank05; also changes BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of AIScore_Speed_Conditions; AIScore_Speed_Conditions: the conditions of
 ; AIScore_Speed: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked,
 ; AIScore_Speed_Sub01_Sub01 in turn and ... (E-0352, E-0279)
@@ -2705,7 +2713,7 @@ AIScore_SideStep_Conditions_AddAx9ToHL::
     ret
 
 ; called from AIScore_Surge_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleStatus (E-0347)
+; byte at wBattleStatus; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Surge_Conditions; AIScore_Surge_Conditions: the conditions of
 ; AIScore_Surge: calls ActorCanPayMPCost_Bank05, AIScore_Surge_Sub01_Sub01 in turn and tests C after
 ; each (zero: stop (E-0352, E-0279)
@@ -2754,7 +2762,7 @@ AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_DeMagic_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleSlotOut (E-0347)
+; byte at wBattleSlotOut; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_DeMagic_Conditions; AIScore_DeMagic_Conditions: the conditions of
 ; AIScore_DeMagic: calls ActorCanPayMPCost_Bank05, AIScore_DeMagic_Sub01_Sub01 in turn and tests C
 ; after each (zero: stop (E-0352, E-0279)
@@ -2925,7 +2933,7 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
 ; called from FailIfFoeAIDamageEstimatesAtLeastEstimate: branches on wRecordBuffer; branches on
 ; wLinkMode; branches on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches
 ; on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches on wBattleActor;
-; calls SlotFamilyBelowWater; then 9 more steps (see the code) (E-0347)
+; calls SlotFamilyBelowWater; then 10 more steps (see the code) (E-0347)
 ; why: a helper of FailIfFoeAIDamageEstimatesAtLeastEstimate;
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate: C = $00 when an occupied foe's wAIDamageEstimates word
 ; is at least ... (E-0352, E-0125)
@@ -3505,7 +3513,8 @@ PassIfTwiceATKAboveLowestFoeDEF::
     ret
 
 ; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
-; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05 (E-0347)
+; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05; also changes BC and
+; A by register arithmetic (E-0347)
 ; why: a helper of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
 ; ... (E-0352, E-0083)
@@ -3551,7 +3560,7 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
 
 ; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
 ; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleATK_Bank05 (E-0347)
+; GetBattleATK_Bank05; also changes DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
 ; ... (E-0352, E-0083)
@@ -4060,7 +4069,7 @@ AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
     ld c, $01
     ret
 
-; C = 0 (E-0351)
+; C = 0 (E-0353)
 SetCToZero::
     ld c, $00
     ret
@@ -4628,7 +4637,8 @@ CheckFoeStatus6Bit3::
     ret
 
 ; called from AIScore_Sacrifice: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05; branches on
-; C; calls CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
+; C; calls CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05; also changes
+; HL, BC, A and E by register arithmetic (E-0347)
 ; why: a helper of AIScore_Sacrifice; AIScore_Sacrifice: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 21
 ; ... (E-0352, E-0083)
@@ -5330,7 +5340,7 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
 ; called from AIScore_BeDragon: calls GetBattleMaxHP_Bank05; copies L to hTemp0; copies H to hTemp1;
 ; calls GetBattleMaxMP_Bank05; copies L to hTemp2; copies H to hTemp3; calls GetBattleATK_Bank05;
 ; copies L to hTemp4; copies H to hTemp5; calls GetBattleDEF_Bank05; copies L to hTemp6; copies H to
-; hTemp7; then 4 more steps (see the code) (E-0347)
+; hTemp7; then 5 more steps (see the code) (E-0347)
 ; why: a helper of AIScore_BeDragon; AIScore_BeDragon: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 59
 ; ... (E-0352, E-0083)
@@ -5768,7 +5778,8 @@ AnyFoeVulnerableBySlotResistances5Bits23::
     ret
 
 ; called from AIScore_EerieLite_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus8; branches on the byte at wSlotResistances + $2 & $30 (E-0347)
+; wBattleStatus8; branches on the byte at wSlotResistances + $2 & $30; also changes HL, DE, BC and A
+; by register arithmetic (E-0347)
 ; why: a helper of AIScore_EerieLite_Conditions; AIScore_EerieLite_Conditions: the conditions of
 ; AIScore_EerieLite: calls ActorCanPayMPCost_Bank05, AnyFoeNotFullyResistant,
 ; AIScore_EerieLite_Sub01_Sub01 in turn and ... (E-0352, E-0279)
@@ -5890,7 +5901,8 @@ AnyFoeVulnerableBySlotResistances3Bits67::
     ld c, $ff
     ret
 
-; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty (E-0347)
+; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty; also changes HL, BC and A
+; by register arithmetic (E-0347)
 ; why: a helper of AIScore_EvilSlash; AIScore_EvilSlash: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 107
 ; ... (E-0352, E-0083)
@@ -5930,7 +5942,8 @@ AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag; calls
 ; CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls SlotActionIs9C33Or92Or93; calls
-; SlotResistances5EntryHasBits2And3_Bank05_2 (E-0347)
+; SlotResistances5EntryHasBits2And3_Bank05_2; also changes DE, BC and A by register arithmetic
+; (E-0347)
 ; why: a helper of AIAddScoresForTwoLists; AIAddScoresForTwoLists: adds score word $B1 when
 ; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when ... (E-0352, E-0124,
 ; E-0344)
@@ -6123,7 +6136,8 @@ SlotCLacksSkill63Or64WithMP::
 
 ; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag;
 ; branches on C; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls
-; SlotCHasMP3AndSkill6B; calls SlotResistances5EntryHasBits2And3_Bank05 (E-0347)
+; SlotCHasMP3AndSkill6B; calls SlotResistances5EntryHasBits2And3_Bank05; also changes HL, BC, A and
+; D by register arithmetic (E-0347)
 ; why: a helper of AIAddScoresForTwoLists; AIAddScoresForTwoLists: adds score word $B1 when
 ; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when ... (E-0352, E-0124,
 ; E-0344)
@@ -6592,7 +6606,8 @@ AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     ret
 
 ; called from AIScore_SuckAir_Conditions: copies the byte at wBattleSkillsPrefix to wRecordBuffer;
-; calls SlotHasSkillWithFlagD; sets wRecordBuffer (E-0347)
+; calls SlotHasSkillWithFlagD; sets wRecordBuffer; also changes HL, BC, A and D by register
+; arithmetic (E-0347)
 ; why: a helper of AIScore_SuckAir_Conditions; AIScore_SuckAir_Conditions: the conditions of
 ; AIScore_SuckAir: calls PassUnlessRecordBufferData5Bit4AndActorStatusBit7, ActorLacksStatus4Bits67,
 ; ... (E-0352, E-0279)
@@ -6665,7 +6680,8 @@ AnyAllyHPBelow::
     ld c, $ff
     ret
 
-; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer (E-0347)
+; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer; also changes
+; HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AnyAllyHPBelow; AnyAllyHPBelow: C = $FF when an occupied ally's HP is below
 ; AnyAllyHPBelow_GetBattleMaxHP_Bank05 for it, else $00 (E-0352, E-0125, E-0344)
 AnyAllyHPBelow_GetBattleMaxHP_Bank05::
@@ -6722,7 +6738,7 @@ AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     ret
 
 ; Branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank05; calls
-; GetBattleMaxMP_Bank05 (E-0347)
+; GetBattleMaxMP_Bank05; also changes BC, A and E by register arithmetic (E-0347)
 ; why: part of AIScore_MPass; AIScore_MPass: AI scoring routine for 3 skill(s) of the per-skill far
 ; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 27 ... (E-0352,
 ; E-0083)
@@ -6858,7 +6874,8 @@ HPBandOfSlotTemp0_2::
     ret
 
 ; called from AIScore_MegaMagic: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05 (E-0347)
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_MegaMagic; AIScore_MegaMagic: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 61
 ; ... (E-0352, E-0083)
@@ -7112,8 +7129,8 @@ CheckActorSlot0To3OrLinkModeSet::
     ld c, $ff
     ret
 
-; called from AIScore_Meditate_Conditions: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05
-; (E-0347)
+; called from AIScore_Meditate_Conditions: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05;
+; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Meditate_Conditions; AIScore_Meditate_Conditions: the conditions of
 ; AIScore_Meditate: calls ActorCanPayMPCost_Bank05, AIScore_Meditate_Sub01_Sub01 in turn and tests C
 ; after each (zero: stop (E-0352, E-0279)
@@ -7274,7 +7291,7 @@ SkillListHas19Or1AOr7COrA1::
 
 ; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleATK_Bank05; sets hTemp0; sets hTemp1; sets hTemp0 to 0; sets hTemp1 to 0; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; sets hTemp0; sets hTemp1; then 6
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; sets hTemp0; sets hTemp1; then 7
 ; more steps (see the code) (E-0347)
 ; why: part of AIScore_Sap; AIScore_Sap: AI scoring routine for 2 skill(s) of the per-skill far
 ; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 39 ... (E-0352,
@@ -7574,8 +7591,8 @@ AddSlotStatSumToTemp0::
     inc d
     ret
 
-; called from AIScore_BiAttack: calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05
-; (E-0347)
+; called from AIScore_BiAttack: calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05;
+; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_BiAttack; AIScore_BiAttack: AI scoring routine for 2 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 99
 ; ... (E-0352, E-0083)
@@ -7629,7 +7646,7 @@ AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_Berserker: calls ReadSlotAIModeIndexed_Bank05_2; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls GetBattleAGL_Bank05; calls
-; GetBattleHP_Bank05 (E-0347)
+; GetBattleHP_Bank05; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Berserker; AIScore_Berserker: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 110
 ; ... (E-0352, E-0083)
@@ -7705,7 +7722,7 @@ AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
 
 ; called from AIScore_Ramming: calls ReadSlotAIModeIndexed_Bank05_2; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls Get2BitFieldEOfHL; calls
-; GetBattleHP_Bank05 (E-0347)
+; GetBattleHP_Bank05; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of AIScore_Ramming; AIScore_Ramming: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 111
 ; ... (E-0352, E-0083)
@@ -7790,7 +7807,7 @@ AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
 ; branches on wBattleKind; branches on wAIFlag; branches on C; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls ReadSlotAIModeIndexed_Bank05_2; calls
 ; AIScore_Kamikaze_CheckSkills; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks;
-; calls GetBattleHP_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; then 2 more steps (see the
+; calls GetBattleHP_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; then 3 more steps (see the
 ; code) (E-0347)
 ; why: a helper of AIScore_Kamikaze; AIScore_Kamikaze: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 112
@@ -7945,8 +7962,8 @@ ActorStatus4CheckReadsAddress::
     ret
 
 ; Sets hTemp3 to 0; sets hTemp4 to 0; sets hTemp5 to 0; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls GetBattleDEF_Bank05; sets hTemp4; sets hTemp5; increments hTemp3; calls GetBattleATK_Bank05
-; (E-0347)
+; calls GetBattleDEF_Bank05; sets hTemp4; sets hTemp5; increments hTemp3; calls GetBattleATK_Bank05;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty, in a helper of AIScore_BiAttack;
 ; AIScore_BiAttack: AI scoring routine for 2 skill(s) of the per-skill far table
 ; (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 99 ... (E-0352, E-0083)
@@ -8193,7 +8210,7 @@ ResistanceAverageGateForFoeAIMode3::
     ld c, $01
     ret
 
-; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF (E-0351)
+; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF (E-0353)
 ResetAISkillScore::
     xor a
     ld [wAISkillScore], a
@@ -8223,14 +8240,15 @@ AddBCToAISkillScore2::
     ld [wAISkillScore2 + $1], a
     ret
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
 ReadSlotAIModeIndexed_Bank05::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode; branches on C (E-0347)
+; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode; branches on C; also changes
+; HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_Upper_Conditions; AIScore_Upper_Conditions: the conditions of AIScore_Upper:
 ; calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked, AIScore_Upper_Sub01_Sub01 in
 ; turn and ... (E-0352, E-0279)
@@ -8283,7 +8301,8 @@ AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     scf
     ret
 
-; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode; branches on C (E-0347)
+; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode; branches on C; also changes
+; HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_Speed_Conditions; AIScore_Speed_Conditions: the conditions of AIScore_Speed:
 ; calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked, AIScore_Speed_Sub01_Sub01 in
 ; turn and ... (E-0352, E-0279)
@@ -8566,7 +8585,7 @@ GetSlotSpeciesFamily::
 ; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleDEF_Bank05; copies L to hTemp0; copies H to hTemp1; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; copies L to hTemp0; copies H to
-; hTemp1 (E-0347)
+; hTemp1; also changes BC and A by register arithmetic (E-0347)
 ; why: part of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
 ; ... (E-0352, E-0083)
@@ -9038,7 +9057,7 @@ CountSkillsInRanges_2::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in
-; 2 banks) (E-0351)
+; 2 banks) (E-0353)
 ReadByteAtHLPlus4APlus3C_Bank05::
     add a
     add c
@@ -9353,7 +9372,7 @@ AIScore_Beat_Conditions::
 ; called from AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05; branches on C; calls
 ; SkillPassesStatus1Bit0Check; branches on C; calls SkillPassesSideFlagBit3Check; branches on C;
 ; calls SkillPassesRepeatCheck; branches on C; calls AnyFoeLacksStatus2Mask22; branches on C; calls
-; AnyFoeLacksStatus5Bits67; branches on C; then 11 more steps (see the code) (E-0347)
+; AnyFoeLacksStatus5Bits67; branches on C; then 12 more steps (see the code) (E-0347)
 ; why: a helper of AIScore_Sacrifice; AIScore_Sacrifice: AI scoring routine for 1 skill(s) of the
 ; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 21
 ; ... (E-0352, E-0083)
@@ -9443,7 +9462,8 @@ AIHealUsable::
 
 ; called from AIScore_MPass: branches on C; calls ActorLacksStatus4Bits67; branches on C; calls
 ; AllOtherAlliesHaveStatus0Bit6; branches on C; calls SetCToZero; branches on C; calls
-; AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls ResetAISkillScore (E-0347)
+; AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls ResetAISkillScore; also
+; changes A by register arithmetic (E-0347)
 ; why: a helper of AIScore_MPass; AIScore_MPass: AI scoring routine for 3 skill(s) of the per-skill
 ; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 27 ...
 ; (E-0352, E-0083)

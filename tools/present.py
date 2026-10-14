@@ -37,6 +37,10 @@ DROP_COMMENT = re.compile(
     r"; (?:no direct call|\d+ call sites? from |only called from |reads: |writes: |points at: |"
     r"text \(E-0024\)|address loaded by |entry \d+ of the `rst \$00` table|heuristic: )")
 ALIAS = re.compile(r"^([A-Za-z_]\w*):: ; address name$")
+# E-0354: a written note that only names how its routine dispatches says nothing about what it is for
+THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field command|effect routine) for |^per-frame routine for "
+                       r"|^as \w+$|^implements script command type \w+(?: \(also \w+\))?$|^wBattlePhase \d|"
+                       r"^handler \w+ \(entry|^step \d+ of |^by \w+(?: & \$\w+)?$")
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
 ADDR_NAME = re.compile(r"^(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})$")
@@ -131,8 +135,14 @@ class Names:
                     last_ld = ml.group(1)
                 elif code == "rst $00" and cur and last_ld and cur not in self.dispatch_var:
                     self.dispatch_var[cur] = last_ld
-                elif code:
-                    last_ld = None if not code.startswith(("and ", "add ", "dec ", "cp ")) else last_ld
+                elif code and last_ld:
+                    mk = re.match(r"and a, \$([0-9A-F]{2})$", code)
+                    if mk:  # the entry is picked by a masked value: say so (wMapType & $07 = 3)
+                        last_ld = f"{last_ld} & ${mk.group(1)}"
+                    elif re.match(r"(?:dec a|sub a, \$01)$", code):
+                        last_ld = f"{last_ld} - 1"
+                    elif not code.startswith(("add ", "cp ")):
+                        last_ld = None
         self.referrer: dict[str, str] = {}  # label -> the first label whose code or data names it
         for t in texts.values():
             cur = None
@@ -145,10 +155,14 @@ class Names:
                         if w != cur and w in self.labels:
                             self.referrer.setdefault(w, cur)
         self.hram: dict[int, str] = {}  # high-RAM symbols of src/ram.asm, for calls into HRAM
+        self.ram_at: list[tuple[int, str]] = []  # every RAM symbol by address, for address names in comments
         ram = ROOT / "src/ram.asm"
         if ram.exists():
-            for name, val in re.findall(r"^DEF (h\w+) EQU \$([0-9A-F]{4})", ram.read_text(encoding="utf-8"), re.M):
-                self.hram.setdefault(int(val, 16), name)
+            for name, val in re.findall(r"^DEF ([wsh]\w+) EQU \$([0-9A-F]{4})", ram.read_text(encoding="utf-8"), re.M):
+                if name.startswith("h"):
+                    self.hram.setdefault(int(val, 16), name)
+                self.ram_at.append((int(val, 16), name))
+        self.ram_at.sort()
         # E-0350: the evidence ids config records for each label (names.json by address, name_families.json for
         # library copies), cited when a written note leaves them out
         self.evidence: dict[str, str] = {}
@@ -191,8 +205,8 @@ class Names:
         """E-0352: why a routine with no written note exists, from what it is part of: the step of a jumptable
         (and the RAM byte that picks it), the routine that alone calls it, or its callers, up to the first one
         whose note was written by reading. Empty when nothing documented is found."""
-        chain, cur, seen = [], label, set()
-        while cur not in seen and len(chain) < 6:
+        chain, cur, seen, fallback = [], label, set(), ""
+        while cur not in seen and len(chain) < 8:
             seen.add(cur)
             par, n = self.parent_of.get(cur, (None, None))
             par = (self.resolve(par) or par) if par else None
@@ -215,9 +229,14 @@ class Names:
             note = self.note_of.get(par, "")
             if note and not note.rstrip().endswith("(E-0347)") and "; code:" not in note:
                 ids = list(dict.fromkeys(re.findall(r"[ED]-\d{4}", note)))[:2]
-                return (f"{', in '.join(chain)}; {par}: {self._clause(note)}"
-                        + (f" ({', '.join(['E-0352'] + ids)})"))
+                found = (f"{', in '.join(chain)}; {par}: {self._clause(note)}"
+                         + (f" ({', '.join(['E-0352'] + ids)})"))
+                if not THIN_NOTE.search(self._clause(note)):
+                    return found
+                fallback = fallback or found  # a note that only names its dispatch: look further up first
             cur = par
+        if fallback:
+            return fallback
         callers = [self.resolve(c) or c for c in self.callers_of.get(label, [])]
         known = [(c, self.note_of[c]) for c in callers if c in self.note_of and
                  not self.note_of[c].rstrip().endswith("(E-0347)")][:2]
@@ -260,11 +279,32 @@ class Names:
                     return w + suf
         return None
 
+    def ram_name(self, prefix: str, addr: int) -> str | None:
+        """E-0353: the RAM symbol for an address name in a comment (wC5E8 -> wRandomHi): the symbol there, or the
+        symbol just below it as `symbol + $N` when the address is at most $3F past it and before the next one."""
+        import bisect
+        k = bisect.bisect_right(self.ram_at, (addr, "\uffff")) - 1
+        if k < 0:
+            return None
+        base, name = self.ram_at[k]
+        nxt = self.ram_at[k + 1][0] if k + 1 < len(self.ram_at) else 0x10000
+        region = {"s": (0xA000, 0xC000), "w": (0xC000, 0xE000), "h": (0xFF80, 0xFFFF)}[prefix]
+        if not (region[0] <= base <= addr < region[1]) or addr - base > 0x3F or addr >= nxt:
+            return None
+        return name if addr == base else f"{name} + ${addr - base:X}"
+
     def sub(self, comment: str, bank: int | None = None) -> str:
         def one(m: re.Match) -> str:
             w = m.group(0)
             return self.alias.get(w) or self.at.get(w) or w
         comment = MENTION.sub(one, comment)
+        comment = re.sub(r"(?<![\w$])([wshW])([0-9A-F]{4})\b",  # W: a capitalised form some notes kept
+                         lambda m: self.ram_name(m.group(1).lower(), int(m.group(2), 16)) or m.group(0), comment)
+        # a home-bank address after "at" or "table" is the label there (the byte at $0973 -> RandomByteTable)
+        comment = re.sub(r"\b(at|table) \$([0-3][0-9A-F]{3})\b",
+                         lambda m: f"{m.group(1)} {self.at[f'00:{m.group(2)}']}"
+                         if f"00:{m.group(2)}" in self.at and not ADDR_NAME.match(self.at[f"00:{m.group(2)}"])
+                         and int(m.group(2), 16) >= 0x150 else m.group(0), comment)
 
         def word(m: re.Match) -> str:
             w = m.group(0)

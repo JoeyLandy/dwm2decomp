@@ -4,7 +4,7 @@
 SECTION "Bank 1D", ROMX[$4000], BANK[$1D]
     db $1d
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank1D::
     ld de, BeginStringDisplay_Bank1D_StringCategories
     call BeginStringDisplay
@@ -367,7 +367,8 @@ Script_GWasReleasedIn::
     script_jump Script_Hibernate_2
 
 ; called from VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess: branches on wScreenState;
-; branches on the byte at BGMap1TileRun; increments wScreenStep (E-0347)
+; branches on the byte at BGMap1TileRun; increments wScreenStep; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess, in step 0 of VaultMenu_Store
 ; (when wScreenStep = 0); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -478,7 +479,7 @@ LoadThreeTilesAndDrawRows_TileRect_3::
 ; wScreenStep; branches on wVaultMode; sets wTwoChoiceCursor to 6; increments wScreenStep; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80; calls
 ; VaultMenu_WriteSavedSpriteClipModeAndListPages; branches on wSavedSpriteClipMode; branches on
-; wListPages; then 18 more steps (see the code) (E-0347)
+; wListPages; then 19 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc, in step 3 of
 ; VaultMenu_TakeOut (when wScreenStep = 3); VaultMenu_TakeOut: taking out: lists wItemStorage and
 ; moves items back into wInventory (E-0352, E-0276)
@@ -601,7 +602,7 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
 ; VaultMenu_BlinkCursorBlinkEF_Bank1D; may return early; sets wTwoChoiceCursor to 6; increments
 ; wScreenStep; branches on wVaultMode; sets wTwoChoiceCursor to 6; increments wScreenStep; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on wListPages; calls
-; VaultMenu_Store_FindStorageSlots; sets wTwoChoiceCursor to 4; then 17 more steps (see the code)
+; VaultMenu_Store_FindStorageSlots; sets wTwoChoiceCursor to 4; then 18 more steps (see the code)
 ; (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc, in step 3
 ; of VaultMenu_Store (when wScreenStep = 3); VaultMenu_Store: storing: moves items from wInventory
@@ -722,7 +723,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
 ; Branches on wJoypadPressedRepeat; calls BlinkCursorBlinkEF_Bank1D; calls DrawBlankTileC3_Bank1D;
 ; branches on wVaultMode; sets wVaultMode to 2; calls DrawCursorTileBB_Bank1D; plays sound $69;
 ; calls DrawBlankTileC3_Bank1D; branches on wVaultMode; calls VaultMenu_BGMapAddressAtScroll_Bank1D;
-; plays sound $69 (E-0347)
+; plays sound $69; also changes A by register arithmetic (E-0347)
 ; why: part of VaultMenu; VaultMenu: implements script command type E5 (SCRIPT_VAULT): the item
 ; Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0352, E-0038,
 ; E-0244)
@@ -818,7 +819,7 @@ DrawBlankTileC3_Bank1D::
 VaultMenu_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_BGMapAddressAtScroll_Bank1D, in part of VaultMenu; VaultMenu: implements
 ; script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store for...', 'What
 ; will you be taking out?' (mode 2) (E-0352, E-0038, E-0244)
@@ -879,7 +880,8 @@ DrawRect0140AtBGMap13E0AndStep::
 ; 1; calls VaultMenu_Store_CountNonZeroItemGridBytes; branches on wSavedSpriteSlotCount; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; branches on wIsCGB;
-; increments wScreenStep; branches on C; branches on B; increments wScreenStep (E-0347)
+; increments wScreenStep; branches on C; branches on B; increments wScreenStep; then 1 more step
+; (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D, in step 7
 ; of VaultMenu_Store (when wScreenStep = 7); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -990,7 +992,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2::
 ; VaultMenu_Store_CountNonZeroItemGridBytes; calls HLToDecimalDigits; branches on
 ; wSavedSpriteSlotCount; calls BGMapAddressAtScroll_Bank1D; calls HLToDecimalDigits; calls
 ; BGMapAddressAtScroll_Bank1D; increments wScreenStep; sets wScreenCounter to 0; sets wGlyphListPos
-; to 0 (E-0347)
+; to 0; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits, in step 8 of VaultMenu_Store
 ; (when wScreenStep = 8); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -1082,7 +1084,8 @@ CountNonZeroItemGridBytes::
     ret
 
 ; Branches on the byte at wItemStorage; branches on B; copies C to wSavedSpriteClipMode; branches on
-; the byte at wInventory; branches on B; copies C to wListPages (E-0347)
+; the byte at wInventory; branches on B; copies C to wListPages; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ; why: part of VaultMenu; VaultMenu: implements script command type E5 (SCRIPT_VAULT): the item
 ; Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0352, E-0038,
 ; E-0244)
@@ -1156,7 +1159,7 @@ VaultMenu_Store_ReadItemGridX::
     jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
     db $06, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_Store_ReadItemGridX, in part of VaultMenu_Store; VaultMenu_Store: storing:
 ; moves items from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_ReadItemGridX_ReadItemGridX::
@@ -1186,7 +1189,7 @@ VaultMenu_Store_ReadItemGridX_Data::
 ; on wScreenState; branches on the byte at wItemStorage; branches on B; branches on the byte at
 ; wInventory; branches on B; calls HLToDecimalDigits; sets wDigitWorkA; sets wDigitWorkB; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; branches on wIsCGB; then
-; 5 more steps (see the code) (E-0347)
+; 6 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc, in step 10 of
 ; VaultMenu_Store (when wScreenStep = 10); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -1587,7 +1590,7 @@ DrawBlankTileC3_Bank1D_2::
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_Store_BGMapAddressAtScroll_Bank1D, in part of VaultMenu_Store;
 ; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -1666,7 +1669,7 @@ VaultMenu_Store_ReadItemGridYAndItemGridX::
 ; wScreenStep to $0b; calls BGMapAddressAtScroll_Bank1D; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80; calls VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2; branches on
 ; wNumberEditPos; sets wNumberEditPos to 0; calls BlinkCursorBlinkCD_Bank1D; plays sound $69; then
-; 60 more steps (see the code) (E-0347)
+; 61 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D, in step 13 of
 ; VaultMenu_Store (when wScreenStep = 13); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -1998,7 +2001,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip::
     ld b, $cb
 
-; Calls BGMapAddressAtScroll_Bank1D (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2, in part of
 ; VaultMenu_Store_BGMapAddressAtScroll_Bank1D, in part of VaultMenu_Store; VaultMenu_Store: storing:
 ; moves items from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2069,7 +2072,7 @@ CheckListPagesPlusNumberAtMost18::
 
 ; Sets wTextCounter1 to 0; branches on the byte at wItemStorage; increments wTextCounter1; branches
 ; on C; calls TenTimesNumberTensPlusNumberOnes; copies the byte at wItemStorage to wTextCounter3;
-; sets wTextCounter1 to 0 (E-0347)
+; sets wTextCounter1 to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of VaultMenu_Store; VaultMenu_Store: storing: moves items from wInventory into
 ; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteTextCounter1AndTextCounter3::
@@ -2144,7 +2147,7 @@ VaultMenu_Store_WriteTextCounter1AndTextCounter3::
 ; 0; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches
 ; on wSavedSpriteClipMode; sets wTwoChoiceCursor to 1; continues in
 ; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; sets wTwoChoiceCursor to
-; 2; then 1 more step (see the code) (E-0347)
+; 2; then 2 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
 ; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2234,7 +2237,7 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
 ; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches on C; branches
 ; on D; branches on E; sets wTwoChoiceCursor to 1; continues in
 ; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches on the byte at
-; wItemStorage; branches on wTextCounter3; branches on the byte at wItemStorage; then 2 more steps
+; wItemStorage; branches on wTextCounter3; branches on the byte at wItemStorage; then 3 more steps
 ; (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
 ; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
@@ -2432,7 +2435,7 @@ DrawRect0147AndResetNumberEditPos::
 ; hTemp2 & $f0 to wSharedMenuWork; copies hTemp2 & $0f to wListEntries2; copies hTemp1 & $f0 to
 ; wMenuWordBuf; copies hTemp1 & $0f to wMenuWordBuf1; copies hTemp0 & $f0 to wMenuWordBuf2; copies
 ; hTemp0 & $0f to wTextCounter0; branches on the byte at wSharedMenuWork; branches on C; calls
-; BGMapAddressAtScroll_Bank1D; then 7 more steps (see the code) (E-0347)
+; BGMapAddressAtScroll_Bank1D; then 8 more steps (see the code) (E-0347)
 ; why: part of VaultMenu_Store; VaultMenu_Store: storing: moves items from wInventory into
 ; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_Number24ToPackedBCD::
@@ -2587,7 +2590,7 @@ VaultMenu_Store_Number24ToPackedBCD_Data::
 ; wGrid2CursorX; sets wGrid2CursorY; sets wScreenArea; calls BGMapAddressAtScroll_Bank1D; calls
 ; DrawRectSetTextCursorLoPlus21_Bank1D; branches on wScreenState; copies the byte at wGoldLo to
 ; wDigits; calls Number24ToPackedBCD; copies hTemp2 & $0f to wCountTens; copies hTemp1 & $f0 to
-; wCountOnes; copies hTemp1 & $0f to wItemGrid; then 14 more steps (see the code) (E-0347)
+; wCountOnes; copies hTemp1 & $0f to wItemGrid; then 15 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D, in step 20 of
 ; VaultMenu_Store (when wScreenStep = 20); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2701,7 +2704,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
 ; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
 ; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; branches on D; branches on E; branches
 ; on H; branches on L; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; then 10 more steps (see the code) (E-0347)
+; wScriptStartRequest to $80; then 11 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc, in step
 ; 21 of VaultMenu_Store (when wScreenStep = 21); VaultMenu_Store: storing: moves items from
 ; wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2845,7 +2848,7 @@ VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
 ; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
 ; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; branches on D; branches on E; branches
 ; on H; branches on L; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; then 10 more steps (see the code) (E-0347)
+; wScriptStartRequest to $80; then 11 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc, in step 21 of
 ; VaultMenu_TakeOut (when wScreenStep = 21); VaultMenu_TakeOut: taking out: lists wItemStorage and
 ; moves items back into wInventory (E-0352, E-0276)
@@ -2990,7 +2993,7 @@ VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
 ; plays sound $69; branches on wNumberEditPos; branches on wThreeDigits; copies wCountTens to
 ; wThreeDigits; branches on wCountOnes; branches on wItemGrid; calls
 ; DrawThreeDigitsAtScrollOffset6E; copies wItemGrid+1 to wThreeDigits; calls
-; VaultMenu_WriteThreeDigits; then 30 more steps (see the code) (E-0347)
+; VaultMenu_WriteThreeDigits; then 31 more steps (see the code) (E-0347)
 ; why: part of VaultMenu; VaultMenu: implements script command type E5 (SCRIPT_VAULT): the item
 ; Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0352, E-0038,
 ; E-0244)
@@ -3315,7 +3318,8 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     ret
 
 ; Branches on wJoypadRepeatTimer; increments wCursorBlinkCD; branches on wCursorBlinkCD; sets
-; wCursorBlinkCD to 0; calls BGMapAddressAtScroll_Bank1D (E-0347)
+; wCursorBlinkCD to 0; calls BGMapAddressAtScroll_Bank1D; also changes HL, DE, A and B by register
+; arithmetic (E-0347)
 ; why: part of VaultMenu; VaultMenu: implements script command type E5 (SCRIPT_VAULT): the item
 ; Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0352, E-0038,
 ; E-0244)
@@ -3574,7 +3578,7 @@ ItemStorageHasNonZeroEntry::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank1D::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3728,8 +3732,8 @@ TenTimesNumberTensPlusNumberOnes::
     add_a_to_hl
     ret
 
-; Branches on wThreeDigits; copies wCountTens to wThreeDigits; calls DrawThreeDigitsAtScrollOffset6E
-; (E-0347)
+; Branches on wThreeDigits; copies wCountTens to wThreeDigits; calls
+; DrawThreeDigitsAtScrollOffset6E; also changes A and B by register arithmetic (E-0347)
 ; why: part of VaultMenu; VaultMenu: implements script command type E5 (SCRIPT_VAULT): the item
 ; Vault: 'What item should I store for...', 'What will you be taking out?' (mode 2) (E-0352, E-0038,
 ; E-0244)
@@ -3770,7 +3774,7 @@ VaultMenu_WriteThreeDigits::
 ; CountNonZeroItemGridBytes; calls VaultMenu_WriteSavedSpriteClipModeAndListPages; calls
 ; CountNonZeroItemGridBytes; copies L to wSavedSpriteSlotCount; branches on wItemGridY; decrements
 ; wItemGridY; sets wMenuChoice; branches on wItemGridX; branches on wArg1; calls
-; VaultMenu_Store_ReadItemGridX; then 2 more steps (see the code) (E-0347)
+; VaultMenu_Store_ReadItemGridX; then 3 more steps (see the code) (E-0347)
 ; why: part of VaultMenu_Store; VaultMenu_Store: storing: moves items from wInventory into
 ; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_CountNonZeroItemGridBytes::
@@ -3938,7 +3942,7 @@ DrawRecordStatsBoxForArg1_Data2::
     db $d4, $c3, $d8, $c3, $fc, $c3, $00, $c4
 
 ; saves wArg1-wMenuInputResult and hTemp0-hSpriteScrollXLo, runs DrawPartySpeciesSprites for the
-; record at WD789 cell 5, then restores them (E-0125)
+; record at wListEntries cell 5, then restores them (E-0125)
 CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
     ld hl, wRecordBuffer
     ld de, wArg1
@@ -3988,7 +3992,8 @@ CallDrawPartySpeciesSpritesPreservingArg1AndTemp0::
     ret
 
 ; saves wArg1-wMenuInputResult and hTemp0-hSpriteScrollXLo, draws the species sprite of the record
-; at WD789 cell 5 at ($90, $40) (DrawSpeciesMetaSpriteAtScrollOffset), then restores them (E-0127)
+; at wListEntries cell 5 at ($90, $40) (DrawSpeciesMetaSpriteAtScrollOffset), then restores them
+; (E-0127)
 DrawListEntriesCell5SpeciesSprite::
     ld hl, wRecordBuffer
     ld de, wArg1
@@ -4051,7 +4056,7 @@ DrawListEntriesCell5SpeciesSprite::
     jr nz, .loop4
     ret
 
-; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at
+; with SRAM bank 0 enabled reads the record at wListEntries cell 5 and continues at
 ; HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
 ; (E-0126) (E-0344: the address in its name dropped or read as the label there; was
 ; LoadListEntriesCell5RecordAndContinue)
@@ -4078,7 +4083,7 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld a, [wSelectedRecord]
 
 ; Calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
-; branches on C (E-0347)
+; branches on C; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: part of HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2, in a helper of
 ; HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2, in step 62 of
 ; HibernateMenu_ChooseRecords (when wScreenStep = 62); HibernateMenu_ChooseRecords: HibernateMenu
@@ -4218,7 +4223,7 @@ AreaPaletteTable::
     dfar AreaPalettes0 ; id 0
     dfar AreaPalettes1 ; id 1
 
-; wArg5/wArg6 (big-endian pointer) = wListEntries + 5 * wListPageIndex + wListCursor (E-0351)
+; wArg5/wArg6 (big-endian pointer) = wListEntries + 5 * wListPageIndex + wListCursor (E-0353)
 SetArg5ToListEntriesCell5::
     ld a, [wListPageIndex]
     ld b, a
@@ -4236,7 +4241,7 @@ SetArg5ToListEntriesCell5::
     ld [wArg6], a
     ret
 
-; wArg5/wArg6 (big-endian pointer) = wListEntries + 4 * wListPageIndex + wListCursor (E-0351)
+; wArg5/wArg6 (big-endian pointer) = wListEntries + 4 * wListPageIndex + wListCursor (E-0353)
 SetArg5ToListEntriesCell4::
     ld a, [wListPageIndex]
     add a
@@ -4252,8 +4257,8 @@ SetArg5ToListEntriesCell4::
     ld [wArg6], a
     ret
 
-; shows string (field $A4 of the record at WD789 cell 5) of category $0B at $9320 with size $0602
-; (E-0121)
+; shows string (field $A4 of the record at wListEntries cell 5) of category $0B at $9320 with size
+; $0602 (E-0121)
 ShowCategory11StringOfListEntriesCell5Record::
     call SetArg5ToListEntriesCell5
     ld a, $0a
@@ -4284,8 +4289,8 @@ ShowCategory11StringOfListEntriesCell5Record::
     farcall ShowString_Bank08
     ret
 
-; loads the species of the record at WD789 cell 5 (field $0B) and shows string [wSpeciesRecord + $B]
-; of category $0D at $9680 with size $0602 (E-0121)
+; loads the species of the record at wListEntries cell 5 (field $0B) and shows string
+; [wSpeciesRecord + $B] of category $0D at $9680 with size $0602 (E-0121)
 ShowSpeciesCategory13StringOfListEntriesCell5Record::
     call SetArg5ToListEntriesCell5
     ld a, $0a
@@ -5126,7 +5131,7 @@ DrawRecordListNameTiles_Bank1D_Data::
     db $00, $8d, $50, $8d, $a0, $8d
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank1D_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -5426,7 +5431,8 @@ DrawBlankTileC3_Bank1D_3::
 SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap, in part of
 ; SwapMonstersMenu_ChooseToView; SwapMonstersMenu_ChooseToView: screen state 6 (menu option 2): a
 ; record list whose choice leads to the detail screen (state $0A) or the parents screen (state $0B)
@@ -5630,7 +5636,8 @@ EraseTwoChoiceCursor::
 DrawTwoChoiceCursorConfirmed::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of DrawTwoChoiceCursorConfirmed; DrawTwoChoiceCursorConfirmed: writes tile $BC at the
 ; position of wTwoChoiceCursor (E-0352, E-0068)
 DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
@@ -5733,7 +5740,8 @@ UpdateListCursorListCursor::
 
 ; called from UpdateListCursorListCursor: may continue in UpdateListCursorListCursor_ReadListCursor;
 ; increments wListCursorAux; may continue in UpdateListCursorListCursor_ReadListCursor; may continue
-; in UpdateListCursorListCursor_ReadListCursor_2; sets wListCursorAux to 0 (E-0347)
+; in UpdateListCursorListCursor_ReadListCursor_2; sets wListCursorAux to 0; also changes A by
+; register arithmetic (E-0347)
 ; why: a helper of UpdateListCursorListCursor; UpdateListCursorListCursor: list cursor over
 ; wListCount entries: Up/Down move wListCursor with wrap, erase and redraw the cursor, play sound
 ; $69 and set ... (E-0352, E-0106)
@@ -5776,7 +5784,8 @@ UpdateListCursorListCursor_ReadListCursor_2::
 UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap, in a helper of
 ; UpdateListCursorListCursor; UpdateListCursorListCursor: list cursor over wListCount entries:
 ; Up/Down move wListCursor with wrap, erase and redraw the cursor, play sound $69 and set ...
@@ -5952,7 +5961,8 @@ UpdatePagedListCursor::
 ; called from UpdatePagedListCursor: may continue in
 ; UpdatePagedListCursor_ReadMenuInputResultAndListCursor; increments wListCursorAux; may continue in
 ; UpdatePagedListCursor_ReadMenuInputResultAndListCursor; may continue in
-; UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2; sets wListCursorAux to 0 (E-0347)
+; UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2; sets wListCursorAux to 0; also changes A
+; by register arithmetic (E-0347)
 ; why: a helper of UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs
 ; 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both wrapping (E-0352, E-0068)
 UpdatePagedListCursor_WriteListCursorAux::
@@ -5991,7 +6001,8 @@ UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2::
 UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE,
+; A and C by register arithmetic (E-0347)
 ; why: part of UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2, in a helper of
 ; UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs 0..wListLastRow and page
 ; wListPageIndex runs 0..wListPages - 1, both wrapping (E-0352, E-0068)
@@ -6268,7 +6279,8 @@ LoadSpeciesSpriteGraphicsAndPalette::
 ; MonsterSpriteTable in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in
 ; wArg4/wArg5; on CGB it continues with the palette (not read) (E-0104)
 ; code: calls ReadFarPointerAtDEInBankB; calls DecompressToVRAM; branches on wIsCGB; calls
-; ReadByteInBank; branches on rSTAT; sets wOBJPaletteUploadRequest to $7f (E-0347)
+; ReadByteInBank; branches on rSTAT; sets wOBJPaletteUploadRequest to $7f; also changes HL, DE, BC
+; and A by register arithmetic (E-0347)
 DecompressGraphicsArg1ToArg4::
     ld a, [wArg1]
     ld l, a
@@ -6411,7 +6423,7 @@ DrawMetaSpritePartC0::
 ; called from DrawSpritePart9000At88_28: copies wArg6 to hSpriteAttrXor; branches on C; sets
 ; hSpriteSubIndex; continues in
 ; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3; sets hSpriteSubIndex to
-; 0 (E-0347)
+; 0; also changes A and C by register arithmetic (E-0347)
 ; why: a helper of DrawSpritePart9000At88_28; DrawSpritePart9000At88_28: with SRAM disabled draws
 ; sprite part $0090 at ($88, $28) (DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc,
 ; C = 1) (E-0352, E-0124)
@@ -6772,7 +6784,7 @@ LoadTileListSixPerCall::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0351)
+; (E-0353)
 CopyTileBytesToVRAM_Bank1D::
     ld c, $10
 
@@ -6820,7 +6832,7 @@ LoadTileListSixPerFrame::
 
 ; Calls CopyTileBytesToVRAM_Bank1D; increments wGlyphListStart; increments wGlyphListPos; may
 ; continue in LoadTileListSixPerFrame_Loop; sets wGlyphListPos to 0; sets wGlyphListStart to 0;
-; advances wScreenStep (E-0347)
+; advances wScreenStep; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of LoadTileListSixPerFrame; LoadTileListSixPerFrame: copies tiles listed in
 ; LoadTileListSixPerFrame_Data to vBGMap1 + $200 onward six per call (E-0352, E-0127, E-0344)
 LoadTileListSixPerFrame_Loop::
@@ -7091,7 +7103,7 @@ PackRecordFieldsToBank1Slot::
 ; Branches on C; calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2
 ; to rRAMB; branches on B; copies wArg2 to rRAMB; branches on C; branches on B; branches on C;
 ; copies wArg2 to rRAMB; may continue in
-; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1; then 5 more steps (see the code)
+; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1; then 6 more steps (see the code)
 ; (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's
 ; family, state, mark and other fields into the compact form in SRAM bank wArg2 (wPackWork
@@ -7236,7 +7248,7 @@ PackRecordFieldsToBank1Slot_Data::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
-; PackRecordFieldsToBank1Slot_Skip (E-0347)
+; PackRecordFieldsToBank1Slot_Skip; also changes HL and A by register arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7271,7 +7283,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
-; PackRecordFieldsToBank1Slot_Skip (E-0347)
+; PackRecordFieldsToBank1Slot_Skip; also changes HL, A and B by register arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7307,7 +7319,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
-; PackRecordFieldsToBank1Slot_Skip (E-0347)
+; PackRecordFieldsToBank1Slot_Skip; also changes HL, A and B by register arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7344,7 +7356,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
-; PackRecordFieldsToBank1Slot_Skip (E-0347)
+; PackRecordFieldsToBank1Slot_Skip; also changes HL, A and B by register arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7380,7 +7392,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
-; PackRecordFieldsToBank1Slot_Skip (E-0347)
+; PackRecordFieldsToBank1Slot_Skip; also changes HL and A by register arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7416,7 +7428,8 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
 
 ; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
 ; rRAMG2 to 0; sets rRAMB to 0; sets wPackFieldIndex to 0; continues in
-; Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1 (E-0347)
+; Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1; also changes HL, A and B by register
+; arithmetic (E-0347)
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
@@ -7476,7 +7489,7 @@ Pack2BitFieldsFromPackFields::
 
 ; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2 to rRAMB; sets
 ; rRAMB to 0; copies wArg2 to rRAMB; branches on C; sets rRAMB to 0; copies wArg2 to rRAMB; calls
-; SRAMRecordAddressOfArg1; sets rRAMB to 0; copies wArg2 to rRAMB; then 75 more steps (see the code)
+; SRAMRecordAddressOfArg1; sets rRAMB to 0; copies wArg2 to rRAMB; then 76 more steps (see the code)
 ; (E-0347)
 ; why: part of Pack2BitFieldsFromPackFields; Pack2BitFieldsFromPackFields: B = (wPackFields & 3) <<
 ; 6 | (wPackFields + $1 & 3) << 4 | (wPackFields + $2 & 3) << 2 | (wPackFields + $3 & 3), the
@@ -8295,7 +8308,7 @@ CopyTenBytesThenSelectSRAMBank0::
 
 ; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; copies wArg2 to rRAMB; sets rRAMB to 0;
 ; copies wArg2 to rRAMB; sets rRAMB to 0; copies wArg2 to rRAMB; sets rRAMB to 0; copies wArg2 to
-; rRAMB; sets rRAMB to 0; copies wArg2 to rRAMB; sets rRAMB to 0; then 79 more steps (see the code)
+; rRAMB; sets rRAMB to 0; copies wArg2 to rRAMB; sets rRAMB to 0; then 80 more steps (see the code)
 ; (E-0347)
 ; why: part of CopyTenBytesThenSelectSRAMBank0; CopyTenBytesThenSelectSRAMBank0: copies 10 bytes
 ; from HL to DE, selecting SRAM bank 0 (rRAMB = 0) after each byte is read (E-0352, E-0106)

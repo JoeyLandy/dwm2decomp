@@ -59,7 +59,8 @@ CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo::
     inc [hl]
 
 ; called from TickSequencePtrLoSequence: calls LookupSequencePtrLoFrameWord; branches on B; branches
-; on C; continues in CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo (E-0347)
+; on C; continues in CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: a helper of TickSequencePtrLoSequence; TickSequencePtrLoSequence: for the sequence at
 ; wSequencePtrLo: runs the frame timer (CountDownSequencePtrLoFrameTimer) when started, otherwise
 ; marks it started, ... (E-0352, E-0124)
@@ -1736,7 +1737,8 @@ RunBattleActions_StatusChecks_StartAction_ResetEffectStateForAction::
 ; wBattleTargetChoice to $cd; sets wBattleSubStep to 3; branches on wBattleTargetChoice; sets
 ; wBattleSubStep to 4; calls ShowActorStatusRecoveryMessage; advances wBattleSubStep; continues in
 ; RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect; branches on wBattleSubStep; sets
-; wBattleSubStep to 0; increments wActionQueuePos (E-0347)
+; wBattleSubStep to 0; increments wActionQueuePos; also changes HL, A and D by register arithmetic
+; (E-0347)
 ; why: step 1 of RunBattleActions_StatusChecks_StartAction (when wBattleSubStep = 1);
 ; RunBattleActions_StatusChecks_StartAction: by its step: resets the effect state, shows a
 ; category-0 battle text, rolls the status tick effect and picks a random action when the actor ...
@@ -2063,7 +2065,8 @@ ShowBattleTextCategory0Entry_ReturnCarry::
 ; damage = the actor's max HP / 6 (wBattleDamageLo/Hi) is subtracted from the actor's HP without a
 ; floor: HP 10 with max HP 120 becomes $FFF6 (executed, test SixthOfMaxHPWithoutFloor); whether
 ; callers keep HP above the damage is not read (E-0121, E-0154)
-; code: copies L to wBattleDamageLo; copies H to wBattleDamageHi (E-0347)
+; code: copies L to wBattleDamageLo; copies H to wBattleDamageHi; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ActorLosesSixthOfMaxHP::
     ld a, [wBattleActor]
     ld hl, wBattleHP
@@ -2250,7 +2253,8 @@ ResetEffectStateForAction::
 ; called from ShowActorStatusRecoveryMessage: branches on wRandomLo; branches on c; calls
 ; SetBit2OfLevelUpGainsIndexed_Bank32; copies wBattleTarget to wLoadSlot; copies wBattleActor to
 ; wBattleTarget; may continue in
-; RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText (E-0347)
+; RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText; also changes HL, BC,
+; A and D by register arithmetic (E-0347)
 ; why: a helper of ShowActorStatusRecoveryMessage; ShowActorStatusRecoveryMessage: shows battle text
 ; $16-$1C for the first set status bit of the actor (status 6/7, byte 3 bits 0-5) and clears status
 ; 3 bits 0-5 (E-0352, E-0127)
@@ -2523,8 +2527,8 @@ RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3::
 ; wBattleActor; branches on wActionQueuePos; branches on the byte at wActionQueue; calls
 ; ReadByteAtHLPlusA; branches on wBattleActionId; branches on the byte at
 ; RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data; sets wBattleActionChoice to 0;
-; sets wBattleActionChoice to $ff; calls LoadActorChosenActionRecord; advances wBattleSubStep
-; (E-0347)
+; sets wBattleActionChoice to $ff; calls LoadActorChosenActionRecord; advances wBattleSubStep; also
+; changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 1 of RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 1);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
@@ -2616,7 +2620,8 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
 
 ; step 2 of RunBattleActions_StatusChecks_CheckAction: calls ReadByteAtHLPlusA; branches on
 ; wSideControl; calls ReadSlotAIModeIndexed_Bank32; calls ChooseActionTarget; calls
-; ReadByteAtHLPlusA; sets wBattleTarget; advances wBattleSubStep (E-0347)
+; ReadByteAtHLPlusA; sets wBattleTarget; advances wBattleSubStep; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 2 of RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 2);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
@@ -3208,7 +3213,8 @@ SetSubPhase7AndResetSteps::
     ret
 
 ; step 2 of RunBattleActions_StatusChecks: advances wBattleResolveStep; calls ReadByteAtHLPlusA; may
-; return early; calls ShowBattleTextCategory0 (E-0347)
+; return early; calls ShowBattleTextCategory0; also changes HL, A and D by register arithmetic
+; (E-0347)
 ; why: step 2 of RunBattleActions_StatusChecks (when wBattleResolveStep = 2);
 ; RunBattleActions_StatusChecks: by wBattleResolveStep: per-action status checks with their battle
 ; texts ('0 woke up!', 'SealPray was broken!', 'G was shattered!', '0 ... (E-0352)
@@ -3281,7 +3287,8 @@ RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable::
 ; step 4 of RunBattleActions_StatusChecks: advances wBattleResolveStep; branches on the byte at
 ; wBattleStatus3 & $c0; branches on wBattleStatus; branches on the byte at wSlotBodyFlags; advances
 ; wBattleSubPhase; sets wBattleResolveStep to 6; calls SetSubPhase7AndResetSteps; calls
-; ReadByteAtHLPlusA; may return early; calls ShowBattleTextCategory0 (E-0347)
+; ReadByteAtHLPlusA; may return early; calls ShowBattleTextCategory0; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ; why: step 4 of RunBattleActions_StatusChecks (when wBattleResolveStep = 4);
 ; RunBattleActions_StatusChecks: by wBattleResolveStep: per-action status checks with their battle
 ; texts ('0 woke up!', 'SealPray was broken!', 'G was shattered!', '0 ... (E-0352)
@@ -3394,7 +3401,8 @@ RunBattleActions_StatusChecks_ShatterChecks::
 ; wBattleActionId; copies the byte at wBattleActionChoice to wBattleTarget; branches on
 ; wBattleActionId; branches on wBattleStatus8; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wBattleStatus8; advances wBattleResolveStep; sets wBattleSubStep to 0; clears bit 4 of
-; wBattleResolveStep; advances wBattleSubStep (E-0347)
+; wBattleResolveStep; advances wBattleSubStep; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: step 0 of RunBattleActions_StatusChecks_ShatterChecks (when wBattleSubStep = 0);
 ; RunBattleActions_StatusChecks_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!', then CheckActionD0ToE3OrSpecial (E-0352)
@@ -3721,7 +3729,7 @@ SlotCStatusCheckOrBattleSlotOut::
     call CheckSlotStatusBlock
     ret
 
-; HL += A, then A = the byte at HL (E-0351)
+; HL += A, then A = the byte at HL (E-0353)
 ReadByteAtHLPlusA::
     add_a_to_hl
     ld a, [hl]
@@ -3758,7 +3766,7 @@ RunBattleStep4_ResolveSkill::
 ; step 0 of RunBattleStep4_ResolveSkill: advances wBattleResolveStep; sets wFollowUpAction to 1;
 ; sets wMultiHitCount to 0; copies wBattleTarget to wBattleActor; sets wBattleActionChoice to $ff;
 ; sets wSlotMarks to 2; calls ChooseActionTarget; copies the byte at wBattleTargetChoice to
-; wBattleTarget (E-0347)
+; wBattleTarget; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 0 of RunBattleStep4_ResolveSkill (when wBattleResolveStep = 0);
 ; RunBattleStep4_ResolveSkill: by wBattleResolveStep: checks the skill's MP cost (CheckSkillMPCost),
 ; shows its battle text, selects the effect by its flags and checks the ... (E-0352)
@@ -3916,7 +3924,7 @@ RunBattleStep4_ResolveSkill_ShatterChecks::
 ; wBattleActionId; copies the byte at wBattleActionChoice to wBattleTarget; branches on
 ; wBattleStatus8; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus8; advances
 ; wBattleResolveStep; sets wBattleSubStep to 0; clears bit 4 of wBattleResolveStep; advances
-; wBattleSubStep (E-0347)
+; wBattleSubStep; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 0 of RunBattleStep4_ResolveSkill_ShatterChecks (when wBattleSubStep = 0);
 ; RunBattleStep4_ResolveSkill_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!' (E-0352)
@@ -4202,7 +4210,8 @@ RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32::
     ret
 
 ; called from RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32: returns if wBattleActionId is
-; SKILL_BEAT; returns if wBattleActionId is SKILL_DEFEAT; branches on wBattleActionId (E-0347)
+; SKILL_BEAT; returns if wBattleActionId is SKILL_DEFEAT; branches on wBattleActionId; also changes
+; HL and A by register arithmetic (E-0347)
 ; why: a helper of RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32, in step 2 of
 ; RunDefeatSequence (when wBattleSubStep2 = 2); RunDefeatSequence: three sub-steps by
 ; wBattleSubStep2: 0 lowers a counter (wSlotMarks + target by 5) and calls DefeatTarget, 1 runs
@@ -4378,7 +4387,7 @@ DefeatTarget::
 ; called from DefeatTarget: branches on wRedirectFlags; branches on wOriginalTarget; branches on
 ; wBattleTarget; branches on wMultiHitCount; decrements wMultiHitCount; branches on wBattleStatus6;
 ; branches on the byte at wBattleStatus6 & $0f; clears bit 4 of wBattleStatus6; branches on the byte
-; at wBattleStatus6 & $0f (E-0347)
+; at wBattleStatus6 & $0f; also changes HL, BC, A and E by register arithmetic (E-0347)
 ; why: a helper of DefeatTarget; DefeatTarget: target slot wBattleTarget: re-derives its stats
 ; (RecomputeTargetMaxHPAndMP, DefeatTarget_WriteMultiHitCount, ResetTargetAGLAndDEFToBase ...
 ; (E-0352)
@@ -4720,7 +4729,7 @@ ActionEffect_BeDragon_ReadLinkMode::
 ; called from RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait: sets wSideFlags0 to 0; sets
 ; wSideFlags1 to 0; copies C to wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; RecomputeTargetMaxHPAndMP; calls ResetTargetAGLAndDEFToBase; branches on C; sets wBattleSlotOut to
-; $ff; sets wSlotMarks to $ff (E-0347)
+; $ff; sets wSlotMarks to $ff; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait, in step 4 of
 ; RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 4);
 ; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
@@ -5008,7 +5017,8 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     jp SetBattleSubStep1
 
 ; called from ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc: calls AdvanceRandom;
-; branches on C; calls CarryUnlessBattleSlotOutSlotEmpty (E-0347)
+; branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc, in step 0 of
 ; ResolveStep0EEffect (when wBattleSubStep = 0); ResolveStep0EEffect: resolve step $0E runs this
 ; through wBattleSubStep (wBattleSubStep): ten cases, 0-9. Case 0 branches on wBattleActionId: $15
@@ -5124,7 +5134,7 @@ ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent::
 ; ScaleHLTo80Percent_Bank32; copies L to wEffectTemp0; copies H to wEffectTemp1; decrements
 ; wBattleSubStep2; sets wEffectSubStep to 0; sets wTemp0 to $35; calls ActorOnLocalSide_Bank32;
 ; increments wTemp0; copies wBattleTarget to wLoadSlot; copies wBattleActor to wBattleTarget; copies
-; L to wBattleDamageLo; then 6 more steps (see the code) (E-0347)
+; L to wBattleDamageLo; then 7 more steps (see the code) (E-0347)
 ; why: step 1 of ResolveStep0EEffect_Scale80Percent (when wBattleSubStep2 = 1);
 ; ResolveStep0EEffect_Scale80Percent: skips an absent actor, scales HL to 80 percent
 ; (ScaleHLTo80Percent_Bank32), then the effect sub-step (E-0352)
@@ -5227,8 +5237,10 @@ ResolveStep0EEffect_Scale80Percent_RunEffectSubStep::
     ld [wBattleTarget], a
     ret
 
-; runs the routine for wEffectSubStep (jump table of three) (E-0122) (E-0344: the address in its
-; name dropped or read as the label there; was RunEffectSubStep)
+; the sub-steps of an effect that defeats a target: defeats it, blanks its picture and marks the
+; slot in wLevelUpGains (E-0354; was: runs the routine for wEffectSubStep (jump table of three)
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; RunEffectSubStep))
 RunEffectSubStep::
     ld a, [wEffectSubStep]
     jumptable
@@ -5238,8 +5250,9 @@ RunEffectSubStep::
 
 ; step 0 of RunEffectSubStep: advances wEffectSubStep; sets wSlotMarks to $fe; calls DefeatTarget
 ; (E-0347)
-; why: step 0 of RunEffectSubStep (when wEffectSubStep = 0); RunEffectSubStep: runs the routine for
-; wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 0 of RunEffectSubStep (when wEffectSubStep = 0); RunEffectSubStep: the sub-steps of an
+; effect that defeats a target: defeats it, blanks its picture and marks the slot in wLevelUpGains)
+; (E-0352, E-0354, E-0122)
 RunEffectSubStep_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
@@ -5251,8 +5264,9 @@ RunEffectSubStep_DefeatTarget::
     ret
 
 ; step 1 of RunEffectSubStep: calls BlankTargetMonsterPicture; advances wEffectSubStep (E-0347)
-; why: step 1 of RunEffectSubStep (when wEffectSubStep = 1); RunEffectSubStep: runs the routine for
-; wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 1 of RunEffectSubStep (when wEffectSubStep = 1); RunEffectSubStep: the sub-steps of an
+; effect that defeats a target: defeats it, blanks its picture and marks the slot in wLevelUpGains)
+; (E-0352, E-0354, E-0122)
 RunEffectSubStep_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5262,8 +5276,9 @@ RunEffectSubStep_ToBlankTargetMonsterPictureAndStep::
 ; step 2 of RunEffectSubStep: calls SetBit2OfLevelUpGainsIndexed_Bank32; sets wTemp0 to $90; calls
 ; ActorOnLocalSide_Bank32; sets wTemp0 to $8d; calls ShowBattleText; advances wBattleSubStep2; sets
 ; wEffectSubStep to 0 (E-0347)
-; why: step 2 of RunEffectSubStep (when wEffectSubStep = 2); RunEffectSubStep: runs the routine for
-; wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 2 of RunEffectSubStep (when wEffectSubStep = 2); RunEffectSubStep: the sub-steps of an
+; effect that defeats a target: defeats it, blanks its picture and marks the slot in wLevelUpGains)
+; (E-0352, E-0354, E-0122)
 RunEffectSubStep_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
@@ -5323,7 +5338,8 @@ ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent::
 ; step 1 of ResolveStep0EEffect_Brutalize: advances wBattleSubStep2; branches on H; branches on L;
 ; decrements wBattleSubStep2; sets wEffectSubStep to 0; copies wBattleTarget to wLoadSlot; copies
 ; wBattleActor to wBattleTarget; shows battle text '0 was brutalized!'; copies wLoadSlot to
-; wBattleTarget; calls SetBit0OfLevelUpGainsIndexed_Bank32 (E-0347)
+; wBattleTarget; calls SetBit0OfLevelUpGainsIndexed_Bank32; also changes HL, BC, A and D by register
+; arithmetic (E-0347)
 ; why: step 1 of ResolveStep0EEffect_Brutalize (when wBattleSubStep2 = 1);
 ; ResolveStep0EEffect_Brutalize: by its step: skips an absent actor and shows '0 was brutalized!' on
 ; the target (E-0352)
@@ -5464,7 +5480,7 @@ ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1::
 
 ; step 5 of ResolveStep0EEffect: branches on wBattleActionId; branches on wSavedActorByte; sets
 ; wSavedActorByte; calls ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; dispatches on
-; wBattleSubStep2 (E-0347)
+; wBattleSubStep2; also changes A by register arithmetic (E-0347)
 ; why: step 5 of ResolveStep0EEffect (when wBattleSubStep = 5); ResolveStep0EEffect: resolve step
 ; $0E runs this through wBattleSubStep (wBattleSubStep): ten cases, 0-9. Case 0 branches on
 ; wBattleActionId: $15 and $20 to ... (E-0352, E-0051)
@@ -5509,7 +5525,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
 ; SetBit0OfLevelUpGainsIndexed_Bank32; calls AdvanceRandom; calls GetBattleHP_Bank32; copies C to
 ; wBattleDamageLo; copies B to wBattleDamageHi; copies wBattleTarget to wLoadSlot; copies
 ; wBattleActor to wBattleTarget; shows battle text '0 was brutalized!'; copies wLoadSlot to
-; wBattleTarget; copies L to wBattleDamageLo; copies H to wBattleDamageHi; then 2 more steps (see
+; wBattleTarget; copies L to wBattleDamageLo; copies H to wBattleDamageHi; then 3 more steps (see
 ; the code) (E-0347)
 ; why: step 1 of ResolveStep0EEffect_Brutalize_DefeatTarget (when wEffectSubStep = 1);
 ; ResolveStep0EEffect_Brutalize_DefeatTarget: defeats the target, blanks its picture and sets bit 2
@@ -5639,8 +5655,9 @@ RunEffectSubStep_2::
 
 ; step 0 of RunEffectSubStep_2: advances wEffectSubStep; sets wSlotMarks to $fe; calls DefeatTarget
 ; (E-0347)
-; why: step 0 of RunEffectSubStep_2 (when wEffectSubStep = 0); RunEffectSubStep_2: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 0 of RunEffectSubStep_2 (when wEffectSubStep = 0), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_2_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
@@ -5652,8 +5669,9 @@ RunEffectSubStep_2_DefeatTarget::
     ret
 
 ; step 1 of RunEffectSubStep_2: calls BlankTargetMonsterPicture; advances wEffectSubStep (E-0347)
-; why: step 1 of RunEffectSubStep_2 (when wEffectSubStep = 1); RunEffectSubStep_2: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 1 of RunEffectSubStep_2 (when wEffectSubStep = 1), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5663,8 +5681,9 @@ RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep::
 ; step 2 of RunEffectSubStep_2: calls SetBit2OfLevelUpGainsIndexed_Bank32; branches on
 ; wBattleActionId; calls ActorOnLocalSide_Bank32; shows battle text '0 dropped dead!'; sets
 ; wEffectSubStep to 0 (E-0347)
-; why: step 2 of RunEffectSubStep_2 (when wEffectSubStep = 2); RunEffectSubStep_2: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 2 of RunEffectSubStep_2 (when wEffectSubStep = 2), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_2_ShowHeroDroppedDead::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
@@ -5758,7 +5777,7 @@ ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent::
 ; wEffectTemp0; copies H to wEffectTemp1; copies L to wEffectTemp0; copies H to wEffectTemp1;
 ; decrements wBattleSubStep2; sets wEffectSubStep to 0; sets wTemp0 to $35; calls
 ; ActorOnLocalSide_Bank32; increments wTemp0; copies wBattleTarget to wLoadSlot; copies wBattleActor
-; to wBattleTarget; then 7 more steps (see the code) (E-0347)
+; to wBattleTarget; then 8 more steps (see the code) (E-0347)
 ; why: step 1 of ResolveStep0EEffect_DamageAndSelectEffect (when wBattleSubStep2 = 1);
 ; ResolveStep0EEffect_DamageAndSelectEffect: skips an absent actor, computes damage on the target
 ; and selects the effect by the effect flags (SelectEffectByEffectFlags, ... (E-0352)
@@ -5889,8 +5908,9 @@ RunEffectSubStep_3::
 
 ; step 0 of RunEffectSubStep_3: advances wEffectSubStep; sets wSlotMarks to $fe; calls DefeatTarget
 ; (E-0347)
-; why: step 0 of RunEffectSubStep_3 (when wEffectSubStep = 0); RunEffectSubStep_3: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 0 of RunEffectSubStep_3 (when wEffectSubStep = 0), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_3_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
@@ -5902,8 +5922,9 @@ RunEffectSubStep_3_DefeatTarget::
     ret
 
 ; step 1 of RunEffectSubStep_3: calls BlankTargetMonsterPicture; advances wEffectSubStep (E-0347)
-; why: step 1 of RunEffectSubStep_3 (when wEffectSubStep = 1); RunEffectSubStep_3: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 1 of RunEffectSubStep_3 (when wEffectSubStep = 1), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
@@ -5913,8 +5934,9 @@ RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep::
 ; step 2 of RunEffectSubStep_3: calls SetBit2OfLevelUpGainsIndexed_Bank32; sets wTemp0 to $90; calls
 ; ActorOnLocalSide_Bank32; sets wTemp0 to $8d; calls ShowBattleText; advances wBattleSubStep2; sets
 ; wEffectSubStep to 0 (E-0347)
-; why: step 2 of RunEffectSubStep_3 (when wEffectSubStep = 2); RunEffectSubStep_3: runs the routine
-; for wEffectSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 2 of RunEffectSubStep_3 (when wEffectSubStep = 2), in part of RunEffectSubStep;
+; RunEffectSubStep: the sub-steps of an effect that defeats a target: defeats it, blanks its picture
+; and marks the slot in wLevelUpGains) (E-0352, E-0354, E-0122)
 RunEffectSubStep_3_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
@@ -5946,7 +5968,7 @@ ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1::
 ; called from ActionEffect_Surge: calls SetTargetSlotMarksTo3; calls
 ; SetBit2OfLevelUpGainsIndexed_Bank32; clears bit 7 of wBattleStatus; returns unless bit 7 of
 ; wBattleStatus is set; clears bit 7 of wBattleStatus; calls GetBaseAGL; calls GetBaseDEF; may
-; return early (E-0347)
+; return early; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of ActionEffect_Surge; ActionEffect_Surge: effect routine reached through
 ; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 129 Surge
 ; (E-0352, E-0084)
@@ -6037,7 +6059,8 @@ SetTargetSlotMarksTo3::
     db $c9
 
 ; called from ActionEffect_DeMagic: calls SetTargetSlotMarksTo3; calls
-; SetBit2OfLevelUpGainsIndexed_Bank32; calls SetTargetSlotMarksTo3 (E-0347)
+; SetBit2OfLevelUpGainsIndexed_Bank32; calls SetTargetSlotMarksTo3; also changes HL and A by
+; register arithmetic (E-0347)
 ; why: a helper of ActionEffect_DeMagic; ActionEffect_DeMagic: effect routine reached through
 ; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 131
 ; DeMagic, 132 ... (E-0352, E-0084)
@@ -6083,8 +6106,9 @@ ActionEffect_DeMagic_SetTargetSlotMarksTo3::
     ld [hl], a
     ret
 
-; runs the routine for wBattleSubStep (jump table of three) (E-0122) (E-0344: the address in its
-; name dropped or read as the label there; was RunBattleSubStep)
+; the sub-steps of an action's battle effect: selects the effect by its effect flags and runs it
+; (E-0354; was: runs the routine for wBattleSubStep (jump table of three) (E-0122) (E-0344: the
+; address in its name dropped or read as the label there; was RunBattleSubStep))
 RunBattleSubStep::
     ld a, [wBattleSubStep]
     jumptable
@@ -6094,8 +6118,9 @@ RunBattleSubStep::
 
 ; step 0 of RunBattleSubStep: advances wBattleSubStep; calls SelectEffectByEffectFlags; calls
 ; SelectEffectByEffectFlags2Flags (E-0347)
-; why: step 0 of RunBattleSubStep (when wBattleSubStep = 0); RunBattleSubStep: runs the routine for
-; wBattleSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 0 of RunBattleSubStep (when wBattleSubStep = 0); RunBattleSubStep: the sub-steps of an
+; action's battle effect: selects the effect by its effect flags and runs it) (E-0352, E-0354,
+; E-0122)
 RunBattleSubStep_SelectEffectByEffectFlags::
     ld hl, wBattleSubStep
     inc [hl]
@@ -6106,9 +6131,10 @@ RunBattleSubStep_SelectEffectByEffectFlags::
 ; step 1 of RunBattleSubStep: advances wBattleSubStep; sets wBattleSubStep2 to 0; sets
 ; wBattleSubStep to 0; advances wBattleResolveStep; calls SetBit0OfLevelUpGainsIndexed_Bank32; calls
 ; ActorOnLocalSide_Bank32; shows battle text '0 took G damage!'; copies L to wBattleTarget; copies H
-; to wBattleActor (E-0347)
-; why: step 1 of RunBattleSubStep (when wBattleSubStep = 1); RunBattleSubStep: runs the routine for
-; wBattleSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; to wBattleActor; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: step 1 of RunBattleSubStep (when wBattleSubStep = 1); RunBattleSubStep: the sub-steps of an
+; action's battle effect: selects the effect by its effect flags and runs it) (E-0352, E-0354,
+; E-0122)
 RunBattleSubStep_AddDoubleAToHL_Bank32::
     ld a, [wBattleTarget]
     ld hl, wBattleHP
@@ -6172,8 +6198,9 @@ RunBattleSubStep_AddDoubleAToHL_Bank32::
 
 ; step 2 of RunBattleSubStep: copies wBattleTarget to wLoadSlot; copies wBattleActor to
 ; wBattleTarget; calls RunBattleSubStep2; copies wLoadSlot to wBattleTarget (E-0347)
-; why: step 2 of RunBattleSubStep (when wBattleSubStep = 2); RunBattleSubStep: runs the routine for
-; wBattleSubStep (jump table of three) (E-0352, E-0122, E-0344)
+; why: step 2 of RunBattleSubStep (when wBattleSubStep = 2); RunBattleSubStep: the sub-steps of an
+; action's battle effect: selects the effect by its effect flags and runs it) (E-0352, E-0354,
+; E-0122)
 RunBattleSubStep_2::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
@@ -6323,7 +6350,8 @@ RunBattleSubStep2_2_SetBit2OfLevelUpGainsIndexed_Bank32::
 
 ; called from ResolveStepDamageMessage: copies L to wBattleDamageLo; copies H to wBattleDamageHi;
 ; branches on H; copies L to wBattleDamageLo; copies H to wBattleDamageHi; returns unless bit 2 of H
-; is set; copies L to wBattleDamageLo; copies H to wBattleDamageHi (E-0347)
+; is set; copies L to wBattleDamageLo; copies H to wBattleDamageHi; also changes HL, DE and A by
+; register arithmetic (E-0347)
 ; why: a helper of ResolveStepDamageMessage; ResolveStepDamageMessage: resolve step $0A: advances
 ; wBattleResolveStep and, for the actor or target side chosen by wResolveMsgFlags bit 4, stores
 ; wResolveMsgActor ... (E-0352)
@@ -6391,7 +6419,7 @@ GetBattleMP_Bank32::
     jr ReadSlotAIModeIndexed_Bank32_Skip
     db $21, $1f, $d9, $18, $0a
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0353)
 ReadSlotAIModeIndexed_Bank32::
     ld hl, wSlotAIMode
     add_a_to_hl
@@ -6408,7 +6436,7 @@ ReadSlotAIModeIndexed_Bank32_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_Bank32::
     add a
     add_a_to_hl
@@ -6475,7 +6503,7 @@ ClearBattleStatusBitsWithMaskD_Bank32_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_Bank32::
     push hl
     ld hl, wLevelUpGains
@@ -6485,7 +6513,7 @@ SetBit0OfLevelUpGainsIndexed_Bank32::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_Bank32::
     push hl
     ld hl, wLevelUpGains
@@ -6495,7 +6523,7 @@ SetBit1OfLevelUpGainsIndexed_Bank32::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_Bank32::
     push hl
     ld hl, wLevelUpGains

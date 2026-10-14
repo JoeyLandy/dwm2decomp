@@ -297,6 +297,13 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
         elif op in ("ret", "reti") and not args:
             pass
     weak = re.compile(r"^(may return early|branches on .*|continues in \w+|may continue in \w+)$")
+    n_code = sum(1 for x in body if _code(x) and not _code(x).endswith(":"))
+    strong = [c for c in clauses if not weak.match(c)]
+    if clauses and strong and n_code >= 12 and len(strong) * 4 < n_code:
+        # the clauses cover little of a long body: say which registers it leaves changed too (E-0354)
+        _ins, outs = register_flow(body)
+        if outs:
+            clauses = clauses + [f"also changes {_join_regs(outs)} by register arithmetic"]
     if all(weak.match(c) for c in clauses):  # nothing but control flow: say which registers it takes and changes
         tail = [_code(x) for x in body if _code(x) and not _code(x).endswith(":")]
         if not clauses and tail[:1] == ["ret"]:

@@ -55,7 +55,7 @@ GetBattleMP_BankA1_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks) (E-0351)
+; appear in 12 banks) (E-0353)
 AddDoubleAToHL_BankA1::
     add a
     add_a_to_hl
@@ -130,7 +130,7 @@ ClearBitMaskTable_BankA1::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -140,7 +140,7 @@ SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -150,7 +150,7 @@ SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks) (E-0351)
+; banks) (E-0353)
 SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -281,8 +281,8 @@ RunBattleCommandEntry_BankA1::
     dw RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1
 
 ; step 0 of RunBattleCommandEntry_BankA1: sets wLinkSendByte to 0; sets wBattleActor to 0; branches
-; on the byte at wSlotMarks + $4; calls CarryUnlessBattleSlotOutSlotEmpty; advances wBattleSubPhase
-; (E-0347)
+; on the byte at wSlotMarks + $4; calls CarryUnlessBattleSlotOutSlotEmpty; advances wBattleSubPhase;
+; also changes HL, BC, A and E by register arithmetic (E-0347)
 ; why: step 0 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 0);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
 ; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
@@ -400,7 +400,7 @@ RunBattleCommandEntry_BankA1_ChooseActionTarget::
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; calls
 ; RunBattleCommandEntry_BankA1_RandomInRange; calls
 ; RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc; increments wLoadSlot; increments
-; wBattleTempPtrLo; advances wBattleSubPhase (E-0347)
+; wBattleTempPtrLo; advances wBattleSubPhase; then 1 more step (see the code) (E-0347)
 ; why: step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
 ; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
@@ -467,7 +467,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
 ; step 5 of RunBattleCommandEntry_BankA1: copies L to wBattleTempPtrLo; copies H to
 ; wBattleTempPtrHi; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to
 ; wTargetEstimates; branches on E; increments wBattleTempPtrLo; branches on E; branches on the byte
-; at wBattleArg0; sets wActionQueuePos to 0; advances wBattleSubPhase (E-0347)
+; at wBattleArg0; sets wActionQueuePos to 0; advances wBattleSubPhase; also changes HL, DE, BC and A
+; by register arithmetic (E-0347)
 ; why: step 5 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 5);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
 ; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
@@ -604,7 +605,7 @@ RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
     call RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3
     ret
 
-; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0351)
+; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0353)
 AddWordAtHLToBC_BankA1::
     ld a, [hli]
     add c
@@ -616,7 +617,7 @@ AddWordAtHLToBC_BankA1::
 
 ; called from RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1: calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleActionChoice; sets
-; BSTAT6_BERSERK of wBattleStatus6 (E-0347)
+; BSTAT6_BERSERK of wBattleStatus6; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1, in step 6 of
 ; RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 6); RunBattleCommandEntry_BankA1: the same
 ; instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to
@@ -648,7 +649,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3::
     ret
 
 ; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
-; calls NextTableByteSecondStream; calls RandomInRange (E-0347)
+; calls NextTableByteSecondStream; calls RandomInRange; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos,
 ; in step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
@@ -679,7 +681,8 @@ RunBattleCommandEntry_BankA1_RandomInRange::
 ; branches on the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to
 ; wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to
 ; wBattleArg3; calls LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L
-; to wBattleArg0; copies H to wBattleArg1; calls NextTableByteSecondStream (E-0347)
+; to wBattleArg0; copies H to wBattleArg1; calls NextTableByteSecondStream; then 1 more step (see
+; the code) (E-0347)
 ; why: a helper of RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos,
 ; in step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
@@ -819,8 +822,9 @@ MarkVisitedMapScreenInVisitedScreens::
 ; called from RunMenuStateMenuState_InitSoundHardware: changes HL, BC and A; branches on
 ; wKeyWorldFloor (E-0347)
 ; why: a helper of RunMenuStateMenuState_InitSoundHardware, in step 5 of RunMenuStateMenuState (when
-; wMenuState = 5); RunMenuStateMenuState: runs the routine for wMenuState & $0F (jump table)
-; (E-0352, E-0122)
+; wMenuState & $0F = 5); RunMenuStateMenuState: the field menu (field state 6): by wMenuState & $0F
+; it plays the menu's music and sounds, sets the cursor and sub-state of the open menu, ... (E-0352,
+; E-0354, E-0122)
 RunMenuStateMenuState_ReadKeyWorldFloor::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
@@ -935,8 +939,10 @@ MarkVisitedScreens5x5AroundPlayer::
     ldh [hMapScreenY], a
     ret
 
-; runs the routine for wWorldMapState & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122) (the
-; world map, C2 from E-0339; was RunWorldMapState)
+; the world map screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map
+; graphics and tiles, shows the region, and returns to the field (EnterGameMode1WithDefaultPalettes)
+; (E-0354; was: runs the routine for wWorldMapState & 7 (field mode state 8; jump table, 3 reuses 0)
+; (E-0122) (the world map, C2 from E-0339; was RunWorldMapState))
 RunWorldMapState::
     ld a, [wWorldMapState]
     and $07
@@ -953,9 +959,10 @@ RunWorldMapState::
 ; calls DecompressToVRAM; calls FillBGMap0With57; calls RunWorldMapState_WriteVRAMByteInc; branches
 ; on wMapType; calls RunWorldMapState_StoreTemp5ValuesToCursorCellX_2; calls
 ; RunWorldMapState_StoreTemp5ValuesToCursorCellX; branches on wIsCGB; calls CopyFromBank; sets
-; wOBJPaletteUploadRequest to $7f; then 3 more steps (see the code) (E-0347)
-; why: step 4 of RunWorldMapState (when wWorldMapState = 4); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; wOBJPaletteUploadRequest to $7f; then 4 more steps (see the code) (E-0347)
+; why: step 4 of RunWorldMapState (when wWorldMapState & $07 = 4); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     xor a
     ldh [hScrollX], a
@@ -1035,10 +1042,11 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
 ; RunWorldMapState_RunGameMode2MapTypeState; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
 ; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8;
 ; branches on hTemp4; calls IsMapScreenAVisited; calls RunWorldMapState_WriteTemp0AndTemp1; branches
-; on hTemp9; increments hTempA; then 6 more steps (see the code) (E-0347)
+; on hTemp9; increments hTempA; then 7 more steps (see the code) (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware_DecompressToVRAM, in step 4 of
-; RunWorldMapState (when wWorldMapState = 4); RunWorldMapState: runs the routine for wWorldMapState
-; & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; RunWorldMapState (when wWorldMapState & $07 = 4); RunWorldMapState: the world map screen (field
+; state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows
+; the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     call RunWorldMapState_RunGameMode2MapTypeState
     call StoreTemp5ValuesToCursorCellX
@@ -1124,9 +1132,10 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     ret
 
 ; Calls ReadByteInBank; copies L to hTemp0; copies H to hTemp1; calls ReadByteInBank; calls
-; WriteVRAMByte (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; WriteVRAMByte; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteTemp0AndTemp1::
     push hl
     ldh a, [hTemp8]
@@ -1227,9 +1236,10 @@ RunWorldMapState_WriteTemp0AndTemp1::
 ; Calls RunGameMode2MapTypeState; copies wKeyWorldWidth to hTemp3; copies wKeyWorldHeight to hTemp4;
 ; copies hMapScreenX-1 to hTemp7; copies hMapScreenY-1 to hTemp8; branches on hPlayerX & $0f;
 ; increments hTemp7; sets hTemp5; branches on hPlayerY & $0f; increments hTemp8; sets hTemp6; copies
-; L to hPlayerY; then 3 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; L to hPlayerY; then 4 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_RunGameMode2MapTypeState::
     ldh a, [hPlayerX]
     ld l, a
@@ -1312,15 +1322,15 @@ RunGameMode2MapTypeState::
     dw RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer
 
 ; step 0 of RunGameMode2MapTypeState: returns at once (E-0347)
-; why: step 0 of RunGameMode2MapTypeState (when wMapType = 0); RunGameMode2MapTypeState: runs the
-; routine for wMapType & 7 (jump table) (E-0352, E-0122)
+; why: step 0 of RunGameMode2MapTypeState (when wMapType & $07 = 0); RunGameMode2MapTypeState: runs
+; the routine for wMapType & 7 (jump table) (E-0352, E-0122)
 RunGameMode2MapTypeState_Return::
     ret
 
 ; step 1 of RunGameMode2MapTypeState: changes HL and A; branches on wKeyWorldFloor; continues in
 ; SetMapScreenFromAAndCenterPlayer (E-0347)
-; why: step 1 of RunGameMode2MapTypeState (when wMapType = 1); RunGameMode2MapTypeState: runs the
-; routine for wMapType & 7 (jump table) (E-0352, E-0122)
+; why: step 1 of RunGameMode2MapTypeState (when wMapType & $07 = 1); RunGameMode2MapTypeState: runs
+; the routine for wMapType & 7 (jump table) (E-0352, E-0122)
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
     ld a, [wKeyWorldFloor]
     and $07
@@ -1339,8 +1349,8 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
 
 ; step 3 of RunGameMode2MapTypeState: changes HL and A; continues in
 ; SetMapScreenFromAAndCenterPlayer (E-0347)
-; why: step 3 of RunGameMode2MapTypeState (when wMapType = 3); RunGameMode2MapTypeState: runs the
-; routine for wMapType & 7 (jump table) (E-0352, E-0122)
+; why: step 3 of RunGameMode2MapTypeState (when wMapType & $07 = 3); RunGameMode2MapTypeState: runs
+; the routine for wMapType & 7 (jump table) (E-0352, E-0122)
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
     ld a, [wKeyWorldFloor]
     and $07
@@ -1354,9 +1364,10 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
 ; step 7 of RunGameMode2MapTypeState: branches on wKeyWorldActive; branches on wKeyWorldKey;
 ; branches on wKeyWorldSlot; calls SetMapScreenFromAAndCenterPlayer; copies wKeyWorldGoal & $f0 to
 ; hPlayerX; copies wKeyWorldGoal & $0f to hPlayerY; calls SetMapScreenFromAAndCenterPlayer; copies
-; wKeyWorldGoalPos to hPlayerX; copies wKeyWorldGoalPos2 to hPlayerY (E-0347)
-; why: step 7 of RunGameMode2MapTypeState (when wMapType = 7); RunGameMode2MapTypeState: runs the
-; routine for wMapType & 7 (jump table) (E-0352, E-0122)
+; wKeyWorldGoalPos to hPlayerX; copies wKeyWorldGoalPos2 to hPlayerY; also changes A and C by
+; register arithmetic (E-0347)
+; why: step 7 of RunGameMode2MapTypeState (when wMapType & $07 = 7); RunGameMode2MapTypeState: runs
+; the routine for wMapType & 7 (jump table) (E-0352, E-0122)
 RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer::
     ld a, [wKeyWorldActive]
     or a
@@ -1407,10 +1418,11 @@ SetMapScreenFromAAndCenterPlayer::
 ; RunWorldMapState_WriteTemp3AndTemp4Etc; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
 ; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8;
 ; branches on hTemp4; calls ReadByteInBank; calls WriteVRAMByte; branches on hTemp9; increments
-; hTempA; then 5 more steps (see the code) (E-0347)
+; hTempA; then 6 more steps (see the code) (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware_DecompressToVRAM, in step 4 of
-; RunWorldMapState (when wWorldMapState = 4); RunWorldMapState: runs the routine for wWorldMapState
-; & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; RunWorldMapState (when wWorldMapState & $07 = 4); RunWorldMapState: the world map screen (field
+; state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows
+; the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
     call RunWorldMapState_WriteTemp3AndTemp4Etc
     call StoreTemp5ValuesToCursorCellX
@@ -1526,10 +1538,11 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
 ; & $0f to hTemp3; copies the byte at WorldMapScreenCellTable & $0f to hTemp4; copies the byte at
 ; WorldMapScreenCellTable to hTemp0; copies the byte at WorldMapScreenCellTable to hTemp1; copies
 ; the byte at WorldMapScreenCellTable to hTemp2; copies C to hTemp7; copies L to hTemp0; copies H to
-; hTemp1; copies C to hTemp8; copies L to hTemp0; copies H to hTemp1; then 18 more steps (see the
+; hTemp1; copies C to hTemp8; copies L to hTemp0; copies H to hTemp1; then 19 more steps (see the
 ; code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteTemp3AndTemp4Etc::
     ldh a, [hPlayerX]
     ld l, a
@@ -1732,9 +1745,10 @@ WorldMapScreenCellTable::
 ; Branches on hMapId; returns if hMapId is $20; returns if hMapId is $30; returns if hMapId is $48;
 ; returns if hMapId is $70; returns if hMapId is $a0; returns if hMapId is $a8; returns if hMapId is
 ; $b0; returns if hMapId is $b8; returns if hMapId is $c8; returns if hMapId is $d1; returns if
-; hMapId is $da; then 9 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; hMapId is $da; then 10 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteMapScreenXAndMapScreenYEtc::
     ldh a, [hMapId]
     ld c, $01
@@ -1892,8 +1906,9 @@ StoreTemp5ValuesToCursorCellX::
 
 ; step 5 of RunWorldMapState: changes A; may continue in RunWorldMapState_UploadBGPalettes_2; may
 ; continue in RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8 (E-0347)
-; why: step 5 of RunWorldMapState (when wWorldMapState = 5); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; why: step 5 of RunWorldMapState (when wWorldMapState & $07 = 5); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1905,8 +1920,9 @@ RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
 ; wBGPaletteUploadRequest to $7f; sets wOBJPaletteUploadRequest to $7f; calls UploadBGPalettes;
 ; advances wWorldMapState (E-0347)
 ; why: a helper of RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when
-; wWorldMapState = 2); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 2); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_UploadBGPalettes_2::
     ld hl, wDMGPaletteBGP
     ld a, $00
@@ -1935,9 +1951,9 @@ RunWorldMapState_UploadBGPalettes_2::
 ; RunWorldMapState_WaitMapType; calls RunWorldMapState_WaitWorldMapByFieldSkill; calls
 ; RunWorldMapState_WriteTemp1AndTemp2 (E-0347)
 ; why: part of RunWorldMapState_UploadBGPalettes_2, in a helper of
-; RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when wWorldMapState = 2);
-; RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8 (E-0352, E-0122,
-; E-0339)
+; RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when wWorldMapState & $07 =
+; 2); RunWorldMapState: the world map screen (field state 8): by wWorldMapState & 7 it uploads the
+; palettes, loads the map graphics and tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
     call DrawBlinkingMetaSprite8
     call RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc
@@ -1950,9 +1966,10 @@ RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
 ; copies wKeyWorldGoalCell to hTemp1; copies wKeyWorldGoal to hTemp2; calls
 ; RunWorldMapState_Multiply8; copies the byte at WorldMapStartPositions to hTemp1; copies the byte
 ; at WorldMapStartPositions to hTemp2; calls RunWorldMapState_Multiply8; branches on
-; wKeyWorldActive; branches on wKeyWorldKey; then 7 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; wKeyWorldActive; branches on wKeyWorldKey; then 8 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteTemp1AndTemp2::
     ld a, [wMapType]
     bit 7, a
@@ -2053,10 +2070,11 @@ RunWorldMapState_WriteTemp1AndTemp2::
 
 ; Copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
 ; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets hSpriteSetIndex to $28; sets
-; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets hSpriteOriginYHi to 0; calls DrawMetaSprite
-; (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets hSpriteOriginYHi to 0; calls
+; DrawMetaSprite; also changes A and C by register arithmetic (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_Multiply8::
     ld a, [wCursorCellY]
     ld c, a
@@ -2137,9 +2155,10 @@ RunWorldMapState_Multiply8::
 ; Returns if wWorldMapByFieldSkill is 0; branches on wMapType; branches on the byte at wMapObjects;
 ; copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
 ; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 2; sets hSpriteSetIndex to $27; sets
-; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; then 14 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; then 15 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WaitWorldMapByFieldSkill::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -2370,9 +2389,10 @@ RunWorldMapState_WaitWorldMapByFieldSkill_Data::
 ; Branches on wMapType; may return early; copies L to hSpriteOriginX; copies L to hSpriteOriginY;
 ; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1;
 ; sets hSpriteSetIndex to $28; sets hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets
-; hSpriteOriginYHi to 0; then 15 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; hSpriteOriginYHi to 0; then 16 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     ld a, [wMapType]
     bit 7, a
@@ -2586,9 +2606,10 @@ RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     jp .skip2
 
 ; Returns unless bit 7 of wMapType is set; branches on the byte at wKeyWorldObjects; calls
-; RunWorldMapState_Multiply8_2 (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; RunWorldMapState_Multiply8_2; also changes DE and A by register arithmetic (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WaitMapType::
     ld a, [wMapType]
     bit 7, a
@@ -2620,9 +2641,10 @@ RunWorldMapState_WaitMapType::
 ; May return early; copies L to hSpriteOriginX; may return early; copies L to hSpriteOriginY;
 ; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; sets
 ; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets
-; hSpriteSetIndex to $28; then 4 more steps (see the code) (E-0347)
-; why: part of RunWorldMapState_Multiply8, in part of RunWorldMapState; RunWorldMapState: runs the
-; routine for wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; hSpriteSetIndex to $28; then 5 more steps (see the code) (E-0347)
+; why: part of RunWorldMapState_Multiply8, in part of RunWorldMapState; RunWorldMapState: the world
+; map screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics
+; and tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_Multiply8_2::
     ld a, [wCursorCellY]
     ld c, a
@@ -2737,8 +2759,9 @@ DrawBlinkingMetaSprite8::
 
 ; step 0 of RunWorldMapState: sets wSpriteSlotCount to 0; branches on wIsCGB; calls FillBytes; sets
 ; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; advances wWorldMapState (E-0347)
-; why: step 0 of RunWorldMapState (when wWorldMapState = 0); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; why: step 0 of RunWorldMapState (when wWorldMapState & $07 = 0); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_UploadBGPalettes::
     xor a
     ld [wSpriteSlotCount], a
@@ -2767,9 +2790,10 @@ RunWorldMapState_UploadBGPalettes::
 ; calls DecompressToVRAM; calls CopyRectFromBankToVRAM; calls DrawRect12x12FromBankA1; calls
 ; RunWorldMapState_WriteVRAMByteInc_2; branches on wMapType; calls
 ; RunWorldMapState_CenteredBGMapOriginForSizeBC; calls RunWorldMapState_SetTemp0; branches on
-; wIsCGB; calls CopyFromBank; then 4 more steps (see the code) (E-0347)
-; why: step 1 of RunWorldMapState (when wWorldMapState = 1); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; wIsCGB; calls CopyFromBank; then 5 more steps (see the code) (E-0347)
+; why: step 1 of RunWorldMapState (when wWorldMapState & $07 = 1); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_CopyScrollToHardware::
     xor a
     ldh [hScrollX], a
@@ -2859,8 +2883,9 @@ RunWorldMapState_CopyScrollToHardware::
 ; sets wWorldMapState to 6; branches on $06; advances wWorldMapState; calls
 ; RunWorldMapState_WaitFrameCounterLo; calls RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY;
 ; calls RunWorldMapState_WaitMapType_2; calls RunWorldMapState_WriteTemp1 (E-0347)
-; why: step 2 of RunWorldMapState (when wWorldMapState = 2); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; why: step 2 of RunWorldMapState (when wWorldMapState & $07 = 2); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteWorldMapState::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -2885,8 +2910,9 @@ RunWorldMapState_WriteWorldMapState::
     ret
 
 ; step 6 of RunWorldMapState: calls EnterGameMode1WithDefaultPalettes (E-0347)
-; why: step 6 of RunWorldMapState (when wWorldMapState = 6); RunWorldMapState: runs the routine for
-; wWorldMapState & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; why: step 6 of RunWorldMapState (when wWorldMapState & $07 = 6); RunWorldMapState: the world map
+; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
+; tiles, shows the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
     call EnterGameMode1WithDefaultPalettes
     ret
@@ -2894,10 +2920,11 @@ RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
 ; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; copies L to
 ; hTemp0; copies H to hTemp1; copies L to hTemp2; copies H to hTemp3; copies L to hTemp4; copies H
 ; to hTemp5; copies L to hTemp6; copies H to hTemp7; calls RunWorldMapState_WriteTemp0; copies E to
-; hTemp0; copies D to hTemp1; then 28 more steps (see the code) (E-0347)
+; hTemp0; copies D to hTemp1; then 29 more steps (see the code) (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware, in step 1 of RunWorldMapState (when
-; wWorldMapState = 1); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 1); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_SetTemp0::
     ld a, [wKeyWorldHeight]
     ld c, a
@@ -3146,9 +3173,11 @@ RunWorldMapState_SetTemp0::
     jr nz, .loop4
     ret
 
-; Increments hTemp0; calls ReadByteInBank; calls WriteVRAMByte; increments hTemp0 (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; Increments hTemp0; calls ReadByteInBank; calls WriteVRAMByte; increments hTemp0; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteTemp0::
     sra a
     push af
@@ -3262,10 +3291,12 @@ RunGameMode2State_CenterName::
 ; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; calls
 ; CopyRectFromBankToVRAM; calls WriteVRAMByteInc; sets wStringIndex; sets wStringCategory to 0;
 ; copies E to wStringDestLo; copies D to wStringDestHi; calls CopyStringToBuffer_Bank08; calls
-; RunGameMode2State_CenterName; calls CopyGlyphTilesToVRAM; calls WriteVRAMByteInc (E-0347)
+; RunGameMode2State_CenterName; calls CopyGlyphTilesToVRAM; calls WriteVRAMByteInc; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware, in step 1 of RunWorldMapState (when
-; wWorldMapState = 1); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 1); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_CenteredBGMapOriginForSizeBC::
     ld a, [wWorldMapRegion]
     add a
@@ -3369,10 +3400,11 @@ WorldMapViewTable::
 ; branches on wKeyWorldActive; branches on wKeyWorldKey; copies wKeyWorldGoalCell to hTemp1; calls
 ; DrawCursorSpriteAtTemp1Cell; copies the byte at WorldMapStartPositions to hTemp1; calls
 ; DrawCursorSpriteAtTemp1Cell; branches on wKeyWorldActive; branches on wKeyWorldKey; branches on
-; wKeyWorldSlot; copies wKeyWorldGoalCell to hTemp1; then 3 more steps (see the code) (E-0347)
+; wKeyWorldSlot; copies wKeyWorldGoalCell to hTemp1; then 4 more steps (see the code) (E-0347)
 ; why: a helper of RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when
-; wWorldMapState = 2); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 2); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteTemp1::
     ld a, [wMapType]
     bit 7, a
@@ -3504,10 +3536,11 @@ DrawCursorSpriteAtTemp1Cell::
 ; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive; may continue in
 ; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX; branches on the byte at
 ; WorldMapCursorCellTable; calls SetSpriteXFromCursorCellX; calls SetSpriteYFromCursorCellY; calls
-; DrawMetaSpriteSet08 (E-0347)
+; DrawMetaSpriteSet08; also changes HL, A and C by register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when
-; wWorldMapState = 2); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 2); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3622,7 +3655,8 @@ SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
 
 ; Branches on wKeyWorldActive; branches on wKeyWorldKey; calls SetSpriteXFromCursorCellX; calls
 ; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08; calls SetSpriteXFromCursorCellX; calls
-; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08 (E-0347)
+; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08; also changes A by register arithmetic
+; (E-0347)
 ; why: part of SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX, in step 0 of
 ; SetSpriteYFromCursorCellY; SetSpriteYFromCursorCellY: hSpriteOriginY = 8 * wCursorCellY + A + 6
 ; (E-0352, E-0124)
@@ -3706,8 +3740,8 @@ SetSpriteYFromCursorCellY_CheckMapType::
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3
 
-; step 1 of SetSpriteYFromCursorCellY: branches on wKeyWorldFloor; calls SetSpriteXYFromCellA
-; (E-0347)
+; step 1 of SetSpriteYFromCursorCellY: branches on wKeyWorldFloor; calls SetSpriteXYFromCellA; also
+; changes HL and A by register arithmetic (E-0347)
 ; why: step 1 of SetSpriteYFromCursorCellY; SetSpriteYFromCursorCellY: hSpriteOriginY = 8 *
 ; wCursorCellY + A + 6 (E-0352, E-0124)
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
@@ -3742,7 +3776,8 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2::
     ret
 
 ; step 7 of SetSpriteYFromCursorCellY: branches on wKeyWorldActive; branches on wKeyWorldKey;
-; branches on wKeyWorldSlot; calls SetSpriteXYFromCellA (E-0347)
+; branches on wKeyWorldSlot; calls SetSpriteXYFromCellA; also changes A and C by register arithmetic
+; (E-0347)
 ; why: step 7 of SetSpriteYFromCursorCellY; SetSpriteYFromCursorCellY: hSpriteOriginY = 8 *
 ; wCursorCellY + A + 6 (E-0352, E-0124)
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3::
@@ -3814,10 +3849,12 @@ DrawMetaSpriteSet08::
 ; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; may return early; sets
 ; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26; returns if the byte at
 ; wKeyWorldFloorInfo + $3 is $ff; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; sets
-; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26 (E-0347)
+; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26; also changes HL, DE, BC and A by
+; register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when
-; wWorldMapState = 2); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 2); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY::
     ld a, [wMapType]
     bit 7, a
@@ -3942,10 +3979,12 @@ DrawMetaSpriteSet26::
     ret
 
 ; called from RunWorldMapState_WriteWorldMapState: returns unless bit 7 of wMapType is set; returns
-; if the byte at wKeyWorldObjects is $ff; calls RunWorldMapState_IsMapScreenAVisited (E-0347)
+; if the byte at wKeyWorldObjects is $ff; calls RunWorldMapState_IsMapScreenAVisited; also changes
+; DE and A by register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when
-; wWorldMapState = 2); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 2); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WaitMapType_2::
     ld a, [wMapType]
     bit 7, a
@@ -3976,9 +4015,10 @@ RunWorldMapState_WaitMapType_2::
 ; Branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; sets
 ; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; sets
 ; hSpriteSetIndex to $26; sets hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets
-; hSpriteOriginYHi to 0; calls DrawMetaSprite (E-0347)
-; why: part of RunWorldMapState; RunWorldMapState: runs the routine for wWorldMapState & 7 (field
-; mode state 8 (E-0352, E-0122, E-0339)
+; hSpriteOriginYHi to 0; calls DrawMetaSprite; then 1 more step (see the code) (E-0347)
+; why: part of RunWorldMapState; RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_IsMapScreenAVisited::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -4076,10 +4116,11 @@ FillBGMap0With57::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: returns if wIsCGB is 0; calls
-; WriteVRAMByteInc (E-0347)
+; WriteVRAMByteInc; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware_DecompressToVRAM, in step 4 of
-; RunWorldMapState (when wWorldMapState = 4); RunWorldMapState: runs the routine for wWorldMapState
-; & 7 (field mode state 8 (E-0352, E-0122, E-0339)
+; RunWorldMapState (when wWorldMapState & $07 = 4); RunWorldMapState: the world map screen (field
+; state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows
+; the region, ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteVRAMByteInc::
     ld a, [wIsCGB]
     or a
@@ -4103,10 +4144,11 @@ RunWorldMapState_WriteVRAMByteInc::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware: returns if wIsCGB is 0; calls WriteVRAMByteInc;
-; calls WriteVRAMByte (E-0347)
+; calls WriteVRAMByte; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunWorldMapState_CopyScrollToHardware, in step 1 of RunWorldMapState (when
-; wWorldMapState = 1); RunWorldMapState: runs the routine for wWorldMapState & 7 (field mode state 8
-; (E-0352, E-0122, E-0339)
+; wWorldMapState & $07 = 1); RunWorldMapState: the world map screen (field state 8): by
+; wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region,
+; ... (E-0352, E-0354, E-0122)
 RunWorldMapState_WriteVRAMByteInc_2::
     ld a, [wIsCGB]
     or a

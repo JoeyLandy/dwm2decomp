@@ -5,7 +5,7 @@ SECTION "Bank 08", ROMX[$4000], BANK[$08]
     db $08
 
 ; if wStringCategory < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls
-; BeginStringDisplay_Bank08_BeginStringDisplay (E-0351)
+; BeginStringDisplay_Bank08_BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank08::
     ld a, [wStringCategory]
     cp $09
@@ -19,7 +19,7 @@ BeginStringDisplay_Bank08::
     ret
 
 ; if wStringCategory < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls
-; CopyStringToBuffer_Bank08_CopyStringToBuffer (E-0351)
+; CopyStringToBuffer_Bank08_CopyStringToBuffer (E-0353)
 CopyStringToBuffer_Bank08::
     ld a, [wStringCategory]
     cp $09
@@ -33,7 +33,7 @@ CopyStringToBuffer_Bank08::
     ret
 
 ; BeginStringDisplay_Bank08 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_Bank08::
     call BeginStringDisplay_Bank08
     call RunStringDisplayToEnd

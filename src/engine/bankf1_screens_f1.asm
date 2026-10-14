@@ -172,7 +172,8 @@ PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep:
 
 ; step 1 of PauseMenu_State4_GiftMenu_ChooseGift: calls UpdateMenuCursor_BankF1; branches on
 ; wJoypadPressed; branches on wSubMenuCursor & $01; sets wTemp0; sets wTemp1 to 0; returns unless
-; bit 1 of 0 is set; decrements wTemp0; sets wTemp1 to 0 (E-0347)
+; bit 1 of 0 is set; decrements wTemp0; sets wTemp1 to 0; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: step 1 of PauseMenu_State4_GiftMenu_ChooseGift (when wTemp1 = 1);
 ; PauseMenu_State4_GiftMenu_ChooseGift: by its step: screen block $32 with a cursor (E-0352)
 PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1::
@@ -221,7 +222,7 @@ PauseMenu_State4_GiftMenu_GiveGift::
 ; step 0 of PauseMenu_State4_GiftMenu_GiveGift: branches on wItemId; sets wArg1 to $22; calls
 ; RecordGiftAndMaybeApplyPrevious; sets wCounterPtr0Lo to $ff; plays sound $69; sets wInventory to
 ; 0; calls CompactInventory; sets wDataBankSave to $40; calls ExitPauseMenuToField; sets
-; wStringIndex; increments wTemp1; plays sound $69 (E-0347)
+; wStringIndex; increments wTemp1; plays sound $69; then 1 more step (see the code) (E-0347)
 ; why: step 0 of PauseMenu_State4_GiftMenu_GiveGift (when wTemp1 = 0);
 ; PauseMenu_State4_GiftMenu_GiveGift: by its step: sets the amount and counter pointer, rebuilds
 ; block $32 and shows the result string (E-0352)
@@ -674,7 +675,7 @@ SetupInventoryMenuPages_BankF1::
 ; SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
 ; SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
 ; MapIndexViaPartyList; calls PersonalityIndexOfRecord; sets wStringIndex; sets wStringCategory to
-; 7; then 19 more steps (see the code) (E-0347)
+; 7; then 20 more steps (see the code) (E-0347)
 ; why: a helper of BuildItemScreenForWItemId_BankF1; BuildItemScreenForWItemId_BankF1: builds block
 ; $32 with the cursor, blocks $11 and $1B and the rectangle chosen by wItemId, then runs ...
 ; (E-0352, E-0122)
@@ -1060,7 +1061,7 @@ BuildItemScreenForWItemId_BankF1_Data2_Entry08::
     db $38, $04, $2b, $35, $18, $f8, $cd, $07, $43, $af, $ea, $a0, $c0, $ea, $a1, $c0
     db $c9
 
-; the same 57 bytes as CopyTileBufferToBGMap (CopyTileBufferToBGMap) (E-0105)
+; the same 57 bytes as CopyTileBufferToBGMap (CopyTileBufferToBGMap) (E-0353)
 CopyTileBufferToBGMap_BankF1::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -1393,7 +1394,7 @@ ShowStringBank08AtTilesHL_BankF1_2::
     ld [wTextWindowTileHi], a
     ret
 
-; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0351)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0353)
 ClearScreenTileBuffer_BankF1::
     ld hl, wScreenTileBuffer
     ld bc, $0240
@@ -1527,7 +1528,10 @@ ClearScreenBufferAndAttributes_BankF1::
     ldh [rSVBK], a
     ret
 
-; unless a fade is running, runs the routine for wScreenState (jump table of eighteen) (E-0124)
+; the link breeding and record screens (link sessions 2 and 6, the egg service menu): while no fade
+; runs, by wScreenState: the swap menu, 'Ready to start breeding?', choosing the breeding monster,
+; link breeding, record stats and the chosen record (E-0354; was: unless a fade is running, runs the
+; routine for wScreenState (jump table of eighteen) (E-0124))
 RunScreenStateWhenNotFading_F1::
     ld a, [wFadeState]
     and a
@@ -1555,8 +1559,9 @@ RunScreenStateWhenNotFading_F1::
 
 ; step 0 of RunScreenStateWhenNotFading_F1: calls SwapMonstersMenu; increments wScreenState (E-0347)
 ; why: step 0 of RunScreenStateWhenNotFading_F1 (when wScreenState = 0);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -1565,10 +1570,12 @@ RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
     ret
 
 ; step 1 of RunScreenStateWhenNotFading_F1: returns if bit 0 of wTextFlags is set; branches on
-; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
+; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1; also changes
+; HL, BC and A by register arithmetic (E-0347)
 ; why: step 1 of RunScreenStateWhenNotFading_F1 (when wScreenState = 1);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -1594,8 +1601,9 @@ RunScreenStateWhenNotFading_F1_WaitTextFlags::
 ; step 2 of RunScreenStateWhenNotFading_F1: increments wScreenState; sets wStringCategory to 0;
 ; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to 0; advances wTitleScreenState (E-0347)
 ; why: step 2 of RunScreenStateWhenNotFading_F1 (when wScreenState = 2);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding::
     ld a, [wScreenState]
     inc a
@@ -1797,8 +1805,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu::
     ret
 
 ; step 16 of RunScreenStateWhenNotFading_F1_LinkBreed: branches on wSelectedRecord; returns unless
-; wTextFlags is 0; calls BreedMenu; calls BeginString_Bank0E_Cat0; dispatches on wScreenSubStep
-; (E-0347)
+; wTextFlags is 0; calls BreedMenu; calls BeginString_Bank0E_Cat0; dispatches on wScreenSubStep;
+; also changes A by register arithmetic (E-0347)
 ; why: step 16 of RunScreenStateWhenNotFading_F1_LinkBreed (when wScreenStep = 16);
 ; RunScreenStateWhenNotFading_F1_LinkBreed: by wScreenStep: BreedMenu list steps, link messages, a
 ; two-choice confirmation and ComputeBreedingChild (E-0352)
@@ -1829,8 +1837,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor::
 ; step 0 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; sets wLinkSendByte to 0;
 ; increments wScreenSubStep; calls BeginString_Bank0E_Cat0 (E-0347)
 ; why: step 0 of RunScreenStateWhenNotFading_F1 (when wScreenState = 0);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1847,8 +1856,9 @@ RunScreenStateWhenNotFading_F1_ShowPleaseWait::
 ; step 1 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; increments
 ; wScreenSubStep; sets wLinkSendByte to 1 (E-0347)
 ; why: step 1 of RunScreenStateWhenNotFading_F1 (when wScreenState = 1);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
@@ -1863,8 +1873,9 @@ RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
 ; step 2 of RunScreenStateWhenNotFading_F1: returns unless wLinkMessage is $01; sets wLinkSendByte
 ; to 0; calls BeginString_Bank0E_Cat0; increments wScreenSubStep (E-0347)
 ; why: step 2 of RunScreenStateWhenNotFading_F1 (when wScreenState = 2);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor::
     ld a, [wLinkMessage]
     cp $01
@@ -1881,8 +1892,9 @@ RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor::
 ; step 3 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; calls BreedMenu; sets
 ; wSelectedRecord to 0; sets wScreenSubStep to 0 (E-0347)
 ; why: step 3 of RunScreenStateWhenNotFading_F1 (when wScreenState = 3);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1895,7 +1907,8 @@ RunScreenStateWhenNotFading_F1_BreedMenu::
 
 ; step 12 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
 ; wScreenSubStep; calls BeginString_Bank0E_Cat0; increments wScreenSubStep; calls BreedMenu; calls
-; CopyFromBankWaitVRAM; sets wScreenSubStep to 0 (E-0347)
+; CopyFromBankWaitVRAM; sets wScreenSubStep to 0; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 12 of RunScreenStateWhenNotFading_F1_LinkBreed (when wScreenStep = 12);
 ; RunScreenStateWhenNotFading_F1_LinkBreed: by wScreenStep: BreedMenu list steps, link messages, a
 ; two-choice confirmation and ComputeBreedingChild (E-0352)
@@ -2201,7 +2214,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady::
 ; wRecordBufB + MON_SEX & $01; calls BeginString_Bank0E_Cat0; sets wScreenStep to $10; sets
 ; wScreenSubStep to 0; sets wSelectedRecord to $ff; calls PersonalityPairValueToArg5; branches on
 ; wArg5; calls BeginString_Bank0E_Cat0; sets wScreenStep to $10; sets wScreenSubStep to 0; sets
-; wSelectedRecord to $ff; then 13 more steps (see the code) (E-0347)
+; wSelectedRecord to $ff; then 14 more steps (see the code) (E-0347)
 ; why: step 22 of RunScreenStateWhenNotFading_F1_LinkBreed (when wScreenStep = 22);
 ; RunScreenStateWhenNotFading_F1_LinkBreed: by wScreenStep: BreedMenu list steps, link messages, a
 ; two-choice confirmation and ComputeBreedingChild (E-0352)
@@ -2433,7 +2446,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefus
 ; wScreenSubStep; calls PrepareCounterPtr0LoCountersAndRequestScript; branches on wTwoChoiceCursor;
 ; calls BeginString_Bank0E_Cat0; increments wScreenSubStep; sets wScreenSubStep to 0; calls
 ; CopyFromBankWaitVRAM; sets wTwoChoiceCursor to 0; calls CopyRectTo20ByteRows_BankF1; calls
-; BGMapAddressAtScroll_BankF1; calls DrawScreenBufferRect_BankF1; then 1 more step (see the code)
+; BGMapAddressAtScroll_BankF1; calls DrawScreenBufferRect_BankF1; then 2 more steps (see the code)
 ; (E-0347)
 ; why: step 25 of RunScreenStateWhenNotFading_F1_LinkBreed (when wScreenStep = 25);
 ; RunScreenStateWhenNotFading_F1_LinkBreed: by wScreenStep: BreedMenu list steps, link messages, a
@@ -2741,7 +2754,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
 
 ; step 32 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; returns
 ; unless wLinkMessage is $01; sets wLinkSendByte to 0; branches on wLinkMessage; sets wLinkScene to
-; 1 (E-0347)
+; 1; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 32 of RunScreenStateWhenNotFading_F1_LinkBreed (when wScreenStep = 32);
 ; RunScreenStateWhenNotFading_F1_LinkBreed: by wScreenStep: BreedMenu list steps, link messages, a
 ; two-choice confirmation and ComputeBreedingChild (E-0352)
@@ -2771,8 +2784,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte::
 ; step 12 of RunScreenStateWhenNotFading_F1: calls SwapMonstersMenu; returns unless wScreenStep is
 ; $0a; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
 ; why: step 12 of RunScreenStateWhenNotFading_F1 (when wScreenState = 12);
-; RunScreenStateWhenNotFading_F1: unless a fade is running, runs the routine for wScreenState (jump
-; table of eighteen) (E-0352, E-0124)
+; RunScreenStateWhenNotFading_F1: the link breeding and record screens (link sessions 2 and 6, the
+; egg service menu): while no fade runs, by wScreenState: the swap menu, ... (E-0352, E-0354,
+; E-0124)
 RunScreenStateWhenNotFading_F1_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2828,7 +2842,8 @@ ShowString0EAndStep_BankF1::
     ret
 
 ; step 6 of RunScreenStateWhenNotFading_F1_ShowChosenRecord: calls FillTilesBxC; sets
-; wTextWindowTileLo to $12; advances wScreenStep (E-0347)
+; wTextWindowTileLo to $12; advances wScreenStep; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: step 6 of RunScreenStateWhenNotFading_F1_ShowChosenRecord (when wScreenStep = 6);
 ; RunScreenStateWhenNotFading_F1_ShowChosenRecord: by wScreenStep: a string, BreedMenu list steps
 ; and the chosen record's name and species (E-0352)
@@ -3596,7 +3611,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
 ; step 8 of RunScreenStateWhenNotFading_F1_ResetListAndShowString: calls
 ; CopyRectTo20ByteRows_BankF1; sets wStringIndex to $0f; sets wStringCategory to 0; sets
 ; wTextWindowTileLo to $0d; calls ShowString_Bank0E; sets wTextWindowTileLo to $12; increments
-; wScreenStep (E-0347)
+; wScreenStep; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 8 of RunScreenStateWhenNotFading_F1_ResetListAndShowString (when wScreenStep = 8);
 ; RunScreenStateWhenNotFading_F1_ResetListAndShowString: by wScreenStep: resets the list and grid
 ; cursors, shows a string (ShowString_Bank0E) and runs BreedMenu steps (E-0352)
@@ -3696,7 +3711,7 @@ CopyTileBytesToVRAM_BankF1::
     ret
 
 ; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0
-; terminator (the same 19 bytes appear in 2 banks) (E-0351)
+; terminator (the same 19 bytes appear in 2 banks) (E-0353)
 CopyShortStringToNameGlyphBuf_BankF1::
     ld de, wNameGlyphBuf
     ld c, $0a
@@ -3774,7 +3789,7 @@ CopyScreenBufferRectAt024FAndDrawBox_BankF1::
     call DrawScreenBufferRect_BankF1
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E (E-0351)
+; A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E (E-0353)
 BeginString_Bank0E_Cat0::
     ld [wStringIndex], a
     xor a
@@ -3881,7 +3896,8 @@ DrawBlankTileC3_BankF1::
 DrawArrowTileBCAtTwoChoiceEntry_BankF1::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_BankF1; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_BankF1; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE and
+; A by register arithmetic (E-0347)
 ; why: part of DrawArrowTileBCAtTwoChoiceEntry_BankF1; DrawArrowTileBCAtTwoChoiceEntry_BankF1: B =
 ; $BC, then writes B at the scroll position +
 ; DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data[wTwoChoiceCursor] (E-0352, E-0124)
@@ -3983,7 +3999,7 @@ CopyBytesDEToHL_BankF1::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0351)
+; 18 bytes appear in 7 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_BankF1::
     ld a, $02
     ldh [rSVBK], a
@@ -4023,7 +4039,7 @@ LoadFamilyIconTileForRecordB_BankF1::
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0351)
+; same 58 bytes appear in 8 banks) (E-0353)
 CopyRectTo20ByteRows_BankF1::
     push hl
     push bc
@@ -4123,7 +4139,7 @@ DrawScreenBufferRect_BankF1::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_BankF1::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -4143,7 +4159,7 @@ BGMapAddressAtScroll_BankF1::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0351)
+; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
 StoreBAtWordTableEntry_BankF1::
     push bc
     add a
@@ -4194,8 +4210,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Data::
 ; GameMode5_Update_UpdateAndDrawSpriteSlots; calls GameMode5_Update_WriteArg1AndArg2Etc; returns if
 ; wMenuCounter is 0; calls GameMode5_Update_RunNameEntryStateWhenNotFading (E-0347)
 ; why: a helper of GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame_2, in step 7 of
-; GameMode5_Update (when wModeState = 7); GameMode5_Update: per-frame routine for wGameMode = 5
-; (E-0352)
+; GameMode5_Update (when wModeState = 7); GameMode5_Update: game mode 5 (the title screen,
+; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
+; exchanges ... (E-0352, E-0354)
 GameMode5_Update_LinkExchangeJoypadPerFrame_5::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -4229,7 +4246,9 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_5::
 
 ; Returns if wPickCount is 0; sets rRAMG2 to $0a; sets rRAMB to 1; branches on the byte at
 ; sSavedPlayerName; sets rRAMB to 0; sets rRAMG2 to 0; calls DrawSpritePart9000At88_28 (E-0347)
-; why: part of GameMode5_Update; GameMode5_Update: per-frame routine for wGameMode = 5 (E-0352)
+; why: part of GameMode5_Update; GameMode5_Update: game mode 5 (the title screen, new-player set-up
+; and link set-up): by wModeState it loads the screens, waits for the fade, then exchanges ...
+; (E-0352, E-0354)
 GameMode5_Update_WaitPickCount::
     ld a, [wPickCount]
     and a
@@ -4258,7 +4277,9 @@ GameMode5_Update_WaitPickCount::
 ; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; returns unless wLinkSceneFamily is 0;
 ; returns unless wLinkSceneSpeciesHi is $07; calls GetListEntriesCell4Address; copies L to wArg1;
 ; copies H to wArg2; sets hSpriteWindowClipMode to 1; then 1 more step (see the code) (E-0347)
-; why: part of GameMode5_Update; GameMode5_Update: per-frame routine for wGameMode = 5 (E-0352)
+; why: part of GameMode5_Update; GameMode5_Update: game mode 5 (the title screen, new-player set-up
+; and link set-up): by wModeState it loads the screens, waits for the fade, then exchanges ...
+; (E-0352, E-0354)
 GameMode5_Update_WriteArg1AndArg2Etc::
     ld a, [wLinkSceneSpeciesLo]
     cp $0c
@@ -4308,7 +4329,9 @@ GameMode5_Update_WriteArg1AndArg2Etc::
 
 ; Returns if wSpriteSlotCount is 0; calls UpdateAndDrawSpriteSlots; returns if wArg1 is 0; calls
 ; DrawFieldSprites (E-0347)
-; why: part of GameMode5_Update; GameMode5_Update: per-frame routine for wGameMode = 5 (E-0352)
+; why: part of GameMode5_Update; GameMode5_Update: game mode 5 (the title screen, new-player set-up
+; and link set-up): by wModeState it loads the screens, waits for the fade, then exchanges ...
+; (E-0352, E-0354)
 GameMode5_Update_UpdateAndDrawSpriteSlots::
     ld a, [wSpriteSlotCount]
     and a
@@ -4323,8 +4346,10 @@ GameMode5_Update_UpdateAndDrawSpriteSlots::
 ; Sets wArg1 to 1; copies wGiftRecord + MON_SEX to wArg2; copies wGiftRecord + MON_FAMILY to wArg3;
 ; copies wGiftRecord + MON_SPECIES to wArg4; sets wArg5; calls RunNameEntryStateWhenNotFading;
 ; returns unless wArg5 is $ff; branches on the byte at wNameGlyphBuf; sets wRecordBufB + MON_EGG to
-; 0; sets wMenuCounter to 0 (E-0347)
-; why: part of GameMode5_Update; GameMode5_Update: per-frame routine for wGameMode = 5 (E-0352)
+; 0; sets wMenuCounter to 0; also changes HL, DE, A and B by register arithmetic (E-0347)
+; why: part of GameMode5_Update; GameMode5_Update: game mode 5 (the title screen, new-player set-up
+; and link set-up): by wModeState it loads the screens, waits for the fade, then exchanges ...
+; (E-0352, E-0354)
 GameMode5_Update_RunNameEntryStateWhenNotFading::
     ld a, $01
     ld [wArg1], a

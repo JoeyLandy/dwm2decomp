@@ -127,7 +127,7 @@ RunBankE1Routine_Data::
 ; hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at hMetaSpriteXLo is $80;
 ; branches on the byte at hMetaSpriteXLo; branches on B; increments hOamNextEntry; branches on
 ; hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches on the byte at
-; hMetaSpriteXLo; branches on B; then 18 more steps (see the code) (E-0347)
+; hMetaSpriteXLo; branches on B; then 19 more steps (see the code) (E-0347)
 ; why: a helper of RunBankE1Routine; RunBankE1Routine: runs RunBankE1Routine_WaitOamNextEntry with
 ; DE = RunBankE1Routine_Data (E-0352, E-0122, E-0344)
 RunBankE1Routine_WaitOamNextEntry::

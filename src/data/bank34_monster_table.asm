@@ -47,7 +47,7 @@ CopyMonsterTableBytesFromMonsterTable::
     call CopyBytesDEFromHL
     ret
 
-; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE] (E-0351)
+; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE] (E-0353)
 LoadMonsterRecordTo::
     ld a, [wMonsterId + $1]
     cp $02
@@ -75,7 +75,7 @@ LoadMonsterRecordTo::
     pop de
     ld b, $1a
 
-; B bytes from [HL] to [DE]; HL and DE advance (E-0351)
+; B bytes from [HL] to [DE]; HL and DE advance (E-0353)
 CopyBytesDEFromHL::
     ld a, [hli]
     ld [de], a

@@ -4,45 +4,17 @@
     "name": "JumpTable",
     "evidence": "E-0007"
   },
-  "00:000E": {
-    "name": "JumpToHL",
-    "note": "jp hl; the call target used by CallInBank",
-    "evidence": "reading"
-  },
+  "00:000E": {"name": "JumpToHL", "note": "jp hl; the call target used by CallInBank", "evidence": "reading, re-read against the code (E-0353)"},
   "00:0010": {
     "name": "CallInBank",
     "evidence": "E-0007"
   },
-  "00:0080": {
-    "name": "InstallOamDmaRoutine",
-    "note": "copies the 10 bytes at $008E (ld a,$C0 / ldh [rDMA],a / wait / ret) to HRAM at $FF80",
-    "evidence": "reading"
-  },
-  "00:0949": {
-    "name": "FillBytes",
-    "note": "A = value, HL = destination, BC = count; HL ends past the last byte (memset)",
-    "evidence": "reading"
-  },
-  "00:0952": {
-    "name": "CopyBytes",
-    "note": "HL = source, DE = destination, BC = count (memcpy)",
-    "evidence": "reading"
-  },
-  "00:095B": {
-    "name": "NextTableByte",
-    "note": "wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8",
-    "evidence": "reading"
-  },
-  "00:09F3": {
-    "name": "NextRandomSeed",
-    "note": "16-bit seed in wCD03/wCD04 becomes seed * 5 + 11",
-    "evidence": "reading"
-  },
-  "00:05D1": {
-    "name": "SpinDelay",
-    "note": "returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step",
-    "evidence": "reading"
-  },
+  "00:0080": {"name": "InstallOamDmaRoutine", "note": "copies the 10 bytes at $008E (ld a,$C0 / ldh [rDMA],a / wait / ret) to HRAM at $FF80", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0949": {"name": "FillBytes", "note": "A = value, HL = destination, BC = count; HL ends past the last byte (memset)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0952": {"name": "CopyBytes", "note": "HL = source, DE = destination, BC = count (memcpy)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:095B": {"name": "NextTableByte", "note": "wC5E8 = (wC5E8 + 1) & $7F; wC5E7 = the byte at $0973 + wC5E8", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:09F3": {"name": "NextRandomSeed", "note": "16-bit seed in wCD03/wCD04 becomes seed * 5 + 11", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:05D1": {"name": "SpinDelay", "note": "returns at once if wC524 is zero, otherwise counts DE from $1B58 to 0 with three nops per step", "evidence": "reading, re-read against the code (E-0353)"},
   "00:0B18": {
     "name": "CopyFromBank",
     "evidence": "E-0014"
@@ -75,81 +47,25 @@
     "name": "DecompressReadHeader",
     "evidence": "E-0016"
   },
-  "00:120A": {
-    "name": "WaitForVRAMAccess",
-    "note": "loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set",
-    "evidence": "reading"
-  },
-  "00:1211": {
-    "name": "WriteVRAMByte",
-    "note": "A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1",
-    "evidence": "reading"
-  },
-  "00:121F": {
-    "name": "WriteVRAMByteInc",
-    "note": "like WriteVRAMByte but stores at [HL] and increments HL",
-    "evidence": "reading"
-  },
+  "00:120A": {"name": "WaitForVRAMAccess", "note": "loops until STAT bit 1 is clear (modes 0 and 1); returns with Z set", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1211": {"name": "WriteVRAMByte", "note": "A = value, HL = address; disables interrupts, waits until VRAM is accessible, stores A at [HL]; clobbers hFFD1", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:121F": {"name": "WriteVRAMByteInc", "note": "like WriteVRAMByte but stores at [HL] and increments HL", "evidence": "reading, re-read against the code (E-0353)"},
   "00:1278": {
     "name": "QueueSoundEffect",
     "note": "wSoundEffectRequest = A; ProcessSoundQueue starts it on the next frame",
     "evidence": "reading + execution (E-0029)"
   },
-  "00:1682": {
-    "name": "Multiply8",
-    "note": "HL = A * C (8 x 8 bit); clobbers A, B and C",
-    "evidence": "reading"
-  },
-  "00:16D1": {
-    "name": "DivideHLByA",
-    "note": "HL = HL / A (quotient in HL), A = remainder; clobbers D, E",
-    "evidence": "reading"
-  },
-  "00:16F5": {
-    "name": "HLToDecimalDigits",
-    "note": "HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones",
-    "evidence": "reading"
-  },
-  "00:181B": {
-    "name": "TestFlagBit",
-    "note": "DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check",
-    "evidence": "reading"
-  },
-  "00:1845": {
-    "name": "SetFlagBit",
-    "note": "DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300",
-    "evidence": "reading"
-  },
-  "00:1872": {
-    "name": "ReadByteInBank",
-    "note": "B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored",
-    "evidence": "reading"
-  },
-  "00:1F80": {
-    "name": "LoadSRAMRecordByte",
-    "note": "A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved",
-    "evidence": "reading"
-  },
-  "00:1F89": {
-    "name": "LoadSRAMRecordWord",
-    "note": "like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)",
-    "evidence": "reading"
-  },
-  "00:1FD1": {
-    "name": "SRAMRecordAddress",
-    "note": "A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)",
-    "evidence": "reading"
-  },
-  "00:290E": {
-    "name": "FillTilesFromRequest",
-    "note": "fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero",
-    "evidence": "reading"
-  },
-  "00:2E98": {
-    "name": "FillTilesRequest",
-    "note": "HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest",
-    "evidence": "reading"
-  },
+  "00:1682": {"name": "Multiply8", "note": "HL = A * C (8 x 8 bit); clobbers A, B and C", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:16D1": {"name": "DivideHLByA", "note": "HL = HL / A (quotient in HL), A = remainder; clobbers D, E", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:16F5": {"name": "HLToDecimalDigits", "note": "HL (0-999) becomes three digits: wC8C0 = hundreds, wC8C1 = tens, wC8C2 = ones", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:181B": {"name": "TestFlagBit", "note": "DE = bit number; tests that bit of the bit array at wCBD7 (bit 0 of the first byte first); returns carry set when it is 1, A = 0 and carry clear otherwise; no range check", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1845": {"name": "SetFlagBit", "note": "DE = bit number; sets that bit of the bit array at wStoryFlags; when DE >= $0300 (D >= 3) it never returns: the branch target `.skip2` is a `jr` to itself (E-0353: corrected; was: DE = bit number; sets that bit of the bit array at wCBD7; does nothing when DE >= $0300)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1872": {"name": "ReadByteInBank", "note": "B = ROM bank, DE = address; C = the byte at [DE] in that bank; the caller's bank is restored", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1F80": {"name": "LoadSRAMRecordByte", "note": "A = record, C = offset; hFFC6 = the byte at sA000 + A * $A5 + C; HL preserved", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1F89": {"name": "LoadSRAMRecordWord", "note": "like LoadSRAMRecordByte but loads the word into hFFC6 (low) and hFFC7 (high)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1FD1": {"name": "SRAMRecordAddress", "note": "A = record, C = offset; HL = sA000 + A * $A5 + C (records are $A5 bytes)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:290E": {"name": "FillTilesFromRequest", "note": "fills a block of tiles at wC52D/wC52E with the 16-byte pattern at $2940: width wC52F, height wC530 tiles (each byte waits for VRAM access); returns at once if either is zero", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:2E98": {"name": "FillTilesRequest", "note": "HL = tile destination, DE = size: E goes to wTextWindowRows (the tiles FillTilesFromRequest fills in each pass) and D to wTextWindowWidth (the number of passes); then calls FillTilesFromRequest (E-0353: corrected; was: HL = destination, DE = size (E = width, D = height); stores them and calls FillTilesFromRequest)", "evidence": "reading, re-read against the code (E-0353)"},
   "00:3354": {
     "name": "StartSound",
     "evidence": "E-0018"
@@ -162,83 +78,23 @@
     "name": "SoundLabelSlot",
     "evidence": "E-0019"
   },
-  "00:3E7A": {
-    "name": "CompareHLToBC",
-    "note": "Z set when HL == BC; A is clobbered",
-    "evidence": "reading"
-  },
-  "00:3F25": {
-    "name": "AddAx9ToHL",
-    "note": "HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved",
-    "evidence": "reading"
-  },
-  "13:4001": {
-    "name": "StartMessageCommand09HL_B13",
-    "note": "starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)",
-    "evidence": "reading"
-  },
-  "04:55BB": {
-    "name": "StartMessageCommand09HL_B04",
-    "note": "starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)",
-    "evidence": "reading"
-  },
-  "13:4049": {
-    "name": "StartScriptAtHL_B13",
-    "note": "HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)",
-    "evidence": "reading"
-  },
-  "04:5603": {
-    "name": "StartScriptAtHL_B04",
-    "note": "HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)",
-    "evidence": "reading"
-  },
-  "0F:7F68": {
-    "name": "StartMessageHL_B0F",
-    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
-    "evidence": "reading"
-  },
-  "73:4ED8": {
-    "name": "StartMessageHL_B73",
-    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
-    "evidence": "reading"
-  },
-  "85:57C8": {
-    "name": "StartMessageHL_B85",
-    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
-    "evidence": "reading"
-  },
-  "73:7AA5": {
-    "name": "StartMessageHL_B73b",
-    "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0",
-    "evidence": "reading"
-  },
+  "00:3E7A": {"name": "CompareHLToBC", "note": "Z set when HL == BC; A is clobbered", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:3F25": {"name": "AddAx9ToHL", "note": "HL += (A * 9) & $FF (the product is computed in 8 bits and wraps); A is clobbered, other registers preserved", "evidence": "reading, re-read against the code (E-0353)"},
+  "13:4001": {"name": "StartMessageCommand09HL_B13", "note": "starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)", "evidence": "reading, re-read against the code (E-0353)"},
+  "04:55BB": {"name": "StartMessageCommand09HL_B04", "note": "starts a message through script command $09 (message word HL, shown by the same group dispatch as ShowMessageHL when wD7F0 = 0): HL is stored in wScriptParam0 (low) and wScriptParam1 (high); then wC5DC = 1, wC920 = 9, wC91F = 1, wC923 = 0 and wC919 = 0 (an earlier store of $80 to wC919 is overwritten)", "evidence": "reading, re-read against the code (E-0353)"},
+  "13:4049": {"name": "StartScriptAtHL_B13", "note": "HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)", "evidence": "reading, re-read against the code (E-0353)"},
+  "04:5603": {"name": "StartScriptAtHL_B04", "note": "HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the script engine starts fetching at HL (E-0082)", "evidence": "reading, re-read against the code (E-0353)"},
+  "0F:7F68": {"name": "StartMessageHL_B0F", "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0", "evidence": "reading, re-read against the code (E-0353)"},
+  "73:4ED8": {"name": "StartMessageHL_B73", "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0", "evidence": "reading, re-read against the code (E-0353)"},
+  "85:57C8": {"name": "StartMessageHL_B85", "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0", "evidence": "reading, re-read against the code (E-0353)"},
+  "73:7AA5": {"name": "StartMessageHL_B73b", "note": "HL is stored in wC924 (low) and wC925 (high); then wC926 = 0", "evidence": "reading, re-read against the code (E-0353)"},
   "04:55DF": {"name": "StartTreasureFlagDE_B04", "note": "starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 (E-0269)", "evidence": "reading (E-0081, corrected in E-0269)"},
   "13:4025": {"name": "StartTreasureFlagDE_B13", "note": "starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 (E-0269)", "evidence": "reading (E-0081, corrected in E-0269)"},
-  "0F:7ECE": {
-    "name": "SetBit2AtHL_B0F",
-    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
-    "evidence": "reading"
-  },
-  "73:7A47": {
-    "name": "SetBit2AtHL_B73",
-    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
-    "evidence": "reading"
-  },
-  "12:65F5": {
-    "name": "SetBit2AtHL_B12",
-    "note": "sets bit 2 of the byte at [HL]; only A is clobbered",
-    "evidence": "reading"
-  },
-  "00:3E54": {
-    "name": "CarryUnlessBattleSlotOutSlotEmpty",
-    "note": "A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved",
-    "evidence": "reading"
-  },
-  "05:6AE8": {
-    "name": "ResetAISkillScore",
-    "note": "wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF",
-    "evidence": "reading"
-  },
+  "0F:7ECE": {"name": "SetBit2AtHL_B0F", "note": "sets bit 2 of the byte at [HL]; only A is clobbered", "evidence": "reading, re-read against the code (E-0353)"},
+  "73:7A47": {"name": "SetBit2AtHL_B73", "note": "sets bit 2 of the byte at [HL]; only A is clobbered", "evidence": "reading, re-read against the code (E-0353)"},
+  "12:65F5": {"name": "SetBit2AtHL_B12", "note": "sets bit 2 of the byte at [HL]; only A is clobbered", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:3E54": {"name": "CarryUnlessBattleSlotOutSlotEmpty", "note": "A = slot number; returns with carry clear only when A < 8 and wDA63[A] is zero (carry set for A >= 8, for $FF and for any other non-zero value); A, BC and HL are preserved", "evidence": "reading, re-read against the code (E-0353)"},
+  "05:6AE8": {"name": "ResetAISkillScore", "note": "wDA6E = wDA6F = 0 and wDA70 = wDA71 = $FF", "evidence": "reading, re-read against the code (E-0353)"},
   "08:4032": {
     "name": "StringDatabase",
     "note": "nine pointers, one per string category; each points at a table of string pointers; strings end in $F0 (E-0026)",
@@ -324,421 +180,97 @@
     "note": "HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via wDataBank) to wC8CF; wDataBank is restored",
     "evidence": "E-0026"
   },
-  "00:08BA": {
-    "name": "SerialSendByte",
-    "note": "A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write",
-    "evidence": "reading"
-  },
-  "00:08C7": {
-    "name": "LoadSerialByte",
-    "note": "rSC = 0, rSB = A",
-    "evidence": "reading"
-  },
-  "00:2E40": {
-    "name": "LookupString",
-    "note": "DE = table of 16-bit pointers, one per category; wC528 = category, wC529 = index; returns DE = the string pointer; stores the current ROM bank in wC52A",
-    "evidence": "reading"
-  },
-  "00:25C9": {
-    "name": "BeginStringDisplay",
-    "note": "DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620",
-    "evidence": "reading"
-  },
-  "00:25FE": {
-    "name": "CopyStringToBuffer",
-    "note": "DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E",
-    "evidence": "reading"
-  },
-  "00:2611": {
-    "name": "RunStringDisplayToEnd",
-    "note": "sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero",
-    "evidence": "reading"
-  },
-  "07:4001": {
-    "name": "BeginStringDisplay_Bank07",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "07:400F": {
-    "name": "ShowString_Bank07",
-    "note": "Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "08:402B": {
-    "name": "ShowString_Bank08",
-    "note": "Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "09:4001": {
-    "name": "BeginStringDisplay_Bank09",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "09:4008": {
-    "name": "CopyStringToBuffer_Bank09",
-    "note": "ld de, this bank's string table / CopyStringToBuffer",
-    "evidence": "reading"
-  },
-  "09:400F": {
-    "name": "ShowString_Bank09",
-    "note": "Func_009_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "0B:4001": {
-    "name": "BeginStringDisplay_Bank0B",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "0B:400F": {
-    "name": "ShowString_Bank0B",
-    "note": "Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "0D:4001": {
-    "name": "BeginStringDisplay_Bank0D",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "0D:400F": {
-    "name": "ShowString_Bank0D",
-    "note": "Func_00D_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "0E:5370": {
-    "name": "BeginStringDisplay_Bank0E",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "0E:537E": {
-    "name": "ShowString_Bank0E",
-    "note": "Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "1B:480C": {"name": "BeginStringDisplay_Bank1B", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank1B_480C)", "evidence": "reading"},
-  "1B:481A": {"name": "ShowString_Bank1B", "note": "Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank1B_481A)", "evidence": "reading"},
-  "1B:4C86": {"name": "BeginStringDisplay_Bank1B_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank1B_4C86)", "evidence": "reading"},
-  "1B:4C94": {"name": "ShowString_Bank1B_2", "note": "Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank1B_4C94)", "evidence": "reading"},
-  "1D:4001": {
-    "name": "BeginStringDisplay_Bank1D",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "1F:520E": {
-    "name": "BeginStringDisplay_Bank1F",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "24:5D10": {
-    "name": "BeginStringDisplay_Bank24",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "24:5D1E": {
-    "name": "ShowString_Bank24",
-    "note": "Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "28:402B": {
-    "name": "ShowString_Bank28",
-    "note": "Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "2F:4001": {
-    "name": "BeginStringDisplay_Bank2F",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "2F:400F": {
-    "name": "ShowString_Bank2F",
-    "note": "Func_02F_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "33:6490": {"name": "BeginStringDisplay_Bank33", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank33_6490)", "evidence": "reading"},
-  "33:649E": {"name": "ShowString_Bank33", "note": "Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_649E)", "evidence": "reading"},
-  "33:7037": {"name": "BeginStringDisplay_Bank33_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank33_7037)", "evidence": "reading"},
-  "33:7045": {"name": "ShowString_Bank33_2", "note": "Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_7045)", "evidence": "reading"},
-  "37:4001": {
-    "name": "BeginStringDisplay_Bank37",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "86:4001": {
-    "name": "BeginStringDisplay_Bank86",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "88:4001": {
-    "name": "BeginStringDisplay_Bank88",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "88:400F": {
-    "name": "ShowString_Bank88",
-    "note": "Func_088_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "8A:4001": {
-    "name": "BeginStringDisplay_Bank8A",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "E0:76F5": {
-    "name": "ShowString_BankE0",
-    "note": "Func_0E0_76E0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "F0:4001": {"name": "BeginStringDisplay_BankF0", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_BankF0_4001)", "evidence": "reading"},
-  "F0:48A0": {"name": "BeginStringDisplay_BankF0_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_BankF0_48A0)", "evidence": "reading"},
-  "F0:48AE": {
-    "name": "ShowString_BankF0",
-    "note": "Func_0F0_48A0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "F2:43D0": {
-    "name": "BeginStringDisplay_BankF2",
-    "note": "ld de, this bank's string table / BeginStringDisplay",
-    "evidence": "reading"
-  },
-  "F2:43DE": {
-    "name": "ShowString_BankF2",
-    "note": "Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd",
-    "evidence": "reading"
-  },
-  "08:4001": {
-    "name": "BeginStringDisplay_Bank08",
-    "note": "if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650",
-    "evidence": "reading"
-  },
-  "08:4016": {
-    "name": "CopyStringToBuffer_Bank08",
-    "note": "if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F",
-    "evidence": "reading"
-  },
-  "28:4001": {
-    "name": "BeginStringDisplay_Bank28",
-    "note": "if wC529 < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001",
-    "evidence": "reading"
-  },
-  "E0:76E0": {
-    "name": "BeginStringDisplay_BankE0",
-    "note": "if wC528 < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2",
-    "evidence": "reading"
-  },
-  "00:16AA": {
-    "name": "Multiply8By16",
-    "note": "E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "00:16BF": {
-    "name": "DivideBByA",
-    "note": "B = B / A (quotient), A = remainder; clobbers D, E",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "00:16E2": {
-    "name": "Divide24ByA",
-    "note": "E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "05:54FD": {
-    "name": "SetCToZero",
-    "note": "C = 0",
-    "evidence": "reading"
-  },
-  "F0:7C51": {
-    "name": "AddBClampedToC",
-    "note": "[HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "F0:7C5B": {
-    "name": "SubtractBClampedAtZero",
-    "note": "[HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "00:1F49": {
-    "name": "SRAMRecordAddressMapped",
-    "note": "A is first passed through MapIndexViaPartyList; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress",
-    "evidence": "reading"
-  },
-  "00:24C5": {
-    "name": "MapIndexViaPartyList",
-    "note": "returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case",
-    "evidence": "reading"
-  },
-  "00:1881": {
-    "name": "FillTilesBxC",
-    "note": "HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows",
-    "evidence": "reading"
-  },
-  "E2:651C": {
-    "name": "AddBCToWordAtHL",
-    "note": "the 16-bit word at [HL] += BC; HL is unchanged",
-    "evidence": "reading"
-  },
-  "E2:654B": {
-    "name": "ReadBank6TableWord",
-    "note": "BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wD2C7 (rows of 27 words); A = its low byte; clobbers HL, E",
-    "evidence": "reading"
-  },
-  "E2:64CE": {
-    "name": "AccumulateBank6WordToDA6E",
-    "note": "word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70",
-    "evidence": "reading"
-  },
-  "E2:64F5": {
-    "name": "AccumulateBank6WordToDA70",
-    "note": "the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E",
-    "evidence": "reading"
-  },
-  "E0:7420": {
-    "name": "DrawSpriteSlots",
-    "note": "for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex, hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at $7477",
-    "evidence": "reading"
-  },
-  "E0:7480": {
-    "name": "IncrementSpriteSlotCounters",
-    "note": "adds 1 to byte 7 of each of the 8 slots at wSpriteSlots",
-    "evidence": "reading"
-  },
-  "E0:7492": {
-    "name": "StepSpriteSlotToward",
-    "note": "A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved",
-    "evidence": "reading"
-  },
-  "E0:74C5": {
-    "name": "SetSpriteSlotByte5",
-    "note": "A = slot number: byte 5 of the slot = C",
-    "evidence": "reading"
-  },
-  "E0:754F": {
-    "name": "StepWorkBuf5Mod15",
-    "note": "wD0A2 += 1, reset to 0 when it reaches 15 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod15)",
-    "evidence": "reading"
-  },
-  "E0:755E": {
-    "name": "StepWorkBuf5Mod30",
-    "note": "wD0A2 += 1, reset to 0 when it reaches 30 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod30)",
-    "evidence": "reading"
-  },
-  "E0:756D": {
-    "name": "StepWorkBuf5Mod45",
-    "note": "wD0A2 += 1, reset to 0 when it reaches 45 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod45)",
-    "evidence": "reading"
-  },
-  "E0:757C": {
-    "name": "StepWorkBuf5Mod60",
-    "note": "wD0A2 += 1, reset to 0 when it reaches 60 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod60)",
-    "evidence": "reading"
-  },
-  "00:0DF2": {
-    "name": "StartPaletteFade",
-    "note": "A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference",
-    "evidence": "reading"
-  },
-  "03:42DA": {
-    "name": "CopyTileBufferToBGMap",
-    "note": "copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)",
-    "evidence": "reading"
-  },
-  "03:42E3": {
-    "name": "CopyRectToBGMap",
-    "note": "HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)",
-    "evidence": "reading"
-  },
-  "00:21A1": {
-    "name": "CopyGlyphTilesToVRAM",
-    "note": "DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile",
-    "evidence": "reading"
-  },
-  "33:4001": {
-    "name": "CopyBlockToTileBuffer",
-    "note": "DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows 32 bytes apart",
-    "evidence": "reading"
-  },
-  "5F:6BCD": {
-    "name": "AddStepDeltaToPointedByte",
-    "note": "the byte at the address in wC928/wC929 += the byte at AddStepDeltaToPointedByte_Data + wC921 / 2",
-    "evidence": "reading"
-  },
-  "1D:5D84": {
-    "name": "SetArg5ToListEntriesCell5",
-    "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB",
-    "evidence": "reading"
-  },
-  "1D:5DA1": {
-    "name": "SetArg5ToListEntriesCell4",
-    "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB",
-    "evidence": "reading"
-  },
-  "00:2123": {
-    "name": "WriteDecimalDigitTiles",
-    "note": "DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third",
-    "evidence": "reading"
-  },
-  "12:7DCE": {
-    "name": "FindTemp0InInventoryList",
-    "note": "hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches",
-    "evidence": "reading"
-  },
-  "00:173A": {
-    "name": "Number24ToPackedBCD",
-    "note": "the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed",
-    "evidence": "reading"
-  },
-  "00:1FA4": {
-    "name": "CopyRecordNameToNameGlyphBuf",
-    "note": "A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved",
-    "evidence": "reading"
-  },
-  "F1:5834": {
-    "name": "BeginString_Bank0E_Cat0",
-    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E",
-    "evidence": "reading"
-  },
-  "1F:5040": {
-    "name": "SendSGBPacketSet",
-    "note": "returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit",
-    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
-  },
-  "00:05E2": {
-    "name": "DetectSGB",
-    "note": "sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes",
-    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
-  },
-  "00:0692": {
-    "name": "DelayBCWhenSGB",
-    "note": "returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes",
-    "evidence": "reading"
-  },
-  "00:0796": {
-    "name": "TurnOffLCD",
-    "note": "if rLCDC bit 7 is set, waits for rLY = $91, then clears rLCDC bit 7 and bit 7 of wC5EC",
-    "evidence": "reading"
-  },
-  "00:06A8": {
-    "name": "SGBTransferCompressed",
-    "note": "A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read",
-    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
-  },
-  "00:0705": {
-    "name": "SGBTransferRaw",
-    "note": "A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing",
-    "evidence": "reading; Super Game Boy packet protocol (Pan Docs) for the bit pattern"
-  },
-  "00:0829": {
-    "name": "UploadBGPalettes",
-    "note": "when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access",
-    "evidence": "reading"
-  },
-  "00:3290": {
-    "name": "InitSoundHardware",
-    "note": "rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0",
-    "evidence": "reading"
-  },
-  "00:0040": {
-    "name": "VBlankVector",
-    "note": "di; jp VBlankHandler (the interrupt vector at $0040)",
-    "evidence": "reading"
-  },
+  "00:08BA": {"name": "SerialSendByte", "note": "A is stored in rSB and rSC becomes $80 (transfer start, external clock); interrupts are off during the write", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:08C7": {"name": "LoadSerialByte", "note": "rSC = 0, rSB = A", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:2E40": {"name": "LookupString", "note": "DE = table of 16-bit pointers, one per category; wC528 = category, wC529 = index; returns DE = the string pointer; stores the current ROM bank in wC52A", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:25C9": {"name": "BeginStringDisplay", "note": "DE = string table (see LookupString); clears the request area with FillTilesFromRequest, copies the position wC52D/wC52E to wC531/wC532 and wC535/wC536, points wC533/wC534 and wC537/wC538 at the string, sets wC52B = 1 and clears wC52C and wC54F; the string is drawn later by the routine at $2620", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:25FE": {"name": "CopyStringToBuffer", "note": "DE = string table (see LookupString); copies the string, including its $F0 terminator, to the address in wC53D/wC53E", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:2611": {"name": "RunStringDisplayToEnd", "note": "sets bit 1 of wC52B, then runs the display step at $2620 until wC52B is zero", "evidence": "reading, re-read against the code (E-0353)"},
+  "07:4001": {"name": "BeginStringDisplay_Bank07", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "07:400F": {"name": "ShowString_Bank07", "note": "Func_007_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "08:402B": {"name": "ShowString_Bank08", "note": "Func_008_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "09:4001": {"name": "BeginStringDisplay_Bank09", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "09:4008": {"name": "CopyStringToBuffer_Bank09", "note": "ld de, this bank's string table / CopyStringToBuffer", "evidence": "reading, re-read against the code (E-0353)"},
+  "09:400F": {"name": "ShowString_Bank09", "note": "Func_009_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "0B:4001": {"name": "BeginStringDisplay_Bank0B", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "0B:400F": {"name": "ShowString_Bank0B", "note": "Func_00B_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "0D:4001": {"name": "BeginStringDisplay_Bank0D", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "0D:400F": {"name": "ShowString_Bank0D", "note": "Func_00D_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "0E:5370": {"name": "BeginStringDisplay_Bank0E", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "0E:537E": {"name": "ShowString_Bank0E", "note": "Func_00E_5370 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "1B:480C": {"name": "BeginStringDisplay_Bank1B", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank1B_480C)", "evidence": "reading, re-read against the code (E-0353)"},
+  "1B:481A": {"name": "ShowString_Bank1B", "note": "Func_01B_480C (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank1B_481A)", "evidence": "reading, re-read against the code (E-0353)"},
+  "1B:4C86": {"name": "BeginStringDisplay_Bank1B_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank1B_4C86)", "evidence": "reading, re-read against the code (E-0353)"},
+  "1B:4C94": {"name": "ShowString_Bank1B_2", "note": "Func_01B_4C86 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank1B_4C94)", "evidence": "reading, re-read against the code (E-0353)"},
+  "1D:4001": {"name": "BeginStringDisplay_Bank1D", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "1F:520E": {"name": "BeginStringDisplay_Bank1F", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "24:5D10": {"name": "BeginStringDisplay_Bank24", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "24:5D1E": {"name": "ShowString_Bank24", "note": "Func_024_5D10 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "28:402B": {"name": "ShowString_Bank28", "note": "Func_028_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "2F:4001": {"name": "BeginStringDisplay_Bank2F", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "2F:400F": {"name": "ShowString_Bank2F", "note": "Func_02F_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:6490": {"name": "BeginStringDisplay_Bank33", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank33_6490)", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:649E": {"name": "ShowString_Bank33", "note": "Func_033_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_649E)", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:7037": {"name": "BeginStringDisplay_Bank33_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_Bank33_7037)", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:7045": {"name": "ShowString_Bank33_2", "note": "Func_033_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_7045)", "evidence": "reading, re-read against the code (E-0353)"},
+  "37:4001": {"name": "BeginStringDisplay_Bank37", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "86:4001": {"name": "BeginStringDisplay_Bank86", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "88:4001": {"name": "BeginStringDisplay_Bank88", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "88:400F": {"name": "ShowString_Bank88", "note": "Func_088_4001 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "8A:4001": {"name": "BeginStringDisplay_Bank8A", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:76F5": {"name": "ShowString_BankE0", "note": "Func_0E0_76E0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "F0:4001": {"name": "BeginStringDisplay_BankF0", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_BankF0_4001)", "evidence": "reading, re-read against the code (E-0353)"},
+  "F0:48A0": {"name": "BeginStringDisplay_BankF0_2", "note": "ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or read as the label there; was BeginStringDisplay_BankF0_48A0)", "evidence": "reading, re-read against the code (E-0353)"},
+  "F0:48AE": {"name": "ShowString_BankF0", "note": "Func_0F0_48A0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "F2:43D0": {"name": "BeginStringDisplay_BankF2", "note": "ld de, this bank's string table / BeginStringDisplay", "evidence": "reading, re-read against the code (E-0353)"},
+  "F2:43DE": {"name": "ShowString_BankF2", "note": "Func_0F2_43D0 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd", "evidence": "reading, re-read against the code (E-0353)"},
+  "08:4001": {"name": "BeginStringDisplay_Bank08", "note": "if wC528 < 9, BeginStringDisplay with DE = StringDatabase; otherwise far-calls Func_095_4650", "evidence": "reading, re-read against the code (E-0353)"},
+  "08:4016": {"name": "CopyStringToBuffer_Bank08", "note": "if wC528 < 9, CopyStringToBuffer with DE = StringDatabase; otherwise far-calls Func_095_465F", "evidence": "reading, re-read against the code (E-0353)"},
+  "28:4001": {"name": "BeginStringDisplay_Bank28", "note": "if wC529 < $DA, BeginStringDisplay with this bank's table; otherwise far-calls Func_097_4001", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:76E0": {"name": "BeginStringDisplay_BankE0", "note": "if wC528 < 1, BeginStringDisplay with DE = $76FC; otherwise far-calls Func_0A2_49E2", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:16AA": {"name": "Multiply8By16", "note": "E:H:L = A * BC (24-bit product); clobbers A, BC, HL, E", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "00:16BF": {"name": "DivideBByA", "note": "B = B / A (quotient), A = remainder; clobbers D, E", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "00:16E2": {"name": "Divide24ByA", "note": "E:H:L = E:H:L / A (24-bit quotient), A = remainder; clobbers B, D", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "05:54FD": {"name": "SetCToZero", "note": "C = 0", "evidence": "reading, re-read against the code (E-0353)"},
+  "F0:7C51": {"name": "AddBClampedToC", "note": "[HL] = min([HL] + B, C) (8-bit add, no overflow check); clobbers A, C", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "F0:7C5B": {"name": "SubtractBClampedAtZero", "note": "[HL] = [HL] - B, or 0 when the result has bit 7 set; clobbers A", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "00:1F49": {"name": "SRAMRecordAddressMapped", "note": "A is first passed through MapIndexViaPartyList; then HL = sA000 + A * $A5 + C as in SRAMRecordAddress", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:24C5": {"name": "MapIndexViaPartyList", "note": "returns A unchanged when wC58A is non-zero and wC5DB is 4; otherwise A = the byte at wC6FE + (A & $7F); HL is clobbered in that case", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1881": {"name": "FillTilesBxC", "note": "HL = destination, B = width, C = height: writes the 16-byte pattern at $2940 B * C times, each byte after waiting for VRAM access; wC52D holds B between rows", "evidence": "reading, re-read against the code (E-0353)"},
+  "E2:651C": {"name": "AddBCToWordAtHL", "note": "the 16-bit word at [HL] += BC; HL is unchanged", "evidence": "reading, re-read against the code (E-0353)"},
+  "E2:654B": {"name": "ReadBank6TableWord", "note": "BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wD2C7 (rows of 27 words); A = its low byte; clobbers HL, E", "evidence": "reading, re-read against the code (E-0353)"},
+  "E2:64CE": {"name": "AccumulateBank6WordToDA6E", "note": "word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to wDA6E; a positive word is added to wDA6E; a negative word's magnitude is added to wDA70", "evidence": "reading, re-read against the code (E-0353)"},
+  "E2:64F5": {"name": "AccumulateBank6WordToDA70", "note": "the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wDA70, negative words' magnitude goes to wDA6E", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:7420": {"name": "DrawSpriteSlots", "note": "for each of the wSpriteSlotCount 8-byte slots at wSpriteSlots: loads hSpriteSetIndex, hSpriteOriginX (+8), hSpriteOriginY, hSpriteAttrXor, hSpriteTileOffset and hSpriteSubIndex from the slot, then far-calls the routine chosen by the slot's first byte from the 3-byte entries at $7477", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:7480": {"name": "IncrementSpriteSlotCounters", "note": "adds 1 to byte 7 of each of the 8 slots at wSpriteSlots", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:7492": {"name": "StepSpriteSlotToward", "note": "A = slot number, D = target X, E = target Y: moves the slot's X and Y bytes one step toward the target and adds 1 to its byte 7; returns A = 1 (non-zero) if either moved", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:74C5": {"name": "SetSpriteSlotByte5", "note": "A = slot number: byte 5 of the slot = C", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:754F": {"name": "StepWorkBuf5Mod15", "note": "wD0A2 += 1, reset to 0 when it reaches 15 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod15)", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:755E": {"name": "StepWorkBuf5Mod30", "note": "wD0A2 += 1, reset to 0 when it reaches 30 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod30)", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:756D": {"name": "StepWorkBuf5Mod45", "note": "wD0A2 += 1, reset to 0 when it reaches 45 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod45)", "evidence": "reading, re-read against the code (E-0353)"},
+  "E0:757C": {"name": "StepWorkBuf5Mod60", "note": "wD0A2 += 1, reset to 0 when it reaches 60 (E-0340: the address in its name read as its RAM name; was StepWD0A2Mod60)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0DF2": {"name": "StartPaletteFade", "note": "A = fade state (bit 7 selects the reverse direction): on CGB it stores it and far-calls the CGB fade set-up; with the Super Game Boy active it copies wOBJPaletteBuffer to wOBJPaletteBuffer + $20, sets wFadeLevel and the delays, fills the palettes with PAL_WHITE or black ($0000, wFadeMode bit 7) and sends them as SGB packets ($01, and $09 when wFadeMask bit 4 is set); a DMG takes the separate wFadeMode path (E-0353: corrected; was: A = level (bit 7 set selects the second form); on CGB it hands over to Func_002_4001; on DMG it rebuilds the palette copy at wC4FF from wC4DF and sets wC56C, wC572-wC574, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wC56D; observed writes only, the purpose is a palette fade by inference)", "evidence": "reading, re-read against the code (E-0353)"},
+  "03:42DA": {"name": "CopyTileBufferToBGMap", "note": "copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC = $1412)", "evidence": "reading, re-read against the code (E-0353)"},
+  "03:42E3": {"name": "CopyRectToBGMap", "note": "HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is masked with $9B)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:21A1": {"name": "CopyGlyphTilesToVRAM", "note": "DE = VRAM destination: for each byte of the string at wC8CF (up to 11, stopping at $F0), copies the 16-byte tile at ROM bank $1F, $4010 + 16 * character to [DE]; the characters $8D and $8E also OR a 16-byte overlay from $48E0 or $48F0 into the previous tile", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:4001": {"name": "CopyBlockToTileBuffer", "note": "DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows 32 bytes apart", "evidence": "reading, re-read against the code (E-0353)"},
+  "5F:6BCD": {"name": "AddStepDeltaToPointedByte", "note": "the byte at the address in wC928/wC929 += the byte at AddStepDeltaToPointedByte_Data + wC921 / 2", "evidence": "reading, re-read against the code (E-0353)"},
+  "1D:5D84": {"name": "SetArg5ToListEntriesCell5", "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 5 * wD7AF + wD7AB", "evidence": "reading, re-read against the code (E-0353)"},
+  "1D:5DA1": {"name": "SetArg5ToListEntriesCell4", "note": "wD7F5/wD7F6 (big-endian pointer) = wD789 + 4 * wD7AF + wD7AB", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:2123": {"name": "WriteDecimalDigitTiles", "note": "DE = destination: writes three tile ids for the digits in wC8C0-wC8C2 (see HLToDecimalDigits): $E0 + digit, with leading zeros as $C3; DE ends past the third", "evidence": "reading, re-read against the code (E-0353)"},
+  "12:7DCE": {"name": "FindTemp0InInventoryList", "note": "hFFC6 = the index of the first byte of the 24-entry list at wC61D equal to hFFC6; $FF when an entry is $00 or $FF first or no entry matches", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:173A": {"name": "Number24ToPackedBCD", "note": "the 24-bit value at wC8C0-wC8C2 (low byte first) becomes decimal digits: hFFC9 = millions, hFFC8 = hundred-thousands and ten-thousands, hFFC7 = thousands and hundreds, hFFC6 = tens and ones (two digits per byte, high digit in the upper nibble); wC8C0-wC8C2 are consumed", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1FA4": {"name": "CopyRecordNameToNameGlyphBuf", "note": "A = record number, C = offset (see SRAMRecordAddress): copies 10 bytes from the SRAM record to wC8CF; when the first byte is $FF it writes $98,$98,$98,$90,$90 instead and sets carry; DE and HL are preserved", "evidence": "reading, re-read against the code (E-0353)"},
+  "F1:5834": {"name": "BeginString_Bank0E_Cat0", "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank0E", "evidence": "reading, re-read against the code (E-0353)"},
+  "1F:5040": {"name": "SendSGBPacketSet", "note": "returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse, 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit", "evidence": "reading, re-read against the code (E-0353); also Super Game Boy packet protocol (Pan Docs) for the bit pattern"},
+  "00:05E2": {"name": "DetectSGB", "note": "sends packet set $0B, reads rP1 with two different line selections and returns carry set when the joypad lines change as a Super Game Boy makes them; sends packet set $0A afterwards in both outcomes", "evidence": "reading, re-read against the code (E-0353); also Super Game Boy packet protocol (Pan Docs) for the bit pattern"},
+  "00:0692": {"name": "DelayBCWhenSGB", "note": "returns at once when wSGBActive is 0; otherwise busy-waits BC times about $06D6 loop passes", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0796": {"name": "TurnOffLCD", "note": "if rLCDC bit 7 is set, waits for rLY = $91, then clears rLCDC bit 7 and bit 7 of wC5EC", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:06A8": {"name": "SGBTransferCompressed", "note": "A = packet set index (stored in wSGBPacketIndex); returns at once when wSGBActive is 0; otherwise turns the LCD off, clears vTiles1, decompresses the stream at HL into vTiles1, fills the 20 x 13 corner of vBGMap0 with tiles $80, $81, ... in order, turns the LCD on, sends the packet set with SendSGBPacketSet and turns it off again; the tile data is thereby shown for the Super Game Boy to read", "evidence": "reading, re-read against the code (E-0353); also Super Game Boy packet protocol (Pan Docs) for the bit pattern"},
+  "00:0705": {"name": "SGBTransferRaw", "note": "A = packet set index; H = ROM bank, DE = source, BC = byte count: the same as SGBTransferCompressed, but copies the bytes to vTiles1 instead of decompressing", "evidence": "reading, re-read against the code (E-0353); also Super Game Boy packet protocol (Pan Docs) for the bit pattern"},
+  "00:0829": {"name": "UploadBGPalettes", "note": "when bit 7 of wC526 is set, writes 8 bytes (one palette) from a buffer address derived by Func_000_0897 to rBGPD starting at index wC526; otherwise writes all 64 bytes from wC49F to rBGPD from index 0; each byte is written after waiting for VRAM access", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:3290": {"name": "InitSoundHardware", "note": "first resets the channel masks (the helper called with BC = 0); then rNR52 = $80, rNR51 = 0 and wSoundEngineMode = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots ($20 apart) to $FF; clears the 72 bytes at wSoundLabelSlots, wSoundEngineState and wSoundWaveReload (E-0353: corrected; was: rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wDD15 and wDD19; calls Func_000_32DB with BC = 0)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0040": {"name": "VBlankVector", "note": "di; jp VBlankHandler (the interrupt vector at $0040)", "evidence": "reading, re-read against the code (E-0353)"},
   "00:03A4": {
     "name": "VBlankHandler",
     "note": "runs once per frame: saves registers and the VRAM and WRAM banks; skips everything but the sound tick when wC5ED bit 0 shows it was entered again; otherwise runs the OAM DMA routine at $FF80, uploads queued palettes on CGB, flushes the queued BG map write, restores the DMG palettes, scroll and LCDC, applies the screen shake, polls the joypad, runs SoundTick, advances the random seed, processes the sound queue, runs GameFrameUpdate, steps the string display when wC52B is set, steps the fade, and increments the 16-bit frame counter wC5F0/wC5F1; resets the game when all four buttons are held",
@@ -749,26 +281,10 @@
     "note": "for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7, reads events from the track in bank hSoundBank and writes the channel's sound registers (the per-frame sound engine; called from VBlankHandler)",
     "evidence": "reading + execution (E-0029)"
   },
-  "00:131A": {
-    "name": "ProcessSoundQueue",
-    "note": "starts the music requested in wMusicRequest and the effect requested in wSoundEffectRequest (StartMusic / StartSoundEffect), then sets each request to $FF",
-    "evidence": "reading"
-  },
-  "00:122D": {
-    "name": "QueueMusic",
-    "note": "wMusicRequest = A",
-    "evidence": "reading"
-  },
-  "00:1231": {
-    "name": "StartMusic",
-    "note": "A = sound id (0 = none): stores it in wC608, calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the track with Func_000_334E unless the id is one of a list that is handled separately",
-    "evidence": "reading"
-  },
-  "00:127C": {
-    "name": "StartSoundEffect",
-    "note": "A = sound id: stores it in wSoundId and starts the effect (ids in a fixed list take a separate path)",
-    "evidence": "reading"
-  },
+  "00:131A": {"name": "ProcessSoundQueue", "note": "starts the music requested in wMusicRequest and the effect requested in wSoundEffectRequest (StartMusic / StartSoundEffect), then sets each request to $FF", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:122D": {"name": "QueueMusic", "note": "wMusicRequest = A", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:1231": {"name": "StartMusic", "note": "A = sound id (0 = none): stores it in wC608, calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the track with Func_000_334E unless the id is one of a list that is handled separately", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:127C": {"name": "StartSoundEffect", "note": "A = sound id: stores it in wSoundId and starts the effect (ids in a fixed list take a separate path)", "evidence": "reading, re-read against the code (E-0353)"},
   "00:0474": {
     "name": "GameFrameUpdate",
     "note": "hOamNextEntry = 0, ComputeSpriteScrollOffsets, RunGameModeUpdate, and ClearUnusedOAMEntries unless a fade is running",
@@ -784,61 +300,17 @@
     "note": "jumps through a 9-entry table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07, $24, $A0, $F2); called from the main loop each time the mode changes",
     "evidence": "reading + execution (E-0029)"
   },
-  "00:0BB4": {
-    "name": "ClearUnusedOAMEntries",
-    "note": "zeroes the first byte (Y) of every OAM shadow entry from hOamNextEntry up to 40",
-    "evidence": "reading"
-  },
-  "00:252D": {
-    "name": "ComputeSpriteScrollOffsets",
-    "note": "hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6",
-    "evidence": "reading"
-  },
-  "00:0BCC": {
-    "name": "FlushQueuedBGMapWrite",
-    "note": "if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise",
-    "evidence": "reading"
-  },
-  "00:04ED": {
-    "name": "ApplyScreenShake",
-    "note": "while wC604 or wC605 is non-zero, counts it down and adds an oscillating offset (from the counter's low bits) to rSCY or rSCX",
-    "evidence": "reading"
-  },
-  "00:07FD": {
-    "name": "CopyDMGPalettesToHardware",
-    "note": "rBGP, rOBP0, rOBP1 = wC5E9, wC5EA, wC5EB",
-    "evidence": "reading"
-  },
-  "00:07F1": {
-    "name": "WriteLCDCShadow",
-    "note": "waits until rSTAT mode bits are 0, then rLCDC = wC5EC",
-    "evidence": "reading"
-  },
-  "00:07E0": {
-    "name": "CopyScrollToHardware",
-    "note": "rSCX = hScrollX, rSCY = hScrollY",
-    "evidence": "reading"
-  },
-  "00:0F4E": {
-    "name": "StepFade",
-    "note": "does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)",
-    "evidence": "reading"
-  },
-  "00:0A61": {
-    "name": "ReadJoypadDirect",
-    "note": "B = the buttons: upper nibble D-pad (bit 7 down, 6 up, 5 left, 4 right), lower nibble A, B, Select, Start (bits 0-3), 1 = pressed; reads rP1 with each line group selected",
-    "evidence": "reading + Pan Docs (rP1 layout)"
-  },
-  "00:0A17": {
-    "name": "PollJoypad",
-    "note": "shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)",
-    "evidence": "reading"
-  },
-  "00:0A8D": {
-    "name": "UpdateJoypadPresses",
-    "note": "wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)",
-    "evidence": "reading"
-  },
+  "00:0BB4": {"name": "ClearUnusedOAMEntries", "note": "zeroes the first byte (Y) of every OAM shadow entry from hOamNextEntry up to 40", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:252D": {"name": "ComputeSpriteScrollOffsets", "note": "hFFD2/hFFD3 = -(hScrollX - 9) - 1 and hFFD4/hFFD5 = -(hScrollY - $11) - 1 as 16-bit values; returns early in game mode 1 when wC5DC & $0F = 6", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0BCC": {"name": "FlushQueuedBGMapWrite", "note": "if wC0C0/wC0C1 (a VRAM address) is non-zero, writes wC0C3 bytes from wC0C4 there: along the row when wC0C2 is 0, down the column otherwise", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:04ED": {"name": "ApplyScreenShake", "note": "while wC604 or wC605 is non-zero, counts it down and adds an oscillating offset (from the counter's low bits) to rSCY or rSCX", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:07FD": {"name": "CopyDMGPalettesToHardware", "note": "rBGP, rOBP0, rOBP1 = wC5E9, wC5EA, wC5EB", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:07F1": {"name": "WriteLCDCShadow", "note": "waits until rSTAT mode bits are 0, then rLCDC = wC5EC", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:07E0": {"name": "CopyScrollToHardware", "note": "rSCX = hScrollX, rSCY = hScrollY, rWX = hWindowX, rWY = hWindowY (E-0353: corrected; was: rSCX = hScrollX, rSCY = hScrollY)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0F4E": {"name": "StepFade", "note": "does nothing when wFadeState is 0; otherwise advances the palette fade by one step per call (CGB, SGB and DMG paths)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0A61": {"name": "ReadJoypadDirect", "note": "B = the buttons: upper nibble D-pad (bit 7 down, 6 up, 5 left, 4 right), lower nibble A, B, Select, Start (bits 0-3), 1 = pressed; reads rP1 with each line group selected", "evidence": "reading, re-read against the code (E-0353); also Pan Docs (rP1 layout)"},
+  "00:0A17": {"name": "PollJoypad", "note": "shifts wJoypadHeld to wJoypadHeldPrev and reads the new state into wJoypadHeld (directly, or through the SGB path when wSGBActive)", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:0A8D": {"name": "UpdateJoypadPresses", "note": "wJoypadPressed = buttons newly held since the last poll; wJoypadPressedRepeat = the same, plus an auto-repeat that fires after $14 frames and then every 6 (timer in wJoypadRepeatTimer)", "evidence": "reading, re-read against the code (E-0353)"},
   "01:4001": {
     "name": "GameMode0_Init",
     "note": "start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)",
@@ -864,11 +336,7 @@
     "note": "start-up for wGameMode = 2; forcing this mode on the emulator shows: monster status panel (incomplete when forced) (E-0029)",
     "evidence": "reading + execution (E-0029)"
   },
-  "03:4015": {
-    "name": "GameMode2_Update",
-    "note": "per-frame routine for wGameMode = 2",
-    "evidence": "reading + execution (E-0029)"
-  },
+  "03:4015": {"name": "GameMode2_Update", "note": "game mode 2, the pause menu: by wModeState, its pages Info, Items, Skills and Plan, and its closing state (E-0354; was: per-frame routine for wGameMode = 2)", "evidence": "reading + execution (E-0029); reading of its steps and callers (E-0354)"},
   "31:4001": {
     "name": "GameMode4_Init",
     "note": "start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle screen; reached from the debug battle setup (Start) and from encounters (E-0042)",
@@ -884,21 +352,13 @@
     "note": "start-up for wGameMode = 5; forcing this mode on the emulator shows: title screen; also sparkles and a victory screen when forced (E-0029)",
     "evidence": "reading + execution (E-0029)"
   },
-  "07:4F7B": {
-    "name": "GameMode5_Update",
-    "note": "per-frame routine for wGameMode = 5",
-    "evidence": "reading + execution (E-0029)"
-  },
+  "07:4F7B": {"name": "GameMode5_Update", "note": "game mode 5 (the title screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then exchanges joypad state over the link each frame (LinkExchangeJoypadPerFrame) (E-0354; was: per-frame routine for wGameMode = 5)", "evidence": "reading + execution (E-0029); reading of its steps and callers (E-0354)"},
   "24:4001": {
     "name": "GameMode6_Init",
     "note": "start-up for wGameMode = 6; forcing this mode on the emulator shows: victory screen when forced (E-0029)",
     "evidence": "reading + execution (E-0029)"
   },
-  "24:4117": {
-    "name": "GameMode6_Update",
-    "note": "per-frame routine for wGameMode = 6",
-    "evidence": "reading + execution (E-0029)"
-  },
+  "24:4117": {"name": "GameMode6_Update", "note": "game mode 6, the egg and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, record lists, the monster swap menu and the egg or monster switch (E-0354; was: per-frame routine for wGameMode = 6)", "evidence": "reading + execution (E-0029); reading of its steps and callers (E-0354)"},
   "A0:4ECF": {
     "name": "GameMode7_Init",
     "note": "start-up for wGameMode = 7; forcing this mode on the emulator shows: two monster panels when forced (E-0029)",
@@ -914,11 +374,7 @@
     "note": "start-up for wGameMode = 8; forcing this mode on the emulator shows: egg-received dialogue when forced (E-0029)",
     "evidence": "reading + execution (E-0029)"
   },
-  "F2:40A2": {
-    "name": "GameMode8_Update",
-    "note": "per-frame routine for wGameMode = 8",
-    "evidence": "reading + execution (E-0029)"
-  },
+  "F2:40A2": {"name": "GameMode8_Update", "note": "game mode 8, the egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0 received G's egg' and returns to the game mode the link scene set (E-0354; was: per-frame routine for wGameMode = 8)", "evidence": "reading + execution (E-0029); reading of its steps and callers (E-0354)"},
   "02:5F59": {
     "name": "IncrementPlayTime",
     "note": "counts frames wC82D (0-59), seconds wC82E (0-59), minutes wC82F (0-59) and a 16-bit hour count wC830/wC831; stops at 999:59:59 ($03E7 hours)",
@@ -954,31 +410,11 @@
     "note": "B = X, C = Y in pixels: copies the four tile ids of the 2 x 2 block at tile (X / 8, Y / 8) of wScreenTileBuffer (rows of 20) to wC910-wC913; returns A = 1 when any of them is at most wC192, else A = 0 (a different pair of comparisons with wC196 runs when hFF8C bit 3 is set)",
     "evidence": "reading + execution (E-0030)"
   },
-  "02:5A51": {
-    "name": "FindSpriteSlotAtTile",
-    "note": "B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wCB8A, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does",
-    "evidence": "reading"
-  },
-  "33:5550": {
-    "name": "BeginString_Bank07_Cat5",
-    "note": "A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07",
-    "evidence": "reading"
-  },
-  "F0:5DDD": {
-    "name": "BeginString_BankF0_Cat0",
-    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_48A0",
-    "evidence": "reading"
-  },
-  "1B:61F5": {
-    "name": "BeginString_Bank1B_Cat0",
-    "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C",
-    "evidence": "reading"
-  },
-  "00:23BD": {
-    "name": "GradeTemp0",
-    "note": "C = 0 when hFFC6 >= $C0, 1 when hFFC6 >= $40, otherwise 2",
-    "evidence": "reading"
-  },
+  "02:5A51": {"name": "FindSpriteSlotAtTile", "note": "B = X, C = Y in pixels: returns A = the 1-based number of the first slot of wSpriteSlots (from wCB8A, count wSpriteSlotCount) whose X and Y bytes, or those plus 15, lie in the same 16-pixel cell as (B, C); A = 0 when none does", "evidence": "reading, re-read against the code (E-0353)"},
+  "33:5550": {"name": "BeginString_Bank07_Cat5", "note": "A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07", "evidence": "reading, re-read against the code (E-0353)"},
+  "F0:5DDD": {"name": "BeginString_BankF0_Cat0", "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_BankF0_48A0", "evidence": "reading, re-read against the code (E-0353)"},
+  "1B:61F5": {"name": "BeginString_Bank1B_Cat0", "note": "A = string index: wStringIndex = A, wStringCategory = 0, then BeginStringDisplay_Bank1B_480C", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:23BD": {"name": "GradeTemp0", "note": "C = 0 when hFFC6 >= $C0, 1 when hFFC6 >= $40, otherwise 2", "evidence": "reading, re-read against the code (E-0353)"},
   "00:2391": {
     "name": "PersonalityIndexOfRecord",
     "note": "A = SRAM record number: grades the record's bytes at offsets $6F, $72 and $70 with GradeTemp0 (g1, g2, g3, each 0-2) and returns A = 9 * g1 + 3 * g2 + g3, a number from 0 to 26. The status screen passes this to the string database as a personality-name index (category 7, 27 names), so it is the monster's personality index (E-0031)",
@@ -989,26 +425,14 @@
     "note": "wCFEC/wCFED (the first word of the record buffer) = skill number: copies the 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wCFEE",
     "evidence": "reading + execution (E-0032)"
   },
-  "1A:4022": {
-    "name": "LoadSkillRecordPart",
-    "note": "like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead",
-    "evidence": "reading"
-  },
+  "1A:4022": {"name": "LoadSkillRecordPart", "note": "like LoadSkillRecord, but copies wD869 bytes starting wD868 bytes into the record to the address in wD86A/wD86B; with wCFEC = $FF it zero-fills that destination instead", "evidence": "reading, re-read against the code (E-0353)"},
   "34:4001": {
     "name": "LoadMonsterRecord",
     "note": "wCFE6/wCFE7 = monster id: copies its 26-byte MonsterTable record to wCFEC (ids at or above $250 come from bank $A2 through Func_0A2_402D)",
     "evidence": "reading + execution (E-0033)"
   },
-  "34:4040": {
-    "name": "LoadMonsterRecordTo",
-    "note": "DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]",
-    "evidence": "reading"
-  },
-  "34:406E": {
-    "name": "CopyBytesDEFromHL",
-    "note": "B bytes from [HL] to [DE]; HL and DE advance",
-    "evidence": "reading"
-  },
+  "34:4040": {"name": "LoadMonsterRecordTo", "note": "DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]", "evidence": "reading, re-read against the code (E-0353)"},
+  "34:406E": {"name": "CopyBytesDEFromHL", "note": "B bytes from [HL] to [DE]; HL and DE advance", "evidence": "reading, re-read against the code (E-0353)"},
   "01:4F80": {
     "name": "DebugShowMonsterRecord",
     "note": "HL = monster id (the debug monster viewer wraps it at $02AB): stores it in wC5F8/wC5F9 and wMonsterId/wCFE7, loads the record with LoadMonsterRecord and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the record's fields on the debug screen",
@@ -2362,11 +1786,7 @@
     "note": "A = slot: returns carry set when the slot is absent (CarryUnlessBattleSlotOutSlotEmpty) or when status +0 & $D0, +3 & $3F, +5 & $C0 or +8 bit 3 is set (wBattleStatus + 9 * slot); otherwise carry clear; A, BC, HL kept (E-0058)",
     "evidence": "reading + execution (E-0058)"
   },
-  "32:57FD": {
-    "name": "ReadByteAtHLPlusA",
-    "note": "HL += A, then A = the byte at HL",
-    "evidence": "reading"
-  },
+  "32:57FD": {"name": "ReadByteAtHLPlusA", "note": "HL += A, then A = the byte at HL", "evidence": "reading, re-read against the code (E-0353)"},
   "00:24F8": {
     "name": "StepBGMapAddressBackOnScrollWrap",
     "note": "HL = BG map address. With col = (hScrollX / 8) & $1F: when col >= 12 and (L & $1F) < col - 12 (a column of the 20-column view that wrapped past entry 31), HL -= $20 and A = $FF; otherwise HL is unchanged and A = 0. BC and DE kept (E-0059)",
@@ -4054,7 +3474,7 @@
   "01:6809": {"name": "DrawDebugValueHexForMenuState", "note": "writes the word wD09D[wC46B] as three hex digits at the address Data_001_68D3[wC46B] (E-0122)", "evidence": "reading (E-0122)"},
   "01:6E31": {"name": "WriteUnknownNamePlaceholder_Bank01", "note": "writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)", "evidence": "reading (E-0122)"},
   "02:4345": {"name": "RunScreenStateStepEveryOtherFrame", "note": "wD781 += 1; on odd values, unless wD780 is $FF, runs the step for wD780 (jump table) (E-0122)", "evidence": "reading (E-0122)"},
-  "02:4745": {"name": "RunFieldReturnPhase", "note": "runs the routine for wC8C7 & 3 (jump table; phase 3 reuses phase 0) (E-0122)", "evidence": "reading (E-0122)"},
+  "02:4745": {"name": "RunFieldReturnPhase", "note": "what the field does as it is entered (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens the field menu on A, 2 resets fields $55 and $5B of the lead record (E-0354; was: runs the routine for wC8C7 & 3 (jump table; phase 3 reuses phase 0) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "02:4A53": {"name": "ResetLeadRecordFields55And5B", "note": "for the lead record wC6FE: field $55 = 0, field $5B = $0001, then far-calls Func_004_4AA8 (E-0122)", "evidence": "reading (E-0122)"},
   "02:4AE0": {"name": "FieldModeStateDispatch", "note": "advances the play time, then runs the routine for wModeState & $0F (nine states) (E-0122)", "evidence": "reading (E-0122)"},
   "02:4DD6": {"name": "FarClearRollCounterWhenGM2TimerMinutesIs59", "note": "when wCE9D = $3B and wCE9C = wCE9B = 0, far-calls Func_0F0_72B4 (E-0122) (E-0344: the address in its name dropped or read as the label there; was CallF072B4WhenGM2TimerMinutesIs59; shortened from CallF0ClearRollCounterWhenGM2TimerMinutesIs59WhenGM2TimerMinutesIs59)", "evidence": "reading (E-0122)"},
@@ -4067,7 +3487,7 @@
   "02:630C": {"name": "MapMusicByPlayerStateFlagsBit3", "note": "map music case: music $2B when bit 3 of hFF8C is set, else $1C (E-0122)", "evidence": "reading (E-0122)"},
   "02:631A": {"name": "MapMusicByFlag23_2", "note": "map music case: if story flag $23 is set uses music $1C, else $2E (E-0122) (E-0344: the address in its name dropped or read as the label there; was MapMusicByFlag23_631A)", "evidence": "reading (E-0122)"},
   "02:6327": {"name": "MapMusicByFlag25", "note": "map music case: if story flag $25 is set uses music $1C, else $1F (E-0122)", "evidence": "reading (E-0122)"},
-  "02:6C40": {"name": "RunMenuStateMenuState", "note": "runs the routine for wC46B & $0F (jump table) (E-0122)", "evidence": "reading (E-0122)"},
+  "02:6C40": {"name": "RunMenuStateMenuState", "note": "the field menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor and sub-state of the open menu, and closes it (InitSoundHardware); states 6-8 return at once (E-0354; was: runs the routine for wC46B & $0F (jump table) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "02:7333": {"name": "RunSaveGameSteps", "note": "with SRAM enabled: on the first step (wC8C3 = 0) copies the save blocks with their checksum and continues with the next save stage (E-0122)", "evidence": "reading (E-0122)"},
   "03:432F": {"name": "RefreshRecordListAndNameTiles", "note": "far-calls Func_002_5E82 and reloads the record list name tiles (E-0122)", "evidence": "reading (E-0122)"},
   "03:43C3": {"name": "DerefWordTableEntryA_Bank03", "note": "HL = the word at HL + 2 * A; falls through (E-0122)", "evidence": "reading (E-0122)"},
@@ -4115,14 +3535,14 @@
   "07:4E11": {"name": "CopyLinkRulesToLinkRulesCopy", "note": "copies the 10 bytes at wD043 to wD04D (E-0122)", "evidence": "reading (E-0122)"},
   "07:5999": {"name": "StartFadeToLinkScreenState1", "note": "wD06B = 0, wD06A = 1 and starts palette fade 4; the following entry advances wD06A instead (E-0122)", "evidence": "reading (E-0122)"},
   "07:5A3F": {"name": "StartFadeToLinkScreenState2", "note": "wD06B = 0, wD06A = 2 and starts palette fade 4; the following entry advances wD06A instead (E-0122)", "evidence": "reading (E-0122)"},
-  "07:5B14": {"name": "RunGameMode5Case00SubStates", "note": "runs the routine for wD06B (jump table of nine sub-states) (E-0122)", "evidence": "reading (E-0122)"},
+  "07:5B14": {"name": "RunGameMode5Case00SubStates", "note": "the opening of the title screen (game mode 5, state 0): by wTitleScreenSubState it decompresses the graphics, scrolls the title in (the scroll bytes in wWorkBuf), draws the logo meta-sprite and fades (E-0354; was: runs the routine for wD06B (jump table of nine sub-states) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "07:5DD6": {"name": "DrawMetaSprite0AtX50YWorkBuf1", "note": "draws metasprite set 0, sub-index 0, at X = $50, Y = wD09E (E-0122) (E-0340: the address in its name read as its RAM name; was DrawMetaSprite0AtX50YWD09E)", "evidence": "reading (E-0122)"},
-  "07:60E9": {"name": "RunGameMode5Case01SubStates", "note": "runs the routine for wD06B (jump table of three sub-states) (E-0122)", "evidence": "reading (E-0122)"},
+  "07:60E9": {"name": "RunGameMode5Case01SubStates", "note": "the link menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port (SerialSendByte), draws the link menu screen and reads the menu choice (E-0354; was: runs the routine for wD06B (jump table of three sub-states) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "07:6213": {"name": "SendLinkByteForMenuOption", "note": "wD781 = 0, sends the byte at $65BD + (wC471 & $0F) through SerialSendByte (stored in wD782), then wD781 = 1 (E-0122)", "evidence": "reading (E-0122)"},
   "07:63AC": {"name": "ClearScreenStateBlock", "note": "clears the $80 bytes from wD780 (E-0122)", "evidence": "reading (E-0122)"},
   "07:6406": {"name": "WriteTileSound69ThenTitleScreenState7", "note": "writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 7 (E-0122) (E-0340: the address in its name read as its RAM name; was WriteTileSound69ThenWD06A7)", "evidence": "reading (E-0122)"},
   "07:65A7": {"name": "WriteTileSound69ThenTitleScreenState4", "note": "writes A to VRAM at HL, plays sound $69, clears wC58B and wC470 and sets wD06A = 4 (E-0122) (E-0340: the address in its name read as its RAM name; was WriteTileSound69ThenWD06A4)", "evidence": "reading (E-0122)"},
-  "07:6C12": {"name": "RunLinkSession4ScreenState", "note": "runs the routine for wD06A (jump table of nine states) (E-0122)", "evidence": "reading (E-0122)"},
+  "07:6C12": {"name": "RunLinkSession4ScreenState", "note": "the link battle set-up screens (link session 4): by wTitleScreenState it saves and syncs, sets the battle kind, edits the link battle rules or starts with preset ones, signals readiness over the link, and hands over to the egg service menu (E-0354; was: runs the routine for wD06A (jump table of nine states) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "0A:4214": {"name": "RunPlayerMoveTypeMapMoveType", "note": "runs the movement routine for wC194 (jump table of eight) (E-0122)", "evidence": "reading (E-0122)"},
   "0A:465D": {"name": "RunBattleIntroKindCase", "note": "clears wC96C and runs the routine for wC903 & 7 (jump table of eight) (E-0122)", "evidence": "reading (E-0122)"},
   "0A:476E": {"name": "PickRandomEncounterCountdownFromTable", "note": "draws random values until wCD04 & $3F is below 100, then wC902 = 2 * Data_00A_478F[value / 5] (E-0122) (E-0344: the address in its name dropped or read as the label there; was PickRandomEncounterCountdownFromTable478F)", "evidence": "reading (E-0122)"},
@@ -4159,7 +3579,7 @@
   "14:58EE": {"name": "EraseFiveTableEntries", "note": "stores tile $C3 at the addresses of entries 0-4 of the word table Data_014_5B1E (E-0122) (E-0344: the address in its name dropped or read as the label there; was EraseFiveEntriesOf5B1E; a trailing preposition left by the dropped address removed)", "evidence": "reading (E-0122)"},
   "14:5910": {"name": "CopyScreenBufferRectAt0280_Bank14", "note": "runs Func_014_5925 with C = 2, HL = $0280, DE = $00B4, wD7F1/2 = 0/8 (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunFunc5925At0280; shortened from RunCopyScreenBufferRectWithAttrs_Bank14At0280)", "evidence": "reading (E-0122)"},
   "14:5979": {"name": "LoadFamilyIconTileForRecordB_Bank14", "note": "wD09D = field $0D of SRAM record B & $0F (its family), wD09E = $C7, then LoadFamilyIconTileForWorkBuf (E-0122)", "evidence": "reading (E-0122)"},
-  "14:5CA8": {"name": "RunNameEntryStateWhenNotFading", "note": "unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122)", "evidence": "reading (E-0122)"},
+  "14:5CA8": {"name": "RunNameEntryStateWhenNotFading", "note": "the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) and naming a monster that joins after a battle: while no fade runs, by wNameEntryState it sets up the keyboard, takes the cursor and letter input and draws the name (E-0354; was: unless a fade is running, runs the routine for wCFA8 (jump table of eight) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "14:6189": {"name": "DrawBlankTileC3", "note": "B = $C3 (blank tile) and joins the tile draw at Jump_014_618F (E-0122) (E-0344: the address in its name dropped or read as the label there; was DrawBlankTileC3_6189)", "evidence": "reading (E-0122)"},
   "14:6943": {"name": "BlinkCursorNameEntryBlink_Bank14", "note": "cycles wCFBE through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122)", "evidence": "reading (E-0122)"},
   "14:695A": {"name": "DrawBlankTileC3_3", "note": "B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped or read as the label there; was DrawBlankTileC3_695A)", "evidence": "reading (E-0122)"},
@@ -4206,10 +3626,10 @@
   "1B:4431": {"name": "RunLinkSession2Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
   "1B:4468": {"name": "RunLinkSession3Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
   "1B:449F": {"name": "RunLinkSession4Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
-  "1B:44D6": {"name": "RunLinkSession5Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
+  "1B:44D6": {"name": "RunLinkSession5Exchange", "note": "link sessions 5 and 6 (RunLinkSession): by wLinkExchangeState it sends and receives one exchange of the session's buffer; entries 2-3 are session 6's; the screens it runs show record stats and link breeding (E-0354; was: runs the routine for wC582 (jump table of two) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "1B:450D": {"name": "RunLinkSession6Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
   "1B:4544": {"name": "RunLinkSession7Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
-  "1B:457B": {"name": "RunLinkSession8Exchange", "note": "runs the routine for wC582 (jump table of two) (E-0122)", "evidence": "reading (E-0122)"},
+  "1B:457B": {"name": "RunLinkSession8Exchange", "note": "link session 8 (RunLinkSession runs it each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives (1, LinkReceiveStepWithBuffer) one exchange of the session's buffer; the receive side runs the session's screens (RunLinkSession8Case03Steps, the egg scene of GameMode6_Update) (E-0354; was: runs the routine for wC582 (jump table of two) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "1C:4C87": {"name": "BlinkCursorSelectedRecord_Bank1C", "note": "cycles wD7B4 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (cursor drawn by DrawItemGridXCursor / EraseItemGridXCursor) (E-0122)", "evidence": "reading (E-0122)"},
   "1C:4F87": {"name": "BlinkCursorBlinkCD_Bank1C", "note": "cycles wD7CD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was BlinkCursorBlinkCD_Bank1C_4F87)", "evidence": "reading (E-0122)"},
   "1C:52A0": {"name": "BlinkCursorBlinkD2_Bank1C", "note": "cycles wD7D2 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name dropped or read as the label there; was BlinkCursorBlinkD2_Bank1C_52A0)", "evidence": "reading (E-0122)"},
@@ -4256,7 +3676,7 @@
   "1E:70C9": {"name": "PickNameBufferForFirstByte", "note": "BC = wCCCD when the byte at DE is $98 (the '???' placeholder), else wCDCC (E-0122)", "evidence": "reading (E-0122)"},
   "1E:75EB": {"name": "CallDrawRecordStatsBoxForArg1InBank1D", "note": "far-calls Func_01D_5B4D (E-0122) (E-0344: the address in its name dropped or read as the label there; was CallFunc5B4DInBank1D)", "evidence": "reading (E-0122)"},
   "24:52DE": {"name": "CopyDefaultRecordToRecordBufB", "note": "copies the $A5 bytes at Data_024_52ED to wCA2B (E-0122)", "evidence": "reading (E-0122)"},
-  "30:43C4": {"name": "RunCommandEntryResolveStep", "note": "runs the routine for wBattleResolveStep (jump table of four) (E-0122)", "evidence": "reading (E-0122)"},
+  "30:43C4": {"name": "RunCommandEntryResolveStep", "note": "battle command entry for the computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its action (AIChooseActionResolveStep) and runs the action handlers for the AI slots (E-0354; was: runs the routine for wBattleResolveStep (jump table of four) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "30:44E0": {"name": "ActorBattleWordArray3FBand", "note": "A = 0 when the actor's wD93F word is below $33, 2 when below $3B6, otherwise 3 (E-0122)", "evidence": "reading (E-0122)"},
   "30:4558": {"name": "AddActorBattleWordArray3FDiv16ToBattleArg2", "note": "adds the actor's wD93F word / 16 to the word wD86A (E-0122)", "evidence": "reading (E-0122)"},
   "30:4579": {"name": "AddRandom0To63ToBattleArg2", "note": "adds a random value 0-63 (wC5E7 & $3F) to the word wD86A (E-0122)", "evidence": "reading (E-0122)"},
@@ -4278,7 +3698,7 @@
   "31:6A92": {"name": "ShowString0ACat5IfField56AtLeast57", "note": "for record wD868: if field $56 (level) >= field $57, begins showing string $0A of category 5 (BeginStringDisplay_Bank2F) (E-0122)", "evidence": "reading (E-0122)"},
   "31:6AAE": {"name": "StoreWorkBufToRecordSkills", "note": "copies the 8 bytes at wD09D to the skill list (field $34) of record wD868 (E-0122)", "evidence": "reading (E-0122)"},
   "31:6D87": {"name": "CopyTenByteNameToTextBuf0", "note": "copies 10 bytes from HL to wC130 and appends a $F0 terminator (E-0122)", "evidence": "reading (E-0122)"},
-  "31:6E67": {"name": "RunBattleEndStep4SubSteps", "note": "runs the routine for wBattleSubStep (jump table of seven) (E-0122)", "evidence": "reading (E-0122)"},
+  "31:6E67": {"name": "RunBattleEndStep4SubSteps", "note": "the level-up screen at the end of a battle (gaining experience): by wBattleSubStep it clears the screen, draws the panel and the command cursor, lets the player toggle entries and waits for the text (E-0354; was: runs the routine for wBattleSubStep (jump table of seven) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "31:719E": {"name": "DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206", "note": "runs Func_031_7105, then writes the three bytes at wC39E to vBGMap0 + $206 (E-0122) (E-0340: the address in its name read as its RAM name; was DrawWC39EThreeTilesAtBGMap206)", "evidence": "reading (E-0122)"},
   "31:7389": {"name": "DrawPartySlotStatusPanels", "note": "draws the HP, MP and status of the first one, two or three slots (by wD88F) (E-0122)", "evidence": "reading (E-0122)"},
   "31:73FC": {"name": "CopyPartySlotPanelsToVRAM", "note": "copies the panels of the first one, two or three slots (by wD88F) to VRAM (E-0122)", "evidence": "reading (E-0122)"},
@@ -4289,10 +3709,10 @@
   "31:73DD": {"name": "DrawSlotPanelStats2", "note": "draws HP, MP and status marks of slot 2 (slot 6 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)", "evidence": "reading (E-0122)"},
   "31:7450": {"name": "CopySlotPanel2ToVRAM", "note": "builds and copies the panel row of slot 2 (slot 6 when wC58A is 1 and bit 1 of wC57F is set) (E-0122)", "evidence": "reading (E-0122)"},
   "32:57E8": {"name": "SlotCStatusCheckOrBattleSlotOut", "note": "in link battles or for slots 0-3 checks slot C's status block; otherwise carry unless the wDA63 slot is empty (E-0122)", "evidence": "reading (E-0122)"},
-  "32:618A": {"name": "RunEffectSubStep", "note": "runs the routine for wCFCE (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunEffectSubStep_618A)", "evidence": "reading (E-0122)"},
+  "32:618A": {"name": "RunEffectSubStep", "note": "the sub-steps of an effect that defeats a target: defeats it, blanks its picture and marks the slot in wLevelUpGains (E-0354; was: runs the routine for wCFCE (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunEffectSubStep_618A))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "32:63C2": {"name": "RunEffectSubStep_2", "note": "runs the routine for wCFCE (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunEffectSubStep_63C2)", "evidence": "reading (E-0122)"},
   "32:652E": {"name": "RunEffectSubStep_3", "note": "runs the routine for wCFCE (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunEffectSubStep_652E)", "evidence": "reading (E-0122)"},
-  "32:6662": {"name": "RunBattleSubStep", "note": "runs the routine for wBattleSubStep (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunBattleSubStep_6662)", "evidence": "reading (E-0122)"},
+  "32:6662": {"name": "RunBattleSubStep", "note": "the sub-steps of an action's battle effect: selects the effect by its effect flags and runs it (E-0354; was: runs the routine for wBattleSubStep (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunBattleSubStep_6662))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "32:66F1": {"name": "RunBattleSubStep2", "note": "runs the routine for wBattleSubStep2 (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunBattleSubStep2_66F1)", "evidence": "reading (E-0122)"},
   "32:6764": {"name": "RunBattleSubStep2_2", "note": "runs the routine for wBattleSubStep2 (jump table of three) (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunBattleSubStep2_6764)", "evidence": "reading (E-0122)"},
   "33:561C": {"name": "CallDrawListEntriesCell5RecordPanel", "note": "far-calls DrawListEntriesCell5RecordPanel (E-0122)", "evidence": "reading (E-0122)"},
@@ -4327,9 +3747,9 @@
   "39:6DF1": {"name": "StoreFFFFToTargetEstimatesSlotC", "note": "HL = $FFFF, then falls into StoreHLToTargetEstimatesSlotC (E-0122)", "evidence": "reading (E-0122)"},
   "39:6DF4": {"name": "StoreHLToTargetEstimatesSlotC", "note": "stores HL in the word wD874[C & 3] (E-0122)", "evidence": "reading (E-0122)"},
   "3A:639A": {"name": "CheckActionBDOrRun", "note": "returns A = 0 for action $BD while wDABA & $7F is non-zero; otherwise runs Func_03A_63B2 and, without carry, Func_03A_63D2 (E-0122) (E-0344: the address in its name dropped or read as the label there; was CheckActionBDOrRun63B2And63D2)", "evidence": "reading (E-0122)"},
-  "3A:69AA": {"name": "RunActionResolveStep", "note": "runs the routine for wBattleResolveStep (jump table of ten) (E-0122)", "evidence": "reading (E-0122)"},
+  "3A:69AA": {"name": "RunActionResolveStep", "note": "resolves one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the actor can act (out of the battle, asleep: 'woke up'), runs the action's sub-steps (RunBattleSubStep) and the defeat steps (RunDefeatStepMinus1Step) (E-0354; was: runs the routine for wBattleResolveStep (jump table of ten) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "3A:6C7A": {"name": "RollRandomBelowTargetThreshold", "note": "carry when wC5E7 is below $40 (a foe target outside link battles) or $80 (otherwise) (E-0122)", "evidence": "reading (E-0122)"},
-  "3A:6C93": {"name": "RunDefeatStepMinus1Step", "note": "runs the routine for wDABE - 1 (jump table of ten) (E-0122)", "evidence": "reading (E-0122)"},
+  "3A:6C93": {"name": "RunDefeatStepMinus1Step", "note": "the defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and shows '0 went away' (E-0354; was: runs the routine for wDABE - 1 (jump table of ten) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "3B:4373": {"name": "AllThreeSlotsFromCOccupied", "note": "returns carry only when slots C, C + 1 and C + 2 are all occupied (CarryUnlessBattleSlotOutSlotEmpty) (E-0122)", "evidence": "reading (E-0122)"},
   "3B:444A": {"name": "CallWithBattleFoeCount", "note": "hFFC6 = wD890, then far-calls Func_03A_774C (E-0122) (E-0344: the address in its name dropped or read as the label there; was Call774CWithBattleFoeCount)", "evidence": "reading (E-0122)"},
   "3B:4635": {"name": "RunOnceThenNext", "note": "runs Func_03B_4650 once (marked by bit 7 of wDABA), then Func_03B_4673 each time; returns wDABA & $7F (E-0122) (E-0344: the address in its name dropped or read as the label there; was RunOnce4650Then4673; a trailing preposition left by the dropped address removed)", "evidence": "reading (E-0122)"},
@@ -4346,11 +3766,11 @@
   "3B:4E0A": {"name": "SetBattleEndFlagAndMessage98", "note": "wD894 = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)", "evidence": "reading (E-0122)"},
   "3B:4E46": {"name": "InflictTargetStatus0Bit2", "note": "sets bit 2 of the target's status byte 0 (message $43); if already set takes the failure path (E-0122)", "evidence": "reading (E-0122)"},
   "3B:4EF1": {"name": "SetResolveMsgTargetB5AndResolveMsgFlagsTo0180", "note": "wDAC3 = $B5 and the word wDAC0 = $0180 (E-0122) (E-0340: the address in its name read as its RAM name; was SetWDAC3B5AndResolveMsgFlagsTo0180)", "evidence": "reading (E-0122)"},
-  "5F:70D2": {"name": "RunScriptSubStep", "note": "runs the routine for wC92D (jump table of eight) (E-0122)", "evidence": "reading (E-0122)"},
+  "5F:70D2": {"name": "RunScriptSubStep", "note": "the walking sub-steps of a scripted scene (SceneCheerYuna, SceneMonsterInspection): by wScriptSubStep it moves the player and the followers step by step and sets their facing (E-0354; was: runs the routine for wC92D (jump table of eight) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "60:4C6C": {"name": "ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot", "note": "when wC88E is set and wC891 has bit 7 with low bits equal to wCC42, clears wC88E (E-0122)", "evidence": "reading (E-0122)"},
   "61:43CF": {"name": "LoadKeyWorldTilesetAndHeader", "note": "map type 0 (wMapType & 7 = 0): decompresses entry wKeyWorldGoalKind of KeyWorldTilesetTable (61:5728, 6 bytes each) to vTiles2, on CGB copies its $40-byte palette set to wBGPaletteBuffer and requests the upload, then sets wMaxBlockingTile = $3D, wFieldEventKind, wEncounterRate and other map-header bytes (E-0139)", "evidence": "reading (E-0139)"},
   "61:420D": {"name": "LoadMapHeaderByMapType", "note": "runs the routine for wCC44 & 7 (jump table; 4 reuses 3) (E-0122)", "evidence": "reading (E-0122)"},
-  "61:596F": {"name": "CheckWarpsByMapType", "note": "runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122)", "evidence": "reading (E-0122)"},
+  "61:596F": {"name": "CheckWarpsByMapType", "note": "checks the player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and key-world floors (2), warp destinations (3), player-state warps (5) and key-world areas (6); map types 1, 4 and 7 have none (E-0354; was: runs the routine for wCC44 & 7 (jump table; 7 reuses 4) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "61:5794": {"name": "CallFOnScreenY1", "note": "C = 0 unless hMapScreenY = 1, in which case far-calls Func_011_4268 (E-0122) (E-0344: the address in its name dropped or read as the label there; was CallF4268OnScreenY1)", "evidence": "reading (E-0122)"},
   "73:734D": {"name": "ScriptStepSetObjectBit2AndWait", "note": "sets bit 2 of the objects at wCB9C and wCBAC, wCBCF = $80, runs Func_073_736B and advances wScriptStep once wScriptParam0 is 0 (E-0122)", "evidence": "reading (E-0122)"},
   "3A:77C3": {"name": "CopyTargetOrSideNameToTextBuf0", "note": "E = 1: copies the target's name to wC130; otherwise the target side's name followed by the word 'monsters' (E-0122) (E-0344: the address in its name dropped or read as the label there; was CopyTargetOrSideNameToTextBuf0_77C3)", "evidence": "reading (E-0122)"},
@@ -4370,13 +3790,13 @@
   "A0:5D0C": {"name": "OffsetByIndexOfMaxOfFiveWords", "note": "finds the entry with the largest of five words after HL (ties broken randomly), stores its index in wD0A6 and returns HL + Data_0A0_5D54[index] (E-0122)", "evidence": "reading (E-0122)"},
   "A0:67B8": {"name": "WriteFiveTilesFromTable_2", "note": "clears wC46C and writes five consecutive tile numbers starting at Data_0A0_67D2[wCFD4] to HL (E-0122) (E-0344: the address in its name dropped or read as the label there; was WriteFiveTilesFromTable67D2)", "evidence": "reading (E-0122)"},
   "A0:6A25": {"name": "CallRunDebugStateInBankE0_BankA0", "note": "far-calls RunDebugState_E0 (E-0122) (E-0344: the address in its name dropped or read as the label there; was CallFunc443BInBankE0_BankA0; shortened from CallRunDebugState_E0InBankE0_BankA0)", "evidence": "reading (E-0122)"},
-  "A1:4519": {"name": "RunWorldMapState", "note": "runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122) (the world map, C2 from E-0339; was RunGameMode2State)", "evidence": "reading (E-0122); E-0339"},
+  "A1:4519": {"name": "RunWorldMapState", "note": "the world map screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and tiles, shows the region, and returns to the field (EnterGameMode1WithDefaultPalettes) (E-0354; was: runs the routine for wC5DD & 7 (field mode state 8; jump table, 3 reuses 0) (E-0122) (the world map, C2 from E-0339; was RunGameMode2State))", "evidence": "reading (E-0122); E-0339; reading of its steps and callers (E-0354)"},
   "A1:4744": {"name": "RunGameMode2MapTypeState", "note": "runs the routine for wCC44 & 7 (jump table) (E-0122)", "evidence": "reading (E-0122)"},
   "A1:5581": {"name": "SetSpriteXFromCursorCellX", "note": "hSpriteOriginX = 8 * wC945 + A + 6 (E-0122)", "evidence": "reading (E-0122)"},
   "A1:578E": {"name": "FillBGMap0With57", "note": "fills the $400 bytes of vBGMap0 with tile $57 (E-0122)", "evidence": "reading (E-0122)"},
   "A3:413F": {"name": "RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3", "note": "runs Func_0A3_414F, then wDA5B[hFFC6] = 3 (E-0122) (E-0340: the address in its name read as its RAM name; was RunA3414FAndMarkWDA5B3) (E-0344: the address in its name dropped or read as the label there; was RunA3414FAndMarkSlotMarks3)", "evidence": "reading (E-0122)"},
-  "E0:4001": {"name": "RunDebugSubState_E0", "note": "runs the routine for wC5FE (jump table of six) (E-0122)", "evidence": "reading (E-0122)"},
-  "E0:443B": {"name": "RunDebugState_E0", "note": "runs the routine for wC5FD (jump table of fourteen) (E-0122)", "evidence": "reading (E-0122)"},
+  "E0:4001": {"name": "RunDebugSubState_E0", "note": "the editing sub-states of the bank-$E0 debug viewer: shows a string, then edits the debug cursor, two debug values and the battle-end flag (E-0354; was: runs the routine for wC5FE (jump table of six) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
+  "E0:443B": {"name": "RunDebugState_E0", "note": "the bank-$E0 debug battle viewer: by wDebugState it draws strings, slot HP/MP stats, packed 2-bit fields and bytes in hex, waits for buttons, and picks action targets (RunDebugSubState_E0 for its editing sub-states) (E-0354; was: runs the routine for wC5FD (jump table of fourteen) (E-0122))", "evidence": "reading (E-0122); reading of its steps and callers (E-0354)"},
   "E0:489C": {"name": "RunForThreeBattlerRecords", "note": "runs Func_0E0_48B7 for B = 0, 1, 2 on the 78-byte records from wD0ED + 3 * $4E (E-0122) (E-0344: the address in its name dropped or read as the label there; was Run48B7ForThreeBattlerRecords)", "evidence": "reading (E-0122)"},
   "E0:4C7E": {"name": "BlinkTemp0Tile", "note": "writes either $C3 (bit 3 of wFrameCounterLo clear) or wMenuRowCount at the VRAM address in wC0A0/1 (E-0122) (E-0340: the address in its name read as its RAM name; was BlinkWC0A0Tile)", "evidence": "reading (E-0122)"},
   "E0:4FCE": {"name": "DrawSkillDebugDigitsAndRecord", "note": "DrawSkillRecordByte0DigitsForDebugValue0, Func_0E0_502B, then far-calls Func_03A_53B9 (E-0122) (E-0345: draws the skill's debug digits, loads the skill record and far-calls the battle-argument writer; was DrawSkillByte0AndRun502BAnd53B9)", "evidence": "reading (E-0122)"},
@@ -4490,7 +3910,7 @@
   "0F:4774": {"name": "ScriptStepMoveObjects2And3To81B0", "note": "steps objects 2 and 3 toward ($81, $B0) and ($81, $C0) (StepObjectTowardCoord); advances wScriptStep once they arrive (E-0124)", "evidence": "reading (E-0124)"},
   "0F:47F5": {"name": "ScriptStepMoveObjects2And3To0340", "note": "steps objects 2 and 3 toward ($03, $40) and ($03, $50); advances wScriptStep once they arrive (E-0124)", "evidence": "reading (E-0124)"},
   "11:438F": {"name": "StartWarpTransition", "note": "wC8CA = $F0, plays sound $60, starts palette fade 4, wModeState = 4, clears wC8C5, updates hFF8C and sets wC8C6 = 1 (E-0124)", "evidence": "reading (E-0124)"},
-  "12:6B98": {"name": "RunFieldCommandTemp0", "note": "runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124)", "evidence": "reading (E-0124)"},
+  "12:6B98": {"name": "RunFieldCommandTemp0", "note": "the 22 field commands that scenes and map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its graphics to VRAM, setting up a scripted figure of a scene (E-0354; was: runs the field command for hFFC6 (jump table of 22; called from 49 routines) (E-0124))", "evidence": "reading (E-0124); reading of its steps and callers (E-0354)"},
   "12:797C": {"name": "TriggerEventC6IfGoldAtLeast", "note": "when wC627 is $FF or 0 and the gold is at least 5000, wC935 = $C6 and carry; otherwise A = 0, no carry (E-0124) (E-0344: the address in its name dropped or read as the label there; was TriggerEventC6IfGoldAtLeast5000)", "evidence": "reading (E-0124)"},
   "14:4932": {"name": "DrawBoxAndMenuAndStep", "note": "copies box Data_014_4965 to wC410, runs Func_014_5925, blanks the cursor entry wD7AB of Data_014_5B1E and wD781 += 1 (E-0124) (E-0344: the address in its name dropped or read as the label there; was DrawBox4965AndMenuAndStep)", "evidence": "reading (E-0124)"},
   "14:4B5A": {"name": "ClearTilesAndDrawRectAndStep", "note": "clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle Data_014_5B36 to wC364 and wD781 += 1 (E-0124) (E-0344: the address in its name dropped or read as the label there; was ClearTilesAndDrawRect5B36AndStep)", "evidence": "reading (E-0124)"},
@@ -4570,7 +3990,7 @@
   "39:6F66": {"name": "BuffCapOfBaseAGL", "note": "HL = 999 when the base AGL doubled (quadrupled for allies or link battles) reaches 999, otherwise the base AGL times that factor (E-0124)", "evidence": "reading (E-0124)"},
   "3A:4C26": {"name": "RunEffectRoutineEffectEvery5Frames", "note": "every fifth frame (wDAF1) runs the effect routine for wD803 (jump table of fourteen) (E-0124)", "evidence": "reading (E-0124)"},
   "3A:4CF9": {"name": "EffectPositionIndexForTarget", "note": "A = a 0-4 position index from wD890 (side count) and the target's slot (E-0124)", "evidence": "reading (E-0124)"},
-  "3A:5028": {"name": "RunEffectStep", "note": "runs the routine for wD805 (jump table) (E-0124)", "evidence": "reading (E-0124)"},
+  "3A:5028": {"name": "RunEffectStep", "note": "the frames of a screen-flash effect, run every fifth frame: each step sets the DMG background palette (rBGP) to the next shade (E-0354; was: runs the routine for wD805 (jump table) (E-0124))", "evidence": "reading (E-0124); reading of its steps and callers (E-0354)"},
   "3A:5272": {"name": "EffectPositionIndexForActor", "note": "A = a 0-4 position index from wD890 (side count) and the actor's slot (E-0124)", "evidence": "reading (E-0124)"},
   "3A:5383": {"name": "DrawEffectSpriteForEffectTileOffsetRange", "note": "draws the effect sprite from bank $3E, $3F, $3D, $3B or $92 by wD801 (< $0E, $20, $2D, $33, or more) (E-0124)", "evidence": "reading (E-0124)"},
   "3A:5516": {"name": "LoadEffectOBJPaletteC", "note": "on CGB copies palette C (8 bytes) from Data_03A_7D9A to wOBJPaletteBuffer and sets wC527 = $80 (E-0124)", "evidence": "reading (E-0124)"},
@@ -4614,7 +4034,7 @@
   "E2:67F9": {"name": "AIAddScoresForTwoLists", "note": "adds score word $B1 when Func_005_5ECE fails and $B2 when Func_005_5FC7 fails (results of 1 count as passing) (E-0124) (E-0344: the address in its name dropped or read as the label there; was AIAddScoresFor5ECEAnd5FC7; a trailing preposition left by the dropped address removed)", "evidence": "reading (E-0124)"},
   "F0:5A29": {"name": "StepObjectCB8AAndTriggerAt30", "note": "while wCB88 & 3 is set: wCB8A += 1; at $30 runs field command $0E and sets wCBD3/4; at $38 sets bit 1 of wCB8C and wD782 += 1 (E-0124)", "evidence": "reading (E-0124)"},
   "F0:5B06": {"name": "StepScreenStepOffsetTableEvery4Frames", "note": "every fourth frame adds Data_0F0_5B39[wD781] to [DE] and advances wD781; the $80 end mark advances wD782 and resets (E-0124)", "evidence": "reading (E-0124)"},
-  "F0:5DE8": {"name": "RunLinkSession8Case03Steps", "note": "runs the routine for wD781 (jump table of seventeen) (E-0124)", "evidence": "reading (E-0124)"},
+  "F0:5DE8": {"name": "RunLinkSession8Case03Steps", "note": "the record-list screen of link session 8's receive side: clears the BG map, draws a paged record list with species names and marks, and moves the list cursor (HandleListCursorInput_1D) (E-0354; was: runs the routine for wD781 (jump table of seventeen) (E-0124))", "evidence": "reading (E-0124); reading of its steps and callers (E-0354)"},
   "F0:613D": {"name": "DrawPageIndicatorWhenTwoPagesAndStep", "note": "with two or more pages draws the bracket and page-of-pages indicator at wC412; wD781 += 1 (E-0124)", "evidence": "reading (E-0124)"},
   "F0:6BA1": {"name": "LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth", "note": "loads species wCED9 and copies its bytes wD010-wD012 to wCF0A and the 27 bytes at wD01A to wCF41; wCF29 = wCF2B, wCF2D = wCF2F (E-0124)", "evidence": "reading (E-0124)"},
   "F0:70AA": {"name": "BandOfFamilyBitCount", "note": "A = 4, 5, 6 or 7 for wCE9E < 4, < 6, < $0A, or more (E-0124)", "evidence": "reading (E-0124)"},
@@ -4622,7 +4042,7 @@
   "F0:7CD4": {"name": "TestBitDEOfBitArrayHL", "note": "A = $FF when bit DE of the bit array at HL is set (mask Data_0F0_7CFB), else 0; HL is left at the byte (E-0124)", "evidence": "reading (E-0124)"},
   "F0:7E69": {"name": "RollMarkChangeCountChance", "note": "A = 1 with a chance growing with wCEC0 (none below 5, 10 per step to 80 from 13), else 0 (E-0124)", "evidence": "reading (E-0124)"},
   "F1:41EE": {"name": "BuildInventoryScreenBase_BankF1", "note": "clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page indicator (page wMenuPage of wC0A7) (E-0124)", "evidence": "reading (E-0124)"},
-  "F1:4AD0": {"name": "RunScreenStateWhenNotFading_F1", "note": "unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124)", "evidence": "reading (E-0124)"},
+  "F1:4AD0": {"name": "RunScreenStateWhenNotFading_F1", "note": "the link breeding and record screens (link sessions 2 and 6, the egg service menu): while no fade runs, by wScreenState: the swap menu, 'Ready to start breeding?', choosing the breeding monster, link breeding, record stats and the chosen record (E-0354; was: unless a fade is running, runs the routine for wD780 (jump table of eighteen) (E-0124))", "evidence": "reading (E-0124); reading of its steps and callers (E-0354)"},
   "F1:58D2": {"name": "DrawArrowTileBCAtTwoChoiceEntry_BankF1", "note": "B = $BC, then writes B at the scroll position + Data_0F1_58F4[wTwoChoiceCursor] (E-0124)", "evidence": "reading (E-0124)"},
   "00:08D0": {"name": "ClearWRAMHRAMAndSRAMBanks0And2", "note": "on CGB resets VBK, SVBK, HDMA and palette index registers; clears $1E00 bytes of WRAM from wC000 and $74 bytes of HRAM from hFF8A (keeping wIsCGB); clears SRAM banks 2 and 0 (E-0125)", "evidence": "reading (E-0125)"},
   "00:1649": {"name": "CopyScreenTileBufferToBGMapWrapped", "note": "copies the 32 x 32 wScreenTileBuffer to vBGMap0, wrapping columns and rows (E-0125)", "evidence": "reading (E-0125)"},
@@ -5179,21 +4599,9 @@
     "note": "resolve step $0C: farcalls ApplyDamageToTarget",
     "evidence": "reading + execution (E-0043)"
   },
-  "00:3F04": {
-    "name": "DivideHLByBC",
-    "note": "HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
-  "00:3ED4": {
-    "name": "AdvanceRandom",
-    "note": "when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB",
-    "evidence": "reading"
-  },
-  "00:3E98": {
-    "name": "RandomInRange",
-    "note": "HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)",
-    "evidence": "reading + execution (tests/test_routine_behaviour.py)"
-  },
+  "00:3F04": {"name": "DivideHLByBC", "note": "HL = HL / BC (quotient), BC = HL mod BC; clobbers A, DE", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
+  "00:3ED4": {"name": "AdvanceRandom", "note": "when wC58A is 0 calls NextTableByte (wC5E8 = index, wC5E7 = table byte); in link mode runs the same step on the synchronised copy in wC5BA/wC5BB", "evidence": "reading, re-read against the code (E-0353)"},
+  "00:3E98": {"name": "RandomInRange", "note": "HL = minimum, BC = maximum: returns DE = minimum + (random mod (maximum - minimum + 1)), the random value being wC5E8:wC5E7 after AdvanceRandom; DE = HL when the two are equal (73 call sites)", "evidence": "reading, re-read against the code (E-0353); also execution (tests/test_routine_behaviour.py)"},
   "36:5025": {
     "name": "ComputeBasicDamage",
     "note": "the damage formula: HL = the acting slot's value from the array at wD8FF (Func_036_7E2E), BC = the value to compare with, set by the caller. If HL <= BC the damage is RandomInRange(0, 1). Otherwise, with half = (HL - BC) / 2: when HL / 16 >= half the damage is RandomInRange(0, HL / 16); else it is half + RandomInRange(-(half / 16), half / 16) + RandomInRange(-1, 1). The 16-bit result goes to wBattleDamageLo/Hi. The divisors are 16, not 4: ShiftHLRight4 falls through two more shifts (corrected in E-0064)",
@@ -5279,51 +4687,19 @@
     "note": "wBattlePhase 2, wBattleStep 0 (E-0044)",
     "evidence": "execution and structure (E-0044)"
   },
-  "31:440E": {
-    "name": "BattleEnd_Step1",
-    "note": "wBattlePhase 2, wBattleStep 1 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:445B": {
-    "name": "BattleEnd_Step2",
-    "note": "wBattlePhase 2, wBattleStep 2 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:449C": {
-    "name": "BattleEnd_Step3",
-    "note": "wBattlePhase 2, wBattleStep 3 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:4693": {
-    "name": "BattleEnd_Step4",
-    "note": "wBattlePhase 2, wBattleStep 4 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:46CA": {
-    "name": "BattleEnd_Step5",
-    "note": "wBattlePhase 2, wBattleStep 5 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:4840": {
-    "name": "BattleEnd_Step6",
-    "note": "wBattlePhase 2, wBattleStep 6 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
-  "31:48E5": {
-    "name": "BattleEnd_Step7",
-    "note": "wBattlePhase 2, wBattleStep 7 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
+  "31:440E": {"name": "BattleEnd_Step1", "note": "battle end, step 1: at text speed 1 shows the battle's closing message, battle text 6, 7, 8 + wBattleArg0, $86 or $87 by wBattleScene, link mode and wBattleArg0 (E-0354; was: wBattlePhase 2, wBattleStep 1 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:445B": {"name": "BattleEnd_Step2", "note": "battle end, step 2: waits until every sound channel is idle and the text has finished, counting wBattleEndTimer down, then moves on (E-0354; was: wBattlePhase 2, wBattleStep 2 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:449C": {"name": "BattleEnd_Step3", "note": "battle end, step 3: settles the battle MP (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and for battle scenes 2 and 3 (E-0354; was: wBattlePhase 2, wBattleStep 3 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:4693": {"name": "BattleEnd_Step4", "note": "battle end, step 4: the same wait for the sound channels, then gains experience (BattleEnd_GainExperience) (E-0354; was: wBattlePhase 2, wBattleStep 4 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:46CA": {"name": "BattleEnd_Step5", "note": "battle end, step 5: offers the defeated monster to join, by wBattleSubPhase (BattleEnd_Step5_DrawThenAskToJoin, the swap menu, BattleEnd_AddJoinedMonster) (E-0354; was: wBattlePhase 2, wBattleStep 5 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:4840": {"name": "BattleEnd_Step6", "note": "battle end, step 6: changes the music and waits for the fade (E-0354; was: wBattlePhase 2, wBattleStep 6 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
+  "31:48E5": {"name": "BattleEnd_Step7", "note": "battle end, step 7 (link battles): sends the end byte, waits for the partner's message and fades out (E-0354; was: wBattlePhase 2, wBattleStep 7 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
   "31:4975": {
     "name": "BattleEnd_Step9",
     "note": "wBattlePhase 2, wBattleStep 9 (E-0044)",
     "evidence": "execution and structure (E-0044)"
   },
-  "31:43C0": {
-    "name": "BattleFight_Step0",
-    "note": "wBattlePhase 1, wBattleStep 0 (E-0044)",
-    "evidence": "execution and structure (E-0044)"
-  },
+  "31:43C0": {"name": "BattleFight_Step0", "note": "battle fight, step 0: waits for the text, clears the battle work area (FillBytes) and moves on (E-0354; was: wBattlePhase 1, wBattleStep 0 (E-0044))", "evidence": "execution and structure (E-0044); reading of its steps and callers (E-0354)"},
   "31:43CD": {
     "name": "BattleFight_Step1",
     "note": "wBattlePhase 1, wBattleStep 1 (E-0044)",

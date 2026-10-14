@@ -141,7 +141,9 @@ GameMode6_Init::
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; per-frame routine for wGameMode = 6 (E-0029)
+; game mode 6, the egg and save screens after a link or the priest: by wScreenState it shows an
+; obtained egg, the save prompt and the save, record lists, the monster swap menu and the egg or
+; monster switch (E-0354; was: per-frame routine for wGameMode = 6)
 GameMode6_Update::
     ld a, [wFadeState]
     and a
@@ -271,7 +273,8 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
 
 ; step 1 of GameMode6_Update_ObtainedEgg: calls GameMode6_Update_WriteLinkSceneAndGameModeEtc;
 ; branches on wBattleScene; branches on wBattleScene & $01; branches on wRecordBufA; branches on
-; wRecordBufB; sets wScreenStep to 0; increments wScreenState (E-0347)
+; wRecordBufB; sets wScreenStep to 0; increments wScreenState; also changes A by register arithmetic
+; (E-0347)
 ; why: step 1 of GameMode6_Update_ObtainedEgg (when wScreenStep = 1); GameMode6_Update_ObtainedEgg:
 ; by wScreenStep: shows 'obtained an egg of 0.' (E-0352)
 GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
@@ -310,8 +313,9 @@ GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
 
 ; step 1 of GameMode6_Update: calls CopyRectTo20ByteRowsJp_Bank24; calls
 ; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; sets wScreenState (E-0347)
-; why: step 1 of GameMode6_Update (when wScreenState = 1); GameMode6_Update: per-frame routine for
-; wGameMode = 6 (E-0352)
+; why: step 1 of GameMode6_Update (when wScreenState = 1); GameMode6_Update: game mode 6, the egg
+; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
+; prompt and the save, ... (E-0352, E-0354)
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24::
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f0
@@ -636,7 +640,7 @@ GameMode6_Update_SavePrompt_SetScreenStepTo05::
 
 ; step 10 of GameMode6_Update_SavePrompt: branches on wListCount; calls
 ; ShowStringAInDefaultWindow_Bank24; sets wScreenStep; calls StoreBAtWordTableEntry_Bank24_2;
-; increments wScreenStep (E-0347)
+; increments wScreenStep; also changes HL, A and B by register arithmetic (E-0347)
 ; why: step 10 of GameMode6_Update_SavePrompt (when wScreenStep = 10); GameMode6_Update_SavePrompt:
 ; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
 GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24::
@@ -919,8 +923,8 @@ GameMode6_Update_PageList::
 ; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
 ; wScreenSubStep; calls GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc; sets
 ; wScreenSubStep to 2; calls ShowStringAInDefaultWindow_Bank24; calls
-; StoreBAtWordTableEntry_Bank24_2; calls CopyListEntriesCell5NameToTextBuf0; increments wScreenStep
-; (E-0347)
+; StoreBAtWordTableEntry_Bank24_2; calls CopyListEntriesCell5NameToTextBuf0; increments wScreenStep;
+; then 1 more step (see the code) (E-0347)
 ; why: step 0 of GameMode6_Update_PageList (when wScreenSubStep = 0); GameMode6_Update_PageList:
 ; moves the paged cursor, copies a rectangle and sets the sub-step (E-0352, E-0345)
 GameMode6_Update_PageList_UpdatePagedListCursor::
@@ -1322,7 +1326,8 @@ GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageMarks::
 ; step 5 of GameMode6_Update_ChooseRecordAndSave: sets wMenuInputResult to 0; calls
 ; UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets
 ; wScreenStep; increments wScreenStep; calls StoreBAtWordTableEntry_Bank24_2; calls
-; CopyListEntriesCell5NameToTextBuf0; sets wScreenStep (E-0347)
+; CopyListEntriesCell5NameToTextBuf0; sets wScreenStep; also changes HL, A and B by register
+; arithmetic (E-0347)
 ; why: step 5 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 5);
 ; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
 ; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
@@ -1598,15 +1603,17 @@ GameMode6_Update_ChooseRecordAndSave_RunSaveGameSteps::
     ret
 
 ; step 6 of GameMode6_Update: returns at once (E-0347)
-; why: step 6 of GameMode6_Update (when wScreenState = 6); GameMode6_Update: per-frame routine for
-; wGameMode = 6 (E-0352)
+; why: step 6 of GameMode6_Update (when wScreenState = 6); GameMode6_Update: game mode 6, the egg
+; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
+; prompt and the save, ... (E-0352, E-0354)
 GameMode6_Update_Return::
     ret
 
 ; step 12 of GameMode6_Update: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
-; why: step 12 of GameMode6_Update (when wScreenState = 12); GameMode6_Update: per-frame routine for
-; wGameMode = 6 (E-0352)
+; why: step 12 of GameMode6_Update (when wScreenState = 12); GameMode6_Update: game mode 6, the egg
+; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
+; prompt and the save, ... (E-0352, E-0354)
 GameMode6_Update_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1622,8 +1629,9 @@ GameMode6_Update_SwapMonstersMenu::
 
 ; step 13 of GameMode6_Update: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
 ; wScreenStep to 0; sets wScreenSubStep to 0; increments wScreenState (E-0347)
-; why: step 13 of GameMode6_Update (when wScreenState = 13); GameMode6_Update: per-frame routine for
-; wGameMode = 6 (E-0352)
+; why: step 13 of GameMode6_Update (when wScreenState = 13); GameMode6_Update: game mode 6, the egg
+; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
+; prompt and the save, ... (E-0352, E-0354)
 GameMode6_Update_SwapMonstersMenu_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2016,7 +2024,9 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
 ; Returns unless wLinkBreedResult is 0; calls GameMode6_Update_DecompressToVRAM; calls
 ; CopyRectTo20ByteRowsJp_Bank24 (E-0347)
 ; why: part of GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, in step 1 of GameMode6_Update (when
-; wScreenState = 1); GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; wScreenState = 1); GameMode6_Update: game mode 6, the egg and save screens after a link or the
+; priest: by wScreenState it shows an obtained egg, the save prompt and the save, ... (E-0352,
+; E-0354)
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM::
     ld a, [wLinkBreedResult]
     and a
@@ -2028,8 +2038,8 @@ GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM
     call CopyRectTo20ByteRowsJp_Bank24
     ret
 
-; called from GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24: returns if wIsCGB is 0
-; (E-0347)
+; called from GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24: returns if wIsCGB is 0;
+; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: a helper of GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24, in step 0 of
 ; GameMode6_Update_ObtainedEgg (when wScreenStep = 0); GameMode6_Update_ObtainedEgg: by wScreenStep:
 ; shows 'obtained an egg of 0.' (E-0352)
@@ -2110,7 +2120,9 @@ GameMode6_Update_SavePrompt_ShowYesNo::
 ; ShowString_Bank33_2; sets wTextFlags to 0; sets wTextControl to 0; copies L to wTextWindowTileLo;
 ; copies H to wTextWindowTileHi; copies L to wTextWindowRows; then 1 more step (see the code)
 ; (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
+; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
+; (E-0352, E-0354)
 GameMode6_Update_ShowMonsterEg::
     ld hl, vTiles2 + $760
     ld a, l
@@ -2144,7 +2156,9 @@ GameMode6_Update_ShowMonsterEg::
 
 ; Sets wLinkScene to 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1;
 ; returns unless wBattleScene is $08 (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
+; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
+; (E-0352, E-0354)
 GameMode6_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
@@ -2294,7 +2308,7 @@ DrawScreenBufferRectToBGMap_24::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank24::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -2326,7 +2340,7 @@ CopyBytesDEToHL_Bank24_2::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0351)
+; 19 bytes appear in 5 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank24_2::
     ld a, $02
     ldh [rSVBK], a
@@ -2421,7 +2435,8 @@ GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc::
     ret
 
 ; called from GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D: sets rRAMG to $0a;
-; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0 (E-0347)
+; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, A and C by register
+; arithmetic (E-0347)
 ; why: a helper of GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, in step 8 of
 ; GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 8); GameMode6_Update_ChooseRecordAndSave:
 ; by wScreenStep: a paged record list, the 'Info / OK / Yes / No' window, the monster-egg message
@@ -2487,7 +2502,7 @@ CopyMonsterNameToBuffer_B24::
 
 ; called from GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D: sets rRAMG to $0a;
 ; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls CopyRecordNameToNameGlyphBuf; branches on
-; the byte at wNameGlyphBuf (E-0347)
+; the byte at wNameGlyphBuf; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: a helper of GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D, in step 10 of
 ; GameMode6_Update_ChooseRecordList (when wScreenStep = 10); GameMode6_Update_ChooseRecordList: by
 ; wScreenStep: a paged record list with strings (ShowStringAInDefaultWindow_Bank24), record buffer B
@@ -2586,7 +2601,9 @@ GameMode6_Update_SwitchMonster_FillTilesFromRequest::
     ret
 
 ; Calls DecompressToVRAM (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
+; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
+; (E-0352, E-0354)
 GameMode6_Update_DecompressToVRAM::
     and $01
     and a
@@ -2686,7 +2703,8 @@ GameMode6_Init_UploadBGPalettes::
     call GameMode6_Init_WriteVRAMByteInc
     ld hl, wScreenTileBuffer + $93
 
-; Calls WriteVRAMByteInc; calls ReturnStub (E-0347)
+; Calls WriteVRAMByteInc; calls ReturnStub; also changes HL, BC, A and D by register arithmetic
+; (E-0347)
 ; why: part of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
 GameMode6_Init_WriteVRAMByteInc::
     ld bc, $0606
@@ -2858,7 +2876,7 @@ GameMode6_Init_ReadLinkScene::
 ; LoadMonsterPicture; sets wSharedMenuWork to 1; calls GameMode6_Init_ReadLinkScene; calls
 ; LoadMonsterPicture; calls GameMode6_Init_ReadLinkScene; sets wSharedMenuWork to 1; calls
 ; LoadMonsterPicture; calls GameMode6_Init_ReadLinkScene; sets wSharedMenuWork to 2; calls
-; LoadMonsterPicture; then 1 more step (see the code) (E-0347)
+; LoadMonsterPicture; then 2 more steps (see the code) (E-0347)
 ; why: a helper of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
 GameMode6_Init_LoadMonsterPicture::
     ld a, [wBattleScene]
@@ -2932,7 +2950,8 @@ GameMode6_Init_LoadMonsterPicture::
     ret
 
 ; called from GameMode6_Update_SwitchMonster_ShowInfoOKYesN: sets rRAMG2 to $0a; sets rRAMB to 0;
-; calls LoadSRAMRecordWord; calls LoadMonsterPicture; sets rRAMG2 to 0 (E-0347)
+; calls LoadSRAMRecordWord; calls LoadMonsterPicture; sets rRAMG2 to 0; also changes HL, DE, BC and
+; A by register arithmetic (E-0347)
 ; why: a helper of GameMode6_Update_SwitchMonster_ShowInfoOKYesN, in step 0 of
 ; GameMode6_Update_SwitchMonster (when wScreenStep = 0); GameMode6_Update_SwitchMonster: by
 ; wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?' (E-0352)
@@ -2970,7 +2989,9 @@ GameMode6_Update_SwitchMonster_LoadSRAMRecordWord::
     ret
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
-; rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks) (E-0351)
+; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (E-0353: corrected; was: Copies 16 bytes
+; from [HL] to [DE]; each byte is written with interrupts off after waiting for rSTAT bit 1 to
+; clear; clobbers A; HL and DE advance) (the same 20 bytes appear in 3 banks)
 CopyTileBytesToVRAM_Bank24_2::
     xor a
 
@@ -2993,7 +3014,7 @@ CopyTileBytesToVRAM_Bank24_2::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0351)
+; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0353)
 StoreBAtWordTableEntry_Bank24_2::
     push bc
     sla a
@@ -3056,7 +3077,7 @@ DefaultMonsterRecord::
     db ITEM_00 ; $A4: equipped item (E-0125)
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0351)
+; banks) (E-0353)
 StoreC5BEC6AtHLStride2_Bank24::
     ld a, $c5
     ld [hl], a
@@ -3075,7 +3096,9 @@ StoreC5BEC6AtHLStride2_Bank24::
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; then 17 more
 ; steps (see the code) (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
+; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
+; (E-0352, E-0354)
 GameMode6_Update_FillTilesFromRequest::
     ld hl, vTiles1 + $3f0
     ld a, l
@@ -3165,7 +3188,7 @@ GameMode6_Update_Save_ObjectScene::
     dw GameMode6_Update_Save_ObjectScene_WriteSpriteSlotsAndScreenSubStepEtc
 
 ; step 1 of GameMode6_Update_Save_ObjectScene: may return early; decrements wObject2 + OBJ_X; may
-; return early; increments wScreenSubStep (E-0347)
+; return early; increments wScreenSubStep; also changes A by register arithmetic (E-0347)
 ; why: step 1 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 1);
 ; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
 ; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
@@ -3338,7 +3361,7 @@ GameMode6_Update_Save_ObjectScene_WriteObject2AndObject1Etc::
     ret
 
 ; step 13 of GameMode6_Update_Save_ObjectScene: may return early; sets wScreenSubStep to 0;
-; increments wScreenStep (E-0347)
+; increments wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 13 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 13);
 ; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
 ; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
@@ -3381,8 +3404,8 @@ GameMode6_Update_SavePrompt_ObjectScene::
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteObject5AndSpriteSlotsEtc
     dw GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndSpriteSlotsEtc
 
-; step 1 of GameMode6_Update_SavePrompt_ObjectScene: may return early; increments wScreenSubStep
-; (E-0347)
+; step 1 of GameMode6_Update_SavePrompt_ObjectScene: may return early; increments wScreenSubStep;
+; also changes A by register arithmetic (E-0347)
 ; why: step 1 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 1);
 ; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
 ; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
@@ -3532,7 +3555,7 @@ GameMode6_Update_SavePrompt_ObjectScene_WriteObject1AndScreenSubStep::
     ret
 
 ; step 12 of GameMode6_Update_SavePrompt_ObjectScene: sets wObject5 to 0; may return early;
-; increments wScreenSubStep (E-0347)
+; increments wScreenSubStep; also changes A by register arithmetic (E-0347)
 ; why: step 12 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 12);
 ; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
 ; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
@@ -3557,7 +3580,7 @@ GameMode6_Update_SavePrompt_ObjectScene_WriteObject5AndSpriteSlotsEtc::
 
 ; step 13 of GameMode6_Update_SavePrompt_ObjectScene: sets wObject2 + OBJ_STATE to 1; may return
 ; early; increments wObject2 + OBJ_X; may return early; sets wScreenSubStep to 0; increments
-; wScreenStep (E-0347)
+; wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 13 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 13);
 ; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
 ; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
@@ -3585,7 +3608,9 @@ GameMode6_Update_SavePrompt_ObjectScene_WriteObject2AndSpriteSlotsEtc::
 
 ; Calls UpdateAndDrawSpriteSlots; returns if wRecordBufB + MON_EGG is 0; calls DrawFieldSprites
 ; (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: per-frame routine for wGameMode = 6 (E-0352)
+; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
+; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
+; (E-0352, E-0354)
 GameMode6_Update_UpdateAndDrawSpriteSlots::
     farcall UpdateAndDrawSpriteSlots
     ld a, [wRecordBufB + MON_EGG]
@@ -3598,7 +3623,7 @@ GameMode6_Update_UpdateAndDrawSpriteSlots::
 ; CopyBytesDEFromHL_Bank24; calls DecompressGraphicsTemp0ToTemp4; calls CopyBytesDEFromHL_Bank24;
 ; calls DecompressGraphicsTemp0ToTemp4; branches on wRecordBufB + MON_EGG; calls
 ; CopyBytesDEFromHL_Bank24; branches on wBattleScene; branches on wBattleScene & $01; copies
-; wRecordBufB + MON_SPECIES to hTemp0; then 20 more steps (see the code) (E-0347)
+; wRecordBufB + MON_SPECIES to hTemp0; then 21 more steps (see the code) (E-0347)
 ; why: part of GameMode6_Update_Save; GameMode6_Update_Save: by wScreenStep: draws the sprites, then
 ; RunSaveGameSteps (E-0352)
 GameMode6_Update_Save_TestFlagBit::
@@ -3727,7 +3752,7 @@ GameMode6_Update_Save_TestFlagBit::
 .return:
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_Bank24::
     ld a, [hli]
     ld [de], a
@@ -3978,7 +4003,8 @@ GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc::
 
 ; May continue in GameMode6_Update_SavePrompt_ReadTwoChoiceCursor; increments wScreenCounter; may
 ; continue in GameMode6_Update_SavePrompt_ReadTwoChoiceCursor; may continue in
-; GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2; sets wScreenCounter to 0 (E-0347)
+; GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2; sets wScreenCounter to 0; also changes A by
+; register arithmetic (E-0347)
 ; why: part of GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep:
 ; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
 GameMode6_Update_SavePrompt_WriteScreenCounter::
@@ -4018,7 +4044,8 @@ GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2::
 GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank24_3; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank24_3; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap, in part of
 ; GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep: RunSaveGameSteps, a
 ; yes/no prompt and a 'monster egg' message (E-0352)
@@ -4043,7 +4070,7 @@ GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank24_3::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -4067,7 +4094,7 @@ BGMapAddressAtScroll_Bank24_3::
 GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_Data::
     db $2b, $01, $6b, $01
 
-; ld de, this bank's string table / BeginStringDisplay (E-0351)
+; ld de, this bank's string table / BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank24::
     ld de, BeginStringDisplay_Bank24_StringCategories
     call BeginStringDisplay
@@ -4075,7 +4102,7 @@ BeginStringDisplay_Bank24::
     db $11, $25, $5d, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_Bank24 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_Bank24::
     call BeginStringDisplay_Bank24
     call RunStringDisplayToEnd
@@ -4254,7 +4281,7 @@ PriestMenu_ShowServices::
 
 ; step 0 of PriestMenu_ShowServices: sets wTextWindowTileLo to $0e; sets wStringCategory to 0; sets
 ; wStringIndex to $15; calls ShowString_Bank24; sets wTextWindowTileLo to $12; increments
-; wScreenStep (E-0347)
+; wScreenStep; also changes HL and A by register arithmetic (E-0347)
 ; why: step 0 of PriestMenu_ShowServices (when wScreenStep = 0); PriestMenu_ShowServices: by
 ; wScreenStep: the 'Revive / Detox / Uncurse' window and the gold panel (E-0352)
 PriestMenu_ShowServices_ShowRviDoxUncurt::
@@ -4343,7 +4370,7 @@ PriestMenu_PayForService::
 ; UpdateListCursorListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets
 ; wTwoChoiceCursor to 4; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on
 ; wListCursor; calls PriestMenu_PayForService_LoadSRAMRecordByte_2; sets wTwoChoiceCursor to 0;
-; increments wScreenStep; then 4 more steps (see the code) (E-0347)
+; increments wScreenStep; then 5 more steps (see the code) (E-0347)
 ; why: step 0 of PriestMenu_PayForService (when wScreenStep = 0); PriestMenu_PayForService:
 ; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
 ; with two choices and ... (E-0352)
@@ -4575,7 +4602,7 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
 ; step 5 of PriestMenu_PayForService: branches on wListCursor; sets rRAMG to $0a; sets rRAMB to 0;
 ; calls LoadSRAMRecordByte; sets rRAMG to 0; sets rRAMB to 0; branches on hTemp0; sets wScreenStep
 ; to 1; increments wScreenStep; sets wTwoChoiceCursor to 0; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80 (E-0347)
+; wScriptStartRequest to $80; then 1 more step (see the code) (E-0347)
 ; why: step 5 of PriestMenu_PayForService (when wScreenStep = 5); PriestMenu_PayForService:
 ; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
 ; with two choices and ... (E-0352)
@@ -5117,7 +5144,8 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes::
 ; step 1 of PriestMenu_PayForService_CopyBuffers: branches on wIsCGB; calls CopyBytes; branches on
 ; wIsCGB; sets wBGPaletteUploadRequest to $7f; increments wScreenCounter; returns if wScreenCounter
 ; is below $1e; sets wScreenCounter to 0; sets wScreenSubStep to 0; increments wScreenStep; returns
-; unless wListCursor is 0; calls RestartMapMusic (E-0347)
+; unless wListCursor is 0; calls RestartMapMusic; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: step 1 of PriestMenu_PayForService_CopyBuffers (when wScreenSubStep = 1);
 ; PriestMenu_PayForService_CopyBuffers: two CopyBytes steps (E-0352)
 PriestMenu_PayForService_CopyBuffers_CopyBytes_2::
@@ -5192,7 +5220,7 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes_2::
 ; branches on wListCursor; calls SRAMRecordAddress; calls RunMoveIncapacitatedPartyMembersBackTwice;
 ; calls LoadRecordListNameTiles; sets rRAMG to 0; sets rRAMB to 0; calls
 ; PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf; increments wScreenStep; calls
-; LoadPlayerAndFollowerSpriteGraphics; then 3 more steps (see the code) (E-0347)
+; LoadPlayerAndFollowerSpriteGraphics; then 4 more steps (see the code) (E-0347)
 ; why: step 16 of PriestMenu_PayForService (when wScreenStep = 16); PriestMenu_PayForService:
 ; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
 ; with two choices and ... (E-0352)
@@ -5314,7 +5342,7 @@ PriestMenu_PayForService_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0351)
+; same 58 bytes appear in 8 banks) (E-0353)
 CopyRectTo20ByteRows_Bank24::
     push hl
     push bc
@@ -5406,7 +5434,7 @@ DrawScreenBufferRectNoOrigin_Bank24::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank24_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -5438,7 +5466,7 @@ CopyBytesDEToHL_Bank24::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0351)
+; 18 bytes appear in 7 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank24::
     ld a, $02
     ldh [rSVBK], a
@@ -5457,7 +5485,7 @@ CopyLow3BitsToWRAMBank2_Bank24::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0351)
+; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
 StoreBAtWordTableEntry_Bank24::
     push bc
     add a
@@ -5510,7 +5538,8 @@ DrawGoldPanel_Bank24_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; Sets rRAMG to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; branches on hTemp0; branches on E;
-; sets rRAMG to 0; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0 (E-0347)
+; sets rRAMG to 0; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, BC and A
+; by register arithmetic (E-0347)
 ; why: part of PriestMenu_PayForService_LoadSRAMRecordByte, in step 5 of PriestMenu_PayForService
 ; (when wScreenStep = 5); PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep: picks
 ; a party member, shows the gold panel, confirms with two choices and ... (E-0352)
@@ -5563,7 +5592,7 @@ PriestMenu_PayForService_LoadSRAMRecordByte_2::
 ; called from PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24: sets rRAMG to $0a; sets rRAMB to
 ; 0; calls LoadSRAMRecordByte; calls PriestMenu_PayForService_WriteMarkC0; calls
 ; PriestMenu_PayForService_WriteMarkC1; calls PriestMenu_PayForService_WriteMarkC2; branches on E;
-; sets rRAMG to 0; sets rRAMB to 0 (E-0347)
+; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24, in step 2 of
 ; PriestMenu_PayForService (when wScreenStep = 2); PriestMenu_PayForService: PriestMenu screen state
 ; 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
@@ -5747,7 +5776,8 @@ PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc::
 
 ; May continue in PriestMenu_PayForService_ReadChoiceCursor; increments wCursorBlinkAE; may continue
 ; in PriestMenu_PayForService_ReadChoiceCursor; may continue in
-; PriestMenu_PayForService_ReadChoiceCursor_2; sets wCursorBlinkAE to 0 (E-0347)
+; PriestMenu_PayForService_ReadChoiceCursor_2; sets wCursorBlinkAE to 0; also changes A by register
+; arithmetic (E-0347)
 ; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
 ; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
 ; (E-0352)
@@ -5790,7 +5820,8 @@ PriestMenu_PayForService_ReadChoiceCursor_2::
 PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank24_2; calls StepBGMapAddressBackOnScrollWrap (E-0347)
+; Calls BGMapAddressAtScroll_Bank24_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
+; and A by register arithmetic (E-0347)
 ; why: part of PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap, in part of
 ; PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep:
 ; picks a party member, shows the gold panel, confirms with two choices and ... (E-0352)
@@ -5820,7 +5851,8 @@ PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_Data::
 
 ; called from PriestMenu_PayForService_DrawGoldPanel_Bank24: calls CopyBytesDEToHL_Bank24; branches
 ; on wIsCGB; calls CopyLow3BitsToWRAMBank2_Bank24; may continue in
-; PriestMenu_PayForService_CopyBytesDEToHL_Bank24 (E-0347)
+; PriestMenu_PayForService_CopyBytesDEToHL_Bank24; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of PriestMenu_PayForService_DrawGoldPanel_Bank24, in step 4 of
 ; PriestMenu_PayForService (when wScreenStep = 4); PriestMenu_PayForService: PriestMenu screen state
 ; 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
@@ -5916,8 +5948,8 @@ PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2::
     call DrawScreenBufferRectNoOrigin_Bank24
     ret
 
-; Calls CopyBytesDEToHL_Bank24; may continue in PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2
-; (E-0347)
+; Calls CopyBytesDEToHL_Bank24; may continue in PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of PriestMenu_PayForService_CopyBytesDEToHL_Bank24, in a helper of
 ; PriestMenu_PayForService_DrawGoldPanel_Bank24, in step 4 of PriestMenu_PayForService (when
 ; wScreenStep = 4); PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep: picks a
@@ -5947,7 +5979,8 @@ PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2::
     ret
 
 ; Sets rRAMG to $0a; sets rRAMB to 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; sets
-; rRAMB to 0; branches on the byte at wNameGlyphBuf; branches on C (E-0347)
+; rRAMB to 0; branches on the byte at wNameGlyphBuf; branches on C; also changes HL, DE, A and C by
+; register arithmetic (E-0347)
 ; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
 ; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
 ; (E-0352)
@@ -5990,7 +6023,7 @@ PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0351)
+; (E-0353)
 CopyTileBytesToVRAM_Bank24::
     ld c, $10
 

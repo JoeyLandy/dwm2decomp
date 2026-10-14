@@ -182,7 +182,7 @@ SetupKeyWorldObjectsForMapType::
 
 ; called from SetupKeyWorldObjectsForMapType: may return early; branches on E; sets wSpriteSlotCount
 ; to 0; branches on 0; sets wSpriteSlotCount; copies B to hTempA; sets hTemp4 to 0; sets hTemp5;
-; sets hTemp2; branches on hTemp9; sets hTemp0; sets hTemp1; then 12 more steps (see the code)
+; sets hTemp2; branches on hTemp9; sets hTemp0; sets hTemp1; then 13 more steps (see the code)
 ; (E-0347)
 ; why: a helper of SetupKeyWorldObjectsForMapType; SetupKeyWorldObjectsForMapType: for key-world map
 ; types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wKeyWorldFloorInfo
@@ -961,7 +961,7 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
 ; wRandomLo & $03; calls IsTileUnderCellBlocking; calls
 ; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls IsTileUnderCellBlocking; calls
 ; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; continues in
-; UpdateSpriteSlots_RestoreRegisters_Skip (E-0347)
+; UpdateSpriteSlots_RestoreRegisters_Skip; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 2 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
 ; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
@@ -1156,7 +1156,8 @@ UpdateSpriteSlots_Return::
 ; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
 ; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
 ; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2;
-; continues in UpdateSpriteSlots_RestoreRegisters_Skip (E-0347)
+; continues in UpdateSpriteSlots_RestoreRegisters_Skip; also changes HL, BC and A by register
+; arithmetic (E-0347)
 ; why: step 3 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
 ; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
@@ -1668,7 +1669,8 @@ RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     ret
 
 ; Copies C & $0f to hTemp0; copies B & $0f to hTemp1; branches on hTemp1; branches on hTemp0;
-; branches on wPartyCount; branches on hTemp1; branches on hTemp0 (E-0347)
+; branches on wPartyCount; branches on hTemp1; branches on hTemp0; also changes HL, BC and A by
+; register arithmetic (E-0347)
 ; why: part of UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0, in step 5 of UpdateSpriteSlots;
 ; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for
 ; its type byte (jump table of six) (E-0352, E-0124)
@@ -2213,7 +2215,7 @@ DrawFollowerSpriteIfFlag1B::
 ; Returns if bit 0 of hFieldDrawFlags is set; copies hPlayerSpriteVariant to hSpriteSetIndex; sets
 ; hSpriteAttrXor to 0; calls IsFadingAtMap5AScreen00Y80; branches on hPlayerFacing; sets
 ; hSpriteAttrXor to $20; sets hSpriteSubIndex; sets hSpriteTileOffset to 0; sets hSpriteOriginX;
-; sets hSpriteOriginXHi; sets hSpriteOriginY; sets hSpriteOriginYHi; then 12 more steps (see the
+; sets hSpriteOriginXHi; sets hSpriteOriginY; sets hSpriteOriginYHi; then 13 more steps (see the
 ; code) (E-0347)
 ; why: part of AdvancePlayerAnimCounterAndRunPlayerSpriteMode;
 ; AdvancePlayerAnimCounterAndRunPlayerSpriteMode: unless bit 1 of hPlayerStateFlags is set,
@@ -3281,7 +3283,7 @@ KeyWorldObjectList_6_0_1::
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
-; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0351)
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0353)
 StartMessageCommand09HL_B04::
     ld a, l
     ld [wScriptParam0], a
@@ -3535,7 +3537,7 @@ Talk_HeroCheckedThePedestalIts::
 ; Script_WelcomeToTheLibrary; starts Script_WelcomeToTheLibrary_2; calls
 ; TotalSpeciesFlaggedOrListed; branches on hTemp1; branches on hTemp0; checks
 ; EVENT_HELLO_OUR_YOUNG_SAVIOR; starts Script_HelloOurYoungSavior; checks
-; EVENT_WELCOME_TO_THE_LIBRARY_19E; then 1 more step (see the code) (E-0347)
+; EVENT_WELCOME_TO_THE_LIBRARY_19E; then 2 more steps (see the code) (E-0347)
 ; why: step 10 of ReadableTalkEvents (when wTalkEventGroup = 10); ReadableTalkEvents: talk category
 ; $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf") (E-0352)
 ReadableTalkEvents_TestFlagBit_2::
@@ -5717,7 +5719,7 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     ret
 
 ; step 10 of KalkaTalkEvents: branches on hPlayerX; starts Script_WelcomeToOurInn; sets wDataBank to
-; $10 (E-0347)
+; $10; also changes HL and A by register arithmetic (E-0347)
 ; why: step 10 of KalkaTalkEvents (when wTalkEventGroup = 10); KalkaTalkEvents: talk category 2:
 ; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
 ; (E-0352)
@@ -7021,7 +7023,7 @@ FieldTalkEvents_StartScriptAtHL_B04::
     ret
 
 ; step 35 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 1; starts
-; Script_PersonalityMessage (E-0347)
+; Script_PersonalityMessage; also changes HL and A by register arithmetic (E-0347)
 ; why: step 35 of FieldTalkEvents (when wTalkEventGroup = 35); FieldTalkEvents: talk category 0:
 ; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
 ; E-0286)
@@ -7044,7 +7046,7 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     ret
 
 ; step 36 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 2; starts
-; Script_PersonalityMessage (E-0347)
+; Script_PersonalityMessage; also changes HL and A by register arithmetic (E-0347)
 ; why: step 36 of FieldTalkEvents (when wTalkEventGroup = 36); FieldTalkEvents: talk category 0:
 ; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
 ; E-0286)
@@ -10246,7 +10248,8 @@ Talk_KeyWorldBossBattle::
 
 ; step 1 of KeyWorldTalkEvents: sets wDataBank to $10; branches on the byte at wKeyWorldFloorInfo +
 ; $1; sets wScreenTableIndex to $0f; starts Script_WarubouWaHeyYou_2; branches on
-; wKeyWorldFloorState; sets wScreenTableIndex to $13; starts Script_WarubouWaHeyYou_2 (E-0347)
+; wKeyWorldFloorState; sets wScreenTableIndex to $13; starts Script_WarubouWaHeyYou_2; also changes
+; HL and A by register arithmetic (E-0347)
 ; why: step 1 of KeyWorldTalkEvents (when wTalkEventGroup = 1); KeyWorldTalkEvents: talk category 9:
 ; the key-world events (Warubou's messages, KeyWorldBossBattle, KeyWorldFloorBattle (E-0352, E-0286)
 KeyWorldTalkEvents_StartScriptAtHL_B04::

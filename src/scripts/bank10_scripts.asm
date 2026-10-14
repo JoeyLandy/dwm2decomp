@@ -30,7 +30,7 @@ FetchScriptCommand::
 
 ; Branches on wScriptInDataBank; calls ReadWordFromDataBank; sets wScriptRunning to 0; sets
 ; wScriptCommandType to 0; sets wScriptInDataBank to 0; branches on wMapType; sets wModeState to 0;
-; sets wModeState to 5; dispatches on $05 (E-0347)
+; sets wModeState to 5; dispatches on $05; also changes HL and A by register arithmetic (E-0347)
 ; why: part of FetchScriptCommand; FetchScriptCommand: does nothing during a fade or unless
 ; wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning) (E-0352)
 FetchScriptCommand_ReadScriptPointerLo::
@@ -1660,7 +1660,8 @@ ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     ret
 
 ; step 1 of ScriptCommand09: branches on wScriptParam1; returns if bit 7 of wScriptParam1 is set;
-; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep (E-0347)
+; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep; also changes HL and
+; A by register arithmetic (E-0347)
 ; why: step 1 of ScriptCommand09 (when wScriptStep = 1); ScriptCommand09: runs one frame of script
 ; command type 09 (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
 ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
@@ -1735,7 +1736,8 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
 
 ; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
 ; ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType; branches on wMessageMode;
-; copies L to wStringIndex; sets wStringCategory to 0 (E-0347)
+; copies L to wStringIndex; sets wStringCategory to 0; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: a helper of ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of
 ; ScriptCommand09 (when wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09
 ; (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
@@ -1784,7 +1786,8 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data::
     db $24
 
 ; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; copies L
-; to wStringIndex; sets wStringCategory to 0; dispatches on H (E-0347)
+; to wStringIndex; sets wStringCategory to 0; dispatches on H; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: part of ScriptCommand09_WriteStringIndexAndStringCategory_Data, in part of
 ; ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
 ; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when

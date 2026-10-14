@@ -17,7 +17,8 @@ GameMode2_Init::
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; per-frame routine for wGameMode = 2 (E-0029)
+; game mode 2, the pause menu: by wModeState, its pages Info, Items, Skills and Plan, and its
+; closing state (E-0354; was: per-frame routine for wGameMode = 2)
 GameMode2_Update::
     ld a, [wWorldMapState]
     bit 7, a
@@ -39,7 +40,7 @@ PauseMenu_State4::
 
 ; Branches on wWorldMapState; sets wSpriteSlotCount to 0; branches on wIsCGB; calls FillBytes; sets
 ; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; sets rVBK to 1; calls WriteVRAMByteInc;
-; sets rVBK to 0; calls FillBytes; calls CopyRectToBGMap; sets hScrollX to 0; then 39 more steps
+; sets rVBK to 0; calls FillBytes; calls CopyRectToBGMap; sets hScrollX to 0; then 40 more steps
 ; (see the code) (E-0347)
 ; why: part of PauseMenu_State4; PauseMenu_State4: GameMode2_Update, wModeState 4: hands over to
 ; PauseMenu_State4_GiftMenu (state 4) (E-0352, E-0046)
@@ -281,7 +282,7 @@ PauseMenu_State4_ReadModeState::
 ; step 0 of PauseMenu_State4_ReadModeState: calls LoadBlankedBlocks00To03WithCursor; calls
 ; DecompressMenuTilesTo16E0; calls LoadTilesForPartyRecords; copies wPartyCount to wMenuRowCount;
 ; sets wMenuPageCount to 0; sets wMenuPage to 0 (E-0347)
-; why: step 0 of PauseMenu_State4_ReadModeState (when wModeState = 0), in a helper of
+; why: step 0 of PauseMenu_State4_ReadModeState (when wModeState & $07 = 0), in a helper of
 ; PauseMenu_State4; PauseMenu_State4: GameMode2_Update, wModeState 4: hands over to
 ; PauseMenu_State4_GiftMenu (state 4) (E-0352, E-0046)
 PauseMenu_State4_LoadBlankedBlocks00To03WithCursor::
@@ -298,7 +299,7 @@ PauseMenu_State4_LoadBlankedBlocks00To03WithCursor::
 
 ; step 1 of PauseMenu_State4_ReadModeState: calls ResetInventoryMenuToFirstPage; calls
 ; BuildInventoryScreenBase; calls ShowString0Bank09AtTiles16E0ThenItemDescription (E-0347)
-; why: step 1 of PauseMenu_State4_ReadModeState (when wModeState = 1), in a helper of
+; why: step 1 of PauseMenu_State4_ReadModeState (when wModeState & $07 = 1), in a helper of
 ; PauseMenu_State4; PauseMenu_State4: GameMode2_Update, wModeState 4: hands over to
 ; PauseMenu_State4_GiftMenu (state 4) (E-0352, E-0046)
 PauseMenu_State4_ResetInventoryMenuToFirstPage::
@@ -311,7 +312,7 @@ PauseMenu_State4_ResetInventoryMenuToFirstPage::
 ; ShowString1Bank09AtTiles16E0ThenDetails; sets wMenuPageCount to 0; sets wMenuPage to 0; sets
 ; wMenuItemCount to 0; sets wMenuSelectedMember to 0; sets wMenuCursor to 0; sets wSubMenuCursor to
 ; 0 (E-0347)
-; why: step 2 of PauseMenu_State4_ReadModeState (when wModeState = 2), in a helper of
+; why: step 2 of PauseMenu_State4_ReadModeState (when wModeState & $07 = 2), in a helper of
 ; PauseMenu_State4; PauseMenu_State4: GameMode2_Update, wModeState 4: hands over to
 ; PauseMenu_State4_GiftMenu (state 4) (E-0352, E-0046)
 PauseMenu_State4_LoadScreenBlocks1CAnd0C::
@@ -329,7 +330,7 @@ PauseMenu_State4_LoadScreenBlocks1CAnd0C::
 ; step 3 of PauseMenu_State4_ReadModeState: branches on wModeState; checks
 ; EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_STAFF_ROLL_PARTY_SAVED; sets wTemp0 to 1; sets wTemp0
 ; to 6; calls LoadScreenBlock21; calls ShowString2Bank09InWindowThenDefault (E-0347)
-; why: step 3 of PauseMenu_State4_ReadModeState (when wModeState = 3), in a helper of
+; why: step 3 of PauseMenu_State4_ReadModeState (when wModeState & $07 = 3), in a helper of
 ; PauseMenu_State4; PauseMenu_State4: GameMode2_Update, wModeState 4: hands over to
 ; PauseMenu_State4_GiftMenu (state 4) (E-0352, E-0046)
 PauseMenu_State4_TestFlagBit::
@@ -358,7 +359,7 @@ PauseMenu_State4_TestFlagBit::
     call ShowString2Bank09InWindowThenDefault
     ret
 
-; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0351)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0353)
 ClearScreenTileBuffer_Bank03::
     ld hl, wScreenTileBuffer
     ld bc, $0240
@@ -443,7 +444,7 @@ CopyRectRecordBlankingText_Bank03::
     ret
 
 ; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC =
-; $1412) (E-0351)
+; $1412) (E-0353)
 CopyTileBufferToBGMap::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -451,7 +452,7 @@ CopyTileBufferToBGMap::
 
 ; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte
 ; (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is
-; masked with $9B) (E-0351)
+; masked with $9B) (E-0353)
 CopyRectToBGMap::
     push bc
     push hl
@@ -946,8 +947,9 @@ ShowStringBank08AtTilesHL_Bank03_2::
 ; wGM2TimerFrames to 0; branches on wGM2TimerSeconds; increments wGM2TimerSeconds; sets
 ; wGM2TimerSeconds to 0; branches on wGM2TimerMinutes; increments wGM2TimerMinutes; sets
 ; wGM2TimerMinutes to 0; returns if wPlayMinutes is $3b; returns if the byte at wPlayFrames is below
-; $3c; sets wPlayFrames to 0; then 4 more steps (see the code) (E-0347)
-; why: a helper of GameMode2_Update; GameMode2_Update: per-frame routine for wGameMode = 2 (E-0352)
+; $3c; sets wPlayFrames to 0; then 5 more steps (see the code) (E-0347)
+; why: a helper of GameMode2_Update; GameMode2_Update: game mode 2, the pause menu: by wModeState,
+; its pages Info, Items, Skills and Plan, and its closing state (E-0352, E-0354)
 GameMode2_Update_WriteGM2TimerFramesAndGM2TimerSecondsEtc::
     ld a, [wGM2TimerFrames]
     inc a
@@ -1885,7 +1887,7 @@ SetScreenTileBufferRow2Col7TileC1::
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; calls HLToDecimalDigits; calls
 ; WriteDecimalDigitTiles; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; calls HLToDecimalDigits; calls
-; WriteDecimalDigitTiles; calls HLToDecimalDigits; then 7 more steps (see the code) (E-0347)
+; WriteDecimalDigitTiles; calls HLToDecimalDigits; then 8 more steps (see the code) (E-0347)
 ; why: a helper of WithSRAMDrawBuildRecordLevelAndStatusRow;
 ; WithSRAMDrawBuildRecordLevelAndStatusRow: with SRAM bank 0 enabled runs
 ; BuildRecordLevelAndStatusRow and WithSRAMDrawBuildRecordLevelAndStatusRow_HLToDecimalDigits
@@ -1980,7 +1982,7 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_HLToDecimalDigits::
 ; wStringIndex; sets wStringCategory to $0b; calls ShowStringBank08AtTilesHL_Bank03; calls
 ; SRAMRecordAddressMapped; branches on the byte at vTiles2 + $350; sets wStringIndex; sets
 ; wStringCategory to 7; calls ShowStringBank08AtTilesHL_Bank03; calls SRAMRecordAddressMapped;
-; copies the byte at vTiles2 + $4c0 to wStringIndex; sets wStringCategory; then 25 more steps (see
+; copies the byte at vTiles2 + $4c0 to wStringIndex; sets wStringCategory; then 26 more steps (see
 ; the code) (E-0347)
 ; why: a helper of WithSRAMDrawBuildRecordLevelAndStatusRow_2;
 ; WithSRAMDrawBuildRecordLevelAndStatusRow_2: with SRAM bank 0 enabled runs
@@ -2282,7 +2284,8 @@ ShowSkillNameAtSlotB_Data::
 ; calls ShowSpeciesNameAndIconForSlotB; calls WithSRAMDrawMemberRecordFamily_CopyTenBytesToTextBuf0;
 ; calls WithSRAMDrawMemberRecordFamily_DerefWordTableEntryA_Bank03; calls WriteVRAMByteInc; sets
 ; wTextBuf0 to $f0; calls SelectString5Category8ThenShow; calls
-; WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc (E-0347)
+; WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc; also changes HL, BC
+; and A by register arithmetic (E-0347)
 ; why: a helper of WithSRAMDrawMemberRecordFamily; WithSRAMDrawMemberRecordFamily: with SRAM bank 0
 ; enabled, reads byte $0D of the selected member's record (wMenuSelectedMember) and draws species
 ; name and icon ... (E-0352, E-0122, E-0259)
@@ -2435,7 +2438,8 @@ WithSRAMDrawMemberRecordFamily_CopyTenBytesToTextBuf0::
     ret
 
 ; Calls CopyTenBytesToTextBuf0; calls DerefWordTableEntryA_Bank03; branches on the byte at
-; WithSRAMDrawMemberRecordFamily_CopyTenBytesToTextBuf0_Data2; calls HLToDecimalDigits (E-0347)
+; WithSRAMDrawMemberRecordFamily_CopyTenBytesToTextBuf0_Data2; calls HLToDecimalDigits; also changes
+; HL, BC and A by register arithmetic (E-0347)
 ; why: part of WithSRAMDrawMemberRecordFamily; WithSRAMDrawMemberRecordFamily: with SRAM bank 0
 ; enabled, reads byte $0D of the selected member's record (wMenuSelectedMember) and draws species
 ; name and icon ... (E-0352, E-0122, E-0259)
@@ -2588,8 +2592,8 @@ PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics_ReadTemp1::
     dw PauseMenu_Info_Blocks09And0A_FillVRAMRowsWithD
 
 ; step 0 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics: calls WriteVRAMByteInc;
-; branches on wIsCGB; sets rVBK to 1; calls WriteVRAMByteInc; sets rVBK to 0; increments wTemp1
-; (E-0347)
+; branches on wIsCGB; sets rVBK to 1; calls WriteVRAMByteInc; sets rVBK to 0; increments wTemp1;
+; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 0 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics, in a helper of
 ; PauseMenu_Info_Blocks09And0A_LoadScreenBlocks00_09_0A, in step 1 of PauseMenu_Info_Blocks09And0A
 ; (when wTemp1 = 1); PauseMenu_Info_Blocks09And0A: builds screen blocks 0, 9 and $0A and runs the
@@ -2647,7 +2651,7 @@ PauseMenu_Info_Blocks09And0A_WriteVRAMByteInc::
 ; SRAMRecordAddressMapped; calls LoadMonsterPicture; branches on wIsCGB; copies the byte at
 ; PauseMenu_Info_Blocks09And0A_LoadScreenBlockForPartySize_Data1 to hTemp0; calls
 ; LoadMonsterPictureAttributeBlock; calls DrawRecordHPMPAndLevelForRowC; calls
-; ShowRecordSpeciesNameForRowC; calls DrawRecordSexMarkTile; then 7 more steps (see the code)
+; ShowRecordSpeciesNameForRowC; calls DrawRecordSexMarkTile; then 8 more steps (see the code)
 ; (E-0347)
 ; why: step 1 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics, in a helper of
 ; PauseMenu_Info_Blocks09And0A_LoadScreenBlocks00_09_0A, in step 1 of PauseMenu_Info_Blocks09And0A
@@ -3220,7 +3224,7 @@ PauseMenu_Items_UseItem::
     dw PauseMenu_Items_UseItem_ResetInventoryMenuToFirstPage_SetSpriteSlotCount
 
 ; step 0 of PauseMenu_Items_UseItem: sets wTemp1 to $0d; sets wTemp1 to 4; sets wTemp1 to $14;
-; increments wTemp1 (E-0347)
+; increments wTemp1; also changes HL and A by register arithmetic (E-0347)
 ; why: step 0 of PauseMenu_Items_UseItem (when wTemp1 = 0); PauseMenu_Items_UseItem: by wTemp1:
 ; picks an item and a member, CheckItemUsable, ApplyItemEffect ('But nothing happened', 'But it
 ; couldn't be used') and may leave ... (E-0352)
@@ -3881,8 +3885,8 @@ PauseMenu_Items_SubMenu_BuildScreenBlocks0EAnd0FWithCursor::
     ret
 
 ; step 3 of PauseMenu_Items_SubMenu: calls UpdateMenuCursor; branches on wJoypadPressed; plays sound
-; $69; calls WriteVRAMByte; sets wTemp1; may return early; sets wTemp0 to 1; sets wTemp1 to 0
-; (E-0347)
+; $69; calls WriteVRAMByte; sets wTemp1; may return early; sets wTemp0 to 1; sets wTemp1 to 0; also
+; changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 3 of PauseMenu_Items_SubMenu (when wTemp1 = 3); PauseMenu_Items_SubMenu: screen blocks
 ; $0E and $0F with the sub-menu cursor, strings, and the inventory reset to its first page (E-0352)
 PauseMenu_Items_SubMenu_UpdateMenuCursor::
@@ -5559,7 +5563,7 @@ PauseMenu_Skills_UseFieldSkill_WaitTextFlags_AdvanceTemp1::
 ; step 9 of PauseMenu_Skills_UseFieldSkill: returns unless wTextFlags is 0; branches on wItemId;
 ; calls CopyStringHLToDE; sets wStringCategory to 1; sets wStringIndex to $0c; calls
 ; BeginStringDisplay_Bank37; returns if the byte at wWorkBuf + $1 is below [hl]; sets wItemId to
-; $ff; sets wTemp1 to $0b (E-0347)
+; $ff; sets wTemp1 to $0b; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: step 9 of PauseMenu_Skills_UseFieldSkill (when wTemp1 = 9); PauseMenu_Skills_UseFieldSkill:
 ; by wTemp1: shows the skill's strings, applies it to the SRAM record and leaves the pause menu for
 ; the field ('Hero returned with ...', ... (E-0352)
@@ -5669,7 +5673,7 @@ LoadScreenBlocks1CAnd0C::
     ret
 
 ; Calls SRAMRecordAddressMapped; calls CopyRectToBGMap; branches on wMenuItemCount; sets
-; wScreenTileBuffer + $10e to $c6 (E-0347)
+; wScreenTileBuffer + $10e to $c6; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of PauseMenu_Skills; PauseMenu_Skills: GameMode2_Update, wModeState 2: the SKILLS list
 ; ('No skills' at the start) (E-0352, E-0046)
 PauseMenu_Skills_CopyRectToBGMap::
@@ -5732,7 +5736,8 @@ BuildRecordField5FValueScreen::
 ; ClearScreenTileBuffer_Bank03; calls CopyBlockToTileBuffer; calls SRAMRecordAddressMapped; calls
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; branches on wRecordBufferData; calls
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
-; WriteBCTileToScreenBufferAtTableEntry_Bank03; calls CopyRecordRectToScreenBuffer_Bank03 (E-0347)
+; WriteBCTileToScreenBufferAtTableEntry_Bank03; calls CopyRecordRectToScreenBuffer_Bank03; also
+; changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Skills_ChooseTarget_CopyTileBufferToBGMap, in step 1 of
 ; PauseMenu_Skills_ChooseTarget (when wTemp1 = 1); PauseMenu_Skills_ChooseTarget: by wTemp1: the
 ; record field $5F screen with a cursor, before PauseMenu_Skills_UseFieldSkill (E-0352)
@@ -5892,7 +5897,7 @@ ShowString1Bank09AtTiles16E0ThenDetails::
 ; Calls SRAMRecordAddressMapped; sets wStringIndex to 0; sets wRecordBuffer to 0; sets wItemId to 0;
 ; calls LoadSkillRecord; branches on wRecordBufferData; calls SRAMRecordAddressMapped; calls
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; sets wStringCategory to 9; calls
-; ShowStringBank08AtTilesHL_Bank03 (E-0347)
+; ShowStringBank08AtTilesHL_Bank03; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: part of PauseMenu_Skills_ChooseSkill; PauseMenu_Skills_ChooseSkill: by wTemp1: the screen
 ; built from the member's record field $5F (MP) with a cursor, then the skill's string (E-0352)
 PauseMenu_Skills_ChooseSkill_SRAMRecordAddressMapped::
@@ -5949,7 +5954,8 @@ PauseMenu_Skills_ChooseSkill_SRAMRecordAddressMapped::
 ; Calls SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
 ; HLToDecimalDigits; calls WriteDecimalDigitTiles; calls SRAMRecordAddressMapped; calls
 ; SetScreenTileBufferRow16Col7TileC2_Bank03; calls SetScreenTileBufferRow16Col7TileC1_Bank03; calls
-; SetScreenTileBufferRow16Col6TileC0_Bank03 (E-0347)
+; SetScreenTileBufferRow16Col6TileC0_Bank03; also changes HL, DE, A and C by register arithmetic
+; (E-0347)
 ; why: part of PauseMenu_Skills_ChooseTarget; PauseMenu_Skills_ChooseTarget: by wTemp1: the record
 ; field $5F screen with a cursor, before PauseMenu_Skills_UseFieldSkill (E-0352)
 PauseMenu_Skills_ChooseTarget_HLToDecimalDigits::
@@ -6023,7 +6029,8 @@ SetScreenTileBufferRow16Col6TileC0_Bank03::
     ret
 
 ; called from PauseMenu_Skills_ChooseSkill_UpdateMenuCursor: sets rRAMG to $0a; sets rRAMB to 0;
-; calls SRAMRecordAddressMapped; sets rRAMG to 0; branches on wRecordBufferData (E-0347)
+; calls SRAMRecordAddressMapped; sets rRAMG to 0; branches on wRecordBufferData; also changes HL,
+; DE, A and C by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Skills_ChooseSkill_UpdateMenuCursor, in step 1 of
 ; PauseMenu_Skills_ChooseSkill (when wTemp1 = 1); PauseMenu_Skills_ChooseSkill: by wTemp1: the
 ; screen built from the member's record field $5F (MP) with a cursor, then the skill's string
@@ -6222,7 +6229,8 @@ PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data2::
     db $03, $04, $05, $00
 
 ; Calls SRAMRecordAddressMapped; branches on C; sets wMenuPageCount to 1; sets wMenuItemCount to 1;
-; branches on C; sets wMenuLastPageRows to 4 (E-0347)
+; branches on C; sets wMenuLastPageRows to 4; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: part of PauseMenu_Skills_ChooseMember; PauseMenu_Skills_ChooseMember: by wTemp1: the record
 ; list and cursor (E-0352)
 PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped::
@@ -6272,7 +6280,7 @@ PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped::
 
 ; called from PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen: branches on C; sets
 ; wMenuPageCount to 1; sets wMenuItemCount to 1; branches on C; sets wMenuLastPageRows to 4;
-; branches on wMenuPage (E-0347)
+; branches on wMenuPage; also changes A and B by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen, in step 0 of
 ; PauseMenu_Skills_ChooseSkill (when wTemp1 = 0); PauseMenu_Skills_ChooseSkill: by wTemp1: the
 ; screen built from the member's record field $5F (MP) with a cursor, then the skill's string
@@ -6350,7 +6358,8 @@ SetMenuRowsForPage_Bank03::
     ret
 
 ; Calls SRAMRecordAddressMapped; calls CopyRectToBGMap; branches on wMenuItemCount; returns if
-; wMenuPageCount is 0; calls WriteVRAMByte (E-0347)
+; wMenuPageCount is 0; calls WriteVRAMByte; also changes HL, DE, BC and A by register arithmetic
+; (E-0347)
 ; why: part of PauseMenu_Skills_CopyRectToBGMap, in part of PauseMenu_Skills; PauseMenu_Skills:
 ; GameMode2_Update, wModeState 2: the SKILLS list ('No skills' at the start) (E-0352, E-0046)
 PauseMenu_Skills_CopyRectToBGMap_2::
@@ -6547,7 +6556,8 @@ PauseMenu_Plan_ChooseListEntry::
 ; step 0 of PauseMenu_Plan_ChooseListEntry: calls CopyFromBankWaitVRAM; calls
 ; BuildScreenBlocks21To23; calls FillTilesFromRequest; calls CopyTileBufferToBGMap; calls
 ; PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc; calls
-; PauseMenu_Plan_ChooseListEntry_WaitPauseListCount; increments wTemp1 (E-0347)
+; PauseMenu_Plan_ChooseListEntry_WaitPauseListCount; increments wTemp1; also changes HL, DE, BC and
+; A by register arithmetic (E-0347)
 ; why: step 0 of PauseMenu_Plan_ChooseListEntry (when wTemp1 = 0); PauseMenu_Plan_ChooseListEntry:
 ; by wTemp1: menu rows and pages, a list-entry bit-7 test, strings, and an exit to the field
 ; (E-0352)
@@ -6698,7 +6708,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To24::
 ; step 3 of PauseMenu_Plan_ChooseListEntry: calls UpdateMenuCursor; branches on wJoypadPressed;
 ; plays sound $69; increments wTemp1; calls TestListEntryBit7; branches on wCurrentKeyIndex;
 ; branches on wMapType; branches on the byte at wTemp1; calls WriteKeyNameToDE; sets wTemp1 to $0a;
-; branches on the byte at wTemp1 & $3f; copies the byte at wTemp1 & $3f to wStringIndex; then 8 more
+; branches on the byte at wTemp1 & $3f; copies the byte at wTemp1 & $3f to wStringIndex; then 9 more
 ; steps (see the code) (E-0347)
 ; why: step 3 of PauseMenu_Plan_ChooseListEntry (when wTemp1 = 3); PauseMenu_Plan_ChooseListEntry:
 ; by wTemp1: menu rows and pages, a list-entry bit-7 test, strings, and an exit to the field
@@ -6819,7 +6829,7 @@ PauseMenu_Plan_ChooseListEntry_CallChooseListEntry_BuildScreenBlocks21To24::
 ; step 5 of PauseMenu_Plan_ChooseListEntry: calls TestListEntryBit7; branches on wModeState; sets
 ; wDataBankSave to $40; branches on wModeState; sets wStringIndex to 9; sets wStringCategory to 8;
 ; calls TestListEntryBit7; sets wDataBankSave; sets wStringCategory to 8; sets wStringIndex to $0b;
-; calls BeginStringDisplay_Bank08; increments wTemp1 (E-0347)
+; calls BeginStringDisplay_Bank08; increments wTemp1; then 1 more step (see the code) (E-0347)
 ; why: step 5 of PauseMenu_Plan_ChooseListEntry (when wTemp1 = 5); PauseMenu_Plan_ChooseListEntry:
 ; by wTemp1: menu rows and pages, a list-entry bit-7 test, strings, and an exit to the field
 ; (E-0352)
@@ -7143,7 +7153,7 @@ PauseMenu_Plan_TileBufferMenu_CopyTileBufferToBGMapAndStep::
 
 ; step 1 of PauseMenu_Plan_TileBufferMenu: calls CopyRectToBGMap; sets rRAMG to $0a; sets rRAMB to
 ; 0; calls SRAMRecordAddressMapped; copies the byte at vBGMap0 + $ea & $03 to wMenuCursor; sets
-; rRAMG to 0; increments wTemp1 (E-0347)
+; rRAMG to 0; increments wTemp1; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 1 of PauseMenu_Plan_TileBufferMenu (when wTemp1 = 1); PauseMenu_Plan_TileBufferMenu:
 ; copies the tile buffer and a rectangle, then the menu cursor (E-0352)
 PauseMenu_Plan_TileBufferMenu_CopyRectToBGMap::
@@ -7185,7 +7195,7 @@ PauseMenu_Plan_TileBufferMenu_CopyRectToBGMap::
 ; step 2 of PauseMenu_Plan_TileBufferMenu: calls UpdateMenuCursor; branches on wJoypadPressed;
 ; branches on wPauseMenuStep; decrements wPauseMenuStep; decrements wTemp1; sets wTemp0 to 0; sets
 ; wTemp1 to 0; returns unless bit 0 of 0 is set; plays sound $69; sets rRAMG to $0a; sets rRAMB to
-; 0; calls SRAMRecordAddressMapped; then 5 more steps (see the code) (E-0347)
+; 0; calls SRAMRecordAddressMapped; then 6 more steps (see the code) (E-0347)
 ; why: step 2 of PauseMenu_Plan_TileBufferMenu (when wTemp1 = 2); PauseMenu_Plan_TileBufferMenu:
 ; copies the tile buffer and a rectangle, then the menu cursor (E-0352)
 PauseMenu_Plan_TileBufferMenu_UpdateMenuCursor::
@@ -7392,7 +7402,7 @@ PauseMenu_Plan_PagedMenu::
 ; step 0 of PauseMenu_Plan_PagedMenu: branches on wPartyCount; sets wMenuPageCount to 1; sets
 ; wMenuPage to 0; sets wPauseMenuStep to 0; calls
 ; PauseMenu_Plan_PagedMenu_LoadScreenBlock21WithCursor; calls CopyTileBufferToBGMap; increments
-; wTemp1 (E-0347)
+; wTemp1; also changes HL, A and C by register arithmetic (E-0347)
 ; why: step 0 of PauseMenu_Plan_PagedMenu (when wTemp1 = 0); PauseMenu_Plan_PagedMenu: sets the page
 ; count, the cursor and screen block $21 (E-0352)
 PauseMenu_Plan_PagedMenu_WriteWorkBufAndMenuPageCountEtc::
@@ -7606,7 +7616,8 @@ PauseMenu_Plan_PagedMenu_CopyTileBufferToBGMap::
     dec [hl]
     ret
 
-; called from PauseMenu_Plan_PagedMenu_WriteTemp0AndTemp1: copies C to wPartyList (E-0347)
+; called from PauseMenu_Plan_PagedMenu_WriteTemp0AndTemp1: copies C to wPartyList; also changes HL,
+; BC and A by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Plan_PagedMenu_WriteTemp0AndTemp1, in step 4 of
 ; PauseMenu_Plan_PagedMenu (when wTemp1 = 4); PauseMenu_Plan_PagedMenu: sets the page count, the
 ; cursor and screen block $21 (E-0352)
@@ -7639,7 +7650,8 @@ PauseMenu_Plan_PagedMenu_WritePartyList::
     ret
 
 ; Calls LoadScreenBlock28; sets wMenuRowCount; calls PauseMenu_Plan_PagedMenu_CpFF; calls
-; PauseMenu_Plan_PagedMenu_CpFF_2; calls CopyRectToBGMap (E-0347)
+; PauseMenu_Plan_PagedMenu_CpFF_2; calls CopyRectToBGMap; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: part of PauseMenu_Plan_PagedMenu; PauseMenu_Plan_PagedMenu: sets the page count, the cursor
 ; and screen block $21 (E-0352)
 PauseMenu_Plan_PagedMenu_LoadScreenBlock28::
@@ -7730,7 +7742,7 @@ PauseMenu_Plan_PagedMenu_CpFF_2::
 ; Sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddressMapped; copies the byte at wWorkBuf +
 ; $3 to wStringIndex; sets wStringCategory; calls ShowStringBank08AtTilesHL_Bank03; calls
 ; HLToDecimalDigits; calls WriteTwoDigitTilesFromDigits1; calls HLToDecimalDigits; calls
-; WriteDecimalDigitTiles; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; then 7 more steps
+; WriteDecimalDigitTiles; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; then 8 more steps
 ; (see the code) (E-0347)
 ; why: part of PauseMenu_Plan_PagedMenu; PauseMenu_Plan_PagedMenu: sets the page count, the cursor
 ; and screen block $21 (E-0352)
@@ -7908,7 +7920,7 @@ PauseMenu_Plan_Block2DNumber::
 ; calls CopyTenBytesToTextBuf0; calls SelectString5Category8ThenShow; calls HLToDecimalDigits; calls
 ; WriteThreeDigitTilesDigits_Bank03; calls ByteAToDecimalDigits; calls
 ; WriteTwoDigitTilesDigits1NoBlank_Bank03; calls PauseMenu_Plan_Block2DNumber_WriteRAMGAndRAMBEtc;
-; calls WriteAAsTwoDigitTiles; calls CountFlaggedSRAMRecords; calls WriteAAsTwoDigitTiles; then 6
+; calls WriteAAsTwoDigitTiles; calls CountFlaggedSRAMRecords; calls WriteAAsTwoDigitTiles; then 7
 ; more steps (see the code) (E-0347)
 ; why: step 0 of PauseMenu_Plan_Block2DNumber (when wTemp1 = 0); PauseMenu_Plan_Block2DNumber:
 ; screen block $2D and a decimal number (E-0352)
@@ -8485,7 +8497,7 @@ LoadScreenBlock2B::
 ; wStringCategory to 8; sets wStringIndex to 0; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; calls ShowString_Bank08; copies L to wTextWindowTileLo; copies H to
 ; wTextWindowTileHi; calls PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark; branches on the byte at
-; PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data; then 14 more steps
+; PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data; then 15 more steps
 ; (see the code) (E-0347)
 ; why: part of PauseMenu_Plan_ChooseListEntry; PauseMenu_Plan_ChooseListEntry: by wTemp1: menu rows
 ; and pages, a list-entry bit-7 test, strings, and an exit to the field (E-0352)
@@ -8669,7 +8681,7 @@ PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark_Data::
 ; copies L to wTextWindowRows; copies H to wTextWindowWidth; branches on wWorkBuf + $a; branches on
 ; the byte at wWorkBuf + $a; calls WriteKeyNameToDE; copies the byte at wWorkBuf + $a & $3f to
 ; wStringIndex; sets wStringCategory to 7; calls ShowString_Bank09; copies L to wTextWindowTileLo;
-; then 3 more steps (see the code) (E-0347)
+; then 4 more steps (see the code) (E-0347)
 ; why: part of PauseMenu_Plan_ChooseListEntry; PauseMenu_Plan_ChooseListEntry: by wTemp1: menu rows
 ; and pages, a list-entry bit-7 test, strings, and an exit to the field (E-0352)
 PauseMenu_Plan_ChooseListEntry_WaitPauseListCount::
@@ -8781,7 +8793,7 @@ PauseMenu_Plan_ChooseListEntry_WaitPauseListCount::
 ; wInventorySortFlags; branches on the byte at wKeyList; increments wPauseListCount; branches on the
 ; byte at wKeyList; sets bit 7 of wWorkBuf + $a; increments wPauseListCount; branches on the byte at
 ; wKeyList; sets bit 7 of wWorkBuf + $a; increments wPauseListCount; branches on the byte at
-; wKeyList; then 2 more steps (see the code) (E-0347)
+; wKeyList; then 3 more steps (see the code) (E-0347)
 ; why: a helper of BuildScreenBlocks21To23; BuildScreenBlocks21To23: loads block $21 with its cursor
 ; and block $23, adds block $22 when BuildScreenBlocks21To23_FillBytes returns NZ, then runs ...
 ; (E-0352, E-0122)
@@ -9069,8 +9081,8 @@ ShowString2Bank09InWindowThenDefault::
     ret
 
 ; called from PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D: sets rRAMG to $0a; sets rRAMB to 0;
-; sets wWorkBuf to 0; branches on the byte at sRecords; increments wWorkBuf; sets rRAMG to 0
-; (E-0347)
+; sets wWorkBuf to 0; branches on the byte at sRecords; increments wWorkBuf; sets rRAMG to 0; also
+; changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: a helper of PauseMenu_Plan_Block2DNumber_LoadScreenBlock2D, in step 0 of
 ; PauseMenu_Plan_Block2DNumber (when wTemp1 = 0); PauseMenu_Plan_Block2DNumber: screen block $2D and
 ; a decimal number (E-0352)

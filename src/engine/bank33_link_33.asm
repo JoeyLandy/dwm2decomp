@@ -6,7 +6,7 @@ SECTION "Bank 33", ROMX[$4000], BANK[$33]
 
 ; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a
 ; width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows
-; 32 bytes apart (E-0351)
+; 32 bytes apart (E-0353)
 CopyBlockToTileBuffer::
     ld d, $00
     ld hl, ScreenBlockTable
@@ -699,10 +699,12 @@ TileRect_ScreenBlockTable_45::
 ; LinkExchangeJoypadPerFrame; branches on wTitleScreenState; branches on wScreenState; returns
 ; unless wScreenSubStep is 0; branches on wScreenStep; calls DrawListEntriesCell5SpeciesSprite;
 ; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; branches on wScreenStep; calls
-; DrawRecordBufBSpeciesSpritePart_BankF1; calls DrawRecordBufBSpeciesSprites (E-0347)
+; DrawRecordBufBSpeciesSpritePart_BankF1; calls DrawRecordBufBSpeciesSprites; also changes A by
+; register arithmetic (E-0347)
 ; why: a helper of GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame, in step 5 of
-; GameMode5_Update (when wModeState = 5); GameMode5_Update: per-frame routine for wGameMode = 5
-; (E-0352)
+; GameMode5_Update (when wModeState = 5); GameMode5_Update: game mode 5 (the title screen,
+; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
+; exchanges ... (E-0352, E-0354)
 GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -754,8 +756,8 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     ret
 
 ; called from RunLinkSession6Exchange_LinkReceiveStepWithBuffer: branches on wTitleScreenState;
-; dispatches on wTitleScreenSubState; returns unless wFadeState is 0; dispatches on wScreenState
-; (E-0347)
+; dispatches on wTitleScreenSubState; returns unless wFadeState is 0; dispatches on wScreenState;
+; also changes A by register arithmetic (E-0347)
 ; why: a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
 ; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
 ; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
@@ -943,7 +945,8 @@ RunLinkSession6Exchange_ShowYourPalRefusedThe::
 ; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; sets wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2;
 ; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte to 0; calls
-; BeginString_Bank07_Cat5; advances wTitleScreenSubState (E-0347)
+; BeginString_Bank07_Cat5; advances wTitleScreenSubState; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
 ; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
@@ -1013,7 +1016,7 @@ RunLinkSession6Exchange_ChooseTeamMonster::
     dw RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState
 
 ; step 0 of RunLinkSession6Exchange_ChooseTeamMonster: returns unless wTextFlags is 0; branches on
-; wTextFlags; increments wLinkScreenFlag (E-0347)
+; wTextFlags; increments wLinkScreenFlag; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 0);
 ; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
 ; (E-0352)
@@ -1341,7 +1344,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3::
     ld [wScreenState], a
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07 (E-0351)
+; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07 (E-0353)
 BeginString_Bank07_Cat5::
     ld [wStringIndex], a
     ld a, $05
@@ -1460,7 +1463,8 @@ RunLinkSession6Exchange_SetLinkSendByte_5::
     ret
 
 ; step 4 of RunLinkSession6Exchange_PleaseWaitSteps: returns if bit 0 of wTextFlags is set; branches
-; on wTextFlags; increments wModeChangeRequest (E-0347)
+; on wTextFlags; increments wModeChangeRequest; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 4), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
 ; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
@@ -1504,7 +1508,7 @@ RunLinkSession6Exchange_AdvanceScreenState_3::
     ret
 
 ; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep (E-0347)
+; wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
 ; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
@@ -1956,7 +1960,7 @@ RunLinkSession6Exchange_AdvanceScreenState_4::
     ret
 
 ; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep (E-0347)
+; wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
 ; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
@@ -2678,7 +2682,7 @@ RunLinkSession6Exchange_AdvanceScreenStep_3::
 ; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls SetArg5ToListEntriesCell5;
 ; sets wArg1 to $c7; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; copies hTemp0 &
 ; $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf; sets rRAMG2 to 0; calls
-; CopyRectTo20ByteRowsJp_Bank33; sets wArg1; copies L to wArg2; copies H to wArg3; then 7 more steps
+; CopyRectTo20ByteRowsJp_Bank33; sets wArg1; copies L to wArg2; copies H to wArg3; then 8 more steps
 ; (see the code) (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 3), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
@@ -3278,7 +3282,7 @@ SetDefaultStringWindow_Bank33::
     ld [wTextWindowWidth], a
     ret
 
-; wPickedRecords = the record index at WD789 cell 5 (E-0126)
+; wPickedRecords = the record index at wListEntries cell 5 (E-0126)
 StoreListEntriesCell5RecordInPickedRecords::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3290,7 +3294,7 @@ StoreListEntriesCell5RecordInPickedRecords::
     ld [de], a
     ret
 
-; copies the name of the record at WD789 cell 5 (11 bytes) to wTextBuf0 (E-0124)
+; copies the name of the record at wListEntries cell 5 (11 bytes) to wTextBuf0 (E-0124)
 CopyListEntriesCell5NameToTextBuf0_Bank33::
     ld a, $0a
     ld [rRAMG2], a
@@ -3336,7 +3340,7 @@ FinishPickedRecordsEntryAndStep_33::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0351)
+; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0353)
 StoreBAtWordTableEntry_Bank33::
     push bc
     sla a
@@ -3351,7 +3355,7 @@ StoreBAtWordTableEntry_Bank33::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0351)
+; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
 BGMapAddressAtScroll_Bank33::
     ldh a, [hScrollY]
     and $f8
@@ -3588,7 +3592,8 @@ RunFourTimes::
     call RunFourTimes_HLToDecimalDigits
     call RunFourTimes_HLToDecimalDigits
 
-; called from RunFourTimes: calls HLToDecimalDigits (E-0347)
+; called from RunFourTimes: calls HLToDecimalDigits; also changes HL, DE and A by register
+; arithmetic (E-0347)
 ; why: a helper of RunFourTimes; RunFourTimes: calls RunFourTimes_HLToDecimalDigits three times and
 ; falls into it once more (E-0352, E-0122, E-0344)
 RunFourTimes_HLToDecimalDigits::
@@ -3687,7 +3692,7 @@ DrawPlayerNameAndString0Category1::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0351)
+; banks) (E-0353)
 StoreC5BEC6AtHLStride2_Bank33::
     ld a, $c5
     ld [hl], a

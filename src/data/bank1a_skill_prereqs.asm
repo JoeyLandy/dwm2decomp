@@ -32,7 +32,7 @@ LoadSkillRecord::
 
 ; like LoadSkillRecord, but copies wBattleArg1 bytes starting wBattleArg0 bytes into the record to
 ; the address in wBattleArg2/wBattleArg3; with wRecordBuffer = $FF it zero-fills that destination
-; instead (E-0351)
+; instead (E-0353)
 LoadSkillRecordPart::
     ld a, [wRecordBuffer]
     ld c, a
@@ -86,7 +86,7 @@ LoadSkillRecordPart::
 
 ; called from ComputeDamageEstimateForAction: branches on wLinkMode; branches on wBattleActor;
 ; branches on the byte at wSlotAIMode; copies the byte at wSlotAIMode to wBattleDamageLo; copies the
-; byte at wSlotAIMode to wBattleDamageHi (E-0347)
+; byte at wSlotAIMode to wBattleDamageHi; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: a helper of ComputeDamageEstimateForAction; ComputeDamageEstimateForAction: fills the damage
 ; for wBattleActionId: the effect handler for 0 or ids from $48 (except $66),
 ; ComputeDamageEstimateForAction_Multiply8By16 ... (E-0352, E-0124)
@@ -2109,8 +2109,11 @@ FindCInWorkBuf38::
 
 ; called from BattleEnd_Step3: calls FillBytes; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi;
 ; calls LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
-; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf (E-0347)
-; why: a helper of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf; also changes HL, DE, BC and A
+; by register arithmetic (E-0347)
+; why: a helper of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
+; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2165,8 +2168,10 @@ BattleEnd_Step3_LoadSpeciesRecord::
     ret
 
 ; Calls BattleEnd_Step3_RecordKnowsSkill; branches on the byte at SkillPrerequisitePointers; calls
-; BattleEnd_Step3_RecordKnowsSkill (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: wBattlePhase 2, wBattleStep 3 (E-0352, E-0044)
+; BattleEnd_Step3_RecordKnowsSkill; also changes HL, BC and A by register arithmetic (E-0347)
+; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
+; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
+; ... (E-0352, E-0354, E-0044)
 BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
@@ -2584,7 +2589,7 @@ ComputeLevelUpStatGainsForBattleArg1::
 
 ; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
 ; $ff; sets wGrowthTemp0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches on e;
-; sets wGrowthTemp1 (E-0347)
+; sets wGrowthTemp1; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of ComputeLevelUpStatGainsForBattleArg1; ComputeLevelUpStatGainsForBattleArg1: for
 ; record wBattleArg1 below its level cap: computes the stat gains from its species growth rows
 ; (table $6616) into ... (E-0352, E-0127)

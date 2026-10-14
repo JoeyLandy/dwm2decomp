@@ -80,7 +80,7 @@ CloseHibernateMenu_LoadTileListSixPerCall::
     ret
 
 ; step 2 of CloseHibernateMenu: calls FillTilesBxC; sets wTextWindowTileLo to $12; increments
-; wScreenList (E-0347)
+; wScreenList; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 2 of CloseHibernateMenu (when wScreenList = 2); CloseHibernateMenu: implements script
 ; command type EC (SCRIPT_HIBERNATE_CLOSE): ends the hibernation session and clears wMessageMode
 ; (E-0352, E-0038, E-0244)
@@ -152,7 +152,8 @@ HibernateMenu::
 
 ; step 0 of HibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
 ; CopyLow3BitsToWRAMBank2_Bank14; sets wMessageMode to 4; sets hSpriteHideTile to $70; advances
-; wScreenState; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; wScreenState; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; also changes HL, DE,
+; BC and A by register arithmetic (E-0347)
 ; why: step 0 of HibernateMenu (when wScreenState = 0); HibernateMenu: implements script command
 ; type EB (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I
 ; wake up?' (mode ... (E-0352, E-0038, E-0244)
@@ -370,7 +371,7 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 ; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: may continue in
 ; HibernateMenu_ReadGridCursorX; increments wGridCursorY; may continue in
 ; HibernateMenu_ReadGridCursorX; may continue in HibernateMenu_ReadGridCursorX_2; sets wGridCursorY
-; to 0 (E-0347)
+; to 0; also changes A by register arithmetic (E-0347)
 ; why: a helper of HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of
 ; HibernateMenu (when wScreenState = 2); HibernateMenu: implements script command type EB
 ; (SCRIPT_HIBERNATE): monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?'
@@ -418,7 +419,7 @@ HibernateMenu_ReadGridCursorX_2::
 HibernateMenu_BGMapAddressAtScroll_Bank14::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank14 (E-0347)
+; Calls BGMapAddressAtScroll_Bank14; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of HibernateMenu_BGMapAddressAtScroll_Bank14, in a helper of
 ; HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc, in step 2 of HibernateMenu (when
 ; wScreenState = 2); HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE): monster
@@ -794,7 +795,7 @@ HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep::
 ; wListCursor; copies wItemGridY to wListPageIndex; calls ListRecordsState1NotEggs; calls
 ; HibernateMenu_ClampRecordListPageCursor5; calls EraseFiveTableEntries; calls FillTilesBxC; sets
 ; wTwoChoiceCursor to 1; sets wScreenStep to $20; sets wTextWindowTileLo to $12; sets
-; wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; then 1 more step (see the code) (E-0347)
 ; why: step 60 of HibernateMenu_ChooseRecords (when wScreenStep = 60); HibernateMenu_ChooseRecords:
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
@@ -1049,7 +1050,7 @@ HibernateMenu_ChooseRecords_Multiply8::
     ret
 
 ; step 5 of HibernateMenu_ChooseRecords: calls FillTilesBxC; sets wTextWindowTileLo to $12; advances
-; wScreenStep (E-0347)
+; wScreenStep; also changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 5 of HibernateMenu_ChooseRecords (when wScreenStep = 5); HibernateMenu_ChooseRecords:
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
@@ -1379,7 +1380,7 @@ DrawBlankTileC3_Bank14::
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank14 (E-0347)
+; Calls BGMapAddressAtScroll_Bank14; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2, in a helper of
 ; HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of HibernateMenu_ChooseRecords
 ; (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu screen state 5, by
@@ -1572,8 +1573,8 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
     call DrawScreenBufferRect_Bank14
     ret
 
-; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14
-; (E-0347)
+; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of HibernateMenu_ChooseRecords; HibernateMenu_ChooseRecords: HibernateMenu screen state
 ; 5, by wScreenStep: paged record lists with two-choice confirmations and UnpackRecordFromBank1Slot
 ; (E-0352)
@@ -1786,7 +1787,7 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNa
 ; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank14;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
-; 1 more step (see the code) (E-0347)
+; 2 more steps (see the code) (E-0347)
 ; why: step 37 of HibernateMenu_ChooseRecords (when wScreenStep = 37); HibernateMenu_ChooseRecords:
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
@@ -2174,7 +2175,8 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_W
 
 ; Calls HibernateMenu_CopyBytesDEToHL_Bank14_2; branches on wIsCGB; sets rSVBK; calls
 ; HibernateMenu_CopyBytesDEToHL_Bank14_2; sets rSVBK; calls BGMapAddressAtScroll_Bank14; calls
-; DrawScreenBufferRect_Bank14; calls CopyFromBankWaitVRAM (E-0347)
+; DrawScreenBufferRect_Bank14; calls CopyFromBankWaitVRAM; also changes HL, DE, BC and A by register
+; arithmetic (E-0347)
 ; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
 ; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
 ; E-0038, E-0244)
@@ -2229,7 +2231,8 @@ HibernateMenu_WriteSVBK_Data1::
 HibernateMenu_WriteSVBK_Data2::
     db $00, $00, $00, $00, $00, $00
 
-; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_CopyBytesDEToHL_Bank14_2 (E-0347)
+; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_CopyBytesDEToHL_Bank14_2; also changes
+; HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of HibernateMenu_CopyBytesDEToHL_Bank14, in step 0 of HibernateMenu (when wScreenState =
 ; 0); HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE): monster hibernation:
 ; 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352, E-0038, E-0244)
@@ -2259,7 +2262,8 @@ HibernateMenu_CopyBytesDEToHL_Bank14_2::
 
 ; step 16 of HibernateMenu_ChooseRecords: calls CopyFromBankWaitVRAM; plays sound $6c; calls
 ; CopyRectTo20ByteRows_Bank14; calls CopyFromBankWaitVRAM; calls BGMapAddressAtScroll_Bank14; calls
-; DrawScreenBufferRect_Bank14; increments wScreenStep; sets wTwoChoiceCursor to 0 (E-0347)
+; DrawScreenBufferRect_Bank14; increments wScreenStep; sets wTwoChoiceCursor to 0; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: step 16 of HibernateMenu_ChooseRecords (when wScreenStep = 16); HibernateMenu_ChooseRecords:
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
@@ -2752,7 +2756,7 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetScreenStep::
 ; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
 ; wScreenStep; branches on wScreenState; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0;
 ; sets wScriptStartRequest to $80; calls StoreBAtWordTableEntry_Bank14; increments wScreenStep; then
-; 6 more steps (see the code) (E-0347)
+; 7 more steps (see the code) (E-0347)
 ; why: step 59 of HibernateMenu_ChooseRecords (when wScreenStep = 59); HibernateMenu_ChooseRecords:
 ; HibernateMenu screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
@@ -3059,7 +3063,7 @@ HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
 ; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
 ; wScreenStep; sets wScreenStep; sets wTwoChoiceCursor to 0; calls StoreBAtWordTableEntry_Bank14;
 ; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; then
-; 1 more step (see the code) (E-0347)
+; 2 more steps (see the code) (E-0347)
 ; why: step 8 of HibernateMenu_ChooseWithStats (when wScreenStep = 8);
 ; HibernateMenu_ChooseWithStats: screen state 6: a paged record list that marks party members
 ; (MarkPartyMembersInRecordListPage) and shows a stats box ... (E-0352)
@@ -3256,7 +3260,8 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
 
 ; step 18 of HibernateMenu_IndexListEntry: sets rRAMG2 to $0a; calls SetArg5ToListEntriesCell5; sets
 ; rRAMB to 1; sets rRAMG2 to 0; calls SetArg5ToListEntriesCell5; copies the byte at sRecords to
-; wArg1; sets wArg2 to 0; calls HibernateMenu_Multiply8; increments wScreenStep (E-0347)
+; wArg1; sets wArg2 to 0; calls HibernateMenu_Multiply8; increments wScreenStep; also changes HL,
+; DE, BC and A by register arithmetic (E-0347)
 ; why: step 18 of HibernateMenu_IndexListEntry (when wScreenStep = 18);
 ; HibernateMenu_IndexListEntry: screen state 7: takes the chosen list entry
 ; (SetArg5ToListEntriesCell5) and computes its index (Multiply8) (E-0352)
@@ -3320,7 +3325,7 @@ HibernateMenu_SwapMonstersMenu::
 
 ; called from HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep: sets rRAMG2 to $0a; sets rRAMB to
 ; 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
-; branches on C (E-0347)
+; branches on C; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep, in step 50 of
 ; HibernateMenu_ChooseRecords (when wScreenStep = 50); HibernateMenu_ChooseRecords: HibernateMenu
 ; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
@@ -3370,7 +3375,8 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
 
 ; Calls SetArg5ToListEntriesCell5; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1
 ; to 0; calls LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; branches on C; returns if
-; wTextBuf1 is below $e0; sets wTextBuf1 to $f0 (E-0347)
+; wTextBuf1 is below $e0; sets wTextBuf1 to $f0; also changes HL, DE, A and C by register arithmetic
+; (E-0347)
 ; why: part of HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5, in step 4 of
 ; HibernateMenu_ChooseRecords (when wScreenStep = 4); HibernateMenu_ChooseRecords: HibernateMenu
 ; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
@@ -3435,7 +3441,7 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
 ; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: calls
 ; SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf; branches on
-; C (E-0347)
+; C; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: a helper of HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of
 ; HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu
 ; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
@@ -3481,7 +3487,7 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
 ; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: branches on wSelectedRecord;
 ; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1 to 0; calls
 ; LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; branches on C; returns if wTextBuf0
-; is below $e0 (E-0347)
+; is below $e0; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: a helper of HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14, in step 47 of
 ; HibernateMenu_ChooseRecords (when wScreenStep = 47); HibernateMenu_ChooseRecords: HibernateMenu
 ; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
@@ -3551,7 +3557,7 @@ CopyBytesDEToHL_Bank14::
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 18 bytes appear in 7 banks) (E-0351)
+; 18 bytes appear in 7 banks) (E-0353)
 CopyLow3BitsToWRAMBank2_Bank14::
     ld a, $02
     ldh [rSVBK], a
@@ -3570,7 +3576,7 @@ CopyLow3BitsToWRAMBank2_Bank14::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
 BGMapAddressAtScroll_Bank14::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3591,7 +3597,7 @@ BGMapAddressAtScroll_Bank14::
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
 ; then zero-fills the same-shaped rectangle at HL + $0E68 with rSVBK = 2 and restores rSVBK = 0 (the
-; same 58 bytes appear in 8 banks) (E-0351)
+; same 58 bytes appear in 8 banks) (E-0353)
 CopyRectTo20ByteRows_Bank14::
     push hl
     push bc
@@ -3691,8 +3697,8 @@ DrawScreenBufferRect_Bank14::
     ret
 
 ; Sets wGlyphListPos to 0; calls CopyFromBankWaitVRAM; increments wGlyphListStart; increments
-; wGlyphListPos; branches on wGlyphListPos; sets wGlyphListStart to 0; sets wGlyphListPos to 0
-; (E-0347)
+; wGlyphListPos; branches on wGlyphListPos; sets wGlyphListStart to 0; sets wGlyphListPos to 0; also
+; changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
 ; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
 ; E-0038, E-0244)
@@ -3778,7 +3784,7 @@ EraseFiveTableEntries::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0351)
+; A, DE, HL (the same 14 bytes appear in 8 banks) (E-0353)
 StoreBAtWordTableEntry_Bank14::
     push bc
     add a
@@ -3915,7 +3921,7 @@ DrawC5BEC6AtScrollOffsetDE_Bank14::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks) (E-0351)
+; banks) (E-0353)
 StoreC5BEC6AtHLStride2_Bank14::
     ld a, $c5
     ld [hl], a
@@ -3932,7 +3938,7 @@ StoreC5BEC6AtHLStride2_Bank14::
 ; called from HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5: branches on the byte at
 ; sCompactRecords; branches on C; sets rRAMB to 1; branches on the byte at sRecords; branches on C;
 ; copies L to wArg6; copies H to wArg7; sets wArg5 to 0; copies L to wArg6; copies H to wArg7; sets
-; wArg5 to 1 (E-0347)
+; wArg5 to 1; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5, in step 21 of
 ; HibernateMenu_ChooseToHibernate (when wScreenStep = 21); HibernateMenu_ChooseToHibernate: screen
 ; state 4, reached from menu option 0: the list of farm records that are not eggs
@@ -4095,7 +4101,11 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Adv
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopySrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
-; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0122)
+; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) and naming a monster that joins after a battle: while no
+; fade runs, by wNameEntryState it sets up the keyboard, takes the cursor and letter input and draws
+; the name (E-0354; was: unless a fade is running, runs the routine for wNameEntryState (jump table
+; of eight) (E-0122))
 RunNameEntryStateWhenNotFading::
     ld a, [wFadeState]
     and a
@@ -4125,7 +4135,7 @@ RunNameEntryStateWhenNotFading_Setup::
 ; step 0 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; copies H to
 ; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to
 ; $20; sets wArg7 to 0; calls FillTileRectWithArg1Tile; sets hScrollY to 0; sets hScrollX to 0;
-; copies hSpriteWindowClipMode to wSavedSpriteClipMode; then 5 more steps (see the code) (E-0347)
+; copies hSpriteWindowClipMode to wSavedSpriteClipMode; then 6 more steps (see the code) (E-0347)
 ; why: step 0 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 0);
 ; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
 ; wNameEntrySubState and reads the record (E-0352)
@@ -4379,7 +4389,7 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs::
     ld [wArg5], a
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0353)
 CopyBytesDEFromHL_Bank14::
     ld a, [hli]
     ld [de], a
@@ -4407,7 +4417,7 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs_SpriteSlotsInit::
 ; RunNameEntryStateWhenNotFading_ClearNameEntryText; branches on wArg1; sets rRAMG2 to $0a; sets
 ; rRAMB to 0; calls SRAMRecordAddress; branches on the byte at wPartyList; calls
 ; RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter; branches on C; sets wNameEntryCursorX
-; to 0; sets wNameEntryCursorY to 0; checks EVENT_NEVER_SET; sets wNameEntryLength to 4; then 4 more
+; to 0; sets wNameEntryCursorY to 0; checks EVENT_NEVER_SET; sets wNameEntryLength to 4; then 5 more
 ; steps (see the code) (E-0347)
 ; why: step 4 of RunNameEntryStateWhenNotFading_Setup (when wNameEntrySubState = 4);
 ; RunNameEntryStateWhenNotFading_Setup: name-entry state 0: draws the entry rectangle, sets
@@ -4502,10 +4512,12 @@ RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
     ret
 
 ; step 1 of RunNameEntryStateWhenNotFading: calls
-; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntrySubState (E-0347)
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntrySubState; also changes
+; A by register arithmetic (E-0347)
 ; why: step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntrySubState]
@@ -4529,12 +4541,13 @@ RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2; may continue in
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect3; calls
 ; RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte; calls DrawBlankTileC3; branches on
-; wNameEntryCursorY; sets wNameEntryCursorY to 4; branches on wNameEntryCursorX; then 28 more steps
+; wNameEntryCursorY; sets wNameEntryCursorY to 4; branches on wNameEntryCursorX; then 29 more steps
 ; (see the code) (E-0347)
 ; why: step 0 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag::
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
     ld b, $55
@@ -4674,8 +4687,9 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data::
 ; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
     call DrawBlankTileC3
     ld a, [wNameEntryCursorX]
@@ -4717,8 +4731,9 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
 ; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect::
     ld a, $69
     call QueueSoundEffect
@@ -4736,8 +4751,9 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect:
 ; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2::
     ld a, $69
     call QueueSoundEffect
@@ -4754,8 +4770,9 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2
 ; why: part of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data, in part of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect3::
     ld a, $69
     call QueueSoundEffect
@@ -4883,8 +4900,9 @@ ToggleVoicingMarkOnNameEntry::
 ; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY (E-0347)
 ; why: a helper of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte::
     ld a, [wNameEntryCursorByte]
     inc a
@@ -4910,19 +4928,21 @@ DrawBlankTileC3::
 ; called from RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag: changes B (E-0347)
 ; why: a helper of RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2::
     ld b, $55
 
 ; Branches on wNameEntryCursorY; calls BGMapAddressAtScroll_Bank14_2; returns unless
-; wNameEntryCursorX is $0d; branches on wNameEntryCursorY; returns unless wNameEntryCursorY is $03
-; (E-0347)
+; wNameEntryCursorX is $0d; branches on wNameEntryCursorY; returns unless wNameEntryCursorY is $03;
+; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyPositions
@@ -4996,12 +5016,13 @@ NameEntryKeyPositions::
 ; RunNameEntryStateWhenNotFading_ClearNameEntryText; decrements wNameEntrySubState; sets wArg5 to 0;
 ; calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; calls
 ; CopyTileForNameEntryLength; branches on wNameEntryMarkPending; sets wNameEntryMarkPending to 0;
-; decrements wNameEntryLength; decrements wNameEntrySubState; then 1 more step (see the code)
+; decrements wNameEntryLength; decrements wNameEntrySubState; then 2 more steps (see the code)
 ; (E-0347)
 ; why: step 1 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 1),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
     ld b, $55
     call WriteTileBAtScrollOffset47PlusNameEntryLength
@@ -5090,8 +5111,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
 ; (E-0347)
 ; why: step 2 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 2),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyboard
@@ -5352,8 +5374,9 @@ RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter::
 ; increments wNameEntryState; sets wArg5 to 0 (E-0347)
 ; why: step 3 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 3),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
     call RunNameEntryStateWhenNotFading_CheckArg1
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
@@ -5369,8 +5392,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
 ; wNameEntrySubState; calls OrFromBankWaitVRAM; sets wArg5 to 0 (E-0347)
 ; why: step 4 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 4),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListB
@@ -5396,8 +5420,9 @@ RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
 ; 0; sets wArg5 to 0 (E-0347)
 ; why: step 9 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 9),
 ; in step 1 of RunNameEntryStateWhenNotFading (when wNameEntryState = 1);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListA
@@ -5415,8 +5440,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
 ; step 2 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
 ; why: step 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5431,8 +5457,8 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep::
 ; FillTilesFromRequest; increments wNameEntryStep; sets wArg5 to 0 (E-0347)
 ; why: step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 0), in step
 ; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
-; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
-; E-0122)
+; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ld hl, vTiles2 + $5c0
     ld a, l
@@ -5458,8 +5484,8 @@ RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
 ; sets wArg5 to 0 (E-0347)
 ; why: step 1 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 1), in step
 ; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
-; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
-; E-0122)
+; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01e0
@@ -5493,8 +5519,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
 ; sets wArg5 to 0 (E-0347)
 ; why: step 2 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 2), in step
 ; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
-; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
-; E-0122)
+; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01c0
@@ -5528,8 +5554,8 @@ RunNameEntryStateWhenNotFading_SetArg5::
 ; increments wNameEntryState; sets wArg5 to 0 (E-0347)
 ; why: step 3 of RunNameEntryStateWhenNotFading_ReadNameEntryStep (when wNameEntryStep = 3), in step
 ; 2 of RunNameEntryStateWhenNotFading (when wNameEntryState = 2); RunNameEntryStateWhenNotFading:
-; unless a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352,
-; E-0122)
+; the name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01a0
@@ -5562,8 +5588,9 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
 ; step 3 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
 ; why: step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5583,8 +5610,9 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
 ; why: step 5 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 5), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -5613,8 +5641,9 @@ RunNameEntryStateWhenNotFading_SetStringCategory::
 ; why: step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
     ld a, [wArg1]
     and a
@@ -5680,8 +5709,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
 ; why: step 1 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 1), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
     xor a
     ld [wStringCategory], a
@@ -5707,8 +5737,9 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
 ; why: step 2 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 2), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_SetNameEntryStep::
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
@@ -5718,12 +5749,14 @@ RunNameEntryStateWhenNotFading_SetNameEntryStep::
 
 ; step 3 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
-; branches on the byte at wNameEntryText; increments wNameEntryStep; sets wArg5 to 0 (E-0347)
+; branches on the byte at wNameEntryText; increments wNameEntryStep; sets wArg5 to 0; also changes
+; HL, DE and A by register arithmetic (E-0347)
 ; why: step 3 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 3), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
     ld hl, wNameEntryText
     ld de, wTextBuf0
@@ -5757,8 +5790,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
 ; why: step 4 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 4), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -5781,8 +5815,9 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCat
 ; 5; sets wArg7 to 0; calls DrawTileRectFromArg1Params; increments wNameEntryState; plays sound $6c;
 ; then 1 more step (see the code) (E-0347)
 ; why: step 4 of RunNameEntryStateWhenNotFading (when wNameEntryState = 4);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5820,8 +5855,9 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
 ; wNameEntryMenuCursor; increments wNameEntryState; sets wNameEntryMenuCursor to 0; sets wArg5 to 0
 ; (E-0347)
 ; why: step 5 of RunNameEntryStateWhenNotFading (when wNameEntryState = 5);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14
@@ -5858,8 +5894,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
 ; step 6 of RunNameEntryStateWhenNotFading: calls
 ; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep (E-0347)
 ; why: step 6 of RunNameEntryStateWhenNotFading (when wNameEntryState = 6);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5875,8 +5912,9 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
 ; why: step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2
 ; (when wNameEntryStep = 0), in step 6 of RunNameEntryStateWhenNotFading (when wNameEntryState = 6);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank14_2
     ld a, h
@@ -5955,8 +5993,9 @@ RunNameEntryStateWhenNotFading_FinishNameEntry::
 ; to $0a; sets wArg7 to 0; calls DrawTileRectFromArg1Params; sets wNameEntryState to 1; sets
 ; wNameEntryStep to 0; then 5 more steps (see the code) (E-0347)
 ; why: step 7 of RunNameEntryStateWhenNotFading (when wNameEntryState = 7);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5999,10 +6038,11 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenN
     ret
 
 ; Branches on wArg1; calls UpdateAndDrawSpriteSlots; copies wArg4 to wArg1; copies wArg5 to wArg2;
-; sets wArg3 to 0; sets wArg4 to $10; sets wArg5 to $18; sets wArg6 to 0; calls DrawMetaSpritePartC0
-; (E-0347)
-; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
-; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; sets wArg3 to 0; sets wArg4 to $10; sets wArg5 to $18; sets wArg6 to 0; calls
+; DrawMetaSpritePartC0; also changes HL, DE, A and C by register arithmetic (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: the name-entry
+; screen, used for the player's name at a new game, renaming a monster (RenameMenu), naming a bred
+; child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -6147,8 +6187,9 @@ IsHLByteInList_2_Data::
 ; 6 more steps (see the code) (E-0347)
 ; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc, in
 ; step 5 of RunNameEntryStateWhenNotFading (when wNameEntryState = 5);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -6242,18 +6283,20 @@ DrawBlankTileC3_3::
 ; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank14_2 (E-0347)
+; Calls BGMapAddressAtScroll_Bank14_2; also changes HL, DE and A by register arithmetic (E-0347)
 ; why: part of RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2, in part of
 ; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2, in a helper of
 ; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 0), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor::
     ld a, [wNameEntryMenuCursor]
     add a
@@ -6279,7 +6322,7 @@ RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_Data::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0351)
+; (E-0353)
 CopyTileBytesToVRAM_Bank14::
     ld c, $10
 
@@ -6299,9 +6342,10 @@ CopyTileBytesToVRAM_Bank14::
     ret
 
 ; Returns if the byte at wNameEntryText is $f0; copies the byte at wNameEntryText to wNameEntryFlag;
-; calls CopyFromBankWaitVRAM (E-0347)
-; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
-; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; calls CopyFromBankWaitVRAM; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: the name-entry
+; screen, used for the player's name at a new game, renaming a monster (RenameMenu), naming a bred
+; child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryFlag::
     ld hl, wNameEntryText
     ld bc, $0000
@@ -6396,12 +6440,13 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5: sets rRAMG2 to $0a; sets
 ; rRAMB to 0; branches on the byte at sRecords; branches on the byte at wNameEntryText; branches on
 ; the byte at sRecords; branches on C; branches on the byte at sRecords; branches on wArg1; branches
-; on C (E-0347)
+; on C; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
     ld hl, sRecords
     ld a, $0a
@@ -6498,8 +6543,9 @@ RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
 ; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5, in step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
 ; (when wNameEntryStep = 0), in step 3 of RunNameEntryStateWhenNotFading (when wNameEntryState = 3);
-; RunNameEntryStateWhenNotFading: unless a fade is running, runs the routine for wNameEntryState
-; (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading: the name-entry screen, used for the player's name at a new game,
+; renaming a monster (RenameMenu), naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354,
+; E-0122)
 RunNameEntryStateWhenNotFading_ReadArg1::
     ld hl, RejectedNameList
     ld c, $00
@@ -6665,9 +6711,10 @@ RunNameEntryStateWhenNotFading_ScanNameEntryText::
 ; Branches on wNameEntryDrawStep; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi;
 ; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; increments
 ; wNameEntryDrawStep; branches on wArg1; calls BeginStringDisplay; increments wNameEntryDrawStep;
-; branches on wTextFlags; sets wNameEntryDrawStep to 0 (E-0347)
-; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
-; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; branches on wTextFlags; sets wNameEntryDrawStep to 0; then 1 more step (see the code) (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: the name-entry
+; screen, used for the player's name at a new game, renaming a monster (RenameMenu), naming a bred
+; child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_FillTilesFromRequest::
     ld a, [wNameEntryDrawStep]
     and a
@@ -6726,7 +6773,7 @@ RunNameEntryStateWhenNotFading_FillTilesFromRequest::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0351)
+; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0353)
 BGMapAddressAtScroll_Bank14_2::
     ldh a, [hScrollY]
     and $f8
@@ -6760,9 +6807,10 @@ BGMapAddressAtScroll_Bank14_2::
 
 ; Calls CopyFromBankWaitVRAM; increments wNameEntryTimer; continues in
 ; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; sets wNameEntryTimer to 0;
-; sets wNameEntryTimer2 to 0 (E-0347)
-; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: unless a fade is
-; running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; sets wNameEntryTimer2 to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: part of RunNameEntryStateWhenNotFading; RunNameEntryStateWhenNotFading: the name-entry
+; screen, used for the player's name at a new game, renaming a monster (RenameMenu), naming a bred
+; child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2::
     push hl
     push de
@@ -6838,12 +6886,13 @@ CopyTileForNameEntryLength_Data2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5: may continue in
-; CopyF0StringAndRedrawNameEntry_CheckArg2; branches on B; calls CopyF0StringAndRedrawNameEntry
-; (E-0347)
+; CopyF0StringAndRedrawNameEntry_CheckArg2; branches on B; calls CopyF0StringAndRedrawNameEntry;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5, in step 3 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntrySubState (when wNameEntrySubState = 3), in step 1 of
-; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: unless
-; a fade is running, runs the routine for wNameEntryState (jump table of eight) (E-0352, E-0122)
+; RunNameEntryStateWhenNotFading (when wNameEntryState = 1); RunNameEntryStateWhenNotFading: the
+; name-entry screen, used for the player's name at a new game, renaming a monster (RenameMenu),
+; naming a bred child (BreedMenu_NameEntry) ... (E-0352, E-0354, E-0122)
 RunNameEntryStateWhenNotFading_CheckArg1::
     ld a, [wArg1]
     or a
@@ -6941,7 +6990,8 @@ CopyF0StringAndRedrawNameEntry::
 
 ; Calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; sets
 ; wNameEntryMarkPending to 1; branches on C; sets wNameEntryLength to 4; calls
-; WriteTileBAtScrollOffset47PlusNameEntryLength (E-0347)
+; WriteTileBAtScrollOffset47PlusNameEntryLength; also changes HL, BC and A by register arithmetic
+; (E-0347)
 ; why: part of CopyF0StringAndRedrawNameEntry; CopyF0StringAndRedrawNameEntry: copies the
 ; $F0-terminated string at HL to DE, then erases the name-entry cursor tile and redraws
 ; wNameEntryText glyph by glyph (handling ... (E-0352, E-0175)
@@ -8235,7 +8285,7 @@ SuggestedName_8B::
 ; Branches on wArg1; sets rRAMG2 to $0a; sets rRAMB to 0; sets rRAMG2 to $0a; sets rRAMB to 1; sets
 ; rRAMB to 0; branches on the byte at sCompactRecords; branches on the byte at sCompactRecords +
 ; $6f; branches on C; sets rRAMB to 0; branches on the byte at sCompactRecords; branches on C; then
-; 18 more steps (see the code) (E-0347)
+; 19 more steps (see the code) (E-0347)
 ; why: part of HibernateMenu; HibernateMenu: implements script command type EB (SCRIPT_HIBERNATE):
 ; monster hibernation: 'Which monster will hibernate?', 'Who should I wake up?' (mode ... (E-0352,
 ; E-0038, E-0244)

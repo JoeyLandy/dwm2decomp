@@ -5,7 +5,7 @@ SECTION "Bank 28", ROMX[$4000], BANK[$28]
     db $28
 
 ; if wStringIndex < $DA, BeginStringDisplay with this bank's table; otherwise far-calls
-; BeginStringDisplay_Bank28_BeginStringDisplay (E-0351)
+; BeginStringDisplay_Bank28_BeginStringDisplay (E-0353)
 BeginStringDisplay_Bank28::
     ld a, [wStringIndex]
     cp $da
@@ -33,7 +33,7 @@ CopyStringToBuffer_Bank28::
     ret
 
 ; BeginStringDisplay_Bank28 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-; (E-0351)
+; (E-0353)
 ShowString_Bank28::
     call BeginStringDisplay_Bank28
     call RunStringDisplayToEnd

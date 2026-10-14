@@ -63,6 +63,19 @@ class Coverage(unittest.TestCase):
                    and "; why: " not in comment]
         self.assertEqual(missing[:10], [], f"{len(missing)} restated routines without a purpose")
 
+    def test_purpose_lines_quote_notes_that_say_what_a_routine_is_for(self):
+        """E-0354: no purpose line quotes a note that only names its routine's dispatch ("runs the routine for X")."""
+        import re
+        import present
+        thin = []
+        for f in FILES:
+            for name, kind, comment, line, _ in doc_coverage.scan(f):
+                if "; why: " in comment:
+                    m = re.search(r"(\w+): (.*?) \(E-0352", comment.split("; why: ")[1].replace("; ", " "))
+                    if m and present.THIN_NOTE.search(m.group(2)):
+                        thin.append(f"{f.name}:{line} {name} quotes {m.group(1)}")
+        self.assertEqual(thin[:10], [], f"{len(thin)} purpose lines quote a thin note")
+
     def test_no_operand_is_a_bare_address(self):
         """E-0350: no `ld rr, $XXXX`, `call $XXXX` or `jp $XXXX` with an address-like number is left: pointers name
         their label, values are written as what they are (lb pairs, signed or decimal numbers, named constants)."""
