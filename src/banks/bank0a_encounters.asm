@@ -192,8 +192,7 @@ FieldState_StepChecks_LoadSRAMRecordByte_2::
     ret
 
 ; Calls LoadSRAMRecordByte; calls LoadSRAMRecordWord; branches on wStatusFieldStep; sets
-; wFieldStepFlags to $40; branches on wMapType; calls SetFieldStepFlagsBit7; sets wStatusFieldStep;
-; ...
+; wFieldStepFlags to $40; branches on wMapType; branches on hMapId; calls SetFieldStepFlagsBit7; ...
 FieldState_StepChecks_LoadSRAMRecordByte_3::
     ld a, [wPartyCount]
     ld b, a
@@ -381,8 +380,9 @@ RunPlayerMoveTypeMapMoveType::
 RunPlayerMoveTypeMapMoveType_Return::
     ret
 
-; step 6 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to $80; sets wFieldStepFlags to $40;
-; continues in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 6 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $50; sets wStatusFieldStep to $80; sets
+; wFieldStepFlags to $40; continues in
+; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld a, $50
     ldh [hTemp1], a
@@ -392,8 +392,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 7 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to 0; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 7 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $52; sets wStatusFieldStep to 0; continues
+; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
     ld a, $52
     ldh [hTemp1], a
@@ -401,8 +401,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 1 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to 0; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 1 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
+; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ld a, $44
     ldh [hTemp1], a
@@ -410,8 +410,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 2 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to 0; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 2 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $56; sets wStatusFieldStep to 0; continues
+; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
     ld a, $56
     ldh [hTemp1], a
@@ -419,8 +419,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 3 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to 0; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 3 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
+; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
     ld a, $44
     ldh [hTemp1], a
@@ -428,8 +428,9 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 4 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to $80; sets wFieldStepFlags to $40;
-; continues in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 4 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to $80; sets
+; wFieldStepFlags to $40; continues in
+; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
     ld a, $44
     ldh [hTemp1], a
@@ -439,8 +440,8 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-; step 5 of RunPlayerMoveTypeMapMoveType: sets wStatusFieldStep to 0; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+; step 5 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
+; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
     ld a, $44
     ldh [hTemp1], a
@@ -931,9 +932,11 @@ RunBattleIntroKindCase::
     dw RunBattleIntroKindCase_ComputePartyStrengthForKey
     dw RunBattleIntroKindCase_SetBattleKindTo05
 
-; step 6 of RunBattleIntroKindCase: branches on wPendingFieldEvent; calls
-; ComputePartyStrengthForKey; calls NextRandomSeed; branches on wKeyRandomHi; sets wEncounterKind to
-; 2; sets wBattleKind to 6; branches on wKeyRandomHi
+; step 6 of RunBattleIntroKindCase: branches on wPendingFieldEvent & $0f; calls
+; ComputePartyStrengthForKey; copies the byte at
+; RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1 to hTemp0; copies the byte at
+; RunBattleIntroKindCase_ComputePartyStrengthForKey_Data1 to hTemp1; calls NextRandomSeed; branches
+; on wKeyRandomHi & $0f; sets wEncounterKind to 2; ...
 RunBattleIntroKindCase_ComputePartyStrengthForKey::
     ld a, [wPendingFieldEvent]
     and $0f
@@ -1031,7 +1034,7 @@ RunBattleIntroKindCase_ComputePartyStrengthForKey_Data2::
     db $12, $02, $13, $02, $14, $02, $15, $02
 
 ; step 5 of RunBattleIntroKindCase: calls ComputePartyStrengthLevelPartyStrength; branches on
-; wPartyStrength; sets wEncounterMonsters; sets wEncounterKind to 0; sets wBattleKind to 2
+; wPartyStrength; copies C to wEncounterMonsters; sets wEncounterKind to 0; sets wBattleKind to 2
 RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength::
     farcall ComputePartyStrengthLevelPartyStrength
     ld c, $76
@@ -1372,10 +1375,10 @@ ScriptedEncounterTable::
     dw $0001 ; MonsterTable $001: Slime
     dw $0001 ; MonsterTable $001: Slime
 
-; step 0 of RunBattleIntroKindCase: calls ReadMapCellWordForScreenXY; calls
-; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; calls ReadMapCellWordForScreenXY; calls
-; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; calls ReadMapCellWordForScreenXY; calls
-; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; calls ReadMapCellWordForScreenXY; ...
+; step 0 of RunBattleIntroKindCase: branches on hMapId; calls ReadMapCellWordForScreenXY; branches
+; on hPlayerStateFlags; calls ReadMapCellWordForScreenXY; calls
+; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; branches on hPlayerStateFlags; calls
+; ReadMapCellWordForScreenXY; ...
 RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
@@ -1835,9 +1838,8 @@ ReadMapCellWordForScreenXY::
     ld a, [hl]
     ld d, a
 
-; called from RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags: sets wEncounterKind; calls
-; NextTableByte; branches on wRandomLo; sets wBattleKind to 0; returns if wEncounterKind is 0;
-; branches on wEncounterKind; calls NextTableByte; ...
+; called from RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags: sets wEncounterKind; sets hTemp0;
+; sets hTemp1; sets hTemp2; sets hTemp3; sets hTemp4; sets hTemp5; ...
 RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc::
     ld a, [de]
     inc de
@@ -1938,10 +1940,10 @@ RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc::
     ld [wEncounterKind], a
     ret
 
-; called from CollectUniqueEncounterIdsToWorkBuf2: calls ReadMapCellWordForScreenXY_2; calls
-; LoadEncounterMonsterIdsToWorkBuf; calls ReadMapCellWordForScreenXY_2; calls
-; LoadEncounterMonsterIdsToWorkBuf; calls ReadMapCellWordForScreenXY_2; calls
-; LoadEncounterMonsterIdsToWorkBuf; calls ReadMapCellWordForScreenXY_2; ...
+; called from CollectUniqueEncounterIdsToWorkBuf2: branches on hMapId; calls
+; ReadMapCellWordForScreenXY_2; branches on hPlayerStateFlags; calls ReadMapCellWordForScreenXY_2;
+; calls LoadEncounterMonsterIdsToWorkBuf; branches on hPlayerStateFlags; calls
+; ReadMapCellWordForScreenXY_2; ...
 CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
@@ -2470,8 +2472,8 @@ RunBattleIntroKindCase_SetBattleKindTo02::
     ret
 
 ; step 1 of RunBattleIntroKindCase: calls NextTableByte; copies the byte at
-; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1 to wEncounterKind; branches on
-; wMapType; calls RunBattleIntroKindCase_NextRandomSeed; sets wBattleKind to 1; calls
+; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1 to wEncounterKind; branches on wMapType
+; & $07; calls RunBattleIntroKindCase_NextRandomSeed; sets wBattleKind to 1; calls
 ; RunBattleIntroKindCase_NextRandomSeed; sets wBattleKind to 1
 RunBattleIntroKindCase_NextTableByte::
     call NextTableByte
@@ -2547,8 +2549,8 @@ RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1::
 RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2::
     db $00, $01, $00, $01
 
-; called from RunBattleIntroKindCase_NextTableByte: calls NextRandomSeed; branches on wKeyRandomLo;
-; calls NextRandomSeed
+; called from RunBattleIntroKindCase_NextTableByte: branches on hPlayerStateFlags; calls
+; NextRandomSeed
 RunBattleIntroKindCase_NextRandomSeed::
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2680,8 +2682,8 @@ RunBattleTransitionStep::
     dw RunBattleTransitionStep_WriteGameModeAndModeStateEtc
 
 ; step 0 of RunBattleTransitionStep: copies wCurrentMusic to wTransitionMusic; calls QueueMusic;
-; sets wTransitionBGPtrLo; sets wTransitionBGPtrHi; sets wTransitionCounter to 0; sets
-; wTransitionStage to 0; sets wTransitionWork to 0; ...
+; sets hSpriteWindowClipMode to 3; copies E to wTransitionBGPtrLo; copies D to wTransitionBGPtrHi;
+; sets wTransitionCounter to 0; sets wTransitionStage to 0; ...
 RunBattleTransitionStep_QueueMusic::
     ld a, [wCurrentMusic]
     ld [wTransitionMusic], a
@@ -3043,8 +3045,8 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2::
     jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
 
-; Sets wTransitionCountA; sets wTransitionCountB; calls WriteTileC4AtTransitionBGPtrLoAndClearAttr;
-; continues in
+; Copies L to wTransitionCountA; copies H to wTransitionCountB; calls
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip::
     or a
@@ -3071,8 +3073,8 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Sk
     ld h, a
     jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 
-; Sets wTransitionCountA; sets wTransitionCountB; calls WriteTileC4AtTransitionBGPtrLoAndClearAttr;
-; continues in
+; Copies L to wTransitionCountA; copies H to wTransitionCountB; calls
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
 ; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2::
     or a
@@ -3133,9 +3135,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
     adc $00
     ld h, a
 
-; Sets wTransitionCountA; sets wTransitionCountB; increments wTransitionStage; branches on
-; wTransitionStage; increments wTransitionCounter; sets wTransitionStage to 0; may continue in
-; RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
+; Copies L to wTransitionCountA; copies H to wTransitionCountB; increments wTransitionStage;
+; branches on wTransitionStage; increments wTransitionCounter; sets wTransitionStage to 0; may
+; continue in RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA::
     ld a, l
     ld [wTransitionCountA], a
@@ -3172,9 +3174,10 @@ RunBattleTransitionStep_SetCounts::
     dw RunBattleTransitionStep_SetCounts_ReturnAfterSetup
     dw RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep
 
-; step 0 of RunBattleTransitionStep_SetCounts: branches on wTransitionStage; sets wTransitionCountA;
-; sets wTransitionCountB; calls JumpToWordAtHL_Bank0A; calls
-; WriteTileC4AtTransitionBGPtrLoAndClearAttr; sets wTransitionCountA; sets wTransitionCountB; ...
+; step 0 of RunBattleTransitionStep_SetCounts: branches on wTransitionStage; copies L to
+; wTransitionCountA; copies H to wTransitionCountB; calls JumpToWordAtHL_Bank0A; calls
+; WriteTileC4AtTransitionBGPtrLoAndClearAttr; copies L to wTransitionCountA; copies H to
+; wTransitionCountB; ...
 RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ld a, [wTransitionStage]
     or a
@@ -3666,8 +3669,9 @@ UpdatePlayerMovement_TestFlagBit::
     ld [rRAMG], a
     ret
 
-; May return early; returns unless wScriptRunning is 0; may return early; sets wTalkEventGroup to
-; $0a; sets wTalkEventIndex to 0; calls DispatchTalkEvent
+; Returns unless bit 7 of hPlayerSpriteOverride is set; returns unless wScriptRunning is 0; copies L
+; to hPlayerSpriteTimerLo; copies H to hPlayerSpriteTimerHi; returns unless bit 7 of H is set; sets
+; wTalkEventGroup to $0a; sets wTalkEventIndex to 0; ...
 UpdatePlayerMovement_WaitPlayerSpriteOverride::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a

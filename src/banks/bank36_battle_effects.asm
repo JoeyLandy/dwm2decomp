@@ -33,8 +33,8 @@ RunBattleResolveStep::
 ; wDuckBehindSlot when it is not $FF, shows message $33 and returns; otherwise it clears that bit
 ; and continues into ResolveStepTargetAndSubEffects (E-0053)
 ; code: advances wBattleResolveStep; sets wBattleSubStep to 0; branches on wFollowUpAction; calls
-; CheckSlotStatusBlockWide_Bank36; branches on wPersonalityActs; calls PickDuckBehindAlly; sets
-; wDuckBehindSlot; ...
+; CheckSlotStatusBlockWide_Bank36; branches on wPersonalityActs; calls PickDuckBehindAlly; branches
+; on C; ...
 ResolveStepBegin::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1362,7 +1362,7 @@ ResolveStepAdvanceSubPhase::
 
 ; farcalls RollRandomLoBelowChance_WriteTemp0 (not read) and returns the comparison of wRandomLo
 ; with hTemp0 (taken as 4 when hTemp0 is 3): carry set when wRandomLo is below that value (E-0052)
-; code: calls RollRandomLoBelowChance_WriteTemp0
+; code: calls RollRandomLoBelowChance_WriteTemp0; branches on hTemp0
 RollRandomLoBelowChance::
     push bc
     push hl
@@ -1955,7 +1955,7 @@ RecomputeTargetStatsFromRecord::
 
 ; step 2 of ResolveStepDamageMessage_ActorOnLocalSide_Bank36: advances wBattleSubStep; calls
 ; LoadBattleMonsterPictureForSlotB; sets wSlotMarks to 3; returns if wLinkMode is $01; returns if
-; wBattleTarget is below $04; returns if wBattleTarget is $03; sets wSlotNameBytes to $ff
+; wBattleTarget is below $04; returns if wBattleTarget & $03 is $03; sets wSlotNameBytes to $ff
 ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2::
     ld hl, wBattleSubStep
     inc [hl]
@@ -1989,8 +1989,8 @@ ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2::
     ret
 
 ; step 3 of ResolveStepDamageMessage_ActorOnLocalSide_Bank36: advances wBattleSubStep; returns
-; unless wBattleTarget is $03; calls CarryUnlessBattleSlotOutSlotEmpty; may return early; shows
-; battle text '0 went away!'; sets wBattleSlotOut to $ff; sets wSlotMarks to $ff; ...
+; unless wBattleTarget & $03 is $03; calls CarryUnlessBattleSlotOutSlotEmpty; may return early;
+; shows battle text '0 went away!'; sets wBattleSlotOut to $ff; sets wSlotMarks to $ff; ...
 ResolveStepDamageMessage_ShowHeroWentAway::
     ld hl, wBattleSubStep
     inc [hl]
@@ -2052,8 +2052,9 @@ ResolveStepDamageMessage_AddAx9ToHL_2::
     ret
 
 ; step 5 of ResolveStepDamageMessage_ActorOnLocalSide_Bank36: advances wBattleSubPhase; sets
-; wBattleResolveStep to 0; sets wBattleSubStep to 0; sets wSideFlags0; sets wSideFlags1; returns if
-; wBattleActionId is SKILL_DEMAGIC; sets wSideFlags0; ...
+; wBattleResolveStep to 0; sets wBattleSubStep to 0; copies wSideFlags0 & $93 to wSideFlags0; copies
+; wSideFlags1 & $93 to wSideFlags1; returns if wBattleActionId is SKILL_DEMAGIC; sets wSideFlags0;
+; ...
 ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -2308,7 +2309,7 @@ PickRandomEntryOfSlotChoices::
     ccf
     ret
 
-; Calls FillBytes; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
+; Calls FillBytes; branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
 ; PickRandomEntryOfSlotChoices_ReturnCarry; calls PickRandomEntryOfSlotChoices
 PickRandomEntryOfSlotChoices_Skip::
     ld a, $ff
@@ -2552,8 +2553,8 @@ ActionEffect_ActionD4_ScaleByGigaSlashResistance::
     ret
 
 ; called from ActionEffect_ActionD7: calls AdvanceRandom; calls ComputeBasicDamage; calls
-; ActorFormationSlotToTemp0; sets wBattleActor; calls AdvanceRandom; calls ComputeBasicDamage; sets
-; wBattleDamageLo; ...
+; ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; calls AdvanceRandom; calls
+; ComputeBasicDamage; copies L to wBattleDamageLo; ...
 ActionEffect_ActionD7_AdvanceRandom::
     ld a, [wBattleActor]
     push af
@@ -2586,8 +2587,8 @@ ActionEffect_ActionD7_AdvanceRandom::
     ret
 
 ; called from ActionEffect_ActionD8: calls ComputeAttackDamage; calls ActorFormationSlotToTemp0;
-; sets wBattleActor; calls ComputeAttackDamage; sets wBattleDamageLo; sets wBattleDamageHi; sets
-; wBattleActor
+; copies hTemp0 to wBattleActor; calls ComputeAttackDamage; copies L to wBattleDamageLo; copies H to
+; wBattleDamageHi; sets wBattleActor
 ActionEffect_ActionD8_ComputeAttackDamage::
     ld a, [wBattleActor]
     push af
@@ -2615,9 +2616,9 @@ ActionEffect_ActionD8_ComputeAttackDamage::
     ld [wBattleActor], a
     ret
 
-; called from ActionEffect_ActionD9: sets wBattleDamageLo; sets wBattleDamageHi; sets
-; wBattleDamageLo; sets wBattleDamageHi; calls ActorFormationSlotToTemp0; sets wBattleActor; sets
-; wBattleDamageLo; ...
+; called from ActionEffect_ActionD9: copies L to wBattleDamageLo; copies H to wBattleDamageHi;
+; copies L to wBattleDamageLo; copies H to wBattleDamageHi; calls ActorFormationSlotToTemp0; copies
+; hTemp0 to wBattleActor; copies L to wBattleDamageLo; ...
 ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc::
     ld a, [wBattleActor]
     push af
@@ -2861,8 +2862,8 @@ HealTargetHP::
     jp z, .loop
     jp .call_roll_skill_damage_from_record
 
-; called from ActionEffect_MPass: branches on wBattleActionId; sets wBattleDamageLo; sets
-; wBattleDamageHi; calls GetBattleMaxMP
+; called from ActionEffect_MPass: branches on wBattleActionId; copies E to wBattleDamageLo; copies D
+; to wBattleDamageHi; calls GetBattleMaxMP
 ActionEffect_MPass_AddDoubleAToHL_Bank36::
     ld a, [wBattleActionId]
     cp SKILL_MPASS
@@ -3054,7 +3055,7 @@ RollVsSapResistance::
     ret
 
 ; Calls GetBattleDEF; calls GetBaseDEFOfSlotA; branches on wBattleActionId; calls ShiftBCRight1;
-; sets wBattleDamageLo; sets wBattleDamageHi
+; copies C to wBattleDamageLo; copies B to wBattleDamageHi
 ActionEffect_UltraDown_GetBattleDEF::
     ld a, [wBattleTarget]
     call GetBattleDEF
@@ -3207,8 +3208,9 @@ RollVsSlowResistance::
     call RollChanceByFlagsAtHL
     ret
 
-; Calls GetBaseAGLOfSlotA; branches on wBattleActionId; calls ShiftBCRight1; sets wBattleDamageLo;
-; sets wBattleDamageHi; sets wBattleAGL to 1; sets wBattleDamageLo; ...
+; Calls GetBaseAGLOfSlotA; branches on wBattleActionId; calls ShiftBCRight1; copies C to
+; wBattleDamageLo; copies B to wBattleDamageHi; sets wBattleAGL to 1; copies E to wBattleDamageLo;
+; ...
 ResolveStepDamageMessage_GetBaseAGLOfSlotA::
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
@@ -3827,8 +3829,8 @@ ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
 .return:
     ret
 
-; called from ActionEffect_MegaMagic: sets wBattleDamageLo; sets wBattleDamageHi; sets
-; wBattleDamageLo; sets wBattleDamageHi
+; called from ActionEffect_MegaMagic: copies L to wBattleDamageLo; copies H to wBattleDamageHi;
+; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
     ld a, [wAllMPSpentLo]
     ld l, a
@@ -3855,9 +3857,9 @@ ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
     ld a, h
     ld [wBattleDamageHi], a
 
-; Calls ScaleHLTo40Percent; calls RandomInRange; sets wBattleDamageLo; sets wBattleDamageHi; calls
-; HLToBattleStatus8EntryOfBattleTarget_Bank36; calls GetTargetSlotResistancesByte4; calls
-; ScaleDamageByFlagsAtHLAlt
+; Calls ScaleHLTo40Percent; calls RandomInRange; copies L to wBattleDamageLo; copies H to
+; wBattleDamageHi; calls HLToBattleStatus8EntryOfBattleTarget_Bank36; calls
+; GetTargetSlotResistancesByte4; calls ScaleDamageByFlagsAtHLAlt
 ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent::
     call ScaleHLTo40Percent
     call ShiftHLRight2
@@ -3895,8 +3897,8 @@ ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Perce
     ret
 
 ; called from ActionEffect_WindBeast: branches on wLinkMode; branches on wBattleActor; calls
-; ShiftBCRight1; sets wBattleDamageLo; sets wBattleDamageHi; calls ScaleHLTo30Percent; calls
-; RandomInRange; ...
+; ShiftBCRight1; copies L to wBattleDamageLo; copies H to wBattleDamageHi; calls ScaleHLTo30Percent;
+; calls RandomInRange; ...
 ActionEffect_WindBeast_ShiftBCRight1::
     ld a, [wBattleActor]
     ld hl, wBattleLevel
@@ -3957,8 +3959,9 @@ ActionEffect_WindBeast_ShiftBCRight1::
     call ScaleDamageByVacuumResistance
     ret
 
-; called from ActionEffect_Vacuum: branches on wLinkMode; calls ShiftBCRight1; sets wBattleDamageLo;
-; sets wBattleDamageHi; calls ScaleHLTo40Percent; calls RandomInRange; sets wBattleDamageLo; ...
+; called from ActionEffect_Vacuum: branches on wLinkMode; calls ShiftBCRight1; copies L to
+; wBattleDamageLo; copies H to wBattleDamageHi; calls ScaleHLTo40Percent; calls RandomInRange;
+; copies L to wBattleDamageLo; ...
 ActionEffect_Vacuum_ShiftBCRight1::
     ld a, [wBattleActor]
     ld hl, wBattleLevel
@@ -4018,8 +4021,8 @@ ActionEffect_Vacuum_ShiftBCRight1::
     ret
 
 ; called from ActionEffect_Lightning: branches on wLinkMode; branches on wBattleActor; calls
-; ShiftBCRight1; calls GetTargetSpeciesFamily; sets wBattleDamageLo; sets wBattleDamageHi; calls
-; ScaleHLTo40Percent; ...
+; ShiftBCRight1; calls GetTargetSpeciesFamily; copies L to wBattleDamageLo; copies H to
+; wBattleDamageHi; calls ScaleHLTo40Percent; ...
 ActionEffect_Lightning_ShiftBCRight1::
     ld a, [wBattleActor]
     ld hl, wBattleLevel
@@ -4174,8 +4177,8 @@ DamageEightyPercentOfTargetHPScaled::
     ret
 
 ; called from ActionEffect_Kamikaze: calls HLToBattleStatus8EntryOfBattleTarget_Bank36; calls
-; GetTargetSlotResistancesByte3; calls RollChanceByFlagsAtHL; calls GetBattleHP; sets
-; wBattleDamageLo; sets wBattleDamageHi; branches on wLinkMode; ...
+; GetTargetSlotResistancesByte3; calls RollChanceByFlagsAtHL; calls GetBattleHP; copies L to
+; wBattleDamageLo; copies H to wBattleDamageHi; branches on H; ...
 ActionEffect_Kamikaze_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte3
@@ -4375,7 +4378,7 @@ ActionEffect_UltraDown_ReadBattleTarget::
     scf
     ret
 
-; called from ActionEffect_TatsuCall: sets wBattleSlotOut to 0; sets wMonsterId; calls
+; called from ActionEffect_TatsuCall: sets wBattleSlotOut to 0; copies L to wMonsterId; calls
 ; LoadMonsterRecord; calls StoreBCAtWordEntryLoadSlot; calls ActionEffect_TatsuCall_ReadLoadSlot;
 ; calls StoreBCAtWordEntryLoadSlot; calls ActionEffect_TatsuCall_ReadLoadSlot; ...
 ActionEffect_TatsuCall_AddAx9ToHL::
@@ -4535,8 +4538,8 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     call ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc
     ret
 
-; May return early; sets wRecordBuffer; sets wBattleArg0 to 3; sets wBattleArg1 to 1; sets
-; wBattleArg2; sets wBattleArg3; calls LoadSkillRecordPart
+; May return early; sets wRecordBuffer; sets wBattleArg0 to 3; sets wBattleArg1 to 1; copies L to
+; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart
 ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc::
     ld b, $04
     ld a, [wLoadSlot]
@@ -4646,9 +4649,9 @@ ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call RollChanceByFlagsAtHL
     ret
 
-; called from ActionEffect_CallHelp: branches on wLinkMode; branches on wBattleActor; sets
-; wBattleDamageLo; sets wBattleDamageHi; calls HLToBattleStatus8EntryOfBattleTarget_Bank36; calls
-; GetTargetSlotResistancesByte6; calls ScaleDamageByFlagsAtHL
+; called from ActionEffect_CallHelp: branches on wLinkMode; branches on wBattleActor; copies L to
+; wBattleDamageLo; copies H to wBattleDamageHi; calls HLToBattleStatus8EntryOfBattleTarget_Bank36;
+; calls GetTargetSlotResistancesByte6; calls ScaleDamageByFlagsAtHL
 ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi::
     ld a, [wBattleActor]
     ld hl, wBattleLevel
@@ -4684,8 +4687,8 @@ ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi::
     ret
 
 ; called from ActionEffect_BiAttack: branches on wBattleActionId; calls ShiftBCRight2; calls
-; ScaleHLTo75Percent; calls ShiftBCRight1; calls ComputeBasicDamage; sets wBattleDamageLo; sets
-; wBattleDamageHi
+; ScaleHLTo75Percent; calls ShiftBCRight1; calls ComputeBasicDamage; copies L to wBattleDamageLo;
+; copies H to wBattleDamageHi
 ActionEffect_BiAttack_ShiftHLRight1::
     ld a, [wBattleActor]
     ld hl, wBattleATK
@@ -4757,8 +4760,8 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ld [bc], a
     ret
 
-; called from ActionEffect_Meditate: sets wEffectTemp0; sets wEffectTemp1; sets wEffectTemp2; sets
-; wEffectTemp3
+; called from ActionEffect_Meditate: copies C to wEffectTemp0; copies B to wEffectTemp1; copies L to
+; wEffectTemp2; copies H to wEffectTemp3
 ActionEffect_Meditate_AddDoubleAToHL_Bank36::
     ld a, [wBattleActor]
     ld hl, wBattleMaxHP
@@ -4863,7 +4866,7 @@ RollVsSleepResistance::
     jp z, RollChanceByFlagsAtHL
     jp RollChanceByFlagsAtHLSided
 
-; called from ActionEffect_BeDragon: branches on wBattleActionId; sets wMonsterId; calls
+; called from ActionEffect_BeDragon: branches on wBattleActionId; copies L to wMonsterId; calls
 ; LoadMonsterRecord; calls StoreBCAtActorWordEntry; calls ActionEffect_BeDragon_CompareHLToBC; calls
 ; StoreBCAtActorWordEntry; calls ActionEffect_BeDragon_CompareHLToBC; ...
 ActionEffect_BeDragon_LoadMonsterRecord::
@@ -4972,8 +4975,8 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     ret
 
 ; Branches on the byte at wTemp0; calls ActionEffect_BeDragon_ClearEntry; copies the byte at wTemp0
-; to wRecordBuffer; sets wBattleArg0 to 3; sets wBattleArg1 to 1; sets wBattleArg2; sets
-; wBattleArg3; ...
+; to wRecordBuffer; sets wBattleArg0 to 3; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H
+; to wBattleArg3; ...
 ActionEffect_BeDragon_ActionEffect_BeDragon_ClearEntry::
     ld hl, wTemp0
     ld b, $04
@@ -5764,7 +5767,7 @@ RollChanceForLevelA_2_CallAdvanceRandom7::
     cp $26
     ret
 
-; Calls ScaleHLBy21Over16; sets wBattleDamageLo; sets wBattleDamageHi
+; Calls ScaleHLBy21Over16; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 RollChanceForLevelA_2_ReadBattleDamageLo::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5777,7 +5780,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo::
     ld [wBattleDamageHi], a
     ret
 
-; Calls ScaleHLBy37Over32; sets wBattleDamageLo; sets wBattleDamageHi
+; Calls ScaleHLBy37Over32; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 RollChanceForLevelA_2_ReadBattleDamageLo2::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5790,7 +5793,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo2::
     ld [wBattleDamageHi], a
     ret
 
-; Calls ScaleHLTo85Percent; sets wBattleDamageLo; sets wBattleDamageHi
+; Calls ScaleHLTo85Percent; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 RollChanceForLevelA_2_ReadBattleDamageLo3::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5803,7 +5806,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo3::
     ld [wBattleDamageHi], a
     ret
 
-; Calls ScaleHLTo75Percent; sets wBattleDamageLo; sets wBattleDamageHi
+; Calls ScaleHLTo75Percent; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 RollChanceForLevelA_2_ReadBattleDamageLo4::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5816,7 +5819,7 @@ RollChanceForLevelA_2_ReadBattleDamageLo4::
     ld [wBattleDamageHi], a
     ret
 
-; Sets wBattleDamageLo; sets wBattleDamageHi
+; Copies L to wBattleDamageLo; copies H to wBattleDamageHi
 RollChanceForLevelA_2_ReadBattleDamageLo5::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5842,7 +5845,7 @@ ScaleDamageTo40Percent::
     ld [wBattleDamageHi], a
     ret
 
-; Calls ScaleHLTo30Percent; sets wBattleDamageLo; sets wBattleDamageHi
+; Calls ScaleHLTo30Percent; copies L to wBattleDamageLo; copies H to wBattleDamageHi
 ScaleDamageTo40Percent_ReadBattleDamageLo::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -5855,7 +5858,7 @@ ScaleDamageTo40Percent_ReadBattleDamageLo::
     ld [wBattleDamageHi], a
     ret
 
-; Sets wBattleDamageLo; sets wBattleDamageHi
+; Copies L to wBattleDamageLo; copies H to wBattleDamageHi
 ScaleDamageTo40Percent_ReadBattleDamageLo2::
     ld a, [wBattleDamageLo]
     ld l, a
@@ -6265,8 +6268,8 @@ GetBaseAGLOfSlotA::
     pop hl
     ret
 
-; Calls BattlerRecordFieldAddress; sets wMonsterId; calls LoadMonsterRecord; copies wRecordBuffer to
-; wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesRecord
+; Calls BattlerRecordFieldAddress; copies L to wMonsterId; calls LoadMonsterRecord; copies
+; wRecordBuffer to wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesRecord
 ActionEffect_Transform_BattlerRecordFieldAddress::
     ld b, a
     and $03
@@ -6301,7 +6304,7 @@ ActionEffect_Transform_BattlerRecordFieldAddress::
 .return:
     ret
 
-; Calls BattlerRecordFieldAddress; sets wMonsterId; calls LoadMonsterRecord
+; Calls BattlerRecordFieldAddress; copies L to wMonsterId; calls LoadMonsterRecord
 ActionEffect_Transform_BattlerRecordFieldAddress_2::
     ld b, a
     and $03
@@ -6747,10 +6750,9 @@ ActionEffect_ActionD9::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; ClearDamageAndReadTargetStatus0_Bank36; calls HealTargetHP; branches on $01; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
+; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; sets hTemp0 to 0; calls
+; ClearDamageAndReadTargetStatus0_Bank36; sets hTemp0 to 1; calls HealTargetHP; sets hTemp0 to 1;
+; branches on hTemp0; ...
 ActionEffect_ActionDA::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     xor a
@@ -6808,7 +6810,7 @@ ActionEffect_ActionDA::
     or a
     jr z, .skip
     ld l, $37
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
@@ -6818,8 +6820,9 @@ ActionEffect_ActionDA::
 ; wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; ClearDamageAndReadTargetStatus0_Bank36; calls AdvanceRandom; branches on the byte at $6a59; copies
-; the byte at $6a59 to wBattleActionId; sets wEffectFlags to $41; sets wEffectFlags2 to $30; ...
+; ClearDamageAndReadTargetStatus0_Bank36; calls AdvanceRandom; branches on the byte at
+; ActionEffect_ActionDB_Data; copies the byte at ActionEffect_ActionDB_Data to wBattleActionId;
+; copies wEffectFlags2 to hTemp0; copies wEffectFlags to hTemp1; ...
 ActionEffect_ActionDB::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ClearDamageAndReadTargetStatus0_Bank36
@@ -6830,7 +6833,7 @@ ActionEffect_ActionDB::
     and $03
     sla a
     sla a
-    ld de, $6a59
+    ld de, ActionEffect_ActionDB_Data
     add e
     ld e, a
     jr nc, .skip
@@ -6872,15 +6875,18 @@ ActionEffect_ActionDB::
     ld [wBattleActionId], a
     ld a, [de]
     ld l, a
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+
+; data read by ActionEffect_ActionDB (16 bytes)
+ActionEffect_ActionDB_Data::
     db $02, $2f, $77, $00, $20, $34, $d9, $00, $40, $2f, $76, $00, $10, $34, $42, $00
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $DC; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: calls ActorFormationSlotToTemp0; sets wBattleActor; calls ActionEffect_BeDragon; sets
-; wBattleActor; continues in ActionEffect_BeDragon
+; code: calls ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; calls ActionEffect_BeDragon;
+; sets wBattleActor; continues in ActionEffect_BeDragon
 ActionEffect_ActionDC::
     ld a, [wBattleActor]
     push af
@@ -6930,7 +6936,7 @@ ActionEffect_ActionDD::
 
 .skip:
     ld l, $93
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6948,7 +6954,7 @@ ActionEffect_ActionDE::
     set BSTAT1_DANCE_SEALED, [hl]
     set BSTAT1_BREATH_SEALED, [hl]
     ld l, $9e
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6962,8 +6968,9 @@ ActionEffect_ActionDF::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E0; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls ActorFormationSlotToTemp0; sets
-; wBattleActor; calls ActionEffect_StrongD; sets wBattleActor; continues in ActionEffect_StrongD
+; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls ActorFormationSlotToTemp0;
+; copies hTemp0 to wBattleActor; calls ActionEffect_StrongD; sets wBattleActor; continues in
+; ActionEffect_StrongD
 ActionEffect_ActionE0::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -6987,9 +6994,9 @@ ActionEffect_ActionE1::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT7_DAMAGE_X10 of wBattleStatus7; increments hTemp0;
-; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; copies wBattleActor & $04 to hTemp0;
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT7_DAMAGE_X10 of wBattleStatus7; increments
+; hTemp0; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 ActionEffect_ActionE2::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -7017,10 +7024,9 @@ ActionEffect_ActionE2::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT1_CRITICAL of wBattleStatus1; clears bit 6 of
-; wBattleStatus1; sets bit 7 of wBattleStatus1; increments hTemp0; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; copies wBattleActor & $04 to hTemp0;
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT1_CRITICAL of wBattleStatus1; clears bit 6 of
+; wBattleStatus1; sets bit 7 of wBattleStatus1; increments hTemp0; ...
 ActionEffect_ActionE3::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -7122,8 +7128,8 @@ ActionEffect_IceBolt::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 19 Beat, 20 Defeat, 121 K.O.Dance; ids below 175 are skills named
 ; from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsBeatResistance; sets wBattleDamageLo; sets wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
+; code: calls RollVsBeatResistance; copies L to wBattleDamageLo; copies H to wBattleDamageHi;
+; continues in UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
 ; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 ActionEffect_Beat::
     call RollVsBeatResistance
@@ -7140,7 +7146,7 @@ ActionEffect_Beat::
     ld a, h
     ld [wBattleDamageHi], a
     ld hl, $b58e
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 .skip:
@@ -7150,8 +7156,8 @@ ActionEffect_Beat::
 ; wBattleActionId) for action(s) 21 Sacrifice; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: calls ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3; calls AdvanceRandom; calls
-; GetBattleHP; sets wBattleDamageLo; sets wBattleDamageHi; continues in ActionEffect_ActionCF_Skip;
-; sets wBattleDamageLo; ...
+; GetBattleHP; copies C to wBattleDamageLo; copies B to wBattleDamageHi; continues in
+; ActionEffect_ActionCF_Skip; copies L to wBattleDamageLo; ...
 ActionEffect_Sacrifice::
     call ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3
     jr nc, .skip
@@ -7201,7 +7207,7 @@ ActionEffect_Sacrifice::
     ld a, h
     ld [wBattleDamageHi], a
     ld hl, $b58f
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 .skip:
@@ -7233,7 +7239,7 @@ ActionEffect_Heal::
     jr z, .skip
     call HealTargetHP
     ld l, $37
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
@@ -7272,7 +7278,7 @@ ActionEffect_MPass::
     call ActionEffect_MPass_AddDoubleAToHL_Bank36
     jr nc, .skip
     ld l, $c3
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
@@ -7333,13 +7339,13 @@ ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
 .call_action_effect_vivify_add_ax9_to_hl:
     call ActionEffect_Vivify_AddAx9ToHL
     ld l, $50
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; Continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 ActionEffect_Vivify_Skip::
     ld h, $67
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7421,7 +7427,7 @@ ActionEffect_Antidote::
     and $fc
     ld [hl], a
     ld l, $4e
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7445,7 +7451,7 @@ ActionEffect_DeChaos::
     add_a_to_hl
     ld [hl], $03
     ld l, $83
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7471,7 +7477,7 @@ ActionEffect_NumbOff::
     ld l, $82
 
 .call_clear_damage_and_store_resolve_msg_flags2:
-    ld bc, $4090
+    lb bc, $40, $90
     call ClearDamageAndStoreResolveMsgFlags_Bank36
     pop hl
     ld a, [hl]
@@ -7500,7 +7506,7 @@ ActionEffect_CurseOff::
     and $df
     ld [hl], a
     ld l, $51
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7525,12 +7531,12 @@ ActionEffect_Upper::
     or h
     jr z, .skip
     ld l, $45
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7550,12 +7556,12 @@ ActionEffect_UltraDown_SetSlotStatus6Bit7::
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $39
-    ld bc, $0098
+    lb bc, $00, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7577,12 +7583,12 @@ ActionEffect_Speed::
     or h
     jr z, .skip
     ld l, $49
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -7602,12 +7608,12 @@ ResolveStepDamageMessage_SetSlotStatus6Bit7::
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
     ld l, $48
-    ld bc, $0098
+    lb bc, $00, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7624,7 +7630,7 @@ ActionEffect_TwinHits::
     jr nz, .skip
     set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7644,7 +7650,7 @@ ResolveStepDamageMessage_RollVsRadiantResistance::
     call AddAx9ToHL
     set BSTAT1_BLINDED, [hl]
     ld l, $4a
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .check_resolve_msg_flags:
@@ -7677,7 +7683,7 @@ ActionEffect_Sleep::
     or $8c
     ld [hl], a
     ld l, $73
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .check_battle_action_id:
@@ -7688,12 +7694,12 @@ ActionEffect_Sleep::
     ld h, $ce
 
 .skip:
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
     ld h, $d4
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7710,7 +7716,7 @@ ActionEffect_TakeMagic::
     jr nz, .skip
     set BSTAT2_TAKE_MAGIC, [hl]
     ld l, $3f
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7719,9 +7725,9 @@ ActionEffect_TakeMagic::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 50 RobMagic, 119 RobDance; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleActionId; calls GetBattleMP; calls RollVsRobMagicResistance; sets
-; wSavedActorSlot; sets wSavedActorByte; calls ActionEffect_RobMagic_DrainTargetMPAmount; branches
-; on wBattleActionId; ...
+; code: branches on wBattleActionId; calls GetBattleMP; calls RollVsRobMagicResistance; copies C to
+; wSavedActorSlot; copies B to wSavedActorByte; calls ActionEffect_RobMagic_DrainTargetMPAmount;
+; branches on wBattleActionId; ...
 ActionEffect_RobMagic::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -7798,7 +7804,7 @@ ActionEffect_RobMagic::
 
 .skip2:
     ld l, $3d
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip3:
@@ -7825,7 +7831,7 @@ ActionEffect_StopSpell::
     call AddAx9ToHL
     set BSTAT1_SPELLS_SEALED, [hl]
     ld l, $3b
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7855,12 +7861,12 @@ ActionEffect_PanicAll::
     call AddAx9ToHL
     set BSTAT0_CONFUSED, [hl]
     ld l, $42
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $cf
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
@@ -7910,7 +7916,7 @@ ActionEffect_Ironize::
     jr nz, .loop
     farcall ActionEffect_Ironize_ReadLinkModeAndBattleTarget
     ld l, d
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -7934,7 +7940,7 @@ ActionEffect_MagicBack::
     or $20
     ld [hl], a
     ld l, $4b
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -7945,21 +7951,20 @@ ActionEffect_MagicBack::
     or $02
     ld [hl], a
     ld l, $4c
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 56 Barrier; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus2; sets bit 2 of
-; wBattleStatus2; clears bit 2 of wBattleStatus2; branches on wBattleStatus2; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget
+; wBattleStatus2; clears bit 2 of wBattleStatus2; branches on wBattleStatus2; branches on D;
+; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; ...
 ActionEffect_Barrier::
     ld a, [wBattleTarget]
     and $04
@@ -7991,7 +7996,7 @@ ActionEffect_Barrier::
     or a
     jr z, .skip2
     ld l, $4d
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
@@ -8031,7 +8036,7 @@ ActionEffect_MagicWall::
 ; clears BSTAT1_DRAGON_FORM of wBattleStatus1
 ActionEffect_Transform::
     ld l, $52
-    ld bc, $4090
+    lb bc, $40, $90
     call ClearDamageAndStoreResolveMsgFlags_Bank36
     call ActionEffect_Transform_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
@@ -8089,20 +8094,20 @@ ActionEffect_BeDragon::
     cp ACTION_DC
     jr z, .skip
     ld l, $44
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld l, $f7
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 60 Chance; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Chance_AdvanceRandom; sets wBattleActionId; sets wRecordBuffer; calls
-; LoadSkillRecord; sets wBattleTargetChoice to $ff; calls ChooseTargetForActor; sets wBattleTarget;
-; ...
+; code: calls ActionEffect_Chance_AdvanceRandom; copies C to wBattleActionId; copies C to
+; wRecordBuffer; calls LoadSkillRecord; sets wBattleTargetChoice to $ff; calls ChooseTargetForActor;
+; copies D to wBattleTarget; ...
 ActionEffect_Chance::
     farcall ActionEffect_Chance_AdvanceRandom
     ld a, [wBattleActor]
@@ -8244,7 +8249,7 @@ ActionEffect_CallHelp::
 
 .skip:
     ld h, $69
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .call_action_effect_call_help_write_battle:
@@ -8449,7 +8454,7 @@ ActionEffect_ChargeUp::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 105 PsycheUp; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ComputeAttackDamage; calls ScaleHLBy3Over2; sets wBattleDamageLo; sets
+; code: calls ComputeAttackDamage; calls ScaleHLBy3Over2; copies L to wBattleDamageLo; copies H to
 ; wBattleDamageHi; continues in UnreferencedStoreResolveMessage35D0_Bank36
 ActionEffect_PsycheUp::
     call ComputeAttackDamage
@@ -8492,8 +8497,8 @@ ActionEffect_HighJump_Skip::
 ; wBattleActionId) for action(s) 107 EvilSlash; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: calls CheckSlotStatusBlock; calls AdvanceRandom; branches on wRandomLo; clears
-; BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls GetBattleATK; calls RandomWithin5PercentOfHL; sets
-; wBattleDamageLo; ...
+; BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls GetBattleATK; calls RandomWithin5PercentOfHL;
+; copies E to wBattleDamageLo; ...
 ActionEffect_EvilSlash::
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
@@ -8516,19 +8521,19 @@ ActionEffect_EvilSlash::
     ld a, d
     ld [wBattleDamageHi], a
     ld hl, $d235
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $d2
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 108 Massacre; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: clears BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls GetBattleATK; calls
-; RandomWithin5PercentOfHL; sets wBattleDamageLo; sets wBattleDamageHi; continues in
+; RandomWithin5PercentOfHL; copies E to wBattleDamageLo; copies D to wBattleDamageHi; continues in
 ; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 ActionEffect_Massacre::
     ld a, [wBattleActor]
@@ -8543,7 +8548,7 @@ ActionEffect_Massacre::
     ld a, d
     ld [wBattleDamageHi], a
     ld hl, $b535
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8562,7 +8567,7 @@ ActionEffect_TwinSlash::
 ; wBattleActionId) for action(s) 110 Berserker; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: sets BSTAT6_BERSERK of wBattleStatus6; clears BSTAT2_CRITICAL_ROLLED of wBattleStatus2;
-; calls ComputeAttackDamage; sets wBattleDamageLo; sets wBattleDamageHi; continues in
+; calls ComputeAttackDamage; copies L to wBattleDamageLo; copies H to wBattleDamageHi; continues in
 ; UnreferencedStoreResolveMessage35D0_Bank36
 ActionEffect_Berserker::
     ld a, [wBattleActor]
@@ -8618,13 +8623,13 @@ ActionEffect_PalsyAir::
     pop hl
     jr c, .skip
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip:
     set 6, [hl]
     ld l, $76
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
@@ -8658,7 +8663,7 @@ ActionEffect_PoisonGas::
     pop hl
     jr c, .check_battle_action_id
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .check_battle_action_id:
@@ -8676,7 +8681,7 @@ ActionEffect_PoisonGas::
     ld l, $77
 
 .skip3:
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip4:
@@ -8701,13 +8706,13 @@ ActionEffect_Curse::
     pop hl
     jr c, .skip
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip:
     set 5, [hl]
     ld l, $d9
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
@@ -8731,7 +8736,7 @@ ActionEffect_OddDance::
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
     call DrainTargetMPAmount
     ld l, $57
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
@@ -8754,7 +8759,7 @@ ActionEffect_LureDance::
     set BSTAT3_DANCING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $58
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -8861,12 +8866,12 @@ ActionEffect_Radiant_ReadBattleTarget::
     ld a, [wBattleActionId]
     sub $2a
     ld l, a
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
@@ -8892,17 +8897,17 @@ ActionEffect_EerieLite::
     call AddAx9ToHL
     set BSTAT8_EERIE_LITE, [hl]
     ld l, $d5
-    ld bc, $0098
+    lb bc, $00, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8913,7 +8918,7 @@ ActionEffect_EerieLite::
 ActionEffect_Surge::
     farcall ActionEffect_Surge_SetTargetSlotMarksTo3
     ld l, $60
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8934,7 +8939,7 @@ ActionEffect_UltraDown::
 
 .skip:
     ld h, $b5
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -8947,15 +8952,15 @@ ActionEffect_DeMagic::
     xor a
     ld [wBattleSubStep], a
     ld l, $5e
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall; ids
 ; below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: branches on wSideFlags0; calls AdvanceRandom; branches on wRandomLo; sets bit 2 of
-; wPersonalityActs; copies wBattleActor to wLoadSlot; calls ActionEffect_TatsuCall_AddAx9ToHL;
-; copies wLoadSlot to wBattleTarget; ...
+; wPersonalityActs; sets wLoadSlot; calls ActionEffect_TatsuCall_AddAx9ToHL; copies wLoadSlot to
+; wBattleTarget; ...
 ActionEffect_TatsuCall::
     ld a, [wBattleActor]
     rrca
@@ -9005,17 +9010,17 @@ ActionEffect_TatsuCall::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ld l, $61
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $72
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
     ld h, $cc
-    ld bc, $0084
+    lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9083,12 +9088,12 @@ ActionEffect_LushLicks::
     ld a, [wBattleActionId]
     sub $31
     ld l, a
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
     ld h, $71
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip3:
@@ -9112,7 +9117,7 @@ ActionEffect_LegSweep::
     set BSTAT3_TRIPPED, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $5d
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .read_battle_target:
@@ -9125,7 +9130,7 @@ ActionEffect_LegSweep::
     ld h, $68
 
 .skip:
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9145,12 +9150,12 @@ ActionEffect_Ahhh::
     set BSTAT3_VACANT, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $59
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $b5
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
@@ -9173,12 +9178,12 @@ ActionEffect_WarCry::
     set BSTAT3_COWERING, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $5c
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
     ld h, $6b
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 .skip2:
@@ -9218,7 +9223,7 @@ ActionEffect_Geyser::
 
 .skip:
     ld h, $6e
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; Copies wBattleActor to wBattleTarget; branches on wBattleStatus; calls AdvanceRandom; calls
@@ -9264,12 +9269,12 @@ ActionEffect_Geyser_Skip::
     ld a, d
     ld [wBattleDamageHi], a
     ld hl, $d0ad
-    ld bc, $88a8
+    lb bc, $88, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $af
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9292,7 +9297,7 @@ ActionEffect_DanceShut::
     call AddAx9ToHL
     set BSTAT1_DANCE_SEALED, [hl]
     ld l, $de
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -9319,7 +9324,7 @@ ActionEffect_MouthShut::
     call AddAx9ToHL
     set BSTAT1_BREATH_SEALED, [hl]
     ld l, $64
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip:
@@ -9381,7 +9386,7 @@ ActionEffect_Dodge::
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
 ; code: may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; branches on
 ; wBattleActionId; sets bit 4 of wSideFlags0; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus6; sets BSTAT6_GUARDED of wBattleStatus6; branches on wBattleStatus6; ...
+; C; branches on wBattleStatus6; sets BSTAT6_GUARDED of wBattleStatus6; ...
 ActionEffect_Cover::
     ld a, [wBattleTarget]
     rrca
@@ -9553,7 +9558,7 @@ ActionEffect_Meditate::
     call ActionEffect_Meditate_AddDoubleAToHL_Bank36
     jr nc, .skip
     ld l, $37
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 .skip:
@@ -9577,7 +9582,7 @@ ActionEffect_LifeSong::
 
 ; Branches on wMultiHitCount; calls AdvanceRandom; branches on wRandomLo; shows battle text 'But the
 ; prayer went unanswered!'; continues in SetSubPhase7AndResetResolveStep; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleTarget; ...
+; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleTarget & $03; ...
 ActionEffect_LifeSong_CheckMultiHitCount::
     ld a, [wMultiHitCount]
     or a
@@ -9621,7 +9626,7 @@ ActionEffect_LoveRain::
     call AdvanceRandom
     ld a, [wRandomLo]
     and $0f
-    ld hl, $79dc
+    ld hl, ActionEffect_LoveRain_Data
     add_a_to_hl
     ld a, [hl]
     push af
@@ -9644,6 +9649,9 @@ ActionEffect_LoveRain_CheckLoveRainFlag::
 
 .to_set_sub_phase7_and_reset_resolve_step:
     jp SetSubPhase7AndResetResolveStep
+
+; data read by ActionEffect_LoveRain (16 bytes)
+ActionEffect_LoveRain_Data::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -9789,12 +9797,12 @@ ActionEffect_ActionB5::
     ld l, $74
 
 .skip:
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
 .skip2:
     ld h, $d4
-    ld bc, $0080
+    lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9813,7 +9821,7 @@ ActionEffect_ActionB6::
     ld [hld], a
     ld [hl], a
     ld l, $df
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -9836,7 +9844,7 @@ ActionEffect_ActionBA::
     set 0, [hl]
     call ClearTargetStatus5Bits23And7Bits012
     ld l, $78
-    ld bc, $0098
+    lb bc, $00, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9865,14 +9873,14 @@ ActionEffect_ActionBC::
     ld a, h
     ld [bc], a
     ld l, $c3
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $BD; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
-; code: branches on the byte at wBattleHP; sets wBattleDamageLo; sets wBattleDamageHi; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
+; code: branches on the byte at wBattleHP; copies L to wBattleDamageLo; copies H to wBattleDamageHi;
+; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 ActionEffect_ActionBD::
     ld a, [wBattleTarget]
     ld hl, wBattleHP
@@ -9919,12 +9927,12 @@ ActionEffect_ActionC0::
     jr c, .skip
     call ComputeAttackDamage
     ld hl, $d136
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $d1
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9943,7 +9951,7 @@ ActionEffect_ActionC1::
 
 .skip:
     ld h, $d0
-    ld bc, $0888
+    lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -9984,7 +9992,7 @@ ActionEffect_ActionC6::
     call AddAx9ToHL
     set BSTAT0_PARALYZED, [hl]
     ld l, $76
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -10018,7 +10026,7 @@ ActionEffect_ActionC8::
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $C9, $CA; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls GetBattleHP; sets wBattleDamageLo; sets wBattleDamageHi; continues in
+; code: calls GetBattleHP; copies L to wBattleDamageLo; copies H to wBattleDamageHi; continues in
 ; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 ActionEffect_ActionC9::
     ld a, [wBattleActor]
@@ -10045,14 +10053,14 @@ ActionEffect_ActionC9::
     ld a, h
     ld [wBattleDamageHi], a
     ld hl, $af36
-    ld bc, $80a8
+    lb bc, $80, $a8
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $BF, $CB; ids below 175 are skills named from
 ; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ActionEffect_ActionC9; sets wBattleDamageLo; sets wBattleDamageHi; continues
-; in UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+; code: may continue in ActionEffect_ActionC9; copies L to wBattleDamageLo; copies H to
+; wBattleDamageHi; continues in UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 ActionEffect_ActionBF::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
@@ -10075,7 +10083,7 @@ ActionEffect_ActionBF::
     ld a, h
     ld [wBattleDamageHi], a
     ld hl, $afaf
-    ld bc, $0080
+    lb bc, $00, $80
     jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -10123,7 +10131,8 @@ UnreferencedStoreResolveMessage35D0_Bank36::
     ld hl, $d035
     ld bc, $88a8
 
-; Sets wResolveMsgActor; sets wResolveMsgTarget; sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies L to wResolveMsgActor; copies H to wResolveMsgTarget; copies C to wResolveMsgFlags; copies
+; B to wResolveMsgArg
 UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -10142,7 +10151,7 @@ ClearDamageAndStoreResolveMsgFlags_Bank36::
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-; Sets wResolveMsgActor; sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies L to wResolveMsgActor; copies C to wResolveMsgFlags; copies B to wResolveMsgArg
 ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -10163,12 +10172,12 @@ ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2::
     ld h, $b5
     ld bc, $0080
 
-; Sets wResolveMsgTarget
+; Copies H to wResolveMsgTarget
 ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget::
     ld a, h
     ld [wResolveMsgTarget], a
 
-; Sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies C to wResolveMsgFlags; copies B to wResolveMsgArg
 ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags::
     ld a, c
     ld [wResolveMsgFlags], a
@@ -10224,7 +10233,7 @@ SetSubPhase7AndResetResolveStep::
 
 ; Continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags
 SetSubPhase7AndResetResolveStep_Skip::
-    ld bc, $0000
+    lb bc, $00, $00
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgFlags
 
 ; when the target's status byte 2 (wBattleStatus2) bit 2 is set, the damage word is halved (E-0118)
@@ -10506,7 +10515,7 @@ TargetOnLocalSide_Bank36::
 ; Works on registers only
 ClearBattleStatusBitsWithMaskD_Bank36::
     ld a, d
-    ld hl, $7eb7
+    ld hl, ClearBattleStatusBitsWithMaskD_Bank36_Data
     add_a_to_hl
     ld d, [hl]
     ld a, e
@@ -10516,6 +10525,9 @@ ClearBattleStatusBitsWithMaskD_Bank36::
     and [hl]
     ld [hl], a
     ret
+
+; data read by ClearBattleStatusBitsWithMaskD_Bank36 (7 bytes)
+ClearBattleStatusBitsWithMaskD_Bank36_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12

@@ -73,6 +73,8 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
             continue
         op, _, rest = c.partition(" ")
         args = [x.strip() for x in rest.split(",")] if rest else []
+        if op == "ldh":  # high-RAM loads and stores read like ld
+            op = "ld"
 
         def add(cl: str) -> None:
             if cl and (not clauses or clauses[-1] != cl):
@@ -90,6 +92,8 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
                     a_src, a_const = (f"the byte at {de}" if src == "[de]" and de else None), None
                 elif re.fullmatch(r"\[(?:\w+(?: \+ \w+)?)\]", src) and not src.startswith("[hl"):
                     a_src, a_const = src[1:-1], None
+                elif src in ("b", "c", "d", "e", "h", "l"):
+                    a_src, a_const = src.upper(), None
                 elif src.startswith("[hl"):
                     a_src, a_const = (f"the byte at {hl}" if hl else None), None
                 else:
@@ -122,6 +126,16 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
         elif op in ("set", "res") and len(args) == 2 and args[1] == "[hl]" and hl:
             add(f"{'sets' if op == 'set' else 'clears'} {args[0]} of {hl}" if not args[0].isdigit()
                 else f"{'sets' if op == 'set' else 'clears'} bit {args[0]} of {hl}")
+        elif op == "and" and args and args != ["a"] and re.fullmatch(r"\$[0-9a-f]{2}", args[0]):
+            a_src = f"{re.sub(r'[+-]1$', '', a_src)} & {args[0]}" if a_src and a_const is None else None
+            a_const = None
+        elif op in ("add", "adc", "sub", "sbc", "or", "xor", "swap", "srl", "sla", "sra", "rl", "rr", "rlc", "rrc",
+                    "rla", "rra", "rlca", "rrca", "cpl", "daa") and (not args or args[0] == "a" or op in
+                                                                   ("add", "adc", "sub", "sbc", "or", "xor")) \
+                and args != ["a"]:
+            a_src = a_const = None  # A no longer holds a named value
+        elif op == "pop" and args == ["af"]:
+            a_src = a_const = None
         elif op == "cp" and args:
             subj = re.sub(r"[+-]1$", "", a_src) if a_src else None
             cmp = (subj, args[0])

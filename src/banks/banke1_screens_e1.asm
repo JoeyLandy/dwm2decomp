@@ -123,10 +123,9 @@ RunBankE1Routine::
 RunBankE1Routine_Data::
     db $3c, $5d
 
-; called from RunBankE1Routine: may return early; branches on the byte at hMetaSpriteXLo; returns if
-; the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
-; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
-; hMetaSpriteXLo is $80; ...
+; called from RunBankE1Routine: returns if hOamNextEntry is at least $27; sets hMetaSpriteYLo; sets
+; hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at hMetaSpriteXLo is $80;
+; branches on the byte at hMetaSpriteXLo; branches on B; ...
 RunBankE1Routine_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

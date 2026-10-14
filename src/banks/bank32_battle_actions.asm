@@ -56,8 +56,8 @@ CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo::
     ld h, a
     inc [hl]
 
-; called from TickSequencePtrLoSequence: calls LookupSequencePtrLoFrameWord; continues in
-; CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo
+; called from TickSequencePtrLoSequence: calls LookupSequencePtrLoFrameWord; branches on B; branches
+; on C; continues in CountDownSequencePtrLoFrameTimer_ReadSequencePtrLo
 TickSequencePtrLoSequence_LookupSequencePtrLoFrameWord::
     call LookupSequencePtrLoFrameWord
     ld a, b
@@ -2027,7 +2027,7 @@ ShowBattleTextCategory0Entry_ReturnCarry::
 ; damage = the actor's max HP / 6 (wBattleDamageLo/Hi) is subtracted from the actor's HP without a
 ; floor: HP 10 with max HP 120 becomes $FFF6 (executed, test SixthOfMaxHPWithoutFloor); whether
 ; callers keep HP above the damage is not read (E-0121, E-0154)
-; code: sets wBattleDamageLo; sets wBattleDamageHi
+; code: copies L to wBattleDamageLo; copies H to wBattleDamageHi
 ActorLosesSixthOfMaxHP::
     ld a, [wBattleActor]
     ld hl, wBattleHP
@@ -2619,7 +2619,7 @@ RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches::
     call SetSubPhase7AndResetSteps
     ret
 
-; step 4 of RunBattleActions_StatusChecks_CheckAction: calls CheckSkillMPCost; calls
+; step 4 of RunBattleActions_StatusChecks_CheckAction: calls CheckSkillMPCost; branches on D; calls
 ; CheckActionD0ToE3OrSpecial; calls SetSubPhase7AndResetSteps; decrements wBattleSubStep
 RunBattleActions_StatusChecks_CheckAction_CheckSkillMPCost::
     call CheckSkillMPCost
@@ -3076,7 +3076,7 @@ PayActorMPCost::
     ret
 
 ; Calls ReadByteAtHLPlusA; sets wRecordBuffer; calls LoadSkillRecord; calls PayActorMPCost; calls
-; ActorFormationSlotToTemp0; sets wBattleActor; calls ReadByteAtHLPlusA; ...
+; ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; calls ReadByteAtHLPlusA; ...
 PayActorMPCost_CpD6::
     cp $d6
     jr z, .set_record_buffer_data_to_FF
@@ -3198,7 +3198,7 @@ RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable::
     ret
 
 ; step 4 of RunBattleActions_StatusChecks: advances wBattleResolveStep; branches on the byte at
-; wBattleStatus3; branches on wBattleStatus; branches on the byte at wSlotBodyFlags; advances
+; wBattleStatus3 & $c0; branches on wBattleStatus; branches on the byte at wSlotBodyFlags; advances
 ; wBattleSubPhase; sets wBattleResolveStep to 6; calls SetSubPhase7AndResetSteps; ...
 RunBattleActions_StatusChecks_AddAx9ToHL::
     ld hl, wBattleResolveStep
@@ -3716,8 +3716,9 @@ RunBattleStep4_ResolveSkill_WriteFollowUpActionAndMultiHitCountEtc::
     ld [wBattleTarget], a
     ret
 
-; step 1 of RunBattleStep4_ResolveSkill: advances wBattleResolveStep; calls CheckSkillMPCost; calls
-; BuildActionMessageNames; calls CheckActionD0ToE3OrSpecial; sets wBattleResolveStep to 5
+; step 1 of RunBattleStep4_ResolveSkill: advances wBattleResolveStep; calls CheckSkillMPCost;
+; branches on D & $07; calls BuildActionMessageNames; calls CheckActionD0ToE3OrSpecial; sets
+; wBattleResolveStep to 5
 RunBattleStep4_ResolveSkill_CheckSkillMPCost::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -4212,7 +4213,7 @@ DefeatTarget::
 
 ; called from DefeatTarget: branches on wRedirectFlags; branches on wOriginalTarget; branches on
 ; wBattleTarget; branches on wMultiHitCount; decrements wMultiHitCount; branches on wBattleStatus6;
-; branches on the byte at wBattleStatus6; ...
+; branches on the byte at wBattleStatus6 & $0f; ...
 DefeatTarget_WriteMultiHitCount::
     ld a, [wRecordBufferData + $4]
     and $0f
@@ -4521,8 +4522,8 @@ RecomputeTargetMaxHPAndMP_ReadBattleTargetAndLinkMode::
     ld a, [wBattleTarget]
     ld c, a
 
-; called from ActionEffect_BeDragon: branches on wLinkMode; returns unless wLinkMode is $02; may
-; return early; sets wSlotNameBytes to $ff
+; called from ActionEffect_BeDragon: branches on wLinkMode; returns unless wLinkMode is $02; returns
+; if C is below $04; returns if C & $03 is $03; sets wSlotNameBytes to $ff
 ActionEffect_BeDragon_ReadLinkMode::
     ld a, [wLinkMode]
     or a
@@ -4543,8 +4544,8 @@ ActionEffect_BeDragon_ReadLinkMode::
     ret
 
 ; called from RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait: sets wSideFlags0 to 0; sets
-; wSideFlags1 to 0; sets wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; RecomputeTargetMaxHPAndMP; calls ResetTargetAGLAndDEFToBase; sets wBattleSlotOut to $ff; ...
+; wSideFlags1 to 0; copies C to wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; RecomputeTargetMaxHPAndMP; calls ResetTargetAGLAndDEFToBase; branches on C; ...
 RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty::
     xor a
     ld [wSideFlags0], a
@@ -4822,8 +4823,8 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
-; called from ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc: calls AdvanceRandom; calls
-; CarryUnlessBattleSlotOutSlotEmpty
+; called from ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc: calls AdvanceRandom;
+; branches on C; calls CarryUnlessBattleSlotOutSlotEmpty
 ResolveStep0EEffect_AdvanceRandom::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -4923,8 +4924,8 @@ ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent::
     ret
 
 ; step 1 of ResolveStep0EEffect_Scale80Percent: advances wBattleSubStep2; calls
-; ScaleHLTo80Percent_Bank32; sets wEffectTemp0; sets wEffectTemp1; decrements wBattleSubStep2; sets
-; wEffectSubStep to 0; sets wTemp0 to $35; ...
+; ScaleHLTo80Percent_Bank32; copies L to wEffectTemp0; copies H to wEffectTemp1; decrements
+; wBattleSubStep2; sets wEffectSubStep to 0; sets wTemp0 to $35; ...
 ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5104,9 +5105,9 @@ ResolveStep0EEffect_Brutalize_SkipTurnIfActorAbsent::
     inc [hl]
     ret
 
-; step 1 of ResolveStep0EEffect_Brutalize: advances wBattleSubStep2; decrements wBattleSubStep2;
-; sets wEffectSubStep to 0; copies wBattleTarget to wLoadSlot; copies wBattleActor to wBattleTarget;
-; shows battle text '0 was brutalized!'; copies wLoadSlot to wBattleTarget; ...
+; step 1 of ResolveStep0EEffect_Brutalize: advances wBattleSubStep2; branches on H; branches on L;
+; decrements wBattleSubStep2; sets wEffectSubStep to 0; copies wBattleTarget to wLoadSlot; copies
+; wBattleActor to wBattleTarget; ...
 ResolveStep0EEffect_Brutalize_AddDoubleAToHL_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5227,7 +5228,8 @@ ResolveStep0EEffect_Brutalize_ToSetBattleSubStep1::
     ret
 
 ; step 5 of ResolveStep0EEffect: branches on wBattleActionId; branches on wSavedActorByte; sets
-; wSavedActorByte; calls ActorFormationSlotToTemp0; sets wBattleActor; dispatches on wBattleSubStep2
+; wSavedActorByte; calls ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; dispatches on
+; wBattleSubStep2
 ResolveStep0EEffect_ActorFormationSlotToTemp0::
     ld a, [wBattleActionId]
     cp ACTION_D6
@@ -5263,8 +5265,8 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
     ret
 
 ; step 1 of ResolveStep0EEffect_Brutalize_DefeatTarget: advances wBattleSubStep2; calls
-; SetBit0OfLevelUpGainsIndexed_Bank32; calls AdvanceRandom; calls GetBattleHP_Bank32; sets
-; wBattleDamageLo; sets wBattleDamageHi; copies wBattleTarget to wLoadSlot; ...
+; SetBit0OfLevelUpGainsIndexed_Bank32; calls AdvanceRandom; calls GetBattleHP_Bank32; copies C to
+; wBattleDamageLo; copies B to wBattleDamageHi; copies wBattleTarget to wLoadSlot; ...
 ResolveStep0EEffect_Brutalize_DefeatTarget_CallSetBit0OfLevelUpGainsIndexed_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
@@ -5485,9 +5487,9 @@ ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent::
     farcall SelectEffectByEffectFlags2Flags
     ret
 
-; step 1 of ResolveStep0EEffect_DamageAndSelectEffect: advances wBattleSubStep2; sets wEffectTemp0;
-; sets wEffectTemp1; sets wEffectTemp0; sets wEffectTemp1; decrements wBattleSubStep2; sets
-; wEffectSubStep to 0; ...
+; step 1 of ResolveStep0EEffect_DamageAndSelectEffect: advances wBattleSubStep2; copies L to
+; wEffectTemp0; copies H to wEffectTemp1; copies L to wEffectTemp0; copies H to wEffectTemp1;
+; decrements wBattleSubStep2; sets wEffectSubStep to 0; ...
 ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
@@ -6006,9 +6008,9 @@ RunBattleSubStep2_2_SetBit2OfLevelUpGainsIndexed_Bank32::
     farcall ShowBattleText
     ret
 
-; called from ResolveStepDamageMessage: branches on wBattleDamageHi; sets wBattleDamageLo; sets
-; wBattleDamageHi; sets wBattleDamageLo; sets wBattleDamageHi; may return early; sets
-; wBattleDamageLo; ...
+; called from ResolveStepDamageMessage: copies L to wBattleDamageLo; copies H to wBattleDamageHi;
+; branches on H; copies L to wBattleDamageLo; copies H to wBattleDamageHi; returns unless bit 2 of H
+; is set; copies L to wBattleDamageLo; ...
 ResolveStepDamageMessage_AddAx9ToHL::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus7

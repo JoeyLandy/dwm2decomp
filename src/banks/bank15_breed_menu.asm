@@ -97,7 +97,7 @@ CloseBreedMenu_FillTilesBxC::
 
 ; step 3 of CloseBreedMenu: calls DrawRecordListNameTiles_Bank1D; calls LoadTilesForPartyRecords;
 ; sets wMessageMode to 0; sets wScreenList to 0; calls WritePlayerNameWithFlag0SuffixToTextBuf0;
-; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; ...
+; sets hSpriteHideTile to $80; sets wTextWindowTileLo to $12; ...
 CloseBreedMenu_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     farcall LoadTilesForPartyRecords
@@ -464,8 +464,8 @@ BreedMenu_ChooseParents_ListRecordsInUseNotEggs::
     farcall ListRecordsInUseNotEggs
 
 ; Calls ClampRecordListPageCursor5; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank15;
-; calls StoreC5BEC6AtHLStride2_Bank15; sets wArg1; sets wArg2; calls DrawPageOfPagesAtScrollOffset;
-; ...
+; calls StoreC5BEC6AtHLStride2_Bank15; copies D to wArg1; copies E to wArg2; calls
+; DrawPageOfPagesAtScrollOffset; ...
 BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -504,8 +504,8 @@ BreedMenu_ChooseParents_DrawRecordListPageNames::
     ret
 
 ; step 4 of BreedMenu_ChooseParents: calls SetArg5ToListEntriesCell5; sets wArg1 to $c7; calls
-; LoadFamilyIconTileForRecordB_Bank15; calls CopyRectTo20ByteRows_Bank15; sets wArg1; sets wArg2;
-; sets wArg3; ...
+; LoadFamilyIconTileForRecordB_Bank15; calls CopyRectTo20ByteRows_Bank15; sets wArg1; copies L to
+; wArg2; copies H to wArg3; ...
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [hl]
@@ -789,8 +789,8 @@ BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep::
     ret
 
 ; step 17 of BreedMenu_ChooseParents: sets rRAMG2 to $0a; sets rRAMB to 0; calls
-; SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; sets wArg5; calls LoadSRAMRecordByte;
-; branches on wArg5; ...
+; SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; copies hTemp0 & $01 to wArg5; calls
+; LoadSRAMRecordByte; branches on wArg5; ...
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetArg5::
     ld a, $0a
     ld [rRAMG2], a
@@ -1282,8 +1282,9 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_TileRect::
     db $b7 ; id 0
     db $b7 ; id 1
 
-; step 32 of BreedMenu_ChooseParents: sets wArg1 to $9d; sets wArg2 to 0; sets wArg3; sets wArg4;
-; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; copies wItemGridX to wListCursor; ...
+; step 32 of BreedMenu_ChooseParents: sets wArg1 to $9d; sets wArg2 to 0; copies D to wArg3; copies
+; E to wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; copies wItemGridX to
+; wListCursor; ...
 BreedMenu_ChooseParents_LoadTileListSixPerCall::
     ld a, $9d
     ld [wArg1], a
@@ -1377,8 +1378,8 @@ BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_3::
     ret
 
 ; step 38 of BreedMenu_ChooseParents: calls SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets
-; rRAMB to 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; branches on 0; sets wTwoChoiceCursor to 3;
-; ...
+; rRAMB to 0; calls LoadSRAMRecordByte; sets rRAMG2 to 0; branches on hTemp0; sets wTwoChoiceCursor
+; to 3; ...
 BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1474,7 +1475,7 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
     ret
 
 ; step 39 of BreedMenu_ChooseParents: copies the byte at wChildRecord + MON_SPECIES to wArg1; copies
-; the byte at wChildRecord + MON_SPECIES to wArg2; sets wArg3; sets wArg4; calls
+; the byte at wChildRecord + MON_SPECIES to wArg2; copies L to wArg3; copies H to wArg4; calls
 ; TestBitInFieldAtArg3; copies the byte at wChildRecord + MON_SPECIES to wSpeciesIdLo; copies the
 ; byte at wChildRecord + MON_SPECIES to wSpeciesIdHi; ...
 BreedMenu_ChooseParents_TestBitInFieldAtArg3::
@@ -1587,7 +1588,7 @@ BreedMenu_ChooseParents_TestBitInFieldAtArg3::
     ret
 
 ; step 40 of BreedMenu_ChooseParents: copies the byte at wChildRecord + MON_SPECIES to wArg1; copies
-; the byte at wChildRecord + MON_SPECIES to wArg2; sets wArg3; sets wArg4; calls
+; the byte at wChildRecord + MON_SPECIES to wArg2; copies E to wArg3; copies D to wArg4; calls
 ; TestBitInFieldAtArg3; copies the byte at wChildRecord + MON_SPECIES to wSpeciesIdLo; copies the
 ; byte at wChildRecord + MON_SPECIES to wSpeciesIdHi; ...
 BreedMenu_ChooseParents_TestBitInFieldAtArg3_SetArg1::
@@ -1814,8 +1815,8 @@ BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; step 50 of BreedMenu_ChooseParents: sets wArg1 to $9d; sets wArg2 to 0; sets wArg3; sets wArg4;
-; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; increments wScreenStep
+; step 50 of BreedMenu_ChooseParents: sets wArg1 to $9d; sets wArg2 to 0; copies D to wArg3; copies
+; E to wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; increments wScreenStep
 BreedMenu_ChooseParents_LoadTileListSixPerCall_SetArg1::
     ld a, $9d
     ld [wArg1], a
@@ -1934,9 +1935,9 @@ BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_SetScriptCommandType::
     ld [wScreenStep], a
     ret
 
-; step 60 of BreedMenu_ChooseParents: calls TenTimesTemp0PlusTenToDigits; calls
-; BreedMenu_CopyDigitsToTextBuf; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; increments wScreenStep
+; step 60 of BreedMenu_ChooseParents: copies the byte at wChildRecord + MON_PLUS to hTemp0; calls
+; TenTimesTemp0PlusTenToDigits; calls BreedMenu_CopyDigitsToTextBuf; sets wTextWindowTileLo to $12;
+; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; increments wScreenStep
 BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits::
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2250,8 +2251,9 @@ BreedMenu_ChooseParents_SetScreenStep::
     ld [wScriptStartRequest], a
     ret
 
-; step 65 of BreedMenu_ChooseParents: calls TenTimesTemp0PlusTen; sets wArg3 to 0; sets wArg2; sets
-; wArg1; calls SubtractArg1AmountFromGold; calls ListRecordsInUseEggs; sets wListCursor to 0; ...
+; step 65 of BreedMenu_ChooseParents: copies the byte at wChildRecord + MON_PLUS to hTemp0; calls
+; TenTimesTemp0PlusTen; sets wArg3 to 0; copies H to wArg2; copies L to wArg1; calls
+; SubtractArg1AmountFromGold; branches on C; ...
 BreedMenu_ChooseParents_TenTimesTemp0PlusTen::
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2417,7 +2419,7 @@ ClearTileRowsAndResetWindowAndStep::
 
 ; step 3 of BreedMenu_ChooseEgg: calls CopyRectTo20ByteRows_Bank15; calls
 ; ClampRecordListPageCursor4; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank15; calls
-; StoreC5BEC6AtHLStride2_Bank15; sets wArg1; sets wArg2; ...
+; StoreC5BEC6AtHLStride2_Bank15; copies D to wArg1; copies E to wArg2; ...
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15::
     ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -3206,9 +3208,9 @@ DrawPairAndStep_2_2::
     ld [wScreenStep], a
     ret
 
-; step 2 of BreedMenu_ReturnToMap: calls LoadMapHeader; calls LoadMapScreen; calls
-; LoadPlayerAndFollowerSpriteGraphics; calls LoadMapObjectsForScreen; calls
-; RestorePlayerPositionState; sets wOBJPaletteUploadRequest to $7f; increments wScreenStep
+; step 2 of BreedMenu_ReturnToMap: sets hMapId to $0d; calls LoadMapHeader; calls LoadMapScreen;
+; calls LoadPlayerAndFollowerSpriteGraphics; calls LoadMapObjectsForScreen; calls
+; RestorePlayerPositionState; sets hFieldDrawFlags to 0; ...
 BreedMenu_ReturnToMap_LoadMapHeader::
     ld a, $0d
     ldh [hMapId], a
@@ -4015,8 +4017,8 @@ BreedMenu_ReturnToMap_CopyRecordNameToNameGlyphBuf::
     ret
 
 ; step 28 of BreedMenu_ReturnToMap: sets rRAMG2 to $0a; sets rRAMB to 0; calls SRAMRecordAddress;
-; sets rRAMG2 to 0; branches on wListCursor; branches on the byte at wListEntries; sets rRAMG2 to
-; $0a; ...
+; sets rRAMG2 to 0; branches on wListCursor; branches on the byte at wListEntries; branches on C;
+; ...
 BreedMenu_ReturnToMap_SRAMRecordAddress_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -4269,8 +4271,8 @@ BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15::
 .return:
     ret
 
-; step 0 of BreedMenu_RestoreScreen: calls BGMapAddressAtScroll_Bank15; sets wArg5; sets wArg6; sets
-; wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
+; step 0 of BreedMenu_RestoreScreen: calls BGMapAddressAtScroll_Bank15; copies H to wArg5; copies L
+; to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
 BreedMenu_RestoreScreen_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank15
     ld a, h
@@ -4295,8 +4297,8 @@ BreedMenu_RestoreScreen_FillTileRectWithArg1Tile::
     ret
 
 ; step 6 of BreedMenu_RestoreScreen: returns unless wFadeState is 0; calls
-; CopyMonsterNameToBuffer_B15; branches on the byte at wNameGlyphBuf; increments wScreenStep; calls
-; BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; sets wTextWindowTileLo; ...
+; CopyMonsterNameToBuffer_B15; branches on the byte at wNameGlyphBuf; branches on C; increments
+; wScreenStep; calls BGMapAddressAtScroll_Bank15; calls DrawScreenBufferRect_Bank15; ...
 BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
     ld a, [wFadeState]
     and a
@@ -4351,8 +4353,8 @@ BreedMenu_RestoreScreen_CopyMonsterNameToBuffer_B15::
     ret
 
 ; step 7 of BreedMenu_RestoreScreen: sets wScreenStep to 0; sets wScreenSubStep to 0; sets
-; wScreenState to 1; sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets
-; wTextWindowWidth; ...
+; wScreenState to 1; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
+; wTextWindowRows; copies H to wTextWindowWidth; ...
 BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc::
     xor a
     ld [wScreenStep], a
@@ -4468,8 +4470,8 @@ BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
     ret
 
 ; step 13 of BreedMenu_ChooseEgg: calls CopyRectTo20ByteRows_Bank15; calls
-; ClampRecordListPageCursor4; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank15; sets
-; wArg1; sets wArg2; calls DrawPageOfPagesAtArg1_Bank1E; ...
+; ClampRecordListPageCursor4; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank15; copies H
+; to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; ...
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
     ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -4810,7 +4812,8 @@ BreedMenu_ListMonsters_ListRecordsInUseNotEggs::
     farcall ListRecordsInUseNotEggs
 
 ; Calls ClampRecordListPageCursor5; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank15;
-; sets wArg1; sets wArg2; calls DrawPageOfPagesAtArg1_Bank1E; calls BlankWordTableTargets; ...
+; copies H to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; calls
+; BlankWordTableTargets; ...
 BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -5187,7 +5190,7 @@ DrawArrowTileBCAtGridCursorXEntry_Bank15_Data::
     db $21, $00, $61, $00, $a1, $00
 
 ; called from BreedMenu_ReturnToMap_FillTilesBxC: sets rRAMG2 to $0a; sets rRAMB to 0; calls
-; LoadSRAMRecordByte; sets rRAMB to 0; sets rRAMG2 to 0; branches on 0; branches on wPartyCount
+; LoadSRAMRecordByte; sets rRAMB to 0; sets rRAMG2 to 0; branches on hTemp0; branches on rSTAT; ...
 BreedMenu_ReturnToMap_LoadSRAMRecordByte::
     ld b, $00
 
@@ -5914,7 +5917,7 @@ TestBitInFieldAtArg3_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
 ; Sets wListCount to 0; sets rRAMG2 to $0a; sets rRAMB to 0; sets wRecordsFlagged to 0; branches on
-; the byte at sRecords; increments wRecordsFlagged; branches on the byte at sRecords; ...
+; the byte at sRecords; branches on the byte at sRecords & $01; increments wRecordsFlagged; ...
 BreedMenu_WriteListCountAndRAMG2Etc::
     ld hl, wListEntries
     ld b, $1e
@@ -6750,9 +6753,9 @@ PrepareCounterPtr0LoCountersAndRequestScript::
     ld [wScriptStartRequest], a
     ret
 
-; called from PrepareCounterPtr0LoCountersAndRequestScript: branches on the byte at wItemStorage;
-; branches on wCounterArg0; branches on wCounterPtr0Lo; branches on wCounterPtr0Hi; sets wArg1 to 1;
-; returns unless wArg1 is 0; sets wArg1 to 0
+; called from PrepareCounterPtr0LoCountersAndRequestScript: sets hTemp0; branches on the byte at
+; wItemStorage; branches on L; branches on H; branches on hTemp0; branches on wCounterPtr0Lo;
+; branches on wCounterPtr0Hi; ...
 PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1::
     add $3f
     ldh [hTemp0], a
@@ -7325,7 +7328,7 @@ Script_HeroIsGoingTo::
     script_jump Script_Breed_2
 
 ; Sets wListCount to 0; sets rRAMG2 to $0a; sets rRAMB to 0; branches on the byte at
-; sCompactRecords; sets rRAMB to 1; branches on the byte at sRecords; sets wListCount; ...
+; sCompactRecords; branches on B; sets rRAMB to 1; branches on the byte at sRecords; ...
 HibernateMenu_WriteListCountAndRAMG2Etc::
     ld hl, wListEntries
     ld b, $1e
@@ -7384,8 +7387,8 @@ HibernateMenu_WriteListCountAndRAMG2Etc::
     ret
 
 ; called from HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc: sets rRAMG2 to $0a; sets rRAMB to 0;
-; branches on wListLastRow; branches on wListPages; branches on wListPageIndex; sets wArg1 to 0;
-; branches on the byte at wListEntries; ...
+; branches on wListLastRow; branches on wListPages; sets wArg1 to 0; branches on the byte at
+; wListEntries; sets wArg2 to 0; ...
 HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -7749,8 +7752,8 @@ RecordAddressWithBank1Slot1D::
     ret
 
 ; called from HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2: sets rRAMG2 to $0a; calls
-; RecordAddressWithBank1Slot1D; sets wArg2; sets wArg1 to 0; sets wArg3; sets wArg4; calls
-; LoadRecordNameEntry0; ...
+; RecordAddressWithBank1Slot1D; sets wArg2; sets wArg1 to 0; copies L to wArg3; copies H to wArg4;
+; calls LoadRecordNameEntry0; ...
 HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_2::
     ld a, [wArg1]
     ld b, a

@@ -129,9 +129,9 @@ GameMode8_Update_WriteScreenCounterAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 2 of GameMode8_Update: returns if wObject1 + OBJ_ANIM_COUNTER is 0; decrements wObject1 +
-; OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X to $58; sets wObject1 +
-; OBJ_FLAGS; increments wScreenSubStep
+; step 2 of GameMode8_Update: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1
+; + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X to $58; sets wObject1
+; + OBJ_FLAGS; increments wScreenSubStep
 GameMode8_Update_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -1100,9 +1100,9 @@ RunF2::
     call RunF2_LoadTemp0WordFromRecordBufB_2
     ret
 
-; called from RunF2: branches on wRecordBufB + MON_FAMILY; calls LoadTemp0WordFromRecordBufB; sets
-; wNameGlyphBuf to $98; calls CopyGlyphTilesToVRAM; calls CopyShortStringToNameGlyphBuf_BankF2;
-; calls CopyGlyphTilesToVRAM; sets wArg1 to $92; ...
+; called from RunF2: branches on wRecordBufB + MON_FAMILY & $10; calls LoadTemp0WordFromRecordBufB;
+; branches on hTemp1; sets wNameGlyphBuf to $98; calls CopyGlyphTilesToVRAM; calls
+; CopyShortStringToNameGlyphBuf_BankF2; calls CopyGlyphTilesToVRAM; ...
 RunF2_LoadTemp0WordFromRecordBufB::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
@@ -1268,9 +1268,9 @@ RunF2_LoadTemp0WordFromRecordBufB_Data1::
 RunF2_LoadTemp0WordFromRecordBufB_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
-; called from RunF2: branches on wRecordBufB + MON_FAMILY; calls LoadTemp0WordFromRecordBufB; calls
-; CopyTileBytesToVRAMCounted_BankF2; copies the byte at vTiles2 + $6c0 to wArg1; copies the byte at
-; vTiles2 + $6c0 to wArg5; sets wArg2 to 0; sets wArg3 to $6a; ...
+; called from RunF2: branches on wRecordBufB + MON_FAMILY & $10; calls LoadTemp0WordFromRecordBufB;
+; branches on hTemp1; calls CopyTileBytesToVRAMCounted_BankF2; copies the byte at vTiles2 + $6c0 to
+; wArg1; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; ...
 RunF2_LoadTemp0WordFromRecordBufB_2::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10

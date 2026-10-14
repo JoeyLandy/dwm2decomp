@@ -293,10 +293,9 @@ MetaSprites26Attrs::
     db $01 ; id 126
     db $00 ; id 127
 
-; called from DrawMetaSpriteSet_Bank26: may return early; branches on the byte at hMetaSpriteXLo;
-; returns if the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if
-; the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
-; hMetaSpriteXLo is $80; ...
+; called from DrawMetaSpriteSet_Bank26: returns if hOamNextEntry is at least $27; sets
+; hMetaSpriteYLo; sets hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at
+; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; ...
 DrawMetaSpriteSet_Bank26_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

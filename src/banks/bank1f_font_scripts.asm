@@ -1257,7 +1257,8 @@ GlyphCopyArgsForA_Data::
 ; destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT
 ; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
 ; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; code: branches on wArg6; branches on wIsCGB; branches on wArg7; branches on $01
+; code: branches on rSTAT; branches on wIsCGB; branches on wArg7; sets rVBK to 1; branches on rSTAT;
+; sets rVBK to 0; branches on rSTAT
 DrawTileRectFromArg1Params::
     ld hl, wArg1
     ld d, [hl]

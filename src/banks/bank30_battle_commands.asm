@@ -118,8 +118,8 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     ret
 
 ; step 1 of RunBattleCommandEntry: calls NextTableByteSecondStream; branches on wBattleActor;
-; branches on the byte at wSlotMarks; sets wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty;
-; sets wBattleActor; advances wBattleSubPhase; ...
+; branches on the byte at wSlotMarks; copies E to wBattleActor; calls
+; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; ...
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a
@@ -235,8 +235,8 @@ ChooseTargetForActor::
     ret
 
 ; step 4 of RunBattleCommandEntry: calls FillBytes; sets wActionQueuePos to 0; sets wLoadSlot to 0;
-; sets wBattleTempPtrLo; sets wBattleTempPtrHi; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; the byte at wSlotMarks; ...
+; copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi; calls
+; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; ...
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
@@ -324,7 +324,7 @@ RunBattleCommandEntry_AdvanceRandom::
 
 ; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: branches on
 ; the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to wRecordBuffer; sets
-; wBattleArg0 to 5; sets wBattleArg1 to 1; sets wBattleArg2; sets wBattleArg3; calls
+; wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
 ; LoadSkillRecordPart; ...
 RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     push de
@@ -432,9 +432,9 @@ RunBattleCommandEntry_WaitBattleItemTarget::
     ld [hl], $10
     ret
 
-; step 5 of RunBattleCommandEntry: sets wBattleTempPtrLo; sets wBattleTempPtrHi; sets
-; wBattleDamageLo; sets wBattleDamageHi; sets wTargetEstimates; increments wBattleTempPtrLo;
-; branches on the byte at wBattleArg0; ...
+; step 5 of RunBattleCommandEntry: copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi;
+; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to wTargetEstimates; branches
+; on E; increments wBattleTempPtrLo; ...
 RunBattleCommandEntry_CompareHLToBC::
     ld d, $08
 
@@ -530,9 +530,9 @@ RunBattleCommandEntry_CompareHLToBC::
     inc [hl]
     ret
 
-; step 6 of RunBattleCommandEntry: calls AddWordAtHLToBC_Bank30; sets wBattleCommandArgs; calls
-; AddWordAtHLToBC_Bank30; advances wBattleStep; sets wBattleSubPhase to 0; calls FillBytes; calls
-; SaveActionChoicesAndPickFormations; ...
+; step 6 of RunBattleCommandEntry: calls AddWordAtHLToBC_Bank30; copies C to wBattleCommandArgs;
+; calls AddWordAtHLToBC_Bank30; advances wBattleStep; sets wBattleSubPhase to 0; calls FillBytes;
+; calls SaveActionChoicesAndPickFormations; ...
 RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
     ld hl, wBattleHP
     ld bc, $0000
@@ -613,7 +613,7 @@ RunCommandEntryResolveStep::
 
 ; step 0 of RunCommandEntryResolveStep: calls PersonalityIndexOfSlot_Bank30; sets wPersonalityIndex;
 ; calls ForcedActionForActorStatus; branches on wLinkMode; branches on wBattleActor; branches on
-; wMenuState; advances wBattleResolveStep
+; wMenuState & $03; advances wBattleResolveStep
 RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
@@ -1390,7 +1390,7 @@ AddWeightsForSkillD::
     ret
 
 ; called from AddWeightsForSkillD: branches on wLinkMode; branches on wBattleActor; branches on
-; wMenuState; calls GetActorSlotTacticLow2
+; wMenuState & $03; calls GetActorSlotTacticLow2
 AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
     push de
     push hl
@@ -1704,7 +1704,7 @@ ScoreActionsWithAIScoreTableA::
     ld a, h
     ld [wBattleExpAward + $1], a
 
-; Branches on wBattleActor; branches on wLinkMode; branches on wBattleActor; calls
+; Branches on wBattleActor & $03; branches on wLinkMode; branches on wBattleActor; calls
 ; GetActorSlotTacticLow2; calls ActorActionChoiceAddress; calls
 ; EstimateDamageVsEachFoeToAIDamageEstimates; calls ScoreSkillAtHLForAI; ...
 ScoreActionsWithAIScoreTableA_CheckBattleActor::
@@ -2581,7 +2581,7 @@ RollSlotTraitLowFlag80_Skip3::
 RollSlotTraitLowFlag80_Skip4::
     ld c, $04
 
-; May return early
+; Returns if B is at least c
 RollSlotTraitLowFlag80_Skip5::
     ld a, b
     cp c
@@ -2599,10 +2599,10 @@ RollSlotTraitLowFlag80_Skip5::
     scf
     ret
 
-; called from RunCommandEntryResolveStep_AddAx9ToHL: calls IncBIfActorEntryBelow40; calls
-; CountIfActorPersonalityHiAtLeastHLEntry; calls FillBytes; calls
+; called from RunCommandEntryResolveStep_AddAx9ToHL: calls IncBIfActorEntryBelow40; branches on B;
+; calls CountIfActorPersonalityHiAtLeastHLEntry; branches on B; calls FillBytes; calls
 ; RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc; branches on the byte at
-; wSlotPersonalityHi; branches on wTemp0; calls FilterSkillListByMP; ...
+; wSlotPersonalityHi; ...
 RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld b, $00
     ld hl, wSlotPersonalityHi
@@ -2695,7 +2695,7 @@ CountIfActorPersonalityHiAtLeastHLEntry::
     ret
 
 ; Branches on the byte at wBattleSkills; copies the byte at wBattleSkills to wRecordBuffer; sets
-; wBattleArg0 to 3; sets wBattleArg1 to 1; sets wBattleArg2; sets wBattleArg3; calls
+; wBattleArg0 to 3; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
 ; LoadSkillRecordPart
 RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc::
     ld a, [wBattleActor]
@@ -2901,8 +2901,9 @@ RunCommandEntryResolveStep_Cp01::
     scf
     ret
 
-; Copies wTemp0 to wRecordBuffer; sets wBattleArg0 to 0; sets wBattleArg1 to 1; sets wBattleArg2;
-; sets wBattleArg3; calls LoadSkillRecordPart; branches on the byte at wTemp1; ...
+; Copies wTemp0 to wRecordBuffer; sets wBattleArg0 to 0; sets wBattleArg1 to 1; copies L to
+; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on the byte at wTemp1;
+; ...
 RunCommandEntryResolveStep_LoadSkillRecordPart::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
@@ -3008,9 +3009,8 @@ ForcedActionForActorStatus::
     ret
 
 ; called from RunCommandEntryResolveStep_AddAx9ToHL: returns unless wLinkMode is 0; returns if
-; wBattleActor is at least $03; branches on the byte at wBattleLevel; branches on the byte at
-; wSlotTrait; calls GetActorSlotTacticLow2; calls ReadBattleWordFromArray_Bank30; calls
-; CopyFourBytesNegatedByActorSlotTactic; ...
+; wBattleActor is at least $03; sets hTemp0 to 0; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to
+; 0; branches on the byte at wBattleLevel; ...
 RunCommandEntryResolveStep_WaitLinkMode::
     ld a, [wLinkMode]
     or a

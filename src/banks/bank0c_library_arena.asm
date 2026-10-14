@@ -53,8 +53,9 @@ LibraryMenu_WriteMessageModeAndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; sets wLibraryScrollY to 0; sets
-; wLibraryScrollX to 0; branches on $0f; calls LibraryMenu_WriteSVBK; increments wScreenState
+; step 1 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; sets hScrollY to 0; sets
+; hScrollX to 0; copies hSpriteWindowClipMode to wLibraryScrollY; copies hSpriteHideTile to
+; wLibraryScrollX; sets hSpriteHideTile to $90; sets hSpriteWindowClipMode to 1; ...
 LibraryMenu_WriteScrollYAndScrollXEtc::
     call LibraryMenu_FillTileRectWithArg1Tile
     xor a
@@ -140,8 +141,8 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld [wScreenState], a
     ret
 
-; step 4 of LibraryMenu: calls BGMapAddressAtScroll_Bank0C; sets wArg1; sets wArg2; sets wArg3; sets
-; wArg4; calls TestBitInFieldAtArg3; branches on wArg5; ...
+; step 4 of LibraryMenu: calls BGMapAddressAtScroll_Bank0C; branches on D; copies E to wArg1; copies
+; D to wArg2; copies E to wArg3; copies D to wArg4; calls TestBitInFieldAtArg3; ...
 LibraryMenu_BGMapAddressAtScroll_Bank0C::
     call BGMapAddressAtScroll_Bank0C
     ld de, $0182
@@ -524,9 +525,9 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX::
 LibraryMenu_BGMapAddressAtScroll_Bank0C_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $61, $01
 
-; step 6 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; calls LoadMapHeader; calls
-; LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f; calls
-; LoadMapObjectsForScreen; increments wScreenState
+; step 6 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; sets hMapId to $11; calls
+; LoadMapHeader; calls LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f;
+; calls LoadMapObjectsForScreen; increments wScreenState
 LibraryMenu_LoadMapHeader::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld a, $11
@@ -947,7 +948,7 @@ LibraryMenu_ReadGrid2CursorX_Data::
 
 ; step 13 of LibraryMenu: calls CopyRectTo20ByteRows_Bank0C; sets wArg1 to 1; calls
 ; LibraryMenu_HLToDecimalDigits; calls BGMapAddressAtScroll_Bank0C; calls
-; DrawScreenBufferRect_Bank0C; increments wScreenState; sets wTextWindowTileLo; ...
+; DrawScreenBufferRect_Bank0C; increments wScreenState; copies L to wTextWindowTileLo; ...
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
     ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits_TileRect
     ld hl, wWindowTileBuffer + $6c
@@ -1030,9 +1031,9 @@ LibraryMenu_ShowMonsterEntry::
     dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 
 ; step 0 of LibraryMenu_ShowMonsterEntry: calls
-; LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo; sets wTextWindowTileLo;
-; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest;
-; calls CopyTileBytesToVRAM_Bank0C; ...
+; LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; calls FillTilesFromRequest; calls CopyTileBytesToVRAM_Bank0C; ...
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
     ld hl, vTiles1
@@ -1092,9 +1093,9 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $ff, $ff, $ff, $ff, $60, $ff, $60, $ff, $60 ; id 4
     db $ff, $60, $ff, $60, $ff, $60, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; id 5
 
-; step 1 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; calls
-; DecompressToVRAM; ...
+; step 1 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; copies L to wTextWindowTileLo;
+; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; calls DecompressToVRAM; ...
 LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld a, [wScreenSubStep]
     and a
@@ -1251,7 +1252,8 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_8::
     db $7e, $7f
 
 ; step 2 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; calls
-; BGMapAddressAtScroll_Bank0C; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to 6; ...
+; BGMapAddressAtScroll_Bank0C; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to
+; wArg2; sets wArg3 to 6; ...
 LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld a, [wScreenSubStep]
     and a
@@ -1334,8 +1336,8 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wScreenStep], a
     ret
 
-; step 3 of LibraryMenu_ShowMonsterEntry: calls GridCellAddressFromGridCursorXAndGrid2CursorX; sets
-; wArg1; sets wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
+; step 3 of LibraryMenu_ShowMonsterEntry: calls GridCellAddressFromGridCursorXAndGrid2CursorX;
+; copies L to wArg1; copies H to wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
 ; DecompressGraphicsArg1ToArg4; ...
 LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1355,8 +1357,8 @@ LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
     ret
 
 ; step 4 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
-; GridCellAddressFromGridCursorXAndGrid2CursorX; sets wStringCategory; sets wStringIndex; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; ...
+; GridCellAddressFromGridCursorXAndGrid2CursorX; sets wStringCategory; copies L to wStringIndex;
+; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1456,8 +1458,8 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_Data::
 
 ; step 5 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
 ; GridCellAddressFromGridCursorXAndGrid2CursorX; calls LibraryMenu_TestBitInFieldAtArg3; calls
-; CopyFromBankWaitVRAM; sets wStringCategory to 0; sets wStringIndex to 0; sets wTextWindowTileLo;
-; ...
+; CopyFromBankWaitVRAM; sets wStringCategory to 0; sets wStringIndex to 0; copies L to
+; wTextWindowTileLo; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1549,8 +1551,9 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3::
     ret
 
 ; step 7 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
-; GridCellAddressFromGridCursorXAndGrid2CursorX; sets wStringCategory; sets wStringIndex; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; ...
+; GridCellAddressFromGridCursorXAndGrid2CursorX; copies H to wStringCategory; copies L to
+; wStringIndex; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
+; wTextWindowRows; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_4::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1896,7 +1899,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
 
 ; step 13 of LibraryMenu_ShowMonsterEntry: calls StoreBAtWordTableEntry_Bank0C; calls
 ; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; sets wScreenStep to 0; sets
-; wScreenState to $0c; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
+; wScreenState to $0c; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld a, [wGrid2CursorX]
     ld b, $c3
@@ -1927,8 +1930,8 @@ LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ret
 
 ; called from LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3: sets
-; wStringIndex; sets wStringCategory; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; sets wTextWindowWidth; calls ShowString_Bank08; ...
+; wStringIndex; sets wStringCategory; copies E to wTextWindowTileLo; copies D to wTextWindowTileHi;
+; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls ShowString_Bank08; ...
 LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
     push de
     inc hl
@@ -2033,8 +2036,8 @@ LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
     ret
 
 ; Calls GridIndexFromGridCursorXGridCursorY; calls LibraryMenu_TestBitInFieldAtArg3; sets
-; wStringCategory; sets wStringIndex; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; ...
+; wStringCategory; copies L to wStringIndex; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; ...
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_2::
     call GridIndexFromGridCursorXGridCursorY
     add a
@@ -2151,7 +2154,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data::
 
 ; Branches on the byte at LibraryMenu_WriteWorkBuf_Data; copies the byte at
 ; LibraryMenu_WriteWorkBuf_Data to wWorkBuf; branches on the byte at LibraryMenu_WriteWorkBuf_Data;
-; calls LoadFamilyIconTileForWorkBuf
+; calls LoadFamilyIconTileForWorkBuf; branches on C
 LibraryMenu_WriteWorkBuf::
     ld a, [wGridCursorY]
     add a
@@ -2326,7 +2329,7 @@ ReadGridCellByteForGridCursorXGridCursorY::
     ret
 
 ; Branches on wGridCursorY; calls HLToDecimalDigits; calls BGMapAddressAtScroll_Bank0C; branches on
-; wArg1
+; wArg1; branches on C
 LibraryMenu_HLToDecimalDigits::
     ld a, [wGridCursorY]
     add a
@@ -2421,7 +2424,7 @@ LibraryMenu_HLToDecimalDigits_Data1::
 LibraryMenu_HLToDecimalDigits_Data2::
     db $7e, $c3, $a6, $c3, $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
-; Branches on wIsCGB
+; Branches on wIsCGB; sets rSVBK to 2; branches on wIsCGB; sets rSVBK to 0
 LibraryMenu_WriteSVBK::
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -2494,8 +2497,8 @@ BGMapAddressAtScroll_Bank0C::
     add_a_to_hl
     ret
 
-; Calls CopyTileBytesToVRAM_Bank0C; calls BGMapAddressAtScroll_Bank0C; sets wArg5; sets wArg6; sets
-; wArg1; sets wArg2; sets wArg3 to $20; ...
+; Calls CopyTileBytesToVRAM_Bank0C; calls BGMapAddressAtScroll_Bank0C; copies H to wArg5; copies L
+; to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; ...
 LibraryMenu_FillTileRectWithArg1Tile::
     ld hl, LibraryMenu_FillTileRectWithArg1Tile_Tiles
     ld de, vTiles1 + $430
@@ -2637,7 +2640,8 @@ DrawScreenBufferRect_Bank0C::
     ldh [rVBK], a
     ret
 
-; called from ArenaMenu_BGMapAddressAtScroll_Bank0C: calls StoreBAtWordTableEntry_Bank0C
+; called from ArenaMenu_BGMapAddressAtScroll_Bank0C: calls StoreBAtWordTableEntry_Bank0C; branches
+; on C
 ArenaMenu_StoreBAtWordTableEntry_Bank0C::
     ld a, c
     ld b, a
@@ -2703,8 +2707,9 @@ ClearStringWindowAt2200::
     call FillTilesFromRequest
     ret
 
-; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; FillTilesFromRequest; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
+; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
+; H to wTextWindowWidth; calls FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; ...
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles2
     ld a, l
@@ -2790,8 +2795,8 @@ GridIndexFromGrid2CursorXGrid2CursorY::
     pop bc
     ret
 
-; Sets wArg1; sets wArg2; sets wArg3; sets wArg4; calls TestBitInFieldAtArg3; branches on wArg5;
-; sets wSpeciesIdLo; ...
+; Copies L to wArg1; copies H to wArg2; copies E to wArg3; copies D to wArg4; calls
+; TestBitInFieldAtArg3; branches on wArg5; copies L to wSpeciesIdLo; ...
 LibraryMenu_TestBitInFieldAtArg3::
     push hl
     ld a, l
@@ -5446,9 +5451,8 @@ ArenaMenu::
     dw ArenaMenu_RandomModulo52
 
 ; step 39 of ArenaMenu: calls RandomModulo52; sets wArg1; calls
-; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; calls GenerateNewKeyEntry; calls
-; ArenaMenu_AddArg1ToGoldCapped99999; calls ArenaMenu_RandomModulo52_2; calls
-; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; ...
+; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; calls GenerateNewKeyEntry; branches on hTemp0; calls
+; ArenaMenu_AddArg1ToGoldCapped99999; calls ArenaMenu_RandomModulo52_2; ...
 ArenaMenu_RandomModulo52::
     ld a, [wAreaGraphicsIndex]
     add a
@@ -6052,9 +6056,9 @@ ArenaMenu_AdvanceScreenState::
     ld [wScreenState], a
     ret
 
-; step 7 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent_SetScriptReturnBank; sets wArg3 to 0; sets
-; wArg2; sets wArg1; calls SubtractArg1AmountFromGold; increments wScreenState; copies
-; wScreenState+1 to wScreenTableIndex; ...
+; step 7 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent_SetScriptReturnBank; sets wArg3 to 0;
+; copies H to wArg2; copies L to wArg1; calls SubtractArg1AmountFromGold; increments wScreenState;
+; copies wScreenState+1 to wScreenTableIndex; ...
 ArenaMenu_SubtractArg1AmountFromGold::
     call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ld a, [wGridCursorX]
@@ -6816,8 +6820,8 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
     ret
 
 ; step 36 of ArenaMenu: branches on wArenaRank; sets EVENT_ARENA_RANK1_KEY_GIVEN; calls
-; CountKeysOrFull; calls WriteKeyEntryTemp0; sets wInventorySortFlags; sets
-; EVENT_WARUBOU_WA_HEY_THIS_TIME; calls GenerateNewKeyEntry; ...
+; CountKeysOrFull; sets hTemp1 to 3; calls WriteKeyEntryTemp0; sets wInventorySortFlags; sets
+; EVENT_WARUBOU_WA_HEY_THIS_TIME; ...
 ArenaMenu_SetFlagBit::
     ld a, [wArenaRank]
     cp $01
@@ -6990,7 +6994,7 @@ ArenaMenu_ReadArenaRank::
     ret
 
 ; Calls CopyRectTo20ByteRows_Bank0C; copies wGoldLo to wDigits; calls Number24ToPackedBCD; calls
-; UnpackBCDToDigitsArg1_Bank1E
+; UnpackBCDToDigitsArg1_Bank1E; branches on C
 ArenaMenu_Number24ToPackedBCD::
     ld de, ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $70
@@ -7019,7 +7023,7 @@ ArenaMenu_Number24ToPackedBCD::
     jr c, .loop
     ret
 
-; May return early
+; Branches on C; returns if H is 0
 ArenaMenu_DivideHLByA::
     ld hl, $0000
     ld de, wArenaEntry
@@ -7440,7 +7444,8 @@ CopyScreenBufferRectWithAttrs_0C::
     jr c, CopyScreenBufferRectWithAttrs_0C
     ret
 
-; Calls RandomModulo52; branches on the byte at wArenaList
+; Calls RandomModulo52; branches on L; branches on the byte at wArenaList; branches on C; branches
+; on B
 ArenaRounds_RandomModulo52::
     ld hl, wArenaList
     ld b, $28
@@ -7726,7 +7731,8 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     jr nz, .loop
     ret
 
-; Calls ArenaMenu_AddTemp0WordToHL; calls ArenaMenu_DivideHLByA; sets wTwoChoiceCursor to 4
+; Calls ArenaMenu_AddTemp0WordToHL; calls ArenaMenu_DivideHLByA; branches on L; sets
+; wTwoChoiceCursor to 4
 ArenaMenu_WriteTwoChoiceCursor::
     call ArenaMenu_AddTemp0WordToHL
     call ArenaMenu_DivideHLByA
@@ -7767,7 +7773,7 @@ ArenaMenu_WriteTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ret
 
-; called from ArenaMenu_RandomModulo52: calls RandomModulo52; sets wArg1
+; called from ArenaMenu_RandomModulo52: calls RandomModulo52; branches on C; sets wArg1
 ArenaMenu_RandomModulo52_2::
     ld b, $1f
     call RandomModulo52
@@ -7836,7 +7842,7 @@ ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     xor a
     ret
 
-; Calls ReadFarPointerAtDEInBankB; calls ReadByteInBank
+; Calls ReadFarPointerAtDEInBankB; calls ReadByteInBank; branches on C
 ArenaMenu_ReadFarPointerAtDEInBankB::
     ld de, ArenaMenu_ReadFarPointerAtDEInBankB_Data
     ld b, $08
@@ -7874,7 +7880,7 @@ ArenaMenu_ReadFarPointerAtDEInBankB::
     ld [hli], a
     ret
 
-; Sets wArg1; sets wArg2; sets wArg3 to 0; calls AddArg1ToGoldCapped99999
+; Copies L to wArg1; copies H to wArg2; sets wArg3 to 0; calls AddArg1ToGoldCapped99999
 ArenaMenu_AddArg1ToGoldCapped99999::
     ld hl, $1770
     ld a, l

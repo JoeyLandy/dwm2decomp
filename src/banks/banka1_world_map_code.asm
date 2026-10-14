@@ -305,8 +305,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; step 1 of RunBattleCommandEntry_BankA1: calls NextTableByteSecondStream; branches on wBattleActor;
-; branches on the byte at wSlotMarks; sets wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty;
-; sets wBattleActor; advances wBattleSubPhase; ...
+; branches on the byte at wSlotMarks; copies E to wBattleActor; calls
+; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; ...
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
@@ -370,8 +370,8 @@ RunBattleCommandEntry_BankA1_ChooseActionTarget::
     ret
 
 ; step 4 of RunBattleCommandEntry_BankA1: calls FillBytes; sets wActionQueuePos to 0; sets wLoadSlot
-; to 0; sets wBattleTempPtrLo; sets wBattleTempPtrHi; calls CarryUnlessBattleSlotOutSlotEmpty;
-; branches on the byte at wSlotMarks; ...
+; to 0; copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi; calls
+; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; ...
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
@@ -432,9 +432,9 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
     inc [hl]
     ret
 
-; step 5 of RunBattleCommandEntry_BankA1: sets wBattleTempPtrLo; sets wBattleTempPtrHi; sets
-; wBattleDamageLo; sets wBattleDamageHi; sets wTargetEstimates; increments wBattleTempPtrLo;
-; branches on the byte at wBattleArg0; ...
+; step 5 of RunBattleCommandEntry_BankA1: copies L to wBattleTempPtrLo; copies H to
+; wBattleTempPtrHi; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to
+; wTargetEstimates; branches on E; increments wBattleTempPtrLo; ...
 RunBattleCommandEntry_BankA1_CompareHLToBC::
     ld d, $08
 
@@ -530,9 +530,9 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
     inc [hl]
     ret
 
-; step 6 of RunBattleCommandEntry_BankA1: calls AddWordAtHLToBC_BankA1; sets wBattleCommandArgs;
-; calls AddWordAtHLToBC_BankA1; advances wBattleStep; sets wBattleSubPhase to 0; calls FillBytes;
-; calls SaveActionChoicesAndPickFormations; ...
+; step 6 of RunBattleCommandEntry_BankA1: calls AddWordAtHLToBC_BankA1; copies C to
+; wBattleCommandArgs; calls AddWordAtHLToBC_BankA1; advances wBattleStep; sets wBattleSubPhase to 0;
+; calls FillBytes; calls SaveActionChoicesAndPickFormations; ...
 RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
     ld hl, wBattleHP
     ld bc, $0000
@@ -629,8 +629,8 @@ RunBattleCommandEntry_BankA1_RandomInRange::
 
 ; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
 ; branches on the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to
-; wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1 to 1; sets wBattleArg2; sets wBattleArg3;
-; calls LoadSkillRecordPart; ...
+; wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to
+; wBattleArg3; calls LoadSkillRecordPart; ...
 RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -763,8 +763,7 @@ MarkVisitedMapScreenInVisitedScreens::
     ld [hl], a
     ret
 
-; called from RunMenuStateMenuState_InitSoundHardware: branches on wKeyWorldFloor; branches on the
-; byte at wKeyWorldAreaExits
+; called from RunMenuStateMenuState_InitSoundHardware: branches on wKeyWorldFloor
 RunMenuStateMenuState_ReadKeyWorldFloor::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
@@ -893,10 +892,9 @@ RunWorldMapState::
     dw RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest
     dw RunWorldMapState_ToEnterGameMode1WithDefaultPalettes
 
-; step 4 of RunWorldMapState: calls CopyScrollToHardware; calls DecompressToVRAM; calls
-; FillBGMap0With57; calls RunWorldMapState_WriteVRAMByteInc; branches on wMapType; calls
-; RunWorldMapState_StoreTemp5ValuesToCursorCellX_2; calls
-; RunWorldMapState_StoreTemp5ValuesToCursorCellX; ...
+; step 4 of RunWorldMapState: sets hScrollX to 0; sets hScrollY to 0; calls CopyScrollToHardware;
+; calls DecompressToVRAM; calls FillBGMap0With57; calls RunWorldMapState_WriteVRAMByteInc; branches
+; on wMapType; ...
 RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     xor a
     ldh [hScrollX], a
@@ -973,8 +971,8 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: calls
-; RunWorldMapState_RunGameMode2MapTypeState; calls StoreTemp5ValuesToCursorCellX; calls
-; IsMapScreenAVisited; calls RunWorldMapState_WriteTemp0AndTemp1; branches on 0
+; RunWorldMapState_RunGameMode2MapTypeState; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
+; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8; ...
 RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     call RunWorldMapState_RunGameMode2MapTypeState
     call StoreTemp5ValuesToCursorCellX
@@ -1059,7 +1057,8 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     jr nz, .loop
     ret
 
-; Calls ReadByteInBank; calls WriteVRAMByte
+; Calls ReadByteInBank; copies L to hTemp0; copies H to hTemp1; calls ReadByteInBank; calls
+; WriteVRAMByte
 RunWorldMapState_WriteTemp0AndTemp1::
     push hl
     ldh a, [hTemp8]
@@ -1157,8 +1156,9 @@ RunWorldMapState_WriteTemp0AndTemp1::
     call WriteVRAMByte
     ret
 
-; Calls RunGameMode2MapTypeState; branches on wKeyWorldHeight; increments hTemp7; branches on
-; wKeyWorldHeight; increments hTemp8
+; Calls RunGameMode2MapTypeState; copies wKeyWorldWidth to hTemp3; copies wKeyWorldHeight to hTemp4;
+; copies hMapScreenX-1 to hTemp7; copies hMapScreenY-1 to hTemp8; branches on hPlayerX & $0f;
+; increments hTemp7; ...
 RunWorldMapState_RunGameMode2MapTypeState::
     ldh a, [hPlayerX]
     ld l, a
@@ -1274,7 +1274,8 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
     jr SetMapScreenFromAAndCenterPlayer
 
 ; step 7 of RunGameMode2MapTypeState: branches on wKeyWorldActive; branches on wKeyWorldKey;
-; branches on wKeyWorldSlot; calls SetMapScreenFromAAndCenterPlayer
+; branches on wKeyWorldSlot; calls SetMapScreenFromAAndCenterPlayer; copies wKeyWorldGoal & $f0 to
+; hPlayerX; copies wKeyWorldGoal & $0f to hPlayerY; calls SetMapScreenFromAAndCenterPlayer; ...
 RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer::
     ld a, [wKeyWorldActive]
     or a
@@ -1322,8 +1323,8 @@ SetMapScreenFromAAndCenterPlayer::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: calls
-; RunWorldMapState_WriteTemp3AndTemp4Etc; calls StoreTemp5ValuesToCursorCellX; calls ReadByteInBank;
-; calls WriteVRAMByte; branches on $05
+; RunWorldMapState_WriteTemp3AndTemp4Etc; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
+; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8; ...
 RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
     call RunWorldMapState_WriteTemp3AndTemp4Etc
     call StoreTemp5ValuesToCursorCellX
@@ -1435,7 +1436,10 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
     jp nz, .loop
     ret
 
-; Calls RunWorldMapState_WriteMapScreenXAndMapScreenYEtc; increments hTemp7; increments hTemp8
+; Calls RunWorldMapState_WriteMapScreenXAndMapScreenYEtc; copies the byte at WorldMapScreenCellTable
+; & $0f to hTemp3; copies the byte at WorldMapScreenCellTable & $0f to hTemp4; copies the byte at
+; WorldMapScreenCellTable to hTemp0; copies the byte at WorldMapScreenCellTable to hTemp1; copies
+; the byte at WorldMapScreenCellTable to hTemp2; copies C to hTemp7; ...
 RunWorldMapState_WriteTemp3AndTemp4Etc::
     ldh a, [hPlayerX]
     ld l, a
@@ -1635,9 +1639,8 @@ WorldMapScreenCellTable::
     db $21 ; id 10: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells10 ; screen cell grid: 25 bytes (5 x 5) per screen
 
-; May return early; branches on the byte at WorldMapScreenPositionTable; calls
-; LoadMapPositionFromHL; branches on wKeyWorldActive; branches on wKeyWorldKey; calls
-; LoadMapPositionFromHL
+; Branches on hMapId; returns if hMapId is $20; returns if hMapId is $30; returns if hMapId is $48;
+; returns if hMapId is $70; returns if hMapId is $a0; returns if hMapId is $a8; ...
 RunWorldMapState_WriteMapScreenXAndMapScreenYEtc::
     ldh a, [hMapId]
     ld c, $01
@@ -1840,9 +1843,9 @@ RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
     call RunWorldMapState_WriteTemp1AndTemp2
     ret
 
-; Branches on wMapType; branches on wKeyWorldActive; branches on wKeyWorldKey; calls
-; RunWorldMapState_Multiply8; branches on wKeyWorldActive; branches on wKeyWorldKey; branches on
-; wKeyWorldSlot; ...
+; Branches on wMapType; branches on hMapId; branches on wKeyWorldActive; branches on wKeyWorldKey;
+; copies wKeyWorldGoalCell to hTemp1; copies wKeyWorldGoal to hTemp2; calls
+; RunWorldMapState_Multiply8; ...
 RunWorldMapState_WriteTemp1AndTemp2::
     ld a, [wMapType]
     bit 7, a
@@ -1941,7 +1944,8 @@ RunWorldMapState_WriteTemp1AndTemp2::
     call RunWorldMapState_Multiply8
     ret
 
-; Branches on wCursorCellY; branches on wCursorCellH; calls DrawMetaSprite
+; Copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
+; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets hSpriteSetIndex to $28; ...
 RunWorldMapState_Multiply8::
     ld a, [wCursorCellY]
     ld c, a
@@ -2020,7 +2024,8 @@ RunWorldMapState_Multiply8::
     ret
 
 ; Returns if wWorldMapByFieldSkill is 0; branches on wMapType; branches on the byte at wMapObjects;
-; calls DrawMetaSprite; branches on the byte at wMapObjects; calls DrawMetaSprite
+; copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
+; ...
 RunWorldMapState_WaitWorldMapByFieldSkill::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -2182,7 +2187,7 @@ RunWorldMapState_WaitWorldMapByFieldSkill::
     ldh [hSpriteOriginY], a
     inc de
     ld a, [de]
-    ld hl, $4d94
+    ld hl, RunWorldMapState_WaitWorldMapByFieldSkill_Data
     add_a_to_hl
     ld a, [wCursorCellX]
     sla a
@@ -2243,11 +2248,13 @@ RunWorldMapState_WaitWorldMapByFieldSkill::
     dec b
     jp nz, .loop2
     ret
+
+; data read by RunWorldMapState (16 bytes)
+RunWorldMapState_WaitWorldMapByFieldSkill_Data::
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
-; Branches on wMapType; may return early; calls DrawMetaSprite; branches on the byte at
-; wKeyWorldFloorInfo + $3; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; calls
-; DrawMetaSprite
+; Branches on wMapType; may return early; copies L to hSpriteOriginX; copies L to hSpriteOriginY;
+; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; ...
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     ld a, [wMapType]
     bit 7, a
@@ -2490,8 +2497,8 @@ RunWorldMapState_WaitMapType::
     inc de
     jp .skip
 
-; May return early; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early;
-; calls DrawMetaSprite
+; May return early; copies L to hSpriteOriginX; may return early; copies L to hSpriteOriginY;
+; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; ...
 RunWorldMapState_Multiply8_2::
     ld a, [wCursorCellY]
     ld c, a
@@ -2630,9 +2637,9 @@ RunWorldMapState_UploadBGPalettes::
     inc [hl]
     ret
 
-; step 1 of RunWorldMapState: calls CopyScrollToHardware; calls DecompressToVRAM; calls
-; CopyRectFromBankToVRAM; calls DrawRect12x12FromBankA1; calls RunWorldMapState_WriteVRAMByteInc_2;
-; branches on wMapType; calls RunWorldMapState_CenteredBGMapOriginForSizeBC; ...
+; step 1 of RunWorldMapState: sets hScrollX to 0; sets hScrollY to 0; calls CopyScrollToHardware;
+; calls DecompressToVRAM; calls CopyRectFromBankToVRAM; calls DrawRect12x12FromBankA1; calls
+; RunWorldMapState_WriteVRAMByteInc_2; ...
 RunWorldMapState_CopyScrollToHardware::
     xor a
     ldh [hScrollX], a
@@ -2750,9 +2757,9 @@ RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
     call EnterGameMode1WithDefaultPalettes
     ret
 
-; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; calls
-; RunWorldMapState_WriteTemp0; calls WriteVRAMByteInc; calls WriteKeyNameToDE; calls
-; RunGameMode2State_CenterName; calls CopyGlyphTilesToVRAM; calls WriteVRAMByteInc
+; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; copies L to
+; hTemp0; copies H to hTemp1; copies L to hTemp2; copies H to hTemp3; copies L to hTemp4; copies H
+; to hTemp5; ...
 RunWorldMapState_SetTemp0::
     ld a, [wKeyWorldHeight]
     ld c, a
@@ -3001,7 +3008,7 @@ RunWorldMapState_SetTemp0::
     jr nz, .loop4
     ret
 
-; Calls ReadByteInBank; calls WriteVRAMByte
+; Increments hTemp0; calls ReadByteInBank; calls WriteVRAMByte; increments hTemp0
 RunWorldMapState_WriteTemp0::
     sra a
     push af
@@ -3113,8 +3120,8 @@ RunGameMode2State_CenterName::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; calls
-; CopyRectFromBankToVRAM; calls WriteVRAMByteInc; sets wStringIndex; sets wStringCategory to 0; sets
-; wStringDestLo; sets wStringDestHi; ...
+; CopyRectFromBankToVRAM; calls WriteVRAMByteInc; sets wStringIndex; sets wStringCategory to 0;
+; copies E to wStringDestLo; copies D to wStringDestHi; ...
 RunWorldMapState_CenteredBGMapOriginForSizeBC::
     ld a, [wWorldMapRegion]
     add a
@@ -3214,9 +3221,9 @@ WorldMapViewTable::
     db $01, $02 ; rows, width
     db $da, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 
-; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; branches on
-; wKeyWorldActive; branches on wKeyWorldKey; calls DrawCursorSpriteAtTemp1Cell; branches on
-; wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; ...
+; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; branches on hMapId;
+; branches on wKeyWorldActive; branches on wKeyWorldKey; copies wKeyWorldGoalCell to hTemp1; calls
+; DrawCursorSpriteAtTemp1Cell; copies the byte at WorldMapStartPositions to hTemp1; ...
 RunWorldMapState_WriteTemp1::
     ld a, [wMapType]
     bit 7, a
@@ -3525,7 +3532,7 @@ SetSpriteYFromCursorCellY::
     ldh [hSpriteOriginY], a
     ret
 
-; Dispatches on wMapType
+; Dispatches on wMapType & $07
 SetSpriteYFromCursorCellY_CheckMapType::
     ld a, [wMapType]
     and $07
@@ -3637,9 +3644,9 @@ DrawMetaSpriteSet08::
     farcall DrawMetaSprite
     ret
 
-; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; may return early; calls
-; DrawMetaSpriteSet26; returns if the byte at wKeyWorldFloorInfo + $3 is $ff; branches on
-; wWorldMapByFieldSkill; calls IsMapScreenAVisited; calls DrawMetaSpriteSet26
+; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; may return early; sets
+; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26; returns if the byte at
+; wKeyWorldFloorInfo + $3 is $ff; branches on wWorldMapByFieldSkill; ...
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY::
     ld a, [wMapType]
     bit 7, a
@@ -3792,8 +3799,8 @@ RunWorldMapState_WaitMapType_2::
 .skip2:
     jr .skip
 
-; Branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; calls
-; DrawMetaSprite
+; Branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; sets
+; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; ...
 RunWorldMapState_IsMapScreenAVisited::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -3958,7 +3965,7 @@ RunWorldMapState_WriteVRAMByteInc_2::
 
 ; copies a 12 x 12 tile rectangle from A1:$5808 to vBGMap0 + $64 (CopyRectFromBankToVRAM) (E-0116)
 DrawRect12x12FromBankA1::
-    ld de, $5808
+    ld de, DrawRect12x12FromBankA1_TileRect
     lb bc, $0c, $0c
     ld hl, vBGMap0 + $64
     ld a, $a1
@@ -3968,7 +3975,7 @@ DrawRect12x12FromBankA1::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 12 tiles, one row per line
-TileRectA1_1::
+DrawRect12x12FromBankA1_TileRect::
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 0
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 1
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 2

@@ -22,7 +22,7 @@ PauseMenu_State4_GiftMenu_ShowChoices::
 ; step 0 of PauseMenu_State4_GiftMenu_ShowChoices: calls RefreshRecordListAndNameTiles_BankF1; calls
 ; SetupInventoryMenuPages_BankF1; calls BuildInventoryScreenBase_BankF1; calls
 ; SetMenuRowsForPage_BankF1; calls ShowSelectedItemDescription_BankF1; calls
-; CopyTileBufferToBGMap_BankF1; sets wTextWindowTileLo; ...
+; CopyTileBufferToBGMap_BankF1; copies L to wTextWindowTileLo; ...
 PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit::
     ld a, [wLevelUpGains]
     or a
@@ -158,8 +158,8 @@ PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep:
     ret
 
 ; step 1 of PauseMenu_State4_GiftMenu_ChooseGift: calls UpdateMenuCursor_BankF1; branches on
-; wJoypadPressed; branches on wSubMenuCursor; copies wSubMenuCursor to wTemp0; sets wTemp1 to 0;
-; returns unless bit 1 of 0 is set; decrements wTemp0; ...
+; wJoypadPressed; branches on wSubMenuCursor & $01; sets wTemp0; sets wTemp1 to 0; returns unless
+; bit 1 of 0 is set; decrements wTemp0; ...
 PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1::
     ld de, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data
     ld hl, wSubMenuCursor
@@ -641,9 +641,9 @@ SetupInventoryMenuPages_BankF1::
     ld [wMenuRowCount], a
     ret
 
-; called from BuildItemScreenForWItemId_BankF1: sets rRAMG to $0a; sets rRAMB to 0; branches on $00;
-; calls SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
-; SRAMRecordAddressMapped; ...
+; called from BuildItemScreenForWItemId_BankF1: sets rRAMG to $0a; sets rRAMB to 0; calls
+; SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
+; SRAMRecordAddressMapped; calls HLToDecimalDigits; ...
 BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -1315,8 +1315,9 @@ WriteBCTileAtWordTableEntry_BankF1::
     call WriteVRAMByte
     ret
 
-; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; ShowString_Bank08; sets wTextWindowRows; sets wTextWindowWidth; ...
+; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies E to wTextWindowRows; copies
+; D to wTextWindowWidth; calls ShowString_Bank08; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; ...
 ShowStringBank08AtTilesHL_BankF1_2::
     ld a, [wTextWindowTileLo]
     ld c, a
@@ -1837,7 +1838,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK::
 
 ; step 4 of RunScreenStateWhenNotFading_F1_LinkBreed: calls SetArg5ToListEntriesCell5; sets wArg1 to
 ; $c7; calls LoadFamilyIconTileForRecordB_BankF1; calls CopyRectTo20ByteRows_BankF1; sets wArg1;
-; sets wArg2; sets wArg3; ...
+; copies L to wArg2; copies H to wArg3; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1894,8 +1895,8 @@ CopyScreenBufferRectAt0278AndStep_BankF1::
     ret
 
 ; step 17 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; sets rRAMG2
-; to $0a; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; sets rRAMG2 to
-; 0; decrements wScreenStep; ...
+; to $0a; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; branches on
+; hTemp0; sets rRAMG2 to 0; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo::
     ld a, [wTextFlags]
     and a
@@ -2077,8 +2078,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady::
     ret
 
 ; step 22 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
-; wRecordBufB + MON_SEX; calls BeginString_Bank0E_Cat0; sets wScreenStep to $10; sets wScreenSubStep
-; to 0; sets wSelectedRecord to $ff; calls PersonalityPairValueToArg5; ...
+; wRecordBufB + MON_SEX & $01; calls BeginString_Bank0E_Cat0; sets wScreenStep to $10; sets
+; wScreenSubStep to 0; sets wSelectedRecord to $ff; calls PersonalityPairValueToArg5; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed::
     ld a, [wTextFlags]
     and a
@@ -2841,8 +2842,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
-; step 7 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1; sets
-; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
+; step 7 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1;
+; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20;
+; sets wArg4 to $20; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_BankF1
     ld a, h
@@ -2951,7 +2953,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteArg1AndArg2Etc::
 
 ; step 20 of RunScreenStateWhenNotFading_F1_ShowRecordStats: copies wRecordBufB + MON_SPECIES to
 ; wArg1; sets wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
-; DecompressGraphicsArg1ToArg4; calls ShowRecordBufBItemCategory11StringAtTiles2320; ...
+; DecompressGraphicsArg1ToArg4; sets hSpriteHideTile to $f0; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -2984,7 +2986,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 
 ; step 21 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
-; wMenuInputResult; increments wScreenStep; calls DrawRects; ...
+; wMenuInputResult; sets hSpriteHideTile to 0; increments wScreenStep; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3099,9 +3101,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPr
     ld [wScreenStep], a
     ret
 
-; step 28 of RunScreenStateWhenNotFading_F1_ShowRecordStats: branches on wScreenSubStep; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; FillTilesFromRequest; calls DrawRects_3; ...
+; step 28 of RunScreenStateWhenNotFading_F1_ShowRecordStats: branches on wScreenSubStep; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; calls FillTilesFromRequest; calls DrawRects_3; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects_3::
     ld a, [wScreenSubStep]
     and a
@@ -3178,7 +3180,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_2::
     ld [wScreenStep], a
     ret
 
-; step 31 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls RunF2; increments wScreenStep
+; step 31 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls RunF2; sets hSpriteHideTile to
+; $f0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2::
     farcall RunF2
     ld a, $f0
@@ -3189,8 +3192,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2::
     ret
 
 ; step 32 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
-; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets wScreenStep
-; to $17; sets wScreenStep to 7
+; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets
+; hSpriteHideTile to 0; sets wScreenStep to $17; sets hSpriteHideTile to 0; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3924,9 +3927,8 @@ GameMode5_Update_WaitPickCount::
     ret
 
 ; Branches on wLinkSceneSpeciesLo; returns unless wLinkSceneFamily is 0; branches on
-; wLinkSceneSpeciesHi; calls DrawListEntriesCell5SpeciesSprite; calls
-; CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; returns unless wLinkSceneFamily is 0; returns
-; unless wLinkSceneSpeciesHi is $07; ...
+; wLinkSceneSpeciesHi; calls DrawListEntriesCell5SpeciesSprite; sets hSpriteWindowClipMode to 1;
+; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; returns unless wLinkSceneFamily is 0; ...
 GameMode5_Update_WriteArg1AndArg2Etc::
     ld a, [wLinkSceneSpeciesLo]
     cp $0c

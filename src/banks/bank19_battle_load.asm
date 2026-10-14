@@ -1130,7 +1130,7 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; Branches on wDisplaySlot; calls LoadMonsterAndSpeciesForListEntryC
+; Branches on wDisplaySlot & $03; calls LoadMonsterAndSpeciesForListEntryC
 BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1241,8 +1241,9 @@ LoadMonsterAndSpeciesForListEntryC::
     pop bc
     ret
 
-; Sets wBattleArg2; sets wBattleArg3; sets wBattleArg1; branches on the byte at wWildLevel; sets
-; wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesRecord; ...
+; Copies E to wBattleArg2; copies D to wBattleArg3; copies C to wBattleArg1; copies the byte at
+; wWildLevel to hTemp1; branches on the byte at wWildLevel; sets hTemp1 to 1; copies L to
+; wSpeciesIdLo; ...
 GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
     push bc
     ld a, e
@@ -1528,7 +1529,7 @@ ScaleWordBy6Or12Capped10000_Restore::
     ld l, c
     ld h, b
 
-; Works on registers only
+; Copies L to hTemp2; copies H to hTemp3
 ScaleWordBy6Or12Capped10000_SetTemp2::
     ld a, l
     ldh [hTemp2], a
@@ -1993,8 +1994,9 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     pop bc
     ret
 
-; May continue in LoadBattleSlotFromBattlerRecord; calls LoadBattleSlotFromBattlerRecord; calls
-; LoadBattleSlotFromBattlerRecord_2; calls ClearSpeciesRecordBuffer_Bank19
+; May continue in LoadBattleSlotFromBattlerRecord; branches on C; calls
+; LoadBattleSlotFromBattlerRecord; calls LoadBattleSlotFromBattlerRecord_2; calls
+; ClearSpeciesRecordBuffer_Bank19
 GameMode4_Init_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a

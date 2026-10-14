@@ -180,9 +180,8 @@ SetupKeyWorldObjectsForMapType::
     call SetupKeyWorldObjectsForMapType_Multiply8
     ret
 
-; called from SetupKeyWorldObjectsForMapType: may return early; sets wSpriteSlotCount to 0; branches
-; on 0; sets wSpriteSlotCount; branches on the byte at wKeyWorldEncounterTable; calls
-; DecompressGraphicsTemp0ToTemp4; sets wOBJPaletteUploadRequest to $7f
+; called from SetupKeyWorldObjectsForMapType: may return early; branches on E; sets wSpriteSlotCount
+; to 0; branches on 0; sets wSpriteSlotCount; copies B to hTempA; sets hTemp4 to 0; ...
 SetupKeyWorldObjectsForMapType_Multiply8::
     ld a, [hli]
     ld e, a
@@ -945,8 +944,9 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
     ret
 
 ; step 2 of UpdateSpriteSlots: branches on wScriptRunning; calls NextTableByte; branches on
-; wRandomLo; calls IsTileUnderCellBlocking; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2;
-; calls IsTileUnderCellBlocking; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; ...
+; wRandomLo & $03; calls IsTileUnderCellBlocking; calls
+; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls IsTileUnderCellBlocking; calls
+; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; ...
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     pop hl
     push hl
@@ -1397,7 +1397,8 @@ RunPendingFieldEventType0AOrOther::
     call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
     ret
 
-; step 4 of UpdateSpriteSlots: continues in UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
+; step 4 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1; continues in
+; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
 UpdateSpriteSlots_WriteTemp0AndTemp1::
     ld hl, $48d6
     ld a, l
@@ -1406,7 +1407,7 @@ UpdateSpriteSlots_WriteTemp0AndTemp1::
     ldh [hTemp1], a
     jr UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
 
-; step 5 of UpdateSpriteSlots: works on registers only
+; step 5 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
     ld hl, $48fa
     ld a, l
@@ -1626,7 +1627,8 @@ RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     pop bc
     ret
 
-; Branches on wPartyCount; branches on the byte at wFollowerRecords + $1
+; Copies C & $0f to hTemp0; copies B & $0f to hTemp1; branches on hTemp1; branches on hTemp0;
+; branches on wPartyCount; branches on hTemp1; branches on hTemp0
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2::
     push bc
     ld a, c
@@ -2156,8 +2158,9 @@ DrawFollowerSpriteIfFlag1B::
     farcall DrawMetaSprite_2
     ret
 
-; May return early; calls IsFadingAtMap5AScreen00Y80; branches on $02; branches on $00; calls
-; DrawMetaSprite_2; calls DrawMetaSpriteSet_Bank25; calls DrawMetaSpriteSet_Bank26; ...
+; Returns if bit 0 of hFieldDrawFlags is set; copies hPlayerSpriteVariant to hSpriteSetIndex; sets
+; hSpriteAttrXor to 0; calls IsFadingAtMap5AScreen00Y80; branches on hPlayerFacing; sets
+; hSpriteAttrXor to $20; sets hSpriteSubIndex; ...
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
     ldh a, [hFieldDrawFlags]
     bit 0, a
@@ -2423,7 +2426,7 @@ IsFadingAtMap5AScreen00Y80::
 .skip:
     push hl
     push de
-    ld hl, $4e73
+    ld hl, IsFadingAtMap5AScreen00Y80_Data
 
 .skip2:
     push hl
@@ -2475,6 +2478,9 @@ IsFadingAtMap5AScreen00Y80::
     ld a, $06
     add_a_to_hl
     jr .skip2
+
+; data read by IsFadingAtMap5AScreen00Y80 (55 bytes)
+IsFadingAtMap5AScreen00Y80_Data::
     db $05, $02, $00, $50, $00, $28, $2b, $03, $03, $20, $00, $18, $5a, $00, $00, $40
     db $10, $48, $5a, $00, $00, $70, $30, $48, $5c, $00, $01, $30, $78, $90, $7a, $00
     db $00, $40, $58, $80, $7a, $00, $01, $40, $00, $28, $7a, $00, $01, $50, $10, $28
@@ -3386,8 +3392,8 @@ IfFlag000AStartScript::
 ; constant message(s) depending on story flags and state; the first one in the code is $0046, whose
 ; string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_LONG_FACES_002; checks
-; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_THANKS_FOR_COMING_BY; calls RunFieldCommandTemp0;
-; starts Script_YouMustBeThe; sets EVENT_THANKS_FOR_COMING_BY; ...
+; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_THANKS_FOR_COMING_BY; sets hTemp0 to 1; calls
+; RunFieldCommandTemp0; starts Script_YouMustBeThe; ...
 Talk0046_ThanksForComingBy::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -3464,10 +3470,10 @@ Talk_HeroCheckedThePedestalIts::
     call StartScriptAtHL_B04
     ret
 
-; step 10 of ReadableTalkEvents: sets wDataBank to $1f; checks EVENT_THANKS_FOR_COMING_BY_025;
-; checks EVENT_WELCOME_TO_THE_LIBRARY; starts Script_WelcomeToTheLibrary; starts
-; Script_WelcomeToTheLibrary_2; calls TotalSpeciesFlaggedOrListed; checks
-; EVENT_HELLO_OUR_YOUNG_SAVIOR; ...
+; step 10 of ReadableTalkEvents: branches on hPlayerX; sets wDataBank to $1f; checks
+; EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_WELCOME_TO_THE_LIBRARY; starts
+; Script_WelcomeToTheLibrary; starts Script_WelcomeToTheLibrary_2; calls
+; TotalSpeciesFlaggedOrListed; ...
 ReadableTalkEvents_TestFlagBit_2::
     ldh a, [hPlayerX]
     cp $40
@@ -4097,9 +4103,9 @@ TalkMsg080F_YoureNotSupposedToGoNear::
     ret
 
 ; step 19 of YoldTalkEvents: checks EVENT_IN_THE_PAST_MERMAIDS_ARE; calls
-; FindPartyMemberWithSkill76To7DOr92; starts Script_InThePastMermaids; calls
+; FindPartyMemberWithSkill76To7DOr92; branches on hTemp1; starts Script_InThePastMermaids; calls
 ; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts Script_InThePastMermaids_4;
-; sets rRAMG to $0a; ...
+; ...
 YoldTalkEvents_TestFlagBit_InThePastMermaids::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
@@ -4978,9 +4984,9 @@ ChestItem_LogTwig::
     call StartTreasureFlagDE_B04
     ret
 
-; step 79 of YoldTalkEvents: checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; calls
-; FindTemp0InInventoryList; may return early; shows '0 checked the pedestal. It has'; shows '0
-; checked the pedestal. The MoonRock'
+; step 79 of YoldTalkEvents: checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets hTemp0 to $31; calls
+; FindTemp0InInventoryList; returns unless bit 7 of hTemp0 is set; shows '0 checked the pedestal. It
+; has'; shows '0 checked the pedestal. The MoonRock'
 YoldTalkEvents_ShowHeroCheckedThePedestal::
     ld de, EVENT_THE_PIRATES_WERE_SWALLOWED_BY
     call TestFlagBit
@@ -5000,9 +5006,9 @@ YoldTalkEvents_ShowHeroCheckedThePedestal::
     call StartMessageCommand09HL_B04
     ret
 
-; step 80 of YoldTalkEvents: may return early; sets EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING;
-; starts Script_KamehaWahahahahThanksFor; may return early; sets wObject1 + OBJ_X to $40; sets
-; wObject2 + OBJ_X to $40
+; step 80 of YoldTalkEvents: returns unless hPlayerY is $30; sets
+; EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING; starts Script_KamehaWahahahahThanksFor; returns unless
+; hPlayerX is $50; sets wObject1 + OBJ_X to $40; sets wObject2 + OBJ_X to $40
 YoldTalkEvents_SetFlagBit::
     ldh a, [hPlayerY]
     cp $30
@@ -5599,7 +5605,8 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     call StartMessageCommand09HL_B04
     ret
 
-; step 10 of KalkaTalkEvents: starts Script_WelcomeToOurInn; sets wDataBank to $10
+; step 10 of KalkaTalkEvents: branches on hPlayerX; starts Script_WelcomeToOurInn; sets wDataBank to
+; $10
 KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
     ldh a, [hPlayerX]
     cp $30
@@ -6401,8 +6408,8 @@ KalkaTalkEvents_TestFlagBit_I::
     ret
 
 ; step 56 of KalkaTalkEvents: checks EVENT_SCENE_TREASURE_THEFT; may return early; checks
-; EVENT_CHECK_ITEM; calls FindTemp0InInventoryList; starts Script_WhWhereIsEverybody; starts
-; Script_WhWhereIsEverybody_2; shows 'Don't chase what runs from'
+; EVENT_CHECK_ITEM; sets hTemp0 to $19; calls FindTemp0InInventoryList; branches on hTemp0; sets
+; hTemp0 to $1a; ...
 KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
@@ -6495,8 +6502,8 @@ TalkMsg0195_TheLeaderOfTheThievesIs::
     call StartMessageCommand09HL_B04
     ret
 
-; step 60 of KalkaTalkEvents: calls RunFieldCommandTemp0; checks EVENT_HEH_YOU_HAVE_MONSTERS_IN;
-; starts Script_HehYouHaveMonsters; starts Script_YouAgainYou
+; step 60 of KalkaTalkEvents: sets hTemp0 to 3; calls RunFieldCommandTemp0; checks
+; EVENT_HEH_YOU_HAVE_MONSTERS_IN; starts Script_HehYouHaveMonsters; starts Script_YouAgainYou
 KalkaTalkEvents_RunFieldCommandTemp0::
     ld a, $03
     ldh [hTemp0], a
@@ -6612,8 +6619,9 @@ DarckTalkEvents::
     dw DarckTalkEvents_TestFlagBit
     dw DarckTalkEvents_TestFlagBit_DarckFawahahahYouChased
 
-; step 0 of DarckTalkEvents: checks EVENT_TAKE_ITEM; calls FindTemp0InInventoryList; starts
-; Script_IHeardFromLord_2; starts Script_IHeardFromLord; starts Script_YouSeemToStill
+; step 0 of DarckTalkEvents: checks EVENT_TAKE_ITEM; sets hTemp0 to $36; calls
+; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $37; calls FindTemp0InInventoryList;
+; branches on hTemp0; ...
 DarckTalkEvents_TestFlagBit::
     ld de, EVENT_TAKE_ITEM
     call TestFlagBit
@@ -6833,7 +6841,7 @@ Talk_LinkMessage::
     call StartScriptAtHL_B04
     ret
 
-; step 34 of FieldTalkEvents: returns if wFollowerDelay is 0; copies wFollowerDelay+1 to
+; step 34 of FieldTalkEvents: returns if wFollowerDelay is 0; copies hPlayerFacing & $03 to
 ; wFollowerRecords; sets wScriptParam1 to 0; starts Script_PersonalityMessage
 FieldTalkEvents_StartScriptAtHL_B04::
     ld a, [wFollowerDelay]

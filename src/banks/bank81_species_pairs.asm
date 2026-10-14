@@ -4,8 +4,9 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
-; called from CallInBank81KeepRegs: sets wAIWeights; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
-; LoadSpeciesFamily; sets wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesFamily; ...
+; called from CallInBank81KeepRegs: copies L to wAIWeights; copies L to wSpeciesIdLo; copies H to
+; wSpeciesIdHi; calls LoadSpeciesFamily; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls
+; LoadSpeciesFamily; ...
 CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -122,7 +123,7 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld [wSpeciesIdHi], a
     ret
 
-; Continues in CallInBank81KeepRegs_CompareHLToBC; branches on b; continues in
+; Continues in CallInBank81KeepRegs_CompareHLToBC; branches on b; branches on hTemp5; continues in
 ; CallInBank81KeepRegs_CompareHLToBC
 CallInBank81KeepRegs_CompareHLToBC::
     ld a, [hli]

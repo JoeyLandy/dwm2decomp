@@ -2013,7 +2013,7 @@ FindNewlyLearnableSkills::
 FindNewlyLearnableSkills_Return::
     ret
 
-; Continues in FindNewlyLearnableSkills_Return
+; Copies C to hTemp3; sets hTemp4 to 0; continues in FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_Skip::
     ld a, $ff
     ld [de], a
@@ -2027,7 +2027,8 @@ FindNewlyLearnableSkills_Skip::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; Continues in FindNewlyLearnableSkills_Return
+; Copies hTemp6 to hTemp5; copies C to hTemp3; sets hTemp4 to 1; continues in
+; FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_ReadTemp6::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2040,7 +2041,7 @@ FindNewlyLearnableSkills_ReadTemp6::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; Continues in FindNewlyLearnableSkills_Return
+; Copies C to hTemp3; sets hTemp4 to 2; continues in FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_Restore::
     pop bc
     pop hl
@@ -2091,8 +2092,8 @@ FindCInWorkBuf38::
     inc b
     ret
 
-; called from BattleEnd_Step3: calls FillBytes; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
-; LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
+; called from BattleEnd_Step3: calls FillBytes; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi;
+; calls LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
 ; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
@@ -2565,8 +2566,8 @@ ComputeLevelUpStatGainsForBattleArg1::
     ret
 
 ; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
-; $ff; sets wGrowthTemp0 to 0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches
-; on e; ...
+; $ff; sets wGrowthTemp0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches on e;
+; ...
 ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
     push de
     ld a, [wBattleArg1]

@@ -4,8 +4,9 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-; Sets wKeyWorldGenRoom to 0; returns if the byte at wKeyWorldFloorInfo + $3 is $ff; calls
-; RunDebugAutomapCaseTemp0
+; Sets wKeyWorldGenRoom to 0; copies the byte at KeyWorldAreaLayoutTable to hTemp8; copies the byte
+; at KeyWorldAreaLayoutTable to hTemp9; sets hTemp8; sets hTemp9; returns if the byte at
+; wKeyWorldFloorInfo + $3 is $ff; copies the byte at wKeyWorldFloorInfo + $3 to hTemp0; ...
 DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc::
     xor a
     ld [wKeyWorldGenRoom], a
@@ -176,7 +177,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     jr nz, .loop
     ret
 
-; step 4 of RunDebugAutomapCaseTemp0: calls NextRandomSeed; calls
+; step 4 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
 ; RunDebugAutomapCaseTemp0_RandomBelowC
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ldh a, [hTemp8]
@@ -242,7 +243,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-; step 5 of RunDebugAutomapCaseTemp0: calls NextRandomSeed; calls
+; step 5 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
 ; RunDebugAutomapCaseTemp0_RandomBelowC
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     ldh a, [hTemp8]
@@ -319,9 +320,8 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Data_3::
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
-; Branches on wKeyWorldGenRoom; calls NextRandomSeed; calls RandomBelowC; calls
-; RunDebugAutomapCaseTemp0_ReadByteInBank_2; increments wKeyWorldGenRoom; calls RandomBelowC; calls
-; RunDebugAutomapCaseTemp0_ReadByteInBank_2; ...
+; Sets hTemp2 to $a0; calls NextRandomSeed; sets hTemp2; calls RandomBelowC; sets hTemp2; calls
+; RunDebugAutomapCaseTemp0_ReadByteInBank_2; sets hTemp3 to $0f; ...
 RunDebugAutomapCaseTemp0_RandomBelowC::
     push af
     ld a, [wKeyWorldGenRoom]
@@ -466,7 +466,8 @@ KeyWorldMonsterBaseRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank
+; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; branches on hTemp3; copies C to
+; hTemp4
 RunDebugAutomapCaseTemp0_ReadByteInBank::
     push hl
     ld a, e
@@ -504,8 +505,8 @@ RunDebugAutomapCaseTemp0_ReadByteInBank::
     pop hl
     ret
 
-; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; calls NextRandomSeed; calls
-; ReadByteInBank
+; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; copies C to hTemp3; calls
+; NextRandomSeed; calls ReadByteInBank; branches on hTemp3; ...
 RunDebugAutomapCaseTemp0_ReadByteInBank_2::
     push hl
     ld a, e
@@ -617,7 +618,8 @@ ApplyMapScreenFlagEvents::
     add_a_to_hl
     jr .skip
 
-; called from ApplyMapScreenFlagEvents: returns if wIsCGB is 0; branches on wIsCGB
+; called from ApplyMapScreenFlagEvents: branches on hTemp0; returns if wIsCGB is 0; sets rSVBK to 2;
+; branches on wIsCGB; sets rSVBK to 0
 ApplyMapScreenFlagEvents_WriteSVBK::
     ldh a, [hTemp0]
     cp $ff
@@ -1035,11 +1037,11 @@ MapScreenFlagTiles::
     dw $00ae
     db $ff ; end
 
-; called from ItemUsable_LogTwig: returns if bit 3 of 0 is set; may continue in
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80; returns if wMapType is below $20;
-; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; branches on the byte at LogTwigSpotList;
-; branches on the byte at ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data; copies
-; wKeyWorldActive to wSpriteSnapshot; ...
+; called from ItemUsable_LogTwig: sets hTempA to 0; returns if bit 3 of hPlayerStateFlags is set;
+; may continue in ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80; returns if hMapId is
+; below $20; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; branches on the byte at
+; LogTwigSpotList; branches on the byte at ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data;
+; ...
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     xor a
     ldh [hTempA], a
@@ -1183,8 +1185,8 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
     db $00, $ff
 
 ; May return early; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; may return early;
-; branches on the byte at wKeyWorldObjects; branches on the byte at wKeyWorldFloorInfo + $3; copies
-; wKeyWorldActive to wSpriteSnapshot; branches on wKeyWorldActive; ...
+; branches on hPlayerX; branches on hPlayerY; branches on the byte at wKeyWorldObjects; branches on
+; hPlayerY; ...
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     cp $80
     ret nz
@@ -1429,12 +1431,10 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     xor a
     ret
 
-; called from RunFieldReturnPhase_OpenFieldMenuOnA: may continue in
+; called from RunFieldReturnPhase_OpenFieldMenuOnA: sets hSpriteWindowClipMode to 0; may continue in
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX; branches on the byte
-; at RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; branches on wSpriteSnapshot;
-; branches on wLogTwigKeyWorldKey; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
-; RunFieldReturnPhase_WriteSVBK; continues in
+; at RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; copies B to hTemp0; branches on
+; wSpriteSnapshot; branches on wLogTwigKeyWorldKey; may continue in
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; ...
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     xor a
@@ -1545,7 +1545,8 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     call RunFieldReturnPhase_WriteSVBK
     jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-; Branches on wIsCGB; branches on wMapType; calls DrawFullScreenBufferToBGMap
+; Branches on wIsCGB; branches on wMapType; branches on hTemp0; sets rSVBK to 2; sets rSVBK to 0;
+; branches on hTemp0; calls DrawFullScreenBufferToBGMap
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
@@ -1660,7 +1661,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal:
     call DrawFullScreenBufferToBGMap
     ret
 
-; Returns if wIsCGB is 0; branches on wMapType
+; Returns if wIsCGB is 0; branches on wMapType; sets rSVBK to 2; sets rSVBK to 0
 RunFieldReturnPhase_WriteSVBK::
     ld a, c
     and $0f

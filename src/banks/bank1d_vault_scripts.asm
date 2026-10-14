@@ -1047,8 +1047,8 @@ CountNonZeroItemGridBytes::
     jr c, .loop
     ret
 
-; Branches on the byte at wItemStorage; sets wSavedSpriteClipMode; branches on the byte at
-; wInventory; sets wListPages
+; Branches on the byte at wItemStorage; branches on B; copies C to wSavedSpriteClipMode; branches on
+; the byte at wInventory; branches on B; copies C to wListPages
 VaultMenu_WriteSavedSpriteClipModeAndListPages::
     ld hl, wItemStorage
     ld c, $00
@@ -1141,9 +1141,9 @@ VaultMenu_Store_ReadItemGridX_ReadItemGridX::
 VaultMenu_Store_ReadItemGridX_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
-; called from VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc: branches on
-; wScreenState; branches on the byte at wItemStorage; branches on the byte at wInventory; calls
-; HLToDecimalDigits; sets wDigitWorkA; sets wDigitWorkB; calls BGMapAddressAtScroll_Bank1D; ...
+; called from VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc: branches on C; branches
+; on wScreenState; branches on the byte at wItemStorage; branches on B; branches on the byte at
+; wInventory; branches on B; calls HLToDecimalDigits; ...
 VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
     ld hl, VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data
     ld de, wScreenList
@@ -1558,7 +1558,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
-; Branches on the byte at wItemStorage
+; Branches on the byte at wItemStorage; branches on C; branches on the byte at wItemStorage
 VaultMenu_Store_ReadItemGridYAndItemGridX::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -1994,9 +1994,9 @@ CheckListPagesPlusNumberAtMost18::
     xor a
     ret
 
-; Sets wTextCounter1 to 0; branches on the byte at wItemStorage; increments wTextCounter1; calls
-; TenTimesNumberTensPlusNumberOnes; copies the byte at wItemStorage to wTextCounter3; sets
-; wTextCounter1 to 0
+; Sets wTextCounter1 to 0; branches on the byte at wItemStorage; increments wTextCounter1; branches
+; on C; calls TenTimesNumberTensPlusNumberOnes; copies the byte at wItemStorage to wTextCounter3;
+; sets wTextCounter1 to 0
 VaultMenu_Store_WriteTextCounter1AndTextCounter3::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -2064,9 +2064,9 @@ VaultMenu_Store_WriteTextCounter1AndTextCounter3::
     ret
 
 ; called from VaultMenu_Store_ReadScreenState: calls TenTimesNumberTensPlusNumberOnes; branches on
-; the byte at wItemStorage; branches on the byte at wInventory; calls
+; the byte at wInventory; branches on E; branches on C; calls
 ; VaultMenu_WriteSavedSpriteClipModeAndListPages; branches on wListPages; sets wTwoChoiceCursor to
-; 0; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; ...
+; 0; ...
 VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     ld hl, wItemStorage
     ld a, [wItemGridY]
@@ -2148,11 +2148,10 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     ld [wTwoChoiceCursor], a
     jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
-; called from VaultMenu_Store_ReadScreenState: branches on the byte at wInventory; sets
-; wTwoChoiceCursor to 0; continues in
-; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; sets wTwoChoiceCursor to
-; 1; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches
-; on the byte at wItemStorage; branches on wTextCounter3; ...
+; called from VaultMenu_Store_ReadScreenState: branches on the byte at wInventory; branches on C;
+; sets wTwoChoiceCursor to 0; continues in
+; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches on C; branches
+; on D; branches on E; ...
 VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld hl, wInventory
     ld c, $00
@@ -2233,8 +2232,8 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld a, $02
     ld [wTwoChoiceCursor], a
 
-; Sets wTextCounter1 to 0; sets wTextCounter3 to 0; increments wCounterPtr0Lo; calls
-; RunUnlessScreenStateIs3; increments wScreenStep
+; Sets wTextCounter1 to 0; sets wTextCounter3 to 0; copies wCounterPtr0Lo & $01 to wCounterPtr0Lo;
+; calls RunUnlessScreenStateIs3; increments wScreenStep
 VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1::
     xor a
     ld [wTextCounter1], a
@@ -2334,8 +2333,9 @@ DrawRect0147AndResetNumberEditPos::
     ld [wNumberEditPos], a
     ret
 
-; Copies the byte at wBankedGoldLo to wDigits; calls Number24ToPackedBCD; sets wSharedMenuWork; sets
-; wListEntries2; sets wMenuWordBuf; sets wMenuWordBuf1; sets wMenuWordBuf2; ...
+; Branches on C; copies the byte at wBankedGoldLo to wDigits; calls Number24ToPackedBCD; copies
+; hTemp2 & $f0 to wSharedMenuWork; copies hTemp2 & $0f to wListEntries2; copies hTemp1 & $f0 to
+; wMenuWordBuf; copies hTemp1 & $0f to wMenuWordBuf1; ...
 VaultMenu_Store_Number24ToPackedBCD::
     ld hl, wScreenList
     ld de, VaultMenu_Store_Number24ToPackedBCD_Data
@@ -2484,10 +2484,9 @@ VaultMenu_Store_Number24ToPackedBCD_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-; called from VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D: copies wThreeDigits to
+; called from VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D: branches on C; sets
 ; wGrid2CursorX; sets wGrid2CursorY; sets wScreenArea; calls BGMapAddressAtScroll_Bank1D; calls
-; DrawRectSetTextCursorLoPlus21_Bank1D; branches on wScreenState; copies the byte at wGoldLo to
-; wDigits; ...
+; DrawRectSetTextCursorLoPlus21_Bank1D; branches on wScreenState; ...
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
     ld hl, wScreenList
     ld de, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3
@@ -2596,8 +2595,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
 
 ; called from VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc: calls
 ; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
-; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; sets wTwoChoiceCursor to 1; sets
-; wScriptCommandType to 0; ...
+; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; branches on D; branches on E; ...
 VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
@@ -2736,8 +2734,7 @@ VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
 
 ; called from VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc: calls
 ; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
-; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; sets wTwoChoiceCursor to 1; sets
-; wScriptCommandType to 0; ...
+; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; branches on D; branches on E; ...
 VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
@@ -3645,7 +3642,7 @@ VaultMenu_WriteThreeDigits::
 
 ; Branches on wScreenState; calls VaultMenu_WriteSavedSpriteClipModeAndListPages; calls
 ; CountNonZeroItemGridBytes; calls VaultMenu_WriteSavedSpriteClipModeAndListPages; calls
-; CountNonZeroItemGridBytes; sets wSavedSpriteSlotCount; branches on wItemGridY; ...
+; CountNonZeroItemGridBytes; copies L to wSavedSpriteSlotCount; branches on wItemGridY; ...
 VaultMenu_Store_CountNonZeroItemGridBytes::
     ld a, [wScreenState]
     cp $03
@@ -3946,7 +3943,8 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
-; Calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
+; Calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
+; branches on C
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
@@ -6086,7 +6084,7 @@ LoadSpeciesSpriteGraphicsAndPalette::
 ; MonsterSpriteTable in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in
 ; wArg4/wArg5; on CGB it continues with the palette (not read) (E-0104)
 ; code: calls ReadFarPointerAtDEInBankB; calls DecompressToVRAM; branches on wIsCGB; calls
-; ReadByteInBank; sets wOBJPaletteUploadRequest to $7f
+; ReadByteInBank; branches on rSTAT; sets wOBJPaletteUploadRequest to $7f
 DecompressGraphicsArg1ToArg4::
     ld a, [wArg1]
     ld l, a
@@ -6211,7 +6209,7 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-; called from DrawThreeMetaSpritePartsAtGridCursor: continues in
+; called from DrawThreeMetaSpritePartsAtGridCursor: copies wArg6 to hSpriteAttrXor; continues in
 ; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
     ld a, [wArg6]
@@ -6223,8 +6221,10 @@ DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
 DrawMetaSpritePartC0::
     ld c, $00
 
-; called from DrawSpritePart9000At88_28: continues in
-; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
+; called from DrawSpritePart9000At88_28: copies wArg6 to hSpriteAttrXor; branches on C; sets
+; hSpriteSubIndex; continues in
+; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3; sets hSpriteSubIndex to
+; 0
 DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
@@ -6243,8 +6243,9 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     xor a
     ldh [hSpriteSubIndex], a
 
-; Branches on wArg2; branches on wArg1; calls DrawMetaSpriteSet_Bank25; calls
-; DrawMetaSpriteSet_Bank26; calls DrawMetaSpriteSet_Bank27
+; Copies wArg3 to hSpriteTileOffset; sets hSpriteOriginX; sets hSpriteOriginXHi; sets
+; hSpriteOriginY; sets hSpriteOriginYHi; copies wArg1 & $7f to hSpriteSetIndex; branches on wArg2;
+; ...
 DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3::
     ld a, [wArg3]
     ldh [hSpriteTileOffset], a
@@ -6883,10 +6884,8 @@ PackRecordFieldsToBank1Slot::
     ld [rRAMG2], a
     ld [rRAMB], a
 
-; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2 to rRAMB; may
-; continue in PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1; may continue in
-; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12; may continue in
-; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13; ...
+; Branches on C; calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2
+; to rRAMB; branches on B; copies wArg2 to rRAMB; ...
 PackRecordFieldsToBank1Slot_Skip::
     ld hl, wPackFields
     ld c, $00
@@ -7248,7 +7247,7 @@ Pack2BitFieldsFromPackFields::
     ret
 
 ; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2 to rRAMB; sets
-; rRAMB to 0; copies wArg2 to rRAMB; sets rRAMB to 0; ...
+; rRAMB to 0; copies wArg2 to rRAMB; branches on C; ...
 Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1::
     call SRAMRecordAddressOfArg1
     ld a, $28

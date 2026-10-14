@@ -469,8 +469,8 @@ WarpToLinkedMapForCurrentMap_Data2::
     db $00
 
 ; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; copies
-; wKeyWorldGoal to wWarpDestX; copies wKeyWorldGoal to wWarpDestY; calls StartWarpTransition; copies
-; wKeyWorldGoalPos to wWarpDestX; ...
+; wKeyWorldGoal & $f0 to wWarpDestX; copies wKeyWorldGoal & $0f to wWarpDestY; copies
+; wKeyWorldGoalCell & $f0 to hMapScreenX; copies wKeyWorldGoalCell & $0f to hMapScreenY; ...
 WarpToLinkedMapForCurrentMap_Data2_Cp87::
     cp $87
     jr z, .check_key_world_active
@@ -643,9 +643,10 @@ CheckMapExitTable::
     call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
     ret
 
-; called from CheckMapExitTable: sets wWarpPending to 1; plays sound $60; sets wWarpDestX to $40;
-; sets wWarpDestY to $80; sets wLastWarpIndex to 0; sets wFieldTransitionKind to 3; calls
-; StartPaletteFade; ...
+; called from CheckMapExitTable: branches on hPlayerStateFlags; copies hPlayerStateFlags & $df to
+; hPlayerStateFlags; sets wWarpPending to 1; plays sound $60; copies the byte at
+; CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data to hMapId; sets hMapScreenX to 0; sets
+; hMapScreenY to 0; ...
 CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ldh a, [hPlayerX]
     and $f0

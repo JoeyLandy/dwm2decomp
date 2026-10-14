@@ -1548,9 +1548,9 @@ RunLinkSession6Exchange_YourPalRefusedThe::
     call ShowStringA10_Bank33
     ret
 
-; step 9 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $1e; ...
+; step 9 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; ...
 RunLinkSession6Exchange_InfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -1684,8 +1684,8 @@ RunLinkSession6Exchange_PleaseWait_2::
     ret
 
 ; step 13 of RunLinkSession6Exchange_BreedMenuSteps: sets rRAMG to $0a; sets rRAMB to 0; calls
-; SRAMRecordAddress; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo; sets
-; wLinkBufferPtrHi; ...
+; SRAMRecordAddress; copies E to wLinkTimeoutLo; copies D to wLinkTimeoutHi; copies E to
+; wLinkBufferPtrLo; copies D to wLinkBufferPtrHi; ...
 RunLinkSession6Exchange_SetLinkTimeoutLo::
     ld a, $0a
     ld [rRAMG], a
@@ -1825,9 +1825,9 @@ RunLinkSession6Exchange_SetLinkSendByte_6::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $01; sets
-; wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; sets
-; wLinkBufferCountLo to $10; sets wLinkSendByte to $ff; ...
+; step 2 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $01; copies L
+; to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
+; wLinkBufferPtrHi; sets wLinkBufferCountLo to $10; sets wLinkSendByte to $ff; ...
 RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ld a, [wLinkMessage]
     cp $01
@@ -1862,9 +1862,9 @@ RunLinkSession6Exchange_SetLinkSendByte_7::
     inc [hl]
     ret
 
-; step 4 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyRectTo20ByteRowsJp_Bank33; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; FillTilesFromRequest; calls CopyBytes; ...
+; step 4 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyRectTo20ByteRowsJp_Bank33; copies L
+; to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; ...
 RunLinkSession6Exchange_FightInfoEx::
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2179,8 +2179,8 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ret
 
 ; step 14 of RunLinkSession6Exchange_FightInfoExSteps: increments wScreenStep; copies wRandomLo to
-; wBattleSetupFlagsLo; copies wRandomHi to wBattleSetupFlagsHi; sets wLinkTimeoutLo; sets
-; wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; ...
+; wBattleSetupFlagsLo; copies wRandomHi to wBattleSetupFlagsHi; copies L to wLinkTimeoutLo; copies H
+; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 RunLinkSession6Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2323,8 +2323,9 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     dw RunLinkSession6Exchange_SetSpriteHideTile
 
 ; step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls ClearRecordPanelTiles; calls
-; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; sets wTextWindowTileLo;
-; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; ...
+; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; ...
 RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
@@ -2359,8 +2360,8 @@ RunLinkSession6Exchange_AdvanceScreenStep_3::
     ret
 
 ; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls SetArg5ToListEntriesCell5;
-; sets wArg1 to $c7; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; sets wWorkBuf;
-; calls LoadFamilyIconTileForWorkBuf; ...
+; sets wArg1 to $c7; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; copies hTemp0 &
+; $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf; ...
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2463,8 +2464,8 @@ RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     ret
 
 ; step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls CopyRectTo20ByteRowsJp_Bank33;
-; calls RunFourTimes; calls CopyRectTo20ByteRowsJp_Bank33; calls RunFourTimes; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; ...
+; calls RunFourTimes; calls CopyRectTo20ByteRowsJp_Bank33; calls RunFourTimes; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; ...
 RunLinkSession6Exchange_RunFourTimes_2::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
     ld hl, wWindowTileBuffer + $6e
@@ -2503,9 +2504,9 @@ RunLinkSession6Exchange_RunFourTimes_2::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 0; sets
-; wStringIndex to $20; calls ShowString_Bank1B; ...
+; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: copies L to wTextWindowTileLo;
+; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
+; wStringCategory to 0; sets wStringIndex to $20; calls ShowString_Bank1B; ...
 RunLinkSession6Exchange_FightInfoEx_2::
     ld hl, vTiles2 + $300
     ld a, l
@@ -2537,8 +2538,8 @@ RunLinkSession6Exchange_FightInfoEx_2::
 
 ; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls BGMapAddressAtScroll_Bank33;
 ; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; sets wScreenSubStep to 0; copies wReturnScreenState to
-; wScreenState; copies wReturnScreenStep to wScreenStep; ...
+; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
+; wReturnScreenState to wScreenState; ...
 RunLinkSession6Exchange_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2602,8 +2603,8 @@ RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
 
 ; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
 ; ListAvailableRecordsForSelection_Bank33; calls ClampRecordListPageCursor5; branches on wListPages;
-; calls StoreC5BEC6AtHLStride2_Bank33; sets wArg1; sets wArg2; calls DrawPageOfPagesAtArg1_Bank1E;
-; ...
+; calls StoreC5BEC6AtHLStride2_Bank33; copies H to wArg1; copies L to wArg2; calls
+; DrawPageOfPagesAtArg1_Bank1E; ...
 RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
@@ -2646,9 +2647,9 @@ RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
     call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
-; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 0; sets
-; wStringIndex to $1e; calls ShowString_Bank1B; ...
+; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: copies L to wTextWindowTileLo;
+; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
+; wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; ...
 RunLinkSession6Exchange_InfoOKYesN_2::
     ld hl, vTiles2 + $700
     ld a, l
@@ -2687,8 +2688,8 @@ RunLinkSession6Exchange_InfoOKYesN_2::
 
 ; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls BGMapAddressAtScroll_Bank33;
 ; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; sets wScreenSubStep to 0; copies wReturnScreenState to
-; wScreenState; copies wReturnScreenStep to wScreenStep; ...
+; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
+; wReturnScreenState to wScreenState; ...
 RunLinkSession6Exchange_SetSpriteHideTile_2::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d

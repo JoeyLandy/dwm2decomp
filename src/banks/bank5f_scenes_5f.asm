@@ -336,8 +336,8 @@ RunMessageBox_ShowMessageFromMessageIndex::
     ret
 
 ; step 2 of RunMessageBox: returns if bit 0 of wTextFlags is set; branches on wMessageGroup; plays
-; sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; branches on $00; sets
-; wTextWindowState to $82; ...
+; sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 0;
+; branches on hPlayerY; ...
 RunMessageBox_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -488,7 +488,7 @@ ShowMessageHL_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
-; Sets wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank28
+; Copies L to wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank28
 ShowMessageHL_ToBeginStringDisplay_Bank89_SetStringIndex::
     ld a, l
     ld [wStringIndex], a
@@ -909,8 +909,8 @@ SetWStepArrivedIfPartyHasField55Bit7::
     ld [rRAMG], a
     ret
 
-; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; sets wStepArrived to 0; sets
-; rRAMG to 0; sets wStepArrived to 1; sets rRAMG to 0
+; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; branches on hTemp0; sets
+; wStepArrived to 0; sets rRAMG to 0; sets wStepArrived to 1; ...
 GreatLogFieldEvents_LoadSRAMRecordByte::
     ld a, $0a
     ld [rRAMG], a
@@ -945,8 +945,8 @@ GreatLogFieldEvents_LoadSRAMRecordByte::
     ld [rRAMG], a
     ret
 
-; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; sets wStepArrived to 0; sets
-; rRAMG to 0; sets wStepArrived to 1; sets rRAMG to 0
+; Sets rRAMG to $0a; branches on wPartyCount; calls LoadSRAMRecordByte; branches on hTemp0; sets
+; wStepArrived to 0; sets rRAMG to 0; sets wStepArrived to 1; ...
 GreatLogFieldEvents_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
@@ -1195,7 +1195,8 @@ SceneDancing_DanceSteps::
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
-; step 11 of SceneDancing_DanceSteps: sets wFollowerRecords to 0; advances wScriptSubStep
+; step 11 of SceneDancing_DanceSteps: sets hPlayerFacing to 0; sets wFollowerRecords to 0; advances
+; wScriptSubStep
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
     xor a
     ldh [hPlayerFacing], a
@@ -1222,8 +1223,9 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3::
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, $03
 
-; Sets wFollowerRecords; increments wScriptParam0; returns unless wScriptParam0 is $40; sets
-; wScriptParam0 to 0; advances wScriptSubStep
+; Sets hPlayerFacing; sets wFollowerRecords; copies hPlayerStateFlags & $fd to hPlayerStateFlags;
+; increments wScriptParam0; returns unless wScriptParam0 is $40; sets hPlayerStateFlags; sets
+; wScriptParam0 to 0; ...
 SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing::
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -1265,7 +1267,8 @@ SceneMermaidSong2_MoveSteps::
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
-; step 16 of SceneDancing_DanceSteps: advances wScriptStep
+; step 16 of SceneDancing_DanceSteps: copies hPlayerStateFlags & $fd to hPlayerStateFlags; advances
+; wScriptStep
 SceneDancing_DanceSteps_WritePlayerStateFlags::
     ldh a, [hPlayerStateFlags]
     and $fd
@@ -1274,9 +1277,9 @@ SceneDancing_DanceSteps_WritePlayerStateFlags::
     inc [hl]
     ret
 
-; step 12 of SceneDancing_DanceSteps: sets wStepPtrLo; sets wStepPtrHi; calls
-; AddStepDeltaToPointedByte; sets wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte; sets
-; wStepPtrLo; ...
+; step 12 of SceneDancing_DanceSteps: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; copies E to wStepPtrLo; ...
 SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
     ld de, hPlayerY
     ld a, e
@@ -1315,8 +1318,8 @@ SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
     ret
 
 ; step 7 of SceneMermaidSong2_MoveSteps: increments wScriptParam0; may return early; copies
-; wScriptParam0+1 to wFollowerRecords; returns unless wScriptParam0+1 is 0; sets wScriptParam0 to 0;
-; advances wScriptSubStep
+; hPlayerFacing & $03 to hPlayerFacing; copies hPlayerFacing & $03 to wFollowerRecords; returns
+; unless hPlayerFacing & $03 is 0; sets wScriptParam0 to 0; advances wScriptSubStep
 SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
     ld a, [wScriptParam0]
     inc a
@@ -1338,9 +1341,10 @@ SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
     inc [hl]
     ret
 
-; step 4 of SceneMermaidSong2_MoveSteps: branches on wScriptParam0-1; copies wScriptParam0-1 to
-; wFollowerRecords; decrements wFollowerRecords + $1; increments hPlayerX; branches on
-; wScriptParam0-1; branches on wScriptParam0; sets wScriptParam0 to 0; ...
+; step 4 of SceneMermaidSong2_MoveSteps: copies hPlayerFacing & $03 to hPlayerFacing; branches on
+; hPlayerFacing & $03; copies hPlayerFacing & $03 & $03 to wFollowerRecords; decrements
+; wFollowerRecords + $1; increments hPlayerX; branches on hPlayerFacing & $03; branches on
+; wScriptParam0; ...
 SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, [wScriptParam0]
     and $07
@@ -1410,8 +1414,9 @@ SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
     inc [hl]
     ret
 
-; step 3 of SceneMermaidSong2_MoveSteps: sets wStepPtrLo; sets wStepPtrHi; calls
-; AddStepDeltaToPointedByte; sets wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte
+; step 3 of SceneMermaidSong2_MoveSteps: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte
 SceneMermaidSong2_MoveSteps_AddStepDeltaToPointedByte::
     ld de, wFollowerRecords + $7
     ld a, e
@@ -1440,9 +1445,9 @@ SceneDancing_DanceSteps_WriteScriptParam0::
     inc [hl]
     ret
 
-; step 2 of SceneMermaidSong2_MoveSteps: branches on wScriptParam0+1; copies wScriptParam0+1 to
-; wFollowerRecords; increments wFollowerRecords + $1; decrements hPlayerX; calls
-; ScriptStepMoveTwoObjectsByTable
+; step 2 of SceneMermaidSong2_MoveSteps: copies hPlayerFacing & $03 to hPlayerFacing; branches on
+; hPlayerFacing & $03; copies hPlayerFacing & $03 & $03 to wFollowerRecords; increments
+; wFollowerRecords + $1; decrements hPlayerX; calls ScriptStepMoveTwoObjectsByTable
 SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable::
     ld a, [wScriptParam0]
     and $07
@@ -1534,7 +1539,8 @@ RunScriptSubStep::
     dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords
 
 ; step 7 of RunScriptSubStep: sets wFollowerRecords to 1; increments wScriptParam0; may return
-; early; sets wFollowerRecords to 0; sets wScriptParam0 to 0; advances wScriptStep
+; early; sets hPlayerFacing to 0; sets wFollowerRecords to 0; copies hPlayerStateFlags & $fb to
+; hPlayerStateFlags; sets wScriptParam0 to 0; ...
 RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
     ld a, $01
     ld [wFollowerRecords], a
@@ -1577,9 +1583,9 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
     inc [hl]
     ret
 
-; step 6 of RunScriptSubStep: sets wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte;
-; increments wObject5 + SCRIPTOBJ_Y; increments wScriptParam0; returns unless wScriptParam0 is $20;
-; sets wObject5 to 0; ...
+; step 6 of RunScriptSubStep: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; increments wObject5 + SCRIPTOBJ_Y; increments wScriptParam0; returns
+; unless wScriptParam0 is $20; sets wObject5 to 0; ...
 RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     ld de, wObject5 + SCRIPTOBJ_Y
     ld a, e
@@ -1609,8 +1615,9 @@ RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     inc [hl]
     ret
 
-; step 5 of RunScriptSubStep: sets wFollowerRecords to 0; increments wScriptParam0; returns unless
-; wScriptParam0 is $3c; sets wScriptParam0 to 0; advances wScriptSubStep
+; step 5 of RunScriptSubStep: sets hPlayerStateFlags; sets wFollowerRecords to 0; increments
+; wScriptParam0; returns unless wScriptParam0 is $3c; sets wScriptParam0 to 0; advances
+; wScriptSubStep
 RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
     ldh a, [hPlayerStateFlags]
     or $02
@@ -1630,9 +1637,8 @@ RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
     inc [hl]
     ret
 
-; step 4 of RunScriptSubStep: sets wScriptTemp2; sets wScriptTemp3; sets wScriptParam0 to 0;
-; advances wScriptSubStep; branches on the byte at wScriptMsgSelect; branches on the byte at
-; wFollowerRecords
+; step 4 of RunScriptSubStep: copies L to wScriptTemp2; copies H to wScriptTemp3; sets wScriptParam0
+; to 0; advances wScriptSubStep; branches on the byte at wScriptMsgSelect; branches on hPlayerY
 RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc::
     ld a, [wScriptTemp2]
     ld l, a
@@ -1771,8 +1777,8 @@ RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data::
     ds $11, $00
 
 ; step 3 of RunScriptSubStep: increments wScriptParam0; returns unless wScriptParam0 is $78; sets
-; wScriptParam0 to 0; sets wScriptMsgSelect to 0; sets wScriptTemp0 to 1; sets wScriptTemp1 to 3;
-; sets wScriptTemp2; ...
+; wScriptParam0 to 0; sets hPlayerStateFlags; sets wScriptMsgSelect to 0; sets wScriptTemp0 to 1;
+; sets wScriptTemp1 to 3; ...
 RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
     ld a, [wScriptParam0]
     inc a
@@ -1799,9 +1805,9 @@ RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
     inc [hl]
     ret
 
-; step 2 of RunScriptSubStep: sets wObject5 to $80; sets wStepPtrLo; sets wStepPtrHi; calls
-; AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_Y; increments wScriptParam0; returns
-; unless wScriptParam0 is $20; ...
+; step 2 of RunScriptSubStep: sets wObject5 to $80; copies E to wStepPtrLo; copies D to wStepPtrHi;
+; calls AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_Y; increments wScriptParam0;
+; returns unless wScriptParam0 is $20; ...
 RunScriptSubStep_AddStepDeltaToPointedByte::
     ld a, $80
     ld [wObject5], a
@@ -1827,8 +1833,8 @@ RunScriptSubStep_AddStepDeltaToPointedByte::
     ret
 
 ; step 1 of RunScriptSubStep: sets wFollowerRecords to 3; increments wScriptParam0; may return
-; early; sets wFollowerRecords to 0; calls RunFieldCommandTemp0; sets wScriptParam0 to 0; advances
-; wScriptSubStep
+; early; sets hPlayerFacing to 0; sets wFollowerRecords to 0; sets hTemp0 to $0b; calls
+; RunFieldCommandTemp0; ...
 RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
     ld a, $03
     ld [wFollowerRecords], a
@@ -1877,8 +1883,9 @@ RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
     inc [hl]
     ret
 
-; step 0 of RunScriptSubStep: calls UpdateFollowersOnStep_Bank5F; increments wScriptParam0; returns
-; unless wScriptParam0 is $3c; sets wScriptParam0 to 0; advances wScriptSubStep
+; step 0 of RunScriptSubStep: sets hPlayerStateFlags; calls UpdateFollowersOnStep_Bank5F; increments
+; wScriptParam0; returns unless wScriptParam0 is $3c; sets wScriptParam0 to 0; advances
+; wScriptSubStep
 RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
     ldh a, [hPlayerStateFlags]
     or $04
@@ -1953,9 +1960,9 @@ StartMessage5AndAdvanceScriptSubStep::
     inc [hl]
     ret
 
-; step 15 of RunSceneScriptSubStep: branches on wScriptParam0; plays sound $65; sets wStepPtrLo;
-; sets wStepPtrHi; calls AddStepDeltaToPointedByte; increments wSpriteSlots + $b; increments
-; wScriptParam0; ...
+; step 15 of RunSceneScriptSubStep: branches on wScriptParam0; plays sound $65; copies E to
+; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; increments wSpriteSlots + $b;
+; increments wScriptParam0; ...
 RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
     ld a, [wScriptParam0]
     or a
@@ -2030,9 +2037,9 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0::
     inc [hl]
     ret
 
-; step 13 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; calls DrawAnimatedMetaSprite1B;
-; sets wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte; increments wScriptParam0;
-; returns unless wScriptParam0 is $20; ...
+; step 13 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; sets hTemp0 to 1; calls
+; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; increments wScriptParam0; ...
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2055,8 +2062,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
     inc [hl]
     ret
 
-; step 12 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; calls DrawAnimatedMetaSprite1B;
-; sets wScriptParam1; sets wScriptParam0; branches on wScriptParam0; sets wScriptParam0 to 0; sets
+; step 12 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; sets hTemp0 to 1; calls
+; DrawAnimatedMetaSprite1B; sets wScriptParam1; sets wScriptParam0; sets wScriptParam0 to 0; sets
 ; wObject5 to 0; ...
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
     farcall CycleSpriteFloatYDown
@@ -2105,9 +2112,9 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
     inc [hl]
     ret
 
-; step 11 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; calls DrawAnimatedMetaSprite1B;
-; sets wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte; branches on wScriptParam0;
-; increments wObject5 + SCRIPTOBJ_Y; ...
+; step 11 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; sets hTemp0 to 1; calls
+; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; branches on wScriptParam0; ...
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2139,9 +2146,8 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
     ret
 
 ; step 10 of RunSceneScriptSubStep: calls NextTableByte; may continue in
-; RunSceneScriptSubStep_NextTableByte; copies wRandomLo-1 to wObject5 + SCRIPTOBJ_X; increments
-; wScriptParam0; returns unless wScriptParam0 is $b4; sets wObject5 + SCRIPTOBJ_X to $40; plays
-; sound $72; ...
+; RunSceneScriptSubStep_NextTableByte; sets wObject5 + SCRIPTOBJ_X; increments wScriptParam0;
+; returns unless wScriptParam0 is $b4; sets wObject5 + SCRIPTOBJ_X to $40; plays sound $72; ...
 RunSceneScriptSubStep_NextTableByte::
     call NextTableByte
     ld a, [wRandomLo]
@@ -2184,9 +2190,9 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
     ld [wScriptSubStep], a
     ret
 
-; step 8 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; calls DrawAnimatedMetaSprite1B; sets
-; wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_X;
-; increments wObject5 + SCRIPTOBJ_Y; ...
+; step 8 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; sets hTemp0 to 1; calls
+; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_X; ...
 RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2216,9 +2222,9 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
     inc [hl]
     ret
 
-; step 7 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; calls DrawAnimatedMetaSprite1B; sets
-; wStepPtrLo; sets wStepPtrHi; calls AddStepDeltaToPointedByte; increments wScriptParam0; returns
-; unless wScriptParam0 is $20; ...
+; step 7 of RunSceneScriptSubStep: calls CycleSpriteFloatYDown; sets hTemp0 to 1; calls
+; DrawAnimatedMetaSprite1B; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
+; AddStepDeltaToPointedByte; increments wScriptParam0; ...
 RunSceneScriptSubStep_CycleSpriteFloatYDown::
     farcall CycleSpriteFloatYDown
     ld a, $01
@@ -2265,7 +2271,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM::
     inc [hl]
     ret
 
-; step 5 of RunSceneScriptSubStep: sets wStepPtrLo; sets wStepPtrHi; calls
+; step 5 of RunSceneScriptSubStep: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
 ; AddStepDeltaToPointedByte; decrements wObject5 + SCRIPTOBJ_Y; increments wScriptParam0; returns
 ; unless wScriptParam0 is $20; calls StartMessageFromTable; ...
 RunSceneScriptSubStep_AddStepDeltaToPointedByte::
@@ -2308,9 +2314,9 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5::
     inc [hl]
     ret
 
-; step 3 of RunSceneScriptSubStep: branches on wScriptParam0; increments wScriptParam0; calls
-; FullyHealParty; calls MoveIncapacitatedPartyMembersBack; calls LoadRecordListNameTiles; calls
-; LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f; ...
+; step 3 of RunSceneScriptSubStep: branches on wScriptParam0; increments wScriptParam0; sets
+; hFieldDrawFlags to $0e; calls FullyHealParty; calls MoveIncapacitatedPartyMembersBack; calls
+; LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; ...
 RunSceneScriptSubStep_FullyHealParty::
     ld a, [wScriptParam0]
     or a
@@ -2403,8 +2409,8 @@ RunSceneScriptSubStep_CopyBytes::
     inc [hl]
     ret
 
-; step 1 of RunSceneScriptSubStep: calls RunMessageBoxCarryWhenIdle_Bank5F; may return early;
-; branches on wIsCGB; calls CopyBytes; plays sound $7a; advances wScriptSubStep
+; step 1 of RunSceneScriptSubStep: sets hPlayerFacing to 3; calls RunMessageBoxCarryWhenIdle_Bank5F;
+; may return early; branches on wIsCGB; calls CopyBytes; plays sound $7a; advances wScriptSubStep
 RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
     ld a, $03
     ldh [hPlayerFacing], a
@@ -2428,10 +2434,9 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
     inc [hl]
     ret
 
-; step 0 of RunSceneScriptSubStep: calls LoadSpriteGraphics7EToTiles0; checks
-; EVENT_SCENE_RIVAL_DEFEATED_021; sets wScriptMsgSelect to 0; checks
-; EVENT_SCENE_MERMAID_KINGDOM_022; sets wScriptMsgSelect to 1; checks EVENT_SCENE_SHIELD2_023; sets
-; wScriptMsgSelect to 2; ...
+; step 0 of RunSceneScriptSubStep: sets hTemp0 to 1; calls LoadSpriteGraphics7EToTiles0; checks
+; EVENT_SCENE_RIVAL_DEFEATED_021; sets wScriptMsgSelect to 0; sets hTemp0 to 3; checks
+; EVENT_SCENE_MERMAID_KINGDOM_022; sets wScriptMsgSelect to 1; ...
 RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0::
     ld a, $01
     ldh [hTemp0], a
@@ -2961,8 +2966,8 @@ RunOneTimeTreasure_ShowMessageHL::
     ret
 
 ; step 3 of RunOneTimeTreasure: returns if bit 0 of wTextFlags is set; branches on wScriptParam1;
-; plays sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; branches on $00; sets
-; wTextWindowState to $82; ...
+; plays sound $69; sets hSpriteWindowClipMode to 0; sets wTextWindowState to 2; sets wTextWindowStep
+; to 0; branches on hPlayerY; ...
 RunOneTimeTreasure_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a

@@ -313,26 +313,32 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
     return out
 
 
-LD_BC = re.compile(r"^(\s+)ld bc, \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
+LD_BC = re.compile(r"^(\s+)ld (bc|de), \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
+# routines that take two separate bytes in a register pair: rectangles (B = width, C = rows), resolve messages
+# (B = argument, C = flags, E-0073), and sprite steps toward a point (D = X, E = Y, E-0127)
+PAIR_CALLEE = {"bc": re.compile(r"Rect|ResolveMsg"), "de": re.compile(r"Toward")}
 CALL_TO = re.compile(r"^\s+(?:call|farcall|farcall_b|jp)(?: \w+,)? (\w+)")
 
 
 def rect_sizes(lines: list[str]) -> list[str]:
-    """`ld bc, $WWRR` before a call to a rectangle routine (a name with "Rect": B = width, C = rows) is written
-    `lb bc, $WW, $RR`, when no label or other use of BC comes between."""
+    """`ld bc, $WWRR` before a call to a routine that takes B and C as two bytes (a rectangle: B = width, C = rows;
+    a resolve message: B = argument, C = flags) is written `lb bc, $WW, $RR`, and `ld de, $XXYY` before a sprite
+    step toward a point (D = X, E = Y) `lb de, $XX, $YY`, when no label or other use of the pair comes between."""
     out = list(lines)
     for i, ln in enumerate(lines):
         m = LD_BC.match(ln)
         if not m:
             continue
+        pair = m.group(2)
         code = [nx for nx in lines[i + 1:i + 12] if nx.strip() and not nx.lstrip().startswith(";")][:3]
         for nx in code:
             c = CALL_TO.match(nx)
             if c:
-                if "Rect" in c.group(1):
-                    out[i] = f"{m.group(1)}lb bc, ${m.group(2)}, ${m.group(3)}{m.group(4) or ''}"
+                if PAIR_CALLEE[pair].search(c.group(1)):
+                    out[i] = f"{m.group(1)}lb {pair}, ${m.group(3)}, ${m.group(4)}{m.group(5) or ''}"
                 break
-            if not nx.startswith("    ") or "bc" in nx or nx.lstrip().startswith(("ret", "jr", "jp")):
+            if not nx.startswith("    ") or pair in nx or pair[0] in re.findall(r"\b[a-z]\b", nx) or \
+                    pair[1] in re.findall(r"\b[a-z]\b", nx) or nx.lstrip().startswith(("ret", "jr", "jp")):
                 break
     return out
 

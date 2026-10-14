@@ -81,6 +81,21 @@ ret"""), [])
         self.assertEqual(s, "Checks EVENT_NEVER_SET; may return early; shows '0 checked the treasure chest. The'; "
                             "starts Script_HowMayWeServe; plays sound $69")
 
+    def test_high_ram_and_masked_values(self):
+        s = describe.summarize("X", self.body("""
+ldh a, [hJoyPressed]
+and $0f
+cp $03
+ret nz
+ldh [hTemp0], a
+ld a, [wX]
+add $02
+cp $05
+ret c
+ret"""), [])
+        self.assertEqual(s, "Returns unless hJoyPressed & $0f is $03; copies hJoyPressed & $0f to hTemp0; "
+                            "may return early")
+
     def test_registers_are_not_ram(self):
         s = describe.summarize("X", self.body("ld [de], a\nld [hl], a\nret"), [])
         self.assertEqual(s, "Works on registers only")

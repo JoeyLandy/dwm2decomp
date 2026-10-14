@@ -424,8 +424,8 @@ GameMode5_Init::
     dw GameMode5_Init_WriteSaveStepAndSaveRecordIndexEtc
 
 ; step 0 of GameMode5_Init: branches on wSGBActive; sets wSGBPaletteSet to 0; calls
-; LoadSGBObjectPalettesFromPointers; branches on wIsCGB; sets wBGPaletteUploadRequest to $7f; calls
-; FillBytes; calls DecompressToRAMLocked; ...
+; LoadSGBObjectPalettesFromPointers; branches on wIsCGB; sets wBGPaletteUploadRequest to $7f; sets
+; rVBK to 1; calls FillBytes; ...
 GameMode5_Init_LoadSGBObjectPalettesFromPointers::
     ld a, [wSGBActive]
     or a
@@ -1048,7 +1048,7 @@ GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_ReadLinkSetupMode::
     ld bc, $0240
     ld a, $c3
     call FillBytes
-    ld hl, $5447
+    ld hl, SaveCheckScreenRects + $2fe
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
     ld hl, wMenuState
@@ -1122,7 +1122,7 @@ CopyLinkRulesToLinkRulesCopy::
     jr nz, .loop
     ret
 
-; step 5 of GameMode5_Init: branches on 0
+; step 5 of GameMode5_Init: branches on rSTAT
 GameMode5_Init_WriteSaveStepAndSaveRecordIndexEtc::
     ld hl, vTiles0
     ld bc, $0c00
@@ -1525,7 +1525,7 @@ WriteC3TileAtWordTableEntryC_Bank07::
 ; WriteBCTileAtWordTableEntry_Bank07, EraseCursorAtEntryHL_Bank07 and MoveVerticalCursorInListHL;
 ; each run indexed by a menu position; 60 words in all (E-0220, C1)
 ; record: 60 BG map addresses, used in runs of up to 8 by the menus of bank $07
-RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords::
+CursorPositionWords_Bank07::
     dw vBGMap0 + $21, vBGMap0 + $61, vBGMap0 + $a1, vBGMap0 + $e1, vBGMap0 + $121, vBGMap0 + $161, vBGMap0 + $1a1, vBGMap0 + $1e1 ; entry 0
     dw vBGMap0 + $a3, vBGMap0 + $e3, vBGMap0 + $123, vBGMap0 + $163, vBGMap0 + $61, vBGMap0 + $c1, vBGMap0 + $101, vBGMap0 + $141
     dw vBGMap0 + $181, vBGMap0 + $1c1, vBGMap0 + $68, vBGMap0 + $6e, vBGMap0 + $ce, vBGMap0 + $d1, vBGMap0 + $10e, vBGMap0 + $111
@@ -1576,8 +1576,8 @@ ShowStringHL_Bank07::
     farcall BeginStringDisplay_Bank07
     ret
 
-; called from GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_ReadLinkSetupMode: sets
-; wStringCategory; sets wStringIndex; calls ShowString_Bank07
+; called from GameMode5_Init_SendSGBPaletteSetPacket_GameMode5_Init_ReadLinkSetupMode: copies H to
+; wStringCategory; copies L to wStringIndex; calls ShowString_Bank07
 GameMode5_Init_ShowString_Bank07::
     ld a, h
     ld [wStringCategory], a
@@ -1798,8 +1798,8 @@ GameMode5_Update_LoadScreens_Screen0::
     dw GameMode5_Update_LoadScreens_Screen0_WriteWorkBufAndTitleScreenSubState
 
 ; step 0 of GameMode5_Update_LoadScreens_Screen0: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; calls DecompressToRAMLocked;
-; calls CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; ...
+; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
+; DecompressToRAMLocked; sets rSVBK to 0; ...
 GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -1897,8 +1897,8 @@ GameMode5_Update_LoadScreens_Screen1::
     dw GameMode5_Update_LoadScreens_Screen1_WriteWorkBufAndTitleScreenSubState
 
 ; step 0 of GameMode5_Update_LoadScreens_Screen1: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; calls DecompressToRAMLocked;
-; calls CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; ...
+; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
+; DecompressToRAMLocked; sets rSVBK to 0; ...
 GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -1996,8 +1996,8 @@ GameMode5_Update_LoadScreens_Screen2::
     dw GameMode5_Update_LoadScreens_Screen2_StartPaletteFade
 
 ; step 0 of GameMode5_Update_LoadScreens_Screen2: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; calls DecompressToRAMLocked;
-; calls CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; ...
+; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
+; DecompressToRAMLocked; sets rSVBK to 0; ...
 GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -2108,8 +2108,8 @@ RunGameMode5Case00SubStates::
     dw RunGameMode5Case00SubStates_StartPaletteFade_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState
 
 ; step 0 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls DecompressToVRAM;
-; calls WriteVRAMByteInc; branches on wIsCGB; calls WriteVRAMByteInc; calls FillBytes; calls
-; CopyFromBankWaitVRAM; ...
+; calls WriteVRAMByteInc; branches on wIsCGB; sets rVBK to 1; calls WriteVRAMByteInc; sets rVBK to
+; 0; ...
 RunGameMode5Case00SubStates_DecompressToVRAM::
     ld a, [wFadeState]
     or a
@@ -2233,8 +2233,8 @@ RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00::
     inc [hl]
     ret
 
-; step 2 of RunGameMode5Case00SubStates: sets wWorkBuf; calls DrawMetaSprite0AtX50YWorkBuf1; calls
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; may return early; advances
+; step 2 of RunGameMode5Case00SubStates: copies L to wWorkBuf; calls DrawMetaSprite0AtX50YWorkBuf1;
+; calls RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; may return early; advances
 ; wTitleScreenSubState
 RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1::
     ld a, [wWorkBuf]
@@ -2280,8 +2280,8 @@ RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1_2::
 
 ; step 4 of RunGameMode5Case00SubStates: may continue in
 ; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; calls DecompressToVRAM; calls
-; DecompressToRAMLocked; branches on wIsCGB; calls DecompressToRAMLocked; calls
-; CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; ...
+; DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets
+; rSVBK to 0; ...
 RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     ld a, [wLinkMenuCounter]
     ld b, a
@@ -2343,8 +2343,8 @@ RunGameMode5Case00SubStates_StartPaletteFade::
     ret
 
 ; step 6 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls DecompressToVRAM;
-; branches on wIsCGB; calls DecompressToVRAM; calls CopyFromBankWaitVRAM; calls
-; ResetLinkScreenPalettes; calls StartPaletteFade; ...
+; branches on wIsCGB; sets rVBK to 1; calls DecompressToVRAM; sets rVBK to 0; calls
+; CopyFromBankWaitVRAM; ...
 RunGameMode5Case00SubStates_DecompressToVRAM_2::
     ld a, [wFadeState]
     or a
@@ -2498,8 +2498,8 @@ SetScrollYFromWorkBuf1::
     ldh [hScrollY], a
     ret
 
-; Branches on wTitleScreenSubState; calls RunGameMode5Case00SubStates_NextTableByte; calls
-; RunGameMode5Case00SubStates_DrawMetaSprite; may continue in
+; Branches on wTitleScreenSubState; calls RunGameMode5Case00SubStates_NextTableByte; branches on C;
+; calls RunGameMode5Case00SubStates_DrawMetaSprite; may continue in
 ; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState
 RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     push bc
@@ -2596,7 +2596,7 @@ RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     ld a, [hl]
     and $03
     push de
-    ld de, $5efb
+    ld de, RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_Data
     add e
     ld e, a
     jr nc, .skip5
@@ -2622,7 +2622,8 @@ RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     jp nz, RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState
     ret
 
-; Calls DrawMetaSprite
+; Sets hSpriteSubIndex; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteSetIndex to $1e; sets
+; hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; calls DrawMetaSprite
 RunGameMode5Case00SubStates_DrawMetaSprite::
     ld a, [hli]
     and $03
@@ -2693,7 +2694,11 @@ RunGameMode5Case00SubStates_NextTableByte::
     ld [hli], a
     ret
     db $9f, $d0, $a5, $d0, $ab, $d0, $b1, $d0, $b7, $d0, $bd, $d0, $c3, $d0, $c9, $d0
-    db $cf, $d0, $d5, $d0, $db, $d0, $e1, $d0, $04, $07, $07, $04
+    db $cf, $d0, $d5, $d0, $db, $d0, $e1, $d0
+
+; data read by RunGameMode5Case00SubStates (4 bytes)
+RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_Data::
+    db $04, $07, $07, $04
 
 ; DecompressToVRAM, QueueMusic, then the next link sub-state
 GameMode5_Update_LoadScreens_ScreenWithMusic::
@@ -2704,8 +2709,8 @@ GameMode5_Update_LoadScreens_ScreenWithMusic::
     dw GameMode5_Update_LoadScreens_ScreenWithMusic_CheckJoypadPressed
 
 ; step 0 of GameMode5_Update_LoadScreens_ScreenWithMusic: returns unless wFadeState is 0; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; calls DecompressToRAMLocked;
-; calls CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; ...
+; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
+; DecompressToRAMLocked; sets rSVBK to 0; ...
 GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM::
     ld a, [wFadeState]
     or a
@@ -2931,7 +2936,7 @@ GameMode5_Update_WaitFadeState::
 
 ; step 0 of GameMode5_Update_WaitFadeState: calls RunGameMode5Case01SubStates; branches on
 ; wLinkScreenStep; sets wLinkScreenStep to 0; branches on wModeChangeRequest; sets wGridCursorX to
-; $0f; sets wLinkTimerLo; calls StartSerialTransferInternalClock; ...
+; $0f; copies B to wLinkTimerLo; calls StartSerialTransferInternalClock; ...
 GameMode5_Update_RunGameMode5Case01SubStates::
     call RunGameMode5Case01SubStates
     ld a, [wLinkScreenStep]
@@ -2994,7 +2999,7 @@ RunGameMode5Case01SubStates_SerialSendByte::
     ld a, [wLinkSetting]
     or a
     jr z, .call_copy_record_rect_to_screen_buffer_bank07
-    ld hl, $5207
+    ld hl, TileRect_SaveCheckScreenRects_0 + $b8
 
 .call_copy_record_rect_to_screen_buffer_bank07:
     call CopyRecordRectToScreenBuffer_Bank07
@@ -3100,7 +3105,7 @@ RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep::
 .skip:
     jr c, .skip2
     ld a, [wMenuState]
-    ld hl, RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords
+    ld hl, CursorPositionWords_Bank07
     and $07
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $69
@@ -3114,7 +3119,7 @@ RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep::
     jr .return
 
 .check_menu_option:
-    ld de, RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords
+    ld de, CursorPositionWords_Bank07
     ld hl, wMenuState
     ld a, [wMenuOption]
     cp [hl]
@@ -3132,7 +3137,7 @@ RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep::
 ; wScreenSubStep), then wScreenStep = 1 (E-0122)
 SendLinkByteForMenuOption::
     ld a, [wMenuOption]
-    ld de, $65bd
+    ld de, SendLinkByteForMenuOption_Data
     and $0f
     add e
     ld e, a
@@ -3149,7 +3154,7 @@ SendLinkByteForMenuOption::
     ld [wScreenStep], a
     ret
 
-; step 2 of RunGameMode5Case01SubStates: dispatches on wMenuState
+; step 2 of RunGameMode5Case01SubStates: dispatches on wMenuState & $0f
 RunGameMode5Case01SubStates_ReadMenuState::
     ld a, [wMenuState]
     and $0f
@@ -3179,9 +3184,9 @@ RunGameMode5Case01SubStates_SerialSendByte_2::
     dw RunGameMode5Case01SubStates_FillBytes
     dw RunGameMode5Case01SubStates_RunSaveSteps
 
-; step 0 of RunGameMode5Case01SubStates_SerialSendByte_2: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 0; sets
-; wStringIndex to 4; calls ShowString_Bank07; ...
+; step 0 of RunGameMode5Case01SubStates_SerialSendByte_2: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
+; to 0; sets wStringIndex to 4; calls ShowString_Bank07; ...
 RunGameMode5Case01SubStates_ShowMaster::
     ld hl, vTiles2 + $680
     ld a, l
@@ -3208,7 +3213,7 @@ RunGameMode5Case01SubStates_ShowMaster::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld hl, $5367
+    ld hl, TileRect_SaveCheckScreenRects_2 + $68
     call CopyRecordRectToScreenBuffer_Bank07
     farcall DecompressA4GraphicsAndContinue
     ld a, $bc
@@ -3298,7 +3303,7 @@ RunGameMode5Case01SubStates_RunSaveSteps::
     ret
 
 ; Sets rRAMG to $0a; sets rRAMB to 1; branches on wBattlerRecords; branches on wTitleGameCompleted;
-; sets rRAMB to 0; sets rRAMG to 0; calls DrawMetaSprite; ...
+; sets hSpriteSetIndex to $29; sets hSpriteSubIndex to 0; sets hSpriteTileOffset to 0; ...
 RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc::
     ld a, $0a
     ld [rRAMG], a
@@ -3646,6 +3651,9 @@ WriteTileSound69ThenTitleScreenState4::
     xor a
     ld [wSubMenuCursor2], a
     ret
+
+; data read by SendLinkByteForMenuOption (8 bytes)
+SendLinkByteForMenuOption_Data::
     db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
 ; step 1 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
@@ -3665,7 +3673,7 @@ GameMode5_Update_SerialSendByte::
     ld [wSubMenuCursor], a
     ld hl, wWorkBuf
     ld [hl], $00
-    ld de, RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords
+    ld de, CursorPositionWords_Bank07
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and $01
@@ -3808,8 +3816,8 @@ GameMode5_Update_StartPaletteFade::
     ret
 
 ; step 7 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls FillTilesRequest; copies wLinkTimerLo to wTextBuf0;
-; sets wStringCategory to 0; ...
+; SerialSendByte; sets wScreenStep to 1; calls FillTilesRequest; copies wLinkTimerLo & $f0 to
+; wTextBuf0; sets wStringCategory to 0; ...
 GameMode5_Update_ShowGameLinkCannotBe::
     xor a
     ld [wScreenStep], a
@@ -3985,8 +3993,8 @@ GameMode5_Update_NewPlayerSetup_ToStartPaletteFadeAndStep::
     ret
 
 ; step 1 of GameMode5_Update_NewPlayerSetup: returns unless wFadeState is 0; calls FillBytes;
-; branches on wIsCGB; calls FillBytes; calls DrawFullScreenBufferToBGMap; branches on wSGBActive;
-; sets wTextWindowTileLo; ...
+; branches on wIsCGB; sets rSVBK to 2; calls FillBytes; sets rSVBK to 0; calls
+; DrawFullScreenBufferToBGMap; ...
 GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap::
     ld a, [wFadeState]
     or a
@@ -4110,10 +4118,9 @@ GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading::
     inc [hl]
     ret
 
-; step 6 of GameMode5_Update_NewPlayerSetup: sets wFollowerRecords to 0; sets wPartyCount to 0; sets
-; wPartyList to 0; calls InitGoldAndClearInventory; calls
-; GameMode5_Update_NewPlayerSetup_LoadMonsterRecord; calls FillBytes; sets wFieldReturnPhase to 0;
-; ...
+; step 6 of GameMode5_Update_NewPlayerSetup: sets hMapId to $38; sets hMapScreenX to 0; sets
+; hMapScreenY to 0; sets hPlayerX to $e0; sets hPlayerY to 0; sets hPlayerFacing to 0; sets
+; wFollowerRecords to 0; ...
 GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory::
     ld a, $38
     ldh [hMapId], a
@@ -4161,8 +4168,8 @@ InitGoldAndClearInventory::
     ret
 
 ; called from GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory: sets rRAMG to $0a; sets
-; rRAMB to 0; sets wMonsterId; calls LoadMonsterRecord; calls CopyBBytesDEToHL_Bank07; sets
-; wSpeciesIdLo; sets wSpeciesIdHi; ...
+; rRAMB to 0; copies L to wMonsterId; calls LoadMonsterRecord; calls CopyBBytesDEToHL_Bank07; copies
+; L to wSpeciesIdLo; copies H to wSpeciesIdHi; ...
 GameMode5_Update_NewPlayerSetup_LoadMonsterRecord::
     ld a, $0a
     ld [rRAMG], a
@@ -4742,7 +4749,7 @@ RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc::
     jp .return
 
 .call_move_vertical_cursor_in_list_hl:
-    ld de, $5096
+    ld de, CursorPositionWords_Bank07 + $10
     ld hl, wMenuState
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
@@ -5176,7 +5183,7 @@ RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc::
 .call_fill_screen_tile_buffer_with_d:
     ld d, $c3
     call FillScreenTileBufferWithD
-    ld hl, $54db
+    ld hl, TileRect_SaveCheckScreenRects_2 + $1dc
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawWorkBufSelectionTilesAndPanels
     call DrawScreenBufferToBGMap0_Bank07
@@ -5190,10 +5197,11 @@ RunLinkSession4ScreenState_EditRules_WriteSubMenuCursorAndLinkSendByteEtc::
 
 ; step 1 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; may return
 ; early; plays sound $69; calls WriteBCTileAtWordTableEntry_Bank07; sets wSubMenuCursor2 to 2;
-; copies the byte at wWorkBuf to wMenuSelectedMember; sets wTitleScreenSubState; ...
+; copies the byte at wWorkBuf to wMenuSelectedMember; copies the byte at
+; RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_Data to wTitleScreenSubState; ...
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL::
     ld hl, wMenuSubState
-    ld de, $509e
+    ld de, CursorPositionWords_Bank07 + $18
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and $02
@@ -5207,7 +5215,7 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL::
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuSubState]
-    ld hl, $509e
+    ld hl, CursorPositionWords_Bank07 + $18
     and $07
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $02
@@ -5220,13 +5228,16 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL::
     ld [wMenuSelectedMember], a
     ld a, [wMenuSubState]
     and $07
-    ld hl, $7063
+    ld hl, RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_Data
     add_a_to_hl
     ld a, [hl]
     ld [wTitleScreenSubState], a
     xor a
     ld [wLinkScreenFlag], a
     ret
+
+; data read by RunLinkSession4ScreenState (6 bytes)
+RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_Data::
     db $03, $0b, $15, $18, $1b, $1e
 
 ; step 2 of RunLinkSession4ScreenState_EditRules: sets wLinkSendByte to $fe; sets wTitleScreenState
@@ -5248,7 +5259,7 @@ RunLinkSession4ScreenState_EditRules_SetLinkSendByte::
 ; calls SetHLBit7FromInverseABit0; ...
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc::
     ld hl, wMenuSelectedMember
-    ld de, $50aa
+    ld de, CursorPositionWords_Bank07 + $24
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $02
@@ -5321,9 +5332,9 @@ RunLinkSession4ScreenState_EditRules_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession4ScreenState_EditRules: sets wLinkBufferCountLo to $0a; sets
-; wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; sets wLinkReady
-; to 1; sets wLinkSendByte to $ff; ...
+; step 5 of RunLinkSession4ScreenState_EditRules: sets wLinkBufferCountLo to $0a; copies L to
+; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
+; wLinkBufferPtrHi; sets wLinkReady to 1; sets wLinkSendByte to $ff; ...
 RunLinkSession4ScreenState_EditRules_WriteLinkBufferCountLoAndLinkTimeoutLoEtc::
     ld a, $0a
     ld [wLinkBufferCountLo], a
@@ -5425,7 +5436,7 @@ RunLinkSession4ScreenState_EditRules_CheckLinkMessage::
 ; wTitleScreenSubState; ...
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_2::
     ld hl, wMenuSelectedMember
-    ld de, $50ae
+    ld de, CursorPositionWords_Bank07 + $28
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $02
@@ -5462,7 +5473,7 @@ RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_2::
 ; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; calls
 ; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; ...
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07::
-    ld hl, $561f
+    ld hl, TileRect_SaveCheckScreenRects_2 + $320
     call CopyRecordRectToScreenBuffer_Bank07
     call DrawScreenBufferToBGMap0_Bank07
     ld de, wWorkBuf + $6
@@ -5580,7 +5591,7 @@ RunLinkSession4ScreenState_EditRules_WriteVRAMByte::
 ; $69; calls WriteBCTileAtWordTableEntry_Bank07; may return early; sets wTitleScreenSubState to 0
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_WriteBCTileAtWordTableEntry_Bank07::
     ld hl, wMenuCursor
-    ld de, $50c2
+    ld de, CursorPositionWords_Bank07 + $3c
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressed]
     and $01
@@ -5588,7 +5599,7 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_WriteBCTileAtWor
     ld a, $69
     call QueueSoundEffect
     ld a, [wMenuCursor]
-    ld hl, $50c2
+    ld hl, CursorPositionWords_Bank07 + $3c
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, [wMenuCursor]
     and $07
@@ -5689,7 +5700,7 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_WriteBCTileAtWor
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07::
     ld hl, wWorkBuf + $6
-    ld de, $50d0
+    ld de, CursorPositionWords_Bank07 + $4a
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5698,7 +5709,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07::
     call QueueSoundEffect
     ld a, [wWorkBuf + $6]
     and $03
-    ld hl, $50d0
+    ld hl, CursorPositionWords_Bank07 + $4a
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5709,7 +5720,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_2::
     ld hl, wWorkBuf + $7
-    ld de, $50d6
+    ld de, CursorPositionWords_Bank07 + $50
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5718,7 +5729,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_2::
     call QueueSoundEffect
     ld a, [wWorkBuf + $7]
     and $03
-    ld hl, $50d6
+    ld hl, CursorPositionWords_Bank07 + $50
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5729,7 +5740,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_2::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_3::
     ld hl, wWorkBuf + $8
-    ld de, $50dc
+    ld de, CursorPositionWords_Bank07 + $56
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5738,7 +5749,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_3::
     call QueueSoundEffect
     ld a, [wWorkBuf + $8]
     and $03
-    ld hl, $50dc
+    ld hl, CursorPositionWords_Bank07 + $56
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5749,7 +5760,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_3::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_4::
     ld hl, wWorkBuf + $9
-    ld de, $50e2
+    ld de, CursorPositionWords_Bank07 + $5c
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5758,7 +5769,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_4::
     call QueueSoundEffect
     ld a, [wWorkBuf + $9]
     and $03
-    ld hl, $50e2
+    ld hl, CursorPositionWords_Bank07 + $5c
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5769,7 +5780,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_4::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_5::
     ld hl, wWorkBuf + $a
-    ld de, $50e8
+    ld de, CursorPositionWords_Bank07 + $62
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5778,7 +5789,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_5::
     call QueueSoundEffect
     ld a, [wWorkBuf + $a]
     and $03
-    ld hl, $50e8
+    ld hl, CursorPositionWords_Bank07 + $62
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5789,7 +5800,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_5::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_6::
     ld hl, wWorkBuf + $b
-    ld de, $50ee
+    ld de, CursorPositionWords_Bank07 + $68
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5798,7 +5809,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_6::
     call QueueSoundEffect
     ld a, [wWorkBuf + $b]
     and $03
-    ld hl, $50ee
+    ld hl, CursorPositionWords_Bank07 + $68
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5809,7 +5820,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_6::
 ; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_7::
     ld hl, wWorkBuf + $c
-    ld de, $50f4
+    ld de, CursorPositionWords_Bank07 + $6e
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -5818,7 +5829,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_7::
     call QueueSoundEffect
     ld a, [wWorkBuf + $c]
     and $03
-    ld hl, $50f4
+    ld hl, CursorPositionWords_Bank07 + $6e
     call WriteBCTileAtWordTableEntry_Bank07
     ld a, $0d
     ld [wTitleScreenSubState], a
@@ -5830,7 +5841,7 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_7::
 ; wTitleScreenSubState; ...
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_3::
     ld hl, wMenuSelectedMember
-    ld de, $50b2
+    ld de, CursorPositionWords_Bank07 + $2c
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $02
@@ -5886,13 +5897,12 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07_CopyRec
     inc [hl]
     ret
 
-; step 23 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; calls
-; RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2; calls
-; RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3; may return early; plays sound $69; sets
-; wTitleScreenSubState to 0
+; step 23 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; branches on H;
+; branches on L; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2; branches on L;
+; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3; may return early; ...
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_2::
     ld hl, wMenuCursor
-    ld de, $50fa
+    ld de, CursorPositionWords_Bank07 + $74
     call MoveVerticalCursorInListHL
     ld a, [wJoypadPressedRepeat]
     and $30
@@ -5983,8 +5993,8 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_2::
     ld [wTitleScreenSubState], a
     ret
 
-; Calls HLToDecimalDigits; calls WriteVRAMByteInc; branches on wDigits; calls WriteVRAMByteInc;
-; branches on c; calls WriteVRAMByteInc; calls WriteVRAMByte
+; Calls HLToDecimalDigits; calls WriteVRAMByteInc; branches on c; calls WriteVRAMByteInc; calls
+; WriteVRAMByte
 RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2::
     ld a, [wLinkRules + $4]
     ld l, a
@@ -6042,7 +6052,7 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2::
     call WriteVRAMByte
     ret
 
-; Calls HLToDecimalDigits; calls WriteVRAMByteInc; calls WriteVRAMByte
+; Calls HLToDecimalDigits; branches on E; calls WriteVRAMByteInc; branches on E; calls WriteVRAMByte
 RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3::
     ld a, [wLinkRules + $3]
     ld l, a
@@ -6090,7 +6100,7 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3::
 ; wTitleScreenSubState; ...
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_4::
     ld hl, wMenuSelectedMember
-    ld de, $50b6
+    ld de, CursorPositionWords_Bank07 + $30
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $02
@@ -6178,7 +6188,7 @@ RunLinkSession4ScreenState_EditRules_QueueSoundEffect::
 ; called from RunLinkSession4ScreenState_EditRules_QueueSoundEffect: works on registers only
 RunLinkSession4ScreenState_EditRules_ReadMenuCursor::
     ld a, [wMenuCursor]
-    ld hl, $774d
+    ld hl, RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data
     add a
     add_a_to_hl
     ld a, [hli]
@@ -6307,7 +6317,7 @@ RunLinkSession4ScreenState_EditRules_CallDrawRuleMark::
 ; into the BG map
 RunLinkSession4ScreenState_EditRules_DrawRuleMark::
     ld c, a
-    ld hl, $774d
+    ld hl, RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data
     add a
     add_a_to_hl
     ld a, [hli]
@@ -6327,6 +6337,9 @@ RunLinkSession4ScreenState_EditRules_DrawRuleMark::
 .call_write_vram_byte:
     call WriteVRAMByte
     ret
+
+; data read by RunLinkSession4ScreenState (22 bytes)
+RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data::
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $01, $80
     db $01, $40, $01, $20, $01, $10
 
@@ -6336,7 +6349,7 @@ RunLinkSession4ScreenState_EditRules_DrawRuleMark::
 ; wTitleScreenSubState; ...
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_5::
     ld hl, wMenuSelectedMember
-    ld de, $50ba
+    ld de, CursorPositionWords_Bank07 + $34
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $02
@@ -6384,8 +6397,8 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_
     ret
 
 ; step 29 of RunLinkSession4ScreenState_EditRules: plays sound $69; sets wTitleScreenSubState to 0;
-; branches on wLinkRuleTurnLimit; decrements wLinkRuleTurnLimit; branches on wLinkRuleTurnLimit;
-; increments wLinkRuleTurnLimit; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits
+; branches on wLinkRuleTurnLimit & $7f; sets wLinkRuleTurnLimit; branches on wLinkRuleTurnLimit &
+; $7f; sets wLinkRuleTurnLimit; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits
 RunLinkSession4ScreenState_EditRules_QueueSoundEffect_SetTitleScreenSubState::
     ld a, [wJoypadPressed]
     and $03
@@ -6476,7 +6489,7 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits::
 ; wTitleScreenSubState to 0
 RunLinkSession4ScreenState_EditRules_QueueSoundEffect_RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07::
     ld hl, wMenuSelectedMember
-    ld de, $50be
+    ld de, CursorPositionWords_Bank07 + $38
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $03
@@ -6617,8 +6630,8 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_SetLinkSendByte::
     ret
 
 ; step 5 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wLinkMessage is $02;
-; sets wLinkBufferCountLo to $0a; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo;
-; sets wLinkBufferPtrHi; sets wLinkReady to 1; ...
+; sets wLinkBufferCountLo to $0a; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L
+; to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkReady to 1; ...
 RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $02
@@ -6662,7 +6675,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_SetLinkSendByte:
 RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD::
     ld d, $c3
     call FillScreenTileBufferWithD
-    ld hl, $54db
+    ld hl, TileRect_SaveCheckScreenRects_2 + $1dc
     call CopyRecordRectToScreenBuffer_Bank07
     call LoadInvertedBit7FlagsToWorkBuf
     call DrawWorkBufSelectionTilesAndPanels
@@ -6682,7 +6695,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD::
 ; $fe; ...
 RunLinkSession4ScreenState_StartWithPresetRules_QueueSoundEffect::
     ld hl, wMenuSelectedMember
-    ld de, $50aa
+    ld de, CursorPositionWords_Bank07 + $24
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $01
@@ -6994,8 +7007,7 @@ DrawWorkBufSelectionTilesAndPanels_ReadLinkRules::
     ld [hli], a
     ret
 
-; called from DrawWorkBufSelectionTilesAndPanels: calls HLToDecimalDigits; branches on wDigits;
-; branches on c
+; called from DrawWorkBufSelectionTilesAndPanels: calls HLToDecimalDigits; branches on c
 DrawWorkBufSelectionTilesAndPanels_ReadLinkRulesAndDigits::
     ld de, $7bfd
     ld a, [wLinkRules + $5]
@@ -7188,7 +7200,7 @@ RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD::
     jp z, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte
     ld d, $c3
     call FillScreenTileBufferWithD
-    ld hl, $54db
+    ld hl, TileRect_SaveCheckScreenRects_2 + $1dc
     call CopyRecordRectToScreenBuffer_Bank07
     call LoadInvertedBit7FlagsToWorkBuf
     call DrawWorkBufSelectionTilesAndPanels
@@ -7210,7 +7222,7 @@ RunLinkSession4ScreenState_ResetAndSignal_QueueSoundEffect::
     cp $fe
     jr z, RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte
     ld hl, wMenuSelectedMember
-    ld de, $50aa
+    ld de, CursorPositionWords_Bank07 + $24
     call RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
     and $01

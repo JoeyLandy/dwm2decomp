@@ -4,9 +4,9 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-; called from RunMenuStateMenuState_InitSoundHardware: calls FindSRAMSlotMarkerIndex; may return
-; early; sets wKeyWorldSlot; copies the byte at wKeySeeds to wKeyRandomLo; copies the byte at
-; wKeySeeds to wKeyRandomHi
+; called from RunMenuStateMenuState_InitSoundHardware: calls FindSRAMSlotMarkerIndex; returns if
+; hTemp0 is $ff; copies hTemp0 to wKeyWorldSlot; copies the byte at wKeySeeds to wKeyRandomLo;
+; copies the byte at wKeySeeds to wKeyRandomHi
 RunMenuStateMenuState_FindSRAMSlotMarkerIndex::
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -1169,8 +1169,8 @@ KeyWorldLevelTable::
     db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
 ; Sets wKeyWorldFlags to 0; calls ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot; calls
-; PickRandomNonzeroFromKeyWorldGoalKindRows; calls NextRandomSeed; branches on wKeyRandomHi; sets
-; wKeyWorldWidth to $0a; sets wMapWidthScreens to $0a; ...
+; PickRandomNonzeroFromKeyWorldGoalKindRows; calls NextRandomSeed; branches on wKeyRandomHi & $0f;
+; sets wKeyWorldWidth to $0a; sets wMapWidthScreens to $0a; ...
 DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     xor a
     ld [wKeyWorldFlags], a
@@ -1465,7 +1465,8 @@ KeyWorldGoalKindRows::
     db $02, $02, $02, $02 ; id 54
     db $03, $03, $03, $03 ; id 55
 
-; Branches on the byte at wKeyWorldChunks + $3; calls RunRandomPatternCase; increments hTemp7
+; Copies L to hTemp0; copies H to hTemp1; copies E to hTemp5; copies D to hTemp6; sets hTemp7 to 0;
+; branches on the byte at wKeyWorldChunks + $3; calls RunRandomPatternCase; ...
 DebugAutomap_Update_RunRandomPatternCase::
     ld b, $00
     ld hl, wKeyWorldChunks + $3
@@ -1543,9 +1544,8 @@ DebugAutomap_Update_MergeKeyWorldAreas::
     jr nz, .loop
     ret
 
-; Calls NextRandomSeed; branches on wKeyRandomHi; calls NextRandomSeed; branches on wKeyRandomHi;
-; branches on the byte at wKeyWorldAreas; calls SwapDEByteWithMatchingKeyWorldAreas; branches on the
-; byte at wKeyWorldAreas; ...
+; Branches on hTemp7; calls NextRandomSeed; branches on wKeyRandomHi & $03; copies wKeyRandomHi &
+; $03 to hTemp0; calls NextRandomSeed; branches on wKeyRandomHi & $03; branches on hTemp0; ...
 DebugAutomap_Update_NextRandomSeed::
     ldh a, [hTemp7]
     cp $01
@@ -1818,8 +1818,9 @@ SwapDEByteWithMatchingKeyWorldAreas::
     jr nz, .loop
     ret
 
-; Branches on the byte at wKeyWorldAreas; calls PlaceTwoRandomOpenCells; sets wKeyWorldAreaExits to
-; $ff
+; Sets hTemp0 to 0; branches on the byte at wKeyWorldAreas; branches on the byte at wKeyWorldAreas &
+; $0f; copies the byte at wKeyWorldAreas & $0f to hTemp0; copies B to hTemp1; branches on B; copies
+; B to hTemp2; ...
 DebugAutomap_Update_WriteTemp0AndTemp1Etc::
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
@@ -2077,9 +2078,9 @@ ReadKeyWorldCellIsSolid::
 DebugAutomap_Update_Return::
     ret
 
-; Returns if the byte at wKeyWorldFloorInfo + $3 is $ff; branches on the byte at wKeyWorldFloorInfo
-; + $3; calls NextRandomSeed; branches on wKeyRandomHi; branches on $03; calls NextRandomSeed; sets
-; DebugAutomap_Update_WriteTemp0AndTemp1_Data to $80; ...
+; Copies L to hTemp0; copies H to hTemp1; returns if the byte at wKeyWorldFloorInfo + $3 is $ff;
+; branches on the byte at wKeyWorldFloorInfo + $3; calls NextRandomSeed; branches on wKeyRandomHi &
+; $7f; branches on $03; ...
 DebugAutomap_Update_WriteTemp0AndTemp1::
     ld hl, wKeyWorldMenuFlag
     ld a, l
@@ -2186,8 +2187,9 @@ DebugAutomap_Update_WriteTemp0AndTemp1_Data::
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53
     db $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
-; Branches on the byte at wKeyWorldAreas; calls ReadByteInBank; sets wKeyWorldFloorInfo to $ff;
-; calls PlaceObjectInAreaC
+; Branches on hTemp7; sets hTemp0 to 0; sets hTemp1 to 0; branches on the byte at wKeyWorldAreas;
+; branches on the byte at wKeyWorldAreas & $0f; increments hTemp1; branches on the byte at
+; wKeyWorldAreas & $0f; ...
 DebugAutomap_Update_SetTemp0::
     ldh a, [hTemp7]
     cp $01
@@ -2510,8 +2512,8 @@ PlaceObjectInAreaC::
     ret
 
 ; Calls SetKeyWorldBandForA; sets wKeyWorldBand; copies the byte at
-; DebugAutomap_Update_SetKeyWorldBandForA_Data to wMapObjectCount; calls RollKeyWorldObjectKind;
-; calls PlaceKeyWorldObjectAtRandomCell; sets wMapObjectCount
+; DebugAutomap_Update_SetKeyWorldBandForA_Data to wMapObjectCount; copies B to hTemp0; calls
+; RollKeyWorldObjectKind; calls PlaceKeyWorldObjectAtRandomCell; sets wMapObjectCount
 DebugAutomap_Update_SetKeyWorldBandForA::
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
@@ -2911,9 +2913,9 @@ RollKeyWorldObjectKind_Data::
     db $00, $00, $59, $00, $5a, $5d, $00, $00, $5e, $5f, $61, $62, $63, $00, $64
     ds $11, $00
 
-; Calls NextRandomSeed; branches on wKeyRandomHi; calls NextRandomSeed; branches on wKeyRandomHi;
-; branches on the byte at FieldState_MapTransition_NextRandomSeed_Data; calls NextRandomSeed;
-; branches on wKeyRandomHi; ...
+; Calls NextRandomSeed; branches on wKeyRandomHi & $7f; branches on B; calls NextRandomSeed;
+; branches on wKeyRandomHi & $7f; branches on the byte at
+; FieldState_MapTransition_NextRandomSeed_Data; calls NextRandomSeed; ...
 FieldState_MapTransition_NextRandomSeed::
     ld a, [wKeyWorldBand]
     and $0f
@@ -3111,7 +3113,8 @@ FieldState_MapTransition_NextRandomSeed_Data::
     db $06, $08, $0e, $34, $1e, $00, $f5, $cd, $80, $1f, $f0, $c6, $fe, $ff, $28, $07
     db $f1, $0c, $1c, $05, $20, $f0, $c9, $f1, $c9
 
-; Copies wKeyWorldFloorInfo to wKeyWorldGoalScreen; calls ReadByteInBank; copies the byte at
+; Copies wKeyWorldFloorInfo to wKeyWorldGoalScreen; copies wKeyWorldFloorInfo & $0f to hTemp3;
+; copies wKeyWorldFloorInfo & $0f to hTemp4; calls ReadByteInBank; branches on C; copies the byte at
 ; DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data to wKeyWorldGoalPos; copies the byte
 ; at DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data to wKeyWorldGoalPos2
 DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
@@ -3228,8 +3231,9 @@ RunRandomPatternCase::
     dw RunRandomPatternCase_WriteTempA_2
     db $c9, $c9
 
-; step 3 of RunRandomPatternCase: calls NextRandomSeed; calls StoreThreeBytesBeforeTemp0Pointer;
-; calls StoreTemp2To3BytesBeforeHLPlusTemp0; calls ReadByteInBank
+; step 3 of RunRandomPatternCase: branches on B & $01; branches on B; calls NextRandomSeed; calls
+; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
+; to hTempA; calls ReadByteInBank
 RunRandomPatternCase_WriteTempA_2::
     ld a, b
     and $01
@@ -3342,8 +3346,9 @@ RunRandomPatternCase_WriteTempA_2::
     ld a, $01
     ret
 
-; step 2 of RunRandomPatternCase: calls NextRandomSeed; calls StoreThreeBytesBeforeTemp0Pointer;
-; calls StoreTemp2To3BytesBeforeHLPlusTemp0; calls ReadByteInBank
+; step 2 of RunRandomPatternCase: branches on B & $01; calls NextRandomSeed; calls
+; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
+; to hTempA; calls ReadByteInBank
 RunRandomPatternCase_WriteTempA_3::
     ld a, b
     and $01
@@ -3417,8 +3422,9 @@ RunRandomPatternCase_WriteTempA_3::
     ld a, $01
     ret
 
-; step 1 of RunRandomPatternCase: calls NextRandomSeed; calls StoreThreeBytesBeforeTemp0Pointer;
-; calls StoreTemp2To3BytesBeforeHLPlusTemp0; calls ReadByteInBank
+; step 1 of RunRandomPatternCase: branches on B; calls NextRandomSeed; calls
+; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
+; to hTempA; calls ReadByteInBank
 RunRandomPatternCase_WriteTempA::
     ld a, b
     cp $02
@@ -3491,7 +3497,7 @@ RunRandomPatternCase_WriteTempA::
     ret
 
 ; step 0 of RunRandomPatternCase: calls NextRandomSeed; calls StoreThreeBytesBeforeTemp0Pointer;
-; calls ReadByteInBank
+; copies hTemp7 & $f0 to hTempA; calls ReadByteInBank
 RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -4056,9 +4062,9 @@ MarkMapObjectsEntryForKeyWorldGoalCell::
     jr nz, .loop
     ret
 
-; called from RemoveMapObjectsEntryMatching: calls NextRandomSeed; branches on wKeyRandomHi; calls
-; NextRandomSeed; branches on wKeyRandomHi; branches on the byte at wMapObjects + $4; calls
-; NextRandomSeed; calls ReadByteInBank
+; called from RemoveMapObjectsEntryMatching: sets hTempA to 0; calls NextRandomSeed; branches on
+; wKeyRandomHi & $0f; copies wKeyRandomHi & $0f to hTemp3; calls NextRandomSeed; branches on
+; wKeyRandomHi & $0f; copies wKeyRandomHi & $0f to hTemp4; ...
 RemoveMapObjectsEntryMatching_NextRandomSeed::
     push de
     xor a
@@ -4187,9 +4193,8 @@ RemoveMapObjectsEntryMatching_NextRandomSeed::
     ret
 
 ; called from FieldState_MapTransition: branches on wMapType; calls
-; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending; may return early; branches on the
-; byte at FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2; sets
-; wScreenTriggerCount to 0; branches on 0; branches on wWarpPending; ...
+; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending; branches on hMapId; branches on
+; hMapScreenX; returns if hMapScreenY is $01; branches on hMapId; branches on hMapScreenX; ...
 FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld a, [wMapType]
     bit 7, a
@@ -4363,8 +4368,8 @@ KeyContentsWordRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 27
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 28
 
-; Branches on wMapType; sets wScreenTriggerCount to 0; branches on wKeyWorldArea; branches on the
-; byte at wKeyWorldFloorState + $4; branches on wWarpPending; sets wWarpPending to 0; calls
+; Branches on wMapType & $07; sets wScreenTriggerCount to 0; branches on wKeyWorldArea; branches on
+; the byte at wKeyWorldFloorState + $4; branches on wWarpPending; sets wWarpPending to 0; calls
 ; SetKeyWorldBandForA; ...
 FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending::
     ld a, [wMapType]

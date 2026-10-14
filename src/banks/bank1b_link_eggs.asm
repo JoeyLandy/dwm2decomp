@@ -33,8 +33,8 @@ RunLinkSession::
     dw RunLinkSession_8Exchange
 
 ; step 0 of RunLinkSession: sets wGlyphListPos to $ff; sets wScreenCounter to 0; sets wGlyphListPos
-; to 0; calls WaitSerialTransferDone; copies wScreenStep to wGlyphListPos; branches on wScreenStep;
-; calls LinkCheckScreenCounterState; ...
+; to 0; calls WaitSerialTransferDone; copies wScreenStep to wGlyphListPos; branches on rSB; calls
+; LinkCheckScreenCounterState; ...
 RunLinkSession_WaitSerialTransferDone::
     ld a, $ff
     ld [wGlyphListPos], a
@@ -1975,8 +1975,8 @@ LinkKeyTrade::
     dw LinkKeyTrade_WaitLinkMessage_SetLinkSendByte
 
 ; step 0 of LinkKeyTrade: returns unless wTextFlags is 0; calls CopyRectTo20ByteRows; calls
-; BuildKeyListIndexListEntries; sets wStringIndex to $0e; sets wStringCategory to 0; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; ...
+; BuildKeyListIndexListEntries; sets wStringIndex to $0e; sets wStringCategory to 0; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 LinkKeyTrade_BuildKeyListIndexListEntries::
     ld a, [wTextFlags]
     and a
@@ -2023,8 +2023,9 @@ LinkKeyTrade_BuildKeyListIndexListEntries::
     ld [wScreenStep], a
     ret
 
-; step 1 of LinkKeyTrade: sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets
-; wTextWindowWidth; calls FillTilesFromRequest; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
+; step 1 of LinkKeyTrade: copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
+; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 LinkKeyTrade_FillTilesFromRequest::
     ld hl, vTiles2 + $100
     ld a, l
@@ -2065,7 +2066,7 @@ LinkKeyTrade_FillTilesFromRequest::
 
 ; step 2 of LinkKeyTrade: calls CopyRectTo20ByteRows; sets wArg5 to 2; calls ClampKeyListPageCursor;
 ; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank1B; calls
-; StoreC5BEC6AtHLStride2_Bank1B; sets wArg1; ...
+; StoreC5BEC6AtHLStride2_Bank1B; copies D to wArg1; ...
 LinkKeyTrade_ClampKeyListPageCursor::
     ld de, LinkKeyTrade_ClampKeyListPageCursor_TileRect
     ld hl, wWindowTileBuffer + $c9
@@ -2447,8 +2448,8 @@ LinkKeyTrade_KeyCannotBeTraded_WaitTextFlags::
     ret
 
 ; step 0 of LinkKeyTrade_KeyCannotBeTraded: calls KeyEntryAddressForListEntriesCell4; calls
-; BeginString_Bank1B_Cat0; increments wScreenSubStep; branches on wScreenSubStep; branches on
-; wMapType; calls BeginString_Bank1B_Cat0; increments wScreenStep; ...
+; BeginString_Bank1B_Cat0; increments wScreenSubStep; branches on hMapId; branches on wMapType;
+; calls BeginString_Bank1B_Cat0; increments wScreenStep; ...
 LinkKeyTrade_KeyCannotBeTraded_KeyEntryAddressForListEntriesCell4::
     call KeyEntryAddressForListEntriesCell4
     push hl
@@ -2647,8 +2648,8 @@ LinkKeyTrade_WriteScreenStepAndLinkSendByte::
     ret
 
 ; step 14 of LinkKeyTrade: increments wScreenStep; calls KeyEntryAddressForListEntriesCell4; calls
-; WordAddressForListEntriesCell4Item; sets wLinkBufferCountLo; sets wLinkBufferCountHi; sets
-; wLinkTimeoutLo; sets wLinkTimeoutHi; ...
+; WordAddressForListEntriesCell4Item; copies L to wLinkBufferCountLo; copies H to
+; wLinkBufferCountHi; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; ...
 LinkKeyTrade_KeyEntryAddressForListEntriesCell4::
     ld a, [wScreenStep]
     inc a
@@ -2726,8 +2727,8 @@ LinkKeyTrade_WaitLinkMessage::
     ret
 
 ; step 16 of LinkKeyTrade: calls LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc; calls
-; LinkKeyTrade_ReadRandomSeed2Lo; increments wScreenStep; sets wSelectedRecord to 0; increments
-; wScreenStep; sets wScreenSubStep to 0; sets wSelectedRecord to $fe; ...
+; LinkKeyTrade_ReadRandomSeed2Lo; branches on C; increments wScreenStep; sets wSelectedRecord to 0;
+; increments wScreenStep; sets wScreenSubStep to 0; ...
 LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc::
     call LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc
     cp $ff
@@ -2764,8 +2765,8 @@ LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc::
     ret
 
 ; called from LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc: branches on the byte at wKeyList;
-; branches on wRandomSeed2Lo; branches on wLinkPartnerName; branches on wRandomSeed2Lo; branches on
-; wLinkPartnerByte1; branches on wLinkPartnerByte2
+; branches on wRandomSeed2Lo; branches on wLinkPartnerName & $0f; branches on wRandomSeed2Lo;
+; branches on wLinkPartnerByte1; branches on wLinkPartnerByte2
 LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc::
     ld hl, wKeyList
     ld de, wLinkPartnerName
@@ -2833,8 +2834,8 @@ LinkKeyTrade_ReadRandomSeed2LoAndLinkPartnerNameEtc::
     ret
 
 ; called from LinkKeyTrade_WriteScreenStepAndSelectedRecordEtc: branches on the byte at wKeyList;
-; may return early; calls KeyEntryAddressForListEntriesCell4; branches on the byte at wKeyList;
-; branches on wRandomSeed2Lo
+; returns if C is below $14; calls KeyEntryAddressForListEntriesCell4; branches on the byte at
+; wKeyList; branches on wRandomSeed2Lo
 LinkKeyTrade_ReadRandomSeed2Lo::
     ld hl, wKeyList
     ld b, $20
@@ -3077,8 +3078,9 @@ LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor::
     ld [wScreenStep], a
     ret
 
-; step 20 of LinkKeyTrade: branches on wLinkMessage; sets wTextWindowTileLo; sets wTextWindowTileHi;
-; sets wTextWindowRows; sets wTextWindowWidth; sets wScreenStep to 6; sets wLinkSendByte to $fd; ...
+; step 20 of LinkKeyTrade: branches on wLinkMessage; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wScreenStep to
+; 6; sets wLinkSendByte to $fd; ...
 LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -3342,8 +3344,8 @@ LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep::
     ret
 
 ; step 30 of LinkKeyTrade: returns unless wLinkMessage is $01; increments wScreenStep; calls
-; RunScreenCounterStep; sets wWorkBuf; sets wLinkBufferCountLo; sets wLinkBufferCountHi; sets
-; wLinkBufferPtrLo; ...
+; RunScreenCounterStep; copies L to wWorkBuf; copies L to wLinkBufferCountLo; copies H to
+; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; ...
 LinkKeyTrade_RunScreenCounterStep::
     ld a, [wLinkMessage]
     cp $01
@@ -3391,9 +3393,9 @@ LinkKeyTrade_WaitLinkMessage_SetLinkReady::
     ld [wScreenStep], a
     ret
 
-; step 32 of LinkKeyTrade: returns unless wLinkMessage is $01; branches on wLinkMessage; sets
-; wWorkBuf; sets wLinkBufferCountLo; sets wLinkBufferCountHi; decrements wScreenStep; calls
-; RunScreenCounterStep; ...
+; step 32 of LinkKeyTrade: returns unless wLinkMessage is $01; branches on wLinkMessage; copies L to
+; wWorkBuf; copies L to wLinkBufferCountLo; copies H to wLinkBufferCountHi; decrements wScreenStep;
+; calls RunScreenCounterStep; ...
 LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
     ld a, [wLinkMessage]
     cp $01
@@ -3449,7 +3451,7 @@ LinkKeyTrade_WaitLinkMessage_SetWorkBuf::
 
 ; step 33 of LinkKeyTrade: calls DrawThreeTilesAtBGMap20FFromDE; increments wScreenStep; sets
 ; wSaveStep to 0; sets wSaveRecordIndex to 0; calls KeyEntryAddressForListEntriesCell4; calls
-; SetArg5ToListEntriesCell4; calls DeleteKeyEntryTemp0; ...
+; SetArg5ToListEntriesCell4; sets hTemp0; ...
 LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_KeyEntryAddressForListEntriesCell4::
     ld de, LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data_2
     call DrawThreeTilesAtBGMap20FFromDE
@@ -3669,7 +3671,8 @@ LinkKeyTrade_ShowPleaseWait::
     ret
 
 ; step 36 of LinkKeyTrade: returns unless wLinkMessage is $05; sets wLinkSendByte to 0; branches on
-; wLinkMessage; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1
+; wLinkMessage; sets hDecompressLock to 0; sets wGameMode to 5; sets wModeState to 1; sets
+; wModeChangeRequest to 1
 LinkKeyTrade_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $05
@@ -3800,8 +3803,9 @@ LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip::
     ld a, $03
     ld [wArg5], a
 
-; Branches on the byte at wNameGlyphBuf; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; sets wTextWindowWidth; sets wStringIndex to $27; sets wStringCategory to 0; ...
+; Branches on the byte at wNameGlyphBuf; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringIndex to
+; $27; sets wStringCategory to 0; ...
 LinkKeyTrade_WriteArg5AndTextWindowTileLoEtc_Skip2::
     ld hl, wTextBuf0
     ld de, wNameGlyphBuf
@@ -4610,8 +4614,9 @@ LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data_2::
     db $a0, $a1, $a2
 
 ; called from RunLinkSession4ScreenState_DecompressToVRAMAndStep: calls DecompressToVRAM; calls
-; ClearScreenBufferAndAttributes_BankF1; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; ...
+; ClearScreenBufferAndAttributes_BankF1; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; ...
 RunLinkSession4ScreenState_DecompressToVRAM::
     ld hl, wScreenState
     ld bc, $006f
@@ -4673,8 +4678,8 @@ EggServiceMenu_Bank1B::
     dw EggServiceMenu_Bank1B_ListAvailableRecords
     dw EggServiceMenu_Bank1B_ListAvailableRecords2
 
-; step 0 of EggServiceMenu_Bank1B: sets wStringCategory to 0; calls ShowStringA10_Bank1B; calls
-; ClearTileRowsFromPickCount; increments wScreenState
+; step 0 of EggServiceMenu_Bank1B: sets hSpriteHideTile to $c0; sets wStringCategory to 0; calls
+; ShowStringA10_Bank1B; calls ClearTileRowsFromPickCount; increments wScreenState
 EggServiceMenu_Bank1B_ShowStringA10_Bank1B::
     ld a, $c0
     ldh [hSpriteHideTile], a
@@ -5084,9 +5089,9 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
     call ShowStringA10_Bank1B
     ret
 
-; step 9 of EggServiceMenu_Bank1B_PickRecords: returns unless wTextFlags is 0; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $1e; ...
+; step 9 of EggServiceMenu_Bank1B_PickRecords: returns unless wTextFlags is 0; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; ...
 EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -5684,9 +5689,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
     ld [wScreenStep], a
     ret
 
-; step 4 of EggServiceMenu_Bank1B_StartLinkBattle: increments wScreenStep; sets wLinkTimeoutLo; sets
-; wLinkTimeoutHi; sets wLinkBufferCountLo; sets wLinkBufferCountHi; sets wLinkBufferPtrLo; sets
-; wLinkBufferPtrHi; ...
+; step 4 of EggServiceMenu_Bank1B_StartLinkBattle: increments wScreenStep; copies L to
+; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferCountLo; copies H to
+; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
     ld a, [wScreenStep]
     inc a
@@ -5744,9 +5749,9 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle::
     call ShowStringA10_Bank1B
     ret
 
-; step 6 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wTextFlags is 0; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $1f; ...
+; step 6 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wTextFlags is 0; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1f; ...
 EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     ld a, [wTextFlags]
     and a
@@ -5919,8 +5924,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2::
     ret
 
 ; step 13 of EggServiceMenu_Bank1B_StartLinkBattle: branches on wLinkRole; sets wLinkScene to 0;
-; calls EggServiceMenu_Bank1B_StartLinkBattle_WriteRAMG2AndRAMB; sets wLinkTimeoutLo; sets
-; wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; ...
+; calls EggServiceMenu_Bank1B_StartLinkBattle_WriteRAMG2AndRAMB; copies L to wLinkTimeoutLo; copies
+; H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc::
     ld a, [wLinkRole]
     bit 1, a
@@ -5963,8 +5968,8 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc::
     ret
 
 ; step 15 of EggServiceMenu_Bank1B_StartLinkBattle: returns unless wLinkMessage is $01; increments
-; wScreenStep; sets wLinkBufferCountLo; sets wLinkBufferCountHi; sets wLinkSendByte to $ff; sets
-; wLinkReady to 1
+; wScreenStep; copies L to wLinkBufferCountLo; copies H to wLinkBufferCountHi; sets wLinkSendByte to
+; $ff; sets wLinkReady to 1
 EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -6047,9 +6052,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
-; step 6 of EggServiceMenu_Bank1B_ListAvailableRecords: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 0; sets
-; wStringIndex to $1f; calls ShowString_Bank1B; ...
+; step 6 of EggServiceMenu_Bank1B_ListAvailableRecords: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
+; to 0; sets wStringIndex to $1f; calls ShowString_Bank1B; ...
 EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
     ld hl, vTiles2 + $300
     ld a, l
@@ -6110,7 +6115,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
 
 ; step 1 of EggServiceMenu_Bank1B_ListAvailableRecords: calls ListAvailableRecordsForSelection;
 ; calls ClampRecordListPageCursor5; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank1B;
-; sets wArg1; sets wArg2; calls DrawPageOfPagesAtArg1_Bank1E; ...
+; copies H to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; ...
 EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection::
     call ListAvailableRecordsForSelection
     farcall ClampRecordListPageCursor5
@@ -6157,9 +6162,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
 
-; step 6 of EggServiceMenu_Bank1B_ListAvailableRecords2: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 0; sets
-; wStringIndex to $1e; calls ShowString_Bank1B; ...
+; step 6 of EggServiceMenu_Bank1B_ListAvailableRecords2: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
+; to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; ...
 EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
     ld hl, vTiles2 + $700
     ld a, l
@@ -6214,8 +6219,8 @@ EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN::
 
 ; step 7 of EggServiceMenu_Bank1B_ListAvailableRecords: calls BGMapAddressAtScroll_Bank1B; calls
 ; DrawScreenBufferRectToBGMap_1B; calls BGMapAddressAtScroll_Bank1B; calls
-; DrawScreenBufferRectToBGMap_1B; sets wScreenSubStep to 0; copies wReturnScreenState to
-; wScreenState; copies wReturnScreenStep to wScreenStep; ...
+; DrawScreenBufferRectToBGMap_1B; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
+; wReturnScreenState to wScreenState; ...
 EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -7019,9 +7024,8 @@ EggServiceMenu_Bank1B_PickRecords_SetArg5ToListEntriesCell5::
     ld [de], a
     ret
 
-; Branches on wPickCount; calls EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte; calls
-; SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; sets
-; rRAMG2 to 0; ...
+; Branches on wPickCount; calls EggServiceMenu_Bank1B_PickRecords_LoadSRAMRecordByte; branches on H;
+; branches on L; calls SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; ...
 EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc::
     ld a, [wPickCount]
     cp $03

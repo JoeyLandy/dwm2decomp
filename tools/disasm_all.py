@@ -1261,6 +1261,7 @@ class Rom:
         self.vetoed = 0  # heuristic candidates rejected by data-pointer evidence
         self.dreason: dict[tuple[int, int], str] = {}  # why a Data_ label exists
         self.dref: dict[tuple[int, int], tuple[int, int]] = {}  # (bank, insn addr) -> (bank, ptr)
+        self.dref_plus: dict[tuple[int, int], tuple[int, int, int]] = {}  # E-0348: (bank, insn) -> (bank, base, offset)
 
     @staticmethod
     def base(bank: int) -> int:
@@ -2032,6 +2033,79 @@ class Rom:
         return {a for (b, a), info in self.names.items()
                 if b == 0 and info["name"].startswith(("DecompressTo", "SGBTransferCompressed"))}
 
+    def _passed_to_same_bank_reader(self, bank: int, a: int, helpers: set) -> bool:
+        """E-0348: the load at bank:a is followed, before any other control transfer, by a call to a routine in this
+        bank or bank 0 whose first 40 instructions never switch the ROM bank (no write to $2100, no rst $10, no call
+        to a bank-switching helper): such a routine reads its pointer argument in the caller's bank."""
+        ins = self.insn[bank]
+        q = a + ins[a][0]
+        for _ in range(8):
+            v = ins.get(q)
+            if not v or v[0] == "dw":
+                return False
+            if v[2] == "call" and v[3] is not None:
+                r = self.resolve(bank, v[3])
+                if not r or r[0] not in (0, bank) or (r[0] == 0 and r[1] in helpers):
+                    return False
+                ci, cq = self.insn[r[0]], r[1]
+                for _ in range(40):
+                    w = ci.get(cq)
+                    if not w or w[0] == "dw":
+                        break
+                    if "[$2100]" in w[1] or w[1].startswith("rst $10") or \
+                            (w[2] in ("call", "jp") and w[3] is not None and self.resolve(r[0], w[3]) in
+                             {(0, h) for h in helpers}):
+                        return False
+                    if w[1] in ("ret", "reti"):
+                        break
+                    cq += w[0]
+                return True
+            if v[2] in ("ret", "jp", "rst") or (v[2] == "jr" and "," not in v[1]):
+                return False
+            q += v[0]
+        return False
+
+    def _data_base(self, bank: int, imm: int) -> int | None:
+        """The data label at or below imm in this bank when imm lies in the same data run (no decoded
+        instruction and no code label between them); None otherwise."""
+        if imm in self.insn[bank] or imm in self.covered[bank]:
+            return None
+        cands = [k for k in self.dlabels[bank] if k <= imm and imm - k < 0x400]
+        if not cands:
+            return None
+        base = max(cands)
+        if any(base < x <= imm for x in self.insn[bank]) or any(base < x <= imm for x in self.labels[bank]):
+            return None
+        return base
+
+    def _used_as_pointer(self, ins: dict, a: int, reg: str, bank: int = -1) -> bool:
+        """E-0348: the next instructions after `ld REG, $XXXX` use REG as a pointer before anything else: a table
+        index (`add a, l` / `add hl, de|bc`) or a read through it (`[hl]`, `[de]`, `[bc]`). A call, return or jump
+        first, or a reload of the register, ends the search: a value passed straight to a routine says nothing."""
+        q = a + ins[a][0]
+        regs = {"hl": ("h", "l", "hl"), "de": ("d", "e", "de"), "bc": ("b", "c", "bc")}[reg]
+        for _ in range(6):
+            v = ins.get(q)
+            if not v or v[0] == "dw":
+                return False
+            t = v[1]
+            if (reg == "hl" and (re.match(r"add (a, l|hl, (de|bc))$", t) or "[hl" in t)) or f"[{reg}]" in t:
+                return True
+            if (reg == "de" and t == "add a, e") or (reg == "bc" and t == "add a, c"):
+                return True  # a table indexed through the low byte
+            if v[2] == "call" and v[3] is not None and bank >= 0:  # a bank-0 table reader takes HL as the table
+                r = self.resolve(bank, v[3])
+                if reg == "hl" and r and r[0] == 0 and re.search(r"TableEntry|IndexWord|IndexByte",
+                                                                  self.labels[0].get(r[1], "")):
+                    return True
+            if v[2] in ("call", "ret", "jp", "rst") or (v[2] == "jr" and "," not in t):
+                return False
+            dst = t.split(",")[0].split()[-1] if t.startswith(("ld ", "pop ", "inc ", "dec ")) else ""
+            if dst in regs or t.startswith(f"pop {reg}"):
+                return False
+            q += v[0]
+        return False
+
     def label_data_refs(self) -> None:
         """Resolve `ld hl|de|bc, $4000-$7FFF` in traced code to labelled data starts (C1).
 
@@ -2159,6 +2233,9 @@ class Rom:
                     mb = ldb.match(xt)
                     if mb and bnk is None:
                         bnk = int(mb.group(1), 16)
+                    ma = re.match(r"ld a, \$([0-9A-F]{2})$", xt)
+                    if ma and bnk is None and int(ma.group(1), 16) == bank:
+                        bnk = bank  # E-0348: the bank in A is this one (CopyRectFromBankToVRAM and kin)
                     ml = ld16.match(xt)
                     if ml and 0x4000 <= int(ml.group(2), 16) < 0x8000:
                         loads.append((x, int(ml.group(2), 16)))
@@ -2195,6 +2272,17 @@ class Rom:
                     tb, why = bank, "same-bank load of a declared table's start"
                 elif bank != 0 and bank not in untrusted:
                     tb, why = bank, "pointer load in the same bank (bank assumed)"
+                elif bank != 0 and self._used_as_pointer(ins, a, m.group(1), bank):
+                    tb, why = bank, "same-bank load indexed or read through right after (E-0348)"
+                elif bank != 0 and self._passed_to_same_bank_reader(bank, a, helpers):
+                    base = self._data_base(bank, imm)  # E-0348: only onto data that is already labelled
+                    if base is not None:
+                        if base == imm:
+                            self.dref[(bank, a)] = (bank, imm)
+                        else:
+                            self.dref_plus[(bank, a)] = (bank, base, imm - base)
+                        weak += 1
+                    continue
                 else:
                     continue
                 if tb >= self.nbanks or tb in self.zero:
@@ -6116,6 +6204,9 @@ class Rom:
                 continue
             n, text, kind, tgt = it
             ref = self.dref.get((bank, pc))
+            plus = self.dref_plus.get((bank, pc))
+            if plus and plus[1] in self.dlabels[plus[0]]:  # E-0348: a pointer inside a labelled table
+                text = re.sub(r"\$[0-9A-F]{4}$", f"{self.dlabels[plus[0]][plus[1]]} + ${plus[2]:X}", text)
             if ref:
                 rb_, ra = ref
                 nm = self.dlabels[rb_].get(ra) or (self.labels[rb_].get(ra) if ra in self.insn[rb_] else None)

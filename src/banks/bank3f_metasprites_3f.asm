@@ -6,7 +6,7 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
 
 ; called from DrawEffectSpriteForEffectTileOffsetRange: may continue in
 ; DrawEffectSpriteAtEffectSpriteX_Bank3F; copies wBattlePartyCount to wLoadSlot; copies
-; wBattleTarget to wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; wBattleTarget & $04 to wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; SetEffectSpriteXForTargets; calls DrawEffectSpriteAtEffectSpriteX_Bank3F; decrements wLoadSlot;
 ; ...
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot::

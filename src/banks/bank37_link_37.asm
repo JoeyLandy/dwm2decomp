@@ -968,7 +968,7 @@ RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenSubStep::
 
 ; step 4 of RunLinkSession5Exchange_LinkBreed: calls SetArg5ToListEntriesCell5; sets wArg1 to $c7;
 ; calls LoadFamilyIconTileForRecordB_Bank37; calls CopyRectToScreenBufferAndClearAttributes_37; sets
-; wArg1; sets wArg2; sets wArg3; ...
+; wArg1; copies L to wArg2; copies H to wArg3; ...
 RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1025,8 +1025,8 @@ RunCopyScreenBufferRectWithAttrs_37At0278AndStep::
     ret
 
 ; step 17 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; sets rRAMG2 to $0a;
-; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; sets rRAMG2 to 0;
-; decrements wScreenStep; ...
+; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; branches on hTemp0;
+; sets rRAMG2 to 0; ...
 RunLinkSession5Exchange_LinkBreed_SetArg5ToListEntriesCell5_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -1156,8 +1156,8 @@ RunLinkSession5Exchange_LinkBreed_WaitTextFlags_SetScreenStep::
     ret
 
 ; step 31 of RunLinkSession5Exchange_LinkBreed: sets wLinkBufferCountLo to $64; sets
-; wLinkBufferCountHi to 0; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo; sets
-; wLinkBufferPtrHi; sets wLinkSendByte to $ff; ...
+; wLinkBufferCountHi to 0; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to
+; wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to $ff; ...
 RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc::
     ld a, $64
     ld [wLinkBufferCountLo], a
@@ -1240,8 +1240,8 @@ RunLinkSession5Exchange_LinkBreed_UnpackLinkRecordToRecordBufB::
     ret
 
 ; step 22 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; branches on
-; wRecordBufB + MON_SEX; calls ShowStringIndexA_Bank37; sets wScreenStep to $10; sets wScreenSubStep
-; to 8; sets wSelectedRecord to $ff; sets wLinkSendByte to 0; ...
+; wRecordBufB + MON_SEX & $01; calls ShowStringIndexA_Bank37; sets wScreenStep to $10; sets
+; wScreenSubStep to 8; sets wSelectedRecord to $ff; sets wLinkSendByte to 0; ...
 RunLinkSession5Exchange_LinkBreed_ShowStringIndexA_Bank37_SetScreenStep_3::
     ld a, [wTextFlags]
     and a
@@ -1326,9 +1326,9 @@ RunLinkSession5Exchange_LinkBreed_ComputeBreedingChild::
     jr z, .loop
     jp RunLinkSession5Exchange_LinkBreed_WriteLinkBufferCountLoAndLinkBufferCountHiEtc
 
-; step 23 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets
-; wTwoChoiceCursor to 0; plays sound $6c; ...
+; step 23 of RunLinkSession5Exchange_LinkBreed: returns unless wTextFlags is 0; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; sets wTwoChoiceCursor to 0; plays sound $6c; ...
 RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37::
     ld a, [wTextFlags]
     and a
@@ -1673,8 +1673,8 @@ RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner::
     dw RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitLinkMessage
 
 ; step 0 of RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner: returns unless wTextFlags is 0;
-; increments wScreenSubStep; branches on wLinkRole; branches on wAIFlag; sets wLinkBufferCountLo;
-; sets wLinkBufferCountHi to 0; sets wLinkTimeoutLo; ...
+; increments wScreenSubStep; branches on wLinkRole; branches on wAIFlag; copies B to
+; wLinkBufferCountLo; sets wLinkBufferCountHi to 0; copies L to wLinkTimeoutLo; ...
 RunLinkSession5Exchange_LinkBreed_WaitTextThenPartner_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1809,9 +1809,9 @@ ShowString0EAndStep_Bank37::
     ld [wScreenStep], a
     ret
 
-; step 6 of RunLinkSession5Exchange_ShowChosenRecord: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; ...
+; step 6 of RunLinkSession5Exchange_ShowChosenRecord: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 RunLinkSession5Exchange_ShowChosenRecord_FillTilesFromRequest::
     ld hl, vTiles1 + $270
     ld a, l
@@ -2027,8 +2027,9 @@ RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
-; step 7 of RunLinkSession5Exchange_ShowRecordStats: calls BGMapAddressAtScroll_Bank37; sets wArg5;
-; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
+; step 7 of RunLinkSession5Exchange_ShowRecordStats: calls BGMapAddressAtScroll_Bank37; copies H to
+; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to
+; $20; ...
 RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank37
     ld a, h
@@ -2055,9 +2056,9 @@ RunLinkSession5Exchange_ShowRecordStats_FillTileRectWithArg1Tile::
     ld [wScreenState], a
     ret
 
-; step 14 of RunLinkSession5Exchange_ShowRecordStats: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest;
-; increments wScreenStep
+; step 14 of RunLinkSession5Exchange_ShowRecordStats: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; increments wScreenStep
 RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
     ld hl, vTiles2 + $200
     ld a, l
@@ -2075,9 +2076,9 @@ RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest::
     ld [wScreenStep], a
     ret
 
-; step 15 of RunLinkSession5Exchange_ShowRecordStats: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; ...
+; step 15 of RunLinkSession5Exchange_ShowRecordStats: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 RunLinkSession5Exchange_ShowRecordStats_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles1 + $270
     ld a, l
@@ -2163,7 +2164,7 @@ RunLinkSession5Exchange_ShowRecordStats_WriteArg1AndArg2Etc::
 
 ; step 20 of RunLinkSession5Exchange_ShowRecordStats: copies wRecordBufB + MON_SPECIES to wArg1;
 ; sets wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
-; DecompressGraphicsArg1ToArg4; calls ShowRecordBufBItemCategory11StringAtTiles2320; ...
+; DecompressGraphicsArg1ToArg4; sets hSpriteHideTile to $f0; ...
 RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -2196,7 +2197,7 @@ RunLinkSession5Exchange_ShowRecordStats_DecompressGraphicsArg1ToArg4::
 
 ; step 21 of RunLinkSession5Exchange_ShowRecordStats: sets wJoypadPressedRepeat; sets
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
-; wMenuInputResult; increments wScreenStep; calls DrawRects; ...
+; wMenuInputResult; sets hSpriteHideTile to 0; increments wScreenStep; ...
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2275,7 +2276,7 @@ RunLinkSession5Exchange_ShowRecordStats_ShowSpeciesCategory13StringAtTiles2680::
 
 ; step 27 of RunLinkSession5Exchange_ShowRecordStats: sets wJoypadPressedRepeat; sets
 ; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
-; wMenuInputResult; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
+; wMenuInputResult; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; ...
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_2::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2344,8 +2345,9 @@ RunLinkSession5Exchange_ShowRecordStats_DrawRects_3::
     ret
 
 ; step 29 of RunLinkSession5Exchange_ShowRecordStats: calls DrawLevelAndStatusRowForRecordBufBLevel;
-; sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; FillTilesFromRequest; calls DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37; ...
+; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
+; H to wTextWindowWidth; calls FillTilesFromRequest; calls
+; DrawRecordBufBNameNameAndRecordBufBSpeciesString_Bank37; ...
 RunLinkSession5Exchange_ShowRecordStats_DrawLevelAndStatusRowForRecordBufBLevel_SetTextWindowTileLo::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
@@ -2400,7 +2402,8 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_Decompress
     ld [wScreenStep], a
     ret
 
-; step 31 of RunLinkSession5Exchange_ShowRecordStats: calls RunF2; increments wScreenStep
+; step 31 of RunLinkSession5Exchange_ShowRecordStats: calls RunF2; sets hSpriteHideTile to $f0;
+; increments wScreenStep
 RunLinkSession5Exchange_ShowRecordStats_RunF2::
     farcall RunF2
     ld a, $f0
@@ -2411,8 +2414,8 @@ RunLinkSession5Exchange_ShowRecordStats_RunF2::
     ret
 
 ; step 32 of RunLinkSession5Exchange_ShowRecordStats: sets wJoypadPressedRepeat; sets
-; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets wScreenStep
-; to $17; sets wScreenStep to 7
+; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets
+; hSpriteHideTile to 0; sets wScreenStep to $17; sets hSpriteHideTile to 0; ...
 RunLinkSession5Exchange_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2498,7 +2501,8 @@ RunLinkSession5Exchange_ResetListAndShowString_BreedMenu::
 
 ; step 8 of RunLinkSession5Exchange_ResetListAndShowString: calls
 ; CopyRectToScreenBufferAndClearAttributes_37; sets wStringIndex to $0f; sets wStringCategory to 0;
-; sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; ...
+; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
+; H to wTextWindowWidth; ...
 RunLinkSession5Exchange_ResetListAndShowString_CallCopyRectToScreenBufferAndClearAttributes_37::
     ld de, RunLinkSession5Exchange_LinkBreed_CopyRectToScreenBufferAndClearAttributes_37_TileRect
     ld hl, wWindowTileBuffer + $e7

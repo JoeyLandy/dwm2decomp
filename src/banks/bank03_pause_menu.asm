@@ -38,7 +38,7 @@ PauseMenu_State4::
     ret
 
 ; Branches on wWorldMapState; sets wSpriteSlotCount to 0; branches on wIsCGB; calls FillBytes; sets
-; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; calls WriteVRAMByteInc; ...
+; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; sets rVBK to 1; ...
 PauseMenu_State4_CheckWorldMapState::
     ld a, [wWorldMapState]
     or a
@@ -261,7 +261,7 @@ PauseMenu_State4_CheckWorldMapState::
     ld [wObject2 + OBJ_X], a
     ret
 
-; called from PauseMenu_State4: dispatches on wModeState
+; called from PauseMenu_State4: dispatches on wModeState & $07
 PauseMenu_State4_ReadModeState::
     ld a, [wModeState]
     and $07
@@ -876,8 +876,9 @@ WriteBCTileAtWordTableEntry_Bank03::
     call WriteVRAMByte
     ret
 
-; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; ShowString_Bank08; sets wTextWindowRows; sets wTextWindowWidth; ...
+; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies E to wTextWindowRows; copies
+; D to wTextWindowWidth; calls ShowString_Bank08; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; ...
 ShowStringBank08AtTilesHL_Bank03_2::
     ld a, [wTextWindowTileLo]
     ld c, a
@@ -1414,7 +1415,7 @@ PauseMenu_Info_Blocks09And0A_LoadScreenBlocks00_09_0A::
     ret
 
 ; step 2 of PauseMenu_Info_Blocks09And0A: calls UpdateMenuCursor; sets wTemp1 to 0; branches on
-; wJoypadPressed; plays sound $69; calls FillBytes; increments wTemp0; sets wArg1; ...
+; wJoypadPressed; plays sound $69; sets hOamNextEntry to 0; calls FillBytes; increments wTemp0; ...
 PauseMenu_Info_Blocks09And0A_UpdateMenuCursor::
     ld de, MenuCursorPositions_Bank03
     ld hl, wMenuSelectedMember
@@ -1891,7 +1892,7 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_HLToDecimalDigits::
 
 ; called from WithSRAMDrawBuildRecordLevelAndStatusRow_2: calls SRAMRecordAddressMapped; sets
 ; wStringIndex; sets wStringCategory to $0b; calls ShowStringBank08AtTilesHL_Bank03; calls
-; SRAMRecordAddressMapped; branches on the byte at vTiles2 + $350; sets wStringIndex to 3; ...
+; SRAMRecordAddressMapped; branches on the byte at vTiles2 + $350; sets wStringIndex; ...
 WithSRAMDrawBuildRecordLevelAndStatusRow_2_ShowStringBank08AtTilesHL_Bank03::
     ld c, $a4
     ld a, [wMenuSelectedMember]
@@ -2434,7 +2435,8 @@ DecompressRecordSpeciesGraphicsToTiles0::
     ret
 
 ; called from PauseMenu_Info_Blocks09And0A_LoadScreenBlocks00_09_0A: sets rRAMG to $0a; sets rRAMB
-; to 0; sets wArg1; sets wArg2; sets wWorkBuf; calls LoadPartySpeciesSpriteGraphics; sets rRAMG to 0
+; to 0; copies L to wArg1; copies H to wArg2; copies L to wWorkBuf; calls
+; LoadPartySpeciesSpriteGraphics; sets rRAMG to 0; ...
 PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics::
     ld a, $0a
     ld [rRAMG], a
@@ -2469,7 +2471,7 @@ PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics_ReadTemp1::
     dw PauseMenu_Info_Blocks09And0A_FillVRAMRowsWithD
 
 ; step 0 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics: calls WriteVRAMByteInc;
-; branches on wIsCGB; calls WriteVRAMByteInc; increments wTemp1
+; branches on wIsCGB; sets rVBK to 1; calls WriteVRAMByteInc; sets rVBK to 0; increments wTemp1
 PauseMenu_Info_Blocks09And0A_WriteVRAMByteInc::
     ld hl, vBGMap0
     ld bc, $1412
@@ -2740,9 +2742,9 @@ DrawRecordSexMarkTile_Data::
     db $66, $c3, $86, $c3, $a6, $c3
 
 ; step 2 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics: calls
-; CopyTileBufferToBGMap; branches on wIsCGB; calls CopyRectToVRAMSourceStrideBPlus14_Bank03;
-; branches on wPartyCount; calls CopyRectToVRAMSourceStrideBPlus14_Bank03; branches on wPartyCount;
-; calls CopyRectToVRAMSourceStrideBPlus14_Bank03; ...
+; CopyTileBufferToBGMap; branches on wIsCGB; sets rVBK to 1; sets rSVBK to 2; calls
+; CopyRectToVRAMSourceStrideBPlus14_Bank03; branches on wPartyCount; calls
+; CopyRectToVRAMSourceStrideBPlus14_Bank03; ...
 PauseMenu_Info_Blocks09And0A_CopyTileBufferToBGMap::
     call CopyTileBufferToBGMap
     ld a, [wIsCGB]
@@ -2793,8 +2795,8 @@ PauseMenu_Info_Blocks09And0A_WaitJoypadPressed::
     ret
 
 ; step 4 of PauseMenu_Info_Blocks09And0A_LoadPartySpeciesSpriteGraphics: calls FillVRAMRowsWithD;
-; branches on wIsCGB; calls FillVRAMRowsWithD; calls WriteSixteenTilesFromAtTiles2140; sets
-; wDataBankSave to 0; sets wTemp1 to 0; sets wPauseMenuScreen to 0
+; branches on wIsCGB; sets rVBK to 1; calls FillVRAMRowsWithD; sets rVBK to 0; calls
+; WriteSixteenTilesFromAtTiles2140; sets wDataBankSave to 0; ...
 PauseMenu_Info_Blocks09And0A_FillVRAMRowsWithD::
     ld hl, vBGMap0
     ld bc, $1412
@@ -2993,8 +2995,7 @@ PauseMenu_Items_ChooseItem_BuildScreenBlock0EWithCursorAndStep::
     ret
 
 ; step 1 of PauseMenu_Items_ChooseItem: calls UpdateMenuCursor; branches on wJoypadPressed; plays
-; sound $69; copies wSubMenuCursor to wTemp0; sets wTemp1 to 0; returns unless bit 1 of 0 is set;
-; decrements wTemp0; ...
+; sound $69; sets wTemp0; sets wTemp1 to 0; returns unless bit 1 of 0 is set; decrements wTemp0; ...
 PauseMenu_Items_ChooseItem_UpdateMenuCursor::
     ld de, PauseMenu_Items_ChooseItem_UpdateMenuCursor_Data
     ld hl, wSubMenuCursor
@@ -3631,8 +3632,7 @@ PauseMenu_Items_SubMenu_BuildScreenBlocks0EAnd0FWithCursor::
     ret
 
 ; step 3 of PauseMenu_Items_SubMenu: calls UpdateMenuCursor; branches on wJoypadPressed; plays sound
-; $69; calls WriteVRAMByte; copies wSubMenuCursor2 to wTemp1; returns unless bit 1 of
-; wSubMenuCursor2 is set; sets wTemp0 to 1; ...
+; $69; calls WriteVRAMByte; sets wTemp1; may return early; sets wTemp0 to 1; ...
 PauseMenu_Items_SubMenu_UpdateMenuCursor::
     ld de, PauseMenu_Items_SubMenu_UpdateMenuCursor_Data
     ld hl, wSubMenuCursor2
@@ -5095,8 +5095,8 @@ PauseMenu_Skills_UseFieldSkill_WaitTextFlags_SetTemp0::
     ret
 
 ; step 5 of PauseMenu_Skills_UseFieldSkill: sets rRAMG to $0a; sets rRAMB to 0; branches on
-; wRecordBufferData; calls SRAMRecordAddressMapped; sets wItemEffectAmount; sets wItemEffectRange;
-; calls SRAMRecordAddressMapped; ...
+; wRecordBufferData; calls SRAMRecordAddressMapped; copies L to wItemEffectAmount; copies H to
+; wItemEffectRange; calls SRAMRecordAddressMapped; ...
 PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped::
     ld a, $0a
     ld [rRAMG], a
@@ -5857,8 +5857,8 @@ PauseMenu_Skills_UseFieldSkill_BeginStringDisplay_Bank37_Data2::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $00, $00
     db $03, $04, $05, $00
 
-; Calls SRAMRecordAddressMapped; sets wMenuPageCount to 1; sets wMenuItemCount to 1; branches on
-; $04; sets wMenuLastPageRows to 4
+; Calls SRAMRecordAddressMapped; branches on C; sets wMenuPageCount to 1; sets wMenuItemCount to 1;
+; branches on C; sets wMenuLastPageRows to 4
 PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped::
     ld a, [wMenuSelectedMember]
     and $03
@@ -5904,8 +5904,9 @@ PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped::
     ld [wMenuLastPageRows], a
     ret
 
-; called from PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen: sets wMenuPageCount to 1;
-; sets wMenuItemCount to 1; branches on $04; sets wMenuLastPageRows to 4; branches on wMenuPage
+; called from PauseMenu_Skills_ChooseSkill_BuildRecordField5FValueScreen: branches on C; sets
+; wMenuPageCount to 1; sets wMenuItemCount to 1; branches on C; sets wMenuLastPageRows to 4;
+; branches on wMenuPage
 PauseMenu_Skills_ChooseSkill_WriteMenuPageCountAndMenuItemCountEtc::
     ld a, c
     cp $00
@@ -6059,8 +6060,8 @@ PauseMenu_Plan_Block21Menu_LoadScreenBlock21::
     ret
 
 ; step 1 of PauseMenu_Plan_Block21Menu: calls UpdateMenuCursor; branches on wJoypadPressed; plays
-; sound $69; calls WriteBCTileAtWordTableEntry_Bank03; copies wMenuSelectedMember+1 to wTemp0;
-; branches on wMenuSelectedMember; calls TestSaveForbiddenHere; ...
+; sound $69; calls WriteBCTileAtWordTableEntry_Bank03; copies wMenuSelectedMember & $07 to wTemp0;
+; branches on wMenuSelectedMember & $07; calls TestSaveForbiddenHere; ...
 PauseMenu_Plan_Block21Menu_UpdateMenuCursor::
     ld hl, wMenuSelectedMember
     ld de, MenuCursorPositions_Bank03
@@ -6567,7 +6568,7 @@ PauseMenu_Plan_ChooseListEntry_BuildScreenBlocks21To25WithCursor::
 
 ; step 14 of PauseMenu_Plan_ChooseListEntry: calls UpdateMenuCursor; branches on wJoypadPressed;
 ; plays sound $69; calls WriteBCTileAtWordTableEntry_Bank03; increments wTemp1; returns unless bit 1
-; of wSubMenuCursor2 is set; calls BuildScreenBlocks21To24; ...
+; of wSubMenuCursor2 & $01 is set; calls BuildScreenBlocks21To24; ...
 PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_WriteBCTileAtWordTableEntry_Bank03::
     ld hl, wSubMenuCursor2
     ld de, PauseMenu_Plan_ChooseListEntry_UpdateMenuCursor_Data_2
@@ -6626,7 +6627,8 @@ PauseMenu_Plan_ChooseListEntry_BeginStringDisplay_Bank08AndStep_SetStringIndex::
     ret
 
 ; step 16 of PauseMenu_Plan_ChooseListEntry: returns unless wTextFlags is 0; sets wTemp1 to 0; calls
-; TestListEntryBit7; calls DeleteKeyEntryTemp0; sets wMenuPage to 0; sets wMenuCursor to 0
+; TestListEntryBit7; sets hTemp0; calls DeleteKeyEntryTemp0; sets wMenuPage to 0; sets wMenuCursor
+; to 0
 PauseMenu_Plan_ChooseListEntry_TestListEntryBit7_SetTemp1::
     ld a, [wTextFlags]
     or a
@@ -6690,8 +6692,8 @@ PauseMenu_Plan_TileBufferMenu_CopyTileBufferToBGMapAndStep::
     ret
 
 ; step 1 of PauseMenu_Plan_TileBufferMenu: calls CopyRectToBGMap; sets rRAMG to $0a; sets rRAMB to
-; 0; calls SRAMRecordAddressMapped; copies the byte at vBGMap0 + $ea to wMenuCursor; sets rRAMG to
-; 0; increments wTemp1
+; 0; calls SRAMRecordAddressMapped; copies the byte at vBGMap0 + $ea & $03 to wMenuCursor; sets
+; rRAMG to 0; increments wTemp1
 PauseMenu_Plan_TileBufferMenu_CopyRectToBGMap::
     ld a, [wPauseMenuStep]
     ld hl, PauseMenu_Plan_TileBufferMenu_CopyRectToBGMap_Data
@@ -6822,8 +6824,8 @@ PauseMenu_Plan_Blocks21And2C_LoadScreenBlock21CursorAnd2CAndStep::
     ret
 
 ; step 1 of PauseMenu_Plan_Blocks21And2C: branches on wJoypadPressed; plays sound $69; copies
-; wMenuCursor to wBattleTextSpeed; branches on wMenuCursor; sets wTemp0 to 0; sets wTemp1 to 0;
-; branches on wJoypadPressedRepeat; ...
+; wMenuCursor & $07 to wBattleTextSpeed; branches on wMenuCursor & $07; sets wTemp0 to 0; sets
+; wTemp1 to 0; branches on wJoypadPressedRepeat; ...
 PauseMenu_Plan_Blocks21And2C_QueueSoundEffect::
     ld a, [wJoypadPressed]
     bit 0, a
@@ -7127,7 +7129,7 @@ PauseMenu_Plan_PagedMenu_CopyTileBufferToBGMap::
     dec [hl]
     ret
 
-; called from PauseMenu_Plan_PagedMenu_WriteTemp0AndTemp1: sets wPartyList
+; called from PauseMenu_Plan_PagedMenu_WriteTemp0AndTemp1: copies C to wPartyList
 PauseMenu_Plan_PagedMenu_WritePartyList::
     ld a, [wWorkBuf + $6]
     ld hl, wPartyList
@@ -7236,8 +7238,8 @@ PauseMenu_Plan_PagedMenu_CpFF_2::
     jr PauseMenu_Plan_PagedMenu_LoadScreenBlock28_Next
 
 ; Sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddressMapped; copies the byte at wWorkBuf +
-; $3 to wStringIndex; copies the byte at wWorkBuf + $3 to wStringCategory; calls
-; ShowStringBank08AtTilesHL_Bank03; calls HLToDecimalDigits; ...
+; $3 to wStringIndex; sets wStringCategory; calls ShowStringBank08AtTilesHL_Bank03; calls
+; HLToDecimalDigits; ...
 PauseMenu_Plan_PagedMenu_ShowStringBank08AtTilesHL_Bank03::
     ld a, $0a
     ld [rRAMG], a
@@ -7332,7 +7334,7 @@ PauseMenu_Plan_PagedMenu_ShowStringBank08AtTilesHL_Bank03::
     call CopyRectToBGMap
     ret
 
-; Works on registers only
+; Branches on B; branches on C; branches on B
 PauseMenu_Plan_PagedMenu_WriteWorkBuf::
     ld a, [wWorkBuf + $3]
     ld c, a
@@ -7578,9 +7580,10 @@ PauseMenu_Plan_RecordJourney::
     dw PauseMenu_Plan_RecordJourney_WriteTemp0AndTemp1
     dw PauseMenu_Plan_RecordJourney_RestartGame
 
-; step 0 of PauseMenu_Plan_RecordJourney: calls PauseMenu_Plan_RecordJourney_CopyBlockToTileBuffer;
-; sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to 4; ...
+; step 0 of PauseMenu_Plan_RecordJourney: sets hSpriteWindowClipMode to 0; calls
+; PauseMenu_Plan_RecordJourney_CopyBlockToTileBuffer; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
+; to 0; ...
 PauseMenu_Plan_RecordJourney_ShowMaster::
     xor a
     ldh [hSpriteWindowClipMode], a
@@ -7763,7 +7766,7 @@ PauseMenu_Plan_RecordJourney_RestartGame_Skip::
     ret
 
 ; Sets rRAMG to $0a; sets rRAMB to 1; branches on wBattlerRecords; branches on wTitleGameCompleted;
-; sets rRAMB to 0; sets rRAMG to 0; calls DrawMetaSprite; ...
+; sets hSpriteSetIndex to $29; sets hSpriteSubIndex to 0; sets hSpriteTileOffset to 0; ...
 PauseMenu_Plan_RecordJourney_WriteRAMGAndRAMBEtc::
     ld a, $0a
     ld [rRAMG], a
@@ -7942,8 +7945,9 @@ LoadScreenBlock2B::
     farcall CopyBlockToTileBuffer
     ret
 
-; Sets wTextWindowRows; sets wTextWindowWidth; branches on wPauseListCount; sets wStringCategory to
-; 8; sets wStringIndex to 0; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
+; Copies L to wTextWindowRows; copies H to wTextWindowWidth; branches on wPauseListCount; sets
+; wStringCategory to 8; sets wStringIndex to 0; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; ...
 PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc::
     ld hl, $0c01
     ld a, l
@@ -8119,9 +8123,9 @@ PauseMenu_Plan_ChooseListEntry_WriteTextWindowRowsAndTextWindowWidthEtc_Data::
 PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark_Data::
     db $46, $99, $86, $99, $c6, $99, $06, $9a
 
-; Returns if wPauseListCount is 0; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; sets wTextWindowWidth; branches on wWorkBuf + $a; branches on the byte at
-; wWorkBuf + $a; ...
+; Returns if wPauseListCount is 0; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi;
+; copies L to wTextWindowRows; copies H to wTextWindowWidth; branches on wWorkBuf + $a; branches on
+; the byte at wWorkBuf + $a; ...
 PauseMenu_Plan_ChooseListEntry_WaitPauseListCount::
     ld a, [wPauseListCount]
     or a

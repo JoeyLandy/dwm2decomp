@@ -476,8 +476,8 @@ Talk_WelcomeToOurInn::
     call StartScriptAtHL_B13
     ret
 
-; step 15 of FhuntTalkEvents: may return early; calls FhuntTalkEvents_WriteRAMGAndTemp0; shows '…Be
-; gone! If your soul'; starts Script_FineYou
+; step 15 of FhuntTalkEvents: may return early; calls FhuntTalkEvents_WriteRAMGAndTemp0; branches on
+; hTemp0; shows '…Be gone! If your soul'; starts Script_FineYou
 FhuntTalkEvents_ShowBeGoneIfYour::
     ld a, [wScreenTileBuffer + $d2]
     cp $68
@@ -583,9 +583,10 @@ FhuntTalkEvents_ShowHeroCheckedBehindThe::
     call StartMessageCommand09HL_B13
     ret
 
-; step 22 of FhuntTalkEvents: checks EVENT_HM_YOURE_FROM_THE_VILLAGE; shows 'Hm? You're a stranger!
-; You'; starts Script_HmYou; sets EVENT_HM_YOURE_FROM_THE_VILLAGE; shows 'Hm? You're from the
-; village!'; shows 'ZZZZZ… Ssss… ZZZZZ… Ssss…'
+; step 22 of FhuntTalkEvents: checks EVENT_HM_YOURE_FROM_THE_VILLAGE; branches on
+; hPlayerSpriteOverride; shows 'Hm? You're a stranger! You'; starts Script_HmYou; sets
+; EVENT_HM_YOURE_FROM_THE_VILLAGE; shows 'Hm? You're from the village!'; shows 'ZZZZZ… Ssss… ZZZZZ…
+; Ssss…'
 FhuntTalkEvents_TestFlagBit_2::
     ld de, EVENT_HM_YOURE_FROM_THE_VILLAGE
     call TestFlagBit
@@ -719,7 +720,8 @@ TalkMsg0425_TheNewMonsterKingMakesOthers::
     call StartMessageCommand09HL_B13
     ret
 
-; step 31 of FhuntTalkEvents: starts Script_YouAreYouA; starts Script_YouAreYouA_2
+; step 31 of FhuntTalkEvents: branches on hPlayerSpriteOverride; starts Script_YouAreYouA; starts
+; Script_YouAreYouA_2
 FhuntTalkEvents_StartScriptAtHL_B13_2::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -820,7 +822,7 @@ Talk_WelcomeToTheTravelersInn::
     ret
 
 ; step 41 of FhuntTalkEvents: checks EVENT_SCENE_MADCONDOR; may return early; calls
-; FhuntTalkEvents_WriteTemp0AndRAMG; may return early; starts Script_Kweeeeeh
+; FhuntTalkEvents_WriteTemp0AndRAMG; returns if hTemp0 is 0; starts Script_Kweeeeeh
 FhuntTalkEvents_TestFlagBit_Kweeeeeh::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
@@ -963,9 +965,9 @@ TalkMsg0440_HardlyNoOneHasSeenThe::
     call StartMessageCommand09HL_B13
     ret
 
-; step 52 of FhuntTalkEvents: checks EVENT_SCENE_THREE_ITEMS_0C2; calls FindTemp0InInventoryList;
-; checks EVENT_SCENE_MADCONDOR_CRY; shows 'This is only for army'; shows 'The King has posted a';
-; starts Script_WhatYouHaveThe; shows 'Where has our King gone?'
+; step 52 of FhuntTalkEvents: checks EVENT_SCENE_THREE_ITEMS_0C2; sets hTemp0 to $39; calls
+; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3a; calls FindTemp0InInventoryList;
+; branches on hTemp0; ...
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1014,9 +1016,8 @@ FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList::
     ret
 
 ; step 53 of FhuntTalkEvents: checks EVENT_SCENE_THREE_ITEMS_0C2; checks
-; EVENT_WHAT_YOU_HAVE_THE_THREE_0B7; calls FindTemp0InInventoryList; checks
-; EVENT_SCENE_MADCONDOR_CRY; shows 'If you wish to join'; shows 'Give away the LightOrb? But'; shows
-; 'What? You have the three'; ...
+; EVENT_WHAT_YOU_HAVE_THE_THREE_0B7; sets hTemp0 to $39; calls FindTemp0InInventoryList; branches on
+; hTemp0; sets hTemp0 to $3a; calls FindTemp0InInventoryList; ...
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_2::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1267,8 +1268,8 @@ TalkMsg0459_ThoseInsideTheHauntedCastle::
     call StartMessageCommand09HL_B13
     ret
 
-; step 71 of FhuntTalkEvents: calls FhuntTalkEvents_TestFlagBit_3; shows '0 checked the small hole.
-; It's'; starts Script_HeroCheckedTheSmall
+; step 71 of FhuntTalkEvents: calls FhuntTalkEvents_TestFlagBit_3; branches on hTemp0; shows '0
+; checked the small hole. It's'; starts Script_HeroCheckedTheSmall
 FhuntTalkEvents_ShowHeroCheckedTheSmall::
     farcall FhuntTalkEvents_TestFlagBit_3
     ldh a, [hTemp0]
@@ -1343,8 +1344,8 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-; step 76 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; starts Script_LetThePowerOf;
-; shows 'Step once on each of'
+; step 76 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
+; Script_LetThePowerOf; shows 'Step once on each of'
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
     ldh a, [hTemp0]
@@ -1495,9 +1496,9 @@ TalkMsg046F_WhatYouveGotTheThree::
     call StartMessageCommand09HL_B13
     ret
 
-; step 90 of FhuntTalkEvents: checks EVENT_SCENE_THREE_ITEMS_0C2; checks EVENT_SCENE_FOUND_ME; calls
-; FindTemp0InInventoryList; shows 'Hm? How did you get'; starts Script_I_17; shows 'If you can't
-; even reach'; shows 'I've become the Mayor, but'
+; step 90 of FhuntTalkEvents: checks EVENT_SCENE_THREE_ITEMS_0C2; checks EVENT_SCENE_FOUND_ME; sets
+; hTemp0 to $39; calls FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3a; calls
+; FindTemp0InInventoryList; ...
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_3::
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
@@ -1668,10 +1669,9 @@ ChestItem_SteelFang_Flag00BF::
     call StartTreasureFlagDE_B13
     ret
 
-; step 103 of FhuntTalkEvents: checks EVENT_GOOD_YOU_HAVE_BROUGHT_THE; calls
-; FindTemp0InInventoryList; shows 'Ah, so good of you'; calls FindTemp0InInventoryList; calls
-; RemoveInventorySlotShiftDown; calls FindTemp0InInventoryList; calls RemoveInventorySlotShiftDown;
-; ...
+; step 103 of FhuntTalkEvents: checks EVENT_GOOD_YOU_HAVE_BROUGHT_THE; sets hTemp0 to $39; calls
+; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $3a; calls FindTemp0InInventoryList;
+; branches on hTemp0; ...
 FhuntTalkEvents_TestFlagBit_FindTemp0InInventoryList_4::
     ld de, EVENT_GOOD_YOU_HAVE_BROUGHT_THE
     call TestFlagBit
@@ -1741,7 +1741,7 @@ Talk_ThisWayHereHere::
     call StartScriptAtHL_B13
     ret
 
-; step 106 of FhuntTalkEvents: sets wObject1 + OBJ_STATE to 0; returns if 0 is $70; starts
+; step 106 of FhuntTalkEvents: sets wObject1 + OBJ_STATE to 0; returns if hPlayerY is $70; starts
 ; Script_Sound
 FhuntTalkEvents_StartScriptAtHL_B13_3::
     xor a
@@ -1777,7 +1777,7 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-; step 110 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; starts
+; step 110 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
 ; Script_LetThePowerOf; shows 'The castle's lord summons monsters…'
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
@@ -1793,7 +1793,7 @@ FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_2::
     call StartMessageCommand09HL_B13
     ret
 
-; step 111 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; starts
+; step 111 of FhuntTalkEvents: calls FhuntTalkEvents_WriteTemp0AndTemp1; branches on hTemp0; starts
 ; Script_LetThePowerOf; shows 'A button hides behind a'
 FhuntTalkEvents_StartScriptAtHL_B13_LetThePowerOf_3::
     farcall FhuntTalkEvents_WriteTemp0AndTemp1
@@ -2185,9 +2185,9 @@ TalkMsg030C_ItsBecomeMuchColderWeMay::
     call StartMessageCommand09HL_B13
     ret
 
-; step 11 of NordenTalkEvents: checks EVENT_WHAT_IS_THAT_DIRTY_MEDAL; calls
-; FindTemp0InInventoryList; shows 'His Majesty is in talks'; starts Script_WhatIsThatDirty; shows
-; 'Please enter, your envoyship!'
+; step 11 of NordenTalkEvents: checks EVENT_WHAT_IS_THAT_DIRTY_MEDAL; sets hTemp0 to $32; calls
+; FindTemp0InInventoryList; branches on hTemp0; shows 'His Majesty is in talks'; starts
+; Script_WhatIsThatDirty; shows 'Please enter, your envoyship!'
 NordenTalkEvents_ShowHisMajestyIsIn::
     ld de, EVENT_WHAT_IS_THAT_DIRTY_MEDAL
     call TestFlagBit
@@ -3682,7 +3682,8 @@ TalkMsg039B_BeforeLadyYunaWouldBeUp::
     call StartMessageCommand09HL_B13
     ret
 
-; step 110 of NordenTalkEvents: shows 'Oh? How did you get'; shows 'This leads to Lady Yuna's'
+; step 110 of NordenTalkEvents: branches on hPlayerY; shows 'Oh? How did you get'; shows 'This leads
+; to Lady Yuna's'
 NordenTalkEvents_ShowOhHowDidYou::
     ldh a, [hPlayerY]
     cp $30
@@ -3791,7 +3792,7 @@ TalkMsg03A4_KingSighNotEvenThisYou::
 
 ; step 114 of NordenTalkEvents: checks EVENT_SCENE_SHIELD2_1E5; checks
 ; EVENT_SCENE_PRINCESS_MEDICINE_09D; checks EVENT_SCENE_PRINCESS_MEDICINE; checks
-; EVENT_YOU_WILL_THANK_YOU_LET; shows '…………'; calls FindTemp0InInventoryList; starts Script_Message;
+; EVENT_YOU_WILL_THANK_YOU_LET; shows '…………'; sets hTemp0 to $33; calls FindTemp0InInventoryList;
 ; ...
 NordenTalkEvents_TestFlagBit_2::
     ld de, EVENT_SCENE_SHIELD2_1E5
@@ -3965,9 +3966,9 @@ TalkMsg03AF_AroundThesePartsThereAre::
     call StartMessageCommand09HL_B13
     ret
 
-; step 124 of NordenTalkEvents: checks EVENT_OH_AN_ENVOY_FROM_THE; calls FindTemp0InInventoryList;
-; shows 'This is no place for'; starts Script_ThisIsNoPlace; starts Script_ThisIsNoPlace_2; shows 'I
-; beg your pardon, please!'
+; step 124 of NordenTalkEvents: checks EVENT_OH_AN_ENVOY_FROM_THE; sets hTemp0 to $32; calls
+; FindTemp0InInventoryList; branches on hTemp0; shows 'This is no place for'; branches on hPlayerX;
+; starts Script_ThisIsNoPlace; ...
 NordenTalkEvents_ShowThisIsNoPlace::
     ld de, EVENT_OH_AN_ENVOY_FROM_THE
     call TestFlagBit
@@ -4576,8 +4577,8 @@ NordenTalkEvents_ShowHeroCheckedTheTreasure::
     call StartScriptAtHL_B13
     ret
 
-; step 161 of NordenTalkEvents: calls FindTemp0InInventoryList; calls RemoveInventorySlotShiftDown;
-; starts Script_SceneShield2
+; step 161 of NordenTalkEvents: sets hTemp0 to $32; calls FindTemp0InInventoryList; calls
+; RemoveInventorySlotShiftDown; starts Script_SceneShield2
 NordenTalkEvents_FindTemp0InInventoryList::
     ld a, $32
     ldh [hTemp0], a
@@ -5087,8 +5088,7 @@ GreatLogTalkEvents_TestFlagBit::
 
 ; called from GreatLogTalkEvents_TestFlagBit: checks EVENT_ILL_GET_YOU_TO_RUN; checks
 ; EVENT_OH_YOU_BOUGHT_THE_LOVE; checks EVENT_YOUVE_BEEN_GOING_OUT_A_180; starts Script_You_4; sets
-; EVENT_YOUVE_BEEN_GOING_OUT_A; sets EVENT_YOUVE_BEEN_GOING_OUT_A_180; calls
-; FindTemp0InInventoryList; ...
+; EVENT_YOUVE_BEEN_GOING_OUT_A; sets EVENT_YOUVE_BEEN_GOING_OUT_A_180; sets hTemp0 to 2; ...
 GreatLogTalkEvents_TestFlagBit_2::
     ld de, EVENT_ILL_GET_YOU_TO_RUN
     call TestFlagBit
@@ -5506,9 +5506,8 @@ TalkMsg0016_ItSeemsToMeThatThe::
     ret
 
 ; called from TalkMsg0016_ItSeemsToMeThatThe: checks EVENT_REWARD_ITEM_OR_KEY; checks
-; EVENT_BEAVERN_HELPED_PUT_UP; starts Script_BeavernHelpedPutUp; calls FindPartyIndexOfSpeciesTemp0;
-; starts Script_BeavernHelpedPutUp; checks EVENT_REWARD_ITEM_OR_KEY_2; starts
-; Script_AMadGopherJoinedYou_2; ...
+; EVENT_BEAVERN_HELPED_PUT_UP; starts Script_BeavernHelpedPutUp; copies L to hTemp0; copies H to
+; hTemp1; calls FindPartyIndexOfSpeciesTemp0; branches on hTemp0; ...
 TalkMsg0016_ItSeemsToMeThatThe_TestFlagBit::
     ld de, EVENT_REWARD_ITEM_OR_KEY
     call TestFlagBit
@@ -6308,8 +6307,8 @@ TalkMsg003F_InsideTheWellIsTheLogs::
 
 ; step 23 of GreatLogTalkEvents: checks EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT; shows 'I'm Warubou,
 ; GreatLog's spirit! Warooh,'; sets EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT; checks
-; EVENT_IM_PRINCE_KAMEHA_OF; shows 'Warubou: It's a dead end, warooh!'; shows 'Warubou: Wa-hey! Give
-; me something! Then,'; starts Script_WarubouWhaISmell; ...
+; EVENT_IM_PRINCE_KAMEHA_OF; branches on hMapScreenX; shows 'Warubou: It's a dead end, warooh!';
+; shows 'Warubou: Wa-hey! Give me something! Then,'; ...
 GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit::
     ld de, EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT
     call TestFlagBit
@@ -7022,8 +7021,8 @@ TalkMsg0224_TakeCareToFindTinyMedals::
     ret
 
 ; step 39 of GreatLogTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
-; EVENT_SCENE_THREE_ITEMS; checks EVENT_SCENE_MASTER_THANKS; calls FindPartyIndexOfSpeciesTemp0;
-; shows 'Oh… You're so lucky to'; starts Script_OhYou_5; shows 'What should I do with'; ...
+; EVENT_SCENE_THREE_ITEMS; checks EVENT_SCENE_MASTER_THANKS; copies L to hTemp0; copies H to hTemp1;
+; calls FindPartyIndexOfSpeciesTemp0; branches on hTemp0; ...
 GreatLogTalkEvents_TestFlagBit_SetTemp0::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7215,7 +7214,8 @@ GreatLogTalkEvents_TestFlagBit_StartMessageCommand09HL_B13_2::
     ret
 
 ; step 51 of GreatLogTalkEvents: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
-; shows 'The farm is full.'; calls StartMessageCommand09HL_B13; calls CreateMonsterRecordOfKindTemp1
+; shows 'The farm is full.'; calls StartMessageCommand09HL_B13; sets hTemp1; copies wArg5 to hTemp2;
+; sets hTemp3 to 1; ...
 GreatLogTalkEvents_ShowTheFarmIsFull::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -7907,7 +7907,7 @@ TalkMsg027A_ListenThisIsASecretTheres::
 
 ; step 101 of GreatLogTalkEvents: sets wDataBank to $0c; sets wScreenTableIndex to 0; calls
 ; GreatLogTalkEvents_ClearArenaData; branches on wArenaRank; branches on wArenaOutcome; calls
-; GenerateNewKeyEntry; sets wArenaOutcome; ...
+; GenerateNewKeyEntry; copies hTemp0 to wArenaOutcome; ...
 GreatLogTalkEvents_ClearArenaData_Here::
     ld a, $0c
     ld [wDataBank], a
@@ -8399,8 +8399,8 @@ TalkMsg08BF_MasterOnlyMakesMeChargeIt::
     ret
 
 ; step 127 of GreatLogTalkEvents: checks EVENT_REWARD_ITEM_OR_KEY_2; checks EVENT_I_WANT_TO_OPEN_UP;
-; sets EVENT_I_WANT_TO_OPEN_UP; shows 'I want to open up'; calls FindPartyIndexOfSpeciesTemp0;
-; checks EVENT_REWARD_ITEM_OR_KEY; starts Script_WaitCouldIGet_2; ...
+; sets EVENT_I_WANT_TO_OPEN_UP; shows 'I want to open up'; copies L to hTemp0; copies H to hTemp1;
+; calls FindPartyIndexOfSpeciesTemp0; ...
 GreatLogTalkEvents_TestFlagBit_SetFlagBit::
     ld de, EVENT_REWARD_ITEM_OR_KEY_2
     call TestFlagBit
@@ -9108,9 +9108,9 @@ Talk04CB_ThatKeyIUsed::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $04CE, whose
 ; string begins '0 checked the shelf. 0 found'; the branching is not interpreted (E-0097)
-; code: checks EVENT_HERO_CHECKED_THE_SHELF; calls GenerateNewKeyEntry; shows '0 checked the shelf.
-; 0 found'; shows '0 checked the shelf. 0 obtained'; sets EVENT_HERO_CHECKED_THE_SHELF; shows '0
-; checked the shelf. Souvenirs from'
+; code: checks EVENT_HERO_CHECKED_THE_SHELF; calls GenerateNewKeyEntry; branches on hTemp0; shows '0
+; checked the shelf. 0 found'; shows '0 checked the shelf. 0 obtained'; sets
+; EVENT_HERO_CHECKED_THE_SHELF; shows '0 checked the shelf. Souvenirs from'
 Talk04CE_HeroCheckedTheShelf::
     ld de, EVENT_HERO_CHECKED_THE_SHELF
     call TestFlagBit
@@ -9543,7 +9543,8 @@ GreatLogTalkEvents_StartScriptAtHL_B13::
     call StartScriptAtHL_B13
     ret
 
-; step 167 of GreatLogTalkEvents: calls AddGoldCapped; shows 'Terry: Here, just take this. 0'
+; step 167 of GreatLogTalkEvents: copies L to hTemp0; copies H to hTemp1; calls AddGoldCapped; shows
+; 'Terry: Here, just take this. 0'
 GreatLogTalkEvents_ShowTerryHereJustTake::
     ld hl, $2710
     ld a, l
@@ -10073,8 +10074,8 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
     call StartMessageCommand09HL_B13
     ret
 
-; step 204 of GreatLogTalkEvents: calls GreatLogTalkEvents_WriteTemp1; may return early; sets
-; wTileActionKind; starts Script_SceneStrongestMaster
+; step 204 of GreatLogTalkEvents: calls GreatLogTalkEvents_WriteTemp1; returns if bit 7 of hTemp1 is
+; set; copies hTemp1 to wTileActionKind; starts Script_SceneStrongestMaster
 GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1::
     farcall GreatLogTalkEvents_WriteTemp1
     ldh a, [hTemp1]
@@ -10325,8 +10326,8 @@ TalkMsg04D1_ThereAreTimesWhenYouHave::
     ret
 
 ; step 219 of GreatLogTalkEvents: checks EVENT_DESK_KEY_0C8; may return early; checks
-; EVENT_DESK_KEY; branches on $01; calls KeyListHasKindTemp0; calls CountKeysOrFull; shows '0 found
-; a Magic Key. But'; ...
+; EVENT_DESK_KEY; branches on $01; sets hTemp0 to $0a; calls KeyListHasKindTemp0; branches on
+; hTemp0; ...
 GreatLogTalkEvents_ShowHeroFoundAMagic::
     ld de, EVENT_DESK_KEY_0C8
     call TestFlagBit
@@ -10559,7 +10560,7 @@ TalkMsg0DD5_MonsterSkillsArePassedOn::
     ret
 
 ; step 228 of GreatLogTalkEvents: returns unless wGiftRecord is $01; returns unless wObject5 is 0;
-; calls RunFieldCommandTemp0
+; sets hTemp0 to $14; calls RunFieldCommandTemp0
 GreatLogTalkEvents_RunFieldCommandTemp0::
     ld a, [wGiftRecord]
     cp $01
@@ -10592,7 +10593,8 @@ GreatLogTalkEvents_StartScriptAtHL_B13_WhatWillYouGive::
     call StartScriptAtHL_B13
     ret
 
-; step 230 of GreatLogTalkEvents: calls StartMessageCommand09HL_B13; calls LoadSpeciesFlagsPresetC
+; step 230 of GreatLogTalkEvents: branches on hPlayerX; calls StartMessageCommand09HL_B13; calls
+; LoadSpeciesFlagsPresetC
 GreatLogTalkEvents_StartMessageCommand09HL_B13::
     ldh a, [hPlayerX]
     cp $30
@@ -10856,8 +10858,9 @@ Talk0B6D_BreedingFireAndIce::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0D90, whose
 ; string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)
-; code: checks EVENT_SCENE_TERRY_BATTLE_038; calls TotalSpeciesFlaggedOrListed; shows 'Humph… I'm
-; Terry. Terry: I'm'; starts Script_HumphI; shows 'Terry: I hope you'll stay a'
+; code: checks EVENT_SCENE_TERRY_BATTLE_038; calls TotalSpeciesFlaggedOrListed; branches on hTemp1;
+; branches on hTemp0; shows 'Humph… I'm Terry. Terry: I'm'; starts Script_HumphI; shows 'Terry: I
+; hope you'll stay a'
 Talk0D90_HumphImTerry::
     ld de, EVENT_SCENE_TERRY_BATTLE_038
     call TestFlagBit

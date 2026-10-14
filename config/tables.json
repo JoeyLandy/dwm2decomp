@@ -14089,7 +14089,7 @@
     {
       "bank": "07",
       "addr": "5086",
-      "label": "RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords",
+      "label": "CursorPositionWords_Bank07",
       "count": 1,
       "fields": [
         {

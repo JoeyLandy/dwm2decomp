@@ -2431,6 +2431,31 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0348 — Pointer operands named where their bank is clear; byte pairs written with lb
+
+- Kind: generator rules (C1, same-bank reading) and presentation. The assembled bytes do not change.
+- **Why pointers stayed numbers.** label_data_refs withholds its same-bank guess in banks where many `ld rr, $4000-$7FFF` operands land inside decoded code. In those banks the values are often not pointers: message flags in BC, coordinates in DE, message words in HL. The rule was right for those values but also left real local tables as numbers.
+- **New rules, applied per operand in those banks:**
+  - **Used as a pointer.** The next instructions index the register as a table before any call, return or jump: `add a, l`, `add hl, de|bc`, `add a, e` for DE, a read through it (`[hl]`, `[de]`, `[bc]`), or a call to a bank-0 table reader (`...TableEntry`, `IndexWord`). The target must not lie inside a decoded instruction. Example: ActionEffect_LoveRain's sixteen heal amounts are now ActionEffect_LoveRain_Data.
+  - **Passed to a same-bank reader.** The register goes, before any other control transfer, to a routine in this bank or bank 0 whose first 40 instructions never switch the ROM bank (no write to $2100, no rst $10, no bank-switching helper). The target must be an existing data label of this bank, or lie inside one. A pointer inside a table is written `Label + $offset` (`CursorPositionWords_Bank07 + $10`). No new label is made.
+  - **Bank in A.** `ld a, BANK` before a bank-switching copy helper (CopyRectFromBankToVRAM) names the bank when it is the current one.
+- **Byte pairs.** `ld bc, $WWRR` / `ld de, $XXYY` holding two separate bytes are written `lb bc, $WW, $RR` / `lb de, $XX, $YY`, as pokered writes them:
+  - before rectangle routines (B = width, C = rows), as before;
+  - before the resolve-message routines (B = argument, C = flags, E-0073);
+  - before the sprite steps toward a point (D = X, E = Y, E-0127): StepSpriteSlotToward and StepSpriteSlotTowardDE.
+  - The `lb` macro assembles to the same `ld`.
+- **Summaries.**
+  - tools/describe.py reads `ldh` loads and stores.
+  - It follows A through `and $NN` ("returns unless hJoyPressed & $0f is $03").
+  - It forgets A after arithmetic and shifts.
+  - It names register copies ("copies L to wResolveMsgActor").
+- **Result.**
+  - tools/readability.py raw_pointer_operands: 447 to 167.
+  - `ld rr, $4000-$7FFF` operands with no quote: 389 to 94.
+  - The 31 message words with a quote are message ids, documented by their text.
+  - What remains are home-bank loads into whatever bank the caller maps, pointers passed to routines that read another bank, and values the rules cannot tell from pointers.
+- Binary verification: build/run534 PASS, 0 differing bytes.
+
 ### E-0347 — Every label documented; comments name only what exists
 
 - Kind: OBSERVATION and a presentation rule. Generated comments restate instructions; they make no semantic claim.

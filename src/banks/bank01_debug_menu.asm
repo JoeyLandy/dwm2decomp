@@ -1321,8 +1321,8 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
 .return:
     ret
 
-; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on the byte at wTemp0;
-; sets wTemp0 to 0; branches on the byte at wTemp0; branches on wMenuState; calls
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on B; branches on the
+; byte at wTemp0; sets wTemp0 to 0; branches on the byte at wTemp0; branches on wMenuState; calls
 ; WriteHexByteTilesAtDE
 DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
     push af
@@ -1870,7 +1870,8 @@ DebugSkillViewer_Update::
     call DebugSkillViewer_Update_WriteVRAMByteInc
     ret
 
-; called from DebugSkillViewer_Update: sets wDigits; calls Number24ToPackedBCD; may return early
+; called from DebugSkillViewer_Update: copies L to wDigits; calls Number24ToPackedBCD; may return
+; early; sets hTemp1 to $99; sets hTemp0 to $99
 DebugSkillViewer_Update_Number24ToPackedBCD::
     ld a, l
     ld [wDigits], a
@@ -2013,7 +2014,7 @@ DebugSkillViewer_Update_WriteVRAMByte::
 DebugSkillViewer_Update_WriteVRAMByte_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
-; called from DebugShowMonsterRecord: sets wDigits; calls Number24ToPackedBCD; calls
+; called from DebugShowMonsterRecord: copies E to wDigits; calls Number24ToPackedBCD; calls
 ; WriteVRAMByteInc; calls WriteVRAMByte
 DebugShowMonsterRecord_Number24ToPackedBCD::
     push bc
@@ -2804,8 +2805,8 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
     ret
 
 ; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp04; branches on the byte at
-; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue0; calls
-; StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; ...
+; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue0; branches
+; on C; calls StepDebugCursorDebugCounter; ...
 DebugToggleArg1Marker_CheckDebugCursor2::
     ld a, [wDebugCursor]
     and a
@@ -2882,8 +2883,8 @@ DebugToggleArg1Marker_Loop::
     ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
-; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
-; FillTilesFromRequest; calls DrawMonsterNameForWordAtDE_Bank01
+; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
+; H to wTextWindowWidth; calls FillTilesFromRequest; calls DrawMonsterNameForWordAtDE_Bank01
 DebugToggleArg1Marker_Skip::
     push de
     push hl
@@ -2903,8 +2904,8 @@ DebugToggleArg1Marker_Skip::
     ret
 
 ; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp042; branches on the byte at
-; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue3; calls
-; StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; ...
+; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue3; branches
+; on C; calls StepDebugCursorDebugCounter; ...
 DebugToggleArg1Marker_CheckDebugCursor3::
     ld a, [wDebugCursor]
     and a
@@ -3678,9 +3679,9 @@ DebugAutomap_Update::
 DebugAutomap_Update_Data::
     db $00, $05, $20, $30, $48, $70, $a0, $a8, $b0, $b8, $c8, $d1, $da
 
-; called from DebugAutomap_Update: calls RollKeyContentsForLevelTemp0; copies wDebugValue0 to
-; wCurrentKeyIndex; branches on wDebugState; calls FindSRAMSlotMarkerIndex; may return early; sets
-; wKeyWorldSlot; sets wPartyStrength; ...
+; called from DebugAutomap_Update: copies wDebugValue1 to hTemp0; calls
+; RollKeyContentsForLevelTemp0; copies wDebugValue0 to wCurrentKeyIndex; branches on wDebugState;
+; calls FindSRAMSlotMarkerIndex; returns if hTemp0 is $ff; sets wKeyWorldSlot; ...
 DebugAutomap_Update_RollKeyContentsForLevelTemp0::
     ld a, [wDebugValue1]
     ldh [hTemp0], a
@@ -5295,7 +5296,7 @@ ClampDebugValueToTableLimit::
 
 ; called from DebugBattleSetup_Update: branches on wPartyCount; branches on wFarmLevel; branches on
 ; the byte at wPartyList; calls DebugBattleSetup_Update_SRAMRecordAddressMapped_2; calls
-; CheckSaveData; calls RunSaveSteps; calls DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
+; CheckSaveData; branches on hTemp0; calls RunSaveSteps; ...
 DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ld a, [wPartyCount]
     or a
@@ -5599,8 +5600,8 @@ WriteThreeHexDigitsAtDE::
     ld [de], a
     ret
 
-; Sets wFollowerRecords to 0; sets wPlayerName to $24; sets wGoldLo to $9f; sets wGoldMid to $86;
-; sets wGoldHi to 1; sets wPartyCount to 3; sets wPartyList to 0; ...
+; Sets hMapId to 0; sets hMapScreenX to 2; sets hMapScreenY to 0; sets hPlayerX to $40; sets
+; hPlayerY to $40; sets wFollowerRecords to 0; sets wPlayerName to $24; ...
 DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
     ld a, $00
     ldh [hMapId], a
@@ -5788,9 +5789,9 @@ PickRandomMonsterSkipping7ETo82::
     call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
     ret
 
-; Sets wMonsterId; calls LoadMonsterRecord; calls SRAMRecordAddress; branches on wBattleArg1; calls
-; CopyBBytesDEToHL_Bank01; calls WriteUnknownNamePlaceholder_Bank01; sets wRecordBufA + MON_LEVEL;
-; ...
+; Copies E to wMonsterId; calls LoadMonsterRecord; calls SRAMRecordAddress; branches on wBattleArg1;
+; calls CopyBBytesDEToHL_Bank01; calls WriteUnknownNamePlaceholder_Bank01; sets wRecordBufA +
+; MON_LEVEL; ...
 CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
     ldh a, [hTemp3]
     push af
@@ -6126,7 +6127,8 @@ CreateMonsterRecordOfKindTemp1::
     ld [rRAMG], a
     ret
 
-; called from PickRandomMonsterSkipping7ETo82: sets wBattleArg1 to $ff; sets wBattleArg2 to $ff
+; called from PickRandomMonsterSkipping7ETo82: sets wBattleArg1 to $ff; sets wBattleArg2 to $ff;
+; sets hTemp3 to 1
 PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
     ld a, $ff
     ld [wBattleArg1], a

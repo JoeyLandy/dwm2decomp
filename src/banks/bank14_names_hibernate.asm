@@ -40,8 +40,8 @@ CloseHibernateMenu_CopyBytesDEToHL_Bank14::
     ld [wScreenList], a
     ret
 
-; step 1 of CloseHibernateMenu: sets wArg1 to $9c; sets wArg2 to 0; sets wArg3; sets wArg4; calls
-; LoadTileListSixPerCall; returns unless wArg5 is $ff; sets wGlyphListPos to 0; ...
+; step 1 of CloseHibernateMenu: sets wArg1 to $9c; sets wArg2 to 0; copies D to wArg3; copies E to
+; wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; sets wGlyphListPos to 0; ...
 CloseHibernateMenu_LoadTileListSixPerCall::
     ld a, $9c
     ld [wArg1], a
@@ -91,8 +91,8 @@ CloseHibernateMenu_FillTilesBxC::
     ret
 
 ; step 3 of CloseHibernateMenu: calls DrawRecordListNameTiles_Bank1D; sets wMessageMode to 0; sets
-; wScreenList to 0; calls WritePlayerNameWithFlag0SuffixToTextBuf0; sets wScriptCommandType to 0;
-; sets wScriptStartRequest to $80
+; wScreenList to 0; sets hSpriteHideTile to $80; calls WritePlayerNameWithFlag0SuffixToTextBuf0;
+; sets wScriptCommandType to 0; sets wScriptStartRequest to $80
 CloseHibernateMenu_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     xor a
@@ -137,8 +137,8 @@ HibernateMenu::
     dw HibernateMenu_SwapMonstersMenu
 
 ; step 0 of HibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
-; CopyLow3BitsToWRAMBank2_Bank14; sets wMessageMode to 4; advances wScreenState; sets
-; wScriptCommandType to 0; sets wScriptStartRequest to $80
+; CopyLow3BitsToWRAMBank2_Bank14; sets wMessageMode to 4; sets hSpriteHideTile to $70; advances
+; wScreenState; sets wScriptCommandType to 0; ...
 HibernateMenu_CopyBytesDEToHL_Bank14::
     ld hl, wScreenState
     ld bc, $006f
@@ -830,7 +830,7 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2::
     ret
 
 ; step 63 of HibernateMenu_ChooseRecords: branches on wScreenSubStep; sets rRAMG2 to $0a; sets rRAMB
-; to 0; copies wSelectedRecord to wArg1; sets rRAMG2 to 0; sets wArg2 to 0; sets wArg3; ...
+; to 0; copies wSelectedRecord to wArg1; sets rRAMG2 to 0; sets wArg2 to 0; copies L to wArg3; ...
 HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
     ld a, [wScreenSubStep]
     and a
@@ -1409,9 +1409,9 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3::
     ret
 
 ; called from HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3: calls
-; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
-; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; calls BGMapAddressAtScroll_Bank14; calls
-; DrawScreenBufferRect_Bank14
+; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; branches on wIsCGB; sets rSVBK; calls
+; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; sets rSVBK; calls BGMapAddressAtScroll_Bank14;
+; calls DrawScreenBufferRect_Bank14
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -1549,8 +1549,8 @@ HibernateMenu_ChooseRecords_ListRecordsState1NotEggs::
     db $21, $2d, $5f, $06, $1d, $d7
 
 ; Calls ClampRecordListPageCursor5; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank14;
-; calls StoreC5BEC6AtHLStride2_Bank14; sets wArg1; sets wArg2; calls DrawPageOfPagesAtScrollOffset;
-; ...
+; calls StoreC5BEC6AtHLStride2_Bank14; copies D to wArg1; copies E to wArg2; calls
+; DrawPageOfPagesAtScrollOffset; ...
 HibernateMenu_ClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -1970,9 +1970,9 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_W
     ld [wScriptStartRequest], a
     ret
 
-; Calls HibernateMenu_CopyBytesDEToHL_Bank14_2; branches on wIsCGB; calls
-; HibernateMenu_CopyBytesDEToHL_Bank14_2; calls BGMapAddressAtScroll_Bank14; calls
-; DrawScreenBufferRect_Bank14; calls CopyFromBankWaitVRAM
+; Calls HibernateMenu_CopyBytesDEToHL_Bank14_2; branches on wIsCGB; sets rSVBK; calls
+; HibernateMenu_CopyBytesDEToHL_Bank14_2; sets rSVBK; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; ...
 HibernateMenu_WriteSVBK::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -2130,8 +2130,8 @@ HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc::
     ret
 
 ; step 18 of HibernateMenu_ChooseRecords: sets rRAMG2 to $0a; sets rRAMB to 0; calls
-; SetArg5ToListEntriesCell5; sets wArg2 to 1; sets wArg3; sets wArg4; branches on the byte at
-; sRecords; ...
+; SetArg5ToListEntriesCell5; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; branches on the
+; byte at sRecords; ...
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_3::
     ld a, $0a
     ld [rRAMG2], a
@@ -3028,7 +3028,8 @@ HibernateMenu_SwapMonstersMenu::
     ret
 
 ; called from HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep: sets rRAMG2 to $0a; sets rRAMB to
-; 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
+; 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
+; branches on C
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
     push bc
     ld a, $0a
@@ -3072,8 +3073,8 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
     ld [de], a
     ret
 
-; Calls SetArg5ToListEntriesCell5; sets wArg2 to 1; sets wArg3; sets wArg4; sets wArg1 to 0; calls
-; LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; ...
+; Calls SetArg5ToListEntriesCell5; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1
+; to 0; calls LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; ...
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3133,7 +3134,8 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
 
 ; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: calls
 ; SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls
-; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
+; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf; branches on
+; C
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -3173,8 +3175,8 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
     ret
 
 ; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: branches on wSelectedRecord;
-; sets wArg2 to 1; sets wArg3; sets wArg4; sets wArg1 to 0; calls LoadRecordNameEntry0; branches on
-; the byte at wNameGlyphBuf; ...
+; sets wArg2 to 1; copies L to wArg3; copies H to wArg4; sets wArg1 to 0; calls
+; LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; ...
 HibernateMenu_ChooseRecords_LoadRecordNameEntry0::
     ld a, [wSelectedRecord]
     cp $1d
@@ -3615,8 +3617,8 @@ StoreC5BEC6AtHLStride2_Bank14::
     ret
 
 ; called from HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5: branches on the byte at
-; sCompactRecords; sets rRAMB to 1; branches on the byte at sRecords; sets wArg6; sets wArg7; sets
-; wArg5 to 0; sets wArg6; ...
+; sCompactRecords; branches on C; sets rRAMB to 1; branches on the byte at sRecords; branches on C;
+; copies L to wArg6; copies H to wArg7; ...
 HibernateMenu_ChooseToHibernate_WriteRAMBAndArg6Etc::
     ld hl, sCompactRecords
     ld c, $00
@@ -3801,8 +3803,9 @@ RunNameEntryStateWhenNotFading_Setup::
     dw RunNameEntryStateWhenNotFading_Setup_CopyArgs
     dw RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc
 
-; step 0 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; sets wArg5;
-; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
+; step 0 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; copies H to
+; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20; sets wArg4 to
+; $20; ...
 RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_2::
     ld hl, wNameEntryState
     ld bc, $001d
@@ -3895,8 +3898,9 @@ RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
     ld [wArg5], a
     ret
 
-; step 2 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; sets wArg5;
-; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to $12; ...
+; step 2 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; copies H to
+; wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14; sets wArg4 to
+; $12; ...
 RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params::
     ld a, [wArg2]
     push af
@@ -5014,9 +5018,9 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep::
     dw RunNameEntryStateWhenNotFading_SetArg5
     dw RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5
 
-; step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest;
-; increments wNameEntryStep; sets wArg5 to 0
+; step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: copies L to wTextWindowTileLo; copies
+; H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; increments wNameEntryStep; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ld hl, vTiles2 + $5c0
     ld a, l
@@ -5037,7 +5041,8 @@ RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ret
 
 ; step 1 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
-; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 1; ...
+; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
+; sets wArg4 to 1; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01e0
@@ -5066,7 +5071,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     ret
 
 ; step 2 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
-; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 3; ...
+; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
+; sets wArg4 to 3; ...
 RunNameEntryStateWhenNotFading_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01c0
@@ -5095,7 +5101,8 @@ RunNameEntryStateWhenNotFading_SetArg5::
     ret
 
 ; step 3 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
-; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 5; ...
+; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14;
+; sets wArg4 to 5; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01a0
@@ -5304,8 +5311,8 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCat
     ret
 
 ; step 4 of RunNameEntryStateWhenNotFading: calls
-; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; sets
-; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to 6; ...
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; copies H
+; to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to 6; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5385,8 +5392,8 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
 
 ; step 0 of
 ; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2:
-; calls BGMapAddressAtScroll_Bank14_2; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to
-; $20; sets wArg4 to $20; ...
+; calls BGMapAddressAtScroll_Bank14_2; copies H to wArg5; copies L to wArg6; copies D to wArg1;
+; copies E to wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
 RunNameEntryStateWhenNotFading_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank14_2
     ld a, h
@@ -5460,8 +5467,8 @@ RunNameEntryStateWhenNotFading_FinishNameEntry::
     ret
 
 ; step 7 of RunNameEntryStateWhenNotFading: calls
-; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; sets
-; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; ...
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; copies H
+; to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $14; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5877,7 +5884,7 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
 
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5: sets rRAMG2 to $0a; sets
 ; rRAMB to 0; branches on the byte at sRecords; branches on the byte at wNameEntryText; branches on
-; the byte at sRecords; branches on wArg1
+; the byte at sRecords; branches on C; branches on the byte at sRecords; ...
 RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
     ld hl, sRecords
     ld a, $0a
@@ -5969,7 +5976,7 @@ RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
 
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5: branches on the byte at
 ; RejectedNameList; branches on the byte at wNameEntryText; branches on the byte at
-; RejectedNameList; branches on wArg1
+; RejectedNameList; branches on C; branches on the byte at RejectedNameList; branches on wArg1
 RunNameEntryStateWhenNotFading_ReadArg1::
     ld hl, RejectedNameList
     ld c, $00
@@ -6132,9 +6139,9 @@ RunNameEntryStateWhenNotFading_ScanNameEntryText::
     xor a
     ret
 
-; Branches on wNameEntryDrawStep; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
-; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; increments wNameEntryDrawStep;
-; ...
+; Branches on wNameEntryDrawStep; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi;
+; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; increments
+; wNameEntryDrawStep; ...
 RunNameEntryStateWhenNotFading_FillTilesFromRequest::
     ld a, [wNameEntryDrawStep]
     and a
@@ -6303,7 +6310,7 @@ CopyTileForNameEntryLength_Data2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
 ; called from RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5: may continue in
-; CopyF0StringAndRedrawNameEntry_CheckArg2; calls CopyF0StringAndRedrawNameEntry
+; CopyF0StringAndRedrawNameEntry_CheckArg2; branches on B; calls CopyF0StringAndRedrawNameEntry
 RunNameEntryStateWhenNotFading_CheckArg1::
     ld a, [wArg1]
     or a
@@ -6400,7 +6407,7 @@ CopyF0StringAndRedrawNameEntry::
     jr CopyF0StringAndRedrawNameEntry
 
 ; Calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; sets
-; wNameEntryMarkPending to 1; sets wNameEntryLength to 4; calls
+; wNameEntryMarkPending to 1; branches on C; sets wNameEntryLength to 4; calls
 ; WriteTileBAtScrollOffset47PlusNameEntryLength
 CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL::
     ld b, $c3

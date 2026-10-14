@@ -684,10 +684,10 @@ RunA0OrBySlotC::
     ld [wBattleArg0], a
     ret
 
-; called from RunA0OrBySlotC: calls BattlerRecordAddress_BankA0; branches on wLinkRole; branches on
-; wBattleArg0; calls LoadSlotSkillsFromBattlerRecord; calls
+; called from RunA0OrBySlotC: calls BattlerRecordAddress_BankA0; branches on C; branches on
+; wLinkRole; branches on wBattleArg0; calls LoadSlotSkillsFromBattlerRecord; calls
 ; SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord; calls
-; RunA0OrBySlotC_SetSlotOutAndStatus; calls StoreByteAtDEPlusC_BankA0; ...
+; RunA0OrBySlotC_SetSlotOutAndStatus; ...
 RunA0OrBySlotC_BattlerRecordAddress_BankA0::
     ld a, c
     push bc
@@ -1568,9 +1568,9 @@ ApplyLevelScaledStatsToSlots::
     jr nz, .loop
     ret
 
-; called from ApplyLevelScaledStatsToSlots: sets wBattleArg1; sets wSpeciesIdLo; sets wSpeciesIdHi;
-; calls LoadSpeciesRecord; calls StatFromGrowthRow; sets wBattleArg0 to 1; calls
-; ScaleStatByWildLevelCapped999; ...
+; called from ApplyLevelScaledStatsToSlots: copies C to wBattleArg1; copies L to wSpeciesIdLo;
+; copies H to wSpeciesIdHi; calls LoadSpeciesRecord; copies wSpeciesRecord + SPECIES_GROWTH to
+; hTemp0; calls StatFromGrowthRow; sets wBattleArg0 to 1; ...
 ApplyLevelScaledStatsToSlots_LoadSpeciesRecord::
     push bc
     ld a, c
@@ -2412,8 +2412,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage::
     ret
 
 ; step 2 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: advances wBattleStep; copies wRandomLo
-; to wLinkRecvBuffer; copies wRandomHi to wIntroOrFamilyCount; sets wLinkTimeoutLo; sets
-; wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; ...
+; to wLinkRecvBuffer; copies wRandomHi to wIntroOrFamilyCount; copies L to wLinkTimeoutLo; copies H
+; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo::
     ld hl, wBattleStep
     inc [hl]
@@ -2463,8 +2463,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_SetBattleStep::
     ret
 
 ; step 5 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wLinkMessage is $03;
-; sets wLinkSendByte to 0; branches on wLinkRole; sets wLinkPartnerName; sets wRandomSeed2Lo; sets
-; wRandomLo; sets wLinkPartnerByte1; ...
+; sets wLinkSendByte to 0; branches on wLinkRole; copies L to wLinkPartnerName; copies L to
+; wRandomSeed2Lo; copies L to wRandomLo; copies H to wLinkPartnerByte1; ...
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte_2::
     ld a, [wLinkMessage]
     cp $03
@@ -2568,8 +2568,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ShowTheFirstMonsterIs::
     inc [hl]
     ret
 
-; step 9 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wIsCGB; calls
-; LoadMonsterPictureAttributes; calls LoadMonsterPicture; sets wBGPaletteUploadRequest to $7f;
+; step 9 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wIsCGB; sets hTemp0 to 1;
+; calls LoadMonsterPictureAttributes; calls LoadMonsterPicture; sets wBGPaletteUploadRequest to $7f;
 ; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
     ld a, [wIsCGB]
@@ -2597,7 +2597,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
 
 ; step 10 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wScreenCountPlusOne; calls
 ; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on wIsCGB; branches on
-; wScreenCountPlusOne; calls LoadMonsterPictureAttributes; advances wBattleStep
+; wScreenCountPlusOne; sets hTemp0 to 1; calls LoadMonsterPictureAttributes; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_2::
     ld hl, vBGMap0 + $e1
     ld a, [wScreenCountPlusOne]
@@ -2672,7 +2672,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep::
 
 ; step 13 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wScreenCountPlusOne; sets
 ; wBattleStep; calls RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on
-; wIsCGB; branches on wScreenCountPlusOne; calls LoadMonsterPictureAttributes; advances wBattleStep
+; wIsCGB; branches on wScreenCountPlusOne; sets hTemp0 to 3; calls LoadMonsterPictureAttributes; ...
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteBattleStepAndTemp0::
     ld hl, vBGMap0 + $e7
     ld a, [wScreenCountPlusOne]
@@ -2749,8 +2749,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep_SetBGP
     ret
 
 ; step 16 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: calls
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on wIsCGB; calls
-; LoadMonsterPictureAttributes; advances wBattleStep
+; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on wIsCGB; sets hTemp0
+; to 5; calls LoadMonsterPictureAttributes; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_3::
     ld d, $5c
     ld hl, vBGMap0 + $ed
@@ -2886,9 +2886,9 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte::
     inc [hl]
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wLinkMessage is $01; sets
-; wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferPtrLo; sets wLinkBufferPtrHi; sets
-; wLinkBufferCountLo to 8; sets wLinkSendByte to $ff; ...
+; step 1 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wLinkMessage is $01; copies L to
+; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
+; wLinkBufferPtrHi; sets wLinkBufferCountLo to 8; sets wLinkSendByte to $ff; ...
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -2936,10 +2936,10 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2::
     ld [wLinkSendByte], a
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on wLinkRuleTurnLimit; sets
-; wLinkRuleTurnLimit to $63; branches on the byte at wBattleSlotOut; branches on the byte at
-; wBattleStatus; branches on the byte at wBattleSlotOut + $1; branches on the byte at wBattleStatus;
-; copies wScreenCountPlusOne to wStringIndex; ...
+; step 3 of RunBattlePhaseWhenTextIdle_A0_SyncLink: sets wLinkRuleTurnLimit to $63; branches on the
+; byte at wBattleSlotOut; branches on the byte at wBattleStatus; branches on the byte at
+; wBattleSlotOut + $1; branches on the byte at wBattleStatus; sets wStringIndex; sets
+; wStringCategory to 6; ...
 RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL::
     ld a, [wBattleTurn]
     inc a
@@ -3047,7 +3047,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
     ld [wLinkSendByte], a
     ret
 
-; step 5 of RunBattlePhaseWhenTextIdle_A0_SyncLink: sets vBGMap0 + $e1 to $c3; advances wBattleStep
+; step 5 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on rSTAT; sets vBGMap0 + $e1 to $c3;
+; branches on rSTAT; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT::
     ld hl, vBGMap0 + $e1
     ld bc, $1206
@@ -3073,8 +3074,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT::
     inc [hl]
     ret
 
-; step 6 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on wIsCGB; branches on $01; sets
-; vBGMap0 + $e1 to 0; branches on $01; advances wBattleStep
+; step 6 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on wIsCGB; sets rVBK to 1; branches on
+; rSTAT; sets vBGMap0 + $e1 to 0; branches on rSTAT; sets rVBK to 0; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK::
     ld a, [wIsCGB]
     or a
@@ -3204,10 +3205,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: sets wTextSpeed to 1; sets
-; wResultsUnreadWordLo; sets wResultsUnreadWordHi; branches on the byte at wBattleStatus + $9;
-; branches on the byte at wBattleSlotOut; sets wBattleResultStep to 3; copies wBattleResultDelay to
-; wBattleResultCounter; ...
+; step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: sets wTextSpeed to 1; copies L to
+; wResultsUnreadWordLo; copies H to wResultsUnreadWordHi; branches on C & $30; branches on C & $21;
+; branches on C & $12; branches on the byte at wBattleSlotOut; ...
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
     ld a, $01
     ld [wTextSpeed], a
@@ -3297,8 +3297,8 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
     ret
 
 ; step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls RunBackupAndSaveSteps; returns unless
-; bit 7 of wSaveStep is set; calls SaveGameToSRAMWithChecksum; copies wBattleResultStep to
-; wStringIndex; sets wStringCategory to 5; calls BeginStringDisplay_Bank07; advances wBattleStep
+; bit 7 of wSaveStep is set; calls SaveGameToSRAMWithChecksum; sets wStringIndex; sets
+; wStringCategory to 5; calls BeginStringDisplay_Bank07; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
     farcall RunBackupAndSaveSteps
     ld a, [wSaveStep]
@@ -3331,9 +3331,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
     inc [hl]
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: sets wTextWindowTileLo; sets
-; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; sets wStringCategory to 1; sets
-; wStringIndex to 3; calls ShowString_Bank07; ...
+; step 3 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
+; to 1; sets wStringIndex to 3; calls ShowString_Bank07; ...
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
     ld hl, vTiles1 + $700
     ld a, l
@@ -3369,9 +3369,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
     inc [hl]
     ret
 
-; step 4 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls DrawRectAndWriteDATiles; calls
-; WriteTwoDigitsBlankLeading_A0; copies wEncounterClass to wWindowTileBuffer; calls
-; WriteThreeTwoDigitRows; advances wBattleStep
+; step 4 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls DrawRectAndWriteDATiles; branches on
+; E; calls WriteTwoDigitsBlankLeading_A0; sets wWindowTileBuffer; calls WriteThreeTwoDigitRows;
+; advances wBattleStep
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRectAndWriteDATiles::
     call DrawRectAndWriteDATiles
     ld a, [wBattleResultStep]
@@ -3578,9 +3578,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1_2_Re
     inc [hl]
     ret
 
-; step 8 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: returns unless wTextFlags is 0; calls
-; WriteNumber24AsDecimalString; sets wStringCategory to 5; sets wStringIndex to $16; calls
-; BeginStringDisplay_Bank07; sets wBattleSubPhase to 0; sets wLinkSendByte to 0; ...
+; step 8 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: returns unless wTextFlags is 0; sets
+; hTemp0; sets hTemp1; sets hTemp2 to 0; calls WriteNumber24AsDecimalString; sets wStringCategory to
+; 5; sets wStringIndex to $16; ...
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG::
     ld a, [wTextFlags]
     or a
@@ -4531,7 +4531,7 @@ BattleResultGoldByRank::
 
 ; called from RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytesAndStep: sets bit 7 of wSideControl;
 ; calls FillBytes; sets wBattleItemTarget to $ff; sets wBattleItemId to $ff; sets wMenuState to 0;
-; branches on the byte at wSlotMarks; advances wBattleStep; ...
+; branches on the byte at wSlotMarks; branches on C; ...
 RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytes::
     ld hl, wSideControl
     ld b, $08
@@ -4732,9 +4732,10 @@ RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0AndStep::
     inc [hl]
     ret
 
-; step 4 of RunBattleSetup_BankA0_EntrySelect: copies wMenuState to wBattleSetupDB; branches on
-; wMenuState; calls RunBattleSetup_BankA0_EntrySelect_ReadLinkRole; sets wBattleSubPhase to 3; sets
-; wBattleResolveStep to 0; branches on the byte at wSlotMarks; sets wStringCategory to 0; ...
+; step 4 of RunBattleSetup_BankA0_EntrySelect: copies wMenuState & $03 to wBattleSetupDB; branches
+; on wMenuState & $03; calls RunBattleSetup_BankA0_EntrySelect_ReadLinkRole; sets wBattleSubPhase to
+; 3; sets wBattleResolveStep to 0; branches on the byte at wSlotMarks; sets wStringCategory to 0;
+; ...
 RunBattleSetup_BankA0_EntrySelect_WriteBattleSetupDBAndStringIndexEtc::
     ld a, [wMenuState]
     and $03
@@ -5065,7 +5066,7 @@ RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
 ; step 6 of RunBattleSetup_BankA0_CommandMenu: calls
 ; RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2; branches on wJoypadPressed;
 ; sets wBattleArg1 to 0; calls ClearAndLayoutTileBlocksForBattleFoeCount; advances
-; wBattleResolveStep; plays sound $69; branches on wMenuSelectedMember; ...
+; wBattleResolveStep; plays sound $69; branches on wMenuSelectedMember & $03; ...
 RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount::
     ld de, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
     ld hl, wMenuSelectedMember
@@ -5238,8 +5239,8 @@ RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow
 
 ; step 12 of RunBattleSetup_BankA0_CommandMenu: calls
 ; DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0; sets wBattleArg1 to 0; copies the byte at
-; wSideControl to wMenuCursor; copies the byte at wSideControl to wCommandCursor; clears bit 7 of
-; wCommandCursor; calls ShowSkillPageNames_BankA0; calls
+; wSideControl & $03 to wMenuCursor; sets wCommandCursor; clears bit 7 of wCommandCursor; calls
+; ShowSkillPageNames_BankA0; calls
 ; RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0; ...
 RunBattleSetup_BankA0_CommandMenu_WriteBattleArg1AndMenuCursorEtc::
     ld a, [wBattleArg1]
@@ -5574,8 +5575,8 @@ RunBattleSetup_BankA0_AdvanceRandom::
     ret
 
 ; step 6 of RunBattleSetup_BankA0: returns unless wLinkMessage is $01; advances wBattleSubPhase;
-; sets wLinkBufferCountHi to 0; sets wLinkBufferCountLo to $0b; sets wLinkTimeoutLo; sets
-; wLinkTimeoutHi; sets wLinkBufferPtrLo; ...
+; sets wLinkBufferCountHi to 0; sets wLinkBufferCountLo to $0b; copies L to wLinkTimeoutLo; copies H
+; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; ...
 RunBattleSetup_BankA0_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -5826,7 +5827,8 @@ RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0::
 
 ; called from RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount: calls
 ; SetBit6AndBlankEntryTile_BankA0; calls ClearBit6AndCursorEntryTile_BankA0; plays sound $69; calls
-; ClearBit6AndCursorEntryTile_BankA0; calls SetBit6AndBlankEntryTile_BankA0; sets wFrameCounterLo
+; ClearBit6AndCursorEntryTile_BankA0; calls SetBit6AndBlankEntryTile_BankA0; copies wFrameCounterLo
+; & $f0 to wFrameCounterLo
 RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -6133,9 +6135,9 @@ WriteFiveTilesFromTable_2::
 WriteFiveTilesFromTable_2_Data::
     db $d0, $d5
 
-; called from RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount: sets
-; wBattleArg2; sets wBattleArg3; branches on the byte at wBattleSkills; sets wCommandPageCount to 0;
-; sets wCommandCursorMax; sets wCommandCursor to 0
+; called from RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount: copies L
+; to wBattleArg2; copies H to wBattleArg3; branches on the byte at wBattleSkills; branches on C;
+; sets wCommandPageCount to 0; branches on C; copies C & $03 & $03 to wCommandCursorMax; ...
 RunBattleSetup_BankA0_CommandMenu_WriteBattleArg2AndBattleArg3Etc::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
@@ -6494,7 +6496,7 @@ CallRunDebugStateInBankE0_BankA0::
     farcall RunDebugState_E0
     ret
 
-; Works on registers only
+; Branches on rSTAT
 RunBattleSetup_BankA0_ReadSTAT::
     ld hl, vTiles1
     ld bc, $0120
@@ -6519,12 +6521,11 @@ RunBattleSetup_BankA0_ReadSTAT::
 
 ; C = slot 0-2: when the slot is present and its status byte 0 is non-zero, calls one marker routine
 ; for each of bits 0, 1, 4, 5, 6 and 7 that is set (the zero-status path is not read) (E-0111)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0; calls
+; code: branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at
+; wBattleStatus; calls DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0; calls
 ; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_3; calls
 ; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_4; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_6; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_2; ...
+; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_6; ...
 DrawSlotStatusMarks_BankA0::
     push bc
     ld a, c
@@ -6784,8 +6785,8 @@ DrawSlotMPDigits_BankA0::
 ; C = slot 0-2: writes tiles $EA, $AF (not in the charmap; probably a level mark) into
 ; wScreenTileBuffer at the position from DrawSlotLevel_BankA0_Data, then the value
 ; wBattleLevel[slot] as digits (probably the level; the digit part is not read to its end) (E-0111)
-; code: sets DrawSlotLevel_BankA0_Data to $ea; sets DrawSlotLevel_BankA0_Data to $af; calls
-; HLToDecimalDigits; calls WriteTwoDigitTilesFromDigits1
+; code: branches on C; branches on C & $03; sets DrawSlotLevel_BankA0_Data to $ea; sets
+; DrawSlotLevel_BankA0_Data to $af; calls HLToDecimalDigits; calls WriteTwoDigitTilesFromDigits1
 DrawSlotLevel_BankA0::
     push bc
     ld a, c

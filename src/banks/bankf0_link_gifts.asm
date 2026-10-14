@@ -667,8 +667,8 @@ RunLinkSession8Exchange_SetLinkSendByte::
     ret
 
 ; step 2 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; branches on the
-; byte at wPlayerName; copies wPlayerId to wLinkEggFamilyBit; sets wLinkBufferCountLo; sets
-; wLinkBufferCountHi; sets wLinkTimeoutLo; sets wLinkTimeoutHi; ...
+; byte at wPlayerName; copies wPlayerId to wLinkEggFamilyBit; copies L to wLinkBufferCountLo; copies
+; H to wLinkBufferCountHi; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; ...
 RunLinkSession8Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
@@ -754,8 +754,8 @@ RunLinkSession8Exchange_SetScreenStep_9::
     ret
 
 ; step 5 of RunLinkSession8Exchange_WriteTitleScreenState: sets wStringCategory to 0; sets
-; wStringIndex to $1f; sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets
-; wTextWindowWidth; calls ShowString_BankF0; ...
+; wStringIndex to $1f; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
+; wTextWindowRows; copies H to wTextWindowWidth; calls ShowString_BankF0; ...
 RunLinkSession8Exchange_SetStringCategory_3::
     ld hl, wFamilyRankTaken
     ld b, $35
@@ -917,7 +917,7 @@ RunLinkSession8Exchange_IsItOKTo::
 
 ; step 1 of RunLinkSession8Exchange_WriteTitleScreenState: calls CopyRectTo20ByteRows_BankF0; calls
 ; StoreBAtWordTableEntry_BankF0; calls BGMapAddressAtScroll_BankF0; calls
-; DrawScreenBufferRect_BankF0; sets wStringCategory to 0; sets wStringIndex to $1e; sets
+; DrawScreenBufferRect_BankF0; sets wStringCategory to 0; sets wStringIndex to $1e; copies L to
 ; wTextWindowTileLo; ...
 RunLinkSession8Exchange_SetStringCategory::
     ld de, RunLinkSession8Exchange_SetStringCategory_TileRect
@@ -1024,7 +1024,7 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2::
 
 ; step 4 of RunLinkSession8Exchange_WriteTitleScreenState: calls CopyRectTo20ByteRows_BankF0; calls
 ; StoreBAtWordTableEntry_BankF0; calls BGMapAddressAtScroll_BankF0; calls
-; DrawScreenBufferRect_BankF0; sets wStringCategory to 0; sets wStringIndex to $1d; sets
+; DrawScreenBufferRect_BankF0; sets wStringCategory to 0; sets wStringIndex to $1d; copies L to
 ; wTextWindowTileLo; ...
 RunLinkSession8Exchange_SetStringCategory_2::
     ld de, RunLinkSession8Exchange_SetStringCategory_2_TileRect
@@ -1168,7 +1168,8 @@ RunLinkSession8Exchange_ShowMessage_BeginString_BankF0_Cat0::
     ret
 
 ; step 3 of RunLinkSession8Exchange_ShowMessage: returns if bit 0 of wTextFlags is set; branches on
-; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1
+; wTextFlags; sets rSVBK to 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to
+; 1
 RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -1477,7 +1478,7 @@ RunLinkSession8Exchange_SetScreenStep_5::
     ret
 
 ; step 27 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $b6; sets
-; wLinkSendByte to 0; increments wScreenState; sets wScreenStep to 0; sets wScreenSubStep to 0
+; wLinkSendByte to 0; sets wScreenState; sets wScreenStep to 0; sets wScreenSubStep to 0
 RunLinkSession8Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $b6
@@ -1496,8 +1497,8 @@ RunLinkSession8Exchange_SetLinkSendByte_5::
     ret
 
 ; step 9 of RunLinkSession8Exchange_WriteTitleScreenState: branches on wGiftRecord; increments
-; wScreenStep; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferCountLo; sets
-; wLinkBufferCountHi; sets wLinkBufferPtrLo; ...
+; wScreenStep; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to
+; wLinkBufferCountLo; copies H to wLinkBufferCountHi; copies L to wLinkBufferPtrLo; ...
 RunLinkSession8Exchange_SetScreenStep_10::
     ld a, [wGiftRecord]
     and a
@@ -1532,9 +1533,9 @@ RunLinkSession8Exchange_SetScreenStep_10::
     ld [wLinkReady], a
     ret
 
-; step 13 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
-; wLinkTimeoutLo; sets wLinkTimeoutHi; sets wLinkBufferCountLo; sets wLinkBufferCountHi; sets
-; wLinkBufferPtrLo; sets wLinkBufferPtrHi; ...
+; step 13 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; copies L to
+; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferCountLo; copies H to
+; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 RunLinkSession8Exchange_SetScreenStep_6::
     ld a, [wScreenStep]
     inc a
@@ -1562,7 +1563,7 @@ RunLinkSession8Exchange_SetScreenStep_6::
 
 ; step 17 of RunLinkSession8Exchange_WriteTitleScreenState: checks EVENT_NEVER_SET; sets
 ; wLinkEggData to 1; branches on wLinkEggState; calls RankFamilyScoresIntoFamilyRanking; calls
-; LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth; sets wFamilyBitCount; calls
+; LoadTopSpeciesLoSpeciesStatsToTopSpeciesGrowth; copies L to wFamilyBitCount; calls
 ; RaiseRandomLowestResistance; ...
 RunLinkSession8Exchange_TestFlagBit::
     ld de, EVENT_NEVER_SET
@@ -1678,9 +1679,9 @@ RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
     ld [wScreenStep], a
     ret
 
-; step 3 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
-; wLinkBufferCountLo; sets wLinkBufferCountHi; sets wLinkTimeoutLo; sets wLinkTimeoutHi; sets
-; wLinkBufferPtrLo; sets wLinkBufferPtrHi; ...
+; step 3 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; copies L to
+; wLinkBufferCountLo; copies H to wLinkBufferCountHi; copies L to wLinkTimeoutLo; copies H to
+; wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
 RunLinkSession8Exchange_SetScreenStep_8::
     ld a, [wScreenStep]
     inc a
@@ -1860,8 +1861,9 @@ RunLinkSession8Exchange_AdvanceScreenStep::
     ld [wPickCount], a
     ret
 
-; step 23 of RunLinkSession8Exchange_WriteTitleScreenState: calls BGMapAddressAtScroll_BankF0; sets
-; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
+; step 23 of RunLinkSession8Exchange_WriteTitleScreenState: calls BGMapAddressAtScroll_BankF0;
+; copies H to wArg5; copies L to wArg6; copies D to wArg1; copies E to wArg2; sets wArg3 to $20;
+; sets wArg4 to $20; ...
 RunLinkSession8Exchange_SetArg5::
     call BGMapAddressAtScroll_BankF0
     ld a, h
@@ -1950,9 +1952,9 @@ RunLinkSession8Exchange_ObjectSceneThenSave_WriteSpriteSlotsAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 4 of RunLinkSession8Exchange_ObjectSceneThenSave: returns if wObject1 + OBJ_ANIM_COUNTER is
-; 0; decrements wObject1 + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X
-; to $58; sets wObject1 + OBJ_FLAGS; increments wScreenSubStep
+; step 4 of RunLinkSession8Exchange_ObjectSceneThenSave: returns if wObject1 + OBJ_ANIM_COUNTER &
+; $03 is 0; decrements wObject1 + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1
+; + OBJ_X to $58; sets wObject1 + OBJ_FLAGS; increments wScreenSubStep
 RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -2012,8 +2014,8 @@ RunLinkSession8Exchange_ObjectSceneThenSave_SetObject5_SetObject5::
     ret
 
 ; step 10 of RunLinkSession8Exchange_ObjectSceneThenSave: sets wObject1 + OBJ_FLAGS; sets wObject1 +
-; OBJ_STATE to 1; returns if wObject1 + OBJ_ANIM_COUNTER is 0; increments wObject1 + OBJ_X; returns
-; unless wObject1 + OBJ_X is $e0; increments wScreenSubStep
+; OBJ_STATE to 1; returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; increments wObject1 + OBJ_X;
+; returns unless wObject1 + OBJ_X is $e0; increments wScreenSubStep
 RunLinkSession8Exchange_ObjectSceneThenSave_WriteObject1AndScreenSubStep_SetScreenSubStep::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
@@ -2338,9 +2340,9 @@ RunLinkSession8Exchange_ObjectScene_GameMode6_Update::
     ld [wSaveRecordIndex], a
     ret
 
-; step 8 of RunLinkSession8Exchange_ObjectScene: may return early; calls RunFieldCommandTemp0; sets
-; wObject5 + SCRIPTOBJ_X to $48; sets wObject5 + SCRIPTOBJ_Y to $40; sets wScreenCounter to 0;
-; increments wScreenSubStep
+; step 8 of RunLinkSession8Exchange_ObjectScene: may return early; sets hTemp0 to $0e; calls
+; RunFieldCommandTemp0; sets wObject5 + SCRIPTOBJ_X to $48; sets wObject5 + SCRIPTOBJ_Y to $40; sets
+; wScreenCounter to 0; increments wScreenSubStep
 RunLinkSession8Exchange_ObjectScene_RunFieldCommandTemp0::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -2405,8 +2407,8 @@ RunLinkSession8Exchange_ObjectScene_SetObject2Plus7::
     ret
 
 ; step 26 of RunLinkSession8Exchange_ObjectScene: sets wObject2 + OBJ_FLAGS; sets wObject2 +
-; OBJ_STATE to 3; returns if wObject2 + OBJ_ANIM_COUNTER is 0; decrements wObject2 + OBJ_X; returns
-; unless wObject2 + OBJ_X is $30; increments wScreenSubStep
+; OBJ_STATE to 3; returns if wObject2 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject2 + OBJ_X;
+; returns unless wObject2 + OBJ_X is $30; increments wScreenSubStep
 RunLinkSession8Exchange_ObjectScene_WriteObject2AndScreenSubStep::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
@@ -2529,8 +2531,8 @@ RunLinkSession8Exchange_ObjectScene_WriteObject2AndSpriteSlotsEtc::
     ret
 
 ; step 30 of RunLinkSession8Exchange_ObjectScene: calls RunTextUntilTextWindowStateDone_BankF0;
-; calls CopyNameStringFromBank08Database; calls BeginString_BankF0_Cat0; advances wScreenSubStep;
-; sets wLinkSceneSpeciesLo to 2; sets wLinkSceneSpeciesHi to 0; sets wLinkSceneFamily to 1; ...
+; calls CopyNameStringFromBank08Database; calls BeginString_BankF0_Cat0; sets hSpriteWindowClipMode
+; to 0; advances wScreenSubStep; sets wLinkSceneSpeciesLo to 2; sets wLinkSceneSpeciesHi to 0; ...
 RunLinkSession8Exchange_ObjectScene_ShowGHatchedFromThe::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggSpeciesLo
@@ -2590,8 +2592,8 @@ RunLinkSession8Exchange_EggHatched::
     dw RunLinkSession8Exchange_ObjectSceneThenSave_RunSaveGameSteps
 
 ; step 8 of RunLinkSession8Exchange_EggHatched: sets wObject1 + OBJ_FLAGS; sets wObject1 + OBJ_STATE
-; to 1; returns if wObject1 + OBJ_ANIM_COUNTER is 0; increments wObject1 + OBJ_X; returns unless
-; wObject1 + OBJ_X is $70; calls RunFieldCommandTemp0; sets wObject5 + SCRIPTOBJ_X to $48; ...
+; to 1; returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; increments wObject1 + OBJ_X; returns
+; unless wObject1 + OBJ_X is $70; sets hTemp0 to $0e; calls RunFieldCommandTemp0; ...
 RunLinkSession8Exchange_EggHatched_RunFieldCommandTemp0::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
@@ -2637,8 +2639,8 @@ RunLinkSession8Exchange_EggHatched_SetObject1Plus7::
     ret
 
 ; step 26 of RunLinkSession8Exchange_EggHatched: sets wObject2 + OBJ_FLAGS; sets wObject2 +
-; OBJ_STATE to 1; returns if wObject2 + OBJ_ANIM_COUNTER is 0; increments wObject2 + OBJ_X; returns
-; unless wObject2 + OBJ_X is $60; increments wScreenSubStep
+; OBJ_STATE to 1; returns if wObject2 + OBJ_ANIM_COUNTER & $03 is 0; increments wObject2 + OBJ_X;
+; returns unless wObject2 + OBJ_X is $60; increments wScreenSubStep
 RunLinkSession8Exchange_EggHatched_WriteObject2AndScreenSubStep::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
@@ -2701,7 +2703,7 @@ RunLinkSession8Exchange_EggHatched_ToStepScreenStepOffsetTableEvery4Frames::
     ret
 
 ; step 28 of RunLinkSession8Exchange_EggHatched: sets wObject1 + OBJ_STATE to 1; sets wObject2 +
-; OBJ_STATE to 1; returns if wObject1 + OBJ_ANIM_COUNTER is 0; increments wObject2 + OBJ_X;
+; OBJ_STATE to 1; returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; increments wObject2 + OBJ_X;
 ; increments wObject1 + OBJ_X; returns unless wObject1 + OBJ_X is $e0; increments wScreenSubStep
 RunLinkSession8Exchange_EggHatched_WriteSpriteSlotsAndObject1Etc::
     ld a, [wSpriteSlots + $d]
@@ -2728,8 +2730,8 @@ RunLinkSession8Exchange_EggHatched_WriteSpriteSlotsAndObject1Etc::
     ret
 
 ; step 30 of RunLinkSession8Exchange_EggHatched: calls RunTextUntilTextWindowStateDone_BankF0; calls
-; CopyStringMaxBToDE; calls CopyNameStringFromBank08Database; calls BeginString_BankF0_Cat0;
-; advances wScreenSubStep; sets wSaveStep to 0; sets wSaveRecordIndex to 0
+; CopyStringMaxBToDE; calls CopyNameStringFromBank08Database; calls BeginString_BankF0_Cat0; sets
+; hSpriteWindowClipMode to 0; advances wScreenSubStep; sets wSaveStep to 0; ...
 RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
@@ -2932,7 +2934,7 @@ RunLinkSession8Case01Steps_FillTilesBxC::
 
 ; step 3 of RunLinkSession8Case01Steps: calls CopyRectTo20ByteRows_BankF0; calls
 ; ClampRecordListPageCursor4; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_BankF0; calls
-; StoreC5BEC6AtHLStride2_BankF0; sets wArg1; sets wArg2; ...
+; StoreC5BEC6AtHLStride2_BankF0; copies D to wArg1; copies E to wArg2; ...
 RunLinkSession8Case01Steps_ClampRecordListPageCursor4::
     ld de, RunLinkSession8Case01Steps_ClampRecordListPageCursor4_TileRect
     ld hl, wWindowTileBuffer + $6b
@@ -3102,9 +3104,9 @@ RunLinkSession8Case01Steps_BGMapAddressAtScroll_BankF0::
     ld [wScreenStep], a
     ret
 
-; step 9 of RunLinkSession8Case01Steps: sets wArg1 to $9e; sets wArg2 to 0; sets wArg3; sets wArg4;
-; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; calls StoreBAtWordTableEntry_BankF0;
-; ...
+; step 9 of RunLinkSession8Case01Steps: sets wArg1 to $9e; sets wArg2 to 0; copies D to wArg3;
+; copies E to wArg4; calls LoadTileListSixPerCall; returns unless wArg5 is $ff; calls
+; StoreBAtWordTableEntry_BankF0; ...
 RunLinkSession8Case01Steps_ShowChooseTheKindOf::
     ld a, $9e
     ld [wArg1], a
@@ -3306,9 +3308,9 @@ RunLinkSession8Case03Steps_UploadTilesFromData::
     ret
 
 ; step 5 of RunLinkSession8Case03Steps: calls GetListEntriesCell4Address_BankF0; calls
-; RunLinkSession8Case03Steps_DrawRecordParentNames; calls BGMapAddressAtScroll_BankF0; calls
-; StepBGMapAddressBackOnScrollWrap; branches on wListCount; calls CopyFromBankWaitVRAM; calls
-; BGMapAddressAtScroll_BankF0; ...
+; RunLinkSession8Case03Steps_DrawRecordParentNames; sets hSpriteHideTile to $f0; calls
+; BGMapAddressAtScroll_BankF0; calls StepBGMapAddressBackOnScrollWrap; branches on wListCount; calls
+; CopyFromBankWaitVRAM; ...
 RunLinkSession8Case03Steps_GetListEntriesCell4Address_BankF0::
     call GetListEntriesCell4Address_BankF0
     ld a, [hl]
@@ -3454,8 +3456,8 @@ RunLinkSession8Case03Steps_DrawRect6x6FromAtScroll41_BankF0::
     ret
 
 ; step 7 of RunLinkSession8Case03Steps: calls HandleListCursorInput_1D; branches on
-; wMenuInputResult; branches on wRecordsFlagged; increments wScreenStep; calls
-; SplitListCursorBy4_BankF0; sets wScreenStep
+; wMenuInputResult; branches on wRecordsFlagged; sets hSpriteHideTile to 0; increments wScreenStep;
+; calls SplitListCursorBy4_BankF0; sets hSpriteHideTile to 0; ...
 RunLinkSession8Case03Steps_HandleListCursorInput_1D::
     farcall HandleListCursorInput_1D
     ld a, [wMenuInputResult]
@@ -3516,8 +3518,8 @@ RunLinkSession8Case03Steps_WriteScreenStep_RunLinkSession8Case03Steps_WriteGlyph
     ret
 
 ; step 11 of RunLinkSession8Case03Steps: calls RunLinkSession8Case03Steps_WriteGlyphListPos; sets
-; wStringCategory to 0; sets wStringIndex to $1e; sets wTextWindowTileLo; sets wTextWindowTileHi;
-; sets wTextWindowRows; sets wTextWindowWidth; ...
+; wStringCategory to 0; sets wStringIndex to $1e; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; ...
 RunLinkSession8Case03Steps_ShowString_BankF0::
     ld hl, RunLinkSession8Case03Steps_ShowString_BankF0_TileCopyDestList
     ld de, RunLinkSession8Case03Steps_ShowString_BankF0_TileCopySrcList
@@ -3660,7 +3662,8 @@ RunLinkSession8Case03Steps_DrawRecordListPageMarks::
 
 ; step 16 of RunLinkSession8Case03Steps: calls BGMapAddressAtScroll_BankF0; calls
 ; DrawScreenBufferRect_BankF0; calls BGMapAddressAtScroll_BankF0; calls DrawScreenBufferRect_BankF0;
-; calls RestoreSpriteStateClearCount_BankF0; sets wScreenSubStep to 0; sets wScreenState to 2; ...
+; calls RestoreSpriteStateClearCount_BankF0; sets hSpriteHideTile to $70; sets wScreenSubStep to 0;
+; ...
 RunLinkSession8Case03Steps_RestoreSpriteStateClearCount_BankF0::
     call BGMapAddressAtScroll_BankF0
     lb bc, $14, $0d

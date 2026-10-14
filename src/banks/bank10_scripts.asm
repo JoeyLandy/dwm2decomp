@@ -439,8 +439,8 @@ ScriptFetch02::
     ld a, $03
     ld [wScriptCommandType], a
 
-; Sets wScriptParam0; sets wScriptParam1; sets wScriptStep to 0; sets wScriptPointerLo; sets
-; wScriptPointerHi
+; Sets wScriptParam0; sets wScriptParam1; sets wScriptStep to 0; copies L to wScriptPointerLo;
+; copies H to wScriptPointerHi
 ScriptFetch02_Restore::
     pop hl
     ld a, [hli]
@@ -1671,8 +1671,8 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     ret
 
 ; step 2 of ScriptCommand09: returns if bit 0 of wTextFlags is set; branches on wScriptParam1; plays
-; sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; branches on $00; sets
-; wTextWindowState to $82; ...
+; sound $69; sets hSpriteWindowClipMode to 0; sets wTextWindowState to 2; sets wTextWindowStep to 0;
+; branches on hPlayerY; ...
 ScriptCommand09_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -1720,7 +1720,7 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
 
 ; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
 ; ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType; branches on wMessageMode;
-; sets wStringIndex; sets wStringCategory to 0
+; copies L to wStringIndex; sets wStringCategory to 0
 ScriptCommand09_WriteStringIndexAndStringCategory::
     ld a, h
     and $3f
@@ -1765,8 +1765,8 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data::
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
-; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; sets
-; wStringIndex; sets wStringCategory to 0; dispatches through the table that follows
+; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; copies L
+; to wStringIndex; sets wStringCategory to 0; dispatches on H
 ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
     pop hl
     ld a, [wMapType]
@@ -1857,8 +1857,8 @@ ScriptCommand09_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
-; Sets wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank83; sets wStringIndex;
-; sets wStringCategory to 0; calls BeginStringDisplay_Bank8A
+; Branches on H; branches on L; copies L to wStringIndex; sets wStringCategory to 0; calls
+; BeginStringDisplay_Bank83; copies L to wStringIndex; sets wStringCategory to 0; ...
 ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
     ld a, h
     or a

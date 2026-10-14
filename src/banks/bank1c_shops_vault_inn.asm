@@ -689,8 +689,8 @@ BGMapAddressAtScroll_Bank1C::
     add_a_to_hl
     ret
 
-; called from InnMenu_Init: sets wArg7 to 0; sets wArg8; sets wMenuInputResult; branches on the byte
-; at wDigits
+; called from InnMenu_Init: sets wArg7 to 0; copies H to wArg8; copies L to wMenuInputResult;
+; branches on the byte at wDigits; branches on C
 InnMenu_Init_WriteArg7AndArg8Etc::
     ld hl, wDigits
     xor a
@@ -796,7 +796,7 @@ DrawScreenBufferRectToBGMap_1C::
     ldh [c], a
     ret
 
-; called from InnMenu_Pay: sets wGoldHi; sets wGoldMid; sets wGoldLo
+; called from InnMenu_Pay: sets wGoldHi; copies B to wGoldMid; copies C to wGoldLo
 InnMenu_Pay_WriteGoldHiAndGoldMidEtc::
     ld a, [wArg7]
     ld e, a
@@ -839,8 +839,8 @@ InnMenu_Pay_CopyBytesDEToHL_Bank1C::
     call CopyLow3BitsToWRAMBank2_Bank1C
     ret
 
-; called from InnMenu_Pay: calls DrawGoldDigitsAtHLWrapped_1C; branches on wTextWindowState; calls
-; CopyRectTo20ByteRowsJp_Bank1C; calls BGMapAddressAtScroll_Bank1C; calls
+; called from InnMenu_Pay: branches on C; calls DrawGoldDigitsAtHLWrapped_1C; branches on
+; wTextWindowState; calls CopyRectTo20ByteRowsJp_Bank1C; calls BGMapAddressAtScroll_Bank1C; calls
 ; DrawScreenBufferRectToBGMap_1C
 InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C::
     ld hl, wScreenSubStep
@@ -966,9 +966,9 @@ CloseShopMenu_ToCloseShopMenu_SetGlyphListPos::
     call CloseShopMenu_SetGlyphListPos
     ret
 
-; step 2 of CloseShopMenu: calls DecompressToVRAM; sets wTextWindowTileLo; sets wTextWindowTileHi;
-; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets wTextWindowTileLo;
-; ...
+; step 2 of CloseShopMenu: calls DecompressToVRAM; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
+; FillTilesFromRequest; copies L to wTextWindowTileLo; ...
 CloseShopMenu_DecompressToVRAM::
     ld b, $46
     ld de, Tiles1Gfx
@@ -1358,7 +1358,8 @@ ShopMenu_Buy::
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_3
 
 ; step 0 of ShopMenu_Buy: branches on the byte at ShopMenu_Buy_WriteVBKAndScreenStep_Data; branches
-; on wIsCGB; branches on $01; increments wScreenStep
+; on rSTAT; branches on wIsCGB; sets rVBK to 1; branches on rSTAT; sets rVBK to 0; increments
+; wScreenStep
 ShopMenu_Buy_WriteVBKAndScreenStep::
     ld hl, ShopMenu_Buy_WriteVBKAndScreenStep_Data
     ld de, vBGMap1 + $300
@@ -1424,9 +1425,9 @@ ShopMenu_Buy_DrawRectBothBanksSetTextCursorLoPlus1C1::
     ld [wScreenStep], a
     ret
 
-; step 2 of ShopMenu_Buy: calls LoadArg1PointerForScreenTableIndex; sets wSavedSpriteClipMode; sets
-; wSavedFieldDrawFlags; branches on wItemGridY; branches on wItemGridY+1; branches on wItemGridY;
-; decrements wItemGridY; ...
+; step 2 of ShopMenu_Buy: calls LoadArg1PointerForScreenTableIndex; copies C to
+; wSavedSpriteClipMode; copies L to wSavedFieldDrawFlags; branches on wItemGridY; decrements
+; wItemGridY; sets wMenuChoice; branches on wItemGridX; ...
 ShopMenu_Buy_LoadArg1PointerForScreenTableIndex::
     call LoadArg1PointerForScreenTableIndex
     ld c, $00
@@ -2061,8 +2062,8 @@ ShopMenu_Buy_ResetTextCounter0Counters::
     ret
 
 ; step 8 of ShopMenu_Buy: sets wNumberTens to 0; sets wNumberOnes to 1; calls
-; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB; copies
-; wNumberTens to wShopNumberTens; copies wNumberOnes to wScreenCountPlusOne; ...
+; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB;
+; branches on C; branches on B; ...
 ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens::
     xor a
     ld [wNumberTens], a
@@ -2559,7 +2560,7 @@ DrawNumberTensOnesAtTableOffsets_Data::
 
 ; called from ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C: calls LoadArg1PointerForScreenTableIndex;
 ; calls ReadF2FarPointerForScreenTableIndex; calls ShopMenu_Buy_ReadFarPointerAtDEInBankB; calls
-; ReadFarPointerAtDEInBankB; sets wThreeDigits
+; ReadFarPointerAtDEInBankB; copies L to wThreeDigits
 ShopMenu_Buy_WriteThreeDigits::
     ld a, [wNumberTens]
     ld e, a
@@ -2628,8 +2629,8 @@ ShopMenu_Buy_WriteThreeDigits::
     ret
 
 ; step 10 of ShopMenu_Buy: calls LoadArg1PointerForScreenTableIndex; sets wListCursorBlink; copies
-; the byte at wThreeDigits to wDigits; calls Number24ToPackedBCD; sets wScreenList; sets
-; wListEntries; sets wGrid2CursorX; ...
+; the byte at wThreeDigits to wDigits; calls Number24ToPackedBCD; copies hTemp3 & $0f to
+; wScreenList; copies hTemp2 & $f0 to wListEntries; copies hTemp2 & $0f to wGrid2CursorX; ...
 ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetListCursorBlink::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
@@ -2744,8 +2745,8 @@ ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetListCursorBlink::
     ret
 
 ; step 11 of ShopMenu_Buy: calls BGMapAddressAtScroll_Bank1C_2; calls
-; StepBGMapAddressBackOnScrollWrap; calls ClearRectSetTextCursorLoPlus1C1_Bank1C; plays sound $6c;
-; increments wScreenStep
+; StepBGMapAddressBackOnScrollWrap; branches on C; branches on B; calls
+; ClearRectSetTextCursorLoPlus1C1_Bank1C; plays sound $6c; increments wScreenStep
 ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $010e
@@ -3251,9 +3252,9 @@ ShopMenu_Sell::
     dw ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C
     dw ShopMenu_Sell_AddArg1ToGoldCapped99999
 
-; step 2 of ShopMenu_Sell: branches on the byte at wInventory; sets wListPages; calls
-; ListDistinctInventoryItemsToItemGrid; branches on the byte at wItemGrid; sets
-; wSavedSpriteSlotCount; branches on wItemGridY; branches on wItemGridY+1; ...
+; step 2 of ShopMenu_Sell: branches on the byte at wInventory; branches on B; copies C to
+; wListPages; calls ListDistinctInventoryItemsToItemGrid; branches on the byte at wItemGrid;
+; branches on B; copies L to wSavedSpriteSlotCount; ...
 ShopMenu_Sell_ListDistinctInventoryItemsToItemGrid::
     ld hl, wInventory
     ld b, $00
@@ -3551,8 +3552,9 @@ ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc::
 .return:
     ret
 
-; step 4 of ShopMenu_Sell: calls ComputeSellPrice; sets wDigits; calls Number24ToPackedBCD; sets
-; wSharedMenuWork; sets wListEntries2; sets wMenuWordBuf; sets wMenuWordBuf1; ...
+; step 4 of ShopMenu_Sell: calls ComputeSellPrice; copies L to wDigits; calls Number24ToPackedBCD;
+; copies hTemp1 & $f0 to wSharedMenuWork; copies hTemp1 & $0f to wListEntries2; copies hTemp0 & $f0
+; to wMenuWordBuf; copies hTemp0 & $0f to wMenuWordBuf1; ...
 ShopMenu_Sell_ComputeSellPrice::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -3828,9 +3830,8 @@ ShopMenu_Sell_BlinkCursorSelectedRecord_Bank1C::
     ld [wScreenStep], a
     ret
 
-; step 6 of ShopMenu_Sell: calls ResetTextCounter0Counters; calls ComputeSellPrice; decrements
-; wScreenStep; sets wTextTimer to 0; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; ...
+; step 6 of ShopMenu_Sell: calls ResetTextCounter0Counters; calls ComputeSellPrice; branches on L;
+; branches on H; decrements wScreenStep; sets wTextTimer to 0; sets wTwoChoiceCursor to 1; ...
 ShopMenu_Sell_ResetTextCounter0Counters::
     call ResetTextCounter0Counters
     ld hl, wItemGrid
@@ -3887,8 +3888,8 @@ ShopMenu_Sell_ResetTextCounter0Counters::
     ret
 
 ; step 7 of ShopMenu_Sell: sets wNumberTens to 0; sets wNumberOnes to 1; calls
-; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB; copies
-; wNumberTens to wShopScrollA; copies wNumberOnes to wShopScrollB; ...
+; BGMapAddressAtScroll_Bank1C_2; calls StepBGMapAddressBackOnScrollWrap; branches on wIsCGB;
+; branches on C; branches on B; ...
 ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap::
     xor a
     ld [wNumberTens], a
@@ -4407,7 +4408,8 @@ DrawNumberTensOnesAtTableOffsets_2::
 DrawNumberTensOnesAtTableOffsets_2_Data::
     db $62, $01
 
-; called from ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2: calls ComputeSellPrice; sets wThreeDigits
+; called from ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2: calls ComputeSellPrice; copies L to
+; wThreeDigits
 ShopMenu_Sell_WriteThreeDigits::
     ld a, [wNumberTens]
     ld e, a
@@ -4466,8 +4468,9 @@ ShopMenu_Sell_WriteThreeDigits::
     ret
 
 ; step 9 of ShopMenu_Sell: copies the byte at wItemGrid to wListCursorBlink; copies the byte at
-; wThreeDigits to wDigits; calls Number24ToPackedBCD; sets wScreenList; sets wListEntries; sets
-; wGrid2CursorX; sets wGrid2CursorY; ...
+; wThreeDigits to wDigits; calls Number24ToPackedBCD; copies hTemp2 & $f0 to wScreenList; copies
+; hTemp2 & $0f to wListEntries; copies hTemp1 & $f0 to wGrid2CursorX; copies hTemp1 & $0f to
+; wGrid2CursorY; ...
 ShopMenu_Sell_WriteListCursorBlinkAndDigitsEtc::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -4741,7 +4744,7 @@ ShopMenu_Sell_ClearRectSetTextCursorLoPlus1C1_Bank1C::
 
 ; step 13 of ShopMenu_Sell: sets wArg3; sets wArg2; copies wThreeDigits to wArg1; calls
 ; AddArg1ToGoldCapped99999; calls RemoveItemCountFromInventory; branches on the byte at wInventory;
-; sets wListPages; ...
+; branches on B; ...
 ShopMenu_Sell_AddArg1ToGoldCapped99999::
     ld a, [wThreeDigits + $2]
     ld [wArg3], a

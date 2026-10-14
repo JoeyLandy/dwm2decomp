@@ -808,8 +808,8 @@ ItemUsable_Warp::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; sets wItemId to $ff; branches on $ff; sets wItemId to $ff; calls
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; may return early; sets wItemId to $fe
+; code: branches on wMapType; sets wItemId to $ff; branches on hMapId; sets wItemId to $ff; calls
+; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; returns unless hTempA is 0; sets wItemId to $fe
 ItemUsable_LogTwig::
     ld a, [wMapType]
     bit 7, a
@@ -926,7 +926,8 @@ ItemUsable_Item2F::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; checks EVENT_SCENE_MONSTERS_IN_TOW; sets wItemId to $ff
+; code: branches on wMapType; branches on hMapId; branches on hMapScreenX; branches on hMapScreenY;
+; branches on hPlayerX; branches on hPlayerY; branches on hPlayerFacing; ...
 ItemUsable_WaterCall::
     ld a, [wMapType]
     bit 7, a
@@ -977,7 +978,8 @@ ItemUsable_WaterCall::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff
+; code: branches on wMapType; branches on hMapId; branches on hPlayerY; branches on hPlayerFacing;
+; branches on hPlayerX; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff
 ItemUsable_MoonRock::
     ld a, [wMapType]
     bit 7, a
@@ -1016,8 +1018,8 @@ ItemUsable_MoonRock::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; checks EVENT_SCENE_SHIELD_1E4; checks EVENT_SCENE_SHIELD2_1E5; sets
-; wItemId to $ff
+; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
+; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_1E4; checks EVENT_SCENE_SHIELD2_1E5; ...
 ItemUsable_Crest::
     ld a, [wMapType]
     bit 7, a
@@ -1064,7 +1066,8 @@ ItemUsable_YunaSoul::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff
+; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
+; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff
 ItemUsable_SleepHerb::
     ld a, [wMapType]
     bit 7, a
@@ -1101,7 +1104,8 @@ ItemUsable_SleepHerb::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
-; code: branches on wMapType; returns unless wScreenSavedFlag is 0; sets wItemId to $ff
+; code: branches on wMapType; branches on hMapId; branches on hMapScreenY; returns unless
+; wScreenSavedFlag is 0; sets wItemId to $ff
 ItemUsable_Change::
     ld a, [wMapType]
     bit 7, a
@@ -2331,7 +2335,7 @@ SubtractAFromRecordWordFloor1::
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: as
 ; SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before
 ; it (the second half is not read to its end) (E-0103)
-; code: calls SRAMRecordAddressMapped; may return early
+; code: sets hTemp0; calls SRAMRecordAddressMapped; branches on E; returns if D is $03
 SubtractAFromRecordWordPairFloor1::
     ldh [hTemp0], a
     ld a, [wTargetRecord]
@@ -4688,7 +4692,7 @@ CountSpeciesPerFamilyFlaggedOrListed::
     ret
 
 ; Calls FillBytes; sets wSpeciesIdLo to 0; sets wSpeciesIdHi to 0; calls LoadSpeciesFamily; branches
-; on wSpeciesRecord; calls TestSpeciesFlag; sets wSpeciesIdLo; ...
+; on wSpeciesRecord; calls TestSpeciesFlag; copies L to wSpeciesIdLo; ...
 BattleEnd_Step3_LoadSpeciesFamily::
     xor a
     ld hl, wWorkBuf
@@ -4999,7 +5003,7 @@ BattleEnd_AskToJoin::
 
 ; step 0 of BattleEnd_AskToJoin: advances wBattleSubStep; calls
 ; CopyBattleMonsterNameWithLetterSuffix; branches on wBattleKind; calls KeyWorldAreaEncounterIndex;
-; sets wStringIndex to $1e; calls ShowStringCategory5_Bank16; calls CountRecordsByField6E; ...
+; branches on hTemp0; sets wStringIndex to $1e; calls ShowStringCategory5_Bank16; ...
 BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5107,8 +5111,8 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld [wBattleSubStep], a
     ret
 
-; step 5 of BattleEnd_AskToJoin: calls WriteVRAMByte; branches on wTemp1; advances wBattleSubStep;
-; advances wBattleSubPhase; sets wBattleSubStep to 0
+; step 5 of BattleEnd_AskToJoin: calls WriteVRAMByte; advances wBattleSubStep; advances
+; wBattleSubPhase; sets wBattleSubStep to 0
 BattleEnd_AskToJoin_WriteVRAMByte::
     ld a, $bc
     ld hl, vBGMap0 + $12f
@@ -5188,7 +5192,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen::
     ret
 
 ; step 11 of BattleEnd_AskToJoin: calls SetDEFlagOnBButton; may return early; sets wMenuState to 0;
-; copies wSubMenuCursor2 to wListPage; advances wBattleSubStep; may return early; calls
+; copies wSubMenuCursor2 to wListPage; advances wBattleSubStep; returns if E is 0; calls
 ; CountRecordsByField6E; ...
 BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld de, wMenuState
@@ -5327,7 +5331,7 @@ BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
 
 ; step 15 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
 ; wBattleSubStep; returns unless bit 0 of wJoypadPressed is set; advances wBattleSubStep; returns
-; unless bit 1 of wMenuSubState is set; calls CopyRectRecordToScreenBuffer_11; ...
+; unless bit 1 of wMenuSubState & $01 is set; calls CopyRectRecordToScreenBuffer_11; ...
 BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
     ld de, wMenuSubState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
@@ -7006,7 +7010,7 @@ RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
     ret
 
 ; step 4 of RunBattleEndStep5SubSteps: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
-; sRecords; sets wWorkBuf; sets sRecords to 1; calls CopyBBytesDEToHL_Bank16; calls
+; sRecords; copies C to wWorkBuf; sets sRecords to 1; calls CopyBBytesDEToHL_Bank16; calls
 ; SRAMRecordAddressMapped; ...
 RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc::
     ld a, $0a
@@ -7571,8 +7575,9 @@ BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
     ret
 
 ; step 14 of BattleEnd_AddJoinedMonster: calls SwapMonstersMenu; returns unless wScreenStep is $0a;
-; copies wSavedSpriteSlotCount to wSpriteSlotCount; calls DecompressToVRAM; increments
-; wBattleScreenFlags; advances wBattleSubStep
+; copies wSavedSpriteClipMode to hSpriteWindowClipMode; sets hSpriteHideTile to $80; copies
+; wSavedFieldDrawFlags to hFieldDrawFlags; copies wSavedSpriteSlotCount to wSpriteSlotCount; calls
+; DecompressToVRAM; ...
 BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -8399,9 +8404,9 @@ BuildBattleMenuScreen::
     farcall CopyRectRecordToScreenBuffer
     ret
 
-; called from BattleEnd_Step3: branches on wBattleKind; calls NextTableByte; branches on wRecordBufA
-; + MON_LEVEL; sets wRecordBufA + MON_LEVEL to 1; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
-; LoadSpeciesRecord; ...
+; called from BattleEnd_Step3: branches on wBattleKind; calls NextTableByte; sets wRecordBufA +
+; MON_LEVEL to 1; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord;
+; branches on wRecordBufA + MON_LEVEL; ...
 BattleEnd_Step3_NextTableByte::
     ld a, [wBattleKind]
     cp $02
@@ -8605,7 +8610,7 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
-; Branches on h; sets wBattleTempBuf; calls NextTableByte
+; Branches on h; copies C to wBattleTempBuf; calls NextTableByte
 BattleEnd_Step3_Multiply8By16::
     ld hl, $03e7
     ld a, l
@@ -8648,7 +8653,7 @@ BattleEnd_Step3_Multiply8By16::
     ld h, a
     ret
 
-; Branches on h; sets wBattleTempBuf; calls NextTableByte; may return early
+; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; returns if H is $03
 BattleEnd_Step3_Multiply8By16_2::
     ld hl, $03e7
     ld a, l
@@ -9033,8 +9038,9 @@ DrawTitleSaveSummaryScreen::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
-; Calls LoadSaveFileSummary; branches on wBattlerRecords; branches on wGameMode; sets
-; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; ...
+; Calls LoadSaveFileSummary; branches on wBattlerRecords; branches on wGameMode; copies L to
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; ...
 DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
     call LoadSaveFileSummary
     ld a, [wBattlerRecords]
@@ -9403,7 +9409,7 @@ CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
     ret
 
-; Copies wTitleKeyEntry to wStringIndex; sets wStringCategory to 6; calls ShowString_Bank09
+; Copies wTitleKeyEntry & $3f to wStringIndex; sets wStringCategory to 6; calls ShowString_Bank09
 CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
     ld a, [wTitleKeyEntry]
     and $3f

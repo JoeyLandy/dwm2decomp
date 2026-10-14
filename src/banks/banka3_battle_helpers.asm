@@ -965,7 +965,8 @@ PersonalityIndexOfSlot_BankA3_2::
     pop hl
     ret
 
-; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor
+; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor; copies the
+; byte at wBattleMonsterId to hTemp0
 RollRandomLoBelowChance_WriteTemp0::
     ld a, [wLinkMode]
     or a

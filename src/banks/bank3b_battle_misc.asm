@@ -495,8 +495,8 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
 ; step 0 of RunBattleActions_UseItem: advances wBattleResolveStep; sets wMultiHitCount to 0; sets
-; wSlotsOccupiedFlag to 0; branches on wBattleItemTarget; copies wBattleItemTarget to wBattleTarget;
-; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleItemId; ...
+; wSlotsOccupiedFlag to 0; branches on wBattleItemTarget; copies wBattleItemTarget & $07 to
+; wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleItemId; ...
 RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -704,8 +704,8 @@ RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
     ret
 
 ; step 5 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgFlags;
-; sets wResolveMsgFlags; returns unless bit 4 of wResolveMsgFlags is set; sets wSlotsOccupiedFlag to
-; 1; sets wEffectFlags to 4; calls SelectEffectByEffectFlags; ...
+; copies B to wResolveMsgFlags; returns unless bit 4 of wResolveMsgFlags is set; sets
+; wSlotsOccupiedFlag to 1; sets wEffectFlags to 4; calls SelectEffectByEffectFlags; ...
 RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -832,7 +832,7 @@ SetResolveStep0AUnlessResolveMsgFlagsBit4::
 RunBattleActions_UseItem_Return::
     ret
 
-; step 8 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
+; step 8 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg & $c0;
 ; decrements wBattleResolveStep; sets wBattleSubStep2 to 0; calls
 ; SetBit0OfLevelUpGainsIndexed_Bank3B; calls SetBit1OfLevelUpGainsIndexed_Bank3B; calls
 ; SetBit2OfLevelUpGainsIndexed_Bank3B
@@ -995,7 +995,7 @@ RunOnceThenNext::
     ret
 
 ; called from RunOnceThenNext: branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; increments wMultiHitCount
+; increments wMultiHitCount; branches on B
 RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     ld b, $04
     ld a, [wBattleTarget]
@@ -1059,8 +1059,8 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     jr .check_record_buffer_data
 
 ; step 11 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
-; returns if wSlotsOccupiedFlag is 0; copies wBattleItemId to wItemId; copies wMenuOption to
-; wInventorySlot; calls LoadItemRecord; calls ConsumeSelectedItemByChance; ...
+; returns if wSlotsOccupiedFlag is 0; copies wBattleItemId to wItemId; sets wInventorySlot; calls
+; LoadItemRecord; calls ConsumeSelectedItemByChance; ...
 RunBattleActions_UseItem_LoadItemRecord::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1377,8 +1377,9 @@ RestoreTargetHPByActionAmount::
     ld [hl], b
     ret
 
-; called from RestoreTargetMPIfLow: branches on wBattleActionId; calls SetDamageRandomInRange; sets
-; wBattleDamageLo; sets wBattleDamageHi; calls GetBattleMaxMP_Bank3B; calls SetDamageDEMinusBCPlusHL
+; called from RestoreTargetMPIfLow: branches on wBattleActionId; calls SetDamageRandomInRange;
+; copies E to wBattleDamageLo; copies D to wBattleDamageHi; calls GetBattleMaxMP_Bank3B; calls
+; SetDamageDEMinusBCPlusHL
 RestoreTargetMPIfLow_SetDamageRandomInRange::
     ld a, [wBattleActionId]
     cp SKILL_FIREBANE
@@ -1933,7 +1934,7 @@ RestoreTargetHPIfHurt::
     jr z, .skip
     call RestoreTargetHPByActionAmount
     ld l, $37
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
 .skip:
@@ -1956,7 +1957,7 @@ RestoreTargetMPIfLow::
     jr z, .skip
     call RestoreTargetMPIfLow_SetDamageRandomInRange
     ld l, $c3
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
 .skip:
@@ -1972,7 +1973,7 @@ CureTargetStatus0Bits01::
     and $fc
     ld [hl], a
     ld l, $4e
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -1992,7 +1993,7 @@ CureTargetStatus0Bit6::
     add_a_to_hl
     ld [hl], $03
     ld l, $4f
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2008,7 +2009,7 @@ CureTargetStatus0Bit5::
     and $df
     ld [hl], a
     ld l, $51
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2028,7 +2029,7 @@ CureTargetStatus0Bits237::
     add_a_to_hl
     ld [hl], $03
     ld l, $82
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2048,7 +2049,7 @@ CureTargetStatus0Bit4::
     add_a_to_hl
     ld [hl], $03
     ld l, $83
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2112,35 +2113,35 @@ ApplyTargetBattleWordArray3FReduction::
     cp $01
     jr z, .skip
     ld l, $fd
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
     ld l, $95
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip2:
     ld h, $e6
-    ld bc, $0080
+    lb bc, $00, $80
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; reduces the target's wBattleExtraStat (or adds to wBattleMeter for local targets); when status
@@ -2190,7 +2191,7 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank3B
     ld l, $75
-    ld bc, $0090
+    lb bc, $00, $90
     call ClearDamageAndStoreResolveMsgFlags_Bank3B
     ld a, [wMultiHitCount]
     or a
@@ -2234,25 +2235,25 @@ InflictStatus0Bit0WithBattleWordArray3FReduction::
 
 .skip:
     ld h, $e6
-    ld bc, $0080
+    lb bc, $00, $80
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 .call_show_battle_text_category0:
     ld d, $7b
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category02:
     ld d, $7d
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 .call_show_battle_text_category03:
     ld d, $7c
     farcall ShowBattleTextCategory0
-    ld bc, $0000
+    lb bc, $00, $00
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
 ; wBattleEndFlag = 1 and stores message $98 (ClearDamageAndStoreResolveMsgFlags_Bank3B) (E-0122)
@@ -2260,7 +2261,7 @@ SetBattleEndFlagAndMessage98::
     ld a, $01
     ld [wBattleEndFlag], a
     ld l, $98
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
     db $c9
 
@@ -2286,7 +2287,7 @@ InflictTargetStatus0Bit0::
     call AddAx9ToHL
     set BSTAT1_SPELLS_SEALED, [hl]
     ld l, $3b
-    ld bc, $4098
+    lb bc, $40, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2305,7 +2306,7 @@ InflictTargetStatus0Bit2::
     jr nz, .skip
     set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
-    ld bc, $0090
+    lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
 
 .skip:
@@ -2356,7 +2357,7 @@ RaiseWord3FAndRestoreHP::
     jr z, .skip2
     call RestoreTargetHPByActionAmount
     ld l, $37
-    ld bc, $4090
+    lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor
 
 .skip2:
@@ -2374,7 +2375,8 @@ UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
     ld hl, $d035
     ld bc, $88a8
 
-; Sets wResolveMsgActor; sets wResolveMsgTarget; sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies L to wResolveMsgActor; copies H to wResolveMsgTarget; copies C to wResolveMsgFlags; copies
+; B to wResolveMsgArg
 UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2393,7 +2395,7 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B::
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-; Sets wResolveMsgActor; sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies L to wResolveMsgActor; copies C to wResolveMsgFlags; copies B to wResolveMsgArg
 ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2421,12 +2423,12 @@ SetResolveMsgTargetB5AndResolveMsgFlagsTo0180::
     ld h, $b5
     ld bc, $0180
 
-; Sets wResolveMsgTarget
+; Copies H to wResolveMsgTarget
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
     ld a, h
     ld [wResolveMsgTarget], a
 
-; Sets wResolveMsgFlags; sets wResolveMsgArg
+; Copies C to wResolveMsgFlags; copies B to wResolveMsgArg
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
     ld a, c
     ld [wResolveMsgFlags], a
