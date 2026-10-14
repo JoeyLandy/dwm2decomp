@@ -4,41 +4,35 @@
 SECTION "Bank 12", ROMX[$4000], BANK[$12]
     db $12
 
-; implements script command type 9D (SCRIPT_COUNTDOWN_MESSAGE): a key-world/field talk event (group
-; $1E, dispatched by CountDownTalkCountdownThenDispatchTalkEvent: one message); named from its
-; trigger and calls (E-0038)
+; Runs SCRIPT_COUNTDOWN_MESSAGE: open message $10 in the current message group, then run its box
+; until idle and end the command. wScriptStep selects the two stages. (C1, E-0358)
 CountdownMessage::
     ld a, [wScriptStep]
     jumptable
-    dw CountdownMessage_ToStartMessageAAndStep
-    dw CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12
+    dw CountdownMessage_Open
+    dw CountdownMessage_Finish
 
-; step 0 of CountdownMessage: calls StartMessageA; advances wScriptStep (E-0347)
-; why: step 0 of CountdownMessage (when wScriptStep = 0); CountdownMessage: implements script
-; command type 9D (SCRIPT_COUNTDOWN_MESSAGE): a key-world/field talk event (group $1E, dispatched by
-; ... (E-0352)
-CountdownMessage_ToStartMessageAAndStep::
+; Opens message $10 in the group already in wMessageGroup and advances to the shared message-wait
+; stage. It does not select a new group. (C1, E-0358)
+CountdownMessage_Open::
     ld a, $10
     call StartMessageA
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; implements script command type 9C (SCRIPT_ENCOUNTER_MESSAGE): a key-world/field talk event (group
-; $1D, dispatched by TickRandomEncounterCounter: one message (StartMessageA)); named from its
-; trigger and calls (E-0038)
+; Runs SCRIPT_ENCOUNTER_MESSAGE: open message $0F in the current message group, then share
+; CountdownMessage's wait-and-finish stage. (C1, E-0358)
 EncounterCounterMessage::
     ld a, [wScriptStep]
     jumptable
-    dw EncounterCounterMessage_ToStartMessageAAndStep
-    dw CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12
+    dw EncounterCounterMessage_Open
+    dw CountdownMessage_Finish
 
-; step 1 of CountdownMessage: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 1 of CountdownMessage (when wScriptStep = 1); CountdownMessage: implements script
-; command type 9D (SCRIPT_COUNTDOWN_MESSAGE): a key-world/field talk event (group $1E, dispatched by
-; ... (E-0352)
-CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12::
+; Shared closing stage for CountdownMessage and EncounterCounterMessage. Runs the message box with
+; freeze flag A = 0; returns while it is active, and ends the script command with
+; wScriptStartRequest = $80 only when the runner returns carry (idle). (C1, E-0358)
+CountdownMessage_Finish::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -46,20 +40,19 @@ CountdownMessage_RunMessageBoxCarryWhenIdle_Bank12::
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of EncounterCounterMessage: calls StartMessageA; advances wScriptStep (E-0347)
-; why: step 0 of EncounterCounterMessage (when wScriptStep = 0); EncounterCounterMessage: implements
-; script command type 9C (SCRIPT_ENCOUNTER_MESSAGE): a key-world/field talk event (group $1D,
-; dispatched by ... (E-0352)
-EncounterCounterMessage_ToStartMessageAAndStep::
+; Opens message $0F without changing wMessageGroup, then advances to the shared message-wait stage.
+; (C1, E-0358)
+EncounterCounterMessage_Open::
     ld a, $0f
     call StartMessageA
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; implements script command type 9A (SCRIPT_RANDOM_BATTLE): a key-world/field talk event (group $19,
-; dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: picks a battle intro (NextRandomSeed) and
-; starts a battle (SetModeState3AndSaveScreen)); named from its trigger and calls (E-0038)
+; Starts a random-battle transition on script step 0. wMapType bit 7 selects intro 1 instead of 0;
+; after NextRandomSeed, bit 0 of wKeyRandomLo selects transition substep 0 or 2. Saves the field
+; screen and enters mode 3, then advances the step. On a later call, ends this command with
+; wScriptStartRequest = $80. (C1, E-0358)
 RandomBattleEvent::
     ld a, [wScriptStep]
     or a
@@ -88,30 +81,29 @@ RandomBattleEvent::
     inc [hl]
     ret
 
-; implements script command type 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group
-; $1C: moves an object by step deltas with the followers, then fades); named from its trigger and
-; calls (E-0038)
+; Runs SCRIPT_OBJECT_PATH_1C, a twelve-stage player-and-follower path. Hop the player and each
+; follower in turn, leave for map $00 screen (0,2) at ($70,$F0), arrange the entry line, then hop
+; them again and finish. wScriptStep selects the stage; hop stages assume wScriptParam0 starts at 0.
+; (C1, E-0358)
 ObjectPath1C::
     ld a, [wScriptStep]
     jumptable
-    dw ObjectPath1C_SetBit2AtHL_B12
-    dw ObjectPath1C_UpdateFollowersOnStep_Bank12
-    dw ObjectPath1C_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte
-    dw ObjectPath1C_AddStepDeltaToPointedByte
-    dw ObjectPath1C_WriteFollowerRecordsAndMapIdEtc
-    dw ObjectPath1C_SetBit2AtHL_B12_SetPlayerFacing
-    dw ObjectPath1C_WritePlayerY
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing
-    dw ObjectPath1C_SetFollowerRecords
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12
-    dw ObjectPath1C_ClearBit2AtHL_Bank12
+    dw ObjectPath1C_HopPlayerRight
+    dw ObjectPath1C_HopFirstFollower
+    dw ObjectPath1C_HopSecondFollower
+    dw ObjectPath1C_HopThirdFollowerRight
+    dw ObjectPath1C_LeaveMap
+    dw ObjectPath1C_PrepareEntryLine
+    dw ObjectPath1C_WalkPartyToEntryY
+    dw ObjectPath1C_HopPlayerDown
+    dw ObjectPath1C_HopFirstFollowerDown
+    dw ObjectPath1C_HopSecondFollowerDown
+    dw ObjectPath1C_HopThirdFollowerDown
+    dw FinishObjectPath
 
-; step 10 of ObjectPath1C: calls ScriptApplyStepDeltaAtDE_Bank12 (E-0347)
-; why: step 10 of ObjectPath1C (when wScriptStep = 10); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12::
+; Last entry hop: face follower 3 down, add one to its Y, then apply the hop curve to that same Y.
+; The curve helper advances to FinishObjectPath after sixteen calls from phase 0. (C1, E-0358)
+ObjectPath1C_HopThirdFollowerDown::
     xor a
     ld [wFollowerRecords + $a], a
     ld a, [wFollowerRecords + $c]
@@ -121,13 +113,10 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12::
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-; step 9 of ObjectPath1C: calls ScriptApplyStepDeltaAtDE_Bank12; increments wFollowerRecords + $c;
-; returns unless wScriptParam0 is 0; sets wScriptStep to $0b; also changes HL, DE and A by register
-; arithmetic (E-0347)
-; why: step 9 of ObjectPath1C (when wScriptStep = 9); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
+; Entry hop for follower 2: face it down, apply the curve to its Y and add one to that Y; follower 3
+; also adds one to Y. Once the curve resets its phase, a two-monster party skips follower 3's hop
+; and goes straight to FinishObjectPath. (C1, E-0358)
+ObjectPath1C_HopSecondFollowerDown::
     xor a
     ld [wFollowerRecords + $5], a
     ld de, wFollowerRecords + $7
@@ -148,13 +137,10 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
     ld [wScriptStep], a
     ret
 
-; step 8 of ObjectPath1C: sets wFollowerRecords to 0; calls ScriptApplyStepDeltaAtDE_Bank12;
-; increments wFollowerRecords + $7; increments wFollowerRecords + $c; returns unless wScriptParam0
-; is 0; sets wScriptStep to $0b (E-0347)
-; why: step 8 of ObjectPath1C (when wScriptStep = 8); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_SetFollowerRecords::
+; Entry hop for follower 1: face it down, apply the curve to its Y and add one to that Y; followers
+; 2 and 3 also add one to Y. On curve completion, a one-monster party skips the other followers'
+; hops and finishes. (C1, E-0358)
+ObjectPath1C_HopFirstFollowerDown::
     xor a
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -176,13 +162,10 @@ ObjectPath1C_SetFollowerRecords::
     ld [wScriptStep], a
     ret
 
-; step 7 of ObjectPath1C: sets hPlayerFacing to 0; calls ScriptApplyStepDeltaAtDE_Bank12; increments
-; hPlayerY; increments wFollowerRecords + $2; increments wFollowerRecords + $7; increments
-; wFollowerRecords + $c (E-0347)
-; why: step 7 of ObjectPath1C (when wScriptStep = 7); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing::
+; Entry hop for the player: face down, apply the curve to hPlayerY, then increment the player's and
+; all three followers' Y bytes. Only the curve helper advances the stage, after sixteen calls from
+; phase 0. (C1, E-0358)
+ObjectPath1C_HopPlayerDown::
     xor a
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -198,13 +181,10 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing::
     inc [hl]
     ret
 
-; step 6 of ObjectPath1C: increments wFollowerRecords + $c; increments wFollowerRecords + $7;
-; increments wFollowerRecords + $2; increments hPlayerY; returns unless hPlayerY is $20; advances
-; wScriptStep (E-0347)
-; why: step 6 of ObjectPath1C (when wScriptStep = 6); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_WritePlayerY::
+; Moves the player and all three followers one pixel down per call. Advances when the updated
+; hPlayerY equals $20; this is an equality check on an eight-bit coordinate, not a clamp. (C1,
+; E-0358)
+ObjectPath1C_WalkPartyToEntryY::
     ld hl, wFollowerRecords + $c
     inc [hl]
     ld hl, wFollowerRecords + $7
@@ -220,12 +200,10 @@ ObjectPath1C_WritePlayerY::
     inc [hl]
     ret
 
-; step 5 of ObjectPath1C: sets hPlayerFacing to 2; sets wFollowerRecords to 2; calls
-; SetBit2AtHL_B12; advances wScriptStep (E-0347)
-; why: step 5 of ObjectPath1C (when wScriptStep = 5); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_SetBit2AtHL_B12_SetPlayerFacing::
+; After the fade, face the player and all followers up and place the followers at Y = $E0, $D0, $C0.
+; Set the player's moving bit and advance to walking the entry line; the player's coordinates come
+; from the warp. (C1, E-0358)
+ObjectPath1C_PrepareEntryLine::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -243,14 +221,10 @@ ObjectPath1C_SetBit2AtHL_B12_SetPlayerFacing::
     inc [hl]
     ret
 
-; step 4 of ObjectPath1C: increments hPlayerY; increments wFollowerRecords + $2; increments
-; wFollowerRecords + $7; may return early; sets hMapId to 0; sets hMapScreenX to 0; sets hMapScreenY
-; to 2; sets wWarpDestX to $70; sets wWarpDestY to $f0; sets wFieldTransitionKind to 0; calls
-; ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 4 of ObjectPath1C (when wScriptStep = 4); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_WriteFollowerRecordsAndMapIdEtc::
+; Moves the player and all followers down one pixel, facing follower 3 up. When follower 3's updated
+; Y equals $B0, request map $00 screen (0,2), destination ($70,$F0), transition kind 0, and start
+; the fade that advances the script. Other Y values return without starting a warp. (C1, E-0358)
+ObjectPath1C_LeaveMap::
     ld a, $02
     ld [wFollowerRecords + $a], a
     ld hl, hPlayerY
@@ -279,14 +253,10 @@ ObjectPath1C_WriteFollowerRecordsAndMapIdEtc::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 3 of ObjectPath1C: increments hPlayerY; increments wFollowerRecords + $2; increments
-; wFollowerRecords + $7; sets wFollowerRecords to 2; increments wFollowerRecords + $b; copies E to
-; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; continues in
-; ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 3 of ObjectPath1C (when wScriptStep = 3); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_AddStepDeltaToPointedByte::
+; Outgoing follower-3 hop: face it right and increment its X while the curve changes its Y. The
+; player and followers 1 and 2 increment Y; followers 1 and 2 face up. AdvanceObjectPathHopPhase
+; supplies the shared sixteen-call stage timing. (C1, E-0358)
+ObjectPath1C_HopThirdFollowerRight::
     ld a, $01
     ld [wFollowerRecords + $a], a
     ld hl, hPlayerY
@@ -307,15 +277,12 @@ ObjectPath1C_AddStepDeltaToPointedByte::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jp ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jp AdvanceObjectPathHopPhase
 
-; step 2 of ObjectPath1C: calls UpdateFollowersOnStep_Bank12; sets wFollowerRecords to 2; increments
-; hPlayerY; copies E to wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte;
-; continues in ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 2 of ObjectPath1C (when wScriptStep = 2); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte::
+; Outgoing follower-2 hop: update the follower chain from the player's pre-move Y, face follower 1
+; up, increment the player's Y, and apply the curve to follower 2's Y. Finish through
+; AdvanceObjectPathHopPhase. (C1, E-0358)
+ObjectPath1C_HopSecondFollower::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld a, $02
@@ -328,15 +295,12 @@ ObjectPath1C_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jp ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jp AdvanceObjectPathHopPhase
 
-; step 1 of ObjectPath1C: calls UpdateFollowersOnStep_Bank12; sets hPlayerFacing to 2; increments
-; hPlayerY; copies E to wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte;
-; continues in ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 1 of ObjectPath1C (when wScriptStep = 1); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_UpdateFollowersOnStep_Bank12::
+; Outgoing follower-1 hop: update the follower chain using the player's pre-move Y, face the player
+; up, increment hPlayerY, and apply the curve to follower 1's Y. Finish through
+; AdvanceObjectPathHopPhase; facing and coordinate change are preserved as written. (C1, E-0358)
+ObjectPath1C_HopFirstFollower::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld a, $02
@@ -349,15 +313,12 @@ ObjectPath1C_UpdateFollowersOnStep_Bank12::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jp ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jp AdvanceObjectPathHopPhase
 
-; step 0 of ObjectPath1C: calls SetBit2AtHL_B12; calls UpdateFollowersOnStep_Bank12; copies E to
-; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; increments hPlayerX;
-; continues in ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 0 of ObjectPath1C (when wScriptStep = 0); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_SetBit2AtHL_B12::
+; Begin the outgoing path by setting the player's moving bit. Update followers using the player's
+; pre-move X, apply the hop curve to hPlayerY, increment hPlayerX, and use AdvanceObjectPathHopPhase
+; to advance after sixteen calls from phase 0. (C1, E-0358)
+ObjectPath1C_HopPlayerRight::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ldh a, [hPlayerX]
@@ -370,43 +331,42 @@ ObjectPath1C_SetBit2AtHL_B12::
     farcall AddStepDeltaToPointedByte
     ld hl, hPlayerX
     inc [hl]
-    jp ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jp AdvanceObjectPathHopPhase
 
-; implements script command type 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group
-; $1B: moves an object by step deltas with the followers, then fades); named from its trigger and
-; calls (E-0038)
+; Runs SCRIPT_OBJECT_PATH_1B, a twelve-stage player-and-follower path. Hop the outgoing chain, leave
+; for map $1A screen (2,0) at ($60,$B0), arrange the entry line, walk to Y = $50, then hop left and
+; finish. Several stages decrement follower Y rather than X; these stores are preserved, not
+; inferred from their facing. (C1, E-0358)
 ObjectPath1B::
     ld a, [wScriptStep]
     jumptable
-    dw ObjectPath1B_SetBit2AtHL_B12
-    dw ObjectPath1B_UpdateFollowersOnStep_Bank12
-    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte
-    dw ObjectPath1B_AddStepDeltaToPointedByte
-    dw ObjectPath1B_WriteFollowerRecordsAndMapIdEtc
-    dw ObjectPath1B_SetBit2AtHL_B12_SetPlayerFacing
-    dw ObjectPath1B_UpdateFollowersOnStep_Bank12_SetPlayerY
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing
-    dw ObjectPath1B_SetFollowerRecords
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12
-    dw ObjectPath1C_ClearBit2AtHL_Bank12
+    dw ObjectPath1B_HopPlayerUp
+    dw ObjectPath1B_HopFirstFollowerUp
+    dw ObjectPath1B_HopSecondFollowerUp
+    dw ObjectPath1B_HopThirdFollowerUp
+    dw ObjectPath1B_LeaveMap
+    dw ObjectPath1B_PrepareEntryLine
+    dw ObjectPath1B_WalkPartyToEntryY
+    dw ObjectPath1B_HopPlayerLeft
+    dw ObjectPath1B_HopFirstFollowerLeft
+    dw ObjectPath1B_HopSecondFollowerLeft
+    dw ObjectPath1B_HopThirdFollowerLeft
+    dw FinishObjectPath
 
-; step 11 of ObjectPath1C: calls ClearBit2AtHL_Bank12; sets wScriptStartRequest to $80 (E-0347)
-; why: step 11 of ObjectPath1C (when wScriptStep = 11); ObjectPath1C: implements script command type
-; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1C_ClearBit2AtHL_Bank12::
+; Shared final stage of ObjectPath1B and ObjectPath1C: clear the player's moving bit and end the
+; script command with wScriptStartRequest = $80. Leaves the hop phase and follower records as the
+; preceding stage produced them. (C1, E-0358)
+FinishObjectPath::
     ld hl, hPlayerStateFlags
     call ClearBit2AtHL_Bank12
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 10 of ObjectPath1B: calls ScriptApplyStepDeltaAtDE_Bank12 (E-0347)
-; why: step 10 of ObjectPath1B (when wScriptStep = 10); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12::
+; Last entry hop: face follower 3 left and decrement its X, while applying the curve to its Y. The
+; curve helper advances to FinishObjectPath on completion. Follower 3's direct movement changes from
+; the Y decrements in the preceding stages to an X decrement here. (C1, E-0358)
+ObjectPath1B_HopThirdFollowerLeft::
     ld a, $03
     ld [wFollowerRecords + $a], a
     ld a, [wFollowerRecords + $b]
@@ -416,13 +376,10 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12::
     call ScriptApplyStepDeltaAtDE_Bank12
     ret
 
-; step 9 of ObjectPath1B: calls ScriptApplyStepDeltaAtDE_Bank12; decrements wFollowerRecords + $6;
-; decrements wFollowerRecords + $c; returns unless wScriptParam0 is 0; sets wScriptStep to $0b
-; (E-0347)
-; why: step 9 of ObjectPath1B (when wScriptStep = 9); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
+; Entry hop for follower 2: face it left, curve its Y and decrement its X, but decrement follower
+; 3's Y. On curve completion, exactly two party members skip follower 3's hop and select
+; FinishObjectPath; other counts retain the helper's next stage. (C1, E-0358)
+ObjectPath1B_HopSecondFollowerLeft::
     ld a, $03
     ld [wFollowerRecords + $5], a
     ld de, wFollowerRecords + $7
@@ -442,13 +399,10 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
     ld [wScriptStep], a
     ret
 
-; step 8 of ObjectPath1B: sets wFollowerRecords to 3; calls ScriptApplyStepDeltaAtDE_Bank12;
-; decrements wFollowerRecords + $7; decrements wFollowerRecords + $c; returns unless wScriptParam0
-; is 0; sets wScriptStep to $0b (E-0347)
-; why: step 8 of ObjectPath1B (when wScriptStep = 8); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_SetFollowerRecords::
+; Entry hop for follower 1: face it left, curve its Y and decrement its X, but decrement followers 2
+; and 3's Y. When the curve resets the phase, exactly one party member selects FinishObjectPath;
+; otherwise continue with follower 2. (C1, E-0358)
+ObjectPath1B_HopFirstFollowerLeft::
     ld a, $03
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -470,13 +424,10 @@ ObjectPath1B_SetFollowerRecords::
     ld [wScriptStep], a
     ret
 
-; step 7 of ObjectPath1B: sets hPlayerFacing to 3; calls ScriptApplyStepDeltaAtDE_Bank12; decrements
-; hPlayerX; decrements wFollowerRecords + $2; decrements wFollowerRecords + $7; decrements
-; wFollowerRecords + $c (E-0347)
-; why: step 7 of ObjectPath1B (when wScriptStep = 7); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing::
+; Entry hop for the player: face left, curve hPlayerY and decrement hPlayerX, but decrement all
+; three followers' Y bytes. The curve helper advances after sixteen calls from phase 0; it does not
+; move the followers' X bytes. (C1, E-0358)
+ObjectPath1B_HopPlayerLeft::
     ld a, $03
     ldh [hPlayerFacing], a
     ld de, hPlayerY
@@ -492,8 +443,11 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing::
     dec [hl]
     ret
 
-; DE = address of a byte: adds the step delta for wScriptParam0, then wScriptParam0 += 2; at $20 it
-; is reset and wScriptStep += 1 (the bank-$12 form of ScriptApplyStepDeltaAtDE) (E-0117)
+; DE points to an eight-bit coordinate. Store DE in wStepPtrLo/wStepPtrHi and far-call
+; AddStepDeltaToPointedByte in bank $5F, which adds the curve entry for wScriptParam0 / 2 modulo
+; 256. Advance the phase by two; only equality with $20 resets it and advances wScriptStep. Starting
+; at phase 0 gives sixteen calls and zero net curve displacement; no bounds check protects other
+; phases. (C1, E-0358)
 ScriptApplyStepDeltaAtDE_Bank12::
     ld a, e
     ld [wStepPtrLo], a
@@ -512,12 +466,10 @@ ScriptApplyStepDeltaAtDE_Bank12::
     inc [hl]
     ret
 
-; step 6 of ObjectPath1B: calls UpdateFollowersOnStep_Bank12; decrements hPlayerY; returns unless
-; hPlayerY is $50; advances wScriptStep (E-0347)
-; why: step 6 of ObjectPath1B (when wScriptStep = 6); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_UpdateFollowersOnStep_Bank12_SetPlayerY::
+; Updates followers from the player's pre-move Y, then moves the player one pixel up. Advances only
+; when the updated hPlayerY equals $50; the follower helper refreshes its targets at 16-pixel
+; boundaries. (C1, E-0358)
+ObjectPath1B_WalkPartyToEntryY::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ldh a, [hPlayerY]
@@ -529,12 +481,10 @@ ObjectPath1B_UpdateFollowersOnStep_Bank12_SetPlayerY::
     inc [hl]
     ret
 
-; step 5 of ObjectPath1B: sets hPlayerFacing to 2; sets wFollowerRecords to 2; calls
-; SetBit2AtHL_B12; advances wScriptStep (E-0347)
-; why: step 5 of ObjectPath1B (when wScriptStep = 5); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_SetBit2AtHL_B12_SetPlayerFacing::
+; After the fade, face the player and followers up and set follower Y to $C0, $D0, $E0. Set the
+; player's moving bit and advance to the entry walk. The player's position is supplied by the
+; preceding warp. (C1, E-0358)
+ObjectPath1B_PrepareEntryLine::
     ld a, $02
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -552,14 +502,10 @@ ObjectPath1B_SetBit2AtHL_B12_SetPlayerFacing::
     inc [hl]
     ret
 
-; step 4 of ObjectPath1B: decrements hPlayerY; decrements wFollowerRecords + $2; decrements
-; wFollowerRecords + $7; may return early; sets hMapId to $1a; sets hMapScreenX to 2; sets
-; hMapScreenY to 0; sets wWarpDestX to $60; sets wWarpDestY to $b0; sets wFieldTransitionKind to 0;
-; calls ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 4 of ObjectPath1B (when wScriptStep = 4); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_WriteFollowerRecordsAndMapIdEtc::
+; Decrements the player's and all three followers' Y bytes. When follower 3's updated Y equals $F0,
+; request map $1A screen (2,0) at ($60,$B0), transition kind 0, and start the fade that advances the
+; script. Otherwise return and keep walking. (C1, E-0358)
+ObjectPath1B_LeaveMap::
     ld hl, hPlayerY
     dec [hl]
     ld hl, wFollowerRecords + $2
@@ -586,14 +532,10 @@ ObjectPath1B_WriteFollowerRecordsAndMapIdEtc::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 3 of ObjectPath1B: decrements hPlayerY; decrements wFollowerRecords + $2; decrements
-; wFollowerRecords + $7; decrements wFollowerRecords + $c; copies E to wStepPtrLo; copies D to
-; wStepPtrHi; calls AddStepDeltaToPointedByte; continues in
-; ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 3 of ObjectPath1B (when wScriptStep = 3); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_AddStepDeltaToPointedByte::
+; Outgoing follower-3 hop: face it up and decrement the player's and all followers' Y bytes, then
+; add the curve to follower 3's Y. Continue through AdvanceObjectPathHopPhase for stage timing. (C1,
+; E-0358)
+ObjectPath1B_HopThirdFollowerUp::
     ld a, $02
     ld [wFollowerRecords + $a], a
     ld hl, hPlayerY
@@ -610,15 +552,12 @@ ObjectPath1B_AddStepDeltaToPointedByte::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jr ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jr AdvanceObjectPathHopPhase
 
-; step 2 of ObjectPath1B: calls UpdateFollowersOnStep_Bank12; decrements hPlayerY; copies E to
-; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; continues in
-; ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 2 of ObjectPath1B (when wScriptStep = 2); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte::
+; Outgoing follower-2 hop: update the follower chain from the player's pre-move Y, decrement
+; hPlayerY, and curve follower 2's Y. AdvanceObjectPathHopPhase handles completion; this stage does
+; not explicitly change facing. (C1, E-0358)
+ObjectPath1B_HopSecondFollowerUp::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -629,15 +568,12 @@ ObjectPath1B_UpdateFollowersOnStep_Bank12_AddStepDeltaToPointedByte::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jr ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jr AdvanceObjectPathHopPhase
 
-; step 1 of ObjectPath1B: calls UpdateFollowersOnStep_Bank12; decrements hPlayerY; copies E to
-; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; continues in
-; ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0 (E-0347)
-; why: step 1 of ObjectPath1B (when wScriptStep = 1); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_UpdateFollowersOnStep_Bank12::
+; Outgoing follower-1 hop: update the follower chain from the player's pre-move Y, decrement
+; hPlayerY, and curve follower 1's Y. Continue through AdvanceObjectPathHopPhase, without explicitly
+; changing facing. (C1, E-0358)
+ObjectPath1B_HopFirstFollowerUp::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -648,14 +584,12 @@ ObjectPath1B_UpdateFollowersOnStep_Bank12::
     ld a, d
     ld [wStepPtrHi], a
     farcall AddStepDeltaToPointedByte
-    jr ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0
+    jr AdvanceObjectPathHopPhase
 
-; step 0 of ObjectPath1B: calls SetBit2AtHL_B12; calls UpdateFollowersOnStep_Bank12; copies E to
-; wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; decrements hPlayerY (E-0347)
-; why: step 0 of ObjectPath1B (when wScriptStep = 0); ObjectPath1B: implements script command type
-; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
-; deltas with the ... (E-0352)
-ObjectPath1B_SetBit2AtHL_B12::
+; Begin the outgoing path by setting the player's moving bit. Update followers from the player's
+; pre-move Y, apply the curve to hPlayerY and decrement that Y. Falls through to
+; AdvanceObjectPathHopPhase, which advances after sixteen calls from phase 0. (C1, E-0358)
+ObjectPath1B_HopPlayerUp::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ldh a, [hPlayerY]
@@ -669,12 +603,11 @@ ObjectPath1B_SetBit2AtHL_B12::
     ld hl, hPlayerY
     dec [hl]
 
-; Increments wScriptParam0; returns unless wScriptParam0 is $20; sets wScriptParam0 to 0; advances
-; wScriptStep (E-0347)
-; why: part of ObjectPath1B_SetBit2AtHL_B12, in step 0 of ObjectPath1B (when wScriptStep = 0);
-; ObjectPath1B: implements script command type 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk
-; event (group $1B: moves an object by step deltas with the ... (E-0352)
-ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0::
+; Shared tail for the outgoing path hops: wScriptParam0 = (wScriptParam0 + 2) modulo 256. Only a
+; result of $20 resets the phase and increments the eight-bit wScriptStep. From 0, completion takes
+; sixteen calls; odd starting phases never satisfy the equality. The caller applies the curve before
+; this tail. (C1, E-0358)
+AdvanceObjectPathHopPhase::
     ld a, [wScriptParam0]
     inc a
     inc a
@@ -687,46 +620,45 @@ ObjectPath1B_SetBit2AtHL_B12_CheckScriptParam0::
     inc [hl]
     ret
 
-; implements script command type 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from
-; ArenaRankMessageTable and foes from ArenaEncounterLists by wAreaGraphicsIndex, advancing the round
-; (IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea); reached through ScriptCommand96 in bank $10
-; (E-0038, E-0246)
+; Runs SCRIPT_ARENA_ROUNDS through 26 stages: enter map $0B, walk the party into position, approach
+; for three battles, stage the next opposing side between battles, then heal and leave. Shared
+; ArenaScene stages also serve ArenaGridBattle. Message choices come from ArenaRankMessageTable; the
+; next-round branches use the reused arena counter wRecordCapacity, not a farm-capacity query. (C1,
+; E-0359)
 ArenaRounds::
     ld a, [wScriptStep]
     jumptable
-    dw ArenaRounds_ScriptStartFadeAndAdvanceStep
-    dw ArenaRounds_RunMessageBoxThenContinue_SetBit2AtHL_B12
-    dw ArenaRounds_SetBit2AtHL_B12
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage_BackRecordCapacity_2
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_SetupMap0BMonsterObjects
-    dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
-    dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage_BackRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_SetupMap0BMonsterObjects
-    dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
-    dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep_AdvanceScriptStep
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_QueueSoundEffect
-    dw ArenaRounds_FullyHealParty
-    dw ArenaRounds_RestartMapMusic
+    dw ArenaRounds_EnterArena
+    dw ArenaRounds_PrepareEntryWalk
+    dw ArenaScene_WalkPartyIntoRing
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaRounds_AfterFirstBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_LoadOpposingSide
+    dw ArenaScene_WalkArenaObjectsIn
+    dw ArenaScene_ReleaseArenaObjects
+    dw ArenaScene_OpenSecondBattleMessage
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaRounds_AfterSecondBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_LoadOpposingSide
+    dw ArenaScene_WalkArenaObjectsIn
+    dw ArenaScene_ReleaseArenaObjects
+    dw ArenaScene_OpenThirdBattleMessage
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaRounds_CloseThirdBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_WaitBeforeExit
+    dw ArenaScene_HealAndLeaveArena
+    dw ArenaScene_RestoreCallerScript
 
-; step 21 of ArenaRounds: calls StartArenaRankMessage; advances wScriptStep; decrements
-; wRecordCapacity (E-0347)
-; why: step 21 of ArenaRounds (when wScriptStep = 21); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_StartArenaRankMessage::
+; After the third battle, start column 7 of ArenaRankMessageTable, advance to its message wait, and
+; decrement the eight-bit arena counter wRecordCapacity. Does not inspect a battle-result flag here.
+; (C1, E-0359)
+ArenaRounds_CloseThirdBattle::
     ld a, $07
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -735,14 +667,11 @@ ArenaRounds_StartArenaRankMessage::
     dec [hl]
     ret
 
-; step 13 of ArenaRounds: decrements wRecordCapacity; branches on wRecordCapacity; calls
-; StartArenaRankMessage; sets wScriptStep to $16; calls StartArenaRankMessage; advances wScriptStep;
-; calls IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea; calls
-; ArenaRounds_WriteBattleIntroKindAndEncounterKind (E-0347)
-; why: step 13 of ArenaRounds (when wScriptStep = 13); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_StartArenaRankMessage_BackRecordCapacity::
+; Decrement the arena counter. If it becomes exactly 2, show closing column 7 and select stage 22;
+; otherwise show column 5 and advance to stage 14. In both branches, increment wArenaRound, rebuild
+; the remaining random foes and copy the current round into wEncounterMonsters, even when selecting
+; the closing stage. (C1, E-0359)
+ArenaRounds_AfterSecondBattle::
     ld hl, wRecordCapacity
     dec [hl]
     ld a, [wRecordCapacity]
@@ -762,17 +691,14 @@ ArenaRounds_StartArenaRankMessage_BackRecordCapacity::
 
 .call_inc_arena_round_and_copy_area_graphics:
     farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
-    farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
+    farcall ArenaRounds_RandomModulo52_SetBattleIntroKind
     ret
 
-; step 5 of ArenaRounds: decrements wRecordCapacity; branches on wRecordCapacity; calls
-; StartArenaRankMessage; sets wScriptStep to $16; calls StartArenaRankMessage; advances wScriptStep;
-; calls IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea; calls
-; ArenaRounds_WriteBattleIntroKindAndEncounterKind (E-0347)
-; why: step 5 of ArenaRounds (when wScriptStep = 5); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_StartArenaRankMessage_BackRecordCapacity_2::
+; Decrement the arena counter. A result of exactly 2 selects closing column 7 and stage 22; every
+; other result selects column 3 and the next stage. Both paths still increment wArenaRound and
+; prepare the remaining round list and current foes. This condition alone does not establish a win
+; or loss. (C1, E-0359)
+ArenaRounds_AfterFirstBattle::
     ld hl, wRecordCapacity
     dec [hl]
     ld a, [wRecordCapacity]
@@ -792,16 +718,14 @@ ArenaRounds_StartArenaRankMessage_BackRecordCapacity_2::
 
 .call_inc_arena_round_and_copy_area_graphics:
     farcall IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
-    farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
+    farcall ArenaRounds_RandomModulo52_SetBattleIntroKind
     ret
 
-; step 1 of ArenaRounds: sets hFieldDrawFlags to $0e; calls RunMessageBoxThenContinue; may return
-; early; calls SetBit2AtHL_B12; sets hPlayerFacing to 0; sets hPlayerX to $40; increments
-; wArenaFlags; sets wMessageIndex to 0; advances wScriptStep (E-0347)
-; why: step 1 of ArenaRounds (when wScriptStep = 1); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_RunMessageBoxThenContinue_SetBit2AtHL_B12::
+; Hold field draw mask $0E while the opening message runs. Once idle, set the player moving and
+; facing down at X = $40; put follower X at $40, first follower Y at 0 and followers 2/3 facing
+; down. Increment wArenaFlags, reset the message byte for route timing, and advance to the shared
+; entrance walk. The other coordinates and wScriptParam1 are left to the caller. (C1, E-0359)
+ArenaRounds_PrepareEntryWalk::
     ld a, $0e
     ldh [hFieldDrawFlags], a
     xor a
@@ -827,13 +751,11 @@ ArenaRounds_RunMessageBoxThenContinue_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-; step 0 of ArenaRounds: sets hMapId to $0b; sets hMapScreenX to 0; sets hMapScreenY to 0; sets
-; wWarpDestX to $e0; sets wWarpDestY to 0; sets wFieldTransitionKind to 0; calls
-; ScriptStartFadeAndAdvanceStep; calls StartMessageA; sets wArenaFlags to $80 (E-0347)
-; why: step 0 of ArenaRounds (when wScriptStep = 0); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_ScriptStartFadeAndAdvanceStep::
+; Request map $0B screen (0,0), destination ($E0,0), transition kind 0, and start the fade that
+; advances the script. Open message index wAreaGraphicsIndex + 5 in the current group, wrapping as a
+; byte, then set wArenaFlags = $80 to select the special message row and sprite-selection path. (C1,
+; E-0359)
+ArenaRounds_EnterArena::
     ld a, $0b
     ldh [hMapId], a
     xor a
@@ -853,49 +775,46 @@ ArenaRounds_ScriptStartFadeAndAdvanceStep::
     ld [wArenaFlags], a
     ret
 
-; implements script command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from
-; ArenaRankMessageTable (StartArenaRankMessage) and foes from GridEncounterTable by wGridCursorX and
-; wScreenCountPlusOne (battle intro 4, encounter kind 2; ScriptCommand95's Shared02); reached
-; through ScriptCommand95 in bank $10 (E-0038, E-0246)
+; Runs SCRIPT_ARENA_GRID_BATTLE through 27 stages, sharing the party entrance, battle approach,
+; opposing-side arrival and exit with ArenaRounds. It adds an opening follow-up message. Between
+; battles it refreshes the grid selection; rank 0 uses the fixed encounter list, other ranks use
+; GridEncounterTable. wScriptStep selects the stage. (C1, E-0359)
 ArenaGridBattle::
     ld a, [wScriptStep]
     jumptable
-    dw ArenaGridBattle_ScriptStartFadeAndAdvanceStep
-    dw ArenaGridBattle_RunMessageBoxThenContinue
-    dw ArenaGridBattle_RunMessageBoxThenContinue_SetBit2AtHL_B12
-    dw ArenaRounds_SetBit2AtHL_B12
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_2
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_SetupMap0BMonsterObjects
-    dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
-    dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_SetupMap0BMonsterObjects
-    dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
-    dw ArenaRounds_ClearBit2AtHL_Bank12
-    dw ArenaRounds_ToStartArenaRankMessageAndStep_AdvanceScriptStep
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage
-    dw ArenaRounds_RunMessageBoxThenContinue
-    dw ArenaRounds_QueueSoundEffect
-    dw ArenaRounds_FullyHealParty
-    dw ArenaRounds_RestartMapMusic
+    dw ArenaGridBattle_EnterArena
+    dw ArenaGridBattle_OpenFollowup
+    dw ArenaGridBattle_PrepareEntryWalk
+    dw ArenaScene_WalkPartyIntoRing
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaGridBattle_AfterFirstBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_LoadOpposingSide
+    dw ArenaScene_WalkArenaObjectsIn
+    dw ArenaScene_ReleaseArenaObjects
+    dw ArenaScene_OpenSecondBattleMessage
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaGridBattle_AfterSecondBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_LoadOpposingSide
+    dw ArenaScene_WalkArenaObjectsIn
+    dw ArenaScene_ReleaseArenaObjects
+    dw ArenaScene_OpenThirdBattleMessage
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_ApproachForBattle
+    dw ArenaGridBattle_CloseThirdBattle
+    dw ArenaScene_WaitMessage
+    dw ArenaScene_WaitBeforeExit
+    dw ArenaScene_HealAndLeaveArena
+    dw ArenaScene_RestoreCallerScript
 
-; step 25 of ArenaRounds: calls RestartMapMusic; sets wTalkEventIndex to 1; sets wTalkEventGroup to
-; $65; copies wScriptReturnBank to wScriptStartRequest; copies wScriptReturnLo to wScriptPointerLo;
-; copies wScriptReturnHi to wScriptPointerHi; sets hSpriteWindowClipMode to 2; sets
-; wScriptCommandType to $f7; sets wScriptInDataBank to 1 (E-0347)
-; why: step 25 of ArenaRounds (when wScriptStep = 25); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_RestartMapMusic::
+; After leaving the arena, restart map music, queue talk-event group $65 index 1, and restore
+; wScriptReturnBank/Lo/Hi into the active script request and pointer. Select command $F7, mark the
+; script as in the data bank, and restore sprite-window clip mode 2. This stage serves both arena
+; commands. (C1, E-0359)
+ArenaScene_RestoreCallerScript::
     farcall RestartMapMusic
     ld a, $01
     ld [wTalkEventIndex], a
@@ -915,13 +834,10 @@ ArenaRounds_RestartMapMusic::
     ld [wScriptInDataBank], a
     ret
 
-; step 24 of ArenaRounds: calls FullyHealParty; sets hMapId to 4; sets hMapScreenX to 1; sets
-; hMapScreenY to 0; sets wWarpDestX to $40; sets wWarpDestY to $30; sets wFieldTransitionKind to 3;
-; calls ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 24 of ArenaRounds (when wScriptStep = 24); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_FullyHealParty::
+; Heal the party through FullyHealParty, then request map $04 screen (1,0), destination ($40,$30),
+; transition kind 3. Start the fade that advances to restoring the caller script. The heal helper
+; uses the incoming SRAM bank and assumes a nonempty party. (C1, E-0359)
+ArenaScene_HealAndLeaveArena::
     call FullyHealParty
     ld a, $04
     ldh [hMapId], a
@@ -938,12 +854,10 @@ ArenaRounds_FullyHealParty::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 23 of ArenaRounds: increments wScriptParam0; branches on wScriptParam0; plays sound $6d; may
-; return early; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 23 of ArenaRounds (when wScriptStep = 23); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_QueueSoundEffect::
+; Shared exit delay: increment wScriptParam0 once per call, queue sound $6D only when it becomes 1,
+; and wait for exact equality with $3C. At $3C reset the counter and advance the stage. A fresh
+; counter of 0 takes sixty calls; larger starting values wrap instead of being clamped. (C1, E-0359)
+ArenaScene_WaitBeforeExit::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -962,12 +876,10 @@ ArenaRounds_QueueSoundEffect::
     inc [hl]
     ret
 
-; step 22 of ArenaGridBattle: calls StartArenaRankMessage; advances wScriptStep; decrements
-; wRecordCapacity (E-0347)
-; why: step 22 of ArenaGridBattle (when wScriptStep = 22); ArenaGridBattle: implements script
-; command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_StartArenaRankMessage::
+; After the third grid battle, show message-table column 7, advance to the shared message wait and
+; decrement the reused arena counter wRecordCapacity. No battle-result flag is tested in this stage.
+; (C1, E-0359)
+ArenaGridBattle_CloseThirdBattle::
     ld a, $07
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -976,26 +888,20 @@ ArenaGridBattle_StartArenaRankMessage::
     dec [hl]
     ret
 
-; step 18 of ArenaRounds: calls StartArenaRankMessage; advances wScriptStep (E-0347)
-; why: step 18 of ArenaRounds (when wScriptStep = 18); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_ToStartArenaRankMessageAndStep_AdvanceScriptStep::
+; Show column 6 of ArenaRankMessageTable in the current group and advance to the shared message wait
+; before the third battle approach. Used by both arena commands. (C1, E-0359)
+ArenaScene_OpenThirdBattleMessage::
     ld a, $06
     call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 14 of ArenaGridBattle: calls StartArenaRankMessage; advances wScriptStep; decrements
-; wRecordCapacity; branches on wArenaRank; calls SetupScreenCountPlusOneFromRecordCapacity; calls
-; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind; calls
-; SetupScreenCountPlusOneFromRecordCapacity; calls
-; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind (E-0347)
-; why: step 14 of ArenaGridBattle (when wScriptStep = 14); ArenaGridBattle: implements script
-; command type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity::
+; Show column 5, advance the stage and decrement the arena counter;
+; SetupScreenCountPlusOneFromRecordCapacity immediately increments it again and updates the grid
+; column from wAreaGraphicsIndex. Prepare the next three foes from the fixed list for rank 0, or
+; GridEncounterTable for other ranks. (C1, E-0359)
+ArenaGridBattle_AfterSecondBattle::
     ld a, $05
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -1014,24 +920,19 @@ ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity:
     farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind
     ret
 
-; step 10 of ArenaRounds: calls StartArenaRankMessage; advances wScriptStep (E-0347)
-; why: step 10 of ArenaRounds (when wScriptStep = 10); ArenaRounds: implements script command type
-; 96 (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from
-; ... (E-0352, E-0038, E-0246)
-ArenaRounds_ToStartArenaRankMessageAndStep::
+; Show column 4 of ArenaRankMessageTable, then advance to the shared message wait before the second
+; battle approach. Does not change the current message group. (C1, E-0359)
+ArenaScene_OpenSecondBattleMessage::
     ld a, $04
     call StartArenaRankMessage
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 9 of ArenaRounds: may return early; sets wFieldEventKind to 7; sets wObject1 + OBJ_STATE to
-; 3; sets wObject2 + OBJ_STATE to 3; sets wObject3 + OBJ_STATE to 3; calls ClearBit2AtHL_Bank12;
-; plays sound $00; advances wScriptStep (E-0347)
-; why: step 9 of ArenaRounds (when wScriptStep = 9); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_ClearBit2AtHL_Bank12::
+; Move arena object 0 upward one pixel, facing up, until its updated Y equals $30. Then face all
+; four arena objects left, set field event kind 7, clear their moving bits, queue sound 0 and
+; advance to the next battle announcement. Other Y values return without advancing. (C1, E-0359)
+ArenaScene_ReleaseArenaObjects::
     ld a, $02
     ld [wSpriteSlots + $7], a
     ld a, [wSpriteSlots + $c]
@@ -1060,15 +961,12 @@ ArenaRounds_ClearBit2AtHL_Bank12::
     inc [hl]
     ret
 
-; step 8 of ArenaRounds: branches on wMessageIndex; increments wMessageIndex; branches on
-; wMessageIndex; sets wSpriteSlotCount to 2; branches on $02; sets wSpriteSlotCount to 3; branches
-; on $03; sets wSpriteSlotCount to 4; branches on the byte at wSpriteSlots + $c; sets wSpriteSlots +
-; $c to 1; branches on the byte at wSpriteSlots + $c; sets wSpriteSlots + $c to 0; then 3 more steps
-; (see the code) (E-0347)
-; why: step 8 of ArenaRounds (when wScriptStep = 8); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_WriteMessageIndexAndSpriteSlotCount::
+; Bring four arena objects into position, including slots not yet drawable. A timer borrowed from
+; wMessageIndex reveals slot counts 2,3,4 at $10,$20,$30 and holds at $60. Each slot increments Y
+; through byte wrap to $20, then X to $60, Y to $40 and X toward $70. Each slot whose updated X
+; equals $70 increments wScriptStep separately; simultaneous arrivals can advance it multiple times
+; in one call. (C1, E-0359)
+ArenaScene_WalkArenaObjectsIn::
     ld a, [wMessageIndex]
     cp $60
     jr z, .skip
@@ -1167,13 +1065,11 @@ ArenaRounds_WriteMessageIndexAndSpriteSlotCount::
     jr nz, .loop
     ret
 
-; step 7 of ArenaRounds: calls SetupMap0BMonsterObjects; sets wOBJPaletteUploadRequest to $7f; sets
-; wSpriteSlotCount to 1; calls SetBit2AtHL_B12; sets wFieldEventKind to 0; plays sound $6d; sets
-; wMessageIndex to 0; advances wScriptStep (E-0347)
-; why: step 7 of ArenaRounds (when wScriptStep = 7); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_SetupMap0BMonsterObjects::
+; Set up the next map-$0B objects and their graphics from wEncounterMonsters. Request object
+; palettes, show one slot initially, mark all four arena objects moving, disable the field-event
+; updater, queue sound $6D, reset the borrowed message timer and advance to their entrance
+; animation. (C1, E-0359)
+ArenaScene_LoadOpposingSide::
     farcall SetupMap0BMonsterObjects
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -1197,15 +1093,11 @@ ArenaRounds_SetupMap0BMonsterObjects::
     inc [hl]
     ret
 
-; step 6 of ArenaGridBattle: calls StartArenaRankMessage; advances wScriptStep; decrements
-; wRecordCapacity; branches on wArenaRank; calls SetupScreenCountPlusOneFromRecordCapacity; calls
-; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind; calls
-; SetupScreenCountPlusOneFromRecordCapacity; calls
-; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind (E-0347)
-; why: step 6 of ArenaGridBattle (when wScriptStep = 6); ArenaGridBattle: implements script command
-; type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_StartArenaRankMessage_2::
+; Show column 3, advance, decrement the arena counter, and call the grid-selection helper that
+; increments it back and sets wScreenCountPlusOne. Rank 0 selects the fixed encounter list; other
+; ranks select GridEncounterTable using the refreshed wGridCursorX. Prepare the next three foes in
+; either case. (C1, E-0359)
+ArenaGridBattle_AfterFirstBattle::
     ld a, $03
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -1224,15 +1116,11 @@ ArenaGridBattle_StartArenaRankMessage_2::
     farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind
     ret
 
-; step 4 of ArenaRounds: increments wFollowerRecords + $1; increments wFollowerRecords + $6;
-; increments wFollowerRecords + $b; decrements wObject1 + OBJ_X; decrements wObject2 + OBJ_X;
-; decrements wObject3 + OBJ_X; calls StepScriptParam0Counter_Bank12; may return early; advances
-; wScriptStep; increments wRecordCapacity; sets wBattleIntroKind to 4; sets wBattleTransitionSubStep
-; to 1; then 1 more step (see the code) (E-0347)
-; why: step 4 of ArenaRounds (when wScriptStep = 4); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_StepScriptParam0Counter_Bank12::
+; Move all three follower X bytes right and all three opposing monster X bytes left, one pixel per
+; call. After sixteen calls from phase 0, reset the phase, advance the script, increment the arena
+; counter, choose battle intro 4 and transition substep 1, and save the field screen while entering
+; battle mode 3. (C1, E-0359)
+ArenaScene_ApproachForBattle::
     ld hl, wFollowerRecords + $1
     inc [hl]
     ld hl, wFollowerRecords + $6
@@ -1259,12 +1147,10 @@ ArenaRounds_StepScriptParam0Counter_Bank12::
     farcall SetModeState3AndSaveScreen
     ret
 
-; step 3 of ArenaRounds: calls RunMessageBoxThenContinue; may return early; sets wMessageIndex to 0;
-; advances wScriptStep (E-0347)
-; why: step 3 of ArenaRounds (when wScriptStep = 3); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_RunMessageBoxThenContinue::
+; Shared message wait used throughout both arena dispatch tables. Run the box with freeze flag 0;
+; while active return without changing the step. On idle, clear wMessageIndex so it can serve as an
+; animation timer, then advance the script stage. (C1, E-0359)
+ArenaScene_WaitMessage::
     xor a
     call RunMessageBoxThenContinue
     ret nc
@@ -1274,14 +1160,13 @@ ArenaRounds_RunMessageBoxThenContinue::
     inc [hl]
     ret
 
-; step 2 of ArenaRounds: calls SetBit2AtHL_B12; branches on wMessageIndex; increments wMessageIndex;
-; branches on wMessageIndex; sets hFieldDrawFlags to $0c; branches on $0c; sets hFieldDrawFlags to
-; 8; branches on $08; sets hFieldDrawFlags to 0; branches on wScriptParam0; calls
-; UpdateFollowersOnStep_Bank12; increments hPlayerY; then 32 more steps (see the code) (E-0347)
-; why: step 2 of ArenaRounds (when wScriptStep = 2); ArenaRounds: implements script command type 96
-; (SCRIPT_ARENA_ROUNDS): the arena's rounds: messages from ArenaRankMessageTable and foes from ...
-; (E-0352, E-0038, E-0246)
-ArenaRounds_SetBit2AtHL_B12::
+; Walk the player in five legs selected by wScriptParam0: Y to $20, X to $30, Y to $40, X to $20,
+; then Y back to $30. Update followers during the first four legs, but not the final upward leg. A
+; second timer in wMessageIndex changes field draw masks at $10,$20,$30 and holds at $60. At the
+; final coordinate, stop the player, face the party right, show message column 2, restore
+; wFieldEventKind from wScriptParam1, clear both parameters and advance. Values above phase 3 also
+; use the final leg. (C1, E-0359)
+ArenaScene_WalkPartyIntoRing::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
     ld a, [wMessageIndex]
@@ -1400,14 +1285,11 @@ ArenaRounds_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-; step 2 of ArenaGridBattle: calls RunMessageBoxThenContinue; may return early; calls
-; SetBit2AtHL_B12; sets hPlayerFacing to 0; sets hPlayerX to $40; plays sound $6d; copies
-; wFieldEventKind to wScriptParam1; sets wFieldEventKind to 0; sets wMessageIndex to 0; advances
-; wScriptStep (E-0347)
-; why: step 2 of ArenaGridBattle (when wScriptStep = 2); ArenaGridBattle: implements script command
-; type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_RunMessageBoxThenContinue_SetBit2AtHL_B12::
+; Wait for the follow-up message to become idle, then place the player/follower entry line at X =
+; $40 and face the player and followers 2/3 down, with first follower Y = 0. Mark the player moving,
+; queue sound $6D, save wFieldEventKind in wScriptParam1 and disable it during the route. Reset the
+; borrowed message timer and advance. (C1, E-0359)
+ArenaGridBattle_PrepareEntryWalk::
     xor a
     call RunMessageBoxThenContinue
     ret nc
@@ -1435,12 +1317,10 @@ ArenaGridBattle_RunMessageBoxThenContinue_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-; step 1 of ArenaGridBattle: calls RunMessageBoxThenContinue; may return early; calls
-; StartArenaRankMessage; sets hFieldDrawFlags to $0e; advances wScriptStep (E-0347)
-; why: step 1 of ArenaGridBattle (when wScriptStep = 1); ArenaGridBattle: implements script command
-; type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_RunMessageBoxThenContinue::
+; After the opening message becomes idle, show ArenaRankMessageTable column 1, set field draw mask
+; $0E and advance to preparing the entry walk. Returns without these changes while the first box
+; remains active. (C1, E-0359)
+ArenaGridBattle_OpenFollowup::
     xor a
     call RunMessageBoxThenContinue
     ret nc
@@ -1452,13 +1332,11 @@ ArenaGridBattle_RunMessageBoxThenContinue::
     inc [hl]
     ret
 
-; step 0 of ArenaGridBattle: sets hMapId to $0b; sets hMapScreenX to 0; sets hMapScreenY to 0; sets
-; wWarpDestX to $e0; sets wWarpDestY to 0; sets wFieldTransitionKind to 0; calls
-; ScriptStartFadeAndAdvanceStep; calls StartArenaRankMessage; sets wArenaFlags to 0 (E-0347)
-; why: step 0 of ArenaGridBattle (when wScriptStep = 0); ArenaGridBattle: implements script command
-; type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
-; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_ScriptStartFadeAndAdvanceStep::
+; Request map $0B screen (0,0), destination ($E0,0), transition kind 0, and start the fade that
+; advances the script. Show message-table column 0 using the incoming wArenaFlags, then clear
+; wArenaFlags for subsequent stages; the flag is cleared after, not before, the opening lookup. (C1,
+; E-0359)
+ArenaGridBattle_EnterArena::
     ld a, $0b
     ldh [hMapId], a
     xor a
@@ -1477,8 +1355,11 @@ ArenaGridBattle_ScriptStartFadeAndAdvanceStep::
     ld [wArenaFlags], a
     ret
 
-; starts the message at ArenaRankMessageTable + 2 * A + 16 * wArenaRank (16 * 5 when bit 7 of
-; wArenaFlags is set) (E-0125)
+; A selects one of eight message columns. For normal ranks 0-4, read the low byte at
+; ArenaRankMessageTable + 16 * wArenaRank + 2 * A; wArenaFlags bit 7 forces row 5. Pass only that
+; byte to StartMessageA, preserving the current message group and discarding the stored high byte.
+; The actual arithmetic is eight-bit SLA on A and SWAP on rank with carries into the pointer; no
+; index bounds check is performed. (C1, E-0359)
 StartArenaRankMessage::
     ld de, ArenaRankMessageTable
     sla a
@@ -1516,9 +1397,11 @@ StartArenaRankMessage::
     call StartMessageA
     ret
 
-; StartArenaRankMessage reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when
-; wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in
-; wMessageGroup; 6 rows of 8 words (E-0237, C1)
+; six rows of eight stored message words; ranks 0-4 select their row, wArenaFlags bit 7 forces row
+; 5. Columns 0/1 are opening/follow-up, 2/4/6 announce the three battles, 3/5 follow the first two
+; battles, and 7 closes the sequence. StartArenaRankMessage uses only the low byte of each word and
+; leaves wMessageGroup unchanged; stored high bytes and row-5 $FFFF words are preserved (E-0359,
+; E-0237, C1)
 ; record: one row per arena rank
 ArenaRankMessageTable::
     dw $0040, $008c, $0013, $0017, $0014, $0018, $0015, $001b ; id 0
@@ -1528,42 +1411,42 @@ ArenaRankMessageTable::
     dw $0044, $0090, $0013, $0017, $0014, $0018, $0015, $001f ; id 4
     dw $ffff, $ffff, $0013, $0019, $0014, $001a, $0016, $0020 ; id 5
 
-; implements script command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21,
-; dispatched from the link screens (GameMode5_Update, RunLinkSession4ScreenState): graphics and a
-; message); named from its trigger and calls (E-0038)
+; Runs SCRIPT_LINK_MESSAGE through 23 stages, using the shared MonsterScene record graphics, timed
+; movement and message sequence. Show the two buffered monsters, move them apart, leave and re-enter
+; map $14 with field command $0D requested on initialization, show message $0E in the current group,
+; then finish by restoring the saved link flag and requesting game mode 8. No serial exchange occurs
+; in this dispatcher itself. (C1, E-0360)
 LinkMessageEvent::
     ld a, [wScriptStep]
     jumptable
-    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
-    dw LinkMessageEvent_ToStartMessageAAndStep
-    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetSaveStateFlag
+    dw MonsterScene_LoadBufferedGraphics
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_RevealFirst
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideFirstLeft
+    dw MonsterScene_RevealSecond
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideSecondRight
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_ReenterWithEffect
+    dw MonsterScene_OpenMessage
+    dw MonsterScene_WaitMessage
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_HideEffectObject
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw LinkMessageEvent_FinishToMode8
 
-; step 22 of LinkMessageEvent: copies wLinkSaveStateFlag to wSaveStateFlag; sets wGameMode to 8;
-; sets wModeState to 0; sets wModeChangeRequest to 1; sets wScriptRunning to 0 (E-0347)
-; why: step 22 of LinkMessageEvent (when wScriptStep = 22); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_SetSaveStateFlag::
+; Finish the link presentation: copy wLinkSaveStateFlag into wSaveStateFlag, request game mode 8
+; with substate 0 and mode-change request 1, and stop the script. This copies the saved flag back;
+; it does not set wLinkSaveStateFlag or itself perform an SRAM save. (C1, E-0360)
+LinkMessageEvent_FinishToMode8::
     ld a, [wLinkSaveStateFlag]
     ld [wSaveStateFlag], a
     ld a, $08
@@ -1576,46 +1459,44 @@ LinkMessageEvent_SetSaveStateFlag::
     ld [wScriptRunning], a
     ret
 
-; implements script command type 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group
-; $20, dispatched by NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent: fades, sets the warp destination
-; and wSavedPositionValid, and queues the next script and talk event); named from its trigger and
-; calls (E-0038)
+; Runs SCRIPT_NPC_BREED_WARP through 25 stages. Save/warp preparation is supplied by the caller;
+; enter map $14 and use the shared MonsterScene two-record animation, then choose the return map
+; from the ten-entry selector table, fade and resume the saved caller script with command $F4 and
+; talk group $89 index 1. (C1, E-0360)
 NpcBreedWarp::
     ld a, [wScriptStep]
     jumptable
-    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
-    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
-    dw LinkMessageEvent_ToStartMessageAAndStep
-    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw NpcBreedWarp_WriteMapIdAndMapScreenXEtc
-    dw NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc
+    dw MonsterScene_EnterMap14
+    dw MonsterScene_LoadBufferedGraphics
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_RevealFirst
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideFirstLeft
+    dw MonsterScene_RevealSecond
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideSecondRight
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_ReenterWithEffect
+    dw MonsterScene_OpenMessage
+    dw MonsterScene_WaitMessage
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_HideEffectObject
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw NpcBreedWarp_StartReturnFade
+    dw NpcBreedWarp_RestoreCallerScript
 
-; step 24 of NpcBreedWarp: sets wTalkEventIndex to 1; sets wTalkEventGroup to $89; copies
-; wScriptReturnBank to wScriptStartRequest; copies wScriptReturnLo to wScriptPointerLo; copies
-; wScriptReturnHi to wScriptPointerHi; sets wScriptCommandType to $f4; sets wScriptInDataBank to 1
-; (E-0347)
-; why: step 24 of NpcBreedWarp (when wScriptStep = 24); NpcBreedWarp: implements script command type
-; 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group $20, dispatched by ... (E-0352)
-NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc::
+; Restore slot 0 state from wSavedPlayerState, queue talk group $89 index 1, restore the saved
+; script request byte and pointer, select command $F4 and mark the script as using the data bank.
+; Player/follower coordinates are restored by the field transition when wSavedPositionValid is set;
+; this stage only restores the slot-state byte. (C1, E-0360)
+NpcBreedWarp_RestoreCallerScript::
     ld a, [wSavedPlayerState]
     ld [wSpriteSlots + $7], a
     ld a, $01
@@ -1634,16 +1515,13 @@ NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc::
     ld [wScriptInDataBank], a
     ret
 
-; step 23 of NpcBreedWarp: copies the byte at NpcBreedWarp_WriteMapIdAndMapScreenXEtc_Data to
-; hMapId; sets hMapScreenX to 0; sets hMapScreenY to 0; branches on wScreenTableIndex; sets
-; hMapScreenX to 2; sets wWarpDestX to $40; sets wWarpDestY to $40; sets hFieldDrawFlags to 0; sets
-; wFieldTransitionKind to 0; calls ScriptStartFadeAndAdvanceStep; sets wSavedPositionValid to 1
-; (E-0347)
-; why: step 23 of NpcBreedWarp (when wScriptStep = 23); NpcBreedWarp: implements script command type
-; 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group $20, dispatched by ... (E-0352)
-NpcBreedWarp_WriteMapIdAndMapScreenXEtc::
+; Use wScreenTableIndex (valid 0-9) to choose NpcBreedReturnMapIds. Screen X is 0 for selectors
+; 1,3,5,6,7 and 2 for the others; screen Y is 0 and destination is ($40,$40). Clear the draw mask,
+; select transition kind 0 and start the fade/step helper, then mark the saved position valid. No
+; selector bounds check is made. (C1, E-0360)
+NpcBreedWarp_StartReturnFade::
     ld a, [wScreenTableIndex]
-    ld hl, NpcBreedWarp_WriteMapIdAndMapScreenXEtc_Data
+    ld hl, NpcBreedReturnMapIds
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -1678,55 +1556,51 @@ NpcBreedWarp_WriteMapIdAndMapScreenXEtc::
     ld [wSavedPositionValid], a
     ret
 
-; data read by NpcBreedWarp (10 bytes) (E-0347)
-NpcBreedWarp_WriteMapIdAndMapScreenXEtc_Data::
+; Ten one-byte return-map ids indexed by wScreenTableIndex (0-9); NpcBreedWarp_StartReturnFade
+; chooses screen X separately and performs no index bounds check. (C1, E-0360)
+NpcBreedReturnMapIds::
     db $04, $17, $04, $17, $04, $17, $17, $17, $04, $04
 
-; implements script command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group
-; $17, dispatched by BreedMenu_TalkEvent17ThenNameEntry: a field object with loaded graphics, a
-; message with a name from the string database (CopyStringToBuffer_Bank08)); named from its trigger
-; and calls (E-0038)
+; Runs SCRIPT_BREED_CHILD_SCENE through 28 stages. Start with the shared two-record presentation on
+; map $14; after its first message, replace object 1 graphics with the child species, prepare and
+; run the field effect, then show the child species name and optional breeding-plus digits. Finish
+; by publishing map $0D and restoring the caller script as command $ED. (C1, E-0360)
 BreedChildScene::
     ld a, [wScriptStep]
     jumptable
-    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
-    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
-    dw LinkMessageEvent_ToStartMessageAAndStep
-    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
-    dw BreedChildScene_DecompressGraphicsTemp0ToTemp4
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedChildScene_RunFieldCommandTemp0AndStep
-    dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedChildScene_CopyStringToBuffer_Bank08
-    dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
-    dw BreedChildScene_WriteMapIdAndMapScreenXEtc
+    dw MonsterScene_EnterMap14
+    dw MonsterScene_LoadBufferedGraphics
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_RevealFirst
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideFirstLeft
+    dw MonsterScene_RevealSecond
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideSecondRight
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_ReenterWithEffect
+    dw MonsterScene_OpenMessage
+    dw MonsterScene_WaitMessage
+    dw BreedChildScene_LoadChildGraphics
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw BreedChildScene_StartEffect
+    dw BreedChildScene_WaitEffect
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw BreedChildScene_OpenChildMessage
+    dw BreedChildScene_WaitMessageAndRestoreClip
+    dw BreedChildScene_RestoreCallerScript
 
-; step 17 of BreedChildScene: copies the byte at wChildRecord to wObject1 + OBJ_SPRITE_ID; copies
-; the byte at wChildRecord to hTemp0; copies the byte at wChildRecord to hTemp1; sets hTemp2 to 0;
-; sets hTemp3 to 6; copies L to hTemp4; copies H to hTemp5; calls DecompressGraphicsTemp0ToTemp4;
-; sets hTemp0 to $0d; calls RunFieldCommandTemp0; sets wOBJPaletteUploadRequest to $7f; advances
-; wScriptStep (E-0347)
-; why: step 17 of BreedChildScene (when wScriptStep = 17); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_DecompressGraphicsTemp0ToTemp4::
+; Replace object 1 species/sprite word with wChildRecord + MON_SPECIES. Load its monster graphics
+; into VRAM $8600 with palette slot 6, then run field command $0D to prepare the shared effect
+; object. Request object palettes and advance; object 2 retains its existing data. (C1, E-0360)
+BreedChildScene_LoadChildGraphics::
     ld a, $0b
     ld hl, wChildRecord
     add_a_to_hl
@@ -1755,40 +1629,36 @@ BreedChildScene_DecompressGraphicsTemp0ToTemp4::
     inc [hl]
     ret
 
-; implements script command type 8C (SCRIPT_BREED_CHILD_SPRITE): a key-world/field talk event (group
-; $16, dispatched by BreedMenu_CopyToChildThenTalkEvent16: loads graphics
-; (DecompressGraphicsTemp0ToTemp4) for a field object (RunFieldCommandTemp0)); named from its
-; trigger and calls (E-0038)
+; Runs SCRIPT_BREED_CHILD_SPRITE through 17 stages: enter map $14, load only the child into object
+; 1, use shared slot-0 movement and timed waits, show the prepared effect object, then run the same
+; effect wait, species/plus message and caller return as BreedChildScene. Shared movement still
+; writes both object 1 and object 2 states. (C1, E-0360)
 BreedChildSprite::
     ld a, [wScriptStep]
     jumptable
-    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
-    dw BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedChildSprite_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedChildScene_RunFieldCommandTemp0AndStep
-    dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedChildScene_CopyStringToBuffer_Bank08
-    dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
-    dw BreedChildScene_WriteMapIdAndMapScreenXEtc
+    dw MonsterScene_EnterMap14
+    dw BreedChildSprite_LoadChildGraphics
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_Wait30Calls
+    dw BreedChildSprite_ShowEffectObject
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw BreedChildScene_StartEffect
+    dw BreedChildScene_WaitEffect
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw BreedChildScene_OpenChildMessage
+    dw BreedChildScene_WaitMessageAndRestoreClip
+    dw BreedChildScene_RestoreCallerScript
 
-; step 27 of BreedChildScene: sets hMapId to $0d; sets hMapScreenX to 1; sets hMapScreenY to 0; sets
-; hPlayerX to $40; sets hPlayerY to $40; sets wObject5 to 0; sets wSpriteSlotCount to 0; sets
-; wFieldEventKind to 0; sets wTalkEventIndex to 1; sets wTalkEventGroup to $6a; copies
-; wScriptReturnBank to wScriptStartRequest; copies wScriptReturnLo to wScriptPointerLo; then 4 more
-; steps (see the code) (E-0347)
-; why: step 27 of BreedChildScene (when wScriptStep = 27); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_WriteMapIdAndMapScreenXEtc::
+; Finish the child presentation by assigning map $0D screen (1,0) and player position ($40,$40)
+; directly. Hide object 5, clear the slot count and field-event kind, restore clip mode 2, queue
+; talk group $6A index 1 and restore the saved script request/pointer with command $ED and
+; data-bank-script flag 1. This stage does not initiate a palette fade. (C1, E-0360)
+BreedChildScene_RestoreCallerScript::
     ld a, $0d
     ldh [hMapId], a
     ld a, $01
@@ -1823,12 +1693,10 @@ BreedChildScene_WriteMapIdAndMapScreenXEtc::
     ld [wScriptInDataBank], a
     ret
 
-; step 26 of BreedChildScene: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; advances
-; wScriptStep; copies wScriptParam0 to hSpriteWindowClipMode (E-0347)
-; why: step 26 of BreedChildScene (when wScriptStep = 26); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12::
+; Run the child message with freeze flag 0 and wait for idle carry. On idle, advance the stage and
+; copy wScriptParam0 into the clipping mode. The copy is unconditional: only the nonzero-plus branch
+; of the preceding formatter saved clipping into that parameter. (C1, E-0360)
+BreedChildScene_WaitMessageAndRestoreClip::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -1838,15 +1706,13 @@ BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12::
     ldh [hSpriteWindowClipMode], a
     ret
 
-; step 25 of BreedChildScene: advances wScriptStep; copies the byte at wChildRecord to wStringIndex;
-; copies the byte at wChildRecord to wStringCategory; copies E to wStringDestLo; copies D to
-; wStringDestHi; calls CopyStringToBuffer_Bank08; branches on the byte at wChildRecord; calls
-; StartMessageA; branches on B; sets wTextNumber to $f0; calls StartMessageA; copies
-; hSpriteWindowClipMode to wScriptParam0; then 2 more steps (see the code) (E-0347)
-; why: step 25 of BreedChildScene (when wScriptStep = 25); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_CopyStringToBuffer_Bank08::
+; Advance the stage and copy the child species name from bank $08 to wTextBuf2 + 1, preserving byte
+; 0: string index is species low byte, category is species high byte + 2 modulo 256. For MON_PLUS =
+; 0, show message $17 and return without saving clipping or changing the number buffer. Otherwise
+; divide the plus byte by ten, write optional quotient then remainder glyph values and terminator
+; $F0, show message $18, save clipping in wScriptParam0 and clear it. Values above 99 are not
+; expanded into three decimal digits. (C1, E-0360)
+BreedChildScene_OpenChildMessage::
     ld hl, wScriptStep
     inc [hl]
     ld hl, wChildRecord
@@ -1897,13 +1763,11 @@ BreedChildScene_CopyStringToBuffer_Bank08::
     ldh [hSpriteWindowClipMode], a
     ret
 
-; step 21 of BreedChildScene: branches on wScriptParam0; plays sound $74; calls
-; StepScriptParam0Counter_Bank12; may return early; sets wObject5 to 0; sets wObject1 + OBJ_STATE to
-; 0; sets wObject1 + OBJ_Y to $3c; advances wScriptStep (E-0347)
-; why: step 21 of BreedChildScene (when wScriptStep = 21); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_StepScriptParam0Counter_Bank12::
+; Wait for the field effect using the shared byte counter: queue sound $74 when the incoming phase
+; is $C2, then increment toward exact $E0. From phase 0 completion takes 224 calls. On completion
+; reset the phase, hide object 5, face object 1 down at Y=$3C and advance the stage. This does not
+; test whether the graphics animation has finished. (C1, E-0360)
+BreedChildScene_WaitEffect::
     ld a, [wScriptParam0]
     cp $c2
     jr nz, .call_step_script_param0_counter_bank12
@@ -1924,12 +1788,10 @@ BreedChildScene_StepScriptParam0Counter_Bank12::
     inc [hl]
     ret
 
-; step 20 of BreedChildScene: sets hTemp0 to $0e; calls RunFieldCommandTemp0; advances wScriptStep
-; (E-0347)
-; why: step 20 of BreedChildScene (when wScriptStep = 20); BreedChildScene: implements script
-; command type 8D (SCRIPT_BREED_CHILD_SCENE): a key-world/field talk event (group $17, dispatched by
-; ... (E-0352)
-BreedChildScene_RunFieldCommandTemp0AndStep::
+; Run field command $0E, which shares the effect placement setter with $0D but selects a different
+; graphics record. Advance the script stage; the following wait supplies the delay and sound cue.
+; (C1, E-0360)
+BreedChildScene_StartEffect::
     ld a, $0e
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
@@ -1937,26 +1799,20 @@ BreedChildScene_RunFieldCommandTemp0AndStep::
     inc [hl]
     ret
 
-; step 4 of BreedChildSprite: sets wObject5 to $80; advances wScriptStep (E-0347)
-; why: step 4 of BreedChildSprite (when wScriptStep = 4); BreedChildSprite: implements script
-; command type 8C (SCRIPT_BREED_CHILD_SPRITE): a key-world/field talk event (group $16, dispatched
-; by ... (E-0352)
-BreedChildSprite_SetObject5::
+; Show the prepared script effect by setting object 5 byte 0 to $80, then advance. This stage uses
+; the graphics/template prepared earlier; it does not load new graphics. (C1, E-0360)
+BreedChildSprite_ShowEffectObject::
     ld a, $80
     ld [wObject5], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 1 of BreedChildSprite: sets hSpriteWindowClipMode to 0; sets hFieldDrawFlags; copies the byte
-; at wChildRecord to wObject1 + OBJ_SPRITE_ID; copies the byte at wChildRecord to hTemp0; copies the
-; byte at wChildRecord to hTemp1; sets hTemp2 to 0; sets hTemp3 to 6; copies L to hTemp4; copies H
-; to hTemp5; calls DecompressGraphicsTemp0ToTemp4; sets hTemp0 to $0d; calls RunFieldCommandTemp0;
-; then 4 more steps (see the code) (E-0347)
-; why: step 1 of BreedChildSprite (when wScriptStep = 1); BreedChildSprite: implements script
-; command type 8C (SCRIPT_BREED_CHILD_SPRITE): a key-world/field talk event (group $16, dispatched
-; by ... (E-0352)
-BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
+; Clear clipping and enable the low four draw-mask bits. Copy the child species word to object 1,
+; load its monster graphics at VRAM $8600/palette slot 6 and prepare field command $0D, then hide
+; object 5 until its later show stage. Request object palettes, mark slot 0 moving and advance. (C1,
+; E-0360)
+BreedChildSprite_LoadChildGraphics::
     xor a
     ldh [hSpriteWindowClipMode], a
     ldh a, [hFieldDrawFlags]
@@ -1994,45 +1850,43 @@ BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
     inc [hl]
     ret
 
-; implements script command type 8B (SCRIPT_BREED_FADE): a key-world/field talk event (group $15,
-; dispatched by BreedMenu_TalkEvent15: a palette fade); named from its trigger and calls (E-0038)
+; Runs SCRIPT_BREED_FADE through 25 stages. Enter map $14 and run the shared two-record MonsterScene
+; sequence, then request map $0D screen (1,0) at ($40,$40) and start a palette fade. After the fade
+; state reaches zero, resume the saved caller script with command $ED and talk group $6A index 1.
+; (C1, E-0360)
 BreedFade::
     ld a, [wScriptStep]
     jumptable
-    dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
-    dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject1AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
-    dw LinkMessageEvent_ToStartMessageAAndStep
-    dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
-    dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
-    dw BreedFade_StartPaletteFade
-    dw BreedFade_WaitFadeState
+    dw MonsterScene_EnterMap14
+    dw MonsterScene_LoadBufferedGraphics
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_RevealFirst
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideFirstLeft
+    dw MonsterScene_RevealSecond
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_SlideSecondRight
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_ReenterWithEffect
+    dw MonsterScene_OpenMessage
+    dw MonsterScene_WaitMessage
+    dw MonsterScene_WalkSlot0Up
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_HideEffectObject
+    dw MonsterScene_Wait30Calls
+    dw MonsterScene_WalkSlot0Down
+    dw MonsterScene_Wait30Calls
+    dw BreedFade_StartReturnFade
+    dw BreedFade_RestoreCallerWhenIdle
 
-; step 24 of BreedFade: returns unless wFadeState is 0; sets wTalkEventIndex to 1; sets
-; wTalkEventGroup to $6a; copies wScriptReturnBank to wScriptStartRequest; copies wScriptReturnLo to
-; wScriptPointerLo; copies wScriptReturnHi to wScriptPointerHi; sets wScriptCommandType to $ed; sets
-; wScriptInDataBank to 1 (E-0347)
-; why: step 24 of BreedFade (when wScriptStep = 24); BreedFade: implements script command type 8B
-; (SCRIPT_BREED_FADE): a key-world/field talk event (group $15, dispatched by BreedMenu_TalkEvent15:
-; a ... (E-0352)
-BreedFade_WaitFadeState::
+; Return while wFadeState is nonzero. Once it is exactly zero, queue talk group $6A index 1, restore
+; the saved script request/pointer, select command $ED and mark the script as using the data bank.
+; No stage increment is needed: the command itself is replaced. (C1, E-0360)
+BreedFade_RestoreCallerWhenIdle::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2052,13 +1906,11 @@ BreedFade_WaitFadeState::
     ld [wScriptInDataBank], a
     ret
 
-; step 23 of BreedFade: sets hMapId to $0d; sets hMapScreenX to 1; sets hMapScreenY to 0; sets
-; wWarpDestX to $40; sets wWarpDestY to $40; sets hFieldDrawFlags to 0; sets wFieldTransitionKind to
-; 0; calls StartPaletteFade; sets wSavedPositionValid to 1; advances wScriptStep (E-0347)
-; why: step 23 of BreedFade (when wScriptStep = 23); BreedFade: implements script command type 8B
-; (SCRIPT_BREED_FADE): a key-world/field talk event (group $15, dispatched by BreedMenu_TalkEvent15:
-; a ... (E-0352)
-BreedFade_StartPaletteFade::
+; Assign map $0D screen (1,0), destination ($40,$40), clear the draw mask and select transition kind
+; 0. Start palette fade $0F, mark the saved position valid and advance to the fade wait. The
+; duplicate write of screen X = 1 is retained. Unlike the general fade/step helper, this body does
+; not reset wScriptParam0 or set wModeState = 4. (C1, E-0360)
+BreedFade_StartReturnFade::
     ld a, $0d
     ldh [hMapId], a
     ld a, $01
@@ -2082,23 +1934,18 @@ BreedFade_StartPaletteFade::
     inc [hl]
     ret
 
-; step 18 of LinkMessageEvent: sets wObject5 to 0; advances wScriptStep (E-0347)
-; why: step 18 of LinkMessageEvent (when wScriptStep = 18); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_SetObject5::
+; Hide script object 5 by clearing its byte 0 and advance. Shared by the link, NPC breeding and
+; breed-fade presentations; no palette or graphics load occurs here. (C1, E-0360)
+MonsterScene_HideEffectObject::
     xor a
     ld [wObject5], a
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 15 of LinkMessageEvent: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 15 of LinkMessageEvent (when wScriptStep = 15); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12::
+; Run the current message with freeze flag 0. Advance only on idle carry; while the box remains
+; active, leave the script step unchanged. Used after the shared message $0E. (C1, E-0360)
+MonsterScene_WaitMessage::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -2106,33 +1953,27 @@ LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 14 of LinkMessageEvent: calls StartMessageA; advances wScriptStep (E-0347)
-; why: step 14 of LinkMessageEvent (when wScriptStep = 14); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_ToStartMessageAAndStep::
+; Show message index $0E in the group already selected by the caller, then advance to the shared
+; message wait. Does not select a new message group. (C1, E-0360)
+MonsterScene_OpenMessage::
     ld a, $0e
     call StartMessageA
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 13 of LinkMessageEvent: sets wFieldInitFlag to $8d; continues in
-; NpcBreedWarp_ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 13 of LinkMessageEvent (when wScriptStep = 13); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc::
+; Set wFieldInitFlag = $8D, requesting field command $0D on the next InitFieldScreen, then jump to
+; MonsterScene_EnterMap14. The entry helper starts a fade and advances the script; the field
+; initializer masks off bit 7 before dispatching the requested command. (C1, E-0360)
+MonsterScene_ReenterWithEffect::
     ld a, $8d
     ld [wFieldInitFlag], a
-    jp NpcBreedWarp_ScriptStartFadeAndAdvanceStep
+    jp MonsterScene_EnterMap14
 
-; step 10 of LinkMessageEvent: calls SetBit2AtHL_B12; may return early; sets wObject1 + OBJ_STATE to
-; 1; sets wObject2 + OBJ_STATE to 3; advances wScriptStep (E-0347)
-; why: step 10 of LinkMessageEvent (when wScriptStep = 10); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_SetBit2AtHL_B12::
+; Face slot 0 down, set its moving bit and increment its Y each call. Only updated Y=$C8 advances
+; the stage and sets object 1 facing right and object 2 left. The writes to both object states also
+; occur in the child-only variant. Coordinate addition wraps as a byte. (C1, E-0360)
+MonsterScene_WalkSlot0Down::
     xor a
     ld [wSpriteSlots + $7], a
     ld hl, wSpriteSlots + $d
@@ -2150,13 +1991,10 @@ LinkMessageEvent_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-; step 7 of LinkMessageEvent: sets wObject2 + OBJ_STATE to 1; increments wScriptParam0; may return
-; early; increments wObject2 + OBJ_X; returns unless wObject2 + OBJ_X is $58; sets wObject2 +
-; OBJ_STATE to 0; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 7 of LinkMessageEvent (when wScriptStep = 7); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_WriteObject2AndScriptParam0::
+; Face object 2 right and increment the phase byte every call. Move X right by one only when the
+; updated phase low two bits are zero, one pixel every four calls from phase 0. At updated X=$58,
+; face down, reset the phase and advance; other coordinates keep the current stage. (C1, E-0360)
+MonsterScene_SlideSecondRight::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
     ld a, [wScriptParam0]
@@ -2177,12 +2015,10 @@ LinkMessageEvent_WriteObject2AndScriptParam0::
     inc [hl]
     ret
 
-; step 5 of LinkMessageEvent: calls StepScriptParam0Counter_Bank12; may return early; sets wObject2
-; + OBJ_Y to $40; advances wScriptStep (E-0347)
-; why: step 5 of LinkMessageEvent (when wScriptStep = 5); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep::
+; Wait sixty calls from phase 0 using the equality-based counter. On completion, reset the phase,
+; put object 2 at Y=$40 and advance. This stage does not change its X or explicitly change its
+; facing. (C1, E-0360)
+MonsterScene_RevealSecond::
     ld b, $3c
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -2192,13 +2028,10 @@ LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep::
     inc [hl]
     ret
 
-; step 4 of LinkMessageEvent: sets wObject1 + OBJ_STATE to 3; increments wScriptParam0; may return
-; early; decrements wObject1 + OBJ_X; returns unless wObject1 + OBJ_X is $48; sets wObject1 +
-; OBJ_STATE to 0; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 4 of LinkMessageEvent (when wScriptStep = 4); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_WriteObject1AndScriptParam0::
+; Face object 1 left and increment the phase byte every call. On updated phases divisible by four,
+; decrement its X. At updated X=$48, face down, reset the phase and advance; the counter and X both
+; wrap as bytes without a clamp. (C1, E-0360)
+MonsterScene_SlideFirstLeft::
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
     ld a, [wScriptParam0]
@@ -2219,12 +2052,10 @@ LinkMessageEvent_WriteObject1AndScriptParam0::
     inc [hl]
     ret
 
-; step 3 of LinkMessageEvent: calls StepScriptParam0Counter_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 3 of LinkMessageEvent (when wScriptStep = 3); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_StepScriptParam0Counter_Bank12_2::
+; Shared pause throughout these scene tables: increment the byte phase once per call and return
+; until the result equals $1E. At equality reset the phase and advance the script. From phase 0 that
+; is thirty calls; arbitrary larger phases wrap before completing. (C1, E-0360)
+MonsterScene_Wait30Calls::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -2232,12 +2063,9 @@ LinkMessageEvent_StepScriptParam0Counter_Bank12_2::
     inc [hl]
     ret
 
-; step 2 of LinkMessageEvent: calls StepScriptParam0Counter_Bank12; may return early; sets wObject1
-; + OBJ_Y to $40; advances wScriptStep (E-0347)
-; why: step 2 of LinkMessageEvent (when wScriptStep = 2); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_StepScriptParam0Counter_Bank12::
+; Wait sixty calls from phase 0; on exact counter completion reset the phase, place object 1 at
+; Y=$40 and advance. The scene supplies the object species and X coordinate separately. (C1, E-0360)
+MonsterScene_RevealFirst::
     ld b, $3c
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -2247,12 +2075,9 @@ LinkMessageEvent_StepScriptParam0Counter_Bank12::
     inc [hl]
     ret
 
-; step 1 of LinkMessageEvent: may return early; calls ClearBit2AtHL_Bank12; advances wScriptStep
-; (E-0347)
-; why: step 1 of LinkMessageEvent (when wScriptStep = 1); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_ClearBit2AtHL_Bank12::
+; Decrement slot 0 Y each call, including byte wrap. Only when the updated Y equals $58, clear its
+; moving bit and advance. The same body is reused before and after the shared message. (C1, E-0360)
+MonsterScene_WalkSlot0Up::
     ld a, [wSpriteSlots + $c]
     dec a
     ld [wSpriteSlots + $c], a
@@ -2264,15 +2089,11 @@ LinkMessageEvent_ClearBit2AtHL_Bank12::
     inc [hl]
     ret
 
-; step 0 of LinkMessageEvent: sets hSpriteWindowClipMode to 0; sets hFieldDrawFlags; copies the byte
-; at wRecordBufA to wObject1 + OBJ_SPRITE_ID; copies the byte at wRecordBufA to hTemp0; copies the
-; byte at wRecordBufA to hTemp1; sets hTemp2 to 0; sets hTemp3 to 6; copies L to hTemp4; copies H to
-; hTemp5; calls DecompressGraphicsTemp0ToTemp4; copies the byte at wRecordBufB to wObject2 +
-; OBJ_SPRITE_ID; copies the byte at wRecordBufB to hTemp0; then 9 more steps (see the code) (E-0347)
-; why: step 0 of LinkMessageEvent (when wScriptStep = 0); LinkMessageEvent: implements script
-; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
-; the link screens ... (E-0352)
-LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
+; Clear clipping and enable the low four draw-mask bits. Copy species words from wRecordBufA/B to
+; objects 1/2; load their monster graphics at VRAM $8600/$8700 with palette slots 6/7. Request
+; object palettes, mark slot 0 moving and advance. These buffers are parents in breeding and
+; own/partner records in link presentation. (C1, E-0360)
+MonsterScene_LoadBufferedGraphics::
     xor a
     ldh [hSpriteWindowClipMode], a
     ldh a, [hFieldDrawFlags]
@@ -2324,12 +2145,10 @@ LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc::
     inc [hl]
     ret
 
-; step 0 of NpcBreedWarp: sets hMapId to $14; sets hMapScreenX to 0; sets hMapScreenY to 0; sets
-; wWarpDestX to $e0; sets wWarpDestY to 0; sets wFieldTransitionKind to 0; calls
-; ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 0 of NpcBreedWarp (when wScriptStep = 0); NpcBreedWarp: implements script command type
-; 8F (SCRIPT_NPC_BREED_WARP): a key-world/field talk event (group $20, dispatched by ... (E-0352)
-NpcBreedWarp_ScriptStartFadeAndAdvanceStep::
+; Shared entry/re-entry helper: request map $14 screen (0,0), destination ($E0,0) and transition
+; kind 0, then far-call ScriptStartFadeAndAdvanceStep. That helper starts fade $0F, sets mode
+; substate 4, clears the transition step and phase, and advances the script. (C1, E-0360)
+MonsterScene_EnterMap14::
     ld a, $14
     ldh [hMapId], a
     xor a
@@ -2344,9 +2163,10 @@ NpcBreedWarp_ScriptStartFadeAndAdvanceStep::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; copies wSpriteSlots + $7, the player position and facing, wFollowerRecords and wFollowerRecords +
-; $1-wFollowerRecords + $C fields into wSavedPlayerState-wSavedPlayerState + $C, then advances
-; wScriptStep (E-0121)
+; Snapshot thirteen bytes: slot 0 state, player X/Y/facing, then direction/X/Y from each of the
+; three five-byte follower records. Skip the followers' target coordinates, and advance the
+; eight-bit script step. Does not set wSavedPositionValid; the caller or return stage supplies that
+; flag. (C1, E-0360)
 SavePlayerPositionStateAndStep::
     ld a, [wSpriteSlots + $7]
     ld [wSavedPlayerState], a
@@ -2378,35 +2198,37 @@ SavePlayerPositionStateAndStep::
     inc [hl]
     ret
 
-; implements script command type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group
-; $14: steps the followers, toggling object flag bit 1, with a sound); named from its trigger and
-; calls (E-0038)
+; SCRIPT_FOLLOWERS_STEP_14 has three stages: face down and freeze the player animation counter, move
+; player Y down by two toward exact $80 while stepping followers twice, then wait for the last party
+; follower Y to equal player Y and request fetching the next script command. The final wait does not
+; test X or all follower records. The stage index is unchecked. (C1, E-0361)
 FollowersStep14::
     ld a, [wScriptStep]
     jumptable
-    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_SetScriptStartRequest
+    dw FollowerScene_BeginDown
+    dw FollowerScene_WalkDownTo80
+    dw FollowerScene_FinishWhenLastYMatches
 
-; implements script command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event
-; (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the
-; field transition); named from its trigger and calls (E-0038)
+; SCRIPT_WARP_WITH_FOLLOWERS has five stages: shared down-facing initialization, walk to Y=$80, fade
+; toward map 1 screen (1,0) with destination (player X,$F0), stagger the three follower Ys while
+; player Y wraps toward $50, then use the shared last-follower-Y completion wait. The dispatcher
+; only selects a stage; map loading is performed by the field transition. (C1, E-0361)
 WarpWithFollowers::
     ld a, [wScriptStep]
     jumptable
-    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw WarpWithFollowers_ScriptStartFadeAndAdvanceStep
-    dw WarpWithFollowers_SetBit1AtHL_Bank12
-    dw FollowersStep14_SetScriptStartRequest
+    dw FollowerScene_BeginDown
+    dw FollowerScene_WalkDownTo80
+    dw WarpWithFollowers_StartEntryFade
+    dw WarpWithFollowers_StaggerDownTo50
+    dw FollowerScene_FinishWhenLastYMatches
 
-; step 3 of WarpWithFollowers: calls SetBit1AtHL_Bank12; sets wFollowerRecords to 0; branches on
-; hPlayerY; increments hPlayerY; returns unless hPlayerY is $50; advances wScriptStep; also changes
-; HL and A by register arithmetic (E-0347)
-; why: step 3 of WarpWithFollowers (when wScriptStep = 3); WarpWithFollowers: implements script
-; command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event (group $13: sets an
-; object flag, fades, then ... (E-0352)
-WarpWithFollowers_SetBit1AtHL_Bank12::
+; Set player animation-freeze bit 1 and all three follower directions to down. In
+; downstream-to-upstream order, add two to follower 3 Y only if follower 2 Y is unsigned below $E0,
+; to follower 2 Y only if follower 1 Y is below $E0, and to follower 1 Y only if player Y is below
+; $E0. Thus each gate reads the upstream coordinate before this call updates it. Always add two to
+; player Y with byte wrap; advance only on updated Y=$50. This does not use follower targets or
+; party count. (C1, E-0361)
+WarpWithFollowers_StaggerDownTo50::
     ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank12
     xor a
@@ -2450,13 +2272,11 @@ WarpWithFollowers_SetBit1AtHL_Bank12::
     inc [hl]
     ret
 
-; step 2 of WarpWithFollowers: sets hMapId to 1; sets hMapScreenX to 1; sets hMapScreenY to 0;
-; copies hPlayerX to wWarpDestX; sets wWarpDestY to $f0; sets wFieldTransitionKind to 0; calls
-; ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 2 of WarpWithFollowers (when wScriptStep = 2); WarpWithFollowers: implements script
-; command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event (group $13: sets an
-; object flag, fades, then ... (E-0352)
-WarpWithFollowers_ScriptStartFadeAndAdvanceStep::
+; Request map 1 screen (1,0), destination (current player X,$F0), transition kind 0. Far-call
+; ScriptStartFadeAndAdvanceStep in bank $5F, which starts fade $0F, selects mode substate 4, clears
+; transition step and phase, and advances the script. The banked-call helper restores bank $12 on
+; return; this body does not directly move the player or followers. (C1, E-0361)
+WarpWithFollowers_StartEntryFade::
     ld a, $01
     ldh [hMapId], a
     ld a, $01
@@ -2472,26 +2292,26 @@ WarpWithFollowers_ScriptStartFadeAndAdvanceStep::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; implements script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event
-; (group $12: moves the player (UpdatePlayerMovement) and the followers); named from its trigger and
-; calls (E-0038)
+; SCRIPT_PLAYER_AND_FOLLOWERS_STEP has six stages: shared initialization, walk down to Y=$80, start
+; the next-screen field action with vertical delta $FF80, continue movement/action until request bit
+; 7 clears, walk down to exact Y=$20, then wait for the last party follower Y and request the next
+; script command. Stage 2 advances immediately after its first movement/action call; stage 3
+; supplies the completion wait. (C1, E-0361)
 PlayerAndFollowersStep::
     ld a, [wScriptStep]
     jumptable
-    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw PlayerAndFollowersStep_UpdatePlayerMovement
-    dw PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7
-    dw PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_SetScriptStartRequest
+    dw FollowerScene_BeginDown
+    dw FollowerScene_WalkDownTo80
+    dw FollowerScene_StartNextScreenAction
+    dw FollowerScene_WaitScreenAction
+    dw PlayerAndFollowersStep_WalkDownTo20
+    dw FollowerScene_FinishWhenLastYMatches
 
-; step 4 of PlayerAndFollowersStep: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
-; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $20; advances
-; wScriptStep (E-0347)
-; why: step 4 of PlayerAndFollowersStep (when wScriptStep = 4); PlayerAndFollowersStep: implements
-; script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event (group
-; $12: moves the player ... (E-0352)
-PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12::
+; Step followers using the incoming player Y, increment player Y once, step followers again using
+; that intermediate Y, then increment player Y once more. Advance only at updated Y=$20. Every
+; addition is eight-bit and wraps; no clamp, facing change or target refresh occurs except through
+; the shared follower helper at 16-pixel boundaries. (C1, E-0361)
+PlayerAndFollowersStep_WalkDownTo20::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -2507,23 +2327,22 @@ PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12::
     inc [hl]
     ret
 
-; implements script command type 91 (SCRIPT_FOLLOWERS_STEP_11): a key-world/field talk event (group
-; $11: steps the followers (UpdateFollowersOnStep_Bank12)); named from its trigger and calls
-; (E-0038)
+; SCRIPT_FOLLOWERS_STEP_11 has three stages: shared down-facing initialization, walk player Y down
+; by two toward exact $60 while stepping followers twice, then use the shared last-party-follower Y
+; wait and request the next script command. Unlike the six-stage commands, this table does not start
+; a next-screen field action. The index is unchecked. (C1, E-0361)
 FollowersStep11::
     ld a, [wScriptStep]
     jumptable
-    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
-    dw FollowersStep11_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_SetScriptStartRequest
+    dw FollowerScene_BeginDown
+    dw FollowersStep11_WalkDownTo60
+    dw FollowerScene_FinishWhenLastYMatches
 
-; step 1 of FollowersStep11: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
-; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $60; advances
-; wScriptStep (E-0347)
-; why: step 1 of FollowersStep11 (when wScriptStep = 1); FollowersStep11: implements script command
-; type 91 (SCRIPT_FOLLOWERS_STEP_11): a key-world/field talk event (group $11: steps the followers
-; ... (E-0352)
-FollowersStep11_UpdateFollowersOnStep_Bank12::
+; Step followers at the incoming player Y and again after incrementing Y once, then increment Y a
+; second time. Advance only when the updated byte equals $60. The two increments wrap and preserve
+; input parity, so odd Y cannot reach this even threshold without an intervening writer. (C1,
+; E-0361)
+FollowersStep11_WalkDownTo60::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -2539,26 +2358,26 @@ FollowersStep11_UpdateFollowersOnStep_Bank12::
     inc [hl]
     ret
 
-; implements script command type 90 (SCRIPT_FOLLOWERS_STEP_10): a key-world/field talk event (group
-; $10: steps the followers (UpdateFollowersOnStep_Bank12)); named from its trigger and calls
-; (E-0038)
+; SCRIPT_FOLLOWERS_STEP_10 uses the same first four stages as PlayerAndFollowersStep: initialize,
+; walk to $80, start the next-screen field action and wait for its request bit 7 to clear. Its fifth
+; stage walks down to $50 rather than $20; the sixth uses the shared last-party-follower Y
+; completion wait. No bounds check is made on the stage index. (C1, E-0361)
 FollowersStep10::
     ld a, [wScriptStep]
     jumptable
-    dw FollowersStep14_SetBit1AtHL_Bank12AndStep
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw PlayerAndFollowersStep_UpdatePlayerMovement
-    dw PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7
-    dw FollowersStep10_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_SetScriptStartRequest
+    dw FollowerScene_BeginDown
+    dw FollowerScene_WalkDownTo80
+    dw FollowerScene_StartNextScreenAction
+    dw FollowerScene_WaitScreenAction
+    dw FollowersStep10_WalkDownTo50
+    dw FollowerScene_FinishWhenLastYMatches
 
-; step 2 of FollowersStep14: calls UpdateFollowersOnStep_Bank12; returns unless hPlayerY is c; calls
-; ClearBit1AtHL_Bank12; sets wScriptStartRequest to $80; also changes HL, A and C by register
-; arithmetic (E-0347)
-; why: step 2 of FollowersStep14 (when wScriptStep = 2); FollowersStep14: implements script command
-; type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers,
-; toggling object ... (E-0352)
-FollowersStep14_SetScriptStartRequest::
+; Step followers twice without changing player Y, then read Y at wFollowerRecords + 2 +
+; ((wPartyCount - 1) * 5 modulo 256). For valid party counts 1-3 this is the last follower. Return
+; unless that Y equals player Y; on equality clear player animation-freeze bit 1 and set
+; wScriptStartRequest=$80. X, other followers, flags and targets are not completion conditions.
+; Party count 0 underflows and is not checked. (C1, E-0361)
+FollowerScene_FinishWhenLastYMatches::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ldh a, [hPlayerY]
@@ -2582,13 +2401,11 @@ FollowersStep14_SetScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of FollowersStep10: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
-; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $50; advances
-; wScriptStep (E-0347)
-; why: step 4 of FollowersStep10 (when wScriptStep = 4); FollowersStep10: implements script command
-; type 90 (SCRIPT_FOLLOWERS_STEP_10): a key-world/field talk event (group $10: steps the followers
-; ... (E-0352)
-FollowersStep10_UpdateFollowersOnStep_Bank12::
+; Step followers at the incoming player Y, increment Y, step followers at the intermediate Y and
+; increment Y again. Advance only on updated Y=$50. Both Y increments wrap as bytes, and equality
+; rather than a crossing/clamp determines completion. Party count does not limit the follower helper
+; to fewer than three records. (C1, E-0361)
+FollowersStep10_WalkDownTo50::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -2604,13 +2421,11 @@ FollowersStep10_UpdateFollowersOnStep_Bank12::
     inc [hl]
     ret
 
-; step 3 of PlayerAndFollowersStep: calls UpdatePlayerMovement; calls
-; RunFieldActionRequestActionIfBit7; returns if bit 7 of wFieldActionRequest is set; advances
-; wScriptStep (E-0347)
-; why: step 3 of PlayerAndFollowersStep (when wScriptStep = 3); PlayerAndFollowersStep: implements
-; script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event (group
-; $12: moves the player ... (E-0352)
-PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7::
+; Far-call UpdatePlayerMovement and then RunFieldActionRequestActionIfBit7 in bank $02. Advance the
+; script only if request bit 7 is clear after both calls; otherwise return at the same stage. This
+; checks the field-action lifetime rather than the remaining vertical delta or a follower
+; coordinate. Both calls restore bank $12. (C1, E-0361)
+FollowerScene_WaitScreenAction::
     farcall UpdatePlayerMovement
     farcall RunFieldActionRequestActionIfBit7
     ld a, [wFieldActionRequest]
@@ -2620,14 +2435,12 @@ PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7::
     inc [hl]
     ret
 
-; step 2 of PlayerAndFollowersStep: sets wFieldActionRequest to $80; sets wScreenScrollDir to 8;
-; increments hMapScreenY; sets hPlayerStateFlags; copies L to hPlayerStepDYLo; copies H to
-; hPlayerStepDYHi; calls UpdatePlayerMovement; calls RunFieldActionRequestActionIfBit7; advances
-; wScriptStep (E-0347)
-; why: step 2 of PlayerAndFollowersStep (when wScriptStep = 2); PlayerAndFollowersStep: implements
-; script command type 92 (SCRIPT_PLAYER_AND_FOLLOWERS_STEP): a key-world/field talk event (group
-; $12: moves the player ... (E-0352)
-PlayerAndFollowersStep_UpdatePlayerMovement::
+; Set field-action request $80 and screen-scroll direction 8, increment map-screen Y with byte wrap,
+; set player step-in-progress bit 0, and write vertical step delta $FF80 (little-endian signed
+; -128). Far-call movement and action dispatch in bank $02, then advance the script unconditionally.
+; Other player-state bits and the horizontal step delta are preserved; the following wait tests
+; action completion. (C1, E-0361)
+FollowerScene_StartNextScreenAction::
     ld a, $80
     ld [wFieldActionRequest], a
     ld a, $08
@@ -2648,13 +2461,11 @@ PlayerAndFollowersStep_UpdatePlayerMovement::
     inc [hl]
     ret
 
-; step 1 of FollowersStep14: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
-; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $80; advances
-; wScriptStep (E-0347)
-; why: step 1 of FollowersStep14 (when wScriptStep = 1); FollowersStep14: implements script command
-; type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers,
-; toggling object ... (E-0352)
-FollowersStep14_UpdateFollowersOnStep_Bank12::
+; Step followers using player Y, increment player Y once, step followers again at the intermediate
+; Y, then increment Y again. Advance only when updated Y=$80. Boundary-sensitive target capture can
+; occur on either helper call, before that call moves the followers. The arithmetic wraps and does
+; not clamp or change input parity. (C1, E-0361)
+FollowerScene_WalkDownTo80::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ld hl, hPlayerY
@@ -2670,12 +2481,11 @@ FollowersStep14_UpdateFollowersOnStep_Bank12::
     inc [hl]
     ret
 
-; step 0 of FollowersStep14: sets hPlayerFacing to 0; calls SetBit1AtHL_Bank12; plays sound $65;
-; advances wScriptStep (E-0347)
-; why: step 0 of FollowersStep14 (when wScriptStep = 0); FollowersStep14: implements script command
-; type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers,
-; toggling object ... (E-0352)
-FollowersStep14_SetBit1AtHL_Bank12AndStep::
+; Face the player down (0), set hPlayerStateFlags bit 1, queue sound $65 and advance the script
+; step. The bit freezes the player animation counter; this body does not set moving bit 2,
+; initialize coordinates or follower targets, or clear other player-state bits. Script step
+; increment wraps as a byte. (C1, E-0361)
+FollowerScene_BeginDown::
     xor a
     ldh [hPlayerFacing], a
     ld hl, hPlayerStateFlags
@@ -2686,43 +2496,43 @@ FollowersStep14_SetBit1AtHL_Bank12AndStep::
     inc [hl]
     ret
 
-; implements script command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event
-; (group $09, dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: reloads the player sprite graphics
-; with a negative screen flash); named from its trigger and calls (E-0038)
+; SCRIPT_PLAYER_SPRITE_FLASH selects eight unchecked stages: save background palettes/queue sound,
+; flash for thirty calls, choose a sprite-slot graphics id, turn once, activate/load the override
+; while turning again, turn twice more, then clear clipping and request the next script command. The
+; four turns each take three calls from phase 0; graphics load occurs at the start of the second
+; turn, not at selection. The override timer is initialized to 100 and is decremented separately
+; after the script stops running. (C1, E-0362)
 PlayerSpriteFlash::
     ld a, [wScriptStep]
     jumptable
-    dw PlayerSpriteFlash_QueueSoundEffect
-    dw PlayerSpriteFlash_ToScriptStepFlashScreenNegative
-    dw PlayerSpriteFlash_NextRandomSeed
-    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
-    dw PlayerSpriteFlash_LoadPlayerSpriteGraphics
-    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
-    dw PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
-    dw PlayerSpriteFlash_WriteSpriteWindowClipModeAndScriptStartRequest
+    dw PlayerSpriteFlash_SavePalettes
+    dw PlayerSpriteFlash_FlashPalettes
+    dw PlayerSpriteFlash_SelectSlotGraphics
+    dw PlayerSpriteFlash_TurnAfterThreeCalls
+    dw PlayerSpriteFlash_ActivateAndTurn
+    dw PlayerSpriteFlash_TurnAfterThreeCalls
+    dw PlayerSpriteFlash_TurnAfterThreeCalls
+    dw PlayerSpriteFlash_ResumeScript
 
-; step 7 of PlayerSpriteFlash: sets hSpriteWindowClipMode to 0; sets wScriptStartRequest to $80
-; (E-0347)
-; why: step 7 of PlayerSpriteFlash (when wScriptStep = 7); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_WriteSpriteWindowClipModeAndScriptStartRequest::
+; Clear sprite-window clipping and set wScriptStartRequest=$80 to request fetching the next opcode.
+; Leave override, graphics id, facing, timer and current stage unchanged. This request alone does
+; not end the whole script; its next opcode decides that. (C1, E-0362)
+PlayerSpriteFlash_ResumeScript::
     xor a
     ldh [hSpriteWindowClipMode], a
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of PlayerSpriteFlash: may continue in PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing;
-; sets hPlayerSpriteOverride; calls LoadPlayerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f
-; (E-0347)
-; why: step 4 of PlayerSpriteFlash (when wScriptStep = 4); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_LoadPlayerSpriteGraphics::
+; Only when incoming phase is zero, set override bit 7, far-call LoadPlayerSpriteGraphics in bank
+; $04 and request object-palette upload $7F. Then fall through to the three-call turn helper.
+; Nonzero phases skip loading; an arbitrary phase that wraps to zero can cause a later reload.
+; Preserve the other override bits, including bit 0 selecting monster versus field graphics. (C1,
+; E-0362)
+PlayerSpriteFlash_ActivateAndTurn::
     ld a, [wScriptParam0]
     or a
-    jr nz, PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing
+    jr nz, PlayerSpriteFlash_TurnAfterThreeCalls
     ldh a, [hPlayerSpriteOverride]
     or $80
     ldh [hPlayerSpriteOverride], a
@@ -2730,12 +2540,11 @@ PlayerSpriteFlash_LoadPlayerSpriteGraphics::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
-; step 3 of PlayerSpriteFlash: increments wScriptParam0; returns unless wScriptParam0 is $03; copies
-; hPlayerFacing & $03 to hPlayerFacing; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 3 of PlayerSpriteFlash (when wScriptStep = 3); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing::
+; Increment the eight-bit phase and return unless the updated value equals 3. On equality, facing
+; becomes (facing + 1) & 3, phase resets to 0 and the script stage increments. From phase 0 this
+; takes three calls; larger phases wrap before equality. Shared by all four turn stages, including
+; the activation stage fallthrough. (C1, E-0362)
+PlayerSpriteFlash_TurnAfterThreeCalls::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -2751,16 +2560,13 @@ PlayerSpriteFlash_WriteScriptParam0AndPlayerFacing::
     inc [hl]
     ret
 
-; step 2 of PlayerSpriteFlash: sets hPlayerFacing to 0; calls NextRandomSeed; branches on
-; wKeyRandomHi & $07; branches on the byte at wSpriteSlots + $b; copies the byte at wSpriteSlots +
-; $b to hPlayerSpriteOverride; copies the byte at wSpriteSlots + $b to hPlayerSpriteStreamLo; copies
-; the byte at wSpriteSlots + $b to hPlayerSpriteStreamHi; branches on hPlayerSpriteOverride;
-; branches on hPlayerSpriteStreamLo; branches on hPlayerSpriteStreamHi; sets hPlayerSpriteTimerLo to
-; $64; sets hPlayerSpriteTimerHi to 0; then 3 more steps (see the code) (E-0347)
-; why: step 2 of PlayerSpriteFlash (when wScriptStep = 2); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_NextRandomSeed::
+; Face down and rejection-sample NextRandomSeed high byte & 7 until the index is below the captured
+; slot count and the slot X/Y are unsigned below $A0/$90. HL remains at slot byte 12 after reading
+; Y, then subtracting $0B puts it at byte 1: copy bytes 1,2,3 to override kind and little-endian
+; graphics id. Reject the exact copied triple (1,$5E,0); other kind values with the same id are
+; accepted. Slot state byte 0 is not checked. Set timer=100, phase=0 and advance. Only slots 0-7 can
+; be sampled; no retry limit exists if none is eligible. (C1, E-0362)
+PlayerSpriteFlash_SelectSlotGraphics::
     xor a
     ldh [hPlayerFacing], a
     ld a, [wSpriteSlotCount]
@@ -2790,16 +2596,16 @@ PlayerSpriteFlash_NextRandomSeed::
     ld a, [hli]
     ldh [hPlayerSpriteOverride], a
     ld a, [hli]
-    ldh [hPlayerSpriteStreamLo], a
+    ldh [hPlayerSpriteGfxIdLo], a
     ld a, [hl]
-    ldh [hPlayerSpriteStreamHi], a
+    ldh [hPlayerSpriteGfxIdHi], a
     ldh a, [hPlayerSpriteOverride]
     cp $01
     jr nz, .set_player_sprite_timer_lo_to_64
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     cp $5e
     jr nz, .set_player_sprite_timer_lo_to_64
-    ldh a, [hPlayerSpriteStreamHi]
+    ldh a, [hPlayerSpriteGfxIdHi]
     or a
     jr z, .loop
 
@@ -2814,20 +2620,17 @@ PlayerSpriteFlash_NextRandomSeed::
     inc [hl]
     ret
 
-; step 1 of PlayerSpriteFlash: calls ScriptStepFlashScreenNegative (E-0347)
-; why: step 1 of PlayerSpriteFlash (when wScriptStep = 1); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_ToScriptStepFlashScreenNegative::
+; Far-call ScriptStepFlashScreenNegative in bank $12 and return. The helper owns the phase counter,
+; palette writes and stage advance; this wrapper adds no independent wait or state change. The
+; banked-call convention is retained even though the callee is in this bank. (C1, E-0362)
+PlayerSpriteFlash_FlashPalettes::
     farcall ScriptStepFlashScreenNegative
     ret
 
-; step 0 of PlayerSpriteFlash: plays sound $7a; branches on wIsCGB; calls CopyBytes; advances
-; wScriptStep (E-0347)
-; why: step 0 of PlayerSpriteFlash (when wScriptStep = 0); PlayerSpriteFlash: implements script
-; command type A0 (SCRIPT_PLAYER_SPRITE_FLASH): a key-world/field talk event (group $09, dispatched
-; by ... (E-0352)
-PlayerSpriteFlash_QueueSoundEffect::
+; Queue sound $7A. On CGB copy all 64 background-palette bytes to wBGPaletteCopy; on DMG leave that
+; copy untouched. Increment the script stage without clearing its phase or altering clipping. The
+; following flash helper uses the saved copy and controls timing. (C1, E-0362)
+PlayerSpriteFlash_SavePalettes::
     ld a, $7a
     call QueueSoundEffect
     ld a, [wIsCGB]
@@ -2843,22 +2646,22 @@ PlayerSpriteFlash_QueueSoundEffect::
     inc [hl]
     ret
 
-; implements script command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event
-; (group $0A, dispatched by UpdatePlayerMovement: reloads the player sprite graphics and shows a
-; message); named from its trigger and calls (E-0038)
+; SCRIPT_PLAYER_SPRITE_MESSAGE has three unchecked stages: open message $12 in the existing group,
+; wait for idle carry, then clear the player override, reload default graphics and request the next
+; script opcode. The group-$0A talk event is supplied by the override countdown path; this
+; dispatcher itself does not decrement the timer or select a group. (C1, E-0362)
 PlayerSpriteMessage::
     ld a, [wScriptStep]
     jumptable
-    dw PlayerSpriteMessage_ToStartMessageAAndStep
-    dw PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12
-    dw PlayerSpriteMessage_LoadPlayerSpriteGraphics
+    dw PlayerSpriteMessage_OpenMessage
+    dw PlayerSpriteMessage_WaitMessage
+    dw PlayerSpriteMessage_RestoreAndResume
 
-; step 2 of PlayerSpriteMessage: sets hPlayerSpriteOverride to 0; calls LoadPlayerSpriteGraphics;
-; sets wOBJPaletteUploadRequest to $7f; sets wScriptStartRequest to $80 (E-0347)
-; why: step 2 of PlayerSpriteMessage (when wScriptStep = 2); PlayerSpriteMessage: implements script
-; command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event (group $0A,
-; dispatched by ... (E-0352)
-PlayerSpriteMessage_LoadPlayerSpriteGraphics::
+; Clear the entire override byte, far-call LoadPlayerSpriteGraphics in bank $04 to select the
+; default player variant from story flag 0, request object-palette upload $7F and set script fetch
+; request $80. Keep the graphics-id and timer bytes unchanged; clearing override disables their use.
+; Do not increment the current stage. (C1, E-0362)
+PlayerSpriteMessage_RestoreAndResume::
     xor a
     ldh [hPlayerSpriteOverride], a
     farcall LoadPlayerSpriteGraphics
@@ -2868,12 +2671,10 @@ PlayerSpriteMessage_LoadPlayerSpriteGraphics::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of PlayerSpriteMessage: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 1 of PlayerSpriteMessage (when wScriptStep = 1); PlayerSpriteMessage: implements script
-; command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event (group $0A,
-; dispatched by ... (E-0352)
-PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12::
+; Run the bank-$12 message helper with freeze flag 0. Return without advancing while idle carry is
+; clear; on idle carry increment the eight-bit script stage. The override stays active until the
+; following restore stage. (C1, E-0362)
+PlayerSpriteMessage_WaitMessage::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -2881,40 +2682,38 @@ PlayerSpriteMessage_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 0 of PlayerSpriteMessage: calls StartMessageA; advances wScriptStep (E-0347)
-; why: step 0 of PlayerSpriteMessage (when wScriptStep = 0); PlayerSpriteMessage: implements script
-; command type A1 (SCRIPT_PLAYER_SPRITE_MESSAGE): a key-world/field talk event (group $0A,
-; dispatched by ... (E-0352)
-PlayerSpriteMessage_ToStartMessageAAndStep::
+; Start message index $12 in the group already selected by the caller: StartMessageA writes the
+; index and clears message state to 0. Increment the script stage, without loading graphics,
+; clearing override or changing the message group. (C1, E-0362)
+PlayerSpriteMessage_OpenMessage::
     ld a, $12
     call StartMessageA
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; implements script command type 8E (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08,
-; dispatched by RunFieldReturnPhase_OpenFieldMenuOnA: a timed palette fade, then the warp
-; destination from the map link records (E-0238) or wKeyWorldGoal); named from its trigger and calls
+; SCRIPT_MAP_LINK_WARP has two unchecked stages: the shared timed player/follower lift, then a
+; destination-selection stage that requests the next script command and starts a transition only if
+; it finds a normal-map record or takes the key-world path. The normal-map sentinel case leaves the
+; destination and transition state unchanged. (C1, E-0362)
 MapLinkWarp::
     ld a, [wScriptStep]
     jumptable
-    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
-    dw MapLinkWarp_WriteScriptStartRequestAndMapIdEtc
+    dw WarpScene_LiftPartyFor90Calls
+    dw MapLinkWarp_SelectDestination
 
-; step 1 of MapLinkWarp: sets wScriptStartRequest to $80; may continue in
-; MapExitWarpTable_CheckKeyWorldActive; branches on the byte at MapExitWarpTable; sets hMapId;
-; branches on wKeyWorldActive; branches on wKeyWorldKey; calls
-; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: step 1 of MapLinkWarp (when wScriptStep = 1); MapLinkWarp: implements script command type 8E
-; (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by ... (E-0352,
-; E-0238)
-MapLinkWarp_WriteScriptStartRequestAndMapIdEtc::
+; Set script fetch request $80 first. If map-type bit 7 is set, jump to the key-world selector.
+; Otherwise search five-byte MapExitWarpTable records by incoming map id until $FF; a miss returns
+; C=0 without starting a fade. A match replaces map id with record byte 1, then uses packed
+; destination bytes 3/4 unless a key world is active and (key byte - 1) modulo 256 equals record
+; byte 2; that case uses wKeyWorldGoal instead. Matching the saved goal does not undo the
+; destination-map write. (C1, E-0362)
+MapLinkWarp_SelectDestination::
     ld a, $80
     ld [wScriptStartRequest], a
     ld a, [wMapType]
     bit 7, a
-    jp nz, MapExitWarpTable_CheckKeyWorldActive
+    jp nz, MapLinkWarp_SelectKeyWorldGoal
     ldh a, [hMapId]
     ld c, a
     ld hl, MapExitWarpTable
@@ -2948,22 +2747,21 @@ MapLinkWarp_WriteScriptStartRequestAndMapIdEtc::
     ld b, a
     ld a, [wKeyWorldActive]
     or a
-    jr z, .call_map_link_warp_write_warp_dest_x_and_warp
+    jr z, .call_map_link_warp_decode_packed_destination
     ld a, [wKeyWorldKey]
     dec a
     cp b
-    jr nz, .call_map_link_warp_write_warp_dest_x_and_warp
+    jr nz, .call_map_link_warp_decode_packed_destination
     ld de, wKeyWorldGoal
 
-.call_map_link_warp_write_warp_dest_x_and_warp:
-    call MapLinkWarp_WriteWarpDestXAndWarpDestYEtc
+.call_map_link_warp_decode_packed_destination:
+    call MapLinkWarp_DecodePackedDestination
     ret
 
-; the code at MapLinkWarp_WriteScriptStartRequestAndMapIdEtc walks 5-byte records up to $FF for the
-; one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to
-; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc (high nibble to wWarpDestX, low nibble * 16 to
-; wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey -
-; 1 equals byte 2; 16 records and $FF (E-0238, C1)
+; Sixteen five-byte normal-map link records and $FF sentinel. Byte 0 matches incoming map, byte 1
+; becomes map id, byte 2 matches (active key - 1) modulo 256 to select saved goal bytes; bytes 3/4
+; otherwise hold packed pixel position and screen nibbles. A miss requests the next script opcode
+; but starts no transition. (C1, E-0362; earlier E-0238)
 ; record: map, new map, key; destination position and screen
 MapExitWarpTable::
     db $20, $20, $00 ; id 0: map to match, new hMapId, key number + 1 that uses wKeyWorldGoal instead
@@ -3000,13 +2798,11 @@ MapExitWarpTable::
     db $44, $00 ; destination: X / Y nibbles (wWarpDestX / wWarpDestY), screen byte
     db $ff ; end
 
-; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; calls
-; MapLinkWarp_WriteWarpDestXAndWarpDestYEtc; copies wKeyWorldGoalPos to wWarpDestX; copies
-; wKeyWorldGoalPos2 to wWarpDestY; calls MapLinkWarp_StartPaletteFade; also changes DE, A and C by
-; register arithmetic (E-0347)
-; why: part of MapExitWarpTable; MapExitWarpTable: E-0238, or DE = wKeyWorldGoal when a key world is
-; active and wKeyWorldKey - 1 equals byte 2 (E-0352, E-0238)
-MapExitWarpTable_CheckKeyWorldActive::
+; For an active key world with key bit 7 set and slot equal to key & $7F, decode the packed
+; position/screen at wKeyWorldGoal. Otherwise copy the two direct goal-position bytes to warp X/Y
+; and use the packed screen byte at wKeyWorldGoalScreen. Both paths start the common transition,
+; preserve map id and warp facing, and make no destination validity check. (C1, E-0362)
+MapLinkWarp_SelectKeyWorldGoal::
     ld a, [wKeyWorldActive]
     or a
     jr z, .read_key_world_goal_pos
@@ -3019,7 +2815,7 @@ MapExitWarpTable_CheckKeyWorldActive::
     cp c
     jr nz, .read_key_world_goal_pos
     ld de, wKeyWorldGoal
-    call MapLinkWarp_WriteWarpDestXAndWarpDestYEtc
+    call MapLinkWarp_DecodePackedDestination
     ret
 
 .read_key_world_goal_pos:
@@ -3028,15 +2824,13 @@ MapExitWarpTable_CheckKeyWorldActive::
     ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
     ld de, wKeyWorldGoalScreen
-    call MapLinkWarp_StartPaletteFade
+    call MapLinkWarp_StartTransition
     ret
 
-; called from MapLinkWarp_WriteScriptStartRequestAndMapIdEtc: sets wWarpDestX; sets wWarpDestY
-; (E-0347)
-; why: a helper of MapLinkWarp_WriteScriptStartRequestAndMapIdEtc, in step 1 of MapLinkWarp (when
-; wScriptStep = 1); MapLinkWarp: implements script command type 8E (SCRIPT_MAP_LINK_WARP): a
-; key-world/field talk event (group $08, dispatched by ... (E-0352, E-0238)
-MapLinkWarp_WriteWarpDestXAndWarpDestYEtc::
+; DE points at a packed position byte: high nibble is pixel X, low nibble shifted left four is pixel
+; Y. Write warp X/Y, increment DE and fall through to the packed-screen/transition helper. No
+; coordinate bias is added; valid values are multiples of 16. (C1, E-0362)
+MapLinkWarp_DecodePackedDestination::
     ld a, [de]
     and $f0
     ld [wWarpDestX], a
@@ -3046,14 +2840,11 @@ MapLinkWarp_WriteWarpDestXAndWarpDestYEtc::
     ld [wWarpDestY], a
     inc de
 
-; called from MapLinkWarp_WriteScriptStartRequestAndMapIdEtc: sets hMapScreenX; sets hMapScreenY;
-; sets wFieldTransitionStep to $80; sets wFieldTransitionKind to 1; calls StartPaletteFade;
-; increments wFieldInitStage; sets wModeState to 4; copies hPlayerStateFlags & $f7 to
-; hPlayerStateFlags; sets hPlayerStateFlags (E-0347)
-; why: a helper of MapLinkWarp_WriteScriptStartRequestAndMapIdEtc, in step 1 of MapLinkWarp (when
-; wScriptStep = 1); MapLinkWarp: implements script command type 8E (SCRIPT_MAP_LINK_WARP): a
-; key-world/field talk event (group $08, dispatched by ... (E-0352, E-0238)
-MapLinkWarp_StartPaletteFade::
+; Decode the byte at DE into screen X=high nibble and Y=low nibble, then increment DE. Set
+; transition step $80/kind 1, start fade 4, increment the field-init stage and select mode substate
+; 4. Clear player flag bits 3 and 7, set bit 5 and preserve the remaining bits. Do not write map id,
+; warp facing, phase or script stage. (C1, E-0362)
+MapLinkWarp_StartTransition::
     ld a, [de]
     swap a
     and $0f
@@ -3088,17 +2879,14 @@ MapLinkWarp_StartPaletteFade::
 MapExitWarp::
     ld a, [wScriptStep]
     jumptable
-    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
+    dw WarpScene_LiftPartyFor90Calls
     dw MapExitWarp_ScriptStartFadeAndAdvanceStep
 
-; step 1 of MapExitWarp: sets wScriptStartRequest to $80; sets hPlayerStateFlags; sets
-; wFieldTransitionKind to 1; calls ScriptStartFadeAndAdvanceStep; sets wFieldTransitionStep to $80;
-; branches on wMapType; copies the byte at wKeyWorldFloorInfo & $0f to hMapScreenX; sets
-; hMapScreenY; sets wWarpDestX to $40; sets wWarpDestY to $40; sets wWarpDestFacing to 0; copies
-; wKeyWorldWidth to wMapWidthScreens; then 12 more steps (see the code) (E-0347)
-; why: step 1 of MapExitWarp (when wScriptStep = 1); MapExitWarp: implements script command type 8A
-; (SCRIPT_MAP_EXIT_WARP): a key-world/field talk event (group $07, dispatched by ... (E-0352,
-; E-0182)
+; Map exit warp, step 1: resumes the script and starts a fade (transition kind 1, step $80). In a
+; key world: the floor's screen from wKeyWorldFloorInfo (4 bytes a floor), position ($40, $40)
+; facing down, the map size from the key world and map type $80. Otherwise the map's record in
+; MapExitDestinationTable (7 bytes; the second destination when wLastWarpIndex is 2): map, screen
+; and position; maps $52, $89 and $BB also clear hPlayerStateFlags bit 7. (C1, E-0357)
 MapExitWarp_ScriptStartFadeAndAdvanceStep::
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3308,11 +3096,8 @@ HealPartyEvent::
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
     dw HealPartyEvent_SetScriptStartRequest
 
-; step 0 of HealPartyEvent: advances wScriptStep; sets hPlayerFacing to 3; checks
-; EVENT_THANKS_FOR_COMING_BY_025; may return early; sets hPlayerFacing to 2 (E-0347)
-; why: step 0 of HealPartyEvent (when wScriptStep = 0); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 0: the player faces left, or up after EVENT_THANKS_FOR_COMING_BY_025. (C1,
+; E-0357)
 HealPartyEvent_TestFlagBit_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
@@ -3331,7 +3116,7 @@ HealPartyEvent_TestFlagBit_AdvanceScriptStep::
 ReturnWarp::
     ld a, [wScriptStep]
     jumptable
-    dw MapLinkWarp_WritePlayerYAndPlayerFacingEtc
+    dw WarpScene_LiftPartyFor90Calls
     dw ReturnWarp_StartReturnWarpByFlag25
     dw HealPartyEvent_TestFlagBit
     dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12
@@ -3340,11 +3125,8 @@ ReturnWarp::
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
     dw HealPartyEvent_SetScriptStartRequest
 
-; step 1 of HealPartyEvent: advances wScriptStep; checks EVENT_SCENE_LIMBO_MONSTER2; calls
-; StartMessageA; checks EVENT_THANKS_FOR_COMING_BY_025; sets wObject1 + OBJ_STATE to 0 (E-0347)
-; why: step 1 of HealPartyEvent (when wScriptStep = 1); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 1: message $15 after EVENT_SCENE_LIMBO_MONSTER2, otherwise $0D; object 0
+; faces right, or after EVENT_THANKS_FOR_COMING_BY_025 object 1 faces down. (C1, E-0357)
 HealPartyEvent_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
@@ -3372,24 +3154,21 @@ HealPartyEvent_TestFlagBit::
     ld [wObject1 + OBJ_STATE], a
     ret
 
-; step 1 of ReturnWarp: calls StartReturnWarpByFlag25; sets wFieldTransitionStep to $80 (E-0347)
-; why: step 1 of ReturnWarp (when wScriptStep = 1); ReturnWarp: implements script command type 89
-; (SCRIPT_RETURN_WARP): a key-world/field talk event (group $06, dispatched by ... (E-0352)
+; Return warp, step 1: starts the return warp (StartReturnWarpByFlag25) with transition step $80.
+; (C1, E-0357)
 ReturnWarp_StartReturnWarpByFlag25::
     call StartReturnWarpByFlag25
     ld a, $80
     ld [wFieldTransitionStep], a
     ret
 
-; step 0 of MapLinkWarp: branches on hPlayerY; sets hPlayerY; copies wScriptParam0 & $03 to
-; hPlayerFacing; branches on wScriptParam0; copies hPlayerFacing to wFollowerRecords; branches on
-; wScriptParam0; calls StepScriptParam0Counter_Bank12; may return early; copies hPlayerStateFlags &
-; $b7 to hPlayerStateFlags; advances wScriptStep; also changes HL, A and B by register arithmetic
-; (E-0347)
-; why: step 0 of MapLinkWarp (when wScriptStep = 0); MapLinkWarp: implements script command type 8E
-; (SCRIPT_MAP_LINK_WARP): a key-world/field talk event (group $08, dispatched by ... (E-0352,
-; E-0238)
-MapLinkWarp_WritePlayerYAndPlayerFacingEtc::
+; Each call subtracts four from player Y unless it equals $E0; when moved, facing=(incoming phase >>
+; 1)&3. Starting at incoming phases 8,16,24, likewise subtract four from follower 1,2,3 Y unless
+; that Y equals $E0, and copy player facing to each moved record. This bypasses targets, delay and
+; party count. Increment phase using the exact-90 counter; on completion reset phase, clear player
+; flag bits 3/6 and advance. Byte subtraction wraps: $E0 is an equality sentinel, not an unsigned
+; cutoff or clamp. (C1, E-0362)
+WarpScene_LiftPartyFor90Calls::
     ldh a, [hPlayerY]
     cp $e0
     jr z, .check_script_param0
@@ -3492,11 +3271,9 @@ StartReturnWarpByFlag25::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 0 of ReturnMessage: advances wScriptStep; calls ReturnMessage_WriteGoldHiAndGoldMidEtc;
-; checks EVENT_THANKS_FOR_COMING_BY_025; calls StartMessageA; sets wObject1 + OBJ_STATE to 0; checks
-; EVENT_SCENE_LIMBO_MONSTER2; calls StartMessageA (E-0347)
-; why: step 0 of ReturnMessage (when wScriptStep = 0); ReturnMessage: implements script command type
-; 88 (SCRIPT_RETURN_MESSAGE): a key-world/field talk event (group $05, dispatched by ... (E-0352)
+; Return message, step 0: sets the gold (ReturnMessage_WriteGoldHiAndGoldMidEtc); before
+; EVENT_THANKS_FOR_COMING_BY_025 message $0C with object 0 facing right; after it object 1 faces
+; down and message $14 (after EVENT_SCENE_LIMBO_MONSTER2) or $13. (C1, E-0357)
 ReturnMessage_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
@@ -3525,11 +3302,8 @@ ReturnMessage_TestFlagBit::
     call StartMessageA
     ret
 
-; step 2 of HealPartyEvent: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; branches on
-; wIsCGB; calls CopyBytes; advances wScriptStep; plays sound $7a (E-0347)
-; why: step 2 of HealPartyEvent (when wScriptStep = 2); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 2: after the box closes, saves the GBC background palettes and plays sound
+; $7A. (C1, E-0357)
 HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3549,13 +3323,9 @@ HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12::
     call QueueSoundEffect
     ret
 
-; step 4 of HealPartyEvent: sets rRAMG to $0a; calls LoadSRAMRecordByte; sets wScriptParam0 to 0;
-; sets wScriptParam0 to 1; sets rRAMG to 0; calls FullyHealParty; branches on wScriptParam0; checks
-; EVENT_SCENE_LIMBO_MONSTER2; calls StartMessageA; sets wScriptParam0 to 0; increments wScriptStep;
-; sets hFieldDrawFlags to $0e; then 2 more steps (see the code) (E-0347)
-; why: step 4 of HealPartyEvent (when wScriptStep = 4); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 4: notes whether a party member has fallen (MON_STATUS bit 7) and fully
+; heals the party; with none fallen shows message $16 (after EVENT_SCENE_LIMBO_MONSTER2) or $11 and
+; skips step 5; otherwise hides the followers and goes to step 5. (C1, E-0357)
 HealPartyEvent_FullyHealParty::
     ld a, $0a
     ld [rRAMG], a
@@ -3615,13 +3385,8 @@ HealPartyEvent_FullyHealParty::
     inc [hl]
     ret
 
-; step 5 of HealPartyEvent: calls MoveIncapacitatedPartyMembersBack; calls LoadRecordListNameTiles;
-; calls LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f; sets
-; hFieldDrawFlags to 0; advances wScriptStep; checks EVENT_SCENE_LIMBO_MONSTER2; calls StartMessageA
-; (E-0347)
-; why: step 5 of HealPartyEvent (when wScriptStep = 5); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 5: moves the fallen members to the back, reloads the names and sprites,
+; shows the followers again and shows message $16 or $11. (C1, E-0357)
 HealPartyEvent_MoveIncapacitatedPartyMembersBack::
     farcall MoveIncapacitatedPartyMembersBack
     farcall MoveIncapacitatedPartyMembersBack
@@ -3645,11 +3410,8 @@ HealPartyEvent_MoveIncapacitatedPartyMembersBack::
     call StartMessageA
     ret
 
-; step 6 of HealPartyEvent: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 6 of HealPartyEvent (when wScriptStep = 6); HealPartyEvent: implements script command
-; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
-; RunMenuStateMenuState: heals ... (E-0352)
+; Heal party event, step 6: waits for the message box to close, then resumes the script. (C1,
+; E-0357)
 HealPartyEvent_SetScriptStartRequest::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3675,11 +3437,7 @@ PartyDefeatedReturn::
     dw PartyDefeatedReturn_StartReturnWarpByFlag25
     dw PartyDefeatedReturn_DispatchTalkEvent
 
-; step 8 of PartyDefeatedReturn: sets wTalkEventGroup to 5; sets wTalkEventIndex to 0; calls
-; DispatchTalkEvent (E-0347)
-; why: step 8 of PartyDefeatedReturn (when wScriptStep = 8); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 8: starts talk event 0 of group 5 (the return message). (C1, E-0357)
 PartyDefeatedReturn_DispatchTalkEvent::
     ld a, $05
     ld [wTalkEventGroup], a
@@ -3688,11 +3446,8 @@ PartyDefeatedReturn_DispatchTalkEvent::
     farcall DispatchTalkEvent
     ret
 
-; step 7 of PartyDefeatedReturn: calls StartReturnWarpByFlag25; sets wFieldReturnPhase to 0; sets
-; wFieldTransitionStep to $80 (E-0347)
-; why: step 7 of PartyDefeatedReturn (when wScriptStep = 7); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 7: starts the return warp (StartReturnWarpByFlag25), field return
+; phase 0, transition step $80. (C1, E-0357)
 PartyDefeatedReturn_StartReturnWarpByFlag25::
     call StartReturnWarpByFlag25
     xor a
@@ -3701,11 +3456,7 @@ PartyDefeatedReturn_StartReturnWarpByFlag25::
     ld [wFieldTransitionStep], a
     ret
 
-; step 6 of PartyDefeatedReturn: calls StepScriptParam0Counter_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 6 of PartyDefeatedReturn (when wScriptStep = 6); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 6: waits $B4 frames. (C1, E-0357)
 PartyDefeatedReturn_StepScriptParam0Counter_Bank12::
     ld b, $b4
     call StepScriptParam0Counter_Bank12
@@ -3714,11 +3465,8 @@ PartyDefeatedReturn_StepScriptParam0Counter_Bank12::
     inc [hl]
     ret
 
-; step 5 of PartyDefeatedReturn: sets rRAMG to $0a; calls LoadSRAMRecordByte; sets rRAMG to 0; plays
-; music $42; advances wScriptStep; sets rRAMG to 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 5 of PartyDefeatedReturn (when wScriptStep = 5); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 5: when every party member has fallen (MON_STATUS bit 7) plays music
+; $42 and goes on to the return; otherwise resumes the script. (C1, E-0357)
 PartyDefeatedReturn_QueueMusic::
     ld a, $0a
     ld [rRAMG], a
@@ -3749,28 +3497,22 @@ PartyDefeatedReturn_QueueMusic::
     ld [wScriptStartRequest], a
     ret
 
-; step 3 of PartyDefeatedReturn: decrements wScriptStep; decrements wScriptParam0; may continue in
-; PartyDefeatedReturn_SetMessageIndex; continues in PartyDefeatedReturn_SetMessageIndex (E-0347)
-; why: step 3 of PartyDefeatedReturn (when wScriptStep = 3); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 3: shows message $000B with the next marked member's name in the open
+; box (kept open unless it is the last) and goes back to step 2. (C1, E-0357)
 PartyDefeatedReturn_BackScriptStep::
     ld hl, wScriptStep
     dec [hl]
-    ld de, wShadowOAM + $b
+    ld de, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $000b
     ld a, [wScriptParam0]
     dec a
     ld [wScriptParam0], a
     or a
     jr nz, PartyDefeatedReturn_SetMessageIndex
-    ld de, vTiles0 + $b
+    ld de, MSG_ALREADY_OPEN | $000b
     jr PartyDefeatedReturn_SetMessageIndex
 
-; step 2 of PartyDefeatedReturn: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; branches
-; on wScriptParam0; sets wScriptParam0 to 0; sets wScriptStep to 4; advances wScriptStep (E-0347)
-; why: step 2 of PartyDefeatedReturn (when wScriptStep = 2); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 2: after the box closes, goes to step 4 when no marked member is left,
+; otherwise to step 3. (C1, E-0357)
 PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -3789,11 +3531,8 @@ PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 1 of PartyDefeatedReturn: advances wScriptStep; decrements wScriptParam0; may continue in
-; PartyDefeatedReturn_SetMessageIndex (E-0347)
-; why: step 1 of PartyDefeatedReturn (when wScriptStep = 1); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 1: shows message $000A with the first marked member's name (kept open
+; when more follow). (C1, E-0357)
 PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
     ld hl, wScriptStep
     inc [hl]
@@ -3805,14 +3544,8 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
     jr nz, PartyDefeatedReturn_SetMessageIndex
     ld de, $000a
 
-; Copies E to wMessageIndex; copies D to wMessageGroup; sets wMessageState to 0; copies
-; wScriptParam1 & $fe to wScriptParam1; copies wScriptParam1 & $fc to wScriptParam1; copies
-; wScriptParam1 & $f7 to wScriptParam1; sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets
-; rRAMG to 0; calls CopyBytes (E-0347)
-; why: part of PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc, in step 1 of
-; PartyDefeatedReturn (when wScriptStep = 1); PartyDefeatedReturn: implements script command type 87
-; (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04, dispatched from ...
-; (E-0352)
+; Starts the message word in DE and copies the name of the next marked party member (the lowest bit
+; left in wScriptParam1, which is cleared) into wTextBuf1 + 7. (C1, E-0357)
 PartyDefeatedReturn_SetMessageIndex::
     ld a, e
     ld [wMessageIndex], a
@@ -3859,11 +3592,8 @@ PartyDefeatedReturn_SetMessageIndex::
     call CopyBytes
     ret
 
-; step 0 of PartyDefeatedReturn: copies C to wScriptParam0; copies wStatusFieldStep to
-; wScriptParam1; advances wScriptStep; also changes HL, BC and A by register arithmetic (E-0347)
-; why: step 0 of PartyDefeatedReturn (when wScriptStep = 0); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 0: counts the party members marked in wStatusFieldStep (one bit each)
+; into wScriptParam0 and keeps the bits in wScriptParam1. (C1, E-0357)
 PartyDefeatedReturn_WriteScriptParam0AndScriptParam1::
     ld a, [wPartyCount]
     ld b, a
@@ -3903,11 +3633,9 @@ KeyWorldBossBattle::
     dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
     dw KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest
 
-; step 7 of KeyWorldBossBattle: sets wKeyWorldFlags; sets wKeyWorldEncounterTable + $3 to 1; sets
-; wScriptStartRequest to $80; also changes HL, A and B by register arithmetic (E-0347)
-; why: step 7 of KeyWorldBossBattle (when wScriptStep = 7); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 7: sets wKeyWorldFlags bit 7, marks all four floor entries of
+; wKeyWorldEncounterTable done, sets bit 6 of the current key entry's byte 7 and resumes the script.
+; (C1, E-0357)
 KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
     ld a, [wKeyWorldFlags]
     or $80
@@ -3939,12 +3667,8 @@ KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-; step 6 of KeyWorldBossBattle: branches on wScriptParam0; sets wSpriteSlotCount to 1; sets
-; wSpriteSlotCount to 0; increments wScriptParam0; returns unless wScriptParam0 is $78; sets
-; wScriptParam0 to 0; advances wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 6 of KeyWorldBossBattle (when wScriptStep = 6); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 6: the boss sprite flickers (one sprite slot or none; every 8 frames,
+; then 4 from frame $1E, 2 from $3C) for $78 frames. (C1, E-0357)
 KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0::
     ld a, [wScriptParam0]
     cp $1e
@@ -3986,11 +3710,7 @@ KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0::
     inc [hl]
     ret
 
-; step 5 of KeyWorldBossBattle: calls KeyWorldBossBattle_ReadMessageState_2; may return early; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of KeyWorldBossBattle (when wScriptStep = 5); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 5: waits for the message box to close. (C1, E-0357)
 KeyWorldBossBattle_WriteScriptParam0::
     xor a
     call KeyWorldBossBattle_ReadMessageState_2
@@ -4001,11 +3721,7 @@ KeyWorldBossBattle_WriteScriptParam0::
     inc [hl]
     ret
 
-; step 4 of KeyWorldBossBattle: advances wScriptStep; shows 'Warubou: Wa-hey! No good, no good!'
-; (E-0347)
-; why: step 4 of KeyWorldBossBattle (when wScriptStep = 4); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 4: Warubou's 'Wa-hey! No good, no good!' (message $0129). (C1, E-0357)
 KeyWorldBossBattle_ShowWarubouWaheyNoGood::
     ld hl, wScriptStep
     inc [hl]
@@ -4013,18 +3729,12 @@ KeyWorldBossBattle_ShowWarubouWaheyNoGood::
     call StartMessageHL_B0F_Bank12
     ret
 
-; step 3 of KeyWorldBossBattle: calls ScriptStepFlashScreenNegative (E-0347)
-; why: step 3 of KeyWorldBossBattle (when wScriptStep = 3); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 3: runs the negative screen flash. (C1, E-0357)
 KeyWorldBossBattle_ToScriptStepFlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
-; step 2 of KeyWorldBossBattle: branches on wIsCGB; calls CopyBytes; advances wScriptStep (E-0347)
-; why: step 2 of KeyWorldBossBattle (when wScriptStep = 2); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 2: saves the GBC background palettes for the flash. (C1, E-0357)
 KeyWorldBossBattle_CopyBytes::
     ld a, [wIsCGB]
     or a
@@ -4039,13 +3749,9 @@ KeyWorldBossBattle_CopyBytes::
     inc [hl]
     ret
 
-; step 1 of KeyWorldBossBattle: calls RunMessageBoxFar_Bank12; may return early; advances
-; wScriptStep; sets wBattleIntroKind to 3; copies L to wEncounterMonsters; sets wWildLevel; sets
-; wEncounterKind to 0; copies L to wEncounterMonsters; sets wWildLevel; sets wWildBand; sets
-; wEncounterClass; sets wEncounterKind to 2; then 3 more steps (see the code) (E-0347)
-; why: step 1 of KeyWorldBossBattle (when wScriptStep = 1); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 1: after the box closes starts the boss battle (intro 3): one monster
+; (wKeyWorldEncounter word 0 at level byte 2, encounter kind 0) when bytes 3-4 are zero, otherwise
+; three (words 3, 0 and 6, level byte 5, band byte 2, class byte 8, kind 2). (C1, E-0357)
 KeyWorldBossBattle_RunMessageBoxFar_Bank12::
     xor a
     call RunMessageBoxFar_Bank12
@@ -4113,11 +3819,7 @@ KeyWorldBossBattle_RunMessageBoxFar_Bank12::
     farcall SetModeState3AndSaveScreen
     ret
 
-; step 0 of KeyWorldBossBattle: calls NextRandomSeed; calls StartMessageHL_B0F_Bank12; advances
-; wScriptStep (E-0347)
-; why: step 0 of KeyWorldBossBattle (when wScriptStep = 0); KeyWorldBossBattle: implements script
-; command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0
-; + 0..F), a battle ... (E-0352)
+; Key world boss battle, step 0: a random message of $00D0-$00DF. (C1, E-0357)
 KeyWorldBossBattle_StartMessageHL_B0F_Bank12::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -4143,11 +3845,8 @@ KeyWorldFloorBattle::
     dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
     dw KeyWorldFloorBattle_WriteScriptStartRequest
 
-; step 5 of KeyWorldFloorBattle: sets wKeyWorldEncounterTable + $3 to 1; sets wScriptStartRequest to
-; $80 (E-0347)
-; why: step 5 of KeyWorldFloorBattle (when wScriptStep = 5); KeyWorldFloorBattle: implements script
-; command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0
-; + 0..F), a battle ... (E-0352)
+; Key world floor battle, step 5: marks the floor's entry of wKeyWorldEncounterTable done (byte 3 =
+; 1) and resumes the script. (C1, E-0357)
 KeyWorldFloorBattle_WriteScriptStartRequest::
     ld a, [wKeyWorldFloor]
     and $7f
@@ -4160,11 +3859,8 @@ KeyWorldFloorBattle_WriteScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of KeyWorldFloorBattle: advances wScriptStep; shows 'Warubou: Wa-hey… That was no good.'
-; (E-0347)
-; why: step 2 of KeyWorldFloorBattle (when wScriptStep = 2); KeyWorldFloorBattle: implements script
-; command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0
-; + 0..F), a battle ... (E-0352)
+; Key world floor battle, step 2: Warubou's 'Wa-hey... That was no good.' (message $012A). (C1,
+; E-0357)
 KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
     ld hl, wScriptStep
     inc [hl]
@@ -4172,13 +3868,8 @@ KeyWorldFloorBattle_ShowWarubouWaheyThatWas::
     call StartMessageHL_B0F_Bank12
     ret
 
-; step 1 of KeyWorldFloorBattle: calls RunMessageBoxFar_Bank12; may return early; advances
-; wScriptStep; sets wBattleIntroKind to 3; copies the byte at wKeyWorldEncounterTable to
-; wEncounterMonsters; copies the byte at wKeyWorldEncounterTable to wWildLevel; sets wEncounterKind
-; to 0; sets wBattleTransitionSubStep to 1; calls SetModeState3AndSaveScreen (E-0347)
-; why: step 1 of KeyWorldFloorBattle (when wScriptStep = 1); KeyWorldFloorBattle: implements script
-; command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0
-; + 0..F), a battle ... (E-0352)
+; Key world floor battle, step 1: after the box closes starts a battle (intro 3, kind 0) against the
+; floor's entry: its monster word and level. (C1, E-0357)
 KeyWorldFloorBattle_RunMessageBoxFar_Bank12::
     xor a
     call RunMessageBoxFar_Bank12
@@ -4206,11 +3897,7 @@ KeyWorldFloorBattle_RunMessageBoxFar_Bank12::
     farcall SetModeState3AndSaveScreen
     ret
 
-; step 0 of KeyWorldFloorBattle: calls NextRandomSeed; calls StartMessageHL_B0F_Bank12; advances
-; wScriptStep (E-0347)
-; why: step 0 of KeyWorldFloorBattle (when wScriptStep = 0); KeyWorldFloorBattle: implements script
-; command type 9E (SCRIPT_KEY_WORLD_FLOOR_BATTLE): talk category 9, group 3: a random message ($00E0
-; + 0..F), a battle ... (E-0352)
+; Key world floor battle, step 0: a random message of $00E0-$00EF. (C1, E-0357)
 KeyWorldFloorBattle_StartMessageHL_B0F_Bank12::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -4246,12 +3933,8 @@ RandomGoldOrItem::
     dw RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12
     dw RandomGoldOrItem_AddGoldCapped
 
-; step 8 of RandomGoldOrItem: copies wTriggerMarkerFlags & $7f to hTemp0; sets hTemp1 to 0; calls
-; AddGoldCapped; copies wScriptParam1 to wStepPtrLo; calls AppendItemStepPtrLoToInventory; sets
-; wTriggerMarkerFlags to 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 8 of RandomGoldOrItem (when wScriptStep = 8); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 8: gives the gold (wTriggerMarkerFlags low bits, AddGoldCapped) or item
+; wScriptParam1, clears the marker flags and resumes the script. (C1, E-0357)
 RandomGoldOrItem_AddGoldCapped::
     ld a, [wTriggerMarkerFlags]
     and $7f
@@ -4274,11 +3957,8 @@ RandomGoldOrItem_AddGoldCapped::
     ld [wScriptStartRequest], a
     ret
 
-; step 7 of RandomGoldOrItem: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; sets
-; wTriggerKind to $ff; advances wScriptStep (E-0347)
-; why: step 7 of RandomGoldOrItem (when wScriptStep = 7); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 7: after the box closes sets the trigger kind to $FF (used up). (C1,
+; E-0357)
 RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -4289,12 +3969,8 @@ RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 6 of RandomGoldOrItem: advances wScriptStep; copies wTriggerMarkerFlags & $7f to wDigits;
-; calls Number24ToPackedBCD; calls WritePackedBCDNoLeadingZeros; calls StartMessageA; sets
-; wMessageGroup to 0; calls CopyItemNameToDE; calls StartMessageA; sets wMessageGroup to 0 (E-0347)
-; why: step 6 of RandomGoldOrItem (when wScriptStep = 6); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 6: message 5 with the amount of gold, or message 6 with the item's name.
+; (C1, E-0357)
 RandomGoldOrItem_Number24ToPackedBCD::
     ld hl, wScriptStep
     inc [hl]
@@ -4324,12 +4000,8 @@ RandomGoldOrItem_Number24ToPackedBCD::
     ld [wMessageGroup], a
     ret
 
-; step 5 of RandomGoldOrItem: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
-; AddStepDeltaToPointedByte; increments wScriptParam0; returns unless wScriptParam0 is $20; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of RandomGoldOrItem (when wScriptStep = 5); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 5: makes the trigger marker hop (the hop curve on wTriggerIndex) for 16
+; frames. (C1, E-0357)
 RandomGoldOrItem_AddStepDeltaToPointedByte::
     ld de, wTriggerIndex
     ld a, e
@@ -4349,20 +4021,15 @@ RandomGoldOrItem_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 4 of RandomGoldOrItem: calls RandomGoldOrItem_NextRandomSeed (E-0347)
-; why: step 4 of RandomGoldOrItem (when wScriptStep = 4); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 4: picks the gold or item at random (RandomGoldOrItem_NextRandomSeed).
+; (C1, E-0357)
 RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed::
     farcall RandomGoldOrItem_NextRandomSeed
     ret
 
-; step 3 of RandomGoldOrItem: branches on wIsCGB; branches on wMapType; branches on hMapId; sets
-; rSVBK to 2; sets rSVBK to 0; calls DrawFullScreenBufferAtScroll; sets hFieldDrawFlags to 0;
-; advances wScriptStep; also changes HL, DE, A and C by register arithmetic (E-0347)
-; why: step 3 of RandomGoldOrItem (when wScriptStep = 3); RandomGoldOrItem: implements script
-; command type 84 (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched
-; from ... (E-0352)
+; Random gold or item, step 3: replaces the 2x2 tiles at the trigger's spot (wMessageGroup and
+; wMessageIndex high nibbles) with tiles $40 $41 / $50 $51; on the GBC their palette becomes 1 (3 on
+; maps $53-$57 and $63-$66); redraws the screen and shows the field sprites. (C1, E-0357)
 RandomGoldOrItem_WriteSVBKAndFieldDrawFlags::
     ld a, [wMessageGroup]
     swap a
@@ -4581,13 +4248,9 @@ SpawnScriptSpriteInFrontOfPlayer::
     ld de, Tiles0Plus700Gfx_4
     ld b, $7e
 
-; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
-; $7f; branches on hPlayerFacing; sets wMessageIndex; copies E to wMessageGroup; copies D to
-; wMessageIndex; sets wMessageGroup; sets wMessageIndex; copies E to wMessageGroup; copies D to
-; wMessageIndex; then 5 more steps (see the code) (E-0347)
-; why: part of SpawnScriptSpriteInFrontOfPlayer; SpawnScriptSpriteInFrontOfPlayer: decompresses
-; sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16 pixels in front
-; of the player and advances ... (E-0352, E-0129)
+; Decompresses the sprite to VRAM $8700 (on the GBC with its palette from bank $7E; a load of
+; wMapSpriteKind is overwritten at once by $10), puts its position 16 pixels in front of the player
+; in wMessageIndex/wMessageGroup and turns the followers the player's way. (C1, E-0357)
 SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM::
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -4695,11 +4358,8 @@ FieldScene01::
     call FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld
     ret
 
-; called from FieldScene01: sets wJoypadHeld to 0; sets wJoypadPressed to 0; dispatches on
-; wScriptStep (E-0347)
-; why: a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, the getting-off variant (wScriptParam1 not 1 or 2): clears the joypad and runs its
+; two steps by wScriptStep. (C1, E-0357)
 FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld::
     xor a
     ld [wJoypadHeld], a
@@ -4709,13 +4369,8 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld::
     dw FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
     dw FieldScene01_AddStepDeltaToPointedByte
 
-; step 0 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld: copies hPlayerStateFlags &
-; $f7 to hPlayerStateFlags; sets hFieldDrawFlags to $0e; sets hPlayerSpriteMode to 0; sets hPlayerY;
-; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 0 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld (when wScriptStep = 0),
-; in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, getting off, step 0: clears hPlayerStateFlags bit 3, hides the followers, player
+; sprite mode 0, and lifts the player 8 pixels. (C1, E-0357)
 FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
     ldh a, [hPlayerStateFlags]
     and $f7
@@ -4733,15 +4388,9 @@ FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
     inc [hl]
     ret
 
-; step 1 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld: copies E to wStepPtrLo;
-; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; increments hPlayerY; increments
-; wScriptParam0; branches on wScriptParam0; copies hPlayerFacing to wFollowerRecords; sets
-; hFieldDrawFlags to 0; sets wScriptStartRequest to $80; sets hPlayerStateFlags; copies L to
-; hPlayerStepDXLo; copies H to hPlayerStepDXHi; then 9 more steps (see the code) (E-0347)
-; why: step 1 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld (when wScriptStep = 1),
-; in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, getting off, step 1: the player hops forward (a pixel in its facing every other
+; frame, down a pixel every four) for $20 frames; then the followers gather on the player and are
+; shown, the script resumes, a zero step starts and the map music plays. (C1, E-0357)
 FieldScene01_AddStepDeltaToPointedByte::
     ld de, hPlayerY
     ld a, e
@@ -4822,11 +4471,8 @@ FieldScene01_AddStepDeltaToPointedByte::
     dec [hl]
     ret
 
-; called from FieldScene01: sets wJoypadHeld to 0; sets wJoypadPressed to 0; dispatches on
-; wScriptStep; also changes A by register arithmetic (E-0347)
-; why: a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 1 (wScriptParam1 = 1): clears the joypad and runs its steps by wScriptStep:
+; gather the followers, load the sprite, wait, spin, flicker, show it, and climb on. (C1, E-0357)
 FieldScene01_WriteJoypadHeldAndJoypadPressed::
     xor a
     ld [wJoypadHeld], a
@@ -4843,14 +4489,10 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed::
     dw FieldScene01_AdvanceScriptStep
     dw FieldScene01_SetStepPtrLo
 
-; step 8 of FieldScene01_WriteJoypadHeldAndJoypadPressed: copies E to wStepPtrLo; copies D to
-; wStepPtrHi; calls AddStepDeltaToPointedByte; decrements hPlayerY; increments wScriptParam0;
-; branches on wScriptParam0; sets hPlayerY; sets hPlayerStateFlags; sets hPlayerSpriteMode to 2;
-; sets wScriptStartRequest to $80; calls DrawScriptMetaSprite21AtScrollOffset; may return early;
-; then 5 more steps (see the code) (E-0347)
-; why: step 8 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 8), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 1, step 8: the player hops onto the sprite in front (a pixel toward it
+; every other frame, rising a pixel every four) for $20 frames, the sprite drawn; then the player's
+; Y snaps to the tile grid, hPlayerStateFlags bit 3 is set (bits 5 and 7 cleared), player sprite
+; mode 2, and the script resumes. (C1, E-0357)
 FieldScene01_SetStepPtrLo::
     ld de, hPlayerY
     ld a, e
@@ -4915,14 +4557,9 @@ FieldScene01_SetStepPtrLo::
     dec [hl]
     ret
 
-; step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed: calls
-; DrawScriptMetaSprite21AtScrollOffset; advances wScriptStep; branches on wMapType; returns if the
-; byte at FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data is $ff; branches on the byte at
-; FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data; plays music $2b; also changes HL, A and C
-; by register arithmetic (E-0347)
-; why: step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 7), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 1, step 7: draws the sprite and moves on; plays music $2B in a key world of
+; map type $80 or on a map listed in FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data. (C1,
+; E-0357)
 FieldScene01_AdvanceScriptStep::
     call DrawScriptMetaSprite21AtScrollOffset
     ld hl, wScriptStep
@@ -4955,14 +4592,9 @@ FieldScene01_AdvanceScriptStep::
 FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data::
     db $30, $ff
 
-; step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed: calls DecompressToVRAM; calls
-; CopyFromBank; sets wOBJPaletteUploadRequest to $7f; branches on hPlayerFacing; sets wMessageIndex;
-; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; sets wMessageIndex;
-; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 5 more steps (see
-; the code) (E-0347)
-; why: step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 3), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 1, step 3: decompresses the sprite (Tiles0Plus700Gfx_2) to VRAM $8700 with
+; its palette from bank $7E, puts it 16 pixels in front of the player (wMessageIndex/wMessageGroup)
+; and turns the followers the player's way. (C1, E-0357)
 FieldScene01_DecompressToVRAM::
     ld de, Tiles0Plus700Gfx_2
     ld b, $7e
@@ -5037,11 +4669,8 @@ FieldScene01_DecompressToVRAM::
     inc [hl]
     ret
 
-; called from FieldScene01: sets wJoypadHeld to 0; sets wJoypadPressed to 0; dispatches on
-; wScriptStep; also changes A by register arithmetic (E-0347)
-; why: a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 2 (wScriptParam1 = 2): clears the joypad and runs its steps by wScriptStep:
+; as variant 1 up to the climb, then travel until land and get off. (C1, E-0357)
 FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2::
     xor a
     ld [wJoypadHeld], a
@@ -5059,11 +4688,7 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2::
     dw FieldScene01_WaitFieldActionRequest
     dw FieldScene01_SetTriggerEnable
 
-; step 4 of FieldScene01_WriteJoypadHeldAndJoypadPressed: calls StepScriptParam0Counter_Bank12; may
-; return early; advances wScriptStep (E-0347)
-; why: step 4 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 4), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, step 4: waits $1E frames. (C1, E-0357)
 FieldScene01_StepScriptParam0Counter_Bank12::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
@@ -5072,13 +4697,8 @@ FieldScene01_StepScriptParam0Counter_Bank12::
     inc [hl]
     ret
 
-; step 5 of FieldScene01_WriteJoypadHeldAndJoypadPressed: copies E to wStepPtrLo; copies D to
-; wStepPtrHi; calls AddStepDeltaToPointedByte; copies hPlayerFacing & $03 to hPlayerFacing;
-; increments wScriptParam0; returns unless wScriptParam0 is $20; copies wFollowerRecords to
-; hPlayerFacing; plays sound $7a; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 5), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, step 5: the player hops while spinning (a quarter turn every other frame) for $20
+; frames; then faces the first follower's way and sound $7A plays. (C1, E-0357)
 FieldScene01_AddStepDeltaToPointedByte_2::
     ld de, hPlayerY
     ld a, e
@@ -5110,16 +4730,9 @@ FieldScene01_AddStepDeltaToPointedByte_2::
     inc [hl]
     ret
 
-; step 9 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2: sets wTriggerEnable to 1;
-; sets hPlayerStateFlags; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
-; AddStepDeltaToPointedByte; increments hPlayerY; increments wScriptParam0; branches on
-; wScriptParam0; copies hPlayerStateFlags & $5f to hPlayerStateFlags; copies hPlayerFacing to
-; wFollowerRecords; sets hFieldDrawFlags to 0; sets wScriptStartRequest to $80; then 6 more steps
-; (see the code) (E-0347)
-; why: step 9 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
-; 9), in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 2, step 9: enables triggers and sets hPlayerStateFlags bits 5 and 7 while
+; the player hops down off the sprite for $20 frames; then clears them, gathers and shows the
+; followers, resumes the script, stops the step deltas and disables triggers. (C1, E-0357)
 FieldScene01_SetTriggerEnable::
     ld a, $01
     ld [wTriggerEnable], a
@@ -5182,15 +4795,10 @@ FieldScene01_SetTriggerEnable::
 .return:
     ret
 
-; step 8 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2: returns if bit 7 of
-; wFieldActionRequest is set; returns if bit 0 of hPlayerStateFlags is set; branches on
-; hPlayerFacing; sets wJoypadHeld; returns if B is 0; sets wJoypadHeld; returns if C is $80; sets
-; wJoypadHeld; returns if B is $90; sets wJoypadHeld; returns if C is 0; branches on
-; wSpriteSlotCount; then 10 more steps (see the code) (E-0347)
-; why: step 8 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
-; 8), in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 2, step 8: once the step is done, holds the direction the player faces (one
+; tile on, within the screen); when the tiles there are above wMaxBlockingTile the player gets off
+; (sprite mode 0, lifted 8 pixels, next step); when they block, or object 0 stands there, the player
+; turns around; tiles at or below wMapTallTileMin let it go on. (C1, E-0357)
 FieldScene01_WaitFieldActionRequest::
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -5306,15 +4914,8 @@ FieldScene01_WaitFieldActionRequest::
     ld [wJoypadHeld], a
     ret
 
-; step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2: copies E to wStepPtrLo;
-; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; decrements hPlayerY; increments
-; wScriptParam0; branches on wScriptParam0; sets hPlayerY; sets hPlayerSpriteMode to 2; sets
-; wScriptParam0 to 0; advances wScriptStep; calls DrawScriptMetaSprite21AtScrollOffset; may return
-; early; then 5 more steps (see the code) (E-0347)
-; why: step 7 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
-; 7), in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 2, step 7: the player hops onto the sprite in front (as variant 1, step 8)
+; for $20 frames; then its Y snaps to the tile grid and player sprite mode 2. (C1, E-0357)
 FieldScene01_AddStepDeltaToPointedByte_3::
     ld de, hPlayerY
     ld a, e
@@ -5377,13 +4978,8 @@ FieldScene01_AddStepDeltaToPointedByte_3::
     dec [hl]
     ret
 
-; step 6 of FieldScene01_WriteJoypadHeldAndJoypadPressed: branches on wScriptParam0; calls
-; DrawScriptMetaSprite21AtScrollOffset; increments wScriptParam0; returns unless wScriptParam0 is
-; $78; sets wScriptParam0 to 0; advances wScriptStep; sets hFieldDrawFlags to $0e; also changes HL
-; and A by register arithmetic (E-0347)
-; why: step 6 of FieldScene01_WriteJoypadHeldAndJoypadPressed (when wScriptStep = 6), in a helper of
-; FieldScene01; FieldScene01: implements script command type 83 (SCRIPT_FIELD_SCENE_01): a
-; key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, step 6: the sprite flickers (every 2 frames, slowing to 4 and 8) for $78 frames;
+; then hides the followers. (C1, E-0357)
 FieldScene01_DrawScriptMetaSprite21AtScrollOffset::
     ld a, [wScriptParam0]
     cp $1e
@@ -5473,15 +5069,9 @@ DrawScriptMetaSprite21AtScrollOffset::
     farcall DrawMetaSprite
     ret
 
-; step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2: calls DecompressToVRAM;
-; calls CopyFromBank; sets wOBJPaletteUploadRequest to $7f; branches on hPlayerFacing; sets
-; wMessageIndex; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; sets
-; wMessageIndex; copies E to wMessageGroup; copies D to wMessageIndex; sets wMessageGroup; then 5
-; more steps (see the code) (E-0347)
-; why: step 3 of FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2 (when wScriptStep =
-; 3), in a helper of FieldScene01; FieldScene01: implements script command type 83
-; (SCRIPT_FIELD_SCENE_01): a key-world/field talk event (group $01, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Field scene 1, variant 2, step 3: as variant 1's step 3 with the sprite Tiles0Plus700Gfx_3:
+; decompresses it to VRAM $8700 with its palette from bank $7E, puts it 16 pixels in front of the
+; player and turns the followers the player's way. (C1, E-0357)
 FieldScene01_DecompressToVRAM_2::
     ld de, Tiles0Plus700Gfx_3
     ld b, $7e
@@ -5588,12 +5178,9 @@ KeyWorldDoorItem::
     dw KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12
     dw KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor
 
-; step 4 of KeyWorldDoorItem: calls KeyWorldDoorItem_RandomModulo29_BankF0; calls
-; DrawDoorTilesForKeyWorldFloor; calls DrawFullScreenBufferAtScroll; sets wScriptStartRequest to $80
-; (E-0347)
-; why: step 4 of KeyWorldDoorItem (when wScriptStep = 4); KeyWorldDoorItem: implements script
-; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
-; or key entry ... (E-0352)
+; Key world door item, step 4: runs KeyWorldDoorItem_RandomModulo29_BankF0, marks the floor's door
+; opened (state byte 3 = $FF), redraws the door tiles and the screen and resumes the script. (C1,
+; E-0357)
 KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor::
     farcall KeyWorldDoorItem_RandomModulo29_BankF0
     ld a, [wKeyWorldFloor]
@@ -5608,13 +5195,9 @@ KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of KeyWorldDoorItem: sets wScriptStartRequest to $80; branches on L; copies L to
-; wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls DrawDoorTilesForKeyWorldFloor; calls
-; DrawFullScreenBufferAtScroll; sets wScriptStartRequest to $80; also changes HL and A by register
-; arithmetic (E-0347)
-; why: step 2 of KeyWorldDoorItem (when wScriptStep = 2); KeyWorldDoorItem: implements script
-; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
-; or key entry ... (E-0352)
+; Key world door item, step 2: with no item resumes at once; otherwise marks the door opened, adds
+; item wScriptParam0 to the inventory unless its bit 7 is set, redraws the door tiles and the screen
+; and resumes the script. (C1, E-0357)
 KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo::
     ld a, [wScriptParam0]
     ld l, a
@@ -5648,11 +5231,7 @@ KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of KeyWorldDoorItem: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 1 of KeyWorldDoorItem (when wScriptStep = 1); KeyWorldDoorItem: implements script
-; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
-; or key entry ... (E-0352)
+; Key world door item, step 1: waits for the message box to close. (C1, E-0357)
 KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5661,13 +5240,10 @@ KeyWorldDoorItem_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 0 of KeyWorldDoorItem: advances wScriptStep; calls StartMessageA; branches on L; calls
-; CopyItemNameToDE; calls StartMessageA; copies L to wScriptParam0; copies H to wScriptParam1; calls
-; GenerateNewKeyEntry; branches on hTemp0; calls StartMessageA; copies L to wScriptParam0; copies H
-; to wScriptParam1; then 4 more steps (see the code) (E-0347)
-; why: step 0 of KeyWorldDoorItem (when wScriptStep = 0); KeyWorldDoorItem: implements script
-; command type 86 (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item
-; or key entry ... (E-0352)
+; Key world door item, step 0: no item: message 0; item $80: a new key (GenerateNewKeyEntry) with
+; message 8, or message 9 and no item when it returns hTemp0 = 0; item $81: the same new key when
+; wGiftRecord is 1, otherwise message $19 and step 3; any other item: its name, message 2 when the
+; last inventory slot is free, otherwise message 3 and no item. (C1, E-0357)
 KeyWorldDoorItem_StartMessageA::
     ld hl, wScriptStep
     inc [hl]
@@ -5749,12 +5325,9 @@ AreaItemEvent::
     dw AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw AreaItemEvent_WriteScriptStartRequestAndStepPtrLo
 
-; step 2 of AreaItemEvent: sets wScriptStartRequest to $80; sets wStepPtrLo; calls
-; AppendItemStepPtrLoToInventory; calls CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea; calls
-; DrawFullScreenBufferAtScroll; sets wScriptStartRequest to $80 (E-0347)
-; why: step 2 of AreaItemEvent (when wScriptStep = 2); AreaItemEvent: implements script command type
-; 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Area item, step 2: with no item resumes at once; otherwise gives the item (record byte 1), marks
+; the record taken (byte 3 = 1), updates the floor's item state
+; (CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea), redraws and resumes the script. (C1, E-0357)
 AreaItemEvent_WriteScriptStartRequestAndStepPtrLo::
     ld a, [wScriptParam0]
     ld l, a
@@ -5783,11 +5356,7 @@ AreaItemEvent_WriteScriptStartRequestAndStepPtrLo::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of AreaItemEvent: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; advances
-; wScriptStep (E-0347)
-; why: step 1 of AreaItemEvent (when wScriptStep = 1); AreaItemEvent: implements script command type
-; 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Area item, step 1: waits for the message box to close. (C1, E-0357)
 AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5796,12 +5365,8 @@ AreaItemEvent_RunMessageBoxCarryWhenIdle_Bank12::
     inc [hl]
     ret
 
-; step 0 of AreaItemEvent: advances wScriptStep; branches on the byte at wScriptStep; calls
-; StartMessageA; calls CopyItemNameToDE; calls StartMessageA; copies L to wScriptParam0; copies H to
-; wScriptParam1; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 0 of AreaItemEvent (when wScriptStep = 0); AreaItemEvent: implements script command type
-; 81 (SCRIPT_AREA_ITEM): a key-world/field talk event (group $0E, dispatched from
-; FieldModeStateDispatch: ... (E-0352)
+; Area item, step 0: an item already taken (record byte 3 set) gives message 0; otherwise its name,
+; message 2 when the last inventory slot is free, or message 3 and no item. (C1, E-0357)
 AreaItemEvent_StartMessageA::
     ld hl, wScriptStep
     inc [hl]
@@ -5861,21 +5426,14 @@ StepTriggerReward::
     dw StepTriggerReward_SetModeState3AndSaveScreen
     dw StepTriggerReward_SetScriptStartRequestTo80
 
-; step 5 of StepTriggerReward: sets wScriptStartRequest to $80 (E-0347)
-; why: step 5 of StepTriggerReward (when wScriptStep = 5); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 5: resumes the script. (C1, E-0357)
 StepTriggerReward_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of StepTriggerReward: sets wBattleIntroKind to 5; sets wBattleTransitionSubStep to 1; calls
-; SetModeState3AndSaveScreen; calls StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 4 of StepTriggerReward (when wScriptStep = 4); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 4: starts a battle (intro 5), marks the trigger used (bit 7) and resumes
+; the script. (C1, E-0357)
 StepTriggerReward_SetModeState3AndSaveScreen::
     ld a, $05
     ld [wBattleIntroKind], a
@@ -5890,12 +5448,8 @@ StepTriggerReward_SetModeState3AndSaveScreen::
     ld [wScriptStartRequest], a
     ret
 
-; step 3 of StepTriggerReward: calls StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; sets
-; wStepPtrLo; sets wTriggerKind to $ff; calls AppendItemStepPtrLoToInventory; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 3 of StepTriggerReward (when wScriptStep = 3); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 3: gives the trigger's item, marks it used and sets the trigger kind to
+; $FF. (C1, E-0357)
 StepTriggerReward_AppendItemStepPtrLoToInventory::
     call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     inc hl
@@ -5912,12 +5466,8 @@ StepTriggerReward_AppendItemStepPtrLoToInventory::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of StepTriggerReward: calls StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; copies
-; L to hTemp0; copies H to hTemp1; calls AddGoldCapped; sets wTriggerKind to $ff; sets
-; wScriptStartRequest to $80; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 2 of StepTriggerReward (when wScriptStep = 2); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 2: gives ten times the trigger's value in gold (AddGoldCapped), marks it
+; used and sets the trigger kind to $FF. (C1, E-0357)
 StepTriggerReward_AddGoldCapped::
     call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
     inc hl
@@ -5947,11 +5497,8 @@ StepTriggerReward_AddGoldCapped::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of StepTriggerReward: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; copies
-; wScriptParam0 to wScriptStep (E-0347)
-; why: step 1 of StepTriggerReward (when wScriptStep = 1); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 1: after the box closes, goes to the step chosen in step 0
+; (wScriptParam0). (C1, E-0357)
 StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
@@ -5960,14 +5507,10 @@ StepTriggerReward_RunMessageBoxCarryWhenIdle_Bank12::
     ld [wScriptStep], a
     ret
 
-; step 0 of StepTriggerReward: advances wScriptStep; calls
-; StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex; branches on the byte at wScriptStep;
-; calls CopyItemNameToDE; calls StartMessageA; sets wScriptParam0 to 3; calls CopyItemNameToDE;
-; calls StartMessageA; sets wScriptParam0 to 5; copies L to wDigits; calls Number24ToPackedBCD;
-; calls WritePackedBCDNoLeadingZeros; then 11 more steps (see the code) (E-0347)
-; why: step 0 of StepTriggerReward (when wScriptStep = 0); StepTriggerReward: implements script
-; command type 80 (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched
-; by ... (E-0352)
+; Step trigger reward, step 0: by the trigger's kind: 0, an item: message 6 then the item (step 3),
+; or message 7 when the bag is full (step 5); 1, gold: message 5 with ten times its value (step 2);
+; 2, an item: message 2 (step 3) or 3 when full (step 5); others: message 4 and a battle (step 4).
+; (C1, E-0357)
 StepTriggerReward_CopyItemNameToDE::
     ld hl, wScriptStep
     inc [hl]
@@ -6069,9 +5612,8 @@ StepTriggerReward_CopyItemNameToDE::
     ld [wScriptParam0], a
     ret
 
-; Changes HL and A; branches on wScreenTriggerCount (E-0347)
-; why: part of StepTriggerReward; StepTriggerReward: implements script command type 80
-; (SCRIPT_STEP_TRIGGER_REWARD): a key-world/field talk event (group $0F, dispatched by ... (E-0352)
+; Points HL at the active trigger's record: wScreenTriggers + 4 x wTriggerIndex when the screen has
+; triggers, otherwise wMapObjects + 8 x wTriggerIndex. (C1, E-0357)
 StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex::
     ld a, [wScreenTriggerCount]
     or a
@@ -6092,7 +5634,10 @@ StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex::
     add_a_to_hl
     ret
 
-; with SRAM enabled sets every party record's HP to max HP, MP to max MP and field $55 to 0 (E-0125)
+; Heal the records indexed by wPartyList, for a nonzero wPartyCount: copy each maximum HP/MP word to
+; its current HP/MP and clear the entire MON_STATUS byte. Enable SRAM while doing so and disable it
+; on return. Does not select a cartridge RAM bank; the caller supplies the bank holding those
+; records, normally bank 0. There is no empty-party guard. (C1, E-0359)
 FullyHealParty::
     ld a, $0a
     ld [rRAMG], a
@@ -6139,8 +5684,11 @@ FullyHealParty::
     ld [rRAMG], a
     ret
 
-; for 30 frames alternates every 4 frames between the normal palettes and their inverse (DMG
-; palettes $D2/$E2 and $2D/$1D), then advances wScriptStep (E-0127)
+; Use incoming phase bit 2 to alternate four-call palette groups. When set, write DMG bytes
+; ($D2,$D2,$E2) and on CGB copy the 64 saved background bytes; otherwise write ($2D,$2D,$1D) and
+; complement each saved background byte on CGB. Request background upload $7F only on CGB. Increment
+; the eight-bit phase toward exact 30; on equality reset phase and advance. From phase 0 the final
+; palette group is the normal copy. Object CGB palettes are not inverted by this body. (C1, E-0362)
 ScriptStepFlashScreenNegative::
     ld a, [wScriptParam0]
     srl a
@@ -6219,13 +5767,8 @@ StepScriptParam0Counter_Bank12::
     scf
     ret
 
-; step 4 of PartyDefeatedReturn: branches on wScriptParam0; increments wScriptParam0; sets
-; hFieldDrawFlags to $0e; calls MoveIncapacitatedPartyMembersBack; calls LoadRecordListNameTiles;
-; calls LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f; sets
-; hFieldDrawFlags to 0; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 4 of PartyDefeatedReturn (when wScriptStep = 4); PartyDefeatedReturn: implements script
-; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
-; dispatched from ... (E-0352)
+; Party defeated return, step 4: the first call hides the followers; the next moves the fallen
+; members to the back, reloads the names and sprites and shows the followers again. (C1, E-0357)
 PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc::
     ld a, [wScriptParam0]
     or a
@@ -6279,6 +5822,11 @@ ClearBit2AtHL_Bank12::
     ld [hl], a
     ret
 
+; Use incoming A low four bits as the tile-boundary test: when they are zero, far-call
+; SetFollowerTargetsFromLeader in bank $02 to capture the current leader chain positions. Always
+; far-call StepFollowersTowardTargets afterward. A controls only whether targets refresh; it is not
+; copied into a coordinate. All three records are processed regardless of party count, and the
+; banked calls restore the calling bank. (C1, E-0361)
 ; A = the player's moving coordinate: when A & $0F = 0 (a 16-pixel tile boundary) far-calls
 ; SetFollowerTargetsFromLeader; then always far-calls StepFollowersTowardTargets (E-0093) (the same
 ; 17 bytes appear in 3 banks)
@@ -6308,14 +5856,10 @@ RunMessageBox_Bank12::
     dw RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc
     dw RunMessageBox_Bank12_WriteMessageState
 
-; step 0 of RunMessageBox_Bank12: calls SetBit1OfPlayerAndObjectFlags; branches on wMessageGroup;
-; calls FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1;
-; sets wTextWindowStep to 0; branches on hMapId; sets hSpriteWindowClipMode to 2; branches on
-; hPlayerY; sets wTextWindowState to $81; sets hSpriteWindowClipMode to 1; then 1 more step (see the
-; code) (E-0347)
-; why: step 0 of RunMessageBox_Bank12; RunMessageBox_Bank12: the bank-$12 message runner: the same
-; four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state
-; 0 ... (E-0352, E-0079)
+; Bank-$12 message box, state 0: unless the flag on the stack is set, freezes the player's and
+; objects' animation (SetBit1OfPlayerAndObjectFlags); unless wMessageGroup bit 7 says the box is
+; open, clears its tiles, plays sound $69 and opens the window at the bottom (or at the top when the
+; player is low on the screen, Y $48 or more), sprite clip mode 2 except on map $14. (C1, E-0357)
 RunMessageBox_Bank12_SetBit1OfPlayerAndObjectFlags::
     pop af
     or a
@@ -6356,11 +5900,8 @@ RunMessageBox_Bank12_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-; step 1 of RunMessageBox_Bank12: may return early; copies wMessageIndex to wStringIndex; sets
-; wStringCategory to 1; calls BeginStringDisplay_Bank09; advances wMessageState (E-0347)
-; why: step 1 of RunMessageBox_Bank12; RunMessageBox_Bank12: the bank-$12 message runner: the same
-; four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state
-; 0 ... (E-0352, E-0079)
+; Bank-$12 message box, state 1: once the window is open, starts string wMessageIndex of category 1
+; (BeginStringDisplay_Bank09). (C1, E-0357)
 RunMessageBox_Bank12_BeginStringDisplay_Bank09::
     pop af
     ld a, [wTextWindowState]
@@ -6375,13 +5916,8 @@ RunMessageBox_Bank12_BeginStringDisplay_Bank09::
     inc [hl]
     ret
 
-; step 2 of RunMessageBox_Bank12: returns if bit 0 of wTextFlags is set; branches on wMessageGroup;
-; sets wMessageState to $ff; plays sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0;
-; sets hSpriteWindowClipMode to 0; branches on hPlayerY; sets wTextWindowState to $82; advances
-; wMessageState (E-0347)
-; why: step 2 of RunMessageBox_Bank12; RunMessageBox_Bank12: the bank-$12 message runner: the same
-; four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state
-; 0 ... (E-0352, E-0079)
+; Bank-$12 message box, state 2: when the text has finished, goes idle at once if wMessageGroup bit
+; 6 keeps the box open; otherwise plays sound $69 and closes the window. (C1, E-0357)
 RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc::
     pop af
     ld a, [wTextFlags]
@@ -6414,11 +5950,8 @@ RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-; step 3 of RunMessageBox_Bank12: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff;
-; also changes A by register arithmetic (E-0347)
-; why: step 3 of RunMessageBox_Bank12; RunMessageBox_Bank12: the bank-$12 message runner: the same
-; four states as RunMessageBox, with A on the stack as the freeze flag instead of wStepPtrLo (state
-; 0 ... (E-0352, E-0079)
+; Bank-$12 message box, state 3: once the window is closed, unfreezes the animation (unless the flag
+; is set) and goes idle ($FF). (C1, E-0357)
 RunMessageBox_Bank12_WriteMessageState::
     ld a, [wTextWindowState]
     and $03
@@ -6454,14 +5987,8 @@ RunMessageBoxStateIfActive_Bank12::
     dw RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc
     dw RunMessageBox_Bank12_WriteMessageState
 
-; step 0 of RunMessageBoxStateIfActive_Bank12: calls SetBit1OfPlayerAndObjectFlags; branches on
-; wMessageIndex; calls FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets
-; wTextWindowState to 1; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on
-; hPlayerY; sets wTextWindowState to $81; sets hSpriteWindowClipMode to 1; advances wMessageState
-; (E-0347)
-; why: step 0 of RunMessageBoxStateIfActive_Bank12; RunMessageBoxStateIfActive_Bank12: unless
-; wMessageState is $FF (idle), runs the message box step for wMessageState (jump table) (E-0352,
-; E-0122)
+; Bank-$12 short message box, state 0: as the message box's state 0, with the box-open flag in
+; wMessageIndex bit 7. (C1, E-0357)
 RunMessageBoxStateIfActive_Bank12_SetBit1OfPlayerAndObjectFlags::
     pop af
     or a
@@ -6497,12 +6024,8 @@ RunMessageBoxStateIfActive_Bank12_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-; step 1 of RunMessageBoxStateIfActive_Bank12: may return early; copies wMessageIndex & $3f to
-; wStringIndex; sets wStringCategory to 9; calls BeginStringDisplay_Bank09; advances wMessageState
-; (E-0347)
-; why: step 1 of RunMessageBoxStateIfActive_Bank12; RunMessageBoxStateIfActive_Bank12: unless
-; wMessageState is $FF (idle), runs the message box step for wMessageState (jump table) (E-0352,
-; E-0122)
+; Bank-$12 short message box, state 1: once the window is open, starts string wMessageIndex & $3F of
+; category 9 (BeginStringDisplay_Bank09). (C1, E-0357)
 RunMessageBoxStateIfActive_Bank12_BeginStringDisplay_Bank09::
     pop af
     ld a, [wTextWindowState]
@@ -6518,13 +6041,8 @@ RunMessageBoxStateIfActive_Bank12_BeginStringDisplay_Bank09::
     inc [hl]
     ret
 
-; step 2 of RunMessageBoxStateIfActive_Bank12: returns if bit 0 of wTextFlags is set; branches on
-; wMessageIndex; sets wMessageState to $ff; plays sound $69; sets wTextWindowState to 2; sets
-; wTextWindowStep to 0; sets hSpriteWindowClipMode to 0; branches on hPlayerY; sets wTextWindowState
-; to $82; advances wMessageState (E-0347)
-; why: step 2 of RunMessageBoxStateIfActive_Bank12; RunMessageBoxStateIfActive_Bank12: unless
-; wMessageState is $FF (idle), runs the message box step for wMessageState (jump table) (E-0352,
-; E-0122)
+; Bank-$12 short message box, state 2: when the text has finished, goes idle if wMessageIndex bit 6
+; keeps the box open; otherwise sound $69 and closes the window. (C1, E-0357)
 RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc::
     pop af
     ld a, [wTextFlags]
@@ -6557,10 +6075,8 @@ RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-; Branches on wMessageState; dispatches through the table that follows (E-0347)
-; why: part of KeyWorldBossBattle; KeyWorldBossBattle: implements script command type 85
-; (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0 + 0..F), a
-; battle ... (E-0352)
+; The key world's message box: unless idle, runs its state (four states: open, text from bank $8A,
+; close, finish) by wMessageState. (C1, E-0357)
 KeyWorldBossBattle_ReadMessageState::
     push af
     ld a, [wMessageState]
@@ -6576,13 +6092,8 @@ KeyWorldBossBattle_ReadMessageState::
     dw KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc
     dw RunMessageBox_Bank12_WriteMessageState
 
-; step 0 of KeyWorldBossBattle_ReadMessageState: calls SetBit1OfPlayerAndObjectFlags; calls
-; FillTilesRequest; calls FillTilesFromRequest; sets wTextWindowState to 1; sets wTextWindowStep to
-; 0; sets hSpriteWindowClipMode to 2; branches on hPlayerY; sets wTextWindowState to $81; sets
-; hSpriteWindowClipMode to 1; advances wMessageState (E-0347)
-; why: step 0 of KeyWorldBossBattle_ReadMessageState, in part of KeyWorldBossBattle;
-; KeyWorldBossBattle: implements script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk
-; category 9, group 0: a random message ($00D0 + 0..F), a battle ... (E-0352)
+; Key world message box, state 0: freezes the animation unless the flag is set, clears the box tiles
+; and opens the window (at the top when the player is low), with no sound. (C1, E-0357)
 KeyWorldBossBattle_SetBit1OfPlayerAndObjectFlags::
     pop af
     or a
@@ -6613,12 +6124,8 @@ KeyWorldBossBattle_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-; step 1 of KeyWorldBossBattle_ReadMessageState: may return early; copies wMessageIndex to
-; wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank8A; advances wMessageState
-; (E-0347)
-; why: step 1 of KeyWorldBossBattle_ReadMessageState, in part of KeyWorldBossBattle;
-; KeyWorldBossBattle: implements script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk
-; category 9, group 0: a random message ($00D0 + 0..F), a battle ... (E-0352)
+; Key world message box, state 1: once the window is open, starts string wMessageIndex of category 0
+; in bank $8A (BeginStringDisplay_Bank8A). (C1, E-0357)
 KeyWorldBossBattle_BeginStringDisplay_Bank8A::
     pop af
     ld a, [wTextWindowState]
@@ -6633,12 +6140,8 @@ KeyWorldBossBattle_BeginStringDisplay_Bank8A::
     inc [hl]
     ret
 
-; step 2 of KeyWorldBossBattle_ReadMessageState: returns if bit 0 of wTextFlags is set; sets
-; wTextWindowState to 2; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 0; branches on
-; hPlayerY; sets wTextWindowState to $82; advances wMessageState (E-0347)
-; why: step 2 of KeyWorldBossBattle_ReadMessageState, in part of KeyWorldBossBattle;
-; KeyWorldBossBattle: implements script command type 85 (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk
-; category 9, group 0: a random message ($00D0 + 0..F), a battle ... (E-0352)
+; Key world message box, state 2: when the text has finished, closes the window (no sound). (C1,
+; E-0357)
 KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc::
     pop af
     ld a, [wTextFlags]
@@ -6699,10 +6202,8 @@ RunMessageBoxFar_Bank12::
 RunMessageBoxCarryWhenIdle_Bank12::
     call RunMessageBox_Bank12
 
-; Changes A; branches on wMessageState (E-0347)
-; why: part of RunMessageBoxCarryWhenIdle_Bank12; RunMessageBoxCarryWhenIdle_Bank12:
-; RunMessageBox_Bank12 (A = the freeze flag), then carry set when wMessageState = $FF (idle), else A
-; = 0 and carry clear (E-0352, E-0079)
+; Returns carry when the message box is idle (wMessageState $FF), otherwise A = 0 and no carry. (C1,
+; E-0357)
 RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState::
     ld a, [wMessageState]
     cp $ff
@@ -6721,12 +6222,7 @@ RunMessageBoxThenContinue::
     call RunMessageBoxStateIfActive_Bank12
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
 
-; called from KeyWorldBossBattle_WriteScriptParam0: calls KeyWorldBossBattle_ReadMessageState;
-; continues in RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState (E-0347)
-; why: a helper of KeyWorldBossBattle_WriteScriptParam0, in step 5 of KeyWorldBossBattle (when
-; wScriptStep = 5); KeyWorldBossBattle: implements script command type 85
-; (SCRIPT_KEY_WORLD_BOSS_BATTLE): talk category 9, group 0: a random message ($00D0 + 0..F), a
-; battle ... (E-0352)
+; Runs the key world message box, then returns carry when it is idle. (C1, E-0357)
 KeyWorldBossBattle_ReadMessageState_2::
     call KeyWorldBossBattle_ReadMessageState
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
@@ -7293,10 +6789,10 @@ DrawAnimatedMetaSprite1B_Data::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
 
-; the 22 field commands that scenes and map entry run with hTemp0 = command: each places script
-; object 5 (wObject5) and decompresses its graphics to VRAM, setting up a scripted figure of a scene
-; (E-0354; was: runs the field command for hTemp0 (jump table of 22; called from 49 routines)
-; (E-0124))
+; Dispatch the field-effect command in hTemp0 (valid indexes 0-21, without a bounds check). In the
+; link/breeding presentation, commands $0D and $0E share the placement setter for object 5 but
+; select their own graphics records. Scene and map-entry callers use this same command interface.
+; (C1, E-0360)
 RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
@@ -7323,13 +6819,8 @@ RunFieldCommandTemp0::
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
 
-; step 20 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to $80; also changes HL and A by register arithmetic
-; (E-0347)
-; why: step 20 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 20: the scene object (wObject5) gets the command's sprite (tile $40, palette 4) at
+; ($40, $40), shown, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7353,13 +6844,9 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-; step 19 of RunFieldCommandTemp0: calls
-; RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 3; sets wObject5 to 0
-; (E-0347)
-; why: step 19 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 19: the scene object gets the command's sprite at tile $30 with palette 3
+; (RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest), hidden, position left as it
+; was. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_SetObject5::
     call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
     push af
@@ -7374,12 +6861,8 @@ RunFieldCommandTemp0_WriteObject5_SetObject5::
     ld [wObject5], a
     ret
 
-; step 18 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
-; changes HL and A by register arithmetic (E-0347)
-; why: step 18 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 18: the scene object gets the command's sprite (tile $40, palette 4), hidden,
+; position left as it was, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_2::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7399,12 +6882,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_2::
     ld [wObject5 + $7], a
     ret
 
-; step 17 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
-; changes HL and A by register arithmetic (E-0347)
-; why: step 17 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 17: the scene object gets the command's sprite (tile $40, palette 4), hidden,
+; position left as it was, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_3::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7424,13 +6903,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_3::
     ld [wObject5 + $7], a
     ret
 
-; step 16 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to 0
-; (E-0347)
-; why: step 16 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 16: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $40),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_4::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7449,13 +6923,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_4::
     ld [wObject5], a
     ret
 
-; step 15 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to 0
-; (E-0347)
-; why: step 15 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 15: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7474,13 +6943,10 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_5::
     ld [wObject5], a
     ret
 
-; step 13 of RunFieldCommandTemp0: calls
-; RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 3; sets wObject5 to $80;
-; also changes HL and A by register arithmetic (E-0347)
-; why: step 13 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Placement shared by field commands $0D/$0E: load the selected effect graphics, then set object 5
+; tile offset $30, sprite-set selector from returned A, attributes 3 and position ($50,$3C). Show it
+; with byte 0 = $80 and clear the final two object bytes. Graphics differ by the incoming command
+; even though placement is shared. (C1, E-0360)
 RunFieldCommandTemp0_WriteObject5_SetObject5_2::
     call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
     push af
@@ -7506,12 +6972,8 @@ RunFieldCommandTemp0_WriteObject5_SetObject5_2::
     ld [wObject5 + $7], a
     ret
 
-; step 12 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
-; changes HL and A by register arithmetic (E-0347)
-; why: step 12 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 12: the scene object gets the command's sprite (tile $40, palette 4) at ($78, $50),
+; hidden, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_6::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7537,12 +6999,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_6::
     ld [wObject5 + $7], a
     ret
 
-; step 11 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0; also
-; changes HL and A by register arithmetic (E-0347)
-; why: step 11 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 11: the scene object gets the command's sprite (tile $40, palette 4) at the player's
+; position, hidden, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_7::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7568,13 +7026,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_7::
     ld [wObject5 + $7], a
     ret
 
-; step 10 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to 0
-; (E-0347)
-; why: step 10 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 10: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_8::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7593,13 +7046,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_8::
     ld [wObject5], a
     ret
 
-; step 9 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to $80
-; (E-0347)
-; why: step 9 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 9: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $E0),
+; shown (above the screen until moved). (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_9::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7618,13 +7066,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_9::
     ld [wObject5], a
     ret
 
-; step 8 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $50; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
-; (E-0347)
-; why: step 8 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 8: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_10::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7643,13 +7086,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_10::
     ld [wObject5], a
     ret
 
-; step 7 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $e0; sets wObject5 to $80
-; (E-0347)
-; why: step 7 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 7: the scene object gets the command's sprite (tile $40, palette 4) at ($30, $E0),
+; shown (above the screen until moved). (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_11::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7668,13 +7106,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_11::
     ld [wObject5], a
     ret
 
-; step 6 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $70; sets wObject5 to $80
-; (E-0347)
-; why: step 6 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 6: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $70),
+; shown, its animation reset. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_12::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7698,13 +7131,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_12::
     ld [wObject5 + $7], a
     ret
 
-; step 5 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 0; sets wObject5 to $80
-; (E-0347)
-; why: step 5 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 5: the scene object gets the command's sprite (tile $40, palette 4) at ($40, 0),
+; shown. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_13::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7723,13 +7151,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_13::
     ld [wObject5], a
     ret
 
-; step 4 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $50; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
-; (E-0347)
-; why: step 4 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 4: the scene object gets the command's sprite (tile $40, palette 4) at ($50, $30),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_14::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7748,12 +7171,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_14::
     ld [wObject5], a
     ret
 
-; step 3 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 3 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 3: the scene object gets the command's sprite (tile $40, palette 4), hidden,
+; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_15::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7768,13 +7187,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_15::
     ld [wObject5], a
     ret
 
-; step 2 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $30; sets wObject5 to 0
-; (E-0347)
-; why: step 2 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 2: the scene object gets the command's sprite (tile $40, palette 4) at ($40, $30),
+; hidden. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_16::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7793,12 +7207,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_16::
     ld [wObject5], a
     ret
 
-; step 1 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 to 0
-; (E-0347)
-; why: step 1 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 1: the scene object gets the command's sprite (tile $40, palette 4), hidden,
+; position left as it was. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_17::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7813,13 +7223,8 @@ RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_17::
     ld [wObject5], a
     ret
 
-; step 0 of RunFieldCommandTemp0: calls RunFieldCommandTemp0_DecompressToVRAM; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to 4; sets wObject5 +
-; SCRIPTOBJ_TILE_OFFSET to $60; sets wObject5 + SCRIPTOBJ_TILE_OFFSET to $40; sets wObject5 to $80
-; (E-0347)
-; why: step 0 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
-; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
-; ... (E-0352, E-0354, E-0124)
+; Field command 0: the scene object gets the command's sprite (tile $40, palette 4) at ($60, $40),
+; shown. (C1, E-0357)
 RunFieldCommandTemp0_WriteObject5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
@@ -7838,11 +7243,11 @@ RunFieldCommandTemp0_WriteObject5::
     ld [wObject5], a
     ret
 
-; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
-; $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and map
-; entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its ...
-; (E-0352, E-0354, E-0124)
+; hTemp0 selects a four-byte FieldCommandSpriteTable record after masking bit 7 and multiplying by
+; four with byte wrap. Decompress the bank-$7E pointer to VRAM $8400. On CGB copy eight palette
+; bytes indexed by record byte 2 low seven bits into object palette slot 4 and request upload.
+; Return complete record byte 2 in A, just like the $8300/slot-3 variant; the trailing record byte
+; is not consumed by either reader. (C1, E-0360)
 RunFieldCommandTemp0_DecompressToVRAM::
     ldh a, [hTemp0]
     and $7f
@@ -7893,11 +7298,11 @@ RunFieldCommandTemp0_DecompressToVRAM::
     ld a, [hl]
     ret
 
-; Calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank; sets wOBJPaletteUploadRequest to
-; $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunFieldCommandTemp0_DecompressToVRAM, in part of RunFieldCommandTemp0;
-; RunFieldCommandTemp0: the 22 field commands that scenes and map entry run with hTemp0 = command:
-; each places script object 5 (wObject5) and decompresses its ... (E-0352, E-0354, E-0124)
+; hTemp0 selects a four-byte FieldCommandSpriteTable record: mask bit 7, multiply the remaining byte
+; by four with byte wrap and add it to the table. Decompress its pointer from bank $7E into VRAM
+; $8300. On CGB use record byte 2 low seven bits to select eight palette bytes at $7E:$4BBD +
+; 8*index, copy them to object palette slot 3 and request upload. Return the complete record byte 2
+; in A for the caller's sprite-set selector. (C1, E-0360)
 RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
     ldh a, [hTemp0]
     and $7f
@@ -7948,12 +7353,8 @@ RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
     ld a, [hl]
     ret
 
-; called from RunDrawTriggerMarkerSprite: returns if bit 7 of wFieldActionRequest is set; returns
-; unless bit 6 of the byte at wObject5 is set; continues in DrawFieldSprites_SetSpriteTileOffset
-; (E-0347)
-; why: a helper of RunDrawTriggerMarkerSprite; RunDrawTriggerMarkerSprite: runs
-; DrawTriggerMarkerSprite and RunDrawTriggerMarkerSprite_WaitFieldActionRequest (E-0352, E-0122,
-; E-0344)
+; Draws the scene object's trigger marker: unless a field action is pending, draws wObject5 when its
+; bit 6 is set (through DrawFieldSprites' entry drawing). (C1, E-0357)
 RunDrawTriggerMarkerSprite_WaitFieldActionRequest::
     ld a, [wFieldActionRequest]
     bit 7, a
@@ -7977,13 +7378,8 @@ DrawFieldSprites::
     bit 7, a
     ret z
 
-; Sets hSpriteTileOffset; sets hSpriteSetIndex; calls DrawFieldSprites_WriteSpriteSubIndex; sets
-; hSpriteSubIndex to 0; sets hSpriteAttrXor; sets hSpriteOriginX; sets hSpriteOriginXHi; sets
-; hSpriteOriginY; sets hSpriteOriginYHi; calls DrawMetaSprite; also changes HL, DE and A by register
-; arithmetic (E-0347)
-; why: part of DrawFieldSprites; DrawFieldSprites: unless the map is loading or wObject5 bit 7 is
-; clear: reads the sprite entries starting at wObject5 (tile offset, set index with bit 7 ...
-; (E-0352)
+; Draws one sprite entry at DE: its tile offset, sprite set (with an animated sub-index when bit 7
+; is set), attribute bits, and the origin at its position plus (8, 16) and the scroll. (C1, E-0357)
 DrawFieldSprites_SetSpriteTileOffset::
     inc de
     ld a, [de]
@@ -8031,15 +7427,8 @@ DrawFieldSprites_SetSpriteTileOffset::
     farcall DrawMetaSprite
     ret
 
-; called from DrawFieldSprites: increments wObject5 + $6; calls DrawFieldSprites_WriteObject5; sets
-; hSpriteSubIndex; calls DrawFieldSprites_WriteObject5; sets hSpriteSubIndex; calls
-; DrawFieldSprites_WriteObject5; sets hSpriteSubIndex; calls DrawFieldSprites_WriteObject5; copies
-; the byte at DrawFieldSprites_WriteSpriteSubIndex_Data5 to hSpriteSubIndex; branches on the byte at
-; DrawFieldSprites_WriteSpriteSubIndex_Data5; calls DrawFieldSprites_WriteObject5; sets
-; hSpriteSubIndex; then 4 more steps (see the code) (E-0347)
-; why: a helper of DrawFieldSprites; DrawFieldSprites: unless the map is loading or wObject5 bit 7
-; is clear: reads the sprite entries starting at wObject5 (tile offset, set index with bit 7 ...
-; (E-0352)
+; Picks the animated sub-index of the scene object for sprite sets $13, $1A, $17, $1F, $1E and the
+; rest, stepping each set's frame table (wObject5 + 6 counts frames, + 7 is the frame). (C1, E-0357)
 DrawFieldSprites_WriteSpriteSubIndex::
     push af
     ld hl, wObject5 + $6
@@ -8113,10 +7502,8 @@ DrawFieldSprites_WriteSpriteSubIndex::
 .return:
     ret
 
-; Takes HL; changes HL, A and C (E-0347)
-; why: part of DrawFieldSprites; DrawFieldSprites: unless the map is loading or wObject5 bit 7 is
-; clear: reads the sprite entries starting at wObject5 (tile offset, set index with bit 7 ...
-; (E-0352)
+; Steps a frame-duration list: when the counter reaches the current frame's duration it restarts and
+; the frame advances, wrapping to 0 at $FF. (C1, E-0357)
 DrawFieldSprites_WriteObject5::
     ld a, [wObject5 + $7]
     add_a_to_hl
@@ -8143,11 +7530,8 @@ DrawFieldSprites_WriteObject5::
 .return:
     ret
 
-; Increments wObject5 + $7; returns unless the byte at wObject5 + $7 is $ff; also changes HL, A and
-; C by register arithmetic (E-0347)
-; why: part of DrawFieldSprites_WriteObject5, in part of DrawFieldSprites; DrawFieldSprites: unless
-; the map is loading or wObject5 bit 7 is clear: reads the sprite entries starting at wObject5 (tile
-; offset, set index with bit 7 ... (E-0352)
+; Steps a list of (sub-index, duration) pairs, holding on the last frame at $FF; returns the current
+; sub-index. (C1, E-0357)
 DrawFieldSprites_WriteObject5_2::
     push hl
     ld a, [wObject5 + $7]
@@ -8207,11 +7591,12 @@ DrawFieldSprites_WriteSpriteSubIndex_Data8::
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
     db $01, $04, $00, $05, $ff, $ff
 
-; RunFieldCommandTemp0_DecompressToVRAM and _Shared02 index it with hTemp0 & $7F: the word is
-; decompressed from bank $7E to vTiles0 + $400 (DecompressToVRAM); on CGB, byte 2 & $7F selects the
-; palette at 7E:$4BBD + 8 * index copied to wOBJPaletteBuffer + $20; byte 3 is returned in A; 22
-; records (E-0238, C1)
-; record: bank-$7E graphics stream; palette index; returned byte
+; 22 four-byte records: little-endian graphics pointer into bank $7E, sprite-set/palette selector in
+; byte 2, preserved trailing byte. Both field-graphics readers return byte 2 in A and use its low
+; seven bits for the palette index. The general reader loads VRAM $8400/palette slot 4; the
+; scene-effect variant loads $8300/slot 3. The earlier byte-3 return claim is superseded; no record
+; byte changes (E-0360, E-0238, C1)
+; record: bank-$7E graphics pointer; sprite-set/palette selector; trailing byte
 FieldCommandSpriteTable::
     dw Tiles0Plus300Gfx ; id 0
     db $0a, $00
@@ -8391,13 +7776,9 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
     ld [wTriggerIndex], a
     jr FindTriggerEntryForCurrentScreen_SetTriggerCell
 
-; Sets wTriggerCell; returns if the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data is
-; 0; copies the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data to wTriggerKind; also
-; changes HL and A by register arithmetic (E-0347)
-; why: part of FindTriggerEntryForCurrentScreen_ScreenTriggers;
-; FindTriggerEntryForCurrentScreen_ScreenTriggers: on maps from $30 (or special map $85) finds the
-; wScreenTriggers entry for the current screen and sets wTriggerIndex, wTriggerCell and ... (E-0352,
-; E-0128)
+; The end of the trigger search: stores the trigger's cell and its kind (the entry's low two bits,
+; or for 0 a kind from FindTriggerEntryForCurrentScreen_ScreenTriggers_Data by the next byte);
+; returns when the kind is 0. (C1, E-0357)
 FindTriggerEntryForCurrentScreen_SetTriggerCell::
     inc hl
     ld a, [hl]
@@ -8417,11 +7798,8 @@ FindTriggerEntryForCurrentScreen_SetTriggerCell::
     ret z
     ld [wTriggerKind], a
 
-; Calls DecompressToVRAM; returns if wIsCGB is 0; branches on wIsCGB; calls CopyFromBank; sets
-; wOBJPaletteUploadRequest to $7f; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RandomGoldOrItem; RandomGoldOrItem: implements script command type 84
-; (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from ...
-; (E-0352)
+; Loads the trigger marker's sprite: the graphics of TriggerSpriteRecord0 + 6 x wTriggerKind
+; (pointer and bank) to VRAM $8400 and, on the GBC, its palette into OBJ palette 4. (C1, E-0357)
 RandomGoldOrItem_DecompressToVRAM::
     ld a, [wTriggerKind]
     ld c, a
@@ -8783,13 +8161,11 @@ CheckStepTriggerAndDispatchTalk::
 .return:
     ret
 
-; called from FieldState_WalkAMenu: may return early; returns if bit 7 of wFieldActionRequest is
-; set; returns if bit 0 of hPlayerStateFlags is set; returns unless bit 0 of wJoypadPressed is set;
-; returns unless bit 7 of wMapType is set; branches on wMapType; returns unless wMapType is $86;
-; branches on hPlayerFacing; calls ReadTileBuffer2x2AtPixel_Bank12; branches on wMapType; branches
-; on wTilesUnderPoint; copies L to wScriptParam0; then 31 more steps (see the code) (E-0347)
-; why: a helper of FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens
-; the field menu (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
+; Field state 5's A button in a key world: when idle and A is pressed on map type $85, a treasure
+; tile $2C in front starts talk event group $0E (the area item) with a pointer to whichever of the
+; floor's item records belongs to this screen (FieldState_WalkAMenu_WaitTextWindowState_Data), tile
+; $2E starts it with no item; on map type $86 tile $1A starts group $0D (the door item) with the
+; floor's wKeyWorldMenuFlag, tile $1C group $0E with no item. (C1, E-0357)
 FieldState_WalkAMenu_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03
@@ -9543,13 +8919,9 @@ TriggerEventForStatusedMemberHP::
     sub a
     ret
 
-; called from RunPeriodicFieldEventChecks: branches on wEventItemSlot; branches on wGoldHi; branches
-; on wGoldMid; branches on wGoldLo; sets rRAMG to $0a; calls LoadSRAMRecordWord; sets rRAMG to 0;
-; sets rRAMG to $0a; calls LoadSRAMRecordWord; sets rRAMG to 0; branches on D; branches on E; then 2
-; more steps (see the code) (E-0347)
-; why: a helper of RunPeriodicFieldEventChecks; RunPeriodicFieldEventChecks: on town maps, every 100
-; calls (wTownEventTimer), tries the gold, party-stat and digit events in turn until one sets
-; wPendingFieldEvent (E-0352, E-0128)
+; The low-HP town event: when wEventItemSlot is free and the gold is at least 1,000, sets pending
+; field event $C8 (carry) if the party's total HP is under 30% of its total maximum HP (total / 100
+; x 30). (C1, E-0357)
 RunPeriodicFieldEventChecks_WriteRAMGAndPendingFieldEvent::
     ld a, [wEventItemSlot]
     cp $ff
@@ -10132,20 +9504,17 @@ RunPendingFieldEventPendingFieldEvent::
     ld [wPendingFieldEvent], a
     ret
 
-; Takes A; changes A; may return early (E-0347)
-; why: part of RunPendingFieldEventPendingFieldEvent; RunPendingFieldEventPendingFieldEvent: on town
-; maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage (E-0352, E-0130)
+; Returns unless A has no bits set besides bit 7, then falls into the check below. (C1, E-0357)
 RunPendingFieldEventPendingFieldEvent_Skip::
     and $7f
     ret nz
 
-; Returns unless bit 7 of wPendingFieldEvent is set; branches on wPendingFieldEvent; branches on
-; wPendingFieldEvent & $0f; sets wPendingFieldEvent to 0; sets wTownEventTimer to $63; calls
-; RunPeriodicFieldEventChecks; calls NextTableByte; calls ReadTileBuffer2x2AtPixel_Bank12; calls
-; RollFieldEventOnTallTiles; may return early; sets wSpriteSlots to 3; copies wPendingFieldEvent &
-; $bf to wPendingFieldEvent; then 10 more steps (see the code) (E-0347)
-; why: part of RunPendingFieldEventPendingFieldEvent; RunPendingFieldEventPendingFieldEvent: on town
-; maps runs the pending event in wPendingFieldEvent (bits 7 and 6 select the stage (E-0352, E-0130)
+; Places the pending town event's visitor: with bit 6 (the first stage) cancels kinds 1, 3, 4, 5 and
+; 7 when the last inventory slot is taken (resetting wTownEventTimer to $63 and trying the other
+; events), otherwise puts sprite slot 0 at one of four random spots
+; (RunPendingFieldEventPendingFieldEvent_Data2) unless the tiles there forbid it
+; (RollFieldEventOnTallTiles), and clears bit 6; then draws one slot with the kind's sprite
+; (RunPendingFieldEventPendingFieldEvent_Data1) loaded to VRAM $8500. (C1, E-0357)
 RunPendingFieldEventPendingFieldEvent_CheckPendingFieldEvent::
     ld a, [wPendingFieldEvent]
     bit 7, a
@@ -10333,13 +9702,8 @@ RunPendingFieldEventPendingFieldEvent_Data1::
 RunPendingFieldEventPendingFieldEvent_Data2::
     db $20, $20, $70, $60, $20, $60, $70, $20
 
-; called from ClearPendingFieldEventWhenFieldIdle: branches on wMapType; branches on hMapId;
-; branches on hMapScreenX; branches on hMapScreenY; checks EVENT_SCENE_CRATE; checks
-; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD; sets wPendingFieldEvent to 0; also changes DE and A by register
-; arithmetic (E-0347)
-; why: a helper of ClearPendingFieldEventWhenFieldIdle; ClearPendingFieldEventWhenFieldIdle: returns
-; unless ClearPendingFieldEventWhenFieldIdle_TestFlagBit is 0, wTriggerKind is $FF and no script
-; runs (E-0352, E-0122)
+; Returns A = 1, clearing the pending town event, on map $30 screen (5, 5) outside key worlds after
+; EVENT_WELCOME_YOUNG_HUMAN_I_HEARD but before EVENT_SCENE_CRATE; otherwise A = 0. (C1, E-0357)
 ClearPendingFieldEventWhenFieldIdle_TestFlagBit::
     ld a, [wMapType]
     bit 7, a
@@ -10545,11 +9909,7 @@ FindPartyMemberWithSkill76To7DOr92::
     ld [rRAMG], a
     ret
 
-; called from GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1: sets hTemp1 to 0 (E-0347)
-; why: a helper of GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1, in step 204 of
-; GreatLogTalkEvents (when wTalkEventGroup = 204); GreatLogTalkEvents: talk category 1: jumps by
-; wTalkEventGroup to the talk handlers of the Great Log home island (messages from $0000-$02DF:
-; Warubou, Prince ... (E-0352)
+; Clears hTemp1. (C1, E-0357)
 GreatLogTalkEvents_WriteTemp1::
     xor a
     ldh [hTemp1], a
@@ -10637,10 +9997,8 @@ AddGoldCapped::
     ld [wGoldHi], a
     ret
 
-; called from ReturnMessage_TestFlagBit: sets wGoldHi; sets wGoldMid; sets wGoldLo (E-0347)
-; why: a helper of ReturnMessage_TestFlagBit, in step 0 of ReturnMessage (when wScriptStep = 0);
-; ReturnMessage: implements script command type 88 (SCRIPT_RETURN_MESSAGE): a key-world/field talk
-; event (group $05, dispatched by ... (E-0352)
+; Halves the gold (the 24-bit wGoldHi/Mid/Lo shifted right): the return message's penalty. (C1,
+; E-0357)
 ReturnMessage_WriteGoldHiAndGoldMidEtc::
     ld a, [wGoldHi]
     srl a

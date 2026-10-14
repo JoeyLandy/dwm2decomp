@@ -232,10 +232,10 @@ SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
     ret
 
 ; step 2 of SceneWatchOut: branches on wTextYesNoResult; calls
-; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; calls StartMessageHL_B85; advances
-; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; calls SaveScreenBufferToBGMap1;
-; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; calls StartMessageHL_B85;
-; advances wScriptStep; then 2 more steps (see the code) (E-0347)
+; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows '…The farm has no room'; advances
+; wScriptStep; branches on wPartyCount; shows 'We are partners, and good'; calls
+; SaveScreenBufferToBGMap1; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; shows
+; 'Your party's full… There isn't'; advances wScriptStep; then 2 more steps (see the code) (E-0347)
 ; why: step 2 of SceneWatchOut (when wScriptStep = 2); SceneWatchOut: implements script command type
 ; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
 ; keep ... (E-0352, E-0038, E-0245)
@@ -247,7 +247,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ld a, [wArg5]
     cp $ff
     jr nz, .check_party_count
-    ld hl, vTiles1 + $557
+    ld hl, MSG_ALREADY_OPEN | $0d57 ; '*: …The farm has no room'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -257,7 +257,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ld a, [wPartyCount]
     cp $03
     jr z, .call_start_message_hl_b85
-    ld hl, vTiles0 + $1b8
+    ld hl, MSG_ALREADY_OPEN | $01b8 ; '*: We are partners, and good'
     call StartMessageHL_B85
     farcall SaveScreenBufferToBGMap1
     ld a, [wPartyCount]
@@ -268,7 +268,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, vTiles1 + $511
+    ld hl, MSG_ALREADY_OPEN | $0d11 ; '*: Your party's full… There isn't'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -277,7 +277,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ret
 
 .call_start_message_hl_b852:
-    ld hl, vTiles1 + $512
+    ld hl, MSG_ALREADY_OPEN | $0d12 ; '*: Oh, but… I can be'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -564,15 +564,15 @@ SceneWatchOut_ReadScriptMsgSelect::
     ret
 
 ; step 9 of SceneWatchOut: calls RestoreScreenBufferFromBGMap1; calls
-; DrawScreenBufferAtScrollOrigin; calls StartMessageHL_B85; calls ClearBit1OfPlayerAndObjectFlags;
-; sets wScriptStep to 1 (E-0347)
+; DrawScreenBufferAtScrollOrigin; shows 'Let me join your party?'; calls
+; ClearBit1OfPlayerAndObjectFlags; sets wScriptStep to 1 (E-0347)
 ; why: step 9 of SceneWatchOut (when wScriptStep = 9); SceneWatchOut: implements script command type
 ; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
 ; keep ... (E-0352, E-0038, E-0245)
 SceneWatchOut_ShowLetMeJoinYour::
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
-    ld hl, wKeyWorldBossMonsters + $6
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0d56 ; '*: Let me join your party?'
     call StartMessageHL_B85
     farcall ClearBit1OfPlayerAndObjectFlags
     ld a, $01
@@ -617,10 +617,10 @@ SceneWatchOut_Msg_PickTheMonsterTo::
     ret
 
 ; step 2 of SceneWaterReward: branches on wTextYesNoResult; calls
-; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; calls StartMessageHL_B85; advances
-; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; calls SaveScreenBufferToBGMap1;
-; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; calls StartMessageHL_B85;
-; advances wScriptStep; then 2 more steps (see the code) (E-0347)
+; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows '…Wait, the farm is full…';
+; advances wScriptStep; branches on wPartyCount; shows 'We are partners, and good'; calls
+; SaveScreenBufferToBGMap1; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; shows
+; '…But you have no room'; advances wScriptStep; then 2 more steps (see the code) (E-0347)
 ; why: step 2 of SceneWaterReward (when wScriptStep = 2); SceneWaterReward: implements script
 ; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
 ; shows: 'King This ... (E-0352, E-0038, E-0245)
@@ -632,7 +632,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ld a, [wArg5]
     cp $ff
     jr nz, .check_party_count
-    ld hl, vTiles1 + $555
+    ld hl, MSG_ALREADY_OPEN | $0d55 ; '*: …Wait, the farm is full…'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -642,7 +642,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ld a, [wPartyCount]
     cp $03
     jr z, .call_start_message_hl_b85
-    ld hl, vTiles0 + $1b8
+    ld hl, MSG_ALREADY_OPEN | $01b8 ; '*: We are partners, and good'
     call StartMessageHL_B85
     farcall SaveScreenBufferToBGMap1
     ld a, [wPartyCount]
@@ -653,7 +653,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, vTiles0 + $1b9
+    ld hl, MSG_ALREADY_OPEN | $01b9 ; '*: …But you have no room'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -662,7 +662,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ret
 
 .call_start_message_hl_b852:
-    ld hl, vTiles0 + $1ba
+    ld hl, MSG_ALREADY_OPEN | $01ba ; '*: Tch, I think I can'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -1914,10 +1914,10 @@ SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; step 3 of SceneLimboMonster2: branches on wTextYesNoResult; calls StartMessageHL_B85; copies the
-; byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X; copies the byte at
-; SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances wScriptStep; calls
-; StartMessageHL_B85; sets wScriptStep to 1 (E-0347)
+; step 3 of SceneLimboMonster2: branches on wTextYesNoResult; shows 'Warubou: Wa-hey! Good, good,
+; good! I'; copies the byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X;
+; copies the byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances
+; wScriptStep; shows 'Warubou: Wa-hey… That's cold of you.'; sets wScriptStep to 1 (E-0347)
 ; why: step 3 of SceneLimboMonster2 (when wScriptStep = 3); SceneLimboMonster2: implements script
 ; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
 ; script shows: the same ... (E-0352, E-0038, E-0245)
@@ -1925,7 +1925,7 @@ SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b85
-    ld hl, vTiles1 + $3a5
+    ld hl, MSG_ALREADY_OPEN | $0ba5 ; 'Warubou: Wa-hey! Good, good, good! I'
     call StartMessageHL_B85
     ld a, [wObject1 + OBJ_STATE]
     add a
@@ -1940,7 +1940,7 @@ SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, vTiles1 + $595
+    ld hl, MSG_ALREADY_OPEN | $0d95 ; 'Warubou: Wa-hey… That's cold of you.'
     call StartMessageHL_B85
     ld a, $01
     ld [wScriptStep], a
@@ -2137,10 +2137,10 @@ SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; step 3 of SceneLimboMonster: branches on wTextYesNoResult; calls StartMessageHL_B85; copies the
-; byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X; copies the byte at
-; SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances wScriptStep; calls
-; StartMessageHL_B85; sets wScriptStep to 1 (E-0347)
+; step 3 of SceneLimboMonster: branches on wTextYesNoResult; shows 'Warubou: Wa-hey! Good, good,
+; good! I'; copies the byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X;
+; copies the byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances
+; wScriptStep; shows 'Warubou: Wa-hey… That's cold of you.'; sets wScriptStep to 1 (E-0347)
 ; why: step 3 of SceneLimboMonster (when wScriptStep = 3); SceneLimboMonster: implements script
 ; command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only
 ; script shows: 'Limbo is the ... (E-0352, E-0038, E-0245)
@@ -2148,7 +2148,7 @@ SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b85
-    ld hl, vTiles1 + $32a
+    ld hl, MSG_ALREADY_OPEN | $0b2a ; 'Warubou: Wa-hey! Good, good, good! I'
     call StartMessageHL_B85
     ld a, [wObject1 + OBJ_STATE]
     add a
@@ -2163,7 +2163,7 @@ SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, vTiles1 + $595
+    ld hl, MSG_ALREADY_OPEN | $0d95 ; 'Warubou: Wa-hey… That's cold of you.'
     call StartMessageHL_B85
     ld a, $01
     ld [wScriptStep], a
@@ -2714,9 +2714,9 @@ GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
     ret
 
 ; step 0 of GrowthLimitInfo: advances wScriptStep; sets rRAMG to $0a; calls
-; CopyRecordNameToNameGlyphBuf; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on hTemp0; calls
-; StartMessageHL_B85; calls HLToDecimalDigits; calls StartMessageHL_B85; also changes HL, DE, BC and
-; A by register arithmetic (E-0347)
+; CopyRecordNameToNameGlyphBuf; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on hTemp0; shows
+; 'N has reached its growth limit.'; calls HLToDecimalDigits; shows 'N's growth limit is Lv .'; also
+; changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: step 0 of GrowthLimitInfo (when wScriptStep = 0); GrowthLimitInfo: implements script command
 ; type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone
 ; has a growth ... (E-0352, E-0038, E-0245)
@@ -2758,7 +2758,7 @@ GrowthLimitInfo_CopyRecordNameToNameGlyphBuf::
     ldh a, [hTemp0]
     cp e
     jr nz, .call_hl_to_decimal_digits
-    ld hl, wRecordBufB + $2b
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0a56 ; 'N has reached its growth limit.'
     call StartMessageHL_B85
     ret
 
@@ -2779,7 +2779,7 @@ GrowthLimitInfo_CopyRecordNameToNameGlyphBuf::
     inc de
     ld a, $f0
     ld [de], a
-    ld hl, wRecordBufB + $2a
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0a55 ; 'N's growth limit is Lv .'
     call StartMessageHL_B85
     ret
 
@@ -3337,8 +3337,8 @@ SceneFoundMeBattle_WriteScriptStepAndTemp0::
     ret
 
 ; step 0 of SceneFoundMeBattle: advances wScriptStep; branches on hPlayerSpriteOverride; sets
-; wScriptParam1 to 0; shows 'You! I've never seen you'; branches on hPlayerSpriteStreamHi; branches
-; on hPlayerSpriteStreamLo; sets wScriptParam1 to 1; shows 'Oh, you're the cooking crew.'; sets
+; wScriptParam1 to 0; shows 'You! I've never seen you'; branches on hPlayerSpriteGfxIdHi; branches
+; on hPlayerSpriteGfxIdLo; sets wScriptParam1 to 1; shows 'Oh, you're the cooking crew.'; sets
 ; wScriptParam1 to 2; shows 'Hm? Are you a new'; also changes HL and A by register arithmetic
 ; (E-0347)
 ; why: step 0 of SceneFoundMeBattle (when wScriptStep = 0); SceneFoundMeBattle: implements script
@@ -3351,7 +3351,7 @@ SceneFoundMeBattle_StartMessageHL_B85::
     bit 7, a
     jr z, .loop
     and $01
-    jr z, .check_player_sprite_stream_hi
+    jr z, .check_player_sprite_gfx_id_hi
 
 .loop:
     ld a, $00
@@ -3360,11 +3360,11 @@ SceneFoundMeBattle_StartMessageHL_B85::
     call StartMessageHL_B85
     ret
 
-.check_player_sprite_stream_hi:
-    ldh a, [hPlayerSpriteStreamHi]
+.check_player_sprite_gfx_id_hi:
+    ldh a, [hPlayerSpriteGfxIdHi]
     cp $00
     jr nz, .loop
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     cp $d6
     jr nz, .cp_EC
     ld a, $01
@@ -4110,9 +4110,8 @@ PartyHasField6FAtLeastC0Without55Bit7::
 ; hTemp0 to 0; sets rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls
 ; LoadSRAMRecordWord; sets rRAMG to 0; sets hTemp0 to 1; also changes HL, BC and A by register
 ; arithmetic (E-0347)
-; why: a helper of FhuntTalkEvents_ShowBeGoneIfYour, in step 15 of FhuntTalkEvents (when
-; wTalkEventGroup = 15); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
-; handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
+; why: a helper of FhuntTalkEvents_ShowBeGoneIfYour; FhuntTalkEvents_ShowBeGoneIfYour: Fhunt talk
+; 15, the grave's voice: silent once tile $68 is in the screen buffer (E-0352, E-0357)
 FhuntTalkEvents_WriteRAMGAndTemp0::
     ld a, [wPartyCount]
     or a
@@ -4166,9 +4165,9 @@ FhuntTalkEvents_WriteRAMGAndTemp0::
 ; rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on
 ; the byte at TalkEvent29WordList; sets rRAMG to 0; sets hTemp0 to 0; then 2 more steps (see the
 ; code) (E-0347)
-; why: a helper of FhuntTalkEvents_TestFlagBit_Kweeeeeh, in step 41 of FhuntTalkEvents (when
-; wTalkEventGroup = 41); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
-; handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
+; why: a helper of FhuntTalkEvents_TestFlagBit_Kweeeeeh; FhuntTalkEvents_TestFlagBit_Kweeeeeh: Fhunt
+; talk 41, the giant bird: after EVENT_SCENE_MADCONDOR, 'Kweeeeeh!' when the player is disguised as
+; a monster listed in ... (E-0352, E-0357)
 FhuntTalkEvents_WriteTemp0AndRAMG::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4176,9 +4175,9 @@ FhuntTalkEvents_WriteTemp0AndRAMG::
     and $01
     jr nz, .check_party_count2
     ld de, TalkEvent29WordList
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     ld l, a
-    ldh a, [hPlayerSpriteStreamHi]
+    ldh a, [hPlayerSpriteGfxIdHi]
     ld h, a
 
 .skip:
@@ -4305,9 +4304,9 @@ TalkEvent29WordList::
 ; hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteOverride; sets hTemp0 to 0;
 ; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2; also changes HL, DE, A and C by
 ; register arithmetic (E-0347)
-; why: a helper of FhuntTalkEvents_ShowHeroCheckedTheSmall, in step 71 of FhuntTalkEvents (when
-; wTalkEventGroup = 71); FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the talk
-; handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
+; why: a helper of FhuntTalkEvents_ShowHeroCheckedTheSmall; FhuntTalkEvents_ShowHeroCheckedTheSmall:
+; Fhunt talk 71, the small hole: by FhuntTalkEvents_TestFlagBit_3's answer (the player's monster
+; disguise listed in TalkEvent47WordList): ... (E-0352, E-0357)
 FhuntTalkEvents_TestFlagBit_3::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -4316,18 +4315,18 @@ FhuntTalkEvents_TestFlagBit_3::
     bit 7, a
     jr z, .clear_temp0
     and $01
-    jr z, .read_player_sprite_stream_lo
+    jr z, .read_player_sprite_gfx_id_lo
 
 .clear_temp0:
     xor a
     ldh [hTemp0], a
     ret
 
-.read_player_sprite_stream_lo:
+.read_player_sprite_gfx_id_lo:
     ld de, TalkEvent47WordList
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     ld l, a
-    ldh a, [hPlayerSpriteStreamHi]
+    ldh a, [hPlayerSpriteGfxIdHi]
     ld h, a
 
 .skip:
@@ -4387,8 +4386,8 @@ TalkEvent47WordList::
     dw $013c, $013d, $0140, $015a, $0149, $014d, $014e, $015b
     dw $0144, $0000
 
-; Branches on hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteStreamHi; branches
-; on hPlayerSpriteStreamLo; sets hTemp1 to 1; also changes A by register arithmetic (E-0347)
+; Branches on hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteGfxIdHi; branches on
+; hPlayerSpriteGfxIdLo; sets hTemp1 to 1; also changes A by register arithmetic (E-0347)
 ; why: part of FhuntTalkEvents; FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the
 ; talk handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
 FhuntTalkEvents_WriteTemp0AndTemp1::
@@ -4396,18 +4395,18 @@ FhuntTalkEvents_WriteTemp0AndTemp1::
     bit 7, a
     jr z, .loop
     and $01
-    jr z, .check_player_sprite_stream_hi
+    jr z, .check_player_sprite_gfx_id_hi
 
 .loop:
     xor a
     ldh [hTemp0], a
     ret
 
-.check_player_sprite_stream_hi:
-    ldh a, [hPlayerSpriteStreamHi]
+.check_player_sprite_gfx_id_hi:
+    ldh a, [hPlayerSpriteGfxIdHi]
     cp $00
     jr nz, .skip
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     cp $f6
     jr c, .loop
     jr .set_temp1_to_01
@@ -4727,10 +4726,9 @@ SetupMap0BMonsterObjects_Data2::
 ; $80; calls ComputePartyStrengthLevelPartyStrength; calls NextRandomSeed; sets wTriggerMarkerFlags;
 ; sets wTriggerMarkerFlags to $80; calls RandomGoldOrItem_NextRandomSeed_2; then 13 more steps (see
 ; the code) (E-0347)
-; why: a helper of RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed, in step 4 of RandomGoldOrItem
-; (when wScriptStep = 4); RandomGoldOrItem: implements script command type 84
-; (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from ...
-; (E-0352)
+; why: a helper of RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed;
+; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: Random gold or item, step 4: picks the gold or
+; item at random (RandomGoldOrItem_NextRandomSeed) (E-0352, E-0357)
 RandomGoldOrItem_NextRandomSeed::
     ld a, [wTriggerKind]
     cp $ff
@@ -4861,10 +4859,9 @@ RandomGoldOrItem_NextRandomSeed::
 
 ; Calls NextRandomSeed; may continue in RandomGoldOrItem_NextRandomSeed_2 (E-0347)
 ; why: part of RandomGoldOrItem_NextRandomSeed, in a helper of
-; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed, in step 4 of RandomGoldOrItem (when
-; wScriptStep = 4); RandomGoldOrItem: implements script command type 84
-; (SCRIPT_RANDOM_GOLD_OR_ITEM): a key-world/field talk event (group $02, dispatched from ...
-; (E-0352)
+; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed;
+; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: Random gold or item, step 4: picks the gold or
+; item at random (RandomGoldOrItem_NextRandomSeed) (E-0352, E-0357)
 RandomGoldOrItem_NextRandomSeed_2::
     call NextRandomSeed
     ld a, [wKeyRandomLo]

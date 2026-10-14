@@ -701,10 +701,9 @@ TileRect_ScreenBlockTable_45::
 ; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; branches on wScreenStep; calls
 ; DrawRecordBufBSpeciesSpritePart_BankF1; calls DrawRecordBufBSpeciesSprites; also changes A by
 ; register arithmetic (E-0347)
-; why: a helper of GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame, in step 5 of
-; GameMode5_Update (when wModeState = 5); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; why: a helper of GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame;
+; GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame: Game mode 5 frame, wModeState 5:
+; far-calls GameMode5_Update_LinkExchangeJoypadPerFrame_4 (E-0352, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]

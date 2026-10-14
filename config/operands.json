@@ -99,6 +99,8 @@
     "00:0E51": {"expr": "PAL_WHITE", "why": "the colour a fade starts from when wFadeMode bit 7 is clear"},
     "12:57CB": {"expr": "MSG_KEEP_OPEN | $000a", "why": "a message word: E to wMessageIndex, D to wMessageGroup"},
     "10:44DB": {"expr": "MSG_KEEP_OPEN | $0097", "why": "a message word stored to wMessageIndex/wMessageGroup"},
-    "10:44EB": {"expr": "MSG_KEEP_OPEN | $008d", "why": "as 10:44DB"}
+    "10:44EB": {"expr": "MSG_KEEP_OPEN | $008d", "why": "as 10:44DB"},
+    "12:579B": {"expr": "MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $000b", "why": "as 12:57CB: message $000B in the open box, kept open (E-0357)"},
+    "12:57A8": {"expr": "MSG_ALREADY_OPEN | $000b", "why": "as 12:57CB: message $000B in the open box, for the last name (E-0357)"}
   }
 }

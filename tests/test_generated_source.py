@@ -18,6 +18,56 @@ CALL = re.compile(r"\s+(?:rst \$10|call \$0010)$")
 TERMINATOR = re.compile(r"\s+(?:ret|reti|jp |jr |jp$)")
 
 
+def field_message_targets(text: str) -> set[str]:
+    """E-0357/E-0358: recognize message-word consumers from instructions, not names or quotes."""
+    heads = list(re.finditer(r"^(\w+)::(?! ; address name)[^\n]*\n", text, re.M))
+    targets = set()
+    for i, head in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+        body = [ln.split(';')[0].strip() for ln in text[head.end():end].splitlines() if ln.startswith('    ')]
+        front = body[:4]
+        direct = front == ['ld a, l', 'ld [wMessageIndex], a', 'ld a, h', 'ld [wMessageGroup], a']
+        command = (front == ['ld a, l', 'ld [wScriptParam0], a', 'ld a, h', 'ld [wScriptParam1], a']
+                   and 'ld a, $09\nld [wScriptCommandType], a' in '\n'.join(body))
+        display = ('ld a, h\nand a, $3F\nld h, a' in '\n'.join(body)
+                   and 'ld a, l\nld [wStringIndex], a' in '\n'.join(body))
+        if direct or command or display:
+            targets.add(head.group(1))
+    return targets
+
+
+def field_message_argument(lines: list[str], n: int, targets: set[str]) -> bool:
+    """A numeric HL value goes straight to a proven message-word consumer; n is one-based."""
+    if not re.fullmatch(r'ld hl, \$[0-9A-F]{4}', lines[n - 1].split(';')[0].strip()):
+        return False
+    for ln in lines[n:]:
+        code = ln.split(';')[0].strip()
+        if not code or re.fullmatch(r'[.\w]+::?', code):
+            continue
+        m = re.fullmatch(r'(?:call|jp)(?: (?:nz|z|nc|c),)? (\w+)', code)
+        return bool(m and m.group(1) in targets)
+    return False
+
+
+class FieldMessageAudit(unittest.TestCase):
+    def test_flags_are_values_when_the_callee_copies_hl_to_message_fields(self):
+        text = ('Message::\nFunc_001_4000:: ; address name\n'
+                '    ld a, l\n    ld [wMessageIndex], a\n    ld a, h\n    ld [wMessageGroup], a\n    ret\n')
+        targets = field_message_targets(text)
+        self.assertEqual(targets, {'Message'})
+        self.assertTrue(field_message_argument(['    ld hl, $C48A', '    call Message'], 1, targets))
+
+    def test_a_quote_or_message_like_name_does_not_exempt_a_pointer_reader(self):
+        targets = field_message_targets('StartMessageHL::\n    ld a, [hl]\n    ret\n')
+        self.assertFalse(field_message_argument(["    ld hl, $C48A ; 'dialogue'", '    call StartMessageHL'],
+                                               1, targets))
+
+    def test_an_intervening_instruction_or_memory_operand_is_not_exempt(self):
+        self.assertFalse(field_message_argument(['    ld hl, $C48A', '    inc hl', '    call Message'],
+                                               1, {'Message'}))
+        self.assertFalse(field_message_argument(['    ld a, [$C48A]', '    call Message'], 1, {'Message'}))
+
+
 @unittest.skipUnless(BANKS.is_dir(), "build/listing has not been generated (tools/disasm_all.py)")
 class GeneratedSource(unittest.TestCase):
     def test_banked_call_labels_name_the_target_bank(self):
@@ -122,6 +172,8 @@ class SymbolicOperands(unittest.TestCase):
             return False
 
         bad, checked, symbolic = [], 0, 0
+        field_targets = field_message_targets(''.join(f.read_text(encoding='utf-8')
+                                                      for f in sorted(BANKS.glob('bank*.asm'))))
         sym = re.compile(r"\[[whrsv][A-Za-z0-9_]+( \+ \$[0-9A-F]+)?\]|BANK_NUMBER_BYTE|, [whrsv][A-Z][A-Za-z0-9_]*( \+ \$[0-9A-F]+)?$")
         for f in sorted(BANKS.glob("bank*.asm")):
             lines = f.read_text(encoding="utf-8").splitlines()
@@ -153,6 +205,8 @@ class SymbolicOperands(unittest.TestCase):
                         continue  # a step delta stored in the player movement bytes (E-0132)
                     if message_argument(lines, n, entries):
                         continue  # battle message bytes in HL/BC (E-0137)
+                    if field_message_argument(lines, n, field_targets):
+                        continue  # field message word, including keep-open/already-open flag bits (E-0357)
                     if reg == "de" and any(re.match(r"call StepSpriteSlotToward", x) for x in nxt):
                         continue  # a (y, x) sprite position (E-0137)
                     if forbidden(int(m.group(1), 16), True):

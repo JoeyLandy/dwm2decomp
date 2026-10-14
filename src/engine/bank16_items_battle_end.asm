@@ -3179,10 +3179,9 @@ MapItemUseFlags::
 
 ; called from PauseMenu_Skills_UseFieldSkill_WaitTextFlags: branches on wInventorySlot; sets wItemId
 ; to $ff; dispatches on $ff; also changes A by register arithmetic (E-0347)
-; why: a helper of PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of
-; PauseMenu_Skills_UseFieldSkill (when wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows
-; the skill's strings, applies it to the SRAM record and leaves the pause menu for the field ('Hero
-; returned with ...', ... (E-0352)
+; why: a helper of PauseMenu_Skills_UseFieldSkill_WaitTextFlags;
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using a field skill, step 2: after the message
+; applies the skill to the target (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_WriteItemId::
     ld a, [wInventorySlot]
     cp $14
@@ -3217,9 +3216,9 @@ PauseMenu_Skills_UseFieldSkill_WriteItemId::
 ; step 0 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Herb; calls
 ; SetItemMessage12IfItemRefused (E-0347)
 ; why: step 0 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb::
     call ItemUsable_Herb
     call SetItemMessage12IfItemRefused
@@ -3228,9 +3227,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb::
 ; step 3 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldDew; calls
 ; SetItemMessage12IfItemRefused (E-0347)
 ; why: step 3 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
@@ -3239,9 +3238,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew::
 ; step 5 of PauseMenu_Skills_UseFieldSkill_WriteItemId: branches on wTargetRecord; sets wItemId to
 ; $ff; calls ItemUsable_Potion; calls SetItemMessage12IfItemRefused (E-0347)
 ; why: step 5 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -3262,9 +3261,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
 ; step 8 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldLeaf; calls
 ; SetItemMessage12IfItemRefused (E-0347)
 ; why: step 8 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf::
     call ItemUsable_WorldLeaf
     call SetItemMessage12IfItemRefused
@@ -3273,9 +3272,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf::
 ; step 10 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Antidote; calls
 ; SetItemMessage12IfItemRefused (E-0347)
 ; why: step 10 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
@@ -3284,9 +3283,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote::
 ; step 11 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ListPartyMembersWithField55Bit0;
 ; calls SetItemMessage12IfItemRefused (E-0347)
 ; why: step 11 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
@@ -3296,9 +3295,9 @@ PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
 ; wInventorySlot; calls SetItemMessage14IfItemRefused; branches on wItemId; sets wItemMessage to
 ; $15; calls CollectUniqueEncounterIdsToWorkBuf2 (E-0347)
 ; why: step 12 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
@@ -3322,9 +3321,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
 ; step 15 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_ExitBell; calls
 ; SetItemMessage14IfItemRefused (E-0347)
 ; why: step 15 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
@@ -3335,9 +3334,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
 ; branches on wGoldLo; sets wItemId to $ff; sets wItemMessage to $17; may return early; sets wItemId
 ; to $ff; sets wItemMessage to $16; also changes A by register arithmetic (E-0347)
 ; why: step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
     call ItemUsable_Repellent
     call SetItemMessage14IfItemRefused
@@ -3374,9 +3373,9 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
 ; wMapObjects; sets wItemId to $ff; sets wItemMessage to $18; also changes HL, A and B by register
 ; arithmetic (E-0347)
 ; why: step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
     call ItemUsable_Warp
     call SetItemMessage14IfItemRefused
@@ -3413,9 +3412,9 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
 ; step 19 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WarpWing; calls
 ; SetItemMessage14IfItemRefused (E-0347)
 ; why: step 19 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags, in step 2 of PauseMenu_Skills_UseFieldSkill (when
-; wTemp1 = 2); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies it to
-; the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ... (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
+; a field skill, step 2: after the message applies the skill to the target
+; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
@@ -3443,10 +3442,10 @@ SetItemMessage14IfItemRefused::
 
 ; called from PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: returns if wItemId is $ff;
 ; dispatches on wInventorySlot; also changes A by register arithmetic (E-0347)
-; why: a helper of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of
-; PauseMenu_Skills_UseFieldSkill (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows
-; the skill's strings, applies it to the SRAM record and leaves the pause menu for the field ('Hero
-; returned with ...', ... (E-0352)
+; why: a helper of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_WaitItemId::
     ld a, [wItemId]
     cp $ff
@@ -3477,10 +3476,10 @@ PauseMenu_Skills_UseFieldSkill_WaitItemId::
 ; step 0 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0a; sets
 ; wItemEffectRange to $1e; calls HealRecordHPByRandomAmount; sets wItemMessage to 6 (E-0347)
 ; why: step 0 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 0), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ld a, $0a
     ld [wItemEffectAmount], a
@@ -3494,10 +3493,10 @@ PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
 ; step 1 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; sets
 ; wItemEffectRange to $4b; calls HealRecordHPByRandomAmount; sets wItemMessage to 6 (E-0347)
 ; why: step 1 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 1), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3526,10 +3525,10 @@ FullHealRecordTargetRecord::
 ; wItemEffectRange to $5a; copies wItemUseMessage to wItemMessage; calls HealPartyRecordAIfHurt
 ; (E-0347)
 ; why: step 3 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 3), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealPartyRecordAIfHurt::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3576,10 +3575,10 @@ HealPartyRecordAIfHurt::
 ; step 4 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage; calls
 ; FullHealPartyRecordA (E-0347)
 ; why: step 4 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 4), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3610,10 +3609,10 @@ FullHealPartyRecordA::
 ; step 5 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; calls
 ; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
 ; why: step 5 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 5), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3625,10 +3624,10 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
 ; step 6 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $1e; calls
 ; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
 ; why: step 6 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 6), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3640,10 +3639,10 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
 ; step 7 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $50; calls
 ; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
 ; why: step 7 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 7), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_2::
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3656,10 +3655,10 @@ PauseMenu_Skills_UseFieldSkill_2::
 ; wItemMessage to 8; sets wLevelUpGains to 1; also changes HL, BC and A by register arithmetic
 ; (E-0347)
 ; why: step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 8), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3689,10 +3688,10 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage::
 ; step 9 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; calls
 ; FullHealRecordTargetRecord; sets wItemMessage to 8; sets wLevelUpGains to 1 (E-0347)
 ; why: step 9 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 9), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3708,10 +3707,10 @@ PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
 ; step 10 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
 ; wItemMessage to 9 (E-0347)
 ; why: step 10 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 10), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3724,10 +3723,10 @@ PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
 ; step 11 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage;
 ; calls ClearPartyRecordFlag55Bit0 (E-0347)
 ; why: step 11 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 11), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_ClearPartyRecordFlag55Bit0::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3755,10 +3754,10 @@ ClearPartyRecordFlag55Bit0::
 ; step 12 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 1; sets wItemMessage
 ; to $ff; sets wItemId to $ff (E-0347)
 ; why: step 12 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 12), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
     ld a, $01
     ld [wDataBankSave], a
@@ -3772,10 +3771,10 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
 ; SRAMRecordAddressMapped; sets wNewRecordFamily; sets wItemMessage to $ff; sets wItemId to $ff
 ; (E-0347)
 ; why: step 13 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 13), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ld a, $01
     ld [wDataBankSave], a
@@ -3796,10 +3795,10 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
 ; step 14 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wTalkCountdown to $c8; sets
 ; wItemMessage to $ff; sets wItemId to $ff (E-0347)
 ; why: step 14 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 14), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
@@ -3812,10 +3811,10 @@ PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
 ; step 15 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 4; sets wItemMessage
 ; to $ff; sets wItemId to $ff (E-0347)
 ; why: step 15 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 15), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ld a, $04
     ld [wDataBankSave], a
@@ -3827,10 +3826,10 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
 
 ; step 16 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemMessage to $0b (E-0347)
 ; why: step 16 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 16), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
@@ -3842,10 +3841,10 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
 ; CompactInventory; sets wItemMessage to $0e; also changes HL, DE, A and C by register arithmetic
 ; (E-0347)
 ; why: step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 17), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ld a, [wMapType]
     cp $80
@@ -3951,10 +3950,10 @@ PauseMenu_Skills_UseFieldSkill_NextTableByte::
 ; step 18 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wWorldMapByFieldSkill to 1; sets
 ; wItemMessage to $11; sets wItemId to $ff (E-0347)
 ; why: step 18 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 18), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
@@ -3967,10 +3966,10 @@ PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
 ; step 19 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls MarkVisitedScreens5x5AroundPlayer;
 ; sets wItemMessage to $1c; sets wItemId to $ff (E-0347)
 ; why: step 19 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 19), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc, in step 7 of PauseMenu_Skills_UseFieldSkill
-; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
-; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
-; (E-0352)
+; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
+; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
+; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
+; (E-0352, E-0357)
 PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer::
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1c

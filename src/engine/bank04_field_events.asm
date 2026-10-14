@@ -180,13 +180,13 @@ SetupKeyWorldObjectsForMapType::
     call SetupKeyWorldObjectsForMapType_Multiply8
     ret
 
-; called from SetupKeyWorldObjectsForMapType: may return early; branches on E; sets wSpriteSlotCount
-; to 0; branches on 0; sets wSpriteSlotCount; copies B to hTempA; sets hTemp4 to 0; sets hTemp5;
-; sets hTemp2; branches on hTemp9; sets hTemp0; sets hTemp1; then 13 more steps (see the code)
-; (E-0347)
-; why: a helper of SetupKeyWorldObjectsForMapType; SetupKeyWorldObjectsForMapType: for key-world map
-; types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the wKeyWorldFloorInfo
-; + ... (E-0352, E-0130)
+; Loads the objects of the current key-world screen into the sprite slots: from the floor's table of
+; per-screen pointers (indexed by hMapScreenY * width + hMapScreenX), the screen's object list gives
+; the slot count and, per object, its type, position and graphics; monster objects take their
+; species from the key world's encounter (wKeyWorldEncounter, or the floor's entry in
+; wKeyWorldEncounterTable), and goal objects their graphics from KeyWorldGoalGraphicsTable by
+; wKeyWorldGoalKind. A screen with no list ($0000) keeps its objects; an $FFFF list clears them.
+; (C1, E-0357)
 SetupKeyWorldObjectsForMapType_Multiply8::
     ld a, [hli]
     ld e, a
@@ -463,10 +463,13 @@ PlaceObjectCB86ForKeyWorldGoalKind::
     ld [wSpriteSlots + $7], a
     ret
 
-; hTemp0/hTemp1 = graphics number, hTemp4/hTemp5 = VRAM destination: with hTemp2 = 0 the source and
-; bank come from a 3-byte-per-entry table at $4EAA; otherwise from the word table at $43AC with bank
-; $7D ($7E for numbers $50 and up); then DecompressToVRAM; on CGB it goes on to the palette (not
-; read) (E-0093)
+; hTemp0/1 is a little-endian graphics id, hTemp4/5 the VRAM destination and hTemp3 the object
+; palette slot. With hTemp2=0, index the three-byte MonsterSpriteTable by 3*id for pointer/bank;
+; otherwise index FieldSpriteGraphicsTable by 2*id and use bank $7D when the low id byte is below
+; $50, else $7E. Decompress the selected stream. On CGB, monster palette address is $27:$7328 + 8*id
+; with 16-bit wrap; field palette uses FieldSpritePaletteIndex indexed only by the low id byte and
+; an eight-bit 8*palette-index offset into FieldSpritePalettes. Copy eight bytes to slot offset
+; (8*hTemp3 modulo 256). No id/slot bounds check or upload request is made here. (C1, E-0362)
 DecompressGraphicsTemp0ToTemp4::
     ldh a, [hTemp2]
     or a
@@ -839,9 +842,8 @@ UpdateSpriteSlots::
     ld b, a
     ld hl, wSpriteSlots
 
-; Dispatches through the table that follows (E-0347)
-; why: part of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; The loop over the sprite slots: runs the routine for each 16-byte slot's type byte (types 0-5).
+; (C1, E-0357)
 UpdateSpriteSlots_Loop::
     push bc
     push hl
@@ -855,9 +857,7 @@ UpdateSpriteSlots_Loop::
     dw UpdateSpriteSlots_WriteTemp0AndTemp1
     dw UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0
 
-; Changes HL, BC and A; may continue in UpdateSpriteSlots_Loop (E-0347)
-; why: part of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Moves to the next sprite slot (16 bytes on) and continues the loop. (C1, E-0357)
 UpdateSpriteSlots_Restore::
     pop hl
     pop bc
@@ -867,9 +867,8 @@ UpdateSpriteSlots_Restore::
     jr nz, UpdateSpriteSlots_Loop
     ret
 
-; step 0 of UpdateSpriteSlots: changes HL and A (E-0347)
-; why: step 0 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 0, a still object: unless its flags (slot byte $0D) have bit 1 set, counts its
+; animation timer up; then picks its animation frame. (C1, E-0357)
 UpdateSpriteSlots_RestoreRegisters::
     pop hl
     ld a, $0d
@@ -888,10 +887,9 @@ UpdateSpriteSlots_RestoreRegisters::
 .skip:
     ld a, [hl]
 
-; Takes HL and A; changes HL, BC and A; may continue in UpdateSpriteSlots_Loop (E-0347)
-; why: part of UpdateSpriteSlots_RestoreRegisters, in step 0 of UpdateSpriteSlots;
-; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for
-; its type byte (jump table of six) (E-0352, E-0124)
+; Picks a sprite slot's animation frame from its timer: one bit of the timer (bit 3 with flag bit 2,
+; else bit 4) alternates two frames; objects of kind 3 store frame $82 or $83 in the slot. (C1,
+; E-0357)
 UpdateSpriteSlots_RestoreRegisters_Skip::
     ld c, a
     inc hl
@@ -957,13 +955,11 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
     jp nz, UpdateSpriteSlots_Loop
     ret
 
-; step 2 of UpdateSpriteSlots: branches on wScriptRunning; calls NextTableByte; branches on
-; wRandomLo & $03; calls IsTileUnderCellBlocking; calls
-; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls IsTileUnderCellBlocking; calls
-; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; continues in
-; UpdateSpriteSlots_RestoreRegisters_Skip; also changes HL, BC and A by register arithmetic (E-0347)
-; why: step 2 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 2, a wandering object: counts its timer, and while a move is in progress (bit 7
+; of its move byte) steps it one pixel in its direction and counts the move down; otherwise, when no
+; script runs, it may start a new move in a random direction (wRandomLo), checking that the target
+; cell is neither a blocking tile (IsTileUnderCellBlocking) nor taken by the player or a follower.
+; (C1, E-0357)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     pop hl
     push hl
@@ -1145,21 +1141,12 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     ld a, [hl]
     jp UpdateSpriteSlots_RestoreRegisters_Skip
 
-; step 1 of UpdateSpriteSlots: returns at once (E-0347)
-; why: step 1 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 1: nothing. (C1, E-0357)
 UpdateSpriteSlots_Return::
     ret
 
-; step 3 of UpdateSpriteSlots: branches on wScriptRunning; calls NextTableByte; calls
-; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
-; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
-; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
-; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2;
-; continues in UpdateSpriteSlots_RestoreRegisters_Skip; also changes HL, BC and A by register
-; arithmetic (E-0347)
-; why: step 3 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 3, an object that moves along fixed directions: like type 2, but the direction of
+; each move comes from bits 5-6 of its move byte instead of chance. (C1, E-0357)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     pop hl
     push hl
@@ -1421,10 +1408,8 @@ RunPendingFieldEventType0AOrOther::
     call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
     ret
 
-; step 4 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1; continues in
-; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore (E-0347)
-; why: step 4 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 4, an object that follows the path at UpdateSpriteSlots_WriteTemp0AndTemp1_Data.
+; (C1, E-0357)
 UpdateSpriteSlots_WriteTemp0AndTemp1::
     ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data
     ld a, l
@@ -1433,9 +1418,8 @@ UpdateSpriteSlots_WriteTemp0AndTemp1::
     ldh [hTemp1], a
     jr UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
 
-; step 5 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1 (E-0347)
-; why: step 5 of UpdateSpriteSlots; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at
-; wSpriteSlots runs the routine for its type byte (jump table of six) (E-0352, E-0124)
+; Sprite slot type 5, an object that follows the path at
+; UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2. (C1, E-0357)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
     ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2
     ld a, l
@@ -1443,10 +1427,9 @@ UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
     ld a, h
     ldh [hTemp1], a
 
-; Changes HL, DE, A and C; continues in UpdateSpriteSlots_Restore (E-0347)
-; why: part of UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0, in step 5 of UpdateSpriteSlots;
-; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for
-; its type byte (jump table of six) (E-0352, E-0124)
+; Steps a path-following sprite slot: counts its timer, and when it reaches the length of the
+; current path entry (path at hTemp0/hTemp1), moves to the next entry and its direction; the object
+; then moves one pixel that way. (C1, E-0357)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
     pop hl
     ld a, $0d
@@ -1600,11 +1583,9 @@ IsTileUnderCellBlocking::
     pop bc
     ret
 
-; called from RunPendingFieldEventType0AOrOther: takes DE and BC; changes HL, DE, BC and A; branches
-; on wMapTallTileMin (E-0347)
-; why: a helper of RunPendingFieldEventType0AOrOther; RunPendingFieldEventType0AOrOther: runs
-; RunPendingFieldEventType0AOrOther_ReadMapTallTileMin when wPendingFieldEvent & $0F = $0A, else
-; IsTileUnderCellBlocking (E-0352, E-0122)
+; Copies the four tiles under the cell at pixel (B, C) from wScreenTileBuffer to wTilesUnderPoint
+; and tests them against the map's tall-tile limit, returning whether the cell blocks movement. (C1,
+; E-0357)
 RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     push bc
     push de
@@ -1668,12 +1649,9 @@ RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     pop bc
     ret
 
-; Copies C & $0f to hTemp0; copies B & $0f to hTemp1; branches on hTemp1; branches on hTemp0;
-; branches on wPartyCount; branches on hTemp1; branches on hTemp0; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: part of UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0, in step 5 of UpdateSpriteSlots;
-; UpdateSpriteSlots: for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for
-; its type byte (jump table of six) (E-0352, E-0124)
+; Returns A = 1 when the metatile cell at pixel (B, C) is occupied by the player or by any party
+; follower (each checked at its position and the position 15 pixels on), otherwise 0. Used before an
+; object moves into a cell. (C1, E-0357)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2::
     push bc
     ld a, c
@@ -1971,9 +1949,12 @@ LoadPlayerAndFollowerSpriteGraphics::
     call LoadAltObjectGraphicsIfPlayerStateFlagsBit3
     ret
 
-; decompresses the player sprite graphics to vTiles0: variant 0 or 1 by story flag 0, or the stream
-; named by hPlayerSpriteStreamLo/hPlayerSpriteStreamHi when bit 7 of hPlayerSpriteOverride is set
-; (E-0127)
+; Load player graphics at VRAM $8000 with object palette slot 0. Without override bit 7, story flag
+; 0 selects field graphics id 0/1 and writes the player variant; with override bit 7, copy the full
+; hPlayerSpriteGfxId word to hTemp0/1 and use override bit 0 as hTemp2 (0 monster, 1 field). Clear
+; hTemp3 and call DecompressGraphicsTemp0ToTemp4. The override id is a table index, not a
+; compressed-stream address. Override loads preserve the previous player-variant byte; this loader
+; does not request palette upload itself. (C1, E-0362)
 LoadPlayerSpriteGraphics::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -2008,9 +1989,9 @@ LoadPlayerSpriteGraphics::
 .set_temp2:
     and $01
     ldh [hTemp2], a
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     ld l, a
-    ldh a, [hPlayerSpriteStreamHi]
+    ldh a, [hPlayerSpriteGfxIdHi]
     ld h, a
     ld a, l
     ldh [hTemp0], a
@@ -2072,40 +2053,28 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
 .read_player_sprite_mode:
     ldh a, [hPlayerSpriteMode]
     jumptable
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B
-    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawFollowerSpriteIfFlag1B
+    dw AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawPlayerOverlaySprite21Or22
 
-; step 0 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawPartyFollowerSprites (E-0347)
-; why: step 0 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode;
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode: unless bit 1 of hPlayerStateFlags is set,
-; hPlayerAnimCounter += 1 (+3 more with bit 2) (E-0352, E-0124)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites::
-    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
+; Player sprite mode 0: draws the player and then the party followers (DrawPartyFollowerSprites).
+; (C1, E-0357)
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite::
+    call DrawPlayerSprite
     call DrawPartyFollowerSprites
     ret
 
-; step 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawFollowerSpriteIfFlag1B (E-0347)
-; why: step 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode;
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode: unless bit 1 of hPlayerStateFlags is set,
-; hPlayerAnimCounter += 1 (+3 more with bit 2) (E-0352, E-0124)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B::
-    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
+; Player sprite mode 1: draws the player and the single follower shown when story flag $1B is set.
+; (C1, E-0357)
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawFollowerSpriteIfFlag1B::
+    call DrawPlayerSprite
     call DrawFollowerSpriteIfFlag1B
     ret
 
-; step 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawPlayerOverlaySprite21Or22 (E-0347)
-; why: step 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode;
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode: unless bit 1 of hPlayerStateFlags is set,
-; hPlayerAnimCounter += 1 (+3 more with bit 2) (E-0352, E-0124)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22::
-    call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
+; Player sprite mode 2: draws the player with an overlay sprite (set $21 or $22) below it. (C1,
+; E-0357)
+AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerSprite_DrawPlayerOverlaySprite21Or22::
+    call DrawPlayerSprite
     call DrawPlayerOverlaySprite21Or22
     ret
 
@@ -2148,7 +2117,7 @@ DrawPlayerOverlaySprite21Or22::
 
 ; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower
 ; sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when
-; IsFadingAtMap5AScreen00Y80) (E-0175)
+; UseSpecialSpritePoseAtPosition) (E-0175)
 DrawFollowerSpriteIfFlag1B::
     ldh a, [hFieldDrawFlags]
     bit 1, a
@@ -2166,7 +2135,7 @@ DrawFollowerSpriteIfFlag1B::
     ld b, a
     ld a, [wFollowerRecords + $2]
     ld c, a
-    call IsFadingAtMap5AScreen00Y80
+    call UseSpecialSpritePoseAtPosition
     or a
     jr z, .check_follower_records
     ld a, $02
@@ -2212,15 +2181,15 @@ DrawFollowerSpriteIfFlag1B::
     farcall DrawMetaSprite_2
     ret
 
-; Returns if bit 0 of hFieldDrawFlags is set; copies hPlayerSpriteVariant to hSpriteSetIndex; sets
-; hSpriteAttrXor to 0; calls IsFadingAtMap5AScreen00Y80; branches on hPlayerFacing; sets
-; hSpriteAttrXor to $20; sets hSpriteSubIndex; sets hSpriteTileOffset to 0; sets hSpriteOriginX;
-; sets hSpriteOriginXHi; sets hSpriteOriginY; sets hSpriteOriginYHi; then 13 more steps (see the
-; code) (E-0347)
-; why: part of AdvancePlayerAnimCounterAndRunPlayerSpriteMode;
-; AdvancePlayerAnimCounterAndRunPlayerSpriteMode: unless bit 1 of hPlayerStateFlags is set,
-; hPlayerAnimCounter += 1 (+3 more with bit 2) (E-0352, E-0124)
-AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
+; Return if field draw-mask bit 0 hides the player. Set the frame from facing (3 uses side frame 1
+; mirrored with attribute $20), or selector 2 when UseSpecialSpritePoseAtPosition returns 1, plus
+; animation-counter bit 5. Sprite origin adds wrapped player X+8/Y+16 to the stored scroll words;
+; carry from the initial byte bias is discarded, while carry from adding scroll low propagates high.
+; Mode 2 subtracts eight from the 16-bit Y origin. Without override draw the default field set; with
+; bit 7, bit 0 selects field set from graphics-id low byte or monster set low & $7F in bank
+; $25/$26/$27 chosen by id high/nonzero and low bit 7. Tile offset is 0. This corrects the older
+; minus-scroll wording. (C1, E-0362)
+DrawPlayerSprite::
     ldh a, [hFieldDrawFlags]
     bit 0, a
     ret nz
@@ -2232,7 +2201,7 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
     ld b, a
     ldh a, [hPlayerY]
     ld c, a
-    call IsFadingAtMap5AScreen00Y80
+    call UseSpecialSpritePoseAtPosition
     or a
     jr z, .check_player_facing
     ld a, $02
@@ -2302,19 +2271,19 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
 
 .skip:
     and $01
-    jr z, .check_player_sprite_stream_lo
-    ldh a, [hPlayerSpriteStreamLo]
+    jr z, .check_player_sprite_gfx_id_lo
+    ldh a, [hPlayerSpriteGfxIdLo]
     ldh [hSpriteSetIndex], a
     jr .call_draw_meta_sprite_2
 
-.check_player_sprite_stream_lo:
-    ldh a, [hPlayerSpriteStreamLo]
+.check_player_sprite_gfx_id_lo:
+    ldh a, [hPlayerSpriteGfxIdLo]
     and $7f
     ldh [hSpriteSetIndex], a
-    ldh a, [hPlayerSpriteStreamHi]
+    ldh a, [hPlayerSpriteGfxIdHi]
     or a
     jr nz, .call_draw_meta_sprite_set_bank27
-    ldh a, [hPlayerSpriteStreamLo]
+    ldh a, [hPlayerSpriteGfxIdLo]
     bit 7, a
     jr nz, .call_draw_meta_sprite_set_bank26
     farcall DrawMetaSpriteSet_Bank25
@@ -2362,7 +2331,7 @@ DrawPartyFollowerSprites::
     ld a, [hld]
     ld c, a
     dec hl
-    call IsFadingAtMap5AScreen00Y80
+    call UseSpecialSpritePoseAtPosition
     pop bc
     or a
     jr z, .skip
@@ -2458,8 +2427,13 @@ DrawPartyFollowerSprites::
     jp nz, .loop
     ret
 
-; A = 1 while a fade runs on map $5A, screen (0, 0), with hPlayerY = $80; otherwise A = 0 (E-0175)
-IsFadingAtMap5AScreen00Y80::
+; Return A=1 during a nonzero fade only when map=$5A, screen=(0,0) and player Y=$80; B/C are ignored
+; in that path. Without a fade, search the nine six-byte SpecialSpritePoseRegions records: match map
+; and screen, require B=pixel X and minimum Y <= C <= maximum Y with unsigned inclusive comparisons.
+; Return A=1 on a match, else 0 at the $FF sentinel. Preserve HL/DE in the table path and do not
+; mutate coordinates. This extends the older fade-only interpretation: ordinary positions in the
+; table also select the special pose. (C1, E-0362)
+UseSpecialSpritePoseAtPosition::
     ld a, [wFadeState]
     or a
     jr z, .skip
@@ -2485,7 +2459,7 @@ IsFadingAtMap5AScreen00Y80::
 .skip:
     push hl
     push de
-    ld hl, IsFadingAtMap5AScreen00Y80_Data
+    ld hl, SpecialSpritePoseRegions
 
 .skip2:
     push hl
@@ -2538,12 +2512,40 @@ IsFadingAtMap5AScreen00Y80::
     add_a_to_hl
     jr .skip2
 
-; data read by IsFadingAtMap5AScreen00Y80 (55 bytes) (E-0347)
-IsFadingAtMap5AScreen00Y80_Data::
-    db $05, $02, $00, $50, $00, $28, $2b, $03, $03, $20, $00, $18, $5a, $00, $00, $40
-    db $10, $48, $5a, $00, $00, $70, $30, $48, $5c, $00, $01, $30, $78, $90, $7a, $00
-    db $00, $40, $58, $80, $7a, $00, $01, $40, $00, $28, $7a, $00, $01, $50, $10, $28
-    db $7a, $00, $01, $30, $38, $48, $ff
+; Nine six-byte regions and $FF sentinel, searched only while no fade runs by
+; UseSpecialSpritePoseAtPosition. Match map/screen, B=X and minimum <= C=Y <= maximum to return A=1.
+; The fade branch ignores this table. All nine region boundaries are probed. (C1, E-0362; earlier
+; fade-only E-0175 was incomplete)
+; record: map/screen, exact pixel X and inclusive pixel Y range
+SpecialSpritePoseRegions::
+    db $05, $02, $00 ; id 0: map, screen X, screen Y
+    db $50 ; pixel X (exact)
+    db $00, $28 ; inclusive pixel Y minimum, maximum
+    db $2b, $03, $03 ; id 1: map, screen X, screen Y
+    db $20 ; pixel X (exact)
+    db $00, $18 ; inclusive pixel Y minimum, maximum
+    db $5a, $00, $00 ; id 2: map, screen X, screen Y
+    db $40 ; pixel X (exact)
+    db $10, $48 ; inclusive pixel Y minimum, maximum
+    db $5a, $00, $00 ; id 3: map, screen X, screen Y
+    db $70 ; pixel X (exact)
+    db $30, $48 ; inclusive pixel Y minimum, maximum
+    db $5c, $00, $01 ; id 4: map, screen X, screen Y
+    db $30 ; pixel X (exact)
+    db $78, $90 ; inclusive pixel Y minimum, maximum
+    db $7a, $00, $00 ; id 5: map, screen X, screen Y
+    db $40 ; pixel X (exact)
+    db $58, $80 ; inclusive pixel Y minimum, maximum
+    db $7a, $00, $01 ; id 6: map, screen X, screen Y
+    db $40 ; pixel X (exact)
+    db $00, $28 ; inclusive pixel Y minimum, maximum
+    db $7a, $00, $01 ; id 7: map, screen X, screen Y
+    db $50 ; pixel X (exact)
+    db $10, $28 ; inclusive pixel Y minimum, maximum
+    db $7a, $00, $01 ; id 8: map, screen X, screen Y
+    db $30 ; pixel X (exact)
+    db $38, $48 ; inclusive pixel Y minimum, maximum
+    db $ff ; end
 
 ; E-0041 (C1: the debug monster viewer's second pane decompresses the stream for its id to vTiles0 +
 ; $200; all 384 entries parse). Far pointers: address, bank.
@@ -3532,14 +3534,11 @@ Talk_HeroCheckedThePedestalIts::
     call StartScriptAtHL_B04
     ret
 
-; step 10 of ReadableTalkEvents: branches on hPlayerX; sets wDataBank to $1f; checks
-; EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_WELCOME_TO_THE_LIBRARY; starts
-; Script_WelcomeToTheLibrary; starts Script_WelcomeToTheLibrary_2; calls
-; TotalSpeciesFlaggedOrListed; branches on hTemp1; branches on hTemp0; checks
-; EVENT_HELLO_OUR_YOUNG_SAVIOR; starts Script_HelloOurYoungSavior; checks
-; EVENT_WELCOME_TO_THE_LIBRARY_19E; then 2 more steps (see the code) (E-0347)
-; why: step 10 of ReadableTalkEvents (when wTalkEventGroup = 10); ReadableTalkEvents: talk category
-; $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf") (E-0352)
+; Talk event $0A step 10, the library's front desk: places its clerk sprite by the player's X
+; position and starts its script: the first-visit welcome until EVENT_WELCOME_TO_THE_LIBRARY, then
+; the normal one; after the game's end (EVENT_THANKS_FOR_COMING_BY_025), with at least 56 ($38)
+; species seen (TotalSpeciesFlaggedOrListed), a further script, otherwise 'Hello, our young savior'
+; once. (C1, E-0357)
 ReadableTalkEvents_TestFlagBit_2::
     ldh a, [hPlayerX]
     cp $40
@@ -3692,10 +3691,8 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
     call StartMessageCommand09HL_B04
     ret
 
-; step 23 of ReadableTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
-; EVENT_SCENE_THREE_ITEMS; may return early; shows '0 read the sign. 'Danger! Stay' (E-0347)
-; why: step 23 of ReadableTalkEvents (when wTalkEventGroup = 23); ReadableTalkEvents: talk category
-; $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf") (E-0352)
+; Talk event $0A step 23: a notice (message $0042) shown before the three-item scene and again after
+; the game's end. (C1, E-0357)
 ReadableTalkEvents_TestFlagBit_3::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -4027,12 +4024,8 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
     call StartMessageCommand09HL_B04
     ret
 
-; step 6 of YoldTalkEvents: checks EVENT_SCENE_MERMAID_KINGDOM_05F; checks
-; EVENT_THE_BIRDS_ARE_NOISY_ITS; starts Script_TheBirdsAreNoisy; sets EVENT_THE_BIRDS_ARE_NOISY_ITS;
-; shows 'I hope the volcanic island'; shows 'My grandson just shivers now…' (E-0347)
-; why: step 6 of YoldTalkEvents (when wTalkEventGroup = 6); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 6: 'The birds are noisy' the first time (setting its flag), message $0808 afterwards,
+; message $0877 after the mermaid kingdom scene (EVENT_SCENE_MERMAID_KINGDOM_05F). (C1, E-0357)
 YoldTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -4056,11 +4049,7 @@ YoldTalkEvents_TestFlagBit::
     call StartMessageCommand09HL_B04
     ret
 
-; step 7 of YoldTalkEvents: sets wScreenTableIndex to 4; sets wDataBank to $10; starts Script_IDon
-; (E-0347)
-; why: step 7 of YoldTalkEvents (when wTalkEventGroup = 7); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 7: a shop: screen table 4, script data in bank $10, script Script_IDon. (C1, E-0357)
 YoldTalkEvents_StartScriptAtHL_B04::
     ld a, $04
     ld [wScreenTableIndex], a
@@ -4177,14 +4166,11 @@ TalkMsg080F_YoureNotSupposedToGoNear::
     call StartMessageCommand09HL_B04
     ret
 
-; step 19 of YoldTalkEvents: checks EVENT_IN_THE_PAST_MERMAIDS_ARE; calls
-; FindPartyMemberWithSkill76To7DOr92; branches on hTemp1; starts Script_InThePastMermaids; calls
-; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts Script_InThePastMermaids_4;
-; sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; calls CopyBytes; calls
-; ReadBank08TableWordForA; then 4 more steps (see the code) (E-0347)
-; why: step 19 of YoldTalkEvents (when wTalkEventGroup = 19); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 19, the mermaid's past: after EVENT_IN_THE_PAST_MERMAIDS_ARE a fixed message; otherwise,
+; with a party member who knows one of skills $76-$7D or $92 (FindPartyMemberWithSkill76To7DOr92),
+; the story script; with a member marked in record byte $55 bit 7, another; otherwise it names the
+; member and skill in the text buffers and starts one of two scripts by EVENT_THE_PIRATES. (C1,
+; E-0357)
 YoldTalkEvents_TestFlagBit_InThePastMermaids::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
@@ -4361,11 +4347,8 @@ TalkMsg0822_IWentToPolonaAWhile::
     call StartMessageCommand09HL_B04
     ret
 
-; step 32 of YoldTalkEvents: sets wScreenTableIndex to 6; sets wDataBank to $10; starts
-; Script_IOfferQualityMerchandise (E-0347)
-; why: step 32 of YoldTalkEvents (when wTalkEventGroup = 32); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 32: a shop: screen table 6, script data in bank $10, 'I offer quality merchandise'. (C1,
+; E-0357)
 YoldTalkEvents_StartScriptAtHL_B04_IOfferQualityMerchandise::
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4608,15 +4591,11 @@ TalkMsg0836_TheVolcanicIslandOffTheCoast::
     call StartMessageCommand09HL_B04
     ret
 
-; step 51 of YoldTalkEvents: checks EVENT_SCENE_MERMAID_KINGDOM_05F; checks
-; EVENT_THE_PIRATES_WERE_SWALLOWED_BY; checks EVENT_THE_PIRATES; calls
-; PartyHasSpeciesLo3CTo5BWithHiSet; sets wObject3 + OBJ_STATE to 1; shows 'Hnnnr… Hic… Gnn… Zzz…
-; Gfffff…'; starts Script_ZzzZzzHuhWatch; starts Script_WhatAreYouHere; calls
-; PartyHasSpeciesLo3CTo5BWithHiSet; sets wObject3 + OBJ_STATE to 1; shows 'Hnnnr… Hic… Gnn… Zzz…
-; Gfffff…'; starts Script_ZzzZzzHuhWatch_2; then 1 more step (see the code) (E-0347)
-; why: step 51 of YoldTalkEvents (when wTalkEventGroup = 51); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 51, a sleeper: before the pirates' story it wakes only for a party monster of species
+; $3C-$5B with a high byte (PartyHasSpeciesLo3CTo5BWithHiSet), otherwise mutters (message $0837,
+; object 3 state 1); after EVENT_THE_PIRATES 'What are you here ...'; after the pirates were
+; swallowed the species check picks between the mutter and a second waking script; after the mermaid
+; kingdom scene message $0880. (C1, E-0357)
 YoldTalkEvents_ShowHnnnrHicGnnZzz::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -4700,12 +4679,8 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
     scf
     ret
 
-; step 52 of YoldTalkEvents: checks EVENT_SCENE_WATCH_OUT; checks EVENT_WHO_ARE_YOU_THIS_IS; starts
-; Script_WhoAreYouThis; sets EVENT_WHO_ARE_YOU_THIS_IS; starts Script_YouCanKeepTrying; starts
-; Script_SceneWatchOut (E-0347)
-; why: step 52 of YoldTalkEvents (when wTalkEventGroup = 52); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 52: 'Who are you? This is ...' the first time (setting its flag), then 'You can keep
+; trying'; after EVENT_SCENE_WATCH_OUT the watch-out scene script. (C1, E-0357)
 YoldTalkEvents_TestFlagBit_WhoAreYouThis::
     ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
@@ -4831,11 +4806,8 @@ YoldTalkEvents_TestFlagBit_DoYouWantTo::
     call StartScriptAtHL_B04
     ret
 
-; step 62 of YoldTalkEvents: checks EVENT_THIS_IS_THE_MERMAID; shows 'This is the mermaid kingdom.';
-; sets EVENT_THIS_IS_THE_MERMAID; starts Script_ThisIsTheMermaid (E-0347)
-; why: step 62 of YoldTalkEvents (when wTalkEventGroup = 62); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 62: message $084E the first time (setting EVENT_THIS_IS_THE_MERMAID), then the mermaid
+; script. (C1, E-0357)
 YoldTalkEvents_ShowThisIsTheMermaid::
     ld de, EVENT_THIS_IS_THE_MERMAID
     call TestFlagBit
@@ -4935,14 +4907,10 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
     call StartMessageCommand09HL_B04
     ret
 
-; step 69 of YoldTalkEvents: checks EVENT_HERO_RECEIVED_THE_SAILOR_RING; checks EVENT_SCENE_CRATE;
-; checks EVENT_WELCOME_YOUNG_HUMAN_I_HEARD; starts Script_WelcomeYoungHumanI; shows 'The MoonRock is
-; on the'; calls InventoryHasFreeSlotCheck; shows 'Welcome, my young hero! No'; sets
-; wInventorySortFlags; starts Script_WelcomeMyYoungHero; shows 'Welcome, young hero! No words'
-; (E-0347)
-; why: step 69 of YoldTalkEvents (when wTalkEventGroup = 69); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 69: the sailor ring giver. Before the crate scene 'Welcome, young human' once, then
+; message $0858; after EVENT_SCENE_CRATE it gives item $5F when the inventory has room (marking
+; wInventorySortFlags bit 6) with its script, or message $0DC7 when it is full; after
+; EVENT_HERO_RECEIVED_THE_SAILOR_RING message $0885. (C1, E-0357)
 YoldTalkEvents_TestFlagBit_WelcomeYoungHumanI::
     ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
@@ -5037,11 +5005,9 @@ YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn::
     call StartScriptAtHL_B04
     ret
 
-; step 75 of YoldTalkEvents: calls InventoryHasFreeSlotCheck; shows '0 checked the treasure chest.
-; There'; sets wInventorySortFlags; starts Script_HeroCheckedTheTreasure (E-0347)
-; why: step 75 of YoldTalkEvents (when wTalkEventGroup = 75); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 75, a treasure: with room in the inventory it puts item $31 in the free slot (marking
+; wInventorySortFlags bit 6) and starts 'Hero checked the treasure'; with a full inventory message
+; $0888. (C1, E-0357)
 YoldTalkEvents_ShowHeroCheckedTheTreasure::
     call InventoryHasFreeSlotCheck
     jr c, .read_inventory_sort_flags
@@ -5066,10 +5032,7 @@ YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate::
     call SetFlagBit
     ret
 
-; step 77 of YoldTalkEvents: takes A; changes A (E-0347)
-; why: step 77 of YoldTalkEvents (when wTalkEventGroup = 77); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 77: clears byte 7 of the first sprite slot. (C1, E-0357)
 YoldTalkEvents_SetSpriteSlotsPlus7::
     xor a
     ld [wSpriteSlots + $7], a
@@ -5088,12 +5051,8 @@ ChestItem_LogTwig::
     call StartTreasureFlagDE_B04
     ret
 
-; step 79 of YoldTalkEvents: checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets hTemp0 to $31; calls
-; FindTemp0InInventoryList; returns unless bit 7 of hTemp0 is set; shows '0 checked the pedestal. It
-; has'; shows '0 checked the pedestal. The MoonRock' (E-0347)
-; why: step 79 of YoldTalkEvents (when wTalkEventGroup = 79); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 79, a pedestal: after the pirates were swallowed message $0867; before, message $0865
+; when item $31 is in the inventory (FindTemp0InInventoryList). (C1, E-0357)
 YoldTalkEvents_ShowHeroCheckedThePedestal::
     ld de, EVENT_THE_PIRATES_WERE_SWALLOWED_BY
     call TestFlagBit
@@ -5113,12 +5072,8 @@ YoldTalkEvents_ShowHeroCheckedThePedestal::
     call StartMessageCommand09HL_B04
     ret
 
-; step 80 of YoldTalkEvents: returns unless hPlayerY is $30; sets
-; EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING; starts Script_KamehaWahahahahThanksFor; returns unless
-; hPlayerX is $50; sets wObject1 + OBJ_X to $40; sets wObject2 + OBJ_X to $40 (E-0347)
-; why: step 80 of YoldTalkEvents (when wTalkEventGroup = 80); YoldTalkEvents: talk category 3: jumps
-; by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 80: at Y $30, sets EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING and starts Kameha's thanks;
+; at X $50 also moves the first slot and objects 1 and 2 to X $40. (C1, E-0357)
 YoldTalkEvents_SetFlagBit::
     ldh a, [hPlayerY]
     cp $30
@@ -5462,12 +5417,8 @@ Talk_ThickSuctionCuppedTentacles::
     call StartScriptAtHL_B04
     ret
 
-; step 109 of YoldTalkEvents: sets wDataBank to $1f; checks EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202;
-; starts Script_OurChurchIsImpoverished_2; sets EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202; starts
-; Script_IAmAServant_3 (E-0347)
-; why: step 109 of YoldTalkEvents (when wTalkEventGroup = 109); YoldTalkEvents: talk category 3:
-; jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz (messages $0800-$088F)
-; (E-0352)
+; Yold talk 109, the church: 'Our church is impoverished' the first time (setting its flag), then 'I
+; am a servant'; script data in bank $1F. (C1, E-0357)
 YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ld a, $1f
     ld [wDataBank], a
@@ -5718,11 +5669,8 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     call StartMessageCommand09HL_B04
     ret
 
-; step 10 of KalkaTalkEvents: branches on hPlayerX; starts Script_WelcomeToOurInn; sets wDataBank to
-; $10; also changes HL and A by register arithmetic (E-0347)
-; why: step 10 of KalkaTalkEvents (when wTalkEventGroup = 10); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 10, the inn: turns the innkeeper toward the player (slot byte 7 = 2 at X $30, else 1)
+; and starts 'Welcome to our inn' with script data in bank $10. (C1, E-0357)
 KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
     ldh a, [hPlayerX]
     cp $30
@@ -5870,12 +5818,8 @@ TalkMsg013F_TheCircusMasterWasTrying::
     call StartMessageCommand09HL_B04
     ret
 
-; step 18 of KalkaTalkEvents: sets wScreenTableIndex to 3; sets wDataBank to $10; checks
-; EVENT_WELCOME_TO_MY_ITEM_SHOP; starts Script_WelcomeToMyItem; sets EVENT_WELCOME_TO_MY_ITEM_SHOP;
-; starts Script_HelloHowMayI_2 (E-0347)
-; why: step 18 of KalkaTalkEvents (when wTalkEventGroup = 18); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 18, the item shop: screen table 3; 'Welcome to my item shop' the first time (setting
+; its flag), then 'Hello, how may I ...'. (C1, E-0357)
 KalkaTalkEvents_TestFlagBit::
     ld a, $03
     ld [wScreenTableIndex], a
@@ -5962,12 +5906,8 @@ TalkMsg0143_WhenWeGetAHotSpell::
     call StartMessageCommand09HL_B04
     ret
 
-; step 23 of KalkaTalkEvents: sets wDataBank to $1f; checks EVENT_THE_CHURCH_WELCOMES_YOU_WE; starts
-; Script_TheChurchWelcomesYou; sets EVENT_THE_CHURCH_WELCOMES_YOU_WE; starts Script_IAmAServant
-; (E-0347)
-; why: step 23 of KalkaTalkEvents (when wTalkEventGroup = 23); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 23, the church: 'The church welcomes you' the first time (setting its flag), then 'I am
+; a servant'; script data in bank $1F. (C1, E-0357)
 KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
     ld a, $1f
     ld [wDataBank], a
@@ -5985,14 +5925,9 @@ KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
     call StartScriptAtHL_B04
     ret
 
-; step 24 of KalkaTalkEvents: checks EVENT_DID_YOU_SAY_YES_YES; branches on wPartyCount; calls
-; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts Script_IAmTheLeader; starts
-; Script_IAmTheLeader_2; starts Script_IAmTheLeader_3; branches on wPartyCount; calls
-; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts
-; Script_AhThreeHealthyMonsters; shows 'Oh, you need a trio' (E-0347)
-; why: step 24 of KalkaTalkEvents (when wTalkEventGroup = 24); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 24, the leader: before EVENT_DID_YOU_SAY_YES_YES, one of three scripts by whether the
+; party has three members and whether one is marked in record byte $55 bit 7; afterwards, with three
+; unmarked members, 'Ah, three healthy monsters', otherwise message $014E. (C1, E-0357)
 KalkaTalkEvents_TestFlagBit_IAmTheLeader::
     ld de, EVENT_DID_YOU_SAY_YES_YES
     call TestFlagBit
@@ -6240,12 +6175,8 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
     call StartMessageCommand09HL_B04
     ret
 
-; step 39 of KalkaTalkEvents: checks EVENT_SCENE_RIVAL_DEFEATED_05A; checks
-; EVENT_YOU_WILL_SO_WE_CAN; starts Script_WhyAreYouSnooping; shows 'Our King worked to save'; shows
-; 'Welcome, our honored guests! The' (E-0347)
-; why: step 39 of KalkaTalkEvents (when wTalkEventGroup = 39); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 39: 'Why are you snooping?' until EVENT_YOU_WILL_SO_WE_CAN, then message $017F; after
+; the rival is defeated (EVENT_SCENE_RIVAL_DEFEATED_05A) message $01AE. (C1, E-0357)
 KalkaTalkEvents_TestFlagBit_WhyAreYouSnooping::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
@@ -6310,16 +6241,10 @@ TalkMsg015F_HeroCheckedTheDresserThere::
     call StartMessageCommand09HL_B04
     ret
 
-; step 43 of KalkaTalkEvents: checks EVENT_SCENE_RIVAL_DEFEATED_05A; checks
-; EVENT_SCENE_TREASURE_THEFT; checks EVENT_SCENE_WATER_SOLVED; checks
-; EVENT_KING_WHAT_NEVER_MIND_THEN; checks EVENT_STRONG_MONSTERS_ARE_IN_THE; checks
-; EVENT_KING_THEN_MAKE_WAY_TO; checks EVENT_KING_YOU_WISH_TO; starts Script_KingAhYou_5; starts
-; Script_KingSoHaveYou; shows 'King: Investigate what concerns my people'; starts
-; Script_SoHaveYouDiscovered; shows 'I discovered why the water'; then 3 more steps (see the code)
-; (E-0347)
-; why: step 43 of KalkaTalkEvents (when wTalkEventGroup = 43); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 43, the king: picks the script or message from the story so far: the first audience,
+; then 'So have you ...', the way-making and 'Strong monsters are in the ...' stages, the water
+; solved, the treasure theft and the rival defeated (seven story flags tested from the latest). (C1,
+; E-0357)
 KalkaTalkEvents_TestFlagBit_KingAhYou::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
@@ -6544,13 +6469,9 @@ KalkaTalkEvents_TestFlagBit_I::
     call StartScriptAtHL_B04
     ret
 
-; step 56 of KalkaTalkEvents: checks EVENT_SCENE_TREASURE_THEFT; may return early; checks
-; EVENT_CHECK_ITEM; sets hTemp0 to $19; calls FindTemp0InInventoryList; branches on hTemp0; sets
-; hTemp0 to $1a; calls FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $1b; calls
-; FindTemp0InInventoryList; branches on hTemp0; then 6 more steps (see the code) (E-0347)
-; why: step 56 of KalkaTalkEvents (when wTalkEventGroup = 56); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 56: after the treasure theft, 'Wh-where is everybody?' when the inventory holds none of
+; items $19-$1C, the second version when it holds any of them, message $018E after EVENT_CHECK_ITEM.
+; (C1, E-0357)
 KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
@@ -6643,12 +6564,8 @@ TalkMsg0195_TheLeaderOfTheThievesIs::
     call StartMessageCommand09HL_B04
     ret
 
-; step 60 of KalkaTalkEvents: sets hTemp0 to 3; calls RunFieldCommandTemp0; checks
-; EVENT_HEH_YOU_HAVE_MONSTERS_IN; starts Script_HehYouHaveMonsters; starts Script_YouAgainYou
-; (E-0347)
-; why: step 60 of KalkaTalkEvents (when wTalkEventGroup = 60); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 60: runs field command 3, then 'Heh, you have monsters in ...' the first time and 'You
+; again? You ...' after its flag. (C1, E-0357)
 KalkaTalkEvents_RunFieldCommandTemp0::
     ld a, $03
     ldh [hTemp0], a
@@ -6727,10 +6644,7 @@ KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-; step 68 of KalkaTalkEvents: changes A; may return early (E-0347)
-; why: step 68 of KalkaTalkEvents (when wTalkEventGroup = 68); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 68: unless bit 4 of story byte $61 is set, clears its bit 3. (C1, E-0357)
 KalkaTalkEvents_WaitStoryFlagsPlus61::
     ld a, [wStoryFlags + $61]
     bit 4, a
@@ -6739,12 +6653,8 @@ KalkaTalkEvents_WaitStoryFlagsPlus61::
     ld [wStoryFlags + $61], a
     ret
 
-; step 69 of KalkaTalkEvents: sets wDataBank to $1f; checks EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO;
-; starts Script_OurChurchIsImpoverished; sets EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO; starts
-; Script_IAmAServant_2 (E-0347)
-; why: step 69 of KalkaTalkEvents (when wTalkEventGroup = 69); KalkaTalkEvents: talk category 2:
-; jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages $0130-$01CF)
-; (E-0352)
+; Kalka talk 69, a second church: 'Our church is impoverished' the first time, then 'I am a
+; servant'. (C1, E-0357)
 KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ld a, $1f
     ld [wDataBank], a
@@ -6770,13 +6680,8 @@ DarckTalkEvents::
     dw DarckTalkEvents_TestFlagBit
     dw DarckTalkEvents_TestFlagBit_DarckFawahahahYouChased
 
-; step 0 of DarckTalkEvents: checks EVENT_TAKE_ITEM; sets hTemp0 to $36; calls
-; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $37; calls FindTemp0InInventoryList;
-; branches on hTemp0; sets hTemp0 to $38; calls FindTemp0InInventoryList; branches on hTemp0; starts
-; Script_IHeardFromLord_2; starts Script_IHeardFromLord; then 1 more step (see the code) (E-0347)
-; why: step 0 of DarckTalkEvents (when wTalkEventGroup = 0); DarckTalkEvents: talk category 6: two
-; flag-tested handlers that start Darck's scripts ("Darck Fawahahah! You chased your treasures")
-; (E-0352)
+; Darck talk 0: before EVENT_TAKE_ITEM, 'I heard from Lord ...' in one of two versions by whether
+; the inventory holds any of items $36-$38; afterwards 'You seem to still ...'. (C1, E-0357)
 DarckTalkEvents_TestFlagBit::
     ld de, EVENT_TAKE_ITEM
     call TestFlagBit
@@ -6891,10 +6796,7 @@ Talk_EncounterMessage::
     call StartScriptAtHL_B04
     ret
 
-; step 28 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1c (E-0347)
-; why: step 28 of FieldTalkEvents (when wTalkEventGroup = 28); FieldTalkEvents: talk category 0:
-; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
-; E-0286)
+; Field talk 28: after the three-item scene starts the object path script $1C. (C1, E-0357)
 FieldTalkEvents_TestFlagBit_2::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -6906,10 +6808,7 @@ FieldTalkEvents_TestFlagBit_2::
     call StartScriptAtHL_B04
     ret
 
-; step 27 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1b (E-0347)
-; why: step 27 of FieldTalkEvents (when wTalkEventGroup = 27); FieldTalkEvents: talk category 0:
-; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
-; E-0286)
+; Field talk 27: after the three-item scene starts the object path script $1B. (C1, E-0357)
 FieldTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -7002,11 +6901,8 @@ Talk_LinkMessage::
     call StartScriptAtHL_B04
     ret
 
-; step 34 of FieldTalkEvents: returns if wFollowerDelay is 0; copies hPlayerFacing & $03 to
-; wFollowerRecords; sets wScriptParam1 to 0; starts Script_PersonalityMessage (E-0347)
-; why: step 34 of FieldTalkEvents (when wTalkEventGroup = 34); FieldTalkEvents: talk category 0:
-; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
-; E-0286)
+; Field talk 34, talking to the first follower: while the followers trail the player, turns follower
+; 0 to face the player and starts its personality message (wScriptParam1 = 0). (C1, E-0357)
 FieldTalkEvents_StartScriptAtHL_B04::
     ld a, [wFollowerDelay]
     or a
@@ -7022,11 +6918,8 @@ FieldTalkEvents_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-; step 35 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 1; starts
-; Script_PersonalityMessage; also changes HL and A by register arithmetic (E-0347)
-; why: step 35 of FieldTalkEvents (when wTalkEventGroup = 35); FieldTalkEvents: talk category 0:
-; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
-; E-0286)
+; Field talk 35, the second follower: as talk 34 for follower 1 when the party has at least two
+; members. (C1, E-0357)
 FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     ld a, [wFollowerDelay]
     or a
@@ -7045,11 +6938,8 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     call StartScriptAtHL_B04
     ret
 
-; step 36 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 2; starts
-; Script_PersonalityMessage; also changes HL and A by register arithmetic (E-0347)
-; why: step 36 of FieldTalkEvents (when wTalkEventGroup = 36); FieldTalkEvents: talk category 0:
-; jumps by wTalkEventGroup to the field events (the one-command scripts $80-$A1, E-0286) (E-0352,
-; E-0286)
+; Field talk 36, the third follower: as talk 34 for follower 2 when the party has three members.
+; (C1, E-0357)
 FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2::
     ld a, [wFollowerDelay]
     or a
@@ -7453,14 +7343,9 @@ ElvenVillageTalkEvents_TestFlagBit::
     call StartScriptAtHL_B04
     ret
 
-; step 1 of ElvenVillageTalkEvents: checks EVENT_KEY_BOSS_BEATEN; checks EVENT_SCENE_GIVE_BACK_CYAL;
-; checks EVENT_SCENE_TOO_STRONG; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_CYAL_YAY_YOU; checks
-; EVENT_YOURE_AHUMAN_HOW; shows 'You're a human. How did'; sets EVENT_YOURE_AHUMAN_HOW; checks
-; EVENT_ARE_YOU_MAYBE_A; shows 'Even worse, you have monsters.'; starts Script_SoCyalTookA; shows
-; 'Rolt: Go south in the plains,'; then 5 more steps (see the code) (E-0347)
-; why: step 1 of ElvenVillageTalkEvents (when wTalkEventGroup = 1); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 1: messages $0701, $0702, $0706 and others and two scripts, chosen by the
+; village story from the first meeting with a human to the key boss beaten (EVENT_KEY_BOSS_BEATEN);
+; some set their own flags. (C1, E-0357)
 ElvenVillageTalkEvents_ShowYoureAHumanHow::
     ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
@@ -7526,14 +7411,9 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
     call StartMessageCommand09HL_B04
     ret
 
-; step 2 of ElvenVillageTalkEvents: checks EVENT_CYAL_I_HOPE_YOULL_STAY; checks
-; EVENT_KEY_BOSS_BEATEN; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_CYAL_YAY_YOU; starts
-; Script_AreYouMaybeA; shows 'Cyal: We're going back home now.'; sets EVENT_YOURE_AHUMAN_HOW_145;
-; starts Script_CyalListenHeroWe; shows 'Cyal: I hope you'll stay my'; sets
-; EVENT_CYAL_I_HOPE_YOULL_STAY; shows 'Cyal: I ought to become a' (E-0347)
-; why: step 2 of ElvenVillageTalkEvents (when wTalkEventGroup = 2); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 2, Cyal: 'Are you maybe a ...' at first, message $0707 after Cyal's 'Yay, you',
+; Cyal's 'Listen, hero' script after the elder's scene, message $0747 then $0748 after the key boss
+; is beaten. (C1, E-0357)
 ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA::
     ld de, EVENT_CYAL_I_HOPE_YOULL_STAY
     call TestFlagBit
@@ -7776,11 +7656,7 @@ TalkMsg0752_IveHeardThatHumansAre::
     call StartMessageCommand09HL_B04
     ret
 
-; step 10 of ElvenVillageTalkEvents: sets wScreenTableIndex to $10; sets wDataBank to $10; starts
-; Script_WelcomeHowMayI_5 (E-0347)
-; why: step 10 of ElvenVillageTalkEvents (when wTalkEventGroup = 10); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 10: a shop: screen table $10, 'Welcome, how may I ...'. (C1, E-0357)
 ElvenVillageTalkEvents_StartScriptAtHL_B04::
     ld a, $10
     ld [wScreenTableIndex], a
@@ -7790,14 +7666,9 @@ ElvenVillageTalkEvents_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-; step 11 of ElvenVillageTalkEvents: checks EVENT_KEY_BOSS_BEATEN; checks EVENT_WELL_WELL_IT_IS_14D;
-; checks EVENT_ROLT_WAIT_GONE_ALREADY; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_WELL_WELL_IT_IS;
-; checks EVENT_YOURE_AHUMAN_HOW_145; shows 'Well, well… It is a'; sets EVENT_WELL_WELL_IT_IS; starts
-; Script_WellWellAHuman; checks EVENT_YOURE_AHUMAN_HOW_145; shows 'I'm the Village Elder. By the';
-; starts Script_I_18; then 5 more steps (see the code) (E-0347)
-; why: step 11 of ElvenVillageTalkEvents (when wTalkEventGroup = 11); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 11: 'Well, well, it is ...' messages and scripts by the village story (the
+; elder's scene, Rolt's departure, the key boss beaten), setting its flags on first hearing. (C1,
+; E-0357)
 ElvenVillageTalkEvents_ShowWellWellItIs::
     ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
@@ -9414,11 +9285,8 @@ TalkMsg0C02_OnlyAHandfulOfMastersHave::
     call StartMessageCommand09HL_B04
     ret
 
-; step 98 of ElvenVillageTalkEvents: checks EVENT_THIS_IS_THE_POWER; shows 'This is the Power
-; Tower.'; sets EVENT_THIS_IS_THE_POWER; shows 'If you win, you'll earn' (E-0347)
-; why: step 98 of ElvenVillageTalkEvents (when wTalkEventGroup = 98); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 98: message $0C00 the first time (setting EVENT_THIS_IS_THE_POWER), then $0C01.
+; (C1, E-0357)
 ElvenVillageTalkEvents_ShowThisIsThePower::
     ld de, EVENT_THIS_IS_THE_POWER
     call TestFlagBit
@@ -9695,11 +9563,8 @@ TalkMsg0C1A_InThisTowerYourOpponents::
     call StartMessageCommand09HL_B04
     ret
 
-; step 130 of ElvenVillageTalkEvents: checks EVENT_THIS_IS_THE_BAFFLE; shows 'This is the Baffle
-; Tower.'; sets EVENT_THIS_IS_THE_BAFFLE; shows 'If you win, you'll earn' (E-0347)
-; why: step 130 of ElvenVillageTalkEvents (when wTalkEventGroup = 130); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 130: message $0C18 the first time (setting EVENT_THIS_IS_THE_BAFFLE), then
+; $0C19. (C1, E-0357)
 ElvenVillageTalkEvents_ShowThisIsTheBaffle::
     ld de, EVENT_THIS_IS_THE_BAFFLE
     call TestFlagBit
@@ -9967,11 +9832,8 @@ TalkMsg0C32_TheMonstersHereAreAwfulIm::
     call StartMessageCommand09HL_B04
     ret
 
-; step 162 of ElvenVillageTalkEvents: checks EVENT_IF_YOUVE_MADE_IT; shows 'If you've made it to';
-; sets EVENT_IF_YOUVE_MADE_IT; shows 'This Tower is terribly tough.' (E-0347)
-; why: step 162 of ElvenVillageTalkEvents (when wTalkEventGroup = 162); ElvenVillageTalkEvents: talk
-; category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world (messages
-; $0700-$07BF, $0C00-$0CFF) (E-0352)
+; Elven village talk 162: message $0C30 the first time (setting EVENT_IF_YOUVE_MADE_IT), then $0C31.
+; (C1, E-0357)
 ElvenVillageTalkEvents_ShowIfYouveMadeIt::
     ld de, EVENT_IF_YOUVE_MADE_IT
     call TestFlagBit
@@ -10246,12 +10108,8 @@ Talk_KeyWorldBossBattle::
     call StartScriptAtHL_B04
     ret
 
-; step 1 of KeyWorldTalkEvents: sets wDataBank to $10; branches on the byte at wKeyWorldFloorInfo +
-; $1; sets wScreenTableIndex to $0f; starts Script_WarubouWaHeyYou_2; branches on
-; wKeyWorldFloorState; sets wScreenTableIndex to $13; starts Script_WarubouWaHeyYou_2; also changes
-; HL and A by register arithmetic (E-0347)
-; why: step 1 of KeyWorldTalkEvents (when wTalkEventGroup = 1); KeyWorldTalkEvents: talk category 9:
-; the key-world events (Warubou's messages, KeyWorldBossBattle, KeyWorldFloorBattle (E-0352, E-0286)
+; Key world talk 1, Warubou: starts his script with screen table $0F on a floor of kind 3, otherwise
+; $12 or $13 by bit 7 of wKeyWorldFloorState. (C1, E-0357)
 KeyWorldTalkEvents_StartScriptAtHL_B04::
     ld a, $10
     ld [wDataBank], a
@@ -10392,10 +10250,8 @@ TalkMsg0122_WarubouWaheyYouDidItHero::
     call StartMessageCommand09HL_B04
     ret
 
-; step 6 of KeyWorldTalkEvents: returns if wKeyWorldGoalKind is $05; returns if wKeyWorldGoalKind is
-; $07; returns if wKeyWorldGoalKind is $08; shows 'Warubou: Use a Magic Key and' (E-0347)
-; why: step 6 of KeyWorldTalkEvents (when wTalkEventGroup = 6); KeyWorldTalkEvents: talk category 9:
-; the key-world events (Warubou's messages, KeyWorldBossBattle, KeyWorldFloorBattle (E-0352, E-0286)
+; Key world talk 6: Warubou's 'Use a magic ...' hint (message $0121), except for goal kinds 5, 7 and
+; 8. (C1, E-0357)
 KeyWorldTalkEvents_ShowWarubouUseAMagic::
     ld a, [wKeyWorldGoalKind]
     cp $05

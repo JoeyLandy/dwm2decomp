@@ -46,9 +46,7 @@ ReadSlotAIModeIndexed_Bank05_2::
     ld a, [hl]
     ret
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of ReadSlotAIModeIndexed_Bank05_2; ReadSlotAIModeIndexed_Bank05_2: A = the byte at
-; wSlotAIMode + A (E-0352)
+; The end of a word-table read: HL = the word at HL + 2 * A. (C1, E-0357)
 ReadSlotAIModeIndexed_Bank05_2_Skip::
     add a
     add_a_to_hl
@@ -514,14 +512,10 @@ AnyFoeHasMPReadsWrongOffset::
     ld c, $ff
     ret
 
-; called from AIScore_TakeMagic_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleSkillsPrefix; copies the byte at
-; wBattleSkillsPrefix to wRecordBuffer; sets wBattleArg0 to 7; sets wBattleArg1 to 1; copies L to
-; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on hTemp0; branches on
-; C; copies L to wRecordBuffer; then 1 more step (see the code) (E-0347)
-; why: a helper of AIScore_TakeMagic_Conditions; AIScore_TakeMagic_Conditions: the conditions of
-; AIScore_TakeMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_TakeMagic_Sub01_Sub01 in turn and tests C ... (E-0352, E-0279)
+; TakeMagic AI condition: passes (C = $FF) when some present foe knows a skill whose record part
+; (LoadSkillRecordPart, field 7) has bit 0 set, i.e. a skill TakeMagic could act on; C = 0 when none
+; does; C = 1 when the actor's AI mode is below 2 (the check is skipped). Keeps wRecordBuffer. (C1,
+; E-0357)
 AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -719,12 +713,8 @@ AnyFoeHasSkillFlag10::
     ld c, $01
     ret
 
-; called from AIScore_DanceShut_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus1; calls SlotHasSkillWithFlagD; sets
-; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: a helper of AIScore_DanceShut_Conditions; AIScore_DanceShut_Conditions: the conditions of
-; AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
-; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
+; DanceShut AI condition: passes when some present foe is not yet dance-sealed (BSTAT1_DANCE_SEALED)
+; and knows a skill with flag $20 (a dance); C = 1 below AI mode 2. (C1, E-0357)
 AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -856,12 +846,7 @@ AnyFoeHasDEFAtLeast2::
     ld c, $ff
     ret
 
-; called from AIScore_SquallHit_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L; also changes BC and A by register arithmetic
-; (E-0347)
-; why: a helper of AIScore_SquallHit_Conditions; AIScore_SquallHit_Conditions: the conditions of
-; AIScore_SquallHit: calls CheckSkillUsableElseResetAISkillScore, AIScore_SquallHit_Sub01_Sub01, ...
-; (E-0352, E-0279)
+; SquallHit AI condition: passes when some present foe has an AGL of 2 or more. (C1, E-0357)
 AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -892,10 +877,7 @@ AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; Calls AnySlotLacksStatusMask (E-0347)
-; why: part of AIScore_FireAir; AIScore_FireAir: AI scoring routine for 8 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 64 ...
-; (E-0352, E-0083)
+; FireAir: passes when some present foe lacks status 2 bit 6. (C1, E-0357)
 AIScore_FireAir_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -918,10 +900,8 @@ AnyFoeLacksStatus0Bit4::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_PoisonAir_Conditions: calls AnySlotLacksStatusMask (E-0347)
-; why: a helper of AIScore_PoisonAir_Conditions; AIScore_PoisonAir_Conditions: the conditions of
-; AIScore_PoisonAir: calls AIAndPassUnlessRecordBufferData5Bit4,
-; AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask, ... (E-0352, E-0279)
+; PoisonAir AI condition: passes when some present foe is not yet poisoned (status 0 bit 1 clear).
+; (C1, E-0357)
 AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -956,12 +936,8 @@ AnyFoeLacksStatus0MaskCC::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_AquaWall_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer; also changes
-; HL, BC, A and D by register arithmetic (E-0347)
-; why: a helper of AIScore_AquaWall_Conditions; AIScore_AquaWall_Conditions: the conditions of
-; AIScore_AquaWall: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus0Bit6,
-; AIScore_AquaWall_Sub01_Sub01 in turn and tests ... (E-0352, E-0279)
+; AquaWall AI condition: passes when some present foe without status 1 bits 0, 6 or 7 knows a skill
+; with flag $08; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1155,10 +1131,7 @@ AnyFoeLacksStatus1Bit7::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_DanceShut_Conditions: calls AnySlotLacksStatusMask (E-0347)
-; why: a helper of AIScore_DanceShut_Conditions; AIScore_DanceShut_Conditions: the conditions of
-; AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
-; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
+; DanceShut AI condition: passes when some present foe lacks status 1 bit 6. (C1, E-0357)
 AIScore_DanceShut_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1192,12 +1165,8 @@ AnyFoeNotBlocked::
     ld c, $ff
     ret
 
-; called from AIScore_LegSweep_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wSlotBodyFlags; branches on the byte at wBattleStatus3 & $c0; branches on the byte at
-; wBattleStatus3 & $0c; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_LegSweep_Conditions; AIScore_LegSweep_Conditions: the conditions of
-; AIScore_LegSweep: calls AILickSkillUsable, AIScore_LegSweep_Sub01_Sub01 in turn and tests C after
-; each (zero: stop (E-0352, E-0279)
+; LegSweep AI condition: passes when some present foe can be tripped: not marked in wSlotBodyFlags
+; bit 4, no status 3 bits 6-7, and status 3 bits 2-3 clear. (C1, E-0357)
 AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1305,12 +1274,9 @@ AIGateFoeStatus1Mask22::
     ld c, $01
     ret
 
-; called from AIScore_FireAir: calls ReadSlotAIModeIndexed_Bank05; calls TestRecordBufferData1;
-; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2 & $40; also
-; changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_FireAir; AIScore_FireAir: AI scoring routine for 8 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 64
-; ... (E-0352, E-0083)
+; FireAir AI condition: for an elemental skill with resistance class 3 (wRecordBufferData + 1),
+; fails when a present foe has status 2 bit 6 set; passes otherwise; C = 1 below AI mode 2. (C1,
+; E-0357)
 AIScore_FireAir_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1416,10 +1382,7 @@ ActorLacksStatus1Bit3::
     ld c, $ff
     ret
 
-; called from AIScore_TakeMagic_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
-; why: a helper of AIScore_TakeMagic_Conditions; AIScore_TakeMagic_Conditions: the conditions of
-; AIScore_TakeMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_TakeMagic_Sub01_Sub01 in turn and tests C ... (E-0352, E-0279)
+; TakeMagic AI condition: fails when the actor already has BSTAT2_TAKE_MAGIC. (C1, E-0357)
 AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1433,10 +1396,7 @@ AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld c, $ff
     ret
 
-; called from AIScore_TailWind_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
-; why: a helper of AIScore_TailWind_Conditions; AIScore_TailWind_Conditions: the conditions of
-; AIScore_TailWind: calls AIBuffSkillUsable, AnyFoeNotBlocked, AIScore_TailWind_Sub01_Sub01 in turn
-; and tests C after each ... (E-0352, E-0279)
+; TailWind AI condition: fails when the actor already has BSTAT2_WIND_GUARD. (C1, E-0357)
 AIScore_TailWind_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1499,10 +1459,7 @@ AllOtherAlliesHaveStatus0Bit6::
     ld c, $ff
     ret
 
-; called from AIScore_Antidote_Conditions: calls AnySlotHasStatusMask (E-0347)
-; why: a helper of AIScore_Antidote_Conditions; AIScore_Antidote_Conditions: the conditions of
-; AIScore_Antidote: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_Antidote_Sub01_AnySlotHasStatusMask in turn ... (E-0352, E-0279)
+; Antidote AI condition: passes when some present ally is poisoned (status 0 bits 0-1). (C1, E-0357)
 AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1512,10 +1469,8 @@ AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_NumbOff_Conditions: calls AnySlotHasStatusMask (E-0347)
-; why: a helper of AIScore_NumbOff_Conditions; AIScore_NumbOff_Conditions: the conditions of
-; AIScore_NumbOff: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_NumbOff_Sub01_AnySlotHasStatusMask in turn ... (E-0352, E-0279)
+; NumbOff AI condition: passes when some present ally is paralysed or asleep (status 0 & $CC). (C1,
+; E-0357)
 AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1525,10 +1480,7 @@ AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_DeChaos_Conditions: calls AnySlotHasStatusMask (E-0347)
-; why: a helper of AIScore_DeChaos_Conditions; AIScore_DeChaos_Conditions: the conditions of
-; AIScore_DeChaos: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_DeChaos_Sub01_AnySlotHasStatusMask in turn ... (E-0352, E-0279)
+; DeChaos AI condition: passes when some present ally is confused (status 0 bit 4). (C1, E-0357)
 AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1538,10 +1490,7 @@ AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_CurseOff_Conditions: calls AnySlotHasStatusMask (E-0347)
-; why: a helper of AIScore_CurseOff_Conditions; AIScore_CurseOff_Conditions: the conditions of
-; AIScore_CurseOff: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AIScore_CurseOff_Sub01_AnySlotHasStatusMask in turn ... (E-0352, E-0279)
+; CurseOff AI condition: passes when some present ally is cursed (status 0 bit 5). (C1, E-0357)
 AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1558,11 +1507,8 @@ AnyAllySlotResistances4Bits2To5NotAllSet::
     ld a, [wBattleActor]
     and $04
 
-; Calls ReadByteAtHLPlus4APlus3C_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wSlotResistances + $4 & $3c; also changes HL, BC and A by register arithmetic (E-0347)
-; why: part of AnyAllySlotResistances4Bits2To5NotAllSet; AnyAllySlotResistances4Bits2To5NotAllSet:
-; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when
-; a present slot's entry & $3C is not $3C, ... (E-0352, E-0094, E-0340)
+; Passes when some present slot of the side starting at A has resistance byte 4 & $3C not equal to
+; $3C, i.e. is not fully resistant in that field (7-byte entries of wSlotResistances). (C1, E-0357)
 AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, a
     ld b, $03
@@ -1595,112 +1541,76 @@ AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, $ff
     ret
 
-; called from AIScore_SuckAir_Conditions: changes A; continues in
-; AnyAllySlotResistances4Bits2To5NotAllSet_Skip (E-0347)
-; why: a helper of AIScore_SuckAir_Conditions; AIScore_SuckAir_Conditions: the conditions of
-; AIScore_SuckAir: calls PassUnlessRecordBufferData5Bit4AndActorStatusBit7, ActorLacksStatus4Bits67,
-; ... (E-0352, E-0279)
+; SuckAir AI condition: the resistance test of AnyAllySlotResistances4Bits2To5NotAllSet applied to
+; the foes. (C1, E-0357)
 AIScore_SuckAir_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
     xor $04
     jp AnyAllySlotResistances4Bits2To5NotAllSet_Skip
 
-; called from AIScore_SlimeBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_SlimeBlow_Conditions; AIScore_SlimeBlow_Conditions: the conditions of
-; AIScore_SlimeBlow: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_SlimeBlow_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; SlimeBlow AI condition: a foe of family 0 (slimes) is present (FoeOfFamilyEPresent). (C1, E-0357)
 AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $00
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_DrakSlash_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_DrakSlash_Conditions; AIScore_DrakSlash_Conditions: the conditions of
-; AIScore_DrakSlash: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_DrakSlash_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; DrakSlash AI condition: a foe of family 1 (dragons) is present. (C1, E-0357)
 AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent::
     ld e, $01
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BeastCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_BeastCut_Conditions; AIScore_BeastCut_Conditions: the conditions of
-; AIScore_BeastCut: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_BeastCut_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; BeastCut AI condition: a foe of family 2 (beasts) is present. (C1, E-0357)
 AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $02
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BirdBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_BirdBlow_Conditions; AIScore_BirdBlow_Conditions: the conditions of
-; AIScore_BirdBlow: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_BirdBlow_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; BirdBlow AI condition: a foe of family 3 (birds) is present. (C1, E-0357)
 AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $03
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BugBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_BugBlow_Conditions; AIScore_BugBlow_Conditions: the conditions of
-; AIScore_BugBlow: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_BugBlow_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; BugBlow AI condition: a foe of family 5 (bugs) is present. (C1, E-0357)
 AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $05
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_Shears_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_Shears_Conditions; AIScore_Shears_Conditions: the conditions of
-; AIScore_Shears: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_Shears_Sub01_ToFoeOfFamilyEPresent in turn and tests ... (E-0352, E-0279)
+; Shears AI condition: a foe of family 4 (plants) is present. (C1, E-0357)
 AIScore_Shears_Conditions_ToFoeOfFamilyEPresent::
     ld e, $04
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_DevilCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_DevilCut_Conditions; AIScore_DevilCut_Conditions: the conditions of
-; AIScore_DevilCut: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_DevilCut_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; DevilCut AI condition: a foe of family 6 (devils) is present. (C1, E-0357)
 AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $06
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_ZombieCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_ZombieCut_Conditions; AIScore_ZombieCut_Conditions: the conditions of
-; AIScore_ZombieCut: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_ZombieCut_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; ZombieCut AI condition: a foe of family 7 (zombies) is present. (C1, E-0357)
 AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $07
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_CleanCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_CleanCut_Conditions; AIScore_CleanCut_Conditions: the conditions of
-; AIScore_CleanCut: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_CleanCut_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; CleanCut AI condition: a foe of family 8 (materials) is present. (C1, E-0357)
 AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $08
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_AquaCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
-; why: a helper of AIScore_AquaCut_Conditions; AIScore_AquaCut_Conditions: the conditions of
-; AIScore_AquaCut: calls CheckSkillUsableElseResetAISkillScore,
-; AIScore_AquaCut_Sub01_ToFoeOfFamilyEPresent in turn and ... (E-0352, E-0279)
+; AquaCut AI condition: a foe of family 9 (water) is present. (C1, E-0357)
 AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $09
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_MetalCut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wSlotBodyFlags; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_MetalCut_Conditions; AIScore_MetalCut_Conditions: the conditions of
-; AIScore_MetalCut: calls CheckSkillUsableElseResetAISkillScore, AIScore_MetalCut_Sub01_Sub01 in
-; turn and tests C after ... (E-0352, E-0279)
+; MetalCut AI condition: passes unless a present foe is marked metal (wSlotBodyFlags bit 0); fails
+; when one is. (C1, E-0357)
 AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1731,13 +1641,8 @@ AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_UltraDown_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; ReadByteAtHLPlus4APlus3C_Bank05; calls GetBattleDEF_Bank05; branches on L; calls
-; GetBattleAGL_Bank05; branches on L; branches on wBattleStatus1; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: a helper of AIScore_UltraDown_Conditions; AIScore_UltraDown_Conditions: the conditions of
-; AIScore_UltraDown: calls ActorCanPayMPCost_Bank05, AIScore_UltraDown_Sub01_Sub01 in turn and tests
-; C after each (zero: ... (E-0352, E-0279)
+; UltraDown AI condition: passes when some present foe that is not fully resistant (resistance byte
+; 2 & $30 not $30) still has DEF or AGL of 2 or more, or is not blinded. (C1, E-0357)
 AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1830,12 +1735,8 @@ AnyFoeOpenToSlotResistances1Field0::
     ld c, $ff
     ret
 
-; called from AIScore_StopSpell_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: a helper of AIScore_StopSpell_Conditions; AIScore_StopSpell_Conditions: the conditions of
-; AIScore_StopSpell: calls AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0Bit6,
-; AnyActiveFoeHasSkillFlag40 in turn and ... (E-0352, E-0279)
+; StopSpell AI condition: passes when some present foe is not spell-sealed, knows a spell (skill
+; flag $40) and is not fully resistant (resistance byte 2 & $03 not $03). (C1, E-0357)
 AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -1916,12 +1817,8 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
     ld c, $ff
     ret
 
-; called from AIScore_Sap_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleDEF_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05; also
-; changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Sap_Conditions; AIScore_Sap_Conditions: the conditions of AIScore_Sap:
-; calls AIUsableAndFoeLacksStatus2And5, AIScore_Sap_Sub01_Sub01 in turn and tests C after each
-; (zero: stop (E-0352, E-0279)
+; Sap AI condition: passes when some present foe with DEF of 2 or more is not fully resistant to it
+; (resistance byte 3 & $30 not $30). (C1, E-0357)
 AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1960,12 +1857,8 @@ AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_Slow_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05; also
-; changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Slow_Conditions; AIScore_Slow_Conditions: the conditions of AIScore_Slow:
-; calls AIUsableAndFoeLacksStatus2And5, AnyFoeNotBlocked, AIScore_Slow_Sub01_Sub01 in turn and tests
-; C after ... (E-0352, E-0279)
+; Slow AI condition: passes when some present foe with AGL of 2 or more is not fully resistant to it
+; (resistance byte 3 & $0C not $0C). (C1, E-0357)
 AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2080,11 +1973,8 @@ AnyFoeOpenToSlotResistances5Field3::
     ld c, $ff
     ret
 
-; called from AIScore_Curse_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; ReadByteAtHLPlus4APlus3C_Bank05; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Curse_Conditions; AIScore_Curse_Conditions: the conditions of
-; AIScore_Curse: calls ActorCanPayMPCost_Bank05, PassUnlessRecordBufferData5Bit4AndActorStatusBit7,
-; SkillPassesRepeatCheck ... (E-0352, E-0279)
+; Curse AI condition: passes when some present foe that is not cursed (status 0 bit 5) is not fully
+; resistant (resistance byte 5 & $30 not $30). (C1, E-0357)
 AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2120,12 +2010,8 @@ AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_DanceShut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: a helper of AIScore_DanceShut_Conditions; AIScore_DanceShut_Conditions: the conditions of
-; AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
-; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
+; DanceShut AI condition: passes when some present foe that is not dance-sealed knows a dance (flag
+; $20) and is not fully resistant (resistance byte 5 & $03 not $03). (C1, E-0357)
 AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -2293,11 +2179,8 @@ AtLeastTwoFoesPresent::
     ld c, $ff
     ret
 
-; called from AIScore_TatsuCall_Conditions: changes HL, A and C; branches on the byte at
-; wBattleSlotOut (E-0347)
-; why: a helper of AIScore_TatsuCall_Conditions; AIScore_TatsuCall_Conditions: the conditions of
-; AIScore_TatsuCall: calls ActorCanPayMPCost_Bank05, AIScore_TatsuCall_Sub01_Sub01 in turn and tests
-; C after each (zero: ... (E-0352, E-0279)
+; TatsuCall AI condition: passes only when the actor's side has its fourth slot free (wBattleSlotOut
+; of slot 3 of the side is set), so a called monster has a place. (C1, E-0357)
 AIScore_TatsuCall_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -2447,12 +2330,8 @@ AnyAllyMPAtMostThreeQuarters::
     ld c, $ff
     ret
 
-; called from AIScore_Upper_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Upper_Conditions_GetBattleDEF_Bank05; also changes BC and A by register arithmetic
-; (E-0347)
-; why: a helper of AIScore_Upper_Conditions; AIScore_Upper_Conditions: the conditions of
-; AIScore_Upper: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked,
-; AIScore_Upper_Sub01_Sub01 in turn and ... (E-0352, E-0279)
+; Upper AI condition: passes when some present ally's DEF can still be raised
+; (AIScore_Upper_Conditions_GetBattleDEF_Bank05). (C1, E-0357)
 AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2477,12 +2356,8 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_Speed_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Speed_Conditions_GetBattleAGL_Bank05; also changes BC and A by register arithmetic
-; (E-0347)
-; why: a helper of AIScore_Speed_Conditions; AIScore_Speed_Conditions: the conditions of
-; AIScore_Speed: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked,
-; AIScore_Speed_Sub01_Sub01 in turn and ... (E-0352, E-0279)
+; Speed AI condition: passes when some present ally's AGL can still be raised
+; (AIScore_Speed_Conditions_GetBattleAGL_Bank05). (C1, E-0357)
 AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2681,10 +2556,7 @@ AnyAllyLacksStatus1Bits23And4Bits01::
     ld c, $ff
     ret
 
-; called from AIScore_MagicWall_Conditions: calls AnySlotLacksStatusMask (E-0347)
-; why: a helper of AIScore_MagicWall_Conditions; AIScore_MagicWall_Conditions: the conditions of
-; AIScore_MagicWall: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6,
-; AnyActiveFoeHasSkillFlag40 ... (E-0352, E-0279)
+; MagicWall AI condition: passes when some present ally lacks status 8 bit 6. (C1, E-0357)
 AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -2694,10 +2566,7 @@ AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_SideStep_Conditions: changes HL, A and C (E-0347)
-; why: a helper of AIScore_SideStep_Conditions; AIScore_SideStep_Conditions: the conditions of
-; AIScore_SideStep: calls ActorCanPayMPCost_Bank05,
-; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, ... (E-0352, E-0279)
+; SideStep AI condition: fails when the actor already has status 5 bits 2-3 set. (C1, E-0357)
 AIScore_SideStep_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
@@ -2712,11 +2581,8 @@ AIScore_SideStep_Conditions_AddAx9ToHL::
     ld c, $ff
     ret
 
-; called from AIScore_Surge_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleStatus; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Surge_Conditions; AIScore_Surge_Conditions: the conditions of
-; AIScore_Surge: calls ActorCanPayMPCost_Bank05, AIScore_Surge_Sub01_Sub01 in turn and tests C after
-; each (zero: stop (E-0352, E-0279)
+; Surge AI condition: passes when some present ally has a status to cure: any bit of status 0,
+; status 1 & $C3, status 5 & $03, status 6 bit 7 or status 8 bit 7. (C1, E-0357)
 AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2761,11 +2627,9 @@ AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_DeMagic_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleSlotOut; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_DeMagic_Conditions; AIScore_DeMagic_Conditions: the conditions of
-; AIScore_DeMagic: calls ActorCanPayMPCost_Bank05, AIScore_DeMagic_Sub01_Sub01 in turn and tests C
-; after each (zero: stop (E-0352, E-0279)
+; DeMagic AI condition: passes when some present foe carries an effect it removes (status 1 & $3C,
+; status 2 & $6F, status 5 & $CC, status 6 bit 6 or status 8 bit 6), or when the foes' fourth slot
+; is taken. (C1, E-0357)
 AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2853,10 +2717,8 @@ CheckBattleKindNot4Or5::
     ld c, $ff
     ret
 
-; called from AIScore_SealPray: changes A and C; branches on wQueuedActionId (E-0347)
-; why: a helper of AIScore_SealPray; AIScore_SealPray: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 156
-; ... (E-0352, E-0083)
+; SealPray AI condition: fails when the queued action (wQueuedActionId) is one of $3D-$3F, $43, $47,
+; $66 or $67; passes otherwise. (C1, E-0357)
 AIScore_SealPray_ReadQueuedActionId::
     ld a, [wQueuedActionId]
     and a
@@ -2930,13 +2792,10 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
     ld c, $ff
     ret
 
-; called from FailIfFoeAIDamageEstimatesAtLeastEstimate: branches on wRecordBuffer; branches on
-; wLinkMode; branches on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches
-; on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches on wBattleActor;
-; calls SlotFamilyBelowWater; then 10 more steps (see the code) (E-0347)
-; why: a helper of FailIfFoeAIDamageEstimatesAtLeastEstimate;
-; FailIfFoeAIDamageEstimatesAtLeastEstimate: C = $00 when an occupied foe's wAIDamageEstimates word
-; is at least ... (E-0352, E-0125)
+; The estimated damage of skill wRecordBuffer, in HL: by default the sum of two words of its record
+; (bytes 9-10 and 11-12); skills $48-$4A, $4E and $4F compute it from the actor's level and stats
+; (with link-battle differences), skills $50-$53 another way. Used by
+; FailIfFoeAIDamageEstimatesAtLeastEstimate. (C1, E-0357)
 FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc::
     ld a, [wRecordBuffer]
     cp $48
@@ -3512,12 +3371,9 @@ PassIfTwiceATKAboveLowestFoeDEF::
     ld c, $01
     ret
 
-; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
-; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05; also changes BC and
-; A by register arithmetic (E-0347)
-; why: a helper of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
-; ... (E-0352, E-0083)
+; TwinHits AI check: passes when the actor's ATK is more than twice, or less than half, the lowest
+; foe DEF found by AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; fails when it lies between; C
+; = 1 below AI mode 2. (C1, E-0357)
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3558,12 +3414,8 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld c, $01
     ret
 
-; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
-; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleATK_Bank05; also changes DE, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
-; ... (E-0352, E-0083)
+; TwinHits AI check for the allies: passes unless some present ally's ATK lies between half and
+; twice the lowest foe DEF; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3952,13 +3804,8 @@ FailIfFoeKnowsSkills42To47::
     ld c, $01
     ret
 
-; called from AIScore_Transform: calls ReadSlotAIModeIndexed_Bank05; calls GetBattleMaxHP_Bank05;
-; copies L to hTemp0; copies H to hTemp1; calls GetBattleMaxMP_Bank05; copies L to hTemp2; copies H
-; to hTemp3; calls GetBattleATK_Bank05; copies L to hTemp4; copies H to hTemp5; calls
-; GetBattleDEF_Bank05; copies L to hTemp6; then 12 more steps (see the code) (E-0347)
-; why: a helper of AIScore_Transform; AIScore_Transform: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 58
-; ... (E-0352, E-0083)
+; Transform AI condition: fails when some present foe beats the actor in at least three of max HP,
+; max MP, ATK and DEF; passes otherwise; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -4198,10 +4045,7 @@ ActorMPBelowThreeQuarters::
     ld c, $ff
     ret
 
-; called from AIScore_MagicBack_Conditions: changes HL, A and C (E-0347)
-; why: a helper of AIScore_MagicBack_Conditions; AIScore_MagicBack_Conditions: the conditions of
-; AIScore_MagicBack: calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeLacksStatus0Bit6,
-; AnyActiveFoeHasSkillFlag40 ... (E-0352, E-0279)
+; MagicBack AI condition: fails when the actor already has status 2 bits 1 or 5. (C1, E-0357)
 AIScore_MagicBack_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -4425,11 +4269,9 @@ CheckLinkRules1RuleBit1::
     ld c, $ff
     ret
 
-; called from AIScore_MegaMagic: changes HL, A and C; branches on wLinkMode; branches on wLinkRules
-; + $1; branches on wLinkRuleFlags (E-0347)
-; why: a helper of AIScore_MegaMagic; AIScore_MegaMagic: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 61
-; ... (E-0352, E-0083)
+; MegaMagic link rule: in a link battle whose rules (wLinkRules + 1 bit 7 and bit 0) restrict it,
+; fails when the next rule byte forbids it outright or the side's rule flag (wLinkRuleFlags) is set;
+; passes otherwise and in normal battles. (C1, E-0357)
 AIScore_MegaMagic_ReadLinkModeAndBattleActor::
     ld a, [wLinkMode]
     and a
@@ -4636,12 +4478,9 @@ CheckFoeStatus6Bit3::
     ld c, $01
     ret
 
-; called from AIScore_Sacrifice: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05; branches on
-; C; calls CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05; also changes
-; HL, BC, A and E by register arithmetic (E-0347)
-; why: a helper of AIScore_Sacrifice; AIScore_Sacrifice: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 21
-; ... (E-0352, E-0083)
+; Sacrifice AI condition: considered only when the actor's HP is below a tenth of its max and
+; another ally is present; then passes when some present foe has resistance byte 3 & $03 of 2 or
+; more, fails otherwise. (C1, E-0357)
 AIScore_Sacrifice_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5337,13 +5176,8 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
     ld c, $01
     ret
 
-; called from AIScore_BeDragon: calls GetBattleMaxHP_Bank05; copies L to hTemp0; copies H to hTemp1;
-; calls GetBattleMaxMP_Bank05; copies L to hTemp2; copies H to hTemp3; calls GetBattleATK_Bank05;
-; copies L to hTemp4; copies H to hTemp5; calls GetBattleDEF_Bank05; copies L to hTemp6; copies H to
-; hTemp7; then 5 more steps (see the code) (E-0347)
-; why: a helper of AIScore_BeDragon; AIScore_BeDragon: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 59
-; ... (E-0352, E-0083)
+; BeDragon AI check: counts how many of the actor's stats are already high (max HP 999, max MP 300,
+; ATK 300, DEF 200, AGL 286 or more); fails with three or more, passes otherwise. (C1, E-0357)
 AIScore_BeDragon_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5549,10 +5383,7 @@ CheckBattleKindNot2Or3::
     ld c, $ff
     ret
 
-; called from AIScore_MegaMagic: changes A and C; branches on wLinkMode (E-0347)
-; why: a helper of AIScore_MegaMagic; AIScore_MegaMagic: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 61
-; ... (E-0352, E-0083)
+; Passes in normal and type-2 link battles, fails in other link modes. (C1, E-0357)
 AIScore_MegaMagic_ReadLinkMode::
     ld a, [wLinkMode]
     and a
@@ -5777,12 +5608,8 @@ AnyFoeVulnerableBySlotResistances5Bits23::
     ld c, $ff
     ret
 
-; called from AIScore_EerieLite_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus8; branches on the byte at wSlotResistances + $2 & $30; also changes HL, DE, BC and A
-; by register arithmetic (E-0347)
-; why: a helper of AIScore_EerieLite_Conditions; AIScore_EerieLite_Conditions: the conditions of
-; AIScore_EerieLite: calls ActorCanPayMPCost_Bank05, AnyFoeNotFullyResistant,
-; AIScore_EerieLite_Sub01_Sub01 in turn and ... (E-0352, E-0279)
+; EerieLite AI condition: passes when some present foe is not under BSTAT8_EERIE_LITE and is not
+; fully resistant (resistance byte 2 & $30 not $30). (C1, E-0357)
 AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5901,11 +5728,8 @@ AnyFoeVulnerableBySlotResistances3Bits67::
     ld c, $ff
     ret
 
-; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty; also changes HL, BC and A
-; by register arithmetic (E-0347)
-; why: a helper of AIScore_EvilSlash; AIScore_EvilSlash: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 107
-; ... (E-0352, E-0083)
+; EvilSlash AI condition: fails when a present foe has status 0 bits 6-7 or status 2 & $3F set;
+; passes otherwise. (C1, E-0357)
 AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5940,13 +5764,9 @@ AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $00
     ret
 
-; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag; calls
-; CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls SlotActionIs9C33Or92Or93; calls
-; SlotResistances5EntryHasBits2And3_Bank05_2; also changes DE, BC and A by register arithmetic
-; (E-0347)
-; why: a helper of AIAddScoresForTwoLists; AIAddScoresForTwoLists: adds score word $B1 when
-; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when ... (E-0352, E-0124,
-; E-0344)
+; One of AIAddScoresForTwoLists' conditions (AI mode 4 or more and wAIFlag set): fails when an
+; unblocked foe marked 2 in wSlotMarks, whose chosen action is not $9C, $33, $92 or $93, has both
+; bits 2-3 of its resistance byte 5; passes otherwise; C = 1 below mode 4. (C1, E-0357)
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6134,13 +5954,9 @@ SlotCLacksSkill63Or64WithMP::
     jr c, .loop2
     ret
 
-; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag;
-; branches on C; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls
-; SlotCHasMP3AndSkill6B; calls SlotResistances5EntryHasBits2And3_Bank05; also changes HL, BC, A and
-; D by register arithmetic (E-0347)
-; why: a helper of AIAddScoresForTwoLists; AIAddScoresForTwoLists: adds score word $B1 when
-; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when ... (E-0352, E-0124,
-; E-0344)
+; The other condition of AIAddScoresForTwoLists: fails when an unblocked ally other than the actor,
+; marked below 3, without 3 MP or skill $6B, has both bits 2-3 of resistance byte 5; passes
+; otherwise; C = 1 below mode 4. (C1, E-0357)
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6494,10 +6310,7 @@ CheckAIFlagSetModeGated::
     ld c, $01
     ret
 
-; called from AIScore_AquaWall_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
-; why: a helper of AIScore_AquaWall_Conditions; AIScore_AquaWall_Conditions: the conditions of
-; AIScore_AquaWall: calls ActorCanPayMPCost_Bank05, AnyFoeLacksStatus0Bit6,
-; AIScore_AquaWall_Sub01_Sub01 in turn and tests ... (E-0352, E-0279)
+; AquaWall AI condition: fails when the actor already has BSTAT2_AQUA_WALL. (C1, E-0357)
 AIScore_AquaWall_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -6584,17 +6397,12 @@ UnreferencedReturnC0:: ; configured code entry (E-0237); C0
     ld c, $00
     ret
 
-; Changes C (E-0347)
-; why: part of UnreferencedReturnC0; UnreferencedReturnC0: ld c, $00 / ret after
-; UnreferencedEstimateStrongestFoeHit's ret (E-0352, E-0237, E-0344)
+; The code after UnreferencedReturnC0: C = 1, return; not reached by any jump found. (C1, E-0357)
 UnreferencedReturnC0_Done::
     ld c, $01
     ret
 
-; called from AIScore_Curse_Conditions: calls AnySlotLacksStatusMask (E-0347)
-; why: a helper of AIScore_Curse_Conditions; AIScore_Curse_Conditions: the conditions of
-; AIScore_Curse: calls ActorCanPayMPCost_Bank05, PassUnlessRecordBufferData5Bit4AndActorStatusBit7,
-; SkillPassesRepeatCheck ... (E-0352, E-0279)
+; Curse AI condition: passes when some present foe is not yet cursed (status 0 bit 5). (C1, E-0357)
 AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -6605,12 +6413,7 @@ AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_SuckAir_Conditions: copies the byte at wBattleSkillsPrefix to wRecordBuffer;
-; calls SlotHasSkillWithFlagD; sets wRecordBuffer; also changes HL, BC, A and D by register
-; arithmetic (E-0347)
-; why: a helper of AIScore_SuckAir_Conditions; AIScore_SuckAir_Conditions: the conditions of
-; AIScore_SuckAir: calls PassUnlessRecordBufferData5Bit4AndActorStatusBit7, ActorLacksStatus4Bits67,
-; ... (E-0352, E-0279)
+; SuckAir AI condition: passes when one of the actor's eight skills has flag $02. (C1, E-0357)
 AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
     ld a, [wBattleActor]
     swap a
@@ -6680,10 +6483,9 @@ AnyAllyHPBelow::
     ld c, $ff
     ret
 
-; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer; also changes
-; HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AnyAllyHPBelow; AnyAllyHPBelow: C = $FF when an occupied ally's HP is below
-; AnyAllyHPBelow_GetBattleMaxHP_Bank05 for it, else $00 (E-0352, E-0125, E-0344)
+; The HP threshold for AnyAllyHPBelow, by healing skill: max HP minus a tenth for most, three
+; quarters of max HP for skills $17, $19, $7C and $A1, and another fraction for $18 and $1A. (C1,
+; E-0357)
 AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     push bc
     call GetBattleMaxHP_Bank05
@@ -6737,11 +6539,8 @@ AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     pop bc
     ret
 
-; Branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank05; calls
-; GetBattleMaxMP_Bank05; also changes BC, A and E by register arithmetic (E-0347)
-; why: part of AIScore_MPass; AIScore_MPass: AI scoring routine for 3 skill(s) of the per-skill far
-; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 27 ... (E-0352,
-; E-0083)
+; MPass AI condition: passes when some present ally other than the actor has MP below its max. (C1,
+; E-0357)
 AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     ld e, a
@@ -6873,12 +6672,8 @@ HPBandOfSlotTemp0_2::
     ld c, $05
     ret
 
-; called from AIScore_MegaMagic: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05; also
-; changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_MegaMagic; AIScore_MegaMagic: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 61
-; ... (E-0352, E-0083)
+; MegaMagic AI condition: passes when some present foe has HP + DEF of at least $578 (1,400); C = 1
+; below AI mode 3. (C1, E-0357)
 AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -7129,11 +6924,7 @@ CheckActorSlot0To3OrLinkModeSet::
     ld c, $ff
     ret
 
-; called from AIScore_Meditate_Conditions: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05;
-; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Meditate_Conditions; AIScore_Meditate_Conditions: the conditions of
-; AIScore_Meditate: calls ActorCanPayMPCost_Bank05, AIScore_Meditate_Sub01_Sub01 in turn and tests C
-; after each (zero: stop (E-0352, E-0279)
+; Meditate AI condition: passes when the actor's HP is below two thirds of its max. (C1, E-0357)
 AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -7289,13 +7080,9 @@ SkillListHas19Or1AOr7COrA1::
     or a
     ret
 
-; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleATK_Bank05; sets hTemp0; sets hTemp1; sets hTemp0 to 0; sets hTemp1 to 0; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; sets hTemp0; sets hTemp1; then 7
-; more steps (see the code) (E-0347)
-; why: part of AIScore_Sap; AIScore_Sap: AI scoring routine for 2 skill(s) of the per-skill far
-; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 39 ... (E-0352,
-; E-0083)
+; Sap AI check: compares the allies' average ATK with twice the foes' average DEF, and the excess
+; with half the foes' average HP; passes when the attack would not already be enough, fails
+; otherwise. (C1, E-0357)
 AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7591,11 +7378,8 @@ AddSlotStatSumToTemp0::
     inc d
     ret
 
-; called from AIScore_BiAttack: calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05;
-; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_BiAttack; AIScore_BiAttack: AI scoring routine for 2 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 99
-; ... (E-0352, E-0083)
+; BiAttack AI check: fails when a present foe's HP is below 120% of its damage estimate
+; (wAIDamageEstimates), i.e. a normal attack would already finish it. (C1, E-0357)
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7644,12 +7428,9 @@ AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; called from AIScore_Berserker: calls ReadSlotAIModeIndexed_Bank05_2; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls GetBattleAGL_Bank05; calls
-; GetBattleHP_Bank05; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Berserker; AIScore_Berserker: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 110
-; ... (E-0352, E-0083)
+; Berserker AI check: needs at least two foes; when the actor's AGL is below 120% of the last foe's
+; AGL it passes; otherwise it fails if that foe's HP is at most twice its damage estimate
+; (wAIDamageEstimates), passes if more; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7720,12 +7501,9 @@ AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
-; called from AIScore_Ramming: calls ReadSlotAIModeIndexed_Bank05_2; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls Get2BitFieldEOfHL; calls
-; GetBattleHP_Bank05; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Ramming; AIScore_Ramming: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 111
-; ... (E-0352, E-0083)
+; Ramming AI check: needs at least two foes and an elemental class for the skill; fails when the
+; last foe's resistance to it (2-bit field) is 2 or more or its HP is at least 60% of the actor's
+; HP, passes otherwise; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7803,15 +7581,12 @@ AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
-; called from AIScore_Kamikaze: calls ReadSlotAIModeIndexed_Bank05_2; branches on wLinkMode;
-; branches on wBattleKind; branches on wAIFlag; branches on C; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls ReadSlotAIModeIndexed_Bank05_2; calls
-; AIScore_Kamikaze_CheckSkills; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks;
-; calls GetBattleHP_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; then 3 more steps (see the
-; code) (E-0347)
-; why: a helper of AIScore_Kamikaze; AIScore_Kamikaze: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 112
-; ... (E-0352, E-0083)
+; Kamikaze AI condition: only in normal battles (not linked, battle kind below 2, wAIFlag set, AI
+; mode 3 or more). It looks for another ally of AI mode 3 or more with no healing skill ($16-$1A,
+; $7C, $A1), unblocked and marked below 3. It then compares the actor's HP with half of the actor's
+; own HP, which always passes, so the foe checks after it (a foe with HP at least the actor's HP +
+; 100 and resistance below 2 fails) are never reached: likely a bug where a different slot's HP was
+; meant. C = 1 below mode 3. (C1, E-0357)
 AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7961,12 +7736,8 @@ ActorStatus4CheckReadsAddress::
     ld c, $ff
     ret
 
-; Sets hTemp3 to 0; sets hTemp4 to 0; sets hTemp5 to 0; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls GetBattleDEF_Bank05; sets hTemp4; sets hTemp5; increments hTemp3; calls GetBattleATK_Bank05;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty, in a helper of AIScore_BiAttack;
-; AIScore_BiAttack: AI scoring routine for 2 skill(s) of the per-skill far table
-; (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 99 ... (E-0352, E-0083)
+; BiAttack AI check: passes when 5/4 of the actor's ATK is at least the foes' average DEF, fails
+; otherwise. (C1, E-0357)
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, [wBattleActor]
     and $04
@@ -8247,11 +8018,9 @@ ReadSlotAIModeIndexed_Bank05::
     ld a, [hl]
     ret
 
-; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode; branches on C; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of AIScore_Upper_Conditions; AIScore_Upper_Conditions: the conditions of AIScore_Upper:
-; calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked, AIScore_Upper_Sub01_Sub01 in
-; turn and ... (E-0352, E-0279)
+; Whether slot C's DEF can still be raised: no when it is 999 or more; otherwise yes (carry) while
+; it is below its base DEF (GetBaseDEF) times 2, or times 4 for an AI slot in a normal battle. (C1,
+; E-0357)
 AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     call GetBattleDEF_Bank05
     ld a, l
@@ -8301,11 +8070,8 @@ AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     scf
     ret
 
-; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode; branches on C; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of AIScore_Speed_Conditions; AIScore_Speed_Conditions: the conditions of AIScore_Speed:
-; calls CheckSkillUsableStatusElseResetAISkillScore, AnyFoeNotBlocked, AIScore_Speed_Sub01_Sub01 in
-; turn and ... (E-0352, E-0279)
+; Whether slot C's AGL can still be raised: no when it is 999 or more; otherwise yes (carry) while
+; it is below its base AGL times 2, or times 4 for an AI slot in a normal battle. (C1, E-0357)
 AIScore_Speed_Conditions_GetBattleAGL_Bank05::
     call GetBattleAGL_Bank05
     ld a, l
@@ -8582,13 +8348,7 @@ GetSlotSpeciesFamily::
     ld a, [wSpeciesRecord]
     ret
 
-; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleDEF_Bank05; copies L to hTemp0; copies H to hTemp1; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; copies L to hTemp0; copies H to
-; hTemp1; also changes BC and A by register arithmetic (E-0347)
-; why: part of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
-; ... (E-0352, E-0083)
+; Finds the lowest DEF among the present foes, in hTemp0/hTemp1. (C1, E-0357)
 AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -9369,13 +9129,9 @@ AIScore_Beat_Conditions::
     call ResetAISkillScore
     ret
 
-; called from AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05; branches on C; calls
-; SkillPassesStatus1Bit0Check; branches on C; calls SkillPassesSideFlagBit3Check; branches on C;
-; calls SkillPassesRepeatCheck; branches on C; calls AnyFoeLacksStatus2Mask22; branches on C; calls
-; AnyFoeLacksStatus5Bits67; branches on C; then 12 more steps (see the code) (E-0347)
-; why: a helper of AIScore_Sacrifice; AIScore_Sacrifice: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 21
-; ... (E-0352, E-0083)
+; Sacrifice AI conditions in turn: MP cost, status 1 bit 0, side flag 3, repeat, foes lacking status
+; 2 & $22, status 5 bits 6-7 and status 0 bit 6, a foe not fully resistant, the status-1 gate, and
+; the side flag; any failure resets the skill's AI score (ResetAISkillScore). (C1, E-0357)
 AIScore_Sacrifice_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9460,13 +9216,8 @@ AIHealUsable::
     call ResetAISkillScore
     ret
 
-; called from AIScore_MPass: branches on C; calls ActorLacksStatus4Bits67; branches on C; calls
-; AllOtherAlliesHaveStatus0Bit6; branches on C; calls SetCToZero; branches on C; calls
-; AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls ResetAISkillScore; also
-; changes A by register arithmetic (E-0347)
-; why: a helper of AIScore_MPass; AIScore_MPass: AI scoring routine for 3 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 27 ...
-; (E-0352, E-0083)
+; MPass AI conditions: the actor lacks status 4 bits 6-7, another ally has status 0 bit 6, then a
+; step that always fails (SetCToZero), so MPass's score is always reset here. (C1, E-0357)
 AIScore_MPass_ActorLacksStatus4Bits67::
     ld a, c
     and a
@@ -9722,11 +9473,8 @@ AIScore_Slow_Conditions::
     call ResetAISkillScore
     ret
 
-; called from AIScore_TwinHits: calls CheckSkillUsableStatusElseResetAISkillScore; returns if C is
-; 0; calls AnyAllyLacksStatus1Bits23And4Bits01; branches on C; calls ResetAISkillScore (E-0347)
-; why: a helper of AIScore_TwinHits; AIScore_TwinHits: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 45
-; ... (E-0352, E-0083)
+; TwinHits AI conditions: the usual usability checks, then an ally lacking status 1 bits 2-3 and
+; status 4 bits 0-1; otherwise the score is reset. (C1, E-0357)
 AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore::
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
@@ -10128,12 +9876,8 @@ CheckSkillUsableStatusElseResetAISkillScore::
     call ResetAISkillScore
     ret
 
-; called from AIScore_MegaMagic: calls AIAttackSkillUsable; returns if C is 0; calls
-; ActorLacksStatus4Bits67; branches on C; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C;
-; calls ResetAISkillScore (E-0347)
-; why: a helper of AIScore_MegaMagic; AIScore_MegaMagic: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 61
-; ... (E-0352, E-0083)
+; MegaMagic AI conditions: an attack skill usable, the actor lacks status 4 bits 6-7, and the battle
+; is a link battle or of kind 2 or more; otherwise the score is reset. (C1, E-0357)
 AIScore_MegaMagic_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -10183,12 +9927,8 @@ AIAttackSkillUsable::
     call ResetAISkillScore
     ret
 
-; called from AIScore_FireAir: calls AIAttackSkillUsable; returns if C is 0; calls
-; PassUnlessRecordBufferData5Bit4AndActorStatusBit7; branches on C; calls
-; AIScore_FireAir_AnySlotLacksStatusMask; branches on C; calls ResetAISkillScore (E-0347)
-; why: a helper of AIScore_FireAir; AIScore_FireAir: AI scoring routine for 8 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 64
-; ... (E-0352, E-0083)
+; FireAir AI conditions: an attack skill usable, the skill's status-0 check passes, and a foe lacks
+; status 2 bit 6; otherwise the score is reset. (C1, E-0357)
 AIScore_FireAir_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -10596,12 +10336,9 @@ AIScore_SquallHit_Conditions::
     call ResetAISkillScore
     ret
 
-; called from AIScore_BiAttack: calls CheckSkillUsableElseResetAISkillScore; returns if C is 0;
-; calls AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2; branches on C; calls ResetAISkillScore
-; (E-0347)
-; why: a helper of AIScore_BiAttack; AIScore_BiAttack: AI scoring routine for 2 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 99
-; ... (E-0352, E-0083)
+; BiAttack AI conditions: usable, and the DEF check
+; (AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2); otherwise the score is reset and C = 0.
+; (C1, E-0357)
 AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -10828,12 +10565,8 @@ AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call ResetAISkillScore
     ret
 
-; called from AIScore_Kamikaze: calls AIAndAnyFoeNotFullyResistantAndActorHPNotOne; returns if C is
-; 0; calls AnyFoeNotBlocked; branches on C; calls AllOtherAlliesHaveStatus0Bit6; branches on C;
-; calls ResetAISkillScore (E-0347)
-; why: a helper of AIScore_Kamikaze; AIScore_Kamikaze: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 112
-; ... (E-0352, E-0083)
+; Kamikaze AI conditions: usable with a foe not fully resistant and HP not 1, an unblocked foe, and
+; another ally with status 0 bit 6; otherwise the score is reset. (C1, E-0357)
 AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
@@ -11864,11 +11597,7 @@ AIScore_AquaWall_Conditions::
     call ResetAISkillScore
     ret
 
-; called from AIScore_SealPray: calls ActorCanPayMPCost_Bank05; branches on C; calls
-; ResetAISkillScore (E-0347)
-; why: a helper of AIScore_SealPray; AIScore_SealPray: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 156
-; ... (E-0352, E-0083)
+; SealPray AI condition: the actor can pay the MP cost; otherwise the score is reset. (C1, E-0357)
 AIScore_SealPray_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c

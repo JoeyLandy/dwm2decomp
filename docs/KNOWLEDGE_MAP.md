@@ -1,6 +1,16 @@
 # Knowledge map
 
-Baseline: **2026-09-12**. Target: **DWM2: Cobi's Journey**; exact reference revision pending. **There are no locally verified game-semantic findings yet.**
+Historical planning baseline: **2026-09-12**, before local verification. Current target: **DWM2: Cobi's Journey**, `dwm2-cobi-us-rev0`; header version 0, catalog cross-check pending. Local findings are recorded in [the evidence log](EVIDENCE_LOG.md) and [current status](PROJECT_STATUS.md). The research-lead tables below retain their original confidence and are not a current coverage inventory.
+
+## Current readability investigations
+
+| Range / system | Finding and confidence | Evidence / next action |
+| --- | --- | --- |
+| Bank $12 CPU [$4001,$43DA), field command paths and their message/battle stubs | C1: 33 whole-routine explanations; twelve-stage player/follower paths, exact hop phase and eight-bit coordinate updates, party-size shortcuts. Five direct routine probes pass in the project's emulator. | [E-0358](EVIDENCE_LOG.md#e-0358--scripted-player-and-follower-paths-read-through-their-transitions), [worked reading](OBJECT_PATHS.md). Arena stages are the next row. |
+| Bank $12 CPU [$43DA,$4919), arena dispatchers/stages and message table; related $0C helpers and party heal | C1: 29 whole-routine readings, shared stages and exact counter conditions, byte/nibble message lookup, individual foe-word draws and incoming SRAM-bank dependency. Eight direct routine probes pass. | [E-0359](EVIDENCE_LOG.md#e-0359--arena-scene-stages-and-their-shared-data), [worked reading](ARENA_SCENE.md). Link/breeding presentations are the next row. |
+| Bank $12 CPU [$4919,$4E4B), link/breeding stages, return table and snapshot; related field dispatcher/loaders | C1: 36 whole-routine notes; conditional clipping save, exact timers, record-based graphics, distinct return contracts, corrected field-record byte return and saved-link-flag direction. Ten original-ROM probes pass. | [E-0360](EVIDENCE_LOG.md#e-0360--link-and-breeding-presentation-stages), [worked reading](LINK_BREEDING_SCENES.md). Follower movement/warp commands are the next row. |
+| Bank $12 CPU [$4E4B,$4FEA), follower/player step and warp commands; related $12/$02 follower helpers | C1: 18 whole-routine notes; exact two-pixel thresholds, intermediate-boundary target snapshots, last-Y-only completion, stagger gates, action-bit wait, unsigned overshoot. Ten original-ROM probes pass; next-screen setup checks its callee input only. | [E-0361](EVIDENCE_LOG.md#e-0361--follower-command-coordinates-and-completion), [worked reading](FOLLOWER_COMMANDS.md). Sprite overrides and map-link warp are the next row. |
+| Bank $12 CPU [$4FEA,$51F4), sprite flash/message and map-link warp; shared lift, $04 graphics/rendering/pose table, $0A timer and RNG | C1: 24 whole-routine notes, corrected graphics-id HRAM fields, nine structured pose regions, exact palette/turn/countdown conditions and sixteen normal-map links. Seventeen original-ROM probes pass; renderer routing is probed up to its draw callee. | [E-0362](EVIDENCE_LOG.md#e-0362--sprite-override-selection-rendering-and-map-link-warps), [worked reading](SPRITE_WARP_COMMANDS.md). Next: MapExitWarp at $12:$51F4 and ReturnWarp. |
 
 This map connects research questions to evidence and experiments. It is not a recovered module layout or call graph. C0 means no supported local interpretation; C1 means an external lead or hypothesis; C2/C3 require local evidence under the [evidence standard](EVIDENCE_LOG.md). Source IDs resolve in [the survey](SURVEY.md).
 

@@ -819,10 +819,9 @@ MarkVisitedMapScreenInVisitedScreens::
 
 ; called from RunMenuStateMenuState_InitSoundHardware: changes HL, BC and A; branches on
 ; wKeyWorldFloor (E-0347)
-; why: a helper of RunMenuStateMenuState_InitSoundHardware, in step 5 of RunMenuStateMenuState (when
-; wMenuState & $0F = 5); RunMenuStateMenuState: the field menu (field state 6): by wMenuState & $0F
-; it plays the menu's music and sounds, sets the cursor and sub-state of the open menu, ... (E-0352,
-; E-0354, E-0122)
+; why: a helper of RunMenuStateMenuState_InitSoundHardware; RunMenuStateMenuState_InitSoundHardware:
+; Warp effect step 5, the warp itself: silences and restarts the map music, then moves the player. A
+; normal warp goes to wWarpDestX/Y on the ... (E-0352, E-0357)
 RunMenuStateMenuState_ReadKeyWorldFloor::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]

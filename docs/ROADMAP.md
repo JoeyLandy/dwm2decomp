@@ -2,6 +2,26 @@
 
 Baseline: **2026-09-12**. Work is sequenced by evidence and exit gates. These are planning estimates, not deadlines; re-estimate after the first matching build. All phases inherit the full-ROM identity requirement and C0–C3 semantic standard.
 
+## Current goal and next gate (2026-10-14)
+
+The active goal is full pokered-style readability for the matching Cobi target.
+The matching build exists; the dated phase plans below are historical. Their
+semantic exit gates remain separate from source presentation and have not all
+been certified. Current progress and counts are in [project status](PROJECT_STATUS.md).
+
+Replace the remaining generated routine restatements with whole-routine
+explanations and concise action names, reading callers, tables and stage
+transitions together. E-0358 covers the bank-$12 path block and E-0359 its arena
+block beginning at $43DA. E-0360 covers the link/breeding presentation beginning
+at $4919; E-0361 covers the following follower/player step and warp block
+[$4E4B,$4FEA). E-0362 covers sprite-flash/message and map-link warp
+[$4FEA,$51F4), including graphics-id loading/rendering and the shared lift.
+Next are MapExitWarp at $51F4, its destination table and ReturnWarp stages. Each accepted block requires regeneration, grounded
+documentation/naming checks and a fresh full-ROM match of the combined tree.
+Completion also requires reviewing table/RAM contracts, residual opaque assets,
+unsupported semantics and reproducibility; zero address labels alone does not
+establish full readability. This goal remains open.
+
 ## Phase 0 — Archaeological survey and target definition
 
 **Current:** baseline survey delivered; reference identification and adoption audit still pending.

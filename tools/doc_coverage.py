@@ -18,6 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import present  # noqa: E402
 DATA_FIRST = re.compile(r"^\s+(?:(?:db|dw|dl|dfar|ds|INCBIN|dbw|dwb|bigdw|dn|d24)\b|(?:script|objsel|text|sound|snd)_\w+)")
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362")  # whole-routine readings in config/annotations.json
+HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")\)")
+RESTATED = "(E-0347)"  # the generated list of a routine's effects (tools/describe.py)
 GAP = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")  # in code notes
 
 
@@ -48,13 +51,15 @@ def main() -> None:
     if args.bank:
         files = [f for f in files if f.name.startswith(f"bank{args.bank.lower()}")]
     tot = {"code": [0, 0], "data": [0, 0]}
-    gaps = 0
+    gaps = hand = restated = 0
     for f in files:
         header = False  # a commented label earlier in the current run of data labels
         for name, kind, comment, line, text_body in scan(f):
             tot[kind][0] += 1
             if kind == "code":
                 header = False
+                hand += HAND_NOTE.search(comment.split("; why: ")[0]) is not None
+                restated += RESTATED in comment.split("; why: ")[0]
             elif comment:
                 header = True
             covered = bool(comment) or (kind == "data" and (text_body or header))
@@ -69,11 +74,25 @@ def main() -> None:
     for k, (n, d) in tot.items():
         print(f"{k}: {n} labels, {d} documented ({100 * d / max(n, 1):.1f}%), {n - d} without a comment")
     print(f"documented labels whose comment admits a gap with no restatement of the code: {gaps}")
+    print(f"code labels described by a hand-written note ({', '.join(HAND_EVIDENCE)}): {hand}; "
+          f"only by a generated restatement of their instructions (E-0347): {restated}")
     stale = stale_names(files)
     print(f"names in comments that are no label, RAM symbol or constant: {len(stale)} ({sum(stale.values())} uses)")
     if args.list == "stale":
         for w, n in stale.most_common():
             print(n, w)
+
+
+def note_counts(files) -> tuple[int, int]:
+    """(code labels with a whole-routine reading, labels described only by a generated restatement)."""
+    hand = restated = 0
+    for f in files:
+        for _, kind, comment, _, _ in scan(f):
+            if kind == "code":
+                note = comment.split("; why: ")[0]
+                hand += HAND_NOTE.search(note) is not None
+                restated += RESTATED in note
+    return hand, restated
 
 
 def stale_names(files) -> "collections.Counter":

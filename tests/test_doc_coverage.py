@@ -63,6 +63,19 @@ class Coverage(unittest.TestCase):
                    and "; why: " not in comment]
         self.assertEqual(missing[:10], [], f"{len(missing)} restated routines without a purpose")
 
+    def test_hand_written_notes_replace_restatements(self):
+        """E-0357 through E-0361: a routine read by hand carries its note from config/annotations.json instead of
+        the generated restatement, and the number of routines described only by a restatement never grows. Lower
+        RESTATED_AT_MOST as notes are added."""
+        RESTATED_AT_MOST = 3148
+        hand, restated = doc_coverage.note_counts(FILES)
+        self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
+        self.assertGreaterEqual(hand, 2006)
+        import json
+        ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
+        hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]
+        self.assertEqual(len(hand_keys), hand, "every hand-written note sits above exactly one code label")
+
     def test_purpose_lines_quote_notes_that_say_what_a_routine_is_for(self):
         """E-0354: no purpose line quotes a note that only names its routine's dispatch ("runs the routine for X")."""
         import re

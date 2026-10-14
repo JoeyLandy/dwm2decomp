@@ -424,12 +424,9 @@ GameMode5_Init::
     dw GameMode5_Init_SendSGBPaletteSetPacket_3
     dw GameMode5_Init_WriteSaveStepAndSaveRecordIndexEtc
 
-; step 0 of GameMode5_Init: branches on wSGBActive; sets wSGBPaletteSet to 0; calls
-; LoadSGBObjectPalettesFromPointers; branches on wIsCGB; sets wBGPaletteUploadRequest to $7f; sets
-; rVBK to 1; calls FillBytes; sets rVBK to 0; calls DecompressToRAMLocked; sets rBGP to 0; sets
-; rOBP0 to 0; sets rOBP1 to 0; then 16 more steps (see the code) (E-0347)
-; why: step 0 of GameMode5_Init (when wModeState = 0); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 0 (the boot into the intro): on the SGB loads the object
+; palettes; on CGB whitens all BG palettes and clears the BG attributes; then decompresses the title
+; tiles to vTiles1 and sets the DMG palettes and the rest of the screen state. (C1, E-0357)
 GameMode5_Init_LoadSGBObjectPalettesFromPointers::
     ld a, [wSGBActive]
     or a
@@ -512,12 +509,12 @@ GameMode5_Init_LoadSGBObjectPalettesFromPointers::
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; step 1 of GameMode5_Init: calls InitSoundHardware; calls FillBytes; branches on wSGBActive; calls
-; LoadSGBBorderForSetA; calls SpinDelay; sets wSGBPaletteSet to 0; calls SendSGBPaletteSetPacket;
-; calls StartPaletteFade; calls FillBytes; sets rRAMG to $0a; sets rRAMB to 1; branches on
-; sSavedLinkSetting; then 54 more steps (see the code) (E-0347)
-; why: step 1 of GameMode5_Init (when wModeState = 1); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 1 (the title menu): silences the sound, clears the work and link
+; areas, sets the SGB border and palettes and starts the fade in; clears the player, story flags and
+; key-world data and the working SRAM areas (bank 0, the first $6F bytes of bank 1, bank 2), keeping
+; the link setting saved in SRAM; sets message speeds (battle 4, text 1); draws the two menu
+; strings; then checks the save (CheckSaveData): with no save it plays music 9, otherwise it draws
+; the save summary for the result and plays music 2 or 9. (C1, E-0357)
 GameMode5_Init_InitSoundHardware::
     call InitSoundHardware
     xor a
@@ -784,13 +781,10 @@ CopyRect32StrideToVRAM_Bank07::
     jr nz, CopyRect32StrideToVRAM_Bank07
     ret
 
-; step 2 of GameMode5_Init: sets wSaveStep to 0; sets wSaveRecordIndex to 0; branches on wSGBActive;
-; sets wSGBPaletteSet to 0; calls SendSGBPaletteSetPacket; branches on wIsCGB; calls
-; LoadPalette0FromData; calls RunSaveSteps; branches on wSaveStep; branches on wMapType; calls
-; LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot; calls StartPaletteFade; then 22 more steps (see
-; the code) (E-0347)
-; why: step 2 of GameMode5_Init (when wModeState = 2); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 2 (returning to the title from a game): clears the screen state,
+; loads the save (RunSaveSteps until done, and the key world when in one), fades in, decompresses
+; the title tiles, opens the text window and plays music 9 with the window and scroll reset, then
+; turns the screen on. (C1, E-0357)
 GameMode5_Init_SendSGBPaletteSetPacket::
     ld hl, wScreenState
     ld bc, $006f
@@ -892,13 +886,8 @@ GameMode5_Init_SendSGBPaletteSetPacket::
     ld a, $09
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; step 3 of GameMode5_Init: sets wSaveStep to 0; sets wSaveRecordIndex to 0; branches on wSGBActive;
-; sets wSGBPaletteSet to 0; calls SendSGBPaletteSetPacket; branches on wIsCGB; calls
-; LoadPalette0FromData; calls RunSaveSteps; branches on wSaveStep; branches on wMapType; calls
-; LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot; calls StartPaletteFade; then 21 more steps (see
-; the code) (E-0347)
-; why: step 3 of GameMode5_Init (when wModeState = 3); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 3: the same reload of the save and title screen as wModeState 2.
+; (C1, E-0357)
 GameMode5_Init_SendSGBPaletteSetPacket_2::
     ld hl, wScreenState
     ld bc, $006f
@@ -998,13 +987,9 @@ GameMode5_Init_SendSGBPaletteSetPacket_2::
     ld a, $09
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; step 4 of GameMode5_Init: calls GameMode5_Init_ReadLinkSetupMode; sets wSaveStep to 0; sets
-; wSaveRecordIndex to 0; branches on wSGBActive; sets wSGBPaletteSet to 0; calls
-; SendSGBPaletteSetPacket; branches on wIsCGB; calls LoadPalette0FromData; calls RunSaveSteps;
-; branches on wSaveStep; branches on wMapType; calls
-; LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot; then 24 more steps (see the code) (E-0347)
-; why: step 4 of GameMode5_Init (when wModeState = 4); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 4 (the link battle set-up): copies the link rules
+; (GameMode5_Init_ReadLinkSetupMode), reloads the save, decompresses the link screen tiles and shows
+; its strings. (C1, E-0357)
 GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode::
     call GameMode5_Init_ReadLinkSetupMode
     xor a
@@ -1102,10 +1087,8 @@ GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode::
     ld a, $09
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; called from GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode: changes HL, DE, A and B;
-; branches on wLinkSetupMode (E-0347)
-; why: a helper of GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode, in step 4 of
-; GameMode5_Init (when wModeState = 4); GameMode5_Init: start-up for wGameMode = 5 (E-0352, E-0029)
+; Copies the 10 link rule bytes to wLinkRules: the saved copy (wLinkRulesCopy) when wLinkSetupMode
+; is 2, otherwise the defaults at GameMode5_Init_ReadLinkSetupMode_Data. (C1, E-0357)
 GameMode5_Init_ReadLinkSetupMode::
     ld a, [wLinkSetupMode]
     cp $02
@@ -1146,9 +1129,8 @@ CopyLinkRulesToLinkRulesCopy::
     jr nz, .loop
     ret
 
-; step 5 of GameMode5_Init: takes A; changes HL, BC and A; branches on rSTAT (E-0347)
-; why: step 5 of GameMode5_Init (when wModeState = 5); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 5: clears vTiles0 ($1800 bytes, waiting for VRAM access), then
+; continues into wModeState 6. (C1, E-0357)
 GameMode5_Init_WriteSaveStepAndSaveRecordIndexEtc::
     ld hl, vTiles0
     ld bc, $0c00
@@ -1170,13 +1152,10 @@ GameMode5_Init_WriteSaveStepAndSaveRecordIndexEtc::
     or c
     jr nz, .loop
 
-; step 6 of GameMode5_Init: sets wSaveStep to 0; sets wSaveRecordIndex to 0; branches on wSGBActive;
-; sets wSGBPaletteSet to 0; calls SendSGBPaletteSetPacket; branches on wIsCGB; calls
-; LoadPalette0FromData; calls RunSaveSteps; branches on wSaveStep; branches on wMapType; calls
-; LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot; calls WriteVRAMByteInc; then 23 more steps (see
-; the code) (E-0347)
-; why: step 6 of GameMode5_Init (when wModeState = 6); GameMode5_Init: start-up for wGameMode = 5
-; (E-0352, E-0029)
+; Game mode 5 start-up, wModeState 6 (returning after a link battle): clears the screen state,
+; reloads the save, blanks the BG map, restores the party's HP, MP and status from the battle
+; (GameMode5_Init_LoadSRAMRecordWord), fully heals the party, and reopens the title text window with
+; music 9. (C1, E-0357)
 GameMode5_Init_SendSGBPaletteSetPacket_3::
     ld hl, wScreenState
     ld bc, $006f
@@ -1291,11 +1270,8 @@ GameMode5_Init_SendSGBPaletteSetPacket_3::
     ld a, $09
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; called from GameMode5_Init_SendSGBPaletteSetPacket_3: sets rRAMG to $0a; calls LoadSRAMRecordWord;
-; calls LoadSRAMRecordByte; sets rRAMG to 0; returns if wPartyCount is $03; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
-; why: a helper of GameMode5_Init_SendSGBPaletteSetPacket_3, in step 6 of GameMode5_Init (when
-; wModeState = 6); GameMode5_Init: start-up for wGameMode = 5 (E-0352, E-0029)
+; Copies each party member's HP, MP and status from SRAM into wBattleStateBuffer (5 bytes per
+; member), then fills the entries of absent members. (C1, E-0357)
 GameMode5_Init_LoadSRAMRecordWord::
     ld a, $0a
     ld [rRAMG], a
@@ -1367,18 +1343,14 @@ GameMode5_Update::
     dw GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame
     dw GameMode5_Update_2
 
-; step 5 of GameMode5_Update: calls GameMode5_Update_LinkExchangeJoypadPerFrame_4 (E-0347)
-; why: step 5 of GameMode5_Update (when wModeState = 5); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5 frame, wModeState 5: far-calls GameMode5_Update_LinkExchangeJoypadPerFrame_4. (C1,
+; E-0357)
 GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame::
     farcall GameMode5_Update_LinkExchangeJoypadPerFrame_4
     ret
 
-; step 7 of GameMode5_Update: calls GameMode5_Update_LinkExchangeJoypadPerFrame_5 (E-0347)
-; why: step 7 of GameMode5_Update (when wModeState = 7); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5 frame, wModeState 7: far-calls GameMode5_Update_LinkExchangeJoypadPerFrame_5. (C1,
+; E-0357)
 GameMode5_Update_2::
     farcall GameMode5_Update_LinkExchangeJoypadPerFrame_5
     ret
@@ -1442,13 +1414,9 @@ MoveVerticalCursorInListHL::
     call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
-; Branches on wFrameCounterLo; calls EraseCursorAtEntryHL_Bank07; calls
-; WriteBBTileAtWordTableEntryC_Bank07; branches on wSubMenuCursor2; sets wFrameCounterLo to 0; calls
-; WriteC3TileAtWordTableEntryC_Bank07; plays sound $69; calls WriteBBTileAtWordTableEntryC_Bank07;
-; also changes A and C by register arithmetic (E-0347)
-; why: part of RunLinkSession4ScreenState; RunLinkSession4ScreenState: the link battle set-up
-; screens (link session 4): by wTitleScreenState it saves and syncs, sets the battle kind, edits the
-; link battle rules ... (E-0352, E-0354, E-0122)
+; A blinking cursor that Left/Right move through a list: every 8 frames the cursor tile at entry
+; [HL] alternates with a blank; Left and Right change [HL], wrapping within wSubMenuCursor2 entries,
+; and redraw it. (C1, E-0357)
 RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07::
     ld a, [wFrameCounterLo]
     and $07
@@ -1621,10 +1589,7 @@ ShowStringHL_Bank07::
     farcall BeginStringDisplay_Bank07
     ret
 
-; called from GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode: copies H to wStringCategory;
-; copies L to wStringIndex; calls ShowString_Bank07 (E-0347)
-; why: a helper of GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode, in step 4 of
-; GameMode5_Init (when wModeState = 4); GameMode5_Init: start-up for wGameMode = 5 (E-0352, E-0029)
+; Shows string H:L (category H, index L) with ShowString_Bank07. (C1, E-0357)
 GameMode5_Init_ShowString_Bank07::
     ld a, h
     ld [wStringCategory], a
@@ -1844,14 +1809,9 @@ GameMode5_Update_LoadScreens_Screen0::
     dw GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM
     dw GameMode5_Update_WriteWorkBufAndTitleScreenSubState
 
-; step 0 of GameMode5_Update_LoadScreens_Screen0: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM; calls
-; DrawFullScreenBufferToBGMap; calls ResetLinkScreenPalettes; calls StartPaletteFade; advances
-; wTitleScreenSubState; then 1 more step (see the code) (E-0347)
-; why: step 0 of GameMode5_Update_LoadScreens_Screen0 (when wTitleScreenSubState = 0);
-; GameMode5_Update_LoadScreens_Screen0: two DecompressToVRAM steps, then the next link sub-state
-; (E-0352)
+; Intro screen 0, step 0: after the first call, decompresses the screen's tiles, map and (on CGB)
+; attributes and palettes, draws them, resets the palettes and fades in; then starts the screen's
+; timer. (C1, E-0357)
 GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -1896,12 +1856,8 @@ GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM::
     ld [wWorkBuf + $1], a
     ret
 
-; step 2 of GameMode5_Update_LoadScreens_Screen0: increments wWorkBuf; branches on wWorkBuf; sets
-; wWorkBuf to 0; may continue in StartFadeToLinkScreenState1_Skip; may return early; also changes A
-; by register arithmetic (E-0347)
-; why: step 2 of GameMode5_Update_LoadScreens_Screen0 (when wTitleScreenSubState = 2);
-; GameMode5_Update_LoadScreens_Screen0: two DecompressToVRAM steps, then the next link sub-state
-; (E-0352)
+; Intro screen 0, step 2: shows the screen for three seconds (60-frame units in wWorkBuf + 1), then
+; goes to intro screen 1; after two seconds A, B or Start skips ahead. (C1, E-0357)
 GameMode5_Update_WriteWorkBufAndTitleScreenSubState::
     ld a, [wWorkBuf]
     inc a
@@ -1934,9 +1890,7 @@ StartFadeToLinkScreenState1::
     call StartPaletteFade
     ret
 
-; Advances wTitleScreenState; sets wTitleScreenSubState to 0; calls StartPaletteFade (E-0347)
-; why: part of StartFadeToLinkScreenState1; StartFadeToLinkScreenState1: wTitleScreenSubState = 0,
-; wTitleScreenState = 1 and starts palette fade 4 (E-0352, E-0122)
+; Starts the next intro screen: wTitleScreenState + 1, sub-state 0, fade out. (C1, E-0357)
 StartFadeToLinkScreenState1_Skip::
     ld hl, wTitleScreenState
     inc [hl]
@@ -1954,14 +1908,8 @@ GameMode5_Update_LoadScreens_Screen1::
     dw GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_WriteWorkBufAndTitleScreenSubState
 
-; step 0 of GameMode5_Update_LoadScreens_Screen1: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM; calls
-; DrawFullScreenBufferToBGMap; calls ResetLinkScreenPalettes; calls StartPaletteFade; advances
-; wTitleScreenSubState; then 1 more step (see the code) (E-0347)
-; why: step 0 of GameMode5_Update_LoadScreens_Screen1 (when wTitleScreenSubState = 0);
-; GameMode5_Update_LoadScreens_Screen1: two DecompressToVRAM steps, then the next link sub-state
-; (E-0352)
+; Intro screen 1, step 0: decompresses and draws its tiles, map, attributes and palettes, then fades
+; in. (C1, E-0357)
 GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -2006,12 +1954,8 @@ GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM::
     ld [wWorkBuf + $1], a
     ret
 
-; step 2 of GameMode5_Update_LoadScreens_Screen1: increments wWorkBuf; branches on wWorkBuf; sets
-; wWorkBuf to 0; may continue in StartFadeToLinkScreenState2_Skip; may return early; also changes A
-; by register arithmetic (E-0347)
-; why: step 2 of GameMode5_Update_LoadScreens_Screen1 (when wTitleScreenSubState = 2);
-; GameMode5_Update_LoadScreens_Screen1: two DecompressToVRAM steps, then the next link sub-state
-; (E-0352)
+; Intro screen 1, step 2: shows it for three seconds (A, B or Start skip after two), then intro
+; screen 2. (C1, E-0357)
 GameMode5_Update_LoadScreens_WriteWorkBufAndTitleScreenSubState::
     ld a, [wWorkBuf]
     inc a
@@ -2044,9 +1988,7 @@ StartFadeToLinkScreenState2::
     call StartPaletteFade
     ret
 
-; Advances wTitleScreenState; sets wTitleScreenSubState to 0; calls StartPaletteFade (E-0347)
-; why: part of StartFadeToLinkScreenState2; StartFadeToLinkScreenState2: wTitleScreenSubState = 0,
-; wTitleScreenState = 2 and starts palette fade 4 (E-0352, E-0122)
+; Starts the next intro screen: wTitleScreenState + 1, sub-state 0, fade out. (C1, E-0357)
 StartFadeToLinkScreenState2_Skip::
     ld hl, wTitleScreenState
     inc [hl]
@@ -2064,13 +2006,8 @@ GameMode5_Update_LoadScreens_Screen2::
     dw GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM
     dw GameMode5_Update_LoadScreens_Screen2_StartPaletteFade
 
-; step 0 of GameMode5_Update_LoadScreens_Screen2: branches on wTitleScreenSubState; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM; calls
-; DrawFullScreenBufferToBGMap; calls ResetLinkScreenPalettes; calls StartPaletteFade; advances
-; wTitleScreenSubState; then 1 more step (see the code) (E-0347)
-; why: step 0 of GameMode5_Update_LoadScreens_Screen2 (when wTitleScreenSubState = 0);
-; GameMode5_Update_LoadScreens_Screen2: two DecompressToVRAM steps, then a palette fade (E-0352)
+; Intro screen 2, step 0: decompresses and draws its tiles, map, attributes and palettes, then fades
+; in. (C1, E-0357)
 GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM::
     ld a, [wTitleScreenSubState]
     or a
@@ -2115,12 +2052,8 @@ GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM::
     ld [wWorkBuf + $1], a
     ret
 
-; step 2 of GameMode5_Update_LoadScreens_Screen2: increments wWorkBuf; branches on wWorkBuf; returns
-; if wWorkBuf is below $3c; returns if wWorkBuf is $3c; sets wWorkBuf to 0; sets
-; wTitleScreenSubState to 0; sets wTitleScreenState to 3; calls StartPaletteFade; sets wWorkBuf to
-; 0; advances wTitleScreenState; sets wTitleScreenSubState to 0; calls StartPaletteFade (E-0347)
-; why: step 2 of GameMode5_Update_LoadScreens_Screen2 (when wTitleScreenSubState = 2);
-; GameMode5_Update_LoadScreens_Screen2: two DecompressToVRAM steps, then a palette fade (E-0352)
+; Intro screen 2, step 2: after $5A frames goes on to the next state; after $3C frames A, B or Start
+; jump straight to state 3 (the title opening). (C1, E-0357)
 GameMode5_Update_LoadScreens_Screen2_StartPaletteFade::
     ld a, [wWorkBuf]
     inc a
@@ -2153,12 +2086,8 @@ GameMode5_Update_LoadScreens_Screen2_StartPaletteFade::
     call StartPaletteFade
     ret
 
-; step 3 of GameMode5_Update_LoadScreens: may continue in RunGameMode5Case00SubStates; calls
-; RunGameMode5Case00SubStates; sets wTitleScreenState to 4; sets wTitleScreenSubState to 0; calls
-; StartPaletteFade (E-0347)
-; why: step 3 of GameMode5_Update_LoadScreens (when wTitleScreenState = 3);
-; GameMode5_Update_LoadScreens: by wTitleScreenState: steps that decompress screen graphics (two
-; DecompressToVRAM each), one with music, and RunGameMode5Case00SubStates (E-0352)
+; Title state 3: runs the title opening (RunGameMode5Case00SubStates); A, B or Start skip it to
+; state 4. (C1, E-0357)
 GameMode5_Update_LoadScreens_RunGameMode5Case00SubStates::
     ld a, [wJoypadPressed]
     and $0b
@@ -2189,14 +2118,8 @@ RunGameMode5Case00SubStates::
     dw RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_2
     dw RunGameMode5Case00SubStates_StartPaletteFade_ReadWorkBufAndTitleScreenSubState
 
-; step 0 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls DecompressToVRAM;
-; calls WriteVRAMByteInc; branches on wIsCGB; sets rVBK to 1; calls WriteVRAMByteInc; sets rVBK to
-; 0; calls FillBytes; calls CopyFromBankWaitVRAM; calls FillBytes; copies L to wWorkBuf; sets
-; wLinkMenuCounter to 1; then 6 more steps (see the code) (E-0347)
-; why: step 0 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 0);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 0: after the fade decompresses the sprite tiles, clears tiles and both BG maps
+; (and the CGB attributes), and sets up the falling stars. (C1, E-0357)
 RunGameMode5Case00SubStates_DecompressToVRAM::
     ld a, [wFadeState]
     or a
@@ -2288,15 +2211,8 @@ RunGameMode5Case00SubStates_DecompressToVRAM::
     inc [hl]
     ret
 
-; step 1 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; increments wLinkMenuEntry; may
-; return early; calls RunGameMode5Case00SubStates_NextTableByte; increments wLinkMenuCounter;
-; returns if wLinkMenuCounter is below $0a; sets wLinkMenuEntry to 0; advances wTitleScreenSubState
-; (E-0347)
-; why: step 1 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 1);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 1: every 8 frames starts another of 10 falling sparkles (positions from a
+; table), moving the ones already started. (C1, E-0357)
 RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00::
     ld a, [wFadeState]
     or a
@@ -2325,13 +2241,8 @@ RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00::
     inc [hl]
     ret
 
-; step 2 of RunGameMode5Case00SubStates: copies L to wWorkBuf; calls DrawMetaSprite0AtX50YWorkBuf1;
-; calls RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; may return early; advances
-; wTitleScreenSubState; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: step 2 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 2);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 2: moves the title sprite down 1/4 pixel per frame (wWorkBuf) until it reaches
+; Y $50, keeping the sparkles moving. (C1, E-0357)
 RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1::
     ld a, [wWorkBuf]
     ld l, a
@@ -2355,13 +2266,8 @@ RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1::
     inc [hl]
     ret
 
-; step 3 of RunGameMode5Case00SubStates: calls DrawMetaSprite0AtX50YWorkBuf1; calls
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; decrements wLinkMenuEntry; may
-; return early; advances wTitleScreenSubState; calls StartPaletteFade (E-0347)
-; why: step 3 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 3);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 3: keeps the title sprite and sparkles drawn for wLinkMenuEntry frames, then
+; fades out. (C1, E-0357)
 RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1_2::
     call DrawMetaSprite0AtX50YWorkBuf1
     ld a, [wLinkMenuCounter]
@@ -2378,16 +2284,8 @@ RunGameMode5Case00SubStates_DrawMetaSprite0AtX50YWorkBuf1_2::
     call StartPaletteFade
     ret
 
-; step 4 of RunGameMode5Case00SubStates: may continue in
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; calls DecompressToVRAM; calls
-; DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls DecompressToRAMLocked; sets
-; rSVBK to 0; calls CopyFromBankWaitVRAM; calls DrawFullScreenBufferToBGMap; calls
-; ResetLinkScreenPalettes; calls StartPaletteFade; advances wTitleScreenSubState; then 1 more step
-; (see the code) (E-0347)
-; why: step 4 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 4);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 4: after the fade decompresses and draws the next screen (tiles, map,
+; attributes and palettes) and fades in, waiting $5A frames. (C1, E-0357)
 RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     ld a, [wLinkMenuCounter]
     ld b, a
@@ -2432,12 +2330,7 @@ RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWor
     ld [wWorkBuf], a
     ret
 
-; step 5 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; decrements wWorkBuf;
-; returns unless wFadeState is 0; advances wTitleScreenSubState; calls StartPaletteFade (E-0347)
-; why: step 5 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 5);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 5: waits out the $5A frames, then fades out. (C1, E-0357)
 RunGameMode5Case00SubStates_StartPaletteFade::
     ld a, [wFadeState]
     or a
@@ -2452,14 +2345,8 @@ RunGameMode5Case00SubStates_StartPaletteFade::
     call StartPaletteFade
     ret
 
-; step 6 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls DecompressToVRAM;
-; branches on wIsCGB; sets rVBK to 1; calls DecompressToVRAM; sets rVBK to 0; calls
-; CopyFromBankWaitVRAM; calls ResetLinkScreenPalettes; calls StartPaletteFade; calls FillBytes; sets
-; wLinkMenuCounter to 1; copies L to wWorkBuf; then 4 more steps (see the code) (E-0347)
-; why: step 6 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 6);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 6: decompresses the title screen's tiles and both BG map layers and its
+; palettes, fades in and clears the sparkle state. (C1, E-0357)
 RunGameMode5Case00SubStates_DecompressToVRAM_2::
     ld a, [wFadeState]
     or a
@@ -2516,16 +2403,8 @@ RunGameMode5Case00SubStates_DecompressToVRAM_2::
     inc [hl]
     ret
 
-; step 7 of RunGameMode5Case00SubStates: returns unless wFadeState is 0; calls
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; branches on wLinkMenuCounter;
-; increments wLinkMenuEntry; branches on wLinkMenuCounter; calls
-; RunGameMode5Case00SubStates_NextTableByte; increments wLinkMenuCounter; copies L to wWorkBuf;
-; calls SetScrollYFromWorkBuf1; may return early; sets wWorkBuf to $3c; advances
-; wTitleScreenSubState; then 1 more step (see the code) (E-0347)
-; why: step 7 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 7);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 7: starts the sparkles again (one every 8 frames, up to 10) and scrolls the
+; screen up half a pixel per frame (hScrollY from wWorkBuf + 1). (C1, E-0357)
 RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_2::
     ld a, [wFadeState]
     or a
@@ -2577,13 +2456,8 @@ RunGameMode5Case00SubStates_ReadWordTableEntry_Bank00_2::
     inc [hl]
     ret
 
-; step 8 of RunGameMode5Case00SubStates: calls
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; decrements wWorkBuf; may return
-; early; advances wTitleScreenState; sets wTitleScreenSubState to 0; calls StartPaletteFade (E-0347)
-; why: step 8 of RunGameMode5Case00SubStates (when wTitleScreenSubState = 8);
-; RunGameMode5Case00SubStates: the opening of the title screen (game mode 5, state 0): by
-; wTitleScreenSubState it decompresses the graphics, scrolls the title in (the ... (E-0352, E-0354,
-; E-0122)
+; Title opening, step 8: keeps the sparkles moving for a count of frames, then moves to the next
+; title state with a fade. (C1, E-0357)
 RunGameMode5Case00SubStates_StartPaletteFade_ReadWorkBufAndTitleScreenSubState::
     ld a, [wLinkMenuCounter]
     ld b, a
@@ -2623,13 +2497,8 @@ SetScrollYFromWorkBuf1::
     ldh [hScrollY], a
     ret
 
-; Branches on wTitleScreenSubState; calls RunGameMode5Case00SubStates_NextTableByte; branches on C;
-; calls RunGameMode5Case00SubStates_DrawMetaSprite; may continue in
-; RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
-; why: part of RunGameMode5Case00SubStates; RunGameMode5Case00SubStates: the opening of the title
-; screen (game mode 5, state 0): by wTitleScreenSubState it decompresses the graphics, scrolls the
-; title in (the ... (E-0352, E-0354, E-0122)
+; Moves the sparkles: each 6-byte entry from HL (B of them) advances by its kind (falling toward
+; wWorkBuf + 1 + $50, rising, or another path) and is drawn. (C1, E-0357)
 RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     push bc
     push hl
@@ -2751,11 +2620,8 @@ RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState::
     jp nz, RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState
     ret
 
-; Sets hSpriteSubIndex; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteSetIndex to $1e; sets
-; hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; calls DrawMetaSprite (E-0347)
-; why: part of RunGameMode5Case00SubStates; RunGameMode5Case00SubStates: the opening of the title
-; screen (game mode 5, state 0): by wTitleScreenSubState it decompresses the graphics, scrolls the
-; title in (the ... (E-0352, E-0354, E-0122)
+; Draws one sparkle: frame (entry byte & 3) of meta-sprite set $1E at the entry's X and Y, with tile
+; offset $10 and palette 1. (C1, E-0357)
 RunGameMode5Case00SubStates_DrawMetaSprite::
     ld a, [hli]
     and $03
@@ -2777,11 +2643,8 @@ RunGameMode5Case00SubStates_DrawMetaSprite::
     pop hl
     ret
 
-; Calls NextTableByte; branches on wTitleScreenSubState; branches on 0; calls NextTableByte; also
-; changes HL, A and E by register arithmetic (E-0347)
-; why: part of RunGameMode5Case00SubStates; RunGameMode5Case00SubStates: the opening of the title
-; screen (game mode 5, state 0): by wTitleScreenSubState it decompresses the graphics, scrolls the
-; title in (the ... (E-0352, E-0354, E-0122)
+; Starts a sparkle entry at HL: a random X ($30-$6F) and a start Y and kind that depend on the
+; opening step (falling from the title sprite, from slightly above it, or kind 2). (C1, E-0357)
 RunGameMode5Case00SubStates_NextTableByte::
     xor a
     ld [hli], a
@@ -2846,14 +2709,8 @@ GameMode5_Update_LoadScreens_ScreenWithMusic::
     dw GameMode5_Update_LoadScreens_ScreenWithMusic_QueueMusic
     dw GameMode5_Update_LoadScreens_CheckJoypadPressed
 
-; step 0 of GameMode5_Update_LoadScreens_ScreenWithMusic: returns unless wFadeState is 0; calls
-; DecompressToVRAM; calls DecompressToRAMLocked; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToRAMLocked; sets rSVBK to 0; calls CopyFromBankWaitVRAM; calls
-; DrawFullScreenBufferToBGMap; calls ResetLinkScreenPalettes; calls StartPaletteFade; advances
-; wTitleScreenSubState; then 2 more steps (see the code) (E-0347)
-; why: step 0 of GameMode5_Update_LoadScreens_ScreenWithMusic (when wTitleScreenSubState = 0);
-; GameMode5_Update_LoadScreens_ScreenWithMusic: DecompressToVRAM, QueueMusic, then the next link
-; sub-state (E-0352)
+; Title state with music, step 0: after the fade decompresses the title tiles, map, attributes and
+; BG and object palettes and draws them. (C1, E-0357)
 GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM::
     ld a, [wFadeState]
     or a
@@ -2910,11 +2767,7 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM::
     ldh [hScrollY], a
     ret
 
-; step 1 of GameMode5_Update_LoadScreens_ScreenWithMusic: returns unless wFadeState is 0; sets
-; wWorkBuf to $b4; plays music $06; advances wTitleScreenSubState (E-0347)
-; why: step 1 of GameMode5_Update_LoadScreens_ScreenWithMusic (when wTitleScreenSubState = 1);
-; GameMode5_Update_LoadScreens_ScreenWithMusic: DecompressToVRAM, QueueMusic, then the next link
-; sub-state (E-0352)
+; Title state with music, step 1: plays music 6 and sets a $B4-frame timer. (C1, E-0357)
 GameMode5_Update_LoadScreens_ScreenWithMusic_QueueMusic::
     ld a, [wFadeState]
     or a
@@ -2927,13 +2780,9 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_QueueMusic::
     inc [hl]
     ret
 
-; step 2 of GameMode5_Update_LoadScreens_ScreenWithMusic: returns unless wSoundChannel2 is $ff;
-; decrements wWorkBuf; branches on wSoundChannel2; calls StartPaletteFade; sets wTitleScreenSubState
-; to 0; sets wTitleScreenState to 2; calls StartPaletteFade; sets wModeState to 1; sets
-; wWorldMapState to 0; sets wGameMode2Arg to 0; increments wModeChangeRequest (E-0347)
-; why: step 2 of GameMode5_Update_LoadScreens_ScreenWithMusic (when wTitleScreenSubState = 2);
-; GameMode5_Update_LoadScreens_ScreenWithMusic: DecompressToVRAM, QueueMusic, then the next link
-; sub-state (E-0352)
+; Title state with music, step 2: A, B or Start go to the title menu (wModeState 1); when the music
+; has ended on all channels and the timer has run out it goes back to the intro (state 2). (C1,
+; E-0357)
 GameMode5_Update_LoadScreens_CheckJoypadPressed::
     ld a, [wJoypadPressed]
     and $0b
@@ -3064,11 +2913,9 @@ ResetLinkScreenPalettes::
 .return:
     ret
 
-; step 1 of GameMode5_Update: returns unless wFadeState is 0; sets wScreenStep to 2; dispatches on
-; wTitleScreenState; also changes A by register arithmetic (E-0347)
-; why: step 1 of GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5, wModeState 1, the title menu: after any fade runs the screen for wTitleScreenState:
+; the menu, the link start, save-data-lost, continue, the link error, the save screens, the new
+; player set-up, the link refusal and the duo set-up. (C1, E-0357)
 GameMode5_Update_WaitFadeState::
     ld a, [wFadeState]
     and a
@@ -3087,15 +2934,9 @@ GameMode5_Update_WaitFadeState::
     dw GameMode5_Update_ShowGameLinkCannotBe
     dw GameMode5_Update_DuoOwnWL
 
-; step 0 of GameMode5_Update_WaitFadeState: calls RunGameMode5Case01SubStates; branches on
-; wLinkScreenStep; sets wLinkScreenStep to 0; branches on wModeChangeRequest; sets wGridCursorX to
-; $0f; copies B to wLinkTimerLo; calls StartSerialTransferInternalClock; sets wGridCursorX to 1;
-; branches on wLinkStatus & $03; branches on wModeChangeRequest; also changes A and B by register
-; arithmetic (E-0347)
-; why: step 0 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 0), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title menu: runs the menu (RunGameMode5Case01SubStates); when it asks to start a link
+; (wLinkScreenStep), sends that byte with this console driving the clock and waits for the transfer.
+; (C1, E-0357)
 GameMode5_Update_RunGameMode5Case01SubStates::
     call RunGameMode5Case01SubStates
     ld a, [wLinkScreenStep]
@@ -3141,14 +2982,13 @@ RunGameMode5Case01SubStates::
     dw RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep
     dw RunGameMode5Case01SubStates_ReadMenuState
 
-; step 0 of RunGameMode5Case01SubStates: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls FillBytes; branches on wLinkSetting; calls
-; CopyRecordRectToScreenBuffer_Bank07; calls DrawScreenBufferToBGMap0_Bank07; sets wSubMenuCursor to
-; 8; sets wSubMenuCursor2 to 0; copies wMenuState to wMenuOption; sets wLinkScreenStep to 0; then 2
-; more steps (see the code) (E-0347)
-; why: step 0 of RunGameMode5Case01SubStates (when wTitleScreenSubState = 0);
-; RunGameMode5Case01SubStates: the link menu of game mode 5 (state 1): by wTitleScreenSubState it
-; signals the partner over the serial port (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu, step 0: sends the 'not ready' byte $F4 to a partner, draws the menu (the normal one
+; or, with the link setting on, the version with the link entry), sets the cursor range (7 or 8
+; entries) and clears the link state. (C1, E-0357)
+; code: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte; sets wScreenStep to
+; 1; calls FillBytes; branches on wLinkSetting; calls CopyRecordRectToScreenBuffer_Bank07; calls
+; DrawScreenBufferToBGMap0_Bank07; sets wSubMenuCursor to 8; sets wSubMenuCursor2 to 0; copies
+; wMenuState to wMenuOption; sets wLinkScreenStep to 0; then 2 more steps (see the code) (E-0347)
 RunGameMode5Case01SubStates_SerialSendByte::
     xor a
     ld [wScreenStep], a
@@ -3189,14 +3029,11 @@ RunGameMode5Case01SubStates_SerialSendByte::
     inc [hl]
     ret
 
-; step 1 of RunGameMode5Case01SubStates: branches on wFadeState; sets wScreenStep to 0; sets
-; wScreenSubStep to $f4; calls SerialSendByte; sets wScreenStep to 1; branches on wTextFlags; sets
-; wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte; sets wScreenStep to 1;
-; branches on wJoypadPressed; calls SendLinkByteForMenuOption; then 19 more steps (see the code)
-; (E-0347)
-; why: step 1 of RunGameMode5Case01SubStates (when wTitleScreenSubState = 1);
-; RunGameMode5Case01SubStates: the link menu of game mode 5 (state 1): by wTitleScreenSubState it
-; signals the partner over the serial port (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu, step 1: keeps sending $F4 while a fade or text runs; otherwise sends the highlighted
+; entry's byte each frame ($C0 when A is pressed) so a linked partner sees the choice. Up/Down move
+; the cursor (MoveVerticalCursorInListHL). A on a Super Game Boy with entry 2 or later shows message
+; 7 and the save frame and goes to state 5; otherwise A marks entries 0-1 (cursor tile and sound
+; $69) and moves to step 2, which runs the entry. (C1, E-0357)
 RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep::
     ld a, [wFadeState]
     and a
@@ -3325,10 +3162,8 @@ SendLinkByteForMenuOption::
     ld [wScreenStep], a
     ret
 
-; step 2 of RunGameMode5Case01SubStates: dispatches on wMenuState & $0f (E-0347)
-; why: step 2 of RunGameMode5Case01SubStates (when wTitleScreenSubState = 2);
-; RunGameMode5Case01SubStates: the link menu of game mode 5 (state 1): by wTitleScreenSubState it
-; signals the partner over the serial port (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Runs the title menu entry chosen (wMenuState & $0F): continue, new game, the link entries and
+; others. (C1, E-0357)
 RunGameMode5Case01SubStates_ReadMenuState::
     ld a, [wMenuState]
     and $0f
@@ -3342,12 +3177,8 @@ RunGameMode5Case01SubStates_ReadMenuState::
     dw RunGameMode5Case01SubStates_2
     dw RunGameMode5Case01SubStates_3
 
-; step 0 of RunGameMode5Case01SubStates_ReadMenuState: sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; dispatches on wLinkScreenFlag (E-0347)
-; why: step 0 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 0), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu 'continue': sends $F4, then steps by wLinkScreenFlag: show the save summary, wait for
+; the confirmation, load the save. (C1, E-0357)
 RunGameMode5Case01SubStates_SerialSendByte_2::
     xor a
     ld [wScreenStep], a
@@ -3362,16 +3193,8 @@ RunGameMode5Case01SubStates_SerialSendByte_2::
     dw RunGameMode5Case01SubStates_FillBytes
     dw RunGameMode5Case01SubStates_RunSaveSteps
 
-; step 0 of RunGameMode5Case01SubStates_SerialSendByte_2: copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
-; to 0; sets wStringIndex to 4; calls ShowString_Bank07; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
-; CopyRecordRectToScreenBuffer_Bank07; then 4 more steps (see the code) (E-0347)
-; why: step 0 of RunGameMode5Case01SubStates_SerialSendByte_2 (when wLinkScreenFlag = 0), in step 0
-; of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 0), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Continue, step 0: draws the save summary: the 'Master' title string, the summary frame and
+; graphics with the cursor, and the completion mark. (C1, E-0357)
 RunGameMode5Case01SubStates_ShowMaster::
     ld hl, vTiles2 + $680
     ld a, l
@@ -3409,14 +3232,8 @@ RunGameMode5Case01SubStates_ShowMaster::
     inc [hl]
     ret
 
-; step 1 of RunGameMode5Case01SubStates_SerialSendByte_2: increments wLinkScreenFlag; sets wSaveStep
-; to 0; sets wSaveRecordIndex to 0; calls FillBytes; sets wLinkScreenFlag to 0; sets
-; wTitleScreenSubState to 0; calls RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc (E-0347)
-; why: step 1 of RunGameMode5Case01SubStates_SerialSendByte_2 (when wLinkScreenFlag = 1), in step 0
-; of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 0), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Continue, step 1: A confirms (starts loading the save), B returns to the menu (blanking the
+; screen). (C1, E-0357)
 RunGameMode5Case01SubStates_FillBytes::
     ld a, [wJoypadPressed]
     and $01
@@ -3446,18 +3263,9 @@ RunGameMode5Case01SubStates_FillBytes::
     call RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc
     ret
 
-; step 2 of RunGameMode5Case01SubStates_SerialSendByte_2: calls
-; RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc; calls RunSaveSteps; returns unless bit 7 of
-; wSaveStep is set; calls LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot; branches on wMapType;
-; copies wKeyWorldWidth to wMapWidthScreens; copies wKeyWorldHeight to wMapHeightScreens; sets
-; wFieldReturnPhase to 0; sets wTalkCountdown to 0; sets wEncounterDelay to 0; calls
-; ClearBit1OfPlayerAndObjectFlags; copies hPlayerFacing to wFollowerRecords; then 3 more steps (see
-; the code) (E-0347)
-; why: step 2 of RunGameMode5Case01SubStates_SerialSendByte_2 (when wLinkScreenFlag = 2), in step 0
-; of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 0), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Continue, step 2: loads the save (RunSaveSteps until done) and the key world, sets the map size in
+; a key world, clears the field return state and timers, puts the followers on the player, picks a
+; new encounter countdown and goes to state 3 (start the game). (C1, E-0357)
 RunGameMode5Case01SubStates_RunSaveSteps::
     call RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc
     farcall RunSaveSteps
@@ -3500,13 +3308,8 @@ RunGameMode5Case01SubStates_RunSaveSteps::
     ld [wTitleScreenState], a
     ret
 
-; Sets rRAMG to $0a; sets rRAMB to 1; branches on wBattlerRecords; branches on wTitleGameCompleted;
-; sets hSpriteSetIndex to $29; sets hSpriteSubIndex to 0; sets hSpriteTileOffset to 0; sets
-; hSpriteAttrXor to 0; copies L to hSpriteOriginX; copies H to hSpriteOriginXHi; copies L to
-; hSpriteOriginY; copies H to hSpriteOriginYHi; then 5 more steps (see the code) (E-0347)
-; why: part of RunGameMode5Case01SubStates; RunGameMode5Case01SubStates: the link menu of game mode
-; 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port (SerialSendByte),
-; draws the ... (E-0352, E-0354, E-0122)
+; Draws the completion mark on the title save summary: when the save (SRAM bank 1) has a battle
+; record and the game was completed, meta-sprite set $29 at (128, 64). (C1, E-0357)
 RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc::
     ld a, $0a
     ld [rRAMG], a
@@ -3548,12 +3351,8 @@ RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc::
     ld [rRAMG], a
     ret
 
-; step 1 of RunGameMode5Case01SubStates_ReadMenuState: calls ClearScreenStateBlock; calls
-; InitLinkScreenStateBlock (E-0347)
-; why: step 1 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 1), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu 'new game': clears the screen state and starts the new player set-up (wTitleScreenState
+; 6). (C1, E-0357)
 RunGameMode5Case01SubStates_ClearScreenStateBlock::
     call ClearScreenStateBlock
     call InitLinkScreenStateBlock
@@ -3571,15 +3370,9 @@ ClearScreenStateBlock::
     jr nz, .loop
     ret
 
-; step 2 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $f5; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 2 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 2), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 2: when the partner has answered ($FF or $FE in wSubMenuCursor2), marks the
+; entry and goes to state 4 (or 7 when refused, wGridCursorX = 2); otherwise asks to send link byte
+; $F5. (C1, E-0357)
 RunGameMode5Case01SubStates_WriteJoypadReadFlagAndLinkScreenStepEtc::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3635,15 +3428,8 @@ WriteTileSound69ThenTitleScreenState7::
     ld [wSubMenuCursor2], a
     ret
 
-; step 3 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $f6; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 3 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 3), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 3: the same as entry 2 with link byte $F6 and the cursor on the next row.
+; (C1, E-0357)
 RunGameMode5Case01SubStates_SetJoypadReadFlag::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3684,15 +3470,7 @@ RunGameMode5Case01SubStates_SetJoypadReadFlag::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
-; step 4 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $b7; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 4 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 4), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 4: as entries 2 and 3, sending link byte $B7, cursor on row 9. (C1, E-0357)
 RunGameMode5Case01SubStates_WriteJoypadReadFlagAndLinkScreenStepEtc_SetJoypadReadFlag::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3733,15 +3511,7 @@ RunGameMode5Case01SubStates_WriteJoypadReadFlagAndLinkScreenStepEtc_SetJoypadRea
     call WriteTileSound69ThenTitleScreenState7
     ret
 
-; step 6 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $e0; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 6 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 6), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 6: as entry 2, sending link byte $E0, cursor on row 13. (C1, E-0357)
 RunGameMode5Case01SubStates_2::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3782,15 +3552,7 @@ RunGameMode5Case01SubStates_2::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
-; step 7 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $f1; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 7 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 7), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 7: as entry 2, sending link byte $F1, cursor on row 15. (C1, E-0357)
 RunGameMode5Case01SubStates_3::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3831,15 +3593,7 @@ RunGameMode5Case01SubStates_3::
     call WriteTileSound69ThenTitleScreenState7
     ret
 
-; step 5 of RunGameMode5Case01SubStates_ReadMenuState: branches on wSubMenuCursor2; sets
-; wJoypadReadFlag to 0; sets wLinkScreenStep to $dc; sets wScreenStep to 0; sets wScreenSubStep to
-; $f4; calls SerialSendByte; sets wScreenStep to 1; calls WriteTileSound69ThenTitleScreenState4;
-; sets wGridCursorX to 2; sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte;
-; then 2 more steps (see the code) (E-0347)
-; why: step 5 of RunGameMode5Case01SubStates_ReadMenuState (when wMenuState & $0F = 5), in step 2 of
-; RunGameMode5Case01SubStates (when wTitleScreenSubState = 2); RunGameMode5Case01SubStates: the link
-; menu of game mode 5 (state 1): by wTitleScreenSubState it signals the partner over the serial port
-; (SerialSendByte), draws the ... (E-0352, E-0354, E-0122)
+; Title menu link entry 5: as entry 2, sending link byte $DC, cursor on row 11. (C1, E-0357)
 RunGameMode5Case01SubStates_4::
     ld a, [wSubMenuCursor2]
     cp $ff
@@ -3899,13 +3653,8 @@ WriteTileSound69ThenTitleScreenState4::
 SendLinkByteForMenuOption_Data::
     db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
-; step 1 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; sets wMenuState to 1; sets wSubMenuCursor to 1; sets
-; wWorkBuf to 0; calls MoveVerticalCursorInListHL; may return early (E-0347)
-; why: step 1 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 1), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 1, the link start: sends $F4, puts the cursor on entry 1 of a two-entry list and waits
+; for A; A starts the link (the rest of the state follows in the code after it). (C1, E-0357)
 GameMode5_Update_SerialSendByte::
     xor a
     ld [wScreenStep], a
@@ -3945,12 +3694,8 @@ GameMode5_Update_SaveDataLost::
     dw GameMode5_Update_SaveDataLost_ReadSoundChannelSlots
     dw GameMode5_Update_SaveDataLost_FillBytes
 
-; step 0 of GameMode5_Update_SaveDataLost: returns unless wFadeState is 0; sets wStringCategory to
-; 0; sets wStringIndex to 3; calls BeginStringDisplay_Bank07; plays music $52; advances
-; wTitleScreenSubState (E-0347)
-; why: step 0 of GameMode5_Update_SaveDataLost (when wTitleScreenSubState = 0);
-; GameMode5_Update_SaveDataLost: by wTitleScreenSubState: 'Saved data has been lost.', then clears
-; memory (E-0352)
+; Save data lost, step 0: after the fade shows 'Saved data has been lost' (message 3) and plays
+; sound $52. (C1, E-0357)
 GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen::
     ld a, [wFadeState]
     or a
@@ -3966,11 +3711,7 @@ GameMode5_Update_SaveDataLost_ShowSavedDataHasBeen::
     inc [hl]
     ret
 
-; step 1 of GameMode5_Update_SaveDataLost: returns unless wSoundChannelSlots is $ff; advances
-; wTitleScreenSubState (E-0347)
-; why: step 1 of GameMode5_Update_SaveDataLost (when wTitleScreenSubState = 1);
-; GameMode5_Update_SaveDataLost: by wTitleScreenSubState: 'Saved data has been lost.', then clears
-; memory (E-0352)
+; Save data lost, step 1: waits until the sound has finished on both channels. (C1, E-0357)
 GameMode5_Update_SaveDataLost_ReadSoundChannelSlots::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -3981,13 +3722,8 @@ GameMode5_Update_SaveDataLost_ReadSoundChannelSlots::
     inc [hl]
     ret
 
-; step 2 of GameMode5_Update_SaveDataLost: returns unless wTextFlags is 0; sets rRAMG to $0a; sets
-; rRAMB to 0; calls FillBytes; sets rRAMB to 1; calls FillBytes; sets rRAMB to 2; calls FillBytes;
-; sets rRAMB to 3; calls FillBytes; sets rRAMB to 0; sets rRAMG to 0; then 6 more steps (see the
-; code) (E-0347)
-; why: step 2 of GameMode5_Update_SaveDataLost (when wTitleScreenSubState = 2);
-; GameMode5_Update_SaveDataLost: by wTitleScreenSubState: 'Saved data has been lost.', then clears
-; memory (E-0352)
+; Save data lost, step 2: after the message clears all four SRAM banks and draws the empty save
+; frame. (C1, E-0357)
 GameMode5_Update_SaveDataLost_FillBytes::
     ld a, [wTextFlags]
     or a
@@ -4037,14 +3773,8 @@ GameMode5_Update_SaveDataLost_FillBytes::
     call QueueMusic
     ret
 
-; step 3 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls StartPaletteFade; branches on wScriptRunning;
-; branches on wMapType; sets wGameMode to 0; calls ClearScreenStateBlock; increments
-; wModeChangeRequest (E-0347)
-; why: step 3 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 3), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 3, starting the game: sends $F4, fades out and switches to game mode 1 (the field),
+; its state 1 when a script is running, 5 in a key world, 0 otherwise. (C1, E-0357)
 GameMode5_Update_StartPaletteFade::
     xor a
     ld [wScreenStep], a
@@ -4078,15 +3808,8 @@ GameMode5_Update_StartPaletteFade::
     inc [hl]
     ret
 
-; step 7 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls FillTilesRequest; copies wLinkTimerLo & $f0 to
-; wTextBuf0; sets wStringCategory to 0; sets wStringIndex to 7; calls BeginStringDisplay_Bank07;
-; calls CopyRecordRectToScreenBuffer_Bank07; calls CopyRect32StrideToVRAM_Bank07; sets
-; wTitleScreenState to 5 (E-0347)
-; why: step 7 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 7), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 7, link refused: shows message 7 with the error numbers from wLinkTimerLo,
+; wGridCursorY and wScreenState written into the text buffer as digits. (C1, E-0357)
 GameMode5_Update_ShowGameLinkCannotBe::
     xor a
     ld [wScreenStep], a
@@ -4137,15 +3860,8 @@ GameMode5_Update_ShowGameLinkCannotBe::
     ld [wTitleScreenState], a
     ret
 
-; step 8 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls EraseCursorAtEntryHL_Bank07; copies wMenuOption to
-; wMenuState; calls FillTilesRequest; copies wScreenCounter & $f0 to wTextBuf0; sets wStringCategory
-; to 0; sets wStringIndex to 8; calls BeginStringDisplay_Bank07; calls
-; CopyRecordRectToScreenBuffer_Bank07; then 2 more steps (see the code) (E-0347)
-; why: step 8 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 8), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 8, the duo set-up: erases the cursor, restores the menu choice and shows message 8
+; with three numbers (wScreenCounter, wGlyphListPos, wGlyphListStart) as digits. (C1, E-0357)
 GameMode5_Update_DuoOwnWL::
     xor a
     ld [wScreenStep], a
@@ -4199,14 +3915,8 @@ GameMode5_Update_DuoOwnWL::
     ld [wTitleScreenState], a
     ret
 
-; step 4 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; calls FillTilesRequest; sets wStringCategory to 0; sets
-; wStringIndex to 5; calls BeginStringDisplay_Bank07; calls CopyRecordRectToScreenBuffer_Bank07;
-; calls CopyRect32StrideToVRAM_Bank07; advances wTitleScreenState (E-0347)
-; why: step 4 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 4), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 4, link failed: shows 'Game Link is not ...' (message 5) in the window and moves to
+; state 5. (C1, E-0357)
 GameMode5_Update_ShowGameLinkIsNot::
     xor a
     ld [wScreenStep], a
@@ -4233,13 +3943,7 @@ GameMode5_Update_ShowGameLinkIsNot::
     inc [hl]
     ret
 
-; step 5 of GameMode5_Update_WaitFadeState: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls
-; SerialSendByte; sets wScreenStep to 1; returns unless wTextFlags is 0; sets wTitleScreenState to
-; 0; sets wTitleScreenSubState to 0 (E-0347)
-; why: step 5 of GameMode5_Update_WaitFadeState (when wTitleScreenState = 5), in step 1 of
-; GameMode5_Update (when wModeState = 1); GameMode5_Update: game mode 5 (the title screen,
-; new-player set-up and link set-up): by wModeState it loads the screens, waits for the fade, then
-; exchanges ... (E-0352, E-0354)
+; Title state 5: after the message returns to the title menu (state 0). (C1, E-0357)
 GameMode5_Update_SetScreenStep::
     xor a
     ld [wScreenStep], a
@@ -4269,11 +3973,7 @@ GameMode5_Update_NewPlayerSetup::
     dw GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading
     dw GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory
 
-; step 0 of GameMode5_Update_NewPlayerSetup: calls StartPaletteFade; advances wTitleScreenSubState
-; (E-0347)
-; why: step 0 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 0);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 0: fades out. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_ToStartPaletteFadeAndStep::
     ld a, $04
     call StartPaletteFade
@@ -4281,14 +3981,8 @@ GameMode5_Update_NewPlayerSetup_ToStartPaletteFadeAndStep::
     inc [hl]
     ret
 
-; step 1 of GameMode5_Update_NewPlayerSetup: returns unless wFadeState is 0; calls FillBytes;
-; branches on wIsCGB; sets rSVBK to 2; calls FillBytes; sets rSVBK to 0; calls
-; DrawFullScreenBufferToBGMap; branches on wSGBActive; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; then 2 more steps
-; (see the code) (E-0347)
-; why: step 1 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 1);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 1: after the fade blanks the screen buffer and attributes, draws them and
+; prepares the text window. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap::
     ld a, [wFadeState]
     or a
@@ -4343,11 +4037,7 @@ GameMode5_Update_NewPlayerSetup_DrawFullScreenBufferToBGMap::
     inc [hl]
     ret
 
-; step 2 of GameMode5_Update_NewPlayerSetup: returns unless wFadeState is 0; advances
-; wTitleScreenSubState (E-0347)
-; why: step 2 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 2);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 2: waits for the fade. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -4356,11 +4046,8 @@ GameMode5_Update_NewPlayerSetup_WaitFadeState::
     inc [hl]
     ret
 
-; step 3 of GameMode5_Update_NewPlayerSetup: calls SetFlagBit; sets wWorkBuf to 1; checks
-; EVENT_NEVER_SET; sets wWorkBuf to 0; advances wTitleScreenSubState (E-0347)
-; why: step 3 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 3);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 3: sets the story flag EVENT_IN_THE_MIDDLE_OF_THE (the game has begun) and
+; sets the name entry's mode (wWorkBuf) from EVENT_NEVER_SET, which is never set. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_SetFlagBit::
     ld e, LOW(EVENT_IN_THE_MIDDLE_OF_THE)
     ld d, HIGH(EVENT_IN_THE_MIDDLE_OF_THE)
@@ -4378,21 +4065,15 @@ GameMode5_Update_NewPlayerSetup_SetFlagBit::
     inc [hl]
     ret
 
-; step 4 of GameMode5_Update_NewPlayerSetup: advances wTitleScreenSubState (E-0347)
-; why: step 4 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 4);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 4: moves on at once. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_AdvanceTitleScreenSubState::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
-; step 5 of GameMode5_Update_NewPlayerSetup: calls RunNameEntryStateWhenNotFading; calls
-; NextTableByte; copies wRandomLo to wPlayerId; returns unless wArg5 is $ff; branches on wArg5;
-; advances wTitleScreenSubState; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: step 5 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 5);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 5: runs the name entry for the player's name
+; (RunNameEntryStateWhenNotFading); while it runs, a random player id is drawn each frame; when it
+; finishes, copies the 10-glyph name to wPlayerName. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading::
     ld hl, wArg1
     ld a, $00
@@ -4424,14 +4105,10 @@ GameMode5_Update_NewPlayerSetup_RunNameEntryStateWhenNotFading::
     inc [hl]
     ret
 
-; step 6 of GameMode5_Update_NewPlayerSetup: sets hMapId to $38; sets hMapScreenX to 0; sets
-; hMapScreenY to 0; sets hPlayerX to $e0; sets hPlayerY to 0; sets hPlayerFacing to 0; sets
-; wFollowerRecords to 0; sets wPartyCount to 0; sets wPartyList to 0; calls
-; InitGoldAndClearInventory; calls GameMode5_Update_NewPlayerSetup_LoadMonsterRecord; calls
-; FillBytes; then 2 more steps (see the code) (E-0347)
-; why: step 6 of GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 6);
-; GameMode5_Update_NewPlayerSetup: by wTitleScreenSubState: fades, sets a flag, runs name entry,
-; then InitGoldAndClearInventory (E-0352)
+; New player set-up, step 6: puts the player on map $38 at screen (0, 0), position ($E0, 0), empty
+; party, gold 100 and an empty inventory, creates the starting monster record
+; (GameMode5_Update_NewPlayerSetup_LoadMonsterRecord), clears the key list and starts the game
+; (title state 3). (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory::
     ld a, $38
     ldh [hMapId], a
@@ -4478,15 +4155,9 @@ InitGoldAndClearInventory::
     call FillBytes
     ret
 
-; called from GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory: sets rRAMG to $0a; sets
-; rRAMB to 0; copies L to wMonsterId; calls LoadMonsterRecord; calls CopyBBytesDEToHL_Bank07; copies
-; L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord; calls FillBBytesAtHL_Bank07;
-; calls CopyBBytesDEToHL_Bank07; sets sRecords + $d to 0; calls
-; GameMode5_Update_NewPlayerSetup_WriteUnknownName; then 2 more steps (see the code) (E-0347)
-; why: a helper of GameMode5_Update_NewPlayerSetup_InitGoldAndClearInventory, in step 6 of
-; GameMode5_Update_NewPlayerSetup (when wTitleScreenSubState = 6); GameMode5_Update_NewPlayerSetup:
-; by wTitleScreenSubState: fades, sets a flag, runs name entry, then InitGoldAndClearInventory
-; (E-0352)
+; Creates the starting monster in SRAM record 0 from MonsterTable entry 1: state 2 (in the party), a
+; fixed six-glyph name, no parents, the player as owner, then its level, HP, MP, stats, skills and
+; resistances from the template and species, written field by field. (C1, E-0357)
 GameMode5_Update_NewPlayerSetup_LoadMonsterRecord::
     ld a, $0a
     ld [rRAMG], a
@@ -4714,15 +4385,9 @@ GameMode5_Update_NewPlayerSetup_WriteUnknownName::
     jr nz, .loop
     ret
 
-; step 2 of GameMode5_Update: may continue in
-; RunLinkSession4ScreenState_CallLinkExchangeJoypadPerFrame; calls LinkExchangeJoypadPerFrame;
-; branches on wTitleScreenState; branches on wScreenState; branches on wMenuCounter; calls
-; RunSaveGameSteps; returns unless bit 7 of wSaveStep is set; sets wMenuCounter to 0; returns if
-; wLinkScene is 0; sets wGameMode to 1; sets wModeChangeRequest to 1; sets wMapType to 0; then 25
-; more steps (see the code) (E-0347)
-; why: step 2 of GameMode5_Update (when wModeState = 2); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5, wModeState 2, a link session in progress: exchanges the joypad each frame
+; (LinkExchangeJoypadPerFrame); in title state 1 runs the save when asked (wMenuCounter) and, when
+; the link scene is set, switches to game mode 1 with talk event $21 and its script. (C1, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame::
     ld a, [wLinkSession]
     cp $05
@@ -4825,11 +4490,7 @@ GameMode5_Update_LinkExchangeJoypadPerFrame::
     ret
     db $c9
 
-; step 3 of GameMode5_Update: calls LinkExchangeJoypadPerFrame; branches on wTitleScreenState
-; (E-0347)
-; why: step 3 of GameMode5_Update (when wModeState = 3); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5, wModeState 3: exchanges the joypad each frame. (C1, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame_2::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -4840,14 +4501,8 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_2::
 .return:
     ret
 
-; step 4 of GameMode5_Update: calls LinkExchangeJoypadPerFrame; branches on wTitleScreenState;
-; branches on wScreenState; returns unless wScreenSubStep is 0; branches on wScreenStep; calls
-; DrawListEntriesCell5SpeciesSprite; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0;
-; branches on wScreenStep; calls DrawRecordBufBSpeciesSpritePart_BankF1; calls
-; DrawRecordBufBSpeciesSprites; also changes A by register arithmetic (E-0347)
-; why: step 4 of GameMode5_Update (when wModeState = 4); GameMode5_Update: game mode 5 (the title
-; screen, new-player set-up and link set-up): by wModeState it loads the screens, waits for the
-; fade, then exchanges ... (E-0352, E-0354)
+; Game mode 5, wModeState 4: exchanges the joypad each frame and, on the record screens
+; (wScreenState $0C or $0D), redraws the species sprites the current step shows. (C1, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame_3::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -4923,13 +4578,8 @@ RunLinkSession4ScreenState_SaveAndSync::
     dw RunLinkSession4ScreenState_SetTitleScreenSubState
     dw RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage
 
-; step 0 of RunLinkSession4ScreenState_SaveAndSync: returns unless wFadeState is 0; calls
-; RunSaveSteps; calls RunLinkSession4ScreenState_SaveAndSync_LoadSRAMRecordWord; calls
-; FullyHealParty; sets wSubMenuCursor to 4; sets wLinkSendByte to 0; increments wTitleScreenSubState
-; (E-0347)
-; why: step 0 of RunLinkSession4ScreenState_SaveAndSync (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_SaveAndSync: by wTitleScreenSubState: RunSaveSteps, then a link message
-; wait (E-0352)
+; Link battle set-up, save and sync, step 0: after the fade saves the game, copies the party's HP,
+; MP and status, fully heals the party and starts the sync. (C1, E-0357)
 RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps::
     ld a, [wFadeState]
     or a
@@ -4948,13 +4598,8 @@ RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps::
     ld [wTitleScreenSubState], a
     ret
 
-; called from RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps: sets rRAMG to $0a; calls
-; LoadSRAMRecordWord; calls LoadSRAMRecordByte; sets rRAMG to 0; returns if wPartyCount is $03; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps, in step 0 of
-; RunLinkSession4ScreenState_SaveAndSync (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_SaveAndSync: by wTitleScreenSubState: RunSaveSteps, then a link message
-; wait (E-0352)
+; Copies each party member's HP, MP and status from SRAM into wBattleStateBuffer (5 bytes each),
+; then fills the entries of absent members. (C1, E-0357)
 RunLinkSession4ScreenState_SaveAndSync_LoadSRAMRecordWord::
     ld a, $0a
     ld [rRAMG], a
@@ -5011,11 +4656,7 @@ RunLinkSession4ScreenState_SaveAndSync_LoadSRAMRecordWord::
     inc de
     ret
 
-; step 1 of RunLinkSession4ScreenState_SaveAndSync: increments wTitleScreenSubState; sets
-; wLinkSendByte to $d3 (E-0347)
-; why: step 1 of RunLinkSession4ScreenState_SaveAndSync (when wTitleScreenSubState = 1);
-; RunLinkSession4ScreenState_SaveAndSync: by wTitleScreenSubState: RunSaveSteps, then a link message
-; wait (E-0352)
+; Save and sync, step 1: sends link byte $D3. (C1, E-0357)
 RunLinkSession4ScreenState_SetTitleScreenSubState::
     ld a, [wTitleScreenSubState]
     inc a
@@ -5024,11 +4665,8 @@ RunLinkSession4ScreenState_SetTitleScreenSubState::
     ld [wLinkSendByte], a
     ret
 
-; step 2 of RunLinkSession4ScreenState_SaveAndSync: returns unless wLinkMessage is $d3; sets
-; wLinkSendByte to 0; sets wTitleScreenSubState to 0; increments wTitleScreenState (E-0347)
-; why: step 2 of RunLinkSession4ScreenState_SaveAndSync (when wTitleScreenSubState = 2);
-; RunLinkSession4ScreenState_SaveAndSync: by wTitleScreenSubState: RunSaveSteps, then a link message
-; wait (E-0352)
+; Save and sync, step 2: waits for the partner's $D3, then moves to the next set-up state. (C1,
+; E-0357)
 RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $d3
@@ -5041,13 +4679,11 @@ RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage::
     ld [wTitleScreenState], a
     ret
 
-; step 1 of RunLinkSession4ScreenState: branches on wLinkMessage; sets wTitleScreenSubState to 1;
-; sets wLinkScreenFlag to 1; sets wLinkSendByte to 1; advances wTitleScreenState; branches on $01;
-; sets wBattleKind to 8; advances wTitleScreenState; sets wLinkSendByte to 0; branches on 0; calls
-; InitLinkRulesPresetB; sets wBattleKind to 9; then 23 more steps (see the code) (E-0347)
-; why: step 1 of RunLinkSession4ScreenState (when wTitleScreenState = 1);
-; RunLinkSession4ScreenState: the link battle set-up screens (link session 4): by wTitleScreenState
-; it saves and syncs, sets the battle kind, edits the link battle rules ... (E-0352, E-0354, E-0122)
+; Link battle set-up, state 1, the battle type choice. A partner's choice is followed: $FE edit the
+; rules, $FD battle kind 8 with the current rules, $FC battle kind 9 with preset rules B, $FB battle
+; kind 8 with preset rules A. Otherwise this side chooses among four entries: preset A (sends $FB,
+; state 5), preset B ($FC, state 5), the current rules (loaded with LoadInvertedBit7FlagsToWorkBuf,
+; $FD, state 3) and edit the rules (or B: sends $FE, next state); sound $69 on A. (C1, E-0357)
 RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -5258,15 +4894,9 @@ RunLinkSession4ScreenState_SetBattleKindAndSync::
     dw RunLinkSession4ScreenState_SetBattleKindAndSync_2
     dw RunLinkSession4ScreenState_SetBattleKindAndSync_FillBytes
 
-; step 0 of RunLinkSession4ScreenState_SetBattleKindAndSync: branches on wLinkMessage; branches on
-; wLinkRole; calls InitLinkRulesPresetA; sets wBattleKind to 8; sets wLinkSetupMode to 0; sets
-; wTitleScreenState to 5; branches on wLinkRole; calls InitLinkRulesPresetB; sets wBattleKind to 9;
-; sets wLinkSetupMode to 1; sets wTitleScreenState to 5; branches on wLinkRole; then 5 more steps
-; (see the code) (E-0347)
-; why: step 0 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 0: on the side that does not drive the clock (wLinkRole bit 1 clear),
+; acts on the partner's choice: $FB preset rules A and battle kind 8, $FC preset rules B and battle
+; kind 9, $FD as the following lines; $01 and $FE continue. (C1, E-0357)
 RunLinkSession4ScreenState_CheckLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -5328,12 +4958,7 @@ RunLinkSession4ScreenState_CheckLinkMessage::
     inc [hl]
     ret
 
-; step 1 of RunLinkSession4ScreenState_SetBattleKindAndSync: advances wTitleScreenSubState; sets
-; wLinkSendByte to 2 (E-0347)
-; why: step 1 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 1);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 1: sends link byte 2. (C1, E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_SetTitleScreenSubState::
     ld hl, wTitleScreenSubState
     inc [hl]
@@ -5341,13 +4966,8 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_SetTitleScreenSubState::
     ld [wLinkSendByte], a
     ret
 
-; step 2 of RunLinkSession4ScreenState_SetBattleKindAndSync: returns unless wLinkMessage is $02;
-; sets wLinkSendByte to 0; calls CopyRecordRectToScreenBuffer_Bank07; calls
-; CopyRect32StrideToVRAM_Bank07; advances wTitleScreenSubState (E-0347)
-; why: step 2 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 2);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 2: waits for the partner's 2, then redraws the message window. (C1,
+; E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $02
@@ -5364,12 +4984,7 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 3 of RunLinkSession4ScreenState_SetBattleKindAndSync: returns unless wLinkMessage is 0;
-; advances wTitleScreenSubState (E-0347)
-; why: step 3 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 3);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 3: waits until the partner's message byte returns to 0. (C1, E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage_AdvanceTitleScreenSubState::
     ld a, [wLinkMessage]
     or a
@@ -5378,12 +4993,8 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_WaitLinkMessage_AdvanceTitleScre
     inc [hl]
     ret
 
-; step 4 of RunLinkSession4ScreenState_SetBattleKindAndSync: branches on wLinkScreenFlag; calls
-; ShowStringHL_Bank07; advances wTitleScreenSubState (E-0347)
-; why: step 4 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 4: shows message $0302, or $0303 when wLinkScreenFlag is set. (C1,
+; E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_ShowStringHL_Bank07::
     ld hl, $0302
     ld a, [wLinkScreenFlag]
@@ -5397,12 +5008,7 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_ShowStringHL_Bank07::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession4ScreenState_SetBattleKindAndSync: returns unless wTextFlags is 0; sets
-; wLinkSendByte to 1; advances wTitleScreenSubState (E-0347)
-; why: step 5 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 5);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 5: after the message sends link byte 1. (C1, E-0357)
 RunLinkSession4ScreenState_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -5413,12 +5019,7 @@ RunLinkSession4ScreenState_WaitTextFlags::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession4ScreenState_SetBattleKindAndSync: returns unless wLinkMessage is $01;
-; advances wTitleScreenSubState (E-0347)
-; why: step 6 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 6);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 6: waits for the partner's 1. (C1, E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_2::
     ld a, [wLinkMessage]
     cp $01
@@ -5427,14 +5028,8 @@ RunLinkSession4ScreenState_SetBattleKindAndSync_2::
     inc [hl]
     ret
 
-; step 7 of RunLinkSession4ScreenState_SetBattleKindAndSync: sets wLinkSession to 0; sets
-; wLinkExchangeState to 0; sets wLinkRole to 0; sets wLinkStatus to 0; sets wLinkMode to 0; sets
-; wLinkMessage to 0; sets wLinkSendByte to 0; sets wLinkScreenStep to 0; calls FillBytes; increments
-; wModeChangeRequest; calls StartPaletteFade (E-0347)
-; why: step 7 of RunLinkSession4ScreenState_SetBattleKindAndSync (when wTitleScreenSubState = 7);
-; RunLinkSession4ScreenState_SetBattleKindAndSync: by wTitleScreenSubState: writes wBattleKind and
-; the link screen state, copies a record rectangle, shows a string and waits for the partner
-; (E-0352)
+; Battle kind and sync, step 7: ends the link session (clears the link state and work bytes) and
+; returns to the title (game mode 5, wModeState 1) with a fade. (C1, E-0357)
 RunLinkSession4ScreenState_SetBattleKindAndSync_FillBytes::
     xor a
     ld [wLinkSession], a
@@ -5501,14 +5096,9 @@ RunLinkSession4ScreenState_EditRules::
     dw RunLinkSession4ScreenState_EditRules_SetTitleScreenSubState
     dw RunLinkSession4ScreenState_EditRules_QueueSoundEffect_RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07
 
-; step 0 of RunLinkSession4ScreenState_EditRules: branches on wLinkMessage; branches on wLinkRole;
-; sets wTitleScreenSubState to 1; sets wLinkScreenFlag to 1; sets wLinkSendByte to 1; sets
-; wTitleScreenState to 2; branches on wLinkRole; sets wBattleKind to 8; sets wTitleScreenState to 4;
-; sets wLinkSendByte to 0; branches on wLinkRole; calls InitLinkRulesPresetA; then 15 more steps
-; (see the code) (E-0347)
-; why: step 0 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 0: on the side not driving the clock follows the partner's choice ($FE
+; editing, $FD battle kind 8, $FB preset A, $FC preset B); otherwise draws the rules screen. (C1,
+; E-0357)
 RunLinkSession4ScreenState_WriteSubMenuCursorAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -5588,14 +5178,8 @@ RunLinkSession4ScreenState_WriteSubMenuCursorAndLinkSendByteEtc::
     ld [wLinkSendByte], a
     ret
 
-; step 1 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; may return
-; early; plays sound $69; calls WriteBCTileAtWordTableEntry_Bank07; sets wSubMenuCursor2 to 2;
-; copies the byte at wWorkBuf to wMenuSelectedMember; copies the byte at
-; RunLinkSession4ScreenState_EditRules_Data to wTitleScreenSubState; sets wLinkScreenFlag to 0; also
-; changes HL, DE and A by register arithmetic (E-0347)
-; why: step 1 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 1);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 1: the cursor over the rule list; A opens the selected rule (its current
+; value from wWorkBuf and its step from RunLinkSession4ScreenState_EditRules_Data). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL::
     ld hl, wMenuSubState
     ld de, CursorPositionWords_Bank07 + $18
@@ -5637,11 +5221,7 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL::
 RunLinkSession4ScreenState_EditRules_Data::
     db $03, $0b, $15, $18, $1b, $1e
 
-; step 2 of RunLinkSession4ScreenState_EditRules: sets wLinkSendByte to $fe; sets wTitleScreenState
-; to 2; sets wTitleScreenSubState to 0; sets wLinkScreenFlag to 0 (E-0347)
-; why: step 2 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 2);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 2 (leave): sends $FE and returns to the battle type choice. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
@@ -5653,15 +5233,9 @@ RunLinkSession4ScreenState_EditRules_SetLinkSendByte::
     ld [wLinkScreenFlag], a
     ret
 
-; step 3 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; copies wMenuSelectedMember to wWorkBuf;
-; sets wTitleScreenSubState to 0; may return early; plays sound $69; sets wTitleScreenSubState to 2;
-; calls SetHLBit7FromInverseABit0; sets wLinkSetupMode to 2; calls CopyLinkRulesToLinkRulesCopy;
-; sets wLinkSendByte to 1; advances wTitleScreenSubState; also changes HL, DE and A by register
-; arithmetic (E-0347)
-; why: step 3 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 3);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 3, the 'decide' rule: Left/Right choose yes or no; B goes back keeping the
+; choice; A with 'no' returns to the list; with 'yes' it writes the edited rule values from wWorkBuf
+; + 1 onward into wLinkRules (each as bit 7, inverted) and starts sending them. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $24
@@ -5725,11 +5299,7 @@ SetHLBit7FromInverseABit0::
     ld [hli], a
     ret
 
-; step 4 of RunLinkSession4ScreenState_EditRules: returns unless wLinkMessage is $02; sets
-; wLinkSendByte to 2; advances wTitleScreenSubState (E-0347)
-; why: step 4 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 4: waits for the partner's 2 and answers 2. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $02
@@ -5740,13 +5310,8 @@ RunLinkSession4ScreenState_EditRules_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession4ScreenState_EditRules: sets wLinkBufferCountLo to $0a; copies L to
-; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
-; wLinkBufferPtrHi; sets wLinkReady to 1; sets wLinkSendByte to $ff; advances wTitleScreenSubState
-; (E-0347)
-; why: step 5 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 5);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 5: starts the transfer of the 10 rule bytes from wLinkRules, receiving the
+; partner's into wLinkPartnerName, and sends $FF. (C1, E-0357)
 RunLinkSession4ScreenState_WriteLinkBufferCountLoAndLinkTimeoutLoEtc::
     ld a, $0a
     ld [wLinkBufferCountLo], a
@@ -5768,11 +5333,7 @@ RunLinkSession4ScreenState_WriteLinkBufferCountLoAndLinkTimeoutLoEtc::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession4ScreenState_EditRules: returns unless wLinkMessage is $f0; sets
-; wLinkSendByte to 0; advances wTitleScreenSubState (E-0347)
-; why: step 6 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 6);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 6: waits for the partner's $F0 (transfer done). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
@@ -5783,11 +5344,7 @@ RunLinkSession4ScreenState_EditRules_WaitLinkMessage_SetLinkSendByte::
     inc [hl]
     ret
 
-; step 7 of RunLinkSession4ScreenState_EditRules: calls CopyRecordRectToScreenBuffer_Bank07; calls
-; CopyRect32StrideToVRAM_Bank07; advances wTitleScreenSubState (E-0347)
-; why: step 7 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 7);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 7: redraws the message window. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep::
     ld hl, TileRect_SaveCheckScreenRects_2
     call CopyRecordRectToScreenBuffer_Bank07
@@ -5799,11 +5356,7 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep:
     inc [hl]
     ret
 
-; step 8 of RunLinkSession4ScreenState_EditRules: calls ShowStringHL_Bank07; advances
-; wTitleScreenSubState (E-0347)
-; why: step 8 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 8);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 8: shows message $0306. (C1, E-0357)
 RunLinkSession4ScreenState_ToShowStringHL_Bank07AndStep::
     ld hl, $0306
     call ShowStringHL_Bank07
@@ -5811,11 +5364,7 @@ RunLinkSession4ScreenState_ToShowStringHL_Bank07AndStep::
     inc [hl]
     ret
 
-; step 9 of RunLinkSession4ScreenState_EditRules: returns unless wTextFlags is 0; advances
-; wTitleScreenSubState (E-0347)
-; why: step 9 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 9);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 9: waits for the message. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -5824,13 +5373,8 @@ RunLinkSession4ScreenState_EditRules_WaitTextFlags::
     inc [hl]
     ret
 
-; step 10 of RunLinkSession4ScreenState_EditRules: branches on wLinkMessage; sets wTitleScreenState
-; to 2; sets wTitleScreenSubState to 0; sets wLinkScreenFlag to 1; sets wLinkSendByte to 1; returns
-; unless $01 is $01; sets wLinkSendByte to 1; sets wTitleScreenState to 5; sets wTitleScreenSubState
-; to 1; sets wLinkScreenFlag to 0 (E-0347)
-; why: step 10 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 10);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 10: the partner's $FE returns to the battle type choice (edit again); its
+; 1 goes to state 5 (the battle). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CheckLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
@@ -5858,14 +5402,8 @@ RunLinkSession4ScreenState_EditRules_CheckLinkMessage::
     ld [wLinkScreenFlag], a
     ret
 
-; step 11 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; sets wTitleScreenSubState to 0; may return
-; early; plays sound $69; branches on wMenuSelectedMember; sets wTitleScreenSubState to 0; advances
-; wTitleScreenSubState; sets wLinkScreenFlag to 0; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 11 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 11);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 11, a yes/no rule: Left/Right choose; B goes back keeping it; A stores it,
+; and 'yes' moves on to the rule's details. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_2::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $28
@@ -5900,16 +5438,9 @@ RunLinkSession4ScreenState_EditRules_2::
     ld [wLinkScreenFlag], a
     ret
 
-; step 12 of RunLinkSession4ScreenState_EditRules: calls CopyRecordRectToScreenBuffer_Bank07; calls
-; DrawScreenBufferToBGMap0_Bank07; branches on c; calls
-; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; calls
-; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; calls
-; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; calls
-; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; branches on c; calls
-; RunLinkSession4ScreenState_EditRules_WriteVRAMByte; then 9 more steps (see the code) (E-0347)
-; why: step 12 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 12);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 12: draws the rule details screen and, for each rule bit of wLinkRules + 1
+; (bits 6, 5, 4 and on), stores its value in wWorkBuf + 6 onward (2 when the rule is off, else the
+; matching bit of wLinkRules + 2) and draws its mark. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07::
     ld hl, TileRect_SaveCheckScreenRects_2 + $320
     call CopyRecordRectToScreenBuffer_Bank07
@@ -6010,12 +5541,8 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07::
     inc [hl]
     ret
 
-; called from RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07: calls
-; WriteVRAMByte (E-0347)
-; why: a helper of RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07, in step
-; 12 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 12);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Draws a rule detail mark: cursor tile $BC at HL + 2 * A, then moves HL down two BG map rows for
+; the next rule. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteVRAMByte::
     push bc
     push hl
@@ -6029,12 +5556,9 @@ RunLinkSession4ScreenState_EditRules_WriteVRAMByte::
     pop bc
     ret
 
-; step 13 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; plays sound
-; $69; calls WriteBCTileAtWordTableEntry_Bank07; may return early; sets wTitleScreenSubState to 0;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 13 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 13);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 13: the cursor over the rule details. A opens the detail chosen (step 14 +
+; entry); B packs the chosen detail values (wWorkBuf + 6 onward, 2 meaning off) back into the rule
+; bits of wLinkRules + 1 and + 2 and returns. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_WriteBCTileAtWordTableEntry_Bank07::
     ld hl, wMenuCursor
     ld de, CursorPositionWords_Bank07 + $3c
@@ -6141,12 +5665,8 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_WriteBCTileAtWor
     ld [wTitleScreenSubState], a
     ret
 
-; step 14 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 14 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 14);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 14: chooses detail value 1 among its options (Left/Right on wWorkBuf + 6);
+; A or B marks it and returns to the detail list (step 13). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07::
     ld hl, wWorkBuf + $6
     ld de, CursorPositionWords_Bank07 + $4a
@@ -6164,12 +5684,8 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07::
     ld [wTitleScreenSubState], a
     ret
 
-; step 15 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 15 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 15);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 15: chooses detail value 2 (wWorkBuf + 7), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_2::
     ld hl, wWorkBuf + $7
     ld de, CursorPositionWords_Bank07 + $50
@@ -6187,12 +5703,8 @@ RunLinkSession4ScreenState_EditRules_WriteBCTileAtWordTableEntry_Bank07_2::
     ld [wTitleScreenSubState], a
     ret
 
-; step 16 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 16 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 16);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 16: chooses detail value 3 (wWorkBuf + 8), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_3::
     ld hl, wWorkBuf + $8
     ld de, CursorPositionWords_Bank07 + $56
@@ -6210,12 +5722,8 @@ RunLinkSession4ScreenState_EditRules_3::
     ld [wTitleScreenSubState], a
     ret
 
-; step 17 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 17 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 17);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 17: chooses detail value 4 (wWorkBuf + 9), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_4::
     ld hl, wWorkBuf + $9
     ld de, CursorPositionWords_Bank07 + $5c
@@ -6233,12 +5741,8 @@ RunLinkSession4ScreenState_EditRules_4::
     ld [wTitleScreenSubState], a
     ret
 
-; step 18 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 18 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 18);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 18: chooses detail value 5 (wWorkBuf + $A), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_5::
     ld hl, wWorkBuf + $a
     ld de, CursorPositionWords_Bank07 + $62
@@ -6256,12 +5760,8 @@ RunLinkSession4ScreenState_EditRules_5::
     ld [wTitleScreenSubState], a
     ret
 
-; step 19 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 19 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 19);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 19: chooses detail value 6 (wWorkBuf + $B), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_6::
     ld hl, wWorkBuf + $b
     ld de, CursorPositionWords_Bank07 + $68
@@ -6279,12 +5779,8 @@ RunLinkSession4ScreenState_EditRules_6::
     ld [wTitleScreenSubState], a
     ret
 
-; step 20 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; calls
-; WriteBCTileAtWordTableEntry_Bank07; sets wTitleScreenSubState to $0d (E-0347)
-; why: step 20 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 20);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 20: chooses detail value 7 (wWorkBuf + $C), then back to the detail list.
+; (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_7::
     ld hl, wWorkBuf + $c
     ld de, CursorPositionWords_Bank07 + $6e
@@ -6302,14 +5798,8 @@ RunLinkSession4ScreenState_EditRules_7::
     ld [wTitleScreenSubState], a
     ret
 
-; step 21 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; sets wTitleScreenSubState to 0; may return
-; early; plays sound $69; branches on wMenuSelectedMember; sets wTitleScreenSubState to 0; advances
-; wTitleScreenSubState; sets wLinkScreenFlag to 0; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 21 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 21);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 21, the second yes/no rule (wWorkBuf + 2): B goes back keeping the choice;
+; A stores it and 'yes' moves to its values. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_3::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $2c
@@ -6344,13 +5834,9 @@ RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_3::
     ld [wLinkScreenFlag], a
     ret
 
-; step 22 of RunLinkSession4ScreenState_EditRules: calls CopyRecordRectToScreenBuffer_Bank07; calls
-; CopyRect32StrideToVRAM_Bank07; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2;
-; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3; sets wMenuCursor; sets
-; wSubMenuCursor to 2; advances wTitleScreenSubState (E-0347)
-; why: step 22 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 22);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 22: draws the level rule's panel with its two numbers (the total of
+; wLinkRules + 4/5 and the limit in wLinkRules + 3) and sets the cursor on the entry chosen by bit 6
+; of wLinkRules + 4's high byte. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07_CopyRect32StrideToVRAM_Bank07::
     ld hl, RunLinkSession4ScreenState_EditRules_TileRect
     call CopyRecordRectToScreenBuffer_Bank07
@@ -6371,13 +5857,10 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07_CopyRec
     inc [hl]
     ret
 
-; step 23 of RunLinkSession4ScreenState_EditRules: calls MoveVerticalCursorInListHL; branches on H;
-; branches on L; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2; branches on L;
-; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3; may return early; plays sound $69;
-; sets wTitleScreenSubState to 0; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 23 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 23);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 23: the level rule's values. Up/Down choose between the total level and
+; the single-level limit; Left/Right change it: the total (wLinkRules + 4/5) between 3 and 297
+; ($129), the limit (wLinkRules + 3) between 1 and 99. A or B store which form is chosen in bit 6 of
+; wLinkRules + 5 and return to the rule list. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_2::
     ld hl, wMenuCursor
     ld de, CursorPositionWords_Bank07 + $74
@@ -6471,11 +5954,9 @@ RunLinkSession4ScreenState_EditRules_MoveVerticalCursorInListHL_2::
     ld [wTitleScreenSubState], a
     ret
 
-; Calls HLToDecimalDigits; calls WriteVRAMByteInc; branches on c; calls WriteVRAMByteInc; calls
-; WriteVRAMByte; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunLinkSession4ScreenState_EditRules_HLToDecimalDigits, in part of
-; RunLinkSession4ScreenState_EditRules; RunLinkSession4ScreenState_EditRules: by
-; wTitleScreenSubState: a vertical list cursor over the link battle rules (E-0352)
+; Draws the total-level number of the level rule (wLinkRules + 4/5, low six bits of the high byte)
+; at BG row 8, column 14: a left arrow when it can go lower (4 or more), up to three digits without
+; leading zeros, and a right arrow when it can go higher. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2::
     ld a, [wLinkRules + $4]
     ld l, a
@@ -6533,11 +6014,8 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_2::
     call WriteVRAMByte
     ret
 
-; Calls HLToDecimalDigits; branches on E; calls WriteVRAMByteInc; branches on E; calls
-; WriteVRAMByte; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: part of RunLinkSession4ScreenState_EditRules_HLToDecimalDigits, in part of
-; RunLinkSession4ScreenState_EditRules; RunLinkSession4ScreenState_EditRules: by
-; wTitleScreenSubState: a vertical list cursor over the link battle rules (E-0352)
+; Draws the single-level limit (wLinkRules + 3) at BG row 10, column 14: a left arrow when 2 or
+; more, two digits, and a right arrow below 99. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3::
     ld a, [wLinkRules + $3]
     ld l, a
@@ -6579,14 +6057,8 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits_3::
     call WriteVRAMByte
     ret
 
-; step 24 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; sets wTitleScreenSubState to 0; may return
-; early; plays sound $69; branches on wMenuSelectedMember; sets wTitleScreenSubState to 0; advances
-; wTitleScreenSubState; sets wLinkScreenFlag to 0; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 24 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 24);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 24, the third yes/no rule (wWorkBuf + 3): B goes back keeping it; A stores
+; it and 'yes' moves to its values. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_4::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $30
@@ -6621,12 +6093,8 @@ RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_4::
     ld [wLinkScreenFlag], a
     ret
 
-; step 25 of RunLinkSession4ScreenState_EditRules: calls CopyRecordRectToScreenBuffer_Bank07; calls
-; CopyRect32StrideToVRAM_Bank07; calls RunLinkSession4ScreenState_EditRules_CallDrawRuleMark;
-; advances wTitleScreenSubState (E-0347)
-; why: step 25 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 25);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 25: draws the family panel and the mark of each of the 11 families
+; (RunLinkSession4ScreenState_EditRules_CallDrawRuleMark). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_CopyRect32StrideToVRAM_Bank07::
     ld hl, RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_TileRect
     call CopyRecordRectToScreenBuffer_Bank07
@@ -6639,14 +6107,9 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_
     inc [hl]
     ret
 
-; step 26 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EditRules_EraseCursorAtEntryHL_Bank07; plays sound $84; sets
-; wTitleScreenSubState to 0; may return early; plays sound $69; calls
-; RunLinkSession4ScreenState_EditRules_ReadMenuCursor; calls
-; RunLinkSession4ScreenState_EditRules_DrawRuleMark; also changes A by register arithmetic (E-0347)
-; why: step 26 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 26);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 26, the family exclusions: the cursor moves over the 11 families; A
+; toggles the selected family's bit in wLinkRules + 6/7 and redraws its mark; B returns, unless
+; every family is excluded (sound $84 refuses it). (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_QueueSoundEffect::
     call RunLinkSession4ScreenState_EditRules_EraseCursorAtEntryHL_Bank07
     ld a, [wJoypadPressed]
@@ -6680,11 +6143,8 @@ RunLinkSession4ScreenState_EditRules_QueueSoundEffect::
     call RunLinkSession4ScreenState_EditRules_DrawRuleMark
     ret
 
-; called from RunLinkSession4ScreenState_EditRules_QueueSoundEffect: changes HL, DE and A (E-0347)
-; why: a helper of RunLinkSession4ScreenState_EditRules_QueueSoundEffect, in step 26 of
-; RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 26);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Toggles the family under the cursor: flips its bit (from the mask table
+; RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data) in wLinkRules + 6 or + 7. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_ReadMenuCursor::
     ld a, [wMenuCursor]
     ld hl, RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data
@@ -6712,15 +6172,8 @@ RunLinkSession4ScreenState_EditRules_ReadMenuCursor::
     ld [hl], a
     ret
 
-; called from RunLinkSession4ScreenState_EditRules_QueueSoundEffect: branches on wFrameCounterLo;
-; calls EraseCursorAtEntryHL_Bank07; calls WriteBBTileAtWordTableEntryC_Bank07; branches on the byte
-; at wMenuCursor; returns if the byte at wMenuCursor is $06; branches on the byte at wMenuCursor;
-; sets wFrameCounterLo to 0; calls WriteC3TileAtWordTableEntryC_Bank07; calls
-; WriteBBTileAtWordTableEntryC_Bank07; also changes HL, DE, A and C by register arithmetic (E-0347)
-; why: a helper of RunLinkSession4ScreenState_EditRules_QueueSoundEffect, in step 26 of
-; RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 26);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; The family cursor: blinks every 8 frames and moves over two columns of entries (0-5 and 6-10):
+; Up/Down switch column, Left/Right move within the order, wrapping. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_EraseCursorAtEntryHL_Bank07::
     ld hl, wMenuCursor
     ld de, RunLinkSession4ScreenState_EditRules_EraseCursorAtEntryHL_Bank07_Data
@@ -6804,14 +6257,7 @@ RunLinkSession4ScreenState_EditRules_EraseCursorAtEntryHL_Bank07_Data::
     db $43, $99, $45, $99, $47, $99, $49, $99, $4b, $99, $4d, $99, $83, $99, $85, $99
     db $87, $99, $89, $99, $8b, $99
 
-; called from
-; RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_CopyRect32StrideToVRAM_Bank07:
-; calls RunLinkSession4ScreenState_EditRules_DrawRuleMark (E-0347)
-; why: a helper of
-; RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_CopyRect32StrideToVRAM_Bank07,
-; in step 25 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 25);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Draws the marks of all 11 families. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CallDrawRuleMark::
     ld bc, $0b00
 
@@ -6855,14 +6301,8 @@ RunLinkSession4ScreenState_EditRules_ReadMenuCursor_Data::
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $01, $80
     db $01, $40, $01, $20, $01, $10
 
-; step 27 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; sets wTitleScreenSubState to 0; may return
-; early; plays sound $69; branches on wMenuSelectedMember; sets wTitleScreenSubState to 0; advances
-; wTitleScreenSubState; sets wLinkScreenFlag to 0; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 27 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 27);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 27, the fourth yes/no rule (wWorkBuf + 4): B goes back keeping it; A
+; stores it and 'yes' moves to its values. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_5::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $34
@@ -6897,12 +6337,7 @@ RunLinkSession4ScreenState_EditRules_WriteWorkBufAndTitleScreenSubStateEtc_5::
     ld [wLinkScreenFlag], a
     ret
 
-; step 28 of RunLinkSession4ScreenState_EditRules: calls CopyRecordRectToScreenBuffer_Bank07; calls
-; CopyRect32StrideToVRAM_Bank07; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits;
-; advances wTitleScreenSubState (E-0347)
-; why: step 28 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 28);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 28: draws the turn limit panel and its number. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_2::
     ld hl, RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_2_TileRect
     call CopyRecordRectToScreenBuffer_Bank07
@@ -6915,13 +6350,8 @@ RunLinkSession4ScreenState_EditRules_CopyRecordRectToScreenBuffer_Bank07AndStep_
     inc [hl]
     ret
 
-; step 29 of RunLinkSession4ScreenState_EditRules: plays sound $69; sets wTitleScreenSubState to 0;
-; branches on wLinkRuleTurnLimit & $7f; sets wLinkRuleTurnLimit; branches on wLinkRuleTurnLimit &
-; $7f; sets wLinkRuleTurnLimit; calls RunLinkSession4ScreenState_EditRules_HLToDecimalDigits; also
-; changes A and D by register arithmetic (E-0347)
-; why: step 29 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 29);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 29, the turn limit: Left/Right change wLinkRuleTurnLimit between 10 and 99
+; (bit 7 kept); A or B return to the rule list. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_SetTitleScreenSubState::
     ld a, [wJoypadPressed]
     and $03
@@ -6969,10 +6399,8 @@ RunLinkSession4ScreenState_EditRules_SetTitleScreenSubState::
 .return:
     ret
 
-; Calls HLToDecimalDigits; calls WriteVRAMByteInc; calls WriteVRAMByte; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: part of RunLinkSession4ScreenState_EditRules; RunLinkSession4ScreenState_EditRules: by
-; wTitleScreenSubState: a vertical list cursor over the link battle rules (E-0352)
+; Draws the turn limit (wLinkRuleTurnLimit & $7F) at BG row 9, column 14: arrows when it can go
+; lower (11 or more) or higher (below 99), and two digits. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_HLToDecimalDigits::
     ld a, [wLinkRuleTurnLimit]
     and $7f
@@ -7010,12 +6438,8 @@ RunLinkSession4ScreenState_EditRules_HLToDecimalDigits::
     call WriteVRAMByte
     ret
 
-; step 30 of RunLinkSession4ScreenState_EditRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; may return early; plays sound $69; sets
-; wTitleScreenSubState to 0; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 30 of RunLinkSession4ScreenState_EditRules (when wTitleScreenSubState = 30);
-; RunLinkSession4ScreenState_EditRules: by wTitleScreenSubState: a vertical list cursor over the
-; link battle rules (E-0352)
+; Link rules editor, step 30, the fifth yes/no rule (wWorkBuf + 5): A or B store the choice and
+; return to the rule list. (C1, E-0357)
 RunLinkSession4ScreenState_EditRules_QueueSoundEffect_RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $38
@@ -7048,14 +6472,9 @@ RunLinkSession4ScreenState_StartWithPresetRules::
     dw RunLinkSession4ScreenState_AdvanceTitleScreenSubState
     dw RunLinkSession4ScreenState_SetLinkSendByte
 
-; step 0 of RunLinkSession4ScreenState_StartWithPresetRules: branches on wLinkMessage; calls
-; InitLinkRulesPresetA; sets wBattleKind to 8; sets wLinkSetupMode to 0; sets wTitleScreenState to
-; 5; calls InitLinkRulesPresetB; sets wBattleKind to 9; sets wLinkSetupMode to 1; sets
-; wTitleScreenState to 5; sets wBattleKind to 8; sets wTitleScreenState to 4; calls
-; CopyRecordRectToScreenBuffer_Bank07; then 2 more steps (see the code) (E-0347)
-; why: step 0 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Start with preset rules, step 0: a partner's $FB, $FC or $FD sets the rules (preset A with battle
+; kind 8, preset B with kind 9, or kind 8 with the current rules) and moves on; otherwise redraws
+; the message window. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA::
     ld a, [wLinkMessage]
     cp $fb
@@ -7104,11 +6523,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_InitLinkRulesPresetA::
     inc [hl]
     ret
 
-; step 1 of RunLinkSession4ScreenState_StartWithPresetRules: calls ShowStringHL_Bank07; sets
-; wLinkSendByte to 0; advances wTitleScreenSubState (E-0347)
-; why: step 1 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 1);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 1: shows message $0304 and clears the link byte. (C1, E-0357)
 RunLinkSession4ScreenState_ShowStringHL_Bank07AndStep::
     ld hl, $0304
     call ShowStringHL_Bank07
@@ -7118,11 +6533,7 @@ RunLinkSession4ScreenState_ShowStringHL_Bank07AndStep::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wTextFlags is 0;
-; advances wTitleScreenSubState (E-0347)
-; why: step 2 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 2);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 2: waits for the message. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -7131,13 +6542,8 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags::
     inc [hl]
     ret
 
-; step 3 of RunLinkSession4ScreenState_StartWithPresetRules: branches on wLinkMessage; sets
-; wTitleScreenState to 2; sets wTitleScreenSubState to 0; sets wLinkScreenFlag to 1; sets
-; wLinkSendByte to 1; returns unless $01 is $01; calls ShowStringHL_Bank07; advances
-; wTitleScreenSubState (E-0347)
-; why: step 3 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 3);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 3: the partner's $FE returns to the battle type choice; its 1 shows message
+; $0305 and moves on. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_CheckLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
@@ -7161,11 +6567,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_CheckLinkMessage::
     inc [hl]
     ret
 
-; step 4 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wTextFlags is 0; sets
-; wLinkSendByte to 2; advances wTitleScreenSubState (E-0347)
-; why: step 4 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 4: after the message sends link byte 2. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
@@ -7176,13 +6578,8 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitTextFlags_SetLinkSendByte::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wLinkMessage is $02;
-; sets wLinkBufferCountLo to $0a; copies L to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L
-; to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkReady to 1; sets wLinkSendByte to
-; $ff; advances wTitleScreenSubState (E-0347)
-; why: step 5 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 5);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 5: on the partner's 2 starts receiving the partner's 10 rule bytes into
+; wLinkRules (from wLinkRecvBuffer) and sends $FF. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $02
@@ -7207,11 +6604,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wLinkMessage is $f0;
-; sets wLinkSendByte to 0; advances wTitleScreenSubState (E-0347)
-; why: step 6 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 6);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 6: waits for the partner's $F0 (transfer done). (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
@@ -7222,14 +6615,9 @@ RunLinkSession4ScreenState_StartWithPresetRules_WaitLinkMessage_SetLinkSendByte:
     inc [hl]
     ret
 
-; step 7 of RunLinkSession4ScreenState_StartWithPresetRules: calls FillScreenTileBufferWithD; calls
-; CopyRecordRectToScreenBuffer_Bank07; calls LoadInvertedBit7FlagsToWorkBuf; calls
-; DrawWorkBufSelectionTilesAndPanels; calls DrawScreenBufferToBGMap0_Bank07; sets wSubMenuCursor2 to
-; 2; sets wMenuSelectedMember to 0; advances wTitleScreenSubState; calls
-; CopyLinkRulesToLinkRulesCopy (E-0347)
-; why: step 7 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 7);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 7: draws the received rules (LoadInvertedBit7FlagsToWorkBuf,
+; DrawWorkBufSelectionTilesAndPanels) with a yes/no question, and saves a copy
+; (CopyLinkRulesToLinkRulesCopy). (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD::
     ld d, $c3
     call FillScreenTileBufferWithD
@@ -7247,13 +6635,8 @@ RunLinkSession4ScreenState_StartWithPresetRules_FillScreenTileBufferWithD::
     call CopyLinkRulesToLinkRulesCopy
     ret
 
-; step 8 of RunLinkSession4ScreenState_StartWithPresetRules: calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; plays sound $69; sets wLinkSetupMode to 2;
-; sets wLinkSendByte to 1; advances wTitleScreenSubState; may return early; sets wLinkSendByte to
-; $fe; advances wTitleScreenSubState (E-0347)
-; why: step 8 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 8);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 8: the yes/no question. Yes accepts the partner's rules (wLinkSetupMode 2) and
+; sends 1; no or B sends $FE and skips a step. (C1, E-0357)
 RunLinkSession4ScreenState_StartWithPresetRules_QueueSoundEffect::
     ld hl, wMenuSelectedMember
     ld de, CursorPositionWords_Bank07 + $24
@@ -7288,11 +6671,7 @@ RunLinkSession4ScreenState_StartWithPresetRules_QueueSoundEffect::
     inc [hl]
     ret
 
-; step 9 of RunLinkSession4ScreenState_StartWithPresetRules: returns unless wLinkMessage is $01;
-; sets wTitleScreenState to 5; sets wTitleScreenSubState to 1; sets wLinkScreenFlag to 0 (E-0347)
-; why: step 9 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 9);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 9: on the partner's 1 goes to the battle (state 5). (C1, E-0357)
 RunLinkSession4ScreenState_SetTitleScreenState::
     ld a, [wLinkMessage]
     cp $01
@@ -7305,20 +6684,13 @@ RunLinkSession4ScreenState_SetTitleScreenState::
     ld [wLinkScreenFlag], a
     ret
 
-; step 10 of RunLinkSession4ScreenState_StartWithPresetRules: advances wTitleScreenSubState (E-0347)
-; why: step 10 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 10);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 10: moves on. (C1, E-0357)
 RunLinkSession4ScreenState_AdvanceTitleScreenSubState::
     ld hl, wTitleScreenSubState
     inc [hl]
     ret
 
-; step 11 of RunLinkSession4ScreenState_StartWithPresetRules: sets wLinkSendByte to 1; sets
-; wTitleScreenState to 2; sets wLinkScreenFlag to 0; sets wTitleScreenSubState to 0 (E-0347)
-; why: step 11 of RunLinkSession4ScreenState_StartWithPresetRules (when wTitleScreenSubState = 11);
-; RunLinkSession4ScreenState_StartWithPresetRules: by wTitleScreenSubState: InitLinkRulesPresetA, a
-; message, then link message exchange (E-0352)
+; Preset rules, step 11: sends 1 and returns to the battle type choice. (C1, E-0357)
 RunLinkSession4ScreenState_SetLinkSendByte::
     ld a, $01
     ld [wLinkSendByte], a
@@ -7330,14 +6702,11 @@ RunLinkSession4ScreenState_SetLinkSendByte::
     ld [wTitleScreenSubState], a
     ret
 
-; step 5 of RunLinkSession4ScreenState: branches on wTitleScreenSubState; branches on wLinkMessage;
-; branches on wLinkRole; sets wTitleScreenSubState to 1; sets wLinkScreenFlag to 1; sets
-; wLinkSendByte to 1; sets wTitleScreenState to 2; branches on wLinkRole; sets wBattleKind to 8;
-; sets wTitleScreenState to 4; sets wLinkSendByte to 0; branches on wLinkMessage; then 20 more steps
-; (see the code) (E-0347)
-; why: step 5 of RunLinkSession4ScreenState (when wTitleScreenState = 5);
-; RunLinkSession4ScreenState: the link battle set-up screens (link session 4): by wTitleScreenState
-; it saves and syncs, sets the battle kind, edits the link battle rules ... (E-0352, E-0354, E-0122)
+; Link battle set-up, state 5. First call: on the side not driving the clock, the partner's $FE
+; returns to rules editing and its $FD sets battle kind 8 (state 4); on that side a partner's $FC or
+; $FB that differs from this side's choice applies preset rules A (kind 8) or B (kind 9). It then
+; goes to state 8. Later calls blank the screen, clear the link bytes and move to the next state.
+; (C1, E-0357)
 RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc::
     ld a, [wTitleScreenSubState]
     and a
@@ -7442,21 +6811,15 @@ RunLinkSession4ScreenState_WriteLinkSendByteAndLinkReadyEtc::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession4ScreenState: calls RunLinkSession4ScreenState_DecompressToVRAM; advances
-; wTitleScreenState (E-0347)
-; why: step 6 of RunLinkSession4ScreenState (when wTitleScreenState = 6);
-; RunLinkSession4ScreenState: the link battle set-up screens (link session 4): by wTitleScreenState
-; it saves and syncs, sets the battle kind, edits the link battle rules ... (E-0352, E-0354, E-0122)
+; Link set-up, state 6: decompresses the next screen's graphics
+; (RunLinkSession4ScreenState_DecompressToVRAM) and moves on. (C1, E-0357)
 RunLinkSession4ScreenState_DecompressToVRAMAndStep::
     farcall RunLinkSession4ScreenState_DecompressToVRAM
     ld hl, wTitleScreenState
     inc [hl]
     ret
 
-; step 7 of RunLinkSession4ScreenState: calls EggServiceMenu_Bank1B (E-0347)
-; why: step 7 of RunLinkSession4ScreenState (when wTitleScreenState = 7);
-; RunLinkSession4ScreenState: the link battle set-up screens (link session 4): by wTitleScreenState
-; it saves and syncs, sets the battle kind, edits the link battle rules ... (E-0352, E-0354, E-0122)
+; Link set-up, state 7: runs the egg service menu (EggServiceMenu_Bank1B). (C1, E-0357)
 RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B::
     farcall EggServiceMenu_Bank1B
     ret
@@ -7506,10 +6869,9 @@ WriteBCTileAtHLOrHLPlusBC::
     ld [hl], $bc
     ret
 
-; called from DrawWorkBufSelectionTilesAndPanels: changes HL, BC and A; branches on c (E-0347)
-; why: a helper of DrawWorkBufSelectionTilesAndPanels; DrawWorkBufSelectionTilesAndPanels: draws a
-; tile at wScreenTileBuffer + $68, wScreenTileBuffer + $CE, wScreenTileBuffer + $10E,
-; wScreenTileBuffer + $14E, wWindowTileBuffer + ... (E-0352, E-0121)
+; Draws the yes/no marks of the link rules on the rules summary: for each rule bit of wLinkRules + 1
+; (bits 6 down to 0) tile $16 (off) or a digit tile from the matching bit of wLinkRules + 2. (C1,
+; E-0357)
 DrawWorkBufSelectionTilesAndPanels_ReadLinkRules::
     ld a, [wLinkRules + $1]
     ld c, a
@@ -7591,11 +6953,9 @@ DrawWorkBufSelectionTilesAndPanels_ReadLinkRules::
     ld [hli], a
     ret
 
-; called from DrawWorkBufSelectionTilesAndPanels: calls HLToDecimalDigits; branches on c; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of DrawWorkBufSelectionTilesAndPanels; DrawWorkBufSelectionTilesAndPanels: draws a
-; tile at wScreenTileBuffer + $68, wScreenTileBuffer + $CE, wScreenTileBuffer + $10E,
-; wScreenTileBuffer + $14E, wWindowTileBuffer + ... (E-0352, E-0121)
+; Draws the level rule on the rules summary: the label (DrawWorkBufSelectionTilesAndPanels_Data1, or
+; Data2 for the single-level form when wLinkRules + 5 bit 6 is set) and the number (wLinkRules + 3,
+; or the total from wLinkRules + 4/5). (C1, E-0357)
 DrawWorkBufSelectionTilesAndPanels_ReadLinkRulesAndDigits::
     ld de, DrawWorkBufSelectionTilesAndPanels_Data1
     ld a, [wLinkRules + $5]
@@ -7667,11 +7027,8 @@ DrawWorkBufSelectionTilesAndPanels_Data1::
 DrawWorkBufSelectionTilesAndPanels_Data2::
     db $29, $0b, $16, $c3, $c3
 
-; called from DrawWorkBufSelectionTilesAndPanels: changes HL, DE and A; branches on e; branches on d
-; (E-0347)
-; why: a helper of DrawWorkBufSelectionTilesAndPanels; DrawWorkBufSelectionTilesAndPanels: draws a
-; tile at wScreenTileBuffer + $68, wScreenTileBuffer + $CE, wScreenTileBuffer + $10E,
-; wScreenTileBuffer + $14E, wWindowTileBuffer + ... (E-0352, E-0121)
+; Draws the excluded families on the rules summary: for each family bit of wLinkRules + 6/7 that is
+; clear, writes its icon tile number (0, 1, 2, ...) at wScreenTileBuffer + $163 onward. (C1, E-0357)
 DrawWorkBufSelectionTilesAndPanels_ReadLinkRules_2::
     ld a, [wLinkRules + $6]
     ld e, a
@@ -7756,11 +7113,8 @@ DrawWorkBufSelectionTilesAndPanels_ReadLinkRules_2::
 .return:
     ret
 
-; called from DrawWorkBufSelectionTilesAndPanels: calls HLToDecimalDigits; also changes HL and A by
-; register arithmetic (E-0347)
-; why: a helper of DrawWorkBufSelectionTilesAndPanels; DrawWorkBufSelectionTilesAndPanels: draws a
-; tile at wScreenTileBuffer + $68, wScreenTileBuffer + $CE, wScreenTileBuffer + $10E,
-; wScreenTileBuffer + $14E, wWindowTileBuffer + ... (E-0352, E-0121)
+; Draws the turn limit on the rules summary (wLinkRuleTurnLimit without bit 7, one or two digits) in
+; wWindowTileBuffer. (C1, E-0357)
 DrawWorkBufSelectionTilesAndPanels_HLToDecimalDigits::
     ld a, [wLinkRuleTurnLimit]
     ld l, a
@@ -7791,15 +7145,8 @@ RunLinkSession4ScreenState_ResetAndSignal::
     dw RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte
     dw RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte
 
-; step 0 of RunLinkSession4ScreenState_ResetAndSignal: may continue in
-; RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte; calls
-; FillScreenTileBufferWithD; calls CopyRecordRectToScreenBuffer_Bank07; calls
-; LoadInvertedBit7FlagsToWorkBuf; calls DrawWorkBufSelectionTilesAndPanels; calls
-; DrawScreenBufferToBGMap0_Bank07; sets wSubMenuCursor2 to 2; sets wMenuSelectedMember to 0;
-; advances wTitleScreenSubState (E-0347)
-; why: step 0 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 0);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Reset and signal, step 0: unless the partner sent $FE, draws the rules summary with a yes/no
+; question. (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD::
     ld a, [wLinkMessage]
     cp $fe
@@ -7819,14 +7166,8 @@ RunLinkSession4ScreenState_ResetAndSignal_FillScreenTileBufferWithD::
     inc [hl]
     ret
 
-; step 1 of RunLinkSession4ScreenState_ResetAndSignal: may continue in
-; RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte; calls
-; RunLinkSession4ScreenState_EraseCursorAtEntryHL_Bank07; plays sound $69; sets wLinkSendByte to 1;
-; advances wTitleScreenSubState; may return early; sets wLinkSendByte to $fe; advances
-; wTitleScreenSubState; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 1 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 1);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Reset and signal, step 1: the yes/no question: yes sends 1 and moves on; no or B sends $FE and
+; skips a step; a partner's $FE ends at step 4. (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_QueueSoundEffect::
     ld a, [wLinkMessage]
     cp $fe
@@ -7862,13 +7203,8 @@ RunLinkSession4ScreenState_ResetAndSignal_QueueSoundEffect::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession4ScreenState_ResetAndSignal: may continue in
-; RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte; returns unless
-; wLinkMessage is $01; sets wTitleScreenState to 5; sets wTitleScreenSubState to 1; sets
-; wLinkScreenFlag to 0 (E-0347)
-; why: step 2 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 2);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Reset and signal, step 2: on the partner's 1 goes to the battle (state 5); its $FE goes to step 4.
+; (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_CheckLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
@@ -7883,11 +7219,7 @@ RunLinkSession4ScreenState_ResetAndSignal_CheckLinkMessage::
     ld [wLinkScreenFlag], a
     ret
 
-; step 3 of RunLinkSession4ScreenState_ResetAndSignal: sets wLinkSendByte to 1; sets
-; wTitleScreenState to 2; sets wTitleScreenSubState to 0; sets wLinkScreenFlag to 0 (E-0347)
-; why: step 3 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 3);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Reset and signal, step 3: sends 1 and returns to the battle type choice. (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte::
     ld a, $01
     ld [wLinkSendByte], a
@@ -7899,11 +7231,8 @@ RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte::
     ld [wLinkScreenFlag], a
     ret
 
-; step 4 of RunLinkSession4ScreenState_ResetAndSignal: sets wLinkSendByte to 1; sets
-; wTitleScreenState to 2; sets wTitleScreenSubState to 0; sets wLinkScreenFlag to 1 (E-0347)
-; why: step 4 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Reset and signal, step 4: sends 1 and returns to the battle type choice in rules-editing mode
+; (wLinkScreenFlag 1). (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte::
     ld a, $01
     ld [wLinkSendByte], a
@@ -7915,15 +7244,11 @@ RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte::
     ld [wLinkScreenFlag], a
     ret
 
-; Calls LinkExchangeJoypadPerFrame; branches on wTitleScreenState; branches on wScreenState; returns
-; if wLinkScene is 0; calls RunLinkSession4ScreenState_ResetAndSignal_ComputeBreedingChild; sets
-; wGameMode to 1; sets wModeChangeRequest to 1; sets wMapType to 0; sets wTalkEventIndex to 0; sets
-; wTalkEventGroup to $21; calls DispatchTalkEvent; calls FetchScriptCommand; then 21 more steps (see
-; the code) (E-0347)
-; why: part of RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte, in step 4
-; of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Link session 5's per-frame exchange: exchanges the joypad; on the record screens redraws the
+; species sprites; when the link scene is set, completes the link breeding
+; (RunLinkSession4ScreenState_ResetAndSignal_ComputeBreedingChild) and enters the field (game mode
+; 1) on map $14 at ($E0, 0) with talk event $21, an empty party and the rest of the field state
+; reset. (C1, E-0357)
 RunLinkSession4ScreenState_CallLinkExchangeJoypadPerFrame::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -8013,15 +7338,9 @@ RunLinkSession4ScreenState_CallLinkExchangeJoypadPerFrame::
     ret
     db $c9
 
-; called from RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte: branches on
-; wLinkRole; sets wArg1 to 2; calls ComputeBreedingChild; copies wItemGridX to wListCursor; copies
-; wItemGridY to wListPageIndex; calls SetArg5ToListEntriesCell5; sets wArg1; sets wArg2 to 1; calls
-; DeleteSRAMRecordAndCompact; sets rRAMG2 to $0a; sets rRAMB to 0; sets rRAMG2 to 0; then 12 more
-; steps (see the code) (E-0347)
-; why: a helper of RunLinkSession4ScreenState_ResetAndSignal_SetLinkSendByte_SetLinkSendByte, in
-; step 4 of RunLinkSession4ScreenState_ResetAndSignal (when wTitleScreenSubState = 4);
-; RunLinkSession4ScreenState_ResetAndSignal: fills the screen buffer, plays a sound, sets the link
-; state and send bytes (E-0352)
+; Completes a link breeding on the clock-driving side: computes the child (ComputeBreedingChild with
+; wArg1 = 2), deletes the chosen parent's record (DeleteSRAMRecordAndCompact) and writes the child's
+; $A5-byte record in its place, then saves; the other side clears its breeding result. (C1, E-0357)
 RunLinkSession4ScreenState_ResetAndSignal_ComputeBreedingChild::
     ld a, [wLinkRole]
     bit 1, a

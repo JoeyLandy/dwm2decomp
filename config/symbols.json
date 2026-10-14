@@ -762,28 +762,28 @@
   },
   "FF93": {
     "name": "hPlayerSpriteOverride",
-    "note": "bit 7 set: the player uses the graphics stream in hPlayerSpriteStream and a countdown (hPlayerSpriteTimer) runs; set by script commands $A0/$A1",
-    "evidence": "E-0132"
+    "note": "Player graphics override: bit 7 activates graphics-id rendering and the gated countdown; bit 0 selects field graphics (1) versus monster graphics (0). Other bits are preserved on activation. Script $A0 copies slot byte 1 and later sets bit 7; $A1 clears the byte. (C1, E-0362; earlier E-0132)",
+    "evidence": "C1: reader/writer/control-flow probes (E-0362)"
   },
   "FF94": {
-    "name": "hPlayerSpriteStreamLo",
-    "note": "low byte of the compressed stream used for the player graphics when bit 7 of hPlayerSpriteOverride is set",
-    "evidence": "E-0132"
+    "name": "hPlayerSpriteGfxIdLo",
+    "note": "Low byte of the little-endian player override graphics table id, copied from sprite-slot byte 2; used with override bit 0 to select monster or field graphics. This is not a compressed-stream pointer. (C1, E-0362; was hPlayerSpriteStreamLo, E-0132)",
+    "evidence": "C1: reader/writer/control-flow probes (E-0362)"
   },
   "FF95": {
-    "name": "hPlayerSpriteStreamHi",
-    "note": "high byte of that stream",
-    "evidence": "E-0132"
+    "name": "hPlayerSpriteGfxIdHi",
+    "note": "High byte of the override graphics id, copied from sprite-slot byte 3; loader uses the full word, while rendering uses nonzero high byte to select monster descriptor bank $27. (C1, E-0362; was hPlayerSpriteStreamHi, E-0132)",
+    "evidence": "C1: reader/writer/control-flow probes (E-0362)"
   },
   "FF96": {
     "name": "hPlayerSpriteTimerLo",
-    "note": "low byte of a countdown decremented each field update while the sprite override is on; when it goes negative, talk event $0A is dispatched (UpdatePlayerMovement_Sub01_Sub03)",
-    "evidence": "E-0132"
+    "note": "Low byte of the modulo-65536 override countdown, decremented only with override bit 7 set and no script running. Updated high-byte bit 7 triggers talk group $0A index 0: from 100 it takes 101 eligible calls to $FFFF. (C1, E-0362; earlier E-0132)",
+    "evidence": "C1: reader/writer/control-flow probes (E-0362)"
   },
   "FF97": {
     "name": "hPlayerSpriteTimerHi",
-    "note": "high byte of that countdown",
-    "evidence": "E-0132"
+    "note": "High byte of the override countdown; the post-decrement sign bit gates the group-$0A event. The timer is not cleared by the restore command, which disables its use by clearing override. (C1, E-0362; earlier E-0132)",
+    "evidence": "C1: reader/writer/control-flow probes (E-0362)"
   },
   "FF99": {
     "name": "hPlayerAnimCounter",
@@ -2620,7 +2620,7 @@
   },
   "C965": {
     "name": "wLinkSaveStateFlag",
-    "note": "set by LinkMessageEvent_SetSaveStateFlag and the link joypad exchange (script command $9F) (E-0345, C1: named from its users; was wScriptByte65)",
+    "note": "Saved copy of wSaveStateFlag made by the bank-$07 link setups, which then clear wSaveStateFlag; LinkMessageEvent_FinishToMode8 copies it back before requesting mode 8. This finish routine reads rather than writes the saved byte. (C1, E-0360; earlier E-0134/E-0345; was wScriptByte65)",
     "evidence": "E-0134; E-0345"
   },
   "C966": {

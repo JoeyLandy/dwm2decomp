@@ -6182,6 +6182,8 @@ class Rom:
                 return text  # a step delta (-16, -128 ...) for the movement bytes hFF9B/hFF9D, not an address (E-0132)
             if int(m.group(2), 16) == 0xFFFF:
                 return text  # -1 as a 16-bit number; rIE would only be a pointer in a memory operand
+            if reg == "hl" and key is not None and self.message_call_at(key[0], key[1] + 3):
+                return text  # a message word with flag bits ($848B), not a VRAM/WRAM address (E-0357)
             nm = self.sym_name(int(m.group(2), 16), True)
             if nm:
                 return m.group(1) + nm
@@ -6540,17 +6542,20 @@ class Rom:
 
     MESSAGE_HL_CALLEE = re.compile(r"MessageHL|MessageCommand09HL")
 
+    def message_call_at(self, bank: int, nxt: int) -> bool:
+        """The instruction at nxt calls or jumps to a routine taking a message word in HL."""
+        it = self.insn[bank].get(nxt)
+        if not it or it[0] == "dw" or it[2] not in ("call", "jp") or it[3] is None:
+            return False
+        r = self.resolve(bank, it[3])
+        return bool(r) and bool(self.MESSAGE_HL_CALLEE.search(self.labels[r[0]].get(r[1], "")))
+
     def message_word_note(self, bank: int, nxt: int, text: str) -> str:
         """E-0248: `ld hl, $XXXX` right before a call to a routine that takes a message word in HL
         (StartMessageHL_*, StartMessageCommand09HL_*, ShowMessageHL) quotes the message (the
         normal ShowMessageHL path: group = high byte & $3F)."""
         m = re.match(r"ld hl, \$([0-9A-F]{4})$", text)
-        it = self.insn[bank].get(nxt)
-        if not m or not it or it[0] == "dw" or it[2] not in ("call", "jp") or it[3] is None:
-            return ""
-        r = self.resolve(bank, it[3])
-        name = self.labels[r[0]].get(r[1], "") if r else ""
-        if not self.MESSAGE_HL_CALLEE.search(name):
+        if not m or not self.message_call_at(bank, nxt):
             return ""
         quote = self.message_preview(int(m.group(1), 16))
         return f" ; '{quote}'" if quote else ""

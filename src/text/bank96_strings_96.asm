@@ -1401,9 +1401,10 @@ Script_Rename_3::
 
 ; Sets wStringIndex; calls BeginStringDisplay (E-0347)
 ; why: part of DebugMessageTest_Update_BeginStringDisplay, in a helper of
-; DebugMessageTest_Update_CallUpdate_BeginStringDisplay, in step 28 of DebugMessageTest_Update (when
-; wTemp0 = 28); DebugMessageTest_Update: update for debug-mode state 11: the screen shows 'LIBNO /
-; MESNO' message test (E-0352, E-0041)
+; DebugMessageTest_Update_CallUpdate_BeginStringDisplay;
+; DebugMessageTest_Update_CallUpdate_BeginStringDisplay: Message test, library 28: shows the chosen
+; message with DebugMessageTest_Update_BeginStringDisplay, this bank's own message routine (not ...
+; (E-0352, E-0357)
 DebugMessageTest_Update_BeginStringDisplay_2::
     ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]

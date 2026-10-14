@@ -7855,10 +7855,10 @@ OrDIntoTestBitDEOfBitArrayHLByte::
 ; KeyWorldDoorItem_ModuloBPlusOne; calls RandomModulo29_BankF0; calls
 ; KeyWorldDoorItem_ModuloBPlusOne; calls RandomModulo29_BankF0; calls
 ; KeyWorldDoorItem_ModuloBPlusOne; then 15 more steps (see the code) (E-0347)
-; why: a helper of KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor, in step 4 of KeyWorldDoorItem
-; (when wScriptStep = 4); KeyWorldDoorItem: implements script command type 86
-; (SCRIPT_KEY_WORLD_DOOR_ITEM): a key-world/field talk event (group $0B: random item or key entry
-; ... (E-0352)
+; why: a helper of KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor;
+; KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor: Key world door item, step 4: runs
+; KeyWorldDoorItem_RandomModulo29_BankF0, marks the floor's door opened (state byte 3 = $FF),
+; redraws the ... (E-0352, E-0357)
 KeyWorldDoorItem_RandomModulo29_BankF0::
     ld hl, wGM2TimerFrames
     ld bc, $00d8

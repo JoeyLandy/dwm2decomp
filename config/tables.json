@@ -18629,7 +18629,7 @@
         }
       ],
       "record": "one row per arena rank",
-      "note": "E-0237 (C1: StartArenaRankMessage reads the low byte at $48B9 + 2 * A + 16 * wArenaRank (row 5 when wArenaFlags bit 7 is set) and passes it to StartMessageA, a string of the group already in wMessageGroup; 6 rows of 8 words)."
+      "note": "E-0359, E-0237 (C1: six rows of eight stored message words; ranks 0-4 select their row, wArenaFlags bit 7 forces row 5. Columns 0/1 are opening/follow-up, 2/4/6 announce the three battles, 3/5 follow the first two battles, and 7 closes the sequence. StartArenaRankMessage uses only the low byte of each word and leaves wMessageGroup unchanged; stored high bytes and row-5 $FFFF words are preserved)."
     },
     {
       "bank": "F2",
@@ -18760,11 +18760,11 @@
         {
           "type": "db",
           "size": 2,
-          "name": "palette (& $7F, into LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData), byte returned in A"
+          "name": "sprite-set/palette selector byte; preserved trailing byte"
         }
       ],
-      "record": "bank-$7E graphics stream; palette index; returned byte",
-      "note": "E-0238 (C1: RunFieldCommandTemp0_DecompressToVRAM and _Shared02 index it with hTemp0 & $7F: the word is decompressed from bank $7E to vTiles0 + $400 (DecompressToVRAM); on CGB, byte 2 & $7F selects the palette at 7E:$4BBD + 8 * index copied to wOBJPaletteBuffer + $20; byte 3 is returned in A; 22 records)."
+      "record": "bank-$7E graphics pointer; sprite-set/palette selector; trailing byte",
+      "note": "E-0360, E-0238 (C1: 22 four-byte records: little-endian graphics pointer into bank $7E, sprite-set/palette selector in byte 2, preserved trailing byte. Both field-graphics readers return byte 2 in A and use its low seven bits for the palette index. The general reader loads VRAM $8400/palette slot 4; the scene-effect variant loads $8300/slot 3. The earlier byte-3 return claim is superseded; no record byte changes)."
     },
     {
       "bank": "1C",
@@ -18924,7 +18924,7 @@
         }
       ],
       "record": "map, new map, key; destination position and screen",
-      "note": "E-0238 (C1: the code at Jump_012_50ED walks 5-byte records up to $FF for the one whose byte 0 is hMapId, stores byte 1 to hMapId and passes DE = bytes 3-4 to MapLinkWarp_WriteWarpDestXAndWarpDestYEtc (high nibble to wWarpDestX, low nibble * 16 to wWarpDestY, then the screen), or DE = wKeyWorldGoal when a key world is active and wKeyWorldKey - 1 equals byte 2; 16 records and $FF).",
+      "note": "Sixteen five-byte normal-map link records and $FF sentinel. Byte 0 matches incoming map, byte 1 becomes map id, byte 2 matches (active key - 1) modulo 256 to select saved goal bytes; bytes 3/4 otherwise hold packed pixel position and screen nibbles. A miss requests the next script opcode but starts no transition. (C1, E-0362; earlier E-0238)",
       "field_comments": true
     },
     {
@@ -24513,6 +24513,33 @@
         "prefix": "ItemName1C_"
       },
       "note": "E-0261 (C1: ShopMenu_Case03_Case03, ShopMenu_Case04_Case03 and VaultMenu_Case03_Case09 read the word at $63FE + 2 * item number and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 + 16 * character); the names equal StringTable_ItemNames (08:$4716) for the 99 items)."
+    },
+    {
+      "bank": "04",
+      "addr": "4E73",
+      "label": "SpecialSpritePoseRegions",
+      "count": 9,
+      "id_base": 0,
+      "tail": 1,
+      "fields": [
+        {
+          "type": "db",
+          "size": 3,
+          "name": "map, screen X, screen Y"
+        },
+        {
+          "type": "db",
+          "size": 1,
+          "name": "pixel X (exact)"
+        },
+        {
+          "type": "db",
+          "size": 2,
+          "name": "inclusive pixel Y minimum, maximum"
+        }
+      ],
+      "record": "map/screen, exact pixel X and inclusive pixel Y range",
+      "note": "Nine six-byte regions and $FF sentinel, searched only while no fade runs by UseSpecialSpritePoseAtPosition. Match map/screen, B=X and minimum <= C=Y <= maximum to return A=1. The fade branch ignores this table. All nine region boundaries are probed. (C1, E-0362; earlier fade-only E-0175 was incomplete)"
     }
   ]
 }

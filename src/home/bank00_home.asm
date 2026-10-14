@@ -136,12 +136,16 @@ BootAndMainLoop::
 .set_is_cgb:
     ld [wIsCGB], a
 
-; Calls DisableVBlankTimerSerialJoypadInterrupts; calls ClearWRAMHRAMAndSRAMBanks0And2; calls
-; InstallOamDmaRoutine; calls FillBytes; branches on wIsCGB; sets rVBK to 1; calls FillBytes; sets
-; rVBK to 0; sets wGameMode to 5; sets rRAMB to 0; sets rRAMG to 0; sets rROMB0 to 1; then 94 more
-; steps (see the code) (E-0347)
-; why: part of BootAndMainLoop; BootAndMainLoop: entry after the header jump: wIsCGB = 1 when A was
-; $11 at power-on (E-0352, E-0131)
+; Power-on start-up, then the main loop. Start-up: masks interrupts, clears WRAM, HRAM and SRAM
+; banks 0 and 2, installs the OAM DMA routine, clears the tile area (and on CGB the BG map
+; attributes in VRAM bank 1), selects game mode 5 (the title screen) and maps ROM and SRAM bank
+; defaults. On CGB it loads palette 0; otherwise DetectSGB, and on a Super Game Boy it sends the
+; start-up packet sets, transfers the border tiles and map, and sets the palettes. Every mode then
+; starts here: clear the screen, sprites, scroll and fade, run the mode's start-up routine
+; (RunGameModeInit), reset the frame counters. The loop halts until each interrupt (advancing the
+; random table with NextTableByte when not linked); the per-frame work runs in VBlankHandler. When
+; wModeChangeRequest is set and no fade is in progress (wFadeState 0 or bit 7 set), it masks
+; interrupts, sends SGB packet set 0 and restarts at the screen clear for the new mode. (C1, E-0357)
 BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts::
     di
     ld sp, wStackTop
@@ -363,73 +367,52 @@ RunGameModeInit::
     dw RunGameModeInit_ToGameMode7_Init
     dw RunGameModeInit_ToGameMode8_Init
 
-; step 0 of RunGameModeInit: calls GameMode0_Init (E-0347)
-; why: step 0 of RunGameModeInit (when wGameMode = 0); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 0's start-up (the debug menu): far-calls GameMode0_Init in bank $01. (C1, E-0357)
 RunGameModeInit_ToGameMode0_Init::
     farcall GameMode0_Init
     ret
 
-; step 1 of RunGameModeInit: calls GameMode1_Init (E-0347)
-; why: step 1 of RunGameModeInit (when wGameMode = 1); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 1's start-up (the field: a map with the player): far-calls GameMode1_Init in bank $02.
+; (C1, E-0357)
 RunGameModeInit_ToGameMode1_Init::
     farcall GameMode1_Init
     ret
 
-; step 2 of RunGameModeInit: calls GameMode2_Init (E-0347)
-; why: step 2 of RunGameModeInit (when wGameMode = 2); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 2's start-up (the pause menu's monster pages): far-calls GameMode2_Init in bank $03.
+; (C1, E-0357)
 RunGameModeInit_ToGameMode2_Init::
     farcall GameMode2_Init
     ret
 
-; step 3 of RunGameModeInit: returns at once (E-0347)
-; why: step 3 of RunGameModeInit (when wGameMode = 3); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 3 has no start-up routine: returns at once. (C1, E-0357)
 RunGameModeInit_Return::
     ret
 
-; step 4 of RunGameModeInit: calls GameMode4_Init (E-0347)
-; why: step 4 of RunGameModeInit (when wGameMode = 4); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 4's start-up (the battle): far-calls GameMode4_Init in bank $31. (C1, E-0357)
 RunGameModeInit_ToGameMode4_Init::
     farcall GameMode4_Init
     ret
 
-; step 5 of RunGameModeInit: calls GameMode5_Init (E-0347)
-; why: step 5 of RunGameModeInit (when wGameMode = 5); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 5's start-up (the title screen): far-calls GameMode5_Init in bank $07. (C1, E-0357)
 RunGameModeInit_ToGameMode5_Init::
     farcall GameMode5_Init
     ret
 
-; step 6 of RunGameModeInit: calls GameMode6_Init (E-0347)
-; why: step 6 of RunGameModeInit (when wGameMode = 6); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 6's start-up (the egg and save screens after a link or the priest): far-calls
+; GameMode6_Init in bank $24. (C1, E-0357)
 RunGameModeInit_ToGameMode6_Init::
     farcall GameMode6_Init
     ret
 
-; step 7 of RunGameModeInit: calls GameMode7_Init (E-0347)
-; why: step 7 of RunGameModeInit (when wGameMode = 7); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 7's start-up (shows two monster panels when forced; its use is unknown): far-calls
+; GameMode7_Init in bank $A0. (C1, E-0357)
+; code: calls GameMode7_Init (E-0347)
 RunGameModeInit_ToGameMode7_Init::
     farcall GameMode7_Init
     ret
 
-; step 8 of RunGameModeInit: calls GameMode8_Init (E-0347)
-; why: step 8 of RunGameModeInit (when wGameMode = 8); RunGameModeInit: jumps through a 9-entry
-; table indexed by wGameMode to the mode's start-up routine (banks $01, $02, $03, none, $31, $07,
-; $24, $A0, $F2) (E-0352)
+; Game mode 8's start-up (the egg hand-over scene): far-calls GameMode8_Init in bank $F2. (C1,
+; E-0357)
 RunGameModeInit_ToGameMode8_Init::
     farcall GameMode8_Init
     ret
@@ -601,73 +584,46 @@ RunGameModeUpdate::
     dw RunGameModeUpdate_ToGameMode7_Update
     dw RunGameModeUpdate_ToGameMode8_Update
 
-; step 0 of RunGameModeUpdate: calls GameMode0_Update (E-0347)
-; why: step 0 of RunGameModeUpdate (when wGameMode = 0); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 0's frame (the debug menu): far-calls GameMode0_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode0_Update::
     farcall GameMode0_Update
     ret
 
-; step 1 of RunGameModeUpdate: calls GameMode1_Update (E-0347)
-; why: step 1 of RunGameModeUpdate (when wGameMode = 1); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 1's frame (the field): far-calls GameMode1_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode1_Update::
     farcall GameMode1_Update
     ret
 
-; step 2 of RunGameModeUpdate: calls GameMode2_Update (E-0347)
-; why: step 2 of RunGameModeUpdate (when wGameMode = 2); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 2's frame (the pause menu): far-calls GameMode2_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode2_Update::
     farcall GameMode2_Update
     ret
 
-; step 3 of RunGameModeUpdate: returns at once (E-0347)
-; why: step 3 of RunGameModeUpdate (when wGameMode = 3); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 3 has no per-frame routine: returns at once. (C1, E-0357)
 RunGameModeUpdate_Return::
     ret
 
-; step 4 of RunGameModeUpdate: calls GameMode4_Update (E-0347)
-; why: step 4 of RunGameModeUpdate (when wGameMode = 4); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 4's frame (the battle): far-calls GameMode4_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode4_Update::
     farcall GameMode4_Update
     ret
 
-; step 5 of RunGameModeUpdate: calls GameMode5_Update (E-0347)
-; why: step 5 of RunGameModeUpdate (when wGameMode = 5); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 5's frame (the title screen and link set-up): far-calls GameMode5_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode5_Update::
     farcall GameMode5_Update
     ret
 
-; step 6 of RunGameModeUpdate: calls GameMode6_Update (E-0347)
-; why: step 6 of RunGameModeUpdate (when wGameMode = 6); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 6's frame (the egg and save screens): far-calls GameMode6_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode6_Update::
     farcall GameMode6_Update
     ret
 
-; step 7 of RunGameModeUpdate: calls GameMode7_Update (E-0347)
-; why: step 7 of RunGameModeUpdate (when wGameMode = 7); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 7's frame: far-calls GameMode7_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode7_Update::
     farcall GameMode7_Update
     ret
 
-; step 8 of RunGameModeUpdate: calls GameMode8_Update (E-0347)
-; why: step 8 of RunGameModeUpdate (when wGameMode = 8); RunGameModeUpdate: unless
-; wModeChangeRequest is non-zero or a fade is running: jumps through a 9-entry table indexed by
-; wGameMode to the mode's per-frame ... (E-0352)
+; Game mode 8's frame (the egg hand-over scene): far-calls GameMode8_Update. (C1, E-0357)
 RunGameModeUpdate_ToGameMode8_Update::
     farcall GameMode8_Update
     ret
@@ -875,10 +831,12 @@ DetectSGB::
     scf
     ret
 
-; called from PollJoypad: returns if rP1 is c; sets rP1 to $20; sets rP1 to $30; sets rP1 to $10;
-; sets rP1 to $30; branches on rP1; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of PollJoypad; PollJoypad: shifts wJoypadHeld to wJoypadHeldPrev and reads the new
-; state into wJoypadHeld (directly, or through the SGB path when wSGBActive) (E-0352)
+; Reads the joypad of each Super Game Boy player, up to four (B = 4). Each pass reads the player
+; number from rP1, selects the button lines ($20) and the direction lines ($10) and combines them
+; into one byte; that player's 2-byte slot of wSGBJoypad1 gets the held buttons in its first byte
+; and the newly pressed ones (held now, not before) in its second. It stops early when rP1 reads
+; back the value it started with, which is when the SGB has cycled through the connected players.
+; (C1, E-0357)
 PollJoypad_WriteP1::
     ldh a, [rP1]
     ld b, $04
@@ -1089,10 +1047,11 @@ ClearSGBPacketBuffer::
     pop hl
     ret
 
-; Branches on wLinkMode; calls ClearSGBPacketBuffer_WaitSerialTransferDone; calls
-; ClearSGBPacketBuffer_SendSGBPacketSet; calls ClearSGBPacketBuffer_WriteIFAndIE (E-0347)
-; why: part of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Turns the screen back on after a mode change and re-enables interrupts with the mask in A: when
+; linked it first re-synchronises with the partner (the serial handshake at
+; ClearSGBPacketBuffer_WaitSerialTransferDone), then sets LCDC bit 7 and sends the SGB unfreeze
+; packet, clears rIF, writes rIE and enables interrupts. Not part of ClearSGBPacketBuffer; it only
+; follows it in the ROM. (C1, E-0357)
 ClearSGBPacketBuffer_CheckLinkMode::
     push af
     ld a, [wLinkMode]
@@ -1132,11 +1091,10 @@ TurnOffLCD::
     res 7, [hl]
     ret
 
-; called from ClearSGBPacketBuffer: sets bit 7 of wLCDCShadow; copies the byte at wLCDCShadow to
-; rLCDC; returns if wSGBActive is 0; sets wSGBPacketIndex to 1; calls SendSGBPacketSet; calls
-; SpinDelay (E-0347)
-; why: a helper of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Switches the LCD on (sets bit 7 of wLCDCShadow and copies it to rLCDC); on a Super Game Boy it
+; also sends packet set 1 and waits. The 11 bytes after its ret are never reached; as code they
+; would be ret / xor a / ldh [rIF], a / ldh a, [rIE] / and $F7 / ldh [rIE], a / ret (clear the
+; serial interrupt enable). (C1, E-0357)
 ClearSGBPacketBuffer_SendSGBPacketSet::
     ld hl, wLCDCShadow
     set 7, [hl]
@@ -1159,9 +1117,7 @@ WaitSerialTransferDone::
     jr nz, WaitSerialTransferDone
     ret
 
-; Sets rIF to 0; copies B to rIE (E-0347)
-; why: part of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Clears pending interrupts (rIF = 0) and enables those in A (rIE = A). (C1, E-0357)
 ClearSGBPacketBuffer_WriteIFAndIE::
     ld b, a
     xor a
@@ -1268,11 +1224,10 @@ UploadBGPalettes::
     jr nz, .loop
     ret
 
-; called from VBlankHandler: branches on wOBJPaletteUploadRequest; copies wOBJPaletteUploadRequest
-; to rOBPI; calls HLFromABits3To5; sets rOBPI to $80; branches on rSTAT; also changes HL, DE, BC and
-; A by register arithmetic (E-0347)
-; why: a helper of VBlankHandler; VBlankHandler: runs once per frame: saves registers and the VRAM
-; and WRAM banks (E-0352)
+; VBlank step that uploads sprite palettes on CGB. If bit 7 of wOBJPaletteUploadRequest is set, it
+; uploads one palette (8 bytes; bits 3-5 of the request choose it, and the request also goes to
+; rOBPI) from wOBJPaletteBuffer; otherwise all eight (64 bytes) from wOBJPaletteBuffer. Each byte
+; waits for rSTAT mode below 2 with interrupts off before it goes to rOBPD. (C1, E-0357)
 VBlankHandler_HLFromABits3To5::
     ld a, [wOBJPaletteUploadRequest]
     bit 7, a
@@ -1489,7 +1444,11 @@ RandomByteTable::
     db $39, $37, $e0, $91, $c3, $33, $9b, $5f, $be, $41, $ee, $74, $e2, $0b, $47, $7e ; id 6
     db $bf, $60, $bb, $20, $61, $05, $b2, $94, $b6, $e4, $3a, $21, $1e, $b4, $8c, $ce ; id 7
 
-; 16-bit seed in wKeyRandomLo/wKeyRandomHi becomes seed * 5 + 11 (E-0353)
+; Update the little-endian wKeyRandomLo/Hi word to (5*seed + 11) modulo 65536 using two shifts, word
+; addition and low-byte add/high-byte carry. Preserve HL and BC on the stack; A and flags are
+; working outputs. PlayerSpriteFlash samples low three bits of the resulting high byte, while other
+; callers consume the same shared state. The recurrence does not by itself establish a uniform
+; sprite selection or independent draws. (C1, E-0362)
 NextRandomSeed::
     push hl
     push bc
@@ -2567,12 +2526,10 @@ StepFade::
     jp z, DarkenDMGShade_ClearFadeState
     ret
 
-; called from StepFade: sets wFadeStepSize to 0; calls StepFade_WriteFadeStepSize; sets
-; wFadeStepSize to 8; calls StepFade_WriteFadeStepSize; branches on wFadeMask; sets wFadeStepSize to
-; $10; calls StepFade_WriteFadeStepSize; sets wFadeStepSize to $18; calls
-; StepFade_WriteFadeStepSize; calls ClearSGBPacketBuffer; calls CopySGBPacketFieldsAndSend; returns
-; unless bit 4 of wFadeMask is set; then 2 more steps (see the code) (E-0347)
-; why: a helper of StepFade; StepFade: does nothing when wFadeState is 0 (E-0352)
+; Super Game Boy step of the palette fade: fades the colour groups chosen by bits 0-3 of wFadeMask
+; (8 bytes each, see StepFade_WriteFadeStepSize; groups 2 and 3 only when bit 4 is set), then sends
+; the colours at wOBJPaletteBuffer as SGB packet $01 (PAL01); when bit 4 is set it also sends
+; wOBJPaletteBuffer + $10 as packet $09 (PAL23). (C1, E-0357)
 StepFade_ClearSGBPacketBuffer::
     ld a, [wFadeMask]
     bit 0, a
@@ -2643,23 +2600,25 @@ CopySGBPacketFieldsAndSend::
     farcall_b SendSGBPacketSet
     ret
 
-; Calls StepFade_AdjustColorChannelForFade; calls StepFade_WriteFadeStepSize_2 (E-0347)
-; why: part of StepFade; StepFade: does nothing when wFadeState is 0 (E-0352)
+; Fades one SGB palette group of four colours: StepFade_AdjustColorChannelForFade for the colour at
+; the current offset, then the offset (wFadeStepSize) moves on by 2 bytes per colour; the code falls
+; through the two increments to the next colours. (C1, E-0357)
 StepFade_WriteFadeStepSize::
     call StepFade_AdjustColorChannelForFade
     call StepFade_WriteFadeStepSize_2
     call StepFade_WriteFadeStepSize_2
 
-; Sets wFadeStepSize (E-0347)
-; why: part of StepFade_WriteFadeStepSize, in part of StepFade; StepFade: does nothing when
-; wFadeState is 0 (E-0352)
+; Moves the fade offset wFadeStepSize to the next colour (2 bytes) and falls through to fade it.
+; (C1, E-0357)
 StepFade_WriteFadeStepSize_2::
     ld a, [wFadeStepSize]
     add $02
     ld [wFadeStepSize], a
 
-; Calls AdjustColorChannelForFade; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of StepFade; StepFade: does nothing when wFadeState is 0 (E-0352)
+; Fades one 15-bit colour for the SGB path: takes the target colour from wOBJPaletteBuffer + $20 +
+; wFadeStepSize, moves each of its red, green and blue channels by wFadeLevel with
+; AdjustColorChannelForFade, packs them back and stores the result at the same offset of
+; wOBJPaletteBuffer. (C1, E-0357)
 StepFade_AdjustColorChannelForFade::
     ld hl, wOBJPaletteBuffer + $20
     ld a, [wFadeStepSize]
@@ -2737,21 +2696,16 @@ AdjustColorChannelForFade::
 .return:
     ret
 
-; Calls StepCGBFade (E-0347)
-; why: part of AdjustColorChannelForFade; AdjustColorChannelForFade: A = the 5-bit colour channel A
-; moved by B toward white or black (bit 7 of wFadeMode), clamped (E-0352, E-0128)
+; CGB path of the fade: far-calls StepCGBFade, which moves every palette one level toward the fade
+; target. (C1, E-0357)
 AdjustColorChannelForFade_CallStepCGBFade::
     farcall StepCGBFade
     ret
 
-; May continue in LightenDMGShade_CheckFadeState; branches on wFadeState; branches on
-; wFadeDelayCounter; decrements wFadeDelayCounter; calls LightenSelectedDMGPalettes; copies
-; wFadeDelay to wFadeDelayCounter; increments wFadeLevel; may continue in
-; DarkenDMGShade_ClearFadeState; branches on wFadeDelayCounter; decrements wFadeDelayCounter; calls
-; LightenSelectedDMGPalettes; copies wFadeDelay to wFadeDelayCounter; then 3 more steps (see the
-; code) (E-0347)
-; why: part of AdjustColorChannelForFade; AdjustColorChannelForFade: A = the 5-bit colour channel A
-; moved by B toward white or black (bit 7 of wFadeMode), clamped (E-0352, E-0128)
+; DMG fade step toward white (wFadeMode bit 7 clear; set means toward black,
+; LightenDMGShade_CheckFadeState). Waits wFadeDelay frames per step; each step redraws the chosen
+; DMG palettes and moves wFadeLevel up (fading out) or down (fading in, wFadeState bit 7); the fade
+; ends (wFadeState = 0) when the level reaches 4 or wraps below 0. (C1, E-0357)
 AdjustColorChannelForFade_CheckFadeMode::
     ld a, [wFadeMode]
     bit 7, a
@@ -2853,13 +2807,9 @@ LightenDMGShade::
     rrc c
     ret
 
-; Branches on wFadeState; branches on wFadeDelayCounter; decrements wFadeDelayCounter; calls
-; LightenDMGShade_DarkenDMGPaletteByFadeLevel; copies wFadeDelay to wFadeDelayCounter; increments
-; wFadeLevel; may continue in DarkenDMGShade_ClearFadeState; branches on wFadeDelayCounter;
-; decrements wFadeDelayCounter; calls LightenDMGShade_DarkenDMGPaletteByFadeLevel; copies wFadeDelay
-; to wFadeDelayCounter; decrements wFadeLevel; then 2 more steps (see the code) (E-0347)
-; why: part of LightenDMGShade; LightenDMGShade: subtracts B (the level) from the 2-bit shade in A &
-; 3 (at least 0), ORs it into C and rotates C right by 2 (E-0352, E-0108)
+; DMG fade step toward black (wFadeMode bit 7 set): the same timing as the fade toward white, but
+; each step redraws the palettes with DarkenDMGPaletteByFadeLevel; the fade ends at level 4 or below
+; 0. (C1, E-0357)
 LightenDMGShade_CheckFadeState::
     ld a, [wFadeState]
     bit 7, a
@@ -2901,10 +2851,9 @@ LightenDMGShade_CheckFadeState::
     jr z, DarkenDMGShade_ClearFadeState
     ret
 
-; called from LightenDMGShade: calls DarkenDMGPaletteByFadeLevel; may continue in
-; DarkenDMGPaletteByFadeLevel; also changes HL and A by register arithmetic (E-0347)
-; why: a helper of LightenDMGShade; LightenDMGShade: subtracts B (the level) from the 2-bit shade in
-; A & 3 (at least 0), ORs it into C and rotates C right by 2 (E-0352, E-0108)
+; Redraws the DMG palettes the fade affects: for each of bits 0-2 of wFadeMode it darkens the
+; matching saved palette in wFadeDMGPalettes (BGP, OBP0, OBP1) by wFadeLevel into wDMGPaletteBGP and
+; the bytes after it. (C1, E-0357)
 LightenDMGShade_DarkenDMGPaletteByFadeLevel::
     ld a, [wFadeMode]
     bit 0, a
@@ -2960,9 +2909,7 @@ DarkenDMGShade::
     rrc c
     ret
 
-; Sets wFadeState to 0 (E-0347)
-; why: part of DarkenDMGShade; DarkenDMGShade: adds B (the level) to the 2-bit shade in A & 3, caps
-; it at 3, ORs it into C and rotates C right by 2 (E-0352, E-0108)
+; Ends a fade: wFadeState = 0. (C1, E-0357)
 DarkenDMGShade_ClearFadeState::
     xor a
     ld [wFadeState], a
@@ -3226,11 +3173,11 @@ UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
     ld [wSoundFadeLevel], a
     ret
 
-; called from StepFade: branches on wFieldInitStage; branches on wSoundFadeLevel; returns if
-; wSoundFadeLevel is 0; branches on wSoundFadeTarget; decrements wSoundFadeTarget; branches on rNR50
-; & $88; branches on wSoundFadeVolume; branches on c; branches on C; branches on d; branches on D;
-; sets rNR50; then 6 more steps (see the code) (E-0347)
-; why: a helper of StepFade; StepFade: does nothing when wFadeState is 0 (E-0352)
+; Music volume fade, run once per frame from StepFade. When wSoundFadeLevel is set (and not bit 7,
+; and no field set-up is in progress) it waits wSoundFadeTarget frames per step, then lowers each
+; stereo side of the master volume (rNR50) by one, keeping the left/right enable bits; when the
+; volume reaches 0, or wSoundFadeTimer steps have passed, the fade stops (wSoundFadeLevel = 0). (C1,
+; E-0357)
 StepFade_WriteSoundFadeTargetAndNR50Etc::
     ld a, [wFieldInitStage]
     or a
@@ -3423,14 +3370,12 @@ LoadSGBBorderForSetA::
     ret
     db $c9
 
-; called from ClearSGBPacketBuffer: branches on wLinkMode; calls ClearSGBPacketBuffer_WriteIFAndIE;
-; sets wLinkStatus; branches on wLinkRole; branches on wLinkSession; calls
-; ClearSGBPacketBuffer_SerialSendByte; calls WaitSerialTransferDone; calls
-; ClearSGBPacketBuffer_SerialSendByte; calls ClearSGBPacketBuffer_StartSerialTransferInternalClock;
-; calls WaitSerialTransferDone; branches on rSB; calls
-; ClearSGBPacketBuffer_StartSerialTransferInternalClock; then 11 more steps (see the code) (E-0347)
-; why: a helper of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Serial link re-synchronisation after a mode change (only when wLinkMode is set; otherwise it just
+; clears the link state). With only the serial interrupt enabled it marks the link busy, lets the
+; clock-receiving side wait about 24,576 loop passes, then exchanges a greeting: $F5 in link session
+; 5, otherwise $70 | wIsCGB, expecting $70 or $71 back. It settles which side drives the clock
+; (wLinkRole bit 1) from the two consoles' CGB flags, clears the busy bits, and resets
+; wLinkExchangeState and the 14 joypad bytes from wJoypadHeld. (C1, E-0357)
 ClearSGBPacketBuffer_WaitSerialTransferDone::
     ld a, [wLinkMode]
     or a
@@ -3535,11 +3480,10 @@ ClearSGBPacketBuffer_WaitSerialTransferDone::
     jr nz, .loop2
     ret
 
-; Branches on wLinkRole; calls StartSerialTransferInternalClock; calls SerialSendByte; sets
-; wLinkTimerLo; sets wLinkTimerHi; branches on wLinkTimerHi; branches on wLinkStatus; sets
-; wLinkFrameCounterHi to 2; also changes A by register arithmetic (E-0347)
-; why: part of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Link greeting exchange: sends $70 | wIsCGB (driving the clock when wLinkRole bit 1 is clear,
+; otherwise waiting for the partner's clock) and counts in wLinkTimer until the transfer completes
+; (wLinkStatus bit 6). If the 16-bit count reaches $FF00 it gives up and sets wLinkFrameCounterHi to
+; 2; otherwise returns A = 0. (C1, E-0357)
 ClearSGBPacketBuffer_StartSerialTransferInternalClock::
     ld a, [wLinkRole]
     bit 1, a
@@ -3575,10 +3519,8 @@ ClearSGBPacketBuffer_StartSerialTransferInternalClock::
     ld [wLinkFrameCounterHi], a
     ret
 
-; Calls SerialSendByte; calls StartSerialTransferInternalClock; branches on wLinkStatus; also
-; changes A by register arithmetic (E-0347)
-; why: part of ClearSGBPacketBuffer; ClearSGBPacketBuffer: zero-fills the 16 bytes of
-; wSGBPacketBuffer (E-0352, E-0108)
+; Sends the link acknowledgement byte $F5 (as clock receiver or driver, by wLinkRole bit 1) and
+; waits until the transfer completes (wLinkStatus bit 6). (C1, E-0357)
 ClearSGBPacketBuffer_SerialSendByte::
     ld a, [wLinkRole]
     bit 1, a
@@ -4543,11 +4485,11 @@ LoadMapScreen::
     call LoadMapScreen_WriteTemp0
     ret
 
-; called from LoadMapScreen: branches on wMapType; branches on wKeyWorldActive; branches on
-; wKeyWorldKey; copies B to hTemp0; calls LoadMapScreen_WriteSVBK; copies B to hTemp0; calls
-; LoadMapScreen_WriteSVBK; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of LoadMapScreen; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of
-; map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Draws a map's special 2x2 marker, unless wMapType bit 7 is set. The table after the routine (code
+; at $1AB4) holds 3-byte entries (map id, position, screen) for 11 maps ending with $FF; for the
+; entry matching hMapId it draws the marker with LoadMapScreen_WriteSVBK, passing the entry's index
+; in hTemp0. In a key world (wKeyWorldActive) whose key is that index + 1, the position comes from
+; wKeyWorldGoal instead. What the marker shows in play is not yet confirmed. (C1, E-0357)
 LoadMapScreen_WriteTemp0::
     ld a, [wMapType]
     bit 7, a
@@ -4601,10 +4543,11 @@ LoadMapScreen_WriteTemp0::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-; May return early; branches on wIsCGB; sets rSVBK to 2; branches on hTemp0; sets rSVBK to 0; also
-; changes HL, DE, A and C by register arithmetic (E-0347)
-; why: part of LoadMapScreen; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map
-; hMapId: finds the map record (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Draws the marker of LoadMapScreen_WriteTemp0 when its screen byte (screen X in the high nibble, Y
+; in the low) matches the current screen. The position byte's low nibble gives the metatile row and
+; its high nibble the column; tiles $46 $47 over $56 $57 go into wScreenTileBuffer, and on CGB the
+; same cells of the attribute copy (WRAM bank 2, $D000 upwards) get palette 3 (entries 4 and 10), 5
+; (entries 5-7) or 1 (others). (C1, E-0357)
 LoadMapScreen_WriteSVBK::
     ldh a, [hMapScreenX]
     swap a
@@ -4700,13 +4643,9 @@ LoadMapScreen_WriteSVBK::
     pop hl
     ret
 
-; called from LoadMapScreen: checks EVENT_SCENE_STRONGEST_MASTER; may return early; returns unless
-; hMapScreenX is 0; branches on hMapId; sets wScreenTileBuffer + $14a to $44; sets wScreenTileBuffer
-; + $14a to $45; sets wScreenTileBuffer + $14a to $46; sets wScreenTileBuffer + $14a to $47; returns
-; unless $13 is $05; sets wScreenTileBuffer + $32 to $78; sets wScreenTileBuffer + $32 to $79; sets
-; wScreenTileBuffer + $32 to $7a; then 1 more step (see the code) (E-0347)
-; why: a helper of LoadMapScreen; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of
-; map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; After the story flag EVENT_SCENE_STRONGEST_MASTER is set, patches two map screens at screen X 0:
+; map $0D gets tiles $44 $45 over $46 $47 at wScreenTileBuffer + $14A, and map $05 gets $78 $79 over
+; $7A $7B at wScreenTileBuffer + $32. What the changed tiles show is not yet confirmed. (C1, E-0357)
 LoadMapScreen_TestFlagBit::
     ld de, EVENT_SCENE_STRONGEST_MASTER
     call TestFlagBit
@@ -5026,10 +4965,12 @@ MapRecordPointer::
     ld h, d
     ret
 
-; called from DebugMapEditor_Update: sets rROMB0 to $11; sets hTemp0; sets rROMB0; also changes HL,
-; DE, BC and A by register arithmetic (E-0347)
-; why: a helper of DebugMapEditor_Update; DebugMapEditor_Update: update for debug-mode state 2: the
-; screen shows '? EDIT ?' (world, map number, position) (E-0352, E-0041)
+; Debug map editor check of the edit position. With bank $11 mapped it follows entry hTemp0 of the
+; pointer table at $44B8 to a map record, and returns A = 1 when the position is outside it:
+; wDebugValue1 not below the record's byte 6 (its width) or wDebugValue3 not below byte 7 (its
+; height), or the 3-byte cell at row wDebugValue3, column wDebugValue1 holds a zero word. The cell
+; table is chosen through the record's pointer at offset 16 and the first set bit of the byte it
+; points to. Otherwise returns A = 0. Restores the ROM bank. (C1, E-0357)
 DebugMapEditor_Update_WriteROMB0AndTemp0::
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -6015,13 +5956,13 @@ LoadRecordListNameTiles::
     ld [rRAMG], a
     ret
 
-; called from LoadPlayerAndFollowerSpriteGraphics: returns if wPartyCount is 0; copies L to hTemp4;
-; copies H to hTemp5; copies L to hTemp2; copies H to hTemp3; sets rRAMG to $0a; calls
-; LoadSRAMRecordByte; branches on hTemp0; sets rRAMG to 0; calls DecompressToVRAM; branches on
-; wIsCGB; calls CopyFromBank; then 11 more steps (see the code) (E-0347)
-; why: a helper of LoadPlayerAndFollowerSpriteGraphics; LoadPlayerAndFollowerSpriteGraphics:
-; hPlayerSpriteMode = sprite mode from story flags $19F, $25 and 2 and bit 3 of hPlayerStateFlags,
-; then loads the matching player and ... (E-0352, E-0128)
+; Loads the sprite tiles and palettes of the party members who follow the player in the field. For
+; each member of wPartyList it writes the species word to a list from wPartyList + 3 and
+; decompresses the species' sprite (MonsterSpriteTable, bank $04) to VRAM, $100 bytes apart from
+; vTiles0 + $100; on CGB it copies the species' 8-byte palette from bank $27 ($7328 + species * 8)
+; to the member's object palette (member index + 1). A member whose SRAM status byte has bit 7 set
+; gets $FFFF in the list and a fixed graphic and palette from bank $7E instead; what that bit means
+; is not yet confirmed. (C1, E-0357)
 LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte::
     ld a, [wPartyCount]
     or a
@@ -6338,9 +6279,8 @@ CopyItemNameToDE::
     ld a, $08
     ld [rROMB0], a
 
-; Sets rROMB0; also changes HL, DE, A and C by register arithmetic (E-0347)
-; why: part of CopyItemNameToDE; CopyItemNameToDE: A = item number: with ROM bank $08 mapped, copies
-; that string of StringTable_ItemNames, including its $F0 terminator, to DE (E-0352, E-0071)
+; The end of CopyItemNameToDE: follows the string pointer, copies the item name up to and including
+; its $F0 terminator to DE, and restores the caller's ROM bank. (C1, E-0357)
 CopyItemNameToDE_Skip::
     ld a, [hli]
     ld c, a
@@ -6597,10 +6537,8 @@ StatInterruptHandler::
     dw StatInterruptHandler_WriteSCXAndLYCEtc
     dw StatInterruptHandler_WriteSCYAndLYCEtc
 
-; step 0 of StatInterruptHandler: sets rSVBK (E-0347)
-; why: step 0 of StatInterruptHandler (when wSTATSplitEnable & $03 = 0); StatInterruptHandler: the
-; LCD STAT interrupt (vector $0048): with WRAM bank 0 mapped, runs the split chosen by
-; wSTATSplitEnable & 3 (0 none (E-0352, E-0341)
+; The common exit of StatInterruptHandler: restores the WRAM bank and the saved registers and
+; returns from the interrupt. It is also split 0 (no split). (C1, E-0357)
 StatInterruptHandler_WriteSVBK::
     pop af
     ldh [rSVBK], a
@@ -6609,19 +6547,13 @@ StatInterruptHandler_WriteSVBK::
     pop af
     reti
 
-; step 1 of StatInterruptHandler: continues in StatInterruptHandler_WriteSVBK (E-0347)
-; why: step 1 of StatInterruptHandler (when wSTATSplitEnable & $03 = 1); StatInterruptHandler: the
-; LCD STAT interrupt (vector $0048): with WRAM bank 0 mapped, runs the split chosen by
-; wSTATSplitEnable & 3 (0 none (E-0352, E-0341)
+; STAT split 1: does nothing (jumps to the common exit). (C1, E-0357)
 StatInterruptHandler_WriteSVBK_2::
     jr StatInterruptHandler_WriteSVBK
 
-; step 2 of StatInterruptHandler: copies the byte at wBGPaletteCopy to rSCX; copies hScrollX to
-; rSCX; sets rLYC to 0; continues in StatInterruptHandler_WriteSVBK; also changes HL and A by
-; register arithmetic (E-0347)
-; why: step 2 of StatInterruptHandler (when wSTATSplitEnable & $03 = 2); StatInterruptHandler: the
-; LCD STAT interrupt (vector $0048): with WRAM bank 0 mapped, runs the split chosen by
-; wSTATSplitEnable & 3 (0 none (E-0352, E-0341)
+; STAT split 2, a horizontal wave: on each interrupt sets rSCX to the byte at wBGPaletteCopy + rLY
+; (the buffer here holds per-line scroll values) and moves the LYC line on by 2; after line $8F it
+; restores rSCX from hScrollX and restarts at line 0. (C1, E-0357)
 StatInterruptHandler_WriteSCXAndLYCEtc::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
@@ -6640,12 +6572,9 @@ StatInterruptHandler_WriteSCXAndLYCEtc::
     ldh [rLYC], a
     jr StatInterruptHandler_WriteSVBK
 
-; step 3 of StatInterruptHandler: copies the byte at wBGPaletteCopy to rSCY; copies hScrollY to
-; rSCY; sets rLYC to 0; continues in StatInterruptHandler_WriteSVBK; also changes HL and A by
-; register arithmetic (E-0347)
-; why: step 3 of StatInterruptHandler (when wSTATSplitEnable & $03 = 3); StatInterruptHandler: the
-; LCD STAT interrupt (vector $0048): with WRAM bank 0 mapped, runs the split chosen by
-; wSTATSplitEnable & 3 (0 none (E-0352, E-0341)
+; STAT split 3, a vertical wave: on each interrupt sets rSCY to the byte at wBGPaletteCopy + rLY and
+; moves the LYC line on by 2; after line $80 it restores rSCY from hScrollY and restarts at line 0.
+; (C1, E-0357)
 StatInterruptHandler_WriteSCYAndLYCEtc::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
@@ -7104,10 +7033,10 @@ CallFunc28BDInBank1F::
     ld [rROMB0], a
     ret
 
-; called from CallFunc28BDInBank1F: calls GlyphTileSourceForL; branches on B; branches on rSTAT;
-; copies L to wTextGlyphDestLo; copies H to wTextGlyphDestHi; also changes HL, DE, A and B by
-; register arithmetic (E-0347)
-; why: a helper of CallFunc28BDInBank1F; CallFunc28BDInBank1F: L = A (E-0352, E-0122)
+; Draws one glyph of text over the tile being built: finds glyph L's 16-byte font tile
+; (GlyphTileSourceForL), backs the destination up one tile and ORs the 16 bytes into VRAM, waiting
+; for VRAM access before each byte; in byte 4 (B = $0D) it also clears bit 1. Stores the end address
+; in wTextGlyphDestLo/Hi for the next glyph. (C1, E-0357)
 CallFunc28BDInBank1F_GlyphTileSourceForL::
     call GlyphTileSourceForL
     ld a, l
@@ -7865,14 +7794,10 @@ OpenTextChoice::
     ld [wTextYesNoResult], a
     ret
 
-; called from OpenTextChoice: calls UploadTwoTilesFromScriptTileBuf0; calls CopyFromBankWaitVRAM;
-; calls BGMapAddressAtScrollPlusHL; calls AdvanceBGMapColumnsByB; branches on the byte at
-; TextPromptWindowTiles; calls WriteVRAMByte; calls NextBGMapColumn_Bank00; returns if wIsCGB is 0;
-; sets rVBK to 1; branches on the byte at TextPromptWindowAttrs; calls WriteVRAMByte; calls
-; NextBGMapColumn_Bank00; then 2 more steps (see the code) (E-0347)
-; why: a helper of OpenTextChoice; OpenTextChoice: <CHOICE> ($FF) and the other choices: plays sound
-; $6C, draws the yes/no window (TextPromptWindowTiles), sets wTextFlags bit 2 and clears ...
-; (E-0352, E-0122, E-0336)
+; Draws the yes/no choice window: uploads the two choice tiles from wScriptTileBuf0/1 and two more
+; from bank $1F, then writes the window from TextPromptWindowTiles to the BG map 14 columns right of
+; the scroll position ($FD starts a new row, $FE ends); on CGB it writes the attributes from
+; TextPromptWindowAttrs to VRAM bank 1 in the same way. (C1, E-0357)
 OpenTextChoice_UploadTwoTilesFromScriptTileBuf0::
     call UploadTwoTilesFromScriptTileBuf0
     ld de, Tiles1Plus6E0Tiles
@@ -8263,37 +8188,26 @@ WriteBCAsDecimalString::
     jr nz, WriteBCAsDecimalString_CallDivideBCByDE3
     jr WriteBCAsDecimalString_CallStoreAThenTerminator
 
-; Calls StoreAThenTerminator (E-0347)
-; why: part of WriteBCAsDecimalString; WriteBCAsDecimalString: writes BC (below 10,000) as decimal
-; digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit ...
-; (E-0352, E-0180)
+; The thousands digit of WriteBCAsDecimalString: BC / 1000 is stored as a digit and BC keeps the
+; remainder. (C1, E-0357)
 WriteBCAsDecimalString_CallDivideBCByDE::
     ld de, $03e8
     call DivideBCByDE
     call StoreAThenTerminator
 
-; Calls StoreAThenTerminator (E-0347)
-; why: part of WriteBCAsDecimalString; WriteBCAsDecimalString: writes BC (below 10,000) as decimal
-; digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit ...
-; (E-0352, E-0180)
+; The hundreds digit of WriteBCAsDecimalString: BC / 100. (C1, E-0357)
 WriteBCAsDecimalString_CallDivideBCByDE2::
     ld de, $0064
     call DivideBCByDE
     call StoreAThenTerminator
 
-; Calls StoreAThenTerminator (E-0347)
-; why: part of WriteBCAsDecimalString; WriteBCAsDecimalString: writes BC (below 10,000) as decimal
-; digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit ...
-; (E-0352, E-0180)
+; The tens digit of WriteBCAsDecimalString: BC / 10. (C1, E-0357)
 WriteBCAsDecimalString_CallDivideBCByDE3::
     ld de, $000a
     call DivideBCByDE
     call StoreAThenTerminator
 
-; Calls StoreAThenTerminator (E-0347)
-; why: part of WriteBCAsDecimalString; WriteBCAsDecimalString: writes BC (below 10,000) as decimal
-; digit bytes at HL without leading zeros, each followed by a $F0 terminator that the next digit ...
-; (E-0352, E-0180)
+; The ones digit of WriteBCAsDecimalString: stores what is left in C. (C1, E-0357)
 WriteBCAsDecimalString_CallStoreAThenTerminator::
     ld a, c
     call StoreAThenTerminator
@@ -8633,10 +8547,9 @@ SetSoundEngineStateTo4AndClearSoundEngineMode::
     ld [wSoundEngineMode], a
     ret
 
-; called from InitSoundHardware: copies B to wSoundChannelMask; copies C to wSoundChannelMaskCount;
-; sets wSoundChannelsDone to 0 (E-0347)
-; why: a helper of InitSoundHardware; InitSoundHardware: first resets the channel masks (the helper
-; called with BC = 0) (E-0352, E-0353)
+; Sets which sound channels to wait for (wSoundChannelMask = B, and C into wSoundChannelMaskCount)
+; and clears the set of channels that have finished. InitSoundHardware calls it with BC = 0. (C1,
+; E-0357)
 InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc::
     ld a, b
     ld [wSoundChannelMask], a
@@ -8646,11 +8559,8 @@ InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc::
     ld [wSoundChannelsDone], a
     ret
 
-; called from SoundTick: sets wSoundChannelsDone; also changes A and B by register arithmetic
-; (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Marks the current sound channel (wSoundChannelIndex) as finished: ORs bit (index) into
+; wSoundChannelsDone. (C1, E-0357)
 SoundTick_WriteSoundChannelsDone::
     ld a, [wSoundChannelIndex]
     inc a
@@ -8670,12 +8580,10 @@ SoundTick_WriteSoundChannelsDone::
     ld [wSoundChannelsDone], a
     ret
 
-; called from SoundTick: branches on wSoundChannelsDone; copies wSoundChannelMask to
-; wSoundChannelsDone; branches on wSoundChannelsDone; sets wSoundChannelMask to 0; sets
-; wSoundChannelsDone to 0; also changes HL, A and B by register arithmetic (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; When every channel in wSoundChannelMask has finished, writes the low nibble of
+; wSoundChannelMaskCount into the low nibble of byte 6 of each of those channels' 32-byte slots in
+; wSoundChannelSlots, then clears the mask; it always clears wSoundChannelsDone. What byte 6
+; controls is not yet known. (C1, E-0357)
 SoundTick_WriteSoundChannelsDoneAndSoundChannelMask::
     ld a, [wSoundChannelsDone]
     ld hl, wSoundChannelMask
@@ -8730,10 +8638,8 @@ RunSoundTable3E24ForA::
     ld hl, $3e24
     jr StartSound_Skip
 
-; called from StartMusic: calls StartSound (E-0347)
-; why: a helper of StartMusic; StartMusic: A = sound id (0 = none): stores it in wCurrentMusic,
-; calls InitSoundHardware (silencing every channel), stores A in wSoundId and starts the ...
-; (E-0352)
+; The second half of StartMusic: StartSound for the id after the first, so a two-part sound (ids A
+; and A + 1) starts together. (C1, E-0357)
 StartMusic_StartSound::
     call StartSound
 
@@ -8757,12 +8663,12 @@ StartSound::
     ld [wSoundId], a
     ld hl, SoundBankTable
 
-; Continues in StartSound_Skip; sets rROMB0; branches on the byte at wSoundChannelSlots; branches on
-; the byte at wSoundChannelSlots & $03; sets wSoundEngineMode; sets rROMB0; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
-; why: part of StartSound; StartSound: C2 static reading, and 495 emulated sound starts agree:
-; starts sound id A (kept in $DD10). Finds A's range in SoundBankTable, switches to ... (E-0352,
-; E-0018)
+; The body of StartSound. It walks SoundBankTable (4-byte entries) to the range that holds wSoundId,
+; maps that range's bank, and reads the sound's 4-byte record: the channel slot, a flags byte and
+; the track pointer. If the slot is already in use, the flags' low two bits pick which stereo bits
+; of wSoundEngineMode to clear ($EE, $DD, $BB or $77). It then fills the 32-byte slot in
+; wSoundChannelSlots: cleared position, flags, track pointer, the track's bank, $FF in byte 11 and
+; cleared timers. Restores the ROM bank and returns wSoundId + 1. (C1, E-0357)
 StartSound_Skip::
     cp [hl]
     jr c, .skip
@@ -8893,16 +8799,14 @@ SoundTick::
     inc [hl]
     ld hl, wSoundChannelSlots
 
-; May continue in SoundTick_CheckSoundChannelIndex; copies hSoundBank to rROMB0; copies
-; hSndChanFlags & $03 to wSoundHwChannel; sets wSoundRegBase; sets wSoundSkipMaskB; sets
-; wSoundNoteWork; may continue in StartChannelFromTrackHeader; calls
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; calls
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2; branches on hSndVibratoCounter; copies B
-; to hSndVibratoCounter; continues in SoundTick_CheckSoundWaveReload; then 9 more steps (see the
-; code) (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; One pass of SoundTick for the current channel slot (HL). An unused slot (both first bytes $FF) is
+; skipped. Otherwise the slot's 32 bytes are copied into the HRAM work area from $FFD8 (hTrackPosLo
+; and the bytes after it), the track's bank is mapped, and the channel's hardware number (flags & 3)
+; gives its register base (5 bytes per channel) and its bit in the stereo mask. A slot whose track
+; position is 0 starts from its track header (StartChannelFromTrackHeader). Otherwise it runs the
+; vibrato counter, adds the tempo nibble to a tick accumulator (a tick happens when it passes $10),
+; counts down the note and wait timers, steps the envelope, and fetches the next event when the note
+; ends. (C1, E-0357)
 SoundTick_Loop::
     ld a, [hli]
     ld b, a
@@ -9015,30 +8919,22 @@ SoundTick_Loop::
     or c
     ldh [hSndEnvelope], a
 
-; Calls SoundTick_WriteSoundChannelsDone (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; A channel's track has nothing more to wait for: marks the channel as finished
+; (SoundTick_WriteSoundChannelsDone) and goes on to the next slot. (C1, E-0357)
 SoundTick_CallSoundTick_WriteSoundChannelsDone::
     call SoundTick_WriteSoundChannelsDone
 
-; Copies hSndNoteLength to hSndNoteTimer; calls SoundNextEvent; continues in
-; SoundTick_CheckSoundWaveReload (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Starts the next note: reloads the note timer from hSndNoteLength and fetches the next track event
+; (SoundNextEvent). (C1, E-0357)
 SoundTick_ReadSndNoteLength::
     ldh a, [hSndNoteLength]
     ldh [hSndNoteTimer], a
     call SoundNextEvent
     jr SoundTick_CheckSoundWaveReload
 
-; May continue in SoundTick_CheckSoundWaveReload; calls
-; SoundTick_WriteSndEnvelopeReloadAndSndEnvelope; calls WriteChannelEnvelopeIfChanged; continues in
-; SoundTick_CheckSoundWaveReload (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Envelope step: when the envelope counter reaches the value in the low nibble of hSndEnvFlags - 1,
+; it recomputes the envelope (SoundTick_WriteSndEnvelopeReloadAndSndEnvelope) and writes it to the
+; channel if it changed. (C1, E-0357)
 SoundTick_CheckSndEnvFlags::
     ldh a, [hSndEnvFlags]
     and $0f
@@ -9050,11 +8946,8 @@ SoundTick_CheckSndEnvFlags::
     call WriteChannelEnvelopeIfChanged
     jr SoundTick_CheckSoundWaveReload
 
-; Sets hSndWaitTicks; may continue in SoundTick_CheckSoundWaveReload; continues in
-; SoundTick_CallSoundTick_WriteSoundChannelsDone (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Counts down hSndWaitTicks; when it reaches 0 and the channel has no envelope steps (hSndEnvFlags
+; high nibble 0) the channel is marked finished. (C1, E-0357)
 SoundTick_SetSndWaitTicks::
     dec a
     ldh [hSndWaitTicks], a
@@ -9064,13 +8957,11 @@ SoundTick_SetSndWaitTicks::
     jr nz, SoundTick_CheckSoundWaveReload
     jr SoundTick_CallSoundTick_WriteSoundChannelsDone
 
-; Branches on wSoundWaveReload; branches on wSoundHwChannel; branches on wSoundChannelIndex;
-; branches on hSndSweepOrWave; copies hSndSweepOrWave to wSoundEventArg; sets wSoundWaveReload to 0;
-; sets rNR30 to 0; calls SoundTick_ReadSndWaveParam; sets rNR30 to $80; sets wSoundSkipMaskA; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; End of a channel's pass. For the wave channel (hardware channel 2, slot 2 or later, not muted)
+; whose wave set changed (wSoundWaveReload and hSndSweepOrWave different from the last one), it
+; switches the wave channel off, loads the new 16-byte wave pattern and switches it back on. It adds
+; the channel to the mask of channels this frame has handled (wSoundSkipMaskA), then copies the 32
+; HRAM work bytes back into the channel's slot. (C1, E-0357)
 SoundTick_CheckSoundWaveReload::
     ld a, [wSoundWaveReload]
     and a
@@ -9142,12 +9033,10 @@ SoundTick_CheckSoundWaveReload::
     jr nz, .loop
     pop hl
 
-; Increments wSoundChannelIndex; may continue in SoundTick_Loop; sets wSoundEngineMode; copies
-; wSoundEngineMode to rNR51; sets rROMB0; calls SoundTick_WriteSoundChannelsDoneAndSoundChannelMask
-; (E-0347)
-; why: part of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Moves to the next of the 6 channel slots (32 bytes on); after the last it applies the stereo mask:
+; wSoundEngineMode keeps only the channels that played (wSoundSkipMaskA) and goes to rNR51. Restores
+; the ROM bank and checks whether a waited-for group of channels has finished
+; (SoundTick_WriteSoundChannelsDoneAndSoundChannelMask). (C1, E-0357)
 SoundTick_CheckSoundChannelIndex::
     ld de, $0020
     add hl, de
@@ -9905,29 +9794,23 @@ ComputeNotePitch::
     ld c, $11
     call WriteChannelRegisterC
 
-; Takes H; changes A (E-0347)
-; why: part of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; The high byte of a note's frequency: H & 7 with bit 7 set (restart the channel). (C1, E-0357)
 ComputeNotePitch_Loop::
     ld a, h
     and $07
     or $80
 
-; Sets hSndFreqHi; calls WriteChannelRegisterC; calls ClearChannelLengthBits (E-0347)
-; why: part of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; Writes the frequency high byte (register offset 4, $14) for the current channel, keeping it in
+; hSndFreqHi, and clears the length bits of the duty register so the note plays without a length
+; cut-off. (C1, E-0357)
 ComputeNotePitch_SetSndFreqHi::
     ldh [hSndFreqHi], a
     ld c, $14
     call WriteChannelRegisterC
     call ClearChannelLengthBits
 
-; Sets wSoundEngineMode; also changes BC and A by register arithmetic (E-0347)
-; why: part of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; Sets the current channel's stereo bits in wSoundEngineMode from hSndPanning: the channel's bits
+; (wSoundNoteWork) are replaced by the matching bits of hSndPanning. (C1, E-0357)
 ComputeNotePitch_ReadSoundNoteWork::
     ld a, [wSoundNoteWork]
     ld b, a
@@ -9942,11 +9825,9 @@ ComputeNotePitch_ReadSoundNoteWork::
     ld [wSoundEngineMode], a
     ret
 
-; Sets rNR31 to 0; may continue in ComputeNotePitch_Loop; continues in ComputeNotePitch_SetSndFreqHi
-; (E-0347)
-; why: part of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; Restarts the wave channel's note: clears rNR31 (the sound length); if the wave channel is not
+; running (rNR52 bit 2 clear) it writes the high frequency byte with the restart bit, otherwise
+; without it. (C1, E-0357)
 ComputeNotePitch_Skip::
     xor a
     ldh [rNR31], a
@@ -9957,15 +9838,11 @@ ComputeNotePitch_Skip::
     and $07
     jr ComputeNotePitch_SetSndFreqHi
 
-; called from SoundTick: returns if wSoundHwChannel is $02; returns if hSndPitchSlide is 0;
-; decrements hSndPitchSlideCounter; returns unless hSndPitchSlide is 0; returns if hSndEnvelope is
-; at least $10; copies hSndPitchSlideTime to hSndPitchSlideCounter; branches on the byte at
-; hSndPitchSlide; decrements hSndPitchSlide; returns if B is $0f; sets hSndEnvelope; continues in
-; WriteChannelEnvelopeIfChanged; increments hSndPitchSlide; then 3 more steps (see the code)
-; (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; The volume slide of a note (not on the wave channel): every hSndPitchSlideTime ticks the
+; envelope's start volume (high nibble of hSndEnvelope) moves one step up while hSndPitchSlide is
+; positive and one step down while it is negative (bit 7), stopping at 15 or 0, and the new envelope
+; is written to the channel. The names of these HRAM bytes say pitch; the code changes the volume.
+; (C1, E-0357)
 SoundTick_WaitSoundHwChannel::
     ld a, [wSoundHwChannel]
     cp $02
@@ -10007,12 +9884,10 @@ SoundTick_WaitSoundHwChannel::
     ldh [hSndEnvelope], a
     jr WriteChannelEnvelopeIfChanged
 
-; called from SoundTick: calls ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; returns if
-; wSoundHwChannel is $03; returns unless hSndNoteTimer is 0; returns if hSndNoteTimer is 0;
-; continues in WriteChannelRegisterC; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; The pitch offset of a note in progress (not on the noise channel), applied when the note timer has
+; run out and the channel flags' high nibble is not 0: adds the entry of SoundPitchOffsetRows chosen
+; by that nibble and the low nibble of wSoundTickBuf to the frequency low byte and writes it
+; (register offset 3). Skipped when the channel is muted this frame. (C1, E-0357)
 SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundHwChannel]
@@ -10038,11 +9913,9 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     ld c, $13
     jr WriteChannelRegisterC
 
-; called from ComputeNotePitch: changes A; may continue in WriteChannelRegisterC_ReadSndEnvelope;
-; may continue in SoundTick_CheckSndVibratoDelay (E-0347)
-; why: a helper of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; After a note's pitch is set: the wave channel goes to its volume write
+; (WriteChannelRegisterC_ReadSndEnvelope); a channel with vibrato depth goes to
+; SoundTick_CheckSndVibratoDelay; otherwise the envelope is written. (C1, E-0357)
 ComputeNotePitch_WriteNR32::
     ld a, [wSoundHwChannel]
     cp $02
@@ -10088,10 +9961,8 @@ WriteChannelRegisterC::
     ldh [c], a
     ret
 
-; Changes A and C; continues in WriteChannelRegisterC (E-0347)
-; why: part of WriteChannelRegisterC; WriteChannelRegisterC: A = value, C = register offset: writes
-; A to $FF00 + wSoundRegBase + C (wSoundRegBase holds the current sound channel's register base)
-; (E-0352, E-0077)
+; Writes hSndEnvelope to the channel's envelope register (offset 2, $12); for the wave channel this
+; is its output level. (C1, E-0357)
 WriteChannelRegisterC_ReadSndEnvelope::
     ldh a, [hSndEnvelope]
     ld c, $12
@@ -10109,10 +9980,8 @@ ClearChannelLengthBits::
     ldh [c], a
     ret
 
-; May return early; sets rNR32 (E-0347)
-; why: part of ClearChannelLengthBits; ClearChannelLengthBits: [$FF00 + wSoundRegBase + $11] &= $C0:
-; keeps the duty bits of the current channel's length/duty register and clears its length (E-0352,
-; E-0114)
+; Wave-channel volume from the modulation step E: the level (E / 2 + 2) in the high nibble is
+; written only when it is at least hSndEnvelope; its level bits ($60) go to rNR32. (C1, E-0357)
 ClearChannelLengthBits_Skip::
     ld a, e
     srl a
@@ -10125,14 +9994,9 @@ ClearChannelLengthBits_Skip::
     ldh [rNR32], a
     ret
 
-; called from SoundTick: calls ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; branches on hSndFreqLo;
-; may continue in
-; SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged; may
-; continue in SoundTick_CheckSndVibratoDelay; returns if hSndVibratoDepth is 0; also changes A by
-; register arithmetic (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Per-tick checks of a playing note: skipped when the channel is muted; a note with frequency 0 (a
+; rest) silences the channel's envelope; the wave channel goes on to SoundTick_CheckSndVibratoDelay;
+; other channels only when they have vibrato depth. (C1, E-0357)
 SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ldh a, [hSndFreqLo]
@@ -10150,13 +10014,12 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2::
     and a
     ret z
 
-; Returns if hSndVibratoDelay is 0; branches on hSndVibratoCounter; may continue in
-; ClearChannelLengthBits_Skip; branches on h; branches on e; branches on B; branches on h; continues
-; in WriteChannelEnvelopeIfChanged; returns if H & $08 is l; continues in
-; WriteChannelEnvelopeIfChanged; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2, in a helper of SoundTick;
-; SoundTick: C1: appears to be the sound engine's update routine. It switches to the bank in $FFDD,
-; walks the channel-state slots at $DC00 and writes ... (E-0352, E-0018)
+; The volume modulation step of a note. From hSndVibratoCounter and the delay hSndVibratoDelay it
+; builds a 4-bit position, looks up the modulation row chosen by hSndWaveParam in
+; SoundModulationTable, combines the entry with the envelope's start volume through
+; SoundEnvelopeScaleTable and writes the result to the channel's envelope register (or, for the wave
+; channel, its output level). Called vibrato by the HRAM names; what it changes is the volume. (C1,
+; E-0357)
 SoundTick_CheckSndVibratoDelay::
     ldh a, [hSndVibratoDelay]
     and a
@@ -10278,21 +10141,15 @@ SoundTick_CheckSndVibratoDelay::
     or b
     jp WriteChannelEnvelopeIfChanged
 
-; called from SoundNextEvent: calls ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; continues in
-; WriteChannelEnvelopeIfChanged (E-0347)
-; why: a helper of SoundNextEvent; SoundNextEvent: C2 static reading and 5,154 emulated fetches
-; agree: fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts ...
-; (E-0352, E-0019)
+; A rest: unless the channel is muted this frame, writes envelope 0 (silence) to the channel. (C1,
+; E-0357)
 SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
     jp WriteChannelEnvelopeIfChanged
 
-; called from SoundNextEvent: calls ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; sets
-; wSoundEngineMode (E-0347)
-; why: a helper of SoundNextEvent; SoundNextEvent: C2 static reading and 5,154 emulated fetches
-; agree: fetches the next track event of the current channel. The position in $FFD8/$FFD9 counts ...
-; (E-0352, E-0019)
+; Unless the channel is muted this frame, clears the channel's stereo bits (wSoundSkipMaskB) in
+; wSoundEngineMode, silencing it on both sides. (C1, E-0357)
 SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundSkipMaskB]
@@ -10365,11 +10222,8 @@ SoundPitchOffsetRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
 
-; called from ComputeNotePitch: returns if hSndSweepOrWave is b; copies hSndSweepOrWave to
-; wSoundEventArg; sets rNR30 to 0 (E-0347)
-; why: a helper of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
-; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
-; (E-0352, E-0019)
+; Loads a new wave pattern when hSndSweepOrWave differs from the last one used (wSoundEventArg):
+; records it and switches the wave channel off before the pattern is written. (C1, E-0357)
 ComputeNotePitch_WriteSoundEventArgAndNR30::
     ld a, [wSoundEventArg]
     ld b, a
@@ -10382,10 +10236,8 @@ ComputeNotePitch_WriteSoundEventArgAndNR30::
     xor a
     ldh [rNR30], a
 
-; called from SoundTick: takes A and E; changes HL, DE, A and B (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Copies a 16-byte wave pattern to wave RAM (rWAVE): the set chosen by the high nibble of
+; hSndWaveParam in SoundWaveSetTable, then the pattern at offset DE within it. (C1, E-0357)
 SoundTick_ReadSndWaveParam::
     ld d, a
     ld hl, SoundWaveSetTable
@@ -10435,11 +10287,9 @@ SoundLabelSlot::
     ld h, a
     ret
 
-; called from SoundTick: branches on C; sets hSndEnvelopeReload; sets hSndEnvelope; also changes DE,
-; BC and A by register arithmetic (E-0347)
-; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
-; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
-; E-0018)
+; Recomputes the envelope for an envelope step: (reload nibble + 1) * (start volume + 1) / 16, at
+; least 1, becomes the new start volume (high nibble of hSndEnvelope); hSndEnvelopeReload keeps its
+; low nibble and takes the old start volume as its high nibble. Keeps BC and DE. (C1, E-0357)
 SoundTick_WriteSndEnvelopeReloadAndSndEnvelope::
     push de
     push bc

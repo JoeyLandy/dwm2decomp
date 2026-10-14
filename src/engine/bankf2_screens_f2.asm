@@ -3683,10 +3683,9 @@ ReturnStub_3::
 ; called from KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor: calls
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf; calls CopyWorkBuf1ToKeyList; sets
 ; wScreenStep to 0 (E-0347)
-; why: a helper of KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor, in step 5 of
-; KeyAppraisalMenu_ChooseKey (when wScreenStep = 5); KeyAppraisalMenu_ChooseKey: KeyAppraisalMenu
-; screen state 3, by wScreenStep: the paged key list (BuildKeyListIndexListEntries), a two-choice
-; confirmation and saving (E-0352)
+; why: a helper of KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor;
+; KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor: Choosing a key, step 5: the paged key cursor:
+; Select copies a key list back (KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList) (E-0352, E-0357)
 KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList::
     call KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf
     call CopyWorkBuf1ToKeyList

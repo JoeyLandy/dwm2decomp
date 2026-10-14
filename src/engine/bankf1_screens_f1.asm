@@ -4208,9 +4208,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_Data::
 ; wMenuCounter to 0; calls GameMode5_Update_WaitPickCount; returns if wScreenState is below $07;
 ; calls GameMode5_Update_UpdateAndDrawSpriteSlots; calls GameMode5_Update_WriteArg1AndArg2Etc;
 ; returns if wMenuCounter is 0; calls GameMode5_Update_RunNameEntryStateWhenNotFading (E-0347)
-; why: a helper of GameMode5_Update_2, in step 7 of GameMode5_Update (when wModeState = 7);
-; GameMode5_Update: game mode 5 (the title screen, new-player set-up and link set-up): by wModeState
-; it loads the screens, waits for the fade, then exchanges ... (E-0352, E-0354)
+; why: a helper of GameMode5_Update_2; GameMode5_Update_2: Game mode 5 frame, wModeState 7:
+; far-calls GameMode5_Update_LinkExchangeJoypadPerFrame_5 (E-0352, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame_5::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]

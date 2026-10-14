@@ -4915,10 +4915,9 @@ LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE_Data_2::
 ; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
 ; FillTilesFromRequest; sets wTextWindowState to 1; sets wTextWindowStep to 0; sets
 ; hSpriteWindowClipMode to 0; calls StepTextWindowOpenClose (E-0347)
-; why: a helper of RunLinkSession4ScreenState_DecompressToVRAMAndStep, in step 6 of
-; RunLinkSession4ScreenState (when wTitleScreenState = 6); RunLinkSession4ScreenState: the link
-; battle set-up screens (link session 4): by wTitleScreenState it saves and syncs, sets the battle
-; kind, edits the link battle rules ... (E-0352, E-0354, E-0122)
+; why: a helper of RunLinkSession4ScreenState_DecompressToVRAMAndStep;
+; RunLinkSession4ScreenState_DecompressToVRAMAndStep: Link set-up, state 6: decompresses the next
+; screen's graphics (RunLinkSession4ScreenState_DecompressToVRAM) and moves on (E-0352, E-0357)
 RunLinkSession4ScreenState_DecompressToVRAM::
     ld hl, wScreenState
     ld bc, $006f

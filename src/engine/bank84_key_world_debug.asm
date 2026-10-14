@@ -1486,10 +1486,9 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
 ; RunFieldReturnPhase_CheckKeyWorldGoal; may continue in RunFieldReturnPhase_CheckKeyWorldGoal;
 ; calls RunFieldReturnPhase_WriteSVBK; continues in RunFieldReturnPhase_CheckKeyWorldGoal; then 1
 ; more step (see the code) (E-0347)
-; why: a helper of RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when
-; wFieldReturnPhase & $03 = 1); RunFieldReturnPhase: what the field does as it is entered
-; (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens
-; the ... (E-0352, E-0354, E-0122)
+; why: a helper of RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field
+; entry phase 1: runs the return action stored in wDataBankSave. 0 opens the field menu (as if A
+; were pressed) (E-0352, E-0357)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     xor a
     ldh [hSpriteWindowClipMode], a
@@ -1560,10 +1559,9 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
 ; changes BC and A by register arithmetic (E-0347)
 ; why: part of RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data, in part of
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc, in a helper of
-; RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when wFieldReturnPhase &
-; $03 = 1); RunFieldReturnPhase: what the field does as it is entered (InitFieldScreen), by
-; wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens the ... (E-0352,
-; E-0354, E-0122)
+; RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field entry phase 1:
+; runs the return action stored in wDataBankSave. 0 opens the field menu (as if A were pressed)
+; (E-0352, E-0357)
 RunFieldReturnPhase_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
@@ -1610,10 +1608,9 @@ RunFieldReturnPhase_ReadMapScreenX::
 ; arithmetic (E-0347)
 ; why: part of RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data, in part of
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc, in a helper of
-; RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when wFieldReturnPhase &
-; $03 = 1); RunFieldReturnPhase: what the field does as it is entered (InitFieldScreen), by
-; wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens the ... (E-0352,
-; E-0354, E-0122)
+; RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field entry phase 1:
+; runs the return action stored in wDataBankSave. 0 opens the field menu (as if A were pressed)
+; (E-0352, E-0357)
 RunFieldReturnPhase_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f

@@ -62,6 +62,18 @@ The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit t
 
 ## Text
 
+For a worked example of a jump table, shared stage tail, byte overflow and a
+call between ROM banks, see [the scripted player and follower paths](OBJECT_PATHS.md)
+(C1, E-0358). [The arena scene](ARENA_SCENE.md) shows shared stage tables,
+borrowed RAM counters, message-word lookups and caller bank assumptions (C1, E-0359).
+[The link and breeding presentations](LINK_BREEDING_SCENES.md) show shared
+animation stages, distinct returns and a branch that skips saving a work byte (C1, E-0360).
+[The follower commands](FOLLOWER_COMMANDS.md) explain exact coordinate stops,
+target snapshots and the screen-action wait (C1, E-0361).
+[Sprite overrides and map-link warps](SPRITE_WARP_COMMANDS.md) follow a slot
+graphics ID through loading, rendering, countdown and restoration, with the
+packed destination and position-region tables (C1, E-0362).
+
 Strings use the charmap. Ordinary characters are written as text, and the text printer's commands (bytes `$E0-$FF`) as tokens:
 
 ```
@@ -95,7 +107,7 @@ Names and notes carry evidence ids such as `E-0336`; [EVIDENCE_LOG.md](EVIDENCE_
 - C2: supported, for example observed in the emulator;
 - C3: verified within a stated scope.
 
-The confidence of each routine and RAM name is in `config/names.json` and `config/symbols.json`. A note that says "C2 from E-0320" was observed when the game ran in `tools/sm83.py`, the project's own emulator.
+The confidence of each routine and RAM name is in `config/names.json` and `config/symbols.json`. Whole-routine explanations also live in `config/annotations.json` (E-0357, E-0358), which is the editable source for those comments. A note that says "C2 from E-0320" was observed when the game ran in `tools/sm83.py`, the project's own emulator.
 
 ## Building
 

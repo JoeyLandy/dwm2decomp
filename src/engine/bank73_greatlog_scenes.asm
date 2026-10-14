@@ -138,9 +138,9 @@ GreatLogFieldEvents_KamehaNoGoing_Msg_HeroTriedToOpen::
     inc [hl]
     ret
 
-; step 2 of GreatLogFieldEvents_KamehaNoGoing: branches on wTextYesNoResult; calls
-; StartMessageHL_B73; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to $0d
-; (E-0347)
+; step 2 of GreatLogFieldEvents_KamehaNoGoing: branches on wTextYesNoResult; shows 'Kameha: Wahahah!
+; No going by me!'; advances wScriptStep; shows 'I'm Prince Kameha of GreatLog!'; sets wScriptStep
+; to $0d (E-0347)
 ; why: step 2 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 2);
 ; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
 ; vase message (E-0352)
@@ -148,14 +148,14 @@ GreatLogFieldEvents_KamehaNoGoing_ShowKamehaWahahahNoGoing::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $49
+    ld hl, MSG_ALREADY_OPEN | $0049 ; 'Kameha: Wahahah! No going by me!'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $48
+    ld hl, MSG_ALREADY_OPEN | $0048 ; '*: I'm Prince Kameha of GreatLog!'
     call StartMessageHL_B73
     ld a, $0d
     ld [wScriptStep], a
@@ -1037,10 +1037,10 @@ GreatLogFieldEvents_TaraWellBeOK_ShowTaraWellBeOK::
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_TaraWellBeOK: branches on wTextYesNoResult; calls
-; StartMessageHL_B73; sets wVisitedScreens to $ff; copies L to hTemp0; copies H to hTemp1; calls
-; SubtractGoldFloorZero; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to 6
-; (E-0347)
+; step 2 of GreatLogFieldEvents_TaraWellBeOK: branches on wTextYesNoResult; shows '0 checked the
+; bookshelf. 'Behavior of'; sets wVisitedScreens to $ff; copies L to hTemp0; copies H to hTemp1;
+; calls SubtractGoldFloorZero; advances wScriptStep; shows 'Go to the Vault and'; sets wScriptStep
+; to 6 (E-0347)
 ; why: step 2 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 2);
 ; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
 ; flash, 'Oh my! The well ...' (E-0352)
@@ -1048,7 +1048,7 @@ GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $23
+    ld hl, MSG_ALREADY_OPEN | $0023 ; '0 checked the bookshelf. 'Behavior of'
     call StartMessageHL_B73
     ld a, $ff
     ld [wVisitedScreens], a
@@ -1070,7 +1070,7 @@ GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $22
+    ld hl, MSG_ALREADY_OPEN | $0022 ; '*: Go to the Vault and'
     call StartMessageHL_B73
     ld a, $06
     ld [wScriptStep], a
@@ -1139,8 +1139,8 @@ GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty::
     ret
 
 ; step 9 of GreatLogFieldEvents_ThisIsATale: branches on wTextYesNoResult; copies wMenuSubState to
-; wMenuState; calls StartMessageHL_B73; sets wScriptStep to 3; calls StartMessageHL_B73; sets
-; wScriptStep to $0c (E-0347)
+; wMenuState; shows 'There aren't many friends here.'; sets wScriptStep to 3; shows 'I accidentally
+; went outside. People'; sets wScriptStep to $0c (E-0347)
 ; why: step 9 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 9);
 ; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
 ; ...' (E-0352)
@@ -1150,14 +1150,14 @@ GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends::
     jr nz, .call_start_message_hl_b73
     ld a, [wMenuSubState]
     ld [wMenuState], a
-    ld hl, wShadowOAM + $19
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0019 ; '*: There aren't many friends here.'
     call StartMessageHL_B73
     ld a, $03
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $1a
+    ld hl, MSG_ALREADY_OPEN | $001a ; '*: I accidentally went outside. People'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
@@ -1166,9 +1166,9 @@ GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends::
 ; step 4 of GreatLogFieldEvents_ThisIsATale: calls NextRandomSeed; may continue in
 ; GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn; copies wKeyRandomLo & $0f to wMenuSubState;
 ; copies wKeyRandomLo & $0f to wDigits; calls Number24ToPackedBCD; calls
-; WritePackedBCDNoLeadingZeros; branches on wMenuSubState; calls StartMessageHL_B73; branches on
-; wTextYesNoResult; branches on wMenuSubState; increments wScriptParam1; copies wScriptParam0 to
-; wMenuSelectedMember; then 23 more steps (see the code) (E-0347)
+; WritePackedBCDNoLeadingZeros; branches on wMenuSubState; shows 'Slash: If you're in need of';
+; branches on wTextYesNoResult; branches on wMenuSubState; increments wScriptParam1; copies
+; wScriptParam0 to wMenuSelectedMember; then 23 more steps (see the code) (E-0347)
 ; why: step 4 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 4);
 ; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
 ; ...' (E-0352)
@@ -1193,7 +1193,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     ld a, [wMenuSubState]
     cp c
     jr nz, .check_text_yes_no_result
-    ld hl, vTiles0 + $18
+    ld hl, MSG_ALREADY_OPEN | $0018 ; 'Slash: If you're in need of'
     call StartMessageHL_B73
     jp .read_script_param1
 
@@ -1225,7 +1225,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     ld a, [wScriptParam1]
     cp $05
     jr nz, .call_next_random_seed
-    ld hl, vTiles0 + $1c
+    ld hl, MSG_ALREADY_OPEN | $001c ; '0 checked the pump. It's rusted'
     call StartMessageHL_B73
     ld a, [wMenuSelectedMember]
     ld de, wTextBuf2 + $2
@@ -1264,14 +1264,14 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     call Number24ToPackedBCD
     ld de, wTextNumber + $3
     call WritePackedBCDNoLeadingZeros
-    ld hl, wShadowOAM + $16
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0016 ; '*: It seems to me that'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $17
+    ld hl, MSG_ALREADY_OPEN | $0017 ; '*: Yo, did you enjoy the'
     call StartMessageHL_B73
 
 .read_script_param1:
@@ -1306,7 +1306,8 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     ret
 
 ; step 2 of GreatLogFieldEvents_ThisIsATale: advances wScriptStep; branches on wTextYesNoResult;
-; sets wMenuState to 6; calls StartMessageHL_B73; sets wScriptStep to $10 (E-0347)
+; sets wMenuState to 6; shows 'This is a tale of children'; shows 'Listen you two! Quit your'; sets
+; wScriptStep to $10 (E-0347)
 ; why: step 2 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 2);
 ; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
 ; ...' (E-0352)
@@ -1318,12 +1319,12 @@ GreatLogFieldEvents_ThisIsATale_ShowThisIsATale::
     jr nz, .call_start_message_hl_b73
     ld a, $06
     ld [wMenuState], a
-    ld hl, wShadowOAM + $14
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0014 ; 'This is a tale of children'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $15
+    ld hl, MSG_ALREADY_OPEN | $0015 ; '*: Listen you two! Quit your'
     call StartMessageHL_B73
     ld a, $10
     ld [wScriptStep], a
@@ -1390,9 +1391,9 @@ GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser::
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouWhatIsThis: branches on wTextYesNoResult; calls
-; StartMessageHL_B73; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to $0c
-; (E-0347)
+; step 2 of GreatLogFieldEvents_WarubouWhatIsThis: branches on wTextYesNoResult; shows 'Warubou:
+; What is this? Food? Perfect!'; advances wScriptStep; shows 'Warubou: Wha…? I smell something! I';
+; sets wScriptStep to $0c (E-0347)
 ; why: step 2 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 2);
 ; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
 ; (E-0352)
@@ -1400,14 +1401,14 @@ GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $51
+    ld hl, MSG_ALREADY_OPEN | $0051 ; 'Warubou: What is this? Food? Perfect!'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $50
+    ld hl, MSG_ALREADY_OPEN | $0050 ; 'Warubou: Wha…? I smell something! I'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
@@ -1491,9 +1492,9 @@ GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
 ; step 9 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; calls
 ; ProcessRecordFields5DTo69ThenItemString; calls
 ; GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord; calls StartMessageHL_B73; sets
-; wScriptStep to $0c; sets rRAMG to $0a; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on
-; hTemp0; calls StartMessageHL_B73 (E-0347)
+; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord; shows '0 checked the oven. It smelled';
+; sets wScriptStep to $0c; sets rRAMG to $0a; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on
+; hTemp0; shows '0 checked the oven. It smelled' (E-0347)
 ; why: step 9 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 9);
 ; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
 ; (E-0352)
@@ -1512,7 +1513,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_2::
     jr nz, .read_party_list
 
 .loop:
-    ld hl, vTiles0 + $26
+    ld hl, MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
@@ -1529,12 +1530,12 @@ GreatLogFieldEvents_WarubouWhatIsThis_2::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, .loop
-    ld hl, wShadowOAM + $26
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ret
 
-; step 11 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; calls StartMessageHL_B73;
-; calls ProcessRecordFields5DTo69ThenItemString; calls
+; step 11 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; shows '0 checked the oven.
+; It smelled'; calls ProcessRecordFields5DTo69ThenItemString; calls
 ; GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf; calls
 ; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord (E-0347)
 ; why: step 11 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 11);
@@ -1543,7 +1544,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_2::
 GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, vTiles0 + $26
+    ld hl, MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
     call StartMessageHL_B73
     ld a, $02
     call ProcessRecordFields5DTo69ThenItemString
@@ -1755,7 +1756,7 @@ GreatLogFieldEvents_WarubouItsADead::
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty_AppendItemStepPtrLoToInventory
+    dw GreatLogFieldEvents_WarubouItsADead_ThisHayIsPretty
 
 ; step 0 of GreatLogFieldEvents_WarubouItsADead: advances wScriptStep; shows '0 peered into the
 ; barrel. It' (E-0347)
@@ -1769,8 +1770,9 @@ GreatLogFieldEvents_WarubouItsADead_ShowHeroPeeredIntoThe::
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouItsADead: branches on wTextYesNoResult; calls
-; StartMessageHL_B73; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to 8 (E-0347)
+; step 2 of GreatLogFieldEvents_WarubouItsADead: branches on wTextYesNoResult; shows 'Warubou: It's
+; a dead end, warooh!'; advances wScriptStep; shows 'I'm Warubou, GreatLog's spirit! Warooh,'; sets
+; wScriptStep to 8 (E-0347)
 ; why: step 2 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 2);
 ; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
 ; is pretty ...' (E-0352)
@@ -1778,14 +1780,14 @@ GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $4b
+    ld hl, MSG_ALREADY_OPEN | $004b ; 'Warubou: It's a dead end, warooh!'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $4a
+    ld hl, MSG_ALREADY_OPEN | $004a ; '*: I'm Warubou, GreatLog's spirit! Warooh,'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
@@ -1856,12 +1858,12 @@ GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty::
     ret
 
 ; step 11 of GreatLogFieldEvents_WarubouItsADead: calls NextRandomSeed; sets wStepPtrLo; calls
-; AppendItemStepPtrLoToInventory; calls CopyItemNameToDE; calls StartMessageHL_B73; sets wScriptStep
-; to 8; calls StartMessageHL_B73; decrements wScriptStep (E-0347)
+; AppendItemStepPtrLoToInventory; calls CopyItemNameToDE; shows 'This hay is pretty good.'; sets
+; wScriptStep to 8; shows 'This hay is pretty good.'; decrements wScriptStep (E-0347)
 ; why: step 11 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 11);
 ; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
 ; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty_AppendItemStepPtrLoToInventory::
+GreatLogFieldEvents_WarubouItsADead_ThisHayIsPretty::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $03
@@ -1876,14 +1878,14 @@ GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty_AppendItemStepPtrLoToInv
     jr z, .call_start_message_hl_b73
     cp $ff
     jr z, .call_start_message_hl_b73
-    ld hl, vTiles0 + $1b
+    ld hl, MSG_ALREADY_OPEN | $001b ; '*: This hay is pretty good.'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, wShadowOAM + $1b
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $001b ; '*: This hay is pretty good.'
     call StartMessageHL_B73
     ld hl, wScriptStep
     dec [hl]
@@ -1916,8 +1918,9 @@ GreatLogFieldEvents_WarubouGiveMe_ShowHeroPeeredIntoThe::
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouGiveMe: branches on wTextYesNoResult; calls
-; StartMessageHL_B73; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to 8 (E-0347)
+; step 2 of GreatLogFieldEvents_WarubouGiveMe: branches on wTextYesNoResult; shows 'Warubou: Wa-hey!
+; Give me something! Then,'; advances wScriptStep; shows 'You need Magic Keys to'; sets wScriptStep
+; to 8 (E-0347)
 ; why: step 2 of GreatLogFieldEvents_WarubouGiveMe (when wScriptStep = 2);
 ; GreatLogFieldEvents_WarubouGiveMe: scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi
 ; Hero, they said ...' (E-0352)
@@ -1925,14 +1928,14 @@ GreatLogFieldEvents_WarubouGiveMe_ShowWarubouWaheyGiveMe::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $4f
+    ld hl, MSG_ALREADY_OPEN | $004f ; 'Warubou: Wa-hey! Give me something! Then,'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $4e
+    ld hl, MSG_ALREADY_OPEN | $004e ; '*: You need Magic Keys to'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
@@ -1987,8 +1990,8 @@ GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs::
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_KingAskedUs: branches on wTextYesNoResult; calls StartMessageHL_B73;
-; advances wScriptStep; calls StartMessageHL_B73; sets wScriptStep to 8 (E-0347)
+; step 2 of GreatLogFieldEvents_KingAskedUs: branches on wTextYesNoResult; shows 'Wow, you kids sure
+; learn'; advances wScriptStep; shows 'Have you heard about Magic'; sets wScriptStep to 8 (E-0347)
 ; why: step 2 of GreatLogFieldEvents_KingAskedUs (when wScriptStep = 2);
 ; GreatLogFieldEvents_KingAskedUs: scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
 ; (E-0352)
@@ -1996,14 +1999,14 @@ GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, vTiles0 + $4d
+    ld hl, MSG_ALREADY_OPEN | $004d ; '*: Wow, you kids sure learn'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $4c
+    ld hl, MSG_ALREADY_OPEN | $004c ; '*: Have you heard about Magic'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
@@ -2147,8 +2150,8 @@ GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo::
 
 ; step 2 of GreatLogFieldEvents_GoodToHear: advances wScriptStep; branches on wTextYesNoResult;
 ; copies wScriptParam0 to wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls
-; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; calls
-; StartMessageHL_B73 (E-0347)
+; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; shows
+; 'Is that so? Too bad!'; shows 'We'll soon be reaching GreatLog.' (E-0347)
 ; why: step 2 of GreatLogFieldEvents_GoodToHear (when wScriptStep = 2);
 ; GreatLogFieldEvents_GoodToHear: scene 3: 'Good. That's good to hear! You ...', 'Is that so? ...'
 ; (E-0352)
@@ -2173,12 +2176,12 @@ GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo::
     ld a, h
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
-    ld hl, vTiles0 + $9
+    ld hl, MSG_ALREADY_OPEN | $0009 ; '*: Is that so? Too bad!'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $a
+    ld hl, MSG_ALREADY_OPEN | $000a ; '*: We'll soon be reaching GreatLog.'
     call StartMessageHL_B73
     ret
 
@@ -2209,8 +2212,8 @@ GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA::
     ret
 
 ; step 2 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; branches on wTextYesNoResult;
-; calls StartMessageHL_B73; advances wScriptStep; also changes HL and A by register arithmetic
-; (E-0347)
+; shows '0 peered into the vase. It'; advances wScriptStep; also changes HL and A by register
+; arithmetic (E-0347)
 ; why: step 2 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 2);
 ; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
 ; spirit in ...' (E-0352)
@@ -2220,7 +2223,7 @@ GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .skip
-    ld hl, vTiles0 + $27
+    ld hl, MSG_ALREADY_OPEN | $0027 ; '0 peered into the vase. It'
     call StartMessageHL_B73
     ret
 
@@ -2233,7 +2236,8 @@ GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe::
 
 ; step 5 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; branches on wMessageIndex;
 ; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; calls FullyHealParty; shows
-; 'There's a spirit in GreatLog'; calls StartMessageHL_B73; advances wScriptStep (E-0347)
+; 'There's a spirit in GreatLog'; shows 'Sailing is sure exhilarating. Right?'; advances wScriptStep
+; (E-0347)
 ; why: step 5 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 5);
 ; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
 ; spirit in ...' (E-0352)
@@ -2255,7 +2259,7 @@ GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $7
+    ld hl, MSG_ALREADY_OPEN | $0007 ; '*: Sailing is sure exhilarating. Right?'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
@@ -2302,8 +2306,8 @@ GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre::
 
 ; step 2 of GreatLogFieldEvents_TaraThereYouAre: advances wScriptStep; branches on wTextYesNoResult;
 ; copies wScriptParam0 to wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls
-; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; calls
-; StartMessageHL_B73 (E-0347)
+; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; shows
+; 'Cobi: What's wrong, 0? Papa's calling'; shows 'Tara: Hurry! Papa will be angry!' (E-0347)
 ; why: step 2 of GreatLogFieldEvents_TaraThereYouAre (when wScriptStep = 2);
 ; GreatLogFieldEvents_TaraThereYouAre: scene 1: 'Tara There you are, big brother!', 'Cobi What's
 ; wrong, Hero?' (E-0352)
@@ -2323,12 +2327,12 @@ GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero::
     ld a, h
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
-    ld hl, vTiles0 + $3
+    ld hl, MSG_ALREADY_OPEN | $0003 ; 'Cobi: What's wrong, 0? Papa's calling'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, vTiles0 + $4
+    ld hl, MSG_ALREADY_OPEN | $0004 ; 'Tara: Hurry! Papa will be angry!'
     call StartMessageHL_B73
     ret
 
@@ -7946,9 +7950,9 @@ UnreferencedScriptStepDispatch_73_ClearArg5IfAtOrAboveLimitForFarmLevel::
     ret
 
 ; step 2 of UnreferencedScriptStepDispatch_73: advances wScriptStep; branches on wTextYesNoResult;
-; calls StartMessageHL_B73b; calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
-; branches on wPartyCount; calls StartMessageHL_B73b; advances wScriptStep; calls
-; StartMessageHL_B73b (E-0347)
+; shows 'Oh, but… I can be'; calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
+; branches on wPartyCount; shows 'Great! Let's make this work!'; advances wScriptStep; shows 'Your
+; party's full… There isn't' (E-0347)
 ; why: step 2 of UnreferencedScriptStepDispatch_73 (when wScriptStep = 2);
 ; UnreferencedScriptStepDispatch_73: ld a, [wScriptStep] / rst $00 with a six-entry table, the shape
 ; of a script command's implementation (E-0352, E-0214, E-0344)
@@ -7958,7 +7962,7 @@ UnreferencedScriptStepDispatch_73_ShowOhButICan::
     ld a, [wTextYesNoResult]
     or a
     jr z, .call_clear_arg5_if_at_or_above_limit_for_farm
-    ld hl, vTiles1 + $512
+    ld hl, MSG_ALREADY_OPEN | $0d12 ; '*: Oh, but… I can be'
     call StartMessageHL_B73b
     ret
 
@@ -7970,14 +7974,14 @@ UnreferencedScriptStepDispatch_73_ShowOhButICan::
     ld a, [wPartyCount]
     cp $03
     jr z, .call_start_message_hl_b73b
-    ld hl, vTiles1 + $510
+    ld hl, MSG_ALREADY_OPEN | $0d10 ; '*: Great! Let's make this work!'
     call StartMessageHL_B73b
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73b:
-    ld hl, vTiles1 + $511
+    ld hl, MSG_ALREADY_OPEN | $0d11 ; '*: Your party's full… There isn't'
     call StartMessageHL_B73b
     ret
 

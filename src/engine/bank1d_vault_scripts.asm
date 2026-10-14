@@ -4067,10 +4067,9 @@ LoadListEntriesCell5RecordAndContinue::
 
 ; called from HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2: sets rRAMG2 to $0a; sets
 ; rRAMB to 0 (E-0347)
-; why: a helper of HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2, in step 62 of
-; HibernateMenu_ChooseRecords (when wScreenStep = 62); HibernateMenu_ChooseRecords: HibernateMenu
-; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
-; UnpackRecordFromBank1Slot (E-0352)
+; why: a helper of HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2;
+; HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2: Choosing records, step 62: the yes/no
+; answer: no (or B) restores the box and goes to step $3B (E-0352, E-0357)
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -4081,10 +4080,9 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
 ; Calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf;
 ; branches on C; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: part of HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2, in a helper of
-; HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2, in step 62 of
-; HibernateMenu_ChooseRecords (when wScreenStep = 62); HibernateMenu_ChooseRecords: HibernateMenu
-; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
-; UnpackRecordFromBank1Slot (E-0352)
+; HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2;
+; HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2: Choosing records, step 62: the yes/no
+; answer: no (or B) restores the box and goes to step $3B (E-0352, E-0357)
 HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf

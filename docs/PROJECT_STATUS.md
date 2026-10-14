@@ -1,15 +1,15 @@
 # Project status
 
-As of **2026-09-12**. Stage: **planning baseline complete; implementation not started**.
+As of **2026-10-14**. Stage: **matching disassembly; source readability and semantic review in progress**. Historical planning and earlier session records below remain for provenance.
 
 ## Target and decisions
 
 | Item | State | Basis |
 | --- | --- | --- |
 | First game | DWM2: Cobi's Journey, GB/GBC | User selected during this session |
-| Intended edition | US English working assumption | Resolve against the actual reference; do not infer revision from filename |
-| Exact revision / header / mapper / ROM size / RAM size | Unknown | No local ROM inspected |
-| Reference SHA-256 | Unknown | Must be measured and recorded before baseline build |
+| Intended edition | US header, version byte 0; catalog cross-check pending | Measured local reference; see target manifest |
+| Exact revision / header / mapper / ROM size / RAM size | Header revision 0, MBC5+RAM+battery, 4 MiB ROM, 32 KiB RAM | `config/targets/dwm2-cobi-us-rev0.json` |
+| Reference SHA-256 | `8e38a7420ef5239c7196aa4fd4b1499e65db2823e875bbf8241bb2199e766d4e` | Measured from supplied reference; never derived from generated output |
 | Other targets | Deferred | Tara and DWM1 are comparison sources, not supported builds |
 | Primary output | Matching assembly plus evidence-backed documentation | Project design decision |
 | Implementation foundation | Fresh RGBDS scaffold recommended | See [survey](SURVEY.md); no upstream adopted |
@@ -55,9 +55,147 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-14, after E-0356)
+## Current handoff (2026-10-14, E-0357 with E-0358 to E-0362)
 
-Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run550).
+Two lines of work were integrated into one tree. E-0357 adds 1,866 notes
+written after reading each whole routine (banks $00-$05, $07, $0A, $0C, $0D,
+$0F, $13-$15 and bank $12 outside the probed ranges); E-0358 to E-0362
+(written in a parallel session) read the bank-$12 follower, path, warp, sprite
+override and arena/breeding scenes with original-ROM probes and their own
+notes and docs. Where both covered a routine the probed note was kept. In all,
+2,006 code labels carry a hand-written note and 3,148 still carry only the
+restatement; `tests/test_doc_coverage.py` keeps that count from growing.
+E-0357 also stops message words such as `$848B` being shown as VRAM or WRAM
+addresses (`MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $000b`).
+
+Final binary identity: **PASS**, `build/run571/report.json`, 4,194,304 bytes,
+approved SHA-256, zero differences. Full suite on the integrated tree:
+`build/logs/suite571.log`, 349 tests OK (3 skipped). Next: merge the drafted
+notes for banks $16, $1B, $1E, $24, $3A, $A0 and $E0 (add-only, never
+replacing an existing note), regenerate, rebuild and test, then continue
+with banks $36, $F0, $85, $1C and the rest of the queue. The full readability
+goal remains active.
+
+## Prior handoff (2026-10-14, E-0361)
+
+Read the five follower/player movement and warp command tables at bank $12
+CPU [$4E4B,$4FEA), their ten stage routines and three related follower helpers.
+There are 18 additional whole-routine notes and ten new explicit stage names.
+Shared stages now read as `FollowerScene_BeginDown`,
+`FollowerScene_WalkDownTo80` and `FollowerScene_FinishWhenLastYMatches`.
+[FOLLOWER_COMMANDS.md](FOLLOWER_COMMANDS.md) explains their exact thresholds,
+target snapshots, wrap and distinct transition contracts (C1, E-0361).
+
+Ten original-ROM probes pass, including all five command dispatchers,
+intermediate-boundary capture, last-Y-only completion, unsigned stagger gates,
+four-pixel overshoot, delay preservation, fade parameters and action wait.
+The next-screen setup probe checks input at the first callee; it does not
+certify complete map loading. The earlier partial Y/direction reading E-0093
+is completed here. No game code behavior changed; these remain C1 readings
+in the project's emulator, without new hardware or full-scene validation.
+
+Baseline `build/run566/report.json`: PASS. Final binary identity: **PASS**,
+`build/run568/report.json`, 4,194,304 bytes, approved SHA-256, zero differences.
+The companion `review.json` records revision, exact dirty tree and tool hashes.
+All 54 scoped source/probe checks pass; documentation links and whitespace
+checks pass. The full gameplay suite was not run this turn. Logs are under
+`build/logs/e0361-*`; the initial family-name collision log is retained, and
+regeneration passed after removing the duplicate explicit name, repairing
+text encoding and correcting the fetch-request reading.
+Remaining generated routine restatements: 3,639. Next: PlayerSpriteFlash
+at $12:$4FEA, PlayerSpriteMessage and MapLinkWarp, tracing sprite override,
+message and map-return consumers, then regenerate, check and build anew.
+The full readability goal remains active.
+
+## Prior handoff (2026-10-14, E-0360)
+
+Read the five link/breeding presentation tables and their 32 core routines at
+bank $12 CPU [$4919,$4E4B), plus the related field dispatcher, placement setter
+and both graphics readers. There are 36 additional whole-routine notes, 26 new
+explicit code-stage names and the named return-map table. Shared routines now
+read as `MonsterScene_SlideFirstLeft`, `MonsterScene_RevealSecond` and
+`MonsterScene_Wait30Calls`. [LINK_BREEDING_SCENES.md](LINK_BREEDING_SCENES.md)
+explains the shared sequence, child message and distinct returns (C1, E-0360).
+
+Ten original-ROM probes pass, including the conditional clipping save,
+coordinate/counter wrap, graphics and palette slots, return selector and saved
+state. Corrected older claims: both field loaders return table byte 2, while
+using different VRAM/palette slots; the link finish routine reads the saved
+link flag and copies it back, rather than setting it. No code behavior changed.
+These remain C1 readings; no new full link/breeding session or hardware-timing
+verification is claimed.
+
+Baseline `build/run564/report.json`: PASS. Final binary identity: **PASS**,
+`build/run565/report.json`, 4,194,304 bytes, approved SHA-256, zero differences.
+Its `review.json` ties the result to the exact dirty tree, revision and tools.
+All 54 scoped source/probe checks pass; documentation links and whitespace
+checks pass. The full gameplay suite was not run this turn. Logs are under
+`build/logs/e0360-*`; initial fixture-address failures are retained separately.
+Remaining generated routine restatements: 3,650. Next: read FollowersStep14 at
+$12:$4E4B, WarpWithFollowers and neighboring follower/player step commands,
+tracing flags, coordinates, warp destinations and script returns, then regenerate,
+run the appropriate checks and a fresh full-ROM build. The full goal stays active.
+
+## Prior handoff (2026-10-14, E-0359)
+
+Read the arena block at bank $12 CPU [$43DA,$4919), including both dispatcher
+tables, 25 routines and the message table, plus the related round/grid helpers,
+random foe builder and party heal. There are 29 new or revised whole-routine
+notes (28 additional readings in the coverage count) and 23 new explicit stage
+or helper names. Shared stages now read as `ArenaScene_WalkPartyIntoRing`,
+`ArenaScene_WaitMessage` and `ArenaScene_HealAndLeaveArena`. See
+[ARENA_SCENE.md](ARENA_SCENE.md) and E-0359 for the stage map and contracts.
+
+Eight original-ROM probes pass in the project's emulator. They preserve exact
+counter checks, low-byte-only message lookups, multiple step advances inside
+the object loop and the heal helper's incoming SRAM bank. The random builder's
+old "foe group" wording is corrected: each draw supplies one encounter word.
+These remain C1 readings; a full arena playthrough and hardware timing are not
+newly verified.
+
+Baseline `build/run562/report.json`: PASS. Final binary identity: **PASS**,
+`build/run563/report.json`, 4,194,304 bytes, approved SHA-256, zero differences;
+`review.json` records the revision, dirty-tree and tool hashes. The scoped run
+passed all 52 tests; 39 presentation/annotation/probe checks passed again after
+final wording changes. Documentation links and whitespace checks pass. The
+full gameplay suite was not run this turn. Logs are under
+`build/logs/e0359-*`; the eight probes' initial fixture-address failure is also
+retained. Remaining generated routine restatements: 3,679. Next: read
+LinkMessageEvent at $12:$4919, NPC breeding warp and child-display stages with
+their message, graphics and script-return consumers, then regenerate and run
+the appropriate checks and a fresh full-ROM build. The full readability goal
+remains active.
+
+## Prior handoff (2026-10-14, E-0358)
+
+Read the complete bank-$12 CPU range [$4001,$43DA), covering 33 routines for
+countdown/encounter messages, a random-battle stub, and the two player/follower
+paths. Their comments now explain the stages and transitions; 27 formerly
+generated stage/helper names have concise action names. [OBJECT_PATHS.md](OBJECT_PATHS.md)
+walks through the dispatch, banked curve call and eight-bit arithmetic.
+The reading remains C1: five direct routine probes pass in our own emulator,
+without independent hardware or full-scene validation. Asymmetric X/Y stores
+are recorded and preserved (E-0358).
+
+Baseline `build/run559/report.json`: PASS, zero differences. Final combined-tree
+verification: **PASS**, `build/run561/report.json`, 4,194,304 bytes, approved
+SHA-256, zero differing bytes. `build/run561/review.json` ties the report to the
+revision, dirty-tree file hashes and tool binaries. Logs are under
+`build/logs/e0358-*`: 79 source-wide checks/probes initially had two failures in
+earlier work; both are corrected and pass on rerun, together with the note-count
+check and three new audit controls (six tests, OK). A 63-case presentation/probe
+run encountered the same two failures before those fixes; its log is retained.
+All other checks in both runs passed. Documentation: 23 local links checked and
+`git diff --check` clean. The full gameplay suite was interrupted before a
+completion report; no full-suite pass is claimed. Readings remain C1.
+Next reproducible action: read ArenaRounds at $12:$43DA and ArenaGridBattle,
+including ArenaRankMessageTable and both encounter producers, then regenerate,
+run the relevant checks and perform a fresh full-ROM build. The full readability
+goal remains active, with 3,701 generated routine restatements still to replace.
+
+## Readability state (2026-10-14, after E-0362)
+
+Measured from `src/` by `tools/readability.py` and `tools/doc_coverage.py`; E-0361's final gate is recorded in the current handoff.
 
 | Measure | State |
 | --- | --- |
@@ -66,10 +204,10 @@ Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays 
 | Ids | 9,278 uses of `MONSTER_*`, `SKILL_*`, `ITEM_*`, `ACTION_*` and `RESIST_*` (D-007, E-0338), in code comparisons and data tables |
 | Story flags and status | 347 story flags named `EVENT_*` (1,573 uses), after their setters, the message the setting routine shows, or (34 flags with no setter found) a routine that tests them, 11 by reading (`config/story_flags.json`); no flag number is left in a flag operand. All 72 battle status bits are named `BSTATn_*`, from forcing each bit in a battle, the skill that sets it, or the masks that treat two bits as one field; 8 with no reader or writer are `UNUSED_*` (D-009, E-0339, E-0346) |
 | Assets | 3,550 graphics and map files included by name (`gfx/monster_sprites/drak_slime.lz`), extracted from the reference at build time (D-008); no offset into the ROM is left in `src/` |
-| Labels | 33,212 global labels. None is an address name or spells a RAM or ROM address, none carries a `_CaseNN`/`_SubNN` state-machine index, and none lacks a description beyond its structure (E-0340, E-0344). Steps say what they show, call or write (`FhuntTalkEvents_ShowHeroCheckedBehindThe`, `..._SetDataBankSave`); data is named by its content or its reader (`Script_HowMayWeServe`, `MapObjects_Map94_3_Unlisted_0`). Copies and repeats are numbered `_2`, `_3`. A step name no longer repeats its parent's name (687 shortened, E-0356); 730 labels are longer than 60 characters |
-| RAM | 958 named addresses; none spells a byte number. Work bytes that different routines reuse are named after their main use, and the note lists the others (E-0345) |
-| Pointers | No operand is a bare address (readability.py raw_pointer_operands 0). Pointers name their target, in another bank where the code shows which (`ld de, GlyphFont`, `ld hl, MonsterAttributeMapTable`, `NameEntryTileSrcListB + $..`). Values say what they are: `lb bc, $40, $90` pairs, `ld hl, -999`, `ld hl, 20000`, `PAL_WHITE`, `MSG_KEEP_OPEN | $0487`. 99 operands were read one by one (config/operands.json, E-0348, E-0350) |
-| Documentation | Every label has a comment (9,822 code, 23,484 data; tools/doc_coverage.py), and every routine comment and table header cites an evidence or decision id. Notes written by reading cite their entry; restatements of the instructions cite E-0347; the 185 early readings were re-read against the code and 8 corrected (E-0353). Every restated routine also says what it is for (`; why:`): the step, helper, part or copy it is and the documented routine it serves (E-0352); no purpose line quotes a note that only names a dispatch (E-0354). A review of 30 random restated routines found every claim accurate and two weaknesses, both fixed (E-0355). No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347, E-0350) |
+| Labels | 33,306 global labels. None is an address name or spells a RAM or ROM address, none carries a `_CaseNN`/`_SubNN` state-machine index, and none lacks a description beyond its structure (E-0340, E-0344). Steps say what they show, call or write (`FhuntTalkEvents_ShowHeroCheckedBehindThe`, `..._SetDataBankSave`); data is named by its content or its reader (`Script_HowMayWeServe`, `MapObjects_Map94_3_Unlisted_0`). Copies and repeats are numbered `_2`, `_3`. A step name no longer repeats its parent's name (683 shortened in the current generation, E-0356); 722 labels are longer than 60 characters |
+| RAM | 957 named addresses; none spells a byte number. Work bytes that different routines reuse are named after their main use, and the note lists the others (E-0345) |
+| Pointers | No operand is a bare address (readability.py raw_pointer_operands 0). Pointers name their target, in another bank where the code shows which (`ld de, GlyphFont`, `ld hl, MonsterAttributeMapTable`, `NameEntryTileSrcListB + $..`). Values say what they are: `lb bc, $40, $90` pairs, `ld hl, -999`, `ld hl, 20000`, `PAL_WHITE`, `MSG_KEEP_OPEN | $0487`, `MSG_ALREADY_OPEN | $048b` (E-0357). 99 operands were read one by one (config/operands.json, E-0348, E-0350) |
+| Documentation | Every label has a comment (9,822 code, 23,484 data; tools/doc_coverage.py), and every routine comment and table header cites an evidence or decision id. Notes written by reading cite their entry; restatements of the instructions cite E-0347; the 185 early readings were re-read against the code and 8 corrected (E-0353). Every restated routine also says what it is for (`; why:`): the step, helper, part or copy it is and the documented routine it serves (E-0352); no purpose line quotes a note that only names a dispatch (E-0354). A review of 30 random restated routines found every claim accurate and two weaknesses, both fixed (E-0355). 2,006 routines are now described by a note written after reading the whole routine (E-0357 through E-0362), which replaces the restatement; 3,148 code labels are still described only by the restatement and purpose line. No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347, E-0350) |
 | Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
 
 ## Source presentation (2026-10-13, decision D-005)

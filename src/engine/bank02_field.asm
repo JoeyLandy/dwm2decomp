@@ -4,12 +4,11 @@
 SECTION "Bank 02", ROMX[$4000], BANK[$02]
     db $02
 
-; called from StartPaletteFade: branches on b; sets wFadeLevel to 0; copies wFadeState to
-; wFadeDelay; copies wFadeState to wFadeDelayCounter; sets wFadeLevel to $20; branches on wFadeMode;
-; sets wFadeDelay; sets wFadeDelayCounter; sets rBGPI to $80; copies E to rBGPD; copies D to rBGPD;
-; sets rOBPI to $80; then 3 more steps (see the code) (E-0347)
-; why: a helper of StartPaletteFade; StartPaletteFade: A = fade state (bit 7 selects the reverse
-; direction): on CGB it stores it and far-calls the CGB fade set-up (E-0352, E-0353)
+; Sets up the fade timing after StartPaletteFade stored wFadeState. Fading out (bit 7 clear):
+; wFadeLevel = 0 and the delay per step = wFadeState / 4. Fading in (bit 7 set): wFadeLevel = $20,
+; the delay = (~wFadeState) / 4, and all 32 colours of the BG and OBJ palettes are set to one
+; starting colour (the word at StartPaletteFade_WriteFadeLevelAndFadeDelayEtc_Data, or 0 when
+; wFadeMode bit 7 is set) so the fade in starts from a flat screen. (C1, E-0357)
 StartPaletteFade_WriteFadeLevelAndFadeDelayEtc::
     ld a, [wFadeState]
     ld b, a
@@ -532,14 +531,9 @@ LoadPalette0FromData_2::
 LoadPalette0FromData_2_Data::
     db $00, $7c, $ff, $7f, $e0, $01, $00, $00
 
-; called from RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc: returns if wIsCGB is 0;
-; calls RunScreenStateStepEveryOtherFrame; may continue in
-; RunMenuStateMenuState_CheckDMGPaletteOBP0; copies wDMGPaletteBGP to wDMGPaletteBytes; continues in
-; RunMenuStateMenuState_CheckDMGPaletteOBP0 (E-0347)
-; why: a helper of RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc, in step 4 of
-; RunMenuStateMenuState (when wMenuState & $0F = 4); RunMenuStateMenuState: the field menu (field
-; state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor and sub-state
-; of the open menu, ... (E-0352, E-0354, E-0122)
+; CGB step of the field menu's palette effect: runs one palette upload step
+; (RunScreenStateStepEveryOtherFrame), then copies any changed DMG palette bytes (BGP, then OBP0)
+; into wDMGPaletteBytes so the CGB palettes made from them follow. (C1, E-0357)
 RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame::
     ld a, [wIsCGB]
     or a
@@ -573,9 +567,8 @@ RunScreenStateStepEveryOtherFrame::
     dw RunScreenStateStepEveryOtherFrame_WriteScreenState_4
     dw RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc
 
-; step 0 of RunScreenStateStepEveryOtherFrame: changes HL, DE and A (E-0347)
-; why: step 0 of RunScreenStateStepEveryOtherFrame; RunScreenStateStepEveryOtherFrame: wScreenStep
-; += 1 (E-0352, E-0122)
+; Uploads BG palettes 0-1 (8 colours) for frame wScreenCounter of a palette animation: from wWorkBuf
+; + wScreenCounter * $40, starting at palette index 0 (rBGPI = $80). (C1, E-0357)
 RunScreenStateStepEveryOtherFrame_WriteScreenState::
     ld hl, wWorkBuf
     ld a, [wScreenCounter]
@@ -596,11 +589,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState::
     ld [de], a
     inc de
 
-; called from RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc: branches on
-; rSTAT; increments wScreenState; also changes HL and A by register arithmetic (E-0347)
-; why: a helper of RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc, in step
-; 3 of RunScreenStateStepEveryOtherFrame; RunScreenStateStepEveryOtherFrame: wScreenStep += 1
-; (E-0352, E-0122)
+; Writes 16 bytes (8 colours) from HL to the palette data register DE, each pair after waiting for
+; VRAM access, then moves to the next upload step (wScreenState + 1). (C1, E-0357)
 RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     di
 
@@ -681,10 +671,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     ld [wScreenState], a
     ret
 
-; step 1 of RunScreenStateStepEveryOtherFrame: changes HL, DE and A; continues in
-; RunScreenStateStepEveryOtherFrame_WriteScreenState_2 (E-0347)
-; why: step 1 of RunScreenStateStepEveryOtherFrame; RunScreenStateStepEveryOtherFrame: wScreenStep
-; += 1 (E-0352, E-0122)
+; Uploads BG palettes 2-3 for the current animation frame: from wWorkBuf + $10 + wScreenCounter *
+; $40, starting at palette index $10. (C1, E-0357)
 RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
@@ -706,10 +694,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     inc de
     jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
-; step 2 of RunScreenStateStepEveryOtherFrame: changes HL, DE and A; continues in
-; RunScreenStateStepEveryOtherFrame_WriteScreenState_2 (E-0347)
-; why: step 2 of RunScreenStateStepEveryOtherFrame; RunScreenStateStepEveryOtherFrame: wScreenStep
-; += 1 (E-0352, E-0122)
+; Uploads BG palettes 4-5 for the current animation frame: from wWorkBuf + $20 + wScreenCounter *
+; $40, starting at palette index $20. (C1, E-0357)
 RunScreenStateStepEveryOtherFrame_WriteScreenState_4::
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
@@ -731,13 +717,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_4::
     inc de
     jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
-; step 3 of RunScreenStateStepEveryOtherFrame: calls
-; RunScreenStateStepEveryOtherFrame_WriteScreenState_2; increments wScreenCounter; branches on
-; wScreenCounter; sets wScreenSubStep to 0; sets wScreenCounter to 0; sets wScreenState to $ff; sets
-; wScreenSubStep to 0; sets wScreenState to 0; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 3 of RunScreenStateStepEveryOtherFrame; RunScreenStateStepEveryOtherFrame: wScreenStep
-; += 1 (E-0352, E-0122)
+; Uploads BG palettes 6-7 for the current animation frame (wWorkBuf + $30, index $30), then moves to
+; the next frame; after 8 frames the animation stops (wScreenState = $FF). (C1, E-0357)
 RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld hl, wWorkBuf + $30
     ld a, [wScreenCounter]
@@ -776,14 +757,9 @@ RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld [wScreenState], a
     ret
 
-; called from RunMenuStateMenuState_QueueSoundEffect: calls
-; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc; increments wScreenCounter; branches on
-; wScreenCounter; sets wScreenCounter to 0; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: a helper of RunMenuStateMenuState_QueueSoundEffect, in step 1 of RunMenuStateMenuState (when
-; wMenuState & $0F = 1); RunMenuStateMenuState: the field menu (field state 6): by wMenuState & $0F
-; it plays the menu's music and sounds, sets the cursor and sub-state of the open menu, ... (E-0352,
-; E-0354, E-0122)
+; Precomputes the 8 frames of the field menu's palette animation into wWorkBuf: for each frame
+; (wScreenCounter 0-7) it brightens all eight palettes of wBGPaletteBuffer (64 bytes) by that
+; frame's step. (C1, E-0357)
 RunMenuStateMenuState_WriteScreenCounter::
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
@@ -819,13 +795,9 @@ RunMenuStateMenuState_WriteScreenCounter::
     ld [wScreenCounter], a
     ret
 
-; Copies B to wTextCounter2; copies B & $1f to wTextCounter3; copies C & $1f to wTextCounter4;
-; increments wScreenSubStep; may continue in
-; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc; sets wScreenSubStep to 0; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunMenuStateMenuState; RunMenuStateMenuState: the field menu (field state 6): by
-; wMenuState & $0F it plays the menu's music and sounds, sets the cursor and sub-state of the open
-; menu, ... (E-0352, E-0354, E-0122)
+; Brightens 8 colours (16 bytes) for frame wScreenCounter of the field menu's palette animation:
+; each colour is split into red, green and blue (wTextCounter2-4), raised by the frame's step from
+; RunMenuStateMenuState_Data (capped at 31) and stored at DE. (C1, E-0357)
 RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     ld c, [hl]
     inc hl
@@ -902,12 +874,7 @@ RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
 RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
-; Changes HL and A; may continue in WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return; continues
-; in WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return (E-0347)
-; why: part of RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data, in part of
-; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc, in part of RunMenuStateMenuState;
-; RunMenuStateMenuState: the field menu (field state 6): by wMenuState & $0F it plays the menu's
-; music and sounds, sets the cursor and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Copies wDMGPaletteOBP0 into wDMGPaletteBytes + 1 when it has changed. (C1, E-0357)
 RunMenuStateMenuState_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
@@ -1014,10 +981,7 @@ WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0::
     ld h, a
     ret
 
-; Returns at once (E-0347)
-; why: part of WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0;
-; WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0: writes four colours of the palette at HL to rOBPD,
-; each chosen by a 2-bit shade of wDMGPaletteOBP0 through ... (E-0352, E-0129)
+; A shared return. (C1, E-0357)
 WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return::
     ret
 
@@ -1216,13 +1180,10 @@ RunFieldReturnPhase::
     dw RunFieldReturnPhase_ResetLeadRecordFields55And5B
     dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
-; step 0 of RunFieldReturnPhase: sets wFieldReturnPhase to 0; branches on wModeState; sets
-; wMenuState to 5; sets wMenuSubState to 0; sets wModeState to 0; branches on wScriptRunning; sets
-; wModeState to 1; branches on wMapType; sets wModeState to 5; branches on wSGBActive; returns if
-; wFieldInitStage is $02; calls StartPaletteFade (E-0347)
-; why: step 0 of RunFieldReturnPhase (when wFieldReturnPhase & $03 = 0); RunFieldReturnPhase: what
-; the field does as it is entered (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set
-; the field and menu state, 1 opens the ... (E-0352, E-0354, E-0122)
+; Field entry phase 0 (also the end of phase 2): clears the phase; coming from the field menu
+; (wModeState 6) it reopens the menu at state 5; otherwise it picks the field state (1 when a script
+; is running, 5 on a key-world map, else 0) and starts the fade in ($FC), unless the SGB is still
+; setting up the field. (C1, E-0357)
 RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
     xor a
     ld [wFieldReturnPhase], a
@@ -1265,16 +1226,13 @@ RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
     call StartPaletteFade
     ret
 
-; step 2 of RunFieldReturnPhase: branches on wBattleKind; may continue in
-; RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; branches on wBattleScene; may continue
-; in RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; branches on wBattleKind; calls
-; ResetLeadRecordFields55And5B; continues in
-; RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; sets wFieldReturnPhase to 0; sets hMapId
-; to 5; sets hMapScreenX to 1; sets hMapScreenY to 0; checks EVENT_THANKS_FOR_COMING_BY_025; then 37
-; more steps (see the code) (E-0347)
-; why: step 2 of RunFieldReturnPhase (when wFieldReturnPhase & $03 = 2); RunFieldReturnPhase: what
-; the field does as it is entered (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set
-; the field and menu state, 1 opens the ... (E-0352, E-0354, E-0122)
+; Field entry phase 2, after a battle. Battle kind 5 fully heals the party, moves fallen members to
+; the back, reloads the name tiles and sprites and continues normally. Scene 3, or kind 4 (also for
+; scene 2), fully heals the party and returns the player to map 4, screen (1, 0), resuming the
+; script saved before the battle (wScriptReturn). Kinds 6 and 7 reset the lead's record fields. Any
+; other scene and kind sends the player to map 5, screen (1, 0) at ($50, $30) facing down (or up
+; after EVENT_THANKS_FOR_COMING_BY_025), saving a key world first, then play the map music and run
+; talk event group 5. (C1, E-0357)
 RunFieldReturnPhase_ResetLeadRecordFields55And5B::
     ld a, [wBattleKind]
     cp $05
@@ -1408,13 +1366,13 @@ RunFieldReturnPhase_ResetLeadRecordFields55And5B::
     farcall LoadPlayerAndFollowerSpriteGraphics
     jp RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
-; step 1 of RunFieldReturnPhase: sets wFieldReturnPhase to 0; calls RunFieldReturnPhase_WaitMapType;
-; branches on wDataBankSave; sets wFieldInitStage to 0; sets wJoypadPressed; sets hTemp8 to 1; calls
-; OpenFieldMenuOnA; sets wModeState to 0; branches on wMapType; sets wModeState to 5; sets
-; wCurrentKeyIndex; sets wMapToggleFlag to $80; then 46 more steps (see the code) (E-0347)
-; why: step 1 of RunFieldReturnPhase (when wFieldReturnPhase & $03 = 1); RunFieldReturnPhase: what
-; the field does as it is entered (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set
-; the field and menu state, 1 opens the ... (E-0352, E-0354, E-0122)
+; Field entry phase 1: runs the return action stored in wDataBankSave. 0 opens the field menu (as if
+; A were pressed); $40 restarts the field set-up; with bit 7 set it is a key-world return: the key
+; index goes to wCurrentKeyIndex, EVENT_COBI_HERO_WHILE_YOURE is set when byte 3 of the key's 4-byte
+; entry (from $C707) has bit 7 set and its byte 0 is not 1, and the field menu opens at state 6.
+; Values 1-9 start a talk event (group $19; groups 8, 6 or 7 after resetting the followers with
+; music 2 and sound $67; group $39, $6A, $A1 or $AA; or
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc), others group 9. (C1, E-0357)
 RunFieldReturnPhase_OpenFieldMenuOnA::
     xor a
     ld [wFieldReturnPhase], a
@@ -1646,14 +1604,8 @@ ResetLeadRecordFields55And5B::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ret
 
-; called from RunFieldReturnPhase_OpenFieldMenuOnA: returns if bit 7 of wMapType is set; returns
-; unless hMapId is $00; returns unless hMapScreenX is 0; returns unless hMapScreenY is $03; returns
-; unless wGiftRecord is $01; branches on wCounterPtr0Lo; sets wObject5 to $80; sets wCounterPtr0Lo
-; to 0; sets hTemp0 to $15; calls RunFieldCommandTemp0; sets wObject5 to $80 (E-0347)
-; why: a helper of RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when
-; wFieldReturnPhase & $03 = 1); RunFieldReturnPhase: what the field does as it is entered
-; (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens
-; the ... (E-0352, E-0354, E-0122)
+; On map 0 at screen (0, 3), outside a key world, when wGiftRecord is 1: places script object 5,
+; running field command $15 once first (when wCounterPtr0Lo is $FF). (C1, E-0357)
 RunFieldReturnPhase_WaitMapType::
     ld a, [wMapType]
     bit 7, a
@@ -1687,9 +1639,8 @@ RunFieldReturnPhase_WaitMapType::
     ld [wObject5], a
     ret
 
-; called from GameMode1_Init: changes A; branches on wMapType; branches on hMapId; branches on $02;
-; branches on hMapScreenX; branches on hMapScreenY (E-0347)
-; why: a helper of GameMode1_Init; GameMode1_Init: start-up for wGameMode = 1 (E-0352, E-0029)
+; Returns the field set-up step count for GameMode1_Init: 2 for town maps below $20 (and map $38 at
+; screen (0, 0)), otherwise 4. (C1, E-0357)
 GameMode1_Init_ReadMapTypeAndMapIdEtc::
     ld a, [wMapType]
     bit 7, a
@@ -1889,14 +1840,11 @@ FieldState_MapTransition::
     call InitFieldScreen
     ret
 
-; called from FieldState_MapTransition: branches on wFieldTransitionKind; copies
-; wFieldTransitionKind-1 to hPlayerFacing; branches on wReturnWarpFlag; sets wReturnWarpFlag to 0;
-; checks EVENT_THANKS_FOR_COMING_BY_025; sets hPlayerFacing to 2; sets wMapType to 0; copies
-; hPlayerStateFlags & $b7 to hPlayerStateFlags; sets hMapId to 5; sets hMapScreenX to 1; sets
-; hMapScreenY to 0; branches on wSavedPositionValid; then 17 more steps (see the code) (E-0347)
-; why: a helper of FieldState_MapTransition; FieldState_MapTransition: field state 4: a map or
-; screen transition: warps, the key-world floor and the transition steps (wFieldTransitionStep)
-; (E-0352, E-0339)
+; Field transition: places the player after a warp. A return warp (wReturnWarpFlag) goes to map 5,
+; screen (1, 0), facing up after EVENT_THANKS_FOR_COMING_BY_025. The position comes from the saved
+; player state when wSavedPositionValid is set (restoring the followers too), otherwise from the
+; warp destination (wWarpDestX/Y) with the followers on the player. Then the next transition step;
+; arriving on map 5 also clears the map type and the sprite override. (C1, E-0357)
 FieldState_MapTransition_TestFlagBit::
     ld a, [wFieldTransitionKind]
     or a
@@ -2332,12 +2280,9 @@ CheckTallTileInFront::
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
-; called from FieldState_WalkAMenu: returns unless wFadeState is 0; returns if bit 7 of
-; wFieldActionRequest is set; returns if bit 0 of hPlayerStateFlags is set; returns unless bit 0 of
-; wJoypadPressed is set; dispatches on wMapType & $07; also changes A by register arithmetic
-; (E-0347)
-; why: a helper of FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens
-; the field menu (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
+; Field state 5's A button: when no fade, text, pending action or step is in progress and A is
+; pressed, runs the check for the map type (wMapType & 7): key-world maps 3 and 7 can be left from
+; here. (C1, E-0357)
 FieldState_WalkAMenu_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -2366,21 +2311,12 @@ FieldState_WalkAMenu_WaitFadeState::
     dw FieldState_WalkAMenu_Return
     dw FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
-; step 0 of FieldState_WalkAMenu_WaitFadeState: returns at once (E-0347)
-; why: step 0 of FieldState_WalkAMenu_WaitFadeState (when wMapType & $07 = 0), in a helper of
-; FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens the field menu
-; (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
+; Map types without an A-button exit: returns. (C1, E-0357)
 FieldState_WalkAMenu_Return::
     ret
 
-; step 3 of FieldState_WalkAMenu_WaitFadeState: branches on the byte at wKeyWorldFloorInfo + $1;
-; returns unless the byte at wKeyWorldFloorInfo + $1 is $01; returns unless hPlayerFacing is $02;
-; returns unless hMapScreenY is $01; returns unless hPlayerX is $80; returns unless hPlayerY is $10;
-; continues in FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl; also changes HL
-; and A by register arithmetic (E-0347)
-; why: step 3 of FieldState_WalkAMenu_WaitFadeState (when wMapType & $07 = 3), in a helper of
-; FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens the field menu
-; (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
+; A-button exit check on a key-world floor (map type 3): only on floors whose info byte is 1, facing
+; up at screen row 1, position ($80, $10) (the exit spot); type 6 floors never. (C1, E-0357)
 FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
     ld a, [wKeyWorldFloor]
     add a
@@ -2409,12 +2345,7 @@ FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
 .return:
     ret
 
-; step 7 of FieldState_WalkAMenu_WaitFadeState: returns unless hPlayerFacing is $02; returns unless
-; hPlayerX is $40; returns unless hPlayerY is $40; continues in
-; FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl (E-0347)
-; why: step 7 of FieldState_WalkAMenu_WaitFadeState (when wMapType & $07 = 7), in a helper of
-; FieldState_WalkAMenu; FieldState_WalkAMenu: field state 5: walking where A opens the field menu
-; (OpenFieldMenuOnA) instead of talking (E-0352, E-0339)
+; A-button exit check on map type 7: facing up at position ($40, $40). (C1, E-0357)
 FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ldh a, [hPlayerFacing]
     cp $02
@@ -2427,14 +2358,8 @@ FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ret nz
     jr FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
-; Calls SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot; calls
-; RedrawScreenBufferIfPartyWindowFlagsBit7; calls SaveScreenBufferToBGMap1; sets wFieldReturnPhase
-; to 1; plays sound $69; sets wGameMode to 2; sets wModeState to $0b; sets wWorldMapState to 0; sets
-; wJoypadHeld to 0; sets wJoypadPressed to 0 (E-0347)
-; why: part of FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot, in step 7 of
-; FieldState_WalkAMenu_WaitFadeState (when wMapType & $07 = 7), in a helper of FieldState_WalkAMenu;
-; FieldState_WalkAMenu: field state 5: walking where A opens the field menu (OpenFieldMenuOnA)
-; instead of talking (E-0352, E-0339)
+; Leaves the key world through the field menu: saves the key world record, saves the screen, queues
+; field entry phase 1 and sound $69, and switches to game mode 2 at wModeState $0B. (C1, E-0357)
 FieldState_WalkAMenu_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     call RedrawScreenBufferIfPartyWindowFlagsBit7
@@ -2579,27 +2504,18 @@ RunFieldEventFieldEventKind::
     dw RunFieldEventFieldEventKind_WriteVRAMByteInc_2
     dw RunFieldEventFieldEventKind_WaitMapScreenX
 
-; step 12 of RunFieldEventFieldEventKind: calls
-; RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2 (E-0347)
-; why: step 12 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 12);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 12: scroll shake (RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2). (C1,
+; E-0357)
 RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX::
     call RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2
     ret
 
-; step 8 of RunFieldEventFieldEventKind: calls RunFieldEventFieldEventKind_CopyBytes (E-0347)
-; why: step 8 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 8);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 8: palette cycling (RunFieldEventFieldEventKind_CopyBytes). (C1, E-0357)
 RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes::
     call RunFieldEventFieldEventKind_CopyBytes
     ret
 
-; step 0 of RunFieldEventFieldEventKind: returns at once (E-0347)
-; why: step 0 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 0);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 0: none. (C1, E-0357)
 RunFieldEventFieldEventKind_Return::
     ret
 
@@ -2637,11 +2553,8 @@ AnimateTilesByRotatingVTiles2::
     jr nz, .loop
     ret
 
-; step 13 of RunFieldEventFieldEventKind: may return early; calls WriteVRAMByteInc; also changes HL,
-; A and B by register arithmetic (E-0347)
-; why: step 13 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 13);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 13: every 8 frames rotates the 32 bytes at vTiles2 + $A0 left by one bit (an animated
+; tile). (C1, E-0357)
 RunFieldEventFieldEventKind_WriteVRAMByteInc::
     ld a, [wFrameCounterLo]
     and $07
@@ -2660,11 +2573,8 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc::
     jr nz, .loop
     ret
 
-; step 14 of RunFieldEventFieldEventKind: may return early; calls WriteVRAMByteInc; also changes HL,
-; A and B by register arithmetic (E-0347)
-; why: step 14 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 14);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 14: every 8 frames rotates the 96 bytes at vTiles2 and vTiles2 + $30 left by one bit
+; (animated tiles). (C1, E-0357)
 RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
     ld a, [wFrameCounterLo]
     and $07
@@ -2695,11 +2605,8 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
     jr nz, .loop2
     ret
 
-; step 3 of RunFieldEventFieldEventKind: changes HL, DE and A; may return early; continues in
-; RunFieldEventFieldEventKind_CheckFrameCounterLo (E-0347)
-; why: step 3 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 3);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 3: every 16 frames swaps animated tile frames between vTiles2 + $300 and + $320. (C1,
+; E-0357)
 RunFieldEventFieldEventKind_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $0f
@@ -2708,11 +2615,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo::
     ld hl, vTiles2 + $320
     jp RunFieldEventFieldEventKind_CheckFrameCounterLo
 
-; step 4 of RunFieldEventFieldEventKind: changes HL, DE and A; may return early; continues in
-; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo (E-0347)
-; why: step 4 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 4);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 4: every 4 frames cycles the animated tile at vTiles2 + $280 through the four frames
+; at + $2C0. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
     ld a, [wFrameCounterLo]
     and $03
@@ -2721,11 +2625,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
     ld hl, vTiles2 + $2c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-; step 5 of RunFieldEventFieldEventKind: calls AnimateTilesByRotatingVTiles2; may return early;
-; continues in RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo (E-0347)
-; why: step 5 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 5);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 5: rotates the first tiles (AnimateTilesByRotatingVTiles2) and every 4 frames cycles
+; the tile at vTiles2 + $140 through the frames at + $180. (C1, E-0357)
 RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
     call AnimateTilesByRotatingVTiles2
     ld a, [wFrameCounterLo]
@@ -2735,11 +2636,8 @@ RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
     ld hl, vTiles2 + $180
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-; step 9 of RunFieldEventFieldEventKind: changes HL, DE and A; may return early; continues in
-; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo (E-0347)
-; why: step 9 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 9);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 9: every 4 frames cycles the animated tile at vTiles2 + $280 through the frames at +
+; $2C0. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
     ld a, [wFrameCounterLo]
     and $03
@@ -2748,11 +2646,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
     ld hl, vTiles2 + $2c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-; step 10 of RunFieldEventFieldEventKind: changes HL, DE and A; may return early; continues in
-; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo (E-0347)
-; why: step 10 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 10);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 10: every 4 frames cycles the animated tile at vTiles2 + $480 through the frames at +
+; $4C0. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
     ld a, [wFrameCounterLo]
     and $03
@@ -2761,11 +2656,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
     ld hl, vTiles2 + $4c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-; step 15 of RunFieldEventFieldEventKind: returns if hMapScreenX is $01; returns unless hMapScreenX
-; is $01; continues in RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo (E-0347)
-; why: step 15 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 15);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 15: except at screen X 1, every 4 frames cycles the tile at vTiles2 through the frames
+; at + $40. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitMapScreenX::
     ldh a, [hMapScreenX]
     cp $01
@@ -2777,11 +2669,8 @@ RunFieldEventFieldEventKind_WaitMapScreenX::
     ld hl, vTiles2 + $40
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-; Calls WriteVRAMByteInc; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunFieldEventFieldEventKind_WaitMapScreenX, in step 15 of RunFieldEventFieldEventKind
-; (when wFieldEventKind & $0F = 15); RunFieldEventFieldEventKind: unless a fade runs or bit 7 of
-; wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F (jump table of sixteen)
-; (E-0352, E-0124)
+; Tile animation by swapping: frame (wFrameCounterLo / 4) & 3 picks a 16-byte frame at HL + frame *
+; 16, which is exchanged with the 16-byte tile at DE + frame * 16 in VRAM. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
     ld a, [wFrameCounterLo]
     srl a
@@ -2822,11 +2711,8 @@ RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
     jr nz, .loop
     ret
 
-; Calls WriteVRAMByteInc; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunFieldEventFieldEventKind_WaitMapScreenX, in step 15 of RunFieldEventFieldEventKind
-; (when wFieldEventKind & $0F = 15); RunFieldEventFieldEventKind: unless a fade runs or bit 7 of
-; wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F (jump table of sixteen)
-; (E-0352, E-0124)
+; Two-frame tile animation: bit 4 of the frame counter picks which 16-byte halves of DE and HL are
+; exchanged. (C1, E-0357)
 RunFieldEventFieldEventKind_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $10
@@ -2864,13 +2750,9 @@ RunFieldEventFieldEventKind_CheckFrameCounterLo::
     jr nz, .loop
     ret
 
-; step 6 of RunFieldEventFieldEventKind: checks EVENT_SCENE_MONSTER_INSPECTION; may return early;
-; returns if wFrameCounterLo & $1f is at least $0c; continues in
-; RunFieldEventFieldEventKind_CallWaitForVRAMAccess; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: step 6 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 6);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 6: until EVENT_SCENE_MONSTER_INSPECTION is set, in the first 12 of every 32 frames
+; swaps one tile pair from the 4-byte entries of RunFieldEventFieldEventKind_TestFlagBit_Data. (C1,
+; E-0357)
 RunFieldEventFieldEventKind_TestFlagBit::
     ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
@@ -2900,12 +2782,8 @@ RunFieldEventFieldEventKind_TestFlagBit_Data::
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $a0, $93, $90, $93, $b0, $93
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $a0, $94, $90, $94, $b0, $94
 
-; step 7 of RunFieldEventFieldEventKind: returns if wFrameCounterLo & $1f is at least $0c; continues
-; in RunFieldEventFieldEventKind_CallWaitForVRAMAccess; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: step 7 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 7);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 7: in the first 12 of every 32 frames swaps one tile pair from
+; RunFieldEventFieldEventKind_ReadFrameCounterLo_Data. (C1, E-0357)
 RunFieldEventFieldEventKind_ReadFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $1f
@@ -2932,13 +2810,8 @@ RunFieldEventFieldEventKind_ReadFrameCounterLo_Data::
     db $c0, $94, $e0, $94, $d0, $94, $f0, $94, $60, $95, $80, $95, $70, $95, $90, $95
     db $20, $96, $60, $96, $30, $96, $70, $96, $a0, $96, $e0, $96, $b0, $96, $f0, $96
 
-; step 11 of RunFieldEventFieldEventKind: returns unless hMapScreenY is 0; returns if
-; wFrameCounterLo & $3f is at least $04; continues in
-; RunFieldEventFieldEventKind_CallWaitForVRAMAccess; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: step 11 of RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 11);
-; RunFieldEventFieldEventKind: unless a fade runs or bit 7 of wFieldActionRequest is set, runs the
-; field event for wFieldEventKind & $0F (jump table of sixteen) (E-0352, E-0124)
+; Field event 11: on screen row 0, in the first 4 of every 64 frames swaps one tile pair from
+; RunFieldEventFieldEventKind_WaitMapScreenY_Data. (C1, E-0357)
 RunFieldEventFieldEventKind_WaitMapScreenY::
     ldh a, [hMapScreenY]
     or a
@@ -2966,12 +2839,8 @@ RunFieldEventFieldEventKind_WaitMapScreenY::
 RunFieldEventFieldEventKind_WaitMapScreenY_Data::
     db $e0, $94, $00, $95, $f0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
-; Calls WriteVRAMByteInc; also changes DE, BC and A by register arithmetic (E-0347)
-; why: part of RunFieldEventFieldEventKind_WaitMapScreenY_Data, in part of
-; RunFieldEventFieldEventKind_WaitMapScreenY, in step 11 of RunFieldEventFieldEventKind (when
-; wFieldEventKind & $0F = 11); RunFieldEventFieldEventKind: unless a fade runs or bit 7 of
-; wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F (jump table of sixteen)
-; (E-0352, E-0124)
+; Exchanges 16 bytes between VRAM tiles DE and HL, waiting for VRAM access around each byte. (C1,
+; E-0357)
 RunFieldEventFieldEventKind_CallWaitForVRAMAccess::
     ld b, $10
 
@@ -2998,16 +2867,10 @@ RunFieldEventFieldEventKind_CallWaitForVRAMAccess::
     jr nz, .loop
     ret
 
-; called from RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes: returns if
-; wScriptCommandType is $ed; returns unless wSavedPositionValid is 0; branches on wMenuSubState;
-; sets wMenuSubState to $80; calls CopyBytes; increments wMenuState; may return early; branches on
-; wMenuState; copies wMenuSubState & $81 to wMenuSubState; sets wMenuState to 0; sets hTemp0 to 0;
-; calls RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc; then 2 more steps (see the
-; code) (E-0347)
-; why: a helper of RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes, in step 8 of
-; RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 8); RunFieldEventFieldEventKind: unless
-; a fade runs or bit 7 of wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F
-; (jump table of sixteen) (E-0352, E-0124)
+; Field event 8, palette cycling: on the first call saves the BG palettes to wBGPaletteCopy;
+; afterwards every 8 frames it steps a 16-step cycle and recomputes BG palettes 1-4 from the saved
+; copy, shifted by the step's amount, then requests their upload. Skipped while script command $ED
+; runs or a saved position is pending. (C1, E-0357)
 RunFieldEventFieldEventKind_CopyBytes::
     ld a, [wScriptCommandType]
     cp $ed
@@ -3063,12 +2926,9 @@ RunFieldEventFieldEventKind_CopyBytes::
     ld [wBGPaletteUploadRequest], a
     ret
 
-; Copies B to wTextCounter2; copies B & $1f to wTextCounter3; copies C & $1f to wTextCounter4;
-; branches on wMenuSubState; branches on C; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: part of RunFieldEventFieldEventKind; RunFieldEventFieldEventKind: unless a fade runs or bit 7
-; of wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F (jump table of
-; sixteen) (E-0352, E-0124)
+; Shifts one colour pair for the palette cycle: each colour's red, green and blue (wTextCounter2-4)
+; are offset by the entry of RunFieldEventFieldEventKind_Data for the current step (the second half
+; when wMenuSubState bit 0 is set), floored at 0, and stored at DE. (C1, E-0357)
 RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc::
     ld a, [hl]
     ld c, a
@@ -3155,15 +3015,9 @@ RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc::
 RunFieldEventFieldEventKind_Data::
     db $00, $fc, $f8, $f4, $f0, $ec, $e8, $e4, $e4, $e8, $ec, $f0, $f4, $f8, $fc, $00
 
-; called from RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX: branches on
-; wFieldEventTimer; branches on wKeyRandomLo & $7f; sets wFieldEventTimer to $80; sets hScrollX to
-; 0; branches on wFieldEventArg; branches on wFrameCounterLo & $03; sets hScrollX; increments
-; wFieldEventTimer; returns unless wFieldEventTimer is $bc; copies wKeyRandomHi & $7f to
-; wFieldEventTimer; also changes A and C by register arithmetic (E-0347)
-; why: a helper of RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX, in step 12 of
-; RunFieldEventFieldEventKind (when wFieldEventKind & $0F = 12); RunFieldEventFieldEventKind: unless
-; a fade runs or bit 7 of wFieldActionRequest is set, runs the field event for wFieldEventKind & $0F
-; (jump table of sixteen) (E-0352, E-0124)
+; Field event 12, the scroll shake: waits until the key world's random value matches the event
+; timer, then for $3C steps shakes hScrollX by -2/0/+2 every other frame; afterwards picks a new
+; random wait. hScrollX is held at 0 while waiting. (C1, E-0357)
 RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2::
     ld a, [wFieldEventTimer]
     bit 7, a
@@ -3609,14 +3463,10 @@ UpdatePlayerMovement::
     call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
-; called from UpdatePlayerMovement: calls RedrawScreenBufferIfPartyWindowFlagsBit7; copies
-; hPlayerStateFlags & $fe to hPlayerStateFlags; sets wStepTriggerFlag to 0; branches on h; copies
-; hPlayerStateFlags & $fa to hPlayerStateFlags; sets wStepTriggerFlag to 0; branches on
-; wFieldActionRequest; calls StepFollowersTowardTargets; copies L to hPlayerStepDXLo; copies H to
-; hPlayerStepDXHi; decrements hPlayerX; calls UpdatePlayerMovement_WaitFollowerDelay; then 55 more
-; steps (see the code) (E-0347)
-; why: a helper of UpdatePlayerMovement; UpdatePlayerMovement: does nothing during a fade or while
-; the map is loading (E-0352)
+; Moves the player one pixel (or 8 during a field action) toward the end of the current step, kept
+; in hPlayerStepDX/DY, and steps the followers after. When the step finishes it clears the walking
+; flags and runs the per-step checks: step triggers, the step counter, periodic events, encounters,
+; warps, the map's movement type, status effects and talk countdowns. (C1, E-0357)
 UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     ldh a, [hPlayerStepDXLo]
@@ -3901,10 +3751,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     farcall CountDownTalkCountdownThenDispatchTalkEvent
     ret
 
-; Returns if wFollowerDelay is 0; copies hPlayerFacing to wFollowerRecords; also changes A by
-; register arithmetic (E-0347)
-; why: part of UpdatePlayerMovement; UpdatePlayerMovement: does nothing during a fade or while the
-; map is loading (E-0352)
+; Puts all three followers on the player's position and facing while wFollowerDelay is set. (C1,
+; E-0357)
 UpdatePlayerMovement_WaitFollowerDelay::
     ld a, [wFollowerDelay]
     or a
@@ -3923,9 +3771,10 @@ UpdatePlayerMovement_WaitFollowerDelay::
     ld [wFollowerRecords + $c], a
     ret
 
-; the three 5-byte follower records at wFollowerRecords hold direction, X, Y, target X, target Y:
-; record 0's target = hPlayerX/hPlayerY, record 1's target = record 0's position, record 2's target
-; = record 1's position (E-0093)
+; Capture targets for all three five-byte follower records: follower 1 gets player X/Y, follower 2
+; gets follower 1 current X/Y, and follower 3 gets follower 2 current X/Y. Only target bytes 3/4 in
+; each record are written; direction and position remain unchanged. The targets are a snapshot of
+; positions before the subsequent step, not targets recursively copied from the leader. (C1, E-0361)
 SetFollowerTargetsFromLeader::
     ldh a, [hPlayerX]
     ld [wFollowerRecords + $3], a
@@ -3941,14 +3790,12 @@ SetFollowerTargetsFromLeader::
     ld [wFollowerRecords + $e], a
     ret
 
-; unless wFollowerDelay is non-zero, moves each of the three follower records one pixel toward its
-; target (four pixels when wFieldActionRequest bit 7 is set), X first and then Y, storing the
-; direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end)
-; (E-0093)
-; code: returns unless wFollowerDelay is 0; branches on the byte at wFollowerRecords + $3; branches
-; on c; branches on the byte at wFollowerRecords + $3; branches on c; sets wFollowerRecords to 2;
-; branches on c; sets wFollowerRecords to 0; branches on c; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
+; Return immediately when wFollowerDelay is nonzero; this body does not decrement it. Otherwise
+; process all three five-byte records independently: if X differs from target X, move X toward it
+; and leave Y unchanged; only when X already matches, move Y toward target Y. Use unsigned
+; comparisons and byte addition/subtraction: move one pixel, or four when field-action request bit 7
+; is set. Directions are right 1, left 3, down 0 and up 2. Targets and matched-record directions are
+; preserved. Four-pixel steps can overshoot or wrap; there is no clamp. (C1, E-0361)
 StepFollowersTowardTargets::
     ld a, [wFollowerDelay]
     or a
@@ -4237,11 +4084,9 @@ FindSpriteSlotAtTile::
     pop bc
     ret
 
-; called from UpdatePlayerMovement: takes BC; changes HL, BC and A; branches on wTriggerKind;
-; branches on wMapType; branches on wTriggerCell & $0f; branches on $01; branches on the byte at
-; UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data (E-0347)
-; why: a helper of UpdatePlayerMovement; UpdatePlayerMovement: does nothing during a fade or while
-; the map is loading (E-0352)
+; Returns A = 1 when the trigger (wTriggerKind 2 or 3) lies at metatile B, C: compared with
+; wTriggerCell, or on key-world maps other than $85 through a table indexed by wTriggerCell. (C1,
+; E-0357)
 UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc::
     push bc
     ld a, [wTriggerKind]
@@ -4304,13 +4149,9 @@ UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
-; called from FieldState_WalkATalks: returns unless wFadeState is 0; returns if bit 0 of
-; hPlayerStateFlags is set; returns unless bit 7 of wJoypadHeld is set; branches on the byte at
-; FieldState_WalkATalks_WaitFadeState_Data; branches on hPlayerX; branches on hPlayerY; sets
-; wTalkEventGroup; sets wTalkEventIndex to 0; calls DispatchTalkEvent; sets wJoypadHeld to 0; sets
-; wJoypadPressed to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of FieldState_WalkATalks; FieldState_WalkATalks: field state 0: walking on a map
-; (E-0352, E-0339)
+; Field state 0's Down-held check: at a spot listed in FieldState_WalkATalks_WaitFadeState_Data
+; (map, screen, X, Y; ends with $FF) it starts talk event group $10 + the entry's index and clears
+; the joypad. (C1, E-0357)
 FieldState_WalkATalks_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -4427,11 +4268,8 @@ RunFieldActionRequestActionIfBit7::
     dw RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen
     dw RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords
 
-; step 0 of RunFieldActionRequestActionIfBit7: calls LoadMapScreen; sets wFieldActionStep to 0;
-; increments wFieldActionRequest (E-0347)
-; why: step 0 of RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Field action step 0: loads the new screen (LoadMapScreen) and moves to the scroll step. (C1,
+; E-0357)
 RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
     call LoadMapScreen
     xor a
@@ -4440,14 +4278,9 @@ RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
     inc [hl]
     ret
 
-; step 3 of RunFieldActionRequestActionIfBit7: sets wStepTriggerFlag to 0; calls
-; AdvanceStepCounterAndUpdateStoredRecords; calls RunPeriodicFieldEventChecks; calls
-; TickRandomEncounterCounter; calls CheckWarpsAtPlayerPosition; calls RunPlayerMoveTypeMapMoveType;
-; calls EnterStatusEffectFieldState; calls CountDownTalkCountdownThenDispatchTalkEvent; sets
-; wFieldActionRequest to 0 (E-0347)
-; why: step 3 of RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Field action step 3 (after a screen scroll): runs the per-step checks (step counter, periodic
+; events, encounters, warps, movement type, status effects, talk countdown) and ends the action.
+; (C1, E-0357)
 RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
     xor a
     ld [wStepTriggerFlag], a
@@ -4462,14 +4295,9 @@ RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
     ld [wFieldActionRequest], a
     ret
 
-; step 2 of RunFieldActionRequestActionIfBit7: increments wFieldActionRequest; calls
-; FindTriggerEntryForCurrentScreen; calls FindTriggerEntryForCurrentScreen_ScreenTriggers; calls
-; LoadMapObjectsForScreen; branches on wPendingFieldEvent; sets wPendingFieldEvent to 0; calls
-; ClearPendingFieldEventWhenFieldIdle; sets wObject5 to 0; calls PlaceSpecialMapObjectsOnEntry
-; (E-0347)
-; why: step 2 of RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Field action step 2: finds the new screen's triggers and objects
+; (FindTriggerEntryForCurrentScreen, LoadMapObjectsForScreen), handles a pending field event and
+; places special map objects. (C1, E-0357)
 RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen::
     ld hl, wFieldActionRequest
     inc [hl]
@@ -4494,16 +4322,10 @@ RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen::
     farcall PlaceSpecialMapObjectsOnEntry
     ret
 
-; step 1 of RunFieldActionRequestActionIfBit7: branches on wScreenScrollDir; calls
-; RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc; sets hScrollX; advances
-; wFieldActionStep; branches on wFieldActionStep; calls ComputeSpriteScrollOffsets; copies hScrollX
-; & $f8 to hScrollX; calls MarkVisitedMapScreenInVisitedScreens; increments wFieldActionRequest;
-; calls ComputeSpriteScrollOffsets; calls
-; RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc; sets hScrollX; then 27
-; more steps (see the code) (E-0347)
-; why: step 1 of RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Field action step 1, the screen scroll: each frame draws the next column (20 steps, scrolling 8
+; pixels left or right) or row (18 steps, up or down) of the new screen from wScreenTileBuffer into
+; the BG map, in the direction of wScreenScrollDir; at the end it aligns the scroll, marks the
+; screen visited (MarkVisitedMapScreenInVisitedScreens) and moves to the next step. (C1, E-0357)
 RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ldh a, [hScrollY]
     and $f8
@@ -4713,15 +4535,9 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
 .return:
     ret
 
-; called from RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY: copies E to wBGWriteDestLo;
-; copies D to wBGWriteDestHi; sets wBGWriteVertical to 1; sets wBGWriteCount to $12; returns if
-; wIsCGB is 0; copies E to wAttrWriteDestLo; copies D to wAttrWriteDestHi; sets wAttrWriteVertical
-; to 1; sets wAttrWriteCount to $12; sets rSVBK to 2; sets hTemp0; sets rSVBK to 0; then 2 more
-; steps (see the code) (E-0347)
-; why: a helper of RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY, in step 1 of
-; RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Queues one BG map column (18 tiles) for the VBlank writer: destination DE, the tiles taken every
+; 20 bytes from HL in the screen buffer into wBGWriteData; on CGB also the column's palette numbers
+; (attribute low 3 bits) from the attribute copy in WRAM bank 2 into wAttrWriteData. (C1, E-0357)
 RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4779,15 +4595,9 @@ RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     jr nz, .loop2
     ret
 
-; called from RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY: copies E to wBGWriteDestLo;
-; copies D to wBGWriteDestHi; sets wBGWriteVertical to 0; sets wBGWriteCount to $14; returns if
-; wIsCGB is 0; copies E to wAttrWriteDestLo; copies D to wAttrWriteDestHi; sets wAttrWriteVertical
-; to 0; sets wAttrWriteCount to $14; sets rSVBK to 2; sets hTemp0; sets rSVBK to 0; then 1 more step
-; (see the code) (E-0347)
-; why: a helper of RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY, in step 1 of
-; RunFieldActionRequestActionIfBit7; RunFieldActionRequestActionIfBit7: if bit 7 of
-; wFieldActionRequest is set, runs the routine for wFieldActionRequest & 3 (jump table) (E-0352,
-; E-0122)
+; Queues one BG map row (20 tiles) for the VBlank writer: destination DE, the tiles from HL into
+; wBGWriteData; on CGB also the row's palette numbers from the attribute copy in WRAM bank 2. (C1,
+; E-0357)
 RunFieldActionRequestActionIfBit7_SetBGWriteDestLo::
     ld a, e
     ld [wBGWriteDestLo], a
@@ -5075,12 +4885,10 @@ SendSGBFieldPaletteSet::
     ld [wFieldInitStage], a
     ret
 
-; Sets wJoypadHeld to 0; sets wJoypadHeldPrev to 0; sets wJoypadPressed to 0; sets
-; wJoypadPressedRepeat to 0; sets wJoypadRepeatTimer to 0; sets wFieldFrameFlag to 0; calls
-; FieldModeStateDispatch; sets wFieldInitStage to 0; calls ResetFadeFromDMGPaletteBGP; branches on
-; wSGBActive; calls StartPaletteFade; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: part of SendSGBFieldPaletteSet; SendSGBFieldPaletteSet: on the Super Game Boy sends PAL_SET
-; for wSGBPaletteSet and loads the object palettes (E-0352, E-0129)
+; The end of the field's set-up: clears the joypad state, runs the first frame of the field state
+; (FieldModeStateDispatch), sets the default DMG palettes (BGP $D2, OBP0 $D2, OBP1 $E2) and their
+; fade copies, on the SGB copies the target object palettes into place, then starts the fade in.
+; (C1, E-0357)
 SendSGBFieldPaletteSet_ClearJoypadHeld::
     xor a
     ld [wJoypadHeld], a
@@ -5167,9 +4975,7 @@ PlayMapMusic::
     jr nz, PlayMapMusic_CheckCurrentMusic
     ld c, $35
 
-; Returns if wCurrentMusic is c; calls QueueMusic (E-0347)
-; why: part of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Queues music C unless it is already playing (wCurrentMusic). (C1, E-0357)
 PlayMapMusic_CheckCurrentMusic::
     ld a, [wCurrentMusic]
     cp c
@@ -5178,9 +4984,7 @@ PlayMapMusic_CheckCurrentMusic::
     call QueueMusic
     ret
 
-; Returns if wSoundEffectRequest is c; calls QueueSoundEffect (E-0347)
-; why: part of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Queues sound effect C unless it is already requested. (C1, E-0357)
 PlayMapMusic_CheckSoundEffectRequest::
     ld a, [wSoundEffectRequest]
     cp c
@@ -5189,9 +4993,9 @@ PlayMapMusic_CheckSoundEffectRequest::
     call QueueSoundEffect
     ret
 
-; Dispatches on hMapId; also changes A by register arithmetic (E-0347)
-; why: part of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Chooses the field music by map: a 227-entry jump table indexed by hMapId. Most entries pick one
+; song; some check the screen or story flags first (the PlayMapMusic_TestFlagBit cases), and a few
+; entries are 0 (maps that are never looked up). (C1, E-0357)
 PlayMapMusic_ReadMapId::
     ldh a, [hMapId]
     jumptable
@@ -5424,20 +5228,13 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic_4
     db $00, $00
 
-; step 0 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 0 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $16 (the default for most town and outdoor maps in the table). (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic::
     ld c, $16
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 1 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic; branches on hMapScreenX;
-; may continue in PlayMapMusic_ReadCurrentMusic; checks EVENT_THANKS_FOR_COMING_BY; may continue in
-; PlayMapMusic_ReadCurrentMusic; checks EVENT_SCENE_WARUBOU_SMELLS; may continue in
-; PlayMapMusic_ReadCurrentMusic; continues in PlayMapMusic_CheckCurrentMusic; also changes DE, A and
-; C by register arithmetic (E-0347)
-; why: step 1 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map 1's music: on screen row 2 at screen X 0 or 2, after EVENT_THANKS_FOR_COMING_BY and before
+; EVENT_SCENE_WARUBOU_SMELLS, music $28; otherwise $16. (C1, E-0357)
 PlayMapMusic_TestFlagBit::
     ldh a, [hMapScreenY]
     cp $02
@@ -5458,14 +5255,9 @@ PlayMapMusic_TestFlagBit::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 5 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic; checks
-; EVENT_SCENE_WARUBOU_SMELLS; may continue in PlayMapMusic_ReadCurrentMusic; checks
-; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_SCENE_THREE_ITEMS_0C2; may continue in
-; PlayMapMusic_ReadCurrentMusic; checks EVENT_SCENE_THREE_ITEMS_0C3; may continue in
-; PlayMapMusic_ReadCurrentMusic; continues in PlayMapMusic_CheckCurrentMusic; also changes DE, A and
-; C by register arithmetic (E-0347)
-; why: step 5 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map 5's music: at screen X 0, after EVENT_SCENE_WARUBOU_SMELLS, music $28 until the three-item
+; scene is under way (EVENT_SCENE_WARUBOU_FOOD2_00C set, then 0C2 set and 0C3 clear also give $28);
+; otherwise $16. (C1, E-0357)
 PlayMapMusic_TestFlagBit_2::
     ldh a, [hMapScreenX]
     or a
@@ -5487,18 +5279,13 @@ PlayMapMusic_TestFlagBit_2::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 13 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 13 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $0C (maps $0D and $14). (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_2::
     ld c, $0c
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 4 of PlayMapMusic: checks EVENT_MAP_04_OBJECT_REMOVED_0CC; may continue in
-; PlayMapMusic_ReadCurrentMusic; checks EVENT_SCENE_TERRY_BATTLE_038; may continue in
-; PlayMapMusic_ReadCurrentMusic; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 4 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Maps 4 and $18: after EVENT_MAP_04_OBJECT_REMOVED_0CC and before EVENT_SCENE_TERRY_BATTLE_038,
+; music $CF; otherwise $16. (C1, E-0357)
 PlayMapMusic_TestFlagBit_3::
     ld de, EVENT_MAP_04_OBJECT_REMOVED_0CC
     call TestFlagBit
@@ -5509,22 +5296,16 @@ PlayMapMusic_TestFlagBit_3::
     ld c, $cf
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 29 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckSoundEffectRequest (E-0347)
-; why: step 29 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map $1D: requests sound $76 (unless already requested) instead of music. (C1, E-0357)
 PlayMapMusic_ReadSoundEffectRequest::
     ld c, $76
     jp PlayMapMusic_CheckSoundEffectRequest
 
-; step 28 of PlayMapMusic: returns at once (E-0347)
-; why: step 28 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map $1C: leaves the music unchanged. (C1, E-0357)
 PlayMapMusic_Return::
     ret
 
-; step 33 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 33 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $19. (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_3::
     ld c, $19
     jp PlayMapMusic_CheckCurrentMusic
@@ -5552,9 +5333,7 @@ MapMusicByScreenAndFlags87And8A::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 32 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 32 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $1C. (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_4::
     ld c, $1c
     jp PlayMapMusic_CheckCurrentMusic
@@ -5585,25 +5364,18 @@ MapMusicByFlag25::
     ld c, $1f
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 161 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 161 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType
-; and hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352,
-; E-0122)
+; Map music $CC. (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_5::
     ld c, $cc
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 43 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 43 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $25. (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_6::
     ld c, $25
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 56 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_6; calls InitSoundHardware
-; (E-0347)
-; why: step 56 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; At screen (0, 0) of its map, silences the sound (InitSoundHardware) instead of playing music;
+; elsewhere music $25. (C1, E-0357)
 PlayMapMusic_InitSoundHardware::
     ldh a, [hMapScreenX]
     or a
@@ -5614,11 +5386,8 @@ PlayMapMusic_InitSoundHardware::
     call InitSoundHardware
     ret
 
-; step 57 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_6; checks
-; EVENT_SCENE_CREW_FOLLOWS; may continue in PlayMapMusic_ReadCurrentMusic_6; continues in
-; PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 57 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; At screen (1, 1) of its map, before EVENT_SCENE_CREW_FOLLOWS, music $28; otherwise $25. (C1,
+; E-0357)
 PlayMapMusic_TestFlagBit_4::
     ldh a, [hMapScreenX]
     cp $01
@@ -5632,10 +5401,7 @@ PlayMapMusic_TestFlagBit_4::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 59 of PlayMapMusic: checks EVENT_SCENE_MERMAID_KINGDOM_022; may continue in
-; PlayMapMusic_ReadCurrentMusic_6; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 59 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Before EVENT_SCENE_MERMAID_KINGDOM_022, music $28; afterwards $25. (C1, E-0357)
 PlayMapMusic_TestFlagBit_5::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
@@ -5643,20 +5409,13 @@ PlayMapMusic_TestFlagBit_5::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 55 of PlayMapMusic: changes C; continues in PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 55 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType and
-; hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352, E-0122)
+; Map music $22. (C1, E-0357)
 PlayMapMusic_ReadCurrentMusic_7::
     ld c, $22
     jp PlayMapMusic_CheckCurrentMusic
 
-; step 155 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_7; checks
-; EVENT_SCENE_THREE_ITEMS_0C2; may continue in PlayMapMusic_ReadCurrentMusic_7; checks
-; EVENT_SCENE_THREE_ITEMS_0C3; may continue in PlayMapMusic_ReadCurrentMusic_7; continues in
-; PlayMapMusic_CheckCurrentMusic (E-0347)
-; why: step 155 of PlayMapMusic; PlayMapMusic: chooses the music for the current map (by wMapType
-; and hMapId, with story-flag cases) and queues it unless it is already wCurrentMusic (E-0352,
-; E-0122)
+; On screen row 0 while the three-item scene is under way (EVENT_SCENE_THREE_ITEMS_0C2 set, 0C3
+; clear), music $28; otherwise $22. (C1, E-0357)
 PlayMapMusic_TestFlagBit_6::
     ldh a, [hMapScreenY]
     or a
@@ -5670,13 +5429,10 @@ PlayMapMusic_TestFlagBit_6::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-; called from FieldState_Still: calls FieldState_Still_WriteMenuSubState; branches on
-; wJoypadPressed; sets wFieldReturnPhase to 0; calls ClearBit1OfPlayerAndObjectFlags; sets
-; hSpriteWindowClipMode to 0; calls FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer;
-; branches on wMapType; sets wModeState to 0; sets wModeState to 5; branches on $05; plays sound
-; $69; sets wGameMode to 2; then 11 more steps (see the code) (E-0347)
-; why: a helper of FieldState_Still; FieldState_Still: field state 2: draws the field sprites and
-; runs the common update without player input (E-0352, E-0339)
+; Field state 2, the field menu's choice of page: B closes it (back to field state 0, or 5 in a key
+; world); A opens the chosen page in game mode 2 (wModeState = wMenuState, sound $69); Left/Right
+; and Up/Down move in the 2 x 2 grid (wMenuState xor 1 or xor 2). The cursor is drawn each frame
+; first. (C1, E-0357)
 FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
     call FieldState_Still_WriteMenuSubState
     ld a, [wJoypadPressed]
@@ -5755,10 +5511,9 @@ FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
 .return:
     ret
 
-; Branches on wMenuState; increments wMenuSubState; branches on wMenuSubState+1; calls
-; WriteVRAMByte; branches on B; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of FieldState_Still; FieldState_Still: field state 2: draws the field sprites and runs
-; the common update without player input (E-0352, E-0339)
+; Draws the field menu's four cursor positions (offsets from
+; FieldState_Still_WriteMenuSubState_Data, relative to the scroll position): the chosen one as a
+; blinking cursor ($BB, or $BC when wMenuState bit 7 is set), the others as tile $C3. (C1, E-0357)
 FieldState_Still_WriteMenuSubState::
     ldh a, [hScrollY]
     and $f8
@@ -5861,10 +5616,8 @@ FieldState_Still_WriteMenuSubState::
 FieldState_Still_WriteMenuSubState_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
-; Calls DrawFullScreenBufferToBGMap; sets wPartyWindowFlags to 0; sets wPartyWindowTimer to 0; also
-; changes HL, DE and A by register arithmetic (E-0347)
-; why: part of FieldState_Still; FieldState_Still: field state 2: draws the field sprites and runs
-; the common update without player input (E-0352, E-0339)
+; Redraws the whole screen buffer at the scroll position (closing the field menu's window) and
+; clears the party window flags. (C1, E-0357)
 FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer::
     ldh a, [hScrollY]
     and $f8
@@ -6698,13 +6451,9 @@ StepTextWindowOpenClose::
     dw StepTextWindowOpenClose_SetTextWindowState
     dw StepTextWindowOpenClose_SetTextWindowState
 
-; step 0 of StepTextWindowOpenClose: branches on wTextWindowState; calls
-; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; calls
-; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 0 of StepTextWindowOpenClose; StepTextWindowOpenClose: while wTextWindowState & 3 is
-; set: copies the text window rows to or from wWindowTileBuffer (with CGB attributes) and redraws
-; them at the ... (E-0352, E-0130)
+; Text window step 0: opening, copies the window's bottom row (from StepTextWindowOpenClose_Data1)
+; into the buffer; closing, restores three rows from StepTextWindowOpenClose_Data2; then redraws the
+; 20 x 5 window area. (C1, E-0357)
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6734,13 +6483,8 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-; step 1 of StepTextWindowOpenClose: branches on wTextWindowState; calls
-; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; calls
-; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 1 of StepTextWindowOpenClose; StepTextWindowOpenClose: while wTextWindowState & 3 is
-; set: copies the text window rows to or from wWindowTileBuffer (with CGB attributes) and redraws
-; them at the ... (E-0352, E-0130)
+; Text window step 1: the middle rows (opening) or the bottom row (closing), then redraws the window
+; area. (C1, E-0357)
 StepTextWindowOpenClose_2::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6770,14 +6514,9 @@ StepTextWindowOpenClose_2::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-; step 2 of StepTextWindowOpenClose: branches on wTextWindowState; calls
-; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; copies
-; wTextWindowState & $80 to wTextWindowState; sets wTextWindowStep to 0; calls
-; CopyScreenRectToBGMapSetTextCursorLo; copies wTextWindowState & $80 to wTextWindowState; sets
-; wTextWindowStep to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 2 of StepTextWindowOpenClose; StepTextWindowOpenClose: while wTextWindowState & 3 is
-; set: copies the text window rows to or from wWindowTileBuffer (with CGB attributes) and redraws
-; them at the ... (E-0352, E-0130)
+; Text window step 2: opening, copies all five rows of the window (StepTextWindowOpenClose_Data);
+; closing, just redraws; then ends the open/close (wTextWindowState keeps only bit 7, step 0). (C1,
+; E-0357)
 StepTextWindowOpenClose_SetTextWindowState::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6948,19 +6687,12 @@ RunMenuStateMenuState::
     dw RunMenuStateMenuState_Return
     dw RunMenuStateMenuState_Return
 
-; step 6 of RunMenuStateMenuState: returns at once (E-0347)
-; why: step 6 of RunMenuStateMenuState (when wMenuState & $0F = 6); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 6: nothing (the effect waits here). (C1, E-0357)
 RunMenuStateMenuState_Return::
     ret
 
-; step 0 of RunMenuStateMenuState: plays music $02; calls InitSoundHardware; advances wMenuState;
-; branches on wMapToggleFlag; sets wMenuSubState to 0; sets wMenuCursor to 0; plays sound $78; sets
-; wMenuSubState to 0; sets wMenuCursor to $3b (E-0347)
-; why: step 0 of RunMenuStateMenuState (when wMenuState & $0F = 0); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Field state 6, the warp effect, step 0: queues music 2 and silences the channels; in a key world
+; (wMapToggleFlag bit 7) it plays sound $78 at once, otherwise it waits $3B frames. (C1, E-0357)
 RunMenuStateMenuState_QueueMusic::
     ld a, $02
     call QueueMusic
@@ -6984,14 +6716,9 @@ RunMenuStateMenuState_QueueMusic::
     ld [wMenuCursor], a
     ret
 
-; step 1 of RunMenuStateMenuState: increments wMenuCursor; returns if wMenuCursor is below $3c;
-; plays sound $61; calls RunMenuStateMenuState_ReadScrollYAndScrollX; sets wMenuSubState to 0; sets
-; wMenuSelectedMember to 0; sets wMenuCursor to 0; sets wSubMenuCursor to 0; sets wSubMenuCursor2 to
-; 0; sets wMenuOption to 0; sets wMenuOption2 to 0; advances wMenuState; then 5 more steps (see the
-; code) (E-0347)
-; why: step 1 of RunMenuStateMenuState (when wMenuState & $0F = 1); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 1: after the wait, plays sound $61, covers the 12 columns right of the screen
+; with tile $C4, fills the per-line scroll table (wBGPaletteCopy, $90 lines) with hScrollX,
+; precomputes the brightened palettes and starts a $1E-frame countdown. (C1, E-0357)
 RunMenuStateMenuState_QueueSoundEffect::
     ld a, [wMenuCursor]
     inc a
@@ -7029,12 +6756,8 @@ RunMenuStateMenuState_QueueSoundEffect::
     ld [wScreenState], a
     ret
 
-; called from RunMenuStateMenuState_QueueSoundEffect: calls WriteVRAMByte; also changes HL, BC and A
-; by register arithmetic (E-0347)
-; why: a helper of RunMenuStateMenuState_QueueSoundEffect, in step 1 of RunMenuStateMenuState (when
-; wMenuState & $0F = 1); RunMenuStateMenuState: the field menu (field state 6): by wMenuState & $0F
-; it plays the menu's music and sounds, sets the cursor and sub-state of the open menu, ... (E-0352,
-; E-0354, E-0122)
+; Covers the 12 BG map columns to the right of the visible screen (18 rows) with tile $C4, wrapping
+; inside each row. (C1, E-0357)
 RunMenuStateMenuState_ReadScrollYAndScrollX::
     ldh a, [hScrollY]
     and $f8
@@ -7090,12 +6813,8 @@ RunMenuStateMenuState_ReadScrollYAndScrollX::
     jr nz, .loop
     ret
 
-; step 2 of RunMenuStateMenuState: copies wMenuSelectedMember & $01 to wMenuSubState; decrements
-; wMenuSelectedMember; may return early; advances wMenuState; sets wMenuCursor to 1; sets rLYC to 2;
-; sets wSTATSplitEnable to 2 (E-0347)
-; why: step 2 of RunMenuStateMenuState (when wMenuState & $0F = 2); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 2: counts down $1E frames, then turns on the horizontal wave (STAT split 2 from
+; line 2). (C1, E-0357)
 RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
     ld a, [wMenuSelectedMember]
     and $01
@@ -7116,13 +6835,8 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
     ei
     ret
 
-; step 3 of RunMenuStateMenuState: sets wMenuSubState to 1; may continue in
-; RunMenuStateMenuState_ReadMenuCursor; sets wMenuCursor; may continue in
-; RunMenuStateMenuState_ReadMenuCursor; advances wMenuState; sets wSubMenuCursor to 0; also changes
-; HL, A and B by register arithmetic (E-0347)
-; why: step 3 of RunMenuStateMenuState (when wMenuState & $0F = 3); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 3: every 8 frames increases the wave amplitude (wMenuCursor) until it reaches
+; $38, then goes to step 4. (C1, E-0357)
 RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
     ld a, $01
     ld [wMenuSubState], a
@@ -7144,13 +6858,9 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
     xor a
     ld [wSubMenuCursor], a
 
-; Copies wMenuCursor to hTemp0; branches on wFrameCounterLo & $03; sets hTemp1 to $24; branches on
-; $24; sets hTemp1 to $48; branches on $48; sets hTemp1 to $6c; sets hTemp1 to $90; branches on e;
-; branches on hTemp1; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc, in step 3 of
-; RunMenuStateMenuState (when wMenuState & $0F = 3); RunMenuStateMenuState: the field menu (field
-; state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor and sub-state
-; of the open menu, ... (E-0352, E-0354, E-0122)
+; Fills a quarter of the per-line scroll table each frame (the quarter chosen by the frame count):
+; each line's X scroll = hScrollX plus or minus amplitude * the entry of the sine-like table
+; RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data, giving the wave. (C1, E-0357)
 RunMenuStateMenuState_ReadMenuCursor::
     ld a, [wMenuCursor]
     ldh [hTemp0], a
@@ -7226,14 +6936,9 @@ RunMenuStateMenuState_ReadMenuCursor::
 RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data::
     db $00, $60, $b6, $ec, $ff, $ec, $b6, $60, $00, $60, $b6, $ec, $ff, $ec, $b6, $60
 
-; step 4 of RunMenuStateMenuState: increments wSubMenuCursor; branches on wSubMenuCursor; calls
-; RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame; advances wMenuState; sets
-; wSTATSplitEnable to 0; copies the byte at RunMenuStateMenuState_Data to wDMGPaletteBGP; calls
-; RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame; continues in
-; RunMenuStateMenuState_ReadMenuCursor (E-0347)
-; why: step 4 of RunMenuStateMenuState (when wMenuState & $0F = 4); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 4: every 16 frames steps the DMG palette through RunMenuStateMenuState_Data (a
+; fade) with the matching CGB palette step; after 4 steps the wave is turned off and step 5 follows.
+; (C1, E-0357)
 RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     ld a, [wFrameCounterLo]
     and $0f
@@ -7262,14 +6967,13 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
 RunMenuStateMenuState_Data::
     db $d2, $81, $40, $00, $00
 
-; step 5 of RunMenuStateMenuState: calls InitSoundHardware; calls RestartMapMusic; sets wScreenState
-; to 0; sets wScreenCounter to 0; sets wScreenStep to 0; branches on wMapToggleFlag; branches on
-; wWarpDestFacing; sets wMapType to $80; copies wKeyWorldWidth to wMapWidthScreens; copies
-; wKeyWorldHeight to wMapHeightScreens; sets hPlayerFacing to 0; copies wWarpDestX to hPlayerX; then
-; 62 more steps (see the code) (E-0347)
-; why: step 5 of RunMenuStateMenuState (when wMenuState & $0F = 5); RunMenuStateMenuState: the field
-; menu (field state 6): by wMenuState & $0F it plays the menu's music and sounds, sets the cursor
-; and sub-state of the open menu, ... (E-0352, E-0354, E-0122)
+; Warp effect step 5, the warp itself: silences and restarts the map music, then moves the player. A
+; normal warp goes to wWarpDestX/Y on the current map (a key world when wWarpDestFacing is $F0) and
+; enters the field. In a key world (wMapToggleFlag bit 7) it saves the key world and uses the key
+; list entry of wCurrentKeyIndex: a key marked as leaving (bit 7 of its byte 3) returns the player
+; to the destination in KeyListMapDestinationTable (setting two story flags when their condition
+; flags are set, and running talk event $1A for destination 1); otherwise it enters the key world,
+; from a free SRAM slot or the slot already saved, at its goal screen and position. (C1, E-0357)
 RunMenuStateMenuState_InitSoundHardware::
     call InitSoundHardware
     farcall RestartMapMusic
@@ -7927,11 +7631,8 @@ RestoreRecordsFromSRAMBank1Backup::
     jr nz, .loop3
     ret
 
-; called from RunSaveSteps: sets rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to 2; sets
-; rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to 2;
-; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of RunSaveSteps; RunSaveSteps: with SRAM enabled, steps by wSaveStep: on the first
-; call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines (E-0352, E-0109)
+; Restores SRAM bank 2 (where the key-world slots are saved) from its backup in bank 3: $1FFE bytes
+; from $A000, 10 bytes per pass. (C1, E-0357)
 RunSaveSteps_WriteRAMB::
     ld hl, sRecords
     ld bc, $0333
@@ -8052,10 +7753,8 @@ CopySaveBlocksToSRAM::
     add_a_to_hl
     jr .set_temp0
 
-; called from RunSaveSteps: sets rSVBK to 0; sets rRAMB to 1; branches on sSavedGM2Mode; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RunSaveSteps; RunSaveSteps: with SRAM enabled, steps by wSaveStep: on the first
-; call (0) sets it to 1 and runs CopySaveBlocksToSRAM and three more save routines (E-0352, E-0109)
+; Restores the game-mode-2 timer block ($D8 bytes at sSavedTimerBlock in SRAM bank 1) into
+; wGM2TimerFrames when sSavedGM2Mode is 0 or 1. (C1, E-0357)
 RunSaveSteps_WriteSVBKAndRAMB::
     xor a
     ldh [rSVBK], a
@@ -8136,22 +7835,18 @@ RunSaveGameSteps_2::
     ld [wSaveStep], a
     call SnapshotSpritesForSave
 
-; Calls RunSaveGameSteps_2_ClearSRAMBanks2And3; calls BackupRecordsToSRAMBank1; calls
-; SaveGM2TimerFramesBlockToSRAMBank1; continues in RunSaveGameSteps_2_Skip2 (E-0347)
-; why: part of RunSaveGameSteps_2; RunSaveGameSteps_2: with SRAM enabled runs one save stage per
-; call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of ...
-; (E-0352, E-0124, E-0344)
+; Save stage 0: backs up SRAM bank 2 into bank 3 (RunSaveGameSteps_2_ClearSRAMBanks2And3), backs up
+; the monster records into bank 1 (BackupRecordsToSRAMBank1) and saves the timer block, then closes
+; SRAM. (C1, E-0357)
 RunSaveGameSteps_CallRunSaveGameSteps_2_ClearSRAMBanks2And3::
     call RunSaveGameSteps_2_ClearSRAMBanks2And3
     call BackupRecordsToSRAMBank1
     call SaveGM2TimerFramesBlockToSRAMBank1
     jr RunSaveGameSteps_2_Skip2
 
-; Calls SaveStepCopyBank1RecordSaveRecordIndex; continues in RunSaveGameSteps_2_Skip2; calls
-; ComputeSRAMBank1RecordChecksum; sets wSaveStep (E-0347)
-; why: part of RunSaveGameSteps_2; RunSaveGameSteps_2: with SRAM enabled runs one save stage per
-; call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of ...
-; (E-0352, E-0124, E-0344)
+; Save stages 1 and 2: stage 1 copies one bank-1 record (SaveStepCopyBank1RecordSaveRecordIndex);
+; stage 2 writes the bank-1 checksum and marks the save done (wSaveStep bit 7). Then closes SRAM.
+; (C1, E-0357)
 RunSaveGameSteps_2_Skip::
     dec a
     jr nz, .call_compute_sram_bank1_record_checksum
@@ -8164,10 +7859,7 @@ RunSaveGameSteps_2_Skip::
     or $80
     ld [wSaveStep], a
 
-; Sets rRAMG to 0; sets rRAMB to 0 (E-0347)
-; why: part of RunSaveGameSteps_2; RunSaveGameSteps_2: with SRAM enabled runs one save stage per
-; call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of ...
-; (E-0352, E-0124, E-0344)
+; Closes SRAM (rRAMG = 0, bank 0). (C1, E-0357)
 RunSaveGameSteps_2_Skip2::
     xor a
     ld [rRAMG], a
@@ -8391,13 +8083,9 @@ ClearSRAMBanks2And3::
     call FillBytes
     ret
 
-; called from RunSaveGameSteps_2: branches on wSaveClearFlag; calls ClearSRAMBanks2And3; branches on
-; wMapType; calls SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot; sets rRAMG to $0a; sets rRAMB to 2;
-; sets rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to
-; 2; then 4 more steps (see the code) (E-0347)
-; why: a helper of RunSaveGameSteps_2; RunSaveGameSteps_2: with SRAM enabled runs one save stage per
-; call (sprites snapshot and blocks, then records, then the final stage marked by bit 7 of ...
-; (E-0352, E-0124, E-0344)
+; Backs up SRAM bank 2 (the key-world slots): clears banks 2 and 3 first when wSaveClearFlag is set,
+; saves the current key world when in one, then copies $1FFE bytes from $A000 in bank 2 to bank 3
+; and stores (~sum + $1234) of those bytes in the last word ($BFFE) as a checksum. (C1, E-0357)
 RunSaveGameSteps_2_ClearSRAMBanks2And3::
     ld a, [wSaveClearFlag]
     or a
