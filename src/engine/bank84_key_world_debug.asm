@@ -95,7 +95,7 @@ RunDebugAutomapCaseTemp0_ReturnAfterSetup::
 ; why: step 1 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
 ; for hTemp0 (jump table of seven) (E-0352, E-0122)
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
-    ld hl, RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data
+    ld hl, RunDebugAutomapCaseTemp0_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -328,7 +328,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     ret
 
 ; data read by RunDebugAutomapCaseTemp0 (10 bytes) (E-0347)
-RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data::
+RunDebugAutomapCaseTemp0_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
 RunDebugAutomapCaseTemp0_NextRandomSeed_Data::
@@ -1479,16 +1479,13 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     ret
 
 ; called from RunFieldReturnPhase_OpenFieldMenuOnA: sets hSpriteWindowClipMode to 0; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX; branches on the byte
-; at RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; copies B to hTemp0; branches on
+; RunFieldReturnPhase_ReadMapScreenX; branches on the byte at
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; copies B to hTemp0; branches on
 ; wSpriteSnapshot; branches on wLogTwigKeyWorldKey; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
-; RunFieldReturnPhase_WriteSVBK; continues in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
-; RunFieldReturnPhase_WriteSVBK; continues in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; then 1 more step
-; (see the code) (E-0347)
+; RunFieldReturnPhase_CheckKeyWorldGoal; calls RunFieldReturnPhase_WriteSVBK; continues in
+; RunFieldReturnPhase_CheckKeyWorldGoal; may continue in RunFieldReturnPhase_CheckKeyWorldGoal;
+; calls RunFieldReturnPhase_WriteSVBK; continues in RunFieldReturnPhase_CheckKeyWorldGoal; then 1
+; more step (see the code) (E-0347)
 ; why: a helper of RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when
 ; wFieldReturnPhase & $03 = 1); RunFieldReturnPhase: what the field does as it is entered
 ; (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens
@@ -1498,7 +1495,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX
+    jr nz, RunFieldReturnPhase_ReadMapScreenX
     ldh a, [hMapId]
     ld c, a
     ld hl, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data
@@ -1532,23 +1529,23 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     jr nz, .next
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jp nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jp nz, RunFieldReturnPhase_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
     call RunFieldReturnPhase_WriteSVBK
-    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr RunFieldReturnPhase_CheckKeyWorldGoal
 
 .next:
     inc hl
     inc hl
     ld a, [hl]
     cp c
-    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_CheckKeyWorldGoal
     dec hl
     ld a, [hl]
     ld c, a
     call RunFieldReturnPhase_WriteSVBK
-    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr RunFieldReturnPhase_CheckKeyWorldGoal
 
 ; data read by RunFieldReturnPhase (34 bytes) (E-0347)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
@@ -1557,20 +1554,17 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
     db $00, $ff
 
 ; Branches on wSpriteSnapshot; branches on wLogTwigKeyWorldKey; branches on wKeyWorldSlot; may
-; continue in RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
-; RunFieldReturnPhase_WriteSVBK; continues in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
-; RunFieldReturnPhase_WriteSVBK; continues in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; also changes BC
-; and A by register arithmetic (E-0347)
+; continue in RunFieldReturnPhase_CheckKeyWorldGoal; calls RunFieldReturnPhase_WriteSVBK; continues
+; in RunFieldReturnPhase_CheckKeyWorldGoal; may continue in RunFieldReturnPhase_CheckKeyWorldGoal;
+; calls RunFieldReturnPhase_WriteSVBK; continues in RunFieldReturnPhase_CheckKeyWorldGoal; also
+; changes BC and A by register arithmetic (E-0347)
 ; why: part of RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data, in part of
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc, in a helper of
 ; RunFieldReturnPhase_OpenFieldMenuOnA, in step 1 of RunFieldReturnPhase (when wFieldReturnPhase &
 ; $03 = 1); RunFieldReturnPhase: what the field does as it is entered (InitFieldScreen), by
 ; wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens the ... (E-0352,
 ; E-0354, E-0122)
-RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
+RunFieldReturnPhase_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1590,16 +1584,16 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     jr nz, .check_key_world_goal_screen
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
     call RunFieldReturnPhase_WriteSVBK
-    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr RunFieldReturnPhase_CheckKeyWorldGoal
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp c
-    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_CheckKeyWorldGoal
     ld a, [wKeyWorldGoalPos]
     and $f0
     ld c, a
@@ -1609,7 +1603,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     or c
     ld c, a
     call RunFieldReturnPhase_WriteSVBK
-    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr RunFieldReturnPhase_CheckKeyWorldGoal
 
 ; Branches on wIsCGB; branches on wMapType; branches on hTemp0; sets rSVBK to 2; sets rSVBK to 0;
 ; branches on hTemp0; calls DrawFullScreenBufferToBGMap; also changes HL, DE, A and C by register
@@ -1620,7 +1614,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
 ; $03 = 1); RunFieldReturnPhase: what the field does as it is entered (InitFieldScreen), by
 ; wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens the ... (E-0352,
 ; E-0354, E-0122)
-RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
+RunFieldReturnPhase_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
     ld l, a

@@ -859,7 +859,7 @@ DebugMessageTest_Update::
     ret nz
     ld a, [wJoypadPressed]
     and $01
-    jp z, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat
+    jp z, DebugMessageTest_Update_CheckJoypadPressedRepeat
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
     ld a, [wTemp1]
@@ -1160,7 +1160,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
 ; why: part of DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of
 ; DebugMessageTest_Update (when wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state
 ; 11: the screen shows 'LIBNO / MESNO' message test (E-0352, E-0041)
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat::
+DebugMessageTest_Update_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -1326,8 +1326,8 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE::
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-; May continue in DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo; may continue
-; in DebugMessageTest_Update_WriteHexByteTilesAtDE_2; calls WriteVRAMByteInc; calls WriteVRAMByte;
+; May continue in DebugMessageTest_Update_CheckFrameCounterLo; may continue in
+; DebugMessageTest_Update_WriteHexByteTilesAtDE_2; calls WriteVRAMByteInc; calls WriteVRAMByte;
 ; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState (E-0347)
 ; why: part of DebugMessageTest_Update_WriteHexByteTilesAtDE, in a helper of
 ; DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of DebugMessageTest_Update (when
@@ -1336,7 +1336,7 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE::
 DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState::
     ld a, [wMenuState]
     cp $01
-    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo
+    jr nz, DebugMessageTest_Update_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
@@ -1364,7 +1364,7 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_2::
 ; DebugMessageTest_Update_ToBeginStringDisplay_Bank1B, in step 33 of DebugMessageTest_Update (when
 ; wTemp0 = 33); DebugMessageTest_Update: update for debug-mode state 11: the screen shows 'LIBNO /
 ; MESNO' message test (E-0352, E-0041)
-DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo::
+DebugMessageTest_Update_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
@@ -2321,9 +2321,9 @@ DebugStaffRoll_Update::
 DebugResultsDisplay_Update::
     ld a, [wScreenState]
     and a
-    jp z, DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat
+    jp z, DebugResultsDisplay_Update_CheckJoypadPressedRepeat
     cp $01
-    jp z, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1
+    jp z, DebugResultsDisplay_Update_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2425,8 +2425,8 @@ DebugResultsDisplay_Update::
 
 ; called from DebugResultsDisplay_Update: increments wDebugCounter; may continue in
 ; DebugResultsDisplay_Update_HLToDecimalDigits; may continue in
-; DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs; sets
-; wDebugCounter to 0 (E-0347)
+; DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs; sets wDebugCounter to 0
+; (E-0347)
 ; why: a helper of DebugResultsDisplay_Update; DebugResultsDisplay_Update: update for debug-mode
 ; state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0352, E-0041)
 DebugResultsDisplay_Update_WriteDebugCounter::
@@ -2436,7 +2436,7 @@ DebugResultsDisplay_Update_WriteDebugCounter::
     cp $10
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits
     cp $18
-    jr c, DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs
+    jr c, DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs
     xor a
     ld [wDebugCounter], a
 
@@ -2477,7 +2477,7 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
 ; why: part of DebugResultsDisplay_Update_HLToDecimalDigits, in a helper of
 ; DebugResultsDisplay_Update; DebugResultsDisplay_Update: update for debug-mode state 7: the screen
 ; shows 'RESULTS DISPLAY' (species, gender) (E-0352, E-0041)
-DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs::
+DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs::
     call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
     di
     call WaitForVRAMAccess
@@ -2493,7 +2493,7 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     ld a, [wDebugCursor]
     cp $04
     jr nz, .check_shared_menu_work
-    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data1
+    ld de, DebugResultsDisplay_Update_Data1
     jr .check_shared_menu_work2
 
 .check_shared_menu_work:
@@ -2518,8 +2518,8 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     add_a_to_hl
     ret
 
-; data read by DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork (4 bytes) (E-0347)
-DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data1::
+; data read by DebugResultsDisplay_Update (4 bytes) (E-0347)
+DebugResultsDisplay_Update_Data1::
     db $86, $99, $a6, $99
 
 DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
@@ -2533,7 +2533,7 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
 ; DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork, in part of
 ; DebugResultsDisplay_Update; DebugResultsDisplay_Update: update for debug-mode state 7: the screen
 ; shows 'RESULTS DISPLAY' (species, gender) (E-0352, E-0041)
-DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1::
+DebugResultsDisplay_Update_CheckArg1::
     ld a, [wArg1]
     and a
     jr z, .call_compute_breeding_child
@@ -2561,7 +2561,7 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1::
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data3
+    ld de, DebugResultsDisplay_Update_Data3
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -2750,7 +2750,7 @@ DebugResultsDisplay_Update_WaitForVRAMAccess::
 ; why: part of DebugResultsDisplay_Update_WaitForVRAMAccess, in part of DebugResultsDisplay_Update;
 ; DebugResultsDisplay_Update: update for debug-mode state 7: the screen shows 'RESULTS DISPLAY'
 ; (species, gender) (E-0352, E-0041)
-DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat::
+DebugResultsDisplay_Update_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -4908,7 +4908,7 @@ DebugSoundTest_Update::
 .check_menu_state:
     ld a, [wMenuState]
     or a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo
+    jr nz, DebugSoundTest_Update_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE
@@ -4933,7 +4933,7 @@ DebugSoundTest_Update_WriteHexByteTilesAtDE::
 ; why: part of DebugSoundTest_Update_WriteHexByteTilesAtDE, in a helper of DebugSoundTest_Update;
 ; DebugSoundTest_Update: update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE)
 ; (E-0352, E-0041)
-DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
+DebugSoundTest_Update_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
     jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_2
@@ -6440,43 +6440,43 @@ CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1::
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
 CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2::
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry00
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry01
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry02
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry03
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry04
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry05
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry06
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry07
-    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry08
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry00
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry01
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry02
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry03
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry04
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry05
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry06
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry07
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry08
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry00::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry00::
     db $0b, $2c, $2c, $31, $32, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry01::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry01::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry02::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry02::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry03::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry03::
     db $20, $24, $35, $38, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry04::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry04::
     db $19, $28, $37, $2c, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry05::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry05::
     db $1c, $34, $38, $2c, $3d, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry06::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry06::
     db $15, $24, $30, $2c, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry07::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry07::
     db $1c, $24, $37, $30, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry08::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
     ds $4a6, $00
 
-DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data3::
+DebugResultsDisplay_Update_Data3::
     ds $a3b, $00

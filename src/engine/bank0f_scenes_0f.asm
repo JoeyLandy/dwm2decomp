@@ -13,7 +13,7 @@ ScenePendantSeller::
     dw ScenePendantSeller_SetBit2AtHL_B0F
     dw ScenePendantSeller_StepObjectTowardCoord
     dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F
-    dw ScenePendantSeller_UpdateFollowersOnStep_Bank0F_SetScriptParam0
+    dw ScenePendantSeller_SetScriptParam0
 
 ; step 3 of ScenePendantSeller: calls UpdateFollowersOnStep_Bank0F; increments wScriptParam0;
 ; returns unless wScriptParam0 is $1e; copies hPlayerStateFlags & $fd to hPlayerStateFlags; sets
@@ -21,7 +21,7 @@ ScenePendantSeller::
 ; why: step 3 of ScenePendantSeller (when wScriptStep = 3); ScenePendantSeller: implements script
 ; command type C7 (SCRIPT_SCENE_PENDANT_SELLER): a cutscene step named after the scene its only
 ; script shows: 'This pendant ... (E-0352, E-0038, E-0245)
-ScenePendantSeller_UpdateFollowersOnStep_Bank0F_SetScriptParam0::
+ScenePendantSeller_SetScriptParam0::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank0F
     ldh a, [hPlayerY]
@@ -996,9 +996,9 @@ SceneDarckDefeated::
     dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F
     dw SceneDarckDefeated_ScriptStartFadeAndAdvanceStep_SetMapId_7
     dw SceneDarckDefeated_RunFieldCommandTemp0_SetTemp0_7
-    dw SceneDarckDefeated_StepScriptParam0Counter_Bank0F_AdvanceScriptStep
+    dw SceneDarckDefeated_AdvanceScriptStep
     dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14
-    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_5
+    dw SceneDarckDefeated_ScriptApplyStepDeltaAtDE_5
     dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_13
     dw SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_12
     dw SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc
@@ -1443,7 +1443,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_3::
     ret
 
 ; step 117 of SceneDarckDefeated: sets wStepPtrLo to $40; sets wStepTarget to 3; continues in
-; SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_SetStepPtrHiTo04 (E-0347)
+; SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04 (E-0347)
 ; why: step 117 of SceneDarckDefeated (when wScriptStep = 117); SceneDarckDefeated: implements
 ; script command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its
 ; only script shows: 'Darck Wha ... (E-0352, E-0038, E-0245)
@@ -1452,7 +1452,7 @@ SceneDarckDefeated_WriteStepPtrLoAndStepTargetEtc::
     ld [wStepPtrLo], a
     ld a, $03
     ld [wStepTarget], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_SetStepPtrHiTo04
+    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04
 
 ; step 115 of SceneDarckDefeated: sets wStepPtrLo to $50; sets wStepTarget to 1 (E-0347)
 ; why: step 115 of SceneDarckDefeated (when wScriptStep = 115); SceneDarckDefeated: implements
@@ -1470,7 +1470,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo::
 ; SceneDarckDefeated (when wScriptStep = 115); SceneDarckDefeated: implements script command type 5E
 ; (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only script shows: 'Darck
 ; Wha ... (E-0352, E-0038, E-0245)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrLo_SetStepPtrHiTo04::
+SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHiTo04::
     ld a, $04
     ld [wStepPtrHi], a
     farcall StepObjectTowardCoord
@@ -2309,7 +2309,7 @@ SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_4::
     ret
 
 ; step 59 of SceneDarckDefeated: sets wStepPtrHi to 2; sets wStepPtrLo to $60; continues in
-; SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80 (E-0347)
+; SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80 (E-0347)
 ; why: step 59 of SceneDarckDefeated (when wScriptStep = 59); SceneDarckDefeated: implements script
 ; command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only
 ; script shows: 'Darck Wha ... (E-0352, E-0038, E-0245)
@@ -2318,7 +2318,7 @@ SceneDarckDefeated_WriteStepPtrHiAndStepPtrLoEtc::
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80
+    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80
 
 ; step 58 of SceneDarckDefeated: sets wStepPtrHi to 0; sets wStepPtrLo to $e0; sets wStepTarget to
 ; $83; calls StepObjectTowardCoord; sets wObject1 + OBJ_STATE to 1; increments wObject1 + OBJ_X;
@@ -2352,7 +2352,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_12::
 
 ; step 57 of SceneDarckDefeated: sets wStepPtrHi to 0; sets wStepPtrLo to $e0; sets wStepTarget to
 ; $83; calls StepObjectTowardCoord; sets wStepPtrHi to 1; sets wStepPtrLo to $60; continues in
-; SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80 (E-0347)
+; SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80 (E-0347)
 ; why: step 57 of SceneDarckDefeated (when wScriptStep = 57); SceneDarckDefeated: implements script
 ; command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only
 ; script shows: 'Darck Wha ... (E-0352, E-0038, E-0245)
@@ -2368,14 +2368,14 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_13::
     ld [wStepPtrHi], a
     ld a, $60
     ld [wStepPtrLo], a
-    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80
+    jr SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80
 
 ; step 56 of SceneDarckDefeated: decrements wSpriteSlots + $b; calls ScriptApplyStepDeltaAtDE; may
 ; return early; sets wObject1 + OBJ_Y to $30; advances wScriptStep (E-0347)
 ; why: step 56 of SceneDarckDefeated (when wScriptStep = 56); SceneDarckDefeated: implements script
 ; command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only
 ; script shows: 'Darck Wha ... (E-0352, E-0038, E-0245)
-SceneDarckDefeated_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_5::
+SceneDarckDefeated_ScriptApplyStepDeltaAtDE_5::
     ld hl, wSpriteSlots + $b
     dec [hl]
     ld de, wSpriteSlots + $c
@@ -2403,7 +2403,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14::
 ; SceneDarckDefeated (when wScriptStep = 55); SceneDarckDefeated: implements script command type 5E
 ; (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only script shows: 'Darck
 ; Wha ... (E-0352, E-0038, E-0245)
-SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80::
+SceneDarckDefeated_StepObjectTowardCoord_SetStepTargetTo80::
     ld a, $80
     ld [wStepTarget], a
     farcall StepObjectTowardCoord
@@ -2421,7 +2421,7 @@ SceneDarckDefeated_StepObjectTowardCoord_SetStepPtrHi_14_SetStepTargetTo80::
 ; why: step 54 of SceneDarckDefeated (when wScriptStep = 54); SceneDarckDefeated: implements script
 ; command type 5E (SCRIPT_SCENE_DARCK_DEFEATED): a cutscene step named after the scene its only
 ; script shows: 'Darck Wha ... (E-0352, E-0038, E-0245)
-SceneDarckDefeated_StepScriptParam0Counter_Bank0F_AdvanceScriptStep::
+SceneDarckDefeated_AdvanceScriptStep::
     ld b, $5a
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -6087,7 +6087,7 @@ SceneReportToKing::
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_AdvanceScriptStep
+    dw SceneReportToKing_AdvanceScriptStep
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlags
     dw SceneReportToKing_ScriptStartFadeAndAdvanceStep
@@ -6229,7 +6229,7 @@ SceneReportToKing_WriteFieldDrawFlags::
 ; why: step 12 of SceneReportToKing (when wScriptStep = 12); SceneReportToKing: implements script
 ; command type 42 (SCRIPT_SCENE_REPORT_TO_KING): a cutscene step named after the scene its only
 ; script shows: 'We reported ... (E-0352, E-0038, E-0245)
-SceneReportToKing_WriteFieldDrawFlagsAndScriptStep_AdvanceScriptStep::
+SceneReportToKing_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ld a, $07
@@ -6547,26 +6547,26 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage_2
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2
+    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2
     dw SceneMermaidKingdom_ToScriptStepShakeScreen
     dw SceneMermaidKingdom_SetFlagBit
     dw SceneMermaidKingdom_QueueSoundEffect
-    dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_SetSpriteSlotCount
+    dw SceneMermaidKingdom_SetSpriteSlotCount
     dw SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo
     dw SceneMermaidKingdom_ShowKamehaIWasStupid
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc
     dw SceneMermaidKingdom_StepPlayerLeftTowardStepPtrLo
     dw SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep
-    dw SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_AdvanceScriptStep
+    dw SceneMermaidKingdom_AdvanceScriptStep
     dw SceneMermaidKingdom_ShowAVoiceEchoedFrom
     dw SceneHomecoming_RunMessageBoxFar_Bank0F
     dw SceneMermaidKingdom_Msg0873_WaheyHeroHearMe
@@ -6725,7 +6725,7 @@ SceneMermaidKingdom_ShowAVoiceEchoedFrom::
 ; wScriptStep (E-0347)
 ; why: step 39 of SceneMermaidKingdom (when wScriptStep = 39); SceneMermaidKingdom: implements
 ; script command type 39 (also 3B) (E-0352, E-0038)
-SceneMermaidKingdom_StepScriptParam0Counter_Bank0F_AdvanceScriptStep::
+SceneMermaidKingdom_AdvanceScriptStep::
     ld b, $1e
     call StepScriptParam0Counter_Bank0F
     ret nc
@@ -6905,7 +6905,7 @@ SceneMermaidKingdom_StepPlayerDownTowardStepPtrLo::
 ; may return early; plays sound $65; sets wSpriteSlotCount to 1; advances wScriptStep (E-0347)
 ; why: step 32 of SceneMermaidKingdom (when wScriptStep = 32); SceneMermaidKingdom: implements
 ; script command type 39 (also 3B) (E-0352, E-0038)
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_SetSpriteSlotCount::
+SceneMermaidKingdom_SetSpriteSlotCount::
     ld a, [wObject5 + SCRIPTOBJ_Y]
     dec a
     dec a
@@ -6993,7 +6993,7 @@ SceneMermaidKingdom_ToScriptStepShakeScreen::
 ; advances wScriptStep (E-0347)
 ; why: step 20 of SceneMermaidKingdom (when wScriptStep = 20); SceneMermaidKingdom: implements
 ; script command type 39 (also 3B) (E-0352, E-0038)
-SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_AdvanceScriptStep_2::
+SceneMermaidKingdom_ScriptApplyStepDeltaAtDE_2::
     ld de, wObject2 + OBJ_Y
     call ScriptApplyStepDeltaAtDE
     ret nc
@@ -8883,7 +8883,7 @@ SceneWaterShortage::
     dw SceneWaterShortage_StepPlayerLeftTowardStepPtrLo
     dw SceneWaterShortage_ScriptStartFadeAndAdvanceStep
     dw SceneWaterShortage_StepPlayerDownTowardStepPtrLo
-    dw SceneWaterShortage_StepPlayerLeftTowardStepPtrLo_SetStepPtrLo
+    dw SceneWaterShortage_SetStepPtrLo
     dw SceneWaterShortage_SetScriptStartRequestTo80
 
 ; step 4 of SceneWaterShortage: sets wScriptStartRequest to $80 (E-0347)
@@ -8902,7 +8902,7 @@ SceneWaterShortage_SetScriptStartRequestTo80::
 ; why: step 3 of SceneWaterShortage (when wScriptStep = 3); SceneWaterShortage: implements script
 ; command type 23 (SCRIPT_SCENE_WATER_SHORTAGE): a cutscene step named after the scene its only
 ; script shows: 'King The ... (E-0352, E-0038, E-0245)
-SceneWaterShortage_StepPlayerLeftTowardStepPtrLo_SetStepPtrLo::
+SceneWaterShortage_SetStepPtrLo::
     ld a, $20
     ld [wStepPtrLo], a
     farcall StepPlayerLeftTowardStepPtrLo

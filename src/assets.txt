@@ -163,10 +163,10 @@ gfx/map_types/5_tiles7.lz	$1BE397	$DE
 gfx/map_types/5_tiles8.lz	$1C0001	$191
 gfx/map_types/5_tiles9.lz	$1C13D9	$28D
 gfx/misc/bgmap0_gfx.lz	$385987	$70
-gfx/misc/game_mode5_update_load_screens_screen1_decompress_to_vram_screen_tile_buffer_gfx.lz	$3845A7	$55
-gfx/misc/game_mode5_update_load_screens_screen2_decompress_to_vram_screen_tile_buffer_gfx.lz	$384946	$78
-gfx/misc/game_mode5_update_load_screens_screen_with_music_decompress_to_vram_screen_attr_buffer_gfx.lz	$3858C3	$4C
-gfx/misc/game_mode5_update_load_screens_screen_with_music_decompress_to_vram_screen_tile_buffer_gfx.lz	$38582B	$98
+gfx/misc/game_mode5_update_load_screens_screen1_screen_tile_buffer_gfx.lz	$3845A7	$55
+gfx/misc/game_mode5_update_load_screens_screen2_screen_tile_buffer_gfx.lz	$384946	$78
+gfx/misc/game_mode5_update_load_screens_screen_attr_buffer_gfx.lz	$3858C3	$4C
+gfx/misc/game_mode5_update_load_screens_screen_tile_buffer_gfx.lz	$38582B	$98
 gfx/misc/game_mode6_init_data1.lz	$092CE4	$12F
 gfx/misc/game_mode6_init_data2.lz	$092F4E	$F7
 gfx/misc/gfx16_1.lz	$05BD12	$42
@@ -206,7 +206,7 @@ gfx/misc/map_x6248_screens0_y0_x0.lz	$24F91A	$9C
 gfx/misc/map_x6248_tileset.lz	$24F745	$18F
 gfx/misc/map_x62_f0_screens0_y0_x0.lz	$1A3E04	$BA
 gfx/misc/map_x62_f0_tileset.lz	$242FB4	$27F
-gfx/misc/run_game_mode5_case00_sub_states_decompress_to_vram_run_game_mode5_case00_sub_states_read_work_buf_and_title_screen_sub_state_screen_tile_buffer_gfx.lz	$38590F	$65
+gfx/misc/run_game_mode5_case00_sub_states_screen_tile_buffer_gfx.lz	$38590F	$65
 gfx/misc/screen_map47_1.lz	$11E9D1	$6B
 gfx/misc/screen_map48_1.lz	$121F34	$E2
 gfx/misc/screen_map58_1.lz	$160706	$F5

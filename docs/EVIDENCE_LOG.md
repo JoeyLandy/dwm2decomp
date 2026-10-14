@@ -2431,6 +2431,18 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0356 — Step names that repeated their parent, shortened
+
+- Kind: PRESENTATION rule (names only; no instruction or data byte changes).
+- **The gap.** Step names were built by appending a callee's name to the routine they sit in. When the callee was itself a step of the same routine, its name already began with the routine's name, so the label said it twice: `RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc`. 1,324 labels were longer than 60 characters before this entry.
+- **The rule** (tools/disasm_all.py `shorten_repeated_parents`, the last naming pass):
+  - `A_B_A_C` becomes `A_B_C` when `A` is a label it extends;
+  - a name still longer than 60 characters drops its middle levels (`Top_Mid_Own` becomes `Top_Own`) while `Top_Own` is free.
+- **What it leaves alone:** labels that code calls by name, names given in config/names.json, table labels from config/tables.json, labels that other labels extend (so their parts still read as parts of them), and any rename whose new own part is itself a routine's name (`Top_EraseCursorAtEntryHL_Bank07` would read as calling `EraseCursorAtEntryHL_Bank07`, a different routine), or that would collide.
+- **Purpose lines keep the middle level.** build/listing/short_names.json records each shortened name's former form; tools/present.py climbs to the parent through the former form, so a purpose line still names the step the routine belonged to.
+- **Tests.** tests/test_name_claims.py accepts a callee that is a step of an ancestor (`Top_Own` calling `Top_Own`'s callee); tests/test_step_names.py reads each step's tag from its former name.
+- **Result.** 687 labels shortened; 730 labels are longer than 60 characters (80 longer than 80), the longest 109. The ROM is identical (build/run550).
+
 ### E-0355 — A review of 30 restated routines against their code
 
 - Kind: REVIEW (a human-style reading of generated documentation). Sample: 30 routines with a `; why:` line, drawn with random.seed(2026) from all of them, each read against its instructions.

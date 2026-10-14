@@ -389,12 +389,12 @@ RunPlayerMoveTypeMapMoveType::
     jumptable
     dw RunPlayerMoveTypeMapMoveType_Return
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5
+    dw RunPlayerMoveTypeMapMoveType_3
+    dw RunPlayerMoveTypeMapMoveType_4
+    dw RunPlayerMoveTypeMapMoveType_5
     dw RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2
+    dw RunPlayerMoveTypeMapMoveType_2
 
 ; step 0 of RunPlayerMoveTypeMapMoveType: returns at once (E-0347)
 ; why: step 0 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 0); RunPlayerMoveTypeMapMoveType:
@@ -403,8 +403,7 @@ RunPlayerMoveTypeMapMoveType_Return::
     ret
 
 ; step 6 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $50; sets wStatusFieldStep to $80; sets
-; wFieldStepFlags to $40; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; wFieldStepFlags to $40; continues in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 6 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 6); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
@@ -414,21 +413,21 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 7 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $52; sets wStatusFieldStep to 0; continues
-; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 7 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 7); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
+RunPlayerMoveTypeMapMoveType_2::
     ld a, $52
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 1 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
-; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 1 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 1); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
@@ -436,46 +435,45 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 2 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $56; sets wStatusFieldStep to 0; continues
-; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 2 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 2); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
+RunPlayerMoveTypeMapMoveType_3::
     ld a, $56
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 3 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
-; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 3 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 3); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
+RunPlayerMoveTypeMapMoveType_4::
     ld a, $44
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 4 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to $80; sets
-; wFieldStepFlags to $40; continues in
-; RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; wFieldStepFlags to $40; continues in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 4 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 4); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
+RunPlayerMoveTypeMapMoveType_5::
     ld a, $44
     ldh [hTemp1], a
     ld a, $80
     ld [wStatusFieldStep], a
     ld a, $40
     ld [wFieldStepFlags], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; step 5 of RunPlayerMoveTypeMapMoveType: sets hTemp1 to $44; sets wStatusFieldStep to 0; continues
-; in RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState (E-0347)
+; in RunPlayerMoveTypeMapMoveType_CheckFadeState (E-0347)
 ; why: step 5 of RunPlayerMoveTypeMapMoveType (when wMapMoveType = 5); RunPlayerMoveTypeMapMoveType:
 ; runs the movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
 RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
@@ -483,7 +481,7 @@ RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
-    jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
+    jr RunPlayerMoveTypeMapMoveType_CheckFadeState
 
 ; Returns unless wFadeState is 0; returns unless wScriptRunning is 0; returns unless wTalkCountdown
 ; is 0; calls ReadTileBuffer2x2AtPixel_Bank0A; branches on wTilesUnderPoint; sets wModeState to 7;
@@ -492,7 +490,7 @@ RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A::
 ; why: part of RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A, in step 5 of
 ; RunPlayerMoveTypeMapMoveType (when wMapMoveType = 5); RunPlayerMoveTypeMapMoveType: runs the
 ; movement routine for wMapMoveType (jump table of eight) (E-0352, E-0122)
-RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState::
+RunPlayerMoveTypeMapMoveType_CheckFadeState::
     ld a, [wFadeState]
     or a
     ret nz
@@ -2880,7 +2878,7 @@ RunBattleTransitionStep_CheckStage::
     ld a, [wTransitionCounter]
     jumptable
     dw RunBattleTransitionStep_CheckStage_ReadTransitionStage
-    dw RunBattleTransitionStep_CheckStage_AdvanceBattleTransitionStep
+    dw RunBattleTransitionStep_AdvanceBattleTransitionStep
 
 ; step 0 of RunBattleTransitionStep_CheckStage: branches on wTransitionStage; increments
 ; wTransitionCounter; calls WriteTileC4AtTransitionBGPtrLoAndClearAttr; increments wTransitionStage;
@@ -2946,7 +2944,7 @@ RunBattleTransitionStep_CheckStage_ReadTransitionStage::
 ; why: step 1 of RunBattleTransitionStep_CheckStage (when wTransitionCounter = 1);
 ; RunBattleTransitionStep_CheckStage: reads the transition stage, then advances the step (E-0352,
 ; E-0345)
-RunBattleTransitionStep_CheckStage_AdvanceBattleTransitionStep::
+RunBattleTransitionStep_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -3049,23 +3047,14 @@ RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter:
     dw AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep
 
 ; step 0 of AddHLToTransitionBGPtrLoInBGMap: takes BC; changes A; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may
-; continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may
-; continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; then 8
-; more steps (see the code) (E-0347)
+; AddHLToTransitionBGPtrLoInBGMap_Skip; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip2; may
+; continue in AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_Skip; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip2; may
+; continue in AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_Skip; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip2; then
+; 8 more steps (see the code) (E-0347)
 ; why: step 0 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
@@ -3073,59 +3062,50 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc::
     push bc
     ld a, [wTransitionStage]
     cp $11
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $23
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $33
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $43
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $51
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $5f
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $6b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $77
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $81
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $8b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $93
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $9b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $a1
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $a7
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $ab
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $af
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $b1
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
+    jr AddHLToTransitionBGPtrLoInBGMap_Skip2
 
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap: takes BC; changes A; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may
-; continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; may
-; continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA;
-; may continue in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2; may continue
-; in AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip; then 8 more
-; steps (see the code) (E-0347)
+; AddHLToTransitionBGPtrLoInBGMap_Skip2; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip; may
+; continue in AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_Skip2; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip; may
+; continue in AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA; may continue in
+; AddHLToTransitionBGPtrLoInBGMap_Skip2; may continue in AddHLToTransitionBGPtrLoInBGMap_Skip; then
+; 8 more steps (see the code) (E-0347)
 ; why: step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
@@ -3133,50 +3113,50 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2::
     push bc
     ld a, [wTransitionStage]
     cp $02
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $04
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $08
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $0c
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $12
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $18
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $20
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $28
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $32
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $3c
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $48
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $54
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $62
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip2
     cp $70
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip
     cp $80
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2
     cp $90
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA
     cp $a2
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_Skip2
+    jr AddHLToTransitionBGPtrLoInBGMap_Skip
 
 ; Copies L to wTransitionCountA; copies H to wTransitionCountB; calls
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA;
-; also changes HL and A by register arithmetic (E-0347)
+; AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip::
+AddHLToTransitionBGPtrLoInBGMap_Skip::
     or a
     jr nz, .read_transition_count_a
     ld hl, $0233
@@ -3199,17 +3179,17 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Sk
     ld a, h
     sbc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA
 
 ; Copies L to wTransitionCountA; copies H to wTransitionCountB; calls
 ; WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA;
-; also changes HL and A by register arithmetic (E-0347)
+; AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2::
+AddHLToTransitionBGPtrLoInBGMap_Skip2::
     or a
     jr nz, .read_transition_count_a
     ld hl, $012a
@@ -3232,16 +3212,16 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Sk
     ld a, h
     sbc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA
 
 ; Calls WriteTileC4AtTransitionBGPtrLoAndClearAttr; continues in
-; AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA;
-; also changes HL and A by register arithmetic (E-0347)
+; AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA; also changes HL and A by register arithmetic
+; (E-0347)
 ; why: part of AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2, in
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA::
+AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3255,7 +3235,7 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
     ld a, h
     adc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA
 
 ; Calls WriteTileC4AtTransitionBGPtrLoAndClearAttr; also changes HL and A by register arithmetic
 ; (E-0347)
@@ -3263,7 +3243,7 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2::
+AddHLToTransitionBGPtrLoInBGMap_ReadTransitionCountA2::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3286,7 +3266,7 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Re
 ; step 1 of AddHLToTransitionBGPtrLoInBGMap; AddHLToTransitionBGPtrLoInBGMap: HL =
 ; wTransitionBGPtrLo/wTransitionBGPtrHi + HL, the high byte's low 2 bits wrapped and its upper 6
 ; bits kept from wTransitionBGPtrHi ... (E-0352, E-0117)
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA::
+AddHLToTransitionBGPtrLoInBGMap_SetTransitionCountA::
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3345,7 +3325,7 @@ RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ld [wTransitionCountB], a
 
 .read_transition_stage:
-    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1
+    ld hl, RunBattleTransitionStep_SetCounts_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3368,7 +3348,7 @@ RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     inc hl
     dec b
     jr nz, .loop
-    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1
+    ld hl, RunBattleTransitionStep_SetCounts_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3387,7 +3367,7 @@ RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     dec b
     jr nz, .loop2
     push hl
-    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2
+    ld hl, RunBattleTransitionStep_SetCounts_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3408,7 +3388,7 @@ RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ld h, a
     dec b
     jr nz, .loop3
-    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2
+    ld hl, RunBattleTransitionStep_SetCounts_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3587,12 +3567,11 @@ TransitionRowStep08::
     ld h, d
     ret
 
-; data read by RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB (9 bytes)
-; (E-0347)
-RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1::
+; data read by RunBattleTransitionStep_SetCounts (9 bytes) (E-0347)
+RunBattleTransitionStep_SetCounts_Data1::
     db $14, $12, $10, $0e, $0c, $0a, $08, $06, $04
 
-RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2::
+RunBattleTransitionStep_SetCounts_Data2::
     db $12, $10, $0e, $0c, $0a, $08, $06, $04, $02
 
 ; RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB calls

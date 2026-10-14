@@ -1335,20 +1335,19 @@ ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB::
     call LoadBattleMonsterPictureForSlotB
     ret
 
-; resolve step $0B: wBattleActionId $82 jumps to
-; ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots; $83, $84 and $B3 jump to
-; ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep; any other action advances
+; resolve step $0B: wBattleActionId $82 jumps to ResolveStepDamageMessage_ReadSoundChannelSlots;
+; $83, $84 and $B3 jump to ResolveStepDamageMessage_ReadBattleSubStep; any other action advances
 ; wBattleResolveStep and returns (E-0050)
 ResolveStepBranchOnAction::
     ld a, [wBattleActionId]
     cp SKILL_ULTRADOWN
-    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots
+    jp z, ResolveStepDamageMessage_ReadSoundChannelSlots
     cp SKILL_DEMAGIC
-    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
+    jp z, ResolveStepDamageMessage_ReadBattleSubStep
     cp SKILL_THICKFOG
-    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
+    jp z, ResolveStepDamageMessage_ReadBattleSubStep
     cp SKILL_HIGHJUMP_B3
-    jp z, ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep
+    jp z, ResolveStepDamageMessage_ReadBattleSubStep
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -1672,7 +1671,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36::
 ; ResolveStepDamageMessage; ResolveStepDamageMessage: resolve step $0A: advances wBattleResolveStep
 ; and, for the actor or target side chosen by wResolveMsgFlags bit 4, stores wResolveMsgActor ...
 ; (E-0352)
-ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
+ResolveStepDamageMessage_ReadSoundChannelSlots::
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
     and [hl]
@@ -1739,7 +1738,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
 ; ResolveStepDamageMessage; ResolveStepDamageMessage: resolve step $0A: advances wBattleResolveStep
 ; and, for the actor or target side chosen by wResolveMsgFlags bit 4, stores wResolveMsgActor ...
 ; (E-0352)
-ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep::
+ResolveStepDamageMessage_ReadBattleSubStep::
     ld a, [wBattleSubStep]
     jumptable
     dw ResolveStepDamageMessage_ShowTheWindAroundHero
@@ -2710,8 +2709,7 @@ ActionEffect_ActionD8_ComputeAttackDamage::
 ; copies L to wBattleDamageLo; copies H to wBattleDamageHi; calls ActorFormationSlotToTemp0; copies
 ; hTemp0 to wBattleActor; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies L to
 ; wBattleDamageLo; copies H to wBattleDamageHi; sets wBattleActor; continues in
-; ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent; then 1 more
-; step (see the code) (E-0347)
+; ActionEffect_MegaMagic_CallScaleHLTo40Percent; then 1 more step (see the code) (E-0347)
 ; why: a helper of ActionEffect_ActionD9; ActionEffect_ActionD9: effect routine reached through
 ; ActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 217 (E-0352,
 ; E-0126)
@@ -2777,7 +2775,7 @@ ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc::
     ld [wBattleDamageHi], a
     pop af
     ld [wBattleActor], a
-    jp ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent
+    jp ActionEffect_MegaMagic_CallScaleHLTo40Percent
     db $c9
 
 ; called from ActionEffect_Blaze: calls RollSkillDamageFromRecord; calls
@@ -4017,7 +4015,7 @@ ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
 ; why: part of ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi, in a helper of
 ; ActionEffect_MegaMagic; ActionEffect_MegaMagic: effect routine reached through ActionEffectTable
 ; (ActionEffectTable, indexed by wBattleActionId) for action(s) 61 MegaMagic (E-0352, E-0126)
-ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi_CallScaleHLTo40Percent::
+ActionEffect_MegaMagic_CallScaleHLTo40Percent::
     call ScaleHLTo40Percent
     call ShiftHLRight2
     ld a, l
@@ -4455,7 +4453,7 @@ ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36::
 ; it gets through (E-0095, E-0338)
 RollVsBeatResistance::
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
+    jp z, ActionEffect_EerieLite_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte2
     swap a
@@ -5032,16 +5030,15 @@ ActionEffect_Meditate_AddDoubleAToHL_Bank36::
     ret
 
 ; called from ActionEffect_Sacrifice: calls ZIfAllyActorInBattleKindMode2Or3; may continue in
-; ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done; calls
-; HLToBattleStatus8EntryOfBattleTarget_Bank36; calls GetTargetSlotResistancesByte3; calls
-; ForceLevel4IfActorConcentrated; branches on wBattleActionId; calls
-; ActionEffect_Sacrifice_RollChanceByLevel_100_84_50_0; calls RollChanceForLevelA_2 (E-0347)
+; ActionEffect_EerieLite_Done; calls HLToBattleStatus8EntryOfBattleTarget_Bank36; calls
+; GetTargetSlotResistancesByte3; calls ForceLevel4IfActorConcentrated; branches on wBattleActionId;
+; calls ActionEffect_Sacrifice_RollChanceByLevel_100_84_50_0; calls RollChanceForLevelA_2 (E-0347)
 ; why: a helper of ActionEffect_Sacrifice; ActionEffect_Sacrifice: effect routine reached through
 ; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 21
 ; Sacrifice (E-0352, E-0084)
 ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3::
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
+    jp z, ActionEffect_EerieLite_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte3
     and $03
@@ -5367,7 +5364,7 @@ RollVsPoisonGasResistance::
 ; ResolveStep0EEffect; carry = it gets through (E-0095, E-0338) (sided roll)
 RollVsPalsyAirResistance::
     call ZIfAllyActorInBattleKindMode2Or3
-    jp z, ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done
+    jp z, ActionEffect_EerieLite_Done
     call HLToBattleStatus8EntryOfBattleTarget_Bank36
     call GetTargetSlotResistancesByte5
     rlca
@@ -5435,7 +5432,7 @@ ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36::
 ; ActionEffect_EerieLite; ActionEffect_EerieLite: effect routine reached through
 ; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 128
 ; EerieLite (E-0352, E-0084)
-ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36_Done::
+ActionEffect_EerieLite_Done::
     xor a
     ld e, $01
     ret

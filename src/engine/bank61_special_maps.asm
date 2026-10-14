@@ -3362,7 +3362,7 @@ CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     add_a_to_hl
     ld a, [hl]
     and $0f
-    ld hl, CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc_Data
+    ld hl, CheckWarpsByMapType_RunThreeWarpChecks_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -3416,7 +3416,7 @@ CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     jp .skip
 
 ; data read by CheckWarpsByMapType (6 bytes) (E-0347)
-CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc_Data::
+CheckWarpsByMapType_RunThreeWarpChecks_Data::
     db $00, $30, $11, $22, $03, $33
 
 ; when a key world is active (wKeyWorldActive) and the key in wKeyWorldKey bit 7 is for

@@ -165,7 +165,7 @@ OBJPaletteBufferPlus8Data::
 ; with $4BBD + 8 * index); 38 palettes up to the stream at $4CED, continuing FieldSpritePalettes
 ; (E-0238, C1)
 LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData::
-LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2::
+LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2::
     dw $0000, $037f, $027f, $0000 ; id 0
     dw $0000, $4f5d, $1415, $0000 ; id 1
     dw $0000, $4f5d, $02b0, $0000 ; id 2

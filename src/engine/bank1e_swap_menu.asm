@@ -147,8 +147,8 @@ SwapMonstersMenu_SetupPartyList::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_SetupPartyList_ToSetupTileMapAtBGMap1
-    dw SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_WriteGlyphListPosAndStep
-    dw SwapMonstersMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep
+    dw SwapMonstersMenu_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_ToListPartyRecordsWithState2ToListEntriesAndStep
     dw SwapMonstersMenu_SetupPartyList_CountRecordsInUse
 
 ; step 0 of SwapMonstersMenu_SetupPartyList: calls SetupTileMapAtBGMap1 (E-0347)
@@ -164,7 +164,7 @@ SwapMonstersMenu_SetupPartyList_ToSetupTileMapAtBGMap1::
 ; why: step 1 of SwapMonstersMenu_SetupPartyList (when wScreenStep = 1);
 ; SwapMonstersMenu_SetupPartyList: by wScreenStep: the tile map,
 ; ListPartyRecordsWithState2ToListEntries and CountRecordsInUse (E-0352)
-SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
+SwapMonstersMenu_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
     ld hl, GlyphCopyDestList0
     ld de, GlyphCopySrcList0
     call SwapMonstersMenu_WriteGlyphListPos
@@ -177,7 +177,7 @@ SwapMonstersMenu_SetupPartyList_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
 ; why: step 2 of SwapMonstersMenu_SetupPartyList (when wScreenStep = 2);
 ; SwapMonstersMenu_SetupPartyList: by wScreenStep: the tile map,
 ; ListPartyRecordsWithState2ToListEntries and CountRecordsInUse (E-0352)
-SwapMonstersMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
+SwapMonstersMenu_ToListPartyRecordsWithState2ToListEntriesAndStep::
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
     inc a
@@ -413,7 +413,7 @@ SwapMonstersMenu_MoveRecords::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc
-    dw SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_SetArg1
+    dw SwapMonstersMenu_MoveRecords_SetArg1
     dw SwapMonstersMenu_MoveRecords_FillTilesBxC_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordNameAndSpeciesNameTiles_SetArg1
     dw SwapMonstersMenu_MoveRecords_StoreBAtWordTableEntry_Bank1E
@@ -422,7 +422,7 @@ SwapMonstersMenu_MoveRecords::
     dw SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
     dw SwapMonstersMenu_MoveRecords_SetScreenStep
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw DrawBoxAndMenuAndStep_1E
@@ -447,13 +447,13 @@ SwapMonstersMenu_MoveRecords::
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_MoveRecords_CountRecordsInUse_SetScreenStep
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw DrawBoxAndMenuAndStep_1E
     dw SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E_SetScreenStep_2
     dw SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf
-    dw SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_SetTemp0
+    dw SwapMonstersMenu_MoveRecords_SetTemp0
     dw SwapMonstersMenu_MoveRecords_CopyScreenBufferRectWithAttrs_1E
     dw SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
@@ -465,8 +465,7 @@ SwapMonstersMenu_MoveRecords::
 ; step 0 of SwapMonstersMenu_MoveRecords: changes A; may continue in
 ; SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip; may continue in
 ; SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf; continues in
-; SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
-; (E-0347)
+; SwapMonstersMenu_CallListPartyRecordsWithState2ToListEntries (E-0347)
 ; why: step 0 of SwapMonstersMenu_MoveRecords (when wScreenStep = 0); SwapMonstersMenu_MoveRecords:
 ; by wScreenStep: record lists of party and farm, StoreTemp0BytesToSRAMRecord, capacity from the
 ; farm level, CountRecordsInUse (E-0352)
@@ -476,7 +475,7 @@ SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc::
     jp z, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip
     cp $01
     jp z, SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf
-    jp SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
+    jp SwapMonstersMenu_CallListPartyRecordsWithState2ToListEntries
 
 ; Calls CopyRectTo20ByteRows_Bank1E; calls FillTilesBxC; increments wScreenSubStep (E-0347)
 ; why: part of SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc, in step 0 of
@@ -484,7 +483,7 @@ SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc::
 ; record lists of party and farm, StoreTemp0BytesToSRAMRecord, capacity from the farm level,
 ; CountRecordsInUse (E-0352)
 SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip::
-    ld de, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip_TileRect
+    ld de, SwapMonstersMenu_MoveRecords_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank1E
@@ -496,14 +495,12 @@ SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip::
     ld [wScreenSubStep], a
     ret
 
-; called from SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2: sets rRAMG2
-; to $0a; sets rRAMB to 0; calls CopyRecordNameToNameGlyphBuf; calls CopyGlyphTilesToVRAM; branches
-; on wPartyCount; sets rRAMG2 to 0; increments wScreenSubStep; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
-; why: a helper of SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2, in step
-; 7 of SwapMonstersMenu_ShowMonsterDetails3 (when wScreenStep = 7);
-; SwapMonstersMenu_ShowMonsterDetails3: screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2
-; (E-0352)
+; called from SwapMonstersMenu_ShowMonsterDetails3_2: sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; CopyRecordNameToNameGlyphBuf; calls CopyGlyphTilesToVRAM; branches on wPartyCount; sets rRAMG2 to
+; 0; increments wScreenSubStep; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: a helper of SwapMonstersMenu_ShowMonsterDetails3_2, in step 7 of
+; SwapMonstersMenu_ShowMonsterDetails3 (when wScreenStep = 7); SwapMonstersMenu_ShowMonsterDetails3:
+; screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2 (E-0352)
 SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf::
     ld a, $0a
     ld [rRAMG2], a
@@ -526,7 +523,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf::
     push bc
     ld a, b
     add a
-    ld hl, SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_Data
+    ld hl, SwapMonstersMenu_ShowMonsterDetails3_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -548,10 +545,10 @@ SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf::
 ; BGMapAddressAtScroll_Bank1E; calls DrawScreenBufferRect_Bank1E; sets wScreenSubStep to 0;
 ; increments wScreenStep (E-0347)
 ; why: part of SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf, in a helper of
-; SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2, in step 7 of
-; SwapMonstersMenu_ShowMonsterDetails3 (when wScreenStep = 7); SwapMonstersMenu_ShowMonsterDetails3:
-; screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2 (E-0352)
-SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries::
+; SwapMonstersMenu_ShowMonsterDetails3_2, in step 7 of SwapMonstersMenu_ShowMonsterDetails3 (when
+; wScreenStep = 7); SwapMonstersMenu_ShowMonsterDetails3: screen state $0E: as
+; SwapMonstersMenu_ShowMonsterDetails2 (E-0352)
+SwapMonstersMenu_CallListPartyRecordsWithState2ToListEntries::
     farcall ListPartyRecordsWithState2ToListEntries
     ld hl, wWindowTileBuffer + $78
     ld c, $28
@@ -570,7 +567,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyR
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip_TileRect::
+SwapMonstersMenu_MoveRecords_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -579,7 +576,7 @@ SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip_TileRect::
     db $b6, $c3, $da, $db, $dc, $dd, $de, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_Data::
+SwapMonstersMenu_ShowMonsterDetails3_Data::
     db $00, $8d, $50, $8d, $a0, $8d
 
 ; step 1 of SwapMonstersMenu_MoveRecords: calls LoadFamilyIconTileForRecordB_Bank1E; calls
@@ -588,7 +585,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_Data::
 ; why: step 1 of SwapMonstersMenu_MoveRecords (when wScreenStep = 1); SwapMonstersMenu_MoveRecords:
 ; by wScreenStep: record lists of party and farm, StoreTemp0BytesToSRAMRecord, capacity from the
 ; farm level, CountRecordsInUse (E-0352)
-SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_SetArg1::
+SwapMonstersMenu_MoveRecords_SetArg1::
     ld a, [wListCursor]
     ld hl, wListEntries
     add_a_to_hl
@@ -799,7 +796,7 @@ SwapMonstersMenu_MoveRecords_SetScreenStep::
 ; why: step 10 of SwapMonstersMenu_MoveRecords (when wScreenStep = 10);
 ; SwapMonstersMenu_MoveRecords: by wScreenStep: record lists of party and farm,
 ; StoreTemp0BytesToSRAMRecord, capacity from the farm level, CountRecordsInUse (E-0352)
-SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep::
+SwapMonstersMenu_MoveRecords_AdvanceScreenStep::
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
     call SwapMonstersMenu_WriteGlyphListPos
@@ -1081,13 +1078,13 @@ BlinkCursorBlinkAE_Bank1E::
 ; or read as the label there; was DrawCursorTileBB_Bank1E)
 DrawCursorTileBB_Bank1E::
     ld b, $bb
-    jr SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr SwapMonstersMenu_MoveRecords_ReadChoiceCursor
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1E)
 DrawBlankTileC3_Bank1E::
     ld b, $c3
-    jr SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr SwapMonstersMenu_MoveRecords_ReadChoiceCursor
 
 ; called from SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E: takes BC; changes B (E-0347)
 ; why: a helper of SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E, in step 12 of
@@ -1103,10 +1100,10 @@ SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap::
 ; SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E, in step 12 of SwapMonstersMenu_MoveRecords
 ; (when wScreenStep = 12); SwapMonstersMenu_MoveRecords: by wScreenStep: record lists of party and
 ; farm, StoreTemp0BytesToSRAMRecord, capacity from the farm level, CountRecordsInUse (E-0352)
-SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
+SwapMonstersMenu_MoveRecords_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
-    ld hl, SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, SwapMonstersMenu_MoveRecords_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1124,7 +1121,7 @@ SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
     ret
 
 ; data read by SwapMonstersMenu (4 bytes) (E-0347)
-SwapMonstersMenu_MoveRecords_StepBGMapAddressBackOnScrollWrap_Data::
+SwapMonstersMenu_MoveRecords_Data::
     db $2d, $01, $6d, $01
 
 ; copies box $4718 to wWindowTileBuffer + $110, runs CopyScreenBufferRectWithAttrs_1E, blanks the
@@ -1806,16 +1803,15 @@ SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf::
     ld de, wTextBuf0
     ld c, $00
 
-; May continue in SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop; calls
-; GetListEntriesCell5Address; calls CopyRecordNameToNameGlyphBuf; branches on the byte at
-; wNameGlyphBuf; sets rRAMG2 to 0; increments wScreenStep; sets wTextWindowTileLo to $12; sets
-; wScriptCommandType to 0; sets wScriptStartRequest to $80; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
+; May continue in SwapMonstersMenu_MoveRecords_Loop; calls GetListEntriesCell5Address; calls
+; CopyRecordNameToNameGlyphBuf; branches on the byte at wNameGlyphBuf; sets rRAMG2 to 0; increments
+; wScreenStep; sets wTextWindowTileLo to $12; sets wScriptCommandType to 0; sets wScriptStartRequest
+; to $80; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: part of SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf, in step 40 of
 ; SwapMonstersMenu_MoveRecords (when wScreenStep = 40); SwapMonstersMenu_MoveRecords: by
 ; wScreenStep: record lists of party and farm, StoreTemp0BytesToSRAMRecord, capacity from the farm
 ; level, CountRecordsInUse (E-0352)
-SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop::
+SwapMonstersMenu_MoveRecords_Loop::
     ld a, [hl]
     cp $f0
     jr z, .skip
@@ -1825,7 +1821,7 @@ SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop::
     inc c
     ld a, c
     cp $0a
-    jr c, SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop
+    jr c, SwapMonstersMenu_MoveRecords_Loop
 
 .skip:
     ld a, $90
@@ -1894,7 +1890,7 @@ SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop::
 ; why: step 41 of SwapMonstersMenu_MoveRecords (when wScreenStep = 41);
 ; SwapMonstersMenu_MoveRecords: by wScreenStep: record lists of party and farm,
 ; StoreTemp0BytesToSRAMRecord, capacity from the farm level, CountRecordsInUse (E-0352)
-SwapMonstersMenu_MoveRecords_StoreTemp0BytesToSRAMRecord_SetTemp0::
+SwapMonstersMenu_MoveRecords_SetTemp0::
     ld hl, wPartyList
     ld a, $0a
     ld [rRAMG2], a
@@ -1988,7 +1984,7 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_MoveRecords_CountRecordsInUse
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw DrawBoxAndMenuAndStep_1E
@@ -2005,7 +2001,7 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_MoveRecords_CopyFromBankWaitVRAM
     dw SwapMonstersMenu_MoveRecords_UpdateTwoChoiceCursor_Bank1D
     dw SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc
-    dw SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_SetArg1
+    dw SwapMonstersMenu_MoveRecords_SetArg1
     dw SwapMonstersMenu_MoveRecords_FillTilesBxC_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordNameAndSpeciesNameTiles_SetArg1
     dw SwapMonstersMenu_MoveRecords_StoreBAtWordTableEntry_Bank1E
@@ -2014,7 +2010,7 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_MoveRecords_BGMapAddressAtScroll_Bank1E
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
     dw SwapMonstersMenu_ChooseFromFarm_CountRecordsInUse
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw DrawBoxAndMenuAndStep_1E
@@ -2032,17 +2028,17 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_ChooseFromFarm_UpdatePagedListCursor
     dw SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E
     dw SwapMonstersMenu_ChooseFromFarm_ToSwapMonstersMenu_WriteGlyphListPosAndStep
-    dw SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E_SetListCursor
-    dw SwapMonstersMenu_ChooseFromFarm_WriteScreenSubStepAndScreenStepEtc
-    dw SwapMonstersMenu_MoveRecords_LoadFamilyIconTileForRecordB_Bank1E_SetArg1
+    dw SwapMonstersMenu_ChooseFromFarm_SetListCursor
+    dw SwapMonstersMenu_WriteScreenSubStepAndScreenStepEtc
+    dw SwapMonstersMenu_MoveRecords_SetArg1
     dw SwapMonstersMenu_MoveRecords_FillTilesBxC_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordNameAndSpeciesNameTiles_SetArg1
     dw SwapMonstersMenu_ChooseFromFarm_ListPartyRecordsWithState2ToListEntries
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw DrawBoxAndMenuAndStep_1E
-    dw SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_SetScreenStep_2
+    dw SwapMonstersMenu_ChooseFromFarm_2
     dw SwapMonstersMenu_ChooseFromFarm_CopyRecordNameToNameGlyphBuf
     dw SwapMonstersMenu_ChooseFromFarm_StoreTemp0BytesToSRAMRecord_GetListEntriesCell5Address
     dw SwapMonstersMenu_MoveRecords_CopyScreenBufferRectWithAttrs_1E
@@ -2321,7 +2317,7 @@ SwapMonstersMenu_ChooseFromFarm_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
 ; why: step 60 of SwapMonstersMenu_ChooseFromFarm (when wScreenStep = 60);
 ; SwapMonstersMenu_ChooseFromFarm: screen state 5, reached from menu option 1 when the farm list
 ; (ListRecordsState1NotEggs: records in use that are not eggs) is not empty: ... (E-0352)
-SwapMonstersMenu_ChooseFromFarm_CopyRectTo20ByteRows_Bank1E_SetListCursor::
+SwapMonstersMenu_ChooseFromFarm_SetListCursor::
     ld de, SwapMenuCursorCells + $271
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
@@ -2455,18 +2451,17 @@ SwapMonstersMenu_ChooseFromFarm_DrawBoxAndMenuAndStep_1E::
 ; step 61 of SwapMonstersMenu_ChooseFromFarm: changes A; may continue in
 ; SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip; may continue in
 ; SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf; continues in
-; SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
-; (E-0347)
+; SwapMonstersMenu_CallListPartyRecordsWithState2ToListEntries (E-0347)
 ; why: step 61 of SwapMonstersMenu_ChooseFromFarm (when wScreenStep = 61);
 ; SwapMonstersMenu_ChooseFromFarm: screen state 5, reached from menu option 1 when the farm list
 ; (ListRecordsState1NotEggs: records in use that are not eggs) is not empty: ... (E-0352)
-SwapMonstersMenu_ChooseFromFarm_WriteScreenSubStepAndScreenStepEtc::
+SwapMonstersMenu_WriteScreenSubStepAndScreenStepEtc::
     ld a, [wScreenSubStep]
     and a
     jp z, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip
     cp $01
     jp z, SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf
-    jp SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf_CallListPartyRecordsWithState2ToListEntries
+    jp SwapMonstersMenu_CallListPartyRecordsWithState2ToListEntries
 
 ; step 70 of SwapMonstersMenu_ChooseFromFarm: calls BGMapAddressAtScroll_Bank1E; calls
 ; DrawScreenBufferRect_Bank1E; sets wScreenStep to $39; sets wScriptCommandType to 0; sets
@@ -2474,7 +2469,7 @@ SwapMonstersMenu_ChooseFromFarm_WriteScreenSubStepAndScreenStepEtc::
 ; why: step 70 of SwapMonstersMenu_ChooseFromFarm (when wScreenStep = 70);
 ; SwapMonstersMenu_ChooseFromFarm: screen state 5, reached from menu option 1 when the farm list
 ; (ListRecordsState1NotEggs: records in use that are not eggs) is not empty: ... (E-0352)
-SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_SetScreenStep_2::
+SwapMonstersMenu_ChooseFromFarm_2::
     call BGMapAddressAtScroll_Bank1E
     lb bc, $14, $0d
     ld de, $01cc
@@ -2488,9 +2483,8 @@ SwapMonstersMenu_ChooseFromFarm_BGMapAddressAtScroll_Bank1E_SetScreenStep_2::
     ret
 
 ; step 71 of SwapMonstersMenu_ChooseFromFarm: sets rRAMG2 to $0a; sets rRAMB to 0; calls
-; CopyRecordNameToNameGlyphBuf; continues in
-; SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop; also changes HL, DE, A and C by
-; register arithmetic (E-0347)
+; CopyRecordNameToNameGlyphBuf; continues in SwapMonstersMenu_MoveRecords_Loop; also changes HL, DE,
+; A and C by register arithmetic (E-0347)
 ; why: step 71 of SwapMonstersMenu_ChooseFromFarm (when wScreenStep = 71);
 ; SwapMonstersMenu_ChooseFromFarm: screen state 5, reached from menu option 1 when the farm list
 ; (ListRecordsState1NotEggs: records in use that are not eggs) is not empty: ... (E-0352)
@@ -2507,7 +2501,7 @@ SwapMonstersMenu_ChooseFromFarm_CopyRecordNameToNameGlyphBuf::
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $00
-    jp SwapMonstersMenu_MoveRecords_CopyRecordNameToNameGlyphBuf_Loop
+    jp SwapMonstersMenu_MoveRecords_Loop
 
 ; step 72 of SwapMonstersMenu_ChooseFromFarm: sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; GetListEntriesCell5Address; sets hTemp0 to 2; calls StoreTemp0BytesToSRAMRecord; sets hTemp0 to 1;
@@ -2599,7 +2593,7 @@ SwapMonstersMenu_ChooseToView::
     dw SwapMonstersMenu_ChooseToView_ClampRecordListPageCursor4
     dw SwapMonstersMenu_ChooseToView_DrawRecordListPageSpeciesNames
     dw SwapMonstersMenu_ChooseToView_DrawRecordListPageMarks
-    dw SwapMonstersMenu_ChooseToView_UpdatePagedListCursor_SetMenuInputResult
+    dw SwapMonstersMenu_ChooseToView_SetMenuInputResult
     dw SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1
     dw SwapMonstersMenu_ChooseToView_CopyRectTo20ByteRows_Bank1E
     dw SwapMonstersMenu_ChooseToView_LoadTileListSixPerCall
@@ -2674,9 +2668,8 @@ SwapMonstersMenu_ChooseToView_ListRecordsInUseNotEggs::
 
 ; step 2 of SwapMonstersMenu_ChooseToView: calls
 ; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D; returns if wMenuInputResult is 0; returns
-; if wMenuInputResult is $fd; may continue in
-; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03; may continue in
-; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckMenuChoice (E-0347)
+; if wMenuInputResult is $fd; may continue in SwapMonstersMenu_ChooseToView_SetTwoChoiceCursorTo03;
+; may continue in SwapMonstersMenu_ChooseToView_CheckMenuChoice (E-0347)
 ; why: step 2 of SwapMonstersMenu_ChooseToView (when wScreenStep = 2);
 ; SwapMonstersMenu_ChooseToView: screen state 6 (menu option 2): a record list whose choice leads to
 ; the detail screen (state $0A) or the parents screen (state $0B) (E-0352)
@@ -2688,9 +2681,9 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2::
     cp $fd
     ret z
     cp $fe
-    jr z, SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03
+    jr z, SwapMonstersMenu_ChooseToView_SetTwoChoiceCursorTo03
     cp $ff
-    jr z, SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckMenuChoice
+    jr z, SwapMonstersMenu_ChooseToView_CheckMenuChoice
     ret
 
 ; Sets wTwoChoiceCursor to 3; sets wMenuChoice to 0; sets wListCursorBlink to 0; increments
@@ -2699,7 +2692,7 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2::
 ; SwapMonstersMenu_ChooseToView (when wScreenStep = 2); SwapMonstersMenu_ChooseToView: screen state
 ; 6 (menu option 2): a record list whose choice leads to the detail screen (state $0A) or the
 ; parents screen (state $0B) (E-0352)
-SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03::
+SwapMonstersMenu_ChooseToView_SetTwoChoiceCursorTo03::
     ld a, $03
     ld [wTwoChoiceCursor], a
     xor a
@@ -2714,18 +2707,18 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03
     ld [wScriptStartRequest], a
     ret
 
-; May continue in SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckRecordsFlagged;
-; calls BlankTwoTableEntriesSwapMenuCursorCellsFrom5; calls StoreBAtWordTableEntry_Bank1E; sets
+; May continue in SwapMonstersMenu_ChooseToView_CheckRecordsFlagged; calls
+; BlankTwoTableEntriesSwapMenuCursorCellsFrom5; calls StoreBAtWordTableEntry_Bank1E; sets
 ; wScreenStep; sets wTwoChoiceCursor to 0; sets wTextWindowTileLo to $12; sets wScriptCommandType to
 ; 0; sets wScriptStartRequest to $80 (E-0347)
 ; why: part of SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2, in step 2 of
 ; SwapMonstersMenu_ChooseToView (when wScreenStep = 2); SwapMonstersMenu_ChooseToView: screen state
 ; 6 (menu option 2): a record list whose choice leads to the detail screen (state $0A) or the
 ; parents screen (state $0B) (E-0352)
-SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckMenuChoice::
+SwapMonstersMenu_ChooseToView_CheckMenuChoice::
     ld a, [wMenuChoice]
     and a
-    jr nz, SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckRecordsFlagged
+    jr nz, SwapMonstersMenu_ChooseToView_CheckRecordsFlagged
     call BlankTwoTableEntriesSwapMenuCursorCellsFrom5
     ld a, [wMenuChoice]
     ld b, $bc
@@ -2759,7 +2752,7 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckMenuChoice::
 ; SwapMonstersMenu_ChooseToView (when wScreenStep = 2); SwapMonstersMenu_ChooseToView: screen state
 ; 6 (menu option 2): a record list whose choice leads to the detail screen (state $0A) or the
 ; parents screen (state $0B) (E-0352)
-SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckRecordsFlagged::
+SwapMonstersMenu_ChooseToView_CheckRecordsFlagged::
     ld a, [wRecordsFlagged]
     and a
     jr nz, .call_blank_two_table_entries_swap_menu_cursor
@@ -2970,7 +2963,7 @@ SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1::
     ld a, $0c
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_1E
-    ld de, SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1_TileRect
+    ld de, SwapMonstersMenu_ChooseToView_TileRect
     ld hl, wWindowTileBuffer + $10b
     lb bc, $0d, $03
     call CopyRectTo20ByteRows_Bank1E
@@ -2994,7 +2987,7 @@ SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 3 tiles, one row per line
-SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1_TileRect::
+SwapMonstersMenu_ChooseToView_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bc, $7c, $7d, $7e, $df, $7f, $fe, $ff, $76, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3259,7 +3252,7 @@ SwapMonstersMenu_ChooseToView_DrawRecordListPageMarks::
 ; why: step 27 of SwapMonstersMenu_ChooseToView (when wScreenStep = 27);
 ; SwapMonstersMenu_ChooseToView: screen state 6 (menu option 2): a record list whose choice leads to
 ; the detail screen (state $0A) or the parents screen (state $0B) (E-0352)
-SwapMonstersMenu_ChooseToView_UpdatePagedListCursor_SetMenuInputResult::
+SwapMonstersMenu_ChooseToView_SetMenuInputResult::
     ld a, $01
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -3410,7 +3403,7 @@ SwapMonstersMenu_ChooseToView2::
     dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
     dw SwapMonstersMenu_MoveRecords_DrawRecordListNameTiles_Bank1D
     dw SwapMonstersMenu_ChooseToView_CountRecordsInUse
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs
@@ -3434,7 +3427,7 @@ SwapMonstersMenu_ChooseToView2::
     dw SwapMonstersMenu_ChooseToView_CopyScreenBufferRectWithAttrs_1E_SetArg1
     dw SwapMonstersMenu_ChooseToView_CopyRectTo20ByteRows_Bank1E
     dw SwapMonstersMenu_ChooseToView_LoadTileListSixPerCall
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
     dw SwapMonstersMenu_MoveRecords_CopyRectTo20ByteRows_Bank1E_SetChoiceCursor
     dw SwapMonstersMenu_MoveRecords_BlinkCursorBlinkAE_Bank1E
     dw SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_SetScreenStep
@@ -3452,11 +3445,9 @@ SwapMonstersMenu_ChooseToView2::
 
 ; step 2 of SwapMonstersMenu_ChooseToView2: calls
 ; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D; returns if wMenuInputResult is 0; returns
-; if wMenuInputResult is $fd; may continue in
-; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03; branches on
-; wMenuInputResult; may continue in
-; SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckRecordsFlagged; calls
-; ListRecordsInUseNotEggs; branches on wListCount; sets wTwoChoiceCursor to 4; sets
+; if wMenuInputResult is $fd; may continue in SwapMonstersMenu_ChooseToView_SetTwoChoiceCursorTo03;
+; branches on wMenuInputResult; may continue in SwapMonstersMenu_ChooseToView_CheckRecordsFlagged;
+; calls ListRecordsInUseNotEggs; branches on wListCount; sets wTwoChoiceCursor to 4; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80; sets wScreenStep; then 6 more steps (see
 ; the code) (E-0347)
 ; why: step 2 of SwapMonstersMenu_ChooseToView2 (when wScreenStep = 2);
@@ -3470,7 +3461,7 @@ SwapMonstersMenu_ChooseToView2_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     cp $fd
     ret z
     cp $fe
-    jp z, SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_SetTwoChoiceCursorTo03
+    jp z, SwapMonstersMenu_ChooseToView_SetTwoChoiceCursorTo03
     cp $ff
     jr z, .check_menu_choice
     ret
@@ -3478,7 +3469,7 @@ SwapMonstersMenu_ChooseToView2_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 .check_menu_choice:
     ld a, [wMenuChoice]
     and a
-    jp nz, SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_2_CheckRecordsFlagged
+    jp nz, SwapMonstersMenu_ChooseToView_CheckRecordsFlagged
     farcall ListRecordsInUseNotEggs
     ld a, [wListCount]
     cp $02
@@ -3532,7 +3523,7 @@ SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs::
     ld hl, wWindowTileBuffer + $10b
     lb bc, $0d, $01
     call CopyRectTo20ByteRows_Bank1E
-    ld de, SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_TileRect_2
+    ld de, SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_2
     ld hl, wWindowTileBuffer + $11f
     lb bc, $01, $02
     call CopyRectTo20ByteRows_Bank1E
@@ -3573,7 +3564,7 @@ SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_TileRect::
     db $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
 
 ; record: 1 x 2 tiles, one row per line
-SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_TileRect_2::
+SwapMonstersMenu_ChooseToView2_ListRecordsInUseNotEggs_2::
     db $b7 ; id 0
     db $b5 ; id 1
 
@@ -3940,7 +3931,7 @@ SwapMonstersMenu_ChooseToView2_DeleteSRAMRecordAndCompact_GetListEntriesCell4Add
 ; why: part of SwapMonstersMenu_ChooseToView2; SwapMonstersMenu_ChooseToView2: screen state 7 (menu
 ; option 3): the SwapMonstersMenu_ChooseToView steps for another list (E-0352)
 SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E::
-    ld de, SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E_TileRect
+    ld de, SwapMonstersMenu_ChooseToView2_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank1E
@@ -3964,7 +3955,7 @@ SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 1 tiles, one row per line
-SwapMonstersMenu_ChooseToView2_CopyScreenBufferRectWithAttrs_1E_TileRect::
+SwapMonstersMenu_ChooseToView2_TileRect::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
 
 ; step 54 of SwapMonstersMenu_ChooseToView2: sets wArg1 to $9e; sets wArg2 to 0; copies D to wArg3;
@@ -4106,7 +4097,7 @@ SwapMonstersMenu_ShowMonsterDetails::
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3
-    dw SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5
+    dw SwapMonstersMenu_ShowMonsterDetails_SetTemp5
     dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5
@@ -4158,7 +4149,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList::
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_UpdatePagedListCursor
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_CallListRecordsState1ThenContinue
+    dw SwapMonstersMenu_CallListRecordsState1ThenContinue
 
 ; step 0 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList: sets wMenuInputResult to 0;
 ; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult;
@@ -4208,7 +4199,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_UpdatePagedListCursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -4258,7 +4249,7 @@ RedrawRecordListAndNextStep::
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList (when wScreenSubStep = 3);
 ; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList: moves the paged cursor, clears the
 ; panel, redraws the list and continues (ListRecordsState1ThenContinue) (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_CallListRecordsState1ThenContinue::
+SwapMonstersMenu_CallListRecordsState1ThenContinue::
     call ListRecordsState1ThenContinue
     ld a, $04
     ld [wScreenStep], a
@@ -4354,7 +4345,7 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList::
     dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_WriteScreenSubStep
+    dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenSubStep
 
 ; step 0 of SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList: branches on wGameMode; calls
 ; DrawListEntriesCell5SpeciesSprite; sets wMenuInputResult to 0; calls UpdatePagedListCursor;
@@ -4420,7 +4411,7 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -4448,7 +4439,7 @@ SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode::
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList (when wScreenSubStep = 3);
 ; SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList: draws the species sprite, clears the
 ; panel, redraws the list and continues (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_WriteScreenSubStep::
+SwapMonstersMenu_ShowMonsterDetails_WriteScreenSubStep::
     call ListRecordsState1ThenContinue
     xor a
     ld [wScreenSubStep], a
@@ -4461,7 +4452,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2::
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_CallListRecordsState1ThenContinue
+    dw SwapMonstersMenu_ShowMonsterDetails_CallListRecordsState1ThenContinue
 
 ; step 0 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2: sets wMenuInputResult to 0;
 ; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult;
@@ -4522,7 +4513,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor:
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_2
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4566,7 +4557,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor:
 ; 3), in part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by
 ; wScreenStep: draws the selected record's name, species, personality, level and status, category
 ; string and parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_CallListRecordsState1ThenContinue::
+SwapMonstersMenu_ShowMonsterDetails_CallListRecordsState1ThenContinue::
     call ListRecordsState1ThenContinue
     ld a, [wScreenStep]
     sub $04
@@ -4597,7 +4588,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_2
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4635,7 +4626,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_2
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -4659,13 +4650,11 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3::
 
 ; step 0 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3: sets wMenuInputResult to 0;
 ; calls UpdatePagedListCursor; branches on wMenuInputResult; may continue in
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile;
-; may continue in
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile2;
-; may continue in
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile3;
-; returns if wGameMode is $05; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; sets
-; hSpriteHideTile to 0; increments wScreenSubStep; also changes A by register arithmetic (E-0347)
+; SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile; may continue in
+; SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile2; may continue in
+; SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile3; returns if wGameMode is $05; calls
+; CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; sets hSpriteHideTile to 0; increments
+; wScreenSubStep; also changes A by register arithmetic (E-0347)
 ; why: step 0 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3 (when wScreenSubStep =
 ; 0), in part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by
 ; wScreenStep: draws the selected record's name, species, personality, level and status, category
@@ -4682,11 +4671,11 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor:
     cp $fc
     jr z, .clear_sprite_hide_tile
     cp $fd
-    jr z, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile
+    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
     cp $fe
-    jr z, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile2
+    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile2
     cp $ff
-    jr z, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile3
+    jr z, SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile3
 
 .check_game_mode:
     ld a, [wGameMode]
@@ -4710,7 +4699,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor:
 ; part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by wScreenStep:
 ; draws the selected record's name, species, personality, level and status, category string and
 ; parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile::
+SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile::
     xor a
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -4736,7 +4725,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_
 ; part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by wScreenStep:
 ; draws the selected record's name, species, personality, level and status, category string and
 ; parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile2::
+SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile2::
     xor a
     ldh [hSpriteHideTile], a
     ld a, $17
@@ -4749,7 +4738,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_
 ; part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by wScreenStep:
 ; draws the selected record's name, species, personality, level and status, category string and
 ; parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile3::
+SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile3::
     xor a
     ldh [hSpriteHideTile], a
     ld a, $07
@@ -4758,8 +4747,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_
 
 ; step 3 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3: calls
 ; ListRecordsState1ThenContinue; decrements wScreenStep; sets wScreenSubStep to 0; continues in
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile
-; (E-0347)
+; SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile (E-0347)
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3 (when wScreenSubStep =
 ; 3), in part of SwapMonstersMenu_ShowMonsterDetails; SwapMonstersMenu_ShowMonsterDetails: by
 ; wScreenStep: draws the selected record's name, species, personality, level and status, category
@@ -4771,20 +4759,20 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_CallListRecordsState1T
     ld [wScreenStep], a
     xor a
     ld [wScreenSubStep], a
-    jp SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile
+    jp SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
 
 ; screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2 (E-0302)
 SwapMonstersMenu_ShowMonsterDetails3::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles
+    dw SwapMonstersMenu_ShowMonsterDetails3_CopySixteenTiles
     dw SwapMonstersMenu_ShowMonsterDetails_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawTileRectAtHLFromDE_Bank1E
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
-    dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2
+    dw SwapMonstersMenu_ShowMonsterDetails3_2
     dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_ListRecordsAndDrawListEntriesCell5Panel
@@ -4802,7 +4790,7 @@ SwapMonstersMenu_ShowMonsterDetails3::
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3
-    dw SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5
+    dw SwapMonstersMenu_ShowMonsterDetails_SetTemp5
     dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5
@@ -4819,7 +4807,7 @@ SwapMonstersMenu_ShowMonsterDetails3::
 ; (E-0352)
 SwapMonstersMenu_ShowMonsterDetails3_DrawTileRectAtHLFromDE_Bank1E::
     call BGMapAddressAtScroll_Bank1E
-    ld de, SwapMonstersMenu_ShowMonsterDetails3_DrawTileRectAtHLFromDE_Bank1E_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails3_TileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -4838,13 +4826,13 @@ SwapMonstersMenu_ShowMonsterDetails2::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles
+    dw SwapMonstersMenu_ShowMonsterDetails3_CopySixteenTiles
     dw SwapMonstersMenu_ShowMonsterDetails_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawListEntriesCell5RecordDetails
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList
-    dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2
+    dw SwapMonstersMenu_ShowMonsterDetails3_2
     dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_AdvanceScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_ListRecordsAndDrawListEntriesCell5Panel
@@ -4862,7 +4850,7 @@ SwapMonstersMenu_ShowMonsterDetails2::
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3
-    dw SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5
+    dw SwapMonstersMenu_ShowMonsterDetails_SetTemp5
     dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5
@@ -4879,7 +4867,7 @@ SwapMonstersMenu_ShowMonsterDetails2::
 ; why: step 1 of SwapMonstersMenu_ShowMonsterDetails3 (when wScreenStep = 1);
 ; SwapMonstersMenu_ShowMonsterDetails3: screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2
 ; (E-0352)
-SwapMonstersMenu_ShowMonsterDetails3_SwapMonstersMenu_CopySixteenTiles::
+SwapMonstersMenu_ShowMonsterDetails3_CopySixteenTiles::
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
     call SwapMonstersMenu_WriteGlyphListPos
@@ -4959,7 +4947,7 @@ SwapMonstersMenu_CopySixteenTiles_Data2::
 ; why: step 7 of SwapMonstersMenu_ShowMonsterDetails3 (when wScreenStep = 7);
 ; SwapMonstersMenu_ShowMonsterDetails3: screen state $0E: as SwapMonstersMenu_ShowMonsterDetails2
 ; (E-0352)
-SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2::
+SwapMonstersMenu_ShowMonsterDetails3_2::
     call ClearBGMapAtScrollAndResetScroll
     call SwapMonstersMenu_ShowMonsterDetails3_CopyRecordNameToNameGlyphBuf
     xor a
@@ -5005,7 +4993,7 @@ SwapMonstersMenu_ShowFarmMonsterDetails::
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3
-    dw SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5
+    dw SwapMonstersMenu_ShowMonsterDetails_SetTemp5
     dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep
     dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5
@@ -5070,7 +5058,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList::
     dw SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList_UpdatePagedListCursor
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList_CallClampRecordListPageCursor5
+    dw SwapMonstersMenu_CallClampRecordListPageCursor5
 
 ; step 3 of SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList: calls
 ; SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5; calls
@@ -5079,7 +5067,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList::
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList (when wScreenSubStep =
 ; 3); SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList: moves the paged cursor, clears the
 ; panel and redraws the list (E-0352)
-SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList_CallClampRecordListPageCursor5::
+SwapMonstersMenu_CallClampRecordListPageCursor5::
     call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
     call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
     ld a, $04
@@ -5126,7 +5114,7 @@ SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList::
     dw SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode
     dw ClearTileAreasAndIncScreenSubStep
     dw RedrawRecordListAndNextStep
-    dw SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList_CallClampRecordListPageCursor5
+    dw SwapMonstersMenu_ShowMonsterDetails3_CallClampRecordListPageCursor5
 
 ; step 3 of SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList: calls
 ; SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5; calls
@@ -5136,7 +5124,7 @@ SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList::
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList (when wScreenSubStep =
 ; 3); SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList: draws the species sprite, clears
 ; the panel and redraws the list (E-0352)
-SwapMonstersMenu_ShowMonsterDetails3_SpriteThenRedrawList_CallClampRecordListPageCursor5::
+SwapMonstersMenu_ShowMonsterDetails3_CallClampRecordListPageCursor5::
     call SwapMonstersMenu_ShowMonsterDetails3_ClampRecordListPageCursor5
     call SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap
     ld a, $01
@@ -5196,8 +5184,7 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3::
 ; SwapMonstersMenu_ShowMonsterDetails3_StepBGMapAddressBackOnScrollWrap; sets wArg1 to 1; calls
 ; MarkPartyMembersInRecordListPage; sets wArg1 to 0; calls MarkPartyMembersInRecordListPage;
 ; decrements wScreenStep; sets wScreenSubStep to 0; continues in
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile
-; (E-0347)
+; SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile (E-0347)
 ; why: step 3 of SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3 (when wScreenSubStep =
 ; 3), in part of SwapMonstersMenu_ShowMonsterDetails3; SwapMonstersMenu_ShowMonsterDetails3: screen
 ; state $0E: as SwapMonstersMenu_ShowMonsterDetails2 (E-0352)
@@ -5215,14 +5202,14 @@ SwapMonstersMenu_ShowMonsterDetails3_CursorThenRedrawList3_CallClampRecordListPa
     ld [wScreenStep], a
     xor a
     ld [wScreenSubStep], a
-    jp SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList3_UpdatePagedListCursor_ClearSpriteHideTile
+    jp SwapMonstersMenu_ShowMonsterDetails_ClearSpriteHideTile
 
 ; screen state $0D: as ShowParents (E-0302)
 SwapMonstersMenu_ShowParents2::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll
-    dw SwapMonstersMenu_ShowParents2_SwapMonstersMenu_CopySixteenTiles
+    dw SwapMonstersMenu_ShowParents2_CopySixteenTiles
     dw SwapMonstersMenu_ShowMonsterDetails_AdvanceScreenStep
     dw SwapMonstersMenu_ShowParents2_FillTilesBxC_SetListCursor
     dw SwapMonstersMenu_ShowParents2_UploadTilesFromData
@@ -5230,7 +5217,7 @@ SwapMonstersMenu_ShowParents2::
     dw SwapMonstersMenu_ShowParents2_DrawRect6x6FromAtScroll41
     dw SwapMonstersMenu_ShowParents2_HandleListCursorInput_1D
     dw SwapMonstersMenu_ShowParents2_FillTilesBxC
-    dw SwapMonstersMenu_ShowMonsterDetails3_ClearBGMapAtScrollAndResetScroll_2
+    dw SwapMonstersMenu_ShowMonsterDetails3_2
     dw SwapMonstersMenu_ShowMonsterDetails_LoadAreaGraphicsForAreaGraphicsIndex
     dw SwapMonstersMenu_ShowMonsterDetails_StoreBAtWordTableEntry_Bank1E
     dw SwapMonstersMenu_ShowParents2_ToSwapMonstersMenu_WriteGlyphListPosAndStep
@@ -5244,7 +5231,7 @@ SwapMonstersMenu_ShowParents2::
 ; SwapMonstersMenu_CopySixteenTiles; sets wScreenSubStep to 0; sets wScreenStep to 2 (E-0347)
 ; why: step 1 of SwapMonstersMenu_ShowParents2 (when wScreenStep = 1);
 ; SwapMonstersMenu_ShowParents2: screen state $0D: as ShowParents (E-0352)
-SwapMonstersMenu_ShowParents2_SwapMonstersMenu_CopySixteenTiles::
+SwapMonstersMenu_ShowParents2_CopySixteenTiles::
     ld hl, GlyphCopyDestList4
     ld de, GlyphCopySrcList4
     call SwapMonstersMenu_WriteGlyphListPos
@@ -5664,7 +5651,7 @@ SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4::
     jr nz, .loop
 
 .skip:
-    ld de, SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4_TileRect
+    ld de, SwapMonstersMenu_ShowParents2_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $01
     call CopyRectTo20ByteRows_Bank1E
@@ -5673,7 +5660,7 @@ SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 1 tiles, one row per line
-SwapMonstersMenu_ShowParents2_ClampRecordListPageCursor4_TileRect::
+SwapMonstersMenu_ShowParents2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
 
 ; step 16 of SwapMonstersMenu_ShowParents2: calls CopyFromBankWaitVRAM; sets wArg1 to 1; sets wArg2
@@ -5745,14 +5732,14 @@ SwapMonstersMenu_ShowPartyMemberDetails::
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3
-    dw SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5
+    dw SwapMonstersMenu_ShowMonsterDetails_SetTemp5
     dw SwapMonstersMenu_ShowMonsterDetails_WriteScreenStep
     dw SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_SetMenuInputResult
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E_GetListEntriesCell5Address
     dw SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_GetListEntriesCell5Address
     dw SwapMonstersMenu_ShowMonsterDetails_DrawRecordParentNames
-    dw SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_SetMenuInputResult_2
+    dw SwapMonstersMenu_ShowPartyMemberDetails_2
 
 ; fills the 32 x 32 BG map from the scroll origin with BGFillTile (tile $C3) through
 ; FillTileRectWithArg1Tile with wArg7 = 0, then hScrollX = hScrollY = 0 and wScreenStep += 1
@@ -5816,7 +5803,7 @@ SwapMonstersMenu_ShowMonsterDetails_AdvanceScreenStep::
 ; (ListPartyRecordsWithState2ToListEntries (E-0352)
 SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E::
     call BGMapAddressAtScroll_Bank1E
-    ld de, SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect
+    ld de, SwapMonstersMenu_ShowPartyMemberDetails_TileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -5868,7 +5855,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5938,7 +5925,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_TileRect
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -5990,7 +5977,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0161
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -6383,7 +6370,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_GetListEntriesCell5Address::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0068
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -6432,7 +6419,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawRecordLevelAndStatusRow_1E::
 ; why: step 25 of SwapMonstersMenu_ShowMonsterDetails (when wScreenStep = 25);
 ; SwapMonstersMenu_ShowMonsterDetails: by wScreenStep: draws the selected record's name, species,
 ; personality, level and status, category string and parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address_SetTemp5::
+SwapMonstersMenu_ShowMonsterDetails_SetTemp5::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -6584,7 +6571,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_SetMenuInputR
     call BGMapAddressAtScroll_Bank1E
     ld de, $0160
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_2
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -6767,7 +6754,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawRecordParentNames::
 ; why: step 32 of SwapMonstersMenu_ShowPartyMemberDetails (when wScreenStep = 32);
 ; SwapMonstersMenu_ShowPartyMemberDetails: screen state 8: the details of a party record
 ; (ListPartyRecordsWithState2ToListEntries (E-0352)
-SwapMonstersMenu_ShowPartyMemberDetails_UpdateListCursorListCursor_SetMenuInputResult_2::
+SwapMonstersMenu_ShowPartyMemberDetails_2::
     xor a
     ld [wMenuInputResult], a
     farcall UpdateListCursorListCursor
@@ -6832,7 +6819,7 @@ DrawRect6x6FromAtScroll41::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0041
     add hl, de
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -7449,14 +7436,14 @@ DrawRecordFamilyEntries_Data2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
 ; far-calls LoadRecordWordFieldArg5AndShowIcon for record B and continues at
-; SwapMonstersMenu_ShowMonsterDetails_LoadFamilyIconTileForWorkBuf_ReadArg1 (E-0126) (E-0344: the
-; address in its name dropped or read as the label there; was LoadRecordWordFieldAndContinue)
+; SwapMonstersMenu_ShowMonsterDetails_ReadArg1 (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was LoadRecordWordFieldAndContinue)
 LoadRecordWordFieldAndContinue::
     push bc
     ld c, b
     farcall LoadRecordWordFieldArg5AndShowIcon
     pop bc
-    jp SwapMonstersMenu_ShowMonsterDetails_LoadFamilyIconTileForWorkBuf_ReadArg1
+    jp SwapMonstersMenu_ShowMonsterDetails_ReadArg1
 
 ; called from SwapMonstersMenu_ShowMonsterDetails_GetListEntriesCell5Address: calls
 ; LoadSRAMRecordByte; copies hTemp0 & $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf (E-0347)
@@ -7486,7 +7473,7 @@ SwapMonstersMenu_ShowMonsterDetails_LoadFamilyIconTileForWorkBuf::
 ; SwapMonstersMenu_ShowMonsterDetails (when wScreenStep = 19); SwapMonstersMenu_ShowMonsterDetails:
 ; by wScreenStep: draws the selected record's name, species, personality, level and status, category
 ; string and parent names (E-0352)
-SwapMonstersMenu_ShowMonsterDetails_LoadFamilyIconTileForWorkBuf_ReadArg1::
+SwapMonstersMenu_ShowMonsterDetails_ReadArg1::
     ld a, [wArg1]
     ld c, a
     ld a, b
@@ -7906,7 +7893,7 @@ DrawListEntriesCell5RecordDetails_StepBGMapAddressBackOnScrollWrap::
     push hl
     push de
     ld a, c
-    ld de, DrawListEntriesCell5RecordDetails_StepBGMapAddressBackOnScrollWrap_Data
+    ld de, DrawListEntriesCell5RecordDetails_Data
     add e
     ld e, a
     jr nc, .skip
@@ -7960,7 +7947,7 @@ DrawListEntriesCell5RecordDetails_StepBGMapAddressBackOnScrollWrap::
     ret
 
 ; data read by DrawListEntriesCell5RecordDetails (5 bytes) (E-0347)
-DrawListEntriesCell5RecordDetails_StepBGMapAddressBackOnScrollWrap_Data::
+DrawListEntriesCell5RecordDetails_Data::
     db $63, $65, $67, $69, $6b
 
 ; called from DrawListEntriesCell5RecordDetails: calls LoadSRAMRecordWord; calls HLToDecimalDigits;

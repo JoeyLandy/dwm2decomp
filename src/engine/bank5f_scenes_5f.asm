@@ -1235,10 +1235,10 @@ SceneDancing_DanceSteps::
     dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3
+    dw SceneDancing_DanceSteps_3
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_2
+    dw SceneDancing_DanceSteps_2
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords
@@ -1263,23 +1263,23 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
     inc [hl]
     ret
 
-; step 8 of SceneDancing_DanceSteps: changes A; continues in
-; SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing (E-0347)
+; step 8 of SceneDancing_DanceSteps: changes A; continues in SceneDancing_DanceSteps_SetPlayerFacing
+; (E-0347)
 ; why: step 8 of SceneDancing_DanceSteps (when wScriptSubStep = 8); SceneDancing_DanceSteps: by its
 ; step: changes the player's facing and the follower records between short waits (wScriptParam0)
 ; (E-0352)
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_2::
+SceneDancing_DanceSteps_2::
     ld a, $02
-    jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
+    jr SceneDancing_DanceSteps_SetPlayerFacing
 
-; step 5 of SceneDancing_DanceSteps: changes A; continues in
-; SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing (E-0347)
+; step 5 of SceneDancing_DanceSteps: changes A; continues in SceneDancing_DanceSteps_SetPlayerFacing
+; (E-0347)
 ; why: step 5 of SceneDancing_DanceSteps (when wScriptSubStep = 5); SceneDancing_DanceSteps: by its
 ; step: changes the player's facing and the follower records between short waits (wScriptParam0)
 ; (E-0352)
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3::
+SceneDancing_DanceSteps_3::
     ld a, $01
-    jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
+    jr SceneDancing_DanceSteps_SetPlayerFacing
 
 ; step 2 of SceneDancing_DanceSteps: changes A (E-0347)
 ; why: step 2 of SceneDancing_DanceSteps (when wScriptSubStep = 2); SceneDancing_DanceSteps: by its
@@ -1294,7 +1294,7 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc::
 ; why: part of SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc, in step 2 of
 ; SceneDancing_DanceSteps (when wScriptSubStep = 2); SceneDancing_DanceSteps: by its step: changes
 ; the player's facing and the follower records between short waits (wScriptParam0) (E-0352)
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing::
+SceneDancing_DanceSteps_SetPlayerFacing::
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
@@ -1328,10 +1328,10 @@ SceneMermaidSong2_MoveSteps::
     dw SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_AddStepDeltaToPointedByte
-    dw SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
@@ -1400,7 +1400,7 @@ SceneDancing_DanceSteps_AddStepDeltaToPointedByte::
 ; why: step 7 of SceneMermaidSong2_MoveSteps (when wScriptSubStep = 7); SceneMermaidSong2_MoveSteps:
 ; by its step: waits, moves two objects by table and changes the player's facing and followers
 ; (E-0352)
-SceneMermaidSong2_MoveSteps_WriteScriptParam0AndPlayerFacingEtc::
+SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -1461,7 +1461,7 @@ SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, $1f
     sub c
     sla a
-    ld hl, SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data
+    ld hl, SceneMermaidSong2_MoveSteps_Data
     add_a_to_hl
     ld a, [hli]
     ld c, a
@@ -1563,7 +1563,7 @@ SceneMermaidSong2_MoveSteps_ScriptStepMoveTwoObjectsByTable::
     dec [hl]
 
 .call_script_step_move_two_objects_by_table:
-    ld hl, SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data
+    ld hl, SceneMermaidSong2_MoveSteps_Data
     call ScriptStepMoveTwoObjectsByTable
     ret
 
@@ -1612,7 +1612,7 @@ ScriptStepMoveTwoObjectsByTable::
     ret
 
 ; data read by SceneMermaidSong2 (64 bytes) (E-0347)
-SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc_Data::
+SceneMermaidSong2_MoveSteps_Data::
     db $fe, $00, $ff, $00, $fe, $ff, $ff, $ff, $ff, $ff, $ff, $fe, $00, $ff, $00, $fe
     db $00, $fe, $00, $ff, $01, $fe, $01, $ff, $01, $ff, $02, $ff, $01, $00, $02, $00
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
@@ -1631,7 +1631,7 @@ RunScriptSubStep::
     dw RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
     dw RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc
     dw RunScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo
-    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords
+    dw RunScriptSubStep_SetFollowerRecords
 
 ; step 7 of RunScriptSubStep: sets wFollowerRecords to 1; increments wScriptParam0; may return
 ; early; sets hPlayerFacing to 0; sets wFollowerRecords to 0; copies hPlayerStateFlags & $fb to
@@ -1640,7 +1640,7 @@ RunScriptSubStep::
 ; why: step 7 of RunScriptSubStep (when wScriptSubStep = 7); RunScriptSubStep: the walking sub-steps
 ; of a scripted scene (SceneCheerYuna, SceneMonsterInspection): by wScriptSubStep it moves the
 ; player and the followers ... (E-0352, E-0354, E-0122)
-RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc_SetFollowerRecords::
+RunScriptSubStep_SetFollowerRecords::
     ld a, $01
     ld [wFollowerRecords], a
     ld a, [wFollowerRecords + $1]
@@ -2036,17 +2036,17 @@ RunSceneScriptSubStep::
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
     dw RunSceneScriptSubStep_CopyBytes
     dw RunSceneScriptSubStep_FullyHealParty
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5
+    dw RunSceneScriptSubStep_SetObject5
     dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_4
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_NextTableByte
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_3
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_2
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0
+    dw RunSceneScriptSubStep_SetScriptParam0
     dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_2
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_AdvanceScriptStep
@@ -2159,7 +2159,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
 ; wScriptParam0 to 0; advances wScriptSubStep (E-0347)
 ; why: step 14 of RunSceneScriptSubStep (when wScriptSubStep = 14); RunSceneScriptSubStep: runs the
 ; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0::
+RunSceneScriptSubStep_SetScriptParam0::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc
@@ -2204,7 +2204,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
 ; (E-0347)
 ; why: step 12 of RunSceneScriptSubStep (when wScriptSubStep = 12); RunSceneScriptSubStep: runs the
 ; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_2::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2258,7 +2258,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
 ; wScriptParam1 to 0; then 1 more step (see the code) (E-0347)
 ; why: step 11 of RunSceneScriptSubStep (when wScriptSubStep = 11); RunSceneScriptSubStep: runs the
 ; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_3::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2345,7 +2345,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
 ; wScriptParam0 to 0; then 1 more step (see the code) (E-0347)
 ; why: step 8 of RunSceneScriptSubStep (when wScriptSubStep = 8); RunSceneScriptSubStep: runs the
 ; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
-RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_4::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2462,7 +2462,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
 ; wScriptSubStep (E-0347)
 ; why: step 4 of RunSceneScriptSubStep (when wScriptSubStep = 4); RunSceneScriptSubStep: runs the
 ; routine for wScriptSubStep (jump table of eighteen) (E-0352, E-0124)
-RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetObject5::
+RunSceneScriptSubStep_SetObject5::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank5F
     ret nc

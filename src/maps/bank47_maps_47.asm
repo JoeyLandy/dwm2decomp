@@ -263,7 +263,7 @@ Map0DTileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0DPalettes::
-BreedMenu_RedrawListScreen_DecompressToVRAM_BGPaletteBufferData::
+BreedMenu_RedrawListScreen_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $012f, $4fff, $01d8, $0c63 ; entry 1
     dw $1528, $2bff, $00ff, $0000 ; entry 2

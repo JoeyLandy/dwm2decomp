@@ -12,7 +12,7 @@ BeginStringDisplay_Bank1D::
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd
 
 ; data read by DrawNameGlyphBufGlyphsOverlaying8DAnd8E (6 bytes) (E-0347)
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data::
+DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Data::
     db $01, $40, $cd, $11, $26, $c9
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
@@ -598,15 +598,15 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
-; called from VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc: calls
+; called from VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc: calls
 ; VaultMenu_BlinkCursorBlinkEF_Bank1D; may return early; sets wTwoChoiceCursor to 6; increments
 ; wScreenStep; branches on wVaultMode; sets wTwoChoiceCursor to 6; increments wScreenStep; sets
 ; wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on wListPages; calls
 ; VaultMenu_Store_FindStorageSlots; sets wTwoChoiceCursor to 4; then 18 more steps (see the code)
 ; (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc, in step 3
-; of VaultMenu_Store (when wScreenStep = 3); VaultMenu_Store: storing: moves items from wInventory
-; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
+; why: a helper of VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc, in step 3 of
+; VaultMenu_Store (when wScreenStep = 3); VaultMenu_Store: storing: moves items from wInventory into
+; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
     call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
@@ -876,15 +876,15 @@ DrawRect0140AtBGMap13E0AndStep::
     ld [wScreenStep], a
     ret
 
-; called from VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D: sets wArg1 to
-; 1; calls VaultMenu_Store_CountNonZeroItemGridBytes; branches on wSavedSpriteSlotCount; calls
+; called from VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D: sets wArg1 to 1;
+; calls VaultMenu_Store_CountNonZeroItemGridBytes; branches on wSavedSpriteSlotCount; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; branches on wIsCGB;
 ; increments wScreenStep; branches on C; branches on B; increments wScreenStep; then 1 more step
 ; (see the code) (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D, in step 7
-; of VaultMenu_Store (when wScreenStep = 7); VaultMenu_Store: storing: moves items from wInventory
-; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
+; why: a helper of VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D, in step 7 of
+; VaultMenu_Store (when wScreenStep = 7); VaultMenu_Store: storing: moves items from wInventory into
+; wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld a, $01
     ld [wArg1], a
@@ -906,7 +906,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld de, $0088
     add hl, de
     lb bc, $0c, $09
-    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2
+    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
 
@@ -977,7 +977,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect::
     db $b6, $c3, $d8, $d9, $da, $db, $dc, $dd, $de, $aa, $ca, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $c5, $c3, $c3, $be, $c3, $c3, $c6, $b5 ; id 8
 
-VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2::
+VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1185,12 +1185,12 @@ VaultMenu_Store_ReadItemGridX_ReadItemGridX::
 VaultMenu_Store_ReadItemGridX_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
-; called from VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc: branches on C; branches
-; on wScreenState; branches on the byte at wItemStorage; branches on B; branches on the byte at
+; called from VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc: branches on C; branches on
+; wScreenState; branches on the byte at wItemStorage; branches on B; branches on the byte at
 ; wInventory; branches on B; calls HLToDecimalDigits; sets wDigitWorkA; sets wDigitWorkB; calls
 ; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; branches on wIsCGB; then
 ; 6 more steps (see the code) (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc, in step 10 of
+; why: a helper of VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc, in step 10 of
 ; VaultMenu_Store (when wScreenStep = 10); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
@@ -1363,14 +1363,14 @@ VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
-; called from VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2: branches on
+; called from VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2: branches on
 ; wJoypadPressedRepeat; calls BlinkCursorSelectedRecord_Bank1D_2; returns unless bit 1 of
 ; wJoypadPressedRepeat is set; increments wScreenStep; sets wItemGridX to 0; sets wItemGridY to 0;
 ; sets wTwoChoiceCursor to 2; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; calls
 ; RunUnlessScreenStateIs3; sets wScreenStep; calls BlinkCursorSelectedRecord_Bank1D_2; then 39 more
 ; steps (see the code) (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2, in step 11
-; of VaultMenu_Store (when wScreenStep = 11); VaultMenu_Store: storing: moves items from wInventory
+; why: a helper of VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2, in step 11 of
+; VaultMenu_Store (when wScreenStep = 11); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wJoypadPressedRepeat]
@@ -1974,8 +1974,8 @@ BlinkCursorBlinkCD_Bank1D::
     xor a
     ld [wCursorBlinkCD], a
 
-; Changes A and B; branches on wNumberEditPos; continues in
-; VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos (E-0347)
+; Changes A and B; branches on wNumberEditPos; continues in VaultMenu_Store_ReadNumberEditPos
+; (E-0347)
 ; why: part of VaultMenu_Store_BGMapAddressAtScroll_Bank1D, in part of VaultMenu_Store;
 ; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -1992,7 +1992,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
 .skip:
     add $e0
     ld b, a
-    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos
+    jr VaultMenu_Store_ReadNumberEditPos
 
 ; Changes B (E-0347)
 ; why: part of VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2, in part of
@@ -2005,7 +2005,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip::
 ; why: part of VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2, in part of
 ; VaultMenu_Store_BGMapAddressAtScroll_Bank1D, in part of VaultMenu_Store; VaultMenu_Store: storing:
 ; moves items from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos::
+VaultMenu_Store_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
     ld hl, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2
@@ -2024,7 +2024,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos::
     ei
     ret
 
-; data read by VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos (4 bytes) (E-0347)
+; data read by VaultMenu_Store_ReadNumberEditPos (4 bytes) (E-0347)
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2::
     db $61, $01, $62, $01
 
@@ -2144,10 +2144,9 @@ VaultMenu_Store_WriteTextCounter1AndTextCounter3::
 ; called from VaultMenu_Store_ReadScreenState: calls TenTimesNumberTensPlusNumberOnes; branches on
 ; the byte at wInventory; branches on E; branches on C; calls
 ; VaultMenu_WriteSavedSpriteClipModeAndListPages; branches on wListPages; sets wTwoChoiceCursor to
-; 0; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches
-; on wSavedSpriteClipMode; sets wTwoChoiceCursor to 1; continues in
-; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; sets wTwoChoiceCursor to
-; 2; then 2 more steps (see the code) (E-0347)
+; 0; continues in VaultMenu_Store_ClearTextCounter1; branches on wSavedSpriteClipMode; sets
+; wTwoChoiceCursor to 1; continues in VaultMenu_Store_ClearTextCounter1; sets wTwoChoiceCursor to 2;
+; then 2 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
 ; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2217,7 +2216,7 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     jr c, .check_saved_sprite_clip_mode
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_ClearTextCounter1
 
 .check_saved_sprite_clip_mode:
     ld a, [wSavedSpriteClipMode]
@@ -2225,20 +2224,18 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     jr nz, .set_two_choice_cursor_to_02
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_ClearTextCounter1
 
 .set_two_choice_cursor_to_02:
     ld a, $02
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_ClearTextCounter1
 
 ; called from VaultMenu_Store_ReadScreenState: branches on the byte at wInventory; branches on C;
-; sets wTwoChoiceCursor to 0; continues in
-; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches on C; branches
-; on D; branches on E; sets wTwoChoiceCursor to 1; continues in
-; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches on the byte at
-; wItemStorage; branches on wTextCounter3; branches on the byte at wItemStorage; then 3 more steps
-; (see the code) (E-0347)
+; sets wTwoChoiceCursor to 0; continues in VaultMenu_Store_ClearTextCounter1; branches on C;
+; branches on D; branches on E; sets wTwoChoiceCursor to 1; continues in
+; VaultMenu_Store_ClearTextCounter1; branches on the byte at wItemStorage; branches on
+; wTextCounter3; branches on the byte at wItemStorage; then 3 more steps (see the code) (E-0347)
 ; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
 ; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
@@ -2262,7 +2259,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .loop
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_ClearTextCounter1
 
 .skip:
     ld hl, wItemStorage
@@ -2291,7 +2288,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .skip2
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jr VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jr VaultMenu_Store_ClearTextCounter1
 
 .skip2:
     ld hl, wItemStorage
@@ -2328,7 +2325,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
 ; VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep = 14);
 ; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1::
+VaultMenu_Store_ClearTextCounter1::
     xor a
     ld [wTextCounter1], a
     ld [wTextCounter3], a
@@ -2586,12 +2583,12 @@ VaultMenu_Store_Number24ToPackedBCD_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-; called from VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D: branches on C; sets
+; called from VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D: branches on C; sets
 ; wGrid2CursorX; sets wGrid2CursorY; sets wScreenArea; calls BGMapAddressAtScroll_Bank1D; calls
 ; DrawRectSetTextCursorLoPlus21_Bank1D; branches on wScreenState; copies the byte at wGoldLo to
 ; wDigits; calls Number24ToPackedBCD; copies hTemp2 & $0f to wCountTens; copies hTemp1 & $f0 to
 ; wCountOnes; copies hTemp1 & $0f to wItemGrid; then 15 more steps (see the code) (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D, in step 20 of
+; why: a helper of VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D, in step 20 of
 ; VaultMenu_Store (when wScreenStep = 20); VaultMenu_Store: storing: moves items from wInventory
 ; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
@@ -2700,14 +2697,14 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-; called from VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc: calls
+; called from VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc: calls
 ; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
 ; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; branches on D; branches on E; branches
 ; on H; branches on L; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
 ; wScriptStartRequest to $80; then 11 more steps (see the code) (E-0347)
-; why: a helper of VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc, in step
-; 21 of VaultMenu_Store (when wScreenStep = 21); VaultMenu_Store: storing: moves items from
-; wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
+; why: a helper of VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc, in step 21 of
+; VaultMenu_Store (when wScreenStep = 21); VaultMenu_Store: storing: moves items from wInventory
+; into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
 VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
@@ -4057,9 +4054,8 @@ DrawListEntriesCell5SpeciesSprite::
     ret
 
 ; with SRAM bank 0 enabled reads the record at wListEntries cell 5 and continues at
-; HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
-; (E-0126) (E-0344: the address in its name dropped or read as the label there; was
-; LoadListEntriesCell5RecordAndContinue)
+; HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf (E-0126) (E-0344: the address in its
+; name dropped or read as the label there; was LoadListEntriesCell5RecordAndContinue)
 LoadListEntriesCell5RecordAndContinue::
     call SetArg5ToListEntriesCell5
     ld a, $0a
@@ -4067,7 +4063,7 @@ LoadListEntriesCell5RecordAndContinue::
     xor a
     ld [rRAMB], a
     ld a, [hl]
-    jr HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
+    jr HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf
 
 ; called from HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2: sets rRAMG2 to $0a; sets
 ; rRAMB to 0 (E-0347)
@@ -4089,7 +4085,7 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
 ; HibernateMenu_ChooseRecords (when wScreenStep = 62); HibernateMenu_ChooseRecords: HibernateMenu
 ; screen state 5, by wScreenStep: paged record lists with two-choice confirmations and
 ; UnpackRecordFromBank1Slot (E-0352)
-HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $f0
@@ -4921,7 +4917,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
     ld a, d
     and $0f
     ld d, a
-    ld hl, DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data
+    ld hl, DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Data
     add hl, de
     ld e, l
     ld d, h
@@ -5416,13 +5412,13 @@ BlinkCursorBlinkB8_Bank1D::
 ; or read as the label there; was DrawCursorTileBB_Bank1D_3)
 DrawCursorTileBB_Bank1D_3::
     ld b, $bb
-    jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
+    jr SwapMonstersMenu_ChooseToView_ReadMenuChoice
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1D_3)
 DrawBlankTileC3_Bank1D_3::
     ld b, $c3
-    jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
+    jr SwapMonstersMenu_ChooseToView_ReadMenuChoice
 
 ; Takes BC; changes B (E-0347)
 ; why: part of SwapMonstersMenu_ChooseToView; SwapMonstersMenu_ChooseToView: screen state 6 (menu
@@ -5437,10 +5433,10 @@ SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap::
 ; SwapMonstersMenu_ChooseToView; SwapMonstersMenu_ChooseToView: screen state 6 (menu option 2): a
 ; record list whose choice leads to the detail screen (state $0A) or the parents screen (state $0B)
 ; (E-0352)
-SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice::
+SwapMonstersMenu_ChooseToView_ReadMenuChoice::
     ld a, [wMenuChoice]
     add a
-    ld hl, SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, SwapMonstersMenu_ChooseToView_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5458,7 +5454,7 @@ SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice::
     ret
 
 ; data read by SwapMonstersMenu (4 bytes) (E-0347)
-SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_Data::
+SwapMonstersMenu_ChooseToView_Data::
     db $28, $01, $68, $01
 
 ; up/down moves wListCursor over wListCount entries ($FD), A selects ($FF, sound $69), B cancels
@@ -5793,7 +5789,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap::
 UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     ld a, [wListCursor]
     add a
-    ld hl, UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, UpdateListCursorListCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5811,7 +5807,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     ret
 
 ; data read by UpdateListCursorListCursor (8 bytes) (E-0347)
-UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data::
+UpdateListCursorListCursor_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00
 
 ; row wListCursor runs 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both
@@ -5980,20 +5976,20 @@ UpdatePagedListCursor_WriteListCursorAux::
     ld [wListCursorAux], a
 
 ; called from UpdatePagedListCursor: changes B; continues in
-; UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult (E-0347)
+; UpdatePagedListCursor_ReadMenuInputResult (E-0347)
 ; why: a helper of UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs
 ; 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both wrapping (E-0352, E-0068)
 UpdatePagedListCursor_ReadMenuInputResultAndListCursor::
     ld b, $bb
-    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
+    jr UpdatePagedListCursor_ReadMenuInputResult
 
 ; called from UpdatePagedListCursor: changes B; continues in
-; UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult (E-0347)
+; UpdatePagedListCursor_ReadMenuInputResult (E-0347)
 ; why: a helper of UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs
 ; 0..wListLastRow and page wListPageIndex runs 0..wListPages - 1, both wrapping (E-0352, E-0068)
 UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2::
     ld b, $c3
-    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
+    jr UpdatePagedListCursor_ReadMenuInputResult
 
 ; called from UpdatePagedListCursor: takes BC; changes B (E-0347)
 ; why: a helper of UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs
@@ -6006,7 +6002,7 @@ UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2::
 ; why: part of UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2, in a helper of
 ; UpdatePagedListCursor; UpdatePagedListCursor: row wListCursor runs 0..wListLastRow and page
 ; wListPageIndex runs 0..wListPages - 1, both wrapping (E-0352, E-0068)
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult::
+UpdatePagedListCursor_ReadMenuInputResult::
     ld a, [wMenuInputResult]
     ld c, a
     add a
@@ -6406,14 +6402,14 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     ret
 
 ; called from DrawThreeMetaSpritePartsAtGridCursor: copies wArg6 to hSpriteAttrXor; continues in
-; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3 (E-0347)
+; DrawSpritePart9000At88_28_ReadArg3 (E-0347)
 ; why: a helper of DrawThreeMetaSpritePartsAtGridCursor; DrawThreeMetaSpritePartsAtGridCursor: with
 ; the pointer from GridCellAddressFromGridCursorXAndGrid2CursorX draws sub-indices 0, 4 and 2 ...
 ; (E-0352, E-0121, E-0344)
 DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
-    jr DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
+    jr DrawSpritePart9000At88_28_ReadArg3
 
 ; C = 0, then falls into the sprite part draw
 ; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc body) (E-0122)
@@ -6421,9 +6417,8 @@ DrawMetaSpritePartC0::
     ld c, $00
 
 ; called from DrawSpritePart9000At88_28: copies wArg6 to hSpriteAttrXor; branches on C; sets
-; hSpriteSubIndex; continues in
-; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3; sets hSpriteSubIndex to
-; 0; also changes A and C by register arithmetic (E-0347)
+; hSpriteSubIndex; continues in DrawSpritePart9000At88_28_ReadArg3; sets hSpriteSubIndex to 0; also
+; changes A and C by register arithmetic (E-0347)
 ; why: a helper of DrawSpritePart9000At88_28; DrawSpritePart9000At88_28: with SRAM disabled draws
 ; sprite part $0090 at ($88, $28) (DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc,
 ; C = 1) (E-0352, E-0124)
@@ -6439,7 +6434,7 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     and $01
     add c
     ldh [hSpriteSubIndex], a
-    jr DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
+    jr DrawSpritePart9000At88_28_ReadArg3
 
 .clear_sprite_sub_index:
     xor a
@@ -6453,7 +6448,7 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
 ; DrawSpritePart9000At88_28; DrawSpritePart9000At88_28: with SRAM disabled draws sprite part $0090
 ; at ($88, $28) (DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc, C = 1) (E-0352,
 ; E-0124)
-DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3::
+DrawSpritePart9000At88_28_ReadArg3::
     ld a, [wArg3]
     ldh [hSpriteTileOffset], a
     ld a, [wArg4]
@@ -7233,14 +7228,14 @@ PackRecordFieldsToBank1Slot_Skip::
     and a
     jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1
     cp $01
-    jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12
+    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg12
     cp $02
-    jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13
+    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg13
     cp $03
-    jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14
+    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg14
     cp $04
-    jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15
-    jp PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16
+    jp z, PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg15
+    jp PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg16
 
 ; data read by PackRecordFieldsToBank1Slot (6 bytes) (E-0347)
 PackRecordFieldsToBank1Slot_Data::
@@ -7287,7 +7282,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
+PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg12::
     call SRAMRecordAddressOfArg1
     ld a, $22
     add_a_to_hl
@@ -7323,7 +7318,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
+PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg13::
     call SRAMRecordAddressOfArg1
     ld a, $23
     add_a_to_hl
@@ -7360,7 +7355,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
+PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg14::
     call SRAMRecordAddressOfArg1
     ld a, $24
     add_a_to_hl
@@ -7396,7 +7391,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
+PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg15::
     call SRAMRecordAddressOfArg1
     ld a, $25
     add_a_to_hl
@@ -7433,7 +7428,7 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
 ; why: part of PackRecordFieldsToBank1Slot_Data, in part of PackRecordFieldsToBank1Slot;
 ; PackRecordFieldsToBank1Slot: packs SRAM record wArg1's family, state, mark and other fields into
 ; the compact form in SRAM bank wArg2 (wPackWork workspace) (E-0352, E-0131)
-PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16::
+PackRecordFieldsToBank1Slot_CallSRAMRecordAddressOfArg16::
     call SRAMRecordAddressOfArg1
     ld a, $26
     add_a_to_hl

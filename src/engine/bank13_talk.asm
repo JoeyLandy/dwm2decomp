@@ -4987,7 +4987,7 @@ GreatLogTalkEvents::
     dw TalkMsg04B5_DoYouKnowAllTheKinds
     dw TalkMsg04B6_IfYouEatAnyBadMeatLike
     dw GreatLogTalkEvents_TestFlagBit_UmI
-    dw GreatLogTalkEvents_SaveScreenBufferToBGMap1_WelcomeToTheStarry
+    dw GreatLogTalkEvents_WelcomeToTheStarry
     dw Talk_ImTheProfsAssistantDoYou
     dw TalkMsg08D8_HeroCheckedTheBookshelfBreeding
     dw TalkMsg08D9_HeroCheckedTheBookshelfBreeding
@@ -5085,7 +5085,7 @@ GreatLogTalkEvents::
     dw TalkMsg0225_HeroPeeredIntoTheVaseThere
     dw VaseItem_TinyMedal_Flag0130
     dw TalkMsg024A_HeroCheckedThePlushDollIt
-    dw GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1
+    dw GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1
     dw GreatLogTalkEvents_ShowHereItIstheTinyMedal
     dw TalkMsg0245_HeroPeeredIntoTheVaseIt_13
     dw Talk00FC_YouHaveToEat
@@ -8370,7 +8370,7 @@ GreatLogTalkEvents_TestFlagBit_UmI::
 ; why: step 106 of GreatLogTalkEvents (when wTalkEventGroup = 106); GreatLogTalkEvents: talk
 ; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
 ; from $0000-$02DF: Warubou, Prince ... (E-0352)
-GreatLogTalkEvents_SaveScreenBufferToBGMap1_WelcomeToTheStarry::
+GreatLogTalkEvents_WelcomeToTheStarry::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
     ld a, $15
@@ -10384,7 +10384,7 @@ TalkMsg024A_HeroCheckedThePlushDollIt::
 ; why: step 204 of GreatLogTalkEvents (when wTalkEventGroup = 204); GreatLogTalkEvents: talk
 ; category 1: jumps by wTalkEventGroup to the talk handlers of the Great Log home island (messages
 ; from $0000-$02DF: Warubou, Prince ... (E-0352)
-GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1::
+GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1::
     farcall GreatLogTalkEvents_WriteTemp1
     ldh a, [hTemp1]
     bit 7, a

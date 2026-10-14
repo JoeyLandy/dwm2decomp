@@ -1465,7 +1465,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5_Tile
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
 ; record: 20 x 18 tiles, one row per line
-SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect::
+SwapMonstersMenu_ShowPartyMemberDetails_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -1485,8 +1485,7 @@ SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; the same box layout as
-; SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect, which
+; the same box layout as SwapMonstersMenu_ShowPartyMemberDetails_TileRect, which
 ; SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E draws as 20 x 18; the four
 ; screens are contiguous, 360 bytes each; no reader of this one was found (E-0187, C1)
 TileScreen1F_1::
@@ -1573,7 +1572,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_GetListEntries
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
-SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect::
+SwapMonstersMenu_ShowMonsterDetails_TileRect::
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2a, $2b ; id 1
     db $2c, $2d, $2e, $2f, $30, $31 ; id 2
@@ -1597,7 +1596,7 @@ SwapMonstersMenu_ShowParents2_DrawRect6x6FromAtScroll41_TileRect::
     db $60, $61, $62, $63, $64, $65 ; id 4
     db $66, $67, $68, $69, $6a, $6b ; id 5
 
-LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2::
+LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -1633,7 +1632,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_4_Tile
     db $b6, $ff, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2::
+SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2::
     db $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $05, $06, $07, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 2
@@ -1682,7 +1681,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_TileRe
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
-RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_TileRect::
+RunLinkSession5Exchange_ShowRecordStats_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -1702,7 +1701,7 @@ RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-SwapMonstersMenu_ShowMonsterDetails3_DrawTileRectAtHLFromDE_Bank1E_TileRect::
+SwapMonstersMenu_ShowMonsterDetails3_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -1744,7 +1743,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_Tile
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 ; record: 8 x 7 tiles, one row per line
-SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect_2::
+SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_2::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -1773,7 +1772,7 @@ SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_Tile
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect_2::
+SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_2::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -1802,7 +1801,7 @@ SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_
     db $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2::
+SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_2::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $6e, $7e, $c3, $c3, $c3 ; id 2
@@ -1831,7 +1830,7 @@ SwapMonstersMenu_ShowParents2_UploadTilesFromData_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params_TileRect::
+RunNameEntryStateWhenNotFading_Setup_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $00, $00, $c3, $c3, $b6, $c3, $50, $51, $52, $53, $54, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $00, $00, $c3, $c3, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -1870,7 +1869,7 @@ RunNameEntryStateWhenNotFading_SetArg5_TileRect::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_TileRect::
+RunNameEntryStateWhenNotFading_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1966,11 +1965,10 @@ LoadSixteenGlyphTilesFromTable_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
 
-; first call: draws the 6 x 6 frame
-; LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2 and loads the picture of
-; species wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB attributes and draws the
-; picture (E-0128) (E-0340: the address in its name read as its RAM name; was
-; DrawRecordBufBSpeciesMonsterPictureInTwoSteps)
+; first call: draws the 6 x 6 frame LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2 and
+; loads the picture of species wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB
+; attributes and draws the picture (E-0128) (E-0340: the address in its name read as its RAM name;
+; was DrawRecordBufBSpeciesMonsterPictureInTwoSteps)
 DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld a, [wScreenSubStep]
     and a
@@ -1982,7 +1980,7 @@ DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2034,7 +2032,7 @@ DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect
+    ld de, SwapMonstersMenu_ShowMonsterDetails_TileRect
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2091,8 +2089,7 @@ ClearBGMapAndLoadFrameTiles::
     call CopyFromBankWaitVRAM
     ret
 
-; draws the tile rectangles
-; SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2 (12 x 15 at
+; draws the tile rectangles SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2 (12 x 15 at
 ; scroll + $68) and SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect
 ; (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label
 ; there; was DrawRects)
@@ -2104,7 +2101,7 @@ DrawRects::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2139,10 +2136,9 @@ DrawRects::
 
 ; draws the tile rectangles
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect (12 x 18 at
-; scroll + 8) and
-; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect_2 (8 x 7 at
-; scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label there; was
-; DrawRects_2)
+; scroll + 8) and SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_2 (8 x
+; 7 at scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label there;
+; was DrawRects_2)
 DrawRects_2::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
@@ -2170,7 +2166,7 @@ DrawRects_2::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2186,9 +2182,8 @@ DrawRects_2::
 
 ; clears 21 x 4 tiles at vTiles2 + $200 and draws the tile rectangles
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect (12 x 18) and
-; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect_2 (8 x 7)
-; (E-0127) (E-0344: the address in its name dropped or read as the label there; was
-; ClearTilesAndDrawRects)
+; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_2 (8 x 7) (E-0127)
+; (E-0344: the address in its name dropped or read as the label there; was ClearTilesAndDrawRects)
 ClearTilesAndDrawRects::
     ld hl, vTiles2 + $200
     ld a, l
@@ -2227,7 +2222,7 @@ ClearTilesAndDrawRects::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -2343,8 +2338,7 @@ ShowRecordBufBSkillNamesOrNone::
     ld [wTextWindowWidth], a
     ret
 
-; draws the tile rectangles
-; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2 and
+; draws the tile rectangles SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_2 and
 ; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect, clears
 ; tile rows and sets up the summary text window (E-0128) (E-0344: the address in its name dropped or
 ; read as the label there; was DrawSummaryFrames)
@@ -2356,7 +2350,7 @@ DrawSummaryFrames::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2
+    ld de, SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_2
     ld a, d
     ld [wArg1], a
     ld a, e

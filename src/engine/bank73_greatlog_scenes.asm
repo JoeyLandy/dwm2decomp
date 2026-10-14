@@ -35,7 +35,7 @@ GreatLogFieldEvents::
 GreatLogFieldEvents_MajorFacilities::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_MajorFacilities_StartMessageHL_B73AndStep
+    dw GreatLogFieldEvents_StartMessageHL_B73AndStep
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
     dw GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre
@@ -51,7 +51,7 @@ GreatLogFieldEvents_MajorFacilities::
 ; why: step 0 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 0);
 ; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
 ; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_MajorFacilities_StartMessageHL_B73AndStep::
+GreatLogFieldEvents_StartMessageHL_B73AndStep::
     ld a, [wPendingFieldEvent]
     and $0f
     sub $0c
@@ -79,7 +79,7 @@ GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre::
     and $0f
     sub $0c
     add a
-    ld hl, GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre_Data
+    ld hl, GreatLogFieldEvents_MajorFacilities_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -103,7 +103,7 @@ GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre::
     ret
 
 ; data read by GreatLogFieldEvents (8 bytes) (E-0347)
-GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre_Data::
+GreatLogFieldEvents_MajorFacilities_Data::
     db $93, $01, $96, $01, $99, $01, $9c, $01
 
 ; scene $0B: a chest message, 'Kameha Wahahah! No going ...', a vase message (E-0293)
@@ -119,7 +119,7 @@ GreatLogFieldEvents_KamehaNoGoing::
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
     dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
-    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
     dw ScriptStepBlinkSpritesThenEnd
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe
@@ -211,9 +211,9 @@ GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe::
 GreatLogFieldEvents_GoHelpYourMotherScene::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_ShowGoHelpYourMother
+    dw GreatLogFieldEvents_ShowGoHelpYourMother
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters
+    dw GreatLogFieldEvents_ShowIfSomeMonsterMasters
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1
     dw GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0
@@ -542,7 +542,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
     xor a
     ld [wMenuCursor], a
     call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1_Data
+    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_Data
     ld hl, wScreenTileBuffer
     ld b, $03
 
@@ -603,7 +603,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
     ret
 
 ; data read by GreatLogFieldEvents (15 bytes) (E-0347)
-GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1_Data::
+GreatLogFieldEvents_GoHelpYourMotherScene_Data::
     db $b0, $b1, $b1, $b1, $b2, $b6, $a4, $a5, $a6, $b7, $b3, $b4, $b4, $b4, $b5
 
 ; step 2 of GreatLogFieldEvents_GoHelpYourMotherScene: branches on wTextYesNoResult; shows 'If some
@@ -612,7 +612,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1_Data::
 ; why: step 2 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 2);
 ; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
 ; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters::
+GreatLogFieldEvents_ShowIfSomeMonsterMasters::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
@@ -640,7 +640,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_ShowIfSomeMonsterMasters::
 ; why: step 0 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 0);
 ; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
 ; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_ShowGoHelpYourMother::
+GreatLogFieldEvents_ShowGoHelpYourMother::
     ld hl, wScriptStep
     inc [hl]
     ld hl, $002e ; '*: Go help your mother now.'
@@ -1020,7 +1020,7 @@ GreatLogFieldEvents_TaraWellBeOK::
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf
     dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_TaraWellBeOK_ToScriptStepFlashScreenNegative
+    dw GreatLogFieldEvents_ToScriptStepFlashScreenNegative
     dw GreatLogFieldEvents_TaraWellBeOK_Msg0052_OhMyTheWell
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
@@ -1080,7 +1080,7 @@ GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
 ; why: step 4 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 4);
 ; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
 ; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_TaraWellBeOK_ToScriptStepFlashScreenNegative::
+GreatLogFieldEvents_ToScriptStepFlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
@@ -1368,11 +1368,11 @@ GreatLogFieldEvents_WarubouWhatIsThis::
     dw GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser_HeroCheckedTheDresser
+    dw GreatLogFieldEvents_WarubouWhatIsThis_HeroCheckedTheDresser
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_2
+    dw GreatLogFieldEvents_WarubouWhatIsThis_2
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
@@ -1418,7 +1418,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis::
 ; why: step 5 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 5);
 ; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
 ; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser_HeroCheckedTheDresser::
+GreatLogFieldEvents_WarubouWhatIsThis_HeroCheckedTheDresser::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -1497,7 +1497,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
 ; why: step 9 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 9);
 ; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
 ; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString_2::
+GreatLogFieldEvents_WarubouWhatIsThis_2::
     ld hl, wScriptStep
     inc [hl]
     ld a, $01
@@ -1681,7 +1681,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wScriptParam0]
-    ld de, GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord_Data
+    ld de, GreatLogFieldEvents_WarubouWhatIsThis_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1737,7 +1737,7 @@ GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
     ret
 
 ; data read by GreatLogFieldEvents (6 bytes) (E-0347)
-GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord_Data::
+GreatLogFieldEvents_WarubouWhatIsThis_Data::
     db $5d, $61, $63, $65, $67, $69
 
 ; scene 7: a vase message, "Warubou It's a dead ...", 'This hay is pretty ...' (E-0293)
@@ -1969,7 +1969,7 @@ GreatLogFieldEvents_KingAskedUs::
     dw GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs_GreatLog
+    dw GreatLogFieldEvents_KingAskedUs_GreatLog
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
@@ -2014,7 +2014,7 @@ GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure::
 ; why: step 5 of GreatLogFieldEvents_KingAskedUs (when wScriptStep = 5);
 ; GreatLogFieldEvents_KingAskedUs: scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
 ; (E-0352)
-GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs_GreatLog::
+GreatLogFieldEvents_KingAskedUs_GreatLog::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -2192,7 +2192,7 @@ GreatLogFieldEvents_YouFolksRunA::
     dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
     dw GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn
-    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -2340,7 +2340,7 @@ GreatLogFieldEvents_PapaCalling::
     dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
     dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
     dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
-    dw GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
     dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -2423,7 +2423,7 @@ GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73::
 ; why: step 9 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 9);
 ; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
 ; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_WriteScriptParam0AndFieldDrawFlagsEtc::
+GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc::
     ld a, [wScriptParam0]
     or a
     jr nz, .call_move_incapacitated_party_members_back
@@ -6482,11 +6482,11 @@ SceneMasterThanks::
     dw SceneMasterThanks_FindPartyIndexOfSpeciesTemp0
     dw SceneMasterThanks_WriteScriptStep
     dw SceneMasterThanks_ReadMessageIndexAndMessageGroup
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_3
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_2
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_3
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_2
     dw SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc
     dw SceneMasterThanks_WriteScriptStep_2
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_3
+    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_3
     dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep
     dw SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags
     dw SceneMasterThanks_LoadListedRecordNameTilesForTemp0
@@ -6684,7 +6684,7 @@ SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc::
 ; why: step 4 of SceneMasterThanks (when wScriptStep = 4); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_2::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup_2::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6711,7 +6711,7 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_2::
 ; why: step 3 of SceneMasterThanks (when wScriptStep = 3); SceneMasterThanks: implements script
 ; command type 3A (SCRIPT_SCENE_MASTER_THANKS): a cutscene step named after the scene its only
 ; script shows: 'R Really? ... (E-0352, E-0038, E-0245)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep_3::
+SceneMasterThanks_ReadMessageIndexAndMessageGroup_3::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -7198,7 +7198,7 @@ SceneCrate::
     dw SceneCrate_ScriptStartFadeAndAdvanceStep
     dw SceneCrate_WriteScriptParam0AndSpriteSlotsEtc
     dw SceneCrate_UpdatePlayerMovement
-    dw SceneCrate_WriteScriptParam0AndSpriteSlotsEtc_SetScriptParam0
+    dw SceneCrate_SetScriptParam0
     dw SceneCrate_WritePlayerYAndFollowerRecords
     dw SceneCrate_WriteFollowerRecords
     dw SceneCrate_WriteFollowerRecords_AdvanceScriptStep_2
@@ -7287,7 +7287,7 @@ SceneCrate_WritePlayerYAndFollowerRecords::
 ; why: step 3 of SceneCrate (when wScriptStep = 3); SceneCrate: implements script command type 33
 ; (SCRIPT_SCENE_CRATE): a cutscene step named after the scene its only script shows: '0 checked the
 ; ... (E-0352, E-0038, E-0245)
-SceneCrate_WriteScriptParam0AndSpriteSlotsEtc_SetScriptParam0::
+SceneCrate_SetScriptParam0::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -8387,7 +8387,7 @@ SceneWarubouFood2::
     dw SceneWarubouFood2_ScriptApplyStepDeltaAtDE_Bank73
     dw SceneWarubouFood2_CycleSpriteFloatYDown
     dw SceneWarubouFood2_RunMessageBoxFar_Bank73
-    dw SceneWarubouFood2_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2
+    dw SceneWarubouFood2_CycleSpriteFloatYDown_2
     dw SceneWarubouFood2_RunMessageBoxFar_Bank73
     dw SceneWarubouFood2_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B
     dw SceneWarubouFood2_ShowWarubouWaheyItsThe
@@ -8618,7 +8618,7 @@ SceneWarubouFood2_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
 ; why: step 19 of SceneWarubouFood2 (when wScriptStep = 19); SceneWarubouFood2: implements script
 ; command type 16 (SCRIPT_SCENE_WARUBOU_FOOD_2): a cutscene step named after the scene its only
 ; script shows: the same ... (E-0352, E-0038, E-0245)
-SceneWarubouFood2_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
+SceneWarubouFood2_CycleSpriteFloatYDown_2::
     farcall CycleSpriteFloatYDown
     xor a
     ldh [hTemp0], a
@@ -9568,9 +9568,9 @@ SceneLearnQuick::
     jumptable
     dw SceneLearnQuick_SetMessageIndex
     dw SceneLearnQuick_StepScriptParam0Counter_Bank73
-    dw SceneLearnQuick_StepScriptParam0Counter_Bank73_SceneLearnQuick_WriteStepTargetAndStepPtrLoEtc
+    dw SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteStepTargetAndStepPtrLoEtc
     dw SceneLearnQuick_StepObjectTowardCoord
-    dw SceneLearnQuick_StepObjectTowardCoord_SceneLearnQuick_WriteScriptParam0AndSpriteSlots
+    dw SceneLearnQuick_StepObjectTowardCoord_WriteScriptParam0AndSpriteSlots
     dw SceneLearnQuick_WriteScriptStartRequest
 
 ; step 5 of SceneLearnQuick: calls SceneLearnQuick_WriteScriptParam0AndSpriteSlots; returns unless
@@ -9595,7 +9595,7 @@ SceneLearnQuick_WriteScriptStartRequest::
 ; why: step 4 of SceneLearnQuick (when wScriptStep = 4); SceneLearnQuick: implements script command
 ; type 12 (SCRIPT_SCENE_LEARN_QUICK): a cutscene step named after the scene its only script shows:
 ; 'Wow, you kids ... (E-0352, E-0038, E-0245)
-SceneLearnQuick_StepObjectTowardCoord_SceneLearnQuick_WriteScriptParam0AndSpriteSlots::
+SceneLearnQuick_StepObjectTowardCoord_WriteScriptParam0AndSpriteSlots::
     call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
     ld a, [wObject1 + OBJ_Y]
     cp $30
@@ -9699,7 +9699,7 @@ SceneLearnQuick_StepObjectTowardCoord::
 ; why: step 2 of SceneLearnQuick (when wScriptStep = 2); SceneLearnQuick: implements script command
 ; type 12 (SCRIPT_SCENE_LEARN_QUICK): a cutscene step named after the scene its only script shows:
 ; 'Wow, you kids ... (E-0352, E-0038, E-0245)
-SceneLearnQuick_StepScriptParam0Counter_Bank73_SceneLearnQuick_WriteStepTargetAndStepPtrLoEtc::
+SceneLearnQuick_StepScriptParam0Counter_Bank73_WriteStepTargetAndStepPtrLoEtc::
     call SceneLearnQuick_WriteStepTargetAndStepPtrLoEtc
     call SceneLearnQuick_WriteSpriteSlots
     ld b, $a0

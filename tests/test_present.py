@@ -77,7 +77,7 @@ def _code(text: str, names=None, bank=None) -> list[str]:
 class PresentedTreeTest(unittest.TestCase):
     def test_src_is_the_presented_listing(self):
         texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
-        names = present.Names(texts)
+        names = present.Names(texts, LISTING)
         titles = present.bank_titles()
         stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
                  != present.header(n, titles) + present.present(t, names, int(n[4:6], 16))]

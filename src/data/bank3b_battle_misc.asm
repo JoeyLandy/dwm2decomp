@@ -483,13 +483,13 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ShowActionBattleText
     dw RunBattleActions_UseItem_TargetOnLocalSide_Bank3B
     dw RunBattleActions_UseItem_ShowHeroIsAHunk
-    dw RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep
-    dw RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
+    dw RunBattleActions_DispatchActionEffectTable_Bank3BAndStep
+    dw RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
     dw RunBattleActions_UseItem_ShowBattleText
     dw RunBattleActions_UseItem_Return
     dw RunBattleActions_UseItem_AddDoubleAToHL_Bank3B
     dw RunBattleActions_UseItem_ToRunBattleSubStep2_2
-    dw RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc
+    dw RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc
     dw RunBattleActions_UseItem_LoadItemRecord
     dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
@@ -717,7 +717,7 @@ RunBattleActions_UseItem_ShowHeroIsAHunk::
 ; why: step 4 of RunBattleActions_UseItem (when wBattleResolveStep = 4); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
-RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
+RunBattleActions_DispatchActionEffectTable_Bank3BAndStep::
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
@@ -732,7 +732,7 @@ RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
 ; why: step 5 of RunBattleActions_UseItem (when wBattleResolveStep = 5); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
-RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
+RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgFlags]
@@ -944,7 +944,7 @@ RunBattleActions_UseItem_ToRunBattleSubStep2_2::
 ; why: step 10 of RunBattleActions_UseItem (when wBattleResolveStep = 10); RunBattleActions_UseItem:
 ; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
 ; nothing happened!', LoadItemRecord, ... (E-0352)
-RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
+RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleItemId]
@@ -1818,12 +1818,12 @@ RollChanceForLevelA_Bank3B::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom
+    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3
+    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom3
 
 .done:
     scf
@@ -1840,7 +1840,7 @@ RollChanceByLevel_100_100_75_0_Bank3B::
 
 .skip:
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2
+    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2
 
 .done:
     scf
@@ -1848,8 +1848,8 @@ RollChanceByLevel_100_100_75_0_Bank3B::
     ret
 
 ; called from RollChanceByHLBits6And7_Bank3B: takes A; changes A; continues in
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2; continues in
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4 (E-0347)
+; RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2; continues in
+; RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4 (E-0347)
 ; why: a helper of RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
 ; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
@@ -1861,12 +1861,12 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2
+    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4
+    jp RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4
 
 .done:
     scf
@@ -1877,7 +1877,7 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
 ; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
 ; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
 ; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
-RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom::
+RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
@@ -1887,7 +1887,7 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom::
 ; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
 ; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
 ; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
-RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2::
+RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
@@ -1897,7 +1897,7 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2::
 ; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
 ; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
 ; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
-RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3::
+RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom3::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
@@ -1907,7 +1907,7 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3::
 ; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
 ; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
 ; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
-RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4::
+RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $66

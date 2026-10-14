@@ -1668,7 +1668,7 @@ RunBattleActions_StatusChecks_StartAction::
     dw RunBattleActions_StatusChecks_StartAction_ShowBattleTextCategory0
     dw RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect
     dw RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled
-    dw RunBattleActions_StatusChecks_StartAction_SetBattleResolveStep
+    dw RunBattleActions_StatusChecks_SetBattleResolveStep
     dw RunBattleActions_StatusChecks_StartAction_SetBattleSubPhase
 
 ; step 0 of RunBattleActions_StatusChecks_StartAction: calls ResetEffectStateForAction; branches on
@@ -1854,8 +1854,8 @@ RunBattleActions_StatusChecks_StartAction_RollStatusTickEffect::
     ret
 
 ; step 3 of RunBattleActions_StatusChecks_StartAction: advances wBattleSubStep; may continue in
-; RunBattleActions_StatusChecks_StartAction_SetBattleResolveStep; calls
-; PickRandomActionWhenUncontrolled; calls ShowBattleTextCategory0 (E-0347)
+; RunBattleActions_StatusChecks_SetBattleResolveStep; calls PickRandomActionWhenUncontrolled; calls
+; ShowBattleTextCategory0 (E-0347)
 ; why: step 3 of RunBattleActions_StatusChecks_StartAction (when wBattleSubStep = 3);
 ; RunBattleActions_StatusChecks_StartAction: by its step: resets the effect state, shows a
 ; category-0 battle text, rolls the status tick effect and picks a random action when the actor ...
@@ -1867,7 +1867,7 @@ RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled::
     ld hl, wBattleStatus
     call AddAx9ToHL
     bit BSTAT0_CONFUSED, [hl]
-    jr z, RunBattleActions_StatusChecks_StartAction_SetBattleResolveStep
+    jr z, RunBattleActions_StatusChecks_SetBattleResolveStep
     call PickRandomActionWhenUncontrolled
     ld d, $14
     farcall ShowBattleTextCategory0
@@ -1879,7 +1879,7 @@ RunBattleActions_StatusChecks_StartAction_PickRandomActionWhenUncontrolled::
 ; RunBattleActions_StatusChecks_StartAction: by its step: resets the effect state, shows a
 ; category-0 battle text, rolls the status tick effect and picks a random action when the actor ...
 ; (E-0352)
-RunBattleActions_StatusChecks_StartAction_SetBattleResolveStep::
+RunBattleActions_StatusChecks_SetBattleResolveStep::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -2252,9 +2252,8 @@ ResetEffectStateForAction::
 
 ; called from ShowActorStatusRecoveryMessage: branches on wRandomLo; branches on c; calls
 ; SetBit2OfLevelUpGainsIndexed_Bank32; copies wBattleTarget to wLoadSlot; copies wBattleActor to
-; wBattleTarget; may continue in
-; RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText; also changes HL, BC,
-; A and D by register arithmetic (E-0347)
+; wBattleTarget; may continue in RunBattleActions_StatusChecks_CheckAction_CallShowBattleText; also
+; changes HL, BC, A and D by register arithmetic (E-0347)
 ; why: a helper of ShowActorStatusRecoveryMessage; ShowActorStatusRecoveryMessage: shows battle text
 ; $16-$1C for the first set status bit of the actor (status 6/7, byte 3 bits 0-5) and clears status
 ; 3 bits 0-5 (E-0352, E-0127)
@@ -2328,7 +2327,7 @@ ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget::
     jr nz, .next
     ld a, [hl]
     and $0c
-    jr z, RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText
+    jr z, RunBattleActions_StatusChecks_CheckAction_CallShowBattleText
     ld a, [hl]
     and $f3
     ld [hl], a
@@ -2346,21 +2345,21 @@ ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget::
     add a
 
 ; step 9 of RunBattleActions_StatusChecks_CheckAction: takes HL and A; changes HL and A; continues
-; in RunBattleActions_StatusChecks_CheckAction_ShowBattleText_ReadLoadSlot (E-0347)
+; in RunBattleActions_StatusChecks_CheckAction_ReadLoadSlot (E-0347)
 ; why: step 9 of RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 9);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
 RunBattleActions_StatusChecks_CheckAction_ShowBattleText::
     add_a_to_hl
     ld [hl], $bf
-    jr RunBattleActions_StatusChecks_CheckAction_ShowBattleText_ReadLoadSlot
+    jr RunBattleActions_StatusChecks_CheckAction_ReadLoadSlot
 
 ; Shows battle text '0 woke up!' (E-0347)
 ; why: part of RunBattleActions_StatusChecks_CheckAction_ShowBattleText, in step 9 of
 ; RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 9);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
-RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText::
+RunBattleActions_StatusChecks_CheckAction_CallShowBattleText::
     ld d, $82 ; battle text '0 woke up!'
     farcall ShowBattleText
 
@@ -2369,7 +2368,7 @@ RunBattleActions_StatusChecks_CheckAction_ShowBattleText_CallShowBattleText::
 ; RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 9);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
-RunBattleActions_StatusChecks_CheckAction_ShowBattleText_ReadLoadSlot::
+RunBattleActions_StatusChecks_CheckAction_ReadLoadSlot::
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     scf
@@ -2393,7 +2392,7 @@ RunBattleActions_StatusChecks_CheckAction::
     jumptable
     dw RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3
     dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA
-    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_2
+    dw RunBattleActions_StatusChecks_CheckAction_2
     dw RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches
     dw RunBattleActions_StatusChecks_CheckAction_CheckSkillMPCost
 
@@ -2526,8 +2525,8 @@ RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3::
 ; step 1 of RunBattleActions_StatusChecks_CheckAction: branches on wLinkMode; branches on
 ; wBattleActor; branches on wActionQueuePos; branches on the byte at wActionQueue; calls
 ; ReadByteAtHLPlusA; branches on wBattleActionId; branches on the byte at
-; RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data; sets wBattleActionChoice to 0;
-; sets wBattleActionChoice to $ff; calls LoadActorChosenActionRecord; advances wBattleSubStep; also
+; RunBattleActions_StatusChecks_CheckAction_Data; sets wBattleActionChoice to 0; sets
+; wBattleActionChoice to $ff; calls LoadActorChosenActionRecord; advances wBattleSubStep; also
 ; changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 1 of RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 1);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
@@ -2581,7 +2580,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA::
     ld a, [wBattleActionId]
     ld c, a
     push hl
-    ld hl, RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data
+    ld hl, RunBattleActions_StatusChecks_CheckAction_Data
 
 .skip2:
     ld a, [hli]
@@ -2612,7 +2611,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA::
     ret
 
 ; data read by RunBattleActions (63 bytes) (E-0347)
-RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
+RunBattleActions_StatusChecks_CheckAction_Data::
     db $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13
     db $14, $15, $19, $1a, $26, $28, $2a, $2c, $2e, $2f, $30, $33, $3d, $3e, $3f, $40
     db $41, $42, $43, $44, $45, $46, $47, $49, $4a, $4b, $4d, $4e, $4f, $64, $65, $66
@@ -2625,7 +2624,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
 ; why: step 2 of RunBattleActions_StatusChecks_CheckAction (when wBattleSubStep = 2);
 ; RunBattleActions_StatusChecks_CheckAction: by its step: whether the actor's action is $D0-$E3,
 ; whether the queued action matches, and the skill's MP cost (E-0352)
-RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_2::
+RunBattleActions_StatusChecks_CheckAction_2::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a
@@ -3393,8 +3392,8 @@ RunBattleActions_StatusChecks_ShatterChecks::
     ld a, [wBattleSubStep]
     jumptable
     dw RunBattleActions_StatusChecks_ShatterChecks_ReadByteAtHLPlusA
-    dw RunBattleActions_StatusChecks_ShatterChecks_ShowGWasShattered
-    dw RunBattleActions_StatusChecks_ShatterChecks_ShowSealPrayWasBroken
+    dw RunBattleActions_StatusChecks_ShowGWasShattered
+    dw RunBattleActions_StatusChecks_ShowSealPrayWasBroken
     dw RunBattleActions_StatusChecks_ShatterChecks_CheckActionD0ToE3OrSpecial
 
 ; step 0 of RunBattleActions_StatusChecks_ShatterChecks: calls ReadByteAtHLPlusA; sets
@@ -3481,7 +3480,7 @@ RunBattleActions_StatusChecks_ShatterChecks_ReadByteAtHLPlusA::
 ; why: step 1 of RunBattleActions_StatusChecks_ShatterChecks (when wBattleSubStep = 1);
 ; RunBattleActions_StatusChecks_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!', then CheckActionD0ToE3OrSpecial (E-0352)
-RunBattleActions_StatusChecks_ShatterChecks_ShowGWasShattered::
+RunBattleActions_StatusChecks_ShowGWasShattered::
     ld hl, wBattleSubStep
     inc [hl]
     ld d, $b0 ; battle text 'G was shattered!'
@@ -3494,7 +3493,7 @@ RunBattleActions_StatusChecks_ShatterChecks_ShowGWasShattered::
 ; why: step 2 of RunBattleActions_StatusChecks_ShatterChecks (when wBattleSubStep = 2);
 ; RunBattleActions_StatusChecks_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!', then CheckActionD0ToE3OrSpecial (E-0352)
-RunBattleActions_StatusChecks_ShatterChecks_ShowSealPrayWasBroken::
+RunBattleActions_StatusChecks_ShowSealPrayWasBroken::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wSealPrayState]
@@ -3642,7 +3641,7 @@ RunBattleActions_StatusChecks_CheckActionD0ToE3OrSpecial::
 RunBattleActions_StatusChecks_DroppedDead::
     ld a, [wBattleSubStep]
     jumptable
-    dw RunBattleActions_StatusChecks_DroppedDead_ShowHeroDroppedDead
+    dw RunBattleActions_StatusChecks_ShowHeroDroppedDead
     dw RunBattleActions_StatusChecks_DroppedDead_LoadBattleActor
 
 ; step 0 of RunBattleActions_StatusChecks_DroppedDead: returns unless wTextFlags is 0; copies
@@ -3651,7 +3650,7 @@ RunBattleActions_StatusChecks_DroppedDead::
 ; why: step 0 of RunBattleActions_StatusChecks_DroppedDead (when wBattleSubStep = 0);
 ; RunBattleActions_StatusChecks_DroppedDead: by its step: '0 dropped dead!', then the next actor
 ; (E-0352)
-RunBattleActions_StatusChecks_DroppedDead_ShowHeroDroppedDead::
+RunBattleActions_StatusChecks_ShowHeroDroppedDead::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -3754,7 +3753,7 @@ LoadActorChosenActionRecord::
 RunBattleStep4_ResolveSkill::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleStep4_ResolveSkill_WriteFollowUpActionAndMultiHitCountEtc
+    dw RunBattleStep4_WriteFollowUpActionAndMultiHitCountEtc
     dw RunBattleStep4_ResolveSkill_CheckSkillMPCost
     dw RunBattleStep4_ResolveSkill_ShowActionBattleTextFromActionBattleTextTable
     dw RunBattleStep4_ResolveSkill_SelectEffectByEffectFlags
@@ -3770,7 +3769,7 @@ RunBattleStep4_ResolveSkill::
 ; why: step 0 of RunBattleStep4_ResolveSkill (when wBattleResolveStep = 0);
 ; RunBattleStep4_ResolveSkill: by wBattleResolveStep: checks the skill's MP cost (CheckSkillMPCost),
 ; shows its battle text, selects the effect by its flags and checks the ... (E-0352)
-RunBattleStep4_ResolveSkill_WriteFollowUpActionAndMultiHitCountEtc::
+RunBattleStep4_WriteFollowUpActionAndMultiHitCountEtc::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wSavedActorTarget
@@ -3917,8 +3916,8 @@ RunBattleStep4_ResolveSkill_ShatterChecks::
     jumptable
     dw RunBattleStep4_ResolveSkill_ShatterChecks_ReadByteAtHLPlusA
     dw RunBattleStep4_ResolveSkill_ShatterChecks_ShowGWasShattered
-    dw RunBattleStep4_ResolveSkill_ShatterChecks_ShowSealPrayWasBroken
-    dw RunBattleStep4_ResolveSkill_ShatterChecks_SetBattleResolveStep
+    dw RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken
+    dw RunBattleStep4_ResolveSkill_SetBattleResolveStep
 
 ; step 0 of RunBattleStep4_ResolveSkill_ShatterChecks: calls ReadByteAtHLPlusA; sets
 ; wBattleActionId; copies the byte at wBattleActionChoice to wBattleTarget; branches on
@@ -4015,7 +4014,7 @@ RunBattleStep4_ResolveSkill_ShatterChecks_ShowGWasShattered::
 ; why: step 2 of RunBattleStep4_ResolveSkill_ShatterChecks (when wBattleSubStep = 2);
 ; RunBattleStep4_ResolveSkill_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!' (E-0352)
-RunBattleStep4_ResolveSkill_ShatterChecks_ShowSealPrayWasBroken::
+RunBattleStep4_ResolveSkill_ShowSealPrayWasBroken::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wSealPrayState]
@@ -4032,7 +4031,7 @@ RunBattleStep4_ResolveSkill_ShatterChecks_ShowSealPrayWasBroken::
 ; why: step 3 of RunBattleStep4_ResolveSkill_ShatterChecks (when wBattleSubStep = 3);
 ; RunBattleStep4_ResolveSkill_ShatterChecks: by its step: 'G was shattered!' and 'SealPray was
 ; broken!' (E-0352)
-RunBattleStep4_ResolveSkill_ShatterChecks_SetBattleResolveStep::
+RunBattleStep4_ResolveSkill_SetBattleResolveStep::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a
@@ -5415,7 +5414,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget::
     ld a, [wEffectSubStep]
     jumptable
     dw ResolveStep0EEffect_Brutalize_DefeatTarget_DefeatTarget
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_ToBlankTargetMonsterPictureAndStep
+    dw ResolveStep0EEffect_ToBlankTargetMonsterPictureAndStep
     dw ResolveStep0EEffect_Brutalize_DefeatTarget_SetBit2OfLevelUpGainsIndexed_Bank32
 
 ; step 0 of ResolveStep0EEffect_Brutalize_DefeatTarget: advances wEffectSubStep; sets wSlotMarks to
@@ -5438,7 +5437,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_DefeatTarget::
 ; why: step 1 of ResolveStep0EEffect_Brutalize_DefeatTarget (when wEffectSubStep = 1);
 ; ResolveStep0EEffect_Brutalize_DefeatTarget: defeats the target, blanks its picture and sets bit 2
 ; of its level-up gains entry ('0 was brutalized!') (E-0352)
-ResolveStep0EEffect_Brutalize_DefeatTarget_ToBlankTargetMonsterPictureAndStep::
+ResolveStep0EEffect_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
@@ -5503,13 +5502,13 @@ ResolveStep0EEffect_ActorFormationSlotToTemp0::
     ld a, [wBattleSubStep2]
     jumptable
     dw ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_CallSetBit0OfLevelUpGainsIndexed_Bank32
+    dw ResolveStep0EEffect_CallSetBit0OfLevelUpGainsIndexed_Bank32
     dw ResolveStep0EEffect_Brutalize_DefeatTarget_RunEffectSubStep_2
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId
+    dw ResolveStep0EEffect_Brutalize_CheckBattleActionId
 
 ; step 0 of ResolveStep0EEffect_Brutalize_DefeatTarget: advances wBattleSubStep2; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId (E-0347)
+; ResolveStep0EEffect_Brutalize_CheckBattleActionId (E-0347)
 ; why: step 0 of ResolveStep0EEffect_Brutalize_DefeatTarget (when wEffectSubStep = 0);
 ; ResolveStep0EEffect_Brutalize_DefeatTarget: defeats the target, blanks its picture and sets bit 2
 ; of its level-up gains entry ('0 was brutalized!') (E-0352)
@@ -5518,7 +5517,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
     inc [hl]
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId
+    jp c, ResolveStep0EEffect_Brutalize_CheckBattleActionId
     ret
 
 ; step 1 of ResolveStep0EEffect_Brutalize_DefeatTarget: advances wBattleSubStep2; calls
@@ -5530,7 +5529,7 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
 ; why: step 1 of ResolveStep0EEffect_Brutalize_DefeatTarget (when wEffectSubStep = 1);
 ; ResolveStep0EEffect_Brutalize_DefeatTarget: defeats the target, blanks its picture and sets bit 2
 ; of its level-up gains entry ('0 was brutalized!') (E-0352)
-ResolveStep0EEffect_Brutalize_DefeatTarget_CallSetBit0OfLevelUpGainsIndexed_Bank32::
+ResolveStep0EEffect_CallSetBit0OfLevelUpGainsIndexed_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
     ld hl, wBattleSubStep2
@@ -5708,7 +5707,7 @@ RunEffectSubStep_2_ShowHeroDroppedDead::
 ; why: step 3 of ResolveStep0EEffect_Brutalize_DefeatTarget (when wEffectSubStep = 3);
 ; ResolveStep0EEffect_Brutalize_DefeatTarget: defeats the target, blanks its picture and sets bit 2
 ; of its level-up gains entry ('0 was brutalized!') (E-0352)
-ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId::
+ResolveStep0EEffect_Brutalize_CheckBattleActionId::
     ld a, [wBattleActionId]
     cp ACTION_D6
     jr nz, .set_battle_sub_phase_to_06
@@ -5752,7 +5751,7 @@ ResolveStep0EEffect_DamageAndSelectEffect::
     dw ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent
     dw ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32
     dw ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_3
-    dw ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1
+    dw ResolveStep0EEffect_ToSetBattleSubStep1
 
 ; step 0 of ResolveStep0EEffect_DamageAndSelectEffect: advances wBattleSubStep2; calls
 ; SkipTurnIfActorAbsent; may return early; sets wEffectFlags to $20; calls
@@ -5961,7 +5960,7 @@ RunEffectSubStep_3_SetBit2OfLevelUpGainsIndexed_Bank32::
 ; why: step 3 of ResolveStep0EEffect_DamageAndSelectEffect (when wBattleSubStep2 = 3);
 ; ResolveStep0EEffect_DamageAndSelectEffect: skips an absent actor, computes damage on the target
 ; and selects the effect by the effect flags (SelectEffectByEffectFlags, ... (E-0352)
-ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1::
+ResolveStep0EEffect_ToSetBattleSubStep1::
     call SetBattleSubStep1
     ret
 

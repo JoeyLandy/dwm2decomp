@@ -3460,7 +3460,7 @@ PauseMenu_Skills_UseFieldSkill_WaitItemId::
     dw PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA
     dw PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount
     dw PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount
-    dw PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount_2
+    dw PauseMenu_Skills_UseFieldSkill_2
     dw PauseMenu_Skills_UseFieldSkill_SetItemMessage
     dw PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord
     dw PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2
@@ -3644,7 +3644,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
 ; (when wTemp1 = 7); PauseMenu_Skills_UseFieldSkill: by wTemp1: shows the skill's strings, applies
 ; it to the SRAM record and leaves the pause menu for the field ('Hero returned with ...', ...
 ; (E-0352)
-PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount_2::
+PauseMenu_Skills_UseFieldSkill_2::
     ld a, $50
     ld [wItemEffectAmount], a
     call HealRecordMPByItemEffectAmount
@@ -5269,7 +5269,7 @@ BattleEnd_AskToJoin::
     dw BattleEnd_AskToJoin_ShowChooseAnEggTo
     dw BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage
     dw BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12
-    dw BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep_2
+    dw BattleEnd_AskToJoin_MovePagedListCursor_2
     dw BattleEnd_AskToJoin_ClampRecordListPageCursor4
     dw BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12
     dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2
@@ -5740,9 +5740,8 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor5::
     ret
 
 ; step 17 of BattleEnd_AskToJoin: calls CopyRectRecordToScreenBufferAndPlaySound6C; copies
-; wListCursor to wMenuState; sets
-; BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data to $bc; copies wListPageIndex
-; to wSubMenuCursor2; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; calls
+; wListCursor to wMenuState; sets BattleEnd_AskToJoin_Data to $bc; copies wListPageIndex to
+; wSubMenuCursor2; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; calls
 ; ListPartyAndStoredRecordsForPage; calls DrawRecordListPageWithNumbers; calls
 ; CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString12; sets wListPageSize to 2; sets
 ; wListPage to 0; then 3 more steps (see the code) (E-0347)
@@ -5753,7 +5752,7 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
     farcall CopyRectRecordToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
     ld [wMenuState], a
-    ld hl, BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data
+    ld hl, BattleEnd_AskToJoin_Data
     add a
     add_a_to_hl
     deref_hl
@@ -6141,7 +6140,7 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
 ; why: step 25 of BattleEnd_AskToJoin (when wBattleSubStep = 25); BattleEnd_AskToJoin: by
 ; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
 ; join you?' (category 5 string $0B), ... (E-0352)
-BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep_2::
+BattleEnd_AskToJoin_MovePagedListCursor_2::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
     call MovePagedListCursor
@@ -6716,7 +6715,7 @@ DrawCursorTileAtTableEntryDE::
     ret
 
 ; data read by BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C (10 bytes) (E-0347)
-BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data::
+BattleEnd_AskToJoin_Data::
     db $b9, $c1, $f9, $c1, $39, $c2, $79, $c2, $b9, $c2
 
 BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data::
@@ -7554,17 +7553,17 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_SetRecordState2ForB
     dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16
     dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize_2
+    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2
     dw BattleEnd_AddJoinedMonster_MovePagedListCursor_2
-    dw BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetMenuSelectedMember
-    dw BattleEnd_AddJoinedMonster_MovePagedListCursor_AdvanceBattleSubStep
+    dw BattleEnd_AddJoinedMonster_SetMenuSelectedMember
+    dw BattleEnd_AddJoinedMonster_AdvanceBattleSubStep
     dw BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5
     dw BattleEnd_AddJoinedMonster_SwapMonstersMenu
     dw BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
     dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero
-    dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_ChooseTheMonsterTo
+    dw BattleEnd_AddJoinedMonster_ChooseTheMonsterTo
     dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
-    dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_WillYouTakeHero
+    dw BattleEnd_AddJoinedMonster_WillYouTakeHero
 
 ; step 0 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
 ; CopyRect32StrideToVRAM_Bank16; calls SRAMRecordAddress; sets rRAMG to $0a; sets rRAMB to 0; sets
@@ -7819,7 +7818,7 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
 ; why: step 9 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 9); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize_2::
+BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7903,7 +7902,7 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
 ; why: step 11 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 11); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
-BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetMenuSelectedMember::
+BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
     xor a
     ld [wMenuSelectedMember], a
     ld hl, vBGMap0 + $10c
@@ -7940,7 +7939,7 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetMenuSelectedMember::
 ; why: step 12 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 12); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
-BattleEnd_AddJoinedMonster_MovePagedListCursor_AdvanceBattleSubStep::
+BattleEnd_AddJoinedMonster_AdvanceBattleSubStep::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
     call MovePagedListCursor
@@ -8070,9 +8069,8 @@ BattleEnd_AddJoinedMonster_SwapMonstersMenu::
 
 ; step 15 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
 ; CopyRectAndDrawBattleArg0Values; copies wListCursor to wMenuSubState; sets
-; BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data to $bc; calls
-; CopyRectRecordAndPlaySound6C; calls CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString1D;
-; sets wBattleSubStep to $0c (E-0347)
+; BattleEnd_AskToJoin_Data to $bc; calls CopyRectRecordAndPlaySound6C; calls
+; CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString1D; sets wBattleSubStep to $0c (E-0347)
 ; why: step 15 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 15); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
@@ -8081,7 +8079,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
     call CopyRectAndDrawBattleArg0Values
     ld a, [wListCursor]
     ld [wMenuSubState], a
-    ld hl, BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data
+    ld hl, BattleEnd_AskToJoin_Data
     add a
     add_a_to_hl
     deref_hl
@@ -8138,7 +8136,7 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
 ; why: step 17 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 17); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
-BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_ChooseTheMonsterTo::
+BattleEnd_AddJoinedMonster_ChooseTheMonsterTo::
     call CopyRectAndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12f
     ld [hl], $bc
@@ -8202,7 +8200,7 @@ BattleEnd_AddJoinedMonster_RestoreRecordAFully::
 ; why: step 19 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 19); BattleEnd_AddJoinedMonster:
 ; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
 ; RestoreRecordAFully: places the monster that joined (E-0352)
-BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_WillYouTakeHero::
+BattleEnd_AddJoinedMonster_WillYouTakeHero::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
     ld de, wScreenTileBuffer

@@ -1092,6 +1092,60 @@ def strip_structural_tokens(texts: list[str], given: set[str], uncalled_only: bo
     return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
 
 
+def shorten_repeated_parents(texts: list[str], given: set[str]) -> tuple[list[str], int]:
+    """E-0356: a step name that repeats a label it extends (`A_B_A_C`, the parent's name embedded again where a
+    callee's step name was copied in) drops the repeat (`A_B_C`); a step name still longer than 60 characters drops
+    its intermediate levels (Top_Mid_Own -> Top_Own, the purpose line still names Mid). Only labels no code calls by
+    name and no other label extends are renamed, so local labels named after callees stay true; names that would collide keep their old form."""
+    labels = [m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::(?! ; address name)", t, re.M)]
+    present = set(labels)
+    called = {m for t in texts for m in re.findall(r"^\s+(?:call|farcall|farcall_b)(?: \w+,)? (\w+)", t, re.M)}
+    parents = {"_".join(lab.split("_")[:i]) for lab in labels for i in range(1, lab.count("_") + 1)}
+    rename: dict[str, str] = {}
+    for lab in labels:
+        if lab in given or lab in called or lab in parents:
+            continue  # a label others extend keeps its name, so theirs still read as its parts
+        new = lab
+        for _ in range(4):
+            parts = new.split("_")
+            changed = False
+            for i in range(len(parts) - 1, 0, -1):
+                pre = "_".join(parts[:i])
+                if pre not in present:
+                    continue
+                rest = "_".join(parts[i:])
+                inner = "_" + rest + "_"
+                if ("_" + pre + "_") in inner:
+                    rest2 = inner.replace("_" + pre + "_", "_", 1).strip("_")
+                    new = pre + "_" + rest2 if rest2 else pre
+                    changed = True
+                    break
+            if not changed:
+                break
+        while len(new) > 60:  # Parent_Step_Substep: drop intermediate levels, keep the top and the step's own part
+            parts = new.split("_")
+            pres = ["_".join(parts[:i]) for i in range(1, len(parts)) if "_".join(parts[:i]) in present]
+            if len(pres) < 2:
+                break
+            own = new[len(pres[-1]) + 1:]
+            cand = pres[-2] + "_" + own
+            if cand in present or cand in rename.values():
+                break
+            new = cand
+        if new != lab:
+            parts = new.split("_")
+            own = next(("_".join(parts[i:]) for i in range(len(parts) - 1, 0, -1) if "_".join(parts[:i]) in present), "")
+            if own in present:
+                continue  # Top_Own would read as calling the routine named Own, not Top_Own
+        if new != lab and new not in present and new not in rename.values():
+            rename[lab] = new
+    shorten_repeated_parents.renames = rename  # step_names.json follows the new names
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
+
+
 STATUS_LD = re.compile(r"^\s+ld hl, wBattleStatus(\d?)\s*(?:;.*)?$")
 STATUS_HELPER = re.compile(r"^\s+call (?:TargetStatus(\d)Address|HLToBattleStatus(8)EntryOf\w+)\s*(?:;.*)?$")
 STATUS_OP = re.compile(r"^(\s+(?:bit|set|res) )(\d)(, \[hl\].*)$")
@@ -6625,6 +6679,9 @@ def main() -> int:
     log(f"addresses inside names resolved in the final pass: {nemb2}")
     texts, nstruct2 = strip_structural_tokens(texts, given_names, uncalled_only=True)
     log(f"structural parts dropped in the final pass: {nstruct2}")
+    table_labels = {t["label"] for t in rom.table_at.values() if t.get("label")}  # config/tables.json names them
+    texts, nshort = shorten_repeated_parents(texts, given_names | table_labels)
+    log(f"step names that repeated their parent shortened: {nshort}")
     # E-0346: after the final passes, so scripts and object selectors carry their names
     flag_cfg = json.loads((ROOT / "config/story_flags.json").read_text(encoding="utf-8"))["flags"]
     texts, events, nev = name_story_flags(texts, {int(k, 16): v["name"] for k, v in flag_cfg.items()})
@@ -6633,8 +6690,11 @@ def main() -> int:
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/<dir>/ from it
     out.mkdir(parents=True, exist_ok=True)
     log(f"writing {len(texts)} bank files to build/listing, then src/<dir>/ and src/main.asm")
-    (out / "step_names.json").write_text(json.dumps(getattr(name_steps_by_text, "renames", {}), indent=0),
-                                         encoding="utf-8")
+    short = getattr(shorten_repeated_parents, "renames", {})
+    steps = {old: short.get(new, new) for old, new in getattr(name_steps_by_text, "renames", {}).items()}
+    (out / "step_names.json").write_text(json.dumps(steps, indent=0), encoding="utf-8")
+    (out / "short_names.json").write_text(json.dumps({new: old for old, new in short.items()}, indent=0),
+                                          encoding="utf-8")
     tot_code = 0
     reached = []
     for b, text in enumerate(texts):

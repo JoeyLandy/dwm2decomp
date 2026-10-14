@@ -14,13 +14,16 @@ class StepNamesTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         renames = json.loads((LISTING / "step_names.json").read_text(encoding="utf-8"))
-        cls.tags = {}  # new name -> the description added
+        short = LISTING / "short_names.json"  # step names that later dropped a repeated ancestor (E-0356)
+        former = json.loads(short.read_text(encoding="utf-8")) if short.exists() else {}
+        cls.tags = {}  # new name -> the description added (read from the name before E-0356 shortened it)
         for old, new in renames.items():
             root = STRUCT.split(old)[0]
-            if new.startswith(old + "_"):
-                cls.tags[new] = new[len(old) + 1:]
-            elif new.startswith(root + "_"):
-                cls.tags[new] = new[len(root) + 1:]
+            full = former.get(new, new)
+            if full.startswith(old + "_"):
+                cls.tags[new] = full[len(old) + 1:]
+            elif full.startswith(root + "_"):
+                cls.tags[new] = full[len(root) + 1:]
         cls.bodies = {}
         for p in sorted(LISTING.glob("bank*.asm")):
             text = p.read_text(encoding="utf-8")

@@ -2046,14 +2046,14 @@ LinkKeyTrade::
     dw LinkKeyTrade_QueueSoundEffect_SetTwoChoiceCursor
     dw LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc
     dw LinkKeyTrade_QueueSoundEffect
-    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep_2
+    dw LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_2
     dw LinkKeyTrade_QueueSoundEffect_SetScreenStep
     dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep
     dw LinkKeyTrade_WaitTextFlags
     dw LinkKeyTrade_WriteScreenStepAndLinkSendByte
-    dw LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait
+    dw LinkKeyTrade_ReadyingTradePleaseWait
     dw LinkKeyTrade_DrawThreeTilesAtBGMap20FFromDE
-    dw LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep
+    dw LinkKeyTrade_SetScreenStep
     dw LinkKeyTrade_RunScreenCounterStep
     dw LinkKeyTrade_WaitLinkMessage_SetLinkReady
     dw LinkKeyTrade_WaitLinkMessage_SetWorkBuf
@@ -3341,7 +3341,7 @@ LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc::
     jr z, .loop
     ld a, [wTwoChoiceCursor]
     ld b, $bc
-    ld hl, LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc_Data
+    ld hl, LinkKeyTrade_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
     inc a
@@ -3390,7 +3390,7 @@ ShowTwoChoiceBoxWhenTextIdle::
 ; why: step 22 of LinkKeyTrade (when wScreenStep = 22); LinkKeyTrade: by wScreenStep: builds the key
 ; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
 ; message) and ... (E-0352)
-LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_SetScreenStep_2::
+LinkKeyTrade_WriteScreenStepAndLinkSendByteEtc_2::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_update_two_choice_cursor_bank1_d
@@ -3489,7 +3489,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep::
 ; why: step 27 of LinkKeyTrade (when wScreenStep = 27); LinkKeyTrade: by wScreenStep: builds the key
 ; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
 ; message) and ... (E-0352)
-LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait::
+LinkKeyTrade_ReadyingTradePleaseWait::
     ld a, $0b ; 'Readying trade… Please wait.'
     call BeginString_Bank1B_Cat0
     ld a, [wScreenStep]
@@ -3504,7 +3504,7 @@ LinkKeyTrade_ToBeginString_Bank1B_Cat0AndStep_ReadyingTradePleaseWait::
 ; why: step 29 of LinkKeyTrade (when wScreenStep = 29); LinkKeyTrade: by wScreenStep: builds the key
 ; list, exchanges bytes and messages over the link (sending a byte and waiting for the partner's
 ; message) and ... (E-0352)
-LinkKeyTrade_KeyEntryAddressForListEntriesCell4_SetScreenStep::
+LinkKeyTrade_SetScreenStep::
     ld a, [wLinkMessage]
     cp $02
     ret nz
@@ -4816,7 +4816,7 @@ UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap::
 UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     sla a
-    ld hl, UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, UpdateTwoChoiceCursor_Bank1B_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -4836,7 +4836,7 @@ UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCurso
 
 ; data read by UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (4
 ; bytes) (E-0347)
-UpdateTwoChoiceCursor_Bank1B_StepBGMapAddressBackOnScrollWrap_Data::
+UpdateTwoChoiceCursor_Bank1B_Data::
     db $2d, $01, $6d, $01
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
@@ -4893,7 +4893,7 @@ LinkKeyTrade_ShowIsItOKTo_TileRect::
 LinkKeyTrade_ClampKeyListPageCursor_Data::
     db $ca, $c3, $f2, $c3, $1a, $c4, $42, $c4
 
-LinkKeyTrade_WriteTextWindowTileLoAndTextWindowTileHiEtc_Data::
+LinkKeyTrade_Data::
     db $25, $c4, $4d, $c4
 
 ; record: 6 x 5 tiles, one row per line
@@ -5018,7 +5018,7 @@ EggServiceMenu_Bank1B_WaitForPartner::
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage
     dw EggServiceMenu_Bank1B_WaitForPartner_ShowPleaseWait
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags
-    dw EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte
+    dw EggServiceMenu_Bank1B_WaitForPartner_SetLinkSendByte
     dw EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags_2
 
 ; step 0 of EggServiceMenu_Bank1B_WaitForPartner: returns unless wLinkMessage is $fe; sets
@@ -5074,7 +5074,7 @@ EggServiceMenu_Bank1B_WaitForPartner_WaitTextFlags::
 ; why: step 3 of EggServiceMenu_Bank1B_WaitForPartner (when wScreenStep = 3);
 ; EggServiceMenu_Bank1B_WaitForPartner: by its step: 'Please wait.' and the partner's link message
 ; (E-0352)
-EggServiceMenu_Bank1B_WaitForPartner_WaitLinkMessage_SetLinkSendByte::
+EggServiceMenu_Bank1B_WaitForPartner_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -5293,7 +5293,7 @@ EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
     ret nz
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call StoreBAtWordTableEntry_Bank1B
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -5301,7 +5301,7 @@ EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B::
     call DrawScreenBufferRectToBGMap_1B
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call StoreBAtWordTableEntry_Bank1B
     call SetDefaultStringWindow_Bank1B
     ld a, [wScreenStep]
@@ -5414,7 +5414,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call StoreBAtWordTableEntry_Bank1B
     call CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
@@ -5583,8 +5583,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo::
 
 ; step 11 of EggServiceMenu_Bank1B_PickRecords: returns unless wTextFlags is 0; calls
 ; EraseCEntriesOfWordTable_Bank1B; continues in
-; EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServiceMenu_Bank1B_PickRecords_CopyRe
-; (E-0347)
+; EggServiceMenu_CallEggServiceMenu_Bank1B_PickRecords_CopyRe (E-0347)
 ; why: step 11 of EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 11);
 ; EggServiceMenu_Bank1B_PickRecords: by wScreenStep: record list pages and panels with the 'Info /
 ; OK / Yes / No' window (E-0352)
@@ -5593,9 +5592,9 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
     and a
     ret nz
     ld c, $05
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call EraseCEntriesOfWordTable_Bank1B
-    jr EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServiceMenu_Bank1B_PickRecords_CopyRe
+    jr EggServiceMenu_CallEggServiceMenu_Bank1B_PickRecords_CopyRe
 
 ; called from EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo: calls
 ; EraseCEntriesOfWordTable_Bank1B; calls StoreBAtWordTableEntry_Bank1B (E-0347)
@@ -5605,11 +5604,11 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B::
 ; OK / Yes / No' window (E-0352)
 EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2::
     ld c, $05
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call EraseCEntriesOfWordTable_Bank1B
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call StoreBAtWordTableEntry_Bank1B
 
 ; Calls EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows; calls BGMapAddressAtScroll_Bank1B;
@@ -5618,7 +5617,7 @@ EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2::
 ; EggServiceMenu_Bank1B_PickRecords_ShowYourPalRefusedTo_YourPalRefusedTo, in step 10 of
 ; EggServiceMenu_Bank1B_PickRecords (when wScreenStep = 10); EggServiceMenu_Bank1B_PickRecords: by
 ; wScreenStep: record list pages and panels with the 'Info / OK / Yes / No' window (E-0352)
-EggServiceMenu_Bank1B_PickRecords_EraseCEntriesOfWordTable_Bank1B_2_CallEggServiceMenu_Bank1B_PickRecords_CopyRe::
+EggServiceMenu_CallEggServiceMenu_Bank1B_PickRecords_CopyRe::
     call EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows
     call BGMapAddressAtScroll_Bank1B
     lb bc, $14, $0d
@@ -5956,7 +5955,7 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw EggServiceMenu_Bank1B_StartLinkBattle_FillBytes
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc
+    dw EggServiceMenu_Bank1B_WriteScreenStepAndLinkTimeoutLoEtc
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBeginBattle
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo
@@ -5964,23 +5963,23 @@ EggServiceMenu_Bank1B_StartLinkBattle::
     dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc
+    dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_2
+    dw EggServiceMenu_Bank1B_WriteLinkSceneAndLinkTimeoutLoEtc
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady
-    dw EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBattle
+    dw EggServiceMenu_Bank1B_StartLinkBattle_SetLinkReady
+    dw EggServiceMenu_Bank1B_StartLinkBattle_StartingBattle
     dw EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_SetScreenStep
     dw EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo
-    dw EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc
+    dw EggServiceMenu_Bank1B_WriteGameModeAndModeStateEtc
 
 ; step 17 of EggServiceMenu_Bank1B_StartLinkBattle: calls ShowStringA10_Bank1B; increments
 ; wScreenStep (E-0347)
 ; why: step 17 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 17);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_ToShowStringA10_Bank1BAndStep_StartingBattle::
+EggServiceMenu_Bank1B_StartLinkBattle_StartingBattle::
     ld a, $09 ; 'Starting battle…'
     call ShowStringA10_Bank1B
     ld a, [wScreenStep]
@@ -6128,7 +6127,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo::
 ; why: step 4 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 4);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
+EggServiceMenu_Bank1B_WriteScreenStepAndLinkTimeoutLoEtc::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -6158,7 +6157,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_WriteScreenStepAndLinkTimeoutLoEtc::
 ; why: step 16 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 16);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage_SetLinkReady::
+EggServiceMenu_Bank1B_StartLinkBattle_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -6221,7 +6220,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit::
     farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit_TileRect
+    ld de, EggServiceMenu_Bank1B_StartLinkBattle_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -6358,7 +6357,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitTextFlags::
 ; why: step 12 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 12);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2::
+EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_2::
     ld a, [wLinkMessage]
     cp $01
     jr z, .clear_link_send_byte
@@ -6391,7 +6390,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowYourPalRefusedTo_YourPalRefusedTo_2::
 ; why: step 13 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 13);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc::
+EggServiceMenu_Bank1B_WriteLinkSceneAndLinkTimeoutLoEtc::
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .set_link_scene_to_01
@@ -6462,7 +6461,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_WaitLinkMessage::
 ; why: step 21 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 21);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
-EggServiceMenu_Bank1B_StartLinkBattle_WriteGameModeAndModeStateEtc::
+EggServiceMenu_Bank1B_WriteGameModeAndModeStateEtc::
     ld a, $04
     ld [wGameMode], a
     xor a
@@ -6524,10 +6523,10 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit
+    dw EggServiceMenu_Bank1B_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
+    dw EggServiceMenu_Bank1B_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
+    dw EggServiceMenu_Bank1B_ShowBattlePrizeExit
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
 ; step 6 of EggServiceMenu_Bank1B_ListAvailableRecords: copies L to wTextWindowTileLo; copies H to
@@ -6537,7 +6536,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords::
 ; why: step 6 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 6);
 ; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
 ; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
-EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
+EggServiceMenu_Bank1B_ShowBattlePrizeExit::
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
@@ -6553,7 +6552,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ShowBattlePrizeExit::
     ld a, $1f
     ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit_TileRect
+    ld de, EggServiceMenu_Bank1B_StartLinkBattle_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -6572,9 +6571,9 @@ EggServiceMenu_Bank1B_ListAvailableRecords2::
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles
     dw EggServiceMenu_Bank1B_ListAvailableRecords_ListAvailableRecordsForSelection
     dw EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780
-    dw EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
+    dw EggServiceMenu_Bank1B_ToDrawListEntriesCell5RecordPanel
+    dw EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780
+    dw EggServiceMenu_Bank1B_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7
     dw EggServiceMenu_Bank1B_ListAvailableRecords2_ShowInfoOKYesN
     dw EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B
 
@@ -6585,13 +6584,13 @@ EggServiceMenu_Bank1B_ListAvailableRecords2::
 ; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
 EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles::
     call ClearRecordPanelTiles
-    ld de, EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles_TileRect
+    ld de, EggServiceMenu_Bank1B_ListAvailableRecords_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRows
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data
+    ld hl, EggServiceMenu_Bank1B_PickRecords_Data
     call StoreBAtWordTableEntry_Bank1B
     ld a, [wScreenStep]
     inc a
@@ -6643,7 +6642,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_DrawRecordListPageNames::
 ; why: step 3 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 3);
 ; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
 ; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
-EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
+EggServiceMenu_Bank1B_ToDrawListEntriesCell5RecordPanel::
     call DrawListEntriesCell5RecordPanel
     ret
 
@@ -6652,7 +6651,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawListEntriesCell5RecordPanel::
 ; why: step 4 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 4);
 ; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
 ; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
-EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameAtTiles1780::
+EggServiceMenu_CallClearAndDrawListEntriesCell5NameAtTiles1780::
     call ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
@@ -6661,7 +6660,7 @@ EggServiceMenu_Bank1B_ListAvailableRecords_CallClearAndDrawListEntriesCell5NameA
 ; why: step 5 of EggServiceMenu_Bank1B_ListAvailableRecords (when wScreenStep = 5);
 ; EggServiceMenu_Bank1B_ListAvailableRecords: by wScreenStep: ListAvailableRecordsForSelection, the
 ; list page, the record panel and the 'Battle / Prize / Exit' window (E-0352)
-EggServiceMenu_Bank1B_ListAvailableRecords_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7::
+EggServiceMenu_Bank1B_ToDrawRuleBoxByLinkRuleTurnLimit1Bit7::
     call DrawRuleBoxByLinkRuleTurnLimit1Bit7
     ret
 
@@ -6765,13 +6764,13 @@ EggServiceMenu_Bank1B_ListAvailableRecords_BGMapAddressAtScroll_Bank1B::
     ld [wTextWindowWidth], a
     ret
 
-; called from EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc: branches on
-; wLinkRole; branches on the byte at wPickedRecords; sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; called from EggServiceMenu_Bank1B_WriteLinkSceneAndLinkTimeoutLoEtc: branches on wLinkRole;
+; branches on the byte at wPickedRecords; sets rRAMG2 to $0a; sets rRAMB to 0; calls
 ; SRAMRecordAddress; calls CopyEBytesBCToHL; calls SRAMRecordAddress; calls CopyEBytesBCToHL; calls
 ; SRAMRecordAddress; calls CopyEBytesBCToHL; calls SRAMRecordAddress; calls CopyEBytesBCToHL; then 6
 ; more steps (see the code) (E-0347)
-; why: a helper of EggServiceMenu_Bank1B_StartLinkBattle_WriteLinkSceneAndLinkTimeoutLoEtc, in step
-; 13 of EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 13);
+; why: a helper of EggServiceMenu_Bank1B_WriteLinkSceneAndLinkTimeoutLoEtc, in step 13 of
+; EggServiceMenu_Bank1B_StartLinkBattle (when wScreenStep = 13);
 ; EggServiceMenu_Bank1B_StartLinkBattle: by wScreenStep: the picked records, 'Begin battle?',
 ; 'Please wait.', 'Starting battle' or 'Your pal refused to battle.' over the link (E-0352)
 EggServiceMenu_Bank1B_StartLinkBattle_WriteRAMG2AndRAMB::
@@ -7148,7 +7147,7 @@ EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows::
     jr .return
 
 .skip:
-    ld de, EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows_TileRect_2
+    ld de, EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows_2
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows
@@ -7797,7 +7796,7 @@ EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows_TileRect::
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows_TileRect_2::
+EggServiceMenu_Bank1B_PickRecords_CopyRectTo20ByteRows_2::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -7811,7 +7810,7 @@ EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN_TileRect::
     db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-EggServiceMenu_Bank1B_PickRecords_SetDefaultStringWindow_Bank1B_Data::
+EggServiceMenu_Bank1B_PickRecords_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 EggServiceMenu_Bank1B_PickRecords_WriteScreenStepAndRAMG2Etc_Data::
@@ -7841,7 +7840,7 @@ EggServiceMenu_Bank1B_PickRecords_QueueSoundEffect_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 9 x 7 tiles, one row per line
-EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit_TileRect::
+EggServiceMenu_Bank1B_StartLinkBattle_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7851,7 +7850,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ShowBattlePrizeExit_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
 ; record: 8 x 11 tiles, one row per line
-EggServiceMenu_Bank1B_ListAvailableRecords_ClearRecordPanelTiles_TileRect::
+EggServiceMenu_Bank1B_ListAvailableRecords_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2

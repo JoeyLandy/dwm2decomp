@@ -273,10 +273,10 @@ RunBattleCommandEntry_BankA1::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2
+    dw RunBattleCommandEntry_BankA1_2
     dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_BankA1_ChooseActionTarget
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
+    dw RunBattleCommandEntry_BankA1_SetActionQueuePos
     dw RunBattleCommandEntry_BankA1_CompareHLToBC
     dw RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1
 
@@ -327,7 +327,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
 ; why: step 1 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 1);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
 ; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2::
+RunBattleCommandEntry_BankA1_2::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp $08
@@ -404,7 +404,7 @@ RunBattleCommandEntry_BankA1_ChooseActionTarget::
 ; why: step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
 ; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
 ; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
+RunBattleCommandEntry_BankA1_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
     ld a, $ff
@@ -648,13 +648,12 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3::
     jr nz, .loop
     ret
 
-; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
-; calls NextTableByteSecondStream; calls RandomInRange; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos,
-; in step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
-; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
-; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
+; called from RunBattleCommandEntry_BankA1_SetActionQueuePos: calls NextTableByteSecondStream; calls
+; RandomInRange; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: a helper of RunBattleCommandEntry_BankA1_SetActionQueuePos, in step 4 of
+; RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4); RunBattleCommandEntry_BankA1: the same
+; instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to
+; this bank's own routines and ... (E-0352, E-0107)
 RunBattleCommandEntry_BankA1_RandomInRange::
     push de
     call NextTableByteSecondStream
@@ -677,16 +676,15 @@ RunBattleCommandEntry_BankA1_RandomInRange::
     pop de
     ret
 
-; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
-; branches on the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to
-; wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to
-; wBattleArg3; calls LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L
-; to wBattleArg0; copies H to wBattleArg1; calls NextTableByteSecondStream; then 1 more step (see
-; the code) (E-0347)
-; why: a helper of RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos,
-; in step 4 of RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4);
-; RunBattleCommandEntry_BankA1: the same instruction sequence as RunBattleCommandEntry (bank $30)
-; apart from label operands, which refer to this bank's own routines and ... (E-0352, E-0107)
+; called from RunBattleCommandEntry_BankA1_SetActionQueuePos: branches on the byte at
+; wBattleActionChoice; copies the byte at wBattleActionChoice to wRecordBuffer; sets wBattleArg0 to
+; 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
+; LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L to wBattleArg0;
+; copies H to wBattleArg1; calls NextTableByteSecondStream; then 1 more step (see the code) (E-0347)
+; why: a helper of RunBattleCommandEntry_BankA1_SetActionQueuePos, in step 4 of
+; RunBattleCommandEntry_BankA1 (when wBattleSubPhase = 4); RunBattleCommandEntry_BankA1: the same
+; instruction sequence as RunBattleCommandEntry (bank $30) apart from label operands, which refer to
+; this bank's own routines and ... (E-0352, E-0107)
 RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -1007,7 +1005,7 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     add e
     ld e, a
     jr nc, .skip2
@@ -1905,7 +1903,7 @@ StoreTemp5ValuesToCursorCellX::
     ret
 
 ; step 5 of RunWorldMapState: changes A; may continue in RunWorldMapState_UploadBGPalettes_2; may
-; continue in RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8 (E-0347)
+; continue in RunWorldMapState_CallDrawBlinkingMetaSprite8 (E-0347)
 ; why: step 5 of RunWorldMapState (when wWorldMapState & $07 = 5); RunWorldMapState: the world map
 ; screen (field state 8): by wWorldMapState & 7 it uploads the palettes, loads the map graphics and
 ; tiles, shows the region, ... (E-0352, E-0354, E-0122)
@@ -1914,7 +1912,7 @@ RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
     bit 1, a
     jr nz, RunWorldMapState_UploadBGPalettes_2
     bit 2, a
-    jr z, RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8
+    jr z, RunWorldMapState_CallDrawBlinkingMetaSprite8
 
 ; called from RunWorldMapState_WriteWorldMapState: branches on wIsCGB; calls FillBytes; sets
 ; wBGPaletteUploadRequest to $7f; sets wOBJPaletteUploadRequest to $7f; calls UploadBGPalettes;
@@ -1954,7 +1952,7 @@ RunWorldMapState_UploadBGPalettes_2::
 ; RunWorldMapState_WriteWorldMapState, in step 2 of RunWorldMapState (when wWorldMapState & $07 =
 ; 2); RunWorldMapState: the world map screen (field state 8): by wWorldMapState & 7 it uploads the
 ; palettes, loads the map graphics and tiles, shows the region, ... (E-0352, E-0354, E-0122)
-RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
+RunWorldMapState_CallDrawBlinkingMetaSprite8::
     call DrawBlinkingMetaSprite8
     call RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc
     call RunWorldMapState_WaitMapType
@@ -2843,7 +2841,7 @@ RunWorldMapState_CopyScrollToHardware::
     or a
     jr z, .done
     ld a, $40
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     add e
     ld e, a
     jr nc, .skip2
@@ -3533,7 +3531,7 @@ DrawCursorSpriteAtTemp1Cell::
 
 ; called from RunWorldMapState_WriteWorldMapState: returns unless bit 5 of wFrameCounterLo is set;
 ; may continue in SetSpriteYFromCursorCellY_CheckMapType; may continue in
-; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive; may continue in
+; SetSpriteYFromCursorCellY_CheckKeyWorldActive; may continue in
 ; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX; branches on the byte at
 ; WorldMapCursorCellTable; calls SetSpriteXFromCursorCellX; calls SetSpriteYFromCursorCellY; calls
 ; DrawMetaSpriteSet08; also changes HL, A and C by register arithmetic (E-0347)
@@ -3551,37 +3549,37 @@ RunWorldMapState_WaitFrameCounterLo::
     ldh a, [hMapId]
     ld c, $01
     cp $29
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $02
     cp $45
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $03
     cp $68
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $04
     cp $9d
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $05
     cp $a4
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $06
     cp $af
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $07
     cp $b2
-    jp z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jp z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $08
     cp $c5
-    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jr z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $09
     cp $d0
-    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jr z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $0a
     cp $d9
-    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jr z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     ld c, $0b
     cp $e2
-    jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive
+    jr z, SetSpriteYFromCursorCellY_CheckKeyWorldActive
     cp $20
     jr z, SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     cp $30
@@ -3660,7 +3658,7 @@ SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
 ; why: part of SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX, in step 0 of
 ; SetSpriteYFromCursorCellY; SetSpriteYFromCursorCellY: hSpriteOriginY = 8 * wCursorCellY + A + 6
 ; (E-0352, E-0124)
-SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive::
+SetSpriteYFromCursorCellY_CheckKeyWorldActive::
     ld a, [wKeyWorldActive]
     or a
     jr z, .check_key_world_goal_screen

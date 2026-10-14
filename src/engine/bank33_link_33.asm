@@ -776,11 +776,11 @@ RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     dw RunLinkSession6Exchange_ChooseTeamMonster
     dw RunLinkSession6Exchange_ShowYouRefusedToPay
     dw RunLinkSession6Exchange_BackTitleScreenSubState
-    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2
+    dw RunLinkSession6Exchange_2
     dw RunLinkSession6Exchange_SetLinkSendByte
     dw RunLinkSession6Exchange_ShowYourPalRefusedTo
     dw RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc
-    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3
+    dw RunLinkSession6Exchange_3
 
 .check_fade_state:
     ld a, [wFadeState]
@@ -817,7 +817,7 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
     ld hl, wScreenTileBuffer + $c
     lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank33
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wScreenTileBuffer
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1012,8 +1012,8 @@ RunLinkSession6Exchange_ChooseTeamMonster::
     ld a, [wLinkScreenFlag]
     jumptable
     dw RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags
-    dw RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor
-    dw RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState
+    dw RunLinkSession6Exchange_ShowChooseAMonsterFor
+    dw RunLinkSession6Exchange_SetTitleScreenSubState
 
 ; step 0 of RunLinkSession6Exchange_ChooseTeamMonster: returns unless wTextFlags is 0; branches on
 ; wTextFlags; increments wLinkScreenFlag; also changes HL, BC and A by register arithmetic (E-0347)
@@ -1043,7 +1043,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
 ; why: step 1 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 1);
 ; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
 ; (E-0352)
-RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
+RunLinkSession6Exchange_ShowChooseAMonsterFor::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $0000
@@ -1059,7 +1059,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
 ; why: step 2 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 2);
 ; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
 ; (E-0352)
-RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
+RunLinkSession6Exchange_SetTitleScreenSubState::
     xor a
     ld [wTitleScreenSubState], a
     xor a
@@ -1169,7 +1169,7 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
 ; wTitleScreenSubState = 9), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
 ; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
-RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2::
+RunLinkSession6Exchange_2::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1322,7 +1322,7 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
 ; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
 ; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
-RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3::
+RunLinkSession6Exchange_3::
     ld a, [wLinkMessage]
     cp $10
     jr z, .set_link_send_byte_to_FE
@@ -1567,14 +1567,13 @@ CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle
-; RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2 into wWindowTileBuffer
-; + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its
-; name read as its RAM name; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the
-; address in its name dropped or read as the label there; was
-; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
+; copies the 10 x 11 rectangle RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
+; into wWindowTileBuffer + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119)
+; (E-0340: the address in its name read as its RAM name; was
+; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the address in its name dropped or
+; read as the label there; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
 CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2806,7 +2805,7 @@ RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
 ; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
 ; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
 RunLinkSession6Exchange_RunFourTimes_2::
-    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -3715,7 +3714,7 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 10 x 11 tiles, one row per line
-RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2::
+RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2

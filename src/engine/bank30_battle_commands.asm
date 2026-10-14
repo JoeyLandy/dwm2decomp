@@ -17,7 +17,7 @@ RunBattleCommandEntry::
     dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_ChooseTargetForActor
-    dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
+    dw RunBattleCommandEntry_SetActionQueuePos
     dw RunBattleCommandEntry_CompareHLToBC
     dw RunBattleCommandEntry_AddWordAtHLToBC_Bank30
 
@@ -258,7 +258,7 @@ ChooseTargetForActor::
 ; code) (E-0347)
 ; why: step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle
 ; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
+RunBattleCommandEntry_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
     ld a, $ff
@@ -319,11 +319,11 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     inc [hl]
     ret
 
-; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: calls
-; AdvanceRandom; calls RandomInRange; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
-; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
-; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; called from RunBattleCommandEntry_SetActionQueuePos: calls AdvanceRandom; calls RandomInRange;
+; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
+; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
+; drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_AdvanceRandom::
     push de
     call AdvanceRandom
@@ -346,14 +346,14 @@ RunBattleCommandEntry_AdvanceRandom::
     pop de
     ret
 
-; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: branches on
-; the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to wRecordBuffer; sets
-; wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
-; LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L to wBattleArg0;
-; copies H to wBattleArg1; calls AdvanceRandom; then 1 more step (see the code) (E-0347)
-; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
-; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
-; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; called from RunBattleCommandEntry_SetActionQueuePos: branches on the byte at wBattleActionChoice;
+; copies the byte at wBattleActionChoice to wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1
+; to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; copies L to
+; wBattleArg2; copies H to wBattleArg3; copies L to wBattleArg0; copies H to wBattleArg1; calls
+; AdvanceRandom; then 1 more step (see the code) (E-0347)
+; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
+; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
+; drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -442,12 +442,11 @@ RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     pop de
     ret
 
-; called from RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos: returns if
-; wBattleItemTarget is $ff; sets wBattleArg0 to $10; also changes HL, BC and A by register
-; arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos, in
-; step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle fight
-; step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; called from RunBattleCommandEntry_SetActionQueuePos: returns if wBattleItemTarget is $ff; sets
+; wBattleArg0 to $10; also changes HL, BC and A by register arithmetic (E-0347)
+; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
+; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
+; drawn (wTextFlags) (E-0352)
 RunBattleCommandEntry_WaitBattleItemTarget::
     ld a, [wBattleItemTarget]
     cp $ff
@@ -836,18 +835,18 @@ ActorBattleWordArray3FBand::
     ret
 
 ; called from RunCommandEntryResolveStep_AddAx9ToHL: changes HL; continues in
-; RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor (E-0347)
+; RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor (E-0347)
 ; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
 ; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
 ; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
 ; action ... (E-0352, E-0354, E-0122)
 RunCommandEntryResolveStep_ReadBattleActor::
     ld hl, wSlotTrait
-    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor
+    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor
 
 ; called from RunCommandEntryResolveStep_AddAx9ToHL: calls GetActorSlotTacticLow2; may return early;
 ; calls ReadBattleWordFromArray_Bank30; continues in
-; RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor (E-0347)
+; RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor (E-0347)
 ; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
 ; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
 ; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
@@ -858,7 +857,7 @@ RunCommandEntryResolveStep_GetActorSlotTacticLow2::
     ret z
     ld hl, RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data
     call ReadBattleWordFromArray_Bank30
-    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor
+    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor
 
 ; data read by RunCommandEntryResolveStep (6 bytes) (E-0347)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
@@ -871,7 +870,7 @@ RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
 ; wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
 ; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
 ; action ... (E-0352, E-0354, E-0122)
-RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor::
+RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor::
     ld a, [wBattleActor]
     add_a_to_hl
     ld a, [hl]

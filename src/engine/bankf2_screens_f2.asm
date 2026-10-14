@@ -104,7 +104,7 @@ GameMode8_Update::
     dw GameMode8_Update_SetObject5_SetObject5
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep
+    dw GameMode8_Update_SetScreenSubStep
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
 
@@ -220,7 +220,7 @@ GameMode8_Update_SetObject5_SetObject5::
 ; why: step 11 of GameMode8_Update (when wScreenSubStep = 11); GameMode8_Update: game mode 8, the
 ; egg hand-over scene: by wScreenSubStep it moves the scene's objects and sprite slots, shows '0
 ; received G's egg' and ... (E-0352, E-0354)
-GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
+GameMode8_Update_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -3909,13 +3909,13 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2::
     jr nz, .loop
     ret
 
-; in state 3 continues at VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip; otherwise runs
+; in state 3 continues at VaultMenu_Store_MapItemsToInventory_Skip; otherwise runs
 ; RunUnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126) (E-0344: the address in its name dropped or
 ; read as the label there; was RunUnlessScreenStateIs3)
 RunUnlessScreenStateIs3::
     ld a, [wScreenState]
     cp $03
-    jr z, VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip
+    jr z, VaultMenu_Store_MapItemsToInventory_Skip
     call RunUnlessScreenStateIs3_WriteCounterPtr0Lo
     ret
 
@@ -3952,7 +3952,7 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
 ; VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep = 14);
 ; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
 ; (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip::
+VaultMenu_Store_MapItemsToInventory_Skip::
     ld hl, wWorkBuf
     ld b, $18
 
@@ -4032,7 +4032,7 @@ VaultMenu_Store_MapItemsToInventory::
 ; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage; also changes HL, DE,
 ; BC and A by register arithmetic (E-0347)
 ; why: a helper of RunUnlessScreenStateIs3; RunUnlessScreenStateIs3: in state 3 continues at
-; VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip (E-0352, E-0126, E-0344)
+; VaultMenu_Store_MapItemsToInventory_Skip (E-0352, E-0126, E-0344)
 RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
     ld hl, wWorkBuf
     ld b, $c8

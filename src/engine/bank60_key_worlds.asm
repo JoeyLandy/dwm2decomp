@@ -4257,9 +4257,9 @@ RemoveMapObjectsEntryMatching_NextRandomSeed::
 ; called from FieldState_MapTransition: branches on wMapType; calls
 ; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending; branches on hMapId; branches on
 ; hMapScreenX; returns if hMapScreenY is $01; branches on hMapId; branches on hMapScreenX; returns
-; if hMapScreenY is $02; branches on the byte at
-; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2; sets wScreenTriggerCount
-; to 0; branches on 0; branches on wWarpPending; then 10 more steps (see the code) (E-0347)
+; if hMapScreenY is $02; branches on the byte at FieldState_MapTransition_Data2; sets
+; wScreenTriggerCount to 0; branches on 0; branches on wWarpPending; then 10 more steps (see the
+; code) (E-0347)
 ; why: a helper of FieldState_MapTransition; FieldState_MapTransition: field state 4: a map or
 ; screen transition: warps, the key-world floor and the transition steps (wFieldTransitionStep)
 ; (E-0352, E-0339)
@@ -4295,7 +4295,7 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
 .read_map_id:
     ldh a, [hMapId]
     ld c, a
-    ld hl, FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2
+    ld hl, FieldState_MapTransition_Data2
     ld b, $00
 
 .skip:
@@ -4322,7 +4322,7 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld [wWarpPending], a
     ld a, b
     push af
-    ld hl, FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data1
+    ld hl, FieldState_MapTransition_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBand], a
@@ -4354,11 +4354,11 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     jr nz, .loop2
     ret
 
-; data read by FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc (11 bytes) (E-0347)
-FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data1::
+; data read by FieldState_MapTransition (11 bytes) (E-0347)
+FieldState_MapTransition_Data1::
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0c, $0c
 
-FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc_Data2::
+FieldState_MapTransition_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
 ; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] at DE

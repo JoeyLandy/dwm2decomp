@@ -1735,9 +1735,8 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ret
 
 ; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
-; ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType; branches on wMessageMode;
-; copies L to wStringIndex; sets wStringCategory to 0; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
+; ScriptCommand09_CheckMapType; branches on wMessageMode; copies L to wStringIndex; sets
+; wStringCategory to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
 ; why: a helper of ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of
 ; ScriptCommand09 (when wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09
 ; (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
@@ -1748,7 +1747,7 @@ ScriptCommand09_WriteStringIndexAndStringCategory::
     push hl
     ld a, [wMessageMode]
     and a
-    jr z, ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType
+    jr z, ScriptCommand09_CheckMapType
     dec a
     ld c, a
     sla a
@@ -1793,7 +1792,7 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data::
 ; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
 ; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
 ; ScriptCommandHandlers) (E-0352, E-0038)
-ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
+ScriptCommand09_CheckMapType::
     pop hl
     ld a, [wMapType]
     cp $80

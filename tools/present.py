@@ -62,7 +62,7 @@ class Names:
 
     WORD = re.compile(r"\b[A-Z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*\b")
 
-    def __init__(self, texts: dict[str, str]) -> None:
+    def __init__(self, texts: dict[str, str], listing: Path | None = None) -> None:
         self.alias: dict[str, str] = {}
         self.at: dict[str, str] = {}  # "BB:AAAA" -> label
         self.labels: set[str] = set()
@@ -184,6 +184,10 @@ class Names:
             base = re.sub(r"_Bank[0-9A-F]{2}(?:_\d+)?$", "", lab)
             if lab not in self.evidence and fam_ids.get(base):
                 self.evidence[lab] = fam_ids[base]
+        self.former: dict[str, str] = {}  # shortened step name -> its name before E-0356: it names every level
+        short = (listing / "short_names.json") if listing else None
+        if short and short.exists():
+            self.former = json.loads(short.read_text(encoding="utf-8"))
         self.history: dict[str, str] = {}
         cfg = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
         for k, v in cfg.items():
@@ -213,7 +217,7 @@ class Names:
             if par not in self.labels:  # no recorded parent, or one under a name that no longer exists
                 par = None
             if par is None:  # a label inside a routine, named after it (Parent_Skip): part of that routine
-                parts = cur.split("_")
+                parts = self.former.get(cur, cur).split("_")
                 par = next(("_".join(parts[:k]) for k in range(len(parts) - 1, 0, -1)
                             if "_".join(parts[:k]) in self.labels), None)
                 if not par:
@@ -606,7 +610,7 @@ def main(argv: list[str]) -> int:
     src = Path(argv[0]) if argv else ROOT / "build/listing"
     dest = ROOT / "src"
     texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(src.glob("bank*.asm"))}
-    names = Names(texts)
+    names = Names(texts, src)
     titles = bank_titles()
     written = []
     ASSETS.clear()

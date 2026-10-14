@@ -255,9 +255,9 @@ BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts::
     call SGBTransferRaw
     call SpinDelay
     ld a, $0d
-    ld e, LOW(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
-    ld d, HIGH(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
-    ld b, BANK(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
+    ld e, LOW(BootAndMainLoop_Gfx)
+    ld d, HIGH(BootAndMainLoop_Gfx)
+    ld b, BANK(BootAndMainLoop_Gfx)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $12
@@ -6085,7 +6085,7 @@ LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $c8
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     add e
     ld e, a
     jr nc, .call_copy_from_bank
@@ -8550,16 +8550,16 @@ SoundWaveSet0::
     db $ee, $ee, $cd, $ac, $35, $23, $11, $11, $11, $11, $32, $53, $ca, $dc, $ee, $ee ; id 14
     db $dd, $dd, $dd, $dd, $dd, $dd, $dd, $dd, $22, $22, $22, $22, $22, $22, $22, $22 ; id 15
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay indexes it by
-; (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly (E-0189, C1)
+; SoundTick_CheckSndVibratoDelay indexes it by (hSndA8Param & $0F) * 2; only entry 0 exists, and its
+; rows follow it directly (E-0189, C1)
 ; record: modulation rows
 SoundModulationTable::
     dw SoundModulationRows0 ; id 0
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay reads the byte at
-; the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from
-; hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at
-; InitSoundHardware; what each step does to the pitch or volume is not read (E-0189, C1)
+; SoundTick_CheckSndVibratoDelay reads the byte at the rows - $10 + (hSndVibratoDepth | phase),
+; where the phase is 4 bits computed from hSndVibratoCounter and hSndVibratoDelay, so row 1 is the
+; first; 12 rows end at the routine at InitSoundHardware; what each step does to the pitch or volume
+; is not read (E-0189, C1)
 ; record: 16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a
 ; branch
 SoundModulationRows0::
@@ -10039,8 +10039,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     jr WriteChannelRegisterC
 
 ; called from ComputeNotePitch: changes A; may continue in WriteChannelRegisterC_ReadSndEnvelope;
-; may continue in SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay
-; (E-0347)
+; may continue in SoundTick_CheckSndVibratoDelay (E-0347)
 ; why: a helper of ComputeNotePitch; ComputeNotePitch: C2: pitch for a note event. The semitone (low
 ; nibble of the first byte, 0-11) indexes the period table at SoundNotePeriodTable ($3B74 when ...
 ; (E-0352, E-0019)
@@ -10050,7 +10049,7 @@ ComputeNotePitch_WriteNR32::
     jr z, WriteChannelRegisterC_ReadSndEnvelope
     ldh a, [hSndVibratoDepth]
     and a
-    jr nz, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay
+    jr nz, SoundTick_CheckSndVibratoDelay
     ldh a, [hSndEnvelope]
 
 ; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register
@@ -10129,8 +10128,8 @@ ClearChannelLengthBits_Skip::
 ; called from SoundTick: calls ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB; branches on hSndFreqLo;
 ; may continue in
 ; SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_WriteChannelEnvelopeIfChanged; may
-; continue in SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay; returns
-; if hSndVibratoDepth is 0; also changes A by register arithmetic (E-0347)
+; continue in SoundTick_CheckSndVibratoDelay; returns if hSndVibratoDepth is 0; also changes A by
+; register arithmetic (E-0347)
 ; why: a helper of SoundTick; SoundTick: C1: appears to be the sound engine's update routine. It
 ; switches to the bank in $FFDD, walks the channel-state slots at $DC00 and writes ... (E-0352,
 ; E-0018)
@@ -10146,7 +10145,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2::
 .check_sound_hw_channel:
     ld a, [wSoundHwChannel]
     cp $02
-    jr z, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay
+    jr z, SoundTick_CheckSndVibratoDelay
     ldh a, [hSndVibratoDepth]
     and a
     ret z
@@ -10158,7 +10157,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2::
 ; why: part of SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2, in a helper of SoundTick;
 ; SoundTick: C1: appears to be the sound engine's update routine. It switches to the bank in $FFDD,
 ; walks the channel-state slots at $DC00 and writes ... (E-0352, E-0018)
-SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay::
+SoundTick_CheckSndVibratoDelay::
     ldh a, [hSndVibratoDelay]
     and a
     ret z
@@ -10322,9 +10321,9 @@ SoundNotePeriodTable::
     dw $07d4, $0764, $06f9, $0695, $0637, $05dd, $0589, $053a, $04f0, $04a8, $0465, $0426 ; id 0
     dw $079c, $072e, $06c7, $0666, $060a, $05b3, $0561, $0515, $04cc, $0486, $0445, $0408 ; id 1
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay.skip5 reads the byte
-; at SoundEnvelopeScaleTable + DE (DE = level row * 16 + input) and ORs it into the envelope written
-; by WriteChannelEnvelopeIfChanged; the rows rise from all $10 to $00-$F0 (E-0209, C1)
+; SoundTick_CheckSndVibratoDelay.skip5 reads the byte at SoundEnvelopeScaleTable + DE (DE = level
+; row * 16 + input) and ORs it into the envelope written by WriteChannelEnvelopeIfChanged; the rows
+; rise from all $10 to $00-$F0 (E-0209, C1)
 ; record: 16 scaled volumes (high nibble) for one level
 SoundEnvelopeScaleTable::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0

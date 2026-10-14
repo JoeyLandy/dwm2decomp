@@ -1532,7 +1532,7 @@ SetEffectSpriteXForTargets_Data::
 RunBattleEffectAnimation::
     ld a, [wEffectId]
     cp $00
-    jp z, RunBattleEffectAnimation_Data_CallRunEffectRoutineEffectEvery5Frames
+    jp z, RunBattleEffectAnimation_CallRunEffectRoutineEffectEvery5Frames
     ld a, [wEffectAnimState]
     cp $01
     jr nz, .check_effect_anim_state
@@ -1684,7 +1684,7 @@ RunBattleEffectAnimation_Data::
 ; why: part of RunBattleEffectAnimation_Data, in part of RunBattleEffectAnimation;
 ; RunBattleEffectAnimation: runs the battle effect animation state wEffectAnimState: loads the
 ; effect graphics, steps the effect sprite and its X positions, and ends ... (E-0352, E-0130)
-RunBattleEffectAnimation_Data_CallRunEffectRoutineEffectEvery5Frames::
+RunBattleEffectAnimation_CallRunEffectRoutineEffectEvery5Frames::
     call RunEffectRoutineEffectEvery5Frames
     call UploadBGPalettesWithFade
     ld a, [wEffectId]
@@ -1719,7 +1719,7 @@ RunEffectRoutineEffectEvery5Frames::
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette
     dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
-    dw RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_2
+    dw RunEffectRoutineEffectEvery5Frames_2
 
 ; step 0 of RunEffectRoutineEffectEvery5Frames: sets wEffectId to $ff; sets wEffectSpriteX to 0
 ; (E-0347)
@@ -1785,7 +1785,7 @@ RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1810,7 +1810,7 @@ RunEffectRoutineEffectEvery5Frames_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForTarget
-    ld hl, RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -1920,7 +1920,7 @@ ReadWordTableEntry_Bank3A::
     ret
 
 ; data read by RunEffectRoutineEffectEvery5Frames (10 bytes) (E-0347)
-RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget_Data::
+RunEffectRoutineEffectEvery5Frames_Data::
     db $e7, $00, $e4, $00, $ea, $00, $e1, $00, $ed, $00
 
 ; two effect routines read the word at $4D5C + 2 * index (index 3, or wBattleTarget & 3) and pass it
@@ -1975,9 +1975,9 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake::
     ld a, [wEffectSpriteX]
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_SetScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc
+    dw RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc
 
 ; step 0 of RunEffectRoutineEffectEvery5Frames_ScrollShake: sets hScrollY to 2; sets hScrollX to 0;
 ; increments wEffectSpriteX (E-0347)
@@ -2008,7 +2008,7 @@ SetScroll0_1AndIncEffectSpriteX::
 ; why: step 1 of RunEffectRoutineEffectEvery5Frames_ScrollShake (when wEffectSpriteX = 1);
 ; RunEffectRoutineEffectEvery5Frames_ScrollShake: steps that write hScrollY/hScrollX, then the next
 ; effect id (E-0352)
-RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_SetScrollY::
+RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY::
     xor a
     ldh [hScrollY], a
     xor a
@@ -2022,7 +2022,7 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX_SetScrollY
 ; why: step 3 of RunEffectRoutineEffectEvery5Frames_ScrollShake (when wEffectSpriteX = 3);
 ; RunEffectRoutineEffectEvery5Frames_ScrollShake: steps that write hScrollY/hScrollX, then the next
 ; effect id (E-0352)
-RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc::
+RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc::
     ld a, $ff
     ld [wEffectId], a
     xor a
@@ -2037,20 +2037,20 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteEffectIdAndScrollYEtc::
 RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
+    dw RunEffectRoutineEffectEvery5Frames_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
 
 ; step 0 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: sets wDMGPaletteBGP to 0;
 ; increments wEffectSpriteX (E-0347)
 ; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite (when wEffectSpriteX = 0);
 ; RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: alternates rBGP writes with a palette
 ; pattern that moves the effect sprite right (E-0352)
-RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP::
+RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $00
     inc hl
@@ -2079,7 +2079,7 @@ SetDMGPaletteBGPPatternAndIncEffectSpriteX::
 ; why: step 6 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite (when wEffectSpriteX = 6);
 ; RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: alternates rBGP writes with a palette
 ; pattern that moves the effect sprite right (E-0352)
-RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX::
+RunEffectRoutineEffectEvery5Frames_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX::
     call SetDMGPaletteBGPPatternAndIncEffectSpriteX
     ld a, $ff
     ld [wEffectId], a
@@ -2091,7 +2091,7 @@ RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatter
 RunEffectRoutineEffectEvery5Frames_FlashOnce::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_FlashOnce_CallDarkenPaletteStep
+    dw RunEffectRoutineEffectEvery5Frames_CallDarkenPaletteStep
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectStep
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetEffectId
@@ -2102,7 +2102,7 @@ RunEffectRoutineEffectEvery5Frames_FlashOnce::
 ; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashOnce (when wEffectSpriteX = 0);
 ; RunEffectRoutineEffectEvery5Frames_FlashOnce: sets the effect counter, writes rBGP once, then the
 ; next effect id (E-0352)
-RunEffectRoutineEffectEvery5Frames_FlashOnce_CallDarkenPaletteStep::
+RunEffectRoutineEffectEvery5Frames_CallDarkenPaletteStep::
     call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
     ld a, [wEffectCounter]
     cp $04
@@ -2267,10 +2267,10 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice::
     ld a, [wEffectSpriteX]
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_CallDarkenPaletteStep
-    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_WriteEffectStep
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_CallDarkenPaletteStep
-    dw RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep
+    dw RunEffectRoutineEffectEvery5Frames_WriteEffectStep
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId
 
@@ -2298,7 +2298,7 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice_CallDarkenPaletteStep::
 ; why: step 1 of RunEffectRoutineEffectEvery5Frames_FlashTwice (when wEffectSpriteX = 1);
 ; RunEffectRoutineEffectEvery5Frames_FlashTwice: the FlashOnce steps twice, then the next effect id
 ; (E-0352)
-RunEffectRoutineEffectEvery5Frames_FlashTwice_WriteEffectStep::
+RunEffectRoutineEffectEvery5Frames_WriteEffectStep::
     ld hl, wEffectStep
     inc [hl]
     ld a, [wEffectStep]
@@ -2675,23 +2675,23 @@ LightenDMGPaletteOneStep::
 RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite2::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_SetDMGPaletteBGP
+    dw RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
-    dw RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
+    dw RunEffectRoutineEffectEvery5Frames_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
 
 ; a sequence of steps that only write hScrollX/hScrollY: a screen shake (E-0288)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen::
@@ -2701,30 +2701,30 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_3
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_3
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_4
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_4
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_5
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_5
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX_2
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
+    dw RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc
 
 ; step 1 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 0; sets hScrollY to 0;
 ; increments wEffectSpriteX (E-0347)
@@ -2768,7 +2768,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
 ; why: step 4 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 4);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_2::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_2::
     ld a, $fc
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2780,7 +2780,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_2::
 ; why: step 6 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 6);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_3::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_3::
     ld a, $04
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2792,7 +2792,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_3::
 ; why: step 8 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 8);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_4::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_4::
     ld a, $f8
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2804,7 +2804,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_4::
 ; why: step 10 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 10);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX_5::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_5::
     ld a, $08
     ldh [hScrollX], a
     ld hl, wEffectSpriteX
@@ -2830,7 +2830,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
 ; why: step 14 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 14);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX_2::
+RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2::
     ld a, $08
     ldh [hScrollX], a
     ld a, $02
@@ -2844,7 +2844,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
 ; why: step 27 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 27);
 ; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
 ; hScrollX/hScrollY: a screen shake (E-0352)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc::
+RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc::
     xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -2862,7 +2862,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollYEtc::
 ; why: step 13 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 13);
 ; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
 ; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
-RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_2::
+RunEffectRoutineEffectEvery5Frames_2::
     ld a, [wLinkRole]
     ld b, a
     ld a, [wLinkMode]
@@ -2889,9 +2889,9 @@ RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, [wEffectSpriteX]
     jumptable
     dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep
+    dw LightenDMGPaletteOneStep_SetEffectStep
     dw LightenDMGPaletteOneStep_EffectPositionIndexForActor
-    dw LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep
+    dw LightenDMGPaletteOneStep_SetEffectStep
     dw LightenDMGPaletteOneStep_SetEffectId
 
 ; step 0 of LightenDMGPaletteOneStep: sets wEffectStep to 6; calls EffectPositionIndexForActor;
@@ -2904,7 +2904,7 @@ LightenDMGPaletteOneStep_EffectPositionIndexForActor::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -2925,11 +2925,11 @@ LightenDMGPaletteOneStep_EffectPositionIndexForActor::
 ; why: step 1 of LightenDMGPaletteOneStep; LightenDMGPaletteOneStep: increments wEffectCounter and
 ; steps the three DMG palette bytes one shade lighter (each 2-bit shade minus 1, not below 0)
 ; (E-0352)
-LightenDMGPaletteOneStep_EffectPositionIndexForActor_SetEffectStep::
+LightenDMGPaletteOneStep_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
     call EffectPositionIndexForActor
-    ld hl, RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget_Data
+    ld hl, RunEffectRoutineEffectEvery5Frames_Data
     call ReadWordTableEntry_Bank3A
     ld de, vBGMap0
     add hl, de
@@ -3388,7 +3388,7 @@ UploadBGPalettesWithFade::
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp [hl]
-    jp z, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0
+    jp z, UploadBGPalettesWithFade_CheckDMGPaletteOBP0
     ld c, $69
 
 .loop:
@@ -3457,7 +3457,7 @@ UploadBGPalettesWithFade::
     call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0
+    jp UploadBGPalettesWithFade_CheckDMGPaletteOBP0
 
 ; called from UploadBGPalettesWithFade: takes HL and C; changes HL, DE and A; branches on rSTAT
 ; (E-0347)
@@ -3588,7 +3588,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
 ; UploadBGPalettesWithFade; UploadBGPalettesWithFade: on CGB, when wDMGPaletteBGP changed, writes
 ; the eight background palettes through UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI ...
 ; (E-0352, E-0128)
-UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_CheckDMGPaletteOBP0::
+UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp [hl]
@@ -5513,17 +5513,17 @@ CheckActionBDOrRun::
     ret
 
 ; called from CheckActionBDOrRun: changes A and C; may continue in
-; CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6 (E-0347)
+; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6 (E-0347)
 ; why: a helper of CheckActionBDOrRun; CheckActionBDOrRun: returns A = 0 for action $BD while
 ; wMultiHitCount & $7F is non-zero (E-0352, E-0122, E-0344)
 CheckActionBDOrRun_SlotPresentWithStatus0Bit6::
     ld c, $00
     ld a, [wLinkMode]
     cp $01
-    jr nz, CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
+    jr nz, CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6
     ld a, [wLinkRole]
     bit 1, a
-    jr z, CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
+    jr z, CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6
     ld c, $04
 
 ; Calls SlotPresentWithStatus0Bit6; may return early; calls SlotPresentWithStatus0Bit6; may return
@@ -5531,7 +5531,7 @@ CheckActionBDOrRun_SlotPresentWithStatus0Bit6::
 ; why: part of CheckActionBDOrRun_SlotPresentWithStatus0Bit6, in a helper of CheckActionBDOrRun;
 ; CheckActionBDOrRun: returns A = 0 for action $BD while wMultiHitCount & $7F is non-zero (E-0352,
 ; E-0122, E-0344)
-CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6::
+CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6::
     call SlotPresentWithStatus0Bit6
     ret nc
     inc c
@@ -5542,11 +5542,10 @@ CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6::
     ret
 
 ; called from CheckActionBDOrRun: branches on wLinkMode; may continue in
-; CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6; continues in
-; CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6; calls
-; CarryUnlessBattleSlotOutSlotEmpty; may return early; calls CarryUnlessBattleSlotOutSlotEmpty; may
-; return early; calls CarryUnlessBattleSlotOutSlotEmpty; also changes A and C by register arithmetic
-; (E-0347)
+; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6; continues in
+; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6; calls CarryUnlessBattleSlotOutSlotEmpty; may
+; return early; calls CarryUnlessBattleSlotOutSlotEmpty; may return early; calls
+; CarryUnlessBattleSlotOutSlotEmpty; also changes A and C by register arithmetic (E-0347)
 ; why: a helper of CheckActionBDOrRun; CheckActionBDOrRun: returns A = 0 for action $BD while
 ; wMultiHitCount & $7F is non-zero (E-0352, E-0122, E-0344)
 CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty::
@@ -5556,9 +5555,9 @@ CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .call_carry_unless_battle_slot_out_slot_empty
     ld a, [wLinkRole]
     bit 1, a
-    jr z, CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
+    jr z, CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6
     ld c, $00
-    jr CheckActionBDOrRun_SlotPresentWithStatus0Bit6_CallSlotPresentWithStatus0Bit6
+    jr CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6
 
 .call_carry_unless_battle_slot_out_slot_empty:
     ld a, c
@@ -5598,7 +5597,7 @@ RunBattleActions_ToRunBattleActions_UseItem::
 RunBattleActions_WearOffAndDefeat::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleActions_WearOffAndDefeat_WriteBattleActorAndBattleResolveStep
+    dw RunBattleActions_WriteBattleActorAndBattleResolveStep
     dw RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore
     dw RunBattleActions_WearOffAndDefeat_AddAx9ToHL
     dw RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead
@@ -5612,7 +5611,7 @@ RunBattleActions_WearOffAndDefeat::
 ; why: step 0 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 0);
 ; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
 ; '0 dropped dead!' (E-0352)
-RunBattleActions_WearOffAndDefeat_WriteBattleActorAndBattleResolveStep::
+RunBattleActions_WriteBattleActorAndBattleResolveStep::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wSideFlags0
@@ -6626,25 +6625,22 @@ RunActionResolveStep::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    dw RunActionResolveStep_HeroWokeUp
     dw RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A
     dw RunActionResolveStep_CheckActionBDOrRun
-    dw RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0
+    dw RunActionResolveStep_SetBattleArg0
     dw RunActionResolveStep_ToRunBattleSubStep
     dw RunActionResolveStep_AddDoubleAToHL_Bank3A
     dw RunActionResolveStep_RunDefeatStepMinus1Step
-    dw RunActionResolveStep_CheckActionBDOrRun_AdvanceBattleResolveStep
+    dw RunActionResolveStep_AdvanceBattleResolveStep
     dw RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A
 
 ; step 0 of RunActionResolveStep: advances wBattleResolveStep; may continue in
-; RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp; calls
-; CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp; branches on wFollowUpAction;
-; may continue in RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp; calls
-; GetBattleMaxMP_Bank3A; calls GetBattleMP_Bank3A; may continue in
-; RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp; copies E to wBattleDamageLo;
-; copies D to wBattleDamageHi; copies E to wBattleDamageLo; then 6 more steps (see the code)
-; (E-0347)
+; RunActionResolveStep_HeroWokeUp; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
+; RunActionResolveStep_HeroWokeUp; branches on wFollowUpAction; may continue in
+; RunActionResolveStep_HeroWokeUp; calls GetBattleMaxMP_Bank3A; calls GetBattleMP_Bank3A; may
+; continue in RunActionResolveStep_HeroWokeUp; copies E to wBattleDamageLo; copies D to
+; wBattleDamageHi; copies E to wBattleDamageLo; then 6 more steps (see the code) (E-0347)
 ; why: step 0 of RunActionResolveStep (when wBattleResolveStep = 0); RunActionResolveStep: resolves
 ; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
 ; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
@@ -6655,19 +6651,19 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleStatus2
     call AddAx9ToHL
     bit BSTAT2_TAKE_MAGIC, [hl]
-    jp z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    jp z, RunActionResolveStep_HeroWokeUp
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    jp c, RunActionResolveStep_HeroWokeUp
     ld a, [wRecordBufferData + $7]
     bit 0, a
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    jr z, RunActionResolveStep_HeroWokeUp
     ld a, [wFollowUpAction]
     bit 2, a
     jr z, .read_battle_target
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    jr z, RunActionResolveStep_HeroWokeUp
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -6677,7 +6673,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     call GetBattleMP_Bank3A
     pop bc
     call CompareHLToBC
-    jr z, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp
+    jr z, RunActionResolveStep_HeroWokeUp
     ld a, [wBattleDamageLo]
     ld e, a
     ld a, [wBattleDamageHi]
@@ -6743,7 +6739,7 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
 ; why: step 1 of RunActionResolveStep (when wBattleResolveStep = 1); RunActionResolveStep: resolves
 ; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
 ; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
-RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_HeroWokeUp::
+RunActionResolveStep_HeroWokeUp::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -6814,8 +6810,7 @@ RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     ret
 
 ; step 3 of RunActionResolveStep: advances wBattleResolveStep; calls CheckActionBDOrRun; may
-; continue in RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0; advances
-; wBattleResolveStep (E-0347)
+; continue in RunActionResolveStep_SetBattleArg0; advances wBattleResolveStep (E-0347)
 ; why: step 3 of RunActionResolveStep (when wBattleResolveStep = 3); RunActionResolveStep: resolves
 ; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
 ; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
@@ -6823,7 +6818,7 @@ RunActionResolveStep_CheckActionBDOrRun::
     ld hl, wBattleResolveStep
     inc [hl]
     call CheckActionBDOrRun
-    jr nc, RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0
+    jr nc, RunActionResolveStep_SetBattleArg0
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wBattleResolveStep
@@ -6838,7 +6833,7 @@ RunActionResolveStep_CheckActionBDOrRun::
 ; why: step 4 of RunActionResolveStep (when wBattleResolveStep = 4); RunActionResolveStep: resolves
 ; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
 ; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
-RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty_SetBattleArg0::
+RunActionResolveStep_SetBattleArg0::
     ld a, [wFollowUpAction]
     or a
     jp nz, .skip4
@@ -7059,7 +7054,7 @@ RunActionResolveStep_RunDefeatStepMinus1Step::
 ; why: step 8 of RunActionResolveStep (when wBattleResolveStep = 8); RunActionResolveStep: resolves
 ; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
 ; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
-RunActionResolveStep_CheckActionBDOrRun_AdvanceBattleResolveStep::
+RunActionResolveStep_AdvanceBattleResolveStep::
     call CheckActionBDOrRun
     jr c, .clear_multi_hit_count
     ld hl, wBattleResolveStep
@@ -8770,18 +8765,17 @@ CallWithBattleFoeCount_WriteBattleStatResultLo::
     ldh a, [hTemp0]
     ld b, a
 
-; May continue in BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0; sets
-; wBattleStatResultLo to 0; branches on wBattleTarget; branches on E; branches on D; increments
-; wBattleStatResultLo; branches on D; branches on wBattleStatResultLo; sets wTextBuf0 to $16; sets
-; wTextBuf0 to $32; sets wTextBuf0 to $31; sets wTextBuf0 to $36; then 8 more steps (see the code)
-; (E-0347)
+; May continue in BattleTextPrepBE_CallCopyTargetNameToTextBuf0; sets wBattleStatResultLo to 0;
+; branches on wBattleTarget; branches on E; branches on D; increments wBattleStatResultLo; branches
+; on D; branches on wBattleStatResultLo; sets wTextBuf0 to $16; sets wTextBuf0 to $32; sets
+; wTextBuf0 to $31; sets wTextBuf0 to $36; then 8 more steps (see the code) (E-0347)
 ; why: part of CallWithBattleFoeCount_WriteBattleStatResultLo, in a helper of
 ; CallWithBattleFoeCount; CallWithBattleFoeCount: hTemp0 = wBattleFoeCount, then far-calls
 ; CallWithBattleFoeCount_WriteBattleStatResultLo (E-0352, E-0122, E-0344)
 CallWithBattleFoeCount_WriteBattleStatResultLo_Skip::
     ld a, b
     cp $01
-    jr z, BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0
+    jr z, BattleTextPrepBE_CallCopyTargetNameToTextBuf0
     xor a
     ld [wBattleStatResultLo], a
     ld a, [wBattleTarget]
@@ -8869,7 +8863,7 @@ CallWithBattleFoeCount_WriteBattleStatResultLo_Skip::
 CopyTargetOrSideNameToTextBuf0::
     ld a, e
     cp $01
-    jr z, BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0
+    jr z, BattleTextPrepBE_CallCopyTargetNameToTextBuf0
 
 ; Calls CopyTargetSideNameToTextBuf0 (E-0347)
 ; why: part of CopyTargetOrSideNameToTextBuf0; CopyTargetOrSideNameToTextBuf0: E = 1: copies the
@@ -8888,7 +8882,7 @@ BattleTextPrepBE_ToWriteMonstersWordToTextBuf0::
 ; why: part of BattleTextPrepBE_ToWriteMonstersWordToTextBuf0, in a helper of BattleTextPrepBE;
 ; BattleTextPrepBE: prepares the arguments of battle text BE (entry 190 of BattleTextPrepTable)
 ; (E-0352, E-0180)
-BattleTextPrepBE_ToWriteMonstersWordToTextBuf0_CallCopyTargetNameToTextBuf0::
+BattleTextPrepBE_CallCopyTargetNameToTextBuf0::
     call CopyTargetNameToTextBuf0
     ret
 
@@ -8898,7 +8892,7 @@ CheckAllTargetsSame:: ; configured code entry (E-0210); C0
     ldh a, [hTemp0]
     ld b, a
 
-; May continue in CopyTargetOrSideNameToTextBuf0_2_CallCopyTargetNameToTextBuf0; sets
+; May continue in CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0; sets
 ; wBattleStatResultLo to 0; branches on wBattleTarget; branches on E; branches on D; increments
 ; wBattleStatResultLo; branches on D; branches on wBattleStatResultLo; sets wTextBuf0 to $16; sets
 ; wTextBuf0 to $32; sets wTextBuf0 to $31; sets wTextBuf0 to $36; then 8 more steps (see the code)
@@ -8908,7 +8902,7 @@ CheckAllTargetsSame:: ; configured code entry (E-0210); C0
 CheckAllTargetsSame_Skip::
     ld a, b
     cp $01
-    jr z, CopyTargetOrSideNameToTextBuf0_2_CallCopyTargetNameToTextBuf0
+    jr z, CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0
     xor a
     ld [wBattleStatResultLo], a
     ld a, [wBattleTarget]
@@ -8988,7 +8982,7 @@ CheckAllTargetsSame_Skip::
 
 .call_copy_target_name_to_text_buf0:
     call CopyTargetNameToTextBuf0
-    jr CopyTargetOrSideNameToTextBuf0_2_CallWriteMonstersWordToTextBuf0
+    jr CopyTargetOrSideNameToTextBuf0_CallWriteMonstersWordToTextBuf0
 
 ; E = 1: copies the target's name to wTextBuf0; otherwise the target side's name followed by the
 ; word 'monsters' (E-0122) (E-0344: the address in its name dropped or read as the label there; was
@@ -8996,20 +8990,20 @@ CheckAllTargetsSame_Skip::
 CopyTargetOrSideNameToTextBuf0_2::
     ld a, e
     cp $01
-    jr z, CopyTargetOrSideNameToTextBuf0_2_CallCopyTargetNameToTextBuf0
+    jr z, CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0
     call CopyTargetSideNameToTextBuf0
 
 ; Calls WriteMonstersWordToTextBuf0 (E-0347)
 ; why: part of CopyTargetOrSideNameToTextBuf0_2; CopyTargetOrSideNameToTextBuf0_2: E = 1: copies the
 ; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
-CopyTargetOrSideNameToTextBuf0_2_CallWriteMonstersWordToTextBuf0::
+CopyTargetOrSideNameToTextBuf0_CallWriteMonstersWordToTextBuf0::
     call WriteMonstersWordToTextBuf0
     ret
 
 ; Calls CopyTargetNameToTextBuf0 (E-0347)
 ; why: part of CopyTargetOrSideNameToTextBuf0_2; CopyTargetOrSideNameToTextBuf0_2: E = 1: copies the
 ; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
-CopyTargetOrSideNameToTextBuf0_2_CallCopyTargetNameToTextBuf0::
+CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0::
     call CopyTargetNameToTextBuf0
     ret
 

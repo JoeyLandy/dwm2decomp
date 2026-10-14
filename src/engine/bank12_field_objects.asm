@@ -102,7 +102,7 @@ ObjectPath1C::
     dw ObjectPath1C_SetBit2AtHL_B12_SetPlayerFacing
     dw ObjectPath1C_WritePlayerY
     dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing
-    dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetFollowerRecords
+    dw ObjectPath1C_SetFollowerRecords
     dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep
     dw ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12
     dw ObjectPath1C_ClearBit2AtHL_Bank12
@@ -154,7 +154,7 @@ ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
 ; why: step 8 of ObjectPath1C (when wScriptStep = 8); ObjectPath1C: implements script command type
 ; 99 (SCRIPT_OBJECT_PATH_1C): a key-world/field talk event (group $1C: moves an object by step
 ; deltas with the ... (E-0352)
-ObjectPath1C_ScriptApplyStepDeltaAtDE_Bank12_SetFollowerRecords::
+ObjectPath1C_SetFollowerRecords::
     xor a
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -386,7 +386,7 @@ ObjectPath1B::
     dw ObjectPath1B_SetBit2AtHL_B12_SetPlayerFacing
     dw ObjectPath1B_UpdateFollowersOnStep_Bank12_SetPlayerY
     dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetPlayerFacing
-    dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetFollowerRecords
+    dw ObjectPath1B_SetFollowerRecords
     dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep
     dw ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12
     dw ObjectPath1C_ClearBit2AtHL_Bank12
@@ -448,7 +448,7 @@ ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetScriptStep::
 ; why: step 8 of ObjectPath1B (when wScriptStep = 8); ObjectPath1B: implements script command type
 ; 98 (SCRIPT_OBJECT_PATH_1B): a key-world/field talk event (group $1B: moves an object by step
 ; deltas with the ... (E-0352)
-ObjectPath1B_ScriptApplyStepDeltaAtDE_Bank12_SetFollowerRecords::
+ObjectPath1B_SetFollowerRecords::
     ld a, $03
     ld [wFollowerRecords], a
     ld de, wFollowerRecords + $2
@@ -866,7 +866,7 @@ ArenaGridBattle::
     dw ArenaRounds_SetBit2AtHL_B12
     dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity_2
+    dw ArenaGridBattle_StartArenaRankMessage_2
     dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
@@ -1205,7 +1205,7 @@ ArenaRounds_SetupMap0BMonsterObjects::
 ; why: step 6 of ArenaGridBattle (when wScriptStep = 6); ArenaGridBattle: implements script command
 ; type 95 (SCRIPT_ARENA_GRID_BATTLE): an arena battle: messages from ArenaRankMessageTable
 ; (StartArenaRankMessage) ... (E-0352, E-0038, E-0246)
-ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity_2::
+ArenaGridBattle_StartArenaRankMessage_2::
     ld a, $03
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -1537,25 +1537,25 @@ LinkMessageEvent::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetSaveStateFlag
 
 ; step 22 of LinkMessageEvent: copies wLinkSaveStateFlag to wSaveStateFlag; sets wGameMode to 8;
@@ -1587,25 +1587,25 @@ NpcBreedWarp::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw NpcBreedWarp_WriteMapIdAndMapScreenXEtc
     dw NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc
 
@@ -1693,27 +1693,27 @@ BreedChildScene::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_DecompressGraphicsTemp0ToTemp4
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -1765,17 +1765,17 @@ BreedChildSprite::
     dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
     dw BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedChildSprite_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -2003,25 +2003,25 @@ BreedFade::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_2
     dw BreedFade_StartPaletteFade
     dw BreedFade_WaitFadeState
 
@@ -2224,7 +2224,7 @@ LinkMessageEvent_WriteObject1AndScriptParam0::
 ; why: step 3 of LinkMessageEvent (when wScriptStep = 3); LinkMessageEvent: implements script
 ; command type 9F (SCRIPT_LINK_MESSAGE): a key-world/field talk event (group $21, dispatched from
 ; the link screens ... (E-0352)
-LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_2::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -2386,7 +2386,7 @@ FollowersStep14::
     jumptable
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
+    dw FollowersStep14_SetScriptStartRequest
 
 ; implements script command type 93 (SCRIPT_WARP_WITH_FOLLOWERS): a key-world/field talk event
 ; (group $13: sets an object flag, fades, then sets the warp destination, wFollowerRecords and the
@@ -2398,7 +2398,7 @@ WarpWithFollowers::
     dw FollowersStep14_UpdateFollowersOnStep_Bank12
     dw WarpWithFollowers_ScriptStartFadeAndAdvanceStep
     dw WarpWithFollowers_SetBit1AtHL_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
+    dw FollowersStep14_SetScriptStartRequest
 
 ; step 3 of WarpWithFollowers: calls SetBit1AtHL_Bank12; sets wFollowerRecords to 0; branches on
 ; hPlayerY; increments hPlayerY; returns unless hPlayerY is $50; advances wScriptStep; also changes
@@ -2483,7 +2483,7 @@ PlayerAndFollowersStep::
     dw PlayerAndFollowersStep_UpdatePlayerMovement
     dw PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7
     dw PlayerAndFollowersStep_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
+    dw FollowersStep14_SetScriptStartRequest
 
 ; step 4 of PlayerAndFollowersStep: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
 ; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $20; advances
@@ -2515,7 +2515,7 @@ FollowersStep11::
     jumptable
     dw FollowersStep14_SetBit1AtHL_Bank12AndStep
     dw FollowersStep11_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
+    dw FollowersStep14_SetScriptStartRequest
 
 ; step 1 of FollowersStep11: calls UpdateFollowersOnStep_Bank12; increments hPlayerY; calls
 ; UpdateFollowersOnStep_Bank12; increments hPlayerY; returns unless hPlayerY is $60; advances
@@ -2550,7 +2550,7 @@ FollowersStep10::
     dw PlayerAndFollowersStep_UpdatePlayerMovement
     dw PlayerAndFollowersStep_UpdatePlayerMovement_RunFieldActionRequestActionIfBit7
     dw FollowersStep10_UpdateFollowersOnStep_Bank12
-    dw FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest
+    dw FollowersStep14_SetScriptStartRequest
 
 ; step 2 of FollowersStep14: calls UpdateFollowersOnStep_Bank12; returns unless hPlayerY is c; calls
 ; ClearBit1AtHL_Bank12; sets wScriptStartRequest to $80; also changes HL, A and C by register
@@ -2558,7 +2558,7 @@ FollowersStep10::
 ; why: step 2 of FollowersStep14 (when wScriptStep = 2); FollowersStep14: implements script command
 ; type 94 (SCRIPT_FOLLOWERS_STEP_14): a key-world/field talk event (group $14: steps the followers,
 ; toggling object ... (E-0352)
-FollowersStep14_UpdateFollowersOnStep_Bank12_SetScriptStartRequest::
+FollowersStep14_SetScriptStartRequest::
     ldh a, [hPlayerY]
     call UpdateFollowersOnStep_Bank12
     ldh a, [hPlayerY]
@@ -3306,7 +3306,7 @@ HealPartyEvent::
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_SetScriptStartRequest
+    dw HealPartyEvent_SetScriptStartRequest
 
 ; step 0 of HealPartyEvent: advances wScriptStep; sets hPlayerFacing to 3; checks
 ; EVENT_THANKS_FOR_COMING_BY_025; may return early; sets hPlayerFacing to 2 (E-0347)
@@ -3338,7 +3338,7 @@ ReturnWarp::
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_SetScriptStartRequest
+    dw HealPartyEvent_SetScriptStartRequest
 
 ; step 1 of HealPartyEvent: advances wScriptStep; checks EVENT_SCENE_LIMBO_MONSTER2; calls
 ; StartMessageA; checks EVENT_THANKS_FOR_COMING_BY_025; sets wObject1 + OBJ_STATE to 0 (E-0347)
@@ -3458,7 +3458,7 @@ ReturnMessage::
     dw ScriptStepFlashScreenNegative
     dw HealPartyEvent_FullyHealParty
     dw HealPartyEvent_MoveIncapacitatedPartyMembersBack
-    dw HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_SetScriptStartRequest
+    dw HealPartyEvent_SetScriptStartRequest
 
 ; with bit 7 of wMapType saves the wKeyWorldFlags record; sets the position ($50, $30),
 ; wFieldTransitionKind = 3 (story flag $25) or 4, wReturnWarpFlag = 1 and starts the fade (E-0126)
@@ -3650,7 +3650,7 @@ HealPartyEvent_MoveIncapacitatedPartyMembersBack::
 ; why: step 6 of HealPartyEvent (when wScriptStep = 6); HealPartyEvent: implements script command
 ; type 9B (SCRIPT_HEAL_PARTY): a key-world/field talk event (group $1A, dispatched by
 ; RunMenuStateMenuState: heals ... (E-0352)
-HealPartyEvent_RunMessageBoxCarryWhenIdle_Bank12_SetScriptStartRequest::
+HealPartyEvent_SetScriptStartRequest::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank12
     ret nc
@@ -3668,7 +3668,7 @@ PartyDefeatedReturn::
     dw PartyDefeatedReturn_WriteScriptParam0AndScriptParam1
     dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc
     dw PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12
-    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_BackScriptStep
+    dw PartyDefeatedReturn_BackScriptStep
     dw PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc
     dw PartyDefeatedReturn_QueueMusic
     dw PartyDefeatedReturn_StepScriptParam0Counter_Bank12
@@ -3750,12 +3750,11 @@ PartyDefeatedReturn_QueueMusic::
     ret
 
 ; step 3 of PartyDefeatedReturn: decrements wScriptStep; decrements wScriptParam0; may continue in
-; PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex; continues in
-; PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex (E-0347)
+; PartyDefeatedReturn_SetMessageIndex; continues in PartyDefeatedReturn_SetMessageIndex (E-0347)
 ; why: step 3 of PartyDefeatedReturn (when wScriptStep = 3); PartyDefeatedReturn: implements script
 ; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
 ; dispatched from ... (E-0352)
-PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_BackScriptStep::
+PartyDefeatedReturn_BackScriptStep::
     ld hl, wScriptStep
     dec [hl]
     ld de, wShadowOAM + $b
@@ -3763,9 +3762,9 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_BackScriptStep::
     dec a
     ld [wScriptParam0], a
     or a
-    jr nz, PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex
+    jr nz, PartyDefeatedReturn_SetMessageIndex
     ld de, vTiles0 + $b
-    jr PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex
+    jr PartyDefeatedReturn_SetMessageIndex
 
 ; step 2 of PartyDefeatedReturn: calls RunMessageBoxCarryWhenIdle_Bank12; may return early; branches
 ; on wScriptParam0; sets wScriptParam0 to 0; sets wScriptStep to 4; advances wScriptStep (E-0347)
@@ -3791,7 +3790,7 @@ PartyDefeatedReturn_RunMessageBoxCarryWhenIdle_Bank12::
     ret
 
 ; step 1 of PartyDefeatedReturn: advances wScriptStep; decrements wScriptParam0; may continue in
-; PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex (E-0347)
+; PartyDefeatedReturn_SetMessageIndex (E-0347)
 ; why: step 1 of PartyDefeatedReturn (when wScriptStep = 1); PartyDefeatedReturn: implements script
 ; command type 87 (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04,
 ; dispatched from ... (E-0352)
@@ -3803,7 +3802,7 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
     dec a
     ld [wScriptParam0], a
     or a
-    jr nz, PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex
+    jr nz, PartyDefeatedReturn_SetMessageIndex
     ld de, $000a
 
 ; Copies E to wMessageIndex; copies D to wMessageGroup; sets wMessageState to 0; copies
@@ -3814,7 +3813,7 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
 ; PartyDefeatedReturn (when wScriptStep = 1); PartyDefeatedReturn: implements script command type 87
 ; (SCRIPT_PARTY_DEFEATED_RETURN): a key-world/field talk event (group $04, dispatched from ...
 ; (E-0352)
-PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc_SetMessageIndex::
+PartyDefeatedReturn_SetMessageIndex::
     ld a, e
     ld [wMessageIndex], a
     ld a, d
@@ -7223,7 +7222,7 @@ LoadSpriteGraphics7EToTiles0::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $d8
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     add e
     ld e, a
     jr nc, .call_copy_from_bank
@@ -7302,24 +7301,24 @@ RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
     dw RunFieldCommandTemp0_WriteObject5
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_17
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_16
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_15
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_14
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_13
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_12
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_11
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_10
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_9
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_8
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_7
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_6
     dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
     dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3
-    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_5
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_4
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_3
+    dw RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_2
     dw RunFieldCommandTemp0_WriteObject5_SetObject5
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
@@ -7381,7 +7380,7 @@ RunFieldCommandTemp0_WriteObject5_SetObject5::
 ; why: step 18 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_2::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7406,7 +7405,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2::
 ; why: step 17 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_3::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7432,7 +7431,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3::
 ; why: step 16 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_4::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7457,7 +7456,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4::
 ; why: step 15 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7513,7 +7512,7 @@ RunFieldCommandTemp0_WriteObject5_SetObject5_2::
 ; why: step 12 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_6::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7544,7 +7543,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6::
 ; why: step 11 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_7::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7576,7 +7575,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7::
 ; why: step 10 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_8::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7601,7 +7600,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8::
 ; why: step 9 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_9::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7626,7 +7625,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9::
 ; why: step 8 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_10::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7651,7 +7650,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10::
 ; why: step 7 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_11::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7676,7 +7675,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11::
 ; why: step 6 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_12::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7706,7 +7705,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12::
 ; why: step 5 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_13::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7731,7 +7730,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13::
 ; why: step 4 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_14::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7755,7 +7754,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14::
 ; why: step 3 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_15::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7776,7 +7775,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15::
 ; why: step 2 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_16::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -7800,7 +7799,7 @@ RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16::
 ; why: step 1 of RunFieldCommandTemp0; RunFieldCommandTemp0: the 22 field commands that scenes and
 ; map entry run with hTemp0 = command: each places script object 5 (wObject5) and decompresses its
 ; ... (E-0352, E-0354, E-0124)
-RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17::
+RunFieldCommandTemp0_WriteObject5_DecompressToVRAM_17::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -8327,7 +8326,7 @@ FindTriggerEntryForCurrentScreen::
     ld a, [wMapObjectCount]
     sub b
     ld [wTriggerIndex], a
-    jr FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell
+    jr FindTriggerEntryForCurrentScreen_SetTriggerCell
 
 ; on maps from $30 (or special map $85) finds the wScreenTriggers entry for the current screen and
 ; sets wTriggerIndex, wTriggerCell and wTriggerKind from it (E-0128)
@@ -8390,7 +8389,7 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
     ld a, [wScreenTriggerCount]
     sub b
     ld [wTriggerIndex], a
-    jr FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell
+    jr FindTriggerEntryForCurrentScreen_SetTriggerCell
 
 ; Sets wTriggerCell; returns if the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data is
 ; 0; copies the byte at FindTriggerEntryForCurrentScreen_ScreenTriggers_Data to wTriggerKind; also
@@ -8399,7 +8398,7 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers::
 ; FindTriggerEntryForCurrentScreen_ScreenTriggers: on maps from $30 (or special map $85) finds the
 ; wScreenTriggers entry for the current screen and sets wTriggerIndex, wTriggerCell and ... (E-0352,
 ; E-0128)
-FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell::
+FindTriggerEntryForCurrentScreen_SetTriggerCell::
     inc hl
     ld a, [hl]
     ld [wTriggerCell], a
@@ -8445,7 +8444,7 @@ RandomGoldOrItem_DecompressToVRAM::
     or a
     ret z
     ld a, [hl]
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     add e
     ld e, a
     jr nc, .skip
@@ -10546,10 +10545,9 @@ FindPartyMemberWithSkill76To7DOr92::
     ld [rRAMG], a
     ret
 
-; called from GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1: sets hTemp1 to 0
-; (E-0347)
-; why: a helper of GreatLogTalkEvents_StartScriptAtHL_B13_GreatLogTalkEvents_WriteTemp1, in step 204
-; of GreatLogTalkEvents (when wTalkEventGroup = 204); GreatLogTalkEvents: talk category 1: jumps by
+; called from GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1: sets hTemp1 to 0 (E-0347)
+; why: a helper of GreatLogTalkEvents_StartScriptAtHL_B13_WriteTemp1, in step 204 of
+; GreatLogTalkEvents (when wTalkEventGroup = 204); GreatLogTalkEvents: talk category 1: jumps by
 ; wTalkEventGroup to the talk handlers of the Great Log home island (messages from $0000-$02DF:
 ; Warubou, Prince ... (E-0352)
 GreatLogTalkEvents_WriteTemp1::

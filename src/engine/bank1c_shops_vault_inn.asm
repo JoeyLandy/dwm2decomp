@@ -1153,7 +1153,7 @@ ShopMenu_Setup_ToInitItemListScreenListAndCount::
 ; why: step 3 of ShopMenu_Setup (when wScreenStep = 3); ShopMenu_Setup: screen setup steps (tile
 ; lists, item list screen) (E-0352, E-0276)
 ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
-    ld de, ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep_TileRect
+    ld de, ShopMenu_Setup_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -1172,7 +1172,7 @@ ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-ShopMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep_TileRect::
+ShopMenu_Setup_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ea, $eb, $ec, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -1397,7 +1397,7 @@ ShopMenu_Buy::
     dw ShopMenu_Buy_ResetTextCounter0Counters
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_SetNumberTens
     dw ShopMenu_Buy_BlinkCursorBlinkCD_Bank1C
-    dw ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetListCursorBlink
+    dw ShopMenu_Buy_SetListCursorBlink
     dw ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap
     dw ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C
     dw DrawTwoBoxesAndRequestScript80
@@ -2750,7 +2750,7 @@ ShopMenu_Buy_WriteThreeDigits::
 ; why: step 10 of ShopMenu_Buy (when wScreenStep = 10); ShopMenu_Buy: buying: items from
 ; ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold) and
 ; SubtractArg1AmountFromGold (E-0352, E-0276)
-ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetListCursorBlink::
+ShopMenu_Buy_SetListCursorBlink::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
     ld e, a
@@ -3085,13 +3085,13 @@ BlinkCursorBlinkD2_Bank1C::
 
 .skip:
     ld b, $bb
-    jr ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle
+    jr ShopMenu_Buy_ReadShopCursorToggle
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1C)
 DrawBlankTileC3_Bank1C::
     ld b, $c3
-    jr ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle
+    jr ShopMenu_Buy_ReadShopCursorToggle
 
 ; called from ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C: takes BC; changes B (E-0347)
 ; why: a helper of ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C, in step 12 of ShopMenu_Buy (when
@@ -3106,7 +3106,7 @@ ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2::
 ; ShopMenu_Buy_BlinkCursorBlinkD2_Bank1C, in step 12 of ShopMenu_Buy (when wScreenStep = 12);
 ; ShopMenu_Buy: buying: items from ShopItemListTable for wScreenTableIndex, a gold check
 ; (IsAmountInArg1AboveGold) and SubtractArg1AmountFromGold (E-0352, E-0276)
-ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle::
+ShopMenu_Buy_ReadShopCursorToggle::
     ld a, [wShopCursorToggle]
     add a
     ld hl, ShopMenu_Buy_StepBGMapAddressBackOnScrollWrap_Data
@@ -4494,8 +4494,7 @@ BlinkCursorBlinkCD_Bank1C_2::
     ld [wCursorBlinkCD], a
 
 ; called from ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2: changes A and B; branches on
-; wNumberEditPos; continues in ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos
-; (E-0347)
+; wNumberEditPos; continues in ShopMenu_Sell_ReadNumberEditPos (E-0347)
 ; why: a helper of ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2, in step 8 of ShopMenu_Sell (when
 ; wScreenStep = 8); ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice,
 ; paid with AddArg1ToGoldCapped99999 (E-0352, E-0276)
@@ -4512,7 +4511,7 @@ ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2::
 .skip:
     add $e0
     ld b, a
-    jr ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos
+    jr ShopMenu_Sell_ReadNumberEditPos
 
 ; Changes B (E-0347)
 ; why: part of ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2, in a helper of
@@ -4528,7 +4527,7 @@ ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_Skip::
 ; ShopMenu_Sell_BlinkCursorBlinkCD_Bank1C_2, in step 8 of ShopMenu_Sell (when wScreenStep = 8);
 ; ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice, paid with
 ; AddArg1ToGoldCapped99999 (E-0352, E-0276)
-ShopMenu_Sell_BGMapAddressAtScroll_Bank1C_2_ReadNumberEditPos::
+ShopMenu_Sell_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
     ld hl, ShopMenu_Buy_BGMapAddressAtScroll_Bank1C_2_Data
@@ -4878,13 +4877,13 @@ BlinkCursorBlinkD2_Bank1C_2::
 
 .skip:
     ld b, $bb
-    jr ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle
+    jr ShopMenu_Sell_ReadShopCursorToggle
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
 ; or read as the label there; was DrawBlankTileC3_Bank1C_2)
 DrawBlankTileC3_Bank1C_2::
     ld b, $c3
-    jr ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle
+    jr ShopMenu_Sell_ReadShopCursorToggle
 
 ; called from ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2: takes BC; changes B (E-0347)
 ; why: a helper of ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2, in step 11 of ShopMenu_Sell (when
@@ -4899,7 +4898,7 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2::
 ; ShopMenu_Sell_BlinkCursorBlinkD2_Bank1C_2, in step 11 of ShopMenu_Sell (when wScreenStep = 11);
 ; ShopMenu_Sell: selling: items from the inventory, priced by ComputeSellPrice, paid with
 ; AddArg1ToGoldCapped99999 (E-0352, E-0276)
-ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle::
+ShopMenu_Sell_ReadShopCursorToggle::
     ld a, [wShopCursorToggle]
     add a
     ld hl, ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data_2
@@ -4919,8 +4918,7 @@ ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle::
     ei
     ret
 
-; data read by ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_2_ReadShopCursorToggle (4 bytes)
-; (E-0347)
+; data read by ShopMenu_Sell_ReadShopCursorToggle (4 bytes) (E-0347)
 ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap_Data_2::
     db $2f, $01, $6f, $01
 
@@ -6823,7 +6821,7 @@ VaultMenu_Setup::
     jumptable
     dw VaultMenu_Setup_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Setup_ToCopyTileListFromBank1F_1C
-    dw VaultMenu_Setup_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep
+    dw VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep
     dw VaultMenu_Setup_CopyFromBankWaitVRAM
     dw VaultMenu_Setup_ToInitItemListScreenListAndCount
     dw VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep
@@ -6854,7 +6852,7 @@ VaultMenu_Setup_ToCopyTileListFromBank1F_1C::
 ; wScreenStep (E-0347)
 ; why: step 2 of VaultMenu_Setup (when wScreenStep = 2); VaultMenu_Setup: screen setup: tile lists,
 ; the item list screen and its box (E-0352, E-0276)
-VaultMenu_Setup_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep::
+VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep::
     farcall VaultMenu_WriteSavedSpriteClipModeAndListPages
     ld a, [wScreenStep]
     inc a
@@ -6905,7 +6903,7 @@ VaultMenu_Setup_ToInitItemListScreenListAndCount::
 ; why: step 5 of VaultMenu_Setup (when wScreenStep = 5); VaultMenu_Setup: screen setup: tile lists,
 ; the item list screen and its box (E-0352, E-0276)
 VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
-    ld de, VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep_TileRect
+    ld de, VaultMenu_Setup_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0b, $07
     call CopyRectTo20ByteRowsJp_Bank1C
@@ -6924,7 +6922,7 @@ VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 11 x 7 tiles, one row per line
-VaultMenu_Setup_DrawScreenListBoxAtWindowTileBufferRow5Col12AndStep_TileRect::
+VaultMenu_Setup_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $a6, $cf, $a5, $a7, $df, $eb, $ad, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7106,25 +7104,25 @@ VaultMenu_Store::
     dw VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess
     dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1
     dw VaultMenu_Store_LoadThreeTilesAndDrawRows
-    dw VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
+    dw VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
-    dw VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
+    dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
     dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
-    dw VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
-    dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetScreenStep
+    dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
+    dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
+    dw VaultMenu_Store_SetScreenStep
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetTwoChoiceCursor
+    dw VaultMenu_Store_SetTwoChoiceCursor
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
-    dw VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
-    dw VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
+    dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
+    dw VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C
     dw VaultMenu_Store_ClearRect147AndAskTwoChoice
@@ -7170,7 +7168,7 @@ VaultMenu_Store_LoadThreeTilesAndDrawRows::
 ; step 3 of VaultMenu_Store: calls VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc (E-0347)
 ; why: step 3 of VaultMenu_Store (when wScreenStep = 3); VaultMenu_Store: storing: moves items from
 ; wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
+VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
     farcall VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
     ret
 
@@ -7367,7 +7365,7 @@ VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc::
 ; step 7 of VaultMenu_Store: calls VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D (E-0347)
 ; why: step 7 of VaultMenu_Store (when wScreenStep = 7); VaultMenu_Store: storing: moves items from
 ; wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
+VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     farcall VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     ret
 
@@ -7381,14 +7379,14 @@ VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits::
 ; step 10 of VaultMenu_Store: calls VaultMenu_Store_WriteDigitsAndDigitWorkAEtc (E-0347)
 ; why: step 10 of VaultMenu_Store (when wScreenStep = 10); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
+VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
     farcall VaultMenu_Store_WriteDigitsAndDigitWorkAEtc
     ret
 
 ; step 11 of VaultMenu_Store: calls VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2 (E-0347)
 ; why: step 11 of VaultMenu_Store (when wScreenStep = 11); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
+VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
     farcall VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
     ret
 
@@ -7398,7 +7396,7 @@ VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
 ; wScriptStartRequest to $80 (E-0347)
 ; why: step 12 of VaultMenu_Store (when wScreenStep = 12); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetScreenStep::
+VaultMenu_Store_SetScreenStep::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0088
     add hl, de
@@ -7460,7 +7458,7 @@ VaultMenu_Store_InitItemListScreenListAndDraw::
 ; (E-0347)
 ; why: step 16 of VaultMenu_Store (when wScreenStep = 16); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetTwoChoiceCursor::
+VaultMenu_Store_SetTwoChoiceCursor::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0088
     add hl, de
@@ -7514,14 +7512,14 @@ VaultMenu_Store_CopyTileBytesToVRAM_Bank1C::
 ; step 20 of VaultMenu_Store: calls VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3 (E-0347)
 ; why: step 20 of VaultMenu_Store (when wScreenStep = 20); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D::
+VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D::
     farcall VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3
     ret
 
 ; step 21 of VaultMenu_Store: calls VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc (E-0347)
 ; why: step 21 of VaultMenu_Store (when wScreenStep = 21); VaultMenu_Store: storing: moves items
 ; from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0352, E-0276)
-VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
+VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     farcall VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
     ret
 
@@ -7605,20 +7603,20 @@ VaultMenu_TakeOut::
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_DrawRect0140AtBGMap13E0AndStep
-    dw VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
+    dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
     dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
-    dw VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
-    dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetScreenStep
+    dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
+    dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
+    dw VaultMenu_Store_SetScreenStep
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
     dw VaultMenu_Store_ReadScreenState
     dw VaultMenu_Store_InitItemListScreenListAndDraw
-    dw VaultMenu_Store_DrawRectBothBanksSetTextCursorLoPlus1C1_SetTwoChoiceCursor
+    dw VaultMenu_Store_SetTwoChoiceCursor
     dw VaultMenu_Store_ToDrawRect0147AndResetNumberEditPos
     dw VaultMenu_Store_CopyTileBytesToVRAM_Bank1C
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
-    dw VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
+    dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
     dw VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_DrawGoldDigitsAtHLWrapped_1C

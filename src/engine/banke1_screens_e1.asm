@@ -9,17 +9,17 @@ Tiles2Gfx_4::
     INCBIN "gfx/misc/tiles2_gfx_4.lz"
 
 ; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM_ScreenTileBufferGfx::
+GameMode5_Update_LoadScreens_Screen0_ScreenTileBufferGfx::
     db $68, $01, $13, $13, $a0, $ff, $4d, $13, $41, $0f, $2e, $01, $02, $03, $04, $05
     db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13, $41, $0f
     db $4d, $13, $12, $1f, $42
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM_ScreenAttrBufferGfx::
+GameMode5_Update_LoadScreens_Screen0_ScreenAttrBufferGfx::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
-GameMode5_Update_LoadScreens_Screen0_DecompressToVRAM_BGPaletteBufferData::
+GameMode5_Update_LoadScreens_Screen0_BGPaletteBufferData::
     db $b5, $56, $ff, $7f, $d7, $56, $00, $00
 
 ; LZSS-compressed: 1169 bytes that expand to 1600 (E-0016, E-0017)
@@ -27,14 +27,14 @@ Tiles2Gfx_5::
     INCBIN "gfx/misc/tiles2_gfx_5.lz"
 
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen1_decompress_to_vram_screen_tile_buffer_gfx.lz"
+GameMode5_Update_LoadScreens_Screen1_ScreenTileBufferGfx::
+    INCBIN "gfx/misc/game_mode5_update_load_screens_screen1_screen_tile_buffer_gfx.lz"
 
-GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM_ScreenAttrBufferGfx::
+GameMode5_Update_LoadScreens_Screen1_ScreenAttrBufferGfx::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
-GameMode5_Update_LoadScreens_Screen1_DecompressToVRAM_BGPaletteBufferData::
+GameMode5_Update_LoadScreens_Screen1_BGPaletteBufferData::
     db $60, $31, $b5, $56, $e8, $62, $00, $00
 
 ; LZSS-compressed: 815 bytes that expand to 1552 (E-0016, E-0017)
@@ -42,15 +42,15 @@ Tiles2Gfx_6::
     INCBIN "gfx/misc/tiles2_gfx_6.lz"
 
 ; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen2_decompress_to_vram_screen_tile_buffer_gfx.lz"
+GameMode5_Update_LoadScreens_Screen2_ScreenTileBufferGfx::
+    INCBIN "gfx/misc/game_mode5_update_load_screens_screen2_screen_tile_buffer_gfx.lz"
 
 ; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM_ScreenAttrBufferGfx::
+GameMode5_Update_LoadScreens_Screen2_ScreenAttrBufferGfx::
     db $68, $01, $00, $08, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
     db $00, $08, $1f, $34
 
-GameMode5_Update_LoadScreens_Screen2_DecompressToVRAM_BGPaletteBufferData::
+GameMode5_Update_LoadScreens_Screen2_BGPaletteBufferData::
     db $0f, $3e, $bf, $73, $d7, $56, $00, $00
 
 ; LZSS-compressed: 1165 bytes that expand to 2048 (E-0016, E-0017)
@@ -70,19 +70,19 @@ Tiles0Gfx_4::
     INCBIN "gfx/misc/tiles0_gfx_4.lz"
 
 ; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_with_music_decompress_to_vram_screen_tile_buffer_gfx.lz"
+GameMode5_Update_LoadScreens_ScreenTileBufferGfx::
+    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_tile_buffer_gfx.lz"
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM_ScreenAttrBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_with_music_decompress_to_vram_screen_attr_buffer_gfx.lz"
+GameMode5_Update_LoadScreens_ScreenAttrBufferGfx::
+    INCBIN "gfx/misc/game_mode5_update_load_screens_screen_attr_buffer_gfx.lz"
 
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
-RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/run_game_mode5_case00_sub_states_decompress_to_vram_run_game_mode5_case00_sub_states_read_work_buf_and_title_screen_sub_state_screen_tile_buffer_gfx.lz"
+RunGameMode5Case00SubStates_ScreenTileBufferGfx::
+    INCBIN "gfx/misc/run_game_mode5_case00_sub_states_screen_tile_buffer_gfx.lz"
 
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
-RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_ScreenAttrBufferGfx::
+RunGameMode5Case00SubStates_ScreenAttrBufferGfx::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
@@ -96,19 +96,19 @@ BGMap0Gfx_2::
     db $00, $20, $1f, $4d, $00, $80, $1f, $4d, $00, $e0, $1f, $4d, $00, $40, $2f, $4d
     db $00, $a0, $2f, $4d, $00, $00, $3f, $4d, $00, $60, $3f, $4d, $00, $a0, $3f, $2c
 
-RunGameMode5Case00SubStates_DecompressToVRAM_2_BGPaletteBufferData::
+RunGameMode5Case00SubStates_BGPaletteBufferData::
     db $0f, $54, $ff, $7f, $1f, $13, $aa, $04, $0f, $54, $ff, $7f, $1f, $13, $d5, $09
     db $33, $05, $ff, $03, $bd, $21, $aa, $04, $33, $05, $ff, $7f, $1f, $13, $aa, $04
     db $33, $05, $ff, $7f, $bd, $21, $aa, $04, $36, $04, $ff, $7f, $1f, $13, $aa, $04
     db $36, $04, $ff, $7f, $1f, $13, $d5, $09, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f
 
-RunGameMode5Case00SubStates_DecompressToVRAM_RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_BGPaletteBufferData::
+RunGameMode5Case00SubStates_ReadWorkBufAndTitleScreenSubState_BGPaletteBufferData::
     db $0f, $54, $ff, $7f, $1f, $13, $aa, $04, $0f, $54, $ff, $7f, $1f, $13, $d5, $09
     db $33, $05, $ff, $03, $bd, $21, $aa, $04, $33, $05, $ff, $7f, $1f, $13, $aa, $04
     db $33, $05, $ff, $7f, $bd, $21, $aa, $04, $36, $04, $ff, $7f, $1f, $13, $aa, $04
     db $36, $04, $ff, $7f, $1f, $13, $d5, $09, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f
 
-GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM_OBJPaletteBufferData::
+GameMode5_Update_LoadScreens_OBJPaletteBufferData::
     db $20, $7c, $ff, $7f, $a8, $14, $00, $00, $20, $7c, $ff, $7f, $35, $04, $00, $00
 
 ; runs RunBankE1Routine_WaitOamNextEntry with DE = RunBankE1Routine_Data (E-0122) (E-0344: the

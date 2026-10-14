@@ -2037,7 +2037,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
-    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_2
     ld a, e
     add $08
     ld e, a

@@ -189,7 +189,13 @@ class GlobalNameClaims(unittest.TestCase):
                 mw = re.fullmatch(r"(Write|Read|Check|Set|Clear)([A-Z][A-Za-z0-9]*?)(And[A-Z]\w*|Etc)?", own_core)
                 mv = re.fullmatch(r"Wait([A-Z][A-Za-z0-9]*)", own_core)
                 callee = re.sub(r"AndStep$", "", own_core)
-                if mt and mt.group(1) in defined:
+                # Parent_Own where the callee is a step of an ancestor (Top_Own): the repeated ancestor name was
+                # dropped from the step name (E-0356)
+                anc = {t for t in targets for o in (own, own_core)
+                       if t.endswith("_" + o) and lab.startswith(t[:-len(o)]) and o not in defined}
+                if anc:
+                    claim = True
+                elif mt and mt.group(1) in defined:
                     claim = any(t == mt.group(1) or t.endswith("To" + mt.group(1)) for t in targets)
                 elif callee in defined or own in defined:
                     claim = any(t in (own, callee) or t.endswith("_" + callee) or t.endswith("To" + callee)
