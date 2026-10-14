@@ -794,9 +794,9 @@ ActionTargetRoutines2::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_6C75 ; id 22
-    dw ChooseTarget_Heal_6C75 ; id 23
-    dw ChooseTarget_Heal_6C75 ; id 24
+    dw ChooseTarget_Heal_5 ; id 22
+    dw ChooseTarget_Heal_5 ; id 23
+    dw ChooseTarget_Heal_5 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw ChooseTarget_MPass ; id 27
@@ -805,15 +805,15 @@ ActionTargetRoutines2::
     dw TargetRandomAllySlot ; id 30
     dw TargetRandomAllySlot ; id 31
     dw TargetOwnSideFirstSlot ; id 32
-    dw ChooseTarget_Antidote_6AFD ; id 33
+    dw ChooseTarget_Antidote_3 ; id 33
     dw TargetFirstAlly ; id 34
     dw TargetFirstAlly ; id 35
     dw TargetFirstAlly ; id 36
-    dw ChooseTarget_Upper_6B0A ; id 37
+    dw ChooseTarget_Upper_3 ; id 37
     dw TargetFirstAlly ; id 38
-    dw ChooseTarget_Sap_6BB0 ; id 39
+    dw ChooseTarget_Sap_3 ; id 39
     dw TargetFirstFoe ; id 40
-    dw ChooseTarget_Speed_6B5D ; id 41
+    dw ChooseTarget_Speed_3 ; id 41
     dw TargetFirstAlly ; id 42
     dw TargetByAllyAGL ; id 43
     dw TargetFirstFoe ; id 44
@@ -1026,9 +1026,9 @@ ActionTargetRoutines3::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_6C75 ; id 22
-    dw ChooseTarget_Heal_6C75 ; id 23
-    dw ChooseTarget_Heal_6C75 ; id 24
+    dw ChooseTarget_Heal_5 ; id 22
+    dw ChooseTarget_Heal_5 ; id 23
+    dw ChooseTarget_Heal_5 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw ChooseTarget_MPass ; id 27
@@ -1037,15 +1037,15 @@ ActionTargetRoutines3::
     dw TargetRandomAllySlot ; id 30
     dw TargetRandomAllySlot ; id 31
     dw TargetOwnSideFirstSlot ; id 32
-    dw ChooseTarget_Antidote_6AFD ; id 33
+    dw ChooseTarget_Antidote_3 ; id 33
     dw TargetFirstAlly ; id 34
     dw TargetFirstAlly ; id 35
     dw TargetFirstAlly ; id 36
-    dw ChooseTarget_Upper_6B0A ; id 37
+    dw ChooseTarget_Upper_3 ; id 37
     dw TargetFirstAlly ; id 38
-    dw ChooseTarget_Sap_6BB0 ; id 39
+    dw ChooseTarget_Sap_3 ; id 39
     dw TargetFirstFoe ; id 40
-    dw ChooseTarget_Speed_6B5D ; id 41
+    dw ChooseTarget_Speed_3 ; id 41
     dw TargetFirstAlly ; id 42
     dw TargetByAllyAGL ; id 43
     dw TargetFirstFoe ; id 44
@@ -1491,35 +1491,35 @@ ActionTargetRoutines5::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_67AD ; id 22
-    dw ChooseTarget_Heal_67AD ; id 23
-    dw ChooseTarget_Heal_67AD ; id 24
+    dw ChooseTarget_Heal_3 ; id 22
+    dw ChooseTarget_Heal_3 ; id 23
+    dw ChooseTarget_Heal_3 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw TargetRandomOtherAlly ; id 27
     dw TargetRandomOtherAlly ; id 28
     dw TargetRandomOtherAlly ; id 29
-    dw ChooseTarget_Vivify_6998 ; id 30
-    dw ChooseTarget_Vivify_6998 ; id 31
+    dw ChooseTarget_Vivify_2 ; id 30
+    dw ChooseTarget_Vivify_2 ; id 31
     dw TargetOwnSideFirstSlot ; id 32
-    dw ChooseTarget_Antidote_699B ; id 33
+    dw ChooseTarget_Antidote_2 ; id 33
     dw TargetFirstAlly ; id 34
     dw TargetFirstAlly ; id 35
     dw TargetFirstAlly ; id 36
-    dw ChooseTarget_Upper_69A1 ; id 37
+    dw ChooseTarget_Upper_2 ; id 37
     dw TargetFirstAlly ; id 38
-    dw ChooseTarget_Sap_69A4 ; id 39
+    dw ChooseTarget_Sap_2 ; id 39
     dw TargetFirstFoe ; id 40
-    dw ChooseTarget_Speed_69AA ; id 41
+    dw ChooseTarget_Speed_2 ; id 41
     dw TargetFirstAlly ; id 42
-    dw ChooseTarget_Slow_69A7 ; id 43
+    dw ChooseTarget_Slow_2 ; id 43
     dw TargetFirstFoe ; id 44
-    dw ChooseTarget_TwinHits_699E ; id 45
+    dw ChooseTarget_TwinHits_2 ; id 45
     dw TargetFirstFoe ; id 46
     dw TargetFoeWeightedBySlotOrder ; id 47
     dw TargetFirstFoe ; id 48
     dw TargetSelf ; id 49
-    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw ChooseTarget_RobMagic_2 ; id 50
     dw TargetFirstFoe ; id 51
     dw $0000 ; id 52
     dw $0000 ; id 53
@@ -1527,7 +1527,7 @@ ActionTargetRoutines5::
     dw TargetSelf ; id 55
     dw TargetFirstAlly ; id 56
     dw TargetFirstAlly ; id 57
-    dw ChooseTarget_Transform_6A04 ; id 58
+    dw ChooseTarget_Transform_2 ; id 58
     dw TargetSelf ; id 59
     dw TargetSelf ; id 60
     dw TargetFoeWeightedBySlotOrder ; id 61
@@ -1553,17 +1553,17 @@ ActionTargetRoutines5::
     dw TargetFoeWeightedBySlotOrder ; id 81
     dw TargetFoeWeightedBySlotOrder ; id 82
     dw TargetFoeWeightedBySlotOrder ; id 83
-    dw ChooseTarget_SlimeBlow_69E9 ; id 84
-    dw ChooseTarget_DrakSlash_69C5 ; id 85
-    dw ChooseTarget_BeastCut_69CB ; id 86
-    dw ChooseTarget_BirdBlow_69D1 ; id 87
-    dw ChooseTarget_BugBlow_69EF ; id 88
-    dw ChooseTarget_Shears_69F5 ; id 89
-    dw ChooseTarget_DevilCut_69D7 ; id 90
-    dw ChooseTarget_ZombieCut_69DD ; id 91
-    dw ChooseTarget_CleanCut_69E3 ; id 92
+    dw ChooseTarget_SlimeBlow_2 ; id 84
+    dw ChooseTarget_DrakSlash_2 ; id 85
+    dw ChooseTarget_BeastCut_2 ; id 86
+    dw ChooseTarget_BirdBlow_2 ; id 87
+    dw ChooseTarget_BugBlow_2 ; id 88
+    dw ChooseTarget_Shears_2 ; id 89
+    dw ChooseTarget_DevilCut_2 ; id 90
+    dw ChooseTarget_ZombieCut_2 ; id 91
+    dw ChooseTarget_CleanCut_2 ; id 92
     dw TargetFoeWeightedBySlotOrder ; id 93
-    dw ChooseTarget_MetalCut_69C2 ; id 94
+    dw ChooseTarget_MetalCut_2 ; id 94
     dw TargetFoeWeightedBySlotOrder ; id 95
     dw TargetFoeWeightedBySlotOrder ; id 96
     dw TargetFoeWeightedBySlotOrder ; id 97
@@ -1587,8 +1587,8 @@ ActionTargetRoutines5::
     dw TargetFirstFoe ; id 115
     dw TargetFirstFoe ; id 116
     dw TargetFirstFoe ; id 117
-    dw ChooseTarget_OddDance_69BF ; id 118
-    dw ChooseTarget_OddDance_69BF ; id 119
+    dw ChooseTarget_OddDance_2 ; id 118
+    dw ChooseTarget_OddDance_2 ; id 119
     dw TargetFirstFoe ; id 120
     dw TargetFirstFoe ; id 121
     dw TargetFirstFoe ; id 122
@@ -1599,7 +1599,7 @@ ActionTargetRoutines5::
     dw TargetFirstFoe ; id 127
     dw TargetFirstFoe ; id 128
     dw TargetFirstAlly ; id 129
-    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw ChooseTarget_UltraDown_2 ; id 130
     dw TargetFirstFoe ; id 131
     dw TargetFirstFoe ; id 132
     dw TargetSelf ; id 133
@@ -1609,18 +1609,18 @@ ActionTargetRoutines5::
     dw TargetSelf ; id 137
     dw TargetSelf ; id 138
     dw TargetFoeWeightedBySlotOrder ; id 139
-    dw ChooseTarget_SickLick_69B6 ; id 140
-    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw ChooseTarget_SickLick_2 ; id 140
+    dw ChooseTarget_LegSweep_2 ; id 141
     dw TargetFirstFoe ; id 142
     dw TargetFoeWeightedBySlotOrder ; id 143
     dw TargetFirstFoe ; id 144
     dw TargetRandomFoe ; id 145
     dw TargetFirstFoe ; id 146
-    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw ChooseTarget_MouthShut_2 ; id 147
     dw TargetSelf ; id 148
     dw TargetSelf ; id 149
     dw TargetSelf ; id 150
-    dw ChooseTarget_Cover_69B0 ; id 151
+    dw ChooseTarget_Cover_2 ; id 151
     dw TargetFirstAlly ; id 152
     dw TargetSelf ; id 153
     dw TargetFirstAlly ; id 154
@@ -1955,35 +1955,35 @@ ActionTargetRoutines7::
     dw TargetFoeWeightedBySlotOrder ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_67AD ; id 22
-    dw ChooseTarget_Heal_67AD ; id 23
-    dw ChooseTarget_Heal_67AD ; id 24
+    dw ChooseTarget_Heal_3 ; id 22
+    dw ChooseTarget_Heal_3 ; id 23
+    dw ChooseTarget_Heal_3 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw TargetRandomOtherAlly ; id 27
     dw TargetRandomOtherAlly ; id 28
     dw TargetRandomOtherAlly ; id 29
-    dw ChooseTarget_Vivify_6998 ; id 30
-    dw ChooseTarget_Vivify_6998 ; id 31
+    dw ChooseTarget_Vivify_2 ; id 30
+    dw ChooseTarget_Vivify_2 ; id 31
     dw TargetOwnSideFirstSlot ; id 32
-    dw ChooseTarget_Antidote_699B ; id 33
+    dw ChooseTarget_Antidote_2 ; id 33
     dw TargetFirstAlly ; id 34
     dw TargetFirstAlly ; id 35
     dw TargetFirstAlly ; id 36
-    dw ChooseTarget_Upper_69A1 ; id 37
+    dw ChooseTarget_Upper_2 ; id 37
     dw TargetFirstAlly ; id 38
-    dw ChooseTarget_Sap_69A4 ; id 39
+    dw ChooseTarget_Sap_2 ; id 39
     dw TargetFirstFoe ; id 40
-    dw ChooseTarget_Speed_69AA ; id 41
+    dw ChooseTarget_Speed_2 ; id 41
     dw TargetFirstAlly ; id 42
-    dw ChooseTarget_Slow_69A7 ; id 43
+    dw ChooseTarget_Slow_2 ; id 43
     dw TargetFirstFoe ; id 44
-    dw ChooseTarget_TwinHits_699E ; id 45
+    dw ChooseTarget_TwinHits_2 ; id 45
     dw TargetFirstFoe ; id 46
     dw TargetFoeWeightedBySlotOrder ; id 47
     dw TargetFirstFoe ; id 48
     dw TargetSelf ; id 49
-    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw ChooseTarget_RobMagic_2 ; id 50
     dw TargetFirstFoe ; id 51
     dw $0000 ; id 52
     dw $0000 ; id 53
@@ -1991,7 +1991,7 @@ ActionTargetRoutines7::
     dw TargetSelf ; id 55
     dw TargetFirstAlly ; id 56
     dw TargetFirstAlly ; id 57
-    dw ChooseTarget_Transform_6A04 ; id 58
+    dw ChooseTarget_Transform_2 ; id 58
     dw TargetSelf ; id 59
     dw TargetSelf ; id 60
     dw TargetFoeWeightedBySlotOrder ; id 61
@@ -2017,17 +2017,17 @@ ActionTargetRoutines7::
     dw TargetFoeWeightedBySlotOrder ; id 81
     dw TargetFoeWeightedBySlotOrder ; id 82
     dw TargetFoeWeightedBySlotOrder ; id 83
-    dw ChooseTarget_SlimeBlow_69E9 ; id 84
-    dw ChooseTarget_DrakSlash_69C5 ; id 85
-    dw ChooseTarget_BeastCut_69CB ; id 86
-    dw ChooseTarget_BirdBlow_69D1 ; id 87
-    dw ChooseTarget_BugBlow_69EF ; id 88
-    dw ChooseTarget_Shears_69F5 ; id 89
-    dw ChooseTarget_DevilCut_69D7 ; id 90
-    dw ChooseTarget_ZombieCut_69DD ; id 91
-    dw ChooseTarget_CleanCut_69E3 ; id 92
+    dw ChooseTarget_SlimeBlow_2 ; id 84
+    dw ChooseTarget_DrakSlash_2 ; id 85
+    dw ChooseTarget_BeastCut_2 ; id 86
+    dw ChooseTarget_BirdBlow_2 ; id 87
+    dw ChooseTarget_BugBlow_2 ; id 88
+    dw ChooseTarget_Shears_2 ; id 89
+    dw ChooseTarget_DevilCut_2 ; id 90
+    dw ChooseTarget_ZombieCut_2 ; id 91
+    dw ChooseTarget_CleanCut_2 ; id 92
     dw TargetFoeWeightedBySlotOrder ; id 93
-    dw ChooseTarget_MetalCut_69C2 ; id 94
+    dw ChooseTarget_MetalCut_2 ; id 94
     dw TargetFoeWeightedBySlotOrder ; id 95
     dw TargetFoeWeightedBySlotOrder ; id 96
     dw TargetFoeWeightedBySlotOrder ; id 97
@@ -2051,8 +2051,8 @@ ActionTargetRoutines7::
     dw TargetFirstFoe ; id 115
     dw TargetFirstFoe ; id 116
     dw TargetFirstFoe ; id 117
-    dw ChooseTarget_OddDance_69BF ; id 118
-    dw ChooseTarget_OddDance_69BF ; id 119
+    dw ChooseTarget_OddDance_2 ; id 118
+    dw ChooseTarget_OddDance_2 ; id 119
     dw TargetFirstFoe ; id 120
     dw TargetFirstFoe ; id 121
     dw TargetFirstFoe ; id 122
@@ -2063,7 +2063,7 @@ ActionTargetRoutines7::
     dw TargetFirstFoe ; id 127
     dw TargetFirstFoe ; id 128
     dw TargetFirstAlly ; id 129
-    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw ChooseTarget_UltraDown_2 ; id 130
     dw TargetFirstFoe ; id 131
     dw TargetFirstFoe ; id 132
     dw TargetSelf ; id 133
@@ -2073,18 +2073,18 @@ ActionTargetRoutines7::
     dw TargetSelf ; id 137
     dw TargetSelf ; id 138
     dw TargetFoeWeightedBySlotOrder ; id 139
-    dw ChooseTarget_SickLick_69B6 ; id 140
-    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw ChooseTarget_SickLick_2 ; id 140
+    dw ChooseTarget_LegSweep_2 ; id 141
     dw TargetFirstFoe ; id 142
     dw TargetFoeWeightedBySlotOrder ; id 143
     dw TargetFirstFoe ; id 144
     dw TargetRandomFoe ; id 145
     dw TargetFirstFoe ; id 146
-    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw ChooseTarget_MouthShut_2 ; id 147
     dw TargetSelf ; id 148
     dw TargetSelf ; id 149
     dw TargetSelf ; id 150
-    dw ChooseTarget_Cover_69B0 ; id 151
+    dw ChooseTarget_Cover_2 ; id 151
     dw TargetFirstAlly ; id 152
     dw TargetSelf ; id 153
     dw TargetFirstAlly ; id 154
@@ -2166,7 +2166,7 @@ ActionTargetRoutines7::
 ; SkillTable (E-0204) (E-0219, C1)
 ; record: target routine for this action id
 ActionTargetRoutines8::
-    dw ChooseTarget_SquallHit_543C ; id 0
+    dw ChooseTarget_SquallHit_2 ; id 0
     dw ChooseTarget_Blaze ; id 1
     dw ChooseTarget_Blaze ; id 2
     dw ChooseTarget_Blaze ; id 3
@@ -2188,9 +2188,9 @@ ActionTargetRoutines8::
     dw ChooseTarget_Beat ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_5593 ; id 22
-    dw ChooseTarget_Heal_5593 ; id 23
-    dw ChooseTarget_Heal_5593 ; id 24
+    dw ChooseTarget_Heal_2 ; id 22
+    dw ChooseTarget_Heal_2 ; id 23
+    dw ChooseTarget_Heal_2 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw TargetRandomOtherAlly ; id 27
@@ -2264,19 +2264,19 @@ ActionTargetRoutines8::
     dw ChooseTarget_PoisonHit ; id 95
     dw ChooseTarget_Paralyze ; id 96
     dw ChooseTarget_NapAttack ; id 97
-    dw ChooseTarget_SquallHit_543C ; id 98
-    dw ChooseTarget_SquallHit_543C ; id 99
+    dw ChooseTarget_SquallHit_2 ; id 98
+    dw ChooseTarget_SquallHit_2 ; id 99
     dw TargetRandomFoe ; id 100
     dw TargetFirstFoe ; id 101
     dw TargetFirstFoe ; id 102
     dw ChooseTarget_GigaSlash ; id 103
     dw TargetSelf ; id 104
-    dw ChooseTarget_SquallHit_543C ; id 105
-    dw ChooseTarget_SquallHit_543C ; id 106
-    dw ChooseTarget_SquallHit_543C ; id 107
+    dw ChooseTarget_SquallHit_2 ; id 105
+    dw ChooseTarget_SquallHit_2 ; id 106
+    dw ChooseTarget_SquallHit_2 ; id 107
     dw TargetRandomOtherSlot ; id 108
-    dw ChooseTarget_SquallHit_543C ; id 109
-    dw ChooseTarget_SquallHit_543C ; id 110
+    dw ChooseTarget_SquallHit_2 ; id 109
+    dw ChooseTarget_SquallHit_2 ; id 110
     dw ChooseTarget_Ramming ; id 111
     dw ChooseTarget_Ramming ; id 112
     dw TargetFirstFoe ; id 113
@@ -2376,13 +2376,13 @@ ActionTargetRoutines8::
     dw TargetFirstAlly ; id 207
     dw TargetFirstFoe ; id 208
     dw ChooseTarget_Blaze ; id 209
-    dw ChooseTarget_SquallHit_543C ; id 210
-    dw ChooseTarget_SquallHit_543C ; id 211
-    dw ChooseTarget_SquallHit_543C ; id 212
+    dw ChooseTarget_SquallHit_2 ; id 210
+    dw ChooseTarget_SquallHit_2 ; id 211
+    dw ChooseTarget_SquallHit_2 ; id 212
     dw TargetFirstFoe ; id 213
     dw TargetFirstFoe ; id 214
-    dw ChooseTarget_SquallHit_543C ; id 215
-    dw ChooseTarget_SquallHit_543C ; id 216
+    dw ChooseTarget_SquallHit_2 ; id 215
+    dw ChooseTarget_SquallHit_2 ; id 216
     dw TargetFirstFoe ; id 217
     dw TargetFirstAlly ; id 218
     dw TargetFirstFoe ; id 219
@@ -2398,10 +2398,10 @@ ActionTargetRoutines8::
 ; table 9 of ActionTargetModeTable (mode 4, far side); 228 code words, one per action id, as
 ; SkillTable (E-0204) (E-0219, C1)
 ActionTargetRoutines9::
-    dw ChooseTarget_SquallHit_66C5 ; id 0
-    dw ChooseTarget_Blaze_6A0A ; id 1
-    dw ChooseTarget_Blaze_6A0A ; id 2
-    dw ChooseTarget_Blaze_6A0A ; id 3
+    dw ChooseTarget_SquallHit_3 ; id 0
+    dw ChooseTarget_Blaze_2 ; id 1
+    dw ChooseTarget_Blaze_2 ; id 2
+    dw ChooseTarget_Blaze_2 ; id 3
     dw TargetFirstFoe ; id 4
     dw TargetFirstFoe ; id 5
     dw TargetFirstFoe ; id 6
@@ -2417,38 +2417,38 @@ ActionTargetRoutines9::
     dw TargetFirstFoe ; id 16
     dw TargetFirstFoe ; id 17
     dw TargetFirstFoe ; id 18
-    dw ChooseTarget_Beat_6A07 ; id 19
+    dw ChooseTarget_Beat_2 ; id 19
     dw TargetFirstFoe ; id 20
     dw TargetFirstFoe ; id 21
-    dw ChooseTarget_Heal_68B0 ; id 22
-    dw ChooseTarget_Heal_68B0 ; id 23
-    dw ChooseTarget_Heal_68B0 ; id 24
+    dw ChooseTarget_Heal_4 ; id 22
+    dw ChooseTarget_Heal_4 ; id 23
+    dw ChooseTarget_Heal_4 ; id 24
     dw TargetFirstAlly ; id 25
     dw TargetFirstAlly ; id 26
     dw TargetRandomOtherAlly ; id 27
     dw TargetRandomOtherAlly ; id 28
     dw TargetRandomOtherAlly ; id 29
-    dw ChooseTarget_Vivify_6998 ; id 30
-    dw ChooseTarget_Vivify_6998 ; id 31
+    dw ChooseTarget_Vivify_2 ; id 30
+    dw ChooseTarget_Vivify_2 ; id 31
     dw TargetOwnSideFirstSlot ; id 32
-    dw ChooseTarget_Antidote_699B ; id 33
+    dw ChooseTarget_Antidote_2 ; id 33
     dw TargetFirstAlly ; id 34
     dw TargetFirstAlly ; id 35
     dw TargetFirstAlly ; id 36
-    dw ChooseTarget_Upper_69A1 ; id 37
+    dw ChooseTarget_Upper_2 ; id 37
     dw TargetFirstAlly ; id 38
-    dw ChooseTarget_Sap_69A4 ; id 39
+    dw ChooseTarget_Sap_2 ; id 39
     dw TargetFirstFoe ; id 40
-    dw ChooseTarget_Speed_69AA ; id 41
+    dw ChooseTarget_Speed_2 ; id 41
     dw TargetFirstAlly ; id 42
-    dw ChooseTarget_Slow_69A7 ; id 43
+    dw ChooseTarget_Slow_2 ; id 43
     dw TargetFirstFoe ; id 44
-    dw ChooseTarget_TwinHits_699E ; id 45
+    dw ChooseTarget_TwinHits_2 ; id 45
     dw TargetFirstFoe ; id 46
-    dw ChooseTarget_Sleep_6A10 ; id 47
+    dw ChooseTarget_Sleep_2 ; id 47
     dw TargetFirstFoe ; id 48
     dw TargetSelf ; id 49
-    dw ChooseTarget_RobMagic_6A13 ; id 50
+    dw ChooseTarget_RobMagic_2 ; id 50
     dw TargetFirstFoe ; id 51
     dw $0000 ; id 52
     dw TargetSelf ; id 53
@@ -2456,10 +2456,10 @@ ActionTargetRoutines9::
     dw TargetSelf ; id 55
     dw TargetFirstAlly ; id 56
     dw TargetFirstAlly ; id 57
-    dw ChooseTarget_Transform_6A04 ; id 58
+    dw ChooseTarget_Transform_2 ; id 58
     dw TargetSelf ; id 59
     dw TargetSelf ; id 60
-    dw ChooseTarget_MegaMagic_6AFA ; id 61
+    dw ChooseTarget_MegaMagic_2 ; id 61
     dw TargetFirstFoe ; id 62
     dw TargetFirstFoe ; id 63
     dw TargetFirstFoe ; id 64
@@ -2470,54 +2470,54 @@ ActionTargetRoutines9::
     dw TargetFirstFoe ; id 69
     dw TargetFirstFoe ; id 70
     dw TargetFirstFoe ; id 71
-    dw ChooseTarget_WindBeast_6A22 ; id 72
+    dw ChooseTarget_WindBeast_2 ; id 72
     dw TargetFirstFoe ; id 73
     dw TargetFirstFoe ; id 74
     dw TargetFirstFoe ; id 75
-    dw ChooseTarget_Watershot_6A99 ; id 76
+    dw ChooseTarget_Watershot_2 ; id 76
     dw TargetFirstFoe ; id 77
     dw TargetRandomFoe ; id 78
     dw TargetRandomFoe ; id 79
-    dw ChooseTarget_FireSlash_6A16 ; id 80
-    dw ChooseTarget_VacuSlash_6A1C ; id 81
-    dw ChooseTarget_BoltSlash_6A19 ; id 82
-    dw ChooseTarget_IceSlash_6A1F ; id 83
-    dw ChooseTarget_SlimeBlow_69E9 ; id 84
-    dw ChooseTarget_DrakSlash_69C5 ; id 85
-    dw ChooseTarget_BeastCut_69CB ; id 86
-    dw ChooseTarget_BirdBlow_69D1 ; id 87
-    dw ChooseTarget_BugBlow_69EF ; id 88
-    dw ChooseTarget_Shears_69F5 ; id 89
-    dw ChooseTarget_DevilCut_69D7 ; id 90
-    dw ChooseTarget_ZombieCut_69DD ; id 91
-    dw ChooseTarget_CleanCut_69E3 ; id 92
-    dw ChooseTarget_AquaCut_6A96 ; id 93
-    dw ChooseTarget_MetalCut_69C2 ; id 94
-    dw ChooseTarget_PoisonHit_69FB ; id 95
-    dw ChooseTarget_Paralyze_69FE ; id 96
-    dw ChooseTarget_NapAttack_69BC ; id 97
-    dw ChooseTarget_SquallHit_66C5 ; id 98
-    dw ChooseTarget_SquallHit_66C5 ; id 99
+    dw ChooseTarget_FireSlash_2 ; id 80
+    dw ChooseTarget_VacuSlash_2 ; id 81
+    dw ChooseTarget_BoltSlash_2 ; id 82
+    dw ChooseTarget_IceSlash_2 ; id 83
+    dw ChooseTarget_SlimeBlow_2 ; id 84
+    dw ChooseTarget_DrakSlash_2 ; id 85
+    dw ChooseTarget_BeastCut_2 ; id 86
+    dw ChooseTarget_BirdBlow_2 ; id 87
+    dw ChooseTarget_BugBlow_2 ; id 88
+    dw ChooseTarget_Shears_2 ; id 89
+    dw ChooseTarget_DevilCut_2 ; id 90
+    dw ChooseTarget_ZombieCut_2 ; id 91
+    dw ChooseTarget_CleanCut_2 ; id 92
+    dw ChooseTarget_AquaCut_2 ; id 93
+    dw ChooseTarget_MetalCut_2 ; id 94
+    dw ChooseTarget_PoisonHit_2 ; id 95
+    dw ChooseTarget_Paralyze_2 ; id 96
+    dw ChooseTarget_NapAttack_2 ; id 97
+    dw ChooseTarget_SquallHit_3 ; id 98
+    dw ChooseTarget_SquallHit_3 ; id 99
     dw TargetRandomFoe ; id 100
     dw TargetFirstFoe ; id 101
     dw TargetFirstFoe ; id 102
-    dw ChooseTarget_GigaSlash_6A25 ; id 103
+    dw ChooseTarget_GigaSlash_2 ; id 103
     dw TargetSelf ; id 104
-    dw ChooseTarget_SquallHit_66C5 ; id 105
-    dw ChooseTarget_SquallHit_66C5 ; id 106
-    dw ChooseTarget_SquallHit_66C5 ; id 107
+    dw ChooseTarget_SquallHit_3 ; id 105
+    dw ChooseTarget_SquallHit_3 ; id 106
+    dw ChooseTarget_SquallHit_3 ; id 107
     dw TargetRandomOtherSlot ; id 108
-    dw ChooseTarget_SquallHit_66C5 ; id 109
+    dw ChooseTarget_SquallHit_3 ; id 109
     dw ChooseTarget_Berserker ; id 110
     dw ChooseTarget_Berserker ; id 111
-    dw ChooseTarget_SquallHit_66C5 ; id 112
+    dw ChooseTarget_SquallHit_3 ; id 112
     dw TargetFirstFoe ; id 113
     dw TargetFirstFoe ; id 114
     dw TargetFirstFoe ; id 115
     dw TargetFirstFoe ; id 116
     dw TargetFirstFoe ; id 117
-    dw ChooseTarget_OddDance_69BF ; id 118
-    dw ChooseTarget_OddDance_69BF ; id 119
+    dw ChooseTarget_OddDance_2 ; id 118
+    dw ChooseTarget_OddDance_2 ; id 119
     dw TargetFirstFoe ; id 120
     dw TargetFirstFoe ; id 121
     dw TargetFirstFoe ; id 122
@@ -2528,7 +2528,7 @@ ActionTargetRoutines9::
     dw TargetFirstFoe ; id 127
     dw TargetFirstFoe ; id 128
     dw TargetFirstAlly ; id 129
-    dw ChooseTarget_UltraDown_69AD ; id 130
+    dw ChooseTarget_UltraDown_2 ; id 130
     dw TargetFirstFoe ; id 131
     dw TargetFirstFoe ; id 132
     dw TargetSelf ; id 133
@@ -2537,19 +2537,19 @@ ActionTargetRoutines9::
     dw TargetSelf ; id 136
     dw TargetSelf ; id 137
     dw TargetSelf ; id 138
-    dw ChooseTarget_LushLicks_6A01 ; id 139
-    dw ChooseTarget_SickLick_69B6 ; id 140
-    dw ChooseTarget_LegSweep_69B9 ; id 141
+    dw ChooseTarget_LushLicks_2 ; id 139
+    dw ChooseTarget_SickLick_2 ; id 140
+    dw ChooseTarget_LegSweep_2 ; id 141
     dw TargetFirstFoe ; id 142
-    dw ChooseTarget_LushLicks_6A01 ; id 143
+    dw ChooseTarget_LushLicks_2 ; id 143
     dw TargetFirstFoe ; id 144
     dw TargetRandomFoe ; id 145
     dw TargetFirstFoe ; id 146
-    dw ChooseTarget_MouthShut_69B3 ; id 147
+    dw ChooseTarget_MouthShut_2 ; id 147
     dw TargetSelf ; id 148
     dw TargetSelf ; id 149
     dw TargetSelf ; id 150
-    dw ChooseTarget_Cover_69B0 ; id 151
+    dw ChooseTarget_Cover_2 ; id 151
     dw TargetFirstAlly ; id 152
     dw TargetSelf ; id 153
     dw TargetFirstAlly ; id 154
@@ -2602,26 +2602,26 @@ ActionTargetRoutines9::
     dw TargetSelf ; id 201
     dw TargetSelf ; id 202
     dw TargetSelf ; id 203
-    dw ChooseTarget_SquallHit_66C5 ; id 204
+    dw ChooseTarget_SquallHit_3 ; id 204
     dw TargetSelf ; id 205
     dw TargetOwnSideFirstSlot ; id 206
     dw TargetFirstAlly ; id 207
     dw TargetFirstFoe ; id 208
-    dw ChooseTarget_Blaze_6A0A ; id 209
-    dw ChooseTarget_SquallHit_66C5 ; id 210
-    dw ChooseTarget_SquallHit_66C5 ; id 211
-    dw ChooseTarget_SquallHit_66C5 ; id 212
+    dw ChooseTarget_Blaze_2 ; id 209
+    dw ChooseTarget_SquallHit_3 ; id 210
+    dw ChooseTarget_SquallHit_3 ; id 211
+    dw ChooseTarget_SquallHit_3 ; id 212
     dw TargetFirstFoe ; id 213
     dw TargetFirstFoe ; id 214
-    dw ChooseTarget_SquallHit_66C5 ; id 215
-    dw ChooseTarget_SquallHit_66C5 ; id 216
+    dw ChooseTarget_SquallHit_3 ; id 215
+    dw ChooseTarget_SquallHit_3 ; id 216
     dw TargetFirstFoe ; id 217
     dw TargetFirstAlly ; id 218
     dw TargetFirstFoe ; id 219
     dw TargetSelf ; id 220
     dw TargetFirstAlly ; id 221
     dw TargetFirstFoe ; id 222
-    dw ChooseTarget_Blaze_6A0A ; id 223
+    dw ChooseTarget_Blaze_2 ; id 223
     dw TargetSelf ; id 224
     dw TargetFirstFoe ; id 225
     dw TargetSelf ; id 226
@@ -2741,8 +2741,9 @@ ChooseTarget_SquallHit::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105
 ; PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 110 Berserker, $D2, $D3 ...; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_SquallHit_543C::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_SquallHit_543C)
+ChooseTarget_SquallHit_2::
     ld hl, wBattleDamageLo
     ld bc, $0008
     xor a
@@ -2955,8 +2956,9 @@ ChooseTarget_Heal_Loop::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Heal_5593::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_Heal_5593)
+ChooseTarget_Heal_2::
     ld a, [wBattleActor]
     and $04
     ld e, a
@@ -3489,7 +3491,7 @@ ChooseTarget_Sap::
     ldh [hTemp2], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT2_BOUNCE, [hl]
     jr nz, .next
     ld a, c
     ldh [hTemp3], a
@@ -3548,7 +3550,7 @@ ChooseTarget_Slow::
     ldh [hTemp2], a
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT2_BOUNCE, [hl]
     jr nz, .next
     ld a, c
     ldh [hTemp3], a
@@ -4466,7 +4468,7 @@ ChooseTarget_Beat::
     jr c, .restore
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT2_BOUNCE, [hl]
     jr nz, .restore
     ld a, c
     ld hl, wSlotResistances + $2
@@ -5782,8 +5784,9 @@ TargetFoeWeightedBySlotOrder::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 0 (no name), 98 SquallHit, 99 BiAttack, 105
 ; PsycheUp, 106 HighJump, 107 EvilSlash, 109 TwinSlash, 112 Kamikaze, $CC, $D2 ...; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_SquallHit_66C5::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_SquallHit_66C5)
+ChooseTarget_SquallHit_3::
     call AdvanceRandom
     ld a, [wBattleActor]
     and $04
@@ -5915,8 +5918,9 @@ ChooseTarget_SquallHit_66C5::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Heal_67AD::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_Heal_67AD)
+ChooseTarget_Heal_3::
     ld a, [wBattleActor]
     and $04
     ld e, a
@@ -6086,8 +6090,9 @@ ChooseTarget_Heal_67AD::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Heal_68B0::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_Heal_68B0)
+ChooseTarget_Heal_4::
     ld a, [wBattleActor]
     and $04
     ld e, a
@@ -6178,7 +6183,7 @@ ChooseTarget_Heal_68B0::
     jr nz, .loop2
     ldh a, [hTemp0]
     or a
-    jp z, ChooseTarget_Heal_67AD
+    jp z, ChooseTarget_Heal_3
     cp $01
     jr z, .read_battle_actor
     cp $02
@@ -6225,200 +6230,230 @@ ChooseTarget_Heal_68B0::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Vivify_6998::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Vivify_6998)
+ChooseTarget_Vivify_2::
     jp ChooseTarget_Vivify
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Antidote_699B::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Antidote_699B)
+ChooseTarget_Antidote_2::
     jp ChooseTarget_Antidote
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_TwinHits_699E::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_TwinHits_699E)
+ChooseTarget_TwinHits_2::
     jp ChooseTarget_TwinHits
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Upper_69A1::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Upper_69A1)
+ChooseTarget_Upper_2::
     jp ChooseTarget_Upper
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Sap_69A4::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Sap_69A4)
+ChooseTarget_Sap_2::
     jp ChooseTarget_Sap
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Slow_69A7::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Slow_69A7)
+ChooseTarget_Slow_2::
     jp ChooseTarget_Slow
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Speed_69AA::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Speed_69AA)
+ChooseTarget_Speed_2::
     jp ChooseTarget_Speed
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_UltraDown_69AD::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_UltraDown_69AD)
+ChooseTarget_UltraDown_2::
     jp ChooseTarget_UltraDown
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Cover_69B0::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Cover_69B0)
+ChooseTarget_Cover_2::
     jp ChooseTarget_Cover
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_MouthShut_69B3::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_MouthShut_69B3)
+ChooseTarget_MouthShut_2::
     jp ChooseTarget_MouthShut
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_SickLick_69B6::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_SickLick_69B6)
+ChooseTarget_SickLick_2::
     jp ChooseTarget_SickLick
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_LegSweep_69B9::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_LegSweep_69B9)
+ChooseTarget_LegSweep_2::
     jp ChooseTarget_LegSweep
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_NapAttack_69BC::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_NapAttack_69BC)
+ChooseTarget_NapAttack_2::
     jp ChooseTarget_NapAttack
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_OddDance_69BF::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_OddDance_69BF)
+ChooseTarget_OddDance_2::
     jp ChooseTarget_OddDance
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_MetalCut_69C2::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_MetalCut_69C2)
+ChooseTarget_MetalCut_2::
     jp ChooseTarget_MetalCut
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_DrakSlash_69C5::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_DrakSlash_69C5)
+ChooseTarget_DrakSlash_2::
     ld d, $01
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_BeastCut_69CB::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_BeastCut_69CB)
+ChooseTarget_BeastCut_2::
     ld d, $02
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_BirdBlow_69D1::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_BirdBlow_69D1)
+ChooseTarget_BirdBlow_2::
     ld d, $03
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_DevilCut_69D7::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_DevilCut_69D7)
+ChooseTarget_DevilCut_2::
     ld d, $06
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_ZombieCut_69DD::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_ZombieCut_69DD)
+ChooseTarget_ZombieCut_2::
     ld d, $07
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_CleanCut_69E3::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_CleanCut_69E3)
+ChooseTarget_CleanCut_2::
     ld d, $08
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_SlimeBlow_69E9::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_SlimeBlow_69E9)
+ChooseTarget_SlimeBlow_2::
     ld d, $00
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_BugBlow_69EF::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_BugBlow_69EF)
+ChooseTarget_BugBlow_2::
     ld d, $05
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Shears_69F5::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Shears_69F5)
+ChooseTarget_Shears_2::
     ld d, $04
     call TargetRandomFoeOfFamilyD
     ret
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_PoisonHit_69FB::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_PoisonHit_69FB)
+ChooseTarget_PoisonHit_2::
     jp ChooseTarget_PoisonHit
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Paralyze_69FE::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Paralyze_69FE)
+ChooseTarget_Paralyze_2::
     jp ChooseTarget_Paralyze
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
-; to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_LushLicks_6A01::
+; to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_LushLicks_6A01)
+ChooseTarget_LushLicks_2::
     jp ChooseTarget_LushLicks
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Transform_6A04::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Transform_6A04)
+ChooseTarget_Transform_2::
     jp ChooseTarget_Transform
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Beat_6A07::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Beat_6A07)
+ChooseTarget_Beat_2::
     jp ChooseTarget_Beat
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF;
-; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Blaze_6A0A::
+; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344:
+; the address in its name dropped or read as the label there; was ChooseTarget_Blaze_6A0A)
+ChooseTarget_Blaze_2::
     jp ChooseTarget_Blaze
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6429,50 +6464,58 @@ ChooseTarget_Berserker::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Sleep_6A10::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Sleep_6A10)
+ChooseTarget_Sleep_2::
     jp ChooseTarget_Sleep
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_RobMagic_6A13::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_RobMagic_6A13)
+ChooseTarget_RobMagic_2::
     jp ChooseTarget_RobMagic
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_FireSlash_6A16::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_FireSlash_6A16)
+ChooseTarget_FireSlash_2::
     jp ChooseTarget_FireSlash
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_BoltSlash_6A19::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_BoltSlash_6A19)
+ChooseTarget_BoltSlash_2::
     jp ChooseTarget_BoltSlash
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_VacuSlash_6A1C::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_VacuSlash_6A1C)
+ChooseTarget_VacuSlash_2::
     jp ChooseTarget_VacuSlash
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_IceSlash_6A1F::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_IceSlash_6A1F)
+ChooseTarget_IceSlash_2::
     jp ChooseTarget_IceSlash
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_WindBeast_6A22::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_WindBeast_6A22)
+ChooseTarget_WindBeast_2::
     jp ChooseTarget_WindBeast
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_GigaSlash_6A25::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_GigaSlash_6A25)
+ChooseTarget_GigaSlash_2::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6542,14 +6585,16 @@ ChooseTarget_GigaSlash_6A25::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_AquaCut_6A96::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_AquaCut_6A96)
+ChooseTarget_AquaCut_2::
     jp ChooseTarget_AquaCut
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Watershot_6A99::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Watershot_6A99)
+ChooseTarget_Watershot_2::
     jp ChooseTarget_Watershot
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
@@ -6616,14 +6661,16 @@ ChooseTarget_PanicAll::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_MegaMagic_6AFA::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_MegaMagic_6AFA)
+ChooseTarget_MegaMagic_2::
     jp ChooseTarget_MegaMagic
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Antidote_6AFD::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Antidote_6AFD)
+ChooseTarget_Antidote_3::
     ld a, [wBattleActor]
     and $04
     ld hl, wBattleStatus
@@ -6632,8 +6679,9 @@ ChooseTarget_Antidote_6AFD::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Upper_6B0A::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Upper_6B0A)
+ChooseTarget_Upper_3::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -6683,8 +6731,9 @@ ChooseTarget_Upper_6B0A::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Speed_6B5D::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Speed_6B5D)
+ChooseTarget_Speed_3::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -6734,8 +6783,9 @@ ChooseTarget_Speed_6B5D::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
-; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Sap_6BB0::
+; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
+; name dropped or read as the label there; was ChooseTarget_Sap_6BB0)
+ChooseTarget_Sap_3::
     ld de, GetBattleDEF_Bank39
     jp TargetAllyWithStatusBit20_CheckBattleActor
 
@@ -6861,8 +6911,9 @@ TargetAllyWithStatusBit20_CheckBattleActor::
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
-; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-ChooseTarget_Heal_6C75::
+; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
+; in its name dropped or read as the label there; was ChooseTarget_Heal_6C75)
+ChooseTarget_Heal_5::
     ld a, [wBattleActor]
     and $04
     ld c, a

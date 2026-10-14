@@ -25,7 +25,20 @@ class StoryFlagNamesTest(unittest.TestCase):
     def test_every_event_is_set_under_its_name(self):
         set_by_call = set(re.findall(r"ld de, (EVENT_\w+)\s*\n(?:\s*;.*\n)*\s+(?:call|farcall) SetFlagBit", self.text))
         set_by_script = set(re.findall(r"script_set_flag (EVENT_\w+)", self.text))
-        self.assertEqual(set(self.events) - set_by_call - set_by_script, set())
+        set_by_call |= set(re.findall(r"ld e, LOW\((EVENT_\w+)\)\n\s+ld d, HIGH\(\1\)\n\s+(?:call|farcall) SetFlagBit", self.text))
+        inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
+        tested_only = set(re.findall(r"^DEF (EVENT_\w+) EQU \$[0-9A-F]+ ; no setter found; tested by", inc, re.M))
+        by_hand = set(re.findall(r"^DEF (EVENT_\w+) EQU \$[0-9A-F]+ ; named by reading", inc, re.M))  # E-0346
+        self.assertEqual(set(self.events) - set_by_call - set_by_script - tested_only - by_hand, set())
+
+    def test_tested_only_events_are_never_set(self):
+        """E-0346: a flag named after its tester is not set anywhere under its name or its number."""
+        inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
+        tested_only = re.findall(r"^DEF (EVENT_\w+) EQU \$([0-9A-F]+) ; no setter found; tested by", inc, re.M)
+        self.assertTrue(tested_only)
+        for name, num in tested_only:
+            self.assertNotRegex(self.text, rf"ld de, {name}\s*\n(?:\s*;.*\n)*\s+(?:call|farcall) SetFlagBit")
+            self.assertNotRegex(self.text, rf"script_set_flag (?:{name}|\$0*{num})\b")
 
     def test_event_loads_feed_flag_routines(self):
         for m in re.finditer(r"ld de, (EVENT_\w+)\s*\n((?:\s*;.*\n)*)(.*)", self.text):

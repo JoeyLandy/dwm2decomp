@@ -16,8 +16,12 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STRUCT = re.compile(r"_(?:Case|Sub|Table|Shared)[0-9A-F]{0,2}(?=_|$)|Etc(?=_|$)|(?:^|_)(?:Data|Func|Jump)_|"
-                    r"[A-Za-z][0-9A-F]{3,4}(?=_|$)|Byte[0-9A-F]{2}|_Bank[0-9A-F]{2}$")
+# a name that still reads as machine output: a state-machine index (_Case05, _Sub01, _Table2, _Shared01), an address
+# (Func_/Data_ forms, or a $4000-$7FFF address written inside the name), or a RAM byte number (Byte71). Per-bank copies
+# (_Bank1C) and step names listing their writes (...AndYEtc) are descriptive and not counted (E-0344).
+STRUCT = re.compile(r"_(?:Case|Sub|Shared)[0-9A-F]{2}(?=_|$)|_Table\d(?=_|$)|(?:^|_)(?:Data|Func|Jump)_[0-9A-F]{3}_[0-9A-F]{4}|"
+                    r"(?<![0-9A-Za-z])_?[4-7][0-9A-F]{3}(?![0-9A-F])|(?<=[a-z])[4-7][0-9A-F]{3}(?![0-9A-F])|"
+                    r"Byte[0-9A-F]{2}(?![a-z])")
 RAM_MECH = re.compile(r"[A-Za-z](?=[0-9A-F]{0,3}\d)[0-9A-F]{2,4}(?:$|[A-Z_])|Byte[0-9A-F]{2}|Unk|^[wsh][0-9A-F]{4}$")
 
 

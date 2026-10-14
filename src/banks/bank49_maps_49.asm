@@ -45,7 +45,7 @@ Map0ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0APalettes::
-BGPaletteBufferData_49_46DC::
+EggServiceMenu_DrawListAndPrice_DecompressToVRAM_BGPaletteBufferData::
     dw $7d00, $7fff, $7fe1, $0000 ; entry 0
     dw $7d00, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -82,7 +82,7 @@ Map13Tileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map13Palettes::
-BGPaletteBufferData_49_4AC5::
+RenameMenu_PickMonster_DecompressToVRAM_BGPaletteBufferData::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -116,7 +116,7 @@ Map1ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map1APalettes::
-BGPaletteBufferData_49_52BB::
+DebugStaffRoll_Scene04_DecompressToVRAM_BGPaletteBufferData::
     dw $7d86, $7fff, $7f26, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $01e0, $031d, $0214, $0020 ; entry 2

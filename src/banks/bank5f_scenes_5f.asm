@@ -811,7 +811,7 @@ ScriptStartFadeAndAdvanceStep::
     ret
 
 ; wModeState = 3, wBattleTransitionStep = 0, wFieldReturnPhase = 2, far-calls
-; SaveScreenBufferToBGMap1, then PickRandomEncounterCountdownFromTable478F (E-0078)
+; SaveScreenBufferToBGMap1, then PickRandomEncounterCountdownFromTable (E-0078)
 SetModeState3AndSaveScreen::
     ld a, $03
     ld [wModeState], a
@@ -820,7 +820,7 @@ SetModeState3AndSaveScreen::
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
-    farcall PickRandomEncounterCountdownFromTable478F
+    farcall PickRandomEncounterCountdownFromTable
     ret
 
 ; stores wStepPtrLo in the first wInventory slot that is $00 or $FF (no bound check), then sets bit
@@ -883,7 +883,7 @@ SetWStepArrivedIfPartyHasField55Bit7::
     ld [rRAMG], a
     ret
 
-GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01::
+GreatLogFieldEvents_LoadSRAMRecordByte::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -917,7 +917,7 @@ GreatLogFieldEvents_Shared01_LoadSRAMRecordByte_Sub01::
     ld [rRAMG], a
     ret
 
-GreatLogFieldEvents_Shared01_LoadSRAMRecordByte::
+GreatLogFieldEvents_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -1150,10 +1150,10 @@ SceneDancing_DanceSteps::
     dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case05
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case08
+    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_2
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords
@@ -1173,11 +1173,11 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
     inc [hl]
     ret
 
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case08::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_2::
     ld a, $02
     jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_Case05::
+SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_3::
     ld a, $01
     jr SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc_SetPlayerFacing
 
@@ -1820,7 +1820,7 @@ RunScriptSubStep_UpdateFollowersOnStep_Bank5F::
 RunSceneScriptSubStep::
     ld a, [wScriptSubStep]
     jumptable
-    dw RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0
+    dw RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F
     dw RunSceneScriptSubStep_CopyBytes
     dw RunSceneScriptSubStep_FullyHealParty
@@ -1828,14 +1828,14 @@ RunSceneScriptSubStep::
     dw RunSceneScriptSubStep_AddStepDeltaToPointedByte
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_DecompressToVRAM
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_NextTableByte
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B_DrawAnimatedMetaSprite1B
-    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3
+    dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2
     dw RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_SetScriptParam0
-    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo
+    dw RunSceneScriptSubStep_AddStepDeltaToPointedByte_2
     dw RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit
     dw RunSceneScriptSubStep_AdvanceScriptStep
 
@@ -1853,26 +1853,26 @@ StartChoiceMessageByTextYesNoResult::
     ld a, $06
     ld hl, wScriptSubStep
     inc [hl]
-    jr .call_start_message_from_table7787
+    jr .call_start_message_from_table
 
 .skip:
     ld a, $07
     ld hl, wScriptSubStep
     dec [hl]
 
-.call_start_message_from_table7787:
-    call StartMessageFromTable7787
+.call_start_message_from_table:
+    call StartMessageFromTable
     ret
 
-; starts message 5 from StartMessageFromTable7787_Data and advances wScriptSubStep (E-0126)
+; starts message 5 from StartMessageFromTable_Data and advances wScriptSubStep (E-0126)
 StartMessage5AndAdvanceScriptSubStep::
     ld a, $05
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     ld hl, wScriptSubStep
     inc [hl]
     ret
 
-RunSceneScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
+RunSceneScriptSubStep_AddStepDeltaToPointedByte_2::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_step_ptr_lo
@@ -1925,7 +1925,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte_SetStepPtrLo::
     xor a
     ld [wSpriteSlots + $7], a
     ld a, $04
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     ld a, [wScriptTemp4]
     ld [wPartyCount], a
     xor a
@@ -1961,12 +1961,12 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B::
     cp $20
     ret nz
     ld a, $03
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     ld hl, wScriptSubStep
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_2::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2013,7 +2013,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0C_DrawAnimatedMetaSprite1B::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case0B_DrawAnimatedMetaSprite1B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_3::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2082,7 +2082,7 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F_TestFlagBit::
     ld [wScriptSubStep], a
     ret
 
-RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B::
+RunSceneScriptSubStep_CycleSpriteFloatYDown_DrawAnimatedMetaSprite1B_4::
     farcall CycleSpriteFloatYDown
     ld a, $01
     ldh [hTemp0], a
@@ -2104,7 +2104,7 @@ RunSceneScriptSubStep_CycleSpriteFloatYDown_Case08_DrawAnimatedMetaSprite1B::
     cp $20
     ret nz
     ld a, $02
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     xor a
     ld [wScriptParam0], a
     ld hl, wScriptSubStep
@@ -2171,7 +2171,7 @@ RunSceneScriptSubStep_AddStepDeltaToPointedByte::
     cp $20
     ret nz
     ld a, $01
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     xor a
     ld [wScriptParam0], a
     ld hl, wScriptSubStep
@@ -2274,7 +2274,7 @@ RunSceneScriptSubStep_CopyBytes::
     cp $1e
     ret nz
     ld a, $00
-    call StartMessageFromTable7787
+    call StartMessageFromTable
     xor a
     ld [wScriptParam0], a
     ld hl, wScriptSubStep
@@ -2304,10 +2304,10 @@ RunSceneScriptSubStep_RunMessageBoxCarryWhenIdle_Bank5F::
     inc [hl]
     ret
 
-RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
+RunSceneScriptSubStep_LoadSpriteGraphics7EToTiles0::
     ld a, $01
     ldh [hTemp0], a
-    farcall LoadSpriteGraphics7E5595ToTiles0
+    farcall LoadSpriteGraphics7EToTiles0
     ld de, EVENT_SCENE_RIVAL_DEFEATED_021
     call TestFlagBit
     jr c, .call_test_flag_bit
@@ -2353,11 +2353,12 @@ RunSceneScriptSubStep_LoadSpriteGraphics7E5595ToTiles0::
     inc [hl]
     ret
 
-; starts the message whose index and group are at StartMessageFromTable7787_Data + 2 * A + 16 *
-; wScriptMsgSelect (wMessageState = 0) (E-0124)
-StartMessageFromTable7787::
+; starts the message whose index and group are at StartMessageFromTable_Data + 2 * A + 16 *
+; wScriptMsgSelect (wMessageState = 0) (E-0124) (E-0344: the address in its name dropped or read as
+; the label there; was StartMessageFromTable7787)
+StartMessageFromTable::
     sla a
-    ld de, StartMessageFromTable7787_Data
+    ld de, StartMessageFromTable_Data
     add e
     ld e, a
     jr nc, .read_script_msg_select
@@ -2385,7 +2386,7 @@ StartMessageFromTable7787::
     ld [wMessageState], a
     ret
 
-StartMessageFromTable7787_Data::
+StartMessageFromTable_Data::
     db $26, $01, $27, $01, $28, $01, $29, $01, $2a, $01, $00, $00, $00, $00, $00, $00
     db $a8, $02, $a9, $02, $aa, $02, $ab, $02, $ac, $02, $00, $00, $00, $00, $00, $00
     db $a8, $02, $e9, $02, $aa, $02, $ab, $02, $ec, $02, $00, $00, $00, $00, $00, $00

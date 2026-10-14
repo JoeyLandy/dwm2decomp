@@ -500,31 +500,32 @@ CopyOBJPalettesToBuffer::
     jr nz, .loop
     ret
 
-; on CGB copies the 8-byte palette LoadPalette0FromData4322_Data into wBGPaletteBuffer and
+; on CGB copies the 8-byte palette LoadPalette0FromData_2_Data into wBGPaletteBuffer and
 ; wOBJPaletteBuffer and sets the upload requests wBGPaletteUploadRequest and
-; wOBJPaletteUploadRequest = $7F (E-0117)
-LoadPalette0FromData4322::
+; wOBJPaletteUploadRequest = $7F (E-0117) (E-0344: the address in its name dropped or read as the
+; label there; was LoadPalette0FromData4322)
+LoadPalette0FromData_2::
     ld a, [wIsCGB]
     or a
     ret z
     ld hl, wBGPaletteBuffer
-    ld de, LoadPalette0FromData4322_Data
+    ld de, LoadPalette0FromData_2_Data
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ld hl, wOBJPaletteBuffer
-    ld de, LoadPalette0FromData4322_Data
+    ld de, LoadPalette0FromData_2_Data
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
     ret
 
-LoadPalette0FromData4322_Data::
+LoadPalette0FromData_2_Data::
     db $00, $7c, $ff, $7f, $e0, $01, $00, $00
 
-RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame::
+RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame::
     ld a, [wIsCGB]
     or a
     ret z
@@ -532,10 +533,10 @@ RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame::
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp [hl]
-    jp z, RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
+    jp z, RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
+    jp RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
 
 ; wScreenStep += 1; on odd values, unless wScreenState is $FF, runs the step for wScreenState (jump
 ; table) (E-0122)
@@ -553,8 +554,8 @@ RunScreenStateStepEveryOtherFrame::
     ret z
     jumptable
     dw RunScreenStateStepEveryOtherFrame_WriteScreenState
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_Case01
-    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_Case02
+    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_3
+    dw RunScreenStateStepEveryOtherFrame_WriteScreenState_4
     dw RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc
 
 RunScreenStateStepEveryOtherFrame_WriteScreenState::
@@ -577,7 +578,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState::
     ld [de], a
     inc de
 
-RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState::
+RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     di
 
 .loop:
@@ -657,7 +658,7 @@ RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState::
     ld [wScreenState], a
     ret
 
-RunScreenStateStepEveryOtherFrame_WriteScreenState_Case01::
+RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
     swap a
@@ -676,9 +677,9 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_Case01::
     ld a, $90
     ld [de], a
     inc de
-    jp RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState
+    jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
-RunScreenStateStepEveryOtherFrame_WriteScreenState_Case02::
+RunScreenStateStepEveryOtherFrame_WriteScreenState_4::
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
     swap a
@@ -697,7 +698,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_Case02::
     ld a, $a0
     ld [de], a
     inc de
-    jp RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState
+    jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
 RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld hl, wWorkBuf + $30
@@ -718,7 +719,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld a, $b0
     ld [de], a
     inc de
-    call RunScreenStateStepEveryOtherFrame_Case03_WriteScreenState
+    call RunScreenStateStepEveryOtherFrame_WriteScreenState_2
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
@@ -737,7 +738,7 @@ RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld [wScreenState], a
     ret
 
-RunMenuStateMenuState_Case01_WriteScreenCounter::
+RunMenuStateMenuState_WriteScreenCounter::
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
     ld c, $04
@@ -746,7 +747,7 @@ RunMenuStateMenuState_Case01_WriteScreenCounter::
     push bc
     push hl
     push de
-    call RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
+    call RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc
     pop de
     pop hl
     pop bc
@@ -772,7 +773,7 @@ RunMenuStateMenuState_Case01_WriteScreenCounter::
     ld [wScreenCounter], a
     ret
 
-RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc::
+RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     ld c, [hl]
     inc hl
     ld b, [hl]
@@ -796,7 +797,7 @@ RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc::
     and $1f
     ld [wTextCounter4], a
     push hl
-    ld hl, RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data
+    ld hl, RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data
     ld a, [wScreenCounter]
     add_a_to_hl
     ld b, [hl]
@@ -839,15 +840,15 @@ RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc::
     inc a
     ld [wScreenSubStep], a
     cp $08
-    jr c, RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc
+    jr c, RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc
     xor a
     ld [wScreenSubStep], a
     ret
 
-RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data::
+RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
-RunMenuStateMenuState_Case01_Sub01_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0::
+RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp [hl]
@@ -981,7 +982,7 @@ GameMode1_Init::
     call GameMode1_Init_ReadMapTypeAndMapIdEtc
     call LoadSGBBorderForSetA
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, GameMode1_Init_Data1
@@ -1117,7 +1118,7 @@ WritePlayerNameWithFlag0SuffixToTextBuf0::
     call CopyBytes
     ld a, $f0
     ld [wTextBuf0 + $a], a
-    ld de, $0000
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jp nc, .set_text_buf0_to_87
     ld a, $58
@@ -1228,7 +1229,7 @@ RunFieldReturnPhase_ResetLeadRecordFields55And5B::
     ldh [hMapScreenY], a
     ld c, $03
     push bc
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     pop bc
     jr nc, .set_player_facing
@@ -1325,7 +1326,7 @@ RunFieldReturnPhase_ResetLeadRecordFields55And5B::
 RunFieldReturnPhase_OpenFieldMenuOnA::
     xor a
     ld [wFieldReturnPhase], a
-    call RunFieldReturnPhase_Case01_WaitMapType
+    call RunFieldReturnPhase_WaitMapType
     ld a, [wDataBankSave]
     cp $40
     jr nz, .skip
@@ -1387,7 +1388,7 @@ RunFieldReturnPhase_OpenFieldMenuOnA::
     ld a, [hl]
     cp $01
     jr z, .set_mode_state_to_06
-    ld de, $0020
+    ld de, EVENT_COBI_HERO_WHILE_YOURE
     call SetFlagBit
 
 .set_mode_state_to_06:
@@ -1502,7 +1503,7 @@ RunFieldReturnPhase_OpenFieldMenuOnA::
     jr nz, .set_talk_event_group_to_09
     xor a
     ld [wDataBankSave], a
-    farcall RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc
+    farcall RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc
     ret
 
 .set_talk_event_group_to_09:
@@ -1553,7 +1554,7 @@ ResetLeadRecordFields55And5B::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ret
 
-RunFieldReturnPhase_Case01_WaitMapType::
+RunFieldReturnPhase_WaitMapType::
     ld a, [wMapType]
     bit 7, a
     ret nz
@@ -1673,9 +1674,9 @@ FieldState_WalkATalks::
 .call_draw_field_sprites:
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
-    call CallF072B4WhenGM2TimerMinutesIs59
+    call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; field state 1: runs a frame of the event script and the text window, moving the player only for
@@ -1697,9 +1698,9 @@ FieldState_RunScript::
 .call_draw_field_sprites:
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
-    call CallF072B4WhenGM2TimerMinutesIs59
+    call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; field state 2: draws the field sprites and runs the common update without player input (E-0339)
@@ -1707,9 +1708,9 @@ FieldState_Still::
     call FieldState_Still_ClearBit1OfPlayerAndObjectFlags
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
-    call CallF072B4WhenGM2TimerMinutesIs59
+    call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; field state 3: runs a step of the battle transition (E-0339)
@@ -1717,7 +1718,7 @@ FieldState_BattleTransition::
     farcall RunBattleTransitionStep
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
     ret
 
@@ -1726,7 +1727,7 @@ FieldState_BattleTransition::
 FieldState_MapTransition::
     farcall DrawFieldSprites
     farcall AdvancePlayerAnimCounterAndRunPlayerSpriteMode
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
     ld a, [wFadeState]
     or a
@@ -1797,7 +1798,7 @@ FieldState_MapTransition_TestFlagBit::
     jr z, .check_saved_position_valid
     xor a
     ld [wReturnWarpFlag], a
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr nc, .clear_map_type
     ld a, $02
@@ -1855,7 +1856,7 @@ FieldState_MapTransition_TestFlagBit::
     xor a
     ldh [hPlayerSpriteOverride], a
     xor a
-    ld [wGameMode2Byte50], a
+    ld [wWorldMapByFieldSkill], a
     ret
 
 .read_saved_player_state:
@@ -1920,9 +1921,9 @@ FieldState_WalkAMenu::
 .call_draw_field_sprites:
     farcall DrawFieldSprites
     farcall FieldStateCommonUpdate
-    farcall RunFunc722AAnd6EB7
+    farcall RunDrawTriggerMarkerSprite
     call RunFieldEventFieldEventKind
-    call CallF072B4WhenGM2TimerMinutesIs59
+    call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; field state 6: runs the field menu (RunMenuStateMenuState) (E-0339)
@@ -1958,12 +1959,14 @@ FieldState_StepChecks::
 ; this state and the world map shows the Water region)
 FieldState_WorldMap::
     farcall RunWorldMapState
-    call CallF072B4WhenGM2TimerMinutesIs59
+    call FarClearRollCounterWhenGM2TimerMinutesIs59
     ret
 
 ; when wGM2TimerMinutes = $3B and wGM2TimerSeconds = wGM2TimerFrames = 0, far-calls
-; ClearRollCounterWhenGM2TimerMinutesIs59 (E-0122)
-CallF072B4WhenGM2TimerMinutesIs59::
+; ClearRollCounterWhenGM2TimerMinutesIs59 (E-0122) (E-0344: the address in its name dropped or read
+; as the label there; was CallF072B4WhenGM2TimerMinutesIs59; shortened from
+; CallF0ClearRollCounterWhenGM2TimerMinutesIs59WhenGM2TimerMinutesIs59)
+FarClearRollCounterWhenGM2TimerMinutesIs59::
     ld a, [wGM2TimerMinutes]
     cp $3b
     ret nz
@@ -2050,7 +2053,7 @@ CheckTileInFrontOnA::
     call TestFlag1FAsBool
     or a
     jr z, .check_map_sprite_kind
-    ld [wFieldStateByte34], a
+    ld [wTileActionKind], a
     call TryHeaderTileTalkEvent
     or a
     ret nz
@@ -2065,7 +2068,7 @@ CheckTileInFrontOnA::
     call MapSpriteKindUnlocked
     or a
     ret z
-    ld [wFieldStateByte34], a
+    ld [wTileActionKind], a
 
 .call_check_tall_tile_in_front:
     call CheckTallTileInFront
@@ -2109,20 +2112,20 @@ MapSpriteKindUnlocked::
     ld a, $01
     ret
 
-; unless player state bit 3 is set: when the tile under the point equals wMapHeaderByte11, runs talk
+; unless player state bit 3 is set: when the tile under the point equals wMapEventTile, runs talk
 ; event group 2, index 0 (DispatchTalkEvent) and clears the joypad (E-0339; was
 ; FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc)
 TryHeaderTileTalkEvent::
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr z, .read_map_header_byte11
+    jr z, .read_map_event_tile
 
 .loop:
     xor a
     ret
 
-.read_map_header_byte11:
-    ld a, [wMapHeaderByte11]
+.read_map_event_tile:
+    ld a, [wMapEventTile]
     ld c, a
     ld a, [wTilesUnderPoint]
     cp c
@@ -2238,19 +2241,19 @@ FieldState_WalkAMenu_WaitFadeState::
     ld a, [wMapType]
     and $07
     jumptable
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_WriteFieldReturnPhaseAndGameModeEtc
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_Return
-    dw FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_Return
+    dw FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
-FieldState_WalkAMenu_Sub01_Return::
+FieldState_WalkAMenu_Return::
     ret
 
-FieldState_WalkAMenu_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
+FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
     ld a, [wKeyWorldFloor]
     add a
     add a
@@ -2273,12 +2276,12 @@ FieldState_WalkAMenu_Sub01_WriteFieldReturnPhaseAndGameModeEtc::
     ldh a, [hPlayerY]
     cp $10
     ret nz
-    jr FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
 .return:
     ret
 
-FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
+FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ldh a, [hPlayerFacing]
     cp $02
     ret nz
@@ -2288,9 +2291,9 @@ FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ldh a, [hPlayerY]
     cp $40
     ret nz
-    jr FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
+    jr FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
-FieldState_WalkAMenu_Sub01_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
+FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     call SaveScreenBufferToBGMap1
@@ -2317,7 +2320,7 @@ CheckInteractionInFront::
     ld a, [wMapHeaderByte7]
     or a
     ret z
-    ld de, EVENT_SCENE_LONG_FACES
+    ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     ret nc
     ld a, [wFadeState]
@@ -2421,25 +2424,25 @@ RunFieldEventFieldEventKind::
     dw AnimateTilesByRotatingVTiles2
     dw AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_WaitFrameCounterLo
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_2
     dw RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2
     dw RunFieldEventFieldEventKind_TestFlagBit
     dw RunFieldEventFieldEventKind_ReadFrameCounterLo
-    dw RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_Case08_CopyBytes
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09
-    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A
+    dw RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_3
+    dw RunFieldEventFieldEventKind_WaitFrameCounterLo_4
     dw RunFieldEventFieldEventKind_WaitMapScreenY
-    dw RunFieldEventFieldEventKind_Case0C_WriteFieldEventTimerAndScrollX_Case0C
+    dw RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX
     dw RunFieldEventFieldEventKind_WriteVRAMByteInc
-    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E
+    dw RunFieldEventFieldEventKind_WriteVRAMByteInc_2
     dw RunFieldEventFieldEventKind_WaitMapScreenX
 
-RunFieldEventFieldEventKind_Case0C_WriteFieldEventTimerAndScrollX_Case0C::
-    call RunFieldEventFieldEventKind_Case0C_WriteFieldEventTimerAndScrollX
+RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX::
+    call RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2
     ret
 
-RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_Case08_CopyBytes::
-    call RunFieldEventFieldEventKind_Case08_CopyBytes
+RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes::
+    call RunFieldEventFieldEventKind_CopyBytes
     ret
 
 RunFieldEventFieldEventKind_Return::
@@ -2497,7 +2500,7 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc::
     jr nz, .loop
     ret
 
-RunFieldEventFieldEventKind_WriteVRAMByteInc_Case0E::
+RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
     ld a, [wFrameCounterLo]
     and $07
     ret nz
@@ -2535,7 +2538,7 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo::
     ld hl, vTiles2 + $320
     jp RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo
 
-RunFieldEventFieldEventKind_WaitFrameCounterLo_Case04::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
@@ -2552,7 +2555,7 @@ RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
     ld hl, vTiles2 + $180
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
@@ -2560,7 +2563,7 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_Case09::
     ld hl, vTiles2 + $2c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
-RunFieldEventFieldEventKind_WaitFrameCounterLo_Case0A::
+RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
     ld a, [wFrameCounterLo]
     and $03
     ret nz
@@ -2761,7 +2764,7 @@ RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess::
     jr nz, .loop
     ret
 
-RunFieldEventFieldEventKind_Case08_CopyBytes::
+RunFieldEventFieldEventKind_CopyBytes::
     ld a, [wScriptCommandType]
     cp $ed
     ret z
@@ -2803,20 +2806,20 @@ RunFieldEventFieldEventKind_Case08_CopyBytes::
     ldh [hTemp0], a
     ld hl, wBGPaletteCopy + $8
     ld de, wBGPaletteBuffer + $8
-    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
+    call RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc
     ld hl, wBGPaletteCopy + $10
     ld de, wBGPaletteBuffer + $10
     ld hl, wBGPaletteCopy + $18
     ld de, wBGPaletteBuffer + $18
-    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
+    call RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc
     ld hl, wBGPaletteCopy + $20
     ld de, wBGPaletteBuffer + $20
-    call RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc
+    call RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     ret
 
-RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc::
+RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc::
     ld a, [hl]
     ld c, a
     inc hl
@@ -2844,7 +2847,7 @@ RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc::
     and $1f
     ld [wTextCounter4], a
     push hl
-    ld hl, RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc_Data
+    ld hl, RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc_Data
     ldh a, [hTemp0]
     add_a_to_hl
     ld a, [wMenuSubState]
@@ -2898,10 +2901,10 @@ RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc::
     inc de
     ret
 
-RunFieldEventFieldEventKind_Case08_Sub01_WriteTextCounter2AndTextCounter3Etc_Data::
+RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc_Data::
     db $00, $fc, $f8, $f4, $f0, $ec, $e8, $e4, $e4, $e8, $ec, $f0, $f4, $f8, $fc, $00
 
-RunFieldEventFieldEventKind_Case0C_WriteFieldEventTimerAndScrollX::
+RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2::
     ld a, [wFieldEventTimer]
     bit 7, a
     jr nz, .check_field_event_arg
@@ -3367,7 +3370,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     ldh [hPlayerStateFlags], a
     xor a
     ld [wStepTriggerFlag], a
-    jp .call_update_player_movement_sub01_test_flag
+    jp .call_update_player_movement_test_flag_bit
 
 .read_player_step_dx_lo:
     ldh a, [hPlayerStepDXLo]
@@ -3398,7 +3401,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_sub01_wait
+    jr nz, .call_update_player_movement_wait_follower
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDXLo]
     ld l, a
@@ -3413,8 +3416,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     dec [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_sub01_wait:
-    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
+.call_update_player_movement_wait_follower:
+    call UpdatePlayerMovement_WaitFollowerDelay
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3444,7 +3447,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request2:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_sub01_wait2
+    jr nz, .call_update_player_movement_wait_follower2
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDXLo]
     ld l, a
@@ -3459,8 +3462,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     inc [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_sub01_wait2:
-    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
+.call_update_player_movement_wait_follower2:
+    call UpdatePlayerMovement_WaitFollowerDelay
     ldh a, [hPlayerStepDXLo]
     ld l, a
     ldh a, [hPlayerStepDXHi]
@@ -3494,7 +3497,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request3:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_sub01_wait3
+    jr nz, .call_update_player_movement_wait_follower3
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDYLo]
     ld l, a
@@ -3509,8 +3512,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     dec [hl]
     jp .read_player_step_dx_lo2
 
-.call_update_player_movement_sub01_wait3:
-    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
+.call_update_player_movement_wait_follower3:
+    call UpdatePlayerMovement_WaitFollowerDelay
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3540,7 +3543,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
 .check_field_action_request4:
     ld a, [wFieldActionRequest]
     bit 7, a
-    jr nz, .call_update_player_movement_sub01_wait4
+    jr nz, .call_update_player_movement_wait_follower4
     call StepFollowersTowardTargets
     ldh a, [hPlayerStepDYLo]
     ld l, a
@@ -3555,8 +3558,8 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     inc [hl]
     jr .read_player_step_dx_lo2
 
-.call_update_player_movement_sub01_wait4:
-    call UpdatePlayerMovement_Sub01_WaitFollowerDelay
+.call_update_player_movement_wait_follower4:
+    call UpdatePlayerMovement_WaitFollowerDelay
     ldh a, [hPlayerStepDYLo]
     ld l, a
     ldh a, [hPlayerStepDYHi]
@@ -3617,11 +3620,11 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     xor a
     ld [wStepTriggerFlag], a
 
-.call_update_player_movement_sub01_test_flag:
-    farcall UpdatePlayerMovement_Sub01_TestFlagBit
+.call_update_player_movement_test_flag_bit:
+    farcall UpdatePlayerMovement_TestFlagBit
     farcall AdvanceStepCounterAndUpdateStoredRecords
     farcall RunPeriodicFieldEventChecks
-    farcall UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride
+    farcall UpdatePlayerMovement_WaitPlayerSpriteOverride
     farcall TickRandomEncounterCounter
     farcall CheckStepTriggerAndDispatchTalk
     farcall CheckWarpsAtPlayerPosition
@@ -3630,7 +3633,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     farcall CountDownTalkCountdownThenDispatchTalkEvent
     ret
 
-UpdatePlayerMovement_Sub01_WaitFollowerDelay::
+UpdatePlayerMovement_WaitFollowerDelay::
     ld a, [wFollowerDelay]
     or a
     ret z
@@ -4219,7 +4222,7 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ld hl, wScreenTileBuffer
     ld a, [wFieldActionStep]
     add_a_to_hl
-    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc
+    call RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc
     ldh a, [hScrollX]
     add $08
     ldh [hScrollX], a
@@ -4258,7 +4261,7 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ld a, $13
     sub c
     add_a_to_hl
-    call RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc
+    call RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc
     ldh a, [hScrollX]
     sub $08
     ldh [hScrollX], a
@@ -4389,7 +4392,7 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
 .return:
     ret
 
-RunFieldActionRequestActionIfBit7_Case01_WriteBGWriteDestLoAndBGWriteDestHiEtc::
+RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     ld a, e
     ld [wBGWriteDestLo], a
     ld a, d
@@ -4842,8 +4845,8 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_TestFlagBit
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case05
+    dw PlayMapMusic_TestFlagBit_3
+    dw PlayMapMusic_TestFlagBit_2
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -4851,18 +4854,18 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_2
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_2
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
-    dw PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_3
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
     dw PlayMapMusic_ReadCurrentMusic
@@ -4870,79 +4873,79 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadSoundEffectRequest
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_6
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_6
     dw MapMusicByPlayerStateFlagsBit3
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_7
     dw PlayMapMusic_InitSoundHardware
-    dw PlayMapMusic_TestFlagBit_Case39_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case3B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_TestFlagBit_4
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_TestFlagBit_5
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_4
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw MapMusicByFlag23_631A
-    dw MapMusicByFlag23_631A
+    dw MapMusicByFlag23_2
+    dw MapMusicByFlag23_2
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByScreenAndFlags87And8A
-    dw MapMusicByFlag23_631A
+    dw MapMusicByFlag23_2
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw MapMusicByFlag23_631A
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw MapMusicByFlag23
-    dw MapMusicByFlag23
-    dw MapMusicByFlag23
-    dw MapMusicByFlag23
-    dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw MapMusicByFlag23_2
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
     dw MapMusicByFlag23
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw MapMusicByFlag23_631A
+    dw MapMusicByFlag23
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw MapMusicByFlag23
+    dw MapMusicByFlag23
+    dw MapMusicByFlag23
+    dw MapMusicByFlag23
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw MapMusicByFlag23_2
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
@@ -4950,121 +4953,121 @@ PlayMapMusic_ReadMapId::
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_TestFlagBit_Case9B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_TestFlagBit_6
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw MapMusicByFlag25
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_5
+    dw PlayMapMusic_ReadCurrentMusic_5
+    dw PlayMapMusic_ReadCurrentMusic_5
     dw MapMusicByFlag25
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
+    dw PlayMapMusic_ReadCurrentMusic_6
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_3
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_4
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
-    dw PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_4
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
+    dw PlayMapMusic_ReadCurrentMusic_7
     dw $0000 ; unused index (E-0207)
-    dw PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    dw PlayMapMusic_ReadCurrentMusic_4
     db $00, $00
 
 PlayMapMusic_ReadCurrentMusic::
@@ -5091,7 +5094,7 @@ PlayMapMusic_TestFlagBit::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case05::
+PlayMapMusic_TestFlagBit_2::
     ldh a, [hMapScreenX]
     or a
     jr nz, PlayMapMusic_ReadCurrentMusic
@@ -5112,12 +5115,12 @@ PlayMapMusic_TestFlagBit_Case05::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_2::
     ld c, $0c
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_PlayMapMusic_CheckCurrentMusic::
-    ld de, $00cc
+PlayMapMusic_TestFlagBit_3::
+    ld de, EVENT_MAP_04_OBJECT_REMOVED_0CC
     call TestFlagBit
     jr nc, PlayMapMusic_ReadCurrentMusic
     ld de, EVENT_SCENE_TERRY_BATTLE_038
@@ -5133,7 +5136,7 @@ PlayMapMusic_ReadSoundEffectRequest::
 PlayMapMusic_Return::
     ret
 
-PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_3::
     ld c, $19
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5141,7 +5144,7 @@ PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic::
 MapMusicByFlag23::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case21_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_3
     ld c, $2e
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5160,7 +5163,7 @@ MapMusicByScreenAndFlags87And8A::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_4::
     ld c, $1c
     jp PlayMapMusic_CheckCurrentMusic
 
@@ -5173,79 +5176,80 @@ MapMusicByPlayerStateFlagsBit3::
     ld c, $2b
     jp PlayMapMusic_CheckCurrentMusic
 
-; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122)
-MapMusicByFlag23_631A::
+; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122) (E-0344: the address in
+; its name dropped or read as the label there; was MapMusicByFlag23_631A)
+MapMusicByFlag23_2::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_4
     ld c, $2e
     jp PlayMapMusic_CheckCurrentMusic
 
 ; map music case: if story flag $25 is set uses music $1C, else $1F (E-0122)
 MapMusicByFlag25::
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case20_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_4
     ld c, $1f
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_CaseA1_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_5::
     ld c, $cc
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_6::
     ld c, $25
     jp PlayMapMusic_CheckCurrentMusic
 
 PlayMapMusic_InitSoundHardware::
     ldh a, [hMapScreenX]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_ReadCurrentMusic_6
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_ReadCurrentMusic_6
     call InitSoundHardware
     ret
 
-PlayMapMusic_TestFlagBit_Case39_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_TestFlagBit_4::
     ldh a, [hMapScreenX]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_ReadCurrentMusic_6
     ldh a, [hMapScreenY]
     cp $01
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_ReadCurrentMusic_6
     ld de, EVENT_SCENE_CREW_FOLLOWS
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_6
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case3B_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_TestFlagBit_5::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case2B_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_6
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_ReadCurrentMusic_7::
     ld c, $22
     jp PlayMapMusic_CheckCurrentMusic
 
-PlayMapMusic_TestFlagBit_Case9B_PlayMapMusic_CheckCurrentMusic::
+PlayMapMusic_TestFlagBit_6::
     ldh a, [hMapScreenY]
     or a
-    jr nz, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    jr nz, PlayMapMusic_ReadCurrentMusic_7
     ld de, EVENT_SCENE_THREE_ITEMS_0C2
     call TestFlagBit
-    jr nc, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    jr nc, PlayMapMusic_ReadCurrentMusic_7
     ld de, EVENT_SCENE_THREE_ITEMS_0C3
     call TestFlagBit
-    jr c, PlayMapMusic_ReadCurrentMusic_Case37_PlayMapMusic_CheckCurrentMusic
+    jr c, PlayMapMusic_ReadCurrentMusic_7
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
 FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
-    call FieldState_Still_Sub01_WriteMenuSubState
+    call FieldState_Still_WriteMenuSubState
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -5254,7 +5258,7 @@ FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
     farcall ClearBit1OfPlayerAndObjectFlags
     xor a
     ldh [hSpriteWindowClipMode], a
-    call FieldState_Still_Sub01_WritePartyWindowFlagsAndPartyWindowTimer
+    call FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer
     ld a, [wMapType]
     bit 7, a
     jr nz, .set_mode_state_to_05
@@ -5322,7 +5326,7 @@ FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
 .return:
     ret
 
-FieldState_Still_Sub01_WriteMenuSubState::
+FieldState_Still_WriteMenuSubState::
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5350,7 +5354,7 @@ FieldState_Still_Sub01_WriteMenuSubState::
     ld l, e
     ld h, d
     ld b, $00
-    ld de, FieldState_Still_Sub01_WriteMenuSubState_Data
+    ld de, FieldState_Still_WriteMenuSubState_Data
 
 .loop:
     push hl
@@ -5420,10 +5424,10 @@ FieldState_Still_Sub01_WriteMenuSubState::
     jr nz, .loop
     ret
 
-FieldState_Still_Sub01_WriteMenuSubState_Data::
+FieldState_Still_WriteMenuSubState_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
-FieldState_Still_Sub01_WritePartyWindowFlagsAndPartyWindowTimer::
+FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer::
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5458,12 +5462,12 @@ FieldState_Still_Sub01_WritePartyWindowFlagsAndPartyWindowTimer::
     ret
 
 ; in the field, when A is pressed and nothing blocks it: saves the screen, sets the object flags and
-; draws the field menu windows (TileRect_02_6606, 6642) (E-0130)
+; draws the field menu windows (OpenFieldMenuOnA_TileRect, 6642) (E-0130)
 OpenFieldMenuOnA::
     ld a, [wFadeState]
     or a
     ret nz
-    ld de, EVENT_SCENE_LONG_FACES
+    ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     ret nc
     ld a, [wTextWindowState]
@@ -5514,14 +5518,14 @@ OpenFieldMenuOnA::
     ldh [rSVBK], a
 
 .skip:
-    ld de, TileRect_02_6606
+    ld de, OpenFieldMenuOnA_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $0c, $05
-    call CopyRectToScreenBufferAndClearAttributes_65C3
-    ld de, TileRect_02_6642
+    call CopyRectToScreenBufferAndClearAttributes
+    ld de, OpenFieldMenuOnA_TileRect_2
     ld hl, wWindowTileBuffer + $c
     lb bc, $08, $03
-    call CopyRectToScreenBufferAndClearAttributes_65C3
+    call CopyRectToScreenBufferAndClearAttributes
     ldh a, [hScrollY]
     and $f8
     ld e, a
@@ -5582,8 +5586,9 @@ OpenFieldMenuOnA::
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows
-; in WRAM bank 2 (E-0127)
-CopyRectToScreenBufferAndClearAttributes_65C3::
+; in WRAM bank 2 (E-0127) (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectToScreenBufferAndClearAttributes_65C3)
+CopyRectToScreenBufferAndClearAttributes::
     push hl
     push bc
 
@@ -5647,7 +5652,7 @@ CopyRectToScreenBufferAndClearAttributes_65C3::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-TileRect_02_6606::
+OpenFieldMenuOnA_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $a4, $a5, $a6, $a7, $c3, $a4, $a8, $a9, $ec, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -5655,7 +5660,7 @@ TileRect_02_6606::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 8 x 3 tiles, one row per line
-TileRect_02_6642::
+OpenFieldMenuOnA_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
@@ -5748,7 +5753,7 @@ DrawGoldDigitsAtHLWrapped::
 ; in the field, after $B4 idle frames: saves the bottom of the screen and shows the party status
 ; window (level, HP, MP) (E-0130)
 ShowIdlePartyStatusWindow::
-    ld de, EVENT_SCENE_LONG_FACES
+    ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     ret nc
     ld a, [wTextWindowState]
@@ -5832,24 +5837,24 @@ ShowIdlePartyStatusWindow::
     ret
 
 .skip:
-    ld de, TileRect_02_68E6
+    ld de, ShowIdlePartyStatusWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $07, $06
-    call CopyRectToScreenBufferAndClearAttributes_68A3
+    call CopyRectToScreenBufferAndClearAttributes_2
     jr .call_build_party_status_window_rows
 
 .skip2:
-    ld de, TileRect_02_6910
+    ld de, ShowIdlePartyStatusWindow_TileRect_2
     ld hl, wWindowTileBuffer + $64
     lb bc, $0d, $06
-    call CopyRectToScreenBufferAndClearAttributes_68A3
+    call CopyRectToScreenBufferAndClearAttributes_2
     jr .call_build_party_status_window_rows
 
 .skip3:
-    ld de, TileRect_02_695E
+    ld de, ShowIdlePartyStatusWindow_TileRect_3
     ld hl, wWindowTileBuffer + $64
     lb bc, $13, $06
-    call CopyRectToScreenBufferAndClearAttributes_68A3
+    call CopyRectToScreenBufferAndClearAttributes_2
 
 .call_build_party_status_window_rows:
     call BuildPartyStatusWindowRows
@@ -6045,8 +6050,9 @@ DrawBottomWindowWindowTileBufferRow5AtScroll::
     ret
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows
-; in WRAM bank 2 (E-0127)
-CopyRectToScreenBufferAndClearAttributes_68A3::
+; in WRAM bank 2 (E-0127) (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectToScreenBufferAndClearAttributes_68A3)
+CopyRectToScreenBufferAndClearAttributes_2::
     push hl
     push bc
 
@@ -6110,7 +6116,7 @@ CopyRectToScreenBufferAndClearAttributes_68A3::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 7 x 6 tiles, one row per line
-TileRect_02_68E6::
+ShowIdlePartyStatusWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c7, $eb, $c3, $c3, $c3, $b7 ; id 2
@@ -6119,7 +6125,7 @@ TileRect_02_68E6::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; id 5
 
 ; record: 13 x 6 tiles, one row per line
-TileRect_02_6910::
+ShowIdlePartyStatusWindow_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $d0, $d1, $d2, $d3, $d4, $c3, $d5, $d6, $d7, $d8, $d9, $b7 ; id 1
     db $b6, $c7, $eb, $c3, $c3, $c3, $c3, $c8, $eb, $c3, $c3, $c3, $b7 ; id 2
@@ -6128,7 +6134,7 @@ TileRect_02_6910::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 5
 
 ; record: 19 x 6 tiles, one row per line
-TileRect_02_695E::
+ShowIdlePartyStatusWindow_TileRect_3::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $d0, $d1, $d2, $d3, $d4, $c3, $d5, $d6, $d7, $d8, $d9, $c3, $da, $db, $dc, $dd, $de, $b7 ; id 1
     db $b6, $c7, $eb, $c3, $c3, $c3, $c3, $c8, $eb, $c3, $c3, $c3, $c3, $c9, $eb, $c3, $c3, $c3, $b7 ; id 2
@@ -6249,7 +6255,7 @@ StepTextWindowOpenClose::
     and $03
     jumptable
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes
-    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01
+    dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_2
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
 
@@ -6282,7 +6288,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case01::
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_2::
     ld a, [wTextWindowState]
     bit 0, a
     jr z, .skip
@@ -6317,7 +6323,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowSt
     jr z, .skip
     push de
     ld hl, wWindowTileBuffer
-    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02_Data
+    ld de, StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data
     ld b, $05
     call CopyRowsToScreenBufferAndClearAttributes
     pop de
@@ -6447,7 +6453,7 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data2::
     ds $12, $b4
     db $b5
 
-StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Case02_Data::
+StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data::
     db $b0
     ds $12, $b1
     db $b2, $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d
@@ -6512,7 +6518,7 @@ RunMenuStateMenuState_QueueSoundEffect::
     ret c
     ld a, $61
     call QueueSoundEffect
-    call RunMenuStateMenuState_Case01_ReadScrollYAndScrollX
+    call RunMenuStateMenuState_ReadScrollYAndScrollX
     xor a
     ld [wMenuSubState], a
     ld [wMenuSelectedMember], a
@@ -6536,12 +6542,12 @@ RunMenuStateMenuState_QueueSoundEffect::
     xor a
     ld [wScreenState], a
     ld [wScreenSubStep], a
-    call RunMenuStateMenuState_Case01_WriteScreenCounter
+    call RunMenuStateMenuState_WriteScreenCounter
     xor a
     ld [wScreenState], a
     ret
 
-RunMenuStateMenuState_Case01_ReadScrollYAndScrollX::
+RunMenuStateMenuState_ReadScrollYAndScrollX::
     ldh a, [hScrollY]
     and $f8
     ld l, a
@@ -6720,7 +6726,7 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     ld [wSubMenuCursor], a
     cp $04
     jr nz, .read_sub_menu_cursor
-    call RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame
+    call RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame
     ld hl, wMenuState
     inc [hl]
     xor a
@@ -6732,7 +6738,7 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     add_a_to_hl
     ld a, [hl]
     ld [wDMGPaletteBGP], a
-    call RunMenuStateMenuState_Case04_RunScreenStateStepEveryOtherFrame
+    call RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame
     jp RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor
 
 RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc_Data::
@@ -6803,7 +6809,7 @@ RunMenuStateMenuState_InitSoundHardware::
     ld [wModeState], a
     ld hl, wModeChangeRequest
     inc [hl]
-    farcall RunMenuStateMenuState_Case05_ReadKeyWorldFloor
+    farcall RunMenuStateMenuState_ReadKeyWorldFloor
     ret
 
 .check_map_type:
@@ -6857,7 +6863,7 @@ RunMenuStateMenuState_InitSoundHardware::
     ld a, [hl]
     ldh [hPlayerY], a
     xor a
-    ld [wGameMode2Byte50], a
+    ld [wWorldMapByFieldSkill], a
     xor a
     ld [wMapType], a
     ld a, $80
@@ -6867,14 +6873,14 @@ RunMenuStateMenuState_InitSoundHardware::
     ld de, EVENT_SCENE_WIZSTONE
     call TestFlagBit
     jr nc, .call_test_flag_bit
-    ld de, $0167
+    ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call SetFlagBit
 
 .call_test_flag_bit:
     ld de, EVENT_MILAYOU_HOW_DO_I_KNOW
     call TestFlagBit
     jr nc, .restore
-    ld de, $01c5
+    ld de, EVENT_MILAYOU_IEBEEN
     call SetFlagBit
 
 .restore:
@@ -6898,7 +6904,7 @@ RunMenuStateMenuState_InitSoundHardware::
     inc hl
     ld a, [hl]
     ld [wPartyStrength], a
-    farcall RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex
+    farcall RunMenuStateMenuState_FindSRAMSlotMarkerIndex
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     jr .set_key_world_refresh_to_80
 
@@ -6932,7 +6938,7 @@ RunMenuStateMenuState_InitSoundHardware::
     ld a, [wKeyWorldGoalPos2]
     ldh [hPlayerY], a
     xor a
-    ld [wGameMode2Byte50], a
+    ld [wWorldMapByFieldSkill], a
     ld a, $80
     ld [wMapType], a
     farcall MarkVisitedMapScreenInVisitedScreens
@@ -7517,7 +7523,7 @@ RunSaveSteps_WriteSVBKAndRAMB::
     ldh [rSVBK], a
     ld a, $01
     ld [rRAMB], a
-    ld hl, sSavedCE9BBlock
+    ld hl, sSavedTimerBlock
     ld a, [sSavedGM2Mode]
     cp $01
     jr z, .skip
@@ -7539,12 +7545,12 @@ RunSaveSteps_WriteSVBKAndRAMB::
     jr nz, .loop
     ret
 
-; when wGiftRecord is 0 or 1, copies the $D8 bytes at wGM2TimerFrames to sSavedCE9BBlock in SRAM
+; when wGiftRecord is 0 or 1, copies the $D8 bytes at wGM2TimerFrames to sSavedTimerBlock in SRAM
 ; bank 1 (E-0124)
 SaveGM2TimerFramesBlockToSRAMBank1::
     ld hl, wGM2TimerFrames
     ld bc, $00d8
-    ld de, sSavedCE9BBlock
+    ld de, sSavedTimerBlock
     ld a, $01
     ld [rRAMB], a
     xor a
@@ -7573,35 +7579,36 @@ RunSaveGameSteps::
     ld [rRAMG], a
     ld a, [wSaveStep]
     or a
-    jr nz, RunSaveGameSteps_7347_Skip
+    jr nz, RunSaveGameSteps_2_Skip
     inc a
     ld [wSaveStep], a
     call CopySaveBlocksToSRAMWithSum
-    jr RunSaveGameSteps_7347_CallRunSaveGameSteps_7347_ClearSRAMBanks2And
+    jr RunSaveGameSteps_2_CallRunSaveGameSteps_2_ClearSRAMBanks2And3
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then
-; the final stage marked by bit 7 of wSaveStep) (E-0124)
-RunSaveGameSteps_7347::
+; the final stage marked by bit 7 of wSaveStep) (E-0124) (E-0344: the address in its name dropped or
+; read as the label there; was RunSaveGameSteps_7347)
+RunSaveGameSteps_2::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wSaveStep]
     or a
-    jr nz, RunSaveGameSteps_7347_Skip
+    jr nz, RunSaveGameSteps_2_Skip
     inc a
     ld [wSaveStep], a
     call SnapshotSpritesForSave
 
-RunSaveGameSteps_7347_CallRunSaveGameSteps_7347_ClearSRAMBanks2And::
-    call RunSaveGameSteps_7347_ClearSRAMBanks2And3
+RunSaveGameSteps_2_CallRunSaveGameSteps_2_ClearSRAMBanks2And3::
+    call RunSaveGameSteps_2_ClearSRAMBanks2And3
     call BackupRecordsToSRAMBank1
     call SaveGM2TimerFramesBlockToSRAMBank1
-    jr RunSaveGameSteps_7347_Skip2
+    jr RunSaveGameSteps_2_Skip2
 
-RunSaveGameSteps_7347_Skip::
+RunSaveGameSteps_2_Skip::
     dec a
     jr nz, .call_compute_sram_bank1_record_checksum
     call SaveStepCopyBank1RecordSaveRecordIndex
-    jr RunSaveGameSteps_7347_Skip2
+    jr RunSaveGameSteps_2_Skip2
 
 .call_compute_sram_bank1_record_checksum:
     call ComputeSRAMBank1RecordChecksum
@@ -7609,7 +7616,7 @@ RunSaveGameSteps_7347_Skip::
     or $80
     ld [wSaveStep], a
 
-RunSaveGameSteps_7347_Skip2::
+RunSaveGameSteps_2_Skip2::
     xor a
     ld [rRAMG], a
     ld [rRAMB], a
@@ -7832,8 +7839,8 @@ ClearSRAMBanks2And3::
     call FillBytes
     ret
 
-RunSaveGameSteps_7347_ClearSRAMBanks2And3::
-    ld a, [wSaveByte4E]
+RunSaveGameSteps_2_ClearSRAMBanks2And3::
+    ld a, [wSaveClearFlag]
     or a
     jr z, .check_map_type
     call ClearSRAMBanks2And3
@@ -8108,16 +8115,16 @@ VerifySaveChecksum::
     ld hl, sSaveData
     ld de, hPlayerSpriteVariant
     ld bc, $000e
-    call CopyBytesWithChecksum_Bank02_7674
+    call CopyBytesWithChecksum_Bank02_2
     ld de, wPlayerName
     ld bc, $0291
-    call CopyBytesWithChecksum_Bank02_7674
+    call CopyBytesWithChecksum_Bank02_2
     ld de, wStoryFlags
     ld bc, $006b
-    call CopyBytesWithChecksum_Bank02_7674
+    call CopyBytesWithChecksum_Bank02_2
     ld de, wKeyWorldSlot
     ld bc, $00b5
-    call CopyBytesWithChecksum_Bank02_7674
+    call CopyBytesWithChecksum_Bank02_2
     ldh a, [hTemp2]
     ld l, a
     ldh a, [hTemp3]
@@ -8153,7 +8160,7 @@ VerifySaveChecksum::
 
 ; HL = source, DE = destination, BC = count: copies BC bytes and adds each one to the 16-bit sum in
 ; hTemp2/hTemp3; clobbers A, BC = 0 (E-0065) (the same 20 bytes appear in 2 banks)
-CopyBytesWithChecksum_Bank02_7674::
+CopyBytesWithChecksum_Bank02_2::
     ldh a, [hTemp2]
     add [hl]
     ldh [hTemp2], a
@@ -8166,7 +8173,7 @@ CopyBytesWithChecksum_Bank02_7674::
     dec bc
     ld a, b
     or c
-    jr nz, CopyBytesWithChecksum_Bank02_7674
+    jr nz, CopyBytesWithChecksum_Bank02_2
     ret
 
 ; SRAM bank 1: copies hPlayerSpriteVariant ($0E bytes), wPlayerName ($291), wStoryFlags ($6B) and

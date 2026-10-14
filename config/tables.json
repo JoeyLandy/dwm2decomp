@@ -1805,7 +1805,7 @@
     {
       "bank": "3B",
       "addr": "507C",
-      "label": "MetaSprites3B_507CTable",
+      "label": "MetaSprites3BTable",
       "count": 51,
       "id_base": 0,
       "metasprite": true,
@@ -1821,7 +1821,7 @@
     {
       "bank": "3D",
       "addr": "4077",
-      "label": "MetaSprites3D_4077Table",
+      "label": "MetaSprites3DTable",
       "count": 45,
       "id_base": 0,
       "metasprite": true,
@@ -1837,7 +1837,7 @@
     {
       "bank": "3E",
       "addr": "4024",
-      "label": "MetaSprites3E_4024Table",
+      "label": "MetaSprites3ETable",
       "count": 14,
       "id_base": 0,
       "metasprite": true,
@@ -1853,7 +1853,7 @@
     {
       "bank": "3F",
       "addr": "407E",
-      "label": "MetaSprites3F_407ETable",
+      "label": "MetaSprites3FTable",
       "count": 32,
       "id_base": 0,
       "metasprite": true,
@@ -1869,7 +1869,7 @@
     {
       "bank": "92",
       "addr": "4024",
-      "label": "MetaSprites92_4024Table",
+      "label": "MetaSprites92Table",
       "count": 60,
       "id_base": 0,
       "metasprite": true,
@@ -1885,7 +1885,7 @@
     {
       "bank": "7F",
       "addr": "4008",
-      "label": "MetaSprites7F_4008Table",
+      "label": "MetaSprites7FTable",
       "count": 98,
       "id_base": 0,
       "metasprite": true,
@@ -1901,7 +1901,7 @@
     {
       "bank": "7F",
       "addr": "7011",
-      "label": "MetaSprites7F_7011Table",
+      "label": "MetaSprites7FTable_2",
       "count": 42,
       "id_base": 0,
       "metasprite": true,
@@ -2470,7 +2470,7 @@
     {
       "bank": "87",
       "addr": "5D28",
-      "label": "SpecialMapInteractions_5D28",
+      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_3",
       "count": 1,
       "tail": 1,
       "id_base": 0,
@@ -2497,7 +2497,7 @@
     {
       "bank": "87",
       "addr": "5CA4",
-      "label": "SpecialMapInteractions_5CA4",
+      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions",
       "count": 9,
       "tail": 1,
       "id_base": 0,
@@ -2524,7 +2524,7 @@
     {
       "bank": "87",
       "addr": "5CFF",
-      "label": "SpecialMapInteractions_5CFF",
+      "label": "CheckMapInteractionOnA_KeyWorldFloor_SpecialMapInteractions_2",
       "count": 4,
       "tail": 1,
       "id_base": 0,
@@ -3134,7 +3134,7 @@
     {
       "bank": "5D",
       "addr": "4139",
-      "label": "Palettes_5D_4139",
+      "label": "RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -3150,7 +3150,7 @@
     {
       "bank": "1F",
       "addr": "720D",
-      "label": "TileRect_1F_720D",
+      "label": "GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect",
       "count": 3,
       "id_base": 1,
       "fields": [
@@ -3197,7 +3197,7 @@
     {
       "bank": "1F",
       "addr": "5F9F",
-      "label": "TileScreen_1F_5F9F",
+      "label": "TileScreen1F_1",
       "count": 1,
       "fields": [
         {
@@ -3315,7 +3315,7 @@
     {
       "bank": "1F",
       "addr": "6107",
-      "label": "TileScreen_1F_6107",
+      "label": "TileScreen1F_2",
       "count": 1,
       "fields": [
         {
@@ -3433,7 +3433,7 @@
     {
       "bank": "1F",
       "addr": "626F",
-      "label": "TileScreen_1F_626F",
+      "label": "TileScreen1F_3",
       "count": 1,
       "fields": [
         {
@@ -6475,7 +6475,7 @@
     {
       "bank": "04",
       "addr": "5347",
-      "label": "KeyWorldObjectGrid_5347",
+      "label": "KeyWorldObjectGrid_0",
       "count": 2,
       "id_base": 0,
       "fields": [
@@ -6491,7 +6491,7 @@
     {
       "bank": "04",
       "addr": "538C",
-      "label": "KeyWorldObjectGrid_538C",
+      "label": "KeyWorldObjectGrid_1",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -6507,7 +6507,7 @@
     {
       "bank": "04",
       "addr": "5421",
-      "label": "KeyWorldObjectGrid_5421",
+      "label": "KeyWorldObjectGrid_9",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -6523,7 +6523,7 @@
     {
       "bank": "04",
       "addr": "54C1",
-      "label": "KeyWorldObjectGrid_54C1",
+      "label": "KeyWorldObjectGrid_2",
       "count": 2,
       "id_base": 0,
       "fields": [
@@ -6539,7 +6539,7 @@
     {
       "bank": "04",
       "addr": "5511",
-      "label": "KeyWorldObjectGrid_5511",
+      "label": "KeyWorldObjectGrid_10",
       "count": 2,
       "id_base": 0,
       "fields": [
@@ -6555,7 +6555,7 @@
     {
       "bank": "04",
       "addr": "5561",
-      "label": "KeyWorldObjectGrid_5561",
+      "label": "KeyWorldObjectGrid_3",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -6571,7 +6571,7 @@
     {
       "bank": "04",
       "addr": "5573",
-      "label": "KeyWorldObjectGrid_5573",
+      "label": "KeyWorldObjectGrid_7",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -6587,7 +6587,7 @@
     {
       "bank": "04",
       "addr": "5585",
-      "label": "KeyWorldObjectGrid_5585",
+      "label": "KeyWorldObjectGrid_4",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -6603,7 +6603,7 @@
     {
       "bank": "04",
       "addr": "5597",
-      "label": "KeyWorldObjectGrid_5597",
+      "label": "KeyWorldObjectGrid_5",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -6619,7 +6619,7 @@
     {
       "bank": "04",
       "addr": "55A9",
-      "label": "KeyWorldObjectGrid_55A9",
+      "label": "KeyWorldObjectGrid_6",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -6635,7 +6635,7 @@
     {
       "bank": "04",
       "addr": "534B",
-      "label": "KeyWorldScreenObjects_534B",
+      "label": "KeyWorldScreenObjects_0_0",
       "count": 1,
       "fields": [
         {
@@ -6655,7 +6655,7 @@
     {
       "bank": "04",
       "addr": "5366",
-      "label": "KeyWorldScreenObjects_5366",
+      "label": "KeyWorldScreenObjects_0_1",
       "count": 1,
       "fields": [
         {
@@ -6675,7 +6675,7 @@
     {
       "bank": "04",
       "addr": "5394",
-      "label": "KeyWorldScreenObjects_5394",
+      "label": "KeyWorldScreenObjects_1_0",
       "count": 1,
       "fields": [
         {
@@ -6695,7 +6695,7 @@
     {
       "bank": "04",
       "addr": "53AF",
-      "label": "KeyWorldScreenObjects_53AF",
+      "label": "KeyWorldScreenObjects_1_1",
       "count": 1,
       "fields": [
         {
@@ -6715,7 +6715,7 @@
     {
       "bank": "04",
       "addr": "53E0",
-      "label": "KeyWorldScreenObjects_53E0",
+      "label": "KeyWorldScreenObjects_1_2",
       "count": 1,
       "fields": [
         {
@@ -6735,7 +6735,7 @@
     {
       "bank": "04",
       "addr": "53F0",
-      "label": "KeyWorldScreenObjects_53F0",
+      "label": "KeyWorldScreenObjects_1_3",
       "count": 1,
       "fields": [
         {
@@ -6755,7 +6755,7 @@
     {
       "bank": "04",
       "addr": "5429",
-      "label": "KeyWorldScreenObjects_5429",
+      "label": "KeyWorldScreenObjects_9_0",
       "count": 1,
       "fields": [
         {
@@ -6775,7 +6775,7 @@
     {
       "bank": "04",
       "addr": "5444",
-      "label": "KeyWorldScreenObjects_5444",
+      "label": "KeyWorldScreenObjects_9_1",
       "count": 1,
       "fields": [
         {
@@ -6795,7 +6795,7 @@
     {
       "bank": "04",
       "addr": "5475",
-      "label": "KeyWorldScreenObjects_5475",
+      "label": "KeyWorldScreenObjects_9_2",
       "count": 1,
       "fields": [
         {
@@ -6815,7 +6815,7 @@
     {
       "bank": "04",
       "addr": "5490",
-      "label": "KeyWorldScreenObjects_5490",
+      "label": "KeyWorldScreenObjects_9_3",
       "count": 1,
       "fields": [
         {
@@ -6835,7 +6835,7 @@
     {
       "bank": "04",
       "addr": "54C5",
-      "label": "KeyWorldScreenObjects_54C5",
+      "label": "KeyWorldScreenObjects_2_0",
       "count": 1,
       "fields": [
         {
@@ -6855,7 +6855,7 @@
     {
       "bank": "04",
       "addr": "54E0",
-      "label": "KeyWorldScreenObjects_54E0",
+      "label": "KeyWorldScreenObjects_2_1",
       "count": 1,
       "fields": [
         {
@@ -6875,7 +6875,7 @@
     {
       "bank": "04",
       "addr": "5515",
-      "label": "KeyWorldScreenObjects_5515",
+      "label": "KeyWorldScreenObjects_10_0",
       "count": 1,
       "fields": [
         {
@@ -6895,7 +6895,7 @@
     {
       "bank": "04",
       "addr": "553B",
-      "label": "KeyWorldScreenObjects_553B",
+      "label": "KeyWorldScreenObjects_10_1",
       "count": 1,
       "fields": [
         {
@@ -6915,7 +6915,7 @@
     {
       "bank": "04",
       "addr": "5563",
-      "label": "KeyWorldScreenObjects_5563",
+      "label": "KeyWorldScreenObjects_3_0",
       "count": 1,
       "fields": [
         {
@@ -6935,7 +6935,7 @@
     {
       "bank": "04",
       "addr": "5575",
-      "label": "KeyWorldScreenObjects_5575",
+      "label": "KeyWorldScreenObjects_7_0",
       "count": 1,
       "fields": [
         {
@@ -6955,7 +6955,7 @@
     {
       "bank": "04",
       "addr": "5587",
-      "label": "KeyWorldScreenObjects_5587",
+      "label": "KeyWorldScreenObjects_4_0",
       "count": 1,
       "fields": [
         {
@@ -6975,7 +6975,7 @@
     {
       "bank": "04",
       "addr": "5599",
-      "label": "KeyWorldScreenObjects_5599",
+      "label": "KeyWorldScreenObjects_5_0",
       "count": 1,
       "fields": [
         {
@@ -6995,7 +6995,7 @@
     {
       "bank": "04",
       "addr": "55AB",
-      "label": "KeyWorldScreenObjects_55AB",
+      "label": "KeyWorldScreenObjects_6_0",
       "count": 1,
       "fields": [
         {
@@ -7015,7 +7015,7 @@
     {
       "bank": "04",
       "addr": "534F",
-      "label": "KeyWorldObjectList_534F",
+      "label": "KeyWorldObjectList_0_0_1",
       "count": 1,
       "fields": [
         {
@@ -7043,7 +7043,7 @@
     {
       "bank": "04",
       "addr": "536A",
-      "label": "KeyWorldObjectList_536A",
+      "label": "KeyWorldObjectList_0_1_1",
       "count": 1,
       "fields": [
         {
@@ -7077,7 +7077,7 @@
     {
       "bank": "04",
       "addr": "5398",
-      "label": "KeyWorldObjectList_5398",
+      "label": "KeyWorldObjectList_1_0_1",
       "count": 1,
       "fields": [
         {
@@ -7105,7 +7105,7 @@
     {
       "bank": "04",
       "addr": "53B3",
-      "label": "KeyWorldObjectList_53B3",
+      "label": "KeyWorldObjectList_1_1_1",
       "count": 1,
       "fields": [
         {
@@ -7145,7 +7145,7 @@
     {
       "bank": "04",
       "addr": "53E4",
-      "label": "KeyWorldObjectList_53E4",
+      "label": "KeyWorldObjectList_1_2_1",
       "count": 1,
       "fields": [
         {
@@ -7167,7 +7167,7 @@
     {
       "bank": "04",
       "addr": "53F4",
-      "label": "KeyWorldObjectList_53F4",
+      "label": "KeyWorldObjectList_1_3_1",
       "count": 1,
       "fields": [
         {
@@ -7207,7 +7207,7 @@
     {
       "bank": "04",
       "addr": "542D",
-      "label": "KeyWorldObjectList_542D",
+      "label": "KeyWorldObjectList_9_0_1",
       "count": 1,
       "fields": [
         {
@@ -7235,7 +7235,7 @@
     {
       "bank": "04",
       "addr": "5448",
-      "label": "KeyWorldObjectList_5448",
+      "label": "KeyWorldObjectList_9_1_1",
       "count": 1,
       "fields": [
         {
@@ -7275,7 +7275,7 @@
     {
       "bank": "04",
       "addr": "5479",
-      "label": "KeyWorldObjectList_5479",
+      "label": "KeyWorldObjectList_9_2_1",
       "count": 1,
       "fields": [
         {
@@ -7303,7 +7303,7 @@
     {
       "bank": "04",
       "addr": "5494",
-      "label": "KeyWorldObjectList_5494",
+      "label": "KeyWorldObjectList_9_3_1",
       "count": 1,
       "fields": [
         {
@@ -7343,7 +7343,7 @@
     {
       "bank": "04",
       "addr": "54C9",
-      "label": "KeyWorldObjectList_54C9",
+      "label": "KeyWorldObjectList_2_0_1",
       "count": 1,
       "fields": [
         {
@@ -7371,7 +7371,7 @@
     {
       "bank": "04",
       "addr": "54E4",
-      "label": "KeyWorldObjectList_54E4",
+      "label": "KeyWorldObjectList_2_1_1",
       "count": 1,
       "fields": [
         {
@@ -7411,7 +7411,7 @@
     {
       "bank": "04",
       "addr": "5519",
-      "label": "KeyWorldObjectList_5519",
+      "label": "KeyWorldObjectList_10_0_1",
       "count": 1,
       "fields": [
         {
@@ -7445,7 +7445,7 @@
     {
       "bank": "04",
       "addr": "553F",
-      "label": "KeyWorldObjectList_553F",
+      "label": "KeyWorldObjectList_10_1_1",
       "count": 1,
       "fields": [
         {
@@ -7479,7 +7479,7 @@
     {
       "bank": "04",
       "addr": "5567",
-      "label": "KeyWorldObjectList_5567",
+      "label": "KeyWorldObjectList_3_0_1",
       "count": 1,
       "fields": [
         {
@@ -7501,7 +7501,7 @@
     {
       "bank": "04",
       "addr": "5579",
-      "label": "KeyWorldObjectList_5579",
+      "label": "KeyWorldObjectList_7_0_1",
       "count": 1,
       "fields": [
         {
@@ -7523,7 +7523,7 @@
     {
       "bank": "04",
       "addr": "558B",
-      "label": "KeyWorldObjectList_558B",
+      "label": "KeyWorldObjectList_4_0_1",
       "count": 1,
       "fields": [
         {
@@ -7545,7 +7545,7 @@
     {
       "bank": "04",
       "addr": "559D",
-      "label": "KeyWorldObjectList_559D",
+      "label": "KeyWorldObjectList_5_0_1",
       "count": 1,
       "fields": [
         {
@@ -7567,7 +7567,7 @@
     {
       "bank": "04",
       "addr": "55AF",
-      "label": "KeyWorldObjectList_55AF",
+      "label": "KeyWorldObjectList_6_0_1",
       "count": 1,
       "fields": [
         {
@@ -7589,7 +7589,7 @@
     {
       "bank": "1B",
       "addr": "5190",
-      "label": "Text_1B_5190",
+      "label": "Text_AccessoriesWillBeIn_2",
       "count": 1,
       "fields": [
         {
@@ -8597,7 +8597,7 @@
     {
       "bank": "1E",
       "addr": "7880",
-      "label": "CursorCellTable7880",
+      "label": "SwapMenuCursorCells",
       "count": 5,
       "id_base": 0,
       "fields": [
@@ -8608,12 +8608,12 @@
           "name": "screen buffer address"
         }
       ],
-      "note": "E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wD7AB of $7880 (cursor blanking); entries from 5 on are the table at $788A)."
+      "note": "E-0200 (C1: StoreBAtWordTableEntry_Bank1E writes a tile at entry wD7AB of $7880 (cursor blanking); entries from 5 on are SwapMenuCursorCellsFrom5, the table at $788A; E-0345: were CursorCellTable7880/788A)."
     },
     {
       "bank": "1E",
       "addr": "788A",
-      "label": "CursorCellTable788A",
+      "label": "SwapMenuCursorCellsFrom5",
       "count": 7,
       "id_base": 0,
       "fields": [
@@ -8651,7 +8651,7 @@
     {
       "bank": "0A",
       "addr": "5773",
-      "label": "EncounterGrid_5773",
+      "label": "EncounterGrid_1",
       "count": 64,
       "id_base": 0,
       "fields": [
@@ -8667,7 +8667,7 @@
     {
       "bank": "0A",
       "addr": "57F3",
-      "label": "EncounterGroup_57F3",
+      "label": "EncounterGroup_Grid1_0",
       "count": 1,
       "fields": [
         {
@@ -8695,7 +8695,7 @@
     {
       "bank": "0A",
       "addr": "57FE",
-      "label": "EncounterGroup_57FE",
+      "label": "EncounterGroup_Grid1_4",
       "count": 1,
       "fields": [
         {
@@ -8723,7 +8723,7 @@
     {
       "bank": "0A",
       "addr": "580B",
-      "label": "EncounterGroup_580B",
+      "label": "EncounterGroup_Grid1_40",
       "count": 1,
       "fields": [
         {
@@ -8751,7 +8751,7 @@
     {
       "bank": "0A",
       "addr": "5818",
-      "label": "EncounterGroup_5818",
+      "label": "EncounterGroup_Grid1_30",
       "count": 1,
       "fields": [
         {
@@ -8779,7 +8779,7 @@
     {
       "bank": "0A",
       "addr": "5827",
-      "label": "EncounterGroup_5827",
+      "label": "EncounterGroup_Grid1_5",
       "count": 1,
       "fields": [
         {
@@ -8807,7 +8807,7 @@
     {
       "bank": "0A",
       "addr": "5836",
-      "label": "EncounterGroup_5836",
+      "label": "EncounterGroup_Grid1_37",
       "count": 1,
       "fields": [
         {
@@ -8835,7 +8835,7 @@
     {
       "bank": "0A",
       "addr": "5845",
-      "label": "EncounterGroup_5845",
+      "label": "EncounterGroup_Grid1_7",
       "count": 1,
       "fields": [
         {
@@ -8863,7 +8863,7 @@
     {
       "bank": "0A",
       "addr": "5856",
-      "label": "EncounterGrid_5856",
+      "label": "EncounterGrid_2",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -8879,7 +8879,7 @@
     {
       "bank": "0A",
       "addr": "5876",
-      "label": "EncounterGroup_5876",
+      "label": "EncounterGroup_Grid2_13",
       "count": 1,
       "fields": [
         {
@@ -8907,7 +8907,7 @@
     {
       "bank": "0A",
       "addr": "5881",
-      "label": "EncounterGroup_5881",
+      "label": "EncounterGroup_Grid2_0",
       "count": 1,
       "fields": [
         {
@@ -8935,7 +8935,7 @@
     {
       "bank": "0A",
       "addr": "588E",
-      "label": "EncounterGroup_588E",
+      "label": "EncounterGroup_Direct1",
       "count": 1,
       "fields": [
         {
@@ -8963,7 +8963,7 @@
     {
       "bank": "0A",
       "addr": "589B",
-      "label": "EncounterGrid_589B",
+      "label": "EncounterGrid_3",
       "count": 64,
       "id_base": 0,
       "fields": [
@@ -8979,7 +8979,7 @@
     {
       "bank": "0A",
       "addr": "591B",
-      "label": "EncounterGroup_591B",
+      "label": "EncounterGroup_Grid3_0",
       "count": 1,
       "fields": [
         {
@@ -9007,7 +9007,7 @@
     {
       "bank": "0A",
       "addr": "5928",
-      "label": "EncounterGroup_5928",
+      "label": "EncounterGroup_Grid3_44",
       "count": 1,
       "fields": [
         {
@@ -9035,7 +9035,7 @@
     {
       "bank": "0A",
       "addr": "5939",
-      "label": "EncounterGroup_5939",
+      "label": "EncounterGroup_Grid3_19",
       "count": 1,
       "fields": [
         {
@@ -9063,7 +9063,7 @@
     {
       "bank": "0A",
       "addr": "594A",
-      "label": "EncounterGroup_594A",
+      "label": "EncounterGroup_Grid3_24",
       "count": 1,
       "fields": [
         {
@@ -9091,7 +9091,7 @@
     {
       "bank": "0A",
       "addr": "595B",
-      "label": "EncounterGroup_595B",
+      "label": "EncounterGroup_Grid3_3",
       "count": 1,
       "fields": [
         {
@@ -9119,7 +9119,7 @@
     {
       "bank": "0A",
       "addr": "596A",
-      "label": "EncounterGroup_596A",
+      "label": "EncounterGroup_Grid3_4",
       "count": 1,
       "fields": [
         {
@@ -9147,7 +9147,7 @@
     {
       "bank": "0A",
       "addr": "597B",
-      "label": "EncounterGroup_597B",
+      "label": "EncounterGroup_Grid3_5",
       "count": 1,
       "fields": [
         {
@@ -9175,7 +9175,7 @@
     {
       "bank": "0A",
       "addr": "598A",
-      "label": "EncounterGroup_598A",
+      "label": "EncounterGroup_Grid3_7",
       "count": 1,
       "fields": [
         {
@@ -9203,7 +9203,7 @@
     {
       "bank": "0A",
       "addr": "599B",
-      "label": "EncounterGroup_599B",
+      "label": "EncounterGroup_Grid3_21",
       "count": 1,
       "fields": [
         {
@@ -9231,7 +9231,7 @@
     {
       "bank": "0A",
       "addr": "59AC",
-      "label": "EncounterGroup_59AC",
+      "label": "EncounterGroup_Grid3_29",
       "count": 1,
       "fields": [
         {
@@ -9259,7 +9259,7 @@
     {
       "bank": "0A",
       "addr": "59BD",
-      "label": "EncounterGroup_59BD",
+      "label": "EncounterGroup_Grid3_1",
       "count": 1,
       "fields": [
         {
@@ -9287,7 +9287,7 @@
     {
       "bank": "0A",
       "addr": "59CA",
-      "label": "EncounterGroup_59CA",
+      "label": "EncounterGroup_Grid3_48",
       "count": 1,
       "fields": [
         {
@@ -9315,7 +9315,7 @@
     {
       "bank": "0A",
       "addr": "59D7",
-      "label": "EncounterGroup_59D7",
+      "label": "EncounterGroup_Grid3_50",
       "count": 1,
       "fields": [
         {
@@ -9343,7 +9343,7 @@
     {
       "bank": "0A",
       "addr": "59E6",
-      "label": "EncounterGroup_59E6",
+      "label": "EncounterGroup_Grid3_27",
       "count": 1,
       "fields": [
         {
@@ -9371,7 +9371,7 @@
     {
       "bank": "0A",
       "addr": "59F7",
-      "label": "EncounterGroup_59F7",
+      "label": "EncounterGroup_Grid3_34",
       "count": 1,
       "fields": [
         {
@@ -9399,7 +9399,7 @@
     {
       "bank": "0A",
       "addr": "5A08",
-      "label": "EncounterGroup_5A08",
+      "label": "EncounterGroup_Grid3_35",
       "count": 1,
       "fields": [
         {
@@ -9427,7 +9427,7 @@
     {
       "bank": "0A",
       "addr": "5A19",
-      "label": "EncounterGroup_5A19",
+      "label": "EncounterGroup_Grid3_42",
       "count": 1,
       "fields": [
         {
@@ -9455,7 +9455,7 @@
     {
       "bank": "0A",
       "addr": "5A2A",
-      "label": "EncounterGroup_5A2A",
+      "label": "EncounterGroup_Grid3_43",
       "count": 1,
       "fields": [
         {
@@ -9483,7 +9483,7 @@
     {
       "bank": "0A",
       "addr": "5A3B",
-      "label": "EncounterGroup_5A3B",
+      "label": "EncounterGroup_Direct2",
       "count": 1,
       "fields": [
         {
@@ -9511,7 +9511,7 @@
     {
       "bank": "0A",
       "addr": "5A4C",
-      "label": "EncounterGrid_5A4C",
+      "label": "EncounterGrid_4",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -9527,7 +9527,7 @@
     {
       "bank": "0A",
       "addr": "5A6C",
-      "label": "EncounterGroup_5A6C",
+      "label": "EncounterGroup_Grid4_0",
       "count": 1,
       "fields": [
         {
@@ -9555,7 +9555,7 @@
     {
       "bank": "0A",
       "addr": "5A7B",
-      "label": "EncounterGroup_5A7B",
+      "label": "EncounterGroup_1",
       "count": 1,
       "fields": [
         {
@@ -9583,7 +9583,7 @@
     {
       "bank": "0A",
       "addr": "5A8A",
-      "label": "EncounterGrid_5A8A",
+      "label": "EncounterGrid_5",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -9599,7 +9599,7 @@
     {
       "bank": "0A",
       "addr": "5AAA",
-      "label": "EncounterGroup_5AAA",
+      "label": "EncounterGroup_Grid5_0",
       "count": 1,
       "fields": [
         {
@@ -9627,7 +9627,7 @@
     {
       "bank": "0A",
       "addr": "5AB7",
-      "label": "EncounterGrid_5AB7",
+      "label": "EncounterGrid_6",
       "count": 12,
       "id_base": 0,
       "fields": [
@@ -9643,7 +9643,7 @@
     {
       "bank": "0A",
       "addr": "5ACF",
-      "label": "EncounterGroup_5ACF",
+      "label": "EncounterGroup_Grid6_0",
       "count": 1,
       "fields": [
         {
@@ -9671,7 +9671,7 @@
     {
       "bank": "0A",
       "addr": "5ADE",
-      "label": "EncounterGrid_5ADE",
+      "label": "EncounterGrid_7",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -9687,7 +9687,7 @@
     {
       "bank": "0A",
       "addr": "5AF0",
-      "label": "EncounterGroup_5AF0",
+      "label": "EncounterGroup_Grid7_0",
       "count": 1,
       "fields": [
         {
@@ -9715,7 +9715,7 @@
     {
       "bank": "0A",
       "addr": "5AFF",
-      "label": "EncounterGrid_5AFF",
+      "label": "EncounterGrid_8",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -9731,7 +9731,7 @@
     {
       "bank": "0A",
       "addr": "5B07",
-      "label": "EncounterGroup_5B07",
+      "label": "EncounterGroup_Grid8_0",
       "count": 1,
       "fields": [
         {
@@ -9759,7 +9759,7 @@
     {
       "bank": "0A",
       "addr": "5B14",
-      "label": "EncounterGrid_5B14",
+      "label": "EncounterGrid_9",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -9775,7 +9775,7 @@
     {
       "bank": "0A",
       "addr": "5B1C",
-      "label": "EncounterGroup_5B1C",
+      "label": "EncounterGroup_Grid9_0",
       "count": 1,
       "fields": [
         {
@@ -9803,7 +9803,7 @@
     {
       "bank": "0A",
       "addr": "5B29",
-      "label": "EncounterGrid_5B29",
+      "label": "EncounterGrid_10",
       "count": 3,
       "id_base": 0,
       "fields": [
@@ -9819,7 +9819,7 @@
     {
       "bank": "0A",
       "addr": "5B2F",
-      "label": "EncounterGroup_5B2F",
+      "label": "EncounterGroup_Grid10_0",
       "count": 1,
       "fields": [
         {
@@ -9847,7 +9847,7 @@
     {
       "bank": "0A",
       "addr": "5B3A",
-      "label": "EncounterGroup_5B3A",
+      "label": "EncounterGroup_2",
       "count": 1,
       "fields": [
         {
@@ -9875,7 +9875,7 @@
     {
       "bank": "0A",
       "addr": "5B45",
-      "label": "EncounterGrid_5B45",
+      "label": "EncounterGrid_11",
       "count": 3,
       "id_base": 0,
       "fields": [
@@ -9891,7 +9891,7 @@
     {
       "bank": "0A",
       "addr": "5B4B",
-      "label": "EncounterGroup_5B4B",
+      "label": "EncounterGroup_Grid11_0",
       "count": 1,
       "fields": [
         {
@@ -9919,7 +9919,7 @@
     {
       "bank": "0A",
       "addr": "5B58",
-      "label": "EncounterGrid_5B58",
+      "label": "EncounterGrid_12",
       "count": 3,
       "id_base": 0,
       "fields": [
@@ -9935,7 +9935,7 @@
     {
       "bank": "0A",
       "addr": "5B5E",
-      "label": "EncounterGroup_5B5E",
+      "label": "EncounterGroup_Grid12_0",
       "count": 1,
       "fields": [
         {
@@ -9963,7 +9963,7 @@
     {
       "bank": "0A",
       "addr": "5B6B",
-      "label": "EncounterGrid_5B6B",
+      "label": "EncounterGrid_13",
       "count": 144,
       "id_base": 0,
       "fields": [
@@ -9979,7 +9979,7 @@
     {
       "bank": "0A",
       "addr": "5C8B",
-      "label": "EncounterGroup_5C8B",
+      "label": "EncounterGroup_Grid13_0",
       "count": 1,
       "fields": [
         {
@@ -10007,7 +10007,7 @@
     {
       "bank": "0A",
       "addr": "5C96",
-      "label": "EncounterGroup_5C96",
+      "label": "EncounterGroup_Grid13_31",
       "count": 1,
       "fields": [
         {
@@ -10035,7 +10035,7 @@
     {
       "bank": "0A",
       "addr": "5CA3",
-      "label": "EncounterGroup_5CA3",
+      "label": "EncounterGroup_Grid13_4",
       "count": 1,
       "fields": [
         {
@@ -10063,7 +10063,7 @@
     {
       "bank": "0A",
       "addr": "5CB4",
-      "label": "EncounterGroup_5CB4",
+      "label": "EncounterGroup_Grid13_41",
       "count": 1,
       "fields": [
         {
@@ -10091,7 +10091,7 @@
     {
       "bank": "0A",
       "addr": "5CC3",
-      "label": "EncounterGroup_5CC3",
+      "label": "EncounterGroup_Grid13_44",
       "count": 1,
       "fields": [
         {
@@ -10119,7 +10119,7 @@
     {
       "bank": "0A",
       "addr": "5CD2",
-      "label": "EncounterGroup_5CD2",
+      "label": "EncounterGroup_Grid13_57",
       "count": 1,
       "fields": [
         {
@@ -10147,7 +10147,7 @@
     {
       "bank": "0A",
       "addr": "5CDF",
-      "label": "EncounterGroup_5CDF",
+      "label": "EncounterGroup_Grid13_64",
       "count": 1,
       "fields": [
         {
@@ -10175,7 +10175,7 @@
     {
       "bank": "0A",
       "addr": "5CEE",
-      "label": "EncounterGroup_5CEE",
+      "label": "EncounterGroup_Grid13_85",
       "count": 1,
       "fields": [
         {
@@ -10203,7 +10203,7 @@
     {
       "bank": "0A",
       "addr": "5CFD",
-      "label": "EncounterGroup_5CFD",
+      "label": "EncounterGroup_Entry03_121",
       "count": 1,
       "fields": [
         {
@@ -10231,7 +10231,7 @@
     {
       "bank": "0A",
       "addr": "5D0E",
-      "label": "EncounterGroup_5D0E",
+      "label": "EncounterGroup_Grid13_103",
       "count": 1,
       "fields": [
         {
@@ -10259,7 +10259,7 @@
     {
       "bank": "0A",
       "addr": "5D1D",
-      "label": "EncounterGroup_5D1D",
+      "label": "EncounterGroup_Grid13_104",
       "count": 1,
       "fields": [
         {
@@ -10287,7 +10287,7 @@
     {
       "bank": "0A",
       "addr": "5D2E",
-      "label": "EncounterGroup_5D2E",
+      "label": "EncounterGroup_Grid13_81",
       "count": 1,
       "fields": [
         {
@@ -10315,7 +10315,7 @@
     {
       "bank": "0A",
       "addr": "5D3D",
-      "label": "EncounterGroup_5D3D",
+      "label": "EncounterGroup_Grid13_92",
       "count": 1,
       "fields": [
         {
@@ -10343,7 +10343,7 @@
     {
       "bank": "0A",
       "addr": "5D4E",
-      "label": "EncounterGroup_5D4E",
+      "label": "EncounterGroup_Direct3",
       "count": 1,
       "fields": [
         {
@@ -10371,7 +10371,7 @@
     {
       "bank": "0A",
       "addr": "5D5D",
-      "label": "EncounterGrid_5D5D",
+      "label": "EncounterGrid_14",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -10387,7 +10387,7 @@
     {
       "bank": "0A",
       "addr": "5D7D",
-      "label": "EncounterGroup_5D7D",
+      "label": "EncounterGroup_Grid14_0",
       "count": 1,
       "fields": [
         {
@@ -10415,7 +10415,7 @@
     {
       "bank": "0A",
       "addr": "5D8C",
-      "label": "EncounterGroup_5D8C",
+      "label": "EncounterGroup_Direct4",
       "count": 1,
       "fields": [
         {
@@ -10443,7 +10443,7 @@
     {
       "bank": "0A",
       "addr": "5D9B",
-      "label": "EncounterGrid_5D9B",
+      "label": "EncounterGrid_15",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -10459,7 +10459,7 @@
     {
       "bank": "0A",
       "addr": "5DBB",
-      "label": "EncounterGroup_5DBB",
+      "label": "EncounterGroup_Grid15_0",
       "count": 1,
       "fields": [
         {
@@ -10487,7 +10487,7 @@
     {
       "bank": "0A",
       "addr": "5DCA",
-      "label": "EncounterGrid_5DCA",
+      "label": "EncounterGrid_16",
       "count": 8,
       "id_base": 0,
       "fields": [
@@ -10503,7 +10503,7 @@
     {
       "bank": "0A",
       "addr": "5DDA",
-      "label": "EncounterGroup_5DDA",
+      "label": "EncounterGroup_Grid16_0",
       "count": 1,
       "fields": [
         {
@@ -10531,7 +10531,7 @@
     {
       "bank": "0A",
       "addr": "5DE7",
-      "label": "EncounterGrid_5DE7",
+      "label": "EncounterGrid_17",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -10547,7 +10547,7 @@
     {
       "bank": "0A",
       "addr": "5DEF",
-      "label": "EncounterGrid_5DEF",
+      "label": "EncounterGrid_18",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -10563,7 +10563,7 @@
     {
       "bank": "0A",
       "addr": "5DF7",
-      "label": "EncounterGrid_5DF7",
+      "label": "EncounterGrid_19",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -10579,7 +10579,7 @@
     {
       "bank": "0A",
       "addr": "5DFF",
-      "label": "EncounterGroup_5DFF",
+      "label": "EncounterGroup_Grid17_0",
       "count": 1,
       "fields": [
         {
@@ -10607,7 +10607,7 @@
     {
       "bank": "0A",
       "addr": "5E0C",
-      "label": "EncounterGrid_5E0C",
+      "label": "EncounterGrid_20",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -10623,7 +10623,7 @@
     {
       "bank": "0A",
       "addr": "5E14",
-      "label": "EncounterGrid_5E14",
+      "label": "EncounterGrid_21",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -10639,7 +10639,7 @@
     {
       "bank": "0A",
       "addr": "5E1C",
-      "label": "EncounterGroup_5E1C",
+      "label": "EncounterGroup_Grid20_0",
       "count": 1,
       "fields": [
         {
@@ -10667,7 +10667,7 @@
     {
       "bank": "0A",
       "addr": "5E2B",
-      "label": "EncounterGrid_5E2B",
+      "label": "EncounterGrid_22",
       "count": 144,
       "id_base": 0,
       "fields": [
@@ -10683,7 +10683,7 @@
     {
       "bank": "0A",
       "addr": "5F4B",
-      "label": "EncounterGroup_5F4B",
+      "label": "EncounterGroup_Grid22_0",
       "count": 1,
       "fields": [
         {
@@ -10711,7 +10711,7 @@
     {
       "bank": "0A",
       "addr": "5F56",
-      "label": "EncounterGroup_5F56",
+      "label": "EncounterGroup_Grid22_22",
       "count": 1,
       "fields": [
         {
@@ -10739,7 +10739,7 @@
     {
       "bank": "0A",
       "addr": "5F63",
-      "label": "EncounterGroup_5F63",
+      "label": "EncounterGroup_Entry04_42",
       "count": 1,
       "fields": [
         {
@@ -10767,7 +10767,7 @@
     {
       "bank": "0A",
       "addr": "5F72",
-      "label": "EncounterGroup_5F72",
+      "label": "EncounterGroup_Entry04_80",
       "count": 1,
       "fields": [
         {
@@ -10795,7 +10795,7 @@
     {
       "bank": "0A",
       "addr": "5F83",
-      "label": "EncounterGroup_5F83",
+      "label": "EncounterGroup_Entry04_76",
       "count": 1,
       "fields": [
         {
@@ -10823,7 +10823,7 @@
     {
       "bank": "0A",
       "addr": "5F92",
-      "label": "EncounterGroup_5F92",
+      "label": "EncounterGroup_Entry04_38",
       "count": 1,
       "fields": [
         {
@@ -10851,7 +10851,7 @@
     {
       "bank": "0A",
       "addr": "5FA1",
-      "label": "EncounterGroup_5FA1",
+      "label": "EncounterGroup_Entry04_73",
       "count": 1,
       "fields": [
         {
@@ -10879,7 +10879,7 @@
     {
       "bank": "0A",
       "addr": "5FB0",
-      "label": "EncounterGroup_5FB0",
+      "label": "EncounterGroup_Entry04_124",
       "count": 1,
       "fields": [
         {
@@ -10907,7 +10907,7 @@
     {
       "bank": "0A",
       "addr": "5FBF",
-      "label": "EncounterGroup_5FBF",
+      "label": "EncounterGroup_Entry04_100",
       "count": 1,
       "fields": [
         {
@@ -10935,7 +10935,7 @@
     {
       "bank": "0A",
       "addr": "5FCE",
-      "label": "EncounterGroup_5FCE",
+      "label": "EncounterGroup_Entry04_92",
       "count": 1,
       "fields": [
         {
@@ -10963,7 +10963,7 @@
     {
       "bank": "0A",
       "addr": "5FDF",
-      "label": "EncounterGroup_5FDF",
+      "label": "EncounterGroup_Entry04_117",
       "count": 1,
       "fields": [
         {
@@ -10991,7 +10991,7 @@
     {
       "bank": "0A",
       "addr": "5FEE",
-      "label": "EncounterGroup_5FEE",
+      "label": "EncounterGroup_Entry04_96",
       "count": 1,
       "fields": [
         {
@@ -11019,7 +11019,7 @@
     {
       "bank": "0A",
       "addr": "5FFB",
-      "label": "EncounterGroup_5FFB",
+      "label": "EncounterGroup_Grid22_3",
       "count": 1,
       "fields": [
         {
@@ -11047,7 +11047,7 @@
     {
       "bank": "0A",
       "addr": "600A",
-      "label": "EncounterGroup_600A",
+      "label": "EncounterGroup_Grid22_1",
       "count": 1,
       "fields": [
         {
@@ -11075,7 +11075,7 @@
     {
       "bank": "0A",
       "addr": "6019",
-      "label": "EncounterGroup_6019",
+      "label": "EncounterGroup_Entry04_25",
       "count": 1,
       "fields": [
         {
@@ -11103,7 +11103,7 @@
     {
       "bank": "0A",
       "addr": "6028",
-      "label": "EncounterGrid_6028",
+      "label": "EncounterGrid_23",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11119,7 +11119,7 @@
     {
       "bank": "0A",
       "addr": "6030",
-      "label": "EncounterGroup_6030",
+      "label": "EncounterGroup_Grid23_0",
       "count": 1,
       "fields": [
         {
@@ -11147,7 +11147,7 @@
     {
       "bank": "0A",
       "addr": "603D",
-      "label": "EncounterGrid_603D",
+      "label": "EncounterGrid_24",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11163,7 +11163,7 @@
     {
       "bank": "0A",
       "addr": "6045",
-      "label": "EncounterGroup_6045",
+      "label": "EncounterGroup_Grid24_0",
       "count": 1,
       "fields": [
         {
@@ -11191,7 +11191,7 @@
     {
       "bank": "0A",
       "addr": "6052",
-      "label": "EncounterGrid_6052",
+      "label": "EncounterGrid_25",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11207,7 +11207,7 @@
     {
       "bank": "0A",
       "addr": "605A",
-      "label": "EncounterGroup_605A",
+      "label": "EncounterGroup_Grid25_0",
       "count": 1,
       "fields": [
         {
@@ -11235,7 +11235,7 @@
     {
       "bank": "0A",
       "addr": "606B",
-      "label": "EncounterGrid_606B",
+      "label": "EncounterGrid_26",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11251,7 +11251,7 @@
     {
       "bank": "0A",
       "addr": "6073",
-      "label": "EncounterGroup_6073",
+      "label": "EncounterGroup_Grid26_0",
       "count": 1,
       "fields": [
         {
@@ -11279,7 +11279,7 @@
     {
       "bank": "0A",
       "addr": "6084",
-      "label": "EncounterGrid_6084",
+      "label": "EncounterGrid_27",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -11295,7 +11295,7 @@
     {
       "bank": "0A",
       "addr": "6086",
-      "label": "EncounterGroup_6086",
+      "label": "EncounterGroup_Grid27_0",
       "count": 1,
       "fields": [
         {
@@ -11323,7 +11323,7 @@
     {
       "bank": "0A",
       "addr": "6097",
-      "label": "EncounterGrid_6097",
+      "label": "EncounterGrid_28",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -11339,7 +11339,7 @@
     {
       "bank": "0A",
       "addr": "60A9",
-      "label": "EncounterGroup_60A9",
+      "label": "EncounterGroup_Grid28_0",
       "count": 1,
       "fields": [
         {
@@ -11367,7 +11367,7 @@
     {
       "bank": "0A",
       "addr": "60BA",
-      "label": "EncounterGrid_60BA",
+      "label": "EncounterGrid_29",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -11383,7 +11383,7 @@
     {
       "bank": "0A",
       "addr": "60CC",
-      "label": "EncounterGroup_60CC",
+      "label": "EncounterGroup_Grid29_0",
       "count": 1,
       "fields": [
         {
@@ -11411,7 +11411,7 @@
     {
       "bank": "0A",
       "addr": "60DD",
-      "label": "EncounterGrid_60DD",
+      "label": "EncounterGrid_30",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11427,7 +11427,7 @@
     {
       "bank": "0A",
       "addr": "60E5",
-      "label": "EncounterGroup_60E5",
+      "label": "EncounterGroup_Grid30_0",
       "count": 1,
       "fields": [
         {
@@ -11455,7 +11455,7 @@
     {
       "bank": "0A",
       "addr": "60F2",
-      "label": "EncounterGrid_60F2",
+      "label": "EncounterGrid_31",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11471,7 +11471,7 @@
     {
       "bank": "0A",
       "addr": "60FA",
-      "label": "EncounterGroup_60FA",
+      "label": "EncounterGroup_Grid31_0",
       "count": 1,
       "fields": [
         {
@@ -11499,7 +11499,7 @@
     {
       "bank": "0A",
       "addr": "6107",
-      "label": "EncounterGrid_6107",
+      "label": "EncounterGrid_32",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11515,7 +11515,7 @@
     {
       "bank": "0A",
       "addr": "610F",
-      "label": "EncounterGroup_610F",
+      "label": "EncounterGroup_Grid32_0",
       "count": 1,
       "fields": [
         {
@@ -11543,7 +11543,7 @@
     {
       "bank": "0A",
       "addr": "6120",
-      "label": "EncounterGrid_6120",
+      "label": "EncounterGrid_33",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -11559,7 +11559,7 @@
     {
       "bank": "0A",
       "addr": "6128",
-      "label": "EncounterGroup_6128",
+      "label": "EncounterGroup_Grid33_0",
       "count": 1,
       "fields": [
         {
@@ -11587,7 +11587,7 @@
     {
       "bank": "0A",
       "addr": "6139",
-      "label": "EncounterGrid_6139",
+      "label": "EncounterGrid_34",
       "count": 12,
       "id_base": 0,
       "fields": [
@@ -11603,7 +11603,7 @@
     {
       "bank": "0A",
       "addr": "6151",
-      "label": "EncounterGroup_6151",
+      "label": "EncounterGroup_Grid34_0",
       "count": 1,
       "fields": [
         {
@@ -11631,7 +11631,7 @@
     {
       "bank": "0A",
       "addr": "6160",
-      "label": "EncounterGrid_6160",
+      "label": "EncounterGrid_35",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -11647,7 +11647,7 @@
     {
       "bank": "0A",
       "addr": "6172",
-      "label": "EncounterGroup_6172",
+      "label": "EncounterGroup_Grid35_0",
       "count": 1,
       "fields": [
         {
@@ -11675,7 +11675,7 @@
     {
       "bank": "0A",
       "addr": "6181",
-      "label": "EncounterGrid_6181",
+      "label": "EncounterGrid_36",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -11691,7 +11691,7 @@
     {
       "bank": "0A",
       "addr": "6193",
-      "label": "EncounterGroup_6193",
+      "label": "EncounterGroup_Grid36_0",
       "count": 1,
       "fields": [
         {
@@ -11719,7 +11719,7 @@
     {
       "bank": "0A",
       "addr": "61A2",
-      "label": "EncounterGrid_61A2",
+      "label": "EncounterGrid_37",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -11735,7 +11735,7 @@
     {
       "bank": "0A",
       "addr": "61AE",
-      "label": "EncounterGroup_61AE",
+      "label": "EncounterGroup_Grid37_0",
       "count": 1,
       "fields": [
         {
@@ -11763,7 +11763,7 @@
     {
       "bank": "0A",
       "addr": "61BD",
-      "label": "EncounterGrid_61BD",
+      "label": "EncounterGrid_38",
       "count": 16,
       "id_base": 0,
       "fields": [
@@ -11779,7 +11779,7 @@
     {
       "bank": "0A",
       "addr": "61DD",
-      "label": "EncounterGroup_61DD",
+      "label": "EncounterGroup_Grid38_2",
       "count": 1,
       "fields": [
         {
@@ -11807,7 +11807,7 @@
     {
       "bank": "0A",
       "addr": "61EC",
-      "label": "EncounterGroup_61EC",
+      "label": "EncounterGroup_Grid38_0",
       "count": 1,
       "fields": [
         {
@@ -11835,7 +11835,7 @@
     {
       "bank": "0A",
       "addr": "61FB",
-      "label": "EncounterGrid_61FB",
+      "label": "EncounterGrid_39",
       "count": 12,
       "id_base": 0,
       "fields": [
@@ -11851,7 +11851,7 @@
     {
       "bank": "0A",
       "addr": "6213",
-      "label": "EncounterGroup_6213",
+      "label": "EncounterGroup_Grid39_0",
       "count": 1,
       "fields": [
         {
@@ -11879,7 +11879,7 @@
     {
       "bank": "0A",
       "addr": "6220",
-      "label": "EncounterGrid_6220",
+      "label": "EncounterGrid_40",
       "count": 36,
       "id_base": 0,
       "fields": [
@@ -11895,7 +11895,7 @@
     {
       "bank": "0A",
       "addr": "6268",
-      "label": "EncounterGroup_6268",
+      "label": "EncounterGroup_Grid40_0",
       "count": 1,
       "fields": [
         {
@@ -11923,7 +11923,7 @@
     {
       "bank": "0A",
       "addr": "6275",
-      "label": "EncounterGroup_6275",
+      "label": "EncounterGroup_Grid40_2",
       "count": 1,
       "fields": [
         {
@@ -11951,7 +11951,7 @@
     {
       "bank": "0A",
       "addr": "6284",
-      "label": "EncounterGroup_6284",
+      "label": "EncounterGroup_Grid40_10",
       "count": 1,
       "fields": [
         {
@@ -11979,7 +11979,7 @@
     {
       "bank": "0A",
       "addr": "6293",
-      "label": "EncounterGroup_6293",
+      "label": "EncounterGroup_Grid40_17",
       "count": 1,
       "fields": [
         {
@@ -12007,7 +12007,7 @@
     {
       "bank": "0A",
       "addr": "62A0",
-      "label": "EncounterGroup_62A0",
+      "label": "EncounterGroup_Grid40_34",
       "count": 1,
       "fields": [
         {
@@ -12035,7 +12035,7 @@
     {
       "bank": "0A",
       "addr": "62AB",
-      "label": "EncounterGrid_62AB",
+      "label": "EncounterGrid_41",
       "count": 12,
       "id_base": 0,
       "fields": [
@@ -12051,7 +12051,7 @@
     {
       "bank": "0A",
       "addr": "62C3",
-      "label": "EncounterGroup_62C3",
+      "label": "EncounterGroup_Grid41_0",
       "count": 1,
       "fields": [
         {
@@ -12079,7 +12079,7 @@
     {
       "bank": "0A",
       "addr": "62D2",
-      "label": "EncounterGrid_62D2",
+      "label": "EncounterGrid_42",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -12095,7 +12095,7 @@
     {
       "bank": "0A",
       "addr": "62DE",
-      "label": "EncounterGroup_62DE",
+      "label": "EncounterGroup_Grid42_0",
       "count": 1,
       "fields": [
         {
@@ -12123,7 +12123,7 @@
     {
       "bank": "0A",
       "addr": "62EB",
-      "label": "EncounterGrid_62EB",
+      "label": "EncounterGrid_43",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -12139,7 +12139,7 @@
     {
       "bank": "0A",
       "addr": "62F3",
-      "label": "EncounterGroup_62F3",
+      "label": "EncounterGroup_Grid43_0",
       "count": 1,
       "fields": [
         {
@@ -12167,7 +12167,7 @@
     {
       "bank": "0A",
       "addr": "6300",
-      "label": "EncounterGrid_6300",
+      "label": "EncounterGrid_44",
       "count": 25,
       "id_base": 0,
       "fields": [
@@ -12183,7 +12183,7 @@
     {
       "bank": "0A",
       "addr": "6332",
-      "label": "EncounterGroup_6332",
+      "label": "EncounterGroup_Grid44_5",
       "count": 1,
       "fields": [
         {
@@ -12211,7 +12211,7 @@
     {
       "bank": "0A",
       "addr": "633F",
-      "label": "EncounterGroup_633F",
+      "label": "EncounterGroup_Grid44_0",
       "count": 1,
       "fields": [
         {
@@ -12239,7 +12239,7 @@
     {
       "bank": "0A",
       "addr": "634E",
-      "label": "EncounterGroup_634E",
+      "label": "EncounterGroup_Grid44_10",
       "count": 1,
       "fields": [
         {
@@ -12267,7 +12267,7 @@
     {
       "bank": "0A",
       "addr": "635D",
-      "label": "EncounterGroup_635D",
+      "label": "EncounterGroup_Grid44_14",
       "count": 1,
       "fields": [
         {
@@ -12295,7 +12295,7 @@
     {
       "bank": "0A",
       "addr": "636A",
-      "label": "EncounterGroup_636A",
+      "label": "EncounterGroup_Grid44_20",
       "count": 1,
       "fields": [
         {
@@ -12323,7 +12323,7 @@
     {
       "bank": "0A",
       "addr": "6375",
-      "label": "EncounterGroup_6375",
+      "label": "EncounterGroup_Direct5",
       "count": 1,
       "fields": [
         {
@@ -12351,7 +12351,7 @@
     {
       "bank": "0A",
       "addr": "6382",
-      "label": "EncounterGrid_6382",
+      "label": "EncounterGrid_45",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -12367,7 +12367,7 @@
     {
       "bank": "0A",
       "addr": "6384",
-      "label": "EncounterGroup_6384",
+      "label": "EncounterGroup_Grid45_0",
       "count": 1,
       "fields": [
         {
@@ -12395,7 +12395,7 @@
     {
       "bank": "0A",
       "addr": "6393",
-      "label": "EncounterGrid_6393",
+      "label": "EncounterGrid_46",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -12411,7 +12411,7 @@
     {
       "bank": "0A",
       "addr": "639B",
-      "label": "EncounterGroup_639B",
+      "label": "EncounterGroup_Grid46_0",
       "count": 1,
       "fields": [
         {
@@ -12439,7 +12439,7 @@
     {
       "bank": "0A",
       "addr": "63AA",
-      "label": "EncounterGrid_63AA",
+      "label": "EncounterGrid_47",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -12455,7 +12455,7 @@
     {
       "bank": "0A",
       "addr": "63B2",
-      "label": "EncounterGroup_63B2",
+      "label": "EncounterGroup_Grid47_0",
       "count": 1,
       "fields": [
         {
@@ -12483,7 +12483,7 @@
     {
       "bank": "0A",
       "addr": "63BF",
-      "label": "EncounterGrid_63BF",
+      "label": "EncounterGrid_48",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -12499,7 +12499,7 @@
     {
       "bank": "0A",
       "addr": "63C7",
-      "label": "EncounterGroup_63C7",
+      "label": "EncounterGroup_Grid48_0",
       "count": 1,
       "fields": [
         {
@@ -12643,7 +12643,7 @@
     {
       "bank": "0F",
       "addr": "5284",
-      "label": "ObjectPathTable_5284",
+      "label": "SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable",
       "count": 8,
       "id_base": 0,
       "fields": [
@@ -12666,7 +12666,7 @@
     {
       "bank": "16",
       "addr": "71AC",
-      "label": "MonsterClassByteTable_71AC",
+      "label": "MonsterClassByteTable_1",
       "count": 373,
       "id_base": 0,
       "id_names": "monster",
@@ -12682,7 +12682,7 @@
     {
       "bank": "0C",
       "addr": "5562",
-      "label": "MonsterClassByteTable_5562",
+      "label": "LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable",
       "count": 373,
       "id_base": 0,
       "id_names": "monster",
@@ -12698,7 +12698,7 @@
     {
       "bank": "0C",
       "addr": "536A",
-      "label": "MonsterIconKindTable_536A",
+      "label": "LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable",
       "count": 373,
       "id_base": 0,
       "id_names": "monster",
@@ -13209,7 +13209,7 @@
     {
       "bank": "E0",
       "addr": "4D95",
-      "label": "DebugScreenLayout_E0_4D95",
+      "label": "RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout",
       "count": 1,
       "fields": [
         {
@@ -13327,7 +13327,7 @@
     {
       "bank": "E0",
       "addr": "7641",
-      "label": "Palette_E0_7641",
+      "label": "ResetScreenPalettes_E0_Palette",
       "count": 1,
       "fields": [
         {
@@ -13370,7 +13370,7 @@
     {
       "bank": "73",
       "addr": "44EA",
-      "label": "SymbolTiles_73_44EA",
+      "label": "DrawSymbolTilesForTemp1_SymbolTiles",
       "count": 5,
       "id_base": 0,
       "fields": [
@@ -13386,7 +13386,7 @@
     {
       "bank": "73",
       "addr": "453A",
-      "label": "SymbolRowTable_453A",
+      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable",
       "count": 10,
       "id_base": 0,
       "fields": [
@@ -13401,7 +13401,7 @@
     {
       "bank": "73",
       "addr": "4544",
-      "label": "SymbolRowTable_4544",
+      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2",
       "count": 10,
       "id_base": 0,
       "fields": [
@@ -13416,7 +13416,7 @@
     {
       "bank": "73",
       "addr": "454E",
-      "label": "SymbolRowTable_454E",
+      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3",
       "count": 10,
       "id_base": 0,
       "fields": [
@@ -13431,7 +13431,7 @@
     {
       "bank": "73",
       "addr": "45CA",
-      "label": "RewardAmounts_73_45CA",
+      "label": "AddRewardToCounterCappedAt999_RewardAmounts",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -13446,7 +13446,7 @@
     {
       "bank": "73",
       "addr": "530C",
-      "label": "MapMessageTable_530C",
+      "label": "SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable",
       "count": 54,
       "id_base": 200,
       "fields": [
@@ -13888,7 +13888,7 @@
     {
       "bank": "07",
       "addr": "514F",
-      "label": "TileRect_07_514F",
+      "label": "TileRect_SaveCheckScreenRects_0",
       "count": 1,
       "fields": [
         {
@@ -13999,7 +13999,7 @@
     {
       "bank": "07",
       "addr": "52D7",
-      "label": "TileRect_07_52D7",
+      "label": "TileRect_SaveCheckScreenRects_1",
       "count": 1,
       "fields": [
         {
@@ -14038,7 +14038,7 @@
     {
       "bank": "07",
       "addr": "52FF",
-      "label": "TileRect_07_52FF",
+      "label": "TileRect_SaveCheckScreenRects_2",
       "count": 1,
       "fields": [
         {
@@ -14089,7 +14089,7 @@
     {
       "bank": "07",
       "addr": "5086",
-      "label": "CursorPositionWords_07_5086",
+      "label": "RunGameMode5Case01SubStates_SerialSendByte_SetScreenStep_CursorPositionWords",
       "count": 1,
       "fields": [
         {
@@ -14142,7 +14142,7 @@
     {
       "bank": "31",
       "addr": "757C",
-      "label": "TileRect_31_757C",
+      "label": "TileRect_PartyCountRects_1",
       "count": 1,
       "fields": [
         {
@@ -14205,7 +14205,7 @@
     {
       "bank": "31",
       "addr": "75B8",
-      "label": "TileRect_31_75B8",
+      "label": "TileRect_PartyCountRects_2",
       "count": 1,
       "fields": [
         {
@@ -14268,7 +14268,7 @@
     {
       "bank": "31",
       "addr": "761E",
-      "label": "TileRect_31_761E",
+      "label": "TileRect_PartyCountRects_3",
       "count": 1,
       "fields": [
         {
@@ -14471,7 +14471,7 @@
     {
       "bank": "1D",
       "addr": "44E3",
-      "label": "BGMap1TileRun_1D_44E3",
+      "label": "BGMap1TileRun",
       "count": 1,
       "tail": 1,
       "fields": [
@@ -14506,7 +14506,7 @@
     {
       "bank": "1D",
       "addr": "4547",
-      "label": "BGMap1TileRun_1D_4547",
+      "label": "BGMap1TileRun_2",
       "count": 1,
       "tail": 1,
       "fields": [
@@ -14541,7 +14541,7 @@
     {
       "bank": "1D",
       "addr": "5186",
-      "label": "OrderList_1D_5186",
+      "label": "OrderList1D_1",
       "count": 1,
       "tail": 1,
       "fields": [
@@ -14557,7 +14557,7 @@
     {
       "bank": "1D",
       "addr": "51E6",
-      "label": "OrderList_1D_51E6",
+      "label": "OrderList1D_2",
       "count": 1,
       "tail": 1,
       "fields": [
@@ -14573,7 +14573,7 @@
     {
       "bank": "05",
       "addr": "5AF8",
-      "label": "AllySkillMPCosts_5AF8",
+      "label": "FailIfAllyLacksMPForSkillList_AllySkillMPCosts",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -14664,7 +14664,7 @@
     {
       "bank": "33",
       "addr": "40C5",
-      "label": "TileRect_33_40C5",
+      "label": "TileRect_ScreenBlockTable_0",
       "count": 1,
       "fields": [
         {
@@ -14739,7 +14739,7 @@
     {
       "bank": "33",
       "addr": "4111",
-      "label": "TileRect_33_4111",
+      "label": "TileRect_ScreenBlockTable_1",
       "count": 1,
       "fields": [
         {
@@ -14838,7 +14838,7 @@
     {
       "bank": "33",
       "addr": "41B1",
-      "label": "TileRect_33_41B1",
+      "label": "TileRect_ScreenBlockTable_2",
       "count": 1,
       "fields": [
         {
@@ -14895,7 +14895,7 @@
     {
       "bank": "33",
       "addr": "41D9",
-      "label": "TileRect_33_41D9",
+      "label": "TileRect_ScreenBlockTable_3",
       "count": 1,
       "fields": [
         {
@@ -14946,7 +14946,7 @@
     {
       "bank": "33",
       "addr": "4219",
-      "label": "TileRect_33_4219",
+      "label": "TileRect_ScreenBlockTable_4",
       "count": 1,
       "fields": [
         {
@@ -15033,7 +15033,7 @@
     {
       "bank": "33",
       "addr": "42A1",
-      "label": "TileRect_33_42A1",
+      "label": "TileRect_ScreenBlockTable_5",
       "count": 1,
       "fields": [
         {
@@ -15096,7 +15096,7 @@
     {
       "bank": "33",
       "addr": "42DD",
-      "label": "TileRect_33_42DD",
+      "label": "TileRect_ScreenBlockTable_6",
       "count": 1,
       "fields": [
         {
@@ -15159,7 +15159,7 @@
     {
       "bank": "33",
       "addr": "4335",
-      "label": "TileRect_33_4335",
+      "label": "TileRect_ScreenBlockTable_7",
       "count": 1,
       "fields": [
         {
@@ -15288,7 +15288,7 @@
     {
       "bank": "33",
       "addr": "4411",
-      "label": "TileRect_33_4411",
+      "label": "TileRect_ScreenBlockTable_8",
       "count": 1,
       "fields": [
         {
@@ -15351,7 +15351,7 @@
     {
       "bank": "33",
       "addr": "444D",
-      "label": "TileRect_33_444D",
+      "label": "TileRect_ScreenBlockTable_9",
       "count": 1,
       "fields": [
         {
@@ -15480,7 +15480,7 @@
     {
       "bank": "33",
       "addr": "4529",
-      "label": "TileRect_33_4529",
+      "label": "TileRect_ScreenBlockTable_10",
       "count": 1,
       "fields": [
         {
@@ -15525,7 +15525,7 @@
     {
       "bank": "33",
       "addr": "4535",
-      "label": "TileRect_33_4535",
+      "label": "TileRect_ScreenBlockTable_46",
       "count": 1,
       "fields": [
         {
@@ -15624,7 +15624,7 @@
     {
       "bank": "33",
       "addr": "4594",
-      "label": "TileRect_33_4594",
+      "label": "TileRect_ScreenBlockTable_47",
       "count": 1,
       "fields": [
         {
@@ -15723,7 +15723,7 @@
     {
       "bank": "33",
       "addr": "4641",
-      "label": "TileRect_33_4641",
+      "label": "TileRect_ScreenBlockTable_48",
       "count": 1,
       "fields": [
         {
@@ -15822,7 +15822,7 @@
     {
       "bank": "33",
       "addr": "4749",
-      "label": "TileRect_33_4749",
+      "label": "TileRect_ScreenBlockTable_49",
       "count": 1,
       "fields": [
         {
@@ -15873,7 +15873,7 @@
     {
       "bank": "33",
       "addr": "4789",
-      "label": "TileRect_33_4789",
+      "label": "TileRect_ScreenBlockTable_11",
       "count": 1,
       "fields": [
         {
@@ -15912,7 +15912,7 @@
     {
       "bank": "33",
       "addr": "479F",
-      "label": "TileRect_33_479F",
+      "label": "TileRect_ScreenBlockTable_12",
       "count": 1,
       "fields": [
         {
@@ -15987,7 +15987,7 @@
     {
       "bank": "33",
       "addr": "480F",
-      "label": "TileRect_33_480F",
+      "label": "TileRect_ScreenBlockTable_13",
       "count": 1,
       "fields": [
         {
@@ -16050,7 +16050,7 @@
     {
       "bank": "33",
       "addr": "489F",
-      "label": "TileRect_33_489F",
+      "label": "TileRect_ScreenBlockTable_14",
       "count": 1,
       "fields": [
         {
@@ -16113,7 +16113,7 @@
     {
       "bank": "33",
       "addr": "48D4",
-      "label": "TileRect_33_48D4",
+      "label": "TileRect_ScreenBlockTable_50",
       "count": 1,
       "fields": [
         {
@@ -16176,7 +16176,7 @@
     {
       "bank": "33",
       "addr": "4909",
-      "label": "TileRect_33_4909",
+      "label": "TileRect_ScreenBlockTable_15",
       "count": 1,
       "fields": [
         {
@@ -16227,7 +16227,7 @@
     {
       "bank": "33",
       "addr": "492B",
-      "label": "TileRect_33_492B",
+      "label": "TileRect_ScreenBlockTable_16",
       "count": 1,
       "fields": [
         {
@@ -16278,7 +16278,7 @@
     {
       "bank": "33",
       "addr": "4993",
-      "label": "TileRect_33_4993",
+      "label": "TileRect_ScreenBlockTable_17",
       "count": 1,
       "fields": [
         {
@@ -16353,7 +16353,7 @@
     {
       "bank": "33",
       "addr": "49DF",
-      "label": "TileRect_33_49DF",
+      "label": "TileRect_ScreenBlockTable_18",
       "count": 1,
       "fields": [
         {
@@ -16404,7 +16404,7 @@
     {
       "bank": "33",
       "addr": "4A29",
-      "label": "TileRect_33_4A29",
+      "label": "TileRect_ScreenBlockTable_28",
       "count": 1,
       "fields": [
         {
@@ -16479,7 +16479,7 @@
     {
       "bank": "33",
       "addr": "4A75",
-      "label": "TileRect_33_4A75",
+      "label": "TileRect_ScreenBlockTable_29",
       "count": 1,
       "fields": [
         {
@@ -16554,7 +16554,7 @@
     {
       "bank": "33",
       "addr": "4B2D",
-      "label": "TileRect_33_4B2D",
+      "label": "TileRect_ScreenBlockTable_30",
       "count": 1,
       "fields": [
         {
@@ -16629,7 +16629,7 @@
     {
       "bank": "33",
       "addr": "4B79",
-      "label": "TileRect_33_4B79",
+      "label": "TileRect_ScreenBlockTable_33",
       "count": 1,
       "fields": [
         {
@@ -16740,7 +16740,7 @@
     {
       "bank": "33",
       "addr": "4C40",
-      "label": "TileRect_33_4C40",
+      "label": "TileRect_ScreenBlockTable_34",
       "count": 1,
       "fields": [
         {
@@ -16803,7 +16803,7 @@
     {
       "bank": "33",
       "addr": "4CA6",
-      "label": "TileRect_33_4CA6",
+      "label": "TileRect_ScreenBlockTable_35",
       "count": 1,
       "fields": [
         {
@@ -16878,7 +16878,7 @@
     {
       "bank": "33",
       "addr": "4D31",
-      "label": "TileRect_33_4D31",
+      "label": "TileRect_ScreenBlockTable_36",
       "count": 1,
       "fields": [
         {
@@ -16941,7 +16941,7 @@
     {
       "bank": "33",
       "addr": "4D66",
-      "label": "TileRect_33_4D66",
+      "label": "TileRect_ScreenBlockTable_37",
       "count": 1,
       "fields": [
         {
@@ -16992,7 +16992,7 @@
     {
       "bank": "33",
       "addr": "4D88",
-      "label": "TileRect_33_4D88",
+      "label": "TileRect_ScreenBlockTable_38",
       "count": 1,
       "fields": [
         {
@@ -17031,7 +17031,7 @@
     {
       "bank": "33",
       "addr": "4DA1",
-      "label": "TileRect_33_4DA1",
+      "label": "TileRect_ScreenBlockTable_39",
       "count": 1,
       "fields": [
         {
@@ -17106,7 +17106,7 @@
     {
       "bank": "33",
       "addr": "4E08",
-      "label": "TileRect_33_4E08",
+      "label": "TileRect_ScreenBlockTable_40",
       "count": 1,
       "fields": [
         {
@@ -17169,7 +17169,7 @@
     {
       "bank": "33",
       "addr": "4E8A",
-      "label": "TileRect_33_4E8A",
+      "label": "TileRect_ScreenBlockTable_41",
       "count": 1,
       "fields": [
         {
@@ -17244,7 +17244,7 @@
     {
       "bank": "33",
       "addr": "4EFA",
-      "label": "TileRect_33_4EFA",
+      "label": "TileRect_ScreenBlockTable_42",
       "count": 1,
       "fields": [
         {
@@ -17331,7 +17331,7 @@
     {
       "bank": "33",
       "addr": "4FDA",
-      "label": "TileRect_33_4FDA",
+      "label": "TileRect_ScreenBlockTable_43",
       "count": 1,
       "fields": [
         {
@@ -17382,7 +17382,7 @@
     {
       "bank": "33",
       "addr": "4FFC",
-      "label": "TileRect_33_4FFC",
+      "label": "TileRect_ScreenBlockTable_44",
       "count": 1,
       "fields": [
         {
@@ -17433,7 +17433,7 @@
     {
       "bank": "33",
       "addr": "505A",
-      "label": "TileRect_33_505A",
+      "label": "TileRect_ScreenBlockTable_45",
       "count": 1,
       "fields": [
         {
@@ -17608,7 +17608,7 @@
     {
       "bank": "0C",
       "addr": "7796",
-      "label": "TileRect_0C_7796",
+      "label": "TileRect0C_1",
       "count": 7,
       "id_base": 0,
       "fields": [
@@ -17625,7 +17625,7 @@
     {
       "bank": "0C",
       "addr": "77F1",
-      "label": "TileRect_0C_77F1",
+      "label": "TileRect0C_2",
       "count": 3,
       "id_base": 0,
       "fields": [
@@ -17642,7 +17642,7 @@
     {
       "bank": "0C",
       "addr": "7809",
-      "label": "TileRect_0C_7809",
+      "label": "TileRect0C_3",
       "count": 5,
       "id_base": 0,
       "fields": [
@@ -17659,7 +17659,7 @@
     {
       "bank": "F0",
       "addr": "65A5",
-      "label": "FrameTiles_F0_65A5",
+      "label": "FrameTilesF0_1",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -17675,7 +17675,7 @@
     {
       "bank": "F0",
       "addr": "65AE",
-      "label": "TileRect_F0_65AE",
+      "label": "TileRectF0_1",
       "count": 5,
       "id_base": 0,
       "fields": [
@@ -17692,7 +17692,7 @@
     {
       "bank": "F0",
       "addr": "65D1",
-      "label": "TileRect_F0_65D1",
+      "label": "TileRectF0_2",
       "count": 5,
       "id_base": 0,
       "fields": [
@@ -17709,7 +17709,7 @@
     {
       "bank": "F0",
       "addr": "65F4",
-      "label": "TileRect_F0_65F4",
+      "label": "TileRectF0_3",
       "count": 1,
       "id_base": 0,
       "fields": [
@@ -18715,7 +18715,7 @@
     {
       "bank": "0C",
       "addr": "4718",
-      "label": "Tiles_0C_4718",
+      "label": "LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles",
       "count": 6,
       "id_base": 0,
       "fields": [
@@ -18731,7 +18731,7 @@
     {
       "bank": "7E",
       "addr": "4BBD",
-      "label": "ObjPalettes_7E_4BBD",
+      "label": "LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData",
       "count": 38,
       "id_base": 0,
       "fields": [
@@ -18798,7 +18798,7 @@
     {
       "bank": "1C",
       "addr": "6289",
-      "label": "TileDestTable_1C_6289",
+      "label": "ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -19533,7 +19533,7 @@
     {
       "bank": "85",
       "addr": "4583",
-      "label": "TileRect_85_4583",
+      "label": "ShowBoxFromTable_TileRect",
       "count": 9,
       "id_base": 0,
       "fields": [
@@ -19758,7 +19758,7 @@
     {
       "bank": "F0",
       "addr": "70C5",
-      "label": "UnreferencedBytes_F0_70C5",
+      "label": "UnreferencedBytesF0_1",
       "count": 24,
       "id_base": 0,
       "fields": [

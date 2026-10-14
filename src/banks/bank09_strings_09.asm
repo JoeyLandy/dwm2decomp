@@ -6,13 +6,13 @@ SECTION "Bank 09", ROMX[$4000], BANK[$09]
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank09::
-    ld de, StringCategories_09_4016
+    ld de, BeginStringDisplay_Bank09_StringCategories
     call BeginStringDisplay
     ret
 
 ; ld de, this bank's string table / CopyStringToBuffer
 CopyStringToBuffer_Bank09::
-    ld de, StringCategories_09_4016
+    ld de, BeginStringDisplay_Bank09_StringCategories
     call CopyStringToBuffer
     ret
 
@@ -25,26 +25,26 @@ ShowString_Bank09::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_09_4016::
-    dw StringList_09_402A ; id 0
-    dw StringList_09_4030 ; id 1
-    dw StringList_09_4064 ; id 2
-    dw StringList_09_4078 ; id 3
-    dw StringList_09_410A ; id 4
-    dw StringList_09_410C ; id 5
-    dw StringList_09_41B4 ; id 6
-    dw StringList_09_41CE ; id 7
-    dw StringList_09_41EC ; id 8
-    dw StringList_09_41EE ; id 9
+BeginStringDisplay_Bank09_StringCategories::
+    dw StringList_Bank09_StringCategories_0 ; id 0
+    dw StringList_Bank09_StringCategories_1 ; id 1
+    dw StringList_Bank09_StringCategories_2 ; id 2
+    dw StringList_Bank09_StringCategories_3 ; id 3
+    dw StringList_Bank09_StringCategories_4 ; id 4
+    dw StringList_Bank09_StringCategories_5 ; id 5
+    dw StringList_Bank09_StringCategories_6 ; id 6
+    dw StringList_Bank09_StringCategories_7 ; id 7
+    dw StringList_Bank09_StringCategories_8 ; id 8
+    dw StringList_Bank09_StringCategories_9 ; id 9
 
-; category list of StringCategories_09_4016; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank09_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_09_402A::
+StringList_Bank09_StringCategories_0::
     dw String_09_00_00 ; id 0
     dw String_09_00_01 ; id 1
     dw String_09_00_02 ; id 2
 
-StringList_09_4030::
+StringList_Bank09_StringCategories_1::
     dw String_09_01_00 ; id 0
     dw String_09_01_01 ; id 1
     dw String_09_01_02 ; id 2
@@ -72,7 +72,7 @@ StringList_09_4030::
     dw String_09_01_18 ; id 24
     dw String_09_01_19 ; id 25
 
-StringList_09_4064::
+StringList_Bank09_StringCategories_2::
     dw String_09_02_00 ; id 0
     dw String_09_02_01 ; id 1
     dw String_09_02_02 ; id 2
@@ -84,7 +84,7 @@ StringList_09_4064::
     dw String_09_02_08 ; id 8
     dw String_09_02_09 ; id 9
 
-StringList_09_4078::
+StringList_Bank09_StringCategories_3::
     dw String_09_03_00 ; id 0
     dw String_09_03_01 ; id 1
     dw String_09_03_02 ; id 2
@@ -159,10 +159,10 @@ StringList_09_4078::
     dw String_09_03_47 ; id 71
     dw String_09_03_48 ; id 72
 
-StringList_09_410A::
+StringList_Bank09_StringCategories_4::
     dw String_09_04_00 ; id 0
 
-StringList_09_410C::
+StringList_Bank09_StringCategories_5::
     dw String_09_05_00 ; id 0
     dw String_09_05_01 ; id 1
     dw String_09_05_02 ; id 2
@@ -248,7 +248,7 @@ StringList_09_410C::
     dw String_09_05_52 ; id 82
     dw String_09_05_53 ; id 83
 
-StringList_09_41B4::
+StringList_Bank09_StringCategories_6::
     dw String_09_06_00 ; id 0
     dw String_09_06_01 ; id 1
     dw String_09_06_02 ; id 2
@@ -263,7 +263,7 @@ StringList_09_41B4::
     dw String_09_06_0B ; id 11
     dw String_09_06_0C ; id 12
 
-StringList_09_41CE::
+StringList_Bank09_StringCategories_7::
     dw String_09_07_00 ; id 0
     dw String_09_07_01 ; id 1
     dw String_09_07_02 ; id 2
@@ -280,10 +280,10 @@ StringList_09_41CE::
     dw String_09_07_0D ; id 13
     dw String_09_07_0E ; id 14
 
-StringList_09_41EC::
+StringList_Bank09_StringCategories_8::
     dw String_09_08_00 ; id 0
 
-StringList_09_41EE::
+StringList_Bank09_StringCategories_9::
     dw String_09_09_00 ; id 0
     dw String_09_09_01 ; id 1
     dw String_09_09_02 ; id 2

@@ -13,7 +13,7 @@ RunBattleCommandEntry::
     ret nz
     ld a, [wBattleSubPhase]
     jumptable
-    dw RunBattleCommandEntry_WriteCommandByteE8
+    dw RunBattleCommandEntry_WriteCommandEntryMonster
     dw RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_ChooseTargetForActor
@@ -21,27 +21,27 @@ RunBattleCommandEntry::
     dw RunBattleCommandEntry_CompareHLToBC
     dw RunBattleCommandEntry_AddWordAtHLToBC_Bank30
 
-RunBattleCommandEntry_WriteCommandByteE8::
+RunBattleCommandEntry_WriteCommandEntryMonster::
     ld hl, wBattleSubPhase
     inc [hl]
     ld a, [wLinkMode]
     or a
     ret nz
     xor a
-    ld [wCommandByteE8], a
+    ld [wCommandEntryMonster], a
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld hl, wSlotPersonalityHi
     ld de, $0000
-    call RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld hl, wSlotPersonalityMid
     push de
     ld de, $0000
-    call RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     pop hl
     ld a, l
     sub e
@@ -51,7 +51,7 @@ RunBattleCommandEntry_WriteCommandByteE8::
     ld h, d
     ld l, e
     ld a, $01
-    ld [wCommandByteE8], a
+    ld [wCommandEntryMonster], a
 
 .read_battle_party_count:
     push hl
@@ -60,7 +60,7 @@ RunBattleCommandEntry_WriteCommandByteE8::
     ld c, $00
     ld hl, wSlotPersonalityLo
     ld de, $0000
-    call RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     pop hl
     ld a, l
     sub e
@@ -70,7 +70,7 @@ RunBattleCommandEntry_WriteCommandByteE8::
     ld h, d
     ld l, e
     ld a, $02
-    ld [wCommandByteE8], a
+    ld [wCommandEntryMonster], a
 
 .read_battle_party_count2:
     push hl
@@ -79,7 +79,7 @@ RunBattleCommandEntry_WriteCommandByteE8::
     ld c, $00
     ld hl, wSlotTrait
     ld de, $0000
-    call RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     pop hl
     ld a, l
     sub e
@@ -87,12 +87,12 @@ RunBattleCommandEntry_WriteCommandByteE8::
     sbc d
     jr nc, .return
     ld a, $03
-    ld [wCommandByteE8], a
+    ld [wCommandEntryMonster], a
 
 .return:
     ret
 
-RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
@@ -107,7 +107,7 @@ RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty::
     inc hl
     inc c
     dec b
-    jr nz, RunBattleCommandEntry_Case00_CarryUnlessBattleSlotOutSlotEmpty
+    jr nz, RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     ret
 
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
@@ -185,7 +185,7 @@ ChooseTargetForActor::
     rrca
     rrca
     and $01
-    ld hl, wCommandBytesE9
+    ld hl, wSlotCommands
     add_a_to_hl
     ld a, [hl]
 
@@ -255,8 +255,8 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     cp $02
     jr nz, .next
     ld a, e
-    call RunBattleCommandEntry_Case04_AdvanceRandom
-    call RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc
+    call RunBattleCommandEntry_AdvanceRandom
+    call RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc
     ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
@@ -277,12 +277,12 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     inc e
     dec d
     jp nz, .loop
-    call RunBattleCommandEntry_Case04_WaitBattleItemTarget
+    call RunBattleCommandEntry_WaitBattleItemTarget
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-RunBattleCommandEntry_Case04_AdvanceRandom::
+RunBattleCommandEntry_AdvanceRandom::
     push de
     call AdvanceRandom
     ld a, e
@@ -304,7 +304,7 @@ RunBattleCommandEntry_Case04_AdvanceRandom::
     pop de
     ret
 
-RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc::
+RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
     ld hl, wBattleActionChoice
@@ -392,7 +392,7 @@ RunBattleCommandEntry_Case04_WriteRecordBufferAndBattleArg0Etc::
     pop de
     ret
 
-RunBattleCommandEntry_Case04_WaitBattleItemTarget::
+RunBattleCommandEntry_WaitBattleItemTarget::
     ld a, [wBattleItemTarget]
     cp $ff
     ret z
@@ -531,7 +531,7 @@ RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
     ld bc, $0005
     call FillBytes
     farcall SaveActionChoicesAndPickFormations
-    call RunBattleCommandEntry_Case06_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
@@ -544,7 +544,7 @@ AddWordAtHLToBC_Bank30::
     ld b, a
     ret
 
-RunBattleCommandEntry_Case06_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld c, $00
     ld b, $08
 
@@ -594,7 +594,7 @@ RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
     rrca
     rrca
     and $01
-    ld hl, wCommandBytesE9
+    ld hl, wSlotCommands
     add_a_to_hl
     ld a, [hl]
     jr .skip
@@ -602,12 +602,12 @@ RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
 .check_battle_actor:
     ld a, [wBattleActor]
     cp $01
-    jr z, .read_command_bytes_e9
+    jr z, .read_slot_commands
     ld a, [wMenuState]
     jr .skip
 
-.read_command_bytes_e9:
-    ld a, [wCommandBytesE9]
+.read_slot_commands:
+    ld a, [wSlotCommands]
     jr .skip
 
 .check_menu_state:
@@ -656,15 +656,15 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jr nz, .call_get_actor_slot_tactic_low2
     call ActorBattleWordArray3FBand
     or a
     jr z, .call_get_actor_slot_tactic_low2
     cp $01
     jr z, .call_get_actor_slot_tactic_low22
-    call RunCommandEntryResolveStep_Case01_ReadBattleActor
-    call RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2
+    call RunCommandEntryResolveStep_ReadBattleActor
+    call RunCommandEntryResolveStep_GetActorSlotTacticLow2
     call AddPersonalityWeightToBattleArg0
     call AddActorBattleWordArray3FDiv16ToBattleArg2
     call AddRandom0To63ToBattleArg2
@@ -683,17 +683,17 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     call GetActorSlotTacticLow2
     res 6, [hl]
     ld a, [wBattleActor]
-    ld hl, wResolveBytesE0
+    ld hl, wActorActionBytes
     add_a_to_hl
     ld [hl], $00
-    call RunCommandEntryResolveStep_Case01_WaitLinkMode
+    call RunCommandEntryResolveStep_WaitLinkMode
     jr .return
 
 .call_get_actor_slot_tactic_low22:
     call GetActorSlotTacticLow2
     set 6, [hl]
     ld a, [wBattleActor]
-    ld hl, wResolveBytesE0
+    ld hl, wActorActionBytes
     add_a_to_hl
     ld [hl], $01
     ld a, [wBattleActor]
@@ -706,8 +706,8 @@ RunCommandEntryResolveStep_AddAx9ToHL::
     ld hl, wSideControl
     add_a_to_hl
     set 7, [hl]
-    call RunCommandEntryResolveStep_Case01_WaitLinkMode
-    call RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40
+    call RunCommandEntryResolveStep_WaitLinkMode
+    call RunCommandEntryResolveStep_IncBIfActorEntryBelow40
     ld a, $03
     ld [wBattleResolveStep], a
     ld a, [wBattleActor]
@@ -720,11 +720,10 @@ RunCommandEntryResolveStep_AddAx9ToHL::
 .return:
     ret
 
-; A = 0 when the actor's wBattleWordArray3F word is below $33, 2 when below $3B6, otherwise 3
-; (E-0122)
+; A = 0 when the actor's wBattleExtraStat word is below $33, 2 when below $3B6, otherwise 3 (E-0122)
 ActorBattleWordArray3FBand::
     ld a, [wBattleActor]
-    ld hl, wBattleWordArray3F
+    ld hl, wBattleExtraStat
     add a
     add_a_to_hl
     deref_hl
@@ -741,22 +740,22 @@ ActorBattleWordArray3FBand::
 .return:
     ret
 
-RunCommandEntryResolveStep_Case01_ReadBattleActor::
+RunCommandEntryResolveStep_ReadBattleActor::
     ld hl, wSlotTrait
-    jr RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data_ReadBattleActor
+    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor
 
-RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2::
+RunCommandEntryResolveStep_GetActorSlotTacticLow2::
     call GetActorSlotTacticLow2
     cp $03
     ret z
-    ld hl, RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data
+    ld hl, RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data
     call ReadBattleWordFromArray_Bank30
-    jr RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data_ReadBattleActor
+    jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor
 
-RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data::
+RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
     db $68, $d9, $70, $d9, $78, $d9
 
-RunCommandEntryResolveStep_Case01_GetActorSlotTacticLow2_Data_ReadBattleActor::
+RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data_ReadBattleActor::
     ld a, [wBattleActor]
     add_a_to_hl
     ld a, [hl]
@@ -791,10 +790,10 @@ AddPersonalityWeightToBattleArg0::
     ld [hl], a
     ret
 
-; adds the actor's wBattleWordArray3F word / 16 to the word wBattleArg2 (E-0122)
+; adds the actor's wBattleExtraStat word / 16 to the word wBattleArg2 (E-0122)
 AddActorBattleWordArray3FDiv16ToBattleArg2::
     ld a, [wBattleActor]
-    ld hl, wBattleWordArray3F
+    ld hl, wBattleExtraStat
     add a
     add_a_to_hl
     deref_hl
@@ -912,7 +911,7 @@ AddCommandWeightToAIChoiceWeights::
     cp $00
     ld a, [wMenuState]
     jr z, .skip
-    ld a, [wCommandBytesE9]
+    ld a, [wSlotCommands]
     jr .skip
 
 .read_battle_actor:
@@ -920,7 +919,7 @@ AddCommandWeightToAIChoiceWeights::
     rrca
     rrca
     and $01
-    ld hl, wCommandBytesE9
+    ld hl, wSlotCommands
     add_a_to_hl
     ld a, [hl]
     jr .skip
@@ -1011,7 +1010,7 @@ AddStatusAndHPWeightsToAI::
     cp $00
     ld a, [wMenuState]
     jr z, .skip
-    ld a, [wCommandBytesE9]
+    ld a, [wSlotCommands]
     jr .skip
 
 .read_battle_actor:
@@ -1019,7 +1018,7 @@ AddStatusAndHPWeightsToAI::
     rrca
     rrca
     and $01
-    ld hl, wCommandBytesE9
+    ld hl, wSlotCommands
     add_a_to_hl
     ld a, [hl]
     jr .skip
@@ -1356,7 +1355,7 @@ AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
     cp $00
     ld a, [wMenuState]
     jr z, .skip
-    ld a, [wCommandBytesE9]
+    ld a, [wSlotCommands]
     jr .skip
 
 .read_battle_actor:
@@ -1364,7 +1363,7 @@ AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
     rrca
     rrca
     and $01
-    ld hl, wCommandBytesE9
+    ld hl, wSlotCommands
     add_a_to_hl
     ld a, [hl]
     jr .skip
@@ -2536,7 +2535,7 @@ RollSlotTraitLowFlag80_Skip5::
     scf
     ret
 
-RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40::
+RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld b, $00
     ld hl, wSlotPersonalityHi
     call IncBIfActorEntryBelow40
@@ -2559,7 +2558,7 @@ RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40::
     ld bc, $0008
     ld a, $ff
     call FillBytes
-    call RunCommandEntryResolveStep_Case01_Sub03_WriteRecordBufferAndBattleArg0Etc
+    call RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityHi
     add_a_to_hl
@@ -2575,11 +2574,11 @@ RunCommandEntryResolveStep_Case01_IncBIfActorEntryBelow40::
     ld a, [wPauseMenuStep]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_Case01_Sub03_FillBytes
+    call RunCommandEntryResolveStep_FillBytes
     ld a, [wTemp0]
     cp $ff
     jr z, .call_actor_action_choice_address3
-    call RunCommandEntryResolveStep_Case01_Sub03_LoadSkillRecordPart
+    call RunCommandEntryResolveStep_LoadSkillRecordPart
     call ActorActionChoiceAddress
     ld [hl], c
     ret
@@ -2627,7 +2626,7 @@ CountIfActorPersonalityHiAtLeastHLEntry::
     inc b
     ret
 
-RunCommandEntryResolveStep_Case01_Sub03_WriteRecordBufferAndBattleArg0Etc::
+RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc::
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkills
@@ -2742,9 +2741,9 @@ FilterSkillListByMP::
     call FillBytes
     ld hl, wTemp0
     ld de, wPauseMenuStep
-    jr RunCommandEntryResolveStep_Case01_Sub03_FillBytes_Skip
+    jr RunCommandEntryResolveStep_FillBytes_Skip
 
-RunCommandEntryResolveStep_Case01_Sub03_FillBytes::
+RunCommandEntryResolveStep_FillBytes::
     ld hl, wPauseMenuStep
     ld b, $08
     ld c, $00
@@ -2753,7 +2752,7 @@ RunCommandEntryResolveStep_Case01_Sub03_FillBytes::
     ld a, [hl]
     cp $ff
     jr z, .skip2
-    call RunCommandEntryResolveStep_Case01_Sub03_Sub02_Cp01
+    call RunCommandEntryResolveStep_Cp01
     jr c, .next
     ld a, c
     ld de, wPauseMenuStep
@@ -2780,7 +2779,7 @@ RunCommandEntryResolveStep_Case01_Sub03_FillBytes::
     ld hl, wPauseMenuStep
     ld de, wTemp0
 
-RunCommandEntryResolveStep_Case01_Sub03_FillBytes_Skip::
+RunCommandEntryResolveStep_FillBytes_Skip::
     ld b, $08
 
 .loop:
@@ -2797,7 +2796,7 @@ RunCommandEntryResolveStep_Case01_Sub03_FillBytes_Skip::
     jr nz, .loop
     ret
 
-RunCommandEntryResolveStep_Case01_Sub03_Sub02_Cp01::
+RunCommandEntryResolveStep_Cp01::
     cp $01
     jr c, .done
     cp $16
@@ -2828,7 +2827,7 @@ RunCommandEntryResolveStep_Case01_Sub03_Sub02_Cp01::
     scf
     ret
 
-RunCommandEntryResolveStep_Case01_Sub03_LoadSkillRecordPart::
+RunCommandEntryResolveStep_LoadSkillRecordPart::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
     ld a, $00
@@ -2932,7 +2931,7 @@ ForcedActionForActorStatus::
 .return:
     ret
 
-RunCommandEntryResolveStep_Case01_WaitLinkMode::
+RunCommandEntryResolveStep_WaitLinkMode::
     ld a, [wLinkMode]
     or a
     ret nz
@@ -2986,7 +2985,7 @@ RunCommandEntryResolveStep_Case01_WaitLinkMode::
     add hl, de
     add hl, bc
     call CopyFourBytesNegatedByActorSlotTactic
-    call RunCommandEntryResolveStep_Case01_Sub04_GetActorSlotTacticLow2
+    call RunCommandEntryResolveStep_GetActorSlotTacticLow2_2
     ret
 
 ; copies four bytes from HL to hTemp0, negating each when bit 6 of the actor's wSlotTactic byte is
@@ -3020,8 +3019,8 @@ CopyByteNegateIfCBit6::
     ld [de], a
     ret
 
-RunCommandEntryResolveStep_Case01_Sub04_GetActorSlotTacticLow2::
-    ld a, [wCommandByteE8]
+RunCommandEntryResolveStep_GetActorSlotTacticLow2_2::
+    ld a, [wCommandEntryMonster]
     ld c, a
     ld b, $00
     ld hl, hTemp0
@@ -3062,10 +3061,10 @@ AddSignedEToByteAtHLClampedForActorEntryOfHL::
     call AddSignedEToByteAtHLClamped
     ret
 
-; the code at RunCommandEntryResolveStep_Case01_WaitLinkMode.call_get_actor_slot_tactic_low2 indexes
-; it with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and
-; C (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the
-; four bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
+; the code at RunCommandEntryResolveStep_WaitLinkMode.call_get_actor_slot_tactic_low2 indexes it
+; with GetActorSlotTacticLow2 (wSlotTactic & 3), adds E ($10 when wSlotTrait >= $97, else 0) and C
+; (0/4/8/12 from a threshold test on A), then CopyFourBytesNegatedByActorSlotTactic copies the four
+; bytes to hTemp0, negating each when bit 6 of the actor's tactic byte is set (E-0234, C1)
 ; record: block of eight 4-byte records for this tactic
 TacticOffsetTable::
     dw TacticOffsets0 ; id 0
@@ -3075,7 +3074,7 @@ TacticOffsetTable::
 
 ; block 0 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_Case01_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 ; record: four bytes copied to hTemp0 (two's complement; negated when bit 6 of the tactic byte is
 ; set)
 TacticOffsets0::
@@ -3090,7 +3089,7 @@ TacticOffsets0::
 
 ; block 1 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_Case01_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets1::
     db $00, $07, $fe, $03 ; id 0
     db $00, $05, $fe, $02 ; id 1
@@ -3103,7 +3102,7 @@ TacticOffsets1::
 
 ; block 2 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_Case01_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets2::
     db $fe, $00, $07, $03 ; id 0
     db $fe, $00, $05, $02 ; id 1
@@ -3116,7 +3115,7 @@ TacticOffsets2::
 
 ; block 3 of TacticOffsetTable; records 0-3 are used when wSlotTrait < $97 and records 4-7
 ; otherwise, the record within each half chosen by the threshold test before
-; RunCommandEntryResolveStep_Case01_WaitLinkMode.read_battle_actor2 (E-0234, C1)
+; RunCommandEntryResolveStep_WaitLinkMode.read_battle_actor2 (E-0234, C1)
 TacticOffsets3::
     db $00, $00, $00, $ff ; id 0
     db $00, $00, $00, $fe ; id 1
@@ -3210,18 +3209,18 @@ AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ld [wAIChoiceOrder + $2], a
     ld a, $03
     ld [wAIChoiceIndex], a
-    call AIChooseActionForActor_Sub01_ReadRecordBufferData
+    call AIChooseActionForActor_ReadRecordBufferData
     call AddCommandWeightToAIChoiceWeights
     call AddActorPersonalityTensToAIChoiceWeights
     call AddStatusAndHPWeightsToAI
-    call AIChooseActionForActor_Sub01_WriteAIChoiceWeights
+    call AIChooseActionForActor_WriteAIChoiceWeights
     call AddRandomPersonalityWeights
     call SortThreeAIWeightsRandomTies
     ld a, $00
     ld [wLoadSlot], a
     ret
 
-AIChooseActionForActor_Sub01_ReadRecordBufferData::
+AIChooseActionForActor_ReadRecordBufferData::
     ld a, [wRecordBufferData + $3]
     and $f0
     cp $10
@@ -3251,7 +3250,7 @@ AIChooseActionForActor_Sub01_ReadRecordBufferData::
 .return:
     ret
 
-AIChooseActionForActor_Sub01_WriteAIChoiceWeights::
+AIChooseActionForActor_WriteAIChoiceWeights::
     ld a, [wBattleActor]
     rrca
     and $02
@@ -3774,11 +3773,11 @@ AIScoreRoutineTableA::
     dfar AIScore_Whistle ; id 167
     dfar AIScore_Whistle ; id 168
     dfar AIScore_Whistle ; id 169
-    dfar AIScore_Ahhh_6401 ; id 170
+    dfar AIScore_Ahhh_2 ; id 170
     dfar AIScore_ZoneOut ; id 171
     dfar AIScore_Guard ; id 172
-    dfar AIScore_PanicAll_6473 ; id 173
-    dfar AIScore_Ironize_648D ; id 174
+    dfar AIScore_PanicAll_2 ; id 173
+    dfar AIScore_Ironize_2 ; id 174
     dfar AIScore_NoWeightA ; id 175
     dfar AIScore_NoWeightA ; id 176
     dfar AIScore_NoWeightA ; id 177
@@ -3790,11 +3789,11 @@ AIScoreRoutineTableA::
     dfar AIScore_Whistle ; id 183
     dfar AIScore_NoWeightA ; id 184
     dfar AIScore_NoWeightA ; id 185
-    dfar AIScore_Ahhh_6401 ; id 186
+    dfar AIScore_Ahhh_2 ; id 186
     dfar AIScore_ZoneOut ; id 187
     dfar AIScore_NoWeightA ; id 188
     dfar AIScore_NoWeightA ; id 189
-    dfar AIScore_Ironize_648D ; id 190
+    dfar AIScore_Ironize_2 ; id 190
     dfar AIScore_NoWeightA ; id 191
     dfar AIScore_NoWeightB ; id 192
     dfar AIScore_NoWeightB ; id 193
@@ -3980,11 +3979,11 @@ AIScoreRoutineTableB::
     dfar AIScore_Whistle ; id 167
     dfar AIScore_Whistle ; id 168
     dfar AIScore_Whistle ; id 169
-    dfar AIScore_Ahhh_6401 ; id 170
+    dfar AIScore_Ahhh_2 ; id 170
     dfar AIScore_ZoneOut ; id 171
     dfar AIScore_Guard ; id 172
-    dfar AIScore_PanicAll_6473 ; id 173
-    dfar AIScore_Ironize_648D ; id 174
+    dfar AIScore_PanicAll_2 ; id 173
+    dfar AIScore_Ironize_2 ; id 174
     dfar AIScore_NoWeightA ; id 175
     dfar AIScore_NoWeightA ; id 176
     dfar AIScore_NoWeightA ; id 177
@@ -3996,11 +3995,11 @@ AIScoreRoutineTableB::
     dfar AIScore_Whistle ; id 183
     dfar AIScore_NoWeightA ; id 184
     dfar AIScore_NoWeightA ; id 185
-    dfar AIScore_Ahhh_6401 ; id 186
+    dfar AIScore_Ahhh_2 ; id 186
     dfar AIScore_ZoneOut ; id 187
     dfar AIScore_NoWeightA ; id 188
     dfar AIScore_NoWeightA ; id 189
-    dfar AIScore_Ironize_648D ; id 190
+    dfar AIScore_Ironize_2 ; id 190
     dfar AIScore_NoWeightA ; id 191
     dfar AIScore_NoWeightB ; id 192
     dfar AIScore_NoWeightB ; id 193

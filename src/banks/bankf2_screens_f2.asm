@@ -25,7 +25,7 @@ GameMode8_Init::
     bit 7, a
     jr z, .loop2
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -36,7 +36,7 @@ GameMode8_Init::
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_1B_BankF2
-    farcall LoadPalette0FromData53C6
+    farcall LoadPalette0FromData_3
     farcall SendSGBFieldPaletteSet
     ld hl, vTiles1
     ld a, l
@@ -104,10 +104,10 @@ GameMode8_Update::
     dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
     dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep
     dw GameMode8_Update_ShowHeroReceivedGsEgg
-    dw GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
+    dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
 
 GameMode8_Update_WriteScreenSubStep::
-    call GameMode8_Update_Case00_TestFlagBit
+    call GameMode8_Update_TestFlagBit
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -223,7 +223,7 @@ GameMode8_Update_ShowHeroReceivedGsEgg::
     ld [wStringIndex], a ; '0 received G's egg. Please raise'
     xor a
     ld [wStringCategory], a
-    farcall BeginStringDisplay_BankF0_48A0
+    farcall BeginStringDisplay_BankF0_2
     ld hl, wScreenSubStep
     inc [hl]
     ret
@@ -243,8 +243,8 @@ GameMode8_Update_CopyStringMaxC::
     ld [de], a
     ret
 
-GameMode8_Update_ToGameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
-    call GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc
+GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc::
+    call GameMode8_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
@@ -299,7 +299,7 @@ RunTextUntilTextWindowStateDone_BankF2::
     jr nz, .loop
     ret
 
-GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
+GameMode8_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -311,7 +311,7 @@ GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
     or c
     jr nz, .loop
     xor a
-    ld [wLinkSceneByte4B], a
+    ld [wLinkScene], a
     ld a, $05
     ld [wGameMode], a
     ld a, $01
@@ -320,55 +320,55 @@ GameMode8_Update_Case0D_WriteLinkSceneByte4BAndGameModeEtc::
     ld [wModeChangeRequest], a
     ret
 
-GameMode8_Update_Case00_TestFlagBit::
-    ld de, $0000
+GameMode8_Update_TestFlagBit::
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data5
+    ld hl, GameMode8_Update_TestFlagBit_Data5
     jr .call_copy_bytes_de_from_hl_bank_f2
 
 .skip:
-    ld hl, SpriteSlotsInit_F2_430E
+    ld hl, GameMode8_Update_TestFlagBit_SpriteSlotsInit
 
 .call_copy_bytes_de_from_hl_bank_f2:
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_BankF2
-    ld a, [wBankF0BlockC7]
+    ld a, [wLinkHatchData]
     and a
     jr nz, .skip2
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data6
+    ld hl, GameMode8_Update_TestFlagBit_Data6
     jr .call_copy_bytes_de_from_hl_bank_f22
 
 .skip2:
-    ld hl, Object1Init_F2_432E
+    ld hl, Object1Init_3
 
 .call_copy_bytes_de_from_hl_bank_f22:
     ld de, wObject1
     ld b, $10
     call CopyBytesDEFromHL_BankF2
-    ld de, $0000
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip3
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data1
+    ld hl, GameMode8_Update_TestFlagBit_Data1
     jr .call_copy_bytes_de_from_hl_bank_f23
 
 .skip3:
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data2
+    ld hl, GameMode8_Update_TestFlagBit_Data2
 
 .call_copy_bytes_de_from_hl_bank_f23:
     ld de, hTemp0
     ld b, $06
     call CopyBytesDEFromHL_BankF2
     farcall DecompressGraphicsTemp0ToTemp4
-    ld a, [wBankF0BlockC7]
+    ld a, [wLinkHatchData]
     and a
     jr nz, .skip4
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data3
+    ld hl, GameMode8_Update_TestFlagBit_Data3
     jr .call_copy_bytes_de_from_hl_bank_f24
 
 .skip4:
-    ld hl, GameMode8_Update_Case00_TestFlagBit_Data4
+    ld hl, GameMode8_Update_TestFlagBit_Data4
 
 .call_copy_bytes_de_from_hl_bank_f24:
     ld de, hTemp0
@@ -404,32 +404,32 @@ CopyBytesDEFromHL_BankF2::
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-GameMode8_Update_Case00_TestFlagBit_Data1::
+GameMode8_Update_TestFlagBit_Data1::
     db $00, $00, $01, $04, $00, $80
 
-GameMode8_Update_Case00_TestFlagBit_Data2::
+GameMode8_Update_TestFlagBit_Data2::
     db $01, $00, $01, $01, $00, $80
 
-GameMode8_Update_Case00_TestFlagBit_Data3::
+GameMode8_Update_TestFlagBit_Data3::
     db $0c, $00, $01, $05, $00, $81
 
-GameMode8_Update_Case00_TestFlagBit_Data4::
+GameMode8_Update_TestFlagBit_Data4::
     db $0c, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
-GameMode8_Update_Case00_TestFlagBit_Data5::
+GameMode8_Update_TestFlagBit_Data5::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-SpriteSlotsInit_F2_430E::
+GameMode8_Update_TestFlagBit_SpriteSlotsInit::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-GameMode8_Update_Case00_TestFlagBit_Data6::
+GameMode8_Update_TestFlagBit_Data6::
     db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wObject1 (E-0264)
 ; record: 16 bytes copied to wObject1
-Object1Init_F2_432E::
+Object1Init_3::
     db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
@@ -519,7 +519,7 @@ GameMode8_Update_UpdateAndDrawSpriteSlots::
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_BankF2::
-    ld de, StringCategories_F2_43E5
+    ld de, BeginStringDisplay_BankF2_StringCategories
     call BeginStringDisplay
     ret
     db $11, $e5, $43, $cd, $fe, $25, $c9
@@ -533,12 +533,12 @@ ShowString_BankF2::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_F2_43E5::
-    dw StringList_F2_43E7 ; id 0
+BeginStringDisplay_BankF2_StringCategories::
+    dw StringList_BankF2_StringCategories_0 ; id 0
 
-; category list of StringCategories_F2_43E5; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_BankF2_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_F2_43E7::
+StringList_BankF2_StringCategories_0::
     dw String_F2_00_00 ; id 0
     dw String_F2_00_00 ; id 1
     dw String_F2_00_02 ; id 2
@@ -817,12 +817,12 @@ ShowString0EBank0EAtTiles2700AndLoadTiles::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    ld de, Tiles1Plus6E0Tiles_1F_4510
+    ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4450
+    ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
     ld b, $1f
     ld c, $10
@@ -933,7 +933,7 @@ DrawRecordBufBExpExpAndToNextLevel::
     ld [wDigits + $2], a
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsArg1_Bank1E
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $018c
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1003,8 +1003,8 @@ DrawRecordBufBExpExpAndToNextLevel::
     call Number24ToPackedBCD
     farcall UnpackBCDToDigitsArg1_Bank1E
 
-.call_bg_map_address_at_scroll_bank_f2_514_d:
-    call BGMapAddressAtScroll_BankF2_514D
+.call_bg_map_address_at_scroll_bank_f2_2:
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $020c
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1021,7 +1021,7 @@ DrawRecordBufBExpExpAndToNextLevel::
     ld [wArg6], a
     xor a
     ld [wArg7], a
-    jr .call_bg_map_address_at_scroll_bank_f2_514_d
+    jr .call_bg_map_address_at_scroll_bank_f2_2
 
 ; shows string wRecordBufB + $A4 of category $0B (ShowString_Bank08) at vTiles2 + $320 with size
 ; $0206 (E-0121) (E-0340: the address in its name read as its RAM name; was
@@ -1071,23 +1071,23 @@ ShowSpeciesCategory13StringAtTiles2680::
     farcall ShowString_Bank08
     ret
 
-; runs RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB and
-; RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02 (E-0126)
-RunF24C3DAnd4D72::
-    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB
-    call RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02
+; runs RunF2_LoadTemp0WordFromRecordBufB and RunF2_LoadTemp0WordFromRecordBufB_2 (E-0126) (E-0344:
+; the address in its name dropped or read as the label there; was RunF24C3DAnd4D72)
+RunF2::
+    call RunF2_LoadTemp0WordFromRecordBufB
+    call RunF2_LoadTemp0WordFromRecordBufB_2
     ret
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB::
+RunF2_LoadTemp0WordFromRecordBufB::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
     jr nz, .skip
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1
+    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data1
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2
+    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1236,22 +1236,22 @@ ShowRecordBufBEntryStringAtArg1::
     farcall ShowString_Bank08
     ret
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data1::
+RunF2_LoadTemp0WordFromRecordBufB_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Data2::
+RunF2_LoadTemp0WordFromRecordBufB_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
+RunF2_LoadTemp0WordFromRecordBufB_2::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
     and a
     jr nz, .skip
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data1
+    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data1_2
     jr .call_load_temp0_word_from_record_buf_b
 
 .skip:
-    ld de, RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data2
+    ld de, RunF2_LoadTemp0WordFromRecordBufB_Data2_2
 
 .call_load_temp0_word_from_record_buf_b:
     ld a, [de]
@@ -1292,7 +1292,7 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
     inc de
     inc de
     push de
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $006e
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1340,7 +1340,7 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
     pop de
     call PickNameBufferForFirstByte_BankF2
     push de
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $018e
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1354,7 +1354,8 @@ RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02::
 .return:
     ret
 
-; BC = wNameBufUnknown when the byte at DE is $98 (the ??? placeholder), else wNameBufAlt (E-0122)
+; BC = wNameBufPlaceholder when the byte at DE is $98 (the ??? placeholder), else wNameBufAlt
+; (E-0122)
 PickNameBufferForFirstByte_BankF2::
     ld a, [de]
     cp $98
@@ -1363,15 +1364,15 @@ PickNameBufferForFirstByte_BankF2::
     jr .return
 
 .done:
-    ld bc, wNameBufUnknown
+    ld bc, wNameBufPlaceholder
 
 .return:
     ret
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data1::
+RunF2_LoadTemp0WordFromRecordBufB_Data1_2::
     db $1a, $98, $1a, $1c, $a3, $1c
 
-RunF24C3DAnd4D72_LoadTemp0WordFromRecordBufB_Sub02_Data2::
+RunF2_LoadTemp0WordFromRecordBufB_Data2_2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
 ; A = byte offset: hTemp0/hTemp1 = the word at wRecordBufB + A (E-0079)
@@ -1589,7 +1590,7 @@ DrawLevelAndStatusRowForRecordBufBLevel::
     ldh [hTemp0], a
     ld a, [hl]
     ldh [hTemp1], a
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $0029
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1755,7 +1756,7 @@ DrawFourRecordBufBStatsDigits::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1775,7 +1776,7 @@ DrawFourRecordBufBStatsDigits_Data2::
 ; writes five stat words from wRecordBufB (offsets DrawFiveRecordBufBStatsColumn_Data) as three
 ; digits down a column at scroll + $70 (E-0125)
 DrawFiveRecordBufBStatsColumn::
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld de, $0070
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -1874,12 +1875,12 @@ DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     add_a_to_hl
     ld a, [hl]
     and a
-    jr nz, .call_bg_map_address_at_scroll_bank_f2_514_d
+    jr nz, .call_bg_map_address_at_scroll_bank_f2_2
     ret
 
-.call_bg_map_address_at_scroll_bank_f2_514_d:
+.call_bg_map_address_at_scroll_bank_f2_2:
     push af
-    call BGMapAddressAtScroll_BankF2_514D
+    call BGMapAddressAtScroll_BankF2_2
     ld a, [wArg2]
     ld d, a
     ld a, [wArg3]
@@ -1919,7 +1920,7 @@ DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
 ; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-BGMapAddressAtScroll_BankF2_514D::
+BGMapAddressAtScroll_BankF2_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
     and $f8
@@ -2391,9 +2392,9 @@ MonsterArgOrderTable::
     db $00, $01, $02 ; id 383 ?
 
 ; ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex;
-; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_SetArg3.skip adds 3 * entry (after
-; ShopMenu_Shared02) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the
-; lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed (E-0208, C1)
+; ShopMenu_Buy_LoadArg1PointerForScreenTableIndex_2.skip adds 3 * entry (after ShopMenu_Shared02)
+; and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run
+; contiguously to ReturnStub_6333; read as prices, which is not confirmed (E-0208, C1)
 ; record: list of 24-bit numbers for this wScreenTableIndex
 ScreenNumberListTable::
     dw ScreenNumberList000 ; id 0
@@ -3578,13 +3579,14 @@ ScreenNumberList017::
     d24 1 ; id 102
     d24 1 ; id 103
 
-; a bare ret (E-0116)
-ReturnStub_6333::
+; a bare ret (E-0116) (E-0344: the address in its name dropped or read as the label there; was
+; ReturnStub_6333)
+ReturnStub_3::
     ret
     db $cd, $55, $63, $cd, $46, $63, $c9
 
-KeyAppraisalMenu_ChooseKey_Case05_CopyWorkBuf1ToKeyList::
-    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf
+KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList::
+    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf
     call CopyWorkBuf1ToKeyList
     xor a
     ld [wScreenStep], a
@@ -3605,7 +3607,7 @@ CopyWorkBuf1ToKeyList::
     jr nz, .loop
     ret
 
-KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
+KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ld hl, wWorkBuf + $1
     ld c, $c0
 
@@ -3623,9 +3625,9 @@ KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount
+    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2
     ld hl, wKeyList
-    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
+    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount
     ret
 
 .clear_work_buf:
@@ -3633,19 +3635,19 @@ KeyAppraisalMenu_ChooseKey_Case05_Sub01_WriteKeyGenCountAndWorkBuf::
     ld [wWorkBuf], a
     ld hl, wKeyList
     ld de, wWorkBuf + $1
-    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01
+    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount
     ld hl, wKeyList
-    call KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount
+    call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2
     ret
 
-KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01::
+KeyAppraisalMenu_ChooseKey_WriteKeyGenCount::
     ld b, $00
     ld c, $20
 
-KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop::
+KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
     ld a, [hl]
     cp $ff
-    jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
+    jr z, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip
     push hl
     inc hl
     inc hl
@@ -3703,22 +3705,22 @@ KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop::
 .restore2:
     pop hl
 
-KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip::
+KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     ld a, $04
     add_a_to_hl
     inc b
     dec c
-    jr nz, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Loop
+    jr nz, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop
     ret
 
-KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount::
+KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2::
     ld b, $00
     ld c, $20
 
 .loop:
     ld a, [hl]
     cp $ff
-    jr z, KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount_Sub01_Skip
+    jr z, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip
     push hl
     inc hl
     inc hl
@@ -3779,16 +3781,17 @@ KeyAppraisalMenu_ChooseKey_Case05_Sub01_Sub01_WriteKeyGenCount::
     jr nz, .loop
     ret
 
-; in state 3 continues at VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip; otherwise
-; runs Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126)
-Run64C7UnlessScreenStateIs3::
+; in state 3 continues at VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip; otherwise runs
+; RunUnlessScreenStateIs3_WriteCounterPtr0Lo (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was Run64C7UnlessScreenStateIs3)
+RunUnlessScreenStateIs3::
     ld a, [wScreenState]
     cp $03
-    jr z, VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip
-    call Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo
+    jr z, VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip
+    call RunUnlessScreenStateIs3_WriteCounterPtr0Lo
     ret
 
-VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory::
+VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     ld hl, wWorkBuf
     ld b, $18
 
@@ -3810,7 +3813,7 @@ VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory::
     call VaultMenu_Store_MapItemsToInventory
     ret
 
-VaultMenu_Store_Case0E_VaultMenu_Store_MapItemsToInventory_Skip::
+VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip::
     ld hl, wWorkBuf
     ld b, $18
 
@@ -3886,7 +3889,7 @@ VaultMenu_Store_MapItemsToInventory::
     jr nz, .loop2
     ret
 
-Run64C7UnlessScreenStateIs3_WriteCounterPtr0Lo::
+RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
     ld hl, wWorkBuf
     ld b, $c8
 

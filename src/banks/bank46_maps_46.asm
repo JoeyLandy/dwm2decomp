@@ -5,8 +5,8 @@ SECTION "Bank 46", ROMX[$4000], BANK[$46]
     db $46
 
 ; LZSS-compressed: 644 bytes that expand to 2048 (E-0016, E-0017)
-Tiles1Gfx_46_4001::
-    INCBIN "gfx/misc/tiles1_gfx_46_4001.lz"
+Tiles1Gfx::
+    INCBIN "gfx/misc/tiles1_gfx.lz"
 
 ; 12 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank
@@ -269,7 +269,7 @@ Map00Attrs0_Y1X2::
     INCBIN "maps/map00/attrs0_y1_x2.lz"
 
 ; LZSS-compressed: 257 bytes that expand to 258 (E-0016, E-0017)
-Gfx_46_518D::
+Gfx46_1::
     db $02, $01, $40, $02, $01, $58, $0f, $0c, $01, $29, $01, $01, $19, $00, $01, $56
     db $04, $01, $60, $03, $01, $15, $01, $01, $48, $18
 

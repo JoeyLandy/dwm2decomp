@@ -39,7 +39,7 @@ class FarmChain(unittest.TestCase):
         expect = {"s14": ["TalkMsg000A_WellSoonBeReachingGreatLog"],  # talking to the mother
                   "s22": ["SceneLandHo"],  # talking to Tara
                   "s24": ["SceneLandHo_ShowThisIsATale"],  # "This is a tale of children who came"
-                  "s25": ["SceneHorsingAround", "TalkScript5111_ListenYouTwoQuitYourHorsing"]}
+                  "s25": ["SceneHorsingAround", "Talk_ListenYouTwoQuitYourHorsing"]}
         for state, names in expect.items():
             for name in names:
                 self.assertEqual(self.ran[state].get(name), {1}, (state, name))
@@ -191,7 +191,7 @@ class FarmChain(unittest.TestCase):
 
     def test_the_egg_evaluator_finds_no_egg(self):
         """'You don't have any eggs': EggServiceMenu lists the records in use whose MON_EGG byte is set, and none is."""
-        self.assertEqual(self.ran["x07!"].get("ListRecordsInUseWithByte6ESet"), {1})
+        self.assertEqual(self.ran["x07!"].get("ListRecordsInUseEggs"), {1})
         sram = self.kept["x07!"].sram
         self.assertEqual([i for i in range(8) if sram[i * 0xA5] and sram[i * 0xA5 + 0x6E]], [])
 

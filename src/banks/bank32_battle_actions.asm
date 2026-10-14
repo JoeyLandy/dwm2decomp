@@ -1850,7 +1850,7 @@ ShowActorStatusRecoveryMessage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jr z, .skip
     ld d, $17
     jr .call_show_battle_text_category0
@@ -2307,7 +2307,7 @@ RunBattleActions_StatusChecks_CheckAction::
     jumptable
     dw RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3
     dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA
-    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_SetBattleTarget
+    dw RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_2
     dw RunBattleActions_StatusChecks_CheckAction_QueuedActionMatches
     dw RunBattleActions_StatusChecks_CheckAction_CheckSkillMPCost
 
@@ -2335,7 +2335,7 @@ ApplyActionResultAndMarkFormation::
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ret
 
 .call_show_special_action_message:
@@ -2345,7 +2345,7 @@ ApplyActionResultAndMarkFormation::
     ldh a, [hTemp0]
     call SlotHasStatus3Or4Bits_Bank32
     ret nz
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ret
     db $21, $cc, $cf, $34, $c9
 
@@ -2388,7 +2388,7 @@ RunBattleActions_StatusChecks_CheckAction_ActorActionIsD0ToE3::
     bit 7, [hl]
     jr z, .done
     ld a, [wBattleActor]
-    ld hl, wResolveBytesE0
+    ld hl, wActorActionBytes
     call ReadByteAtHLPlusA
     or a
     jr nz, .done
@@ -2512,7 +2512,7 @@ RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_Data::
     db $41, $42, $43, $44, $45, $46, $47, $49, $4a, $4b, $4d, $4e, $4f, $64, $65, $66
     db $67, $6b, $6c, $6d, $6f, $70, $71, $72, $73, $74, $79, $7a, $8e, $90, $ff
 
-RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_SetBattleTarget::
+RunBattleActions_StatusChecks_CheckAction_ReadByteAtHLPlusA_2::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a
@@ -3136,7 +3136,7 @@ RunBattleActions_StatusChecks_ShowActionBattleTextFromActionBattleTextTable::
     ret z
     cp $b0
     ret nc
-    ld [wBattleByte93], a
+    ld [wLearnSkillState], a
     ret
 
 RunBattleActions_StatusChecks_AddAx9ToHL::
@@ -3152,7 +3152,7 @@ RunBattleActions_StatusChecks_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jr nz, .skip2
     ld a, [wBattleActor]
     ld de, wSlotBodyFlags
@@ -3317,13 +3317,13 @@ RunBattleActions_StatusChecks_ShatterChecks_ShowGWasShattered::
 RunBattleActions_StatusChecks_ShatterChecks_ShowSealPrayWasBroken::
     ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wBattleByteAD]
+    ld a, [wSealPrayState]
     cp $ff
     ret z
     ld d, $92 ; battle text 'SealPray was broken!'
     farcall ShowBattleText
     ld a, $ff
-    ld [wBattleByteAD], a
+    ld [wSealPrayState], a
     ret
 
 RunBattleActions_StatusChecks_ShatterChecks_CheckActionD0ToE3OrSpecial::
@@ -3366,11 +3366,11 @@ CheckLinkRuleViolation::
     ld a, [wLinkRules + $2]
     and c
     jr z, .call_queue_music
-    ld hl, wLinkRuleWork57
+    ld hl, wLinkRuleFlags
     ld a, [wBattleActor]
     cp $04
     jr c, .skip
-    ld hl, wBattleInitByte58
+    ld hl, wLinkRuleState
 
 .skip:
     ld a, c
@@ -3771,13 +3771,13 @@ RunBattleStep4_ResolveSkill_ShatterChecks_ShowGWasShattered::
 RunBattleStep4_ResolveSkill_ShatterChecks_ShowSealPrayWasBroken::
     ld hl, wBattleSubStep
     inc [hl]
-    ld a, [wBattleByteAD]
+    ld a, [wSealPrayState]
     cp $ff
     ret z
     ld d, $92 ; battle text 'SealPray was broken!'
     farcall ShowBattleText
     ld a, $ff
-    ld [wBattleByteAD], a
+    ld [wSealPrayState], a
     ret
 
 RunBattleStep4_ResolveSkill_ShatterChecks_SetBattleResolveStep::
@@ -3905,7 +3905,7 @@ RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld [wBattleSubStep2], a
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
-    call RunDefeatSequence_Case02_WaitBattleActionId
+    call RunDefeatSequence_WaitBattleActionId
     ret z
     ld a, [wBattleActionId]
     cp SKILL_GEYSER
@@ -3928,7 +3928,7 @@ RunDefeatSequence_SetBit2OfLevelUpGainsIndexed_Bank32::
     farcall ShowBattleText
     ret
 
-RunDefeatSequence_Case02_WaitBattleActionId::
+RunDefeatSequence_WaitBattleActionId::
     ld a, [wBattleActionId]
     cp SKILL_BEAT
     ret z
@@ -4422,7 +4422,7 @@ ActionEffect_BeDragon_ReadLinkMode::
     ld [hl], $ff
     ret
 
-RunBattlePhaseWhenTextIdle_A0_SyncLink_Case04_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty::
     xor a
     ld [wSideFlags0], a
     ld [wSideFlags1], a
@@ -4519,7 +4519,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     cp SKILL_FAREWELL
     jr z, .check_battle_screen_flags
     cp SKILL_BEDRAGON
-    jr z, .call_resolve_step0_e_effect_case00_advance
+    jr z, .call_resolve_step0_e_effect_advance_random
     cp SKILL_POISONHIT
     jp z, .read_battle_target
     cp SKILL_PARALYZE
@@ -4535,7 +4535,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     cp SKILL_LIFEDANCE
     jr z, .check_battle_screen_flags
     cp SKILL_HIGHJUMP_B8
-    jr z, .call_resolve_step0_e_effect_case00_advance
+    jr z, .call_resolve_step0_e_effect_advance_random
     cp ACTION_D6
     jr z, .read_battle_actor
     cp ACTION_DC
@@ -4578,8 +4578,8 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld [wBattleSubStep], a
     ret
 
-.call_resolve_step0_e_effect_case00_advance:
-    call ResolveStep0EEffect_Case00_AdvanceRandom
+.call_resolve_step0_e_effect_advance_random:
+    call ResolveStep0EEffect_AdvanceRandom
     xor a
     ld [wBattleSubPhase], a
     xor a
@@ -4594,10 +4594,10 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
-    call ResolveStep0EEffect_Case00_AdvanceRandom
+    call ResolveStep0EEffect_AdvanceRandom
     pop af
     ld [wBattleActor], a
-    jr .call_resolve_step0_e_effect_case00_advance
+    jr .call_resolve_step0_e_effect_advance_random
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -4635,7 +4635,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jp nz, SetBattleSubStep1
     push hl
     farcall RollVsPalsyAirResistance
@@ -4691,7 +4691,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld [wEffectSubStep], a
     jp SetBattleSubStep1
 
-ResolveStep0EEffect_Case00_AdvanceRandom::
+ResolveStep0EEffect_AdvanceRandom::
     call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -4699,7 +4699,7 @@ ResolveStep0EEffect_Case00_AdvanceRandom::
     push hl
     ld a, [wRandomLo]
     and $03
-    ld hl, ResolveStep0EEffect_Case00_AdvanceRandom_Data
+    ld hl, ResolveStep0EEffect_AdvanceRandom_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4739,7 +4739,7 @@ ResolveStep0EEffect_Case00_AdvanceRandom::
     ld [hl], a
     ret
 
-ResolveStep0EEffect_Case00_AdvanceRandom_Data::
+ResolveStep0EEffect_AdvanceRandom_Data::
     db $00, $00, $00, $00, $00
 
 ResolveStep0EEffect_ShowBattleText::
@@ -4766,7 +4766,7 @@ ResolveStep0EEffect_Scale80Percent::
     jumptable
     dw ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent
     dw ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32
-    dw ResolveStep0EEffect_Scale80Percent_RunEffectSubStep_618A
+    dw ResolveStep0EEffect_Scale80Percent_RunEffectSubStep
     dw SetBattleSubStep1
 
 ResolveStep0EEffect_Scale80Percent_SkipTurnIfActorAbsent::
@@ -4866,25 +4866,26 @@ ResolveStep0EEffect_Scale80Percent_ScaleHLTo80Percent_Bank32::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
-ResolveStep0EEffect_Scale80Percent_RunEffectSubStep_618A::
+ResolveStep0EEffect_Scale80Percent_RunEffectSubStep::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunEffectSubStep_618A
+    call RunEffectSubStep
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
 
-; runs the routine for wEffectSubStep (jump table of three) (E-0122)
-RunEffectSubStep_618A::
+; runs the routine for wEffectSubStep (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunEffectSubStep_618A)
+RunEffectSubStep::
     ld a, [wEffectSubStep]
     jumptable
-    dw RunEffectSubStep_618A_DefeatTarget
-    dw RunEffectSubStep_618A_ToBlankTargetMonsterPictureAndStep
-    dw RunEffectSubStep_618A_SetBit2OfLevelUpGainsIndexed_Bank32
+    dw RunEffectSubStep_DefeatTarget
+    dw RunEffectSubStep_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_SetBit2OfLevelUpGainsIndexed_Bank32
 
-RunEffectSubStep_618A_DefeatTarget::
+RunEffectSubStep_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -4894,13 +4895,13 @@ RunEffectSubStep_618A_DefeatTarget::
     call DefeatTarget
     ret
 
-RunEffectSubStep_618A_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-RunEffectSubStep_618A_SetBit2OfLevelUpGainsIndexed_Bank32::
+RunEffectSubStep_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
@@ -5077,20 +5078,20 @@ ResolveStep0EEffect_ActorFormationSlotToTemp0::
 .read_battle_sub_step2:
     ld a, [wBattleSubStep2]
     jumptable
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_ReadBattleActor
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CallSetBit0OfLevelUpGainsIndexed_Bank32
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_RunEffectSubStep_63C2
-    dw ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CheckBattleActionId
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_CallSetBit0OfLevelUpGainsIndexed_Bank32
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_RunEffectSubStep_2
+    dw ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId
 
-ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_ReadBattleActor::
+ResolveStep0EEffect_Brutalize_DefeatTarget_ReadBattleActor::
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
-    jp c, ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CheckBattleActionId
+    jp c, ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId
     ret
 
-ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CallSetBit0OfLevelUpGainsIndexed_Bank32::
+ResolveStep0EEffect_Brutalize_DefeatTarget_CallSetBit0OfLevelUpGainsIndexed_Bank32::
     ld hl, wBattleSubStep2
     inc [hl]
     ld hl, wBattleSubStep2
@@ -5188,25 +5189,26 @@ ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CallSetBit0OfLevelUpGainsIndex
 .return:
     ret
 
-ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_RunEffectSubStep_63C2::
+ResolveStep0EEffect_Brutalize_DefeatTarget_RunEffectSubStep_2::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunEffectSubStep_63C2
+    call RunEffectSubStep_2
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
 
-; runs the routine for wEffectSubStep (jump table of three) (E-0122)
-RunEffectSubStep_63C2::
+; runs the routine for wEffectSubStep (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunEffectSubStep_63C2)
+RunEffectSubStep_2::
     ld a, [wEffectSubStep]
     jumptable
-    dw RunEffectSubStep_63C2_DefeatTarget
-    dw RunEffectSubStep_63C2_ToBlankTargetMonsterPictureAndStep
-    dw RunEffectSubStep_63C2_ShowHeroDroppedDead
+    dw RunEffectSubStep_2_DefeatTarget
+    dw RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_2_ShowHeroDroppedDead
 
-RunEffectSubStep_63C2_DefeatTarget::
+RunEffectSubStep_2_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -5216,13 +5218,13 @@ RunEffectSubStep_63C2_DefeatTarget::
     call DefeatTarget
     ret
 
-RunEffectSubStep_63C2_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_2_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-RunEffectSubStep_63C2_ShowHeroDroppedDead::
+RunEffectSubStep_2_ShowHeroDroppedDead::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, [wBattleActionId]
@@ -5239,7 +5241,7 @@ RunEffectSubStep_63C2_ShowHeroDroppedDead::
     xor a
     ld [wEffectSubStep], a
 
-ResolveStep0EEffect_Brutalize_DefeatTarget_Table2_CheckBattleActionId::
+ResolveStep0EEffect_Brutalize_DefeatTarget_CheckBattleActionId::
     ld a, [wBattleActionId]
     cp ACTION_D6
     jr nz, .set_battle_sub_phase_to_06
@@ -5278,7 +5280,7 @@ ResolveStep0EEffect_DamageAndSelectEffect::
     jumptable
     dw ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent
     dw ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32
-    dw ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_652E
+    dw ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_3
     dw ResolveStep0EEffect_DamageAndSelectEffect_ToSetBattleSubStep1
 
 ResolveStep0EEffect_DamageAndSelectEffect_SkipTurnIfActorAbsent::
@@ -5394,25 +5396,26 @@ ResolveStep0EEffect_DamageAndSelectEffect_AddDoubleAToHL_Bank32::
     call SetBit0OfLevelUpGainsIndexed_Bank32
     ret
 
-ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_652E::
+ResolveStep0EEffect_DamageAndSelectEffect_RunEffectSubStep_3::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunEffectSubStep_652E
+    call RunEffectSubStep_3
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
 
-; runs the routine for wEffectSubStep (jump table of three) (E-0122)
-RunEffectSubStep_652E::
+; runs the routine for wEffectSubStep (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunEffectSubStep_652E)
+RunEffectSubStep_3::
     ld a, [wEffectSubStep]
     jumptable
-    dw RunEffectSubStep_652E_DefeatTarget
-    dw RunEffectSubStep_652E_ToBlankTargetMonsterPictureAndStep
-    dw RunEffectSubStep_652E_SetBit2OfLevelUpGainsIndexed_Bank32
+    dw RunEffectSubStep_3_DefeatTarget
+    dw RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep
+    dw RunEffectSubStep_3_SetBit2OfLevelUpGainsIndexed_Bank32
 
-RunEffectSubStep_652E_DefeatTarget::
+RunEffectSubStep_3_DefeatTarget::
     ld hl, wEffectSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -5422,13 +5425,13 @@ RunEffectSubStep_652E_DefeatTarget::
     call DefeatTarget
     ret
 
-RunEffectSubStep_652E_ToBlankTargetMonsterPictureAndStep::
+RunEffectSubStep_3_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wEffectSubStep
     inc [hl]
     ret
 
-RunEffectSubStep_652E_SetBit2OfLevelUpGainsIndexed_Bank32::
+RunEffectSubStep_3_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $90
@@ -5580,22 +5583,23 @@ ActionEffect_DeMagic_SetTargetSlotMarksTo3::
     ld [hl], a
     ret
 
-; runs the routine for wBattleSubStep (jump table of three) (E-0122)
-RunBattleSubStep_6662::
+; runs the routine for wBattleSubStep (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunBattleSubStep_6662)
+RunBattleSubStep::
     ld a, [wBattleSubStep]
     jumptable
-    dw RunBattleSubStep_6662_SelectEffectByEffectFlags
-    dw RunBattleSubStep_6662_AddDoubleAToHL_Bank32
-    dw RunBattleSubStep_6662_RunBattleSubStep2_66F1
+    dw RunBattleSubStep_SelectEffectByEffectFlags
+    dw RunBattleSubStep_AddDoubleAToHL_Bank32
+    dw RunBattleSubStep_2
 
-RunBattleSubStep_6662_SelectEffectByEffectFlags::
+RunBattleSubStep_SelectEffectByEffectFlags::
     ld hl, wBattleSubStep
     inc [hl]
     farcall SelectEffectByEffectFlags
     farcall SelectEffectByEffectFlags2Flags
     ret
 
-RunBattleSubStep_6662_AddDoubleAToHL_Bank32::
+RunBattleSubStep_AddDoubleAToHL_Bank32::
     ld a, [wBattleTarget]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank32
@@ -5656,25 +5660,26 @@ RunBattleSubStep_6662_AddDoubleAToHL_Bank32::
     ld [wBattleActor], a
     ret
 
-RunBattleSubStep_6662_RunBattleSubStep2_66F1::
+RunBattleSubStep_2::
     ld a, [wBattleTarget]
     ld [wLoadSlot], a
     ld a, [wBattleActor]
     ld [wBattleTarget], a
-    call RunBattleSubStep2_66F1
+    call RunBattleSubStep2
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ret
 
-; runs the routine for wBattleSubStep2 (jump table of three) (E-0122)
-RunBattleSubStep2_66F1::
+; runs the routine for wBattleSubStep2 (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunBattleSubStep2_66F1)
+RunBattleSubStep2::
     ld a, [wBattleSubStep2]
     jumptable
-    dw RunBattleSubStep2_66F1_DefeatTarget
-    dw RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep
-    dw RunBattleSubStep2_66F1_SetBit2OfLevelUpGainsIndexed_Bank32
+    dw RunBattleSubStep2_DefeatTarget
+    dw RunBattleSubStep2_ToBlankTargetMonsterPictureAndStep
+    dw RunBattleSubStep2_SetBit2OfLevelUpGainsIndexed_Bank32
 
-RunBattleSubStep2_66F1_DefeatTarget::
+RunBattleSubStep2_DefeatTarget::
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleTarget]
@@ -5684,13 +5689,13 @@ RunBattleSubStep2_66F1_DefeatTarget::
     call DefeatTarget
     ret
 
-RunBattleSubStep2_66F1_ToBlankTargetMonsterPictureAndStep::
+RunBattleSubStep2_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
 
-RunBattleSubStep2_66F1_SetBit2OfLevelUpGainsIndexed_Bank32::
+RunBattleSubStep2_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld a, [wBattleTarget]
     call SetBit2OfLevelUpGainsIndexed_Bank32
     ld a, $8a
@@ -5737,15 +5742,16 @@ ScaleHLTo80Percent_Bank32::
     pop de
     ret
 
-; runs the routine for wBattleSubStep2 (jump table of three) (E-0122)
-RunBattleSubStep2_6764::
+; runs the routine for wBattleSubStep2 (jump table of three) (E-0122) (E-0344: the address in its
+; name dropped or read as the label there; was RunBattleSubStep2_6764)
+RunBattleSubStep2_2::
     ld a, [wBattleSubStep2]
     jumptable
-    dw RunBattleSubStep2_6764_DefeatTarget
-    dw RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep
-    dw RunBattleSubStep2_6764_SetBit2OfLevelUpGainsIndexed_Bank32
+    dw RunBattleSubStep2_2_DefeatTarget
+    dw RunBattleSubStep2_2_ToBlankTargetMonsterPictureAndStep
+    dw RunBattleSubStep2_2_SetBit2OfLevelUpGainsIndexed_Bank32
 
-RunBattleSubStep2_6764_DefeatTarget::
+RunBattleSubStep2_2_DefeatTarget::
     ld hl, wBattleSubStep2
     inc [hl]
     ld a, [wBattleTarget]
@@ -5757,13 +5763,13 @@ RunBattleSubStep2_6764_DefeatTarget::
     call DefeatTarget
     ret
 
-RunBattleSubStep2_6764_ToBlankTargetMonsterPictureAndStep::
+RunBattleSubStep2_2_ToBlankTargetMonsterPictureAndStep::
     call BlankTargetMonsterPicture
     ld hl, wBattleSubStep2
     inc [hl]
     ret
 
-RunBattleSubStep2_6764_SetBit2OfLevelUpGainsIndexed_Bank32::
+RunBattleSubStep2_2_SetBit2OfLevelUpGainsIndexed_Bank32::
     ld hl, wBattleResolveStep
     inc [hl]
     xor a

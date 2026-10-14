@@ -7324,7 +7324,7 @@ MonsterSpritePalettes::
     dw $0000, $001f, $036c, $0800 ; id 162 Rosevine
     dw $0000, $036c, $296d, $0800 ; id 163 Egdracil
     dw $0000, $6e5f, $6017, $0800 ; id 164 Warubou
-OBJPaletteBufferPlus18Data_27_7850::
+OBJPaletteBufferPlus18Data::
     dw $0000, $7fb5, $7ea6, $0800 ; id 165 Watabou
     dw $0000, $7fff, $6cd6, $0800 ; id 166 Eggplaton
     dw $0000, $02ff, $024a, $0800 ; id 167 FooHero

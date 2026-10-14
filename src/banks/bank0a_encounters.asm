@@ -5,7 +5,7 @@ SECTION "Bank 0A", ROMX[$4000], BANK[$0A]
     db $0a
 
 FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
-    call FieldState_StepChecks_Sub01_QueueSoundEffect
+    call FieldState_StepChecks_QueueSoundEffect
     ld a, [wMenuState]
     inc a
     ld [wMenuState], a
@@ -15,14 +15,14 @@ FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
     ld [rRAMG], a
     ld a, [wMenuSubState]
     or a
-    jr nz, .call_field_state_step_checks_sub01_load_sram
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
+    jr nz, .call_field_state_step_checks_load_sram_record
+    call FieldState_StepChecks_LoadSRAMRecordByte_3
+    call FieldState_StepChecks_LoadSRAMRecordByte
     jr .check_status_field_step
 
-.call_field_state_step_checks_sub01_load_sram:
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02
-    call FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01
+.call_field_state_step_checks_load_sram_record:
+    call FieldState_StepChecks_LoadSRAMRecordByte_2
+    call FieldState_StepChecks_LoadSRAMRecordByte
 
 .check_status_field_step:
     xor a
@@ -50,7 +50,7 @@ FieldState_StepChecks_WriteMenuStateAndRAMGEtc::
     ld [wModeState], a
     ret
 
-FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub01::
+FieldState_StepChecks_LoadSRAMRecordByte::
     ld a, [wStatusStepFlags]
     and $01
     ret z
@@ -107,7 +107,7 @@ SetFieldStepFlagsBit7::
     ld [wFieldStepFlags], a
     ret
 
-FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02::
+FieldState_StepChecks_LoadSRAMRecordByte_2::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -185,7 +185,7 @@ FieldState_StepChecks_Sub01_LoadSRAMRecordByte_Sub02::
     jr nz, .loop
     ret
 
-FieldState_StepChecks_Sub01_LoadSRAMRecordByte::
+FieldState_StepChecks_LoadSRAMRecordByte_3::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
@@ -279,7 +279,7 @@ FieldState_StepChecks_Sub01_LoadSRAMRecordByte::
     jr nz, .loop
     ret
 
-FieldState_StepChecks_Sub01_QueueSoundEffect::
+FieldState_StepChecks_QueueSoundEffect::
     ld a, [wMenuState]
     or a
     jr nz, .read_menu_state
@@ -359,12 +359,12 @@ RunPlayerMoveTypeMapMoveType::
     jumptable
     dw RunPlayerMoveTypeMapMoveType_Return
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02_SetTemp1
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03_SetTemp1
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5
     dw RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A
     dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1
-    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07_SetTemp1
+    dw RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2
 
 RunPlayerMoveTypeMapMoveType_Return::
     ret
@@ -378,7 +378,7 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1::
     ld [wFieldStepFlags], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case07_SetTemp1::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_2::
     ld a, $52
     ldh [hTemp1], a
     xor a
@@ -392,21 +392,21 @@ RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc::
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case02_SetTemp1::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_3::
     ld a, $56
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case03_SetTemp1::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_4::
     ld a, $44
     ldh [hTemp1], a
     xor a
     ld [wStatusFieldStep], a
     jr RunPlayerMoveTypeMapMoveType_ReadTileBuffer2x2AtPixel_Bank0A_CheckFadeState
 
-RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_Case04_SetTemp1::
+RunPlayerMoveTypeMapMoveType_WriteTemp1AndStatusFieldStepEtc_SetTemp1_5::
     ld a, $44
     ldh [hTemp1], a
     ld a, $80
@@ -469,7 +469,7 @@ EnterStatusEffectFieldState::
     ret nz
     bit 5, a
     ret nz
-    ld de, EVENT_SCENE_LONG_FACES
+    ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     ret nc
     ld a, [wModeState]
@@ -586,17 +586,17 @@ ToggleStatusStepFlagsLowBitOnce::
 EnterStatusEffectFieldState_Data::
     db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c
     db $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f
-    dw RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2
+    dw RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2
     dw $5852
     dw $5a59
-    dw PointerRun_0A_438D_Entry03
-    dw PointerRun_0A_438D_Entry04
+    dw PointerRun_Entry03
+    dw PointerRun_Entry04
     dw $605f
-    dw PointerRun_0A_438D_Entry06
-    dw PointerRun_0A_438D_Entry07
-    dw PointerRun_0A_438D_Entry08
-    dw PointerRun_0A_438D_Entry09
-    dw PointerRun_0A_438D_Entry0A
+    dw PointerRun_Entry06
+    dw PointerRun_Entry07
+    dw PointerRun_Entry08
+    dw PointerRun_Entry09
+    dw PointerRun_Entry0A
     db $89, $92, $9d, $a4, $a9, $ab, $af, $b2, $b1, $b6, $b9, $ba, $bc, $c5, $d0, $d9
     db $e2, $ff
 
@@ -798,7 +798,7 @@ TickRandomEncounterCounter::
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
-    call PickRandomEncounterCountdownFromTable478F
+    call PickRandomEncounterCountdownFromTable
     ret
 
 ; TickRandomEncounterCounter.restore reads the record at $44FE + 8 * wEncounterRate; with byte 0 = 0
@@ -1034,25 +1034,26 @@ RunBattleIntroKindCase_ComputePartyStrengthLevelPartyStrength::
     ret
 
 ; draws random values until wKeyRandomHi & $3F is below 100, then wEncounterCountdown = 2 *
-; PickRandomEncounterCountdownFromTable478F_Data[value / 5] (E-0122)
-PickRandomEncounterCountdownFromTable478F::
+; PickRandomEncounterCountdownFromTable_Data[value / 5] (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was PickRandomEncounterCountdownFromTable478F)
+PickRandomEncounterCountdownFromTable::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $3f
     cp $64
-    jr nc, PickRandomEncounterCountdownFromTable478F
+    jr nc, PickRandomEncounterCountdownFromTable
     ld b, a
     ld a, $05
     call DivideBByA
     ld a, b
-    ld hl, PickRandomEncounterCountdownFromTable478F_Data
+    ld hl, PickRandomEncounterCountdownFromTable_Data
     add_a_to_hl
     ld a, [hl]
     add a
     ld [wEncounterCountdown], a
     ret
 
-PickRandomEncounterCountdownFromTable478F_Data::
+PickRandomEncounterCountdownFromTable_Data::
     db $0a, $14, $19, $1e, $23, $28, $2a, $2c, $2d, $2e, $30, $32, $34, $36, $38, $3a
     db $3c, $41, $46, $50, $50
 
@@ -1119,7 +1120,7 @@ StartScriptedEncounterTemp0::
     ld a, $02
     ld [wFieldReturnPhase], a
     farcall SaveScreenBufferToBGMap1
-    farcall PickRandomEncounterCountdownFromTable478F
+    farcall PickRandomEncounterCountdownFromTable
     pop hl
     ret
 
@@ -1365,11 +1366,11 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
     cp $53
     jp z, .call_read_map_cell_word_for_screen_xy11
     cp $54
-    jp z, .call_run_battle_intro_kind_case_case00_write4
+    jp z, .call_run_battle_intro_kind_case_write4
     cp $55
-    jp z, .call_run_battle_intro_kind_case_case00_write4
+    jp z, .call_run_battle_intro_kind_case_write4
     cp $56
-    jp z, .call_run_battle_intro_kind_case_case00_write4
+    jp z, .call_run_battle_intro_kind_case_write4
     cp $5d
     jp z, .call_read_map_cell_word_for_screen_xy12
     cp $62
@@ -1451,7 +1452,7 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
     ret
 
 .call_read_map_cell_word_for_screen_xy:
-    ld de, EncounterGrid_5773
+    ld de, EncounterGrid_1
     ld a, $08
     call ReadMapCellWordForScreenXY
     ret
@@ -1459,81 +1460,81 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, .call_run_battle_intro_kind_case_case00_write
-    ld de, EncounterGrid_5856
+    jr nz, .call_run_battle_intro_kind_case_write
+    ld de, EncounterGrid_2
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-.call_run_battle_intro_kind_case_case00_write:
-    ld de, EncounterGroup_588E
-    call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
+.call_run_battle_intro_kind_case_write:
+    ld de, EncounterGroup_Direct1
+    call RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc
     ret
 
 .check_player_state_flags2:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, .call_run_battle_intro_kind_case_case00_write2
-    ld de, EncounterGrid_589B
+    jr nz, .call_run_battle_intro_kind_case_write2
+    ld de, EncounterGrid_3
     ld a, $08
     call ReadMapCellWordForScreenXY
     ret
 
-.call_run_battle_intro_kind_case_case00_write2:
-    ld de, EncounterGroup_5A3B
-    call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
+.call_run_battle_intro_kind_case_write2:
+    ld de, EncounterGroup_Direct2
+    call RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc
     ret
 
 .call_read_map_cell_word_for_screen_xy2:
-    ld de, EncounterGrid_5A4C
+    ld de, EncounterGrid_4
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy3:
-    ld de, EncounterGrid_5A8A
+    ld de, EncounterGrid_5
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy4:
-    ld de, EncounterGrid_5AB7
+    ld de, EncounterGrid_6
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy5:
-    ld de, EncounterGrid_5ADE
+    ld de, EncounterGrid_7
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy6:
-    ld de, EncounterGrid_5AFF
+    ld de, EncounterGrid_8
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy7:
-    ld de, EncounterGrid_5B14
+    ld de, EncounterGrid_9
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy8:
-    ld de, EncounterGrid_5B29
+    ld de, EncounterGrid_10
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy9:
-    ld de, EncounterGrid_5B45
+    ld de, EncounterGrid_11
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy10:
-    ld de, EncounterGrid_5B58
+    ld de, EncounterGrid_12
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
@@ -1541,198 +1542,198 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
 .check_player_state_flags3:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, .call_run_battle_intro_kind_case_case00_write3
-    ld de, EncounterGrid_5B6B
+    jr nz, .call_run_battle_intro_kind_case_write3
+    ld de, EncounterGrid_13
     ld a, $0c
     call ReadMapCellWordForScreenXY
     ret
 
-.call_run_battle_intro_kind_case_case00_write3:
-    ld de, EncounterGroup_5D4E
-    call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
+.call_run_battle_intro_kind_case_write3:
+    ld de, EncounterGroup_Direct3
+    call RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc
     ret
 
 .call_read_map_cell_word_for_screen_xy11:
-    ld de, EncounterGrid_5D5D
+    ld de, EncounterGrid_14
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
-.call_run_battle_intro_kind_case_case00_write4:
-    ld de, EncounterGroup_5D8C
-    call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
+.call_run_battle_intro_kind_case_write4:
+    ld de, EncounterGroup_Direct4
+    call RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc
     ret
 
 .call_read_map_cell_word_for_screen_xy12:
-    ld de, EncounterGrid_5D9B
+    ld de, EncounterGrid_15
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy13:
-    ld de, EncounterGrid_5DCA
+    ld de, EncounterGrid_16
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy14:
-    ld de, EncounterGrid_5DE7
+    ld de, EncounterGrid_17
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy15:
-    ld de, EncounterGrid_5DEF
+    ld de, EncounterGrid_18
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy16:
-    ld de, EncounterGrid_5DF7
+    ld de, EncounterGrid_19
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy17:
-    ld de, EncounterGrid_5E0C
+    ld de, EncounterGrid_20
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy18:
-    ld de, EncounterGrid_5E14
+    ld de, EncounterGrid_21
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy19:
-    ld de, EncounterGrid_5E2B
+    ld de, EncounterGrid_22
     ld a, $0c
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy20:
-    ld de, EncounterGrid_6028
+    ld de, EncounterGrid_23
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy21:
-    ld de, EncounterGrid_603D
+    ld de, EncounterGrid_24
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy22:
-    ld de, EncounterGrid_6052
+    ld de, EncounterGrid_25
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy23:
-    ld de, EncounterGrid_606B
+    ld de, EncounterGrid_26
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy24:
-    ld de, EncounterGrid_6084
+    ld de, EncounterGrid_27
     ld a, $01
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy25:
-    ld de, EncounterGrid_6097
+    ld de, EncounterGrid_28
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy26:
-    ld de, EncounterGrid_60BA
+    ld de, EncounterGrid_29
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy27:
-    ld de, EncounterGrid_60DD
+    ld de, EncounterGrid_30
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy28:
-    ld de, EncounterGrid_60F2
+    ld de, EncounterGrid_31
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy29:
-    ld de, EncounterGrid_6107
+    ld de, EncounterGrid_32
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy30:
-    ld de, EncounterGrid_6120
+    ld de, EncounterGrid_33
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy31:
-    ld de, EncounterGrid_6139
+    ld de, EncounterGrid_34
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy32:
-    ld de, EncounterGrid_6160
+    ld de, EncounterGrid_35
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy33:
-    ld de, EncounterGrid_6181
+    ld de, EncounterGrid_36
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy34:
-    ld de, EncounterGrid_61A2
+    ld de, EncounterGrid_37
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy35:
-    ld de, EncounterGrid_61BD
+    ld de, EncounterGrid_38
     ld a, $04
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy36:
-    ld de, EncounterGrid_61FB
+    ld de, EncounterGrid_39
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy37:
-    ld de, EncounterGrid_6220
+    ld de, EncounterGrid_40
     ld a, $06
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy38:
-    ld de, EncounterGrid_62AB
+    ld de, EncounterGrid_41
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy39:
-    ld de, EncounterGrid_62D2
+    ld de, EncounterGrid_42
     ld a, $03
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy40:
-    ld de, EncounterGrid_62EB
+    ld de, EncounterGrid_43
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
@@ -1740,37 +1741,37 @@ RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags::
 .check_player_state_flags4:
     ldh a, [hPlayerStateFlags]
     bit 3, a
-    jr nz, .call_run_battle_intro_kind_case_case00_write5
-    ld de, EncounterGrid_6300
+    jr nz, .call_run_battle_intro_kind_case_write5
+    ld de, EncounterGrid_44
     ld a, $05
     call ReadMapCellWordForScreenXY
     ret
 
-.call_run_battle_intro_kind_case_case00_write5:
-    ld de, EncounterGroup_6375
-    call RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc
+.call_run_battle_intro_kind_case_write5:
+    ld de, EncounterGroup_Direct5
+    call RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc
     ret
 
 .call_read_map_cell_word_for_screen_xy41:
-    ld de, EncounterGrid_6382
+    ld de, EncounterGrid_45
     ld a, $01
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy42:
-    ld de, EncounterGrid_6393
+    ld de, EncounterGrid_46
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy43:
-    ld de, EncounterGrid_63AA
+    ld de, EncounterGrid_47
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
 
 .call_read_map_cell_word_for_screen_xy44:
-    ld de, EncounterGrid_63BF
+    ld de, EncounterGrid_48
     ld a, $02
     call ReadMapCellWordForScreenXY
     ret
@@ -1793,7 +1794,7 @@ ReadMapCellWordForScreenXY::
     ld a, [hl]
     ld d, a
 
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
+RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc::
     ld a, [de]
     inc de
     dec a
@@ -1878,11 +1879,11 @@ RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
     ret z
     dec a
     jr nz, .call_next_table_byte
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2
+    ld hl, RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2
     jr .call_next_table_byte2
 
 .call_next_table_byte:
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1
+    ld hl, RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1
 
 .call_next_table_byte2:
     call NextTableByte
@@ -1896,33 +1897,33 @@ RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc::
 CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     ldh a, [hMapId]
     cp $20
-    jp z, .call_read_map_cell_word_for_screen_xy_5057
+    jp z, .call_read_map_cell_word_for_screen_xy_2
     cp $2b
     jp z, .check_player_state_flags
     cp $30
     jp z, .check_player_state_flags2
     cp $35
-    jp z, .call_read_map_cell_word_for_screen_xy_50572
+    jp z, .call_read_map_cell_word_for_screen_xy_22
     cp $38
-    jp z, .call_read_map_cell_word_for_screen_xy_50573
+    jp z, .call_read_map_cell_word_for_screen_xy_23
     cp $39
-    jp z, .call_read_map_cell_word_for_screen_xy_50574
+    jp z, .call_read_map_cell_word_for_screen_xy_24
     cp $3a
-    jp z, .call_read_map_cell_word_for_screen_xy_50575
+    jp z, .call_read_map_cell_word_for_screen_xy_25
     cp $3e
-    jp z, .call_read_map_cell_word_for_screen_xy_50576
+    jp z, .call_read_map_cell_word_for_screen_xy_26
     cp $3f
-    jp z, .call_read_map_cell_word_for_screen_xy_50577
+    jp z, .call_read_map_cell_word_for_screen_xy_27
     cp $37
-    jp z, .call_read_map_cell_word_for_screen_xy_50578
+    jp z, .call_read_map_cell_word_for_screen_xy_28
     cp $42
-    jp z, .call_read_map_cell_word_for_screen_xy_50579
+    jp z, .call_read_map_cell_word_for_screen_xy_29
     cp $43
-    jp z, .call_read_map_cell_word_for_screen_xy_505710
+    jp z, .call_read_map_cell_word_for_screen_xy_210
     cp $48
     jp z, .check_player_state_flags3
     cp $53
-    jp z, .call_read_map_cell_word_for_screen_xy_505711
+    jp z, .call_read_map_cell_word_for_screen_xy_211
     cp $54
     jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp $55
@@ -1930,102 +1931,102 @@ CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     cp $56
     jp z, .call_load_encounter_monster_ids_to_work_buf4
     cp $5d
-    jp z, .call_read_map_cell_word_for_screen_xy_505712
+    jp z, .call_read_map_cell_word_for_screen_xy_212
     cp $62
-    jp z, .call_read_map_cell_word_for_screen_xy_505713
+    jp z, .call_read_map_cell_word_for_screen_xy_213
     cp $63
-    jp z, .call_read_map_cell_word_for_screen_xy_505714
+    jp z, .call_read_map_cell_word_for_screen_xy_214
     cp $64
-    jp z, .call_read_map_cell_word_for_screen_xy_505715
+    jp z, .call_read_map_cell_word_for_screen_xy_215
     cp $65
-    jp z, .call_read_map_cell_word_for_screen_xy_505716
+    jp z, .call_read_map_cell_word_for_screen_xy_216
     cp $66
-    jp z, .call_read_map_cell_word_for_screen_xy_505717
+    jp z, .call_read_map_cell_word_for_screen_xy_217
     cp $67
-    jp z, .call_read_map_cell_word_for_screen_xy_505718
+    jp z, .call_read_map_cell_word_for_screen_xy_218
     cp $70
-    jp z, .call_read_map_cell_word_for_screen_xy_505719
+    jp z, .call_read_map_cell_word_for_screen_xy_219
     cp $73
-    jp z, .call_read_map_cell_word_for_screen_xy_505720
+    jp z, .call_read_map_cell_word_for_screen_xy_220
     cp $74
-    jp z, .call_read_map_cell_word_for_screen_xy_505721
+    jp z, .call_read_map_cell_word_for_screen_xy_221
     cp $75
-    jp z, .call_read_map_cell_word_for_screen_xy_505722
+    jp z, .call_read_map_cell_word_for_screen_xy_222
     cp $76
-    jp z, .call_read_map_cell_word_for_screen_xy_505723
+    jp z, .call_read_map_cell_word_for_screen_xy_223
     cp $81
-    jp z, .call_read_map_cell_word_for_screen_xy_505724
+    jp z, .call_read_map_cell_word_for_screen_xy_224
     cp $82
-    jp z, .call_read_map_cell_word_for_screen_xy_505725
+    jp z, .call_read_map_cell_word_for_screen_xy_225
     cp $83
-    jp z, .call_read_map_cell_word_for_screen_xy_505726
+    jp z, .call_read_map_cell_word_for_screen_xy_226
     cp $85
-    jp z, .call_read_map_cell_word_for_screen_xy_505727
+    jp z, .call_read_map_cell_word_for_screen_xy_227
     cp $86
-    jp z, .call_read_map_cell_word_for_screen_xy_505728
+    jp z, .call_read_map_cell_word_for_screen_xy_228
     cp $87
-    jp z, .call_read_map_cell_word_for_screen_xy_505729
+    jp z, .call_read_map_cell_word_for_screen_xy_229
     cp $88
-    jp z, .call_read_map_cell_word_for_screen_xy_505730
+    jp z, .call_read_map_cell_word_for_screen_xy_230
     cp $8b
-    jp z, .call_read_map_cell_word_for_screen_xy_505731
+    jp z, .call_read_map_cell_word_for_screen_xy_231
     cp $8c
-    jp z, .call_read_map_cell_word_for_screen_xy_505732
+    jp z, .call_read_map_cell_word_for_screen_xy_232
     cp $8e
-    jp z, .call_read_map_cell_word_for_screen_xy_505733
+    jp z, .call_read_map_cell_word_for_screen_xy_233
     cp $90
-    jp z, .call_read_map_cell_word_for_screen_xy_505734
+    jp z, .call_read_map_cell_word_for_screen_xy_234
     cp $a0
-    jp z, .call_read_map_cell_word_for_screen_xy_505735
+    jp z, .call_read_map_cell_word_for_screen_xy_235
     cp $a2
-    jp z, .call_read_map_cell_word_for_screen_xy_505736
+    jp z, .call_read_map_cell_word_for_screen_xy_236
     cp $a8
-    jp z, .call_read_map_cell_word_for_screen_xy_505737
+    jp z, .call_read_map_cell_word_for_screen_xy_237
     cp $ad
-    jp z, .call_read_map_cell_word_for_screen_xy_505738
+    jp z, .call_read_map_cell_word_for_screen_xy_238
     cp $ae
-    jp z, .call_read_map_cell_word_for_screen_xy_505738
+    jp z, .call_read_map_cell_word_for_screen_xy_238
     cp $b0
-    jp z, .call_read_map_cell_word_for_screen_xy_505739
+    jp z, .call_read_map_cell_word_for_screen_xy_239
     cp $b3
-    jp z, .call_read_map_cell_word_for_screen_xy_505740
+    jp z, .call_read_map_cell_word_for_screen_xy_240
     cp $b4
-    jp z, .call_read_map_cell_word_for_screen_xy_505740
+    jp z, .call_read_map_cell_word_for_screen_xy_240
     cp $b5
-    jp z, .call_read_map_cell_word_for_screen_xy_505740
+    jp z, .call_read_map_cell_word_for_screen_xy_240
     cp $b8
-    jp z, .call_read_map_cell_word_for_screen_xy_505741
+    jp z, .call_read_map_cell_word_for_screen_xy_241
     cp $be
-    jp z, .call_read_map_cell_word_for_screen_xy_505742
+    jp z, .call_read_map_cell_word_for_screen_xy_242
     cp $bf
-    jp z, .call_read_map_cell_word_for_screen_xy_505743
+    jp z, .call_read_map_cell_word_for_screen_xy_243
     cp $c0
-    jp z, .call_read_map_cell_word_for_screen_xy_505744
+    jp z, .call_read_map_cell_word_for_screen_xy_244
     cp $c1
-    jp z, .call_read_map_cell_word_for_screen_xy_505744
+    jp z, .call_read_map_cell_word_for_screen_xy_244
     cp $c2
-    jp z, .call_read_map_cell_word_for_screen_xy_505745
+    jp z, .call_read_map_cell_word_for_screen_xy_245
     cp $c3
-    jp z, .call_read_map_cell_word_for_screen_xy_505745
+    jp z, .call_read_map_cell_word_for_screen_xy_245
     ret
 
-.call_read_map_cell_word_for_screen_xy_5057:
-    ld de, EncounterGrid_5773
+.call_read_map_cell_word_for_screen_xy_2:
+    ld de, EncounterGrid_1
     ld a, $08
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .check_player_state_flags:
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .call_load_encounter_monster_ids_to_work_buf
-    ld de, EncounterGrid_5856
+    ld de, EncounterGrid_2
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .call_load_encounter_monster_ids_to_work_buf:
-    ld de, EncounterGroup_588E
+    ld de, EncounterGroup_Direct1
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
@@ -2033,302 +2034,303 @@ CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .call_load_encounter_monster_ids_to_work_buf2
-    ld de, EncounterGrid_589B
+    ld de, EncounterGrid_3
     ld a, $08
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .call_load_encounter_monster_ids_to_work_buf2:
-    ld de, EncounterGroup_5A3B
+    ld de, EncounterGroup_Direct2
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_50572:
-    ld de, EncounterGrid_5A4C
+.call_read_map_cell_word_for_screen_xy_22:
+    ld de, EncounterGrid_4
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50573:
-    ld de, EncounterGrid_5A8A
+.call_read_map_cell_word_for_screen_xy_23:
+    ld de, EncounterGrid_5
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50574:
-    ld de, EncounterGrid_5AB7
+.call_read_map_cell_word_for_screen_xy_24:
+    ld de, EncounterGrid_6
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50575:
-    ld de, EncounterGrid_5ADE
+.call_read_map_cell_word_for_screen_xy_25:
+    ld de, EncounterGrid_7
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50576:
-    ld de, EncounterGrid_5AFF
+.call_read_map_cell_word_for_screen_xy_26:
+    ld de, EncounterGrid_8
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50577:
-    ld de, EncounterGrid_5B14
+.call_read_map_cell_word_for_screen_xy_27:
+    ld de, EncounterGrid_9
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50578:
-    ld de, EncounterGrid_5B29
+.call_read_map_cell_word_for_screen_xy_28:
+    ld de, EncounterGrid_10
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_50579:
-    ld de, EncounterGrid_5B45
+.call_read_map_cell_word_for_screen_xy_29:
+    ld de, EncounterGrid_11
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505710:
-    ld de, EncounterGrid_5B58
+.call_read_map_cell_word_for_screen_xy_210:
+    ld de, EncounterGrid_12
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .check_player_state_flags3:
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .call_load_encounter_monster_ids_to_work_buf3
-    ld de, EncounterGrid_5B6B
+    ld de, EncounterGrid_13
     ld a, $0c
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .call_load_encounter_monster_ids_to_work_buf3:
-    ld de, EncounterGroup_5D4E
+    ld de, EncounterGroup_Direct3
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_505711:
-    ld de, EncounterGrid_5D5D
+.call_read_map_cell_word_for_screen_xy_211:
+    ld de, EncounterGrid_14
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 .call_load_encounter_monster_ids_to_work_buf4:
-    ld de, EncounterGroup_5D8C
+    ld de, EncounterGroup_Direct4
     call LoadEncounterMonsterIdsToWorkBuf
     ret
 
-.call_read_map_cell_word_for_screen_xy_505712:
-    ld de, EncounterGrid_5D9B
+.call_read_map_cell_word_for_screen_xy_212:
+    ld de, EncounterGrid_15
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505713:
-    ld de, EncounterGrid_5DCA
+.call_read_map_cell_word_for_screen_xy_213:
+    ld de, EncounterGrid_16
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505714:
-    ld de, EncounterGrid_5DE7
+.call_read_map_cell_word_for_screen_xy_214:
+    ld de, EncounterGrid_17
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505715:
-    ld de, EncounterGrid_5DEF
+.call_read_map_cell_word_for_screen_xy_215:
+    ld de, EncounterGrid_18
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505716:
-    ld de, EncounterGrid_5DF7
+.call_read_map_cell_word_for_screen_xy_216:
+    ld de, EncounterGrid_19
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505717:
-    ld de, EncounterGrid_5E0C
+.call_read_map_cell_word_for_screen_xy_217:
+    ld de, EncounterGrid_20
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505718:
-    ld de, EncounterGrid_5E14
+.call_read_map_cell_word_for_screen_xy_218:
+    ld de, EncounterGrid_21
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505719:
-    ld de, EncounterGrid_5E2B
+.call_read_map_cell_word_for_screen_xy_219:
+    ld de, EncounterGrid_22
     ld a, $0c
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505720:
-    ld de, EncounterGrid_6028
+.call_read_map_cell_word_for_screen_xy_220:
+    ld de, EncounterGrid_23
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505721:
-    ld de, EncounterGrid_603D
+.call_read_map_cell_word_for_screen_xy_221:
+    ld de, EncounterGrid_24
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505722:
-    ld de, EncounterGrid_6052
+.call_read_map_cell_word_for_screen_xy_222:
+    ld de, EncounterGrid_25
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505723:
-    ld de, EncounterGrid_606B
+.call_read_map_cell_word_for_screen_xy_223:
+    ld de, EncounterGrid_26
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505724:
-    ld de, EncounterGrid_6084
+.call_read_map_cell_word_for_screen_xy_224:
+    ld de, EncounterGrid_27
     ld a, $01
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505725:
-    ld de, EncounterGrid_6097
+.call_read_map_cell_word_for_screen_xy_225:
+    ld de, EncounterGrid_28
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505726:
-    ld de, EncounterGrid_60BA
+.call_read_map_cell_word_for_screen_xy_226:
+    ld de, EncounterGrid_29
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505727:
-    ld de, EncounterGrid_60DD
+.call_read_map_cell_word_for_screen_xy_227:
+    ld de, EncounterGrid_30
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505728:
-    ld de, EncounterGrid_60F2
+.call_read_map_cell_word_for_screen_xy_228:
+    ld de, EncounterGrid_31
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505729:
-    ld de, EncounterGrid_6107
+.call_read_map_cell_word_for_screen_xy_229:
+    ld de, EncounterGrid_32
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505730:
-    ld de, EncounterGrid_6120
+.call_read_map_cell_word_for_screen_xy_230:
+    ld de, EncounterGrid_33
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505731:
-    ld de, EncounterGrid_6139
+.call_read_map_cell_word_for_screen_xy_231:
+    ld de, EncounterGrid_34
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505732:
-    ld de, EncounterGrid_6160
+.call_read_map_cell_word_for_screen_xy_232:
+    ld de, EncounterGrid_35
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505733:
-    ld de, EncounterGrid_6181
+.call_read_map_cell_word_for_screen_xy_233:
+    ld de, EncounterGrid_36
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505734:
-    ld de, EncounterGrid_61A2
+.call_read_map_cell_word_for_screen_xy_234:
+    ld de, EncounterGrid_37
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505735:
-    ld de, EncounterGrid_61BD
+.call_read_map_cell_word_for_screen_xy_235:
+    ld de, EncounterGrid_38
     ld a, $04
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505736:
-    ld de, EncounterGrid_61FB
+.call_read_map_cell_word_for_screen_xy_236:
+    ld de, EncounterGrid_39
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505737:
-    ld de, EncounterGrid_6220
+.call_read_map_cell_word_for_screen_xy_237:
+    ld de, EncounterGrid_40
     ld a, $06
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505738:
-    ld de, EncounterGrid_62AB
+.call_read_map_cell_word_for_screen_xy_238:
+    ld de, EncounterGrid_41
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505739:
-    ld de, EncounterGrid_62D2
+.call_read_map_cell_word_for_screen_xy_239:
+    ld de, EncounterGrid_42
     ld a, $03
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505740:
-    ld de, EncounterGrid_62EB
+.call_read_map_cell_word_for_screen_xy_240:
+    ld de, EncounterGrid_43
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505741:
-    ld de, EncounterGrid_6300
+.call_read_map_cell_word_for_screen_xy_241:
+    ld de, EncounterGrid_44
     ld a, $05
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505742:
-    ld de, EncounterGrid_6382
+.call_read_map_cell_word_for_screen_xy_242:
+    ld de, EncounterGrid_45
     ld a, $01
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505743:
-    ld de, EncounterGrid_6393
+.call_read_map_cell_word_for_screen_xy_243:
+    ld de, EncounterGrid_46
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505744:
-    ld de, EncounterGrid_63AA
+.call_read_map_cell_word_for_screen_xy_244:
+    ld de, EncounterGrid_47
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
-.call_read_map_cell_word_for_screen_xy_505745:
-    ld de, EncounterGrid_63BF
+.call_read_map_cell_word_for_screen_xy_245:
+    ld de, EncounterGrid_48
     ld a, $02
-    call ReadMapCellWordForScreenXY_5057
+    call ReadMapCellWordForScreenXY_2
     ret
 
 ; DE = the word at DE + 2 * A * (hMapScreenY & $0F) + 2 * (hMapScreenX & $0F); falls through
-; (E-0122)
-ReadMapCellWordForScreenXY_5057::
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; ReadMapCellWordForScreenXY_5057)
+ReadMapCellWordForScreenXY_2::
     sla a
     ld c, a
     ldh a, [hMapScreenY]
@@ -2422,7 +2424,7 @@ RunBattleIntroKindCase_NextTableByte::
     call NextTableByte
     ld a, [wRandomLo]
     and $03
-    ld hl, RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1
+    ld hl, RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wEncounterKind], a
@@ -2450,7 +2452,7 @@ RunBattleIntroKindCase_NextTableByte::
     add a
     add c
     ld c, a
-    call RunBattleIntroKindCase_Case01_NextRandomSeed
+    call RunBattleIntroKindCase_NextRandomSeed
     ld a, $01
     ld [wBattleKind], a
     ret
@@ -2480,18 +2482,18 @@ RunBattleIntroKindCase_NextTableByte::
     add a
     add a
     ld c, a
-    call RunBattleIntroKindCase_Case01_NextRandomSeed
+    call RunBattleIntroKindCase_NextRandomSeed
     ld a, $01
     ld [wBattleKind], a
     ret
 
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data1::
+RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data1::
     db $00, $02, $01, $02
 
-RunBattleIntroKindCase_Case00_WriteEncounterKindAndTemp0Etc_Data2::
+RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc_Data2::
     db $00, $01, $00, $01
 
-RunBattleIntroKindCase_Case01_NextRandomSeed::
+RunBattleIntroKindCase_NextRandomSeed::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     jr nz, .skip2
@@ -2619,7 +2621,7 @@ RunBattleTransitionStep::
 
 RunBattleTransitionStep_QueueMusic::
     ld a, [wCurrentMusic]
-    ld [wTransitionByteCD], a
+    ld [wTransitionMusic], a
     ld a, [wBattleTransitionSubStep]
     and $01
     sla a
@@ -2661,7 +2663,7 @@ RunBattleTransitionStep_QueueMusic::
     xor a
     ld [wTransitionCounter], a
     ld [wTransitionStage], a
-    ld [wTransitionByte08], a
+    ld [wTransitionWork], a
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -2711,18 +2713,19 @@ RunBattleTransitionStep_WriteGameModeAndModeStateEtc::
 RunBattleTransitionStep_StagedSteps::
     ld a, [wBattleTransitionSubStep]
     jumptable
-    dw RunBattleTransitionStep_Case01_CheckStage
+    dw RunBattleTransitionStep_CheckStage
     dw RunBattleTransitionStep_StagedSteps_ReadTransitionCounter
-    dw RunBattleTransitionStep_Case01_SetCounts
+    dw RunBattleTransitionStep_SetCounts
 
-; reads the transition stage, then advances the step
-RunBattleTransitionStep_Case01_CheckStage::
+; (E-0345: was RunBattleTransitionStep_Case01_CheckStage) reads the transition stage, then advances
+; the step
+RunBattleTransitionStep_CheckStage::
     ld a, [wTransitionCounter]
     jumptable
-    dw RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage
-    dw RunBattleTransitionStep_Case01_CheckStage_AdvanceBattleTransitionStep
+    dw RunBattleTransitionStep_CheckStage_ReadTransitionStage
+    dw RunBattleTransitionStep_CheckStage_AdvanceBattleTransitionStep
 
-RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage::
+RunBattleTransitionStep_CheckStage_ReadTransitionStage::
     ld a, [wTransitionStage]
     cp $14
     jr nz, .read_transition_stage
@@ -2776,7 +2779,7 @@ RunBattleTransitionStep_Case01_CheckStage_ReadTransitionStage::
     inc [hl]
     ret
 
-RunBattleTransitionStep_Case01_CheckStage_AdvanceBattleTransitionStep::
+RunBattleTransitionStep_CheckStage_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -2860,88 +2863,88 @@ RunBattleTransitionStep_StagedSteps_ReadTransitionCounter_ReadTransitionCounter:
     ld a, [wTransitionCounter]
     jumptable
     dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc
-    dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01
+    dw AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2
     dw AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep
 
 AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc::
     push bc
     ld a, [wTransitionStage]
     cp $11
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $23
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $33
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $43
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $51
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $5f
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $6b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $77
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $81
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $8b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $93
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $9b
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $a1
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $a7
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $ab
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $af
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $b1
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2::
     push bc
     ld a, [wTransitionStage]
     cp $02
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $04
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $08
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $0c
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $12
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $18
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $20
-    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jp c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $28
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $32
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $3c
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $48
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $54
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $62
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
     cp $70
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
     cp $80
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2
     cp $90
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA
     cp $a2
-    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip
+    jr c, AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip::
     or a
     jr nz, .read_transition_count_a
     ld hl, $0233
@@ -2964,9 +2967,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case
     ld a, h
     sbc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_Skip2::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_Skip2::
     or a
     jr nz, .read_transition_count_a
     ld hl, $012a
@@ -2989,9 +2992,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case
     ld a, h
     sbc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3005,9 +3008,9 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case
     ld a, h
     adc $00
     ld h, a
-    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA
+    jr AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_ReadTransitionCountA2::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_ReadTransitionCountA2::
     ld a, [wTransitionCountA]
     ld l, a
     ld a, [wTransitionCountB]
@@ -3022,7 +3025,7 @@ AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case
     adc $00
     ld h, a
 
-AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_Case01_SetTransitionCountA::
+AddHLToTransitionBGPtrLoInBGMap_WriteTransitionCountAAndTransitionCountBEtc_2_SetTransitionCountA::
     ld a, l
     ld [wTransitionCountA], a
     ld a, h
@@ -3048,15 +3051,16 @@ AddHLToTransitionBGPtrLoInBGMap_AdvanceBattleTransitionStep::
     inc [hl]
     ret
 
-; sets the transition counts from the stage record, then advances
-RunBattleTransitionStep_Case01_SetCounts::
+; (E-0345: was RunBattleTransitionStep_Case01_SetCounts) sets the transition counts from the stage
+; record, then advances
+RunBattleTransitionStep_SetCounts::
     ld a, [wTransitionCounter]
     jumptable
-    dw RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage
-    dw RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup
-    dw RunBattleTransitionStep_Case01_SetCounts_AdvanceBattleTransitionStep
+    dw RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB
+    dw RunBattleTransitionStep_SetCounts_ReturnAfterSetup
+    dw RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep
 
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
+RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB::
     ld a, [wTransitionStage]
     or a
     jr nz, .read_transition_stage
@@ -3067,7 +3071,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     ld [wTransitionCountB], a
 
 .read_transition_stage:
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1
+    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3090,7 +3094,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     inc hl
     dec b
     jr nz, .loop
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1
+    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3109,7 +3113,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     dec b
     jr nz, .loop2
     push hl
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2
+    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3130,7 +3134,7 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     ld h, a
     dec b
     jr nz, .loop3
-    ld hl, RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2
+    ld hl, RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2
     ld a, [wTransitionStage]
     add_a_to_hl
     ld b, [hl]
@@ -3178,12 +3182,12 @@ RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage::
     inc [hl]
     ret
 
-RunBattleTransitionStep_Case01_SetCounts_ReturnAfterSetup::
+RunBattleTransitionStep_SetCounts_ReturnAfterSetup::
     ld hl, wTransitionCounter
     dec [hl]
     ret
 
-RunBattleTransitionStep_Case01_SetCounts_AdvanceBattleTransitionStep::
+RunBattleTransitionStep_SetCounts_AdvanceBattleTransitionStep::
     ld hl, wBattleTransitionStep
     inc [hl]
     ret
@@ -3301,10 +3305,10 @@ TransitionRowStep08::
     ld h, d
     ret
 
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data1::
+RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data1::
     db $14, $12, $10, $0e, $0c, $0a, $08, $06, $04
 
-RunBattleTransitionStep_Case01_SetCounts_CheckTransitionStage_Data2::
+RunBattleTransitionStep_SetCounts_WriteTransitionCountAAndTransitionCountB_Data2::
     db $12, $10, $0e, $0c, $0a, $08, $06, $04, $02
 
 ; RunBattleTransitionStep_Case01_Case02_Case00 calls JumpToWordAtHL_Bank0A with HL = $560C + 2 *
@@ -3457,14 +3461,14 @@ AdvanceStepCounterAndUpdateStoredRecords::
     ld [rRAMG], a
     ret
 
-UpdatePlayerMovement_Sub01_TestFlagBit::
+UpdatePlayerMovement_TestFlagBit::
     ld a, [wEncounterRate]
     and $7f
     ret z
     ld a, [wScriptRunning]
     or a
     ret nz
-    ld de, EVENT_SCENE_LONG_FACES
+    ld de, EVENT_SCENE_LONG_FACES_002
     call TestFlagBit
     ret nc
     ld a, [wPartyCount]
@@ -3541,7 +3545,7 @@ UpdatePlayerMovement_Sub01_TestFlagBit::
     ld [rRAMG], a
     ret
 
-UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride::
+UpdatePlayerMovement_WaitPlayerSpriteOverride::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     ret z
@@ -3571,91 +3575,91 @@ UpdatePlayerMovement_Sub01_WaitPlayerSpriteOverride::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 64 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (8 per row): its encounter group
-EncounterGrid_5773::
-    dw EncounterGroup_57F3 ; id 0
-    dw EncounterGroup_57F3 ; id 1
-    dw EncounterGroup_57F3 ; id 2
-    dw EncounterGroup_57F3 ; id 3
-    dw EncounterGroup_57FE ; id 4
-    dw EncounterGroup_5827 ; id 5
-    dw EncounterGroup_5827 ; id 6
-    dw EncounterGroup_5845 ; id 7
-    dw EncounterGroup_57F3 ; id 8
-    dw EncounterGroup_57F3 ; id 9
-    dw EncounterGroup_57F3 ; id 10
-    dw EncounterGroup_57F3 ; id 11
-    dw EncounterGroup_57FE ; id 12
-    dw EncounterGroup_57FE ; id 13
-    dw EncounterGroup_5827 ; id 14
-    dw EncounterGroup_5827 ; id 15
-    dw EncounterGroup_57F3 ; id 16
-    dw EncounterGroup_57F3 ; id 17
-    dw EncounterGroup_57F3 ; id 18
-    dw EncounterGroup_57FE ; id 19
-    dw EncounterGroup_57FE ; id 20
-    dw EncounterGroup_57FE ; id 21
-    dw EncounterGroup_57FE ; id 22
-    dw EncounterGroup_5827 ; id 23
-    dw EncounterGroup_57F3 ; id 24
-    dw EncounterGroup_57F3 ; id 25
-    dw EncounterGroup_57F3 ; id 26
-    dw EncounterGroup_57FE ; id 27
-    dw EncounterGroup_57FE ; id 28
-    dw EncounterGroup_57FE ; id 29
-    dw EncounterGroup_5818 ; id 30
-    dw EncounterGroup_5827 ; id 31
-    dw EncounterGroup_57F3 ; id 32
-    dw EncounterGroup_57F3 ; id 33
-    dw EncounterGroup_57F3 ; id 34
-    dw EncounterGroup_57F3 ; id 35
-    dw EncounterGroup_5818 ; id 36
-    dw EncounterGroup_5836 ; id 37
-    dw EncounterGroup_5845 ; id 38
-    dw EncounterGroup_5845 ; id 39
-    dw EncounterGroup_580B ; id 40
-    dw EncounterGroup_57F3 ; id 41
-    dw EncounterGroup_57F3 ; id 42
-    dw EncounterGroup_57F3 ; id 43
-    dw EncounterGroup_5818 ; id 44
-    dw EncounterGroup_5836 ; id 45
-    dw EncounterGroup_5845 ; id 46
-    dw EncounterGroup_5845 ; id 47
-    dw EncounterGroup_580B ; id 48
-    dw EncounterGroup_580B ; id 49
-    dw EncounterGroup_580B ; id 50
-    dw EncounterGroup_580B ; id 51
-    dw EncounterGroup_5818 ; id 52
-    dw EncounterGroup_5836 ; id 53
-    dw EncounterGroup_5845 ; id 54
-    dw EncounterGroup_5845 ; id 55
-    dw EncounterGroup_57F3 ; id 56
-    dw EncounterGroup_57F3 ; id 57
-    dw EncounterGroup_580B ; id 58
-    dw EncounterGroup_5818 ; id 59
-    dw EncounterGroup_5818 ; id 60
-    dw EncounterGroup_5836 ; id 61
-    dw EncounterGroup_5845 ; id 62
-    dw EncounterGroup_5845 ; id 63
+EncounterGrid_1::
+    dw EncounterGroup_Grid1_0 ; id 0
+    dw EncounterGroup_Grid1_0 ; id 1
+    dw EncounterGroup_Grid1_0 ; id 2
+    dw EncounterGroup_Grid1_0 ; id 3
+    dw EncounterGroup_Grid1_4 ; id 4
+    dw EncounterGroup_Grid1_5 ; id 5
+    dw EncounterGroup_Grid1_5 ; id 6
+    dw EncounterGroup_Grid1_7 ; id 7
+    dw EncounterGroup_Grid1_0 ; id 8
+    dw EncounterGroup_Grid1_0 ; id 9
+    dw EncounterGroup_Grid1_0 ; id 10
+    dw EncounterGroup_Grid1_0 ; id 11
+    dw EncounterGroup_Grid1_4 ; id 12
+    dw EncounterGroup_Grid1_4 ; id 13
+    dw EncounterGroup_Grid1_5 ; id 14
+    dw EncounterGroup_Grid1_5 ; id 15
+    dw EncounterGroup_Grid1_0 ; id 16
+    dw EncounterGroup_Grid1_0 ; id 17
+    dw EncounterGroup_Grid1_0 ; id 18
+    dw EncounterGroup_Grid1_4 ; id 19
+    dw EncounterGroup_Grid1_4 ; id 20
+    dw EncounterGroup_Grid1_4 ; id 21
+    dw EncounterGroup_Grid1_4 ; id 22
+    dw EncounterGroup_Grid1_5 ; id 23
+    dw EncounterGroup_Grid1_0 ; id 24
+    dw EncounterGroup_Grid1_0 ; id 25
+    dw EncounterGroup_Grid1_0 ; id 26
+    dw EncounterGroup_Grid1_4 ; id 27
+    dw EncounterGroup_Grid1_4 ; id 28
+    dw EncounterGroup_Grid1_4 ; id 29
+    dw EncounterGroup_Grid1_30 ; id 30
+    dw EncounterGroup_Grid1_5 ; id 31
+    dw EncounterGroup_Grid1_0 ; id 32
+    dw EncounterGroup_Grid1_0 ; id 33
+    dw EncounterGroup_Grid1_0 ; id 34
+    dw EncounterGroup_Grid1_0 ; id 35
+    dw EncounterGroup_Grid1_30 ; id 36
+    dw EncounterGroup_Grid1_37 ; id 37
+    dw EncounterGroup_Grid1_7 ; id 38
+    dw EncounterGroup_Grid1_7 ; id 39
+    dw EncounterGroup_Grid1_40 ; id 40
+    dw EncounterGroup_Grid1_0 ; id 41
+    dw EncounterGroup_Grid1_0 ; id 42
+    dw EncounterGroup_Grid1_0 ; id 43
+    dw EncounterGroup_Grid1_30 ; id 44
+    dw EncounterGroup_Grid1_37 ; id 45
+    dw EncounterGroup_Grid1_7 ; id 46
+    dw EncounterGroup_Grid1_7 ; id 47
+    dw EncounterGroup_Grid1_40 ; id 48
+    dw EncounterGroup_Grid1_40 ; id 49
+    dw EncounterGroup_Grid1_40 ; id 50
+    dw EncounterGroup_Grid1_40 ; id 51
+    dw EncounterGroup_Grid1_30 ; id 52
+    dw EncounterGroup_Grid1_37 ; id 53
+    dw EncounterGroup_Grid1_7 ; id 54
+    dw EncounterGroup_Grid1_7 ; id 55
+    dw EncounterGroup_Grid1_0 ; id 56
+    dw EncounterGroup_Grid1_0 ; id 57
+    dw EncounterGroup_Grid1_40 ; id 58
+    dw EncounterGroup_Grid1_30 ; id 59
+    dw EncounterGroup_Grid1_30 ; id 60
+    dw EncounterGroup_Grid1_37 ; id 61
+    dw EncounterGroup_Grid1_7 ; id 62
+    dw EncounterGroup_Grid1_7 ; id 63
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_57F3::
+EncounterGroup_Grid1_0::
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_57FE::
+EncounterGroup_Grid1_4::
     db $01 ; entry 0: wEncounterKind + 1
     db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
     dw $0003 ; MonsterTable $003: CactiBall
     dw $0005 ; MonsterTable $005: Crestpent
 
-EncounterGroup_580B::
+EncounterGroup_Grid1_40::
     db $01 ; entry 0: wEncounterKind + 1
     db $0c, $05, $0a, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -3663,7 +3667,7 @@ EncounterGroup_580B::
     dw $0004 ; MonsterTable $004: TailEater
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5818::
+EncounterGroup_Grid1_30::
     db $01 ; entry 0: wEncounterKind + 1
     db $10, $05, $0a, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -3671,7 +3675,7 @@ EncounterGroup_5818::
     dw $0004 ; MonsterTable $004: TailEater
     dw $0005 ; MonsterTable $005: Crestpent
 
-EncounterGroup_5827::
+EncounterGroup_Grid1_5::
     db $02 ; entry 0: wEncounterKind + 1
     db $0d, $02, $04, $09, $0d, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -3679,7 +3683,7 @@ EncounterGroup_5827::
     dw $0005 ; MonsterTable $005: Crestpent
     dw $0006 ; MonsterTable $006: KingCobra
 
-EncounterGroup_5836::
+EncounterGroup_Grid1_37::
     db $02 ; entry 0: wEncounterKind + 1
     db $0e, $02, $04, $09, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -3688,7 +3692,7 @@ EncounterGroup_5836::
     dw $0004 ; MonsterTable $004: TailEater
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_5845::
+EncounterGroup_Grid1_7::
     db $02 ; entry 0: wEncounterKind + 1
     db $14, $02, $04, $09, $0e, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -3701,36 +3705,36 @@ EncounterGroup_5845::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_5856::
-    dw EncounterGroup_5881 ; id 0
-    dw EncounterGroup_5881 ; id 1
-    dw EncounterGroup_5881 ; id 2
-    dw EncounterGroup_5881 ; id 3
-    dw EncounterGroup_5881 ; id 4
-    dw EncounterGroup_5881 ; id 5
-    dw EncounterGroup_5881 ; id 6
-    dw EncounterGroup_5881 ; id 7
-    dw EncounterGroup_5881 ; id 8
-    dw EncounterGroup_5881 ; id 9
-    dw EncounterGroup_5881 ; id 10
-    dw EncounterGroup_5881 ; id 11
-    dw EncounterGroup_5881 ; id 12
-    dw EncounterGroup_5876 ; id 13
-    dw EncounterGroup_5876 ; id 14
-    dw EncounterGroup_5876 ; id 15
+EncounterGrid_2::
+    dw EncounterGroup_Grid2_0 ; id 0
+    dw EncounterGroup_Grid2_0 ; id 1
+    dw EncounterGroup_Grid2_0 ; id 2
+    dw EncounterGroup_Grid2_0 ; id 3
+    dw EncounterGroup_Grid2_0 ; id 4
+    dw EncounterGroup_Grid2_0 ; id 5
+    dw EncounterGroup_Grid2_0 ; id 6
+    dw EncounterGroup_Grid2_0 ; id 7
+    dw EncounterGroup_Grid2_0 ; id 8
+    dw EncounterGroup_Grid2_0 ; id 9
+    dw EncounterGroup_Grid2_0 ; id 10
+    dw EncounterGroup_Grid2_0 ; id 11
+    dw EncounterGroup_Grid2_0 ; id 12
+    dw EncounterGroup_Grid2_13 ; id 13
+    dw EncounterGroup_Grid2_13 ; id 14
+    dw EncounterGroup_Grid2_13 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_5876::
+EncounterGroup_Grid2_13::
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
     dw $0181 ; MonsterTable $181: Spooky
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5881::
+EncounterGroup_Grid2_0::
     db $02 ; entry 0: wEncounterKind + 1
     db $0b, $03, $06, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
@@ -3741,7 +3745,7 @@ EncounterGroup_5881::
 ; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
 ; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
 ; threshold (E-0202, C1)
-EncounterGroup_588E::
+EncounterGroup_Direct1::
     db $02 ; entry 0: wEncounterKind + 1
     db $0c, $05, $0a, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0180 ; MonsterTable $180: GiantWorm
@@ -3752,77 +3756,77 @@ EncounterGroup_588E::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 64 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (8 per row): its encounter group
-EncounterGrid_589B::
-    dw EncounterGroup_591B ; id 0
-    dw EncounterGroup_59BD ; id 1
-    dw EncounterGroup_59BD ; id 2
-    dw EncounterGroup_595B ; id 3
-    dw EncounterGroup_596A ; id 4
-    dw EncounterGroup_597B ; id 5
-    dw EncounterGroup_597B ; id 6
-    dw EncounterGroup_598A ; id 7
-    dw EncounterGroup_591B ; id 8
-    dw EncounterGroup_59BD ; id 9
-    dw EncounterGroup_595B ; id 10
-    dw EncounterGroup_596A ; id 11
-    dw EncounterGroup_597B ; id 12
-    dw EncounterGroup_597B ; id 13
-    dw EncounterGroup_597B ; id 14
-    dw EncounterGroup_591B ; id 15
-    dw EncounterGroup_591B ; id 16
-    dw EncounterGroup_59BD ; id 17
-    dw EncounterGroup_595B ; id 18
-    dw EncounterGroup_5939 ; id 19
-    dw EncounterGroup_595B ; id 20
-    dw EncounterGroup_599B ; id 21
-    dw EncounterGroup_599B ; id 22
-    dw EncounterGroup_591B ; id 23
-    dw EncounterGroup_594A ; id 24
-    dw EncounterGroup_5939 ; id 25
-    dw EncounterGroup_5939 ; id 26
-    dw EncounterGroup_59E6 ; id 27
-    dw EncounterGroup_594A ; id 28
-    dw EncounterGroup_59AC ; id 29
-    dw EncounterGroup_59AC ; id 30
-    dw EncounterGroup_591B ; id 31
-    dw EncounterGroup_594A ; id 32
-    dw EncounterGroup_594A ; id 33
-    dw EncounterGroup_59F7 ; id 34
-    dw EncounterGroup_5A08 ; id 35
-    dw EncounterGroup_591B ; id 36
-    dw EncounterGroup_59AC ; id 37
-    dw EncounterGroup_59AC ; id 38
-    dw EncounterGroup_591B ; id 39
-    dw EncounterGroup_5939 ; id 40
-    dw EncounterGroup_5939 ; id 41
-    dw EncounterGroup_5A19 ; id 42
-    dw EncounterGroup_5A2A ; id 43
-    dw EncounterGroup_5928 ; id 44
-    dw EncounterGroup_591B ; id 45
-    dw EncounterGroup_591B ; id 46
-    dw EncounterGroup_591B ; id 47
-    dw EncounterGroup_59CA ; id 48
-    dw EncounterGroup_59CA ; id 49
-    dw EncounterGroup_59D7 ; id 50
-    dw EncounterGroup_5928 ; id 51
-    dw EncounterGroup_5928 ; id 52
-    dw EncounterGroup_5928 ; id 53
-    dw EncounterGroup_591B ; id 54
-    dw EncounterGroup_591B ; id 55
-    dw EncounterGroup_591B ; id 56
-    dw EncounterGroup_591B ; id 57
-    dw EncounterGroup_59D7 ; id 58
-    dw EncounterGroup_59D7 ; id 59
-    dw EncounterGroup_5928 ; id 60
-    dw EncounterGroup_5928 ; id 61
-    dw EncounterGroup_591B ; id 62
-    dw EncounterGroup_591B ; id 63
+EncounterGrid_3::
+    dw EncounterGroup_Grid3_0 ; id 0
+    dw EncounterGroup_Grid3_1 ; id 1
+    dw EncounterGroup_Grid3_1 ; id 2
+    dw EncounterGroup_Grid3_3 ; id 3
+    dw EncounterGroup_Grid3_4 ; id 4
+    dw EncounterGroup_Grid3_5 ; id 5
+    dw EncounterGroup_Grid3_5 ; id 6
+    dw EncounterGroup_Grid3_7 ; id 7
+    dw EncounterGroup_Grid3_0 ; id 8
+    dw EncounterGroup_Grid3_1 ; id 9
+    dw EncounterGroup_Grid3_3 ; id 10
+    dw EncounterGroup_Grid3_4 ; id 11
+    dw EncounterGroup_Grid3_5 ; id 12
+    dw EncounterGroup_Grid3_5 ; id 13
+    dw EncounterGroup_Grid3_5 ; id 14
+    dw EncounterGroup_Grid3_0 ; id 15
+    dw EncounterGroup_Grid3_0 ; id 16
+    dw EncounterGroup_Grid3_1 ; id 17
+    dw EncounterGroup_Grid3_3 ; id 18
+    dw EncounterGroup_Grid3_19 ; id 19
+    dw EncounterGroup_Grid3_3 ; id 20
+    dw EncounterGroup_Grid3_21 ; id 21
+    dw EncounterGroup_Grid3_21 ; id 22
+    dw EncounterGroup_Grid3_0 ; id 23
+    dw EncounterGroup_Grid3_24 ; id 24
+    dw EncounterGroup_Grid3_19 ; id 25
+    dw EncounterGroup_Grid3_19 ; id 26
+    dw EncounterGroup_Grid3_27 ; id 27
+    dw EncounterGroup_Grid3_24 ; id 28
+    dw EncounterGroup_Grid3_29 ; id 29
+    dw EncounterGroup_Grid3_29 ; id 30
+    dw EncounterGroup_Grid3_0 ; id 31
+    dw EncounterGroup_Grid3_24 ; id 32
+    dw EncounterGroup_Grid3_24 ; id 33
+    dw EncounterGroup_Grid3_34 ; id 34
+    dw EncounterGroup_Grid3_35 ; id 35
+    dw EncounterGroup_Grid3_0 ; id 36
+    dw EncounterGroup_Grid3_29 ; id 37
+    dw EncounterGroup_Grid3_29 ; id 38
+    dw EncounterGroup_Grid3_0 ; id 39
+    dw EncounterGroup_Grid3_19 ; id 40
+    dw EncounterGroup_Grid3_19 ; id 41
+    dw EncounterGroup_Grid3_42 ; id 42
+    dw EncounterGroup_Grid3_43 ; id 43
+    dw EncounterGroup_Grid3_44 ; id 44
+    dw EncounterGroup_Grid3_0 ; id 45
+    dw EncounterGroup_Grid3_0 ; id 46
+    dw EncounterGroup_Grid3_0 ; id 47
+    dw EncounterGroup_Grid3_48 ; id 48
+    dw EncounterGroup_Grid3_48 ; id 49
+    dw EncounterGroup_Grid3_50 ; id 50
+    dw EncounterGroup_Grid3_44 ; id 51
+    dw EncounterGroup_Grid3_44 ; id 52
+    dw EncounterGroup_Grid3_44 ; id 53
+    dw EncounterGroup_Grid3_0 ; id 54
+    dw EncounterGroup_Grid3_0 ; id 55
+    dw EncounterGroup_Grid3_0 ; id 56
+    dw EncounterGroup_Grid3_0 ; id 57
+    dw EncounterGroup_Grid3_50 ; id 58
+    dw EncounterGroup_Grid3_50 ; id 59
+    dw EncounterGroup_Grid3_44 ; id 60
+    dw EncounterGroup_Grid3_44 ; id 61
+    dw EncounterGroup_Grid3_0 ; id 62
+    dw EncounterGroup_Grid3_0 ; id 63
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_591B::
+EncounterGroup_Grid3_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3830,7 +3834,7 @@ EncounterGroup_591B::
     dw $000c ; MonsterTable $00C: Eggplaton
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_5928::
+EncounterGroup_Grid3_44::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $03, $07, $0b, $0f, $12 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3839,7 +3843,7 @@ EncounterGroup_5928::
     dw $000c ; MonsterTable $00C: Eggplaton
     dw $0010 ; MonsterTable $010: ArmyAnt
 
-EncounterGroup_5939::
+EncounterGroup_Grid3_19::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $03, $07, $0b, $10, $12 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3848,7 +3852,7 @@ EncounterGroup_5939::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_594A::
+EncounterGroup_Grid3_24::
     db $03 ; entry 0: wEncounterKind + 1
     db $17, $05, $0a, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0277 ; MonsterTable $277: Healer
@@ -3858,7 +3862,7 @@ EncounterGroup_594A::
     dw $0011 ; MonsterTable $011: MadGopher
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_595B::
+EncounterGroup_Grid3_3::
     db $03 ; entry 0: wEncounterKind + 1
     db $0f, $03, $06, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $018b ; MonsterTable $18B: MiniDrak
@@ -3866,7 +3870,7 @@ EncounterGroup_595B::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_596A::
+EncounterGroup_Grid3_4::
     db $03 ; entry 0: wEncounterKind + 1
     db $15, $05, $08, $0d, $12, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $018b ; MonsterTable $18B: MiniDrak
@@ -3875,7 +3879,7 @@ EncounterGroup_596A::
     dw $0011 ; MonsterTable $011: MadGopher
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-EncounterGroup_597B::
+EncounterGroup_Grid3_5::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $03, $07, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0014 ; MonsterTable $014: Poisongon
@@ -3883,7 +3887,7 @@ EncounterGroup_597B::
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-EncounterGroup_598A::
+EncounterGroup_Grid3_7::
     db $03 ; entry 0: wEncounterKind + 1
     db $16, $05, $0a, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $0014 ; MonsterTable $014: Poisongon
@@ -3892,7 +3896,7 @@ EncounterGroup_598A::
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-EncounterGroup_599B::
+EncounterGroup_Grid3_21::
     db $03 ; entry 0: wEncounterKind + 1
     db $17, $03, $08, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0013 ; MonsterTable $013: Snaily
@@ -3901,7 +3905,7 @@ EncounterGroup_599B::
     dw $0188 ; MonsterTable $188: Pyuro
     dw $0012 ; MonsterTable $012: 1EyeClown
 
-EncounterGroup_59AC::
+EncounterGroup_Grid3_29::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $03, $07, $0c, $0f, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $018d ; MonsterTable $18D: DragonKid
@@ -3910,21 +3914,21 @@ EncounterGroup_59AC::
     dw $0188 ; MonsterTable $188: Pyuro
     dw $018a ; MonsterTable $18A: Brushead
 
-EncounterGroup_59BD::
+EncounterGroup_Grid3_1::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $018b ; MonsterTable $18B: MiniDrak
     dw $0189 ; MonsterTable $189: DanceVegi
     dw $018a ; MonsterTable $18A: Brushead
 
-EncounterGroup_59CA::
+EncounterGroup_Grid3_48::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $018d ; MonsterTable $18D: DragonKid
     dw $018c ; MonsterTable $18C: Pteranod
     dw $018e ; MonsterTable $18E: CatFly
 
-EncounterGroup_59D7::
+EncounterGroup_Grid3_50::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $05, $0a, $0c, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3932,7 +3936,7 @@ EncounterGroup_59D7::
     dw $0189 ; MonsterTable $189: DanceVegi
     dw $018a ; MonsterTable $18A: Brushead
 
-EncounterGroup_59E6::
+EncounterGroup_Grid3_27::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $01, $03, $04, $0a, $10 ; limit for the random 0-127, then rising slot thresholds
     dw $0277 ; MonsterTable $277: Healer
@@ -3941,7 +3945,7 @@ EncounterGroup_59E6::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_59F7::
+EncounterGroup_Grid3_34::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $02, $03, $04, $0c, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3950,7 +3954,7 @@ EncounterGroup_59F7::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_5A08::
+EncounterGroup_Grid3_35::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $01, $03, $04, $0b, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3959,7 +3963,7 @@ EncounterGroup_5A08::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_5A19::
+EncounterGroup_Grid3_42::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $01, $03, $05, $0a, $13 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3968,7 +3972,7 @@ EncounterGroup_5A19::
     dw $0010 ; MonsterTable $010: ArmyAnt
     dw $0011 ; MonsterTable $011: MadGopher
 
-EncounterGroup_5A2A::
+EncounterGroup_Grid3_43::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $01, $03, $05, $07, $10 ; limit for the random 0-127, then rising slot thresholds
     dw $0009 ; MonsterTable $009: Slime
@@ -3981,7 +3985,7 @@ EncounterGroup_5A2A::
 ; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
 ; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
 ; threshold (E-0202, C1)
-EncounterGroup_5A3B::
+EncounterGroup_Direct2::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $04, $08, $0b, $0e, $12 ; limit for the random 0-127, then rising slot thresholds
     dw $001d ; MonsterTable $01D: Petiteel
@@ -3994,29 +3998,29 @@ EncounterGroup_5A3B::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_5A4C::
-    dw EncounterGroup_5A6C ; id 0
-    dw EncounterGroup_5A6C ; id 1
-    dw EncounterGroup_5A6C ; id 2
-    dw EncounterGroup_5A6C ; id 3
-    dw EncounterGroup_5A6C ; id 4
-    dw EncounterGroup_5A6C ; id 5
-    dw EncounterGroup_5A6C ; id 6
-    dw EncounterGroup_5A6C ; id 7
-    dw EncounterGroup_5A6C ; id 8
-    dw EncounterGroup_5A6C ; id 9
-    dw EncounterGroup_5A6C ; id 10
-    dw EncounterGroup_5A6C ; id 11
-    dw EncounterGroup_5A6C ; id 12
-    dw EncounterGroup_5A6C ; id 13
-    dw EncounterGroup_5A6C ; id 14
-    dw EncounterGroup_5A6C ; id 15
+EncounterGrid_4::
+    dw EncounterGroup_Grid4_0 ; id 0
+    dw EncounterGroup_Grid4_0 ; id 1
+    dw EncounterGroup_Grid4_0 ; id 2
+    dw EncounterGroup_Grid4_0 ; id 3
+    dw EncounterGroup_Grid4_0 ; id 4
+    dw EncounterGroup_Grid4_0 ; id 5
+    dw EncounterGroup_Grid4_0 ; id 6
+    dw EncounterGroup_Grid4_0 ; id 7
+    dw EncounterGroup_Grid4_0 ; id 8
+    dw EncounterGroup_Grid4_0 ; id 9
+    dw EncounterGroup_Grid4_0 ; id 10
+    dw EncounterGroup_Grid4_0 ; id 11
+    dw EncounterGroup_Grid4_0 ; id 12
+    dw EncounterGroup_Grid4_0 ; id 13
+    dw EncounterGroup_Grid4_0 ; id 14
+    dw EncounterGroup_Grid4_0 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5A6C::
+EncounterGroup_Grid4_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0022 ; MonsterTable $022: PearlGel
@@ -4028,7 +4032,7 @@ EncounterGroup_5A6C::
 ; three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold
 ; (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold
 ; (E-0202, C1)
-EncounterGroup_5A7B::
+EncounterGroup_1::
     db $02 ; entry 0: wEncounterKind + 1
     db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0022 ; MonsterTable $022: PearlGel
@@ -4040,29 +4044,29 @@ EncounterGroup_5A7B::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_5A8A::
-    dw EncounterGroup_5AAA ; id 0
-    dw EncounterGroup_5AAA ; id 1
-    dw EncounterGroup_5AAA ; id 2
-    dw EncounterGroup_5AAA ; id 3
-    dw EncounterGroup_5AAA ; id 4
-    dw EncounterGroup_5AAA ; id 5
-    dw EncounterGroup_5AAA ; id 6
-    dw EncounterGroup_5AAA ; id 7
-    dw EncounterGroup_5AAA ; id 8
-    dw EncounterGroup_5AAA ; id 9
-    dw EncounterGroup_5AAA ; id 10
-    dw EncounterGroup_5AAA ; id 11
-    dw EncounterGroup_5AAA ; id 12
-    dw EncounterGroup_5AAA ; id 13
-    dw EncounterGroup_5AAA ; id 14
-    dw EncounterGroup_5AAA ; id 15
+EncounterGrid_5::
+    dw EncounterGroup_Grid5_0 ; id 0
+    dw EncounterGroup_Grid5_0 ; id 1
+    dw EncounterGroup_Grid5_0 ; id 2
+    dw EncounterGroup_Grid5_0 ; id 3
+    dw EncounterGroup_Grid5_0 ; id 4
+    dw EncounterGroup_Grid5_0 ; id 5
+    dw EncounterGroup_Grid5_0 ; id 6
+    dw EncounterGroup_Grid5_0 ; id 7
+    dw EncounterGroup_Grid5_0 ; id 8
+    dw EncounterGroup_Grid5_0 ; id 9
+    dw EncounterGroup_Grid5_0 ; id 10
+    dw EncounterGroup_Grid5_0 ; id 11
+    dw EncounterGroup_Grid5_0 ; id 12
+    dw EncounterGroup_Grid5_0 ; id 13
+    dw EncounterGroup_Grid5_0 ; id 14
+    dw EncounterGroup_Grid5_0 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5AAA::
+EncounterGroup_Grid5_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0024 ; MonsterTable $024: AquaHawk
@@ -4072,22 +4076,22 @@ EncounterGroup_5AAA::
 ; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 4
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
-EncounterGrid_5AB7::
-    dw EncounterGroup_5ACF ; id 0
-    dw EncounterGroup_5ACF ; id 1
-    dw EncounterGroup_5ACF ; id 2
-    dw EncounterGroup_5ACF ; id 3
-    dw EncounterGroup_5ACF ; id 4
-    dw EncounterGroup_5ACF ; id 5
-    dw EncounterGroup_5ACF ; id 6
-    dw EncounterGroup_5ACF ; id 7
-    dw EncounterGroup_5ACF ; id 8
-    dw EncounterGroup_5ACF ; id 9
-    dw EncounterGroup_5ACF ; id 10
-    dw EncounterGroup_5ACF ; id 11
+EncounterGrid_6::
+    dw EncounterGroup_Grid6_0 ; id 0
+    dw EncounterGroup_Grid6_0 ; id 1
+    dw EncounterGroup_Grid6_0 ; id 2
+    dw EncounterGroup_Grid6_0 ; id 3
+    dw EncounterGroup_Grid6_0 ; id 4
+    dw EncounterGroup_Grid6_0 ; id 5
+    dw EncounterGroup_Grid6_0 ; id 6
+    dw EncounterGroup_Grid6_0 ; id 7
+    dw EncounterGroup_Grid6_0 ; id 8
+    dw EncounterGroup_Grid6_0 ; id 9
+    dw EncounterGroup_Grid6_0 ; id 10
+    dw EncounterGroup_Grid6_0 ; id 11
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5ACF::
+EncounterGroup_Grid6_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $03, $08, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0023 ; MonsterTable $023: Tortragon
@@ -4099,21 +4103,21 @@ EncounterGroup_5ACF::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_5ADE::
-    dw EncounterGroup_5AF0 ; id 0
-    dw EncounterGroup_5AF0 ; id 1
-    dw EncounterGroup_5AF0 ; id 2
-    dw EncounterGroup_5AF0 ; id 3
-    dw EncounterGroup_5AF0 ; id 4
-    dw EncounterGroup_5AF0 ; id 5
-    dw EncounterGroup_5AF0 ; id 6
-    dw EncounterGroup_5AF0 ; id 7
-    dw EncounterGroup_5AF0 ; id 8
+EncounterGrid_7::
+    dw EncounterGroup_Grid7_0 ; id 0
+    dw EncounterGroup_Grid7_0 ; id 1
+    dw EncounterGroup_Grid7_0 ; id 2
+    dw EncounterGroup_Grid7_0 ; id 3
+    dw EncounterGroup_Grid7_0 ; id 4
+    dw EncounterGroup_Grid7_0 ; id 5
+    dw EncounterGroup_Grid7_0 ; id 6
+    dw EncounterGroup_Grid7_0 ; id 7
+    dw EncounterGroup_Grid7_0 ; id 8
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_5AF0::
+EncounterGroup_Grid7_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0f, $03, $05, $0a, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $018d ; MonsterTable $18D: DragonKid
@@ -4125,27 +4129,27 @@ EncounterGroup_5AF0::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_5AFF::
-    dw EncounterGroup_5B07 ; id 0
-    dw EncounterGroup_5B07 ; id 1
-    dw EncounterGroup_5B07 ; id 2
-    dw EncounterGroup_5B07 ; id 3
+EncounterGrid_8::
+    dw EncounterGroup_Grid8_0 ; id 0
+    dw EncounterGroup_Grid8_0 ; id 1
+    dw EncounterGroup_Grid8_0 ; id 2
+    dw EncounterGroup_Grid8_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5B07::
+EncounterGroup_Grid8_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0013 ; MonsterTable $013: Snaily
     dw $0026 ; MonsterTable $026: RayGigas
     dw $0016 ; MonsterTable $016: Eyeder
 
-EncounterGrid_5B14::
-    dw EncounterGroup_5B1C ; id 0
-    dw EncounterGroup_5B1C ; id 1
-    dw EncounterGroup_5B1C ; id 2
-    dw EncounterGroup_5B1C ; id 3
+EncounterGrid_9::
+    dw EncounterGroup_Grid9_0 ; id 0
+    dw EncounterGroup_Grid9_0 ; id 1
+    dw EncounterGroup_Grid9_0 ; id 2
+    dw EncounterGroup_Grid9_0 ; id 3
 
-EncounterGroup_5B1C::
+EncounterGroup_Grid9_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $02, $06, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $000f ; MonsterTable $00F: Wyvern
@@ -4156,16 +4160,16 @@ EncounterGroup_5B1C::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 3 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_5B29::
-    dw EncounterGroup_5B2F ; id 0
-    dw EncounterGroup_5B2F ; id 1
-    dw EncounterGroup_5B2F ; id 2
+EncounterGrid_10::
+    dw EncounterGroup_Grid10_0 ; id 0
+    dw EncounterGroup_Grid10_0 ; id 1
+    dw EncounterGroup_Grid10_0 ; id 2
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_5B2F::
+EncounterGroup_Grid10_0::
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
@@ -4175,7 +4179,7 @@ EncounterGroup_5B2F::
 ; three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold
 ; (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold
 ; (E-0202, C1)
-EncounterGroup_5B3A::
+EncounterGroup_2::
     db $02 ; entry 0: wEncounterKind + 1
     db $08, $04, $08, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
@@ -4185,28 +4189,28 @@ EncounterGroup_5B3A::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 3 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_5B45::
-    dw EncounterGroup_5B4B ; id 0
-    dw EncounterGroup_5B4B ; id 1
-    dw EncounterGroup_5B4B ; id 2
+EncounterGrid_11::
+    dw EncounterGroup_Grid11_0 ; id 0
+    dw EncounterGroup_Grid11_0 ; id 1
+    dw EncounterGroup_Grid11_0 ; id 2
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5B4B::
+EncounterGroup_Grid11_0::
     db $02 ; entry 0: wEncounterKind + 1
     db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
     dw $000e ; MonsterTable $00E: Hork
     dw $000d ; MonsterTable $00D: JewelBag
 
-EncounterGrid_5B58::
-    dw EncounterGroup_5B5E ; id 0
-    dw EncounterGroup_5B5E ; id 1
-    dw EncounterGroup_5B5E ; id 2
+EncounterGrid_12::
+    dw EncounterGroup_Grid12_0 ; id 0
+    dw EncounterGroup_Grid12_0 ; id 1
+    dw EncounterGroup_Grid12_0 ; id 2
 
-EncounterGroup_5B5E::
+EncounterGroup_Grid12_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0b, $04, $08, $0b, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0026 ; MonsterTable $026: RayGigas
@@ -4217,155 +4221,155 @@ EncounterGroup_5B5E::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 144 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (12 per row): its encounter group
-EncounterGrid_5B6B::
-    dw EncounterGroup_5C8B ; id 0
-    dw EncounterGroup_5C8B ; id 1
-    dw EncounterGroup_5C8B ; id 2
-    dw EncounterGroup_5C8B ; id 3
-    dw EncounterGroup_5CA3 ; id 4
-    dw EncounterGroup_5CA3 ; id 5
-    dw EncounterGroup_5C8B ; id 6
-    dw EncounterGroup_5C8B ; id 7
-    dw EncounterGroup_5C8B ; id 8
-    dw EncounterGroup_5C8B ; id 9
-    dw EncounterGroup_5C8B ; id 10
-    dw EncounterGroup_5C8B ; id 11
-    dw EncounterGroup_5C8B ; id 12
-    dw EncounterGroup_5C8B ; id 13
-    dw EncounterGroup_5C8B ; id 14
-    dw EncounterGroup_5C8B ; id 15
-    dw EncounterGroup_5CA3 ; id 16
-    dw EncounterGroup_5CA3 ; id 17
-    dw EncounterGroup_5CA3 ; id 18
-    dw EncounterGroup_5CA3 ; id 19
-    dw EncounterGroup_5C8B ; id 20
-    dw EncounterGroup_5C8B ; id 21
-    dw EncounterGroup_5C8B ; id 22
-    dw EncounterGroup_5C8B ; id 23
-    dw EncounterGroup_5C8B ; id 24
-    dw EncounterGroup_5C8B ; id 25
-    dw EncounterGroup_5C8B ; id 26
-    dw EncounterGroup_5C8B ; id 27
-    dw EncounterGroup_5CA3 ; id 28
-    dw EncounterGroup_5CA3 ; id 29
-    dw EncounterGroup_5CA3 ; id 30
-    dw EncounterGroup_5C96 ; id 31
-    dw EncounterGroup_5C96 ; id 32
-    dw EncounterGroup_5C96 ; id 33
-    dw EncounterGroup_5C96 ; id 34
-    dw EncounterGroup_5C8B ; id 35
-    dw EncounterGroup_5C8B ; id 36
-    dw EncounterGroup_5C8B ; id 37
-    dw EncounterGroup_5C8B ; id 38
-    dw EncounterGroup_5C8B ; id 39
-    dw EncounterGroup_5C8B ; id 40
-    dw EncounterGroup_5CB4 ; id 41
-    dw EncounterGroup_5CB4 ; id 42
-    dw EncounterGroup_5CB4 ; id 43
-    dw EncounterGroup_5CC3 ; id 44
-    dw EncounterGroup_5C96 ; id 45
-    dw EncounterGroup_5C96 ; id 46
-    dw EncounterGroup_5C96 ; id 47
-    dw EncounterGroup_5C8B ; id 48
-    dw EncounterGroup_5C8B ; id 49
-    dw EncounterGroup_5C8B ; id 50
-    dw EncounterGroup_5C8B ; id 51
-    dw EncounterGroup_5C8B ; id 52
-    dw EncounterGroup_5CB4 ; id 53
-    dw EncounterGroup_5CB4 ; id 54
-    dw EncounterGroup_5CB4 ; id 55
-    dw EncounterGroup_5CC3 ; id 56
-    dw EncounterGroup_5CD2 ; id 57
-    dw EncounterGroup_5C96 ; id 58
-    dw EncounterGroup_5C96 ; id 59
-    dw EncounterGroup_5C8B ; id 60
-    dw EncounterGroup_5C8B ; id 61
-    dw EncounterGroup_5C8B ; id 62
-    dw EncounterGroup_5C8B ; id 63
-    dw EncounterGroup_5CDF ; id 64
-    dw EncounterGroup_5CB4 ; id 65
-    dw EncounterGroup_5CB4 ; id 66
-    dw EncounterGroup_5CB4 ; id 67
-    dw EncounterGroup_5CD2 ; id 68
-    dw EncounterGroup_5CD2 ; id 69
-    dw EncounterGroup_5C96 ; id 70
-    dw EncounterGroup_5C96 ; id 71
-    dw EncounterGroup_5C8B ; id 72
-    dw EncounterGroup_5CDF ; id 73
-    dw EncounterGroup_5CDF ; id 74
-    dw EncounterGroup_5CDF ; id 75
-    dw EncounterGroup_5CDF ; id 76
-    dw EncounterGroup_5CDF ; id 77
-    dw EncounterGroup_5CDF ; id 78
-    dw EncounterGroup_5C8B ; id 79
-    dw EncounterGroup_5C8B ; id 80
-    dw EncounterGroup_5D2E ; id 81
-    dw EncounterGroup_5D2E ; id 82
-    dw EncounterGroup_5D2E ; id 83
-    dw EncounterGroup_5C8B ; id 84
-    dw EncounterGroup_5CEE ; id 85
-    dw EncounterGroup_5CEE ; id 86
-    dw EncounterGroup_5CEE ; id 87
-    dw EncounterGroup_5CDF ; id 88
-    dw EncounterGroup_5CDF ; id 89
-    dw EncounterGroup_5CDF ; id 90
-    dw EncounterGroup_5C8B ; id 91
-    dw EncounterGroup_5D3D ; id 92
-    dw EncounterGroup_5D2E ; id 93
-    dw EncounterGroup_5D2E ; id 94
-    dw EncounterGroup_5C8B ; id 95
-    dw EncounterGroup_5C8B ; id 96
-    dw EncounterGroup_5C8B ; id 97
-    dw EncounterGroup_5CEE ; id 98
-    dw EncounterGroup_5CEE ; id 99
-    dw EncounterGroup_5CEE ; id 100
-    dw EncounterGroup_5C8B ; id 101
-    dw EncounterGroup_5C8B ; id 102
-    dw EncounterGroup_5D0E ; id 103
-    dw EncounterGroup_5D1D ; id 104
-    dw EncounterGroup_5D1D ; id 105
-    dw EncounterGroup_5D1D ; id 106
-    dw EncounterGroup_5C8B ; id 107
-    dw EncounterGroup_5C8B ; id 108
-    dw EncounterGroup_5CEE ; id 109
-    dw EncounterGroup_5CEE ; id 110
-    dw EncounterGroup_5CEE ; id 111
-    dw EncounterGroup_5D0E ; id 112
-    dw EncounterGroup_5D0E ; id 113
-    dw EncounterGroup_5D0E ; id 114
-    dw EncounterGroup_5D0E ; id 115
-    dw EncounterGroup_5D1D ; id 116
-    dw EncounterGroup_5D1D ; id 117
-    dw EncounterGroup_5D1D ; id 118
-    dw EncounterGroup_5D1D ; id 119
-PointerRun_0A_438D_Entry03::
-    dw EncounterGroup_5CEE ; id 120
-    dw EncounterGroup_5CFD ; id 121
-    dw EncounterGroup_5CEE ; id 122
-    dw EncounterGroup_5CEE ; id 123
-    dw EncounterGroup_5D0E ; id 124
-    dw EncounterGroup_5D0E ; id 125
-    dw EncounterGroup_5D0E ; id 126
-    dw EncounterGroup_5C8B ; id 127
-    dw EncounterGroup_5D1D ; id 128
-    dw EncounterGroup_5D1D ; id 129
-    dw EncounterGroup_5D1D ; id 130
-    dw EncounterGroup_5D1D ; id 131
-    dw EncounterGroup_5CEE ; id 132
-    dw EncounterGroup_5CEE ; id 133
-    dw EncounterGroup_5CEE ; id 134
-    dw EncounterGroup_5C8B ; id 135
-    dw EncounterGroup_5C8B ; id 136
-    dw EncounterGroup_5C8B ; id 137
-    dw EncounterGroup_5C8B ; id 138
-    dw EncounterGroup_5C8B ; id 139
-    dw EncounterGroup_5C8B ; id 140
-    dw EncounterGroup_5D1D ; id 141
-    dw EncounterGroup_5D1D ; id 142
-    dw EncounterGroup_5D1D ; id 143
+EncounterGrid_13::
+    dw EncounterGroup_Grid13_0 ; id 0
+    dw EncounterGroup_Grid13_0 ; id 1
+    dw EncounterGroup_Grid13_0 ; id 2
+    dw EncounterGroup_Grid13_0 ; id 3
+    dw EncounterGroup_Grid13_4 ; id 4
+    dw EncounterGroup_Grid13_4 ; id 5
+    dw EncounterGroup_Grid13_0 ; id 6
+    dw EncounterGroup_Grid13_0 ; id 7
+    dw EncounterGroup_Grid13_0 ; id 8
+    dw EncounterGroup_Grid13_0 ; id 9
+    dw EncounterGroup_Grid13_0 ; id 10
+    dw EncounterGroup_Grid13_0 ; id 11
+    dw EncounterGroup_Grid13_0 ; id 12
+    dw EncounterGroup_Grid13_0 ; id 13
+    dw EncounterGroup_Grid13_0 ; id 14
+    dw EncounterGroup_Grid13_0 ; id 15
+    dw EncounterGroup_Grid13_4 ; id 16
+    dw EncounterGroup_Grid13_4 ; id 17
+    dw EncounterGroup_Grid13_4 ; id 18
+    dw EncounterGroup_Grid13_4 ; id 19
+    dw EncounterGroup_Grid13_0 ; id 20
+    dw EncounterGroup_Grid13_0 ; id 21
+    dw EncounterGroup_Grid13_0 ; id 22
+    dw EncounterGroup_Grid13_0 ; id 23
+    dw EncounterGroup_Grid13_0 ; id 24
+    dw EncounterGroup_Grid13_0 ; id 25
+    dw EncounterGroup_Grid13_0 ; id 26
+    dw EncounterGroup_Grid13_0 ; id 27
+    dw EncounterGroup_Grid13_4 ; id 28
+    dw EncounterGroup_Grid13_4 ; id 29
+    dw EncounterGroup_Grid13_4 ; id 30
+    dw EncounterGroup_Grid13_31 ; id 31
+    dw EncounterGroup_Grid13_31 ; id 32
+    dw EncounterGroup_Grid13_31 ; id 33
+    dw EncounterGroup_Grid13_31 ; id 34
+    dw EncounterGroup_Grid13_0 ; id 35
+    dw EncounterGroup_Grid13_0 ; id 36
+    dw EncounterGroup_Grid13_0 ; id 37
+    dw EncounterGroup_Grid13_0 ; id 38
+    dw EncounterGroup_Grid13_0 ; id 39
+    dw EncounterGroup_Grid13_0 ; id 40
+    dw EncounterGroup_Grid13_41 ; id 41
+    dw EncounterGroup_Grid13_41 ; id 42
+    dw EncounterGroup_Grid13_41 ; id 43
+    dw EncounterGroup_Grid13_44 ; id 44
+    dw EncounterGroup_Grid13_31 ; id 45
+    dw EncounterGroup_Grid13_31 ; id 46
+    dw EncounterGroup_Grid13_31 ; id 47
+    dw EncounterGroup_Grid13_0 ; id 48
+    dw EncounterGroup_Grid13_0 ; id 49
+    dw EncounterGroup_Grid13_0 ; id 50
+    dw EncounterGroup_Grid13_0 ; id 51
+    dw EncounterGroup_Grid13_0 ; id 52
+    dw EncounterGroup_Grid13_41 ; id 53
+    dw EncounterGroup_Grid13_41 ; id 54
+    dw EncounterGroup_Grid13_41 ; id 55
+    dw EncounterGroup_Grid13_44 ; id 56
+    dw EncounterGroup_Grid13_57 ; id 57
+    dw EncounterGroup_Grid13_31 ; id 58
+    dw EncounterGroup_Grid13_31 ; id 59
+    dw EncounterGroup_Grid13_0 ; id 60
+    dw EncounterGroup_Grid13_0 ; id 61
+    dw EncounterGroup_Grid13_0 ; id 62
+    dw EncounterGroup_Grid13_0 ; id 63
+    dw EncounterGroup_Grid13_64 ; id 64
+    dw EncounterGroup_Grid13_41 ; id 65
+    dw EncounterGroup_Grid13_41 ; id 66
+    dw EncounterGroup_Grid13_41 ; id 67
+    dw EncounterGroup_Grid13_57 ; id 68
+    dw EncounterGroup_Grid13_57 ; id 69
+    dw EncounterGroup_Grid13_31 ; id 70
+    dw EncounterGroup_Grid13_31 ; id 71
+    dw EncounterGroup_Grid13_0 ; id 72
+    dw EncounterGroup_Grid13_64 ; id 73
+    dw EncounterGroup_Grid13_64 ; id 74
+    dw EncounterGroup_Grid13_64 ; id 75
+    dw EncounterGroup_Grid13_64 ; id 76
+    dw EncounterGroup_Grid13_64 ; id 77
+    dw EncounterGroup_Grid13_64 ; id 78
+    dw EncounterGroup_Grid13_0 ; id 79
+    dw EncounterGroup_Grid13_0 ; id 80
+    dw EncounterGroup_Grid13_81 ; id 81
+    dw EncounterGroup_Grid13_81 ; id 82
+    dw EncounterGroup_Grid13_81 ; id 83
+    dw EncounterGroup_Grid13_0 ; id 84
+    dw EncounterGroup_Grid13_85 ; id 85
+    dw EncounterGroup_Grid13_85 ; id 86
+    dw EncounterGroup_Grid13_85 ; id 87
+    dw EncounterGroup_Grid13_64 ; id 88
+    dw EncounterGroup_Grid13_64 ; id 89
+    dw EncounterGroup_Grid13_64 ; id 90
+    dw EncounterGroup_Grid13_0 ; id 91
+    dw EncounterGroup_Grid13_92 ; id 92
+    dw EncounterGroup_Grid13_81 ; id 93
+    dw EncounterGroup_Grid13_81 ; id 94
+    dw EncounterGroup_Grid13_0 ; id 95
+    dw EncounterGroup_Grid13_0 ; id 96
+    dw EncounterGroup_Grid13_0 ; id 97
+    dw EncounterGroup_Grid13_85 ; id 98
+    dw EncounterGroup_Grid13_85 ; id 99
+    dw EncounterGroup_Grid13_85 ; id 100
+    dw EncounterGroup_Grid13_0 ; id 101
+    dw EncounterGroup_Grid13_0 ; id 102
+    dw EncounterGroup_Grid13_103 ; id 103
+    dw EncounterGroup_Grid13_104 ; id 104
+    dw EncounterGroup_Grid13_104 ; id 105
+    dw EncounterGroup_Grid13_104 ; id 106
+    dw EncounterGroup_Grid13_0 ; id 107
+    dw EncounterGroup_Grid13_0 ; id 108
+    dw EncounterGroup_Grid13_85 ; id 109
+    dw EncounterGroup_Grid13_85 ; id 110
+    dw EncounterGroup_Grid13_85 ; id 111
+    dw EncounterGroup_Grid13_103 ; id 112
+    dw EncounterGroup_Grid13_103 ; id 113
+    dw EncounterGroup_Grid13_103 ; id 114
+    dw EncounterGroup_Grid13_103 ; id 115
+    dw EncounterGroup_Grid13_104 ; id 116
+    dw EncounterGroup_Grid13_104 ; id 117
+    dw EncounterGroup_Grid13_104 ; id 118
+    dw EncounterGroup_Grid13_104 ; id 119
+PointerRun_Entry03::
+    dw EncounterGroup_Grid13_85 ; id 120
+    dw EncounterGroup_Entry03_121 ; id 121
+    dw EncounterGroup_Grid13_85 ; id 122
+    dw EncounterGroup_Grid13_85 ; id 123
+    dw EncounterGroup_Grid13_103 ; id 124
+    dw EncounterGroup_Grid13_103 ; id 125
+    dw EncounterGroup_Grid13_103 ; id 126
+    dw EncounterGroup_Grid13_0 ; id 127
+    dw EncounterGroup_Grid13_104 ; id 128
+    dw EncounterGroup_Grid13_104 ; id 129
+    dw EncounterGroup_Grid13_104 ; id 130
+    dw EncounterGroup_Grid13_104 ; id 131
+    dw EncounterGroup_Grid13_85 ; id 132
+    dw EncounterGroup_Grid13_85 ; id 133
+    dw EncounterGroup_Grid13_85 ; id 134
+    dw EncounterGroup_Grid13_0 ; id 135
+    dw EncounterGroup_Grid13_0 ; id 136
+    dw EncounterGroup_Grid13_0 ; id 137
+    dw EncounterGroup_Grid13_0 ; id 138
+    dw EncounterGroup_Grid13_0 ; id 139
+    dw EncounterGroup_Grid13_0 ; id 140
+    dw EncounterGroup_Grid13_104 ; id 141
+    dw EncounterGroup_Grid13_104 ; id 142
+    dw EncounterGroup_Grid13_104 ; id 143
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_5C8B::
+EncounterGroup_Grid13_0::
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -4375,7 +4379,7 @@ EncounterGroup_5C8B::
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5C96::
+EncounterGroup_Grid13_31::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $04, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0036 ; MonsterTable $036: Gulpple
@@ -4383,7 +4387,7 @@ EncounterGroup_5C96::
     dw $0191 ; MonsterTable $191: BeastNite
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_5CA3::
+EncounterGroup_Grid13_4::
     db $03 ; entry 0: wEncounterKind + 1
     db $15, $04, $09, $0e, $11, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0038 ; MonsterTable $038: Almiraj
@@ -4393,7 +4397,7 @@ EncounterGroup_5CA3::
     dw $003c ; MonsterTable $03C: WingSlime
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5CB4::
+EncounterGroup_Grid13_41::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $09, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002a ; MonsterTable $02A: HammerMan
@@ -4401,7 +4405,7 @@ EncounterGroup_5CB4::
     dw $003b ; MonsterTable $03B: Saccer
     dw $0036 ; MonsterTable $036: Gulpple
 
-EncounterGroup_5CC3::
+EncounterGroup_Grid13_44::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $04, $08, $0d, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002b ; MonsterTable $02B: Yeti
@@ -4409,14 +4413,14 @@ EncounterGroup_5CC3::
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0191 ; MonsterTable $191: BeastNite
 
-EncounterGroup_5CD2::
+EncounterGroup_Grid13_57::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $02, $07, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0040 ; MonsterTable $040: SeaHorse
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0191 ; MonsterTable $191: BeastNite
 
-EncounterGroup_5CDF::
+EncounterGroup_Grid13_64::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $04, $09, $0d, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002a ; MonsterTable $02A: HammerMan
@@ -4424,7 +4428,7 @@ EncounterGroup_5CDF::
     dw $0036 ; MonsterTable $036: Gulpple
     dw $0034 ; MonsterTable $034: Grizzly
 
-EncounterGroup_5CEE::
+EncounterGroup_Grid13_85::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $04, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0028 ; MonsterTable $028: SlimeNite
@@ -4432,7 +4436,7 @@ EncounterGroup_5CEE::
     dw $0034 ; MonsterTable $034: Grizzly
     dw $003e ; MonsterTable $03E: CragDevil
 
-EncounterGroup_5CFD::
+EncounterGroup_Entry03_121::
     db $03 ; entry 0: wEncounterKind + 1
     db $15, $03, $07, $0d, $11, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0028 ; MonsterTable $028: SlimeNite
@@ -4441,7 +4445,7 @@ EncounterGroup_5CFD::
     dw $003b ; MonsterTable $03B: Saccer
     dw $003e ; MonsterTable $03E: CragDevil
 
-EncounterGroup_5D0E::
+EncounterGroup_Grid13_103::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $0a, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002c ; MonsterTable $02C: Orc
@@ -4449,7 +4453,7 @@ EncounterGroup_5D0E::
     dw $0034 ; MonsterTable $034: Grizzly
     dw $003e ; MonsterTable $03E: CragDevil
 
-EncounterGroup_5D1D::
+EncounterGroup_Grid13_104::
     db $03 ; entry 0: wEncounterKind + 1
     db $15, $04, $07, $0b, $10, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $0029 ; MonsterTable $029: LizardMan
@@ -4458,7 +4462,7 @@ EncounterGroup_5D1D::
     dw $0039 ; MonsterTable $039: LandOwl
     dw $0192 ; MonsterTable $192: Drygon
 
-EncounterGroup_5D2E::
+EncounterGroup_Grid13_81::
     db $03 ; entry 0: wEncounterKind + 1
     db $11, $03, $08, $0d, $11, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0033 ; MonsterTable $033: RogueNite
@@ -4466,7 +4470,7 @@ EncounterGroup_5D2E::
     dw $003d ; MonsterTable $03D: BullBird
     dw $0192 ; MonsterTable $192: Drygon
 
-EncounterGroup_5D3D::
+EncounterGroup_Grid13_92::
     db $03 ; entry 0: wEncounterKind + 1
     db $15, $05, $0a, $0e, $12, $15 ; limit for the random 0-127, then rising slot thresholds
     dw $003f ; MonsterTable $03F: Starfish
@@ -4479,7 +4483,7 @@ EncounterGroup_5D3D::
 ; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
 ; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
 ; threshold (E-0202, C1)
-EncounterGroup_5D4E::
+EncounterGroup_Direct3::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $0a, $0f, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0040 ; MonsterTable $040: SeaHorse
@@ -4491,29 +4495,29 @@ EncounterGroup_5D4E::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_5D5D::
-    dw EncounterGroup_5D7D ; id 0
-    dw EncounterGroup_5D7D ; id 1
-    dw EncounterGroup_5D7D ; id 2
-    dw EncounterGroup_5D7D ; id 3
-    dw EncounterGroup_5D7D ; id 4
-    dw EncounterGroup_5D7D ; id 5
-    dw EncounterGroup_5D7D ; id 6
-    dw EncounterGroup_5D7D ; id 7
-    dw EncounterGroup_5D7D ; id 8
-    dw EncounterGroup_5D7D ; id 9
-    dw EncounterGroup_5D7D ; id 10
-    dw EncounterGroup_5D7D ; id 11
-    dw EncounterGroup_5D7D ; id 12
-    dw EncounterGroup_5D7D ; id 13
-    dw EncounterGroup_5D7D ; id 14
-    dw EncounterGroup_5D7D ; id 15
+EncounterGrid_14::
+    dw EncounterGroup_Grid14_0 ; id 0
+    dw EncounterGroup_Grid14_0 ; id 1
+    dw EncounterGroup_Grid14_0 ; id 2
+    dw EncounterGroup_Grid14_0 ; id 3
+    dw EncounterGroup_Grid14_0 ; id 4
+    dw EncounterGroup_Grid14_0 ; id 5
+    dw EncounterGroup_Grid14_0 ; id 6
+    dw EncounterGroup_Grid14_0 ; id 7
+    dw EncounterGroup_Grid14_0 ; id 8
+    dw EncounterGroup_Grid14_0 ; id 9
+    dw EncounterGroup_Grid14_0 ; id 10
+    dw EncounterGroup_Grid14_0 ; id 11
+    dw EncounterGroup_Grid14_0 ; id 12
+    dw EncounterGroup_Grid14_0 ; id 13
+    dw EncounterGroup_Grid14_0 ; id 14
+    dw EncounterGroup_Grid14_0 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5D7D::
+EncounterGroup_Grid14_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $04, $09, $0e, $13, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002e ; MonsterTable $02E: Droll
@@ -4525,7 +4529,7 @@ EncounterGroup_5D7D::
 ; draws three times a random 0-127 below byte 1 and stores the word of the first slot whose
 ; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
 ; threshold (E-0202, C1)
-EncounterGroup_5D8C::
+EncounterGroup_Direct4::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $04, $09, $0e, $13, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $002e ; MonsterTable $02E: Droll
@@ -4537,29 +4541,29 @@ EncounterGroup_5D8C::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_5D9B::
-    dw EncounterGroup_5DBB ; id 0
-    dw EncounterGroup_5DBB ; id 1
-    dw EncounterGroup_5DBB ; id 2
-    dw EncounterGroup_5DBB ; id 3
-    dw EncounterGroup_5DBB ; id 4
-    dw EncounterGroup_5DBB ; id 5
-    dw EncounterGroup_5DBB ; id 6
-    dw EncounterGroup_5DBB ; id 7
-    dw EncounterGroup_5DBB ; id 8
-    dw EncounterGroup_5DBB ; id 9
-    dw EncounterGroup_5DBB ; id 10
-    dw EncounterGroup_5DBB ; id 11
-    dw EncounterGroup_5DBB ; id 12
-    dw EncounterGroup_5DBB ; id 13
-    dw EncounterGroup_5DBB ; id 14
-    dw EncounterGroup_5DBB ; id 15
+EncounterGrid_15::
+    dw EncounterGroup_Grid15_0 ; id 0
+    dw EncounterGroup_Grid15_0 ; id 1
+    dw EncounterGroup_Grid15_0 ; id 2
+    dw EncounterGroup_Grid15_0 ; id 3
+    dw EncounterGroup_Grid15_0 ; id 4
+    dw EncounterGroup_Grid15_0 ; id 5
+    dw EncounterGroup_Grid15_0 ; id 6
+    dw EncounterGroup_Grid15_0 ; id 7
+    dw EncounterGroup_Grid15_0 ; id 8
+    dw EncounterGroup_Grid15_0 ; id 9
+    dw EncounterGroup_Grid15_0 ; id 10
+    dw EncounterGroup_Grid15_0 ; id 11
+    dw EncounterGroup_Grid15_0 ; id 12
+    dw EncounterGroup_Grid15_0 ; id 13
+    dw EncounterGroup_Grid15_0 ; id 14
+    dw EncounterGroup_Grid15_0 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5DBB::
+EncounterGroup_Grid15_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $04, $08, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0041 ; MonsterTable $041: ManEater
@@ -4571,18 +4575,18 @@ EncounterGroup_5DBB::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 8 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_5DCA::
-    dw EncounterGroup_5DDA ; id 0
-    dw EncounterGroup_5DDA ; id 1
-    dw EncounterGroup_5DDA ; id 2
-    dw EncounterGroup_5DDA ; id 3
-    dw EncounterGroup_5DDA ; id 4
-    dw EncounterGroup_5DDA ; id 5
-    dw EncounterGroup_5DDA ; id 6
-    dw EncounterGroup_5DDA ; id 7
+EncounterGrid_16::
+    dw EncounterGroup_Grid16_0 ; id 0
+    dw EncounterGroup_Grid16_0 ; id 1
+    dw EncounterGroup_Grid16_0 ; id 2
+    dw EncounterGroup_Grid16_0 ; id 3
+    dw EncounterGroup_Grid16_0 ; id 4
+    dw EncounterGroup_Grid16_0 ; id 5
+    dw EncounterGroup_Grid16_0 ; id 6
+    dw EncounterGroup_Grid16_0 ; id 7
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5DDA::
+EncounterGroup_Grid16_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0042 ; MonsterTable $042: StubBird
@@ -4592,48 +4596,48 @@ EncounterGroup_5DDA::
 ; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 2
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
-EncounterGrid_5DE7::
-    dw EncounterGroup_5DFF ; id 0
-    dw EncounterGroup_5DFF ; id 1
-    dw EncounterGroup_5DFF ; id 2
-    dw EncounterGroup_5DFF ; id 3
+EncounterGrid_17::
+    dw EncounterGroup_Grid17_0 ; id 0
+    dw EncounterGroup_Grid17_0 ; id 1
+    dw EncounterGroup_Grid17_0 ; id 2
+    dw EncounterGroup_Grid17_0 ; id 3
 
-EncounterGrid_5DEF::
-    dw EncounterGroup_5DFF ; id 0
-    dw EncounterGroup_5DFF ; id 1
-    dw EncounterGroup_5DFF ; id 2
-    dw EncounterGroup_5DFF ; id 3
+EncounterGrid_18::
+    dw EncounterGroup_Grid17_0 ; id 0
+    dw EncounterGroup_Grid17_0 ; id 1
+    dw EncounterGroup_Grid17_0 ; id 2
+    dw EncounterGroup_Grid17_0 ; id 3
 
-EncounterGrid_5DF7::
-    dw EncounterGroup_5DFF ; id 0
-    dw EncounterGroup_5DFF ; id 1
-    dw EncounterGroup_5DFF ; id 2
-    dw EncounterGroup_5DFF ; id 3
+EncounterGrid_19::
+    dw EncounterGroup_Grid17_0 ; id 0
+    dw EncounterGroup_Grid17_0 ; id 1
+    dw EncounterGroup_Grid17_0 ; id 2
+    dw EncounterGroup_Grid17_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_5DFF::
+EncounterGroup_Grid17_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $09, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $019e ; MonsterTable $19E: AgDevil
     dw $019f ; MonsterTable $19F: Puppetor
     dw $01a0 ; MonsterTable $1A0: Golem
 
-EncounterGrid_5E0C::
-    dw EncounterGroup_5E1C ; id 0
-    dw EncounterGroup_5E1C ; id 1
-    dw EncounterGroup_5E1C ; id 2
-    dw EncounterGroup_5E1C ; id 3
+EncounterGrid_20::
+    dw EncounterGroup_Grid20_0 ; id 0
+    dw EncounterGroup_Grid20_0 ; id 1
+    dw EncounterGroup_Grid20_0 ; id 2
+    dw EncounterGroup_Grid20_0 ; id 3
 
-EncounterGrid_5E14::
-    dw EncounterGroup_5E1C ; id 0
-    dw EncounterGroup_5E1C ; id 1
-    dw EncounterGroup_5E1C ; id 2
-    dw EncounterGroup_5E1C ; id 3
+EncounterGrid_21::
+    dw EncounterGroup_Grid20_0 ; id 0
+    dw EncounterGroup_Grid20_0 ; id 1
+    dw EncounterGroup_Grid20_0 ; id 2
+    dw EncounterGroup_Grid20_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5E1C::
+EncounterGroup_Grid20_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $01, $05, $0a, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $019d ; MonsterTable $19D: MetalDrak
@@ -4645,155 +4649,155 @@ EncounterGroup_5E1C::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 144 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (12 per row): its encounter group
-EncounterGrid_5E2B::
-    dw EncounterGroup_5F4B ; id 0
-    dw EncounterGroup_600A ; id 1
-    dw EncounterGroup_600A ; id 2
-    dw EncounterGroup_5FFB ; id 3
-    dw EncounterGroup_5FFB ; id 4
-    dw EncounterGroup_5FFB ; id 5
-    dw EncounterGroup_5F4B ; id 6
-    dw EncounterGroup_5F4B ; id 7
-    dw EncounterGroup_5F4B ; id 8
-    dw EncounterGroup_5F4B ; id 9
-    dw EncounterGroup_5F4B ; id 10
-    dw EncounterGroup_5F4B ; id 11
-    dw EncounterGroup_5F4B ; id 12
-    dw EncounterGroup_600A ; id 13
-    dw EncounterGroup_600A ; id 14
-    dw EncounterGroup_5F4B ; id 15
-    dw EncounterGroup_5FFB ; id 16
-    dw EncounterGroup_5FFB ; id 17
-    dw EncounterGroup_5FFB ; id 18
-    dw EncounterGroup_5F4B ; id 19
-    dw EncounterGroup_5F4B ; id 20
-    dw EncounterGroup_5F4B ; id 21
-    dw EncounterGroup_5F56 ; id 22
-    dw EncounterGroup_5F56 ; id 23
-    dw EncounterGroup_5F4B ; id 24
-PointerRun_0A_438D_Entry04::
-    dw EncounterGroup_6019 ; id 25
-    dw EncounterGroup_5F4B ; id 26
-    dw EncounterGroup_5F4B ; id 27
-    dw EncounterGroup_5FFB ; id 28
-    dw EncounterGroup_5FFB ; id 29
-    dw EncounterGroup_5FFB ; id 30
-    dw EncounterGroup_5FFB ; id 31
-    dw EncounterGroup_5F4B ; id 32
-    dw EncounterGroup_5F4B ; id 33
-    dw EncounterGroup_5F56 ; id 34
-    dw EncounterGroup_5F56 ; id 35
-    dw EncounterGroup_5F4B ; id 36
-    dw EncounterGroup_5F4B ; id 37
-    dw EncounterGroup_5F92 ; id 38
-    dw EncounterGroup_5F92 ; id 39
-    dw EncounterGroup_5F4B ; id 40
-    dw EncounterGroup_5FFB ; id 41
-    dw EncounterGroup_5F63 ; id 42
-    dw EncounterGroup_5F63 ; id 43
-    dw EncounterGroup_5F63 ; id 44
-    dw EncounterGroup_5F63 ; id 45
-    dw EncounterGroup_5F56 ; id 46
-    dw EncounterGroup_5F56 ; id 47
-    dw EncounterGroup_5F92 ; id 48
-    dw EncounterGroup_5F92 ; id 49
-    dw EncounterGroup_5F92 ; id 50
-    dw EncounterGroup_5F92 ; id 51
-    dw EncounterGroup_5F92 ; id 52
-    dw EncounterGroup_5F4B ; id 53
-    dw EncounterGroup_5F63 ; id 54
-    dw EncounterGroup_5F4B ; id 55
-    dw EncounterGroup_5F63 ; id 56
-    dw EncounterGroup_5F63 ; id 57
-    dw EncounterGroup_5F56 ; id 58
-    dw EncounterGroup_5F56 ; id 59
-    dw EncounterGroup_5F92 ; id 60
-    dw EncounterGroup_5F92 ; id 61
-    dw EncounterGroup_5F92 ; id 62
-    dw EncounterGroup_5F92 ; id 63
-    dw EncounterGroup_5F92 ; id 64
-    dw EncounterGroup_5F4B ; id 65
-    dw EncounterGroup_5F63 ; id 66
-    dw EncounterGroup_5F63 ; id 67
-    dw EncounterGroup_5F63 ; id 68
-    dw EncounterGroup_5F63 ; id 69
-    dw EncounterGroup_5F4B ; id 70
-    dw EncounterGroup_5F4B ; id 71
-    dw EncounterGroup_5F4B ; id 72
-    dw EncounterGroup_5FA1 ; id 73
-    dw EncounterGroup_5FA1 ; id 74
-    dw EncounterGroup_5F92 ; id 75
-    dw EncounterGroup_5F83 ; id 76
-    dw EncounterGroup_5F63 ; id 77
-    dw EncounterGroup_5F63 ; id 78
-    dw EncounterGroup_5F63 ; id 79
-    dw EncounterGroup_5F72 ; id 80
-    dw EncounterGroup_5F72 ; id 81
-    dw EncounterGroup_5F4B ; id 82
-    dw EncounterGroup_5F4B ; id 83
-    dw EncounterGroup_5F4B ; id 84
-    dw EncounterGroup_5FA1 ; id 85
-    dw EncounterGroup_5FA1 ; id 86
-    dw EncounterGroup_5FA1 ; id 87
-    dw EncounterGroup_5F83 ; id 88
-    dw EncounterGroup_5F83 ; id 89
-    dw EncounterGroup_5F63 ; id 90
-    dw EncounterGroup_5F4B ; id 91
-    dw EncounterGroup_5FCE ; id 92
-    dw EncounterGroup_5FCE ; id 93
-    dw EncounterGroup_5F4B ; id 94
-    dw EncounterGroup_5F4B ; id 95
-    dw EncounterGroup_5FEE ; id 96
-    dw EncounterGroup_5FEE ; id 97
-    dw EncounterGroup_5F4B ; id 98
-    dw EncounterGroup_5FA1 ; id 99
-    dw EncounterGroup_5FBF ; id 100
-    dw EncounterGroup_5FBF ; id 101
-    dw EncounterGroup_5FBF ; id 102
-    dw EncounterGroup_5FCE ; id 103
-    dw EncounterGroup_5FCE ; id 104
-    dw EncounterGroup_5FCE ; id 105
-    dw EncounterGroup_5F4B ; id 106
-    dw EncounterGroup_5F4B ; id 107
-    dw EncounterGroup_5FEE ; id 108
-    dw EncounterGroup_5FEE ; id 109
-    dw EncounterGroup_5F4B ; id 110
-    dw EncounterGroup_5F4B ; id 111
-    dw EncounterGroup_5FBF ; id 112
-    dw EncounterGroup_5FBF ; id 113
-    dw EncounterGroup_5FBF ; id 114
-    dw EncounterGroup_5FBF ; id 115
-    dw EncounterGroup_5FBF ; id 116
-    dw EncounterGroup_5FDF ; id 117
-    dw EncounterGroup_5FDF ; id 118
-    dw EncounterGroup_5FDF ; id 119
-    dw EncounterGroup_5FEE ; id 120
-    dw EncounterGroup_5FEE ; id 121
-    dw EncounterGroup_5FEE ; id 122
-    dw EncounterGroup_5FEE ; id 123
-    dw EncounterGroup_5FB0 ; id 124
-    dw EncounterGroup_5FB0 ; id 125
-    dw EncounterGroup_5FBF ; id 126
-    dw EncounterGroup_5F4B ; id 127
-    dw EncounterGroup_5F4B ; id 128
-    dw EncounterGroup_5FDF ; id 129
-    dw EncounterGroup_5FDF ; id 130
-    dw EncounterGroup_5FDF ; id 131
-    dw EncounterGroup_5FEE ; id 132
-    dw EncounterGroup_5FEE ; id 133
-    dw EncounterGroup_5FEE ; id 134
-    dw EncounterGroup_5FEE ; id 135
-    dw EncounterGroup_5FB0 ; id 136
-    dw EncounterGroup_5FB0 ; id 137
-    dw EncounterGroup_5FBF ; id 138
-    dw EncounterGroup_5F4B ; id 139
-    dw EncounterGroup_5F4B ; id 140
-    dw EncounterGroup_5F4B ; id 141
-    dw EncounterGroup_5FDF ; id 142
-    dw EncounterGroup_5FDF ; id 143
+EncounterGrid_22::
+    dw EncounterGroup_Grid22_0 ; id 0
+    dw EncounterGroup_Grid22_1 ; id 1
+    dw EncounterGroup_Grid22_1 ; id 2
+    dw EncounterGroup_Grid22_3 ; id 3
+    dw EncounterGroup_Grid22_3 ; id 4
+    dw EncounterGroup_Grid22_3 ; id 5
+    dw EncounterGroup_Grid22_0 ; id 6
+    dw EncounterGroup_Grid22_0 ; id 7
+    dw EncounterGroup_Grid22_0 ; id 8
+    dw EncounterGroup_Grid22_0 ; id 9
+    dw EncounterGroup_Grid22_0 ; id 10
+    dw EncounterGroup_Grid22_0 ; id 11
+    dw EncounterGroup_Grid22_0 ; id 12
+    dw EncounterGroup_Grid22_1 ; id 13
+    dw EncounterGroup_Grid22_1 ; id 14
+    dw EncounterGroup_Grid22_0 ; id 15
+    dw EncounterGroup_Grid22_3 ; id 16
+    dw EncounterGroup_Grid22_3 ; id 17
+    dw EncounterGroup_Grid22_3 ; id 18
+    dw EncounterGroup_Grid22_0 ; id 19
+    dw EncounterGroup_Grid22_0 ; id 20
+    dw EncounterGroup_Grid22_0 ; id 21
+    dw EncounterGroup_Grid22_22 ; id 22
+    dw EncounterGroup_Grid22_22 ; id 23
+    dw EncounterGroup_Grid22_0 ; id 24
+PointerRun_Entry04::
+    dw EncounterGroup_Entry04_25 ; id 25
+    dw EncounterGroup_Grid22_0 ; id 26
+    dw EncounterGroup_Grid22_0 ; id 27
+    dw EncounterGroup_Grid22_3 ; id 28
+    dw EncounterGroup_Grid22_3 ; id 29
+    dw EncounterGroup_Grid22_3 ; id 30
+    dw EncounterGroup_Grid22_3 ; id 31
+    dw EncounterGroup_Grid22_0 ; id 32
+    dw EncounterGroup_Grid22_0 ; id 33
+    dw EncounterGroup_Grid22_22 ; id 34
+    dw EncounterGroup_Grid22_22 ; id 35
+    dw EncounterGroup_Grid22_0 ; id 36
+    dw EncounterGroup_Grid22_0 ; id 37
+    dw EncounterGroup_Entry04_38 ; id 38
+    dw EncounterGroup_Entry04_38 ; id 39
+    dw EncounterGroup_Grid22_0 ; id 40
+    dw EncounterGroup_Grid22_3 ; id 41
+    dw EncounterGroup_Entry04_42 ; id 42
+    dw EncounterGroup_Entry04_42 ; id 43
+    dw EncounterGroup_Entry04_42 ; id 44
+    dw EncounterGroup_Entry04_42 ; id 45
+    dw EncounterGroup_Grid22_22 ; id 46
+    dw EncounterGroup_Grid22_22 ; id 47
+    dw EncounterGroup_Entry04_38 ; id 48
+    dw EncounterGroup_Entry04_38 ; id 49
+    dw EncounterGroup_Entry04_38 ; id 50
+    dw EncounterGroup_Entry04_38 ; id 51
+    dw EncounterGroup_Entry04_38 ; id 52
+    dw EncounterGroup_Grid22_0 ; id 53
+    dw EncounterGroup_Entry04_42 ; id 54
+    dw EncounterGroup_Grid22_0 ; id 55
+    dw EncounterGroup_Entry04_42 ; id 56
+    dw EncounterGroup_Entry04_42 ; id 57
+    dw EncounterGroup_Grid22_22 ; id 58
+    dw EncounterGroup_Grid22_22 ; id 59
+    dw EncounterGroup_Entry04_38 ; id 60
+    dw EncounterGroup_Entry04_38 ; id 61
+    dw EncounterGroup_Entry04_38 ; id 62
+    dw EncounterGroup_Entry04_38 ; id 63
+    dw EncounterGroup_Entry04_38 ; id 64
+    dw EncounterGroup_Grid22_0 ; id 65
+    dw EncounterGroup_Entry04_42 ; id 66
+    dw EncounterGroup_Entry04_42 ; id 67
+    dw EncounterGroup_Entry04_42 ; id 68
+    dw EncounterGroup_Entry04_42 ; id 69
+    dw EncounterGroup_Grid22_0 ; id 70
+    dw EncounterGroup_Grid22_0 ; id 71
+    dw EncounterGroup_Grid22_0 ; id 72
+    dw EncounterGroup_Entry04_73 ; id 73
+    dw EncounterGroup_Entry04_73 ; id 74
+    dw EncounterGroup_Entry04_38 ; id 75
+    dw EncounterGroup_Entry04_76 ; id 76
+    dw EncounterGroup_Entry04_42 ; id 77
+    dw EncounterGroup_Entry04_42 ; id 78
+    dw EncounterGroup_Entry04_42 ; id 79
+    dw EncounterGroup_Entry04_80 ; id 80
+    dw EncounterGroup_Entry04_80 ; id 81
+    dw EncounterGroup_Grid22_0 ; id 82
+    dw EncounterGroup_Grid22_0 ; id 83
+    dw EncounterGroup_Grid22_0 ; id 84
+    dw EncounterGroup_Entry04_73 ; id 85
+    dw EncounterGroup_Entry04_73 ; id 86
+    dw EncounterGroup_Entry04_73 ; id 87
+    dw EncounterGroup_Entry04_76 ; id 88
+    dw EncounterGroup_Entry04_76 ; id 89
+    dw EncounterGroup_Entry04_42 ; id 90
+    dw EncounterGroup_Grid22_0 ; id 91
+    dw EncounterGroup_Entry04_92 ; id 92
+    dw EncounterGroup_Entry04_92 ; id 93
+    dw EncounterGroup_Grid22_0 ; id 94
+    dw EncounterGroup_Grid22_0 ; id 95
+    dw EncounterGroup_Entry04_96 ; id 96
+    dw EncounterGroup_Entry04_96 ; id 97
+    dw EncounterGroup_Grid22_0 ; id 98
+    dw EncounterGroup_Entry04_73 ; id 99
+    dw EncounterGroup_Entry04_100 ; id 100
+    dw EncounterGroup_Entry04_100 ; id 101
+    dw EncounterGroup_Entry04_100 ; id 102
+    dw EncounterGroup_Entry04_92 ; id 103
+    dw EncounterGroup_Entry04_92 ; id 104
+    dw EncounterGroup_Entry04_92 ; id 105
+    dw EncounterGroup_Grid22_0 ; id 106
+    dw EncounterGroup_Grid22_0 ; id 107
+    dw EncounterGroup_Entry04_96 ; id 108
+    dw EncounterGroup_Entry04_96 ; id 109
+    dw EncounterGroup_Grid22_0 ; id 110
+    dw EncounterGroup_Grid22_0 ; id 111
+    dw EncounterGroup_Entry04_100 ; id 112
+    dw EncounterGroup_Entry04_100 ; id 113
+    dw EncounterGroup_Entry04_100 ; id 114
+    dw EncounterGroup_Entry04_100 ; id 115
+    dw EncounterGroup_Entry04_100 ; id 116
+    dw EncounterGroup_Entry04_117 ; id 117
+    dw EncounterGroup_Entry04_117 ; id 118
+    dw EncounterGroup_Entry04_117 ; id 119
+    dw EncounterGroup_Entry04_96 ; id 120
+    dw EncounterGroup_Entry04_96 ; id 121
+    dw EncounterGroup_Entry04_96 ; id 122
+    dw EncounterGroup_Entry04_96 ; id 123
+    dw EncounterGroup_Entry04_124 ; id 124
+    dw EncounterGroup_Entry04_124 ; id 125
+    dw EncounterGroup_Entry04_100 ; id 126
+    dw EncounterGroup_Grid22_0 ; id 127
+    dw EncounterGroup_Grid22_0 ; id 128
+    dw EncounterGroup_Entry04_117 ; id 129
+    dw EncounterGroup_Entry04_117 ; id 130
+    dw EncounterGroup_Entry04_117 ; id 131
+    dw EncounterGroup_Entry04_96 ; id 132
+    dw EncounterGroup_Entry04_96 ; id 133
+    dw EncounterGroup_Entry04_96 ; id 134
+    dw EncounterGroup_Entry04_96 ; id 135
+    dw EncounterGroup_Entry04_124 ; id 136
+    dw EncounterGroup_Entry04_124 ; id 137
+    dw EncounterGroup_Entry04_100 ; id 138
+    dw EncounterGroup_Grid22_0 ; id 139
+    dw EncounterGroup_Grid22_0 ; id 140
+    dw EncounterGroup_Grid22_0 ; id 141
+    dw EncounterGroup_Entry04_117 ; id 142
+    dw EncounterGroup_Entry04_117 ; id 143
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_5F4B::
+EncounterGroup_Grid22_0::
     db $01 ; entry 0: wEncounterKind + 1
     db $07, $03, $07, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0002 ; MonsterTable $002: SpotSlime
@@ -4803,7 +4807,7 @@ EncounterGroup_5F4B::
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_5F56::
+EncounterGroup_Grid22_22::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0048 ; MonsterTable $048: Emyu
@@ -4811,7 +4815,7 @@ EncounterGroup_5F56::
     dw $0045 ; MonsterTable $045: FangSlime
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_5F63::
+EncounterGroup_Entry04_42::
     db $03 ; entry 0: wEncounterKind + 1
     db $10, $04, $08, $0c, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
@@ -4820,7 +4824,7 @@ EncounterGroup_5F63::
     dw $0047 ; MonsterTable $047: MadRaven
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_5F72::
+EncounterGroup_Entry04_80::
     db $03 ; entry 0: wEncounterKind + 1
     db $17, $05, $0a, $0f, $14, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
@@ -4829,7 +4833,7 @@ EncounterGroup_5F72::
     dw $0047 ; MonsterTable $047: MadRaven
     dw $0055 ; MonsterTable $055: WildApe
 
-EncounterGroup_5F83::
+EncounterGroup_Entry04_76::
     db $03 ; entry 0: wEncounterKind + 1
     db $13, $06, $0c, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0056 ; MonsterTable $056: Dumbira
@@ -4837,7 +4841,7 @@ EncounterGroup_5F83::
     dw $0052 ; MonsterTable $052: WarMantis
     dw $0058 ; MonsterTable $058: Metaly
 
-EncounterGroup_5F92::
+EncounterGroup_Entry04_38::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $06, $0c, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005e ; MonsterTable $05E: Gigantes
@@ -4845,7 +4849,7 @@ EncounterGroup_5F92::
     dw $0052 ; MonsterTable $052: WarMantis
     dw $0058 ; MonsterTable $058: Metaly
 
-EncounterGroup_5FA1::
+EncounterGroup_Entry04_73::
     db $02 ; entry 0: wEncounterKind + 1
     db $10, $03, $06, $0b, $10, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005e ; MonsterTable $05E: Gigantes
@@ -4853,7 +4857,7 @@ EncounterGroup_5FA1::
     dw $01a8 ; MonsterTable $1A8: Swordgon
     dw $004d ; MonsterTable $04D: Dragon
 
-EncounterGroup_5FB0::
+EncounterGroup_Entry04_124::
     db $02 ; entry 0: wEncounterKind + 1
     db $13, $06, $0c, $12, $13, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01a8 ; MonsterTable $1A8: Swordgon
@@ -4861,7 +4865,7 @@ EncounterGroup_5FB0::
     dw $004d ; MonsterTable $04D: Dragon
     dw $0053 ; MonsterTable $053: Phoenix
 
-EncounterGroup_5FBF::
+EncounterGroup_Entry04_100::
     db $02 ; entry 0: wEncounterKind + 1
     db $14, $06, $0c, $12, $14, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01a8 ; MonsterTable $1A8: Swordgon
@@ -4869,7 +4873,7 @@ EncounterGroup_5FBF::
     dw $004d ; MonsterTable $04D: Dragon
     dw $0058 ; MonsterTable $058: Metaly
 
-EncounterGroup_5FCE::
+EncounterGroup_Entry04_92::
     db $03 ; entry 0: wEncounterKind + 1
     db $16, $04, $09, $0e, $13, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $0055 ; MonsterTable $055: WildApe
@@ -4878,7 +4882,7 @@ EncounterGroup_5FCE::
     dw $005c ; MonsterTable $05C: MadGoose
     dw $01a8 ; MonsterTable $1A8: Swordgon
 
-EncounterGroup_5FDF::
+EncounterGroup_Entry04_117::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $0a, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01aa ; MonsterTable $1AA: KiteHawk
@@ -4886,14 +4890,14 @@ EncounterGroup_5FDF::
     dw $0059 ; MonsterTable $059: GhosTree
     dw $0062 ; MonsterTable $062: MadSpirit
 
-EncounterGroup_5FEE::
+EncounterGroup_Entry04_96::
     db $02 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $006e ; MonsterTable $06E: Vampirus
     dw $004c ; MonsterTable $04C: MadDragon
     dw $0068 ; MonsterTable $068: CoilBird
 
-EncounterGroup_5FFB::
+EncounterGroup_Grid22_3::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $06, $09, $0e, $14, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005b ; MonsterTable $05B: Lionex
@@ -4901,7 +4905,7 @@ EncounterGroup_5FFB::
     dw $0054 ; MonsterTable $054: FireWeed
     dw $0046 ; MonsterTable $046: RockSlime
 
-EncounterGroup_600A::
+EncounterGroup_Grid22_1::
     db $03 ; entry 0: wEncounterKind + 1
     db $0f, $03, $08, $0d, $0f, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0065 ; MonsterTable $065: Andreal
@@ -4909,7 +4913,7 @@ EncounterGroup_600A::
     dw $0054 ; MonsterTable $054: FireWeed
     dw $0058 ; MonsterTable $058: Metaly
 
-EncounterGroup_6019::
+EncounterGroup_Entry04_25::
     db $02 ; entry 0: wEncounterKind + 1
     db $0d, $02, $03, $0a, $0d, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0058 ; MonsterTable $058: Metaly
@@ -4921,44 +4925,44 @@ EncounterGroup_6019::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_6028::
-    dw EncounterGroup_6030 ; id 0
-    dw EncounterGroup_6030 ; id 1
-    dw EncounterGroup_6030 ; id 2
-    dw EncounterGroup_6030 ; id 3
+EncounterGrid_23::
+    dw EncounterGroup_Grid23_0 ; id 0
+    dw EncounterGroup_Grid23_0 ; id 1
+    dw EncounterGroup_Grid23_0 ; id 2
+    dw EncounterGroup_Grid23_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_6030::
+EncounterGroup_Grid23_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $004e ; MonsterTable $04E: IronTurt
     dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
 
-EncounterGrid_603D::
-    dw EncounterGroup_6045 ; id 0
-    dw EncounterGroup_6045 ; id 1
-    dw EncounterGroup_6045 ; id 2
-    dw EncounterGroup_6045 ; id 3
+EncounterGrid_24::
+    dw EncounterGroup_Grid24_0 ; id 0
+    dw EncounterGroup_Grid24_0 ; id 1
+    dw EncounterGroup_Grid24_0 ; id 2
+    dw EncounterGroup_Grid24_0 ; id 3
 
-EncounterGroup_6045::
+EncounterGroup_Grid24_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0c, $04, $08, $0c, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $004e ; MonsterTable $04E: IronTurt
     dw $004f ; MonsterTable $04F: MadMirror
     dw $0050 ; MonsterTable $050: SabreMan
 
-EncounterGrid_6052::
-    dw EncounterGroup_605A ; id 0
-    dw EncounterGroup_605A ; id 1
-    dw EncounterGroup_605A ; id 2
-    dw EncounterGroup_605A ; id 3
+EncounterGrid_25::
+    dw EncounterGroup_Grid25_0 ; id 0
+    dw EncounterGroup_Grid25_0 ; id 1
+    dw EncounterGroup_Grid25_0 ; id 2
+    dw EncounterGroup_Grid25_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_605A::
+EncounterGroup_Grid25_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $16, $04, $08, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $004e ; MonsterTable $04E: IronTurt
@@ -4971,16 +4975,16 @@ EncounterGroup_605A::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_606B::
-    dw EncounterGroup_6073 ; id 0
-    dw EncounterGroup_6073 ; id 1
-    dw EncounterGroup_6073 ; id 2
-    dw EncounterGroup_6073 ; id 3
+EncounterGrid_26::
+    dw EncounterGroup_Grid26_0 ; id 0
+    dw EncounterGroup_Grid26_0 ; id 1
+    dw EncounterGroup_Grid26_0 ; id 2
+    dw EncounterGroup_Grid26_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_6073::
+EncounterGroup_Grid26_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $16, $04, $08, $0c, $11, $16 ; limit for the random 0-127, then rising slot thresholds
     dw $004e ; MonsterTable $04E: IronTurt
@@ -4993,11 +4997,11 @@ EncounterGroup_6073::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 1 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (1 per row): its encounter group
-EncounterGrid_6084::
-    dw EncounterGroup_6086 ; id 0
+EncounterGrid_27::
+    dw EncounterGroup_Grid27_0 ; id 0
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_6086::
+EncounterGroup_Grid27_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $01a1 ; MonsterTable $1A1: EvilSeed
@@ -5010,21 +5014,21 @@ EncounterGroup_6086::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_6097::
-    dw EncounterGroup_60A9 ; id 0
-    dw EncounterGroup_60A9 ; id 1
-    dw EncounterGroup_60A9 ; id 2
-    dw EncounterGroup_60A9 ; id 3
-    dw EncounterGroup_60A9 ; id 4
-    dw EncounterGroup_60A9 ; id 5
-    dw EncounterGroup_60A9 ; id 6
-    dw EncounterGroup_60A9 ; id 7
-    dw EncounterGroup_60A9 ; id 8
+EncounterGrid_28::
+    dw EncounterGroup_Grid28_0 ; id 0
+    dw EncounterGroup_Grid28_0 ; id 1
+    dw EncounterGroup_Grid28_0 ; id 2
+    dw EncounterGroup_Grid28_0 ; id 3
+    dw EncounterGroup_Grid28_0 ; id 4
+    dw EncounterGroup_Grid28_0 ; id 5
+    dw EncounterGroup_Grid28_0 ; id 6
+    dw EncounterGroup_Grid28_0 ; id 7
+    dw EncounterGroup_Grid28_0 ; id 8
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_60A9::
+EncounterGroup_Grid28_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $01a1 ; MonsterTable $1A1: EvilSeed
@@ -5033,18 +5037,18 @@ EncounterGroup_60A9::
     dw $01a4 ; MonsterTable $1A4: FooHero
     dw $01a5 ; MonsterTable $1A5: BoxSlime
 
-EncounterGrid_60BA::
-    dw EncounterGroup_60CC ; id 0
-    dw EncounterGroup_60CC ; id 1
-    dw EncounterGroup_60CC ; id 2
-    dw EncounterGroup_60CC ; id 3
-    dw EncounterGroup_60CC ; id 4
-    dw EncounterGroup_60CC ; id 5
-    dw EncounterGroup_60CC ; id 6
-    dw EncounterGroup_60CC ; id 7
-    dw EncounterGroup_60CC ; id 8
+EncounterGrid_29::
+    dw EncounterGroup_Grid29_0 ; id 0
+    dw EncounterGroup_Grid29_0 ; id 1
+    dw EncounterGroup_Grid29_0 ; id 2
+    dw EncounterGroup_Grid29_0 ; id 3
+    dw EncounterGroup_Grid29_0 ; id 4
+    dw EncounterGroup_Grid29_0 ; id 5
+    dw EncounterGroup_Grid29_0 ; id 6
+    dw EncounterGroup_Grid29_0 ; id 7
+    dw EncounterGroup_Grid29_0 ; id 8
 
-EncounterGroup_60CC::
+EncounterGroup_Grid29_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $14, $04, $08, $0c, $10, $14 ; limit for the random 0-127, then rising slot thresholds
     dw $01a1 ; MonsterTable $1A1: EvilSeed
@@ -5057,41 +5061,41 @@ EncounterGroup_60CC::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_60DD::
-    dw EncounterGroup_60E5 ; id 0
-    dw EncounterGroup_60E5 ; id 1
-    dw EncounterGroup_60E5 ; id 2
-    dw EncounterGroup_60E5 ; id 3
+EncounterGrid_30::
+    dw EncounterGroup_Grid30_0 ; id 0
+    dw EncounterGroup_Grid30_0 ; id 1
+    dw EncounterGroup_Grid30_0 ; id 2
+    dw EncounterGroup_Grid30_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_60E5::
+EncounterGroup_Grid30_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $05, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005f ; MonsterTable $05F: Exaucers
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
 
-EncounterGrid_60F2::
-    dw EncounterGroup_60FA ; id 0
-    dw EncounterGroup_60FA ; id 1
-    dw EncounterGroup_60FA ; id 2
-    dw EncounterGroup_60FA ; id 3
+EncounterGrid_31::
+    dw EncounterGroup_Grid31_0 ; id 0
+    dw EncounterGroup_Grid31_0 ; id 1
+    dw EncounterGroup_Grid31_0 ; id 2
+    dw EncounterGroup_Grid31_0 ; id 3
 
-EncounterGroup_60FA::
+EncounterGroup_Grid31_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $05, $09, $0e, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005f ; MonsterTable $05F: Exaucers
     dw $0068 ; MonsterTable $068: CoilBird
     dw $0069 ; MonsterTable $069: ArmorPede
 
-EncounterGrid_6107::
-    dw EncounterGroup_610F ; id 0
-    dw EncounterGroup_610F ; id 1
-    dw EncounterGroup_610F ; id 2
-    dw EncounterGroup_610F ; id 3
+EncounterGrid_32::
+    dw EncounterGroup_Grid32_0 ; id 0
+    dw EncounterGroup_Grid32_0 ; id 1
+    dw EncounterGroup_Grid32_0 ; id 2
+    dw EncounterGroup_Grid32_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)
-EncounterGroup_610F::
+EncounterGroup_Grid32_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $17, $04, $09, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $005f ; MonsterTable $05F: Exaucers
@@ -5100,16 +5104,16 @@ EncounterGroup_610F::
     dw $0069 ; MonsterTable $069: ArmorPede
     dw $006a ; MonsterTable $06A: MadHornet
 
-EncounterGrid_6120::
-    dw EncounterGroup_6128 ; id 0
-    dw EncounterGroup_6128 ; id 1
-    dw EncounterGroup_6128 ; id 2
-    dw EncounterGroup_6128 ; id 3
+EncounterGrid_33::
+    dw EncounterGroup_Grid33_0 ; id 0
+    dw EncounterGroup_Grid33_0 ; id 1
+    dw EncounterGroup_Grid33_0 ; id 2
+    dw EncounterGroup_Grid33_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_6128::
+EncounterGroup_Grid33_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $17, $04, $09, $0d, $12, $17 ; limit for the random 0-127, then rising slot thresholds
     dw $005f ; MonsterTable $05F: Exaucers
@@ -5122,22 +5126,22 @@ EncounterGroup_6128::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_6139::
-    dw EncounterGroup_6151 ; id 0
-    dw EncounterGroup_6151 ; id 1
-    dw EncounterGroup_6151 ; id 2
-    dw EncounterGroup_6151 ; id 3
-    dw EncounterGroup_6151 ; id 4
-    dw EncounterGroup_6151 ; id 5
-    dw EncounterGroup_6151 ; id 6
-    dw EncounterGroup_6151 ; id 7
-    dw EncounterGroup_6151 ; id 8
-    dw EncounterGroup_6151 ; id 9
-    dw EncounterGroup_6151 ; id 10
-    dw EncounterGroup_6151 ; id 11
+EncounterGrid_34::
+    dw EncounterGroup_Grid34_0 ; id 0
+    dw EncounterGroup_Grid34_0 ; id 1
+    dw EncounterGroup_Grid34_0 ; id 2
+    dw EncounterGroup_Grid34_0 ; id 3
+    dw EncounterGroup_Grid34_0 ; id 4
+    dw EncounterGroup_Grid34_0 ; id 5
+    dw EncounterGroup_Grid34_0 ; id 6
+    dw EncounterGroup_Grid34_0 ; id 7
+    dw EncounterGroup_Grid34_0 ; id 8
+    dw EncounterGroup_Grid34_0 ; id 9
+    dw EncounterGroup_Grid34_0 ; id 10
+    dw EncounterGroup_Grid34_0 ; id 11
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_6151::
+EncounterGroup_Grid34_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0059 ; MonsterTable $059: GhosTree
@@ -5148,21 +5152,21 @@ EncounterGroup_6151::
 ; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 9 words, up to its first group (E-0202, C1)
-EncounterGrid_6160::
-    dw EncounterGroup_6172 ; id 0
-    dw EncounterGroup_6172 ; id 1
-    dw EncounterGroup_6172 ; id 2
-    dw EncounterGroup_6172 ; id 3
-    dw EncounterGroup_6172 ; id 4
-    dw EncounterGroup_6172 ; id 5
-    dw EncounterGroup_6172 ; id 6
-    dw EncounterGroup_6172 ; id 7
-    dw EncounterGroup_6172 ; id 8
+EncounterGrid_35::
+    dw EncounterGroup_Grid35_0 ; id 0
+    dw EncounterGroup_Grid35_0 ; id 1
+    dw EncounterGroup_Grid35_0 ; id 2
+    dw EncounterGroup_Grid35_0 ; id 3
+    dw EncounterGroup_Grid35_0 ; id 4
+    dw EncounterGroup_Grid35_0 ; id 5
+    dw EncounterGroup_Grid35_0 ; id 6
+    dw EncounterGroup_Grid35_0 ; id 7
+    dw EncounterGroup_Grid35_0 ; id 8
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_6172::
+EncounterGroup_Grid35_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $11, $04, $09, $0e, $11, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005a ; MonsterTable $05A: Babble
@@ -5170,18 +5174,18 @@ EncounterGroup_6172::
     dw $0061 ; MonsterTable $061: GateGuard
     dw $0063 ; MonsterTable $063: Copycat
 
-EncounterGrid_6181::
-    dw EncounterGroup_6193 ; id 0
-    dw EncounterGroup_6193 ; id 1
-    dw EncounterGroup_6193 ; id 2
-    dw EncounterGroup_6193 ; id 3
-    dw EncounterGroup_6193 ; id 4
-    dw EncounterGroup_6193 ; id 5
-    dw EncounterGroup_6193 ; id 6
-    dw EncounterGroup_6193 ; id 7
-    dw EncounterGroup_6193 ; id 8
+EncounterGrid_36::
+    dw EncounterGroup_Grid36_0 ; id 0
+    dw EncounterGroup_Grid36_0 ; id 1
+    dw EncounterGroup_Grid36_0 ; id 2
+    dw EncounterGroup_Grid36_0 ; id 3
+    dw EncounterGroup_Grid36_0 ; id 4
+    dw EncounterGroup_Grid36_0 ; id 5
+    dw EncounterGroup_Grid36_0 ; id 6
+    dw EncounterGroup_Grid36_0 ; id 7
+    dw EncounterGroup_Grid36_0 ; id 8
 
-EncounterGroup_6193::
+EncounterGroup_Grid36_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $12, $05, $09, $0e, $12, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0057 ; MonsterTable $057: Belzebub
@@ -5193,16 +5197,16 @@ EncounterGroup_6193::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 6 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_61A2::
-    dw EncounterGroup_61AE ; id 0
-    dw EncounterGroup_61AE ; id 1
-    dw EncounterGroup_61AE ; id 2
-    dw EncounterGroup_61AE ; id 3
-    dw EncounterGroup_61AE ; id 4
-    dw EncounterGroup_61AE ; id 5
+EncounterGrid_37::
+    dw EncounterGroup_Grid37_0 ; id 0
+    dw EncounterGroup_Grid37_0 ; id 1
+    dw EncounterGroup_Grid37_0 ; id 2
+    dw EncounterGroup_Grid37_0 ; id 3
+    dw EncounterGroup_Grid37_0 ; id 4
+    dw EncounterGroup_Grid37_0 ; id 5
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_61AE::
+EncounterGroup_Grid37_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $11, $04, $09, $0e, $11, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $005a ; MonsterTable $05A: Babble
@@ -5214,28 +5218,28 @@ EncounterGroup_61AE::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 16 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (4 per row): its encounter group
-EncounterGrid_61BD::
-    dw EncounterGroup_61EC ; id 0
-    dw EncounterGroup_61EC ; id 1
-    dw EncounterGroup_61DD ; id 2
-    dw EncounterGroup_61DD ; id 3
-    dw EncounterGroup_61EC ; id 4
-    dw EncounterGroup_61EC ; id 5
-    dw EncounterGroup_61EC ; id 6
-    dw EncounterGroup_61DD ; id 7
-    dw EncounterGroup_61EC ; id 8
-    dw EncounterGroup_61EC ; id 9
-    dw EncounterGroup_61EC ; id 10
-    dw EncounterGroup_61DD ; id 11
-    dw EncounterGroup_61DD ; id 12
-    dw EncounterGroup_61DD ; id 13
-    dw EncounterGroup_61DD ; id 14
-    dw EncounterGroup_61DD ; id 15
+EncounterGrid_38::
+    dw EncounterGroup_Grid38_0 ; id 0
+    dw EncounterGroup_Grid38_0 ; id 1
+    dw EncounterGroup_Grid38_2 ; id 2
+    dw EncounterGroup_Grid38_2 ; id 3
+    dw EncounterGroup_Grid38_0 ; id 4
+    dw EncounterGroup_Grid38_0 ; id 5
+    dw EncounterGroup_Grid38_0 ; id 6
+    dw EncounterGroup_Grid38_2 ; id 7
+    dw EncounterGroup_Grid38_0 ; id 8
+    dw EncounterGroup_Grid38_0 ; id 9
+    dw EncounterGroup_Grid38_0 ; id 10
+    dw EncounterGroup_Grid38_2 ; id 11
+    dw EncounterGroup_Grid38_2 ; id 12
+    dw EncounterGroup_Grid38_2 ; id 13
+    dw EncounterGroup_Grid38_2 ; id 14
+    dw EncounterGroup_Grid38_2 ; id 15
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_61DD::
+EncounterGroup_Grid38_2::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $04, $07, $0b, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
@@ -5243,7 +5247,7 @@ EncounterGroup_61DD::
     dw $0072 ; MonsterTable $072: MistyWing
     dw $01ae ; MonsterTable $1AE: GreatDrak
 
-EncounterGroup_61EC::
+EncounterGroup_Grid38_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0e, $04, $07, $0b, $0e, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
@@ -5255,22 +5259,22 @@ EncounterGroup_61EC::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_61FB::
-    dw EncounterGroup_6213 ; id 0
-    dw EncounterGroup_6213 ; id 1
-    dw EncounterGroup_6213 ; id 2
-    dw EncounterGroup_6213 ; id 3
-    dw EncounterGroup_6213 ; id 4
-    dw EncounterGroup_6213 ; id 5
-    dw EncounterGroup_6213 ; id 6
-    dw EncounterGroup_6213 ; id 7
-    dw EncounterGroup_6213 ; id 8
-    dw EncounterGroup_6213 ; id 9
-    dw EncounterGroup_6213 ; id 10
-    dw EncounterGroup_6213 ; id 11
+EncounterGrid_39::
+    dw EncounterGroup_Grid39_0 ; id 0
+    dw EncounterGroup_Grid39_0 ; id 1
+    dw EncounterGroup_Grid39_0 ; id 2
+    dw EncounterGroup_Grid39_0 ; id 3
+    dw EncounterGroup_Grid39_0 ; id 4
+    dw EncounterGroup_Grid39_0 ; id 5
+    dw EncounterGroup_Grid39_0 ; id 6
+    dw EncounterGroup_Grid39_0 ; id 7
+    dw EncounterGroup_Grid39_0 ; id 8
+    dw EncounterGroup_Grid39_0 ; id 9
+    dw EncounterGroup_Grid39_0 ; id 10
+    dw EncounterGroup_Grid39_0 ; id 11
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_6213::
+EncounterGroup_Grid39_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $04, $08, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0070 ; MonsterTable $070: BossTroll
@@ -5281,48 +5285,48 @@ EncounterGroup_6213::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 36 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (6 per row): its encounter group
-EncounterGrid_6220::
-    dw EncounterGroup_6268 ; id 0
-    dw EncounterGroup_6268 ; id 1
-    dw EncounterGroup_6275 ; id 2
-    dw EncounterGroup_6275 ; id 3
-    dw EncounterGroup_6275 ; id 4
-    dw EncounterGroup_6268 ; id 5
-    dw EncounterGroup_6268 ; id 6
-    dw EncounterGroup_6268 ; id 7
-    dw EncounterGroup_6275 ; id 8
-    dw EncounterGroup_6275 ; id 9
-    dw EncounterGroup_6284 ; id 10
-    dw EncounterGroup_6284 ; id 11
-    dw EncounterGroup_6275 ; id 12
-    dw EncounterGroup_6268 ; id 13
-    dw EncounterGroup_6275 ; id 14
-    dw EncounterGroup_6284 ; id 15
-    dw EncounterGroup_6284 ; id 16
-    dw EncounterGroup_6293 ; id 17
-    dw EncounterGroup_6275 ; id 18
-    dw EncounterGroup_6275 ; id 19
-    dw EncounterGroup_6268 ; id 20
-    dw EncounterGroup_6268 ; id 21
-    dw EncounterGroup_6284 ; id 22
-    dw EncounterGroup_6284 ; id 23
-    dw EncounterGroup_6275 ; id 24
-    dw EncounterGroup_6275 ; id 25
-    dw EncounterGroup_6268 ; id 26
-    dw EncounterGroup_6268 ; id 27
-    dw EncounterGroup_6275 ; id 28
-    dw EncounterGroup_6284 ; id 29
-    dw EncounterGroup_6268 ; id 30
-    dw EncounterGroup_6268 ; id 31
-    dw EncounterGroup_6268 ; id 32
-    dw EncounterGroup_6268 ; id 33
-    dw EncounterGroup_62A0 ; id 34
-    dw EncounterGroup_62A0 ; id 35
+EncounterGrid_40::
+    dw EncounterGroup_Grid40_0 ; id 0
+    dw EncounterGroup_Grid40_0 ; id 1
+    dw EncounterGroup_Grid40_2 ; id 2
+    dw EncounterGroup_Grid40_2 ; id 3
+    dw EncounterGroup_Grid40_2 ; id 4
+    dw EncounterGroup_Grid40_0 ; id 5
+    dw EncounterGroup_Grid40_0 ; id 6
+    dw EncounterGroup_Grid40_0 ; id 7
+    dw EncounterGroup_Grid40_2 ; id 8
+    dw EncounterGroup_Grid40_2 ; id 9
+    dw EncounterGroup_Grid40_10 ; id 10
+    dw EncounterGroup_Grid40_10 ; id 11
+    dw EncounterGroup_Grid40_2 ; id 12
+    dw EncounterGroup_Grid40_0 ; id 13
+    dw EncounterGroup_Grid40_2 ; id 14
+    dw EncounterGroup_Grid40_10 ; id 15
+    dw EncounterGroup_Grid40_10 ; id 16
+    dw EncounterGroup_Grid40_17 ; id 17
+    dw EncounterGroup_Grid40_2 ; id 18
+    dw EncounterGroup_Grid40_2 ; id 19
+    dw EncounterGroup_Grid40_0 ; id 20
+    dw EncounterGroup_Grid40_0 ; id 21
+    dw EncounterGroup_Grid40_10 ; id 22
+    dw EncounterGroup_Grid40_10 ; id 23
+    dw EncounterGroup_Grid40_2 ; id 24
+    dw EncounterGroup_Grid40_2 ; id 25
+    dw EncounterGroup_Grid40_0 ; id 26
+    dw EncounterGroup_Grid40_0 ; id 27
+    dw EncounterGroup_Grid40_2 ; id 28
+    dw EncounterGroup_Grid40_10 ; id 29
+    dw EncounterGroup_Grid40_0 ; id 30
+    dw EncounterGroup_Grid40_0 ; id 31
+    dw EncounterGroup_Grid40_0 ; id 32
+    dw EncounterGroup_Grid40_0 ; id 33
+    dw EncounterGroup_Grid40_34 ; id 34
+    dw EncounterGroup_Grid40_34 ; id 35
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_6268::
+EncounterGroup_Grid40_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01d7 ; MonsterTable $1D7: Slabbit
@@ -5330,7 +5334,7 @@ EncounterGroup_6268::
     dw $01db ; MonsterTable $1DB: MadPlant
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_6275::
+EncounterGroup_Grid40_2::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $05, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01d7 ; MonsterTable $1D7: Slabbit
@@ -5338,7 +5342,7 @@ EncounterGroup_6275::
     dw $01d9 ; MonsterTable $1D9: FairyRat
     dw $01db ; MonsterTable $1DB: MadPlant
 
-EncounterGroup_6284::
+EncounterGroup_Grid40_10::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $05, $07, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01d8 ; MonsterTable $1D8: MultiEyes
@@ -5347,7 +5351,7 @@ EncounterGroup_6284::
     dw $01de ; MonsterTable $1DE: GoHopper
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_6293::
+EncounterGroup_Grid40_17::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01db ; MonsterTable $1DB: MadPlant
@@ -5355,7 +5359,7 @@ EncounterGroup_6293::
     dw $01dd ; MonsterTable $1DD: Grendal
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_62A0::
+EncounterGroup_Grid40_34::
     db $02 ; entry 0: wEncounterKind + 1
     db $0a, $04, $0a, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01d8 ; MonsterTable $1D8: MultiEyes
@@ -5365,25 +5369,25 @@ EncounterGroup_62A0::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 12 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (3 per row): its encounter group
-EncounterGrid_62AB::
-    dw EncounterGroup_62C3 ; id 0
-    dw EncounterGroup_62C3 ; id 1
-    dw EncounterGroup_62C3 ; id 2
-    dw EncounterGroup_62C3 ; id 3
-    dw EncounterGroup_62C3 ; id 4
-    dw EncounterGroup_62C3 ; id 5
-    dw EncounterGroup_62C3 ; id 6
-    dw EncounterGroup_62C3 ; id 7
-    dw EncounterGroup_62C3 ; id 8
-    dw EncounterGroup_62C3 ; id 9
-    dw EncounterGroup_62C3 ; id 10
-    dw EncounterGroup_62C3 ; id 11
+EncounterGrid_41::
+    dw EncounterGroup_Grid41_0 ; id 0
+    dw EncounterGroup_Grid41_0 ; id 1
+    dw EncounterGroup_Grid41_0 ; id 2
+    dw EncounterGroup_Grid41_0 ; id 3
+    dw EncounterGroup_Grid41_0 ; id 4
+    dw EncounterGroup_Grid41_0 ; id 5
+    dw EncounterGroup_Grid41_0 ; id 6
+    dw EncounterGroup_Grid41_0 ; id 7
+    dw EncounterGroup_Grid41_0 ; id 8
+    dw EncounterGroup_Grid41_0 ; id 9
+    dw EncounterGroup_Grid41_0 ; id 10
+    dw EncounterGroup_Grid41_0 ; id 11
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_62C3::
+EncounterGroup_Grid41_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $05, $07, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01dc ; MonsterTable $1DC: Snapper
@@ -5394,16 +5398,16 @@ EncounterGroup_62C3::
 ; RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWD09F_Sub01 pass it in DE with A = 3
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 6 words, up to its first group (E-0202, C1)
-EncounterGrid_62D2::
-    dw EncounterGroup_62DE ; id 0
-    dw EncounterGroup_62DE ; id 1
-    dw EncounterGroup_62DE ; id 2
-    dw EncounterGroup_62DE ; id 3
-    dw EncounterGroup_62DE ; id 4
-    dw EncounterGroup_62DE ; id 5
+EncounterGrid_42::
+    dw EncounterGroup_Grid42_0 ; id 0
+    dw EncounterGroup_Grid42_0 ; id 1
+    dw EncounterGroup_Grid42_0 ; id 2
+    dw EncounterGroup_Grid42_0 ; id 3
+    dw EncounterGroup_Grid42_0 ; id 4
+    dw EncounterGroup_Grid42_0 ; id 5
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_62DE::
+EncounterGroup_Grid42_0::
     db $02 ; entry 0: wEncounterKind + 1
     db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01e3 ; MonsterTable $1E3: Grizzly
@@ -5414,16 +5418,16 @@ EncounterGroup_62DE::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_62EB::
-    dw EncounterGroup_62F3 ; id 0
-    dw EncounterGroup_62F3 ; id 1
-    dw EncounterGroup_62F3 ; id 2
-    dw EncounterGroup_62F3 ; id 3
+EncounterGrid_43::
+    dw EncounterGroup_Grid43_0 ; id 0
+    dw EncounterGroup_Grid43_0 ; id 1
+    dw EncounterGroup_Grid43_0 ; id 2
+    dw EncounterGroup_Grid43_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_62F3::
+EncounterGroup_Grid43_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $06, $08, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01e6 ; MonsterTable $1E6: MadCandle
@@ -5434,35 +5438,35 @@ EncounterGroup_62F3::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 25 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (5 per row): its encounter group
-EncounterGrid_6300::
-    dw EncounterGroup_633F ; id 0
-    dw EncounterGroup_633F ; id 1
-    dw EncounterGroup_633F ; id 2
-    dw EncounterGroup_633F ; id 3
-    dw EncounterGroup_633F ; id 4
-    dw EncounterGroup_6332 ; id 5
-    dw EncounterGroup_6332 ; id 6
-    dw EncounterGroup_633F ; id 7
-    dw EncounterGroup_633F ; id 8
-    dw EncounterGroup_633F ; id 9
-    dw EncounterGroup_634E ; id 10
-    dw EncounterGroup_634E ; id 11
-    dw EncounterGroup_634E ; id 12
-    dw EncounterGroup_634E ; id 13
-    dw EncounterGroup_635D ; id 14
-    dw EncounterGroup_635D ; id 15
-    dw EncounterGroup_635D ; id 16
-    dw EncounterGroup_635D ; id 17
-    dw EncounterGroup_635D ; id 18
-    dw EncounterGroup_635D ; id 19
-    dw EncounterGroup_636A ; id 20
-    dw EncounterGroup_636A ; id 21
-    dw EncounterGroup_635D ; id 22
-    dw EncounterGroup_635D ; id 23
-    dw EncounterGroup_635D ; id 24
+EncounterGrid_44::
+    dw EncounterGroup_Grid44_0 ; id 0
+    dw EncounterGroup_Grid44_0 ; id 1
+    dw EncounterGroup_Grid44_0 ; id 2
+    dw EncounterGroup_Grid44_0 ; id 3
+    dw EncounterGroup_Grid44_0 ; id 4
+    dw EncounterGroup_Grid44_5 ; id 5
+    dw EncounterGroup_Grid44_5 ; id 6
+    dw EncounterGroup_Grid44_0 ; id 7
+    dw EncounterGroup_Grid44_0 ; id 8
+    dw EncounterGroup_Grid44_0 ; id 9
+    dw EncounterGroup_Grid44_10 ; id 10
+    dw EncounterGroup_Grid44_10 ; id 11
+    dw EncounterGroup_Grid44_10 ; id 12
+    dw EncounterGroup_Grid44_10 ; id 13
+    dw EncounterGroup_Grid44_14 ; id 14
+    dw EncounterGroup_Grid44_14 ; id 15
+    dw EncounterGroup_Grid44_14 ; id 16
+    dw EncounterGroup_Grid44_14 ; id 17
+    dw EncounterGroup_Grid44_14 ; id 18
+    dw EncounterGroup_Grid44_14 ; id 19
+    dw EncounterGroup_Grid44_20 ; id 20
+    dw EncounterGroup_Grid44_20 ; id 21
+    dw EncounterGroup_Grid44_14 ; id 22
+    dw EncounterGroup_Grid44_14 ; id 23
+    dw EncounterGroup_Grid44_14 ; id 24
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_6332::
+EncounterGroup_Grid44_5::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01ef ; MonsterTable $1EF: Ogre
@@ -5470,7 +5474,7 @@ EncounterGroup_6332::
     dw $01f7 ; MonsterTable $1F7: Butterfly
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_633F::
+EncounterGroup_Grid44_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $06, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01ef ; MonsterTable $1EF: Ogre
@@ -5481,7 +5485,7 @@ EncounterGroup_633F::
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_634E::
+EncounterGroup_Grid44_10::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $06, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01ed ; MonsterTable $1ED: CatMage
@@ -5489,7 +5493,7 @@ EncounterGroup_634E::
     dw $01ef ; MonsterTable $1EF: Ogre
     dw $01f7 ; MonsterTable $1F7: Butterfly
 
-EncounterGroup_635D::
+EncounterGroup_Grid44_14::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01ed ; MonsterTable $1ED: CatMage
@@ -5497,7 +5501,7 @@ EncounterGroup_635D::
     dw $01f7 ; MonsterTable $1F7: Butterfly
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)
-EncounterGroup_636A::
+EncounterGroup_Grid44_20::
     db $02 ; entry 0: wEncounterKind + 1
     db $0a, $06, $0a, $00, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01f1 ; MonsterTable $1F1: Anemon
@@ -5508,7 +5512,7 @@ EncounterGroup_636A::
 ; threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero
 ; threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_6375::
+EncounterGroup_Direct5::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $04, $06, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $0216 ; MonsterTable $216: Scallopa
@@ -5519,14 +5523,14 @@ EncounterGroup_6375::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 1 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (1 per row): its encounter group
-EncounterGrid_6382::
-    dw EncounterGroup_6384 ; id 0
+EncounterGrid_45::
+    dw EncounterGroup_Grid45_0 ; id 0
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)
-EncounterGroup_6384::
+EncounterGroup_Grid45_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $02, $04, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01f0 ; MonsterTable $1F0: CurseLamp
@@ -5538,13 +5542,13 @@ EncounterGroup_6384::
 ; to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) +
 ; (hMapScreenX & $0F)); 4 words, up to its first group (E-0202, C1)
 ; record: one screen, row by row (2 per row): its encounter group
-EncounterGrid_6393::
-    dw EncounterGroup_639B ; id 0
-    dw EncounterGroup_639B ; id 1
-    dw EncounterGroup_639B ; id 2
-    dw EncounterGroup_639B ; id 3
+EncounterGrid_46::
+    dw EncounterGroup_Grid46_0 ; id 0
+    dw EncounterGroup_Grid46_0 ; id 1
+    dw EncounterGroup_Grid46_0 ; id 2
+    dw EncounterGroup_Grid46_0 ; id 3
 
-EncounterGroup_639B::
+EncounterGroup_Grid46_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $05, $08, $0a, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01f0 ; MonsterTable $1F0: CurseLamp
@@ -5552,30 +5556,30 @@ EncounterGroup_639B::
     dw $01f6 ; MonsterTable $1F6: Skulpent
     dw $01f7 ; MonsterTable $1F7: Butterfly
 
-EncounterGrid_63AA::
-    dw EncounterGroup_63B2 ; id 0
-    dw EncounterGroup_63B2 ; id 1
-    dw EncounterGroup_63B2 ; id 2
-    dw EncounterGroup_63B2 ; id 3
+EncounterGrid_47::
+    dw EncounterGroup_Grid47_0 ; id 0
+    dw EncounterGroup_Grid47_0 ; id 1
+    dw EncounterGroup_Grid47_0 ; id 2
+    dw EncounterGroup_Grid47_0 ; id 3
 
 ; record: wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)
-EncounterGroup_63B2::
+EncounterGroup_Grid47_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $04, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01f0 ; MonsterTable $1F0: CurseLamp
     dw $01f5 ; MonsterTable $1F5: Skullgon
     dw $01f6 ; MonsterTable $1F6: Skulpent
 
-EncounterGrid_63BF::
-    dw EncounterGroup_63C7 ; id 0
-    dw EncounterGroup_63C7 ; id 1
-    dw EncounterGroup_63C7 ; id 2
-    dw EncounterGroup_63C7 ; id 3
+EncounterGrid_48::
+    dw EncounterGroup_Grid48_0 ; id 0
+    dw EncounterGroup_Grid48_0 ; id 1
+    dw EncounterGroup_Grid48_0 ; id 2
+    dw EncounterGroup_Grid48_0 ; id 3
 
 ; named by an encounter grid; RunBattleIntroKindCase_Case00_Sub01 draws three times a random 0-127
 ; below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in
 ; wEncounterMonsters; the record has one word per non-zero threshold (E-0202, C1)
-EncounterGroup_63C7::
+EncounterGroup_Grid48_0::
     db $03 ; entry 0: wEncounterKind + 1
     db $0a, $03, $07, $0a, $00, $00 ; limit for the random 0-127, then rising slot thresholds
     dw $01ef ; MonsterTable $1EF: Ogre
@@ -5583,17 +5587,17 @@ EncounterGroup_63C7::
     dw $01f6 ; MonsterTable $1F6: Skulpent
     ds $48d, $00
 
-PointerRun_0A_438D_Entry06::
+PointerRun_Entry06::
     ds $a10, $00
 
-PointerRun_0A_438D_Entry07::
+PointerRun_Entry07::
     ds $707, $00
 
-PointerRun_0A_438D_Entry08::
+PointerRun_Entry08::
     ds $404, $00
 
-PointerRun_0A_438D_Entry09::
+PointerRun_Entry09::
     ds $202, $00
 
-PointerRun_0A_438D_Entry0A::
+PointerRun_Entry0A::
     ds $82, $00

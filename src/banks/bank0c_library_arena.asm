@@ -23,7 +23,7 @@ LibraryMenu::
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_GridIndexFromGridCursorXGridCursorY
     dw LibraryMenu_WriteScreenState
-    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY
+    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2
     dw LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits
     dw LibraryMenu_StoreBAtWordTableEntry_Bank0C
     dw LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile
@@ -57,9 +57,9 @@ LibraryMenu_WriteScrollYAndScrollXEtc::
     ldh [hScrollY], a
     ldh [hScrollX], a
     ldh a, [hSpriteWindowClipMode]
-    ld [wScreenByte99], a
+    ld [wLibraryScrollY], a
     ldh a, [hSpriteHideTile]
-    ld [wScreenByte9A], a
+    ld [wLibraryScrollX], a
     ld a, $90
     ldh [hSpriteHideTile], a
     ld a, $01
@@ -96,7 +96,7 @@ LibraryMenu_ToClearStringWindowAt2020AndStep::
     ret
 
 LibraryMenu_CopyRectTo20ByteRows_Bank0C::
-    ld de, TileRect_0C_56D9
+    ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -290,15 +290,15 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     bit 5, a
     jr nz, .check_grid_cursor_y2
     bit 6, a
-    jr nz, .call_library_menu_case05_read_grid_cursor_x2
+    jr nz, .call_library_menu_read_grid_cursor_x_2
     bit 7, a
-    jr nz, .call_library_menu_case05_read_grid_cursor_x3
+    jr nz, .call_library_menu_read_grid_cursor_x_22
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .read_grid_cursor_y
     bit 1, a
     jp nz, .check_screen_state
-    call LibraryMenu_Case05_WriteGlyphListStart
+    call LibraryMenu_WriteGlyphListStart
     ret
 
 .check_grid_cursor_y:
@@ -314,15 +314,15 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 .set_grid_cursor_y2:
     ld [wGridCursorY], a
     cp $01
-    jr c, .call_library_menu_case05_read_grid_cursor_x
+    jr c, .call_library_menu_read_grid_cursor_x
     ld a, [wGridCursorX]
     cp $05
-    jr c, .call_library_menu_case05_read_grid_cursor_x
+    jr c, .call_library_menu_read_grid_cursor_x
     dec a
     ld [wGridCursorX], a
 
-.call_library_menu_case05_read_grid_cursor_x:
-    call LibraryMenu_Case05_ReadGridCursorX
+.call_library_menu_read_grid_cursor_x:
+    call LibraryMenu_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -341,8 +341,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     dec a
     jr .set_grid_cursor_y2
 
-.call_library_menu_case05_read_grid_cursor_x2:
-    call LibraryMenu_Case05_ReadGridCursorX_Sub03
+.call_library_menu_read_grid_cursor_x_2:
+    call LibraryMenu_ReadGridCursorX_2
     ld a, [wGridCursorY]
     ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
     add e
@@ -364,13 +364,13 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call LibraryMenu_Case05_ReadGridCursorX
+    call LibraryMenu_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_library_menu_case05_read_grid_cursor_x3:
-    call LibraryMenu_Case05_ReadGridCursorX_Sub03
+.call_library_menu_read_grid_cursor_x_22:
+    call LibraryMenu_ReadGridCursorX_2
     ld a, [wGridCursorY]
     ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
     add e
@@ -405,7 +405,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld a, [hl]
     and a
     jr nz, .call_queue_sound_effect
-    call LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C
+    call LibraryMenu_BGMapAddressAtScroll_Bank0C_2
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a
@@ -417,7 +417,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C
+    call LibraryMenu_BGMapAddressAtScroll_Bank0C_2
     ld a, [wGridCursorX]
     ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
     ld b, $bc
@@ -452,35 +452,35 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_Case05_WriteGlyphListStart::
+LibraryMenu_WriteGlyphListStart::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, LibraryMenu_Case05_ReadGridCursorX
+    jr c, LibraryMenu_ReadGridCursorX
     ld a, [wGlyphListStart]
     inc a
     ld [wGlyphListStart], a
     cp $10
-    jr c, LibraryMenu_Case05_ReadGridCursorX
+    jr c, LibraryMenu_ReadGridCursorX
     cp $18
-    jr c, LibraryMenu_Case05_ReadGridCursorX_Sub03
+    jr c, LibraryMenu_ReadGridCursorX_2
     xor a
     ld [wGlyphListStart], a
 
-LibraryMenu_Case05_ReadGridCursorX::
+LibraryMenu_ReadGridCursorX::
     ld b, $bb
-    jr LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
+    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 
-LibraryMenu_Case05_ReadGridCursorX_Sub03::
+LibraryMenu_ReadGridCursorX_2::
     ld b, $c3
-    jr LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
+    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 
-LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_2::
     ld b, $bc
 
-LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
-    ld hl, LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_Data
+    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -496,7 +496,7 @@ LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
     ei
     ret
 
-LibraryMenu_Case05_BGMapAddressAtScroll_Bank0C_Data::
+LibraryMenu_BGMapAddressAtScroll_Bank0C_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $61, $01
 
 LibraryMenu_LoadMapHeader::
@@ -537,9 +537,9 @@ LibraryMenu_CopyBytesDEToHL_Bank0C::
     lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    ld a, [wScreenByte99]
+    ld a, [wLibraryScrollY]
     ldh [hSpriteWindowClipMode], a
-    ld a, [wScreenByte9A]
+    ld a, [wLibraryScrollX]
     ldh [hSpriteHideTile], a
     xor a
     ldh [hFieldDrawFlags], a
@@ -566,9 +566,9 @@ LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ld hl, $2940
     ld de, vTiles1 + $500
     call CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
-    call LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
+    call LibraryMenu_CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -602,7 +602,7 @@ LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_Case08_CopyTileBytesToVRAM_Bank0C::
+LibraryMenu_CopyTileBytesToVRAM_Bank0C::
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
     ld hl, $2940
@@ -621,7 +621,7 @@ LibraryMenu_ToClearStringWindowAt2200AndStep::
     ret
 
 LibraryMenu_GridIndexFromGridCursorXGridCursorY::
-    ld de, TileRect_0C_574E
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -648,35 +648,35 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld hl, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data1
     ld b, $c3
     call StoreBAtWordTableEntry_Bank0C
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_2
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
 LibraryMenu_WriteScreenState::
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_3
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
-LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
+LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .call_grid_index_from_grid_cursor_x_grid
     bit 5, a
     jr nz, .check_grid2_cursor_y2
     bit 6, a
-    jp nz, .call_library_menu_case0_c_read_grid2_cursor_x2
+    jp nz, .call_library_menu_read_grid2_cursor_x_2
     bit 7, a
-    jp nz, .call_library_menu_case0_c_read_grid2_cursor_x3
+    jp nz, .call_library_menu_read_grid2_cursor_x_22
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_grid_index_from_grid_cursor_x_grid2
     bit 1, a
     jp nz, .check_screen_state
-    call LibraryMenu_Case0C_WriteListEntries
+    call LibraryMenu_WriteListEntries
     ret
 
 .call_grid_index_from_grid_cursor_x_grid:
@@ -714,12 +714,12 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     ld b, a
     pop af
     cp b
-    jr c, .call_library_menu_case0_c_read_grid2_cursor_x
+    jr c, .call_library_menu_read_grid2_cursor_x
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
     cp b
-    jr c, .call_library_menu_case0_c_read_grid2_cursor_x
+    jr c, .call_library_menu_read_grid2_cursor_x
     ld a, b
     ld [wGrid2CursorX], a
     ld a, [wScreenState]
@@ -729,8 +729,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     call QueueSoundEffect
     ret
 
-.call_library_menu_case0_c_read_grid2_cursor_x:
-    call LibraryMenu_Case0C_ReadGrid2CursorX
+.call_library_menu_read_grid2_cursor_x:
+    call LibraryMenu_ReadGrid2CursorX
     ld a, [wScreenState]
     sub $03
     ld [wScreenState], a
@@ -757,8 +757,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     dec a
     jr .set_grid2_cursor_y2
 
-.call_library_menu_case0_c_read_grid2_cursor_x2:
-    call LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
+.call_library_menu_read_grid2_cursor_x_2:
+    call LibraryMenu_ReadGrid2CursorX_2
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -772,13 +772,13 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
 
 .set_grid2_cursor_x2:
     ld [wGrid2CursorX], a
-    call LibraryMenu_Case0C_ReadGrid2CursorX
+    call LibraryMenu_ReadGrid2CursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_library_menu_case0_c_read_grid2_cursor_x3:
-    call LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
+.call_library_menu_read_grid2_cursor_x_22:
+    call LibraryMenu_ReadGrid2CursorX_2
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -812,7 +812,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     add_a_to_hl
     call LibraryMenu_TestBitInFieldAtArg3
     and a
-    jr z, .call_library_menu_case0_c_read_grid2_cursor_x4
+    jr z, .call_library_menu_read_grid2_cursor_x2
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -824,8 +824,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     ld [wScriptStartRequest], a
     ret
 
-.call_library_menu_case0_c_read_grid2_cursor_x4:
-    call LibraryMenu_Case0C_ReadGrid2CursorX
+.call_library_menu_read_grid2_cursor_x2:
+    call LibraryMenu_ReadGrid2CursorX
     ret
 
 .check_screen_state:
@@ -843,33 +843,33 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_SetGrid2CursorY::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_Case0C_WriteListEntries::
+LibraryMenu_WriteListEntries::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, LibraryMenu_Case0C_ReadGrid2CursorX
+    jr c, LibraryMenu_ReadGrid2CursorX
     ld a, [wListEntries]
     inc a
     ld [wListEntries], a
     cp $10
-    jr c, LibraryMenu_Case0C_ReadGrid2CursorX
+    jr c, LibraryMenu_ReadGrid2CursorX
     cp $18
-    jr c, LibraryMenu_Case0C_ReadGrid2CursorX_Sub03
+    jr c, LibraryMenu_ReadGrid2CursorX_2
     xor a
     ld [wListEntries], a
 
-LibraryMenu_Case0C_ReadGrid2CursorX::
+LibraryMenu_ReadGrid2CursorX::
     ld b, $bb
-    jr LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_ReadGrid2CursorX
+    jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
 
-LibraryMenu_Case0C_ReadGrid2CursorX_Sub03::
+LibraryMenu_ReadGrid2CursorX_2::
     ld b, $c3
-    jr LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_ReadGrid2CursorX
+    jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
     db $06, $bc
 
-LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_ReadGrid2CursorX::
+LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX::
     ld a, [wGrid2CursorX]
     add a
-    ld hl, LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data
+    ld hl, LibraryMenu_ReadGrid2CursorX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -885,11 +885,11 @@ LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_ReadGrid2CursorX::
     ei
     ret
 
-LibraryMenu_Case0C_ReadGrid2CursorX_Sub03_Data::
+LibraryMenu_ReadGrid2CursorX_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00, $29, $01, $69, $01
 
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
-    ld de, TileRect_0C_57EA
+    ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -953,14 +953,14 @@ LibraryMenu_ShowMonsterEntry::
     dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo
     dw LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params
     dw LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_GridCellAddressFromGridCursorXAndGrid2CursorX
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07
-    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_SetGrid2CursorX
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_4
+    dw LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_5
     dw LibraryMenu_ShowMonsterEntry_DecompressToVRAM
     dw LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C
-    dw LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C
+    dw LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData
     dw LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits
     dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 
@@ -977,7 +977,7 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld hl, Tiles_0C_4718
+    ld hl, LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles
     ld de, vTiles2 + $610
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
@@ -985,22 +985,22 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
     call CopyTileBytesToVRAM_Bank0C
-    ld de, Tiles2Plus250Tiles_1F_41D0
+    ld de, Tiles2Plus250Tiles
     ld hl, vTiles2 + $7c0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus240Tiles_1F_4170
+    ld de, Tiles2Plus240Tiles
     ld hl, vTiles2 + $7d0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus200Tiles_1F_4160
+    ld de, Tiles2Plus200Tiles
     ld hl, vTiles2 + $7e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus7F0Tiles_1F_4110
+    ld de, Tiles2Plus7F0Tiles
     ld hl, vTiles2 + $7f0
     ld b, $1f
     ld c, $10
@@ -1015,7 +1015,7 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
 ; ScriptCommandF6 code loads HL = $4718 and DE = vTiles2 + $610 and calls CopyTileBytesToVRAM_Bank0C
 ; six times, 16 bytes each (E-0237, C1)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_0C_4718::
+LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
     db $ff, $03, $ff, $03, $ff, $03, $ff, $ff, $ff, $ff, $ff, $03, $ff, $03, $ff, $03 ; id 0
     db $ff, $00, $ff, $00, $ff, $00, $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $03 ; id 1
     db $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $03, $ff, $00, $ff, $00, $ff, $00 ; id 2
@@ -1038,15 +1038,15 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, Tiles1Gfx_F1_5C14
+    ld de, Tiles1Gfx_3
     ld hl, vTiles1
     ld b, $f1
     call DecompressToVRAM
-    ld de, WindowTileBufferPlus64Gfx_F1_5D44
+    ld de, WindowTileBufferPlus64Gfx
     ld hl, wWindowTileBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, WindowTileBufferGfx_F1_5D9C
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_WindowTileBufferGfx
     ld hl, wWindowTileBuffer
     ld b, $f1
     call DecompressToVRAM
@@ -1055,61 +1055,61 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     jr z, .skip
     ld a, $02
     ldh [rSVBK], a
-    ld de, WindowAttrBufferPlus64Gfx_F1_5DBC
+    ld de, WindowAttrBufferPlus64Gfx
     ld hl, wWindowAttrBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, WindowAttrBufferGfx_F1_5DEE
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_WindowAttrBufferGfx
     ld hl, wWindowAttrBuffer
     ld b, $f1
     call DecompressToVRAM
     xor a
     ldh [rSVBK], a
-    farcall LoadBGPalettesFrom5E04
+    farcall LoadBGPalettesFromData
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
     call UploadBGPalettes
 
 .skip:
-    ld de, TileRect_0C_48AB
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect
     ld hl, wWindowTileBuffer + $81
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48B5
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_2
     ld hl, wWindowTileBuffer + $bd
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48BF
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_3
     ld hl, wWindowTileBuffer + $e5
     lb bc, $0a, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48C9
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_4
     ld hl, wWindowTileBuffer + $10d
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48D2
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_5
     ld hl, wWindowTileBuffer + $135
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48DB
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_6
     ld hl, wWindowTileBuffer + $15d
     lb bc, $09, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48E4
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_7
     ld hl, wWindowTileBuffer + $15
     lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
-    ld de, TileRect_0C_48F6
+    ld de, LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_8
     ld hl, wWindowTileBuffer + $3d
     lb bc, $12, $01
     call CopyRectTo20ByteRows_Bank0C
-    call LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX
-    ld de, wScreenBlock9C
+    call LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX
+    ld de, wLibraryEntryBlock
     ld hl, wWindowTileBuffer + $108
     lb bc, $02, $01
     call CopyRectTo20ByteRows_Bank0C
     call LibraryMenu_ShowMonsterEntry_LoadClassBlock
-    ld de, wScreenBlock9C
+    ld de, wLibraryEntryBlock
     ld hl, wWindowTileBuffer + $130
     lb bc, $04, $01
     call CopyRectTo20ByteRows_Bank0C
@@ -1151,30 +1151,30 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 10 x 1 tiles, one row per line
-TileRect_0C_48AB::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect::
     db $2f, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e ; id 0
 
-TileRect_0C_48B5::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_2::
     db $42, $30, $31, $32, $33, $34, $35, $36, $37, $38 ; id 0
 
-TileRect_0C_48BF::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_3::
     db $43, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41 ; id 0
 
 ; record: 9 x 1 tiles, one row per line
-TileRect_0C_48C9::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_4::
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c ; id 0
 
-TileRect_0C_48D2::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_5::
     db $4d, $4e, $4f, $50, $51, $52, $53, $54, $55 ; id 0
 
-TileRect_0C_48DB::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_6::
     db $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e ; id 0
 
 ; record: 18 x 1 tiles, one row per line
-TileRect_0C_48E4::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_7::
     db $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af, $b0, $b1, $b2, $b3 ; id 0
 
-TileRect_0C_48F6::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_8::
     db $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5 ; id 0
     db $7e, $7f
 
@@ -1189,7 +1189,7 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, TileRect_1F_651B
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1241,7 +1241,7 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, TileRect_1F_64D3
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect
     ld a, d
     ld [wArg1], a
     ld a, e
@@ -1277,8 +1277,8 @@ LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050::
-    call DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
+    call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, h
     add $02
@@ -1336,7 +1336,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050::
     ld [wStringIndex], a
     ld a, c
     add a
-    ld de, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Data
+    ld de, LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1370,21 +1370,21 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050::
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Data::
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_Data::
     db $40, $94, $d0, $94, $60, $95
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_GridCellAddressFromGridCursorXAndGrid2CursorX::
-    call DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2::
+    call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     call LibraryMenu_TestBitInFieldAtArg3
     cp $ff
     jr z, .check_screen_step
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles2 + $420
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles2 + $430
     ld b, $1f
     ld c, $10
@@ -1421,8 +1421,8 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_GridCellAddressFrom
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06::
-    call DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3::
+    call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     push hl
     sla l
@@ -1430,7 +1430,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld a, $42
-    call LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1438,7 +1438,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06::
     ld de, MonsterPedigreeTableB
     add hl, de
     ld a, $43
-    call LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6
+    call LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6
     pop hl
     push hl
     sla l
@@ -1446,21 +1446,21 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case06::
     ld de, MonsterPedigreeTableA
     add hl, de
     ld de, vTiles2 + $300
-    call LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowString_Bank08
     pop hl
     sla l
     rl h
     ld de, MonsterPedigreeTableB
     add hl, de
     ld de, vTiles2 + $390
-    call LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08
+    call LibraryMenu_ShowMonsterEntry_ShowString_Bank08
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07::
-    call DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_4::
+    call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, $10
     add_a_to_hl
@@ -1484,8 +1484,8 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_Case07::
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_SetGrid2CursorX::
-    call DrawThreeMetaSpritePartsFor5050
+LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_5::
+    call DrawThreeMetaSpritePartsAtGridCursor
     ld a, [wGridCursorY]
     add a
     ld b, a
@@ -1683,7 +1683,7 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsFor5050_SetGrid2CursorX::
 LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     call LibraryMenu_WriteSVBK
@@ -1693,7 +1693,7 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
     ret
 
 LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
-    ld de, TileRect_0C_56D9
+    ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $09, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -1711,7 +1711,7 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld a, [wGridCursorY]
     add $e1
     ld [wWindowTileBuffer + $156], a
-    ld de, TileRect_0C_574E
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $0d
     call CopyRectTo20ByteRows_Bank0C
@@ -1740,10 +1740,10 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld [wScreenStep], a
     ret
 
-LibraryMenu_ShowMonsterEntry_WriteBGPalette0From555C::
-    call WriteBGPalette0From555C
+LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData::
+    call WriteBGPalette0FromData
     call LibraryMenu_WriteWorkBuf
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1757,7 +1757,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank0C
-    ld de, TileRect_0C_589A
+    ld de, LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $14, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -1767,7 +1767,7 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     lb bc, $14, $05
     ld de, $0168
     call DrawScreenBufferRect_Bank0C
-    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03
+    call LibraryMenu_GridIndexFromGridCursorXGridCursorY_3
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -1816,7 +1816,7 @@ LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
-LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08::
+LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
     push de
     inc hl
     ld a, [hld]
@@ -1869,7 +1869,7 @@ LibraryMenu_ShowMonsterEntry_Case06_ShowString_Bank08::
     farcall ShowString_Bank0B
     ret
 
-LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6::
+LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
     push af
     inc hl
     ld a, [hld]
@@ -1910,13 +1910,13 @@ LibraryMenu_ShowMonsterEntry_Case06_FamilyForSpeciesIdArg6::
     rl h
     ld de, vTiles2
     add hl, de
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ret
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_2::
     call GridIndexFromGridCursorXGridCursorY
     add a
     ld de, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1
@@ -1956,7 +1956,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
     ld [wStringIndex], a
     ld a, c
     add a
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data
     add e
     ld e, a
     jr nc, .skip2
@@ -1988,7 +1988,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
     ld [wStringIndex], a
     ld a, c
     add a
-    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data
+    ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data
     add e
     ld e, a
     jr nc, .skip3
@@ -2026,7 +2026,7 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01::
     jp c, .loop
     ret
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared01_Data::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data::
     db $00, $92, $90, $92, $20, $93, $b0, $93, $40, $94, $d0, $94
 
 LibraryMenu_WriteWorkBuf::
@@ -2076,9 +2076,11 @@ LibraryMenu_WriteWorkBuf_Data::
     db $c0, $90, $10, $91, $60, $91, $b0, $91
 
 ; with the pointer from GridCellAddressFromGridCursorXAndGrid2CursorX draws sub-indices 0, 4 and 2
-; (DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc) at Y = $10, $24 and
-; $38, X = $6C (E-0121)
-DrawThreeMetaSpritePartsFor5050::
+; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc) at Y = $10, $24
+; and $38, X = $6C (E-0121) (E-0344: the address in its name dropped or read as the label there; was
+; DrawThreeMetaSpritePartsFor5050; shortened from
+; DrawThreeMetaSpritePartsForGridCellAddressFromGridCursorXAndGrid2CursorX)
+DrawThreeMetaSpritePartsAtGridCursor::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
     ld [wArg1], a
@@ -2095,7 +2097,7 @@ DrawThreeMetaSpritePartsFor5050::
     ld c, $01
     xor a
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
     ld a, $24
     ld [wArg4], a
     ld a, $6c
@@ -2105,7 +2107,7 @@ DrawThreeMetaSpritePartsFor5050::
     ld c, $01
     ld a, $04
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
     ld a, $38
     ld [wArg4], a
     ld a, $6c
@@ -2115,10 +2117,10 @@ DrawThreeMetaSpritePartsFor5050::
     ld c, $01
     ld a, $02
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
     ret
 
-LibraryMenu_GridIndexFromGridCursorXGridCursorY_Shared03::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_3::
     call BGMapAddressAtScroll_Bank0C
     ld de, $018f
     add hl, de
@@ -2364,7 +2366,7 @@ BGMapAddressAtScroll_Bank0C::
     ret
 
 LibraryMenu_FillTileRectWithArg1Tile::
-    ld hl, Tiles_0C_51AB
+    ld hl, LibraryMenu_FillTileRectWithArg1Tile_Tiles
     ld de, vTiles1 + $430
     call CopyTileBytesToVRAM_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -2388,7 +2390,7 @@ LibraryMenu_FillTileRectWithArg1Tile::
 
 ; HL = $51AB and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_0C_51AB::
+LibraryMenu_FillTileRectWithArg1Tile_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
 ; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 ($14) bytes apart; on CGB it
@@ -2504,7 +2506,7 @@ DrawScreenBufferRect_Bank0C::
     ldh [rVBK], a
     ret
 
-ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C::
+ArenaMenu_StoreBAtWordTableEntry_Bank0C::
     ld a, c
     ld b, a
     ld c, $00
@@ -2693,19 +2695,19 @@ LibraryMenu_TestBitInFieldAtArg3::
     ld a, $fe
     ret
 
-LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
+LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    ld de, MonsterIconKindTable_536A
+    ld de, LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable
     add hl, de
     ld a, [hl]
-    ld hl, LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
+    ld hl, LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
     add a
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
     ld b, $02
-    ld hl, wScreenBlock9C
+    ld hl, wLibraryEntryBlock
 
 .loop:
     ld a, [de]
@@ -2717,11 +2719,11 @@ LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2Cu
 
 ; LibraryMenu_Case10_Case01_Sub01 reads the byte at $536A + the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that
-; LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data[value]
-; points to into wScreenBlock9C; 373 bytes, one per monster id up to $174 (E-0206, C1)
+; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data[value] points
+; to into wScreenBlock9C; 373 bytes, one per monster id up to $174 (E-0206, C1)
 ; record: index into
-; LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
-MonsterIconKindTable_536A::
+; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data
+LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable::
     db $00 ; id 0
     db $00 ; id 1 DrakSlime
     db $00 ; id 2 SpotSlime
@@ -3096,15 +3098,15 @@ MonsterIconKindTable_536A::
     db $03 ; id 371 Orgodemir
     db $02 ; id 372 Darck
 
-LibraryMenu_ShowMonsterEntry_Case01_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data::
+LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data::
     db $e9, $54, $eb, $54, $ed, $54, $ef, $54, $f1, $54, $7c, $80, $7d, $80, $7e, $80
     db $7e, $7e, $7f, $80
 
 ; takes the class byte of the grid cell (MonsterClassByteTable_5562) and copies its four bytes to
-; wScreenBlock9C
+; wLibraryEntryBlock
 LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
-    ld de, MonsterClassByteTable_5562
+    ld de, LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable
     add hl, de
     ld a, [hl]
     add a
@@ -3114,7 +3116,7 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     inc hl
     ld d, [hl]
     ld b, $04
-    ld hl, wScreenBlock9C
+    ld hl, wLibraryEntryBlock
 
 .loop:
     ld a, [de]
@@ -3158,10 +3160,12 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry06::
 LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07::
     db $82, $82, $82, $82
 
-; writes six bytes from WriteBGPalette0From555C_Data to the CGB background palette data (rBCPS =
-; $80, auto-increment), waiting for VRAM access (E-0122)
-WriteBGPalette0From555C::
-    ld hl, WriteBGPalette0From555C_Data
+; writes six bytes from WriteBGPalette0FromData_Data to the CGB background palette data (rBCPS =
+; $80, auto-increment), waiting for VRAM access (E-0122) (E-0344: the address in its name dropped or
+; read as the label there; was WriteBGPalette0From555C; a trailing preposition left by the dropped
+; address removed)
+WriteBGPalette0FromData::
+    ld hl, WriteBGPalette0FromData_Data
     ld b, $80
     ld c, $68
     ld a, b
@@ -3179,7 +3183,7 @@ WriteBGPalette0From555C::
     jr nz, .loop
     ret
 
-WriteBGPalette0From555C_Data::
+WriteBGPalette0FromData_Data::
     db $86, $7d, $ff, $7f, $e1, $7f
 
 ; LibraryMenu_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from
@@ -3188,7 +3192,7 @@ WriteBGPalette0From555C_Data::
 ; 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364,
 ; 366, 367, 372 (E-0206, C1)
 ; record: class 0-7
-MonsterClassByteTable_5562::
+LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable::
     db $00 ; id 0
     db $03 ; id 1 DrakSlime
     db $00 ; id 2 SpotSlime
@@ -3569,7 +3573,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 9 x 13 tiles, one row per line
-TileRect_0C_56D9::
+LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $02, $c3, $c3, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3585,7 +3589,7 @@ TileRect_0C_56D9::
     db $b3, $c5, $c3, $be, $e2, $c6, $b4, $b4, $b5 ; id 12
 
 ; record: 12 x 13 tiles, one row per line
-TileRect_0C_574E::
+LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3600,7 +3604,7 @@ TileRect_0C_574E::
     db $b6, $c3, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $b7 ; id 11
     db $b3, $b4, $b4, $b4, $b4, $b4, $c5, $c3, $be, $c3, $c6, $b5 ; id 12
 
-TileRect_0C_57EA::
+LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits_TileRect::
     db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -3618,7 +3622,7 @@ TileRect_0C_57EA::
     db $b9, $b9, $b9, $ba
 
 ; record: 20 x 5 tiles, one row per line
-TileRect_0C_589A::
+LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -5270,33 +5274,33 @@ ArenaMenu::
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_CallArenaMenu_DispatchTalkEvent
     dw ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_SetTwoChoiceCursor
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3
     dw ArenaMenu_AdvanceScreenState_SetScreenState
     dw ArenaMenu_SetScreenState
     dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD
-    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11_ArenaMenu_Number24ToPackedBCD
+    dw ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_2
     dw ArenaMenu_WriteTextBuf0AndScreenStateEtc
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13_SetArg1
-    dw ArenaMenu_AdvanceScreenState_Case14_SetScreenState
+    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2
+    dw ArenaMenu_AdvanceScreenState_SetScreenState_2
     dw ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor
-    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4
+    dw ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3
     dw ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD
     dw ArenaMenu_RedrawFullScreenBoxes_0C
     dw ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
-    dw ArenaMenu_ToArenaMenu_Case1C_ReadArenaRound
+    dw ArenaMenu_ToArenaMenu_ReadArenaRound
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent
     dw ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_ToArenaMenu_DispatchTalkEvent
     dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor
-    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case23
+    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2
     dw ArenaMenu_SetFlagBit
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
-    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor
+    dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2
     dw ArenaMenu_RandomModulo52
 
 ArenaMenu_RandomModulo52::
@@ -5342,9 +5346,9 @@ ArenaMenu_RandomModulo52::
     cp $fe
     jr z, .call_generate_new_key_entry
     cp $fd
-    jr z, .call_arena_menu_case27_random_modulo52
+    jr z, .call_arena_menu_random_modulo52_2
     ld [wArg1], a
-    call ArenaMenu_Case27_ArenaMenu_AddArg1ToGoldCapped99999
+    call ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999
     jp .set_two_choice_cursor
 
 .call_generate_new_key_entry:
@@ -5360,9 +5364,9 @@ ArenaMenu_RandomModulo52::
     ld a, $03
     jr .set_two_choice_cursor
 
-.call_arena_menu_case27_random_modulo52:
-    call ArenaMenu_Case27_RandomModulo52
-    call ArenaMenu_Case27_ArenaMenu_AddArg1ToGoldCapped99999
+.call_arena_menu_random_modulo52_2:
+    call ArenaMenu_RandomModulo52_2
+    call ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999
     jp .set_two_choice_cursor
 
 .call_arena_menu_add_arg1_to_gold_capped999992:
@@ -5379,7 +5383,7 @@ ArenaMenu_RandomModulo52::
     ld [wAreaGraphicsIndex], a
     ret
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -5498,7 +5502,7 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    farcall ShowString_Bank33_649E
+    farcall ShowString_Bank33
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -5521,7 +5525,7 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    farcall ShowString_Bank33_649E
+    farcall ShowString_Bank33
     ld hl, vTiles1 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -5529,7 +5533,7 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ld [wTextWindowTileHi], a
     ld a, $18
     ld [wStringIndex], a
-    farcall ShowString_Bank33_649E
+    farcall ShowString_Bank33
     ld a, $0b
     ld [wScreenState], a
 
@@ -5562,11 +5566,11 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ret
 
 ArenaMenu_CopyRectTo20ByteRows_Bank0C::
-    ld de, TileRect_0C_762E
+    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
-    call ArenaMenu_Case01_ReadArenaRank
+    call ArenaMenu_ReadArenaRank
     call ArenaMenu_Number24ToPackedBCD
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
@@ -5580,19 +5584,19 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C::
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_arena_menu_case02_read_grid_cursor_x
+    jr nz, .call_arena_menu_read_grid_cursor_x_2
     bit 7, a
-    jr nz, .call_arena_menu_case02_read_grid_cursor_x2
+    jr nz, .call_arena_menu_read_grid_cursor_x_22
     ld a, [wJoypadPressed]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_03
     bit 0, a
-    jr nz, .call_arena_menu_case02_read_grid_cursor_x3
-    call ArenaMenu_Case02_WriteGridCursorY
+    jr nz, .call_arena_menu_read_grid_cursor_x
+    call ArenaMenu_WriteGridCursorY
     ret
 
-.call_arena_menu_case02_read_grid_cursor_x:
-    call ArenaMenu_Case02_ReadGridCursorX_Sub03
+.call_arena_menu_read_grid_cursor_x_2:
+    call ArenaMenu_ReadGridCursorX_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
@@ -5604,13 +5608,13 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call ArenaMenu_Case02_ReadGridCursorX
+    call ArenaMenu_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_arena_menu_case02_read_grid_cursor_x2:
-    call ArenaMenu_Case02_ReadGridCursorX_Sub03
+.call_arena_menu_read_grid_cursor_x_22:
+    call ArenaMenu_ReadGridCursorX_2
     ld a, [wGridCursorX]
     cp $03
     jr c, .skip
@@ -5630,8 +5634,8 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
-.call_arena_menu_case02_read_grid_cursor_x3:
-    call ArenaMenu_Case02_ReadGridCursorX
+.call_arena_menu_read_grid_cursor_x:
+    call ArenaMenu_ReadGridCursorX
     ld a, [wArenaRank]
     dec a
     ld b, a
@@ -5688,33 +5692,33 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1::
     db $0c, $0b, $0a, $1c
 
-ArenaMenu_Case02_WriteGridCursorY::
+ArenaMenu_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, ArenaMenu_Case02_ReadGridCursorX
+    jr c, ArenaMenu_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, ArenaMenu_Case02_ReadGridCursorX
+    jr c, ArenaMenu_ReadGridCursorX
     cp $18
-    jr c, ArenaMenu_Case02_ReadGridCursorX_Sub03
+    jr c, ArenaMenu_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
-ArenaMenu_Case02_ReadGridCursorX::
+ArenaMenu_ReadGridCursorX::
     ld b, $bb
-    jr ArenaMenu_Case02_ReadGridCursorX_Sub03_ReadGridCursorX
+    jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
 
-ArenaMenu_Case02_ReadGridCursorX_Sub03::
+ArenaMenu_ReadGridCursorX_2::
     ld b, $c3
-    jr ArenaMenu_Case02_ReadGridCursorX_Sub03_ReadGridCursorX
+    jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
     db $06, $bc
 
-ArenaMenu_Case02_ReadGridCursorX_Sub03_ReadGridCursorX::
+ArenaMenu_ReadGridCursorX_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
-    ld hl, ArenaMenu_Case02_ReadGridCursorX_Sub03_Data
+    ld hl, ArenaMenu_ReadGridCursorX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5731,16 +5735,17 @@ ArenaMenu_Case02_ReadGridCursorX_Sub03_ReadGridCursorX::
     ei
     ret
 
-ArenaMenu_Case02_ReadGridCursorX_Sub03_Data::
+ArenaMenu_ReadGridCursorX_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
-; plays sound $6C, copies the 6 x 5 box TileRect_0C_7831 to wWindowTileBuffer + $112, draws it at
-; the scroll position + $1CC, wScreenState += 1 and wTwoChoiceCursor = 0 (E-0122) (E-0340: the
-; address in its name read as its RAM name; was ShowTwoChoiceBoxAtWC412)
+; plays sound $6C, copies the 6 x 5 box ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect to
+; wWindowTileBuffer + $112, draws it at the scroll position + $1CC, wScreenState += 1 and
+; wTwoChoiceCursor = 0 (E-0122) (E-0340: the address in its name read as its RAM name; was
+; ShowTwoChoiceBoxAtWC412)
 ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_0C_7831
+    ld de, ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -5841,7 +5846,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
     ld a, $06
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
-    ld de, TileRect_0C_76C7
+    ld de, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -5855,7 +5860,7 @@ ArenaMenu_BGMapAddressAtScroll_Bank0C::
     call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
     ld c, $04
     ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
-    call ArenaMenu_Case05_StoreBAtWordTableEntry_Bank0C
+    call ArenaMenu_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
     ld de, $01cc
@@ -5962,7 +5967,7 @@ ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     call ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     ret
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case0C_SetTwoChoiceCursor::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6050,7 +6055,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ret
 
 ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
-    ld de, TileRect_0C_76D6
+    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
@@ -6074,8 +6079,8 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11_ArenaMenu_Number24ToPackedBCD::
-    ld de, TileRect_0C_76D6
+ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_2::
+    ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $b4
     lb bc, $11, $09
     call CopyRectTo20ByteRows_Bank0C
@@ -6096,19 +6101,19 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_Case11_ArenaMenu_Number24ToPackedBCD::
 ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_arena_menu_case12_read_grid_cursor_x
+    jr nz, .call_arena_menu_read_grid_cursor_x_4
     bit 7, a
-    jr nz, .call_arena_menu_case12_read_grid_cursor_x2
+    jr nz, .call_arena_menu_read_grid_cursor_x_42
     ld a, [wJoypadPressed]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_01
     bit 0, a
-    jr nz, .call_arena_menu_case12_read_grid_cursor_x3
-    call ArenaMenu_Case12_WriteGridCursorY
+    jr nz, .call_arena_menu_read_grid_cursor_x_3
+    call ArenaMenu_WriteGridCursorY_2
     ret
 
-.call_arena_menu_case12_read_grid_cursor_x:
-    call ArenaMenu_Case12_ReadGridCursorX_Sub03
+.call_arena_menu_read_grid_cursor_x_4:
+    call ArenaMenu_ReadGridCursorX_4
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
@@ -6120,13 +6125,13 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call ArenaMenu_Case12_ReadGridCursorX
+    call ArenaMenu_ReadGridCursorX_3
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_arena_menu_case12_read_grid_cursor_x2:
-    call ArenaMenu_Case12_ReadGridCursorX_Sub03
+.call_arena_menu_read_grid_cursor_x_42:
+    call ArenaMenu_ReadGridCursorX_4
     ld a, [wGridCursorX]
     cp $03
     jr c, .skip
@@ -6146,8 +6151,8 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
-.call_arena_menu_case12_read_grid_cursor_x3:
-    call ArenaMenu_Case12_ReadGridCursorX
+.call_arena_menu_read_grid_cursor_x_3:
+    call ArenaMenu_ReadGridCursorX_3
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
@@ -6180,33 +6185,33 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
 ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1::
     db $0c, $0b, $0a, $1c
 
-ArenaMenu_Case12_WriteGridCursorY::
+ArenaMenu_WriteGridCursorY_2::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, ArenaMenu_Case12_ReadGridCursorX
+    jr c, ArenaMenu_ReadGridCursorX_3
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, ArenaMenu_Case12_ReadGridCursorX
+    jr c, ArenaMenu_ReadGridCursorX_3
     cp $18
-    jr c, ArenaMenu_Case12_ReadGridCursorX_Sub03
+    jr c, ArenaMenu_ReadGridCursorX_4
     xor a
     ld [wGridCursorY], a
 
-ArenaMenu_Case12_ReadGridCursorX::
+ArenaMenu_ReadGridCursorX_3::
     ld b, $bb
-    jr ArenaMenu_Case12_ReadGridCursorX_Sub03_ReadGridCursorX
+    jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
 
-ArenaMenu_Case12_ReadGridCursorX_Sub03::
+ArenaMenu_ReadGridCursorX_4::
     ld b, $c3
-    jr ArenaMenu_Case12_ReadGridCursorX_Sub03_ReadGridCursorX
+    jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
     db $06, $bc
 
-ArenaMenu_Case12_ReadGridCursorX_Sub03_ReadGridCursorX::
+ArenaMenu_ReadGridCursorX_4_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
-    ld hl, ArenaMenu_Case12_ReadGridCursorX_Sub03_Data
+    ld hl, ArenaMenu_ReadGridCursorX_Data_2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6223,10 +6228,10 @@ ArenaMenu_Case12_ReadGridCursorX_Sub03_ReadGridCursorX::
     ei
     ret
 
-ArenaMenu_Case12_ReadGridCursorX_Sub03_Data::
+ArenaMenu_ReadGridCursorX_Data_2::
     db $a1, $00, $e1, $00, $21, $01, $61, $01
 
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13_SetArg1::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2::
     ld b, $00
     ld c, $05
     ld hl, $01e0
@@ -6250,7 +6255,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case13_SetArg1::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_AdvanceScreenState_Case14_SetScreenState::
+ArenaMenu_AdvanceScreenState_SetScreenState_2::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6268,10 +6273,10 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
     ld hl, ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data
     add_a_to_hl
     ld a, [hl]
-    ld [wArenaByte86], a
+    ld [wArenaFeeLo], a
     inc hl
     ld a, [hl]
-    ld [wArenaByte87], a
+    ld [wArenaFeeHi], a
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6286,7 +6291,7 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
 ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data::
     db $e8, $03, $d0, $07, $b8, $0b, $88, $13
 
-ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor::
+ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -6313,9 +6318,9 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     and a
     jr nz, .loop
-    ld a, [wArenaByte86]
+    ld a, [wArenaFeeLo]
     ld [wArg1], a
-    ld a, [wArenaByte87]
+    ld a, [wArenaFeeHi]
     ld [wArg2], a
     xor a
     ld [wArg3], a
@@ -6347,7 +6352,7 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_Case17_SetTwoChoiceCursor::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
     ld b, $00
     ld c, $05
     ld hl, $027a
@@ -6357,7 +6362,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1::
     ld a, $06
     ld [wArg2], a
     call CopyScreenBufferRectWithAttrs_0C
-    ld de, TileRect_0C_776F
+    ld de, ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $03, $05
     call CopyRectTo20ByteRows_Bank0C
@@ -6380,9 +6385,9 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_Case18_SetArg1::
 ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
     xor a
     ld [wArg3], a
-    ld a, [wArenaByte87]
+    ld a, [wArenaFeeHi]
     ld [wArg2], a
-    ld a, [wArenaByte86]
+    ld a, [wArenaFeeLo]
     ld [wArg1], a
     farcall SubtractArg1AmountFromGold
     call ArenaMenu_Number24ToPackedBCD
@@ -6402,7 +6407,7 @@ ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
 ArenaMenu_RedrawFullScreenBoxes_0C::
     ld a, [wScreenArea]
     ld [wAreaGraphicsIndex], a
-    call ArenaMenu_Case1A_DispatchTalkEvent
+    call ArenaMenu_DispatchTalkEvent_2
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
@@ -6416,7 +6421,7 @@ ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     jr nz, .clear_arg3
     ld a, [wArenaRound]
     cp $02
-    jr nc, .call_arena_menu_case1_b_return
+    jr nc, .call_arena_menu_return
     call IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -6431,8 +6436,8 @@ ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld [wScreenState], a
     ret
 
-.call_arena_menu_case1_b_return:
-    call ArenaMenu_Case1B_Return
+.call_arena_menu_return:
+    call ArenaMenu_Return
     xor a
 
 .set_two_choice_cursor:
@@ -6456,8 +6461,8 @@ ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld a, $02
     jr .set_two_choice_cursor
 
-ArenaMenu_ToArenaMenu_Case1C_ReadArenaRound::
-    call ArenaMenu_Case1C_ReadArenaRound
+ArenaMenu_ToArenaMenu_ReadArenaRound::
+    call ArenaMenu_ReadArenaRound
     ret
 
 ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent::
@@ -6525,17 +6530,17 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor::
     ld [wScriptStartRequest], a
     ret
 
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Case23::
+ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
     ld a, [wBattleScene]
     and a
     jr nz, .skip
-    jr .call_arena_menu_case23_write_player_name_with
+    jr .call_arena_menu_write_player_name_with_flag0
 
 .skip:
     jr .call_write_player_name_with_flag0_suffix_to
 
-.call_arena_menu_case23_write_player_name_with:
-    call ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0
+.call_arena_menu_write_player_name_with_flag0:
+    call ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0
     xor a
     ld [wTwoChoiceCursor], a
     xor a
@@ -6562,7 +6567,7 @@ ArenaMenu_SetFlagBit::
     ld a, [wArenaRank]
     cp $01
     jr nz, .call_generate_new_key_entry
-    ld de, $0188
+    ld de, EVENT_ARENA_RANK1_KEY_GIVEN
     call SetFlagBit
     farcall CountKeysOrFull
     ld a, $03
@@ -6571,14 +6576,14 @@ ArenaMenu_SetFlagBit::
     ld a, [wInventorySortFlags]
     set 7, a
     ld [wInventorySortFlags], a
-    ld de, $012f
+    ld de, EVENT_WARUBOU_WA_HEY_THIS_TIME
     call SetFlagBit
     jr .skip
 
 .call_generate_new_key_entry:
     farcall GenerateNewKeyEntry
     ldh a, [hTemp0]
-    ld [wTalkEventByte92], a
+    ld [wArenaOutcome], a
     and a
     jr z, .set_two_choice_cursor_to_01
 
@@ -6653,10 +6658,10 @@ RedrawFullScreenBoxes_0C::
     call DrawScreenBufferRect_Bank0C
     ret
 
-ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0::
+ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0::
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
-    ld hl, ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Data
+    ld hl, ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
@@ -6664,7 +6669,7 @@ ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0::
     ld [wTextBuf0 + $1], a
     ret
 
-ArenaMenu_Case23_WritePlayerNameWithFlag0SuffixToTextBuf0_Data::
+ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data::
     db $0c, $0c, $0c, $0b, $0a, $1c
 
 ; wArenaRound += 1 and wScreenArea = wAreaGraphicsIndex (E-0122)
@@ -6690,7 +6695,7 @@ SetupScreenCountPlusOneFromRecordCapacity::
     ld [wRecordCapacity], a
     ret
 
-ArenaMenu_Case01_ReadArenaRank::
+ArenaMenu_ReadArenaRank::
     ld hl, wWindowTileBuffer + $c9
     ld a, [wArenaRank]
     cp $02
@@ -6724,7 +6729,7 @@ ArenaMenu_Case01_ReadArenaRank::
     ret
 
 ArenaMenu_Number24ToPackedBCD::
-    ld de, TileRect_0C_777E
+    ld de, ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank0C
@@ -6751,7 +6756,7 @@ ArenaMenu_Number24ToPackedBCD::
     jr c, .loop
     ret
 
-ArenaMenu_Shared05_DivideHLByA::
+ArenaMenu_DivideHLByA::
     ld hl, $0000
     ld de, wArenaEntry
     ld c, $00
@@ -6783,7 +6788,7 @@ ArenaMenu_Shared05_DivideHLByA::
     ld l, $ff
     ret
 
-ArenaMenu_Shared05_AddTemp0WordToHL::
+ArenaMenu_AddTemp0WordToHL::
     xor a
     ld [wArenaEntry], a
     ld [wArenaEntry + $1], a
@@ -7168,7 +7173,7 @@ CopyScreenBufferRectWithAttrs_0C::
     jr c, CopyScreenBufferRectWithAttrs_0C
     ret
 
-ArenaRounds_Shared01_RandomModulo52::
+ArenaRounds_RandomModulo52::
     ld hl, wArenaList
     ld b, $28
 
@@ -7286,10 +7291,10 @@ RandomModulo52::
     call DivideHLByA
     ret
 
-ArenaMenu_Case1B_Return::
+ArenaMenu_Return::
     ret
 
-ArenaMenu_Case1A_DispatchTalkEvent::
+ArenaMenu_DispatchTalkEvent_2::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
     ld a, [wScriptPointerLo]
@@ -7312,9 +7317,9 @@ ArenaRounds_WriteBattleIntroKindAndEncounterKind::
     ld [wBattleIntroKind], a
     ld a, $02
     ld [wEncounterKind], a
-    call ArenaRounds_Shared01_RandomModulo52
+    call ArenaRounds_RandomModulo52
 
-ArenaMenu_Case1C_ReadArenaRound::
+ArenaMenu_ReadArenaRound::
     ld a, [wArenaRound]
     sla a
     ld b, a
@@ -7439,8 +7444,8 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     ret
 
 ArenaMenu_WriteTwoChoiceCursor::
-    call ArenaMenu_Shared05_AddTemp0WordToHL
-    call ArenaMenu_Shared05_DivideHLByA
+    call ArenaMenu_AddTemp0WordToHL
+    call ArenaMenu_DivideHLByA
     ld a, l
     cp $50
     jr nc, .skip
@@ -7478,14 +7483,14 @@ ArenaMenu_WriteTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ret
 
-ArenaMenu_Case27_RandomModulo52::
+ArenaMenu_RandomModulo52_2::
     ld b, $1f
     call RandomModulo52
     ld c, l
     ld a, l
     and $03
     sla a
-    ld hl, ArenaMenu_Case27_RandomModulo52_Data
+    ld hl, ArenaMenu_RandomModulo52_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -7509,12 +7514,12 @@ ArenaMenu_Case27_RandomModulo52::
     ld [wArg1], a
     ret
 
-ArenaMenu_Case27_RandomModulo52_Data::
+ArenaMenu_RandomModulo52_Data::
     db $40, $75, $47, $75, $4e, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $5a, $5b, $5c, $5d
     db $5e, $5f, $60, $61
 
-ArenaMenu_Case27_ArenaMenu_AddArg1ToGoldCapped99999::
+ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     ld hl, wInventory
     ld c, $18
 
@@ -7532,19 +7537,19 @@ ArenaMenu_Case27_ArenaMenu_AddArg1ToGoldCapped99999::
     call ArenaMenu_AddArg1ToGoldCapped99999
     pop af
     ld [wArg1], a
-    call ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB
+    call ArenaMenu_ReadFarPointerAtDEInBankB
     ld a, $02
     ret
 
 .read_arg1:
     ld a, [wArg1]
     ld [hl], a
-    call ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB
+    call ArenaMenu_ReadFarPointerAtDEInBankB
     xor a
     ret
 
-ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB::
-    ld de, ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB_Data
+ArenaMenu_ReadFarPointerAtDEInBankB::
+    ld de, ArenaMenu_ReadFarPointerAtDEInBankB_Data
     ld b, $08
     call ReadFarPointerAtDEInBankB
     ld c, l
@@ -7604,7 +7609,7 @@ ArenaMenu_RandomModulo52_Data2::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 17 x 9 tiles, one row per line
-TileRect_0C_762E::
+ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $aa, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $c3, $e1, $e0, $e0, $bf, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7616,14 +7621,14 @@ TileRect_0C_762E::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 3 x 5 tiles, one row per line
-TileRect_0C_76C7::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_TileRect::
     db $c3, $c3, $b7 ; id 0
     db $e0, $bf, $b7 ; id 1
     db $c3, $c3, $b7 ; id 2
     db $e0, $bf, $b7 ; id 3
     db $b4, $b4, $b5 ; id 4
 
-TileRect_0C_76D6::
+ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $aa, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $e1, $e0, $e0, $e0, $bf, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7634,7 +7639,7 @@ TileRect_0C_76D6::
     db $b6, $c3, $a7, $c3, $aa, $a4, $a5, $a6, $a6, $c3, $e5, $e0, $e0, $e0, $bf, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-TileRect_0C_776F::
+ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3_TileRect::
     db $c3, $c3, $b7 ; id 0
     db $bf, $c3, $b7 ; id 1
     db $c3, $c3, $b7 ; id 2
@@ -7642,7 +7647,7 @@ TileRect_0C_776F::
     db $b4, $b4, $b5 ; id 4
 
 ; record: 8 x 3 tiles, one row per line
-TileRect_0C_777E::
+ArenaMenu_Number24ToPackedBCD_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
@@ -7651,7 +7656,7 @@ TileRect_0C_777E::
 ; rectangles beside it: top row $B0 $B1.. $B2, side columns $B6/$B7, bottom row $B3 $B4.. $B5
 ; (E-0234, C1)
 ; record: 13 x 7 tiles, one row per line
-TileRect_0C_7796::
+TileRect0C_1::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f0, $f1, $f2, $f3, $f4, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7660,13 +7665,13 @@ TileRect_0C_7796::
     db $b6, $c3, $f5, $f6, $f7, $f8, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-TileRect_0C_77F1::
+TileRect0C_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $e1, $c3, $e2, $c3, $e3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 8 x 5 tiles, one row per line
-TileRect_0C_7809::
+TileRect0C_3::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ac, $c3, $ab, $c3, $aa, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7676,7 +7681,7 @@ TileRect_0C_7809::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-TileRect_0C_7831::
+ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -7986,329 +7991,329 @@ ArenaEncounterList3::
     dw $0276 ; MonsterTable $276: WarMantis
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_0C_7A51::
+Script_Arena::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7A5C, Script_0C_7A59, Script_0C_7A56
-Script_0C_7A56::
-    script_jump Script_0C_7A5F
-Script_0C_7A59::
-    script_jump Script_0C_7AFE
-Script_0C_7A5C::
-    script_jump Script_0C_7A75
-Script_0C_7A5F::
+    script_choice_jump Script_ToArena_3, Script_ToArena_9, Script_ToArena_2
+Script_ToArena_2::
+    script_jump Script_Arena_2
+Script_ToArena_9::
+    script_jump Script_Arena_9
+Script_ToArena_3::
+    script_jump Script_Arena_3
+Script_Arena_2::
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7A6E, Script_0C_7A6B, Script_0C_7A65
-Script_0C_7A65::
+    script_choice_jump Script_CongratulationsYouDidIt, Script_ToArena_2_2, Script_TooBadYouDidn
+Script_TooBadYouDidn::
     script_command SCRIPT_MENU_CLOSE
     script_message $0025 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7A6B::
-    script_jump Script_0C_7A5F
-Script_0C_7A6E::
+Script_ToArena_2_2::
+    script_jump Script_Arena_2
+Script_CongratulationsYouDidIt::
     script_message $4020 ; '*: Congratulations! You did it! You've'
     script_command SCRIPT_ARENA
-    script_jump Script_0C_7ADB
-Script_0C_7A75::
+    script_jump Script_Arena_7
+Script_Arena_3::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7A8D, Script_0C_7A87, Script_0C_7A81, Script_0C_7A7B
-Script_0C_7A7B::
+    script_choice_jump Script_LetMeConfirmThat, Script_You, Script_YouCan, Script_TrainSomeMoreAnd
+Script_TrainSomeMoreAnd::
     script_command SCRIPT_MENU_CLOSE
     script_message $8003 ; '*: Train some more, and see'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7A81::
+Script_YouCan::
     script_message $c016 ; '*: You can't try that Class'
-    script_jump Script_0C_7A75
-Script_0C_7A87::
+    script_jump Script_Arena_3
+Script_You::
     script_message $c001 ; '*: You've finished that Class.'
-    script_jump Script_0C_7A75
-Script_0C_7A8D::
+    script_jump Script_Arena_3
+Script_LetMeConfirmThat::
     script_message $c004 ; '*: Let me confirm that-the 0'
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7A9E, Script_0C_7A98, Script_0C_7A95
-Script_0C_7A95::
-    script_jump Script_0C_7A75
-Script_0C_7A98::
+    script_choice_jump Script_GoodLuckI, Script_NotEnoughGoldFor, Script_ToArena_3_2
+Script_ToArena_3_2::
+    script_jump Script_Arena_3
+Script_NotEnoughGoldFor::
     script_message $c006 ; '*: Not enough gold for that'
-    script_jump Script_0C_7A75
-Script_0C_7A9E::
+    script_jump Script_Arena_3
+Script_GoodLuckI::
     script_message $c005 ; '*: Good luck! I'll cheer for'
-Script_0C_7AA1::
+Script_Arena_4::
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7AAD, Script_0C_7AAA, Script_0C_7AA7
-Script_0C_7AA7::
-    script_jump Script_0C_7AEB
-Script_0C_7AAA::
-    script_jump Script_0C_7AA1
-Script_0C_7AAD::
-    script_jump Script_0C_7AB0
-Script_0C_7AB0::
+    script_choice_jump Script_ToArena_5, Script_ToArena_4, Script_ToArena_8
+Script_ToArena_8::
+    script_jump Script_Arena_8
+Script_ToArena_4::
+    script_jump Script_Arena_4
+Script_ToArena_5::
+    script_jump Script_Arena_5
+Script_Arena_5::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7AC8, Script_0C_7AC2, Script_0C_7ABC, Script_0C_7AB6
-Script_0C_7AB6::
+    script_choice_jump Script_CongratulationsYouDidIt_5, Script_CongratulationsYouDidIt_4, Script_CongratulationsYouDidIt_3, Script_CongratulationsYouDidIt_2
+Script_CongratulationsYouDidIt_2::
     script_command SCRIPT_MENU_CLOSE
     script_message $0024 ; '*: Congratulations! You did it! You've'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7ABC::
+Script_CongratulationsYouDidIt_3::
     script_message $4023 ; '*: Congratulations! You did it! You've'
-    script_jump Script_0C_7ACB
-Script_0C_7AC2::
+    script_jump Script_Arena_6
+Script_CongratulationsYouDidIt_4::
     script_message $4022 ; '*: Congratulations! You did it! You've'
-    script_jump Script_0C_7ACB
-Script_0C_7AC8::
+    script_jump Script_Arena_6
+Script_CongratulationsYouDidIt_5::
     script_message $4021 ; '*: Congratulations! You did it! You've'
-Script_0C_7ACB::
+Script_Arena_6::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7ACF, Script_0C_7AD5
-Script_0C_7ACF::
+    script_choice_jump Script_HeroReceivedTheMagic, Script_OhButYourKey
+Script_HeroReceivedTheMagic::
     script_command SCRIPT_MENU_CLOSE
     script_message $802a ; '0 received the Magic Key.'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7AD5::
+Script_OhButYourKey::
     script_command SCRIPT_MENU_CLOSE
     script_message $802b ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7ADB::
+Script_Arena_7::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7ADF, Script_0C_7AE5
-Script_0C_7ADF::
+    script_choice_jump Script_HeroReceivedThePirate, Script_OhButYourKey_2
+Script_HeroReceivedThePirate::
     script_command SCRIPT_MENU_CLOSE
     script_message $802d ; '0 received the Pirate Key.'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7AE5::
+Script_OhButYourKey_2::
     script_command SCRIPT_MENU_CLOSE
     script_message $802b ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7AEB::
+Script_Arena_8::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7AF5, Script_0C_7AEF
-Script_0C_7AEF::
+    script_choice_jump Script_TooBadYouDidn_3, Script_TooBadYouDidn_2
+Script_TooBadYouDidn_2::
     script_command SCRIPT_MENU_CLOSE
     script_message $0026 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7AF5::
+Script_TooBadYouDidn_3::
     script_command SCRIPT_MENU_CLOSE
     script_message $0025 ; '*: Too bad you didn't make'
     script_command SCRIPT_MENU_CLOSE
     script_end
     db $00, $0b, $c0
 
-Script_0C_7AFE::
+Script_Arena_9::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B08, Script_0C_7B02
-Script_0C_7B02::
+    script_choice_jump Script_Arena_10, Script_OhTheCrowdWanted
+Script_OhTheCrowdWanted::
     script_command SCRIPT_MENU_CLOSE
     script_message $8009 ; '*: Oh… The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B08::
+Script_Arena_10::
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
-Script_0C_7B0A::
-    script_choice_jump Script_0C_7B2F, Script_0C_7B29, Script_0C_7B23, Script_0C_7B1D, Script_0C_7B17, Script_0C_7B11
-Script_0C_7B11::
+Script_ChoiceJump::
+    script_choice_jump Script_TheSClassShould, Script_TheAClassShould, Script_TheBClassShould, Script_ItCouldGetRough_2, Script_ItCouldGetRough, Script_TheEClassShould
+Script_TheEClassShould::
     script_message $c011 ; '*: The E Class should do.'
-    script_jump Script_0C_7B32
-Script_0C_7B17::
+    script_jump Script_Arena_11
+Script_ItCouldGetRough::
     script_message $c010 ; '*: It could get rough out'
-    script_jump Script_0C_7B32
-Script_0C_7B1D::
+    script_jump Script_Arena_11
+Script_ItCouldGetRough_2::
     script_message $c00f ; '*: It could get rough out'
-    script_jump Script_0C_7B32
-Script_0C_7B23::
+    script_jump Script_Arena_11
+Script_TheBClassShould::
     script_message $c00e ; '*: The B Class should be'
-    script_jump Script_0C_7B32
-Script_0C_7B29::
+    script_jump Script_Arena_11
+Script_TheAClassShould::
     script_message $c00d ; '*: The A Class should be'
-    script_jump Script_0C_7B32
-Script_0C_7B2F::
+    script_jump Script_Arena_11
+Script_TheSClassShould::
     script_message $c00c ; '*: The S Class should be'
-Script_0C_7B32::
+Script_Arena_11::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B3C, Script_0C_7B36
-Script_0C_7B36::
+    script_choice_jump Script_IsHeroClassOK, Script_OhTheCrowdWanted_2
+Script_OhTheCrowdWanted_2::
     script_command SCRIPT_MENU_CLOSE
     script_message $8009 ; '*: Oh… The crowd wanted to'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B3C::
+Script_IsHeroClassOK::
     script_command SCRIPT_ARENA
     script_message $c012 ; '*: Is 0 Class OK?'
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B50, Script_0C_7B49, Script_0C_7B45
-Script_0C_7B45::
+    script_choice_jump Script_IHopeYouDo, Script_YouNeedMoreGold, Script_Arena_12
+Script_Arena_12::
     script_command SCRIPT_ARENA
-    script_jump Script_0C_7B0A
-Script_0C_7B49::
+    script_jump Script_ChoiceJump
+Script_YouNeedMoreGold::
     script_message $c014 ; '*: You need more gold to'
     script_command SCRIPT_ARENA
-    script_jump Script_0C_7B0A
-Script_0C_7B50::
+    script_jump Script_ChoiceJump
+Script_IHopeYouDo::
     script_command SCRIPT_ARENA
     script_message $c013 ; '*: I hope you do well!'
-Script_0C_7B54::
+Script_Arena_13::
     script_command SCRIPT_ARENA
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B60, Script_0C_7B5D, Script_0C_7B5A
-Script_0C_7B5A::
-    script_jump Script_0C_7B99
-Script_0C_7B5D::
-    script_jump Script_0C_7B54
-Script_0C_7B60::
-    script_jump Script_0C_7B63
-Script_0C_7B63::
+    script_choice_jump Script_ToCongratulationsYouDidIt_6, Script_ToArena_13, Script_ToArena_16
+Script_ToArena_16::
+    script_jump Script_Arena_16
+Script_ToArena_13::
+    script_jump Script_Arena_13
+Script_ToCongratulationsYouDidIt_6::
+    script_jump Script_CongratulationsYouDidIt_6
+Script_CongratulationsYouDidIt_6::
     script_command SCRIPT_ARENA
     script_message $402f ; '*: Congratulations! You did it! You've'
     script_message $c031 ; '*: Do you want the right'
-Script_0C_7B6A::
+Script_Arena_14::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B7B, Script_0C_7B6E
-Script_0C_7B6E::
+    script_choice_jump Script_Arena_15, Script_DoYouWantThe
+Script_DoYouWantThe::
     script_message $c030 ; '*: Do you want the left'
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B7B, Script_0C_7B75
-Script_0C_7B75::
+    script_choice_jump Script_Arena_15, Script_DoYouWantThe_2
+Script_DoYouWantThe_2::
     script_message $c031 ; '*: Do you want the right'
-    script_jump Script_0C_7B6A
-Script_0C_7B7B::
+    script_jump Script_Arena_14
+Script_Arena_15::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7B81, Script_0C_7B87, Script_0C_7B8D, Script_0C_7B93
-Script_0C_7B81::
+    script_choice_jump Script_YourPrizeIsOne, Script_YourPrizeIsA, Script_OhButYouHave, Script_OhButYourKey_3
+Script_YourPrizeIsOne::
     script_command SCRIPT_MENU_CLOSE
     script_message $8032 ; '*: Your prize is one G!'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B87::
+Script_YourPrizeIsA::
     script_command SCRIPT_MENU_CLOSE
     script_message $8033 ; '*: Your prize is a Magic'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B8D::
+Script_OhButYouHave::
     script_command SCRIPT_MENU_CLOSE
     script_message $8034 ; '*: …Oh, but you have no'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B93::
+Script_OhButYourKey_3::
     script_command SCRIPT_MENU_CLOSE
     script_message $8035 ; '*: …Oh, but your key ring'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7B99::
+Script_Arena_16::
     script_command SCRIPT_ARENA
-    script_choice_jump Script_0C_7BA3, Script_0C_7B9D
-Script_0C_7B9D::
+    script_choice_jump Script_YouLostThat_2, Script_YouLostThat
+Script_YouLostThat::
     script_command SCRIPT_MENU_CLOSE
     script_message $0029 ; '*: You lost? That's too bad.'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7BA3::
+Script_YouLostThat_2::
     script_command SCRIPT_MENU_CLOSE
     script_message $0028 ; '*: You lost? That's too bad.'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0C_7BA9::
+Script_MedalPrizes::
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BB0, Script_0C_7BAD
-Script_0C_7BAD::
-    script_jump Script_0C_7BBA
-Script_0C_7BB0::
+    script_choice_jump Script_AhYouHaveSome, Script_ToMedalPrizes_2
+Script_ToMedalPrizes_2::
+    script_jump Script_MedalPrizes_2
+Script_AhYouHaveSome::
     script_message $c011 ; '*: Ah, you have some TinyMedals?'
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BBA, Script_0C_7BB7
-Script_0C_7BB7::
+    script_choice_jump Script_MedalPrizes_2, Script_ButICan
+Script_ButICan::
     script_message $c012 ; '*: …But, I can't take this'
-Script_0C_7BBA::
+Script_MedalPrizes_2::
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BC1, Script_0C_7BBE
-Script_0C_7BBE::
-    script_jump Script_0C_7C41
-Script_0C_7BC1::
+    script_choice_jump Script_IHaveHeroOf, Script_ToAtMinimumYouMust
+Script_ToAtMinimumYouMust::
+    script_jump Script_AtMinimumYouMust
+Script_IHaveHeroOf::
     script_message $c013 ; '*: I have 0 of your'
     script_message $c015 ; '*: Want to trade medals for'
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BD1, Script_0C_7BCB
-Script_0C_7BCB::
+    script_choice_jump Script_WhichPrizeDoYou, Script_IHopeYou
+Script_IHopeYou::
     script_command SCRIPT_BREED_CLOSE
     script_message $8014 ; '*: I hope you'll find many'
     script_command SCRIPT_BREED_CLOSE
     script_end
-Script_0C_7BD1::
+Script_WhichPrizeDoYou::
     script_message $c016 ; '*: Which prize do you want?'
-Script_0C_7BD4::
+Script_MedalPrizes_3::
     script_command SCRIPT_MEDAL_PRIZES
     script_command SCRIPT_MEDAL_PRIZES
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BE4, Script_0C_7BE1, Script_0C_7BDB
-Script_0C_7BDB::
+    script_choice_jump Script_I, Script_ToMedalPrizes_3, Script_IHopeYou_2
+Script_IHopeYou_2::
     script_command SCRIPT_BREED_CLOSE
     script_message $8014 ; '*: I hope you'll find many'
     script_command SCRIPT_BREED_CLOSE
     script_end
-Script_0C_7BE1::
-    script_jump Script_0C_7BD4
-Script_0C_7BE4::
+Script_ToMedalPrizes_3::
+    script_jump Script_MedalPrizes_3
+Script_I::
     script_message $c017 ; '*: I'll trade for 0 TinyMedals.'
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7BF7, Script_0C_7BF0, Script_0C_7BEC
-Script_0C_7BEC::
+    script_choice_jump Script_MedalPrizes_4, Script_WhichPrizeDoYou_2, Script_ThatRequiresMoreTinyMedals
+Script_ThatRequiresMoreTinyMedals::
     script_message $c018 ; '*: That requires more TinyMedals.'
     script_command SCRIPT_MEDAL_PRIZES
-Script_0C_7BF0::
+Script_WhichPrizeDoYou_2::
     script_message $c016 ; '*: Which prize do you want?'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BD4
-Script_0C_7BF7::
+    script_jump Script_MedalPrizes_3
+Script_MedalPrizes_4::
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7C12, Script_0C_7C0B, Script_0C_7C04, Script_0C_7BFD
-Script_0C_7BFD::
+    script_choice_jump Script_MedalPrizes_5, Script_YouDon, Script_YourKeyRingIs, Script_YouHaveNoMore
+Script_YouHaveNoMore::
     script_message $c01b ; '*: You have no more room'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C04::
+    script_jump Script_WhichPrizeDoYou_2
+Script_YourKeyRingIs::
     script_message $c01a ; '*: Your key ring is already'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C0B::
+    script_jump Script_WhichPrizeDoYou_2
+Script_YouDon::
     script_message $c019 ; '*: You don't have any room'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C12::
+    script_jump Script_WhichPrizeDoYou_2
+Script_MedalPrizes_5::
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7C1F, Script_0C_7C16
-Script_0C_7C16::
+    script_choice_jump Script_FineWeShallTrade_2, Script_FineWeShallTrade
+Script_FineWeShallTrade::
     script_message $c01c ; '*: Fine, we shall trade.'
     script_message $c01d ; '*: I'll send the egg to'
-    script_jump Script_0C_7C22
-Script_0C_7C1F::
+    script_jump Script_MedalPrizes_6
+Script_FineWeShallTrade_2::
     script_message $c01c ; '*: Fine, we shall trade.'
-Script_0C_7C22::
+Script_MedalPrizes_6::
     script_command SCRIPT_MEDAL_PRIZES
-    script_choice_jump Script_0C_7C3D, Script_0C_7C36, Script_0C_7C2F, Script_0C_7C28
-Script_0C_7C28::
+    script_choice_jump Script_MedalPrizes_7, Script_YouCan_3, Script_YouCan_2, Script_YouHaveNoMore_2
+Script_YouHaveNoMore_2::
     script_message $c020 ; '*: You have no more room'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C2F::
+    script_jump Script_WhichPrizeDoYou_2
+Script_YouCan_2::
     script_message $c01f ; '*: You can't hold any more'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C36::
+    script_jump Script_WhichPrizeDoYou_2
+Script_YouCan_3::
     script_message $c01e ; '*: You can't take any more'
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C3D::
+    script_jump Script_WhichPrizeDoYou_2
+Script_MedalPrizes_7::
     script_command SCRIPT_MEDAL_PRIZES
-    script_jump Script_0C_7BF0
-Script_0C_7C41::
+    script_jump Script_WhichPrizeDoYou_2
+Script_AtMinimumYouMust::
     script_command SCRIPT_BREED_CLOSE
     script_message $8024 ; '*: At minimum, you must have'
     script_command SCRIPT_BREED_CLOSE

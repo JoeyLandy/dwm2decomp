@@ -425,7 +425,7 @@ Map48Screens0_Y2X1::
     db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
 ; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx_4C_4E1D::
+Gfx4C_1::
     db $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y2X2::
@@ -482,7 +482,7 @@ Map48Screens0_Y3X2::
     db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
 ; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx_4C_5275::
+Gfx4C_2::
     db $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y3X3::
@@ -535,7 +535,7 @@ Map48Screens0_Y4X2::
     db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
 ; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx_4C_5689::
+Gfx4C_3::
     db $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y4X3::
@@ -592,7 +592,7 @@ Map48Screens0_Y5X1::
     db $4d, $00, $60, $0f, $4d, $00, $c0, $0f
 
 ; LZSS-compressed: 63 bytes that expand to 77 (E-0016, E-0017)
-Gfx_4C_5C00::
+Gfx4C_4::
     db $4d, $00, $f8, $0f, $0d
 
 Map48Screens0_Y5X2::
@@ -810,8 +810,8 @@ Map48Screens0_Y8X6::
     db $68, $01, $02, $00, $01, $02, $00, $0e
 
 ; LZSS-compressed: 225 bytes that expand to 258 (E-0016, E-0017)
-Gfx_4C_725A::
-    INCBIN "gfx/misc/gfx_4_c_725_a.lz"
+Gfx4C_5::
+    INCBIN "gfx/misc/gfx4_c_5.lz"
 
 Map48Screens2_Y8X6::
     db $68, $01, $02, $00, $01, $02, $00, $0e, $02, $01, $0f, $00, $02, $ff, $ff, $4d

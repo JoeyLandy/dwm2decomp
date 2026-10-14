@@ -360,9 +360,9 @@ TryWallOfLightBounce::
     ld a, [wRecordBufferData + $7]
     bit 7, a
     jr z, .return_0
-    bit 1, [hl]
+    bit BSTAT2_BOUNCE, [hl]
     jr nz, .call_target_on_local_side_bank36
-    res 5, [hl]
+    res BSTAT2_MAGIC_BACK, [hl]
     ld a, $01
     ld [wDefeatStep], a
 
@@ -545,7 +545,7 @@ ResolveStepEffectChecks::
 .call_resolve_step_effect_checks_wait_battle:
     ld hl, wBattleResolveStep
     inc [hl]
-    call ResolveStepEffectChecks_WaitBattleActionId_Sub02
+    call ResolveStepEffectChecks_WaitBattleActionId_2
     ret z
     ld a, [wRecordBufferData + $6]
     bit 1, a
@@ -621,7 +621,7 @@ ResolveStepEffectChecks::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT1_BLINDED, [hl]
     jr z, .read_battle_actor
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -805,7 +805,7 @@ ResolveStepEffectChecks_WaitBattleActionId::
     cp SKILL_LOVERAIN_CE
     ret
 
-ResolveStepEffectChecks_WaitBattleActionId_Sub02::
+ResolveStepEffectChecks_WaitBattleActionId_2::
     ld a, [wBattleActionId]
     cp SKILL_HIGHJUMP
     ret z
@@ -832,7 +832,7 @@ ResolveStepChanceRoll::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT1_ATK_DOUBLED, [hl]
     jr nz, ResolveStepActionEffect
 
 .check_record_buffer_data:
@@ -857,7 +857,7 @@ ResolveStepChanceRoll::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    set 7, [hl]
+    set BSTAT2_CRITICAL_ROLLED, [hl]
     call ActorOnLocalSide_Bank36
     ld d, $9c
     jr c, .call_show_battle_text
@@ -875,7 +875,7 @@ ResolveStepChanceRoll::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     ret
 
 ; resolve step $06: advances wBattleResolveStep, then calls DispatchActionEffectTable for
@@ -897,7 +897,7 @@ ResolveStepComputeDamage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT2_CRITICAL_ROLLED, [hl]
     jr z, .check_record_buffer_data
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -914,7 +914,7 @@ ResolveStepComputeDamage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT1_ATK_DOUBLED, [hl]
     jr z, .check_record_buffer_data2
     ld a, [wBattleDamageLo]
     ld l, a
@@ -934,9 +934,9 @@ ResolveStepComputeDamage::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 7, [hl]
+    bit BSTAT2_CRITICAL_ROLLED, [hl]
     jr z, .check_record_buffer_data3
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     call UnreferencedStoreResolveMessage35D0_Bank36
     ld a, [wBattleActor]
     call GetBattleATK
@@ -1672,14 +1672,14 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadSoundChannelSlots::
 ResolveStepDamageMessage_ActorOnLocalSide_Bank36_ReadBattleSubStep::
     ld a, [wBattleSubStep]
     jumptable
-    dw ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero
-    dw ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo
-    dw ResolveStepDamageMessage_Sub04_LoadBattleMonsterPictureForSlotB
-    dw ResolveStepDamageMessage_Sub04_ShowHeroWentAway
-    dw ResolveStepDamageMessage_Sub04_AddAx9ToHL
-    dw ResolveStepDamageMessage_Sub04_WriteBattleResolveStepAndBattleSubStepEtc
+    dw ResolveStepDamageMessage_ShowTheWindAroundHero
+    dw ResolveStepDamageMessage_ShowHeroTurnedBackTo
+    dw ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2
+    dw ResolveStepDamageMessage_ShowHeroWentAway
+    dw ResolveStepDamageMessage_AddAx9ToHL_2
+    dw ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc
 
-ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero::
+ResolveStepDamageMessage_ShowTheWindAroundHero::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -1692,7 +1692,7 @@ ResolveStepDamageMessage_Sub04_ShowTheWindAroundHero::
     farcall ShowBattleText
     ret
 
-ResolveStepDamageMessage_Sub04_ShowHeroTurnedBackTo::
+ResolveStepDamageMessage_ShowHeroTurnedBackTo::
     ld hl, wBattleSubStep
     inc [hl]
     ld hl, wBattleSubStep
@@ -1919,7 +1919,7 @@ RecomputeTargetStatsFromRecord::
     farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ret
 
-ResolveStepDamageMessage_Sub04_LoadBattleMonsterPictureForSlotB::
+ResolveStepDamageMessage_LoadBattleMonsterPictureForSlotB_2::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -1951,7 +1951,7 @@ ResolveStepDamageMessage_Sub04_LoadBattleMonsterPictureForSlotB::
     ld [hl], $ff
     ret
 
-ResolveStepDamageMessage_Sub04_ShowHeroWentAway::
+ResolveStepDamageMessage_ShowHeroWentAway::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -1993,7 +1993,7 @@ ResolveStepDamageMessage_Sub04_ShowHeroWentAway::
     res 2, [hl]
     ret
 
-ResolveStepDamageMessage_Sub04_AddAx9ToHL::
+ResolveStepDamageMessage_AddAx9ToHL_2::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]
@@ -2005,10 +2005,10 @@ ResolveStepDamageMessage_Sub04_AddAx9ToHL::
     ld a, $ff
     ld [wQueuedActionId], a
     ld a, $ff
-    ld [wBattleByteAD], a
+    ld [wSealPrayState], a
     ret
 
-ResolveStepDamageMessage_Sub04_WriteBattleResolveStepAndBattleSubStepEtc::
+ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc::
     ld hl, wBattleSubPhase
     inc [hl]
     xor a
@@ -2315,8 +2315,8 @@ ResolveStepEffectChecks_ShowMissHeroAvoidedDamage::
     ret
 
 ; for action $CC clears bits 0-1 of the actor's wBattleStatus4 byte when bits 2-3 equal 4; for an
-; action in $D0-$E3 it farcalls RunA3414FAndMarkSlotMarks3 first. Then it sets wBattleSubPhase to 2
-; and clears wBattleResolveStep (E-0055)
+; action in $D0-$E3 it farcalls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3 first. Then it sets
+; wBattleSubPhase to 2 and clears wBattleResolveStep (E-0055)
 SetSubPhase2AndRestartResolve::
     ld a, [wBattleActionId]
     cp SKILL_HIGHJUMP_CC
@@ -2326,7 +2326,7 @@ SetSubPhase2AndRestartResolve::
     jr c, .loop
     cp $e4
     jr nc, .loop
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
 
 .loop:
     ld a, $02
@@ -2973,7 +2973,7 @@ RollVsSapResistance::
     call RollChanceByFlagsAtHLSided
     ret
 
-ActionEffect_UltraDown_Sub02_GetBattleDEF::
+ActionEffect_UltraDown_GetBattleDEF::
     ld a, [wBattleTarget]
     call GetBattleDEF
     ld b, h
@@ -3125,7 +3125,7 @@ RollVsSlowResistance::
     call RollChanceByFlagsAtHL
     ret
 
-ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA::
+ResolveStepDamageMessage_GetBaseAGLOfSlotA::
     ld a, [wBattleTarget]
     call GetBaseAGLOfSlotA
     ld a, [wBattleActionId]
@@ -3411,7 +3411,7 @@ ActionEffect_RobMagic_DrainTargetMPAmount::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleActor]
-    call ActionEffect_RobMagic_Sub01_GetBattleMP
+    call ActionEffect_RobMagic_GetBattleMP
     jr nc, .return
     ld a, [wBattleActor]
     ld bc, wBattleMaxMP + $1
@@ -3534,15 +3534,15 @@ ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36::
     call RollChanceByFlagsAtHLSided
     ret
 
-ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
+ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B
+    call ActionEffect_Transform_SlotSpeciesNibblesD00AD00B_2
     ld a, [wBattleActor]
     ld hl, wSlotBodyFlags
     add_a_to_hl
     ld [hl], c
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_GetBaseHP
+    call ActionEffect_Transform_GetBaseHP
     ld a, [wBattleActor]
     ld hl, wBattleHP
     call AddDoubleAToHL_Bank36
@@ -3565,7 +3565,7 @@ ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_GetBaseMP
+    call ActionEffect_Transform_GetBaseMP
     ld a, [wBattleActor]
     ld hl, wBattleMP
     call AddDoubleAToHL_Bank36
@@ -3612,7 +3612,7 @@ ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
     ld [hli], a
     ld [hl], b
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress
+    call ActionEffect_Transform_BattlerRecordFieldAddress
     ld a, [wBattleActor]
     ld de, wSlotResistances
     ld b, a
@@ -3636,7 +3636,7 @@ ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01::
     ld [wBattleArg3], a
     farcall LoadBattleArg0PointersThenRunPackResistanceFieldsToDE
     ld a, [wBattleTarget]
-    call ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04
+    call ActionEffect_Transform_BattlerRecordFieldAddress_2
     ld a, [wBattleActor]
     ld de, wBattleSkillsPrefix
     swap a
@@ -4248,7 +4248,7 @@ ActionEffect_UltraDown_ReadBattleTarget::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT1_BLINDED, [hl]
     jr z, .return_carry
     xor a
     ret
@@ -4297,7 +4297,7 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld a, [wRecordBufferData + $7]
     ld c, a
     ld hl, wBattleLevel
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld a, [wRecordBufferData + $8]
     ld c, a
     ld a, [wRecordBufferData + $9]
@@ -4347,30 +4347,30 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld hl, wBattleINT
     call StoreBCAtWordEntryLoadSlot
     ld bc, $03e7
-    ld hl, wBattleWordArray3F
+    ld hl, wBattleExtraStat
     call StoreBCAtWordEntryLoadSlot
     ld a, [wRecordBufferData + $14]
     ld c, a
     ld hl, wSlotPersonalityHi
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld a, [wRecordBufferData + $15]
     ld c, a
     ld hl, wSlotPersonalityLo
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld a, [wRecordBufferData + $16]
     ld c, a
     ld hl, wSlotPersonalityMid
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld a, [wRecordBufferData + $17]
     ld c, a
     ld hl, wSlotTrait
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld c, $00
     ld hl, wSlotBodyFlags
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld c, $00
     ld hl, wSlotNameSuffix
-    call ActionEffect_TatsuCall_Sub01_ReadLoadSlot
+    call ActionEffect_TatsuCall_ReadLoadSlot
     ld a, [wLoadSlot]
     ld c, a
     farcall SetSlotAIModeFromINT
@@ -4411,10 +4411,10 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld bc, $0004
     call CopyBytes
     ld hl, wTemp0
-    call ActionEffect_TatsuCall_Sub01_WriteRecordBufferAndBattleArg0Etc
+    call ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc
     ret
 
-ActionEffect_TatsuCall_Sub01_WriteRecordBufferAndBattleArg0Etc::
+ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc::
     ld b, $04
     ld a, [wLoadSlot]
     ld de, wBattleSkills
@@ -4462,7 +4462,7 @@ ActionEffect_TatsuCall_Sub01_WriteRecordBufferAndBattleArg0Etc::
     jr nz, .loop
     ret
 
-ActionEffect_TatsuCall_Sub01_ReadLoadSlot::
+ActionEffect_TatsuCall_ReadLoadSlot::
     ld a, [wLoadSlot]
     add_a_to_hl
     ld [hl], c
@@ -4689,14 +4689,14 @@ ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3::
     push af
     ld a, [wBattleActionId]
     cp ACTION_D6
-    jr z, .call_roll_chance_for_level_a_6346
+    jr z, .call_roll_chance_for_level_a_2
     pop af
-    call ActionEffect_Sacrifice_Sub01_RollChanceByLevel_100_84_50_0
+    call ActionEffect_Sacrifice_RollChanceByLevel_100_84_50_0
     ret
 
-.call_roll_chance_for_level_a_6346:
+.call_roll_chance_for_level_a_2:
     pop af
-    call RollChanceForLevelA_6346
+    call RollChanceForLevelA_2
     ret
 
 ; rolls whether the action gets through the target's Sleep (byte 2, bits 7-6) resistance (a 2-bit
@@ -4743,7 +4743,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleHP
-    call ActionEffect_BeDragon_Sub02_CompareHLToBC
+    call ActionEffect_BeDragon_CompareHLToBC
     ld a, [wRecordBufferData + $a]
     ld c, a
     ld a, [wRecordBufferData + $b]
@@ -4752,7 +4752,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     call StoreBCAtActorWordEntry
     ld a, [wBattleActor]
     ld hl, wBattleMP
-    call ActionEffect_BeDragon_Sub02_CompareHLToBC
+    call ActionEffect_BeDragon_CompareHLToBC
     ld a, [wRecordBufferData + $c]
     ld c, a
     ld a, [wRecordBufferData + $d]
@@ -4816,7 +4816,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     ld de, wTemp0
     ld bc, $0004
     call CopyBytes
-    call ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry
+    call ActionEffect_BeDragon_ActionEffect_BeDragon_ClearEntry
     ld a, [wBattleActor]
     ld hl, wSlotBodyFlags
     add_a_to_hl
@@ -4827,7 +4827,7 @@ ActionEffect_BeDragon_LoadMonsterRecord::
     call SetBit1OfLevelUpGainsIndexed_Bank36
     ret
 
-ActionEffect_BeDragon_Sub02_ActionEffect_BeDragon_ClearEntry::
+ActionEffect_BeDragon_ActionEffect_BeDragon_ClearEntry::
     ld hl, wTemp0
     ld b, $04
     ld a, [wBattleActor]
@@ -5193,7 +5193,7 @@ RollChanceByFlagsAtHL::
 .return:
     ret
 
-ActionEffect_Sacrifice_Sub01_RollChanceByLevel_100_84_50_0::
+ActionEffect_Sacrifice_RollChanceByLevel_100_84_50_0::
     bit 6, [hl]
     jr z, .call_roll_chance_by_level_100_100_75_0
     call RollChanceByLevel_100_84_50_0
@@ -5306,9 +5306,10 @@ ScaleDamageByLevelByHLBit7::
 .return:
     ret
 
-; bit 6 of [HL]: RollChanceByLevel_100_75_40_0; else bit 7: RollChanceForLevelA_6346; else
-; RollChanceForLevelA_6330 (E-0122)
-RollChanceByHLBits6And7_6262::
+; bit 6 of [HL]: RollChanceByLevel_100_75_40_0; else bit 7: RollChanceForLevelA_2; else
+; RollChanceForLevelA (E-0122) (E-0344: the address in its name dropped or read as the label there;
+; was RollChanceByHLBits6And7_6262)
+RollChanceByHLBits6And7_2::
     bit 6, [hl]
     jr z, .skip
     call RollChanceByLevel_100_75_40_0
@@ -5316,12 +5317,12 @@ RollChanceByHLBits6And7_6262::
 
 .skip:
     bit 7, [hl]
-    jr z, .call_roll_chance_for_level_a_6330
-    call RollChanceForLevelA_6346
+    jr z, .call_roll_chance_for_level_a
+    call RollChanceForLevelA_2
     jr .return
 
-.call_roll_chance_for_level_a_6330:
-    call RollChanceForLevelA_6330
+.call_roll_chance_for_level_a:
+    call RollChanceForLevelA
 
 .return:
     ret
@@ -5338,12 +5339,12 @@ RollChanceByLevel_100_84_50_0::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_CallAdvanceRandom
+    jp RollChanceForLevelA_2_CallAdvanceRandom
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_6346_CallAdvanceRandom3
+    jp RollChanceForLevelA_2_CallAdvanceRandom3
 
 .done:
     scf
@@ -5359,7 +5360,7 @@ RollChanceByLevel_100_100_75_0::
 
 .skip:
     jr nz, .done
-    jp RollChanceForLevelA_6346_CallAdvanceRandom2
+    jp RollChanceForLevelA_2_CallAdvanceRandom2
 
 .done:
     scf
@@ -5378,12 +5379,12 @@ RollChanceByLevel_100_75_40_0::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_CallAdvanceRandom2
+    jp RollChanceForLevelA_2_CallAdvanceRandom2
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_6346_CallAdvanceRandom4
+    jp RollChanceForLevelA_2_CallAdvanceRandom4
 
 .done:
     scf
@@ -5403,23 +5404,23 @@ RollChanceByLevelAndSide::
     cp $04
     jr nc, .restore
     pop af
-    jp RollChanceForLevelA_6346_Skip
+    jp RollChanceForLevelA_2_Skip
 
 .restore:
     pop af
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_6346_CallAdvanceRandom2
+    jp RollChanceForLevelA_2_CallAdvanceRandom2
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_CallAdvanceRandom3
+    jp RollChanceForLevelA_2_CallAdvanceRandom3
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_6346_CallAdvanceRandom6
+    jp RollChanceForLevelA_2_CallAdvanceRandom6
 
 .done:
     scf
@@ -5433,12 +5434,12 @@ ScaleDamageByLevel_1_085_05_0::
     ret z
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo3
+    jp RollChanceForLevelA_2_ReadBattleDamageLo3
 
 .cp_02:
     cp $02
     jr nz, .skip
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo5
+    jp RollChanceForLevelA_2_ReadBattleDamageLo5
 
 .skip:
     jp ScaleDamageTo40Percent_ClearBattleDamageLo
@@ -5450,7 +5451,7 @@ ScaleDamageByLevel_1_075_04_0::
     ret z
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
+    jp RollChanceForLevelA_2_ReadBattleDamageLo4
 
 .cp_02:
     cp $02
@@ -5465,17 +5466,17 @@ ScaleDamageByLevel_1_075_04_0::
 ScaleDamageByLevel_131_116_075_03::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo
+    jp RollChanceForLevelA_2_ReadBattleDamageLo
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo2
+    jp RollChanceForLevelA_2_ReadBattleDamageLo2
 
 .cp_02:
     cp $02
     jr nz, .skip
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
+    jp RollChanceForLevelA_2_ReadBattleDamageLo4
 
 .skip:
     jp ScaleDamageTo40Percent_ReadBattleDamageLo
@@ -5485,12 +5486,12 @@ ScaleDamageByLevel_131_116_075_03::
 ScaleDamageByLevel_075_05_025_0::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo4
+    jp RollChanceForLevelA_2_ReadBattleDamageLo4
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_ReadBattleDamageLo5
+    jp RollChanceForLevelA_2_ReadBattleDamageLo5
 
 .cp_02:
     cp $02
@@ -5500,8 +5501,9 @@ ScaleDamageByLevel_075_05_025_0::
 .skip:
     jp ScaleDamageTo40Percent_ClearBattleDamageLo
 
-; level A: 0 returns carry; 1, 2 and 3 take three different chance rolls (E-0122)
-RollChanceForLevelA_6330::
+; level A: 0 returns carry; 1, 2 and 3 take three different chance rolls (E-0122) (E-0344: the
+; address in its name dropped or read as the label there; was RollChanceForLevelA_6330)
+RollChanceForLevelA::
     and a
     jr nz, .cp_01
     scf
@@ -5510,93 +5512,94 @@ RollChanceForLevelA_6330::
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_CallAdvanceRandom2
+    jp RollChanceForLevelA_2_CallAdvanceRandom2
 
 .cp_02:
     cp $02
     jr nz, .skip
-    jp RollChanceForLevelA_6346_CallAdvanceRandom3
+    jp RollChanceForLevelA_2_CallAdvanceRandom3
 
 .skip:
-    jp RollChanceForLevelA_6346_CallAdvanceRandom6
+    jp RollChanceForLevelA_2_CallAdvanceRandom6
 
 ; level A: 0 and 1 return, 2 and 3 take chance rolls; the following entries roll random values
-; against $D8, $BF, $7F, $66, $4C, $3F and $26 (E-0130)
-RollChanceForLevelA_6346::
+; against $D8, $BF, $7F, $66, $4C, $3F and $26 (E-0130) (E-0344: the address in its name dropped or
+; read as the label there; was RollChanceForLevelA_6346)
+RollChanceForLevelA_2::
     cp $02
     jr nc, .skip
     ret
 
 .skip:
     jr nz, .skip2
-    jp RollChanceForLevelA_6346_CallAdvanceRandom2
+    jp RollChanceForLevelA_2_CallAdvanceRandom2
 
 .skip2:
-    jp RollChanceForLevelA_6346_CallAdvanceRandom4
+    jp RollChanceForLevelA_2_CallAdvanceRandom4
 
-RollChanceForLevelA_6346_Skip::
+RollChanceForLevelA_2_Skip::
     and a
     jr nz, .cp_01
-    jp RollChanceForLevelA_6346_CallAdvanceRandom3
+    jp RollChanceForLevelA_2_CallAdvanceRandom3
 
 .cp_01:
     cp $01
     jr nz, .cp_02
-    jp RollChanceForLevelA_6346_CallAdvanceRandom5
+    jp RollChanceForLevelA_2_CallAdvanceRandom5
 
 .cp_02:
     cp $02
     jr nz, .done
-    jp RollChanceForLevelA_6346_CallAdvanceRandom7
+    jp RollChanceForLevelA_2_CallAdvanceRandom7
 
 .done:
     scf
     ccf
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom::
+RollChanceForLevelA_2_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom2::
+RollChanceForLevelA_2_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom3::
+RollChanceForLevelA_2_CallAdvanceRandom3::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom4::
+RollChanceForLevelA_2_CallAdvanceRandom4::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $66
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom5::
+RollChanceForLevelA_2_CallAdvanceRandom5::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $4c
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom6::
+RollChanceForLevelA_2_CallAdvanceRandom6::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $3f
     ret
 
-RollChanceForLevelA_6346_CallAdvanceRandom7::
+RollChanceForLevelA_2_CallAdvanceRandom7::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $26
     ret
 
-RollChanceForLevelA_6346_ReadBattleDamageLo::
+RollChanceForLevelA_2_ReadBattleDamageLo::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5608,7 +5611,7 @@ RollChanceForLevelA_6346_ReadBattleDamageLo::
     ld [wBattleDamageHi], a
     ret
 
-RollChanceForLevelA_6346_ReadBattleDamageLo2::
+RollChanceForLevelA_2_ReadBattleDamageLo2::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5620,7 +5623,7 @@ RollChanceForLevelA_6346_ReadBattleDamageLo2::
     ld [wBattleDamageHi], a
     ret
 
-RollChanceForLevelA_6346_ReadBattleDamageLo3::
+RollChanceForLevelA_2_ReadBattleDamageLo3::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5632,7 +5635,7 @@ RollChanceForLevelA_6346_ReadBattleDamageLo3::
     ld [wBattleDamageHi], a
     ret
 
-RollChanceForLevelA_6346_ReadBattleDamageLo4::
+RollChanceForLevelA_2_ReadBattleDamageLo4::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5644,7 +5647,7 @@ RollChanceForLevelA_6346_ReadBattleDamageLo4::
     ld [wBattleDamageHi], a
     ret
 
-RollChanceForLevelA_6346_ReadBattleDamageLo5::
+RollChanceForLevelA_2_ReadBattleDamageLo5::
     ld a, [wBattleDamageLo]
     ld l, a
     ld a, [wBattleDamageHi]
@@ -5996,7 +5999,7 @@ ForceLevel4IfActorConcentrated::
     pop bc
     ret
 
-ActionEffect_RobMagic_Sub01_GetBattleMP::
+ActionEffect_RobMagic_GetBattleMP::
     push hl
     push bc
     ld b, a
@@ -6010,7 +6013,7 @@ ActionEffect_RobMagic_Sub01_GetBattleMP::
     pop hl
     ret
 
-ActionEffect_Transform_Sub01_GetBaseHP::
+ActionEffect_Transform_GetBaseHP::
     push hl
     ld c, a
     farcall GetBaseHP
@@ -6027,7 +6030,7 @@ ActionEffect_Transform_Sub01_GetBaseHP::
     pop hl
     ret
 
-ActionEffect_Transform_Sub01_GetBaseMP::
+ActionEffect_Transform_GetBaseMP::
     push hl
     ld c, a
     farcall GetBaseMP
@@ -6080,7 +6083,7 @@ GetBaseAGLOfSlotA::
     pop hl
     ret
 
-ActionEffect_Transform_Sub01_BattlerRecordFieldAddress::
+ActionEffect_Transform_BattlerRecordFieldAddress::
     ld b, a
     and $03
     cp $03
@@ -6114,7 +6117,7 @@ ActionEffect_Transform_Sub01_BattlerRecordFieldAddress::
 .return:
     ret
 
-ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04::
+ActionEffect_Transform_BattlerRecordFieldAddress_2::
     ld b, a
     and $03
     cp $03
@@ -6145,7 +6148,7 @@ ActionEffect_Transform_Sub01_BattlerRecordFieldAddress_Sub04::
 .return:
     ret
 
-ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B::
+ActionEffect_Transform_SlotSpeciesNibblesD00AD00B_2::
     push hl
     ld c, a
     farcall SlotSpeciesNibblesD00AD00B
@@ -6177,7 +6180,7 @@ ComputeAttackDamageWithHalvedDEF::
     ld [hl], b
     ret
 
-ActionEffect_BeDragon_Sub02_CompareHLToBC::
+ActionEffect_BeDragon_CompareHLToBC::
     add a
     add_a_to_hl
     push hl
@@ -6383,7 +6386,7 @@ ActionEffectTable::
     dw ActionEffect_Whistle ; entry 167
     dw ActionEffect_Whistle ; entry 168
     dw ActionEffect_Whistle ; entry 169
-    dw ActionEffect_Ahhh_79ED ; entry 170
+    dw ActionEffect_Ahhh_2 ; entry 170
     dw ActionEffect_ZoneOut ; entry 171
     dw ActionEffect_Guard ; entry 172
     dw ActionEffect_PanicAll ; entry 173
@@ -6459,7 +6462,7 @@ ActionEffectTable::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD0::
     call RollSkillDamageScaledByBoltResistance
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6467,7 +6470,7 @@ ActionEffect_ActionD0::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD1::
     call ActionEffect_ActionD1_RollSkillDamageFromRecord
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6475,7 +6478,7 @@ ActionEffect_ActionD1::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD2::
     call ActionEffect_ActionD2_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6483,7 +6486,7 @@ ActionEffect_ActionD2::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD3::
     call ActionEffect_ActionD3_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6491,7 +6494,7 @@ ActionEffect_ActionD3::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD4::
     call ActionEffect_ActionD4_ScaleByGigaSlashResistance
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
@@ -6499,21 +6502,21 @@ ActionEffect_ActionD4::
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD5::
     call SkillDamageScaledByGigaSlashResistance
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $D6; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD6::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_Sacrifice
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $D7; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD7::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ActionEffect_ActionD7_AdvanceRandom
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6521,7 +6524,7 @@ ActionEffect_ActionD7::
 ; wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionD8::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ActionEffect_ActionD8_ComputeAttackDamage
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
@@ -6530,14 +6533,14 @@ ActionEffect_ActionD8::
 ; interpreted (E-0126)
 ActionEffect_ActionD9::
     call ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp UnreferencedStoreResolveMessage35D0_Bank36
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDA::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     xor a
     ldh [hTemp0], a
     call ClearDamageAndReadTargetStatus0_Bank36
@@ -6603,7 +6606,7 @@ ActionEffect_ActionDA::
 ; wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDB::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ClearDamageAndReadTargetStatus0_Bank36
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -6676,11 +6679,11 @@ ActionEffect_ActionDC::
 ; wBattleActionId) for action(s) $DD; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDD::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 2, [hl]
+    set BSTAT1_ATK_DOUBLED, [hl]
     push hl
     call AdvanceRandom
     pop hl
@@ -6714,7 +6717,7 @@ ActionEffect_ActionDD::
 ; wBattleActionId) for action(s) $DE; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDE::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
@@ -6729,14 +6732,14 @@ ActionEffect_ActionDE::
 ; wBattleActionId) for action(s) $DF; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionDF::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_RobMagic
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E0; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE0::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
     push af
     farcall ActorFormationSlotToTemp0
@@ -6751,14 +6754,14 @@ ActionEffect_ActionE0::
 ; wBattleActionId) for action(s) $E1; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE1::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_PanicAll
 
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE2::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
     and $04
     ldh [hTemp0], a
@@ -6772,7 +6775,7 @@ ActionEffect_ActionE2::
     ld a, c
     ld hl, wBattleStatus7
     call AddAx9ToHL
-    set 1, [hl]
+    set BSTAT7_DAMAGE_X10, [hl]
 
 .skip:
     ld hl, hTemp0
@@ -6785,7 +6788,7 @@ ActionEffect_ActionE2::
 ; wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionE3::
-    farcall RunA3414FAndMarkSlotMarks3
+    farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
     and $04
     ldh [hTemp0], a
@@ -7255,7 +7258,7 @@ ActionEffect_Sap::
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ActionEffect_UltraDown_SetSlotStatus6Bit7::
-    call ActionEffect_UltraDown_Sub02_GetBattleDEF
+    call ActionEffect_UltraDown_GetBattleDEF
     jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
@@ -7300,7 +7303,7 @@ ActionEffect_Slow::
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
 ResolveStepDamageMessage_SetSlotStatus6Bit7::
-    call ResolveStepDamageMessage_Sub04_Sub01_GetBaseAGLOfSlotA
+    call ResolveStepDamageMessage_GetBaseAGLOfSlotA
     jr nc, .skip
     ld a, [wBattleTarget]
     call SetSlotStatus6Bit7
@@ -7320,9 +7323,9 @@ ActionEffect_TwinHits::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT1_ATK_DOUBLED, [hl]
     jr nz, .skip
-    set 2, [hl]
+    set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7335,14 +7338,14 @@ ResolveStepDamageMessage_RollVsRadiantResistance::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT1_BLINDED, [hl]
     jr nz, .check_resolve_msg_flags
     call RollVsRadiantResistance
     jr nc, .skip
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    set 1, [hl]
+    set BSTAT1_BLINDED, [hl]
     ld l, $4a
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7400,9 +7403,9 @@ ActionEffect_TakeMagic::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 0, [hl]
+    bit BSTAT2_TAKE_MAGIC, [hl]
     jr nz, .skip
-    set 0, [hl]
+    set BSTAT2_TAKE_MAGIC, [hl]
     ld l, $3f
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7601,7 +7604,7 @@ ActionEffect_MagicBack::
     ld a, [wBattleActionId]
     cp SKILL_BOUNCE
     jr z, .skip
-    bit 5, [hl]
+    bit BSTAT2_MAGIC_BACK, [hl]
     jr nz, .skip2
     ld a, [hl]
     and $dd
@@ -7698,7 +7701,7 @@ ActionEffect_Transform::
     ld l, $52
     ld bc, $4090
     call ClearDamageAndStoreResolveMsgFlags_Bank36
-    call ActionEffect_Transform_Sub01_SlotSpeciesNibblesD00AD00B_Sub01
+    call ActionEffect_Transform_SlotSpeciesNibblesD00AD00B
     ld a, [wBattleActor]
     ld hl, wSideControl
     add_a_to_hl
@@ -8137,7 +8140,7 @@ ActionEffect_EvilSlash::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     ld a, [wBattleActor]
     call GetBattleATK
     call RandomWithin5PercentOfHL
@@ -8161,7 +8164,7 @@ ActionEffect_Massacre::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     ld a, [wBattleActor]
     call GetBattleATK
     call RandomWithin5PercentOfHL
@@ -8180,7 +8183,7 @@ ActionEffect_TwinSlash::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     call ActionEffect_PsycheUp
     ret
 
@@ -8195,7 +8198,7 @@ ActionEffect_Berserker::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    res 7, [hl]
+    res BSTAT2_CRITICAL_ROLLED, [hl]
     call ComputeAttackDamage
     ld a, [wBattleDamageLo]
     ld l, a
@@ -8230,7 +8233,7 @@ ActionEffect_PalsyAir::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jr nz, .skip2
     push hl
     call RollVsPalsyAirResistance
@@ -8439,7 +8442,7 @@ ActionEffect_Radiant_ReadBattleTarget::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 1, [hl]
+    bit BSTAT1_BLINDED, [hl]
     jr nz, .skip2
     push de
     call RollVsRadiantResistance
@@ -8785,7 +8788,7 @@ ActionEffect_Geyser_Skip::
     ld [wBattleTarget], a
     ld hl, wBattleStatus
     call AddAx9ToHL
-    bit 6, [hl]
+    bit BSTAT0_PARALYZED, [hl]
     jr nz, .read_battle_actor
     bit BSTAT0_ASLEEP, [hl]
     jr nz, .read_battle_actor
@@ -9136,7 +9139,7 @@ ActionEffect_LoveRain::
     call AddAx9ToHL
     ld a, [hl]
     and $01
-    jr nz, ActionEffect_LoveRain_CheckEffectByte6F
+    jr nz, ActionEffect_LoveRain_CheckLoveRainFlag
     push hl
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -9154,8 +9157,8 @@ ActionEffect_LoveRain::
     set 1, [hl]
     jp SetSubPhase7AndResetResolveStep
 
-ActionEffect_LoveRain_CheckEffectByte6F::
-    ld a, [wEffectByte6F]
+ActionEffect_LoveRain_CheckLoveRainFlag::
+    ld a, [wLoveRainFlag]
     or a
     jr z, .to_set_sub_phase7_and_reset_resolve_step
     call ActionEffect_Heal
@@ -9173,8 +9176,9 @@ ActionEffect_Whistle::
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 170 Ahhh; the misaligned decoding before E-0126 hid this entry; the body is not
-; interpreted (E-0126)
-ActionEffect_Ahhh_79ED::
+; interpreted (E-0126) (E-0344: the address in its name dropped or read as the label there; was
+; ActionEffect_Ahhh_79ED)
+ActionEffect_Ahhh_2::
     call ComputeAttackDamage
     ld a, [wBattleDamageLo]
     ld l, a
@@ -9225,7 +9229,7 @@ ActionEffect_ActionB0::
     ld [hl], $ff
     ld a, [wBattleTarget]
     and $03
-    ld hl, wBattleBytes4F
+    ld hl, wBattleSlotTriples
     ld b, a
     add a
     add b
@@ -9471,7 +9475,7 @@ ActionEffect_ActionC6::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT0_PARALYZED, [hl]
     ld l, $76
     ld bc, $4090
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
@@ -9488,7 +9492,7 @@ ActionEffect_ActionC8::
     jr c, .skip
     ld a, [wBattleTarget]
     and $03
-    ld hl, wBattleBytes4F
+    ld hl, wBattleSlotTriples
     ld b, a
     add a
     add b
@@ -9589,7 +9593,7 @@ ActionEffect_ActionCE::
 ; wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames;
 ; the body is not interpreted (E-0084)
 ActionEffect_ActionCF::
-    jp ActionEffect_LoveRain_CheckEffectByte6F
+    jp ActionEffect_LoveRain_CheckLoveRainFlag
 
 ActionEffect_ActionCF_Skip::
     ld hl, $b535
@@ -9700,7 +9704,7 @@ HalveDamageIfTargetStatus2Bit2::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus2
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT2_DAMAGE_HALVED, [hl]
     ret z
     ld a, [wBattleDamageLo]
     ld l, a
@@ -9729,7 +9733,7 @@ SetSlotStatus6Bit6::
     push hl
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 6, [hl]
+    set BSTAT6_STATS_RAISED, [hl]
     pop hl
     ret
 
@@ -9738,7 +9742,7 @@ SetSlotStatus6Bit7::
     push hl
     ld hl, wBattleStatus6
     call AddAx9ToHL
-    set 7, [hl]
+    set BSTAT6_STATS_LOWERED, [hl]
     pop hl
     ret
 

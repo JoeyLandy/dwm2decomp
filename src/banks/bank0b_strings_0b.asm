@@ -6,7 +6,7 @@ SECTION "Bank 0B", ROMX[$4000], BANK[$0B]
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank0B::
-    ld de, StringCategories_0B_4016
+    ld de, BeginStringDisplay_Bank0B_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9
@@ -20,14 +20,14 @@ ShowString_Bank0B::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_0B_4016::
-    dw StringList_0B_401C ; id 0
-    dw StringList_0B_421C ; id 1
-    dw StringList_0B_4326 ; id 2
+BeginStringDisplay_Bank0B_StringCategories::
+    dw StringList_Bank0B_StringCategories_0 ; id 0
+    dw StringList_Bank0B_StringCategories_1 ; id 1
+    dw StringList_Bank0B_StringCategories_2 ; id 2
 
-; category list of StringCategories_0B_4016; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank0B_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_0B_401C::
+StringList_Bank0B_StringCategories_0::
     dw String_0B_00_00 ; id 0
     dw String_0B_00_01 ; id 1
     dw String_0B_00_02 ; id 2
@@ -285,7 +285,7 @@ StringList_0B_401C::
     dw String_0B_00_FE ; id 254
     dw String_0B_00_FF ; id 255
 
-StringList_0B_421C::
+StringList_Bank0B_StringCategories_1::
     dw String_0B_01_00 ; id 0
     dw String_0B_01_01 ; id 1
     dw String_0B_01_01 ; id 2
@@ -420,7 +420,7 @@ StringList_0B_421C::
     dw String_0B_01_83 ; id 131
     dw String_0B_01_84 ; id 132
 
-StringList_0B_4326::
+StringList_Bank0B_StringCategories_2::
     dw String_0B_02_00 ; id 0
     dw String_0B_02_01 ; id 1
     dw String_0B_02_02 ; id 2

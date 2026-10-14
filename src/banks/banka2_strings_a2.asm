@@ -4,8 +4,10 @@
 SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $a2
 
-; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121)
-CopyMonsterTableBytesFrom4056::
+; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121) (E-0344:
+; the address in its name dropped or read as the label there; was CopyMonsterTableBytesFrom4056; a
+; trailing preposition left by the dropped address removed)
+CopyMonsterTableBytes::
     push de
     push bc
     ld a, [wMonsterId]
@@ -1760,7 +1762,7 @@ MonsterTableA2::
     db $01 ; personality axis $72
 
 BeginStringDisplay_BankE0_BeginStringDisplay::
-    ld de, StringCategories_A2_49F8
+    ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]
     sub $01
     ld [wStringCategory], a
@@ -1771,13 +1773,14 @@ BeginStringDisplay_BankE0_BeginStringDisplay::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_A2_49F8::
-    dw StringList_A2_49FC ; id 0
-    dw StringList_A2_4A3E ; id 1
+BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories::
+    dw StringList_BankE0_BeginStringDisplay_StringCategories_0 ; id 0
+    dw StringList_BankE0_BeginStringDisplay_StringCategories_1 ; id 1
 
-; category list of StringCategories_A2_49F8; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories; one pointer per
+; wStringIndex (E-0217)
 ; record: string
-StringList_A2_49FC::
+StringList_BankE0_BeginStringDisplay_StringCategories_0::
     dw String_A2_00_00 ; id 0
     dw String_A2_00_01 ; id 1
     dw String_A2_00_02 ; id 2
@@ -1812,7 +1815,7 @@ StringList_A2_49FC::
     dw String_A2_00_1F ; id 31
     dw String_A2_00_20 ; id 32
 
-StringList_A2_4A3E::
+StringList_BankE0_BeginStringDisplay_StringCategories_1::
     dw String_A2_01_00 ; id 0
 
 String_A2_00_00::

@@ -72,7 +72,7 @@ Map92Attrs0_Y0X0::
     db $00, $02
 
 BeginStringDisplay_Bank08_BeginStringDisplay::
-    ld de, StringCategories_95_4675
+    ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]
     sub $09
     ld [wStringCategory], a
@@ -80,7 +80,7 @@ BeginStringDisplay_Bank08_BeginStringDisplay::
     ret
 
 CopyStringToBuffer_Bank08_CopyStringToBuffer::
-    ld de, StringCategories_95_4675
+    ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]
     sub $09
     ld [wStringCategory], a
@@ -91,23 +91,24 @@ CopyStringToBuffer_Bank08_CopyStringToBuffer::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_95_4675::
-    dw StringList_95_468D ; id 0
-    dw StringList_95_47ED ; id 1
-    dw StringList_95_47EF ; id 2
-    dw StringList_95_4837 ; id 3
-    dw StringList_95_4839 ; id 4
-    dw StringList_95_4847 ; id 5
-    dw StringList_95_4853 ; id 6
-    dw StringList_95_4857 ; id 7
-    dw StringList_95_4869 ; id 8
-    dw StringList_95_487F ; id 9
-    dw StringList_95_48B7 ; id 10
-    dw StringList_95_48C7 ; id 11
+BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories::
+    dw StringList_95 ; id 0
+    dw StringList_95_2 ; id 1
+    dw StringList_95_3 ; id 2
+    dw StringList_95_4 ; id 3
+    dw StringList_95_5 ; id 4
+    dw StringList_95_6 ; id 5
+    dw StringList_95_7 ; id 6
+    dw StringList_95_8 ; id 7
+    dw StringList_95_9 ; id 8
+    dw StringList_95_10 ; id 9
+    dw StringList_95_11 ; id 10
+    dw StringList_95_12 ; id 11
 
-; category list of StringCategories_95_4675; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories; one pointer per
+; wStringIndex (E-0217)
 ; record: string
-StringList_95_468D::
+StringList_95::
 StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_00 ; id 0
     dw String_95_00_00 ; id 1
@@ -286,11 +287,11 @@ StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_AB ; id 174
     dw String_95_00_AB ; id 175
 
-StringList_95_47ED::
+StringList_95_2::
 StringTable95_Cat0A::
     dw String_95_01_00 ; id 0
 
-StringList_95_47EF::
+StringList_95_3::
 StringTable95_Cat0B::
     dw String_95_02_00 ; id 0
     dw String_95_02_01 ; id 1
@@ -329,11 +330,11 @@ StringTable95_Cat0B::
     dw String_95_02_22 ; id 34
     dw String_95_02_23 ; id 35
 
-StringList_95_4837::
+StringList_95_4::
 StringTable95_Cat0C_FieldActions::
     dw String_95_03_00 ; id 0
 
-StringList_95_4839::
+StringList_95_5::
 StringTable_FieldAbilities::
     dw String_95_04_00 ; id 0
     dw String_95_04_01 ; id 1
@@ -343,7 +344,7 @@ StringTable_FieldAbilities::
     dw String_95_04_05 ; id 5
     dw String_95_04_06 ; id 6
 
-StringList_95_4847::
+StringList_95_6::
 StringTable95_Cat0E_Tactics::
     dw String_95_05_00 ; id 0
     dw String_95_05_00 ; id 1
@@ -352,12 +353,12 @@ StringTable95_Cat0E_Tactics::
     dw String_95_05_04 ; id 4
     dw String_95_05_05 ; id 5
 
-StringList_95_4853::
+StringList_95_7::
 StringTable95_Cat0F::
     dw String_95_06_00 ; id 0
     dw String_95_06_00 ; id 1
 
-StringList_95_4857::
+StringList_95_8::
 StringTable95_Cat10::
     dw String_95_06_00 ; id 0
     dw String_95_07_01 ; id 1
@@ -369,7 +370,7 @@ StringTable95_Cat10::
     dw String_95_07_07 ; id 7
     dw String_95_07_08 ; id 8
 
-StringList_95_4869::
+StringList_95_9::
 StringTable95_Cat11_Targets::
     dw String_95_08_00 ; id 0
     dw String_95_08_01 ; id 1
@@ -383,7 +384,7 @@ StringTable95_Cat11_Targets::
     dw String_95_08_09 ; id 9
     dw String_95_08_0A ; id 10
 
-StringList_95_487F::
+StringList_95_10::
 StringTable95_Cat12_SkillFamilies::
     dw String_95_09_00 ; id 0
     dw String_95_09_01 ; id 1
@@ -414,7 +415,7 @@ StringTable95_Cat12_SkillFamilies::
     dw String_95_09_1A ; id 26
     dw String_95_09_1B ; id 27
 
-StringList_95_48B7::
+StringList_95_11::
 StringTable95_Cat13_SkillTypes::
     dw String_95_0A_00 ; id 0
     dw String_95_0A_01 ; id 1
@@ -425,7 +426,7 @@ StringTable95_Cat13_SkillTypes::
     dw String_95_0A_06 ; id 6
     dw String_95_0A_07 ; id 7
 
-StringList_95_48C7::
+StringList_95_12::
 StringTable95_Cat14_Usable::
     dw String_95_0B_00 ; id 0
     dw String_95_0B_01 ; id 1

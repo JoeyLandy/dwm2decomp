@@ -7,7 +7,7 @@ SECTION "Bank 48", ROMX[$4000], BANK[$48]
 ; entry 0 of AreaPaletteTable (E-0145, C1)
 ; record: one CGB palette: 4 BGR555 colours
 AreaPalettes0::
-BGPaletteBufferData_48_4001::
+DebugStaffRoll_Scene00_DecompressToVRAM_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $7da0, $7fff, $5ad6, $0063 ; entry 1
     dw $02c0, $3f7f, $03e2, $0000 ; entry 2
@@ -29,7 +29,7 @@ Map01Palettes::
     dw $0000, $0000, $0000, $0000 ; entry 7
 
 Map02Palettes::
-BGPaletteBufferData_48_4081::
+DebugStaffRoll_Scene01_DecompressToVRAM_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $7da0, $7fff, $5ad6, $0063 ; entry 1
     dw $02c0, $3f7f, $03e2, $0000 ; entry 2
@@ -156,7 +156,7 @@ Map18Tileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map18Palettes::
-BGPaletteBufferData_48_5138::
+DebugStaffRoll_Scene02_DecompressToVRAM_BGPaletteBufferData::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
     dw $012f, $67ff, $0214, $0000 ; entry 2
@@ -294,8 +294,8 @@ Map19Screens0_Y1X0::
     INCBIN "maps/map19/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 226 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_48_5F34::
-    INCBIN "maps/screen_maps/48_5_f34.lz"
+ScreenMap48_1::
+    INCBIN "gfx/misc/screen_map48_1.lz"
 
 ; LZSS-compressed: 201 bytes that expand to 360 (E-0016, E-0017)
 Map19Screens0_Y1X1::
@@ -318,8 +318,8 @@ Map19Attrs0_Y1X0::
     INCBIN "maps/map19/attrs0_y1_x0.lz"
 
 ; LZSS-compressed: 110 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_48_6367::
-    INCBIN "maps/key_worlds/screen_48_6367.lz"
+KeyWorldScreen48_1::
+    INCBIN "maps/key_worlds/screen48_1.lz"
 
 ; LZSS-compressed: 93 bytes that expand to 360 (E-0016, E-0017)
 Map19Attrs0_Y1X1::
@@ -368,8 +368,8 @@ Map1BScreens0_Y0X0::
 Map1BScreens0_Y1X0::
     INCBIN "maps/map1_b/screens0_y1_x0.lz"
 
-KeyWorldScreen_48_68C7::
-    INCBIN "maps/key_worlds/screen_48_68_c7.lz"
+KeyWorldScreen48_2::
+    INCBIN "maps/key_worlds/screen48_2.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 Map1BScreens0_Y2X0::
@@ -386,7 +386,7 @@ Map1BAttrs0_Y1X0::
     db $03, $fd, $f1, $01, $01, $03, $a0, $ff, $4d, $03, $a5, $0f, $4d, $03, $c4, $ff
     db $2b, $03, $44, $00, $03, $44, $14, $03, $3c, $06, $03, $58, $14, $03, $e4, $02
 
-KeyWorldScreen_48_6ADC::
+KeyWorldScreen48_3::
     db $68, $01, $03, $00, $00, $02, $02, $02, $02, $01, $03, $06, $01, $03, $02, $00
     db $03, $fb, $f7, $02, $03, $0a, $02, $03, $0f, $04, $03, $00, $04, $03, $1f, $09
     db $03, $fd, $f1, $01, $01, $03, $a0, $ff, $4d, $03, $a5, $0f, $4d, $03, $c4, $ff
@@ -455,8 +455,8 @@ Map14Tileset::
     INCBIN "maps/map14/tileset.lz"
 
 ; LZSS-compressed: 1494 bytes that expand to 2048 (E-0016, E-0017)
-Tiles2Gfx_48_7861::
-    INCBIN "gfx/misc/tiles2_gfx_48_7861.lz"
+Tiles2Gfx::
+    INCBIN "gfx/misc/tiles2_gfx.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours

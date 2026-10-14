@@ -41,23 +41,23 @@ ShowString_Bank08::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_08_4032::
+StringCategories_08::
 StringDatabase::
-    dw StringList_08_4044 ; id 0
-    dw StringList_08_4242 ; id 1
-    dw StringList_08_4258 ; id 2
+    dw StringList_08 ; id 0
+    dw StringList_08_2 ; id 1
+    dw StringList_08_3 ; id 2
 CopyNameStringFromBank08Database_Data1::
-    dw StringList_08_4458 ; id 3
-    dw StringList_08_4558 ; id 4
-ArenaMenu_Case27_Sub02_ReadFarPointerAtDEInBankB_Data::
-    dw StringList_08_4716 ; id 5
-    dw StringList_08_47F6 ; id 6
-    dw StringList_08_48D6 ; id 7
-    dw StringList_08_490C ; id 8
+    dw StringList_08_4 ; id 3
+    dw StringList_08_5 ; id 4
+ArenaMenu_ReadFarPointerAtDEInBankB_Data::
+    dw StringList_08_6 ; id 5
+    dw StringList_08_7 ; id 6
+    dw StringList_08_8 ; id 7
+    dw StringList_08_9 ; id 8
 
-; category list of StringCategories_08_4032; one pointer per wStringIndex (E-0217)
+; category list of StringCategories_08; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_08_4044::
+StringList_08::
 StringTable_System::
     dw String_08_00_00 ; id 0
     dw String_08_00_01 ; id 1
@@ -315,7 +315,7 @@ StringTable_System::
     dw String_08_00_ED ; id 253
     dw String_08_00_ED ; id 254
 
-StringList_08_4242::
+StringList_08_2::
 StringTable_MonsterFamilies::
     dw String_08_01_00 ; id 0
     dw String_08_01_01 ; id 1
@@ -329,7 +329,7 @@ StringTable_MonsterFamilies::
     dw String_08_01_09 ; id 9
     dw String_08_01_0A ; id 10
 
-StringList_08_4258::
+StringList_08_3::
 StringTable_MonsterNames::
     dw String_08_02_00 ; id 0
     dw String_08_02_01 ; id 1
@@ -588,7 +588,7 @@ StringTable_MonsterNames::
     dw String_08_02_FE ; id 254
     dw String_08_02_FF ; id 255
 
-StringList_08_4458::
+StringList_08_4::
 StringTable_MonsterNames2::
     dw String_08_03_00 ; id 0
     dw String_08_03_01 ; id 1
@@ -719,7 +719,7 @@ StringTable_MonsterNames2::
     dw String_08_03_7E ; id 126
     dw String_08_03_7F ; id 127
 
-StringList_08_4558::
+StringList_08_5::
 StringTable_SkillNames::
     dw String_08_04_00 ; id 0
     dw String_08_04_01 ; id 1
@@ -945,7 +945,7 @@ StringTable_SkillNames::
     dw String_08_04_D0 ; id 221
     dw String_08_04_D0 ; id 222
 
-StringList_08_4716::
+StringList_08_6::
 StringTable_ItemNames::
     dw String_08_05_00 ; id 0
     dw String_08_05_01 ; id 1
@@ -1060,7 +1060,7 @@ StringTable_ItemNames::
     dw String_08_05_62 ; id 110
     dw String_08_05_62 ; id 111
 
-StringList_08_47F6::
+StringList_08_7::
 StringTable_ItemDescriptions::
     dw String_08_06_00 ; id 0
     dw String_08_06_00 ; id 1
@@ -1175,7 +1175,7 @@ StringTable_ItemDescriptions::
     dw String_08_06_63 ; id 110
     dw String_08_06_6F ; id 111
 
-StringList_08_48D6::
+StringList_08_8::
 StringTable_PersonalityNames::
     dw String_08_07_00 ; id 0
     dw String_08_07_01 ; id 1
@@ -1205,7 +1205,7 @@ StringTable_PersonalityNames::
     dw String_08_07_19 ; id 25
     dw String_08_07_1A ; id 26
 
-StringList_08_490C::
+StringList_08_9::
 StringTable_ItemMenuMessages::
     dw String_08_08_00 ; id 0
     dw String_08_08_01 ; id 1

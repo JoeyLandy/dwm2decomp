@@ -23,10 +23,10 @@ GameMode4_Init_FillBytes::
     call FillBytes
     pop af
     ld [wBattleKind], a
-    call GameMode4_Init_Sub01_FillBytes
+    call GameMode4_Init_FillBytes_2
     ld a, [wLinkMode]
     or a
-    jr nz, .call_game_mode4_init_sub01_write_species_id
+    jr nz, .call_game_mode4_init_write_species_id_lo_and
     ld hl, wWorkBuf
     ld bc, $0200
     xor a
@@ -35,8 +35,8 @@ GameMode4_Init_FillBytes::
     ld [rRAMG], a
     ld a, $00
     ld [rRAMB], a
-    call GameMode4_Init_Sub01_ReadBattlePartyCount
-    call GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC
+    call GameMode4_Init_ReadBattlePartyCount
+    call GameMode4_Init_LoadMonsterAndSpeciesForListEntryC
     ld a, [wBattlerRecordSlot4 + BATTLER_JOIN_CLASS]
     ld [wFoeJoinClass1], a
     ld a, [wBattlerRecordSlot5 + BATTLER_JOIN_CLASS]
@@ -45,36 +45,36 @@ GameMode4_Init_FillBytes::
     ld [wFoeJoinClass3], a
     ld a, $00
     ld [rRAMG], a
-    jr .call_game_mode4_init_sub01_write_species_id
+    jr .call_game_mode4_init_write_species_id_lo_and
 
-.call_game_mode4_init_sub01_write_species_id:
-    call GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi
-    call GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31
-    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03
-    call GameMode4_Init_Sub01_QueueMusic
-    call GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty
+.call_game_mode4_init_write_species_id_lo_and:
+    call GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi
+    call GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31
+    call GameMode4_Init_LoadMonsterPicture
+    call GameMode4_Init_QueueMusic
+    call GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-GameMode4_Init_Sub01_FillBytes::
+GameMode4_Init_FillBytes_2::
     ld a, [wBattleKind]
     cp $04
-    jr z, .set_battle_setup_d7_to_01
+    jr z, .set_command_menu_state_to_01
     cp $05
-    jr z, .set_battle_setup_d7_to_01
+    jr z, .set_command_menu_state_to_01
     cp $09
-    jr z, .set_battle_setup_d7_to_01
+    jr z, .set_command_menu_state_to_01
     xor a
-    jr .set_battle_setup_d7
+    jr .set_command_menu_state
 
-.set_battle_setup_d7_to_01:
+.set_command_menu_state_to_01:
     ld a, $01
 
-.set_battle_setup_d7:
-    ld [wBattleSetupD7], a
+.set_command_menu_state:
+    ld [wCommandMenuState], a
     ld a, $ff
     ld [wEffectId], a
     ld [wQueuedActionId], a
-    ld [wBattleByteAD], a
+    ld [wSealPrayState], a
     ld [wBattleItemTarget], a
     ld hl, wMenuState
     ld bc, $0008
@@ -122,9 +122,9 @@ GameMode4_Init_Sub01_FillBytes::
     ld a, $00
     ld [wBattleScene], a
     xor a
-    ld [wBattleSetupD8], a
-    ld [wBattleSetupD8 + $1], a
-    ld [wBattleSetupD8 + $2], a
+    ld [wBattleLoadWork], a
+    ld [wBattleLoadWork + $1], a
+    ld [wBattleLoadWork + $2], a
     ld a, [wLinkMode]
     or a
     jr nz, .set_text_speed_to_03
@@ -139,7 +139,7 @@ GameMode4_Init_Sub01_FillBytes::
     ld [wBattleSetupDB], a
     ld a, [wBattleTextSpeed]
     ld [wTextSpeed], a
-    jr .clear_link_rule_work57
+    jr .clear_link_rule_flags
 
 .set_text_speed_to_03:
     ld a, $03
@@ -155,7 +155,7 @@ GameMode4_Init_Sub01_FillBytes::
     call GameMode4_Init_CountBattlerRecords
     ld [wBattleFoeCount], a
     ld [wSide1Flag], a
-    jr .clear_link_rule_work57
+    jr .clear_link_rule_flags
 
 .call_game_mode4_init_count_battler_records:
     ld hl, wBattlerRecords + BATTLER_LEVEL
@@ -167,10 +167,10 @@ GameMode4_Init_Sub01_FillBytes::
     ld [wBattlePartyCount], a
     ld [wSide1Flag], a
 
-.clear_link_rule_work57:
+.clear_link_rule_flags:
     xor a
-    ld [wLinkRuleWork57], a
-    ld [wBattleInitByte58], a
+    ld [wLinkRuleFlags], a
+    ld [wLinkRuleState], a
     ret
 
 ; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use
@@ -192,8 +192,8 @@ GameMode4_Init_CountBattlerRecords::
     ld a, c
     ret
 
-GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31::
-    farcall GameMode4_Init_Sub01_Sub02_CopyGlyphTilesToVRAM
+GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
+    farcall GameMode4_Init_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
     farcall LayoutTileBlocksForBattleFoeCount
@@ -205,48 +205,48 @@ GameMode4_Init_Sub01_ClearAttributesAndScreenBuffer_Bank31::
     ld [wBGPaletteUploadRequest], a
     ret
 
-GameMode4_Init_Sub01_Sub03_LoadMonsterPicture_Sub03::
+GameMode4_Init_LoadMonsterPicture::
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_sub01_sub03_load_monster
+    jr z, .call_game_mode4_init_load_monster_picture_2
     ld de, wBattlerRecords + BATTLER_SPECIES
 
-.call_game_mode4_init_sub01_sub03_load_monster:
+.call_game_mode4_init_load_monster_picture_2:
     ld hl, vTiles2 + $140
     ld c, $01
-    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
+    call GameMode4_Init_LoadMonsterPicture_2
     ld a, [wBattleFoeCount]
     cp $01
     jr z, .return
     ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_sub01_sub03_load_monster2
+    jr z, .call_game_mode4_init_load_monster_picture_22
     ld de, wBattlerRecordSlot1 + BATTLER_SPECIES
 
-.call_game_mode4_init_sub01_sub03_load_monster2:
+.call_game_mode4_init_load_monster_picture_22:
     ld hl, vTiles2 + $380
     ld c, $03
-    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
+    call GameMode4_Init_LoadMonsterPicture_2
     ld a, [wBattleFoeCount]
     cp $02
     jr z, .return
     ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
     ld a, [wLinkRole]
     bit 1, a
-    jr z, .call_game_mode4_init_sub01_sub03_load_monster3
+    jr z, .call_game_mode4_init_load_monster_picture_23
     ld de, wBattlerRecordSlot2 + BATTLER_SPECIES
 
-.call_game_mode4_init_sub01_sub03_load_monster3:
+.call_game_mode4_init_load_monster_picture_23:
     ld hl, vTiles2 + $5c0
     ld c, $05
-    call GameMode4_Init_Sub01_Sub03_LoadMonsterPicture
+    call GameMode4_Init_LoadMonsterPicture_2
 
 .return:
     ret
 
-GameMode4_Init_Sub01_Sub03_LoadMonsterPicture::
+GameMode4_Init_LoadMonsterPicture_2::
     ld a, [de]
     push af
     inc de
@@ -257,7 +257,7 @@ GameMode4_Init_Sub01_Sub03_LoadMonsterPicture::
     call LoadMonsterPicture
     ret
 
-GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi::
+GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -268,7 +268,7 @@ GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi::
     ld b, a
 
 .loop:
-    call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
+    call GameMode4_Init_LoadBattleSlotFromBattlerRecord
     inc c
     dec b
     jr nz, .loop
@@ -282,7 +282,7 @@ GameMode4_Init_Sub01_WriteSpeciesIdLoAndSpeciesIdHi::
     ld b, a
 
 .loop2:
-    call GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8
+    call GameMode4_Init_LoadBattleSlotFromBattlerRecord
     inc c
     dec b
     jr nz, .loop2
@@ -881,7 +881,7 @@ ScaleHLToEightTenths_Bank19::
     pop bc
     ret
 
-GameMode4_Init_Sub01_QueueMusic::
+GameMode4_Init_QueueMusic::
     ld a, [wBattleKind]
     or a
     jr z, .skip
@@ -899,7 +899,7 @@ GameMode4_Init_Sub01_QueueMusic::
     call QueueMusic
     ret
 
-GameMode4_Init_Sub01_ReadBattlePartyCount::
+GameMode4_Init_ReadBattlePartyCount::
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -907,14 +907,14 @@ GameMode4_Init_Sub01_ReadBattlePartyCount::
 
 .loop:
     push bc
-    call GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped
+    call GameMode4_Init_SRAMRecordAddressMapped
     pop bc
     inc c
     dec b
     jr nz, .loop
     ret
 
-GameMode4_Init_Sub01_Sub06_SRAMRecordAddressMapped::
+GameMode4_Init_SRAMRecordAddressMapped::
     ld a, c
     ld c, MON_NAME
     call SRAMRecordAddressMapped
@@ -1112,7 +1112,7 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC::
+BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
     and $03
@@ -1145,7 +1145,7 @@ BattleEnd_Step3_Sub04_Sub01_LoadMonsterAndSpeciesForListEntryC::
     ld [de], a
     ret
 
-GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC::
+GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     ld a, [wBattleFoeCount]
     ld b, a
     ld c, $00
@@ -1168,7 +1168,7 @@ GameMode4_Init_Sub01_LoadMonsterAndSpeciesForListEntryC::
 
 .loop2:
     push bc
-    call GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc
+    call GameMode4_Init_WriteBattleArg2AndBattleArg3Etc
     pop bc
     inc c
     ld a, e
@@ -1220,7 +1220,7 @@ LoadMonsterAndSpeciesForListEntryC::
     pop bc
     ret
 
-GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc::
+GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
     push bc
     ld a, e
     ld [wBattleArg2], a
@@ -1336,7 +1336,7 @@ GameMode4_Init_Sub01_Sub07_WriteBattleArg2AndBattleArg3Etc::
     ld [hli], a
     ld a, $03
     ld [hli], a
-    call StoreRandomByte80ToFFAtHL
+    call StoreRandom80ToFFAtHL
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
     call StoreRandomByteAtHL_Bank19
@@ -1383,8 +1383,9 @@ StoreRandomByteAtHL_Bank19::
     ld [hli], a
     ret
 
-; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118)
-StoreRandomByte80ToFFAtHL::
+; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118) (E-0345: was
+; StoreRandomByte80ToFFAtHL)
+StoreRandom80ToFFAtHL::
     push af
     push bc
     push de
@@ -1539,7 +1540,7 @@ CopySpeciesExpCurveBRecordToHL_Bank19::
     ret
 
 ; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and
-; become 1 or 0; with wNewRecordByte0D set bit 4 is cleared (E-0125)
+; become 1 or 0; with wNewRecordFamily set bit 4 is cleared (E-0125)
 RollRecordField0DState::
     ld a, [wBattleArg2]
     add $0d
@@ -1549,7 +1550,7 @@ RollRecordField0DState::
     ld h, a
     ld a, [hl]
     or a
-    jr z, .check_new_record_byte0_d2
+    jr z, .check_new_record_family2
     cp $01
     jr z, .skip
     cp $02
@@ -1576,16 +1577,16 @@ RollRecordField0DState::
     pop af
     ld a, [wRandomLo]
     cp b
-    jr c, .check_new_record_byte0_d
+    jr c, .check_new_record_family
     xor a
-    jr .check_new_record_byte0_d2
+    jr .check_new_record_family2
 
-.check_new_record_byte0_d:
+.check_new_record_family:
     ld a, $01
 
-.check_new_record_byte0_d2:
+.check_new_record_family2:
     ld [hl], a
-    ld a, [wNewRecordByte0D]
+    ld a, [wNewRecordFamily]
     or a
     ret z
     res 4, a
@@ -1898,7 +1899,7 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     inc de
     ld a, [wSpeciesRecord + SPECIES_SEX_RATIO]
     or a
-    jr z, .check_new_record_byte0_d2
+    jr z, .check_new_record_family2
     cp $01
     jr z, .skip
     cp $02
@@ -1925,16 +1926,16 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     pop af
     ld a, [wRandomLo]
     cp b
-    jr c, .check_new_record_byte0_d
+    jr c, .check_new_record_family
     xor a
-    jr .check_new_record_byte0_d2
+    jr .check_new_record_family2
 
-.check_new_record_byte0_d:
+.check_new_record_family:
     ld a, $01
 
-.check_new_record_byte0_d2:
+.check_new_record_family2:
     ld [de], a
-    ld a, [wNewRecordByte0D]
+    ld a, [wNewRecordFamily]
     or a
     jr z, .skip4
     res 4, a
@@ -1962,26 +1963,27 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     pop bc
     ret
 
-GameMode4_Init_Sub01_Sub04_LoadBattleSlotFromBattlerRecord_4BA8::
+GameMode4_Init_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a
-    jr nz, LoadBattleSlotFromBattlerRecord_4BA8
+    jr nz, LoadBattleSlotFromBattlerRecord
     ld a, c
     cp $04
-    jr nc, .call_load_battle_slot_from_battler_record_4
-    call LoadBattleSlotFromBattlerRecord_4BA8
+    jr nc, .call_load_battle_slot_from_battler_record_2
+    call LoadBattleSlotFromBattlerRecord
     jr .call_clear_species_record_buffer_bank19
 
-.call_load_battle_slot_from_battler_record_4:
-    call LoadBattleSlotFromBattlerRecord_4CF8
+.call_load_battle_slot_from_battler_record_2:
+    call LoadBattleSlotFromBattlerRecord_2
 
 .call_clear_species_record_buffer_bank19:
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
 ; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and
-; stats from its battler record into the battle arrays (E-0131)
-LoadBattleSlotFromBattlerRecord_4BA8::
+; stats from its battler record into the battle arrays (E-0131) (E-0344: the address in its name
+; dropped or read as the label there; was LoadBattleSlotFromBattlerRecord_4BA8)
+LoadBattleSlotFromBattlerRecord::
     ld a, c
     push bc
     call BattlerRecordAddress_Bank19
@@ -2082,7 +2084,7 @@ LoadBattleSlotFromBattlerRecord_4BA8::
     cp $04
     jr nc, .restore3
     ld a, c
-    ld de, wBattleSetupD8
+    ld de, wBattleLoadWork
     add e
     ld e, a
     jr nc, .restore2
@@ -2159,7 +2161,7 @@ LoadBattleSlotFromBattlerRecord_4BA8::
     call StoreWordAtDEPlus2C_Bank19
     ld de, wBattleINT
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wBattleWordArray3F
+    ld de, wBattleExtraStat
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
     or a
@@ -2213,8 +2215,9 @@ LoadBattleSlotFromBattlerRecord_4BA8::
     ret
 
 ; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle
-; arrays and loads its skills (E-0131)
-LoadBattleSlotFromBattlerRecord_4CF8::
+; arrays and loads its skills (E-0131) (E-0344: the address in its name dropped or read as the label
+; there; was LoadBattleSlotFromBattlerRecord_4CF8)
+LoadBattleSlotFromBattlerRecord_2::
     push bc
     call BattlerRecordAddress_Bank19
     pop bc
@@ -2331,7 +2334,7 @@ LoadBattleSlotFromBattlerRecord_4CF8::
     call StoreWordAtDEPlus2C_Bank19
     ld de, wBattleINT
     call StoreWordAtDEPlus2C_Bank19
-    ld de, wBattleWordArray3F
+    ld de, wBattleExtraStat
     call StoreWordAtDEPlus2C_Bank19
     ld a, [wLoadSlot]
     or a
@@ -2406,7 +2409,7 @@ BattlerRecordAddress_Bank19::
     ld h, a
     ret
 
-GameMode4_Init_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
+GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a
     jr nz, .skip2
@@ -2783,8 +2786,10 @@ LoadExpTableEntryToTemp2::
 
 ; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121) (E-0340:
-; the address in its name read as its RAM name; was LoadTable4E60EntryForWC991ToWC9DE)
-LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp::
+; the address in its name read as its RAM name; was LoadTable4E60EntryForWC991ToWC9DE) (E-0344: the
+; address in its name dropped or read as the label there; was
+; LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp)
+LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
     ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufA + MON_SPECIES + 1]
@@ -2823,8 +2828,10 @@ LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp::
 
 ; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121) (E-0340:
-; the address in its name read as its RAM name; was LoadTable4E60EntryForWCA36ToWCA83)
-LoadTable4E60EntryForRecordBufBSpeciesToRecordBufBExp::
+; the address in its name read as its RAM name; was LoadTable4E60EntryForWCA36ToWCA83) (E-0344: the
+; address in its name dropped or read as the label there; was
+; LoadTable4E60EntryForRecordBufBSpeciesToRecordBufBExp)
+LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufB + MON_SPECIES + 1]

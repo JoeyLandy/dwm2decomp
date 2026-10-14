@@ -60,10 +60,10 @@ SceneWatchOut::
     dw SceneWatchOut_ShowTheFarmHasNo
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
-    dw SceneWatchOut_Msg4D50_PickTheMonsterTo
+    dw SceneWatchOut_Msg_PickTheMonsterTo
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWatchOut_CopyGlyphTilesToVRAMAndStep
-    dw SceneWatchOut_ToSceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo
+    dw SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_ReadScriptMsgSelect
     dw SceneWatchOut_ReadScriptMsgSelect
@@ -181,7 +181,7 @@ SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
     xor a
     ld [wScriptSubStep], a
     ld [wScriptMsgSelect], a
-    call ShowBoxFromTable4583
+    call ShowBoxFromTable
     farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
@@ -267,10 +267,10 @@ SceneWaterReward::
     dw SceneWaterReward_ShowWaitTheFarmIs
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
     dw SceneWatchOut_RunMessageBoxFar_Bank85
-    dw SceneWatchOut_Msg4D50_PickTheMonsterTo
+    dw SceneWatchOut_Msg_PickTheMonsterTo
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWaterReward_CopyGlyphTilesToVRAMAndStep
-    dw SceneWatchOut_ToSceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo
+    dw SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_ReadScriptMsgSelect
     dw SceneWatchOut_ReadScriptMsgSelect
@@ -472,8 +472,8 @@ SceneWatchOut_ShowLetMeJoinYour::
     ld [wScriptStep], a
     ret
 
-SceneWatchOut_ToSceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
-    call SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo
+SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
+    call SceneWatchOut_ReadJoypadPressedAndFrameCounterLo
     ret
 
 SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
@@ -482,13 +482,13 @@ SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
     xor a
     ld [wScriptSubStep], a
     ld [wScriptMsgSelect], a
-    call ShowBoxFromTable4583
+    call ShowBoxFromTable
     farcall SetBit1OfPlayerAndObjectFlags
     ld hl, wScriptStep
     inc [hl]
     ret
 
-SceneWatchOut_Msg4D50_PickTheMonsterTo::
+SceneWatchOut_Msg_PickTheMonsterTo::
     ld hl, $4d50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
     ld hl, wScriptStep
@@ -566,7 +566,7 @@ SceneWaterReward_ShowCoohIHeardFrom::
     inc [hl]
     ret
 
-SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
+SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -577,7 +577,7 @@ SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
 .check_bit0:
     bit 0, a
     jr z, .check_bit6
-    call SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect
+    call SceneWatchOut_WriteScriptMsgSelect
     ld a, $bc
     call WriteVRAMByte
     ld a, $69
@@ -591,19 +591,19 @@ SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
 .check_bit6:
     bit 6, a
     jr z, .check_bit7
-    call SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect
+    call SceneWatchOut_WriteScriptMsgSelect
     ld a, $c3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
     dec [hl]
     ld a, $69
     call QueueSoundEffect
-    jr .call_scene_watch_out_case08_sub01_write
+    jr .call_scene_watch_out_write_script_msg_select
 
 .check_bit7:
     bit 7, a
-    jr z, .call_scene_watch_out_case08_sub01_write
-    call SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect
+    jr z, .call_scene_watch_out_write_script_msg_select
+    call SceneWatchOut_WriteScriptMsgSelect
     ld a, $c3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
@@ -611,8 +611,8 @@ SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
     ld a, $69
     call QueueSoundEffect
 
-.call_scene_watch_out_case08_sub01_write:
-    call SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect
+.call_scene_watch_out_write_script_msg_select:
+    call SceneWatchOut_WriteScriptMsgSelect
     ld c, $bb
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -624,7 +624,7 @@ SceneWatchOut_Case08_ReadJoypadPressedAndFrameCounterLo::
     call WriteVRAMByte
     ret
 
-SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect::
+SceneWatchOut_WriteScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     and $03
     ld [wScriptMsgSelect], a
@@ -656,11 +656,12 @@ SceneWatchOut_Case08_Sub01_WriteScriptMsgSelect::
     ret
 
 ; saves the screen buffer to vBGMap1, copies the 8 x 9 box $4583 to wScreenTileBuffer (clearing CGB
-; attributes), draws it and plays sound $6C (E-0125)
-ShowBoxFromTable4583::
+; attributes), draws it and plays sound $6C (E-0125) (E-0344: the address in its name dropped or
+; read as the label there; was ShowBoxFromTable4583)
+ShowBoxFromTable::
     farcall SaveScreenBufferToBGMap1
     ld hl, wScreenTileBuffer
-    ld de, TileRect_85_4583
+    ld de, ShowBoxFromTable_TileRect
     ld b, $09
 
 .loop:
@@ -748,7 +749,7 @@ DrawScreenBufferAtScrollOrigin::
 ; $E1-$E3 in the left column of rows 1, 3 and 5, $B3 $B4.. $B5 bottom), after the ret of the routine
 ; that ends at $4582 (E-0239, C1)
 ; record: 8 x 9 tiles, one row per line
-TileRect_85_4583::
+ShowBoxFromTable_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $e1, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -812,8 +813,8 @@ SceneWarubouLeaves::
     ld a, [wScriptStep]
     jumptable
     dw SceneWarubouLeaves_StepObjectTowardCoord
-    dw SceneWarubouLeaves_StepObjectTowardCoord_Case01_SetStepPtrHi
-    dw SceneWarubouLeaves_StepObjectTowardCoord_Case02_SetStepPtrHi
+    dw SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3
+    dw SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2
     dw SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi
 
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
@@ -838,7 +839,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
     ld [wScriptStartRequest], a
     ret
 
-SceneWarubouLeaves_StepObjectTowardCoord_Case02_SetStepPtrHi::
+SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2::
     ld a, $01
     ld [wStepPtrHi], a
     ld a, $03
@@ -855,7 +856,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_Case02_SetStepPtrHi::
     farcall StepObjectTowardCoord
     jr SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived
 
-SceneWarubouLeaves_StepObjectTowardCoord_Case01_SetStepPtrHi::
+SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3::
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $02
@@ -1413,7 +1414,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
     ld hl, $0bb1 ; 'Terry: Well, this proves that I'
     call StartMessageHL_B85
     ld a, $01
-    ld [wLinkByte94], a
+    ld [wLinkSetting], a
     ld de, EVENT_SCENE_TERRY_BATTLE_038
     call SetFlagBit
     ret
@@ -1457,7 +1458,7 @@ SceneTerry::
     jr nz, .call_test_flag_bit
     ld a, $0f
     ldh [hMapId], a
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .set_warp_dest_x_to_20
     ld a, $20
@@ -1476,7 +1477,7 @@ SceneTerry::
     ret
 
 .call_test_flag_bit:
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .set_map_id_to_0F
     ld a, $10
@@ -1985,26 +1986,26 @@ ScenePoorChurch_WriteSVBKAndScriptParam0::
 ScreenAnimationTable::
     dw Map2FScreens0_Y1X0 ; id 0: frame 0 tile map (bank $93)
     dw Map2FAttrs0_Y1X0 ; frame 0 attribute map
-    dw ScreenMap_93_5B36 ; frame 1 tile map
-    dw ScriptScreenAttrMap_93_6153 ; frame 1 attribute map
-    dw ScreenMap_93_5B36 ; id 1: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_93_6153 ; frame 0 attribute map
-    dw ScreenMap_93_5BE9 ; frame 1 tile map
-    dw ScriptScreenAttrMap_93_6194 ; frame 1 attribute map
-    dw ScreenMap_93_5BE9 ; id 2: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_93_6194 ; frame 0 attribute map
-    dw ScreenMap_93_5C99 ; frame 1 tile map
-    dw ScriptScreenAttrMap_93_61CF ; frame 1 attribute map
-    dw ScreenMap_93_5C99 ; id 3: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_93_61CF ; frame 0 attribute map
-    dw ScreenMap_93_5D4B ; frame 1 tile map
-    dw ScriptScreenAttrMap_93_6208 ; frame 1 attribute map
-    dw ScreenMap_93_5D4B ; id 4: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_93_6208 ; frame 0 attribute map
-    dw ScreenMap_93_5DF5 ; frame 1 tile map
-    dw ScriptScreenAttrMap_93_623C ; frame 1 attribute map
-    dw ScreenMap_93_5DF5 ; id 5: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_93_623C ; frame 0 attribute map
+    dw ScreenMap_ScreenAnimationTable_2 ; frame 1 tile map
+    dw ScriptScreenAttrMap_ScreenAnimationTable_3 ; frame 1 attribute map
+    dw ScreenMap_ScreenAnimationTable_2 ; id 1: frame 0 tile map (bank $93)
+    dw ScriptScreenAttrMap_ScreenAnimationTable_3 ; frame 0 attribute map
+    dw ScreenMap_ScreenAnimationTable_6 ; frame 1 tile map
+    dw ScriptScreenAttrMap_ScreenAnimationTable_7 ; frame 1 attribute map
+    dw ScreenMap_ScreenAnimationTable_6 ; id 2: frame 0 tile map (bank $93)
+    dw ScriptScreenAttrMap_ScreenAnimationTable_7 ; frame 0 attribute map
+    dw ScreenMap_ScreenAnimationTable_10 ; frame 1 tile map
+    dw ScriptScreenAttrMap_ScreenAnimationTable_11 ; frame 1 attribute map
+    dw ScreenMap_ScreenAnimationTable_10 ; id 3: frame 0 tile map (bank $93)
+    dw ScriptScreenAttrMap_ScreenAnimationTable_11 ; frame 0 attribute map
+    dw ScreenMap_ScreenAnimationTable_14 ; frame 1 tile map
+    dw ScriptScreenAttrMap_ScreenAnimationTable_15 ; frame 1 attribute map
+    dw ScreenMap_ScreenAnimationTable_14 ; id 4: frame 0 tile map (bank $93)
+    dw ScriptScreenAttrMap_ScreenAnimationTable_15 ; frame 0 attribute map
+    dw ScreenMap_ScreenAnimationTable_18 ; frame 1 tile map
+    dw ScriptScreenAttrMap_ScreenAnimationTable_19 ; frame 1 attribute map
+    dw ScreenMap_ScreenAnimationTable_18 ; id 5: frame 0 tile map (bank $93)
+    dw ScriptScreenAttrMap_ScreenAnimationTable_19 ; frame 0 attribute map
     dw Map2FScreens4_Y1X0 ; frame 1 tile map
     dw Map2FAttrs4_Y1X0 ; frame 1 attribute map
 
@@ -2066,7 +2067,7 @@ SceneGiveBackCyal::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneGiveBackCyal_ClearBit2AtHL_Bank85
     dw SceneGiveBackCyal_ClearBit1AtHL_Bank85
-    dw SceneGiveBackCyal_ToSceneGiveBackCyal_Case09_WriteScrollXAndScrollXHiEtc
+    dw SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
 SceneGiveBackCyal_SetScriptStartRequestTo80::
@@ -2074,9 +2075,9 @@ SceneGiveBackCyal_SetScriptStartRequestTo80::
     ld [wScriptStartRequest], a
     ret
 
-SceneGiveBackCyal_ToSceneGiveBackCyal_Case09_WriteScrollXAndScrollXHiEtc::
+SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld b, $1e
-    call SceneGiveBackCyal_Case09_WriteScrollXAndScrollXHiEtc
+    call SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     ret
 
 SceneGiveBackCyal_ClearBit1AtHL_Bank85::
@@ -2164,7 +2165,7 @@ SceneGiveBackCyal_SetBit2AtHL_B0F_Bank85::
     inc [hl]
     ret
 
-SceneGiveBackCyal_Case09_WriteScrollXAndScrollXHiEtc::
+SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld a, [wFrameCounterLo]
     and $03
     bit 0, a
@@ -2426,7 +2427,7 @@ SceneBarrel_WriteScriptParam0::
     ld [wScriptParam0], a
     and $01
     jr z, .check_script_param0
-    call SceneBarrel_Case05_NextTableByte
+    call SceneBarrel_NextTableByte
 
 .check_script_param0:
     ld a, [wScriptParam0]
@@ -2438,12 +2439,12 @@ SceneBarrel_WriteScriptParam0::
     inc [hl]
     ret
 
-SceneBarrel_Case05_NextTableByte::
+SceneBarrel_NextTableByte::
     call NextTableByte
     ld a, [wRandomHi]
     and $03
     cp $03
-    jr z, SceneBarrel_Case05_NextTableByte
+    jr z, SceneBarrel_NextTableByte
     dec a
     ld c, a
     ld a, $40
@@ -2529,17 +2530,17 @@ SceneBarrel_TestFlagBit::
     inc [hl]
     xor a
     ld [wScriptParam1], a
-    ld de, $015f
+    ld de, EVENT_KIRAL_FETCH_ME_MY
     call TestFlagBit
     ret nc
     ld hl, wScriptParam1
     inc [hl]
-    ld de, $0160
+    ld de, EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY
     call TestFlagBit
     ret nc
     ld hl, wScriptParam1
     inc [hl]
-    ld de, $0161
+    ld de, EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161
     call TestFlagBit
     ret nc
     ld hl, wScriptParam1
@@ -2555,17 +2556,17 @@ SceneLimbo::
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_SetObject5
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_SetObject5
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_RunFieldCommandTemp0
     dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85
     dw SceneLimbo_StartMessageHL_B85
-    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_SetObject5
+    dw SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest
 
@@ -2594,7 +2595,7 @@ SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_SetObject5::
+SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2::
     ld a, [wSpriteSlots + $7]
     or a
     jr nz, .skip
@@ -3437,7 +3438,7 @@ PartyHasField6FAtLeastC0Without55Bit7::
     ldh [hTemp0], a
     ret
 
-FhuntTalkEvents_Case0F_WriteRAMGAndTemp0::
+FhuntTalkEvents_WriteRAMGAndTemp0::
     ld a, [wPartyCount]
     or a
     jr nz, .skip
@@ -3485,7 +3486,7 @@ FhuntTalkEvents_Case0F_WriteRAMGAndTemp0::
     ldh [hTemp0], a
     ret
 
-FhuntTalkEvents_Case29_WriteTemp0AndRAMG::
+FhuntTalkEvents_WriteTemp0AndRAMG::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, .check_party_count2
@@ -3617,8 +3618,8 @@ TalkEvent29WordList::
     dw $0119, $011b, $011f, $0120, $0124, $0126, $0127, $0129
     dw $012a, $012f, $0130, $0135, $0137, $0000
 
-FhuntTalkEvents_Case47_TestFlagBit::
-    ld de, $0000
+FhuntTalkEvents_TestFlagBit_3::
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .set_temp0_to_02
     ldh a, [hPlayerSpriteOverride]
@@ -4011,7 +4012,7 @@ SetupMap0BMonsterObjects::
     db $14, $15, $16, $1a, $1b, $1c, $1d, $21, $24, $25, $26, $28, $29, $2a, $2e, $2f
     db $33, $38, $39, $3d
 
-RandomGoldOrItem_Case04_NextRandomSeed::
+RandomGoldOrItem_NextRandomSeed::
     ld a, [wTriggerKind]
     cp $ff
     jr nz, .loop
@@ -4043,7 +4044,7 @@ RandomGoldOrItem_Case04_NextRandomSeed::
     and $0f
     dec a
     jr nz, .set_trigger_marker_flags_to_80
-    call RandomGoldOrItem_Case04_Sub01_NextRandomSeed
+    call RandomGoldOrItem_NextRandomSeed_2
     cp $05
     jr nc, .call_compute_party_strength_level_party
     ld a, $80
@@ -4074,7 +4075,7 @@ RandomGoldOrItem_Case04_NextRandomSeed::
     push af
     ld a, $80
     ld [wTriggerMarkerFlags], a
-    call RandomGoldOrItem_Case04_Sub01_NextRandomSeed
+    call RandomGoldOrItem_NextRandomSeed_2
     cp $32
     jr nc, .cp_46
     ld a, $00
@@ -4128,7 +4129,7 @@ RandomGoldOrItem_Case04_NextRandomSeed::
     or a
     jp z, .loop
     ld [wTriggerKind], a
-    farcall RandomGoldOrItem_Case04_Sub01_DecompressToVRAM
+    farcall RandomGoldOrItem_DecompressToVRAM
     ld a, [wMessageIndex]
     ld [wTriggerCell], a
     ld a, [wMessageGroup]
@@ -4139,12 +4140,12 @@ RandomGoldOrItem_Case04_NextRandomSeed::
     inc [hl]
     ret
 
-RandomGoldOrItem_Case04_Sub01_NextRandomSeed::
+RandomGoldOrItem_NextRandomSeed_2::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $7f
     cp $63
-    jr nc, RandomGoldOrItem_Case04_Sub01_NextRandomSeed
+    jr nc, RandomGoldOrItem_NextRandomSeed_2
     ret
     db $19, $1a, $1b, $1b, $1c, $2c, $00, $00, $01, $07, $28, $22, $0c, $2c, $00, $00
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07

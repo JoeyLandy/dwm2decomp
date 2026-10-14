@@ -55,28 +55,28 @@ KeyWorldRoom16_Y2X2_Tiles::
     INCBIN "maps/key_worlds/room16_y2_x2_tiles.lz"
 
 ; LZSS-compressed: 241 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4A8F::
-    INCBIN "maps/screen_maps/6_d_4_a8_f.lz"
+ScreenMap6D_1::
+    INCBIN "gfx/misc/screen_map6_d_1.lz"
 
 ; LZSS-compressed: 160 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4B80::
-    INCBIN "maps/screen_maps/6_d_4_b80.lz"
+ScreenMap6D_2::
+    INCBIN "gfx/misc/screen_map6_d_2.lz"
 
 ; LZSS-compressed: 211 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4C20::
-    INCBIN "maps/screen_maps/6_d_4_c20.lz"
+ScreenMap6D_3::
+    INCBIN "gfx/misc/screen_map6_d_3.lz"
 
 ; LZSS-compressed: 261 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4CF3::
-    INCBIN "maps/screen_maps/6_d_4_cf3.lz"
+ScreenMap6D_4::
+    INCBIN "gfx/misc/screen_map6_d_4.lz"
 
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4DF8::
-    INCBIN "maps/screen_maps/6_d_4_df8.lz"
+ScreenMap6D_5::
+    INCBIN "gfx/misc/screen_map6_d_5.lz"
 
 ; LZSS-compressed: 209 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_4EB6::
-    INCBIN "maps/screen_maps/6_d_4_eb6.lz"
+ScreenMap6D_6::
+    INCBIN "gfx/misc/screen_map6_d_6.lz"
 
 ; LZSS-compressed: 246 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom29_Y1X2_Tiles::
@@ -121,28 +121,28 @@ KeyWorldRoom16_Y2X2_Attrs::
     INCBIN "maps/key_worlds/room16_y2_x2_attrs.lz"
 
 ; LZSS-compressed: 103 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_53B6::
-    INCBIN "maps/key_worlds/screen_6_d_53_b6.lz"
+KeyWorldScreen6D_1::
+    INCBIN "maps/key_worlds/screen6_d_1.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_541D::
-    INCBIN "maps/key_worlds/screen_6_d_541_d.lz"
+KeyWorldScreen6D_2::
+    INCBIN "maps/key_worlds/screen6_d_2.lz"
 
 ; LZSS-compressed: 87 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_5463::
-    INCBIN "maps/key_worlds/screen_6_d_5463.lz"
+KeyWorldScreen6D_3::
+    INCBIN "maps/key_worlds/screen6_d_3.lz"
 
 ; LZSS-compressed: 102 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_54BA::
-    INCBIN "maps/key_worlds/screen_6_d_54_ba.lz"
+KeyWorldScreen6D_4::
+    INCBIN "maps/key_worlds/screen6_d_4.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_5520::
-    INCBIN "maps/key_worlds/screen_6_d_5520.lz"
+KeyWorldScreen6D_5::
+    INCBIN "maps/key_worlds/screen6_d_5.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_5571::
-    INCBIN "maps/key_worlds/screen_6_d_5571.lz"
+KeyWorldScreen6D_6::
+    INCBIN "maps/key_worlds/screen6_d_6.lz"
 
 ; LZSS-compressed: 96 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom29_Y1X2_Attrs::
@@ -201,28 +201,28 @@ KeyWorldRoom0A_Y0X2_Tiles::
     INCBIN "maps/key_worlds/room0_a_y0_x2_tiles.lz"
 
 ; LZSS-compressed: 152 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_6128::
-    INCBIN "maps/screen_maps/6_d_6128.lz"
+ScreenMap6D_7::
+    INCBIN "gfx/misc/screen_map6_d_7.lz"
 
 ; LZSS-compressed: 222 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_61C0::
-    INCBIN "maps/screen_maps/6_d_61_c0.lz"
+ScreenMap6D_8::
+    INCBIN "gfx/misc/screen_map6_d_8.lz"
 
 ; LZSS-compressed: 257 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_629E::
-    INCBIN "maps/screen_maps/6_d_629_e.lz"
+ScreenMap6D_9::
+    INCBIN "gfx/misc/screen_map6_d_9.lz"
 
 ; LZSS-compressed: 226 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_639F::
-    INCBIN "maps/screen_maps/6_d_639_f.lz"
+ScreenMap6D_10::
+    INCBIN "gfx/misc/screen_map6_d_10.lz"
 
 ; LZSS-compressed: 215 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_6481::
-    INCBIN "maps/screen_maps/6_d_6481.lz"
+ScreenMap6D_11::
+    INCBIN "gfx/misc/screen_map6_d_11.lz"
 
 ; LZSS-compressed: 187 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_6558::
-    INCBIN "maps/screen_maps/6_d_6558.lz"
+ScreenMap6D_12::
+    INCBIN "gfx/misc/screen_map6_d_12.lz"
 
 ; LZSS-compressed: 244 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom06_Y1X2_Tiles::
@@ -268,28 +268,28 @@ KeyWorldRoom0A_Y0X2_Attrs::
     INCBIN "maps/key_worlds/room0_a_y0_x2_attrs.lz"
 
 ; LZSS-compressed: 69 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6A1A::
-    INCBIN "maps/key_worlds/screen_6_d_6_a1_a.lz"
+KeyWorldScreen6D_7::
+    INCBIN "maps/key_worlds/screen6_d_7.lz"
 
 ; LZSS-compressed: 101 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6A5F::
-    INCBIN "maps/key_worlds/screen_6_d_6_a5_f.lz"
+KeyWorldScreen6D_8::
+    INCBIN "maps/key_worlds/screen6_d_8.lz"
 
 ; LZSS-compressed: 90 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6AC4::
-    INCBIN "maps/key_worlds/screen_6_d_6_ac4.lz"
+KeyWorldScreen6D_9::
+    INCBIN "maps/key_worlds/screen6_d_9.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6B1E::
-    INCBIN "maps/key_worlds/screen_6_d_6_b1_e.lz"
+KeyWorldScreen6D_10::
+    INCBIN "maps/key_worlds/screen6_d_10.lz"
 
 ; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6B76::
-    INCBIN "maps/key_worlds/screen_6_d_6_b76.lz"
+KeyWorldScreen6D_11::
+    INCBIN "maps/key_worlds/screen6_d_11.lz"
 
 ; LZSS-compressed: 71 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_6D_6BCC::
-    INCBIN "maps/key_worlds/screen_6_d_6_bcc.lz"
+KeyWorldScreen6D_12::
+    INCBIN "maps/key_worlds/screen6_d_12.lz"
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom06_Y1X2_Attrs::
@@ -306,8 +306,8 @@ MapType5Tiles2::
     INCBIN "gfx/map_types/5_tiles2.lz"
 
 ; LZSS-compressed: 992 bytes that expand to 989 (E-0016, E-0017)
-Gfx_6D_6D4C::
-    INCBIN "gfx/misc/gfx_6_d_6_d4_c.lz"
+Gfx6D_1::
+    INCBIN "gfx/misc/gfx6_d_1.lz"
 
 ; entry 2 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -353,32 +353,32 @@ KeyWorldRoom0A_Y3X2_Tiles::
     INCBIN "maps/key_worlds/room0_a_y3_x2_tiles.lz"
 
 ; LZSS-compressed: 178 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_77CF::
-    INCBIN "maps/screen_maps/6_d_77_cf.lz"
+ScreenMap6D_13::
+    INCBIN "gfx/misc/screen_map6_d_13.lz"
 
 ; LZSS-compressed: 236 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_7881::
-    INCBIN "maps/screen_maps/6_d_7881.lz"
+ScreenMap6D_14::
+    INCBIN "gfx/misc/screen_map6_d_14.lz"
 
 ; LZSS-compressed: 243 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_796D::
-    INCBIN "maps/screen_maps/6_d_796_d.lz"
+ScreenMap6D_15::
+    INCBIN "gfx/misc/screen_map6_d_15.lz"
 
 ; LZSS-compressed: 217 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_7A60::
-    INCBIN "maps/screen_maps/6_d_7_a60.lz"
+ScreenMap6D_16::
+    INCBIN "gfx/misc/screen_map6_d_16.lz"
 
 ; LZSS-compressed: 218 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8B_Y3X1_Tiles::
     INCBIN "maps/key_worlds/room8_b_y3_x1_tiles.lz"
 
 ; LZSS-compressed: 213 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_7C13::
-    INCBIN "maps/screen_maps/6_d_7_c13.lz"
+ScreenMap6D_17::
+    INCBIN "gfx/misc/screen_map6_d_17.lz"
 
 ; LZSS-compressed: 222 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_6D_7CE8::
-    INCBIN "maps/screen_maps/6_d_7_ce8.lz"
+ScreenMap6D_18::
+    INCBIN "gfx/misc/screen_map6_d_18.lz"
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom22_Y1X2_Tiles::

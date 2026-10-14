@@ -230,7 +230,7 @@ class DispatchCases(unittest.TestCase):
         import re
         text = "".join(f.read_text(encoding="utf-8") for f in (ROOT / "build/listing").glob("bank*.asm"))
         cases = re.findall(r"^(\w+)_Case([0-9A-F]{2})::", text, re.M)
-        self.assertGreater(len(cases), 100)  # fewer as cases get descriptive names (E-0268, E-0302, E-0340)
+        self.assertLess(len(cases), 200)  # most cases now carry descriptions instead of their number (E-0268, E-0302, E-0340, E-0344)
         self.assertIn("RunGameModeInit_Return", text)  # RunGameModeInit's cases now have shape names (E-0272)
         self.assertEqual(len(re.findall(r"^\w+_Case[0-9A-F]{2}::", text, re.M)),
                          len(set(re.findall(r"^(\w+_Case[0-9A-F]{2})::", text, re.M))))

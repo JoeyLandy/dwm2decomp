@@ -38,8 +38,8 @@ CloseBreedMenu_CopyBytesDEToHL_Bank15::
     ret
 
 CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15::
-    ld hl, TileCopyDestList_15_72A9
-    ld de, TileCopySrcList_15_72FF
+    ld hl, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
     xor a
     ld [wGlyphListPos], a
@@ -68,17 +68,17 @@ CloseBreedMenu_FillTilesBxC::
     ld hl, vTiles1 + $500
     ld bc, $0f01
     call FillTilesBxC
-    ld de, Tiles2Plus700Tiles_1F_4230
+    ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus710Tiles_1F_4290
+    ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus720Tiles_1F_4370
+    ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
     ld b, $1f
     ld c, $10
@@ -198,25 +198,27 @@ BreedMenu_Init::
 BreedMenu_Setup::
     ld a, [wScreenStep]
     jumptable
-    dw DrawPair72A9And72C5AndStep
+    dw DrawPairAndStep_2
     dw DrawGoldBoxAndStep_Bank15
     dw BreedMenu_Setup_CopyRectTo20ByteRows_Bank15
 
-; runs CopyGlyphTileListFromBank1F_Bank15 for TileCopyDestList_15_72A9 and TileCopySrcList_15_72C5,
-; then wScreenStep += 1 (E-0122)
-DrawPair72A9And72C5AndStep::
-    ld hl, TileCopyDestList_15_72A9
-    ld de, TileCopySrcList_15_72C5
+; runs CopyGlyphTileListFromBank1F_Bank15 for
+; CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList and
+; DrawPairAndStep_2_TileCopySrcList, then wScreenStep += 1 (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was DrawPair72A9And72C5AndStep)
+DrawPairAndStep_2::
+    ld hl, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, DrawPairAndStep_2_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; copies box TileRect_15_7291 to wWindowTileBuffer + $70 and writes the gold as five digit tiles at
-; wWindowTileBuffer + $86, then wScreenStep += 1 (E-0125)
+; copies box DrawGoldBoxAndStep_Bank15_TileRect to wWindowTileBuffer + $70 and writes the gold as
+; five digit tiles at wWindowTileBuffer + $86, then wScreenStep += 1 (E-0125)
 DrawGoldBoxAndStep_Bank15::
-    ld de, TileRect_15_7291
+    ld de, DrawGoldBoxAndStep_Bank15_TileRect
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank15
@@ -251,7 +253,7 @@ DrawGoldBoxAndStep_Bank15::
     ret
 
 BreedMenu_Setup_CopyRectTo20ByteRows_Bank15::
-    ld de, TileRect_15_6F6B
+    ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
@@ -274,7 +276,7 @@ BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wGridCursorX]
     and a
     jr z, .check_screen_state
-    jr .call_list_records_in_use_with_byte6_e_set
+    jr .call_list_records_in_use_eggs
 
 .check_screen_state:
     ld a, [wScreenState]
@@ -282,8 +284,8 @@ BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld [wScreenState], a
     ret
 
-.call_list_records_in_use_with_byte6_e_set:
-    farcall ListRecordsInUseWithByte6ESet
+.call_list_records_in_use_eggs:
+    farcall ListRecordsInUseEggs
     ld a, [wRecordsFlagged]
     and a
     jr nz, .clear_two_choice_cursor
@@ -317,15 +319,15 @@ BreedMenu_ChooseParents::
     jumptable
     dw BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15
     dw BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0
-    dw BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear
+    dw BreedMenu_ChooseParents_ListRecordsInUseNotEggs
     dw BreedMenu_ChooseParents_DrawRecordListPageNames
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5
     dw BreedMenu_ChooseParents_FillTilesBxC
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles
     dw BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep
     dw BreedMenu_ChooseParents_UpdatePagedListCursor
-    dw BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case09_BreedMenu_CopyBytesDEToHL_Bank15
-    dw BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_SetTwoChoiceCursor
+    dw BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_2
+    dw BreedMenu_ChooseParents_DrawPairAndStep_2_SetTwoChoiceCursor
     dw BreedMenu_ChooseParents_BlankWordTableTargets
     dw BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15
     dw BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15
@@ -333,11 +335,11 @@ BreedMenu_ChooseParents::
     dw BreedMenu_ChooseParents_ToCopyRectTo20ByteRows_Bank15AndStep
     dw BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetArg5
-    dw BreedMenu_ChooseParents_BlankWordTableTargets_Case12_SetScreenStep
-    dw BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc
+    dw BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2
+    dw BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc
     dw BreedMenu_ChooseParents_ClearThreeTileRows
     dw BreedMenu_ChooseParents_FillTilesBxC_SetScreenStep
-    dw BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0
+    dw BreedMenu_ChooseParents_LoadSelectedRecordSex
     dw BreedMenu_ChooseParents_DrawRecordListPageNames
     dw DrawListEntriesCell5IconAndLevelAndStep
     dw BreedMenu_ChooseParents_ToClearThreeTileRowsAndStep
@@ -352,33 +354,33 @@ BreedMenu_ChooseParents::
     dw BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15
     dw BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15
     dw BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0
-    dw BreedMenu_ChooseParents_BlankWordTableTargets_Case25_SetScreenStep
+    dw BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_3
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetTwoChoiceCursor
     dw BreedMenu_ChooseParents_TestBitInFieldAtArg3
     dw BreedMenu_ChooseParents_TestBitInFieldAtArg3_SetArg1
     dw BreedMenu_ChooseParents_PrepareCounterPtr0LoCountersAndRequestScript
-    dw DrawRect70C5IfLinkModeAndStep
+    dw DrawRectIfLinkModeAndStep
     dw BreedMenu_ChooseParents_ShowSaveFileInfoWindow
     dw BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep
     dw BreedMenu_ChooseParents_WriteScreenStep
     dw BreedMenu_ChooseParents_WriteScreenStepAndTwoChoiceCursor
     dw BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D
-    dw BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep
+    dw BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep
     dw BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15
     dw BreedMenu_ChooseParents_LoadTileListSixPerCall_SetArg1
-    dw BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep
+    dw BreedMenu_ChooseParents_DrawPairAndStep_2
     dw BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15
     dw BreedMenu_ChooseParents_BlankWordTableTargets
     dw BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc
-    dw BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep
+    dw BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep
     dw BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15
     dw BreedMenu_ChooseParents_LoadTileListSixPerCall_SetArg1
-    dw BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_DrawGoldBoxAndStep_Bank15
+    dw BreedMenu_ChooseParents_DrawPairAndStep_2_DrawGoldBoxAndStep_Bank15
     dw BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15_SetScriptCommandType
     dw BreedMenu_ChooseParents_TenTimesTemp0PlusTenToDigits
     dw BreedMenu_ChooseParents_CopyFromBankWaitVRAM
     dw BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode
-    dw BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor
+    dw BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_2
     dw BreedMenu_ChooseParents_SetScreenStep
     dw BreedMenu_ChooseParents_TenTimesTemp0PlusTen
 
@@ -391,7 +393,7 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Ba
     ld a, $08
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
-    ld de, TileRect_15_42F4
+    ld de, BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
@@ -412,7 +414,7 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Ba
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-TileRect_15_42F4::
+BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -427,7 +429,7 @@ TileRect_15_42F4::
 
 BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0::
     call ClearTileAreas1240_1700_14E0
-    ld de, TileRect_15_747D
+    ld de, BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
@@ -436,10 +438,10 @@ BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear::
-    farcall ListRecordsInUseWithByte6EClear
+BreedMenu_ChooseParents_ListRecordsInUseNotEggs::
+    farcall ListRecordsInUseNotEggs
 
-BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5::
+BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
     cp $02
@@ -482,7 +484,7 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
-    ld de, TileRect_15_74D5
+    ld de, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_TileRect
     ld hl, wWindowTileBuffer + $bc
     lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank15
@@ -618,7 +620,7 @@ BreedMenu_ChooseParents_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case09_BreedMenu_CopyBytesDEToHL_Bank15::
+BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_2::
     ld c, $0b
     ld hl, $01cc
     ld de, $0000
@@ -635,7 +637,7 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case09_BreedMenu_CopyBytesDE
     ld a, $0c
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
-    ld de, TileRect_15_6FA3
+    ld de, BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_2_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
@@ -648,14 +650,14 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_Case09_BreedMenu_CopyBytesDE
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_SetTwoChoiceCursor::
-    call DrawPair72A9And72C5AndStep
-    ld de, TileRect_15_6F6B
+BreedMenu_ChooseParents_DrawPairAndStep_2_SetTwoChoiceCursor::
+    call DrawPairAndStep_2
+    ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -671,7 +673,7 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_SetTwoChoiceCursor::
     ret
 
 BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15::
-    ld de, TileRect_15_7379
+    ld de, BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -687,10 +689,10 @@ BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15::
 BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15::
     ld a, $6c
     call QueueSoundEffect
-    ld hl, TileCopyDestList_15_72E1
-    ld de, TileCopySrcList_15_72F1
+    ld hl, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
-    ld de, TileRect_15_7351
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -863,12 +865,12 @@ BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_SetArg5::
     ld [wScriptStartRequest], a
     ret
 
-BreedMenu_ChooseParents_BlankWordTableTargets_Case12_SetScreenStep::
+BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2::
     ld a, $b6
     ld [wWindowTileBuffer + $78], a
     ld [wWindowTileBuffer + $a0], a
     ld [wWindowTileBuffer + $c8], a
-    ld de, TileRect_15_7541
+    ld de, BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2_TileRect
     ld hl, wWindowTileBuffer + $94
     lb bc, $0c, $03
     call CopyRectTo20ByteRows_Bank15
@@ -888,17 +890,17 @@ BreedMenu_ChooseParents_BlankWordTableTargets_Case12_SetScreenStep::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc::
-    call BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc
+BreedMenu_ChooseParents_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc::
+    call BreedMenu_ChooseParents_WriteArg1AndArg2Etc
     ret
 
 BreedMenu_ChooseParents_ClearThreeTileRows::
     call ClearThreeTileRows
-    ld de, TileRect_15_7565
+    ld de, BreedMenu_ChooseParents_ClearThreeTileRows_TileRect
     ld hl, wWindowTileBuffer + $94
     lb bc, $0c, $03
     call CopyRectTo20ByteRows_Bank15
-    ld de, TileRect_15_7589
+    ld de, BreedMenu_ChooseParents_ClearThreeTileRows_TileRect_2
     ld hl, wWindowTileBuffer + $10c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
@@ -917,7 +919,7 @@ BreedMenu_ChooseParents_FillTilesBxC_SetScreenStep::
     ld hl, vTiles1 + $4e0
     ld bc, $1101
     call FillTilesBxC
-    ld de, TileRect_15_747D
+    ld de, BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRows_Bank15
@@ -926,10 +928,10 @@ BreedMenu_ChooseParents_FillTilesBxC_SetScreenStep::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_LoadRecordSelectedRecordByte0EBit0::
-    call LoadRecordSelectedRecordByte0EBit0
+BreedMenu_ChooseParents_LoadSelectedRecordSex::
+    call LoadSelectedRecordSex
     call BreedMenu_WriteListCountAndRAMG2Etc
-    jp BreedMenu_ChooseParents_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5
+    jp BreedMenu_ChooseParents_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5
 
 ; for the record at WD789 cell 5 loads its family icon tile and draws its mark and level at
 ; wWindowTileBuffer + $126, then wScreenStep += 1 (E-0124)
@@ -1055,7 +1057,7 @@ BreedMenu_ChooseParents_ComputeBreedingChild::
     jr c, .loop
     ld a, $f0
     ld [hl], a
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $490
     ld b, $1f
     ld c, $10
@@ -1160,7 +1162,7 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15::
     ld [wWindowTileBuffer + $93], a
     ld [wWindowTileBuffer + $a7], a
     call DrawGoldBoxAndStep_Bank15
-    ld de, TileRect_15_74D5
+    ld de, BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_TileRect
     ld hl, wWindowTileBuffer + $bc
     lb bc, $0c, $01
     call CopyRectTo20ByteRows_Bank15
@@ -1168,7 +1170,7 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15::
     ld hl, wWindowTileBuffer + $120
     lb bc, $0c, $04
     call CopyRectTo20ByteRows_Bank15
-    ld de, TileRect_15_4985
+    ld de, BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_TileRect
     ld hl, wWindowTileBuffer + $93
     lb bc, $01, $02
     call CopyRectTo20ByteRows_Bank15
@@ -1195,7 +1197,7 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 1 x 2 tiles, one row per line
-TileRect_15_4985::
+BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_TileRect::
     db $b7 ; id 0
     db $b7 ; id 1
 
@@ -1229,7 +1231,7 @@ BreedMenu_ChooseParents_LoadTileListSixPerCall::
     ret
 
 BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
-    ld de, TileRect_15_75F5
+    ld de, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -1239,7 +1241,7 @@ BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
-    ld de, TileRect_15_7589
+    ld de, BreedMenu_ChooseParents_ClearThreeTileRows_TileRect_2
     ld hl, wWindowTileBuffer + $10c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
@@ -1268,7 +1270,7 @@ BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0::
     ld [wScriptStartRequest], a
     ret
 
-BreedMenu_ChooseParents_BlankWordTableTargets_Case25_SetScreenStep::
+BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_3::
     ld c, $05
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call BlankWordTableTargets
@@ -1529,12 +1531,13 @@ BreedMenu_ChooseParents_TestBitInFieldAtArg3_SetArg1::
     ret
 
 ; if wLinkMode is set, copies and draws rectangle $70C5 at wWindowTileBuffer + $64; wScreenStep += 1
-; (E-0122)
-DrawRect70C5IfLinkModeAndStep::
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; DrawRect70C5IfLinkModeAndStep)
+DrawRectIfLinkModeAndStep::
     ld a, [wLinkMode]
     and a
     jr z, .check_screen_step
-    call CopyRect70C5ToWindowTileBufferRow5AndDraw
+    call CopyRectToWindowTileBufferRow5AndDraw
 
 .check_screen_step:
     ld a, [wScreenStep]
@@ -1578,7 +1581,7 @@ BreedMenu_ChooseParents_DrawBottomBoxForLinkAndSetScreenSubStep::
     jr z, .check_screen_sub_step
     ld a, $0d
     ld [wStringIndex], a
-    farcall BeginStringDisplay_Bank1B_4C86
+    farcall BeginStringDisplay_Bank1B_2
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -1614,7 +1617,7 @@ BreedMenu_ChooseParents_PrepareCounterPtr0LoCountersAndRequestScript::
     ld a, [wLinkMode]
     and a
     jr z, .set_screen_step_to_2A
-    ld de, TileRect_15_75F5
+    ld de, BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -1624,7 +1627,7 @@ BreedMenu_ChooseParents_PrepareCounterPtr0LoCountersAndRequestScript::
     call DrawScreenBufferRect_Bank15
     call ClearTileAreas2700_1750_17D0
     call DrawListEntriesCell5RecordNamesAndStep
-    ld de, TileRect_15_7589
+    ld de, BreedMenu_ChooseParents_ClearThreeTileRows_TileRect_2
     ld hl, wWindowTileBuffer + $10c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_Bank15
@@ -1684,12 +1687,12 @@ BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D::
     ld [wScreenSubStep], a
     ret
 
-BreedMenu_ChooseParents_DrawRect70C5IfLinkModeAndStep::
-    ld de, TileRect_15_761D
+BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep::
+    ld de, BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
-    call DrawRect70C5IfLinkModeAndStep
+    call DrawRectIfLinkModeAndStep
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
@@ -1732,10 +1735,10 @@ BreedMenu_ChooseParents_BGMapAddressAtScroll_Bank15::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep::
-    call DrawPair72A9And72C5AndStep
+BreedMenu_ChooseParents_DrawPairAndStep_2::
+    call DrawPairAndStep_2
     call DrawGoldBoxAndStep_Bank15
-    ld de, TileRect_15_6F6B
+    ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
@@ -1746,7 +1749,7 @@ BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep::
 
 BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15::
     ld a, [wGridCursorX]
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -1770,8 +1773,8 @@ BreedMenu_ChooseParents_StoreBAtWordTableEntry_Bank15::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_DrawGoldBoxAndStep_Bank15::
-    call DrawPair72A9And72C5AndStep
+BreedMenu_ChooseParents_DrawPairAndStep_2_DrawGoldBoxAndStep_Bank15::
+    call DrawPairAndStep_2
     call DrawGoldBoxAndStep_Bank15
     ld a, [wScreenStep]
     dec a
@@ -1852,7 +1855,7 @@ BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc::
     jr z, .check_screen_sub_step
     ld a, $0e
     ld [wStringIndex], a
-    farcall BeginStringDisplay_Bank1B_4C86
+    farcall BeginStringDisplay_Bank1B_2
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -1865,7 +1868,7 @@ BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc::
     ld a, [wLinkMode]
     and a
     jr z, .clear_two_choice_cursor
-    farcall RunSaveGameSteps_7347
+    farcall RunSaveGameSteps_2
     ld a, [wSaveStep]
     bit 7, a
     ret z
@@ -2027,7 +2030,7 @@ RemoveRecordBFromParty::
     jr c, .loop3
     ret
 
-BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_SetTwoChoiceCursor::
+BreedMenu_ChooseParents_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
     and a
@@ -2127,7 +2130,7 @@ BreedMenu_ChooseParents_TenTimesTemp0PlusTen::
     ld a, c
     cp $1e
     jr c, .loop
-    farcall ListRecordsInUseWithByte6ESet
+    farcall ListRecordsInUseEggs
     xor a
     ld [wListCursor], a
     ld [wListPageIndex], a
@@ -2196,8 +2199,8 @@ BreedMenu_ChooseParents_TenTimesTemp0PlusTen::
 BreedMenu_ChooseEgg::
     ld a, [wScreenStep]
     jumptable
-    dw BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc
-    dw BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet
+    dw BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc
+    dw BreedMenu_ChooseEgg_ListRecordsInUseEggs
     dw ClearTileRowsAndResetWindowAndStep
     dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15
     dw BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames
@@ -2210,28 +2213,28 @@ BreedMenu_ChooseEgg::
     dw BreedMenu_ChooseEgg_QueueSoundEffect
     dw BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15
     dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4
-    dw BreedMenu_ChooseEgg_LoadTile4990AndRun6320
+    dw BreedMenu_ChooseEgg_LoadTilesAndDrawRecordListPageMarks
     dw BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4
     dw BreedMenu_ChooseEgg_SetArg5ToListEntriesCell4_SetArg3
 
-BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc::
-    call BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc
+BreedMenu_ChooseEgg_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
+    call BreedMenu_ChooseEgg_WriteArg1AndArg2Etc
     ret
 
-BreedMenu_ChooseEgg_ListRecordsInUseWithByte6ESet::
-    ld de, TileRect_15_6FDB
+BreedMenu_ChooseEgg_ListRecordsInUseEggs::
+    ld de, BreedMenu_ChooseEgg_ListRecordsInUseEggs_TileRect
     ld hl, wWindowTileBuffer + $bb
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
-    farcall ListRecordsInUseWithByte6ESet
+    farcall ListRecordsInUseEggs
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2265,7 +2268,7 @@ ClearTileRowsAndResetWindowAndStep::
     ret
 
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15::
-    ld de, TileRect_15_7050
+    ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
@@ -2293,7 +2296,7 @@ BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Data
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
@@ -2301,7 +2304,7 @@ BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15
     call DrawScreenBufferRect_Bank15
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Data
     call StoreBAtWordTableEntry_Bank15
     ld a, [wScreenStep]
     inc a
@@ -2318,7 +2321,7 @@ BreedMenu_ChooseEgg_DrawRecordListPageSpeciesNames::
     ret
 
 BreedMenu_ChooseEgg_DrawRecordListPageMarks::
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
@@ -2387,7 +2390,7 @@ BreedMenu_ChooseEgg_UpdatePagedListCursor::
     ld [wScreenStep], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Data
     call StoreBAtWordTableEntry_Bank15
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -2433,7 +2436,7 @@ BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
     ld a, [wThreeOptionResult]
     or a
     jr z, .skip
-    ld de, TileRect_15_7345
+    ld de, BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15_TileRect_2
     ld hl, wWindowTileBuffer + $bb
     lb bc, $04, $03
     call CopyRectTo20ByteRows_Bank15
@@ -2443,7 +2446,7 @@ BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15::
     ret
 
 .skip:
-    ld de, TileRect_15_733F
+    ld de, BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $ba
     lb bc, $02, $03
     call CopyRectTo20ByteRows_Bank15
@@ -2496,7 +2499,7 @@ BreedMenu_ChooseEgg_DrawGoldBoxAndStep_Bank15::
 
 BreedMenu_ChooseParents_BlankWordTableTargets::
     ld c, $03
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     call BlankWordTableTargets
     xor a
     ld [wScreenStep], a
@@ -2510,8 +2513,8 @@ BreedMenu_ChooseParents_BlankWordTableTargets::
     ret
 
 BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
-    ld hl, TileCopyDestList_15_72E1
-    ld de, TileCopySrcList_15_72F1
+    ld hl, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
@@ -2521,7 +2524,7 @@ BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep::
 BreedMenu_ChooseEgg_QueueSoundEffect::
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_15_7351
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -2530,7 +2533,7 @@ BreedMenu_ChooseEgg_QueueSoundEffect::
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
     xor a
-    ld [wChoiceCursorF0], a
+    ld [wMenuChoice], a
     ld [wChoiceCursor], a
     ld a, [wScreenStep]
     inc a
@@ -2584,7 +2587,7 @@ BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap
+    call BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap
     ld a, [wChoiceCursor]
     and a
     jp nz, .set_two_choice_cursor_to_01
@@ -2685,20 +2688,20 @@ BlinkCursorBlinkAE_Bank15::
 
 .skip:
     ld b, $bb
-    jr BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122)
 DrawBlankTileC3_Bank15::
     ld b, $c3
-    jr BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap::
+BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
+BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
-    ld hl, BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -2715,11 +2718,11 @@ BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
     ei
     ret
 
-BreedMenu_ChooseParents_Case0E_StepBGMapAddressBackOnScrollWrap_Data::
+BreedMenu_ChooseParents_StepBGMapAddressBackOnScrollWrap_Data::
     db $2d, $01, $6d, $01
 
-BreedMenu_ChooseEgg_LoadTile4990AndRun6320::
-    call LoadTile4990AndRun6320
+BreedMenu_ChooseEgg_LoadTilesAndDrawRecordListPageMarks::
+    call LoadTilesAndDrawRecordListPageMarks
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
     ld de, $01cc
@@ -2959,7 +2962,7 @@ BreedMenu_ReturnToMap::
     ld a, [wScreenStep]
     jumptable
     dw BreedMenu_ReturnToMap_DecompressToVRAM
-    dw DrawPair72A9And72C5AndStep_570C
+    dw DrawPairAndStep_2_2
     dw BreedMenu_ReturnToMap_LoadMapHeader
     dw BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15
     dw BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc
@@ -2979,22 +2982,22 @@ BreedMenu_ReturnToMap::
     dw BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15
     dw BreedMenu_ReturnToMap_UpdatePagedListCursor
     dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1
-    dw BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C
+    dw BreedMenu_ReturnToMap_DrawPairAndStep_2_2
     dw BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep
     dw BreedMenu_ChooseEgg_QueueSoundEffect
     dw BreedMenu_ChooseParents_BlinkCursorBlinkAE_Bank15
-    dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_SetArg1
+    dw BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1_2
     dw BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_SetScreenStep
     dw BreedMenu_ReturnToMap_CopyRecordNameToNameGlyphBuf
-    dw BreedMenu_ReturnToMap_SRAMRecordAddress_SetScreenStep
+    dw BreedMenu_ReturnToMap_SRAMRecordAddress_2
     dw BreedMenu_ReturnToMap_LoadPlayerAndFollowerSpriteGraphics
     dw BreedMenu_ReturnToMap_DrawGoldBoxAndStep_Bank15
-    dw BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_SetScriptCommandType
+    dw BreedMenu_ReturnToMap_DrawPairAndStep_2_2_SetScriptCommandType
     dw BreedMenu_ChooseParents_BlankWordTableTargets
 
 BreedMenu_ReturnToMap_DecompressToVRAM::
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     ld a, [wScreenStep]
@@ -3003,11 +3006,13 @@ BreedMenu_ReturnToMap_DecompressToVRAM::
     call RestorePlayerPositionState
     ret
 
-; runs CopyGlyphTileListFromBank1F_Bank15 for TileCopyDestList_15_72A9 and TileCopySrcList_15_72C5,
-; then wScreenStep += 1 (E-0122)
-DrawPair72A9And72C5AndStep_570C::
-    ld hl, TileCopyDestList_15_72A9
-    ld de, TileCopySrcList_15_72C5
+; runs CopyGlyphTileListFromBank1F_Bank15 for
+; CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList and
+; DrawPairAndStep_2_TileCopySrcList, then wScreenStep += 1 (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was DrawPair72A9And72C5AndStep_570C)
+DrawPairAndStep_2_2::
+    ld hl, CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, DrawPairAndStep_2_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
     ld a, [wScreenStep]
     inc a
@@ -3098,12 +3103,12 @@ BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc::
     ret
 
 BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode::
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+    ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4330
+    ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
     ld b, $1f
     ld c, $10
@@ -3111,7 +3116,7 @@ BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMod
     call BreedMenu_ChooseParents_WaitLinkMode
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_15_73AB
+    ld de, BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
@@ -3149,7 +3154,7 @@ BreedMenu_ReturnToMap_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15
+    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3176,18 +3181,18 @@ BreedMenu_ReturnToMap_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
-BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15::
+BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
     ld c, $05
-    call BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15
+    call BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2
     ld a, [wIsCGB]
     and a
     jr z, .call_bg_map_address_at_scroll_bank15
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $05
-    call BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15
+    call BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15
 
 .call_bg_map_address_at_scroll_bank15:
     call BGMapAddressAtScroll_Bank15
@@ -3196,7 +3201,7 @@ BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_Shared01
     call DrawScreenBufferRect_Bank15
     ret
 
-BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15::
+BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2::
     push hl
     push de
     push bc
@@ -3215,10 +3220,10 @@ BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15::
 
 .next:
     dec c
-    jr nz, BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15
+    jr nz, BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15_2
     ret
 
-BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15::
+BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15::
     push hl
     push de
     push bc
@@ -3237,26 +3242,26 @@ BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15::
 
 .next:
     dec c
-    jr nz, BreedMenu_ReturnToMap_Shared01_CopyLow3BitsToWRAMBank2_Bank15
+    jr nz, BreedMenu_ReturnToMap_CopyLow3BitsToWRAMBank2_Bank15
     ret
 
 BreedMenu_ReturnToMap_CopyFromBankWaitVRAM::
-    ld de, Tiles1Plus2D0Tiles_1F_43C0
+    ld de, Tiles1Plus2D0Tiles
     ld hl, vTiles1 + $2d0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus2E0Tiles_1F_42D0
+    ld de, Tiles1Plus2E0Tiles_2
     ld hl, vTiles1 + $2e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, TileRect_15_6F6B
+    ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     ld a, [wGridCursorX]
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -3274,7 +3279,7 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM::
 
 BreedMenu_ReturnToMap_BlankWordTableTargets::
     ld c, $03
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     call BlankWordTableTargets
     xor a
     ld [wScreenStep], a
@@ -3318,7 +3323,7 @@ BreedMenu_ReturnToMap_SRAMRecordAddress::
     ld a, [wScreenStep]
     sub $03
     ld [wScreenStep], a
-    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_Shared01_CopyBytesDEToHL_Bank15
+    call BreedMenu_ReturnToMap_BGMapAddressAtScroll_Bank15_BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15
     xor a
     ld [wScriptCommandType], a
     ld a, $80
@@ -3342,7 +3347,7 @@ BreedMenu_ReturnToMap_SRAMRecordAddress::
     ret
 
 BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex::
-    ld de, TileRect_15_59E5
+    ld de, BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank15
@@ -3363,7 +3368,7 @@ BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 9 tiles, one row per line
-TileRect_15_59E5::
+BreedMenu_ReturnToMap_CopySixteenTiles_SetListPageIndex_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3446,7 +3451,7 @@ BreedMenu_ReturnToMap_FillTilesBxC_SetScreenStep::
     ld a, $02
     ld [hli], a
     ld [hl], $12
-    ld de, TileRect_15_73C9
+    ld de, BreedMenu_ReturnToMap_FillTilesBxC_SetScreenStep_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $09
     call CopyRectTo20ByteRows_Bank15
@@ -3488,7 +3493,7 @@ BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
-    ld de, TileRect_15_7411
+    ld de, BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $09
     call CopyRectTo20ByteRows_Bank15
@@ -3517,7 +3522,7 @@ BreedMenu_ReturnToMap_FillTilesBxC::
     ld [hl], $12
     ld hl, wWindowTileBuffer + $78
     ld c, $28
-    call BreedMenu_ReturnToMap_Case10_LoadSRAMRecordByte
+    call BreedMenu_ReturnToMap_LoadSRAMRecordByte
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3617,12 +3622,12 @@ BreedMenu_ReturnToMap_UpdatePagedListCursor::
     ret
 
 BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1::
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+    ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4330
+    ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
     ld b, $1f
     ld c, $10
@@ -3635,7 +3640,7 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1::
     ld a, $14
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
-    ld de, TileRect_15_73AB
+    ld de, BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $01
     call CopyRectTo20ByteRows_Bank15
@@ -3644,12 +3649,12 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1::
     ld [wScreenStep], a
     ret
 
-BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C::
+BreedMenu_ReturnToMap_DrawPairAndStep_2_2::
     call BGMapAddressAtScroll_Bank15
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRect_Bank15
-    call DrawPair72A9And72C5AndStep_570C
+    call DrawPairAndStep_2_2
     ld a, $06
     ld [wScreenStep], a
     xor a
@@ -3660,13 +3665,13 @@ BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C::
     ld [wScriptStartRequest], a
     ret
 
-BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_SetArg1::
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_SetArg1_2::
+    ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $770
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4330
+    ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
     ld b, $1f
     ld c, $10
@@ -3679,11 +3684,11 @@ BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_SetArg1::
     ld a, $08
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
-    ld de, TileRect_15_73AB
+    ld de, BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank15
-    ld de, BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_Data
+    ld de, BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Data
     ld hl, wWindowTileBuffer + $10c
     lb bc, $0c, $01
     call CopyRectTo20ByteRows_Bank15
@@ -3751,7 +3756,7 @@ BreedMenu_ReturnToMap_CopyRecordNameToNameGlyphBuf::
     ld [wScriptStartRequest], a
     ret
 
-BreedMenu_ReturnToMap_SRAMRecordAddress_SetScreenStep::
+BreedMenu_ReturnToMap_SRAMRecordAddress_2::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -3844,27 +3849,27 @@ BreedMenu_ReturnToMap_DrawGoldBoxAndStep_Bank15::
     ld a, $14
     ld [wArg2], a
     call BreedMenu_CopyBytesDEToHL_Bank15
-    ld de, Tiles1Plus2D0Tiles_1F_43C0
+    ld de, Tiles1Plus2D0Tiles
     ld hl, vTiles1 + $2d0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus2E0Tiles_1F_42D0
+    ld de, Tiles1Plus2E0Tiles_2
     ld hl, vTiles1 + $2e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, TileRect_15_6F6B
+    ld de, BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank15
     call DrawGoldBoxAndStep_Bank15
     ret
 
-BreedMenu_ReturnToMap_DrawPair72A9And72C5AndStep_570C_SetScriptCommandType::
-    call DrawPair72A9And72C5AndStep_570C
+BreedMenu_ReturnToMap_DrawPairAndStep_2_2_SetScriptCommandType::
+    call DrawPairAndStep_2_2
     ld a, [wGridCursorX]
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank15
     call BGMapAddressAtScroll_Bank15
@@ -3974,7 +3979,7 @@ BreedMenu_RestoreScreen::
     jumptable
     dw BreedMenu_RestoreScreen_FillTileRectWithArg1Tile
     dw BreedMenu_ReturnToMap_DecompressToVRAM
-    dw DrawPair72A9And72C5AndStep_570C
+    dw DrawPairAndStep_2_2
     dw BreedMenu_ReturnToMap_LoadMapHeader
     dw BreedMenu_ReturnToMap_CopyBytesDEToHL_Bank15
     dw BreedMenu_RestoreScreen_DrawGoldBoxAndStep_Bank15
@@ -4140,7 +4145,7 @@ BreedMenu_RedrawListScreen::
     dw BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep
     dw BreedMenu_ChooseEgg_ClampRecordListPageCursor4
     dw BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames
-    dw LoadTile4990AndRun6320
+    dw LoadTilesAndDrawRecordListPageMarks
     dw BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15
     dw BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4
     dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
@@ -4151,7 +4156,7 @@ BreedMenu_RedrawListScreen_DecompressToVRAM::
     ld b, $47
     call DecompressToVRAM
     ld hl, wBGPaletteBuffer
-    ld de, BGPaletteBufferData_47_67E2
+    ld de, BreedMenu_RedrawListScreen_DecompressToVRAM_BGPaletteBufferData
     ld b, $47
     ld c, $40
     call CopyFromBankWaitVRAM
@@ -4163,10 +4168,10 @@ BreedMenu_RedrawListScreen_DecompressToVRAM::
     ret
 
 BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15::
-    ld hl, TileCopyDestList_15_72E1
-    ld de, TileCopySrcList_15_72F1
+    ld hl, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList
     call CopyGlyphTileListFromBank1F_Bank15
-    call DrawPair72A9And72C5AndStep
+    call DrawPairAndStep_2
     ret
 
 BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
@@ -4174,7 +4179,7 @@ BreedMenu_RedrawListScreen_ToClearTileRowsAndResetWindowAndStep::
     ret
 
 BreedMenu_ChooseEgg_ClampRecordListPageCursor4::
-    ld de, TileRect_15_7050
+    ld de, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect
     ld hl, wWindowTileBuffer + $bb
     lb bc, $0d, $09
     call CopyRectTo20ByteRows_Bank15
@@ -4207,9 +4212,11 @@ BreedMenu_RedrawListScreen_DrawRecordListPageSpeciesNames::
     ret
 
 ; copies a tile from bank $1F to vTiles1 + $4E0, runs DrawRecordListPageMarks with wArg1 = wArg2 =
-; 1, then wScreenStep += 1 (E-0122)
-LoadTile4990AndRun6320::
-    ld de, Tiles2Plus420Tiles_1F_4990
+; 1, then wScreenStep += 1 (E-0122) (E-0344: the address in its name dropped or read as the label
+; there; was LoadTile4990AndRun6320; shortened from
+; LoadTileTiles2Plus420TilesAndRunDrawRecordListPageMarks)
+LoadTilesAndDrawRecordListPageMarks::
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
@@ -4226,9 +4233,9 @@ LoadTile4990AndRun6320::
 BreedMenu_RedrawListScreen_StoreBAtWordTableEntry_Bank15::
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data
+    ld hl, BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Data
     call StoreBAtWordTableEntry_Bank15
-    ld de, TileRect_15_7351
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -4268,7 +4275,7 @@ BreedMenu_RedrawListScreen_SetArg5ToListEntriesCell4::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    farcall ShowString_Bank1B_4C94
+    farcall ShowString_Bank1B_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -4360,17 +4367,17 @@ BreedMenu_ChooseParents_WriteScreenStep::
 
 BreedMenu_ChooseParents_CopyFromBankWaitVRAM::
     call BreedMenu_ChooseParents_WaitLinkMode
-    ld de, Tiles2Plus700Tiles_1F_4230
+    ld de, Tiles2Plus700Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus710Tiles_1F_4290
+    ld de, Tiles2Plus710Tiles
     ld hl, vTiles1 + $4f0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus720Tiles_1F_4370
+    ld de, Tiles2Plus720Tiles
     ld hl, vTiles1 + $5f0
     ld b, $1f
     ld c, $10
@@ -4388,7 +4395,7 @@ BreedMenu_ClearListMarks_BlankWordTableTargets::
     ld b, $bc
     ld hl, BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data
     call StoreBAtWordTableEntry_Bank15
-    ld de, TileRect_15_7351
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -4402,8 +4409,8 @@ BreedMenu_ShowSelectedRecord::
     ld a, [wScreenStep]
     jumptable
     dw BreedMenu_RedrawListScreen_DecompressToVRAM
-    dw BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0
-    dw DrawPair72A9And72C5AndStep
+    dw BreedMenu_ShowSelectedRecord_LoadSelectedRecordSex
+    dw DrawPairAndStep_2
     dw BreedMenu_ShowSelectedRecord_FillTilesBxC
     dw BreedMenu_ShowSelectedRecord_ClearThreeTileRows
     dw BreedMenu_ChooseEgg_ToCopyGlyphTileListFromBank1F_Bank15AndStep
@@ -4447,13 +4454,13 @@ BreedMenu_ShowSelectedRecord_LoadFamilyIconTileForRecordB_Bank15::
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_Bank15
     pop af
-    call CopyRect7351ToWindowTileBufferRow13Col12AndIncScreenStep
+    call CopyRectToWindowTileBufferRow13Col12AndIncScreenStep
     ret
 
-BreedMenu_ShowSelectedRecord_LoadRecordSelectedRecordByte0EBit0::
-    call LoadRecordSelectedRecordByte0EBit0
+BreedMenu_ShowSelectedRecord_LoadSelectedRecordSex::
+    call LoadSelectedRecordSex
     call BreedMenu_WriteListCountAndRAMG2Etc
-    jp BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5
+    jp BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5
 
 BreedMenu_ShowSelectedRecord_ClearThreeTileRows::
     call ClearThreeTileRows
@@ -4467,19 +4474,19 @@ BreedMenu_ListMonsters::
     jumptable
     dw BreedMenu_RedrawListScreen_DecompressToVRAM
     dw BreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_Bank15
-    dw BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear
+    dw BreedMenu_ListMonsters_ListRecordsInUseNotEggs
     dw BreedMenu_ShowSelectedRecord_FillTilesBxC
     dw BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5
     dw BreedMenu_ChooseParents_FillTilesBxC
     dw BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles
-    dw CopyRect7351ToWindowTileBufferRow13Col12AndIncScreenStep
+    dw CopyRectToWindowTileBufferRow13Col12AndIncScreenStep
     dw BreedMenu_RedrawListScreen_LoadPlayerAndFollowerSpriteGraphics
 
-BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear::
-    farcall ListRecordsInUseWithByte6EClear
+BreedMenu_ListMonsters_ListRecordsInUseNotEggs::
+    farcall ListRecordsInUseNotEggs
 
-BreedMenu_ListMonsters_ListRecordsInUseWithByte6EClear_CallClampRecordListPageCursor5::
+BreedMenu_ListMonsters_ListRecordsInUseNotEggs_CallClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
     cp $02
@@ -4525,11 +4532,13 @@ BreedMenu_ShowSelectedRecord_ToDrawRecordListPageNames::
     farcall DrawRecordListPageNames
     ret
 
-; copies the 8 x 5 rectangle TileRect_15_7351 into wWindowTileBuffer + $110
-; (CopyRectTo20ByteRows_Bank15), then wScreenStep += 1 (E-0119) (E-0340: the address in its name
-; read as its RAM name; was CopyRect7351ToWC410AndIncScreenStep)
-CopyRect7351ToWindowTileBufferRow13Col12AndIncScreenStep::
-    ld de, TileRect_15_7351
+; copies the 8 x 5 rectangle BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
+; into wWindowTileBuffer + $110 (CopyRectTo20ByteRows_Bank15), then wScreenStep += 1 (E-0119)
+; (E-0340: the address in its name read as its RAM name; was CopyRect7351ToWC410AndIncScreenStep)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRect7351ToWindowTileBufferRow13Col12AndIncScreenStep)
+CopyRectToWindowTileBufferRow13Col12AndIncScreenStep::
+    ld de, BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRows_Bank15
@@ -4652,8 +4661,9 @@ DrawSpritePart9000At88_28::
     farcall DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc
     ret
 
-; outside link battles only sets wScreenSubStep = 2; otherwise copies the row TileRect_15_727D when
-; wScreenSubStep is set, sets wScreenSubStep = 2 and draws the box at scroll + $1CC (E-0124)
+; outside link battles only sets wScreenSubStep = 2; otherwise copies the row
+; DrawBottomBoxForLinkAndSetScreenSubStep_TileRect when wScreenSubStep is set, sets wScreenSubStep =
+; 2 and draws the box at scroll + $1CC (E-0124)
 DrawBottomBoxForLinkAndSetScreenSubStep::
     ld a, [wLinkMode]
     and a
@@ -4669,7 +4679,7 @@ DrawBottomBoxForLinkAndSetScreenSubStep::
     jr .set_screen_sub_step_to_02
 
 .skip:
-    ld de, TileRect_15_727D
+    ld de, DrawBottomBoxForLinkAndSetScreenSubStep_TileRect
     ld hl, wWindowTileBuffer + $c8
     lb bc, $14, $01
     call CopyRectTo20ByteRows_Bank15
@@ -4683,11 +4693,12 @@ DrawBottomBoxForLinkAndSetScreenSubStep::
     call DrawScreenBufferRect_Bank15
     ret
 
-; copies the 20 x 11 rectangle TileRect_15_70C5 into wWindowTileBuffer + $64, then
-; DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119) (E-0340: the address in its
-; name read as its RAM name; was CopyRect70C5ToWC364AndDraw)
-CopyRect70C5ToWindowTileBufferRow5AndDraw::
-    ld de, TileRect_15_70C5
+; copies the 20 x 11 rectangle CopyRectToWindowTileBufferRow5AndDraw_TileRect into wWindowTileBuffer
+; + $64, then DrawScreenBufferRect_Bank15 (20 x 13 at the scroll origin) (E-0119) (E-0340: the
+; address in its name read as its RAM name; was CopyRect70C5ToWC364AndDraw) (E-0344: the address in
+; its name dropped or read as the label there; was CopyRect70C5ToWindowTileBufferRow5AndDraw)
+CopyRectToWindowTileBufferRow5AndDraw::
+    ld de, CopyRectToWindowTileBufferRow5AndDraw_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $14, $0b
     call CopyRectTo20ByteRows_Bank15
@@ -4702,9 +4713,9 @@ CopyRect70C5ToWindowTileBufferRow5AndDraw::
 HandleThreeOptionMenuInput_15::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_draw_blank_tile_c3_6542
+    jr nz, .call_draw_blank_tile_c3_2
     bit 7, a
-    jr nz, .call_draw_blank_tile_c3_65422
+    jr nz, .call_draw_blank_tile_c3_22
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
@@ -4713,8 +4724,8 @@ HandleThreeOptionMenuInput_15::
     call BlinkCursorGridCursorY_Bank15
     ret
 
-.call_draw_blank_tile_c3_6542:
-    call DrawBlankTileC3_6542
+.call_draw_blank_tile_c3_2:
+    call DrawBlankTileC3_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
@@ -4739,8 +4750,8 @@ HandleThreeOptionMenuInput_15::
     call QueueSoundEffect
     ret
 
-.call_draw_blank_tile_c3_65422:
-    call DrawBlankTileC3_6542
+.call_draw_blank_tile_c3_22:
+    call DrawBlankTileC3_2
     ld a, [wGridCursorX]
     cp $02
     jr c, .skip
@@ -4760,7 +4771,7 @@ HandleThreeOptionMenuInput_15::
     call QueueSoundEffect
     call DrawArrowTileBCAtGridCursorXEntry_Bank15
     ld c, $03
-    ld hl, BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data
+    ld hl, BreedMenu_ChooseParents_DrawPairAndStep_2_Data
     call BlankWordTableTargets
     ld a, [wGridCursorX]
     cp $02
@@ -4802,7 +4813,7 @@ BlinkCursorGridCursorY_Bank15::
     cp $10
     jr c, .skip
     cp $18
-    jr c, DrawBlankTileC3_6542
+    jr c, DrawBlankTileC3_2
     xor a
     ld [wGridCursorY], a
 
@@ -4810,8 +4821,9 @@ BlinkCursorGridCursorY_Bank15::
     ld b, $bb
     jr DrawArrowTileBCAtGridCursorXEntry_Bank15_ReadGridCursorX
 
-; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-DrawBlankTileC3_6542::
+; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawBlankTileC3_6542)
+DrawBlankTileC3_2::
     ld b, $c3
     jr DrawArrowTileBCAtGridCursorXEntry_Bank15_ReadGridCursorX
 
@@ -4843,7 +4855,7 @@ DrawArrowTileBCAtGridCursorXEntry_Bank15_ReadGridCursorX::
 DrawArrowTileBCAtGridCursorXEntry_Bank15_Data::
     db $21, $00, $61, $00, $a1, $00
 
-BreedMenu_ReturnToMap_Case10_LoadSRAMRecordByte::
+BreedMenu_ReturnToMap_LoadSRAMRecordByte::
     ld b, $00
 
 .loop:
@@ -5125,16 +5137,16 @@ StoreBAtWordTableEntry_Bank15::
     ld [de], a
     ret
 
-BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc::
-    ld hl, BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data
+BreedMenu_ChooseParents_WriteArg1AndArg2Etc::
+    ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
     ld a, $9d
-    jr BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc_SetArg1
+    jr BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1
 
-BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc::
-    ld hl, BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data
+BreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
+    ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
     ld a, $9c
 
-BreedMenu_ChooseEgg_Case00_WriteArg1AndArg2Etc_SetArg1::
+BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1::
     ld [wArg1], a
     xor a
     ld [wArg2], a
@@ -5661,8 +5673,9 @@ BreedMenu_WriteListCountAndRAMG2Etc::
     ret
 
 ; with SRAM bank 0 enabled: wArg1 = bit 0 of byte $0E of record wSelectedRecord (LoadSRAMRecordByte)
-; (E-0119)
-LoadRecordSelectedRecordByte0EBit0::
+; (E-0119) (E-0345: record byte $0E bit 0 is the sex (MON_SEX); was
+; LoadRecordSelectedRecordByte0EBit0)
+LoadSelectedRecordSex::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -5872,7 +5885,7 @@ ShowSaveFileInfoWindow::
     ld [wStringCategory], a
     ld a, $28
     ld [wStringIndex], a ; 'Unused.'
-    farcall ShowString_Bank1B_4C94
+    farcall ShowString_Bank1B_2
     ld hl, wTextWindowTileLo
     xor a
     ld [hli], a
@@ -5890,7 +5903,7 @@ ShowSaveFileInfoWindow::
     ld [rRAMG2], a
     ld a, $01
     ld [rRAMB], a
-    ld de, TileRect_15_71A1
+    ld de, ShowSaveFileInfoWindow_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $14, $0b
     call CopyRectTo20ByteRows_Bank15
@@ -5900,7 +5913,7 @@ ShowSaveFileInfoWindow::
     ld a, [hl]
     and a
     jr z, .skip2
-    ld hl, Tiles_15_763B
+    ld hl, ShowSaveFileInfoWindow_Tiles
     ld de, vTiles2 + $6f0
     call CopyTileBytesToVRAM_Bank15
     ld a, $6f
@@ -6486,7 +6499,7 @@ PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-TileRect_15_6F6B::
+BreedMenu_Setup_CopyRectTo20ByteRows_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $a4, $a5, $ee, $ee, $a6, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6495,7 +6508,7 @@ TileRect_15_6F6B::
     db $b6, $c3, $ac, $ad, $ae, $a9, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-TileRect_15_6FA3::
+BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_BreedMenu_CopyBytesDEToHL_Bank15_2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6505,7 +6518,7 @@ TileRect_15_6FA3::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
 ; record: 13 x 9 tiles, one row per line
-TileRect_15_6FDB::
+BreedMenu_ChooseEgg_ListRecordsInUseEggs_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6516,7 +6529,7 @@ TileRect_15_6FDB::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-TileRect_15_7050::
+BreedMenu_ChooseEgg_ClampRecordListPageCursor4_DrawC5BEC6AtScrollOffsetDE_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6528,7 +6541,7 @@ TileRect_15_7050::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 20 x 11 tiles, one row per line
-TileRect_15_70C5::
+CopyRectToWindowTileBufferRow5AndDraw_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6541,7 +6554,7 @@ TileRect_15_70C5::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-TileRect_15_71A1::
+ShowSaveFileInfoWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $a4, $a5, $a6, $a7, $78, $79, $ed, $a8, $a9, $aa, $ab, $ac, $c3, $c3, $c3, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6555,13 +6568,13 @@ TileRect_15_71A1::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 ; record: 20 x 1 tiles, one row per line
-TileRect_15_727D::
+DrawBottomBoxForLinkAndSetScreenSubStep_TileRect::
     db $b6, $c3, $c3, $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $b7 ; id 0
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-TileRect_15_7291::
+DrawGoldBoxAndStep_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
@@ -6569,33 +6582,33 @@ TileRect_15_7291::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-TileCopyDestList_15_72A9::
+CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0 ; entry 0
     dw vTiles1 + $2c0, vTiles1 + $2d0, vTiles1 + $2e0, vTiles1 + $6e0, vTiles1 + $6f0, rIE
 
 ; record: bank-$1F tile sources
-TileCopySrcList_15_72C5::
+DrawPairAndStep_2_TileCopySrcList::
     dw $40c0, $4360, $4280, $4120, $4250, $4380, $4270, $42c0 ; entry 0
     dw $40f0, $43c0, $42d0, $4290, $4910, $ffff
 
-TileCopyDestList_15_72E1::
+BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopyDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
-TileCopySrcList_15_72F1::
+BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
-TileCopySrcList_15_72FF::
+CloseBreedMenu_CopyGlyphTileListFromBank1F_Bank15_TileCopySrcList::
     dw $4130, $4180, $4100, $4190, $41e0, $40f0, $41d0, $4150 ; entry 0
     dw $4160, $41a0, $40b0, $4910, $4910, $ffff
 
-BreedMenu_ChooseParents_Case13_WriteArg1AndArg2Etc_Data::
+BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
     db $ff, $ff
 
-BreedMenu_ChooseParents_DrawPair72A9And72C5AndStep_Case0A_Data::
+BreedMenu_ChooseParents_DrawPairAndStep_2_Data::
     db $79, $c3, $a1, $c3, $c9, $c3
 
-BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Case03_Data::
+BreedMenu_ChooseEgg_ClampRecordListPageCursor4_Data::
     db $d0, $c3, $f8, $c3, $20, $c4, $48, $c4
 
 BreedMenu_ReturnToMap_SRAMRecordAddress_Data::
@@ -6604,26 +6617,26 @@ BreedMenu_ReturnToMap_SRAMRecordAddress_Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 2 x 3 tiles, one row per line
-TileRect_15_733F::
+BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15_TileRect::
     db $c3, $b7 ; id 0
     db $c3, $b7 ; id 1
     db $b4, $b5 ; id 2
 
 ; record: 4 x 3 tiles, one row per line
-TileRect_15_7345::
+BreedMenu_ChooseEgg_CopyRectTo20ByteRows_Bank15_TileRect_2::
     db $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $b7 ; id 1
     db $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 8 x 5 tiles, one row per line
-TileRect_15_7351::
+BreedMenu_ChooseParents_CopyGlyphTileListFromBank1F_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $70, $71, $72, $73, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $c3, $74, $75, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-TileRect_15_7379::
+BreedMenu_ChooseParents_CopyRectTo20ByteRows_Bank15_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6634,7 +6647,7 @@ BreedMenu_ChooseParents_DrawScreenBufferAtScrollAndIncScreenStep_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 ; record: 6 x 5 tiles, one row per line
-TileRect_15_73AB::
+BreedMenu_ChooseParents_CopyFromBankWaitVRAM_BreedMenu_ChooseParents_WaitLinkMode_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6644,7 +6657,7 @@ TileRect_15_73AB::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 9 tiles, one row per line
-TileRect_15_73C9::
+BreedMenu_ReturnToMap_FillTilesBxC_SetScreenStep_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6656,7 +6669,7 @@ TileRect_15_73C9::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 12 x 9 tiles, one row per line
-TileRect_15_7411::
+BreedMenu_ReturnToMap_SetArg5ToListEntriesCell5_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -6665,11 +6678,11 @@ TileRect_15_7411::
     db $b6, $f5, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 5
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 6
     db $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 7
-BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Case19_Data::
+BreedMenu_ReturnToMap_CopyFromBankWaitVRAM_Data::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 8 x 11 tiles, one row per line
-TileRect_15_747D::
+BreedMenu_ChooseParents_ClearTileAreas1240_1700_14E0_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6682,7 +6695,7 @@ TileRect_15_747D::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-TileRect_15_74D5::
+BreedMenu_ChooseParents_SetArg5ToListEntriesCell5_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6696,20 +6709,20 @@ BreedMenu_ChooseParents_DrawGoldBoxAndStep_Bank15_Data::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 12 x 3 tiles, one row per line
-TileRect_15_7541::
+BreedMenu_ChooseParents_BlankWordTableTargets_SetScreenStep_2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
-TileRect_15_7565::
+BreedMenu_ChooseParents_ClearThreeTileRows_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c9, $7c, $7d, $7e, $7f, $c0, $c1, $c2, $ca, $cb, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
 ; record: 12 x 5 tiles, one row per line
-TileRect_15_7589::
+BreedMenu_ChooseParents_ClearThreeTileRows_TileRect_2::
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 0
     db $b6, $f5, $f6, $f7, $fd, $fe, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6722,7 +6735,7 @@ BreedMenu_ChooseParents_ComputeBreedingChild_Data::
     db $fe, $63, $00, $7f, $fb, $f9, $f9, $0f, $ff, $ff, $c4, $30, $00, $00, $00, $00
 
 ; record: 8 x 5 tiles, one row per line
-TileRect_15_75F5::
+BreedMenu_ChooseParents_ClearTileAreas2700_1750_17D0_TileRect::
     db $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6730,7 +6743,7 @@ TileRect_15_75F5::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-TileRect_15_761D::
+BreedMenu_ChooseParents_DrawRectIfLinkModeAndStep_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
@@ -6739,228 +6752,228 @@ TileRect_15_761D::
 
 ; HL = $763B and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_15_763B::
+ShowSaveFileInfoWindow_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_15_764B::
+Script_Breed::
     script_command SCRIPT_BREED
-Script_15_764C::
+Script_Breed_2::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_765A, Script_15_7657, Script_15_7651
-Script_15_7651::
+    script_choice_jump Script_WhichWillBeThe, Script_ToBreed_13, Script_BecomeAGreatMaster
+Script_BecomeAGreatMaster::
     script_command SCRIPT_BREED_CLOSE
     script_message $8020 ; '*: Become a great master!'
     script_command SCRIPT_BREED_CLOSE
     script_end
-Script_15_7657::
-    script_jump Script_15_7724
-Script_15_765A::
+Script_ToBreed_13::
+    script_jump Script_Breed_13
+Script_WhichWillBeThe::
     script_message $c002 ; '*: Which will be the base'
-Script_15_765D::
+Script_Breed_3::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7668, Script_15_7661
-Script_15_7661::
+    script_choice_jump Script_ThisIsTheOne, Script_IsThereAnythingElse
+Script_IsThereAnythingElse::
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
-Script_15_7668::
+    script_jump Script_Breed_2
+Script_ThisIsTheOne::
     script_message $c003 ; '*: This is the one you'
     script_command SCRIPT_BREED
-Script_15_766C::
-    script_choice_jump Script_15_7677, Script_15_767B, Script_15_7670
-Script_15_7670::
+Script_ChoiceJump_3::
+    script_choice_jump Script_Breed_4, Script_Breed_5, Script_WhichWillBeThe_2
+Script_WhichWillBeThe_2::
     script_message $c002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
-    script_jump Script_15_765D
-Script_15_7677::
+    script_jump Script_Breed_3
+Script_Breed_4::
     script_command SCRIPT_BREED
-    script_jump Script_15_766C
-Script_15_767B::
+    script_jump Script_ChoiceJump_3
+Script_Breed_5::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7697, Script_15_7691, Script_15_768B, Script_15_7681
-Script_15_7681::
+    script_choice_jump Script_AndWhatWillIts, Script_YouWon, Script_That, Script_There
+Script_There::
     script_message $c008 ; '*: There's no potential mate.'
-Script_15_7684::
+Script_WhichWillBeThe_3::
     script_message $c002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
-    script_jump Script_15_765D
-Script_15_768B::
+    script_jump Script_Breed_3
+Script_That::
     script_message $c006 ; '*: That's too low in level'
-    script_jump Script_15_7684
-Script_15_7691::
+    script_jump Script_WhichWillBeThe_3
+Script_YouWon::
     script_message $c005 ; '*: You won't have a monster'
-    script_jump Script_15_7684
-Script_15_7697::
+    script_jump Script_WhichWillBeThe_3
+Script_AndWhatWillIts::
     script_message $c007 ; '*: And what will its mate'
-Script_15_769A::
+Script_Breed_6::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76A5, Script_15_769E
-Script_15_769E::
+    script_choice_jump Script_ThisIsTheOne_2, Script_WhichWillBeThe_4
+Script_WhichWillBeThe_4::
     script_message $c002 ; '*: Which will be the base'
     script_command SCRIPT_BREED
-    script_jump Script_15_765D
-Script_15_76A5::
+    script_jump Script_Breed_3
+Script_ThisIsTheOne_2::
     script_message $c003 ; '*: This is the one you'
-Script_15_76A8::
+Script_Breed_7::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76B5, Script_15_76B9, Script_15_76AD
-Script_15_76AD::
+    script_choice_jump Script_Breed_8, Script_Breed_9, Script_AndWhatWillIts_2
+Script_AndWhatWillIts_2::
     script_command SCRIPT_BREED
     script_message $c007 ; '*: And what will its mate'
     script_command SCRIPT_BREED
-    script_jump Script_15_769A
-Script_15_76B5::
+    script_jump Script_Breed_6
+Script_Breed_8::
     script_command SCRIPT_BREED
-    script_jump Script_15_76A8
-Script_15_76B9::
+    script_jump Script_Breed_7
+Script_Breed_9::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76CB, Script_15_76C5, Script_15_76C5, Script_15_76BF
-Script_15_76BF::
+    script_choice_jump Script_Breed_10, Script_YouWon_2, Script_YouWon_2, Script_That_2
+Script_That_2::
     script_message $c006 ; '*: That's too low in level'
-    script_jump Script_15_76AD
-Script_15_76C5::
+    script_jump Script_AndWhatWillIts_2
+Script_YouWon_2::
     script_message $c005 ; '*: You won't have a monster'
-    script_jump Script_15_76AD
-Script_15_76CB::
+    script_jump Script_AndWhatWillIts_2
+Script_Breed_10::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76D5, Script_15_76CF
-Script_15_76CF::
+    script_choice_jump Script_HeroWillResultFrom, Script_AGreatMonsterWill
+Script_AGreatMonsterWill::
     script_message $c00a ; '*: A great monster will be'
-    script_jump Script_15_76E5
-Script_15_76D5::
+    script_jump Script_Breed_11
+Script_HeroWillResultFrom::
     script_message $c009 ; '*: 0 will result from this.'
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76E2, Script_15_76DC
-Script_15_76DC::
+    script_choice_jump Script_YouAlreadyHadThat, Script_You_2
+Script_You_2::
     script_message $c00c ; '*: You've never had that monster.'
-    script_jump Script_15_76E5
-Script_15_76E2::
+    script_jump Script_Breed_11
+Script_YouAlreadyHadThat::
     script_message $c00b ; '*: You already had that monster.'
-Script_15_76E5::
+Script_Breed_11::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76E9, Script_15_76EC
-Script_15_76E9::
-    script_jump Script_15_76EF
-Script_15_76EC::
+    script_choice_jump Script_ToBreed_12, Script_AccessoriesWillBeIn
+Script_ToBreed_12::
+    script_jump Script_Breed_12
+Script_AccessoriesWillBeIn::
     script_message $c029 ; '*: Accessories will be in the'
-Script_15_76EF::
+Script_Breed_12::
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_76FC, Script_15_76F4
-Script_15_76F4::
+    script_choice_jump Script_HatchingThatWillCost, Script_IsThereAnythingElse_2
+Script_IsThereAnythingElse_2::
     script_command SCRIPT_BREED
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
-Script_15_76FC::
+    script_jump Script_Breed_2
+Script_HatchingThatWillCost::
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
     script_message $c00f ; '*: Hatching that will cost 0G.'
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7706, Script_15_7712, Script_15_770C
-Script_15_7706::
+    script_choice_jump Script_I_2, Script_IWon, Script_YouDon_2
+Script_I_2::
     script_message $c010 ; '*: I'll hatch the egg too,'
-    script_jump Script_15_7764
-Script_15_770C::
+    script_jump Script_Breed_18
+Script_YouDon_2::
     script_message $c012 ; '*: You don't have enough gold,'
-    script_jump Script_15_7715
-Script_15_7712::
+    script_jump Script_YouGotTheEgg
+Script_IWon::
     script_message $c011 ; '*: I won't hatch the egg,'
-Script_15_7715::
+Script_YouGotTheEgg::
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
     script_message $401e ; '*: You got the egg of'
     script_message $c019 ; '*: 0 is going to the'
     script_command SCRIPT_BREED
     script_message $c004 ; '*: Is there anything else?'
-    script_jump Script_15_764C
-Script_15_7724::
+    script_jump Script_Breed_2
+Script_Breed_13::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7731, Script_15_7728
-Script_15_7728::
+    script_choice_jump Script_WhichEggShouldI, Script_ThereIsn
+Script_ThereIsn::
     script_message $c01c ; '*: There isn't a single egg'
     script_message $c004 ; '*: Is there anything else?'
-    script_jump Script_15_764C
-Script_15_7731::
+    script_jump Script_Breed_2
+Script_WhichEggShouldI::
     script_message $c01a ; '*: Which egg should I hatch?'
-Script_15_7734::
+Script_Breed_14::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_773F, Script_15_7738
-Script_15_7738::
+    script_choice_jump Script_ThatWillCostHero, Script_IsThereAnythingElse_3
+Script_IsThereAnythingElse_3::
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
-Script_15_773F::
+    script_jump Script_Breed_2
+Script_ThatWillCostHero::
     script_message $c01b ; '*: That will cost 0G. OK?'
-Script_15_7742::
+Script_Breed_15::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_774E, Script_15_7752, Script_15_7747
-Script_15_7747::
+    script_choice_jump Script_Breed_16, Script_Breed_17, Script_WhichEggShouldI_2
+Script_WhichEggShouldI_2::
     script_message $c01a ; '*: Which egg should I hatch?'
     script_command SCRIPT_BREED
-    script_jump Script_15_7734
-Script_15_774E::
+    script_jump Script_Breed_14
+Script_Breed_16::
     script_command SCRIPT_BREED
-    script_jump Script_15_7742
-Script_15_7752::
+    script_jump Script_Breed_15
+Script_Breed_17::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7761, Script_15_7756
-Script_15_7756::
+    script_choice_jump Script_FineFineJustWait, Script_YouDon_3
+Script_YouDon_3::
     script_message $c01d ; '*: You don't have enough gold.'
     script_command SCRIPT_BREED
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
-Script_15_7761::
+    script_jump Script_Breed_2
+Script_FineFineJustWait::
     script_message $c021 ; '*: Fine, fine. Just wait here.'
-Script_15_7764::
+Script_Breed_18::
     script_command SCRIPT_BREED
     script_command SCRIPT_BREED
-Script_15_7766::
+Script_WillYouTakeHero::
     script_message $4014 ; '*: Will you take 0 with'
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7778, Script_15_776D
-Script_15_776D::
+    script_choice_jump Script_Breed_19, Script_I_3
+Script_I_3::
     script_message $c016 ; '*: I'll send 0 to the'
-Script_15_7770::
+Script_IsThereAnythingElse_4::
     script_command SCRIPT_BREED
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
-Script_15_7778::
+    script_jump Script_Breed_2
+Script_Breed_19::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_7782, Script_15_777C
-Script_15_777C::
+    script_choice_jump Script_WhichWillGoBack, Script_RaiseItWithLove
+Script_RaiseItWithLove::
     script_message $c015 ; '*: Raise it with love and'
-    script_jump Script_15_7770
-Script_15_7782::
+    script_jump Script_IsThereAnythingElse_4
+Script_WhichWillGoBack::
     script_message $c017 ; '*: Which will go back to'
-Script_15_7785::
+Script_Breed_20::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_778D, Script_15_7789
-Script_15_7789::
+    script_choice_jump Script_IsThisTheOne, Script_Breed_21
+Script_Breed_21::
     script_command SCRIPT_BREED
-    script_jump Script_15_7766
-Script_15_778D::
+    script_jump Script_WillYouTakeHero
+Script_IsThisTheOne::
     script_message $c018 ; '*: Is this the one to'
-Script_15_7790::
+Script_Breed_22::
     script_command SCRIPT_BREED
-    script_choice_jump Script_15_779C, Script_15_77A0, Script_15_7795
-Script_15_7795::
+    script_choice_jump Script_Breed_23, Script_HeroIsGoingTo, Script_WhichWillGoBack_2
+Script_WhichWillGoBack_2::
     script_command SCRIPT_BREED
     script_message $c017 ; '*: Which will go back to'
-    script_jump Script_15_7785
-Script_15_779C::
+    script_jump Script_Breed_20
+Script_Breed_23::
     script_command SCRIPT_BREED
-    script_jump Script_15_7790
-Script_15_77A0::
+    script_jump Script_Breed_22
+Script_HeroIsGoingTo::
     script_command SCRIPT_BREED
     script_message $c019 ; '*: 0 is going to the'
     script_command SCRIPT_BREED
     script_message $c004 ; '*: Is there anything else?'
     script_command SCRIPT_BREED
-    script_jump Script_15_764C
+    script_jump Script_Breed_2
 
 HibernateMenu_WriteListCountAndRAMG2Etc::
     ld hl, wListEntries
@@ -7019,7 +7032,7 @@ HibernateMenu_WriteListCountAndRAMG2Etc::
     ld [rRAMG2], a
     ret
 
-HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc::
+HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -7102,13 +7115,13 @@ HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc::
     ld a, c
     cp $04
     jr nz, .skip
-    call HibernateMenu_ChooseRecords_Case03_Sub01_GlyphCopyArgsForA_Bank15
+    call HibernateMenu_ChooseRecords_GlyphCopyArgsForA_Bank15
     jr .restore
 
 .skip:
     ld a, c
     sla a
-    ld hl, HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Data
+    ld hl, HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -7136,10 +7149,10 @@ HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc::
     ld [wScreenStep], a
     ret
 
-HibernateMenu_ChooseRecords_Case03_WriteRAMG2AndRAMBEtc_Data::
+HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
-HibernateMenu_ChooseRecords_Case03_Sub01_GlyphCopyArgsForA_Bank15::
+HibernateMenu_ChooseRecords_GlyphCopyArgsForA_Bank15::
     xor a
     ld [wGlyphListPos], a
     ld [wGlyphListStart], a
@@ -7240,7 +7253,7 @@ LoadFamilyIconTileForArg1Record::
     ld [rRAMG2], a
     ret
 
-HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D::
+HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D::
     ld a, [wArg1]
     ld b, a
     ld a, $0a
@@ -7263,7 +7276,7 @@ HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call BlankLeadingZeroDigits_F_Bank15_7ADB
+    call BlankLeadingZeroDigits_F_Bank15_2
     ld a, [wDigits + $1]
     add $e0
     ld [wWindowTileBuffer + $89], a
@@ -7320,11 +7333,11 @@ HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D::
     ld a, [de]
     ld h, a
     call HLToDecimalDigits
-    call BlankLeadingZeroDigits_F_Bank15_7ADB
+    call BlankLeadingZeroDigits_F_Bank15_2
     pop bc
     ld a, c
     sla a
-    ld hl, HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D_Data
+    ld hl, HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -7349,7 +7362,7 @@ HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D::
     ld [rRAMG2], a
     ret
 
-HibernateMenu_ChooseRecords_Case04_RecordAddressWithBank1Slot1D_Data::
+HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_Data::
     db $d4, $c3, $d8, $c3, $fc, $c3, $00, $c4
 
 ; HL = sCompactRecords + $6F * B in SRAM bank 0, except record $1D, which is at sRecords in SRAM
@@ -7372,7 +7385,7 @@ RecordAddressWithBank1Slot1D::
     ld [rRAMB], a
     ret
 
-HibernateMenu_ChooseRecords_Case06_RecordAddressWithBank1Slot1D::
+HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_2::
     ld a, [wArg1]
     ld b, a
     ld a, $0a
@@ -7441,7 +7454,7 @@ HibernateMenu_ChooseRecords_Case06_RecordAddressWithBank1Slot1D::
 ; when wDigits is 0 it becomes $E3, and then when wDigits + $1 is 0 too it becomes $E3: a digit byte
 ; of $E3 turns into the blank tile $C3 once the usual $E0 digit-tile base is added, so leading zeros
 ; are blanked (E-0093) (the same 23 bytes appear in 2 banks)
-BlankLeadingZeroDigits_F_Bank15_7ADB::
+BlankLeadingZeroDigits_F_Bank15_2::
     ld a, [wDigits]
     and a
     jr nz, .return

@@ -4,7 +4,7 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex::
+RunMenuStateMenuState_FindSRAMSlotMarkerIndex::
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -34,21 +34,21 @@ RunMenuStateMenuState_Case05_FindSRAMSlotMarkerIndex::
     ld a, [hl]
     ld [wKeyRandomHi], a
 
-DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas::
-    call DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc
-    call DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase
-    call DebugAutomap_Update_Sub01_Sub01_NextRandomSeed
+DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas::
+    call DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc
+    call DebugAutomap_Update_RunRandomPatternCase
+    call DebugAutomap_Update_NextRandomSeed
     call DebugAutomap_Update_MergeKeyWorldAreas
-    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc
-    call DebugAutomap_Update_Sub01_Sub01_Return
+    call DebugAutomap_Update_WriteTemp0AndTemp1Etc
+    call DebugAutomap_Update_Return
     call DebugAutomap_Update_SetTemp0
     or a
-    jr nz, DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas
-    farcall DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGenRoomAndTemp8Etc
-    call DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1
-    call DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA
-    call DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength
-    call DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc
+    jr nz, DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
+    farcall DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc
+    call DebugAutomap_Update_WriteTemp0AndTemp1
+    call DebugAutomap_Update_SetKeyWorldBandForA
+    call DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength
+    call DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -66,7 +66,7 @@ DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas::
     ld [hl], a
     ret
 
-DebugAutomap_Update_Sub01_Sub01_LoadKeyWorldLevelBaseTripleForPartyStrength::
+DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength::
     call LoadKeyWorldLevelBaseTripleForPartyStrength
     call LoadKeyWorldParamsForCurrentKeyIndex
     call RollKeyWorldMonsterTableKeyWorldMonsters
@@ -642,7 +642,7 @@ RollKeyWorldEncounterTable::
     dec b
     jr nz, .loop
     ld a, [wPartyStrength]
-    call BandForA_4773
+    call BandForA
     dec a
     dec a
     bit 7, a
@@ -724,7 +724,7 @@ RollKeyWorldEncounterTableLevels::
     dec b
     jr nz, .loop
     ld a, [wPartyStrength]
-    call BandForA_4773
+    call BandForA
     dec a
     dec a
     bit 7, a
@@ -823,7 +823,7 @@ RollKeyWorldEncounterTableLevels::
 ; (E-0127)
 RollKeyWorldMonsterIds::
     ld a, [wPartyStrength]
-    call BandForA_4773
+    call BandForA
     ldh [hTemp0], a
 
 .loop:
@@ -979,8 +979,9 @@ PickRandomMonsterFromBandList::
     scf
     ret
 
-; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125)
-BandForA_4773::
+; A = 2-7 by thresholds 20, 40, 60, 70, 80, 90, 95 (E-0125) (E-0344: the address in its name dropped
+; or read as the label there; was BandForA_4773)
+BandForA::
     cp $14
     jr nc, .cp_28
     ld a, $02
@@ -1156,7 +1157,7 @@ KeyWorldLevelTable::
     db $52, $5b, $60, $64, $64, $64, $00, $00 ; id 98
     db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
+DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     xor a
     ld [wKeyWorldFlags], a
     call ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot
@@ -1224,7 +1225,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     call DivideBByA
     ld a, b
     add a
-    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data
+    ld hl, DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data
     add_a_to_hl
     ld a, [hli]
     ld b, a
@@ -1327,7 +1328,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
     ds $5a, $88
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data::
+DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data::
     db $00, $0f, $08, $0f, $08, $0f, $10, $1f, $10, $1f, $10, $1f, $10, $1f, $10, $1f
     db $10, $1f, $10, $1f
 
@@ -1449,7 +1450,7 @@ KeyWorldGoalKindRows::
     db $02, $02, $02, $02 ; id 54
     db $03, $03, $03, $03 ; id 55
 
-DebugAutomap_Update_Sub01_Sub01_RunRandomPatternCase::
+DebugAutomap_Update_RunRandomPatternCase::
     ld b, $00
     ld hl, wKeyWorldChunks + $3
     ld a, l
@@ -1526,7 +1527,7 @@ DebugAutomap_Update_MergeKeyWorldAreas::
     jr nz, .loop
     ret
 
-DebugAutomap_Update_Sub01_Sub01_NextRandomSeed::
+DebugAutomap_Update_NextRandomSeed::
     ldh a, [hTemp7]
     cp $01
     jp z, .skip4
@@ -1798,7 +1799,7 @@ SwapDEByteWithMatchingKeyWorldAreas::
     jr nz, .loop
     ret
 
-DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1Etc::
+DebugAutomap_Update_WriteTemp0AndTemp1Etc::
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
 
@@ -2051,11 +2052,11 @@ ReadKeyWorldCellIsSolid::
     pop hl
     ret
 
-DebugAutomap_Update_Sub01_Sub01_Return::
+DebugAutomap_Update_Return::
     ret
 
-DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1::
-    ld hl, wKeyWorldByte8B
+DebugAutomap_Update_WriteTemp0AndTemp1::
+    ld hl, wKeyWorldMenuFlag
     ld a, l
     ldh [hTemp0], a
     ld a, h
@@ -2107,7 +2108,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $3f
-    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data
+    ld hl, DebugAutomap_Update_WriteTemp0AndTemp1_Data
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2153,7 +2154,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1::
 .skip3:
     jp .skip
 
-DebugAutomap_Update_Sub01_Sub01_WriteTemp0AndTemp1_Data::
+DebugAutomap_Update_WriteTemp0AndTemp1_Data::
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f
     db $50, $51, $52, $53, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53
@@ -2480,13 +2481,13 @@ PlaceObjectInAreaC::
     ld a, $01
     ret
 
-DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA::
+DebugAutomap_Update_SetKeyWorldBandForA::
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
 
 .loop:
     ld [wKeyWorldBand], a
-    ld hl, DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data
+    ld hl, DebugAutomap_Update_SetKeyWorldBandForA_Data
     add_a_to_hl
     ld a, [hl]
     ld [wMapObjectCount], a
@@ -2524,7 +2525,7 @@ DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA::
     jr z, .loop
     ret
 
-DebugAutomap_Update_Sub01_Sub01_SetKeyWorldBandForA_Data::
+DebugAutomap_Update_SetKeyWorldBandForA_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
 ; wKeyWorldBand = 0 for A < $0B, $0F for A >= $50, otherwise (A - $0A) / 5 + 1 (E-0124)
@@ -3073,7 +3074,7 @@ FieldState_MapTransition_NextRandomSeed_Data::
     db $06, $08, $0e, $34, $1e, $00, $f5, $cd, $80, $1f, $f0, $c6, $fe, $ff, $28, $07
     db $f1, $0c, $1c, $05, $20, $f0, $c9, $f1, $c9
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc::
+DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
     ld a, [wKeyWorldFloorInfo]
     ld [wKeyWorldGoalScreen], a
     swap a
@@ -3151,7 +3152,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc::
 
 .skip2:
     sla a
-    ld hl, DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc_Data
+    ld hl, DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data
     add_a_to_hl
     ld a, [hli]
     ld [wKeyWorldGoalPos], a
@@ -3159,7 +3160,7 @@ DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc::
     ld [wKeyWorldGoalPos2], a
     ret
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGoalScreenAndTemp3Etc_Data::
+DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data::
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
@@ -3170,23 +3171,23 @@ RunRandomPatternCase::
     jumptable
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
-    dw RunRandomPatternCase_WriteTempA_SetTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
+    dw RunRandomPatternCase_WriteTempA_3
+    dw RunRandomPatternCase_WriteTempA_2
+    dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
-    dw RunRandomPatternCase_WriteTempA_SetTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
+    dw RunRandomPatternCase_WriteTempA_3
+    dw RunRandomPatternCase_WriteTempA_2
+    dw RunRandomPatternCase_WriteTempA_3
     dw RunRandomPatternCase_WriteTempA
     dw RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer
     dw RunRandomPatternCase_WriteTempA
-    dw RunRandomPatternCase_WriteTempA_Case02_SetTempA
-    dw RunRandomPatternCase_WriteTempA_SetTempA
+    dw RunRandomPatternCase_WriteTempA_3
+    dw RunRandomPatternCase_WriteTempA_2
     db $c9, $c9
 
-RunRandomPatternCase_WriteTempA_SetTempA::
+RunRandomPatternCase_WriteTempA_2::
     ld a, b
     and $01
     cp $01
@@ -3235,7 +3236,7 @@ RunRandomPatternCase_WriteTempA_SetTempA::
     ld c, a
     add a
     add c
-    ld de, RunRandomPatternCase_WriteTempA_Case03_Data
+    ld de, RunRandomPatternCase_WriteTempA_Data_3
     add e
     ld e, a
     jr nc, .call_store_three_bytes_before_temp0_pointer
@@ -3298,7 +3299,7 @@ RunRandomPatternCase_WriteTempA_SetTempA::
     ld a, $01
     ret
 
-RunRandomPatternCase_WriteTempA_Case02_SetTempA::
+RunRandomPatternCase_WriteTempA_3::
     ld a, b
     and $01
     cp $01
@@ -3326,7 +3327,7 @@ RunRandomPatternCase_WriteTempA_Case02_SetTempA::
     ld c, a
     sla a
     add c
-    ld de, RunRandomPatternCase_WriteTempA_Case02_Data
+    ld de, RunRandomPatternCase_WriteTempA_Data_2
     add e
     ld e, a
     jr nc, .call_store_three_bytes_before_temp0_pointer
@@ -3604,7 +3605,7 @@ RunRandomPatternCase_WriteTempA_Data::
     dfar KeyWorldChunkGroup20 ; id 69
     dfar KeyWorldChunkGroup20 ; id 70
     dfar KeyWorldChunkGroup20 ; id 71
-RunRandomPatternCase_WriteTempA_Case02_Data::
+RunRandomPatternCase_WriteTempA_Data_2::
     dfar KeyWorldChunkGroup20 ; id 72
     dfar KeyWorldChunkGroup21 ; id 73
     dfar KeyWorldChunkGroup22 ; id 74
@@ -3637,7 +3638,7 @@ RunRandomPatternCase_WriteTempA_Case02_Data::
     dfar KeyWorldChunkGroup22 ; id 101
     dfar KeyWorldChunkGroup21 ; id 102
     dfar KeyWorldChunkGroup20 ; id 103
-RunRandomPatternCase_WriteTempA_Case03_Data::
+RunRandomPatternCase_WriteTempA_Data_3::
     dfar KeyWorldChunkGroup30 ; id 104
     dfar KeyWorldChunkGroup31 ; id 105
     dfar KeyWorldChunkGroup32 ; id 106
@@ -4136,7 +4137,7 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld a, [wMapType]
     bit 7, a
     jr z, .check_map_id
-    call FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending
+    call FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending
     ret
 
 .check_map_id:
@@ -4304,7 +4305,7 @@ KeyContentsWordRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 27
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 28
 
-FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending::
+FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending::
     ld a, [wMapType]
     and $07
     cp $05
@@ -4361,7 +4362,7 @@ FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending::
     push de
     push bc
     call FieldState_MapTransition_NextRandomSeed
-    call WriteRandomEntryFromTable690E
+    call WriteRandomEntryFromTable
     pop bc
     pop de
     inc de
@@ -4385,16 +4386,18 @@ FieldState_MapTransition_Sub02_WriteScreenTriggerCountAndWarpPending::
     ret
 
 ; DE += 2; advances the random seed; hTemp0 = wKeyRandomHi & 7; writes
-; WriteRandomEntryFromTable690E_Data[hTemp0] at DE, calls
+; WriteRandomEntryFromTable_Data[hTemp0] at DE, calls
 ; LookupKeyWorldScreenSpotRecordsNibblePairForTemp0, then writes hTemp0 at the next byte (E-0121)
-WriteRandomEntryFromTable690E::
+; (E-0344: the address in its name dropped or read as the label there; was
+; WriteRandomEntryFromTable690E)
+WriteRandomEntryFromTable::
     inc de
     inc de
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
     ldh [hTemp0], a
-    ld hl, WriteRandomEntryFromTable690E_Data
+    ld hl, WriteRandomEntryFromTable_Data
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -4406,7 +4409,7 @@ WriteRandomEntryFromTable690E::
     ld [de], a
     ret
 
-WriteRandomEntryFromTable690E_Data::
+WriteRandomEntryFromTable_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
 ; hTemp3 = hTemp0; picks hTemp1 from the chance row KeyContentsKindChanceRows[level / 10] and hTemp2

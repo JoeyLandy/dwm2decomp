@@ -186,7 +186,7 @@ PauseMenu_State4_GiftMenu_GiveGift::
     jumptable
     dw PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc
     dw PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1
-    dw PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_48A0AndStep
+    dw PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_2AndStep
     dw PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags
 
 PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc::
@@ -254,10 +254,10 @@ PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1::
     inc [hl]
     ret
 
-PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_48A0AndStep::
+PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_2AndStep::
     xor a
     ld [wStringCategory], a
-    farcall BeginStringDisplay_BankF0_48A0
+    farcall BeginStringDisplay_BankF0_2
     ld hl, wTemp1
     inc [hl]
     ret
@@ -1156,7 +1156,7 @@ UpdateMenuCursor_BankF1::
 .call_update_menu_cursor_bank_f1_wait_for_vram:
     ld [hl], b
     ld a, b
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
     xor a
     ld [wFrameCounterLo], a
     jr .return
@@ -1182,7 +1182,7 @@ UpdateMenuCursor_BankF1::
     pop de
     pop af
     ld [hl], a
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
 
 .clear_frame_counter_lo:
     set 7, [hl]
@@ -1201,7 +1201,7 @@ UpdateMenuCursor_BankF1::
     jr z, .call_update_menu_cursor_bank_f1_wait_for_vram2
     ld a, [hl]
     and $0f
-    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02
+    call UpdateMenuCursor_BankF1_WaitForVRAMAccess_2
     jr .return
 
 .call_update_menu_cursor_bank_f1_wait_for_vram2:
@@ -1237,7 +1237,7 @@ UpdateMenuCursor_BankF1_WaitForVRAMAccess::
     ei
     ret
 
-UpdateMenuCursor_BankF1_WaitForVRAMAccess_Sub02::
+UpdateMenuCursor_BankF1_WaitForVRAMAccess_2::
     add a
     add e
     ld e, a
@@ -1287,7 +1287,7 @@ WriteBCTileAtWordTableEntry_BankF1::
     call WriteVRAMByte
     ret
 
-ShowStringBank08AtTilesHL_F1_49A6::
+ShowStringBank08AtTilesHL_BankF1_2::
     ld a, [wTextWindowTileLo]
     ld c, a
     ld a, [wTextWindowTileHi]
@@ -1601,15 +1601,15 @@ RunScreenStateWhenNotFading_F1_LinkBreed::
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo
     dw RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14_YourPalRefusedBreeding
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_2
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed
     dw RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourPalRefusedBreeding
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_AccessoriesWillBeIn
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_3
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2
     dw RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
-    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case1C_YourPalRefusedBreeding
+    dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_4
     dw RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
@@ -1684,16 +1684,16 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor::
 .read_screen_sub_step:
     ld a, [wScreenSubStep]
     jumptable
-    dw RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor
-    dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
-    dw RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait
-    dw RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags
-    dw RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor
-    dw RunScreenStateWhenNotFading_F1_Table2_BreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowPleaseWait
+    dw RunScreenStateWhenNotFading_F1_WaitTextFlags_2
+    dw RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor
+    dw RunScreenStateWhenNotFading_F1_BreedMenu
+    dw RunScreenStateWhenNotFading_F1_ShowPleaseWait
+    dw RunScreenStateWhenNotFading_F1_WaitTextFlags_2
+    dw RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor
+    dw RunScreenStateWhenNotFading_F1_BreedMenu
 
-RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait::
+RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1706,7 +1706,7 @@ RunScreenStateWhenNotFading_F1_Table2_ShowPleaseWait::
     call BeginString_Bank0E_Cat0
     ret
 
-RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags::
+RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1717,7 +1717,7 @@ RunScreenStateWhenNotFading_F1_Table2_WaitTextFlags::
     ld [wLinkSendByte], a
     ret
 
-RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor::
+RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1730,7 +1730,7 @@ RunScreenStateWhenNotFading_F1_Table2_ShowChooseTheMonsterFor::
     ld [wScreenSubStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_Table2_BreedMenu::
+RunScreenStateWhenNotFading_F1_BreedMenu::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1756,12 +1756,12 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK::
 
 .call_breed_menu:
     farcall BreedMenu
-    ld de, Tiles1Plus6E0Tiles_1F_4510
+    ld de, Tiles1Plus6E0Tiles_2
     ld hl, vTiles1 + $6e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4450
+    ld de, Tiles1Plus6F0Tiles_2
     ld hl, vTiles1 + $6f0
     ld b, $1f
     ld c, $10
@@ -1782,7 +1782,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5::
     ld a, $c7
     ld [wArg1], a
     call LoadFamilyIconTileForRecordB_BankF1
-    ld de, TileRect_F1_5A36
+    ld de, RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5_TileRect
     ld hl, wWindowTileBuffer + $6c
     lb bc, $0c, $05
     call CopyRectTo20ByteRows_BankF1
@@ -1805,8 +1805,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags::
     ret nz
 
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep
-; += 1 and clears wSelectedRecord (E-0122)
-RunFunc58FAAt0278AndStep_BankF1::
+; += 1 and clears wSelectedRecord (E-0122) (E-0344: the address in its name dropped or read as the
+; label there; was RunFunc58FAAt0278AndStep_BankF1; shortened from
+; RunCopyScreenBufferRectWithAttrs_F1At0278AndStep_BankF1)
+CopyScreenBufferRectAt0278AndStep_BankF1::
     ld bc, $0005
     ld hl, $0278
     ld de, $00ac
@@ -1925,7 +1927,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
     ld [rRAMG2], a
     ld a, $07 ; 'Please wait.'
     call BeginString_Bank0E_Cat0
-    call RunFunc58FAAt0278AndStep_BankF1
+    call CopyScreenBufferRectAt0278AndStep_BankF1
     call BGMapAddressAtScroll_BankF1
     lb bc, $14, $0d
     ld de, $01cc
@@ -1943,7 +1945,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep::
     ld [wLinkSendByte], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case14_YourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_2::
     ld a, [wLinkMessage]
     cp $01
     jr z, .check_screen_step
@@ -2111,7 +2113,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect::
     ld [wTwoChoiceCursor], a
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_F1_5A90
+    ld de, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows_BankF1
@@ -2124,14 +2126,14 @@ RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_3::
     ld a, [wTextFlags]
     and a
     ret nz
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
-    call RunFunc58FAAt024FAndDrawBox_BankF1
+    call CopyScreenBufferRectAt024FAndDrawBox_BankF1
     ld a, $09
     ld [wScreenStep], a
     ld a, $03 ; 'Your pal refused breeding.'
@@ -2151,7 +2153,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourP
     ret
 
 .loop:
-    call RunFunc58FAAt024FAndDrawBox_BankF1
+    call CopyScreenBufferRectAt024FAndDrawBox_BankF1
     ld a, $09
     ld [wScreenStep], a
     ld a, $02 ; 'You refused breeding.'
@@ -2168,7 +2170,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourP
     jr z, .read_screen_state
     ld a, [wTwoChoiceCursor]
     ld b, $bc
-    ld hl, RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_Data
+    ld hl, RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Data
     call StoreBAtWordTableEntry_BankF1
     ld a, [wScreenStep]
     inc a
@@ -2195,7 +2197,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_YourP
     ld [wScreenState], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_AccessoriesWillBeIn::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -2228,29 +2230,29 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_AccessoriesWillBeIn::
 .clear_screen_sub_step:
     xor a
     ld [wScreenSubStep], a
-    ld de, Tiles2Plus700Tiles_1F_4230
+    ld de, Tiles2Plus700Tiles
     ld hl, vTiles2 + $700
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus710Tiles_1F_4290
+    ld de, Tiles2Plus710Tiles
     ld hl, vTiles2 + $710
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles2Plus720Tiles_1F_4370
+    ld de, Tiles2Plus720Tiles
     ld hl, vTiles2 + $720
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+    ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles2 + $760
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     xor a
     ld [wTwoChoiceCursor], a
-    ld de, TileRect_F1_5A72
+    ld de, RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_BankF1
@@ -2304,7 +2306,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep::
     ld a, [wScreenSubStep]
     and a
     jr z, .read_item_grid_x
-    ld a, [wScreenByteEE]
+    ld a, [wMenuCounter]
     and a
     ret nz
     xor a
@@ -2375,10 +2377,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep::
     inc a
     ld [wScreenSubStep], a
     ld a, $01
-    ld [wScreenByteEE], a
+    ld [wMenuCounter], a
     ret
 
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case1C_YourPalRefusedBreeding::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_4::
     ld a, [wLinkMessage]
     cp $01
     jr z, .clear_link_send_byte
@@ -2474,7 +2476,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte::
     or c
     jr nz, .loop
     ld a, $01
-    ld [wLinkSceneByte4B], a
+    ld [wLinkScene], a
     ret
 
 RunScreenStateWhenNotFading_F1_SwapMonstersMenu::
@@ -2578,23 +2580,23 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Return
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToFillTilesBxCAndStep
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTilesBxC
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case10
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_2
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_SetArg3
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStepAndArg1Etc
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteArg1AndArg2Etc
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects_2AndStep
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ToClearTilesAndDrawRectsAndStep
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCategory13StringAtTiles2680
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D_DrawLevelAndStatusRowForRecordBufBLevel
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72
-    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case20_SetJoypadPressedRepeat
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_2
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects_3
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel_2
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_2
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3
 
 RunScreenStateWhenNotFading_F1_ShowRecordStats_Return::
     ret
@@ -2608,7 +2610,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearBGMapAndLoadFrameTiles::
 
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep::
     farcall ShowString10Bank0EAtTiles2020ThenDefault
-    farcall LoadSixteenGlyphTilesFromTable73BC
+    farcall LoadSixteenGlyphTilesFromTable
     call DrawShortStringRecordBufBNameAtTiles1500
 
 RunScreenStateWhenNotFading_F1_ShowRecordStats_AdvanceScreenStep::
@@ -2633,7 +2635,7 @@ DrawShortStringRecordBufBNameAtTiles1500::
 
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1::
     call BGMapAddressAtScroll_BankF1
-    ld de, TileRect_1F_687F
+    ld de, RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_TileRect
     ld a, $14
     ld [wArg3], a
     ld a, $12
@@ -2684,7 +2686,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor::
     call BGMapAddressAtScroll_BankF1
     ld de, $0161
     add hl, de
-    ld de, TileRect_1F_651B
+    ld de, LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2
     ld a, $06
     ld [wArg3], a
     ld a, $06
@@ -2743,7 +2745,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTilesBxC::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case10::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_2::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString
     ld a, [wScreenStep]
     inc a
@@ -2754,7 +2756,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Set
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
     add hl, de
-    ld de, TileRect_1F_6577
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_4_TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $0f
@@ -2805,7 +2807,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     call BGMapAddressAtScroll_BankF1
     ld de, $0160
     add hl, de
-    ld de, TileRect_1F_66DF
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DecompressGraphicsArg1ToArg4_TileRect
     ld a, $08
     ld [wArg3], a
     ld a, $07
@@ -2847,7 +2849,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPr
 .clear_sprite_hide_tile2:
     xor a
     ldh [hSpriteHideTile], a
-    farcall DrawRects662BAnd653F
+    farcall DrawRects
     ld a, $04
     ld [wScreenStep], a
     ret
@@ -2858,15 +2860,15 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatu
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects6B4FAnd6C27AndStep::
-    farcall DrawRects6B4FAnd6C27
+RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects_2AndStep::
+    farcall DrawRects_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearTilesAndDrawRects6C5FAnd6D37::
-    farcall ClearTilesAndDrawRects6C5FAnd6D37
+RunScreenStateWhenNotFading_F1_ShowRecordStats_ToClearTilesAndDrawRectsAndStep::
+    farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2885,7 +2887,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCatego
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJoypadPressedRepeat::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_2::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -2899,7 +2901,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJ
     cp $fe
     jr z, .call_fill_tiles_from_request
     cp $ff
-    jr z, .call_upload_tiles_from_data5757_bank_f1
+    jr z, .call_upload_tiles_from_data_bank_f1
     ret
 
 .call_fill_tiles_from_request:
@@ -2911,15 +2913,15 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case1B_SetJ
     ld [wScreenStep], a
     ret
 
-.call_upload_tiles_from_data5757_bank_f1:
-    call UploadTilesFromData5757_BankF1
-    farcall DrawSummaryFrames6E47And6D6F
+.call_upload_tiles_from_data_bank_f1:
+    call UploadTilesFromData_BankF1
+    farcall DrawSummaryFrames
     ld a, [wScreenStep]
     add $03
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects_3::
     ld a, [wScreenSubStep]
     and a
     jr nz, .call_show_string10_bank0_e_at_tiles2020_then
@@ -2934,7 +2936,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    farcall DrawRects5E13And66DF
+    farcall DrawRects_3
     ld a, [wScreenSubStep]
     inc a
     ld [wScreenSubStep], a
@@ -2947,13 +2949,13 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects5E13And66DF::
     ld [wScreenSubStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D_DrawLevelAndStatusRowForRecordBufBLevel::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel_2::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
     ld bc, $0901
     call FillTilesBxC
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString
-    ld de, Tiles1Plus4A0Tiles_1F_4AD0
+    ld de, Tiles1Plus4A0Tiles
     ld hl, vTiles2 + $6f0
     ld b, $1f
     ld c, $10
@@ -2970,11 +2972,11 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_Case1D_DrawLevelA
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Case1E::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_2::
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
     add hl, de
-    ld de, TileRect_1F_63D7
+    ld de, SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_GetListEntriesCell5Address_TileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $12
@@ -2988,8 +2990,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Cas
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72::
-    farcall RunF24C3DAnd4D72
+RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2::
+    farcall RunF2
     ld a, $f0
     ldh [hSpriteHideTile], a
     ld a, [wScreenStep]
@@ -2997,7 +2999,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF24C3DAnd4D72::
     ld [wScreenStep], a
     ret
 
-RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_Case20_SetJoypadPressedRepeat::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3::
     ld a, [wJoypadPressedRepeat]
     res 7, a
     res 6, a
@@ -3076,7 +3078,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
     ret
 
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E::
-    ld de, TileRect_F1_5A90
+    ld de, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect_TileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows_BankF1
@@ -3125,9 +3127,11 @@ DrawRecordBufBSpeciesSpritePart_BankF1::
     farcall DrawMetaSpritePartC0
     ret
 
-; copies tiles from Tiles_F1_5757: two to vTiles2 + $6E0 and three to vTiles2 + $7C0 (E-0118)
-UploadTilesFromData5757_BankF1::
-    ld hl, Tiles_F1_5757
+; copies tiles from UploadTilesFromData_BankF1_Tiles: two to vTiles2 + $6E0 and three to vTiles2 +
+; $7C0 (E-0118) (E-0344: the address in its name dropped or read as the label there; was
+; UploadTilesFromData5757_BankF1)
+UploadTilesFromData_BankF1::
+    ld hl, UploadTilesFromData_BankF1_Tiles
     ld de, vTiles2 + $6e0
     call CopyTileBytesToVRAM_BankF1
     call CopyTileBytesToVRAM_BankF1
@@ -3139,7 +3143,7 @@ UploadTilesFromData5757_BankF1::
 
 ; HL = $5757 and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_F1_5757::
+UploadTilesFromData_BankF1_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $ff ; entry 0
     db $ff, $ff, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 1
     db $ff, $ff, $ff, $ff, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 2
@@ -3229,8 +3233,10 @@ DrawTileRectAtHLFromDE_BankF1::
     ret
 
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws
-; the box at scroll + $1CC (E-0122)
-RunFunc58FAAt024FAndDrawBox_BankF1::
+; the box at scroll + $1CC (E-0122) (E-0344: the address in its name dropped or read as the label
+; there; was RunFunc58FAAt024FAndDrawBox_BankF1; shortened from
+; RunCopyScreenBufferRectWithAttrs_F1At024FAndDrawBox_BankF1)
+CopyScreenBufferRectAt024FAndDrawBox_BankF1::
     ld bc, $0007
     ld hl, $024f
     ld de, $0083
@@ -3625,7 +3631,7 @@ StoreBAtWordTableEntry_BankF1::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
-TileRect_F1_5A36::
+RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3633,7 +3639,7 @@ TileRect_F1_5A36::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-TileRect_F1_5A72::
+RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3641,7 +3647,7 @@ TileRect_F1_5A72::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 9 x 7 tiles, one row per line
-TileRect_F1_5A90::
+RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $60, $61, $62, $62, $63, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3650,41 +3656,41 @@ TileRect_F1_5A90::
     db $b6, $c3, $c3, $68, $69, $6a, $6b, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
-RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Case18_Data::
+RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Data::
     db $fc, $c3, $24, $c4, $4c, $c4
 
-GameMode5_Update_Case07_LinkExchangeJoypadPerFrame::
+GameMode5_Update_LinkExchangeJoypadPerFrame_5::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
     cp $01
-    jr z, .check_screen_byte_ee
+    jr z, .check_menu_counter
     ret
 
-.check_screen_byte_ee:
-    ld a, [wScreenByteEE]
+.check_menu_counter:
+    ld a, [wMenuCounter]
     cp $02
-    jr nz, .call_game_mode5_update_case07_sub01_wait_pick
+    jr nz, .call_game_mode5_update_wait_pick_count
     farcall SendSGBPaletteSetForSGBPaletteSet
     ld a, $fc
     call StartPaletteFade
     xor a
-    ld [wScreenByteEE], a
+    ld [wMenuCounter], a
     ret
 
-.call_game_mode5_update_case07_sub01_wait_pick:
-    call GameMode5_Update_Case07_Sub01_WaitPickCount
+.call_game_mode5_update_wait_pick_count:
+    call GameMode5_Update_WaitPickCount
     ld a, [wScreenState]
     cp $07
     ret c
-    call GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots
-    call GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc
-    ld a, [wScreenByteEE]
+    call GameMode5_Update_UpdateAndDrawSpriteSlots
+    call GameMode5_Update_WriteArg1AndArg2Etc
+    ld a, [wMenuCounter]
     and a
     ret z
-    call GameMode5_Update_Case07_Sub01_RunNameEntryStateWhenNotFading
+    call GameMode5_Update_RunNameEntryStateWhenNotFading
     ret
 
-GameMode5_Update_Case07_Sub01_WaitPickCount::
+GameMode5_Update_WaitPickCount::
     ld a, [wPickCount]
     and a
     ret z
@@ -3707,19 +3713,19 @@ GameMode5_Update_Case07_Sub01_WaitPickCount::
     farcall DrawSpritePart9000At88_28
     ret
 
-GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc::
-    ld a, [wLinkByteE8]
+GameMode5_Update_WriteArg1AndArg2Etc::
+    ld a, [wLinkSceneSpeciesLo]
     cp $0c
-    jr z, .check_link_byte_ea
+    jr z, .check_link_scene_family
     cp $0d
-    jp z, .check_link_byte_ea2
+    jp z, .check_link_scene_family2
     ret
 
-.check_link_byte_ea:
-    ld a, [wLinkByteEA]
+.check_link_scene_family:
+    ld a, [wLinkSceneFamily]
     and a
     ret nz
-    ld a, [wLinkByteE9]
+    ld a, [wLinkSceneSpeciesHi]
     cp $15
     jr z, .call_draw_list_entries_cell5_species_sprite
     cp $20
@@ -3736,11 +3742,11 @@ GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc::
     farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
     ret
 
-.check_link_byte_ea2:
-    ld a, [wLinkByteEA]
+.check_link_scene_family2:
+    ld a, [wLinkSceneFamily]
     and a
     ret nz
-    ld a, [wLinkByteE9]
+    ld a, [wLinkSceneSpeciesHi]
     cp $07
     ret nz
     farcall GetListEntriesCell4Address
@@ -3754,7 +3760,7 @@ GameMode5_Update_Case07_Sub01_WriteArg1AndArg2Etc::
     farcall DrawPartySpeciesSprites
     ret
 
-GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots::
+GameMode5_Update_UpdateAndDrawSpriteSlots::
     ld a, [wSpriteSlotCount]
     and a
     ret z
@@ -3765,7 +3771,7 @@ GameMode5_Update_Case07_Sub01_UpdateAndDrawSpriteSlots::
     farcall DrawFieldSprites
     ret
 
-GameMode5_Update_Case07_Sub01_RunNameEntryStateWhenNotFading::
+GameMode5_Update_RunNameEntryStateWhenNotFading::
     ld a, $01
     ld [wArg1], a
     ld a, [wGiftRecord + MON_SEX]
@@ -3819,12 +3825,14 @@ GameMode5_Update_Case07_Sub01_RunNameEntryStateWhenNotFading::
     jr nz, .loop3
     xor a
     ld [wRecordBufB + MON_EGG], a
-    ld [wScreenByteEE], a
+    ld [wMenuCounter], a
     ret
 
-; copies the $40 bytes at LoadBGPalettesFrom5E04_Data to wBGPaletteBuffer (E-0122)
-LoadBGPalettesFrom5E04::
-    ld hl, LoadBGPalettesFrom5E04_Data
+; copies the $40 bytes at LoadBGPalettesFromData_Data to wBGPaletteBuffer (E-0122) (E-0344: the
+; address in its name dropped or read as the label there; was LoadBGPalettesFrom5E04; a trailing
+; preposition left by the dropped address removed)
+LoadBGPalettesFromData::
+    ld hl, LoadBGPalettesFromData_Data
     ld de, wBGPaletteBuffer
     ld c, $40
 
@@ -3837,31 +3845,31 @@ LoadBGPalettesFrom5E04::
     ret
 
 ; LZSS-compressed: 304 bytes that expand to 544 (E-0016, E-0017)
-Tiles1Gfx_F1_5C14::
-    INCBIN "gfx/misc/tiles1_gfx_f1_5_c14.lz"
+Tiles1Gfx_3::
+    INCBIN "gfx/misc/tiles1_gfx_3.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 260 (E-0016, E-0017)
-WindowTileBufferPlus64Gfx_F1_5D44::
-    INCBIN "gfx/misc/window_tile_buffer_plus64_gfx_f1_5_d44.lz"
+WindowTileBufferPlus64Gfx::
+    INCBIN "gfx/misc/window_tile_buffer_plus64_gfx.lz"
 
 ; LZSS-compressed: 32 bytes that expand to 100 (E-0016, E-0017)
-WindowTileBufferGfx_F1_5D9C::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_WindowTileBufferGfx::
     db $64, $00, $00, $9c, $80, $00, $01, $02, $90, $91, $00, $09, $04, $92, $9d, $00
     db $00, $04, $00, $15, $07, $00, $13, $0f, $16, $9e, $9f, $a0, $00, $52, $0c, $a1
 
 ; LZSS-compressed: 50 bytes that expand to 260 (E-0016, E-0017)
-WindowAttrBufferPlus64Gfx_F1_5DBC::
+WindowAttrBufferPlus64Gfx::
     db $04, $01, $03, $01, $03, $00, $0f, $01, $03, $ee, $ff, $01, $03, $f8, $fd, $03
     db $26, $07, $03, $1d, $0f, $01, $03, $45, $0f, $28, $03, $08, $0f, $01, $03, $14
     db $06, $03, $9e, $07, $03, $09, $0b, $02, $02, $02, $02, $03, $a8, $0f, $11, $03
     db $a4, $0c
 
 ; LZSS-compressed: 22 bytes that expand to 100 (E-0016, E-0017)
-WindowAttrBufferGfx_F1_5DEE::
+LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_WindowAttrBufferGfx::
     db $64, $00, $02, $01, $02, $f9, $f4, $02, $08, $08, $02, $ee, $ff, $00, $02, $14
     db $0f, $16, $02, $4f, $0f, $00
 
-LoadBGPalettesFrom5E04_Data::
+LoadBGPalettesFromData_Data::
     db $ee, $3d, $ff, $7f, $d6, $5a, $63, $00, $12, $36, $ff, $7f, $d8, $42, $66, $00
     db $12, $36, $ff, $7f, $d8, $42, $bf, $30, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f
     db $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f, $ff, $7f

@@ -96,61 +96,61 @@ CopyBlockToTileBufferBlankingText::
 ; 51 words, and the records tile $40C5-$51C6 (E-0232, C1)
 ; record: screen block record
 ScreenBlockTable::
-    dw TileRect_33_40C5 ; id 0
-    dw TileRect_33_4111 ; id 1
-    dw TileRect_33_41B1 ; id 2
-    dw TileRect_33_41D9 ; id 3
-    dw TileRect_33_4219 ; id 4
-    dw TileRect_33_42A1 ; id 5
-    dw TileRect_33_42DD ; id 6
-    dw TileRect_33_4335 ; id 7
-    dw TileRect_33_4411 ; id 8
-    dw TileRect_33_444D ; id 9
-    dw TileRect_33_4529 ; id 10
-    dw TileRect_33_4789 ; id 11
-    dw TileRect_33_479F ; id 12
-    dw TileRect_33_480F ; id 13
-    dw TileRect_33_489F ; id 14
-    dw TileRect_33_4909 ; id 15
-    dw TileRect_33_492B ; id 16
-    dw TileRect_33_4993 ; id 17
-    dw TileRect_33_49DF ; id 18
-    dw TileRect_33_49DF ; id 19
-    dw TileRect_33_49DF ; id 20
-    dw TileRect_33_49DF ; id 21
-    dw TileRect_33_49DF ; id 22
-    dw TileRect_33_49DF ; id 23
-    dw TileRect_33_49DF ; id 24
-    dw TileRect_33_49DF ; id 25
-    dw TileRect_33_49DF ; id 26
-    dw TileRect_33_49DF ; id 27
-    dw TileRect_33_4A29 ; id 28
-    dw TileRect_33_4A75 ; id 29
-    dw TileRect_33_4B2D ; id 30
-    dw TileRect_33_4B2D ; id 31
-    dw TileRect_33_4B2D ; id 32
-    dw TileRect_33_4B79 ; id 33
-    dw TileRect_33_4C40 ; id 34
-    dw TileRect_33_4CA6 ; id 35
-    dw TileRect_33_4D31 ; id 36
-    dw TileRect_33_4D66 ; id 37
-    dw TileRect_33_4D88 ; id 38
-    dw TileRect_33_4DA1 ; id 39
-    dw TileRect_33_4E08 ; id 40
-    dw TileRect_33_4E8A ; id 41
-    dw TileRect_33_4EFA ; id 42
-    dw TileRect_33_4FDA ; id 43
-    dw TileRect_33_4FFC ; id 44
-    dw TileRect_33_505A ; id 45
-    dw TileRect_33_4535 ; id 46
-    dw TileRect_33_4594 ; id 47
-    dw TileRect_33_4641 ; id 48
-    dw TileRect_33_4749 ; id 49
-    dw TileRect_33_48D4 ; id 50
+    dw TileRect_ScreenBlockTable_0 ; id 0
+    dw TileRect_ScreenBlockTable_1 ; id 1
+    dw TileRect_ScreenBlockTable_2 ; id 2
+    dw TileRect_ScreenBlockTable_3 ; id 3
+    dw TileRect_ScreenBlockTable_4 ; id 4
+    dw TileRect_ScreenBlockTable_5 ; id 5
+    dw TileRect_ScreenBlockTable_6 ; id 6
+    dw TileRect_ScreenBlockTable_7 ; id 7
+    dw TileRect_ScreenBlockTable_8 ; id 8
+    dw TileRect_ScreenBlockTable_9 ; id 9
+    dw TileRect_ScreenBlockTable_10 ; id 10
+    dw TileRect_ScreenBlockTable_11 ; id 11
+    dw TileRect_ScreenBlockTable_12 ; id 12
+    dw TileRect_ScreenBlockTable_13 ; id 13
+    dw TileRect_ScreenBlockTable_14 ; id 14
+    dw TileRect_ScreenBlockTable_15 ; id 15
+    dw TileRect_ScreenBlockTable_16 ; id 16
+    dw TileRect_ScreenBlockTable_17 ; id 17
+    dw TileRect_ScreenBlockTable_18 ; id 18
+    dw TileRect_ScreenBlockTable_18 ; id 19
+    dw TileRect_ScreenBlockTable_18 ; id 20
+    dw TileRect_ScreenBlockTable_18 ; id 21
+    dw TileRect_ScreenBlockTable_18 ; id 22
+    dw TileRect_ScreenBlockTable_18 ; id 23
+    dw TileRect_ScreenBlockTable_18 ; id 24
+    dw TileRect_ScreenBlockTable_18 ; id 25
+    dw TileRect_ScreenBlockTable_18 ; id 26
+    dw TileRect_ScreenBlockTable_18 ; id 27
+    dw TileRect_ScreenBlockTable_28 ; id 28
+    dw TileRect_ScreenBlockTable_29 ; id 29
+    dw TileRect_ScreenBlockTable_30 ; id 30
+    dw TileRect_ScreenBlockTable_30 ; id 31
+    dw TileRect_ScreenBlockTable_30 ; id 32
+    dw TileRect_ScreenBlockTable_33 ; id 33
+    dw TileRect_ScreenBlockTable_34 ; id 34
+    dw TileRect_ScreenBlockTable_35 ; id 35
+    dw TileRect_ScreenBlockTable_36 ; id 36
+    dw TileRect_ScreenBlockTable_37 ; id 37
+    dw TileRect_ScreenBlockTable_38 ; id 38
+    dw TileRect_ScreenBlockTable_39 ; id 39
+    dw TileRect_ScreenBlockTable_40 ; id 40
+    dw TileRect_ScreenBlockTable_41 ; id 41
+    dw TileRect_ScreenBlockTable_42 ; id 42
+    dw TileRect_ScreenBlockTable_43 ; id 43
+    dw TileRect_ScreenBlockTable_44 ; id 44
+    dw TileRect_ScreenBlockTable_45 ; id 45
+    dw TileRect_ScreenBlockTable_46 ; id 46
+    dw TileRect_ScreenBlockTable_47 ; id 47
+    dw TileRect_ScreenBlockTable_48 ; id 48
+    dw TileRect_ScreenBlockTable_49 ; id 49
+    dw TileRect_ScreenBlockTable_50 ; id 50
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
-TileRect_33_40C5::
+TileRect_ScreenBlockTable_0::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -164,7 +164,7 @@ TileRect_33_40C5::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0008 (row 0, column 8); 12 x 13 tiles
-TileRect_33_4111::
+TileRect_ScreenBlockTable_1::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $0d ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -182,7 +182,7 @@ TileRect_33_4111::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 12
 
 ; record: offset $0161 (row 11, column 1); 6 x 6 tiles
-TileRect_33_41B1::
+TileRect_ScreenBlockTable_2::
     dw $0161 ; entry 0: offset into wScreenTileBuffer
     db $06, $06 ; width, rows
     db $5c, $5d, $5e, $5f, $60, $61 ; row 0
@@ -193,7 +193,7 @@ TileRect_33_41B1::
     db $7a, $7b, $7c, $7d, $7e, $7f ; row 5
 
 ; record: offset $01A8 (row 13, column 8); 12 x 5 tiles
-TileRect_33_41D9::
+TileRect_ScreenBlockTable_3::
     dw $01a8 ; entry 0: offset into wScreenTileBuffer
     db $0c, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -204,7 +204,7 @@ TileRect_33_41D9::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0008 (row 0, column 8); 12 x 11 tiles
-TileRect_33_4219::
+TileRect_ScreenBlockTable_4::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -220,7 +220,7 @@ TileRect_33_4219::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
-TileRect_33_42A1::
+TileRect_ScreenBlockTable_5::
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $08, $07 ; width, rows
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 0
@@ -232,7 +232,7 @@ TileRect_33_42A1::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 6
 
 ; record: offset $0168 (row 11, column 8); 12 x 7 tiles
-TileRect_33_42DD::
+TileRect_ScreenBlockTable_6::
     dw $0168 ; entry 0: offset into wScreenTileBuffer
     db $0c, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -244,7 +244,7 @@ TileRect_33_42DD::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
 ; record: offset $0008 (row 0, column 8); 12 x 18 tiles
-TileRect_33_4335::
+TileRect_ScreenBlockTable_7::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $12 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -267,7 +267,7 @@ TileRect_33_4335::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
 ; a record of ScreenBlockTable (E-0232, C1)
-TileRect_33_4411::
+TileRect_ScreenBlockTable_8::
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $08, $07 ; width, rows
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 0
@@ -278,7 +278,7 @@ TileRect_33_4411::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; row 6
 
-TileRect_33_444D::
+TileRect_ScreenBlockTable_9::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $12 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -301,7 +301,7 @@ TileRect_33_444D::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
 ; record: offset $0183 (row 12, column 3); 2 x 4 tiles
-TileRect_33_4529::
+TileRect_ScreenBlockTable_10::
     dw $0183 ; entry 0: offset into wScreenTileBuffer
     db $02, $04 ; width, rows
     db $c3, $0f ; row 0
@@ -310,7 +310,7 @@ TileRect_33_4529::
     db $c3, $13 ; row 3
 
 ; record: offset $0000 (row 0, column 0); 7 x 13 tiles
-TileRect_33_4535::
+TileRect_ScreenBlockTable_46::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $07, $0d ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -328,7 +328,7 @@ TileRect_33_4535::
     db $c3, $32, $33, $34, $35, $36, $37 ; row 12
 
 ; record: offset $0000 (row 0, column 0); 13 x 13 tiles
-TileRect_33_4594::
+TileRect_ScreenBlockTable_47::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $0d, $0d ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -346,7 +346,7 @@ TileRect_33_4594::
     db $c3, $32, $33, $34, $35, $36, $37, $56, $57, $58, $59, $5a, $5b ; row 12
 
 ; record: offset $0000 (row 0, column 0); 20 x 13 tiles
-TileRect_33_4641::
+TileRect_ScreenBlockTable_48::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $14, $0d ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -365,7 +365,7 @@ TileRect_33_4641::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $01A4 (row 13, column 4); 12 x 5 tiles
-TileRect_33_4749::
+TileRect_ScreenBlockTable_49::
     dw $01a4 ; entry 0: offset into wScreenTileBuffer
     db $0c, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -375,7 +375,7 @@ TileRect_33_4749::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $0000 (row 0, column 0); 6 x 3 tiles
-TileRect_33_4789::
+TileRect_ScreenBlockTable_11::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $06, $03 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -383,7 +383,7 @@ TileRect_33_4789::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; row 2
 
 ; record: offset $0008 (row 0, column 8); 12 x 9 tiles
-TileRect_33_479F::
+TileRect_ScreenBlockTable_12::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -397,7 +397,7 @@ TileRect_33_479F::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0140 (row 10, column 0); 20 x 7 tiles
-TileRect_33_480F::
+TileRect_ScreenBlockTable_13::
     dw $0140 ; entry 0: offset into wScreenTileBuffer
     db $14, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -410,7 +410,7 @@ TileRect_33_480F::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0040 (row 2, column 0); 7 x 7 tiles
-TileRect_33_489F::
+TileRect_ScreenBlockTable_14::
     dw $0040 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -421,7 +421,7 @@ TileRect_33_489F::
     db $b6, $c3, $f1, $f4, $f3, $f3, $b7 ; row 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-TileRect_33_48D4::
+TileRect_ScreenBlockTable_50::
     dw $0040 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -433,7 +433,7 @@ TileRect_33_48D4::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
 ; record: offset $0100 (row 8, column 0); 6 x 5 tiles
-TileRect_33_4909::
+TileRect_ScreenBlockTable_15::
     dw $0100 ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -443,7 +443,7 @@ TileRect_33_4909::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
-TileRect_33_492B::
+TileRect_ScreenBlockTable_16::
     dw $01a0 ; entry 0: offset into wScreenTileBuffer
     db $14, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -453,7 +453,7 @@ TileRect_33_492B::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
-TileRect_33_4993::
+TileRect_ScreenBlockTable_17::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -468,7 +468,7 @@ TileRect_33_4993::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0120 (row 9, column 0); 14 x 5 tiles
-TileRect_33_49DF::
+TileRect_ScreenBlockTable_18::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $0e, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -477,7 +477,7 @@ TileRect_33_49DF::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-TileRect_33_4A29::
+TileRect_ScreenBlockTable_28::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -491,7 +491,7 @@ TileRect_33_4A29::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0120 (row 9, column 0); 20 x 9 tiles
-TileRect_33_4A75::
+TileRect_ScreenBlockTable_29::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $14, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -504,7 +504,7 @@ TileRect_33_4A75::
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $be, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-TileRect_33_4B2D::
+TileRect_ScreenBlockTable_30::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -518,7 +518,7 @@ TileRect_33_4B2D::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0000 (row 0, column 0); 13 x 15 tiles
-TileRect_33_4B79::
+TileRect_ScreenBlockTable_33::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $0d, $0f ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -538,7 +538,7 @@ TileRect_33_4B79::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 14
 
 ; record: offset $0006 (row 0, column 6); 14 x 7 tiles
-TileRect_33_4C40::
+TileRect_ScreenBlockTable_34::
     dw $0006 ; entry 0: offset into wScreenTileBuffer
     db $0e, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -551,7 +551,7 @@ TileRect_33_4C40::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0125 (row 9, column 5); 15 x 9 tiles
-TileRect_33_4CA6::
+TileRect_ScreenBlockTable_35::
     dw $0125 ; entry 0: offset into wScreenTileBuffer
     db $0f, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -565,7 +565,7 @@ TileRect_33_4CA6::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0000 (row 0, column 0); 7 x 7 tiles
-TileRect_33_4D31::
+TileRect_ScreenBlockTable_36::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $07, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -577,7 +577,7 @@ TileRect_33_4D31::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
 ; record: offset $00E0 (row 7, column 0); 6 x 5 tiles
-TileRect_33_4D66::
+TileRect_ScreenBlockTable_37::
     dw $00e0 ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -587,7 +587,7 @@ TileRect_33_4D66::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $00CD (row 6, column 13); 7 x 3 tiles
-TileRect_33_4D88::
+TileRect_ScreenBlockTable_38::
     dw $00cd ; entry 0: offset into wScreenTileBuffer
     db $07, $03 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -596,7 +596,7 @@ TileRect_33_4D88::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $0129 (row 9, column 9); 11 x 9 tiles
-TileRect_33_4DA1::
+TileRect_ScreenBlockTable_39::
     dw $0129 ; entry 0: offset into wScreenTileBuffer
     db $0b, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -610,7 +610,7 @@ TileRect_33_4DA1::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0042 (row 2, column 2); 18 x 7 tiles
-TileRect_33_4E08::
+TileRect_ScreenBlockTable_40::
     dw $0042 ; entry 0: offset into wScreenTileBuffer
     db $12, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -622,7 +622,7 @@ TileRect_33_4E08::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
 ; record: offset $0128 (row 9, column 8); 12 x 9 tiles
-TileRect_33_4E8A::
+TileRect_ScreenBlockTable_41::
     dw $0128 ; entry 0: offset into wScreenTileBuffer
     db $0c, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -636,7 +636,7 @@ TileRect_33_4E8A::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0020 (row 1, column 0); 20 x 11 tiles
-TileRect_33_4EFA::
+TileRect_ScreenBlockTable_42::
     dw $0020 ; entry 0: offset into wScreenTileBuffer
     db $14, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -653,7 +653,7 @@ TileRect_33_4EFA::
 
 ; a record of ScreenBlockTable (E-0232, C1)
 ; record: offset $010E (row 8, column 14); 6 x 5 tiles
-TileRect_33_4FDA::
+TileRect_ScreenBlockTable_43::
     dw $010e ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -663,7 +663,7 @@ TileRect_33_4FDA::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $0121 (row 9, column 1); 18 x 5 tiles
-TileRect_33_4FFC::
+TileRect_ScreenBlockTable_44::
     dw $0121 ; entry 0: offset into wScreenTileBuffer
     db $12, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -673,7 +673,7 @@ TileRect_33_4FFC::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $0000 (row 0, column 0); 20 x 18 tiles
-TileRect_33_505A::
+TileRect_ScreenBlockTable_45::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $14, $12 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -695,7 +695,7 @@ TileRect_33_505A::
     db $b6, $c3, $28, $c3, $c3, $c3, $29, $c3, $c3, $c3, $2a, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-GameMode5_Update_Case05_LinkExchangeJoypadPerFrame::
+GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
     or a
@@ -745,26 +745,26 @@ GameMode5_Update_Case05_LinkExchangeJoypadPerFrame::
     farcall DrawRecordBufBSpeciesSprites
     ret
 
-RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
+RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wTitleScreenState]
     or a
     jr nz, .check_fade_state
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToScreenTileBufferRow1Col14
-    dw RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero
-    dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc
-    dw RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte
+    dw RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep
+    dw RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14
+    dw RunLinkSession6Exchange_ShowForTeamMode1Hero
+    dw RunLinkSession6Exchange_ShowYourPalRefusedThe
+    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc
+    dw RunLinkSession6Exchange_SetLinkSendByte_2
     dw RunLinkSession6Exchange_ChooseTeamMonster
-    dw RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay
+    dw RunLinkSession6Exchange_ShowYouRefusedToPay
     dw RunLinkSession6Exchange_BackTitleScreenSubState
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09_YourPalRefusedThe
+    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2
     dw RunLinkSession6Exchange_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc
-    dw RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D_SetLinkSendByte
+    dw RunLinkSession6Exchange_ShowYourPalRefusedTo
+    dw RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc
+    dw RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3
 
 .check_fade_state:
     ld a, [wFadeState]
@@ -773,11 +773,11 @@ RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wScreenState]
     jumptable
     dw RunLinkSession6Exchange_AdvanceScreenState
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case01_AdvanceScreenState
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case03_AdvanceScreenState
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05
+    dw RunLinkSession6Exchange_AdvanceScreenState_2
+    dw RunLinkSession6Exchange_PleaseWaitSteps
+    dw RunLinkSession6Exchange_AdvanceScreenState_3
+    dw RunLinkSession6Exchange_BreedMenuSteps
+    dw RunLinkSession6Exchange_FightInfoExSteps
     dw RunLinkSession6Exchange_SwapMonstersMenu
     dw RunLinkSession6Exchange_SwapMonstersMenu
     dw RunLinkSession6Exchange_SwapMonstersMenu
@@ -786,15 +786,15 @@ RunLinkSession6Exchange_Case01_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     dw RunLinkSession6Exchange_SwapMonstersMenu
     dw RunLinkSession6Exchange_SwapMonstersMenu
     dw RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F
+    dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps
+    dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2
 
-RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
-    ld de, TileRect_33_62AB
+RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
     lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank33
-    ld de, TileRect_33_62C3
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
     ld hl, wScreenTileBuffer
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -804,13 +804,13 @@ RunLinkSession6Exchange_Case01_Sub01_DrawPlayerNameAndString0Category1AndStep::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToScreenTileBufferRow1Col14::
+RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
     xor a
     ld [wLinkSendByte], a
     call WriteGoldDigitsToScreenTileBufferRow1Col14
     ld de, wKeyNameBuf
     ld hl, wScreenTileBuffer + $43
-    call RunFunc6204FourTimes
+    call RunFourTimes
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $0000
@@ -819,7 +819,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteGoldDigitsToScreenTileBufferRow1Col14:
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero::
+RunLinkSession6Exchange_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
     ret nz
@@ -831,7 +831,7 @@ RunLinkSession6Exchange_Case01_Sub01_ShowForTeamMode1Hero::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe::
+RunLinkSession6Exchange_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .check_text_flags
@@ -895,7 +895,7 @@ RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedThe::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc::
+RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -936,7 +936,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_2::
     xor a
     ld [wLinkSendByte], a
     ld hl, wTitleScreenSubState
@@ -993,7 +993,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
     ld [wScreenState], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_ShowYouRefusedToPay::
+RunLinkSession6Exchange_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -1067,7 +1067,7 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case09_YourPalRefusedThe::
+RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1103,7 +1103,7 @@ RunLinkSession6Exchange_SetLinkSendByte::
     ld [wScreenState], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo::
+RunLinkSession6Exchange_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1163,7 +1163,7 @@ RunLinkSession6Exchange_Case01_Sub01_ShowYourPalRefusedTo::
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc::
+RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1188,7 +1188,7 @@ RunLinkSession6Exchange_Case01_Sub01_WriteTitleScreenSubStateAndLinkSendByteEtc:
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_WriteLinkSendByteAndTitleScreenStateEtc_Case0D_SetLinkSendByte::
+RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3::
     ld a, [wLinkMessage]
     cp $10
     jr z, .set_link_send_byte_to_FE
@@ -1223,7 +1223,7 @@ RunLinkSession6Exchange_AdvanceScreenState::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case01_AdvanceScreenState::
+RunLinkSession6Exchange_AdvanceScreenState_2::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1232,16 +1232,16 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case01_AdvanceScreenState::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02::
+RunLinkSession6Exchange_PleaseWaitSteps::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00_SetLinkSendByte
+    dw RunLinkSession6Exchange_SetLinkSendByte_3
     dw RunLinkSession6Exchange_PleaseWait
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03_SetLinkSendByte
+    dw RunLinkSession6Exchange_SetLinkSendByte_4
+    dw RunLinkSession6Exchange_SetLinkSendByte_5
     dw RunLinkSession6Exchange_AdvanceModeChangeRequest
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case00_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -1262,7 +1262,7 @@ RunLinkSession6Exchange_PleaseWait::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_4::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1272,7 +1272,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case02_SetLinkSendByte::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case02_Case03_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1308,12 +1308,12 @@ RunLinkSession6Exchange_AdvanceModeChangeRequest::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case03_AdvanceScreenState::
+RunLinkSession6Exchange_AdvanceScreenState_3::
     ld hl, wScreenState
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04::
+RunLinkSession6Exchange_BreedMenuSteps::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession6Exchange_BreedMenu
@@ -1322,16 +1322,16 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04::
     dw RunLinkSession6Exchange_BreedMenu
     dw CallDrawListEntriesCell5RecordPanel
     dw CallClearAndDrawListEntriesCell5Name
-    dw CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
-    dw RunLinkSession6Exchange_RunFunc6204FourTimes
+    dw CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
+    dw RunLinkSession6Exchange_RunFourTimes
     dw RunLinkSession6Exchange_YourPalRefusedThe
     dw RunLinkSession6Exchange_InfoOKYesN
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A_YourPalRefusedThe
+    dw RunLinkSession6Exchange_YourPalRefusedThe_2
     dw RunLinkSession6Exchange_ChooseAMonsterFor
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C_PleaseWait
+    dw RunLinkSession6Exchange_PleaseWait_2
     dw RunLinkSession6Exchange_SetLinkTimeoutLo
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F_AdvanceScreenState
+    dw RunLinkSession6Exchange_YourPalRefusedThe_3
+    dw RunLinkSession6Exchange_AdvanceScreenState_4
 
 RunLinkSession6Exchange_BreedMenu::
     ld a, [wTextFlags]
@@ -1354,11 +1354,14 @@ CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle TileRect_33_62C3 into wWindowTileBuffer + $6E
-; (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its name
-; read as its RAM name; was CopyRect62C3ToWC36EAndIncScreenStep)
-CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep::
-    ld de, TileRect_33_62C3
+; copies the 10 x 11 rectangle
+; RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2 into wWindowTileBuffer
+; + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its
+; name read as its RAM name; was CopyRect62C3ToWC36EAndIncScreenStep) (E-0344: the address in its
+; name dropped or read as the label there; was
+; CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep)
+CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1366,24 +1369,24 @@ CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_RunFunc6204FourTimes::
+RunLinkSession6Exchange_RunFourTimes::
     ld a, [wTextFlags]
     and a
     ret nz
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
+    ld hl, RunLinkSession6Exchange_Data
     call StoreBAtWordTableEntry_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFunc6204FourTimes
+    call RunFourTimes
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_33
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
+    ld hl, RunLinkSession6Exchange_Data
     call StoreBAtWordTableEntry_Bank33
     call SetDefaultStringWindow_Bank33
     ld a, [wScreenStep]
@@ -1453,7 +1456,7 @@ RunLinkSession6Exchange_YourPalRefusedThe::
     call StoreListEntriesCell5RecordInPickedRecords
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
+    ld hl, RunLinkSession6Exchange_Data
     call StoreBAtWordTableEntry_Bank33
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     ld hl, wScreenStep
@@ -1480,10 +1483,10 @@ RunLinkSession6Exchange_InfoOKYesN::
     ld [wStringCategory], a
     ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
-    farcall ShowString_Bank1B_481A
+    farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_33_63C7
+    ld de, RunLinkSession6Exchange_InfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1498,7 +1501,7 @@ RunLinkSession6Exchange_InfoOKYesN::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0A_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe_2::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .clear_arg5
@@ -1558,9 +1561,9 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
     and a
     ret nz
     ld c, $05
-    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
+    ld hl, RunLinkSession6Exchange_Data
     call WriteC3AtWordTableEntries_Bank33
-    call DrawBox639FAndKeyRows
+    call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -1572,8 +1575,8 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0C_PleaseWait::
-    call DrawBox639FAndKeyRows
+RunLinkSession6Exchange_PleaseWait_2::
+    call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -1614,14 +1617,14 @@ RunLinkSession6Exchange_SetLinkTimeoutLo::
     xor a
     ld [rRAMG], a
     xor a
-    ld [wLinkSceneByte4B], a
+    ld [wLinkScene], a
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe_3::
     ld a, [wLinkMessage]
     cp $01
     jr z, .set_link_buffer_count_lo
@@ -1652,7 +1655,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0E_YourPalRefusedThe::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F_AdvanceScreenState::
+RunLinkSession6Exchange_AdvanceScreenState_4::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1662,27 +1665,27 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case0F_AdvanceScreenState::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05::
+RunLinkSession6Exchange_FightInfoExSteps::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession6Exchange_AdvanceScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case01_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02_SetLinkTimeoutLo
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03_SetLinkSendByte
+    dw RunLinkSession6Exchange_SetLinkSendByte_6
+    dw RunLinkSession6Exchange_SetLinkTimeoutLo_2
+    dw RunLinkSession6Exchange_SetLinkSendByte_7
     dw RunLinkSession6Exchange_FightInfoEx
     dw RunLinkSession6Exchange_BattleInTeamMode
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06_YourPalRefusedThe
+    dw RunLinkSession6Exchange_YourPalRefusedThe_4
     dw RunLinkSession6Exchange_TheBattleResultsWill
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08_YourPalRefusedThe
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09_PleaseWait
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A_AdvanceScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B_YourPalRefusedThe
+    dw RunLinkSession6Exchange_YourPalRefusedThe_5
+    dw RunLinkSession6Exchange_PleaseWait_3
+    dw RunLinkSession6Exchange_AdvanceScreenStep_2
+    dw RunLinkSession6Exchange_YourPalRefusedThe_6
     dw RunLinkSession6Exchange_VerifySaveChecksum
     dw RunLinkSession6Exchange_SetArg5ToListEntriesCell5
     dw RunLinkSession6Exchange_SetScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0F_SetLinkSendByte
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10_SetScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11_SetLinkSendByte
+    dw RunLinkSession6Exchange_SetLinkSendByte_8
+    dw RunLinkSession6Exchange_SetScreenStep_2
+    dw RunLinkSession6Exchange_SetLinkSendByte_9
 
 RunLinkSession6Exchange_AdvanceScreenStep::
     ld hl, wScreenStep
@@ -1707,14 +1710,14 @@ CopyBBytesThenMark1::
     ld [de], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case01_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_6::
     ld a, $01
     ld [wLinkSendByte], a
     ld hl, wScreenStep
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02_SetLinkTimeoutLo::
+RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1736,7 +1739,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case02_SetLinkTimeoutLo::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -1747,7 +1750,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case03_SetLinkSendByte::
     ret
 
 RunLinkSession6Exchange_FightInfoEx::
-    ld de, TileRect_33_6331
+    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1771,10 +1774,10 @@ RunLinkSession6Exchange_FightInfoEx::
     ld de, vTiles2 + $50
     call CopyGlyphTilesToVRAM
     ld a, [wLinkTradeByte]
-    ld [wBattleByte63], a
+    ld [wLinkFightInfo], a
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $a7
-    call RunFunc6204FourTimes
+    call RunFourTimes
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
@@ -1789,8 +1792,8 @@ RunLinkSession6Exchange_FightInfoEx::
     ld [wStringCategory], a
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
-    farcall ShowString_Bank1B_481A
-    ld de, TileRect_33_63F9
+    farcall ShowString_Bank1B
+    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect_2
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1826,7 +1829,7 @@ RunLinkSession6Exchange_BattleInTeamMode::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case06_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe_4::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .call_handle_three_choice_cursor_input_f1
@@ -1908,7 +1911,7 @@ RunLinkSession6Exchange_TheBattleResultsWill::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe_5::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .check_text_flags
@@ -1943,14 +1946,14 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case08_YourPalRefusedThe::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case09_PleaseWait::
+RunLinkSession6Exchange_PleaseWait_3::
     ld hl, wScreenStep
     inc [hl]
     ld a, $0c ; 'Please wait.'
     call BeginString_Bank07_Cat5
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A_AdvanceScreenStep::
+RunLinkSession6Exchange_AdvanceScreenStep_2::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1960,7 +1963,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0A_AdvanceScreenStep::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0B_YourPalRefusedThe::
+RunLinkSession6Exchange_YourPalRefusedThe_6::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_screen_state_to_02
@@ -2063,7 +2066,7 @@ RunLinkSession6Exchange_SetScreenStep::
     ld [wLinkReady], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0F_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_8::
     ld a, [wLinkMessage]
     cp $f0
     ret nz
@@ -2092,7 +2095,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0F_SetLinkSendByte::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10_SetScreenStep::
+RunLinkSession6Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2100,7 +2103,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case10_SetScreenStep::
     ld [wLinkSendByte], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case11_SetLinkSendByte::
+RunLinkSession6Exchange_SetLinkSendByte_9::
     ld a, [wLinkMessage]
     cp $d2
     ret nz
@@ -2148,21 +2151,21 @@ RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     ld [wListPageIndex], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E::
+RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession6Exchange_ClearRecordPanelTiles
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01_AdvanceScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01_AdvanceScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03_SetArg5ToListEntriesCell5
+    dw RunLinkSession6Exchange_AdvanceScreenStep_3
+    dw RunLinkSession6Exchange_AdvanceScreenStep_3
+    dw RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2
     dw RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05_RunFunc6204FourTimes
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06_FightInfoEx
+    dw RunLinkSession6Exchange_RunFourTimes_2
+    dw RunLinkSession6Exchange_FightInfoEx_2
     dw RunLinkSession6Exchange_SetSpriteHideTile
 
 RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
-    ld de, TileRect_33_6331
+    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2187,12 +2190,12 @@ RunLinkSession6Exchange_ClearRecordPanelTiles::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case01_AdvanceScreenStep::
+RunLinkSession6Exchange_AdvanceScreenStep_3::
     ld hl, wScreenStep
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03_SetArg5ToListEntriesCell5::
+RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
     ld h, a
@@ -2218,7 +2221,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03_SetArg5ToListEntriesCe
     farcall LoadFamilyIconTileForWorkBuf
     xor a
     ld [rRAMG2], a
-    ld de, TileRect_33_5D5F
+    ld de, RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect
     ld hl, wWindowTileBuffer + $140
     lb bc, $0d, $02
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2283,7 +2286,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case03_SetArg5ToListEntriesCe
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 2 tiles, one row per line
-TileRect_33_5D5F::
+RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
@@ -2291,21 +2294,21 @@ RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05_RunFunc6204FourTimes::
-    ld de, TileRect_33_62C3
+RunLinkSession6Exchange_RunFourTimes_2::
+    ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFunc6204FourTimes
-    ld de, TileRect_33_6331
+    call RunFourTimes
+    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wLinkPartnerName
     ld hl, wWindowTileBuffer + $a7
-    call RunFunc6204FourTimes
+    call RunFourTimes
     ld hl, vTiles2 + $50
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2329,7 +2332,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case05_RunFunc6204FourTimes::
     inc [hl]
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06_FightInfoEx::
+RunLinkSession6Exchange_FightInfoEx_2::
     ld hl, vTiles2 + $300
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2344,8 +2347,8 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0E_Case06_FightInfoEx::
     ld [wStringCategory], a
     ld a, $20
     ld [wStringIndex], a ; 'FightInfoEx'
-    farcall ShowString_Bank1B_481A
-    ld de, TileRect_33_63F9
+    farcall ShowString_Bank1B
+    ld de, RunLinkSession6Exchange_FightInfoEx_TileRect_2
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2380,27 +2383,27 @@ RunLinkSession6Exchange_SetSpriteHideTile::
     call SetDefaultStringWindow_Bank33
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F::
+RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00_ClearRecordPanelTiles
+    dw RunLinkSession6Exchange_ClearRecordPanelTiles_2
     dw RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33
     dw RunLinkSession6Exchange_DrawRecordListPageNames
     dw RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel
     dw RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name
-    dw RunLinkSession6Exchange_CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN
-    dw RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetSpriteHideTile
+    dw RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
+    dw RunLinkSession6Exchange_InfoOKYesN_2
+    dw RunLinkSession6Exchange_SetSpriteHideTile_2
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case00_ClearRecordPanelTiles::
+RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     farcall ClearRecordPanelTiles
-    ld de, TileRect_33_6438
+    ld de, RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank33
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data
+    ld hl, RunLinkSession6Exchange_Data
     call StoreBAtWordTableEntry_Bank33
     call DrawPlayerNameAndString0Category1
     ld a, [wScreenStep]
@@ -2444,11 +2447,11 @@ RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
-RunLinkSession6Exchange_CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep::
-    call CopyRect62C3ToWindowTileBufferRow5Col10AndIncScreenStep
+RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
+    call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN::
+RunLinkSession6Exchange_InfoOKYesN_2::
     ld hl, vTiles2 + $700
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2463,17 +2466,17 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN::
     ld [wStringCategory], a
     ld a, $1e
     ld [wStringIndex], a ; 'InfoOKYesN'
-    farcall ShowString_Bank1B_481A
+    farcall ShowString_Bank1B
     call CopyListEntriesCell5NameToTextBuf0_Bank33
     call SetDefaultStringWindow_Bank33
     xor a
     ld a, $12
     ld [wStringIndex], a
-    farcall ShowString_Bank1B_481A
+    farcall ShowString_Bank1B
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFunc6204FourTimes
-    ld de, TileRect_33_63C7
+    call RunFourTimes
+    ld de, RunLinkSession6Exchange_InfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
@@ -2484,7 +2487,7 @@ RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case06_InfoOKYesN::
     ld [wScreenStep], a
     ret
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case0F_Case07_SetSpriteHideTile::
+RunLinkSession6Exchange_SetSpriteHideTile_2::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
     ld de, $01cc
@@ -2521,16 +2524,17 @@ LoadRecordByteForPickedRecords::
     ld [rRAMB], a
     ret
 
-; copies box TileRect_33_639F to wWindowTileBuffer + $110 and runs RunFunc6204FourTimes for
-; wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126)
-DrawBox639FAndKeyRows::
-    ld de, TileRect_33_639F
+; copies box DrawBoxAndKeyRows_TileRect to wWindowTileBuffer + $110 and runs RunFunc6204FourTimes
+; for wKeyNameBuf at wWindowTileBuffer + $B1 (E-0126) (E-0344: the address in its name dropped or
+; read as the label there; was DrawBox639FAndKeyRows)
+DrawBoxAndKeyRows::
+    ld de, DrawBoxAndKeyRows_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank33
     ld de, wKeyNameBuf
     ld hl, wWindowTileBuffer + $b1
-    call RunFunc6204FourTimes
+    call RunFourTimes
     ret
 
 ; lists in wListEntries the stored records (state 1, or 2 unless wPickCount is 3) whose field $6E is
@@ -2658,7 +2662,7 @@ ShowStringA10_Bank33::
     ld [wStringIndex], a
     xor a
     ld [wStringCategory], a
-    farcall BeginStringDisplay_Bank1B_480C
+    farcall BeginStringDisplay_Bank1B
     ret
 
 ; sets the string window: wTextWindowTileLo/wTextWindowTileHi = vTiles1 ($8800),
@@ -2978,13 +2982,14 @@ WriteGoldDigitsToScreenTileBufferRow1Col14::
     ld [hl], a
     ret
 
-; calls RunFunc6204FourTimes_HLToDecimalDigits three times and falls into it once more (E-0122)
-RunFunc6204FourTimes::
-    call RunFunc6204FourTimes_HLToDecimalDigits
-    call RunFunc6204FourTimes_HLToDecimalDigits
-    call RunFunc6204FourTimes_HLToDecimalDigits
+; calls RunFourTimes_HLToDecimalDigits three times and falls into it once more (E-0122) (E-0344: the
+; address in its name dropped or read as the label there; was RunFunc6204FourTimes)
+RunFourTimes::
+    call RunFourTimes_HLToDecimalDigits
+    call RunFourTimes_HLToDecimalDigits
+    call RunFourTimes_HLToDecimalDigits
 
-RunFunc6204FourTimes_HLToDecimalDigits::
+RunFourTimes_HLToDecimalDigits::
     push hl
     ld a, [de]
     inc de
@@ -3097,13 +3102,13 @@ StoreC5BEC6AtHLStride2_Bank33::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-TileRect_33_62AB::
+RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 10 x 11 tiles, one row per line
-TileRect_33_62C3::
+RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -3116,7 +3121,7 @@ TileRect_33_62C3::
     db $b6, $13, $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-TileRect_33_6331::
+RunLinkSession6Exchange_FightInfoEx_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $05, $06, $07, $08, $09, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
@@ -3130,25 +3135,25 @@ TileRect_33_6331::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 ; record: 8 x 5 tiles, one row per line
-TileRect_33_639F::
+DrawBoxAndKeyRows_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $14, $15, $c3, $17, $ed, $c3, $c3, $b7 ; id 1
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
     db $b7, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 3
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
-TileRect_33_63C7::
+RunLinkSession6Exchange_InfoOKYesN_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-RunLinkSession6Exchange_Case01_Sub01_Table2_Case04_Case07_Data::
+RunLinkSession6Exchange_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 ; record: 9 x 7 tiles, one row per line
-TileRect_33_63F9::
+RunLinkSession6Exchange_FightInfoEx_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3160,7 +3165,7 @@ TileRect_33_63F9::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-TileRect_33_6438::
+RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3173,192 +3178,194 @@ TileRect_33_6438::
     db $b6, $c3, $a4, $a5, $a6, $ce, $cf, $b7 ; id 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
-; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank33_6490::
-    ld de, StringCategories_33_64A5
+; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
+; read as the label there; was BeginStringDisplay_Bank33_6490)
+BeginStringDisplay_Bank33::
+    ld de, BeginStringDisplay_Bank33_StringCategories
     call BeginStringDisplay
     ret
     db $11, $a5, $64, $cd, $fe, $25, $c9
 
-; BeginStringDisplay_Bank33_6490 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-ShowString_Bank33_649E::
-    call BeginStringDisplay_Bank33_6490
+; BeginStringDisplay_Bank33 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_649E)
+ShowString_Bank33::
+    call BeginStringDisplay_Bank33
     call RunStringDisplayToEnd
     ret
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_33_64A5::
-    dw StringList_33_64A7 ; id 0
+BeginStringDisplay_Bank33_StringCategories::
+    dw StringList_Bank33_StringCategories_0 ; id 0
 
-; category list of StringCategories_33_64A5; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank33_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_33_64A7::
-    dw String_33_64A5_00_00 ; id 0
-    dw String_33_64A5_00_00 ; id 1
-    dw String_33_64A5_00_02 ; id 2
-    dw String_33_64A5_00_03 ; id 3
-    dw String_33_64A5_00_04 ; id 4
-    dw String_33_64A5_00_05 ; id 5
-    dw String_33_64A5_00_06 ; id 6
-    dw String_33_64A5_00_07 ; id 7
-    dw String_33_64A5_00_07 ; id 8
-    dw String_33_64A5_00_07 ; id 9
-    dw String_33_64A5_00_0A ; id 10
-    dw String_33_64A5_00_0B ; id 11
-    dw String_33_64A5_00_0C ; id 12
-    dw String_33_64A5_00_0D ; id 13
-    dw String_33_64A5_00_0E ; id 14
-    dw String_33_64A5_00_0F ; id 15
-    dw String_33_64A5_00_10 ; id 16
-    dw String_33_64A5_00_11 ; id 17
-    dw String_33_64A5_00_12 ; id 18
-    dw String_33_64A5_00_13 ; id 19
-    dw String_33_64A5_00_14 ; id 20
-    dw String_33_64A5_00_15 ; id 21
-    dw String_33_64A5_00_15 ; id 22
-    dw String_33_64A5_00_17 ; id 23
-    dw String_33_64A5_00_18 ; id 24
-    dw String_33_64A5_00_19 ; id 25
-    dw String_33_64A5_00_1A ; id 26
-    dw String_33_64A5_00_1B ; id 27
-    dw String_33_64A5_00_1B ; id 28
-    dw String_33_64A5_00_1B ; id 29
-    dw String_33_64A5_00_1B ; id 30
-    dw String_33_64A5_00_1B ; id 31
-    dw String_33_64A5_00_1B ; id 32
-    dw String_33_64A5_00_21 ; id 33
-    dw String_33_64A5_00_22 ; id 34
-    dw String_33_64A5_00_23 ; id 35
-    dw String_33_64A5_00_24 ; id 36
-    dw String_33_64A5_00_25 ; id 37
-    dw String_33_64A5_00_26 ; id 38
-    dw String_33_64A5_00_27 ; id 39
-    dw String_33_64A5_00_28 ; id 40
-    dw String_33_64A5_00_28 ; id 41
-    dw String_33_64A5_00_2A ; id 42
-    dw String_33_64A5_00_2B ; id 43
-    dw String_33_64A5_00_2C ; id 44
-    dw String_33_64A5_00_2D ; id 45
-    dw String_33_64A5_00_2E ; id 46
-    dw String_33_64A5_00_2F ; id 47
-    dw String_33_64A5_00_30 ; id 48
-    dw String_33_64A5_00_31 ; id 49
-    dw String_33_64A5_00_32 ; id 50
-    dw String_33_64A5_00_33 ; id 51
-    dw String_33_64A5_00_34 ; id 52
-    dw String_33_64A5_00_35 ; id 53
-    dw BeginStringDisplay_Bank33_7037 ; id 54
+StringList_Bank33_StringCategories_0::
+    dw Text_YouveFinishedThatClass ; id 0
+    dw Text_YouveFinishedThatClass ; id 1
+    dw Text_WhichClassWillYou ; id 2
+    dw Text_TrainSomeMoreAnd ; id 3
+    dw Text_LetMeConfirmThat ; id 4
+    dw Text_GoodLuckIllCheer ; id 5
+    dw Text_NotEnoughGoldFor ; id 6
+    dw Text_OhTheCrowdWanted ; id 7
+    dw Text_OhTheCrowdWanted ; id 8
+    dw Text_OhTheCrowdWanted ; id 9
+    dw Text_HowManyMastersIn ; id 10
+    dw Text_WillYouTryA ; id 11
+    dw Text_TheSClassShould ; id 12
+    dw Text_TheAClassShould ; id 13
+    dw Text_TheBClassShould ; id 14
+    dw Text_ItCouldGetRough ; id 15
+    dw Text_ItCouldGetRough_2 ; id 16
+    dw Text_TheEClassShould ; id 17
+    dw Text_IsClassOK ; id 18
+    dw Text_IHopeYouDo ; id 19
+    dw Text_YouNeedMoreGold ; id 20
+    dw Text_YouCantTryThat ; id 21
+    dw Text_YouCantTryThat ; id 22
+    dw Text_LasSABCDENo ; id 23
+    dw Text_BattlesCost ; id 24
+    dw Text_INFOTESKLPA ; id 25
+    dw Text_LasSABCDENo_2 ; id 26
+    dw Text_CongratulationsYouDidIt ; id 27
+    dw Text_CongratulationsYouDidIt ; id 28
+    dw Text_CongratulationsYouDidIt ; id 29
+    dw Text_CongratulationsYouDidIt ; id 30
+    dw Text_CongratulationsYouDidIt ; id 31
+    dw Text_CongratulationsYouDidIt ; id 32
+    dw Text_CongratulationsYouDidIt_2 ; id 33
+    dw Text_CongratulationsYouDidIt_3 ; id 34
+    dw Text_CongratulationsYouDidIt_4 ; id 35
+    dw Text_CongratulationsYouDidIt_5 ; id 36
+    dw Text_TooBadYouDidnt ; id 37
+    dw Text_TooBadYouDidnt_2 ; id 38
+    dw Text_CongratulationsDoesItYouve ; id 39
+    dw Text_YouLostThatsToo ; id 40
+    dw Text_YouLostThatsToo ; id 41
+    dw Text_ReceivedTheMagicKey ; id 42
+    dw Text_OhButYourKey ; id 43
+    dw Text_HeresTheMagicKey ; id 44
+    dw Text_ReceivedThePirateKey ; id 45
+    dw Text_HeresThePirateKey ; id 46
+    dw Text_CongratulationsYouDidIt_6 ; id 47
+    dw Text_DoYouWantThe ; id 48
+    dw Text_DoYouWantThe_2 ; id 49
+    dw Text_YourPrizeIsOne ; id 50
+    dw Text_YourPrizeIsA ; id 51
+    dw Text_OhButYouHave ; id 52
+    dw Text_OhButYourKey_2 ; id 53
+    dw BeginStringDisplay_Bank33_2 ; id 54
 
-String_33_64A5_00_00::
+Text_YouveFinishedThatClass::
     db "<VOICE2>*: You've finished<LINE>"
     db "that Class.<WAIT>"
     db "@"
 
-String_33_64A5_00_02::
+Text_WhichClassWillYou::
     db "<VOICE2>*: Which Class will<LINE>"
     db "you challenge?@"
 
-String_33_64A5_00_03::
+Text_TrainSomeMoreAnd::
     db "<VOICE2>*: Train some more,<LINE>"
     db "and see you again!<WAIT>"
     db "@"
 
-String_33_64A5_00_04::
+Text_LetMeConfirmThat::
     db "<VOICE2>*: Let me confirm<LINE>"
     db "that-the <BUF0> Class?@"
 
-String_33_64A5_00_05::
+Text_GoodLuckIllCheer::
     db "<VOICE2>*: Good luck! I'll<LINE>"
     db "cheer for you!<WAIT>"
     db "@"
 
-String_33_64A5_00_06::
+Text_NotEnoughGoldFor::
     db "<VOICE2>*: Not enough gold<LINE>"
     db "for that Class!<WAIT>"
     db "@"
 
-String_33_64A5_00_07::
+Text_OhTheCrowdWanted::
     db "<VOICE2>*: Oh… The crowd<LINE>"
     db "wanted to see you…<WAIT>"
     db "@"
 
-String_33_64A5_00_0A::
+Text_HowManyMastersIn::
     db "<VOICE2>*: How many masters<LINE>"
     db "in the group?@"
 
-String_33_64A5_00_0B::
+Text_WillYouTryA::
     db "<VOICE2>*: Will you try a<LINE>"
     db "Master Battle?@"
 
-String_33_64A5_00_0C::
+Text_TheSClassShould::
     db "<VOICE2>*: The S Class<LINE>"
     db "should be good.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_0D::
+Text_TheAClassShould::
     db "<VOICE2>*: The A Class<LINE>"
     db "should be good.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_0E::
+Text_TheBClassShould::
     db "<VOICE2>*: The B Class<LINE>"
     db "should be good.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_0F::
+Text_ItCouldGetRough::
     db "<VOICE2>*: It could get<LINE>"
     db "rough out there.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_10::
+Text_ItCouldGetRough_2::
     db "<VOICE2>*: It could get<LINE>"
     db "rough out there.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_11::
+Text_TheEClassShould::
     db "<VOICE2>*: The E Class<LINE>"
     db "should do.<PROMPT>"
     db "<NEXT>Which Class will"
     db "<NEXT>you challenge?@"
 
-String_33_64A5_00_12::
+Text_IsClassOK::
     db "<VOICE2>*: Is <BUF0> Class OK?@"
 
-String_33_64A5_00_13::
+Text_IHopeYouDo::
     db "<VOICE2>*: I hope you do<LINE>"
     db "well!<WAIT>"
     db "@"
 
-String_33_64A5_00_14::
+Text_YouNeedMoreGold::
     db "<VOICE2>*: You need more<LINE>"
     db "gold to register.<WAIT>"
     db "@"
 
-String_33_64A5_00_15::
+Text_YouCantTryThat::
     db "<VOICE2>*: You can't try<LINE>"
     db "that Class yet.<WAIT>"
     db "@"
 
-String_33_64A5_00_17::
+Text_LasSABCDENo::
     db "lasSABCDE★No@"
 
-String_33_64A5_00_18::
+Text_BattlesCost::
     db "Battles Cost@"
 
-String_33_64A5_00_19::
+Text_INFOTESKLPA::
     db "INFOTESKLPA@"
 
-String_33_64A5_00_1A::
+Text_LasSABCDENo_2::
     db "lasSABCDE★No@"
 
-String_33_64A5_00_1B::
+Text_CongratulationsYouDidIt::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've won the"
@@ -3379,7 +3386,7 @@ String_33_64A5_00_1B::
     db "<NEXT>-the Pirate Key!<WAIT>"
     db "@"
 
-String_33_64A5_00_21::
+Text_CongratulationsYouDidIt_2::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've won the"
@@ -3388,7 +3395,7 @@ String_33_64A5_00_21::
     db "<NEXT>-a  Magic Key!<WAIT>"
     db "@"
 
-String_33_64A5_00_22::
+Text_CongratulationsYouDidIt_3::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've won the"
@@ -3397,7 +3404,7 @@ String_33_64A5_00_22::
     db "<NEXT>-a  Magic Key!<WAIT>"
     db "@"
 
-String_33_64A5_00_23::
+Text_CongratulationsYouDidIt_4::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've won the"
@@ -3406,7 +3413,7 @@ String_33_64A5_00_23::
     db "<NEXT>-a  Magic Key!<WAIT>"
     db "@"
 
-String_33_64A5_00_24::
+Text_CongratulationsYouDidIt_5::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've finally won"
@@ -3425,7 +3432,7 @@ String_33_64A5_00_24::
     db "<NEXT>wisely!<WAIT>"
     db "@"
 
-String_33_64A5_00_25::
+Text_TooBadYouDidnt::
     db "<VOICE2>*: Too bad you<LINE>"
     db "didn't make it.<PROMPT>"
     db "<NEXT>It's hard to win"
@@ -3436,7 +3443,7 @@ String_33_64A5_00_25::
     db "<NEXT>better next time.<WAIT>"
     db "@"
 
-String_33_64A5_00_26::
+Text_TooBadYouDidnt_2::
     db "<VOICE2>*: Too bad you<LINE>"
     db "didn't make it.<PROMPT>"
     db "<NEXT>You can create"
@@ -3447,7 +3454,7 @@ String_33_64A5_00_26::
     db "<NEXT>better next time.<WAIT>"
     db "@"
 
-String_33_64A5_00_27::
+Text_CongratulationsDoesItYouve::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "<BUF0> does it!<PROMPT>"
     db "<NEXT>You've won"
@@ -3456,7 +3463,7 @@ String_33_64A5_00_27::
     db "<NEXT>battle here again!<WAIT>"
     db "@"
 
-String_33_64A5_00_28::
+Text_YouLostThatsToo::
     db "<VOICE2>*: You lost?<LINE>"
     db "That's too bad.<PROMPT>"
     db "<NEXT>Try again after"
@@ -3465,12 +3472,12 @@ String_33_64A5_00_28::
     db "<NEXT>more.<WAIT>"
     db "@"
 
-String_33_64A5_00_2A::
+Text_ReceivedTheMagicKey::
     db "<BUF0> received<LINE>"
     db "the Magic Key.<MUSIC_WAIT>", $58, "<WAIT>"
     db "<MAP_MUSIC>@"
 
-String_33_64A5_00_2B::
+Text_OhButYourKey::
     db "<VOICE2>*: …Oh, but your<LINE>"
     db "key ring is full.<PROMPT>"
     db "<NEXT>You'll have to"
@@ -3479,22 +3486,22 @@ String_33_64A5_00_2B::
     db "<NEXT>later.<WAIT>"
     db "@"
 
-String_33_64A5_00_2C::
+Text_HeresTheMagicKey::
     db "<VOICE2>*: Here's the Magic<LINE>"
     db "Key you", $44, " won!<WAIT>"
     db "@"
 
-String_33_64A5_00_2D::
+Text_ReceivedThePirateKey::
     db "<BUF0> received<LINE>"
     db "the Pirate Key.<MUSIC_WAIT>", $58, "<WAIT>"
     db "<MAP_MUSIC>@"
 
-String_33_64A5_00_2E::
+Text_HeresThePirateKey::
     db "<VOICE2>*: Here's the Pirate<LINE>"
     db "Key you", $44, " won!<WAIT>"
     db "@"
 
-String_33_64A5_00_2F::
+Text_CongratulationsYouDidIt_6::
     db "<VOICE2>*: Congratulations!<LINE>"
     db "You did it!<PROMPT>"
     db "<NEXT>You've won the"
@@ -3503,25 +3510,25 @@ String_33_64A5_00_2F::
     db "<NEXT>these chests!<WAIT>"
     db "@"
 
-String_33_64A5_00_30::
+Text_DoYouWantThe::
     db "<VOICE2>*: Do you want the<LINE>"
     db "left chest?@"
 
-String_33_64A5_00_31::
+Text_DoYouWantThe_2::
     db "<VOICE2>*: Do you want the<LINE>"
     db "right chest?@"
 
-String_33_64A5_00_32::
+Text_YourPrizeIsOne::
     db "<VOICE2>*: Your prize is<LINE>"
     db "one <BUF1>!<WAIT>"
     db "@"
 
-String_33_64A5_00_33::
+Text_YourPrizeIsA::
     db "<VOICE2>*: Your prize is<LINE>"
     db "a Magic Key!<WAIT>"
     db "@"
 
-String_33_64A5_00_34::
+Text_OhButYouHave::
     db "<VOICE2>*: …Oh, but you<LINE>"
     db "have no room.<PROMPT>"
     db "<NEXT>Well, instead of"
@@ -3530,7 +3537,7 @@ String_33_64A5_00_34::
     db "<NEXT><WAIT>"
     db "@"
 
-String_33_64A5_00_35::
+Text_OhButYourKey_2::
     db "<VOICE2>*: …Oh, but your<LINE>"
     db "key ring is full.<PROMPT>"
     db "<NEXT>Well, instead of"
@@ -3539,111 +3546,114 @@ String_33_64A5_00_35::
     db "<NEXT>instead.<WAIT>"
     db "@"
 
-; ld de, this bank's string table / BeginStringDisplay
-BeginStringDisplay_Bank33_7037::
-    ld de, StringCategories_33_704C
+; ld de, this bank's string table / BeginStringDisplay (E-0344: the address in its name dropped or
+; read as the label there; was BeginStringDisplay_Bank33_7037)
+BeginStringDisplay_Bank33_2::
+    ld de, BeginStringDisplay_Bank33_2_StringCategories
     call BeginStringDisplay
     ret
     db $11, $4c, $70, $cd, $fe, $25, $c9
 
-; BeginStringDisplay_Bank33_7037 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
-ShowString_Bank33_7045::
-    call BeginStringDisplay_Bank33_7037
+; BeginStringDisplay_Bank33_2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0344: the address in its name dropped or read as the label there; was ShowString_Bank33_7045)
+ShowString_Bank33_2::
+    call BeginStringDisplay_Bank33_2
     call RunStringDisplayToEnd
     ret
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_33_704C::
-    dw StringList_33_704E ; id 0
+BeginStringDisplay_Bank33_2_StringCategories::
+    dw StringList_Bank33_2_StringCategories_0 ; id 0
 
-; category list of StringCategories_33_704C; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank33_2_StringCategories; one pointer per wStringIndex
+; (E-0217)
 ; record: string
-StringList_33_704E::
-    dw String_33_704C_00_00 ; id 0
-    dw String_33_704C_00_01 ; id 1
-    dw String_33_704C_00_02 ; id 2
-    dw String_33_704C_00_03 ; id 3
-    dw String_33_704C_00_04 ; id 4
-    dw String_33_704C_00_05 ; id 5
-    dw String_33_704C_00_06 ; id 6
-    dw String_33_704C_00_07 ; id 7
-    dw String_33_704C_00_08 ; id 8
-    dw String_33_704C_00_09 ; id 9
-    dw String_33_704C_00_0A ; id 10
-    dw String_33_704C_00_0B ; id 11
-    dw String_33_704C_00_0C ; id 12
-    dw String_33_704C_00_0D ; id 13
-    dw String_33_704C_00_0E ; id 14
-    dw String_33_704C_00_0E ; id 15
-    dw String_33_704C_00_0E ; id 16
-    dw String_33_704C_00_0E ; id 17
-    dw String_33_704C_00_12 ; id 18
+StringList_Bank33_2_StringCategories_0::
+    dw Text_ItEndsInA ; id 0
+    dw Text_CongratulationsYouveWon ; id 1
+    dw Text_TooBadYouveLost ; id 2
+    dw Text_TurnedOver ; id 3
+    dw Text_Received ; id 4
+    dw Text_ButYouHaveNo ; id 5
+    dw Text_GaveUpOnGetting ; id 6
+    dw Text_SwitchWithWhich ; id 7
+    dw Text_SwitchWithWhich_2 ; id 8
+    dw Text_SwitchWhichEgg ; id 9
+    dw Text_WasReleased ; id 10
+    dw Text_MonsterEG ; id 11
+    dw Text_YesNo ; id 12
+    dw Text_InfoOKYesN_2 ; id 13
+    dw Text_ThereAreNoEggs ; id 14
+    dw Text_ThereAreNoEggs ; id 15
+    dw Text_ThereAreNoEggs ; id 16
+    dw Text_ThereAreNoEggs ; id 17
+    dw Text_YoullBeLeftWith ; id 18
 
-String_33_704C_00_00::
+Text_ItEndsInA::
     db "It ends in a draw!<PROMPT>"
     db "@"
 
-String_33_704C_00_01::
+Text_CongratulationsYouveWon::
     db "Congratulations!<LINE>"
     db "You've won!<PROMPT>"
     db "@"
 
-String_33_704C_00_02::
+Text_TooBadYouveLost::
     db "Too bad!<LINE>"
     db "You've lost!<PROMPT>"
     db "@"
 
-String_33_704C_00_03::
+Text_TurnedOver::
     db "Turned over<LINE>"
     db "<BUF0>…<PROMPT>"
     db "@"
 
-String_33_704C_00_04::
+Text_Received::
     db "Received<LINE>"
     db "<BUF0><PROMPT>"
     db "@"
 
-String_33_704C_00_05::
+Text_ButYouHaveNo::
     db "But you have no<LINE>"
     db "room for it…<PROMPT>"
     db "<NEXT>Switch it with"
     db "<NEXT>another monster?@"
 
-String_33_704C_00_06::
+Text_GaveUpOnGetting::
     db "Gave up on getting<LINE>"
     db "<BUF0> and released<PROMPT>"
     db "<NEXT>it in the wild…<PROMPT>"
     db "@"
 
-String_33_704C_00_07::
+Text_SwitchWithWhich::
     db "Switch with which?@"
 
-String_33_704C_00_08::
+Text_SwitchWithWhich_2::
     db "Switch with which?@"
 
-String_33_704C_00_09::
+Text_SwitchWhichEgg::
     db "Switch which egg?@"
 
-String_33_704C_00_0A::
+Text_WasReleased::
     db "<BUF0><LINE>"
     db "was released.<PROMPT>"
     db "@"
 
-String_33_704C_00_0B::
+Text_MonsterEG::
     db "MonsterE?g@"
 
-String_33_704C_00_0C::
+Text_YesNo::
     db "YesNo@"
 
-String_33_704C_00_0D::
+Text_InfoOKYesN_2::
     db "InfoOKYesN@"
 
-String_33_704C_00_0E::
+Text_ThereAreNoEggs::
     db "There are no eggs.@"
 
-String_33_704C_00_12::
+Text_YoullBeLeftWith::
     db "You'll be left<LINE>"
     db "with no monster.@"
     ds $e10, $00

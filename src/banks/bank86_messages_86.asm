@@ -6,7 +6,7 @@ SECTION "Bank 86", ROMX[$4000], BANK[$86]
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank86::
-    ld de, StringCategories_86_4016
+    ld de, BeginStringDisplay_Bank86_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd, $01, $40, $cd, $11, $26, $c9
@@ -14,12 +14,12 @@ BeginStringDisplay_Bank86::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_86_4016::
-    dw StringList_86_4018 ; id 0
+BeginStringDisplay_Bank86_StringCategories::
+    dw StringList_Bank86_StringCategories_0 ; id 0
 
-; category list of StringCategories_86_4016; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank86_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_86_4018::
+StringList_Bank86_StringCategories_0::
     dw Message_0C_00 ; id 0
     dw Message_0C_01 ; id 1
     dw Message_0C_02 ; id 2

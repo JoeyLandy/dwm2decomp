@@ -158,20 +158,24 @@ class GlobalNameClaims(unittest.TestCase):
                 while j >= 0 and lines[j].startswith(";"):
                     comments.append(lines[j])
                     j -= 1
-                body = body_after(lines, i, 48)
-                # a step that branches or falls into a sibling label continues there: follow one level
+                body = body_after(lines, i, 200)  # the whole step: a named main call may follow a long setup
+                # a step that branches or falls into a sibling label continues there: follow one level; so does a
+                # step that hands off to a numbered copy of its own name (X calls X_2, E-0344)
                 follow = [t for t in re.findall(r"\bj[pr](?: \w+,)? ([A-Za-z_]\w*)", " ".join(body)) if t in where]
+                follow += [t for t in re.findall(r"\b(?:call|farcall|farcall_b) (" + re.escape(lab) + r"_\d+)\b",
+                                                 " ".join(body)) if t in where]
                 nxt = i + 1
                 while nxt < len(lines) and not (LABEL.match(lines[nxt]) and "address name" not in lines[nxt]):
                     nxt += 1
                 if nxt < len(lines):
                     follow.append(LABEL.match(lines[nxt]).group(1))
-                for t in follow[:3]:
+                for t in follow[:4]:
                     fn, fi = where[t]
                     body = body + body_after(banks[fn], fi, 24)
                 text = " ".join(body).replace(" + $", "Plus")
                 listed = " ".join(c for c in comments if c.startswith(("; writes:", "; reads:", "; points at:")))
                 targets = set(re.findall(r"\b(?:call|jp|jr|farcall|farcall_b|farjp)(?: \w+,)? ([A-Za-z_]\w*)", text))
+                targets |= {re.sub(r"(?:_\d+)+$", "", re.sub(r"_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d", "", tg)) for tg in targets}  # X_2 is a numbered copy of X (E-0344)
 
                 def mentions(var: str) -> bool:
                     v = re.escape(var[:12])
@@ -189,6 +193,7 @@ class GlobalNameClaims(unittest.TestCase):
                     claim = any(t == mt.group(1) or t.endswith("To" + mt.group(1)) for t in targets)
                 elif callee in defined or own in defined:
                     claim = any(t in (own, callee) or t.endswith("_" + callee) or t.endswith("To" + callee)
+                                or re.fullmatch(re.escape(callee) + r"_\d+", t)  # a numbered copy (E-0344)
                                 for t in targets)  # Parent_<Callee>[AndStep] (main-call rule)
                 elif mc:
                     tail = mc.group(1)

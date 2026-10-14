@@ -36,13 +36,13 @@ CopyStringToBuffer_Bank29::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_29_4032::
+StringCategories_29::
 MessageStrings_Bank29::
-    dw StringList_29_4034 ; id 0
+    dw StringList_Bank29_0 ; id 0
 
-; category list of StringCategories_29_4032; one pointer per wStringIndex (E-0217)
+; category list of StringCategories_29; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_29_4034::
+StringList_Bank29_0::
     dw Message_01_00 ; id 0
     dw Message_01_01 ; id 1
     dw Message_01_02 ; id 2

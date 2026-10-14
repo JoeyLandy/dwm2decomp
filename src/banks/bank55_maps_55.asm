@@ -107,7 +107,7 @@ Map8CAttrs0_Y1X2::
     db $4e, $0f, $4d, $03, $0e, $0f
 
 ; LZSS-compressed: 415 bytes that expand to 775 (E-0016, E-0017)
-Gfx_55_4A4D::
+Gfx55_1::
     db $07, $03, $00, $0f, $01, $03, $f6, $f8, $03, $e8, $0f, $3d, $03, $00, $04, $03
     db $40, $1f, $01
 

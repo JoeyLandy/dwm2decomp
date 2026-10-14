@@ -414,7 +414,7 @@ SpeciesRecordPointers::
     dw SpeciesRecords ; id 349 ?
     dw SpeciesRecords ; id 350 ?
     dw SpeciesRecord_DracoLord ; id 351 DracoLord
-    dw SpeciesRecord_DracoLord_7906 ; id 352 DracoLord
+    dw SpeciesRecord_DracoLord_2 ; id 352 DracoLord
     dw SpeciesRecord_LordDraco ; id 353 LordDraco
     dw SpeciesRecord_Hargon ; id 354 Hargon
     dw SpeciesRecord_Sidoh ; id 355 Sidoh
@@ -426,14 +426,14 @@ SpeciesRecordPointers::
     dw SpeciesRecord_PsychoPiz ; id 361 PsychoPiz
     dw SpeciesRecord_Esterk ; id 362 Esterk
     dw SpeciesRecord_Mirudraas ; id 363 Mirudraas
-    dw SpeciesRecord_Mirudraas_7B3A ; id 364 Mirudraas
+    dw SpeciesRecord_Mirudraas_2 ; id 364 Mirudraas
     dw SpeciesRecord_Mudou ; id 365 Mudou
     dw SpeciesRecord_DeathMore ; id 366 DeathMore
-    dw SpeciesRecord_DeathMore_7BC7 ; id 367 DeathMore
-    dw SpeciesRecord_DeathMore_7BF6 ; id 368 DeathMore
+    dw SpeciesRecord_DeathMore_2 ; id 367 DeathMore
+    dw SpeciesRecord_DeathMore_3 ; id 368 DeathMore
     dw SpeciesRecord_Darkdrium ; id 369 Darkdrium
     dw SpeciesRecord_Orgodemir ; id 370 Orgodemir
-    dw SpeciesRecord_Orgodemir_7C83 ; id 371 Orgodemir
+    dw SpeciesRecord_Orgodemir_2 ; id 371 Orgodemir
     dw SpeciesRecord_Darck ; id 372 Darck
     dw SpeciesRecord_Tatsu ; id 373 Tatsu
     dw SpeciesRecord_Diago ; id 374 Diago
@@ -4555,7 +4555,7 @@ SpeciesRecord_DracoLord::
     db $14, $1e, $15, $14, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $01, $00, $00, $00, $01, $03, $03, $03, $02, $03, $03, $03, $03, $03, $00, $01, $01, $03, $02, $03, $03, $03, $03, $00, $00, $00 ; 27 base resistance levels (C1, E-0299)
     dw $0210 ; base EXP (C1, E-0310)
-SpeciesRecord_DracoLord_7906::
+SpeciesRecord_DracoLord_2::
     db $0a ; id 293: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)
     db $00 ; cannot be tripped, bit 0 (C1, E-0310)
@@ -4723,7 +4723,7 @@ SpeciesRecord_Mirudraas::
     db $15, $1e, $1a, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $01, $02, $02, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $01, $01, $01 ; 27 base resistance levels (C1, E-0299)
     dw $0250 ; base EXP (C1, E-0310)
-SpeciesRecord_Mirudraas_7B3A::
+SpeciesRecord_Mirudraas_2::
     db $0a ; id 305: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)
     db $00 ; cannot be tripped, bit 0 (C1, E-0310)
@@ -4765,7 +4765,7 @@ SpeciesRecord_DeathMore::
     db $15, $1e, $1a, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $01, $02, $02, $01, $01, $02, $03, $03, $03, $02, $03, $03, $03, $03, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $01, $00, $02 ; 27 base resistance levels (C1, E-0299)
     dw $0248 ; base EXP (C1, E-0310)
-SpeciesRecord_DeathMore_7BC7::
+SpeciesRecord_DeathMore_2::
     db $0a ; id 308: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)
     db $00 ; cannot be tripped, bit 0 (C1, E-0310)
@@ -4779,7 +4779,7 @@ SpeciesRecord_DeathMore_7BC7::
     db $18, $1e, $1a, $15, $17, $17 ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $01, $02, $03, $03, $03, $03, $03, $03, $02, $02, $03, $01, $01, $02, $03, $02, $03, $03, $03, $03, $02, $01, $03 ; 27 base resistance levels (C1, E-0299)
     dw $026c ; base EXP (C1, E-0310)
-SpeciesRecord_DeathMore_7BF6::
+SpeciesRecord_DeathMore_3::
     db $0a ; id 309: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)
     db $01 ; cannot be tripped, bit 0 (C1, E-0310)
@@ -4821,7 +4821,7 @@ SpeciesRecord_Orgodemir::
     db $18, $19, $1a, $17, $16, $1f ; six stat growth rows (HP, MP, ATK, DEF, AGL, INT; C1, E-0309)
     db $02, $02, $02, $02, $02, $02, $03, $03, $03, $02, $03, $03, $02, $02, $03, $01, $02, $02, $02, $03, $02, $01, $02, $02, $02, $02, $02 ; 27 base resistance levels (C1, E-0299)
     dw $026c ; base EXP (C1, E-0310)
-SpeciesRecord_Orgodemir_7C83::
+SpeciesRecord_Orgodemir_2::
     db $0a ; id 312: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)
     db $00 ; cannot be tripped, bit 0 (C1, E-0310)

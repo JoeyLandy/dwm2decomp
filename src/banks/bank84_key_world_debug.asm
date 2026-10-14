@@ -4,7 +4,7 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-DebugAutomap_Update_Sub01_Sub01_WriteKeyWorldGenRoomAndTemp8Etc::
+DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc::
     xor a
     ld [wKeyWorldGenRoom], a
     ld a, [wKeyWorldAreaCount]
@@ -65,9 +65,9 @@ RunDebugAutomapCaseTemp0::
     dw RunDebugAutomapCaseTemp0_Return
     dw RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
     dw RunDebugAutomapCaseTemp0_NextRandomSeed
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case03
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_2
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0
-    dw RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0
+    dw RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
 RunDebugAutomapCaseTemp0_Return::
@@ -135,7 +135,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed::
     jr nz, .loop
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case03::
+RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
@@ -186,7 +186,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ld a, [wKeyWorldGoalKind]
     add a
     add a
-    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data_3
     add_a_to_hl
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -233,7 +233,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0::
+RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     ldh a, [hTemp8]
     ld l, a
     ldh a, [hTemp9]
@@ -250,7 +250,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_SetTemp0::
     call NextRandomSeed
     ld a, [wKeyRandomHi]
     and $07
-    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data
+    ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data_2
     add_a_to_hl
     ld a, [hl]
     ld [de], a
@@ -299,10 +299,10 @@ RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data::
 RunDebugAutomapCaseTemp0_NextRandomSeed_Data::
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case05_Data::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Data_2::
     db $05, $06, $07, $08, $09, $05, $07, $09
 
-RunDebugAutomapCaseTemp0_NextRandomSeed_Case04_Data::
+RunDebugAutomapCaseTemp0_NextRandomSeed_Data_3::
     db $00, $0b, $00, $0b, $00, $02, $00, $02, $02, $03, $0b, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
@@ -339,7 +339,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank
+    call RunDebugAutomapCaseTemp0_ReadByteInBank_2
     ldh a, [hTemp4]
     swap a
     or $0f
@@ -375,7 +375,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ld d, $00
     sla e
     rl d
-    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank
+    call RunDebugAutomapCaseTemp0_ReadByteInBank_2
     ldh a, [hTemp4]
     swap a
     ld c, a
@@ -424,7 +424,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     rl d
     ldh a, [hTemp4]
     ldh [hTemp3], a
-    call RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01
+    call RunDebugAutomapCaseTemp0_ReadByteInBank
     ldh a, [hTemp3]
     ld c, a
     ldh a, [hTemp4]
@@ -451,7 +451,7 @@ KeyWorldMonsterBaseRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
+RunDebugAutomapCaseTemp0_ReadByteInBank::
     push hl
     ld a, e
     add $01
@@ -488,7 +488,7 @@ RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank_Sub01::
     pop hl
     ret
 
-RunDebugAutomapCaseTemp0_Shared01_ReadByteInBank::
+RunDebugAutomapCaseTemp0_ReadByteInBank_2::
     push hl
     ld a, e
     add $01
@@ -1029,7 +1029,7 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     cp $20
     ret c
     push af
-    call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
+    call ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc
     or a
     jr z, .restore
     pop af
@@ -1160,7 +1160,7 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     cp $80
     ret nz
-    call ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc
+    call ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc
     or a
     ret nz
     ldh a, [hMapScreenX]
@@ -1377,7 +1377,7 @@ LogTwigSpotList::
     db $da, $10, $44, $ff ; id 49
     db $ff ; end
 
-ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc::
+ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     ld a, [wTriggerKind]
     cp $ff
     jr z, .return_0
@@ -1399,15 +1399,15 @@ ItemUsable_LogTwig_Sub01_ReadTriggerKindAndPlayerXEtc::
     xor a
     ret
 
-RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc::
+RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     xor a
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX
+    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX
     ldh a, [hMapId]
     ld c, a
-    ld hl, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data
+    ld hl, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data
     ld b, $00
 
 .skip:
@@ -1438,30 +1438,30 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc::
     jr nz, .next
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jp nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jp nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_WriteSVBK
+    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
 .next:
     inc hl
     inc hl
     ld a, [hl]
     cp c
-    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     dec hl
     ld a, [hl]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_WriteSVBK
+    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data::
+RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
+RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1481,16 +1481,16 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScre
     jr nz, .check_key_world_goal_screen
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_WriteSVBK
+    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp c
-    jr nz, RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
     ld a, [wKeyWorldGoalPos]
     and $f0
     ld c, a
@@ -1499,10 +1499,10 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScre
     swap a
     or c
     ld c, a
-    call RunFieldReturnPhase_Case01_Sub02_WriteSVBK
-    jr RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
+    call RunFieldReturnPhase_WriteSVBK
+    jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
+RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
     ld l, a
@@ -1616,7 +1616,7 @@ RunFieldReturnPhase_Case01_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWor
     call DrawFullScreenBufferToBGMap
     ret
 
-RunFieldReturnPhase_Case01_Sub02_WriteSVBK::
+RunFieldReturnPhase_WriteSVBK::
     ld a, c
     and $0f
     ld l, a
@@ -1663,7 +1663,7 @@ RunFieldReturnPhase_Case01_Sub02_WriteSVBK::
     bit 7, a
     jr nz, .skip2
     ld a, b
-    ld de, RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data
+    ld de, RunFieldReturnPhase_WriteSVBK_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1694,7 +1694,7 @@ RunFieldReturnPhase_Case01_Sub02_WriteSVBK::
     ldh [rSVBK], a
     ret
 
-RunFieldReturnPhase_Case01_Sub02_WriteSVBK_Data::
+RunFieldReturnPhase_WriteSVBK_Data::
     db $01, $01, $03, $02, $02
 
 ; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive

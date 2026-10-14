@@ -190,7 +190,7 @@ BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts::
     ldh [rVBK], a
     ldh [rSVBK], a
     ldh [rRP], a
-    farcall LoadPalette0FromData4322
+    farcall LoadPalette0FromData_2
     jr .clear_sgb_active
 
 .call_detect_sgb:
@@ -249,9 +249,9 @@ BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts::
     call SGBTransferRaw
     call SpinDelay
     ld a, $0d
-    ld e, LOW(Gfx_17_448C)
-    ld d, HIGH(Gfx_17_448C)
-    ld b, BANK(Gfx_17_448C)
+    ld e, LOW(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
+    ld d, HIGH(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
+    ld b, BANK(BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx)
     call SGBTransferCompressed
     call SpinDelay
     ld a, $12
@@ -2466,12 +2466,12 @@ StepFade_ClearSGBPacketBuffer::
     bit 0, a
     ld a, $00
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_WriteFadeStepSize
+    call nz, StepFade_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 1, a
     ld a, $08
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_WriteFadeStepSize
+    call nz, StepFade_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 4, a
     jr z, .call_clear_sgb_packet_buffer
@@ -2479,12 +2479,12 @@ StepFade_ClearSGBPacketBuffer::
     bit 2, a
     ld a, $10
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_WriteFadeStepSize
+    call nz, StepFade_WriteFadeStepSize
     ld a, [wFadeMask]
     bit 3, a
     ld a, $18
     ld [wFadeStepSize], a
-    call nz, StepFade_Sub01_WriteFadeStepSize
+    call nz, StepFade_WriteFadeStepSize
 
 .call_clear_sgb_packet_buffer:
     call ClearSGBPacketBuffer
@@ -2531,17 +2531,17 @@ CopySGBPacketFieldsAndSend::
     farcall_b SendSGBPacketSet
     ret
 
-StepFade_Sub01_WriteFadeStepSize::
-    call StepFade_Sub01_Sub01_AdjustColorChannelForFade
-    call StepFade_Sub01_Sub01_WriteFadeStepSize
-    call StepFade_Sub01_Sub01_WriteFadeStepSize
+StepFade_WriteFadeStepSize::
+    call StepFade_AdjustColorChannelForFade
+    call StepFade_WriteFadeStepSize_2
+    call StepFade_WriteFadeStepSize_2
 
-StepFade_Sub01_Sub01_WriteFadeStepSize::
+StepFade_WriteFadeStepSize_2::
     ld a, [wFadeStepSize]
     add $02
     ld [wFadeStepSize], a
 
-StepFade_Sub01_Sub01_AdjustColorChannelForFade::
+StepFade_AdjustColorChannelForFade::
     ld hl, wOBJPaletteBuffer + $20
     ld a, [wFadeStepSize]
     add_a_to_hl
@@ -3041,7 +3041,7 @@ UnreferencedReturn_00_1339:: ; configured code entry (E-0239); C0
 
 ; with B = A: unless wFieldInitStage is set or A is 0 or has bit 7 set, stores A (halved when
 ; wSGBActive is 0) to wSoundFadeLevel and, when rNR50 bits 7 and 3 are clear and rNR50 is non-zero,
-; sets wSoundFadeTarget to it, wSoundFadeTimer = 8 and wSoundFadeNR50 = rNR50; otherwise clears
+; sets wSoundFadeTarget to it, wSoundFadeTimer = 8 and wSoundFadeVolume = rNR50; otherwise clears
 ; wSoundFadeLevel; no caller found (E-0239)
 UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
     ld b, a
@@ -3074,7 +3074,7 @@ UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
     ld a, $08
     ld [wSoundFadeTimer], a
     ldh a, [rNR50]
-    ld [wSoundFadeNR50], a
+    ld [wSoundFadeVolume], a
     ret
 
 .clear_sound_fade_level:
@@ -3103,7 +3103,7 @@ StepFade_WriteSoundFadeTargetAndNR50Etc::
     and $88
     cp $88
     jr z, .clear_sound_fade_level
-    ld a, [wSoundFadeNR50]
+    ld a, [wSoundFadeVolume]
     or a
     jr z, .clear_sound_fade_level
     ld b, a
@@ -3133,7 +3133,7 @@ StepFade_WriteSoundFadeTargetAndNR50Etc::
     swap a
     or d
     ldh [rNR50], a
-    ld [wSoundFadeNR50], a
+    ld [wSoundFadeVolume], a
     or a
     jr z, .skip4
     ld a, [wSoundFadeTimer]
@@ -3299,16 +3299,16 @@ ClearSGBPacketBuffer_WaitSerialTransferDone::
     ei
     ld a, [wLinkSession]
     cp $05
-    jr nz, .call_clear_sgb_packet_buffer_sub02_start
-    call ClearSGBPacketBuffer_Sub02_SerialSendByte
+    jr nz, .call_clear_sgb_packet_buffer_start_serial
+    call ClearSGBPacketBuffer_SerialSendByte
     call WaitSerialTransferDone
     ldh a, [rSB]
     cp $f5
-    call nz, ClearSGBPacketBuffer_Sub02_SerialSendByte
+    call nz, ClearSGBPacketBuffer_SerialSendByte
     jr .read_link_status
 
-.call_clear_sgb_packet_buffer_sub02_start:
-    call ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock
+.call_clear_sgb_packet_buffer_start_serial:
+    call ClearSGBPacketBuffer_StartSerialTransferInternalClock
     cp $02
     jr z, .skip
     call WaitSerialTransferDone
@@ -3319,7 +3319,7 @@ ClearSGBPacketBuffer_WaitSerialTransferDone::
     jr z, .check_link_session2
     cp $71
     jr z, .check_link_session2
-    call ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock
+    call ClearSGBPacketBuffer_StartSerialTransferInternalClock
 
 .check_link_session2:
     ld b, a
@@ -3378,7 +3378,7 @@ ClearSGBPacketBuffer_WaitSerialTransferDone::
     jr nz, .loop2
     ret
 
-ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock::
+ClearSGBPacketBuffer_StartSerialTransferInternalClock::
     ld a, [wLinkRole]
     bit 1, a
     jr nz, .check_is_cgb
@@ -3413,7 +3413,7 @@ ClearSGBPacketBuffer_Sub02_StartSerialTransferInternalClock::
     ld [wLinkFrameCounterHi], a
     ret
 
-ClearSGBPacketBuffer_Sub02_SerialSendByte::
+ClearSGBPacketBuffer_SerialSendByte::
     ld a, [wLinkRole]
     bit 1, a
     ld a, $f5
@@ -4407,7 +4407,7 @@ LoadMapScreen_WriteTemp0::
     ld de, wKeyWorldGoal
     ld a, b
     ldh [hTemp0], a
-    call LoadMapScreen_Sub01_WriteSVBK
+    call LoadMapScreen_WriteSVBK
     ret
 
 .skip3:
@@ -4416,7 +4416,7 @@ LoadMapScreen_WriteTemp0::
     inc de
     ld a, b
     ldh [hTemp0], a
-    call LoadMapScreen_Sub01_WriteSVBK
+    call LoadMapScreen_WriteSVBK
     ret
 
 .return:
@@ -4425,7 +4425,7 @@ LoadMapScreen_WriteTemp0::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-LoadMapScreen_Sub01_WriteSVBK::
+LoadMapScreen_WriteSVBK::
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -4648,7 +4648,7 @@ LoadMapHeader::
     jr nz, .call_decompress_to_vram
     ld hl, vTiles1
     call DecompressToVRAM
-    ld de, Tiles2Gfx_48_7861
+    ld de, Tiles2Gfx
     ld b, $48
     ld hl, vTiles2
     call DecompressToVRAM
@@ -4690,19 +4690,19 @@ LoadMapHeader::
     ld a, [hli]
     ld [wMapSpriteKind], a
     or a
-    jr z, .call_set_map_sprite_kind_and_map_header
+    jr z, .call_set_map_sprite_kind_and_event_tile_for
     and $0f
-    jr z, .set_map_header_byte11
+    jr z, .set_map_event_tile
     ld a, [hli]
     ld [wMapTallTileMin], a
-    jr .call_set_map_sprite_kind_and_map_header
+    jr .call_set_map_sprite_kind_and_event_tile_for
 
-.set_map_header_byte11:
+.set_map_event_tile:
     ld a, [hli]
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
 
-.call_set_map_sprite_kind_and_map_header:
-    call SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps
+.call_set_map_sprite_kind_and_event_tile_for:
+    call SetMapSpriteKindAndEventTileForSpecialMaps
     call ShiftAnimatedTilesOnMap1Or2
     call SetFieldEventKindOnMap19IfFlagD1
     pop af
@@ -4783,9 +4783,10 @@ Tiles_00_1D07::
     db $df, $53, $ff, $62, $f6, $0a, $ff, $04, $fc, $04, $bf, $48, $ff, $10, $ff, $0f ; id 2
     db $7b, $6a, $bf, $e6, $ff, $22, $9f, $10, $fd, $12, $8f, $08, $ff, $04, $ff, $f8 ; id 3
 
-; sets wMapSpriteKind/wMapHeaderByte11 to $11/$2C on maps $30 and $B8, $22/$30 on maps $63-$66,
-; $12/$2C on map $70 (E-0125)
-SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps::
+; sets wMapSpriteKind/wMapEventTile to $11/$2C on maps $30 and $B8, $22/$30 on maps $63-$66, $12/$2C
+; on map $70 (E-0125) (E-0345: header byte $11 is wMapEventTile; was
+; SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps)
+SetMapSpriteKindAndEventTileForSpecialMaps::
     ldh a, [hMapId]
     cp $30
     jr z, .set_map_sprite_kind_to_11
@@ -4796,7 +4797,7 @@ SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps::
     ld a, $11
     ld [wMapSpriteKind], a
     ld a, $2c
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
     ret
 
 .cp_63:
@@ -4807,7 +4808,7 @@ SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps::
     ld a, $22
     ld [wMapSpriteKind], a
     ld a, $30
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
     ret
 
 .cp_70:
@@ -4816,7 +4817,7 @@ SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps::
     ld a, $12
     ld [wMapSpriteKind], a
     ld a, $2c
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
     ret
 
 .return:
@@ -5575,8 +5576,9 @@ WriteDecimalDigitTiles::
     ret
 
 ; writes the nibbles at hTemp3 downward as digit tiles ($E0 + n), a leading zero as the blank tile
-; $C3
-WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros::
+; $C3 (E-0344: the address in its name dropped or read as the label there; was
+; WithSRAMDraw4ACEAnd4BE8_WriteDigitTilesNoLeadingZeros)
+WithSRAMDraw_WriteDigitTilesNoLeadingZeros::
     push hl
     ld c, $00
     ld hl, hTemp3
@@ -5885,7 +5887,7 @@ LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $c8
-    ld de, OBJPaletteBufferData_7E_4BBD
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
     add e
     ld e, a
     jr nc, .call_copy_from_bank
@@ -6103,8 +6105,9 @@ WritePackedBCDNoLeadingZeros::
     ret
 
 ; HL = $4558 + 2 * A, switches to ROM bank 8 and continues with the shared read at
-; CopyItemNameToDE_Skip (E-0126)
-ReadBank08Table4558WordForA::
+; CopyItemNameToDE_Skip (E-0126) (E-0344: the address in its name dropped or read as the label
+; there; was ReadBank08Table4558WordForA)
+ReadBank08TableWordForA::
     ld l, a
     ld h, $00
     add hl, hl
@@ -6217,8 +6220,8 @@ WriteKeyNameToDE::
     ret
 
 ; A = word number: with ROM bank $09 mapped, copies that string of the bank-$09 database's category
-; 3 (StringList_09_4078: Ylw, Plain, Green, ... then Slime, Draco, Beast, ... Cave, Isle) with its
-; $F0 to DE; restores the bank (E-0090)
+; 3 (StringList_Bank09_StringCategories_3: Ylw, Plain, Green, ... then Slime, Draco, Beast, ...
+; Cave, Isle) with its $F0 to DE; restores the bank (E-0090)
 CopyKeyNameWordToDE::
     add a
     ld hl, $4078
@@ -6388,7 +6391,7 @@ StatInterruptHandler::
     and $03
     jumptable
     dw StatInterruptHandler_WriteSVBK
-    dw StatInterruptHandler_WriteSVBK_Case01
+    dw StatInterruptHandler_WriteSVBK_2
     dw StatInterruptHandler_WriteSCXAndLYCEtc
     dw StatInterruptHandler_WriteSCYAndLYCEtc
 
@@ -6400,7 +6403,7 @@ StatInterruptHandler_WriteSVBK::
     pop af
     reti
 
-StatInterruptHandler_WriteSVBK_Case01::
+StatInterruptHandler_WriteSVBK_2::
     jr StatInterruptHandler_WriteSVBK
 
 StatInterruptHandler_WriteSCXAndLYCEtc::
@@ -7638,12 +7641,12 @@ OpenTextChoice::
 
 OpenTextChoice_UploadTwoTilesFromScriptTileBuf0::
     call UploadTwoTilesFromScriptTileBuf0
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+    ld de, Tiles1Plus6E0Tiles
     ld hl, vTiles1 + $6e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus6F0Tiles_1F_4330
+    ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $6f0
     ld b, $1f
     ld c, $10
@@ -8266,15 +8269,15 @@ ExpandGlyphTileToHL::
     ld [rROMB0], a
     ret
 
-; StartChannelFromTrackHeader.set_sound_event_byte17 indexes it by (hSndA8Param >> 4) * 2; only
-; entry 0 exists, and the wave set follows it directly (E-0189, C1)
+; StartChannelFromTrackHeader.set_sound_event_arg indexes it by (hSndA8Param >> 4) * 2; only entry 0
+; exists, and the wave set follows it directly (E-0189, C1)
 ; record: wave set
 SoundWaveSetTable::
     dw SoundWaveSet0 ; id 0
 
-; StartChannelFromTrackHeader.set_sound_event_byte17 clears rNR30, then copies the 16 bytes at the
-; set + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high
-; nibble) to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth (E-0189, C1)
+; StartChannelFromTrackHeader.set_sound_event_arg clears rNR30, then copies the 16 bytes at the set
+; + wave number * 16 (wave number from hSndSweepOrWave or the track, swapped into the high nibble)
+; to $FF30-$FF3F; wave 0 is a sine, 1 a triangle, 2 a square, 3 a sawtooth (E-0189, C1)
 ; record: one wave RAM image: 32 4-bit samples, two per byte
 SoundWaveSet0::
     db $00, $01, $12, $35, $8a, $cd, $ee, $ff, $ff, $fe, $ed, $ca, $85, $32, $11, $00 ; id 0
@@ -8294,14 +8297,14 @@ SoundWaveSet0::
     db $ee, $ee, $cd, $ac, $35, $23, $11, $11, $11, $11, $32, $53, $ca, $dc, $ee, $ee ; id 14
     db $dd, $dd, $dd, $dd, $dd, $dd, $dd, $dd, $22, $22, $22, $22, $22, $22, $22, $22 ; id 15
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay indexes it by
+; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay indexes it by
 ; (hSndA8Param & $0F) * 2; only entry 0 exists, and its rows follow it directly (E-0189, C1)
 ; record: modulation rows
 SoundModulationTable::
     dw SoundModulationRows0 ; id 0
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay reads the byte
-; at the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from
+; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay reads the byte at
+; the rows - $10 + (hSndVibratoDepth | phase), where the phase is 4 bits computed from
 ; hSndVibratoCounter and hSndVibratoDelay, so row 1 is the first; 12 rows end at the routine at
 ; $3290; what each step does to the pitch or volume is not read (E-0189, C1)
 ; record: 16 steps for one depth value: high nibble is combined with hSndEnvelope, bit 2 selects a
@@ -8322,10 +8325,11 @@ SoundModulationRows0::
 
 ; rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first two bytes of each of the 6 channel slots at
 ; wSoundChannelSlots to $FF; clears the 72 bytes at wSoundLabelSlots, wSoundEngineState and
-; wSoundInitByte19; calls InitSoundHardware_WriteSoundTimer12AndSoundTimer13Etc with BC = 0
+; wSoundWaveReload; calls InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc with BC
+; = 0
 InitSoundHardware::
     ld bc, $0000
-    call InitSoundHardware_WriteSoundTimer12AndSoundTimer13Etc
+    call InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc
     ld a, $80
     ldh [rNR52], a
     xor a
@@ -8354,7 +8358,7 @@ InitSoundHardware::
     jr nz, .loop2
     xor a
     ld [wSoundEngineState], a
-    ld [wSoundInitByte19], a
+    ld [wSoundWaveReload], a
     ret
 
 ; wSoundEngineState = 0, wSoundEngineMode = wSoundSavedMode (sound engine state) (E-0119)
@@ -8373,16 +8377,16 @@ SetSoundEngineStateTo4AndClearSoundEngineMode::
     ld [wSoundEngineMode], a
     ret
 
-InitSoundHardware_WriteSoundTimer12AndSoundTimer13Etc::
+InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc::
     ld a, b
-    ld [wSoundTimer12], a
+    ld [wSoundChannelMask], a
     ld a, c
-    ld [wSoundTimer13], a
+    ld [wSoundChannelMaskCount], a
     xor a
-    ld [wSoundTimer14], a
+    ld [wSoundChannelsDone], a
     ret
 
-SoundTick_WriteSoundTimer14::
+SoundTick_WriteSoundChannelsDone::
     ld a, [wSoundChannelIndex]
     inc a
     ld b, a
@@ -8390,32 +8394,32 @@ SoundTick_WriteSoundTimer14::
 
 .next:
     dec b
-    jr z, .check_sound_timer14
+    jr z, .check_sound_channels_done
     add a
     jr .next
 
-.check_sound_timer14:
+.check_sound_channels_done:
     ld b, a
-    ld a, [wSoundTimer14]
+    ld a, [wSoundChannelsDone]
     or b
-    ld [wSoundTimer14], a
+    ld [wSoundChannelsDone], a
     ret
 
-SoundTick_WriteSoundTimer14AndSoundTimer12::
-    ld a, [wSoundTimer14]
-    ld hl, wSoundTimer12
+SoundTick_WriteSoundChannelsDoneAndSoundChannelMask::
+    ld a, [wSoundChannelsDone]
+    ld hl, wSoundChannelMask
     and [hl]
     cp [hl]
-    jr nz, .clear_sound_timer14
+    jr nz, .clear_sound_channels_done
     ld hl, wSoundChannelSlots + $6
-    ld a, [wSoundTimer13]
+    ld a, [wSoundChannelMaskCount]
     and $0f
     ld b, a
-    ld a, [wSoundTimer12]
+    ld a, [wSoundChannelMask]
 
 .loop:
     srl a
-    ld [wSoundTimer14], a
+    ld [wSoundChannelsDone], a
     jr nc, .skip
     ld a, [hl]
     and $f0
@@ -8429,15 +8433,15 @@ SoundTick_WriteSoundTimer14AndSoundTimer12::
     ld a, h
     adc $00
     ld h, a
-    ld a, [wSoundTimer14]
+    ld a, [wSoundChannelsDone]
     and a
     jr nz, .loop
     xor a
-    ld [wSoundTimer12], a
+    ld [wSoundChannelMask], a
 
-.clear_sound_timer14:
+.clear_sound_channels_done:
     xor a
-    ld [wSoundTimer14], a
+    ld [wSoundChannelsDone], a
     ret
 
 ; runs RunSoundTable3E24ForA three times and falls into it once more (E-0122)
@@ -8602,7 +8606,7 @@ SoundTick::
     ld [wSoundChannelIndex], a
     xor a
     ld [wSoundSkipMaskA], a
-    ld hl, wSoundTickBuf0E
+    ld hl, wSoundTickBuf
     inc [hl]
     ld hl, wSoundChannelSlots
 
@@ -8662,7 +8666,7 @@ SoundTick_Loop::
     dec b
     jr nz, .loop2
     ld [wSoundSkipMaskB], a
-    ld [wSoundTickByte0C], a
+    ld [wSoundNoteWork], a
     ldh a, [hTrackPosLo]
     ld b, a
     ldh a, [hTrackPosHi]
@@ -8670,7 +8674,7 @@ SoundTick_Loop::
     and a
     jp z, StartChannelFromTrackHeader
     call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
-    call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05
+    call SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2
     ldh a, [hSndVibratoDelay]
     ld b, a
     ldh a, [hSndVibratoCounter]
@@ -8689,7 +8693,7 @@ SoundTick_Loop::
     jr c, .call_sound_tick_wait_sound_hw_channel
     sub $10
     ld [hl], a
-    jr SoundTick_CheckSoundInitByte19
+    jr SoundTick_CheckSoundWaveReload
 
 .call_sound_tick_wait_sound_hw_channel:
     ld [hl], a
@@ -8706,7 +8710,7 @@ SoundTick_Loop::
     jr nz, SoundTick_SetSndWaitTicks
     ldh a, [hSndEnvFlags]
     and $f0
-    jr z, SoundTick_CallSoundTick_WriteSoundTimer14
+    jr z, SoundTick_CallSoundTick_WriteSoundChannelsDone
     ld hl, hSndEnvTimer
     dec [hl]
     jr nz, SoundTick_CheckSndEnvFlags
@@ -8718,37 +8722,37 @@ SoundTick_Loop::
     or c
     ldh [hSndEnvelope], a
 
-SoundTick_CallSoundTick_WriteSoundTimer14::
-    call SoundTick_WriteSoundTimer14
+SoundTick_CallSoundTick_WriteSoundChannelsDone::
+    call SoundTick_WriteSoundChannelsDone
 
 SoundTick_ReadSndNoteLength::
     ldh a, [hSndNoteLength]
     ldh [hSndNoteTimer], a
     call SoundNextEvent
-    jr SoundTick_CheckSoundInitByte19
+    jr SoundTick_CheckSoundWaveReload
 
 SoundTick_CheckSndEnvFlags::
     ldh a, [hSndEnvFlags]
     and $0f
     dec a
     cp [hl]
-    jr nz, SoundTick_CheckSoundInitByte19
+    jr nz, SoundTick_CheckSoundWaveReload
     call SoundTick_WriteSndEnvelopeReloadAndSndEnvelope
     ldh a, [hSndEnvelope]
     call WriteChannelEnvelopeIfChanged
-    jr SoundTick_CheckSoundInitByte19
+    jr SoundTick_CheckSoundWaveReload
 
 SoundTick_SetSndWaitTicks::
     dec a
     ldh [hSndWaitTicks], a
-    jr nz, SoundTick_CheckSoundInitByte19
+    jr nz, SoundTick_CheckSoundWaveReload
     ldh a, [hSndEnvFlags]
     and $f0
-    jr nz, SoundTick_CheckSoundInitByte19
-    jr SoundTick_CallSoundTick_WriteSoundTimer14
+    jr nz, SoundTick_CheckSoundWaveReload
+    jr SoundTick_CallSoundTick_WriteSoundChannelsDone
 
-SoundTick_CheckSoundInitByte19::
-    ld a, [wSoundInitByte19]
+SoundTick_CheckSoundWaveReload::
+    ld a, [wSoundWaveReload]
     and a
     jr z, .read_sound_skip_mask_b
     ld a, [wSoundHwChannel]
@@ -8762,19 +8766,19 @@ SoundTick_CheckSoundInitByte19::
     ld a, [wSoundSkipMaskA]
     and b
     jr nz, .read_sound_skip_mask_b
-    ld a, [wSoundEventByte17]
+    ld a, [wSoundEventArg]
     ld b, a
     ldh a, [hSndSweepOrWave]
     cp b
     jr z, .read_sound_skip_mask_b
     ld e, a
-    ld [wSoundEventByte17], a
+    ld [wSoundEventArg], a
     swap e
     xor a
-    ld [wSoundInitByte19], a
+    ld [wSoundWaveReload], a
     ldh [rNR30], a
     ld d, a
-    call SoundTick_ReadSndA8Param
+    call SoundTick_ReadSndWaveParam
     ld a, $80
     ldh [rNR30], a
 
@@ -8834,7 +8838,7 @@ SoundTick_CheckSoundChannelIndex::
     ldh [rNR51], a
     pop af
     ld [rROMB0], a
-    call SoundTick_WriteSoundTimer14AndSoundTimer12
+    call SoundTick_WriteSoundChannelsDoneAndSoundChannelMask
     ret
 
 ; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble ->
@@ -8871,9 +8875,9 @@ StartChannelFromTrackHeader::
     ld a, [hli]
     ldh [hSndSweepOrWave], a
 
-.clear_snd_chan_byte_e3:
+.clear_snd_chan_unused:
     xor a
-    ldh [hSndChanByteE3], a
+    ldh [hSndChanUnused], a
     ldh [hSndBranchIndex], a
     ldh [hSndVibratoDepth], a
     ldh [hSndPitchSlide], a
@@ -8897,17 +8901,17 @@ StartChannelFromTrackHeader::
     ldh a, [hSndSweepOrWave]
     ld e, a
     cp $ff
-    jr nz, .set_sound_event_byte17
+    jr nz, .set_sound_event_arg
     ld e, [hl]
     ld a, e
     ldh [hSndSweepOrWave], a
 
-.set_sound_event_byte17:
-    ld [wSoundEventByte17], a
+.set_sound_event_arg:
+    ld [wSoundEventArg], a
     swap e
     ld hl, SoundWaveSetTable
     push de
-    ldh a, [hSndA8Param]
+    ldh a, [hSndWaveParam]
     swap a
     and $0f
     add a
@@ -8926,7 +8930,7 @@ StartChannelFromTrackHeader::
     inc c
     dec b
     jr nz, .loop
-    jr .clear_snd_chan_byte_e3
+    jr .clear_snd_chan_unused
 
 ; C2 static reading and 5,154 emulated fetches agree (E-0019): fetches the next track event of the
 ; current channel. The position in $FFD8/$FFD9 counts 2-byte events from the track start
@@ -8993,7 +8997,7 @@ SoundNextEvent::
     cp $02
     jr nc, .call_sound_next_event_return_twice_if_sound
     ld a, $ff
-    ld [wSoundInitByte19], a
+    ld [wSoundWaveReload], a
 
 .call_sound_next_event_return_twice_if_sound:
     call SoundNextEvent_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
@@ -9131,11 +9135,11 @@ SoundNextEvent::
     ld d, a
     push hl
     ld a, e
-    ld [wSoundEventByte17], a
+    ld [wSoundEventArg], a
     swap e
     ld hl, SoundWaveSetTable
     push de
-    ldh a, [hSndA8Param]
+    ldh a, [hSndWaveParam]
     swap a
     and $0f
     add a
@@ -9233,7 +9237,7 @@ SoundNextEvent::
     jr nz, .cp_A8
     ld a, [hl]
     ldh [hSndWaitTicks], a
-    jp ComputeNotePitch_ReadSoundTickByte0C
+    jp ComputeNotePitch_ReadSoundNoteWork
 
 .cp_A8:
     cp $a8
@@ -9245,7 +9249,7 @@ SoundNextEvent::
     ld a, c
     and $f0
     or b
-    ldh [hSndA8Param], a
+    ldh [hSndWaveParam], a
     jp .loop
 
 .cp_A9:
@@ -9257,18 +9261,18 @@ SoundNextEvent::
     cp $f1
     jr z, .check_snd_branch_index2
     cp $f2
-    jr z, .check_sound_event_byte18
+    jr z, .check_sound_branch_arg
     cp $f3
-    jr z, .check_sound_event_byte182
+    jr z, .check_sound_branch_arg2
     cp $fe
-    jr z, .read_sound_event_byte18
+    jr z, .read_sound_branch_arg
     cp $ff
     jr nz, .cp_80
     ldh a, [hSndBranchIndex]
     jr .skip4
 
-.read_sound_event_byte18:
-    ld a, [wSoundEventByte18]
+.read_sound_branch_arg:
+    ld a, [wSoundBranchArg]
 
 .skip4:
     sla a
@@ -9285,13 +9289,13 @@ SoundNextEvent::
 
 .cp_80:
     cp $80
-    jr nc, .set_sound_event_byte18
+    jr nc, .set_sound_branch_arg
     ldh [hSndBranchIndex], a
     jp .loop
 
-.set_sound_event_byte18:
+.set_sound_branch_arg:
     sub $80
-    ld [wSoundEventByte18], a
+    ld [wSoundBranchArg], a
     jp .loop
 
 .check_snd_branch_index:
@@ -9306,16 +9310,16 @@ SoundNextEvent::
     ldh [hSndBranchIndex], a
     jp .loop
 
-.check_sound_event_byte18:
-    ld a, [wSoundEventByte18]
+.check_sound_branch_arg:
+    ld a, [wSoundBranchArg]
     inc a
-    ld [wSoundEventByte18], a
+    ld [wSoundBranchArg], a
     jp .loop
 
-.check_sound_event_byte182:
-    ld a, [wSoundEventByte18]
+.check_sound_branch_arg2:
+    ld a, [wSoundBranchArg]
     dec a
-    ld [wSoundEventByte18], a
+    ld [wSoundBranchArg], a
     jp .loop
 
 .cp_AA:
@@ -9535,7 +9539,7 @@ ComputeNotePitch::
     ld a, [wSoundHwChannel]
     cp $02
     jr nz, .call_compute_note_pitch_write_nr32
-    call ComputeNotePitch_WriteSoundEventByte17AndNR30
+    call ComputeNotePitch_WriteSoundEventArgAndNR30
     ld a, $80
     ldh [rNR30], a
 
@@ -9586,8 +9590,8 @@ ComputeNotePitch_SetSndFreqHi::
     call WriteChannelRegisterC
     call ClearChannelLengthBits
 
-ComputeNotePitch_ReadSoundTickByte0C::
-    ld a, [wSoundTickByte0C]
+ComputeNotePitch_ReadSoundNoteWork::
+    ld a, [wSoundNoteWork]
     ld b, a
     cpl
     ld c, a
@@ -9664,7 +9668,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB::
     ret z
     sub $10
     ld b, a
-    ld a, [wSoundTickBuf0E]
+    ld a, [wSoundTickBuf]
     and $0f
     or b
     ld e, a
@@ -9682,7 +9686,7 @@ ComputeNotePitch_WriteNR32::
     jr z, WriteChannelRegisterC_ReadSndEnvelope
     ldh a, [hSndVibratoDepth]
     and a
-    jr nz, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay
+    jr nz, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay
     ldh a, [hSndEnvelope]
 
 ; B = A (bit 3 set when the low three bits are 0); writes it to the channel envelope register
@@ -9750,7 +9754,7 @@ ClearChannelLengthBits_Skip::
     ldh [rNR32], a
     ret
 
-SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05::
+SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ldh a, [hSndFreqLo]
     and a
@@ -9762,12 +9766,12 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05::
 .check_sound_hw_channel:
     ld a, [wSoundHwChannel]
     cp $02
-    jr z, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay
+    jr z, SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay
     ldh a, [hSndVibratoDepth]
     and a
     ret z
 
-SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay::
+SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay::
     ldh a, [hSndVibratoDelay]
     and a
     ret z
@@ -9795,7 +9799,7 @@ SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDela
     ld e, a
     ld d, $00
     push de
-    ldh a, [hSndA8Param]
+    ldh a, [hSndWaveParam]
     and $0f
     ld de, SoundModulationTable
     sla a
@@ -9921,8 +9925,8 @@ SoundNotePeriodTable::
     dw $07d4, $0764, $06f9, $0695, $0637, $05dd, $0589, $053a, $04f0, $04a8, $0465, $0426 ; id 0
     dw $079c, $072e, $06c7, $0666, $060a, $05b3, $0561, $0515, $04cc, $0486, $0445, $0408 ; id 1
 
-; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_Sub05_CheckSndVibratoDelay.skip5 reads the
-; byte at $3B8C + DE (DE = level row * 16 + input) and ORs it into the envelope written by
+; SoundTick_ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB_2_CheckSndVibratoDelay.skip5 reads the byte
+; at $3B8C + DE (DE = level row * 16 + input) and ORs it into the envelope written by
 ; WriteChannelEnvelopeIfChanged; the rows rise from all $10 to $00-$F0 (E-0209, C1)
 ; record: 16 scaled volumes (high nibble) for one level
 SoundEnvelopeScaleTable::
@@ -9964,23 +9968,23 @@ SoundPitchOffsetRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 14
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 15
 
-ComputeNotePitch_WriteSoundEventByte17AndNR30::
-    ld a, [wSoundEventByte17]
+ComputeNotePitch_WriteSoundEventArgAndNR30::
+    ld a, [wSoundEventArg]
     ld b, a
     ldh a, [hSndSweepOrWave]
     cp b
     ret z
-    ld [wSoundEventByte17], a
+    ld [wSoundEventArg], a
     ld e, a
     swap e
     xor a
     ldh [rNR30], a
 
-SoundTick_ReadSndA8Param::
+SoundTick_ReadSndWaveParam::
     ld d, a
     ld hl, SoundWaveSetTable
     push de
-    ldh a, [hSndA8Param]
+    ldh a, [hSndWaveParam]
     swap a
     and $0f
     add a

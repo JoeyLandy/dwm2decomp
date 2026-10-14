@@ -2431,6 +2431,98 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0346 — The other 36 battle status bits; every story flag named; unlisted object selectors
+
+- Kind: READING (C1) and generator naming rules, with the forced-bit runs of E-0339 (`build/status/s0.json` ... `s8.json`, tools/status_check.py).
+- **Status bits** (config/battle_status.json, now 72 of 72). Several unnamed bits are halves of 2-bit fields: each is named after its field, from the masks applied to the status byte.
+  - Byte 0, bits 2-3: SLEEP_TURNS_LO/HI. ActionEffect_Sleep sets bits 7, 3 and 2 together (`or $8C`).
+  - Byte 0, bit 6: PARALYZED. ActionEffect_ActionC6 sets it with resolve message $76, '0 became paralyzed!'.
+  - Byte 1, bit 1: BLINDED. It is set when RollVsRadiantResistance succeeds.
+  - Byte 1, bit 2: ATK_DOUBLED. ActionEffect_TwinHits sets it with message $43, '0's ATK doubled!'.
+  - Byte 2:
+    - bit 0, TAKE_MAGIC;
+    - bit 1, BOUNCE (lasting) and bit 5, MAGIC_BACK (one-time): TryWallOfLightBounce tests $22 and clears bit 5 unless bit 1 is set;
+    - bit 2, DAMAGE_HALVED (HalveDamageIfTargetStatus2Bit2);
+    - bit 7, CRITICAL_ROLLED: ResolveStepChanceRoll sets it, and ResolveStepComputeDamage then uses ATK within 5% as the damage.
+  - Byte 3, bit 7: AIRBORNE_HI. Byte 3 is tested with `and $C0` in about 40 places.
+  - Byte 4:
+    - bit 1, CHARGE_UP_HI (`or $03` in ChargeUp);
+    - bit 2, HIGH_JUMP: ForcedActionForActorStatus forces action $CC; bit 3 is HIGH_JUMP_HI;
+    - bit 5, SUCK_AIR_HI (`or $30`);
+    - bit 6, FOCUS_LO.
+  - Byte 5:
+    - bits 0 and 1, RADIANT_BLIND and SANDSTORM_BLIND: Radiant uses D = 1 and SandStorm D = 2, against this byte;
+    - bits 2-3, SIDE_STEP and SIDE_STEP_HI;
+    - bit 4, SONG_FORCED (forced action $CE);
+    - bit 7, IRONIZE_TURNS_HI: the wear-off step subtracts $40 a turn.
+  - Byte 6, bits 6-7: STATS_RAISED and STATS_LOWERED. They are set through SetSlotStatus6Bit6/7 by Speed, Upper, LushLicks and UltraDown, and DefeatTarget resets AGL and DEF when either is set.
+  - Byte 7:
+    - bit 1, DAMAGE_X10: the damage message step multiplies the damage by 10;
+    - bit 3, DAMAGE_DOUBLED.
+  - Byte 8:
+    - bit 0, LOVE_RAIN_FORCED (forced action $CF);
+    - bit 1, LOVE_RAIN: set by ActionEffect_LoveRain; forcing it shows 'A gentle rain fell!'.
+  - UNUSED_* (2.4, 7.4-7.7, 8.2, 8.3, 8.5): no static reader or writer was found, and forcing them showed no new battle text.
+  - Open contradiction: the damage message step doubles the damage for byte 7 bit 0, which E-0339 named GUARD because Guard sets it. One of the two readings is incomplete.
+- **Story flags**: 347 named, and no flag number is left in a flag operand.
+  - Rules added to name_story_flags:
+    - a setter whose routine name says nothing is described by the last message its routine shows before, or just after, setting the flag;
+    - a setter inside a script uses the script's name;
+    - DE loaded as two bytes (`ld e` / `ld d`) counts as a setter and is written `LOW(EVENT_X)` / `HIGH(EVENT_X)`;
+    - a flag with no setter is named after its first tester that says something; its constants.inc comment says "no setter found; tested by" (34 flags);
+    - an `objsel_unless_flag` in a listed ObjSelector_MapXX selector names a flag MAP_XX_OBJECT_REMOVED.
+  - config/story_flags.json holds 11 names read by hand. Among them:
+    - EVENT_NEVER_SET for flag 0, which about 20 routines test and no code sets;
+    - the Found-Me foe flags $B9-$BB and $201, which SceneFoundMeBattle_SetFlagBit sets from the map screen;
+    - EVENT_STAFF_ROLL_PARTY_SAVED ($19F).
+  - The pass now runs after the final naming passes, so scripts and selectors carry their names when it reads them.
+- **Unlisted object selectors.** 252 selectors and object lists found by tiling a gap were numbered `ObjSelector_N` / `MapObjects_N`. A selector is now named after the listed selector just before it (ObjSelector_Map94_3_Unlisted), and its lists follow (MapObjects_Map94_3_Unlisted_0). The flags above support the placement: the foes of ObjSelector_Map94_3/4/5_Unlisted are the Found-Me foes of map screens 0-2.
+- **Scripts without a message.** These are named by their jump target (Script_ToWhatWouldYouLike) or by their first command (Script_Encounter). No `Script_N` is left.
+- **Table labels.** The 299 labels in config/tables.json that still spelled an address now hold the emitted names.
+  - The encounter and key-world families were shortened: EncounterGrid_13, EncounterGroup_Grid13_104, EncounterGroup_Direct2 and KeyWorldObjectList_0_0_1, from RunBattleIntroKindCase_ReadMapIdAndPlayerStateFlags_EncounterGrid_13 and similar.
+  - Tests that named old labels follow the new names: Text_ strings, Talk_ListenYouTwoQuitYourHorsing and ListRecordsInUseEggs.
+- Binary verification: build/run526 PASS, 0 differing bytes. Full suite: 278 tests OK (3 skipped).
+
+### E-0345 — RAM bytes named from their users
+
+- Kind: READING (C1).
+- 102 RAM bytes that still spelled a byte number (wArenaByte37, wScreenByteBD and others) are named from the routines that read and write them. Each entry in config/symbols.json says "named from its users; was X".
+- Bytes that different routines reuse for different values get the name of their main use. The note lists the other users.
+- Collisions:
+  - $DAE8 is wCommandEntryMonster, because wCommandMonster already existed.
+  - $FF80 is hOAMDMARoutine, the HRAM copy of the OAM DMA routine.
+  - $FFF8 is hUnusedTail.
+- Notes in config/names.json that used the old names now use the new ones; a former name may stay after "was".
+- RAM names that spell a byte number: 0 of 958.
+
+### E-0344 — Data and address naming passes; configured names without addresses
+
+- Kind: generator naming rules (structure, C0 to C1 by rule), with readings where noted.
+- **name_data_by_reference.** A data label still named by its address is named in this order:
+  1. by its content: a script by its first message or scene command, a string by its words;
+  2. by its first referrer: an id entry of a top table (Script_Map30), an entry of a named block, or `<Routine>_<Kind>` for the routine that loads it.
+  - Meta-sprite tables become table ordinals.
+  - What only computed pointers reach is numbered within its kind.
+- **strip_address_tokens.** A ROM address kept in a name only to tell copies apart is dropped; copies are numbered _2, _3 in address order.
+- **resolve_embedded_addresses.** An address inside a name becomes the name of the label there. When that label has no name, the kind word stays (StartScript5709 becomes StartScript...), and a Func address is dropped.
+- **strip_structural_tokens.** The _CaseNN, _SubNN and _TableN parts of a described step are dropped.
+- **Copies of library routines.** A second copy in one bank is now `Name_BankBB_2`, not `Name_BB_AAAA`.
+- **config/names.json.**
+  - 427 configured names that spelled an address were rewritten to the names the passes emit. Each note says "was X".
+  - The address passes skip configured names, so the config and the listing agree. tests/test_generated_source.py checks this.
+  - Edits by reading:
+    - 44 TalkScript_N routines are now named after the script they start (Talk_BreedFade, Talk_HealParty);
+    - 14 names that the passes had built from the routine's own data label were shortened;
+    - 8 trailing prepositions were removed.
+  - CheckWarpsByMapType_RunThreeWarpChecks and CheckWarpsByMapType_KeyWorldGoalWarp were named by reading.
+- **Tests.**
+  - Event-script and pointer-bank tests check structure instead of address names.
+  - The global name-claim test follows a step into a numbered copy of itself (X calls X_2) and reads the whole step.
+- Labels: 33,212.
+  - Address or structural tokens: 0.
+  - No description beyond their structure: 0 (tools/readability.py).
+- Binary verification: build/run523 PASS, 0 differing bytes (before E-0346).
+
 ### E-0343 — Completion flag, item use message, packing and key-world generator bytes
 
 - Kind: READING (C1).

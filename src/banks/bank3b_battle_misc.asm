@@ -488,7 +488,7 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ShowBattleText
     dw RunBattleActions_UseItem_Return
     dw RunBattleActions_UseItem_AddDoubleAToHL_Bank3B
-    dw RunBattleActions_UseItem_ToRunBattleSubStep2_6764
+    dw RunBattleActions_UseItem_ToRunBattleSubStep2_2
     dw RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc
     dw RunBattleActions_UseItem_LoadItemRecord
     dw RunBattleActions_UseItem_SetMultiHitCount
@@ -579,7 +579,7 @@ RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     jr c, .set_effect_flags_to_08
     ld a, [wBattleKind]
     cp $03
-    jr z, .call_call774_c_with_battle_foe_count
+    jr z, .call_call_with_battle_foe_count
     ld a, [wBattleTarget]
     and $04
     ld c, a
@@ -595,23 +595,23 @@ RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     add_a_to_hl
     ld a, [hl]
     cp $07
-    jr z, .call_call774_c_with_battle_foe_count
+    jr z, .call_call_with_battle_foe_count
     ld a, c
     ld hl, wBattleStatus
     call AddAx9ToHL
     ld a, [hl]
     bit 6, a
-    jr nz, .call_call774_c_with_battle_foe_count2
+    jr nz, .call_call_with_battle_foe_count2
     and $8c
-    jr nz, .call_call774_c_with_battle_foe_count3
+    jr nz, .call_call_with_battle_foe_count3
     ld a, $05
     add_a_to_hl
     ld a, [hl]
     and $c0
-    jr nz, .call_call774_c_with_battle_foe_count4
+    jr nz, .call_call_with_battle_foe_count4
     ld a, c
     call CheckSlotStatusBlock
-    jr c, .call_call774_c_with_battle_foe_count5
+    jr c, .call_call_with_battle_foe_count5
 
 .next:
     inc c
@@ -624,52 +624,53 @@ RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     farcall SelectEffectByEffectFlags
     ret
 
-.call_call774_c_with_battle_foe_count:
-    call Call774CWithBattleFoeCount
+.call_call_with_battle_foe_count:
+    call CallWithBattleFoeCount
     ld d, $7e
     farcall ShowBattleTextCategory0
     ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-.call_call774_c_with_battle_foe_count2:
-    call Call774CWithBattleFoeCount
+.call_call_with_battle_foe_count2:
+    call CallWithBattleFoeCount
     ld d, $e6 ; battle text '0 can't eat while paralyzed!'
     farcall ShowBattleText
     ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-.call_call774_c_with_battle_foe_count3:
-    call Call774CWithBattleFoeCount
+.call_call_with_battle_foe_count3:
+    call CallWithBattleFoeCount
     ld d, $7b
     farcall ShowBattleTextCategory0
     ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-.call_call774_c_with_battle_foe_count4:
-    call Call774CWithBattleFoeCount
+.call_call_with_battle_foe_count4:
+    call CallWithBattleFoeCount
     ld d, $7d
     farcall ShowBattleTextCategory0
     ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-.call_call774_c_with_battle_foe_count5:
-    call Call774CWithBattleFoeCount
+.call_call_with_battle_foe_count5:
+    call CallWithBattleFoeCount
     ld d, $7c
     farcall ShowBattleTextCategory0
     ld a, $0b
     ld [wBattleResolveStep], a
     ret
 
-; hTemp0 = wBattleFoeCount, then far-calls Call774CWithBattleFoeCount_WriteBattleStatResultLo
-; (E-0122)
-Call774CWithBattleFoeCount::
+; hTemp0 = wBattleFoeCount, then far-calls CallWithBattleFoeCount_WriteBattleStatResultLo (E-0122)
+; (E-0344: the address in its name dropped or read as the label there; was
+; Call774CWithBattleFoeCount)
+CallWithBattleFoeCount::
     ld a, [wBattleFoeCount]
     ldh [hTemp0], a
-    farcall Call774CWithBattleFoeCount_WriteBattleStatResultLo
+    farcall CallWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
 RunBattleActions_UseItem_ShowHeroIsAHunk::
@@ -870,8 +871,8 @@ RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
 .return:
     ret
 
-RunBattleActions_UseItem_ToRunBattleSubStep2_6764::
-    farcall RunBattleSubStep2_6764
+RunBattleActions_UseItem_ToRunBattleSubStep2_2::
+    farcall RunBattleSubStep2_2
     ret
 
 RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
@@ -884,19 +885,19 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     jr z, .check_battle_target
     ld a, [wBattleItemTarget]
     cp $10
-    jr z, .call_run_once4650_then4673
+    jr z, .call_run_once_then_next
     cp $20
     ret nz
     ld a, [wBattleItemId]
     cp ITEM_METEORB
-    jr nz, .call_run_once4650_then4673
+    jr nz, .call_run_once_then_next
     ret
 
 .check_battle_target:
     ld a, [wBattleTarget]
     cp $04
     ret c
-    jr .call_run_once4650_then4673
+    jr .call_run_once_then_next
 
 .check_multi_hit_count:
     ld a, [wMultiHitCount]
@@ -940,8 +941,8 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ld [wBattleTarget], a
     ret
 
-.call_run_once4650_then4673:
-    call RunOnce4650Then4673
+.call_run_once_then_next:
+    call RunOnceThenNext
     ret z
     ld a, c
     ld [wBattleTarget], a
@@ -949,25 +950,26 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ld [wBattleResolveStep], a
     ret
 
-; runs RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of
-; wMultiHitCount), then RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount each
-; time; returns wMultiHitCount & $7F (E-0122)
-RunOnce4650Then4673::
+; runs RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount),
+; then RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount each time; returns
+; wMultiHitCount & $7F (E-0122) (E-0344: the address in its name dropped or read as the label there;
+; was RunOnce4650Then4673; a trailing preposition left by the dropped address removed)
+RunOnceThenNext::
     ld a, [wMultiHitCount]
     bit 7, a
-    jr nz, .call_run_once4650_then4673_carry_unless
-    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty
+    jr nz, .call_run_once_then_next_carry_unless_battle
+    call RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty
     ld a, [wMultiHitCount]
     or $80
     ld [wMultiHitCount], a
 
-.call_run_once4650_then4673_carry_unless:
-    call RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount
+.call_run_once_then_next_carry_unless_battle:
+    call RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount
     ld a, [wMultiHitCount]
     and $7f
     ret
 
-RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
+RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     ld b, $04
     ld a, [wBattleTarget]
     and $04
@@ -995,7 +997,7 @@ RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-RunOnce4650Then4673_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
+RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
     ld c, a
@@ -1403,11 +1405,11 @@ SetDamageDEMinusBCPlusHL::
     ld [wBattleDamageHi], a
     ret
 
-; the target's wBattleWordArray3F word -=
-; SubtractActionAmountFromTargetBattleWordArray3F_Data[action - $19], floored at 0 (E-0124)
+; the target's wBattleExtraStat word -= SubtractActionAmountFromTargetBattleWordArray3F_Data[action
+; - $19], floored at 0 (E-0124)
 SubtractActionAmountFromTargetBattleWordArray3F::
     ld a, [wBattleTarget]
-    ld hl, wBattleWordArray3F
+    ld hl, wBattleExtraStat
     call AddDoubleAToHL_Bank3B
     push hl
     deref_hl
@@ -1792,7 +1794,7 @@ DispatchActionEffectTable_Bank3B::
 ; wBattleActionId; 64 words up to the first target at $4B91, a lone ret (E-0239, C1)
 ; record: effect routine for this wBattleActionId
 ActionIdEffectTable_3B::
-    dw ActionIdEffectNone_3B_4B91 ; id 0
+    dw ActionIdEffectNone_3B ; id 0
     dw RestoreTargetHPIfHurt ; id 1
     dw RestoreTargetHPIfHurt ; id 2
     dw RestoreTargetHPIfHurt ; id 3
@@ -1805,60 +1807,61 @@ ActionIdEffectTable_3B::
     dw CureTargetStatus0Bit4 ; id 10
     dw RestoreTargetHPIfHurt ; id 11
     dw ApplyTargetMaxHPIfPresent ; id 12
-    dw ActionIdEffectNone_3B_4C94 ; id 13
-    dw ActionIdEffectNone_3B_4C94 ; id 14
-    dw ActionIdEffectNone_3B_4C94 ; id 15
-    dw ActionIdEffectNone_3B_4C94 ; id 16
-    dw ActionIdEffectNone_3B_4C94 ; id 17
-    dw ActionIdEffectNone_3B_4C94 ; id 18
-    dw ActionIdEffectNone_3B_4C94 ; id 19
-    dw ActionIdEffectNone_3B_4C94 ; id 20
-    dw ActionIdEffectNone_3B_4C94 ; id 21
-    dw ActionIdEffectNone_3B_4C94 ; id 22
-    dw ActionIdEffectNone_3B_4C94 ; id 23
-    dw ActionIdEffectNone_3B_4C94 ; id 24
+    dw ActionIdEffectNone_3B_2 ; id 13
+    dw ActionIdEffectNone_3B_2 ; id 14
+    dw ActionIdEffectNone_3B_2 ; id 15
+    dw ActionIdEffectNone_3B_2 ; id 16
+    dw ActionIdEffectNone_3B_2 ; id 17
+    dw ActionIdEffectNone_3B_2 ; id 18
+    dw ActionIdEffectNone_3B_2 ; id 19
+    dw ActionIdEffectNone_3B_2 ; id 20
+    dw ActionIdEffectNone_3B_2 ; id 21
+    dw ActionIdEffectNone_3B_2 ; id 22
+    dw ActionIdEffectNone_3B_2 ; id 23
+    dw ActionIdEffectNone_3B_2 ; id 24
     dw ApplyTargetBattleWordArray3FReduction ; id 25
     dw ApplyTargetBattleWordArray3FReduction ; id 26
     dw ApplyTargetBattleWordArray3FReduction ; id 27
     dw ApplyTargetBattleWordArray3FReduction ; id 28
     dw InflictStatus0Bit0WithBattleWordArray3FReduction ; id 29
     dw SetBattleEndFlagAndMessage98 ; id 30
-    dw JumpToEffectFailurePath4F15 ; id 31
-    dw ActionIdEffectNone_3B_4C94 ; id 32
-    dw ActionIdEffectNone_3B_4C94 ; id 33
+    dw JumpToEffectFailurePath ; id 31
+    dw ActionIdEffectNone_3B_2 ; id 32
+    dw ActionIdEffectNone_3B_2 ; id 33
     dw InflictTargetStatus0Bit0 ; id 34
     dw InflictTargetStatus0Bit2 ; id 35
     dw RollTableDamageWithMessage35 ; id 36
     dw RollTableDamageWithMessage35 ; id 37
     dw RollTableDamageWithMessage35 ; id 38
     dw RollTableDamageWithMessage35 ; id 39
-    dw ActionIdEffectNone_3B_4C94 ; id 40
-    dw ActionIdEffectNone_3B_4C94 ; id 41
-    dw ActionIdEffectNone_3B_4C94 ; id 42
-    dw ActionIdEffectNone_3B_4C94 ; id 43
-    dw ActionIdEffectNone_3B_4C94 ; id 44
-    dw ActionIdEffectNone_3B_4C94 ; id 45
-    dw ActionIdEffectNone_3B_4C94 ; id 46
-    dw ActionIdEffectNone_3B_4C94 ; id 47
-    dw ActionIdEffectNone_3B_4C94 ; id 48
-    dw ActionIdEffectNone_3B_4C94 ; id 49
-    dw ActionIdEffectNone_3B_4C94 ; id 50
-    dw ActionIdEffectNone_3B_4C94 ; id 51
-    dw ActionIdEffectNone_3B_4C94 ; id 52
-    dw ActionIdEffectNone_3B_4C94 ; id 53
-    dw ActionIdEffectNone_3B_4C94 ; id 54
+    dw ActionIdEffectNone_3B_2 ; id 40
+    dw ActionIdEffectNone_3B_2 ; id 41
+    dw ActionIdEffectNone_3B_2 ; id 42
+    dw ActionIdEffectNone_3B_2 ; id 43
+    dw ActionIdEffectNone_3B_2 ; id 44
+    dw ActionIdEffectNone_3B_2 ; id 45
+    dw ActionIdEffectNone_3B_2 ; id 46
+    dw ActionIdEffectNone_3B_2 ; id 47
+    dw ActionIdEffectNone_3B_2 ; id 48
+    dw ActionIdEffectNone_3B_2 ; id 49
+    dw ActionIdEffectNone_3B_2 ; id 50
+    dw ActionIdEffectNone_3B_2 ; id 51
+    dw ActionIdEffectNone_3B_2 ; id 52
+    dw ActionIdEffectNone_3B_2 ; id 53
+    dw ActionIdEffectNone_3B_2 ; id 54
     dw RaiseWord3FAndRestoreHP ; id 55
     dw RaiseWord3FAndRestoreHP ; id 56
-    dw ActionIdEffectNone_3B_4C94 ; id 57
-    dw ActionIdEffectNone_3B_4C94 ; id 58
-    dw ActionIdEffectNone_3B_4C94 ; id 59
-    dw ActionIdEffectNone_3B_4C94 ; id 60
-    dw ActionIdEffectNone_3B_4C94 ; id 61
-    dw ActionIdEffectNone_3B_4C94 ; id 62
-    dw ActionIdEffectNone_3B_4C94 ; id 63
+    dw ActionIdEffectNone_3B_2 ; id 57
+    dw ActionIdEffectNone_3B_2 ; id 58
+    dw ActionIdEffectNone_3B_2 ; id 59
+    dw ActionIdEffectNone_3B_2 ; id 60
+    dw ActionIdEffectNone_3B_2 ; id 61
+    dw ActionIdEffectNone_3B_2 ; id 62
+    dw ActionIdEffectNone_3B_2 ; id 63
 
-; a lone ret: entry 0 of ActionIdEffectTable_3B (E-0239)
-ActionIdEffectNone_3B_4B91::
+; a lone ret: entry 0 of ActionIdEffectTable_3B (E-0239) (E-0344: the address in its name dropped or
+; read as the label there; was ActionIdEffectNone_3B_4B91)
+ActionIdEffectNone_3B::
     ret
 
 ; if the target's HP is below its max, runs RestoreTargetHPByActionAmount and shows message $37;
@@ -2015,13 +2018,14 @@ ApplyTargetMaxHPIfPresent::
 .skip2:
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
-; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239)
-ActionIdEffectNone_3B_4C94::
+; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239) (E-0344: the address in
+; its name dropped or read as the label there; was ActionIdEffectNone_3B_4C94)
+ActionIdEffectNone_3B_2::
     ret
 
 ; for local targets adds the action amount to wBattleMeter; for others checks status, block and
-; resistance and subtracts the amount from the target's wBattleWordArray3F; then stores message $95
-; or $FD (E-0127)
+; resistance and subtracts the amount from the target's wBattleExtraStat; then stores message $95 or
+; $FD (E-0127)
 ApplyTargetBattleWordArray3FReduction::
     call TargetOnLocalSide_Bank3B
     jr c, .read_battle_target
@@ -2087,7 +2091,7 @@ ApplyTargetBattleWordArray3FReduction::
     ld bc, $0000
     jp SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags
 
-; reduces the target's wBattleWordArray3F (or adds to wBattleMeter for local targets); when status
+; reduces the target's wBattleExtraStat (or adds to wBattleMeter for local targets); when status
 ; bits 0-1 are clear and the chance roll passes, sets status bit 0 (message $75) (E-0129)
 InflictStatus0Bit0WithBattleWordArray3FReduction::
     call TargetOnLocalSide_Bank3B
@@ -2209,8 +2213,9 @@ SetBattleEndFlagAndMessage98::
     db $c9
 
 ; effect table entry that goes straight to the failure path
-; ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126)
-JumpToEffectFailurePath4F15::
+; ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126) (E-0344: the address in its name
+; dropped or read as the label there; was JumpToEffectFailurePath4F15)
+JumpToEffectFailurePath::
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; unless already set, rolls the chance
@@ -2244,9 +2249,9 @@ InflictTargetStatus0Bit2::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
     call AddAx9ToHL
-    bit 2, [hl]
+    bit BSTAT1_ATK_DOUBLED, [hl]
     jr nz, .skip
-    set 2, [hl]
+    set BSTAT1_ATK_DOUBLED, [hl]
     ld l, $43
     ld bc, $0090
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B
@@ -2261,12 +2266,12 @@ RollTableDamageWithMessage35:: ; configured code entry (E-0236); C0
     call RollTableDamageScaledByResistance
     jp RaiseWord3FAndRestoreHP_Skip
 
-; adds 30 to the target's wBattleWordArray3F word capped at 999, then if its HP is below max runs
+; adds 30 to the target's wBattleExtraStat word capped at 999, then if its HP is below max runs
 ; RestoreTargetHPByActionAmount and shows message $37, otherwise takes the no-effect path; entry of
 ; ActionIdEffectTable_3B (E-0239; E-0236 had found no caller)
 RaiseWord3FAndRestoreHP::
     ld a, [wBattleTarget]
-    ld hl, wBattleWordArray3F
+    ld hl, wBattleExtraStat
     call AddDoubleAToHL_Bank3B
     ld a, [hli]
     add $1e
@@ -2630,66 +2635,66 @@ DrawEffectSpriteAtEffectSpriteX_Bank3B::
     ld a, $00
     ld [hli], a
     ld [hli], a
-    ld de, MetaSprites3B_507CTable
+    ld de, MetaSprites3BTable
     call BuildOamFromSpriteTable_Bank3B
     ret
 
-; the caller of BuildOamFromSpriteTable_Bank3B passes DE = $MetaSprites3B_507CTable; the builder
-; takes the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as
-; the frame; 51 words, up to the next code or data (E-0147, C1)
+; the caller of BuildOamFromSpriteTable_Bank3B passes DE = $MetaSprites3BTable; the builder takes
+; the word at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the
+; frame; 51 words, up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
-MetaSprites3B_507CTable::
-    dw MetaSprites3B_507CSet00 ; id 0
-    dw MetaSprites3B_507CSet00 ; id 1
-    dw MetaSprites3B_507CSet00 ; id 2
-    dw MetaSprites3B_507CSet00 ; id 3
-    dw MetaSprites3B_507CSet00 ; id 4
-    dw MetaSprites3B_507CSet00 ; id 5
-    dw MetaSprites3B_507CSet00 ; id 6
-    dw MetaSprites3B_507CSet00 ; id 7
-    dw MetaSprites3B_507CSet00 ; id 8
-    dw MetaSprites3B_507CSet00 ; id 9
-    dw MetaSprites3B_507CSet00 ; id 10
-    dw MetaSprites3B_507CSet00 ; id 11
-    dw MetaSprites3B_507CSet00 ; id 12
-    dw MetaSprites3B_507CSet00 ; id 13
-    dw MetaSprites3B_507CSet00 ; id 14
-    dw MetaSprites3B_507CSet00 ; id 15
-    dw MetaSprites3B_507CSet00 ; id 16
-    dw MetaSprites3B_507CSet00 ; id 17
-    dw MetaSprites3B_507CSet00 ; id 18
-    dw MetaSprites3B_507CSet00 ; id 19
-    dw MetaSprites3B_507CSet00 ; id 20
-    dw MetaSprites3B_507CSet00 ; id 21
-    dw MetaSprites3B_507CSet00 ; id 22
-    dw MetaSprites3B_507CSet00 ; id 23
-    dw MetaSprites3B_507CSet00 ; id 24
-    dw MetaSprites3B_507CSet00 ; id 25
-    dw MetaSprites3B_507CSet00 ; id 26
-    dw MetaSprites3B_507CSet00 ; id 27
-    dw MetaSprites3B_507CSet00 ; id 28
-    dw MetaSprites3B_507CSet00 ; id 29
-    dw MetaSprites3B_507CSet00 ; id 30
-    dw MetaSprites3B_507CSet00 ; id 31
-    dw MetaSprites3B_507CSet00 ; id 32
-    dw MetaSprites3B_507CSet00 ; id 33
-    dw MetaSprites3B_507CSet00 ; id 34
-    dw MetaSprites3B_507CSet00 ; id 35
-    dw MetaSprites3B_507CSet00 ; id 36
-    dw MetaSprites3B_507CSet00 ; id 37
-    dw MetaSprites3B_507CSet00 ; id 38
-    dw MetaSprites3B_507CSet00 ; id 39
-    dw MetaSprites3B_507CSet00 ; id 40
-    dw MetaSprites3B_507CSet00 ; id 41
-    dw MetaSprites3B_507CSet00 ; id 42
-    dw MetaSprites3B_507CSet00 ; id 43
-    dw MetaSprites3B_507CSet00 ; id 44
-    dw MetaSprites3B_507CSet00 ; id 45
-    dw MetaSprites3B_507CSet2E ; id 46
-    dw MetaSprites3B_507CSet2F ; id 47
-    dw MetaSprites3B_507CSet30 ; id 48
-    dw MetaSprites3B_507CSet31 ; id 49
-    dw MetaSprites3B_507CSet32 ; id 50
+MetaSprites3BTable::
+    dw MetaSprites3BSet00 ; id 0
+    dw MetaSprites3BSet00 ; id 1
+    dw MetaSprites3BSet00 ; id 2
+    dw MetaSprites3BSet00 ; id 3
+    dw MetaSprites3BSet00 ; id 4
+    dw MetaSprites3BSet00 ; id 5
+    dw MetaSprites3BSet00 ; id 6
+    dw MetaSprites3BSet00 ; id 7
+    dw MetaSprites3BSet00 ; id 8
+    dw MetaSprites3BSet00 ; id 9
+    dw MetaSprites3BSet00 ; id 10
+    dw MetaSprites3BSet00 ; id 11
+    dw MetaSprites3BSet00 ; id 12
+    dw MetaSprites3BSet00 ; id 13
+    dw MetaSprites3BSet00 ; id 14
+    dw MetaSprites3BSet00 ; id 15
+    dw MetaSprites3BSet00 ; id 16
+    dw MetaSprites3BSet00 ; id 17
+    dw MetaSprites3BSet00 ; id 18
+    dw MetaSprites3BSet00 ; id 19
+    dw MetaSprites3BSet00 ; id 20
+    dw MetaSprites3BSet00 ; id 21
+    dw MetaSprites3BSet00 ; id 22
+    dw MetaSprites3BSet00 ; id 23
+    dw MetaSprites3BSet00 ; id 24
+    dw MetaSprites3BSet00 ; id 25
+    dw MetaSprites3BSet00 ; id 26
+    dw MetaSprites3BSet00 ; id 27
+    dw MetaSprites3BSet00 ; id 28
+    dw MetaSprites3BSet00 ; id 29
+    dw MetaSprites3BSet00 ; id 30
+    dw MetaSprites3BSet00 ; id 31
+    dw MetaSprites3BSet00 ; id 32
+    dw MetaSprites3BSet00 ; id 33
+    dw MetaSprites3BSet00 ; id 34
+    dw MetaSprites3BSet00 ; id 35
+    dw MetaSprites3BSet00 ; id 36
+    dw MetaSprites3BSet00 ; id 37
+    dw MetaSprites3BSet00 ; id 38
+    dw MetaSprites3BSet00 ; id 39
+    dw MetaSprites3BSet00 ; id 40
+    dw MetaSprites3BSet00 ; id 41
+    dw MetaSprites3BSet00 ; id 42
+    dw MetaSprites3BSet00 ; id 43
+    dw MetaSprites3BSet00 ; id 44
+    dw MetaSprites3BSet00 ; id 45
+    dw MetaSprites3BSet2E ; id 46
+    dw MetaSprites3BSet2F ; id 47
+    dw MetaSprites3BSet30 ; id 48
+    dw MetaSprites3BSet31 ; id 49
+    dw MetaSprites3BSet32 ; id 50
 
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
@@ -2759,52 +2764,51 @@ BuildOamFromSpriteTable_Bank3B::
 .return:
     ret
 
-; meta-sprite set 0 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 0 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet00::
-    dw MetaSprites3B_507CSet00Frame0 ; entry 0
-    dw MetaSprites3B_507CSet00Frame1 ; entry 1
-    dw MetaSprites3B_507CSet00Frame2 ; entry 2
-    dw MetaSprites3B_507CSet00Frame3 ; entry 3
-    dw MetaSprites3B_507CSet00Frame4 ; entry 4
-    dw MetaSprites3B_507CSet00Frame5 ; entry 5
-    dw MetaSprites3B_507CSet00Frame6 ; entry 6
-    dw MetaSprites3B_507CSet00Frame7 ; entry 7
-    dw MetaSprites3B_507CSet00Frame8 ; entry 8
-    dw MetaSprites3B_507CSet00Frame9 ; entry 9
-    dw MetaSprites3B_507CSet00Frame10 ; entry 10
-    dw MetaSprites3B_507CSet00Frame11 ; entry 11
-    dw MetaSprites3B_507CSet00Frame12 ; entry 12
-    dw MetaSprites3B_507CSet00Frame12 ; entry 13
-    dw MetaSprites3B_507CSet00Frame12 ; entry 14
-    dw MetaSprites3B_507CSet00Frame12 ; entry 15
-    dw MetaSprites3B_507CSet00Frame12 ; entry 16
-    dw MetaSprites3B_507CSet00Frame12 ; entry 17
-    dw MetaSprites3B_507CSet00Frame12 ; entry 18
-    dw MetaSprites3B_507CSet00Frame12 ; entry 19
-    dw MetaSprites3B_507CSet00Frame12 ; entry 20
-    dw MetaSprites3B_507CSet00Frame12 ; entry 21
-    dw MetaSprites3B_507CSet00Frame12 ; entry 22
-    dw MetaSprites3B_507CSet00Frame12 ; entry 23
-    dw MetaSprites3B_507CSet00Frame12 ; entry 24
-    dw MetaSprites3B_507CSet00Frame12 ; entry 25
-    dw MetaSprites3B_507CSet00Frame12 ; entry 26
-    dw MetaSprites3B_507CSet00Frame12 ; entry 27
-    dw MetaSprites3B_507CSet00Frame12 ; entry 28
-    dw MetaSprites3B_507CSet00Frame12 ; entry 29
-    dw MetaSprites3B_507CSet00Frame12 ; entry 30
-    dw MetaSprites3B_507CSet00Frame12 ; entry 31
+MetaSprites3BSet00::
+    dw MetaSprites3BSet00Frame0 ; entry 0
+    dw MetaSprites3BSet00Frame1 ; entry 1
+    dw MetaSprites3BSet00Frame2 ; entry 2
+    dw MetaSprites3BSet00Frame3 ; entry 3
+    dw MetaSprites3BSet00Frame4 ; entry 4
+    dw MetaSprites3BSet00Frame5 ; entry 5
+    dw MetaSprites3BSet00Frame6 ; entry 6
+    dw MetaSprites3BSet00Frame7 ; entry 7
+    dw MetaSprites3BSet00Frame8 ; entry 8
+    dw MetaSprites3BSet00Frame9 ; entry 9
+    dw MetaSprites3BSet00Frame10 ; entry 10
+    dw MetaSprites3BSet00Frame11 ; entry 11
+    dw MetaSprites3BSet00Frame12 ; entry 12
+    dw MetaSprites3BSet00Frame12 ; entry 13
+    dw MetaSprites3BSet00Frame12 ; entry 14
+    dw MetaSprites3BSet00Frame12 ; entry 15
+    dw MetaSprites3BSet00Frame12 ; entry 16
+    dw MetaSprites3BSet00Frame12 ; entry 17
+    dw MetaSprites3BSet00Frame12 ; entry 18
+    dw MetaSprites3BSet00Frame12 ; entry 19
+    dw MetaSprites3BSet00Frame12 ; entry 20
+    dw MetaSprites3BSet00Frame12 ; entry 21
+    dw MetaSprites3BSet00Frame12 ; entry 22
+    dw MetaSprites3BSet00Frame12 ; entry 23
+    dw MetaSprites3BSet00Frame12 ; entry 24
+    dw MetaSprites3BSet00Frame12 ; entry 25
+    dw MetaSprites3BSet00Frame12 ; entry 26
+    dw MetaSprites3BSet00Frame12 ; entry 27
+    dw MetaSprites3BSet00Frame12 ; entry 28
+    dw MetaSprites3BSet00Frame12 ; entry 29
+    dw MetaSprites3BSet00Frame12 ; entry 30
+    dw MetaSprites3BSet00Frame12 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
+; frame 0 of MetaSprites3BSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet00Frame0::
+MetaSprites3BSet00Frame0::
     db $f8, $f8, $00, $00 ; entry 0
     db $f8, $ff, $00, $20 ; entry 1
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame1::
+; frame 1 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame1::
     db $f8, $f0, $02, $00 ; entry 0
     db $f8, $f8, $03, $00 ; entry 1
     db $f8, $00, $03, $20 ; entry 2
@@ -2813,8 +2817,8 @@ MetaSprites3B_507CSet00Frame1::
     db $f0, $f8, $01, $00 ; entry 5
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame2::
+; frame 2 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame2::
     db $f8, $f0, $05, $00 ; entry 0
     db $f8, $f8, $06, $00 ; entry 1
     db $f8, $07, $05, $20 ; entry 2
@@ -2823,37 +2827,37 @@ MetaSprites3B_507CSet00Frame2::
     db $f0, $ff, $04, $20 ; entry 5
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame3::
+; frame 3 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f0, $f8, $07, $00 ; entry 1
     db $f8, $ff, $08, $20 ; entry 2
     db $f0, $ff, $07, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
+; frame 4 of MetaSprites3BSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet00Frame4::
+MetaSprites3BSet00Frame4::
     db $f8, $fc, $0a, $00 ; entry 0
     db $f0, $fc, $09, $00 ; entry 1
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame5::
+; frame 5 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame5::
     db $f8, $fc, $0b, $00 ; entry 0
     db $f0, $fc, $0a, $00 ; entry 1
     db $e8, $fc, $09, $00 ; entry 2
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame6::
+; frame 6 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame6::
     db $e8, $fc, $0d, $00 ; entry 0
     db $f0, $fc, $0e, $00 ; entry 1
     db $f8, $fc, $0c, $00 ; entry 2
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame7::
+; frame 7 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame7::
     db $e8, $f8, $11, $00 ; entry 0
     db $e8, $00, $12, $00 ; entry 1
     db $e0, $f8, $0f, $00 ; entry 2
@@ -2861,9 +2865,9 @@ MetaSprites3B_507CSet00Frame7::
     db $f0, $fc, $0c, $00 ; entry 4
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
+; frame 8 of MetaSprites3BSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet00Frame8::
+MetaSprites3BSet00Frame8::
     db $e4, $f4, $16, $00 ; entry 0
     db $e4, $fc, $17, $00 ; entry 1
     db $e4, $04, $18, $00 ; entry 2
@@ -2874,8 +2878,8 @@ MetaSprites3B_507CSet00Frame8::
     db $ec, $00, $1a, $00 ; entry 7
     db $80 ; end
 
-; frame 9 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame9::
+; frame 9 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame9::
     db $d8, $f0, $1b, $00 ; entry 0
     db $d8, $f8, $1c, $00 ; entry 1
     db $d8, $00, $1d, $00 ; entry 2
@@ -2893,8 +2897,8 @@ MetaSprites3B_507CSet00Frame9::
     db $e8, $f0, $21, $00 ; entry 14
     db $80 ; end
 
-; frame 10 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame10::
+; frame 10 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame10::
     db $de, $ee, $2c, $00 ; entry 0
     db $de, $f6, $2d, $00 ; entry 1
     db $d6, $ee, $2a, $00 ; entry 2
@@ -2913,8 +2917,8 @@ MetaSprites3B_507CSet00Frame10::
     db $f2, $ee, $27, $60 ; entry 15
     db $80 ; end
 
-; frame 11 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
-MetaSprites3B_507CSet00Frame11::
+; frame 11 of MetaSprites3BSet00; ends with $80 (E-0147)
+MetaSprites3BSet00Frame11::
     db $da, $06, $2f, $00 ; entry 0
     db $d2, $06, $2e, $00 ; entry 1
     db $d6, $12, $2f, $00 ; entry 2
@@ -2929,50 +2933,49 @@ MetaSprites3B_507CSet00Frame11::
     db $f1, $0e, $2e, $40 ; entry 11
     db $80 ; end
 
-; frame 12 of MetaSprites3B_507CSet00; ends with $80 (E-0147)
+; frame 12 of MetaSprites3BSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet00Frame12::
+MetaSprites3BSet00Frame12::
     db $80 ; end
 
-; meta-sprite set 46 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 46 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet2E::
-    dw MetaSprites3B_507CSet2EFrame0 ; entry 0
-    dw MetaSprites3B_507CSet2EFrame1 ; entry 1
-    dw MetaSprites3B_507CSet2EFrame2 ; entry 2
-    dw MetaSprites3B_507CSet2EFrame3 ; entry 3
-    dw MetaSprites3B_507CSet2EFrame4 ; entry 4
-    dw MetaSprites3B_507CSet2EFrame5 ; entry 5
-    dw MetaSprites3B_507CSet2EFrame6 ; entry 6
-    dw MetaSprites3B_507CSet2EFrame7 ; entry 7
-    dw MetaSprites3B_507CSet2EFrame8 ; entry 8
-    dw MetaSprites3B_507CSet2EFrame9 ; entry 9
-    dw MetaSprites3B_507CSet2EFrame10 ; entry 10
-    dw MetaSprites3B_507CSet2EFrame11 ; entry 11
-    dw MetaSprites3B_507CSet2EFrame12 ; entry 12
-    dw MetaSprites3B_507CSet2EFrame13 ; entry 13
-    dw MetaSprites3B_507CSet2EFrame14 ; entry 14
-    dw MetaSprites3B_507CSet2EFrame15 ; entry 15
-    dw MetaSprites3B_507CSet2EFrame16 ; entry 16
-    dw MetaSprites3B_507CSet2EFrame17 ; entry 17
-    dw MetaSprites3B_507CSet2EFrame18 ; entry 18
-    dw MetaSprites3B_507CSet2EFrame19 ; entry 19
-    dw MetaSprites3B_507CSet2EFrame20 ; entry 20
-    dw MetaSprites3B_507CSet2EFrame21 ; entry 21
-    dw MetaSprites3B_507CSet2EFrame22 ; entry 22
-    dw MetaSprites3B_507CSet2EFrame23 ; entry 23
-    dw MetaSprites3B_507CSet2EFrame24 ; entry 24
-    dw MetaSprites3B_507CSet2EFrame25 ; entry 25
-    dw MetaSprites3B_507CSet2EFrame26 ; entry 26
-    dw MetaSprites3B_507CSet2EFrame27 ; entry 27
-    dw MetaSprites3B_507CSet2EFrame28 ; entry 28
-    dw MetaSprites3B_507CSet2EFrame28 ; entry 29
-    dw MetaSprites3B_507CSet2EFrame28 ; entry 30
-    dw MetaSprites3B_507CSet2EFrame28 ; entry 31
+MetaSprites3BSet2E::
+    dw MetaSprites3BSet2EFrame0 ; entry 0
+    dw MetaSprites3BSet2EFrame1 ; entry 1
+    dw MetaSprites3BSet2EFrame2 ; entry 2
+    dw MetaSprites3BSet2EFrame3 ; entry 3
+    dw MetaSprites3BSet2EFrame4 ; entry 4
+    dw MetaSprites3BSet2EFrame5 ; entry 5
+    dw MetaSprites3BSet2EFrame6 ; entry 6
+    dw MetaSprites3BSet2EFrame7 ; entry 7
+    dw MetaSprites3BSet2EFrame8 ; entry 8
+    dw MetaSprites3BSet2EFrame9 ; entry 9
+    dw MetaSprites3BSet2EFrame10 ; entry 10
+    dw MetaSprites3BSet2EFrame11 ; entry 11
+    dw MetaSprites3BSet2EFrame12 ; entry 12
+    dw MetaSprites3BSet2EFrame13 ; entry 13
+    dw MetaSprites3BSet2EFrame14 ; entry 14
+    dw MetaSprites3BSet2EFrame15 ; entry 15
+    dw MetaSprites3BSet2EFrame16 ; entry 16
+    dw MetaSprites3BSet2EFrame17 ; entry 17
+    dw MetaSprites3BSet2EFrame18 ; entry 18
+    dw MetaSprites3BSet2EFrame19 ; entry 19
+    dw MetaSprites3BSet2EFrame20 ; entry 20
+    dw MetaSprites3BSet2EFrame21 ; entry 21
+    dw MetaSprites3BSet2EFrame22 ; entry 22
+    dw MetaSprites3BSet2EFrame23 ; entry 23
+    dw MetaSprites3BSet2EFrame24 ; entry 24
+    dw MetaSprites3BSet2EFrame25 ; entry 25
+    dw MetaSprites3BSet2EFrame26 ; entry 26
+    dw MetaSprites3BSet2EFrame27 ; entry 27
+    dw MetaSprites3BSet2EFrame28 ; entry 28
+    dw MetaSprites3BSet2EFrame28 ; entry 29
+    dw MetaSprites3BSet2EFrame28 ; entry 30
+    dw MetaSprites3BSet2EFrame28 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame0::
+; frame 0 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame0::
     db $f8, $b0, $14, $00 ; entry 0
     db $e0, $b8, $00, $00 ; entry 1
     db $e0, $c0, $01, $00 ; entry 2
@@ -2993,9 +2996,9 @@ MetaSprites3B_507CSet2EFrame0::
     db $f8, $b8, $13, $00 ; entry 17
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 1 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame1::
+MetaSprites3BSet2EFrame1::
     db $f0, $c0, $14, $00 ; entry 0
     db $d8, $c8, $00, $00 ; entry 1
     db $d8, $d0, $01, $00 ; entry 2
@@ -3026,8 +3029,8 @@ MetaSprites3B_507CSet2EFrame1::
     db $f8, $d0, $18, $00 ; entry 27
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame2::
+; frame 2 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame2::
     db $e8, $c8, $14, $00 ; entry 0
     db $d0, $d0, $00, $00 ; entry 1
     db $d0, $d8, $01, $00 ; entry 2
@@ -3066,8 +3069,8 @@ MetaSprites3B_507CSet2EFrame2::
     db $f8, $b8, $1b, $00 ; entry 35
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame3::
+; frame 3 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame3::
     db $e8, $d0, $14, $00 ; entry 0
     db $d0, $d8, $00, $00 ; entry 1
     db $d0, $e0, $01, $00 ; entry 2
@@ -3107,8 +3110,8 @@ MetaSprites3B_507CSet2EFrame3::
     db $f8, $d0, $18, $00 ; entry 36
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame4::
+; frame 4 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame4::
     db $e8, $e0, $14, $00 ; entry 0
     db $d0, $e8, $00, $00 ; entry 1
     db $d0, $f0, $01, $00 ; entry 2
@@ -3150,9 +3153,9 @@ MetaSprites3B_507CSet2EFrame4::
     db $f8, $e0, $14, $40 ; entry 38
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 5 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame5::
+MetaSprites3BSet2EFrame5::
     db $f0, $e8, $14, $00 ; entry 0
     db $d8, $f0, $00, $00 ; entry 1
     db $d8, $f8, $01, $00 ; entry 2
@@ -3189,8 +3192,8 @@ MetaSprites3B_507CSet2EFrame5::
     db $f0, $d4, $16, $00 ; entry 33
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame6::
+; frame 6 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame6::
     db $f8, $f8, $14, $00 ; entry 0
     db $e8, $f0, $03, $00 ; entry 1
     db $e8, $f8, $04, $00 ; entry 2
@@ -3221,8 +3224,8 @@ MetaSprites3B_507CSet2EFrame6::
     db $f8, $f0, $2c, $00 ; entry 27
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame7::
+; frame 7 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame7::
     db $e8, $18, $00, $00 ; entry 0
     db $e8, $20, $01, $00 ; entry 1
     db $e8, $28, $02, $00 ; entry 2
@@ -3243,8 +3246,8 @@ MetaSprites3B_507CSet2EFrame7::
     db $f8, $30, $10, $00 ; entry 17
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame8::
+; frame 8 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame8::
     db $e8, $40, $27, $00 ; entry 0
     db $f8, $38, $2a, $00 ; entry 1
     db $f8, $40, $2b, $00 ; entry 2
@@ -3261,9 +3264,9 @@ MetaSprites3B_507CSet2EFrame8::
     db $f8, $00, $21, $20 ; entry 13
     db $80 ; end
 
-; frame 9 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 9 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame9::
+MetaSprites3BSet2EFrame9::
     db $f8, $00, $23, $20 ; entry 0
     db $f0, $08, $20, $00 ; entry 1
     db $f0, $10, $21, $00 ; entry 2
@@ -3282,8 +3285,8 @@ MetaSprites3B_507CSet2EFrame9::
     db $f8, $40, $21, $20 ; entry 15
     db $80 ; end
 
-; frame 10 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame10::
+; frame 10 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame10::
     db $f8, $08, $20, $00 ; entry 0
     db $f8, $10, $21, $00 ; entry 1
     db $f8, $18, $23, $20 ; entry 2
@@ -3302,8 +3305,8 @@ MetaSprites3B_507CSet2EFrame10::
     db $f8, $38, $2c, $00 ; entry 15
     db $80 ; end
 
-; frame 11 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame11::
+; frame 11 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame11::
     db $f8, $20, $20, $00 ; entry 0
     db $f8, $28, $21, $00 ; entry 1
     db $f8, $30, $23, $20 ; entry 2
@@ -3319,8 +3322,8 @@ MetaSprites3B_507CSet2EFrame11::
     db $f8, $00, $22, $00 ; entry 12
     db $80 ; end
 
-; frame 12 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame12::
+; frame 12 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame12::
     db $f8, $08, $20, $00 ; entry 0
     db $f8, $10, $21, $00 ; entry 1
     db $f8, $38, $20, $00 ; entry 2
@@ -3333,9 +3336,9 @@ MetaSprites3B_507CSet2EFrame12::
     db $f8, $18, $22, $00 ; entry 9
     db $80 ; end
 
-; frame 13 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 13 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame13::
+MetaSprites3BSet2EFrame13::
     db $f8, $20, $20, $00 ; entry 0
     db $f8, $28, $21, $00 ; entry 1
     db $f8, $18, $20, $20 ; entry 2
@@ -3348,8 +3351,8 @@ MetaSprites3B_507CSet2EFrame13::
     db $f8, $00, $25, $00 ; entry 9
     db $80 ; end
 
-; frame 14 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame14::
+; frame 14 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame14::
     db $f0, $28, $20, $00 ; entry 0
     db $f0, $30, $21, $00 ; entry 1
     db $f0, $38, $23, $20 ; entry 2
@@ -3367,8 +3370,8 @@ MetaSprites3B_507CSet2EFrame14::
     db $f8, $38, $2c, $00 ; entry 14
     db $80 ; end
 
-; frame 15 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame15::
+; frame 15 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame15::
     db $f8, $f8, $21, $00 ; entry 0
     db $f8, $00, $22, $00 ; entry 1
     db $f8, $20, $20, $20 ; entry 2
@@ -3381,8 +3384,8 @@ MetaSprites3B_507CSet2EFrame15::
     db $f8, $08, $2c, $20 ; entry 9
     db $80 ; end
 
-; frame 16 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame16::
+; frame 16 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame16::
     db $f8, $00, $20, $20 ; entry 0
     db $f8, $f8, $21, $20 ; entry 1
     db $f8, $f0, $22, $20 ; entry 2
@@ -3394,9 +3397,9 @@ MetaSprites3B_507CSet2EFrame16::
     db $f8, $e8, $2c, $40 ; entry 8
     db $80 ; end
 
-; frame 17 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 17 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame17::
+MetaSprites3BSet2EFrame17::
     db $f8, $40, $20, $00 ; entry 0
     db $f8, $48, $20, $20 ; entry 1
     db $f8, $00, $20, $00 ; entry 2
@@ -3407,8 +3410,8 @@ MetaSprites3B_507CSet2EFrame17::
     db $f8, $d0, $20, $20 ; entry 7
     db $80 ; end
 
-; frame 18 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame18::
+; frame 18 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame18::
     db $f8, $d0, $21, $00 ; entry 0
     db $f8, $c8, $21, $20 ; entry 1
     db $f8, $c0, $22, $20 ; entry 2
@@ -3421,8 +3424,8 @@ MetaSprites3B_507CSet2EFrame18::
     db $f8, $2d, $08, $00 ; entry 9
     db $80 ; end
 
-; frame 19 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame19::
+; frame 19 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame19::
     db $f8, $e8, $20, $20 ; entry 0
     db $f8, $e0, $21, $20 ; entry 1
     db $f8, $d8, $22, $20 ; entry 2
@@ -3441,8 +3444,8 @@ MetaSprites3B_507CSet2EFrame19::
     db $f8, $c0, $2c, $00 ; entry 15
     db $80 ; end
 
-; frame 20 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame20::
+; frame 20 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame20::
     db $f8, $c0, $22, $00 ; entry 0
     db $f0, $c8, $20, $00 ; entry 1
     db $f0, $d0, $21, $00 ; entry 2
@@ -3461,9 +3464,9 @@ MetaSprites3B_507CSet2EFrame20::
     db $f8, $b8, $21, $00 ; entry 15
     db $80 ; end
 
-; frame 21 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 21 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame21::
+MetaSprites3BSet2EFrame21::
     db $f8, $c0, $20, $00 ; entry 0
     db $f8, $c8, $21, $00 ; entry 1
     db $f8, $b8, $20, $20 ; entry 2
@@ -3476,8 +3479,8 @@ MetaSprites3B_507CSet2EFrame21::
     db $f8, $e8, $20, $20 ; entry 9
     db $80 ; end
 
-; frame 22 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame22::
+; frame 22 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame22::
     db $f8, $d8, $20, $00 ; entry 0
     db $f8, $e0, $21, $00 ; entry 1
     db $f8, $d0, $20, $20 ; entry 2
@@ -3492,8 +3495,8 @@ MetaSprites3B_507CSet2EFrame22::
     db $f0, $b8, $20, $20 ; entry 11
     db $80 ; end
 
-; frame 23 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame23::
+; frame 23 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame23::
     db $f8, $f0, $20, $00 ; entry 0
     db $f8, $f8, $21, $00 ; entry 1
     db $f8, $e8, $20, $20 ; entry 2
@@ -3510,8 +3513,8 @@ MetaSprites3B_507CSet2EFrame23::
     db $f8, $b0, $2c, $00 ; entry 13
     db $80 ; end
 
-; frame 24 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame24::
+; frame 24 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame24::
     db $f8, $f8, $21, $20 ; entry 0
     db $f8, $f0, $23, $00 ; entry 1
     db $f8, $e0, $24, $00 ; entry 2
@@ -3531,9 +3534,9 @@ MetaSprites3B_507CSet2EFrame24::
     db $f8, $c8, $2c, $00 ; entry 16
     db $80 ; end
 
-; frame 25 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
+; frame 25 of MetaSprites3BSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2EFrame25::
+MetaSprites3BSet2EFrame25::
     db $f8, $f8, $24, $00 ; entry 0
     db $f0, $f0, $21, $20 ; entry 1
     db $f0, $e8, $22, $20 ; entry 2
@@ -3553,8 +3556,8 @@ MetaSprites3B_507CSet2EFrame25::
     db $f0, $e0, $2c, $00 ; entry 16
     db $80 ; end
 
-; frame 26 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame26::
+; frame 26 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame26::
     db $f8, $d8, $20, $00 ; entry 0
     db $f8, $e0, $21, $00 ; entry 1
     db $f8, $d0, $20, $20 ; entry 2
@@ -3568,8 +3571,8 @@ MetaSprites3B_507CSet2EFrame26::
     db $f8, $f0, $26, $00 ; entry 10
     db $80 ; end
 
-; frame 27 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame27::
+; frame 27 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame27::
     db $f8, $f0, $20, $00 ; entry 0
     db $f8, $e8, $20, $20 ; entry 1
     db $f8, $e0, $21, $20 ; entry 2
@@ -3585,58 +3588,57 @@ MetaSprites3B_507CSet2EFrame27::
     db $f8, $b8, $26, $00 ; entry 12
     db $80 ; end
 
-; frame 28 of MetaSprites3B_507CSet2E; ends with $80 (E-0147)
-MetaSprites3B_507CSet2EFrame28::
+; frame 28 of MetaSprites3BSet2E; ends with $80 (E-0147)
+MetaSprites3BSet2EFrame28::
     db $80 ; end
 
-; meta-sprite set 47 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 47 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet2F::
-    dw MetaSprites3B_507CSet2FFrame0 ; entry 0
-    dw MetaSprites3B_507CSet2FFrame1 ; entry 1
-    dw MetaSprites3B_507CSet2FFrame2 ; entry 2
-    dw MetaSprites3B_507CSet2FFrame3 ; entry 3
-    dw MetaSprites3B_507CSet2FFrame4 ; entry 4
-    dw MetaSprites3B_507CSet2FFrame5 ; entry 5
-    dw MetaSprites3B_507CSet2FFrame6 ; entry 6
-    dw MetaSprites3B_507CSet2FFrame7 ; entry 7
-    dw MetaSprites3B_507CSet2FFrame8 ; entry 8
-    dw MetaSprites3B_507CSet2FFrame9 ; entry 9
-    dw MetaSprites3B_507CSet2FFrame10 ; entry 10
-    dw MetaSprites3B_507CSet2FFrame11 ; entry 11
-    dw MetaSprites3B_507CSet2FFrame12 ; entry 12
-    dw MetaSprites3B_507CSet2FFrame13 ; entry 13
-    dw MetaSprites3B_507CSet2FFrame14 ; entry 14
-    dw MetaSprites3B_507CSet2FFrame15 ; entry 15
-    dw MetaSprites3B_507CSet2FFrame16 ; entry 16
-    dw MetaSprites3B_507CSet2FFrame17 ; entry 17
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 18
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 19
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 20
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 21
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 22
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 23
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 24
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 25
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 26
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 27
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 28
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 29
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 30
-    dw MetaSprites3B_507CSet2FFrame18 ; entry 31
+MetaSprites3BSet2F::
+    dw MetaSprites3BSet2FFrame0 ; entry 0
+    dw MetaSprites3BSet2FFrame1 ; entry 1
+    dw MetaSprites3BSet2FFrame2 ; entry 2
+    dw MetaSprites3BSet2FFrame3 ; entry 3
+    dw MetaSprites3BSet2FFrame4 ; entry 4
+    dw MetaSprites3BSet2FFrame5 ; entry 5
+    dw MetaSprites3BSet2FFrame6 ; entry 6
+    dw MetaSprites3BSet2FFrame7 ; entry 7
+    dw MetaSprites3BSet2FFrame8 ; entry 8
+    dw MetaSprites3BSet2FFrame9 ; entry 9
+    dw MetaSprites3BSet2FFrame10 ; entry 10
+    dw MetaSprites3BSet2FFrame11 ; entry 11
+    dw MetaSprites3BSet2FFrame12 ; entry 12
+    dw MetaSprites3BSet2FFrame13 ; entry 13
+    dw MetaSprites3BSet2FFrame14 ; entry 14
+    dw MetaSprites3BSet2FFrame15 ; entry 15
+    dw MetaSprites3BSet2FFrame16 ; entry 16
+    dw MetaSprites3BSet2FFrame17 ; entry 17
+    dw MetaSprites3BSet2FFrame18 ; entry 18
+    dw MetaSprites3BSet2FFrame18 ; entry 19
+    dw MetaSprites3BSet2FFrame18 ; entry 20
+    dw MetaSprites3BSet2FFrame18 ; entry 21
+    dw MetaSprites3BSet2FFrame18 ; entry 22
+    dw MetaSprites3BSet2FFrame18 ; entry 23
+    dw MetaSprites3BSet2FFrame18 ; entry 24
+    dw MetaSprites3BSet2FFrame18 ; entry 25
+    dw MetaSprites3BSet2FFrame18 ; entry 26
+    dw MetaSprites3BSet2FFrame18 ; entry 27
+    dw MetaSprites3BSet2FFrame18 ; entry 28
+    dw MetaSprites3BSet2FFrame18 ; entry 29
+    dw MetaSprites3BSet2FFrame18 ; entry 30
+    dw MetaSprites3BSet2FFrame18 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
+; frame 0 of MetaSprites3BSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2FFrame0::
+MetaSprites3BSet2FFrame0::
     db $d8, $03, $20, $00 ; entry 0
     db $d8, $0b, $21, $00 ; entry 1
     db $d0, $03, $22, $00 ; entry 2
     db $d0, $0b, $23, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame1::
+; frame 1 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame1::
     db $dc, $00, $20, $00 ; entry 0
     db $dc, $08, $21, $00 ; entry 1
     db $e4, $f8, $20, $60 ; entry 2
@@ -3647,8 +3649,8 @@ MetaSprites3B_507CSet2FFrame1::
     db $ec, $f0, $23, $60 ; entry 7
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame2::
+; frame 2 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame2::
     db $f8, $f0, $24, $00 ; entry 0
     db $e8, $f4, $27, $00 ; entry 1
     db $e8, $fc, $28, $00 ; entry 2
@@ -3660,8 +3662,8 @@ MetaSprites3B_507CSet2FFrame2::
     db $d0, $08, $2b, $00 ; entry 8
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame3::
+; frame 3 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame3::
     db $f8, $eb, $27, $00 ; entry 0
     db $f8, $f3, $28, $00 ; entry 1
     db $e8, $fa, $2b, $00 ; entry 2
@@ -3672,47 +3674,47 @@ MetaSprites3B_507CSet2FFrame3::
     db $d8, $03, $2c, $00 ; entry 7
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
+; frame 4 of MetaSprites3BSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2FFrame4::
+MetaSprites3BSet2FFrame4::
     db $f0, $f4, $2d, $00 ; entry 0
     db $f8, $ef, $2d, $00 ; entry 1
     db $e8, $f9, $2c, $00 ; entry 2
     db $dc, $01, $2c, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame5::
+; frame 5 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame5::
     db $f0, $f4, $2d, $00 ; entry 0
     db $e8, $f9, $2d, $00 ; entry 1
     db $e0, $fe, $2d, $00 ; entry 2
     db $f8, $ef, $2b, $00 ; entry 3
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame6::
+; frame 6 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame6::
     db $f8, $ef, $2d, $00 ; entry 0
     db $f0, $f4, $2d, $00 ; entry 1
     db $e8, $f9, $2d, $00 ; entry 2
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame7::
+; frame 7 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame7::
     db $f8, $f8, $00, $00 ; entry 0
     db $f8, $00, $01, $00 ; entry 1
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
+; frame 8 of MetaSprites3BSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2FFrame8::
+MetaSprites3BSet2FFrame8::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $03, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 9 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame9::
+; frame 9 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame9::
     db $e8, $f8, $02, $00 ; entry 0
     db $e8, $00, $03, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
@@ -3723,8 +3725,8 @@ MetaSprites3B_507CSet2FFrame9::
     db $f8, $08, $01, $00 ; entry 7
     db $80 ; end
 
-; frame 10 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame10::
+; frame 10 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame10::
     db $d8, $f0, $08, $00 ; entry 0
     db $d8, $f8, $09, $00 ; entry 1
     db $d8, $08, $08, $20 ; entry 2
@@ -3747,8 +3749,8 @@ MetaSprites3B_507CSet2FFrame10::
     db $f8, $f0, $04, $00 ; entry 19
     db $80 ; end
 
-; frame 11 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame11::
+; frame 11 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame11::
     db $e0, $f0, $12, $00 ; entry 0
     db $e0, $f8, $13, $00 ; entry 1
     db $e0, $08, $12, $20 ; entry 2
@@ -3775,9 +3777,9 @@ MetaSprites3B_507CSet2FFrame11::
     db $f8, $00, $17, $00 ; entry 23
     db $80 ; end
 
-; frame 12 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
+; frame 12 of MetaSprites3BSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2FFrame12::
+MetaSprites3BSet2FFrame12::
     db $d0, $00, $04, $20 ; entry 0
     db $d0, $f8, $05, $20 ; entry 1
     db $e8, $f8, $1c, $40 ; entry 2
@@ -3798,8 +3800,8 @@ MetaSprites3B_507CSet2FFrame12::
     db $d8, $f8, $19, $00 ; entry 17
     db $80 ; end
 
-; frame 13 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame13::
+; frame 13 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame13::
     db $f0, $08, $18, $20 ; entry 0
     db $f0, $00, $19, $20 ; entry 1
     db $f0, $f0, $18, $00 ; entry 2
@@ -3820,8 +3822,8 @@ MetaSprites3B_507CSet2FFrame13::
     db $f8, $00, $1b, $20 ; entry 17
     db $80 ; end
 
-; frame 14 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame14::
+; frame 14 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame14::
     db $e0, $08, $18, $20 ; entry 0
     db $e0, $00, $19, $20 ; entry 1
     db $e0, $f0, $18, $00 ; entry 2
@@ -3844,8 +3846,8 @@ MetaSprites3B_507CSet2FFrame14::
     db $e8, $00, $1b, $20 ; entry 19
     db $80 ; end
 
-; frame 15 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame15::
+; frame 15 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame15::
     db $e8, $f8, $1c, $00 ; entry 0
     db $e8, $00, $1c, $20 ; entry 1
     db $d0, $08, $18, $20 ; entry 2
@@ -3868,9 +3870,9 @@ MetaSprites3B_507CSet2FFrame15::
     db $d8, $00, $1b, $20 ; entry 19
     db $80 ; end
 
-; frame 16 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
+; frame 16 of MetaSprites3BSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet2FFrame16::
+MetaSprites3BSet2FFrame16::
     db $d0, $04, $2e, $20 ; entry 0
     db $f8, $04, $2e, $20 ; entry 1
     db $f0, $04, $2e, $20 ; entry 2
@@ -3891,8 +3893,8 @@ MetaSprites3B_507CSet2FFrame16::
     db $f8, $fc, $2f, $00 ; entry 17
     db $80 ; end
 
-; frame 17 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame17::
+; frame 17 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame17::
     db $d0, $f4, $2e, $20 ; entry 0
     db $f8, $f4, $2e, $20 ; entry 1
     db $f0, $f4, $2e, $20 ; entry 2
@@ -3913,72 +3915,71 @@ MetaSprites3B_507CSet2FFrame17::
     db $f8, $fc, $2f, $20 ; entry 17
     db $80 ; end
 
-; frame 18 of MetaSprites3B_507CSet2F; ends with $80 (E-0147)
-MetaSprites3B_507CSet2FFrame18::
+; frame 18 of MetaSprites3BSet2F; ends with $80 (E-0147)
+MetaSprites3BSet2FFrame18::
     db $80 ; end
 
-; meta-sprite set 48 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 48 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet30::
-    dw MetaSprites3B_507CSet30Frame0 ; entry 0
-    dw MetaSprites3B_507CSet30Frame1 ; entry 1
-    dw MetaSprites3B_507CSet30Frame2 ; entry 2
-    dw MetaSprites3B_507CSet30Frame3 ; entry 3
-    dw MetaSprites3B_507CSet30Frame4 ; entry 4
-    dw MetaSprites3B_507CSet30Frame5 ; entry 5
-    dw MetaSprites3B_507CSet30Frame6 ; entry 6
-    dw MetaSprites3B_507CSet30Frame7 ; entry 7
-    dw MetaSprites3B_507CSet30Frame8 ; entry 8
-    dw MetaSprites3B_507CSet30Frame9 ; entry 9
-    dw MetaSprites3B_507CSet30Frame10 ; entry 10
-    dw MetaSprites3B_507CSet30Frame11 ; entry 11
-    dw MetaSprites3B_507CSet30Frame11 ; entry 12
-    dw MetaSprites3B_507CSet30Frame11 ; entry 13
-    dw MetaSprites3B_507CSet30Frame11 ; entry 14
-    dw MetaSprites3B_507CSet30Frame11 ; entry 15
-    dw MetaSprites3B_507CSet30Frame11 ; entry 16
-    dw MetaSprites3B_507CSet30Frame11 ; entry 17
-    dw MetaSprites3B_507CSet30Frame11 ; entry 18
-    dw MetaSprites3B_507CSet30Frame11 ; entry 19
-    dw MetaSprites3B_507CSet30Frame11 ; entry 20
-    dw MetaSprites3B_507CSet30Frame11 ; entry 21
-    dw MetaSprites3B_507CSet30Frame11 ; entry 22
-    dw MetaSprites3B_507CSet30Frame11 ; entry 23
-    dw MetaSprites3B_507CSet30Frame11 ; entry 24
-    dw MetaSprites3B_507CSet30Frame11 ; entry 25
-    dw MetaSprites3B_507CSet30Frame11 ; entry 26
-    dw MetaSprites3B_507CSet30Frame11 ; entry 27
-    dw MetaSprites3B_507CSet30Frame11 ; entry 28
-    dw MetaSprites3B_507CSet30Frame11 ; entry 29
-    dw MetaSprites3B_507CSet30Frame11 ; entry 30
-    dw MetaSprites3B_507CSet30Frame11 ; entry 31
+MetaSprites3BSet30::
+    dw MetaSprites3BSet30Frame0 ; entry 0
+    dw MetaSprites3BSet30Frame1 ; entry 1
+    dw MetaSprites3BSet30Frame2 ; entry 2
+    dw MetaSprites3BSet30Frame3 ; entry 3
+    dw MetaSprites3BSet30Frame4 ; entry 4
+    dw MetaSprites3BSet30Frame5 ; entry 5
+    dw MetaSprites3BSet30Frame6 ; entry 6
+    dw MetaSprites3BSet30Frame7 ; entry 7
+    dw MetaSprites3BSet30Frame8 ; entry 8
+    dw MetaSprites3BSet30Frame9 ; entry 9
+    dw MetaSprites3BSet30Frame10 ; entry 10
+    dw MetaSprites3BSet30Frame11 ; entry 11
+    dw MetaSprites3BSet30Frame11 ; entry 12
+    dw MetaSprites3BSet30Frame11 ; entry 13
+    dw MetaSprites3BSet30Frame11 ; entry 14
+    dw MetaSprites3BSet30Frame11 ; entry 15
+    dw MetaSprites3BSet30Frame11 ; entry 16
+    dw MetaSprites3BSet30Frame11 ; entry 17
+    dw MetaSprites3BSet30Frame11 ; entry 18
+    dw MetaSprites3BSet30Frame11 ; entry 19
+    dw MetaSprites3BSet30Frame11 ; entry 20
+    dw MetaSprites3BSet30Frame11 ; entry 21
+    dw MetaSprites3BSet30Frame11 ; entry 22
+    dw MetaSprites3BSet30Frame11 ; entry 23
+    dw MetaSprites3BSet30Frame11 ; entry 24
+    dw MetaSprites3BSet30Frame11 ; entry 25
+    dw MetaSprites3BSet30Frame11 ; entry 26
+    dw MetaSprites3BSet30Frame11 ; entry 27
+    dw MetaSprites3BSet30Frame11 ; entry 28
+    dw MetaSprites3BSet30Frame11 ; entry 29
+    dw MetaSprites3BSet30Frame11 ; entry 30
+    dw MetaSprites3BSet30Frame11 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
+; frame 0 of MetaSprites3BSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet30Frame0::
+MetaSprites3BSet30Frame0::
     db $f8, $f8, $00, $00 ; entry 0
     db $f8, $00, $01, $00 ; entry 1
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame1::
+; frame 1 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame1::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $03, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame2::
+; frame 2 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame2::
     db $f0, $00, $02, $20 ; entry 0
     db $f0, $f8, $03, $20 ; entry 1
     db $f8, $00, $04, $20 ; entry 2
     db $f8, $f8, $05, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame3::
+; frame 3 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame3::
     db $e8, $f8, $02, $00 ; entry 0
     db $e8, $00, $03, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
@@ -3989,9 +3990,9 @@ MetaSprites3B_507CSet30Frame3::
     db $f8, $08, $01, $00 ; entry 7
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
+; frame 4 of MetaSprites3BSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet30Frame4::
+MetaSprites3BSet30Frame4::
     db $d8, $f0, $08, $00 ; entry 0
     db $d8, $f8, $09, $00 ; entry 1
     db $d8, $08, $08, $20 ; entry 2
@@ -4014,8 +4015,8 @@ MetaSprites3B_507CSet30Frame4::
     db $f8, $f0, $04, $00 ; entry 19
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame5::
+; frame 5 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame5::
     db $d0, $f0, $18, $00 ; entry 0
     db $d0, $08, $18, $20 ; entry 1
     db $d0, $f8, $1a, $00 ; entry 2
@@ -4042,8 +4043,8 @@ MetaSprites3B_507CSet30Frame5::
     db $f8, $00, $21, $00 ; entry 23
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame6::
+; frame 6 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame6::
     db $d0, $00, $04, $20 ; entry 0
     db $d0, $f8, $05, $20 ; entry 1
     db $d8, $e8, $18, $00 ; entry 2
@@ -4074,8 +4075,8 @@ MetaSprites3B_507CSet30Frame6::
     db $f0, $00, $24, $20 ; entry 27
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame7::
+; frame 7 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame7::
     db $f8, $e8, $28, $00 ; entry 0
     db $f8, $10, $28, $20 ; entry 1
     db $f8, $08, $29, $20 ; entry 2
@@ -4108,9 +4109,9 @@ MetaSprites3B_507CSet30Frame7::
     db $d0, $00, $1f, $20 ; entry 29
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
+; frame 8 of MetaSprites3BSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet30Frame8::
+MetaSprites3BSet30Frame8::
     db $e8, $e8, $28, $00 ; entry 0
     db $e8, $10, $28, $20 ; entry 1
     db $e8, $08, $29, $20 ; entry 2
@@ -4145,8 +4146,8 @@ MetaSprites3B_507CSet30Frame8::
     db $d0, $00, $24, $20 ; entry 31
     db $80 ; end
 
-; frame 9 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame9::
+; frame 9 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame9::
     db $f0, $e8, $22, $00 ; entry 0
     db $f0, $f0, $23, $00 ; entry 1
     db $f0, $f8, $24, $00 ; entry 2
@@ -4181,8 +4182,8 @@ MetaSprites3B_507CSet30Frame9::
     db $d0, $f0, $19, $00 ; entry 31
     db $80 ; end
 
-; frame 10 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame10::
+; frame 10 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame10::
     db $d0, $f0, $25, $00 ; entry 0
     db $d0, $f8, $26, $00 ; entry 1
     db $d8, $f0, $27, $00 ; entry 2
@@ -4209,56 +4210,55 @@ MetaSprites3B_507CSet30Frame10::
     db $f8, $f8, $2c, $00 ; entry 23
     db $80 ; end
 
-; frame 11 of MetaSprites3B_507CSet30; ends with $80 (E-0147)
-MetaSprites3B_507CSet30Frame11::
+; frame 11 of MetaSprites3BSet30; ends with $80 (E-0147)
+MetaSprites3BSet30Frame11::
     db $80 ; end
 
-; meta-sprite set 49 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 49 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet31::
-    dw MetaSprites3B_507CSet31Frame0 ; entry 0
-    dw MetaSprites3B_507CSet31Frame1 ; entry 1
-    dw MetaSprites3B_507CSet31Frame2 ; entry 2
-    dw MetaSprites3B_507CSet31Frame3 ; entry 3
-    dw MetaSprites3B_507CSet31Frame4 ; entry 4
-    dw MetaSprites3B_507CSet31Frame5 ; entry 5
-    dw MetaSprites3B_507CSet31Frame6 ; entry 6
-    dw MetaSprites3B_507CSet31Frame7 ; entry 7
-    dw MetaSprites3B_507CSet31Frame8 ; entry 8
-    dw MetaSprites3B_507CSet31Frame9 ; entry 9
-    dw MetaSprites3B_507CSet31Frame10 ; entry 10
-    dw MetaSprites3B_507CSet31Frame11 ; entry 11
-    dw MetaSprites3B_507CSet31Frame12 ; entry 12
-    dw MetaSprites3B_507CSet31Frame13 ; entry 13
-    dw MetaSprites3B_507CSet31Frame14 ; entry 14
-    dw MetaSprites3B_507CSet31Frame15 ; entry 15
-    dw MetaSprites3B_507CSet31Frame16 ; entry 16
-    dw MetaSprites3B_507CSet31Frame16 ; entry 17
-    dw MetaSprites3B_507CSet31Frame16 ; entry 18
-    dw MetaSprites3B_507CSet31Frame16 ; entry 19
-    dw MetaSprites3B_507CSet31Frame16 ; entry 20
-    dw MetaSprites3B_507CSet31Frame16 ; entry 21
-    dw MetaSprites3B_507CSet31Frame16 ; entry 22
-    dw MetaSprites3B_507CSet31Frame16 ; entry 23
-    dw MetaSprites3B_507CSet31Frame16 ; entry 24
-    dw MetaSprites3B_507CSet31Frame16 ; entry 25
-    dw MetaSprites3B_507CSet31Frame16 ; entry 26
-    dw MetaSprites3B_507CSet31Frame16 ; entry 27
-    dw MetaSprites3B_507CSet31Frame16 ; entry 28
-    dw MetaSprites3B_507CSet31Frame16 ; entry 29
-    dw MetaSprites3B_507CSet31Frame16 ; entry 30
-    dw MetaSprites3B_507CSet31Frame16 ; entry 31
+MetaSprites3BSet31::
+    dw MetaSprites3BSet31Frame0 ; entry 0
+    dw MetaSprites3BSet31Frame1 ; entry 1
+    dw MetaSprites3BSet31Frame2 ; entry 2
+    dw MetaSprites3BSet31Frame3 ; entry 3
+    dw MetaSprites3BSet31Frame4 ; entry 4
+    dw MetaSprites3BSet31Frame5 ; entry 5
+    dw MetaSprites3BSet31Frame6 ; entry 6
+    dw MetaSprites3BSet31Frame7 ; entry 7
+    dw MetaSprites3BSet31Frame8 ; entry 8
+    dw MetaSprites3BSet31Frame9 ; entry 9
+    dw MetaSprites3BSet31Frame10 ; entry 10
+    dw MetaSprites3BSet31Frame11 ; entry 11
+    dw MetaSprites3BSet31Frame12 ; entry 12
+    dw MetaSprites3BSet31Frame13 ; entry 13
+    dw MetaSprites3BSet31Frame14 ; entry 14
+    dw MetaSprites3BSet31Frame15 ; entry 15
+    dw MetaSprites3BSet31Frame16 ; entry 16
+    dw MetaSprites3BSet31Frame16 ; entry 17
+    dw MetaSprites3BSet31Frame16 ; entry 18
+    dw MetaSprites3BSet31Frame16 ; entry 19
+    dw MetaSprites3BSet31Frame16 ; entry 20
+    dw MetaSprites3BSet31Frame16 ; entry 21
+    dw MetaSprites3BSet31Frame16 ; entry 22
+    dw MetaSprites3BSet31Frame16 ; entry 23
+    dw MetaSprites3BSet31Frame16 ; entry 24
+    dw MetaSprites3BSet31Frame16 ; entry 25
+    dw MetaSprites3BSet31Frame16 ; entry 26
+    dw MetaSprites3BSet31Frame16 ; entry 27
+    dw MetaSprites3BSet31Frame16 ; entry 28
+    dw MetaSprites3BSet31Frame16 ; entry 29
+    dw MetaSprites3BSet31Frame16 ; entry 30
+    dw MetaSprites3BSet31Frame16 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
+; frame 0 of MetaSprites3BSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet31Frame0::
+MetaSprites3BSet31Frame0::
     db $d8, $10, $00, $00 ; entry 0
     db $d0, $10, $01, $00 ; entry 1
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame1::
+; frame 1 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame1::
     db $d8, $08, $00, $20 ; entry 0
     db $e0, $10, $00, $00 ; entry 1
     db $d0, $08, $01, $20 ; entry 2
@@ -4266,8 +4266,8 @@ MetaSprites3B_507CSet31Frame1::
     db $d0, $10, $02, $00 ; entry 4
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame2::
+; frame 2 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame2::
     db $d8, $00, $00, $00 ; entry 0
     db $e0, $08, $00, $20 ; entry 1
     db $e8, $10, $00, $00 ; entry 2
@@ -4279,8 +4279,8 @@ MetaSprites3B_507CSet31Frame2::
     db $d0, $10, $03, $00 ; entry 8
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame3::
+; frame 3 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame3::
     db $d8, $f8, $00, $20 ; entry 0
     db $e0, $00, $00, $00 ; entry 1
     db $e8, $08, $00, $20 ; entry 2
@@ -4297,9 +4297,9 @@ MetaSprites3B_507CSet31Frame3::
     db $d0, $10, $04, $00 ; entry 13
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
+; frame 4 of MetaSprites3BSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet31Frame4::
+MetaSprites3BSet31Frame4::
     db $f8, $10, $00, $00 ; entry 0
     db $e8, $00, $00, $00 ; entry 1
     db $e8, $08, $01, $20 ; entry 2
@@ -4322,8 +4322,8 @@ MetaSprites3B_507CSet31Frame4::
     db $d0, $10, $05, $00 ; entry 19
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame5::
+; frame 5 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame5::
     db $f8, $08, $00, $20 ; entry 0
     db $f8, $10, $01, $00 ; entry 1
     db $f0, $00, $00, $00 ; entry 2
@@ -4352,8 +4352,8 @@ MetaSprites3B_507CSet31Frame5::
     db $d8, $10, $08, $00 ; entry 25
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame6::
+; frame 6 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame6::
     db $f8, $00, $00, $20 ; entry 0
     db $f8, $08, $01, $00 ; entry 1
     db $f8, $10, $02, $20 ; entry 2
@@ -4386,8 +4386,8 @@ MetaSprites3B_507CSet31Frame6::
     db $e0, $10, $05, $00 ; entry 29
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame7::
+; frame 7 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame7::
     db $f8, $f8, $00, $20 ; entry 0
     db $f8, $00, $01, $00 ; entry 1
     db $f8, $08, $02, $20 ; entry 2
@@ -4423,9 +4423,9 @@ MetaSprites3B_507CSet31Frame7::
     db $e8, $10, $08, $00 ; entry 32
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
+; frame 8 of MetaSprites3BSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet31Frame8::
+MetaSprites3BSet31Frame8::
     db $f8, $f0, $00, $20 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
@@ -4463,8 +4463,8 @@ MetaSprites3B_507CSet31Frame8::
     db $e8, $10, $07, $00 ; entry 34
     db $80 ; end
 
-; frame 9 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame9::
+; frame 9 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame9::
     db $f8, $e8, $00, $20 ; entry 0
     db $f8, $f0, $01, $00 ; entry 1
     db $f8, $f8, $02, $20 ; entry 2
@@ -4503,8 +4503,8 @@ MetaSprites3B_507CSet31Frame9::
     db $f0, $10, $06, $00 ; entry 35
     db $80 ; end
 
-; frame 10 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame10::
+; frame 10 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame10::
     db $d8, $e8, $08, $00 ; entry 0
     db $f8, $e8, $01, $00 ; entry 1
     db $f8, $f0, $02, $20 ; entry 2
@@ -4543,8 +4543,8 @@ MetaSprites3B_507CSet31Frame10::
     db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; frame 11 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame11::
+; frame 11 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame11::
     db $f8, $e8, $02, $20 ; entry 0
     db $f8, $f0, $03, $00 ; entry 1
     db $f0, $e8, $03, $20 ; entry 2
@@ -4583,9 +4583,9 @@ MetaSprites3B_507CSet31Frame11::
     db $f8, $10, $08, $00 ; entry 35
     db $80 ; end
 
-; frame 12 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
+; frame 12 of MetaSprites3BSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet31Frame12::
+MetaSprites3BSet31Frame12::
     db $f8, $e8, $03, $00 ; entry 0
     db $f0, $e8, $04, $00 ; entry 1
     db $f8, $f0, $04, $00 ; entry 2
@@ -4624,8 +4624,8 @@ MetaSprites3B_507CSet31Frame12::
     db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; frame 13 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame13::
+; frame 13 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame13::
     db $f8, $e8, $04, $00 ; entry 0
     db $d0, $e8, $05, $00 ; entry 1
     db $d0, $f0, $06, $00 ; entry 2
@@ -4664,8 +4664,8 @@ MetaSprites3B_507CSet31Frame13::
     db $f8, $10, $08, $00 ; entry 35
     db $80 ; end
 
-; frame 14 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame14::
+; frame 14 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame14::
     db $d0, $e8, $06, $00 ; entry 0
     db $d0, $f0, $05, $00 ; entry 1
     db $d8, $e8, $08, $00 ; entry 2
@@ -4704,8 +4704,8 @@ MetaSprites3B_507CSet31Frame14::
     db $f8, $10, $07, $00 ; entry 35
     db $80 ; end
 
-; frame 15 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
-MetaSprites3B_507CSet31Frame15::
+; frame 15 of MetaSprites3BSet31; ends with $80 (E-0147)
+MetaSprites3BSet31Frame15::
     db $f8, $e8, $09, $00 ; entry 0
     db $f0, $e8, $09, $00 ; entry 1
     db $e8, $e8, $09, $00 ; entry 2
@@ -4744,50 +4744,49 @@ MetaSprites3B_507CSet31Frame15::
     db $d0, $10, $09, $00 ; entry 35
     db $80 ; end
 
-; frame 16 of MetaSprites3B_507CSet31; ends with $80 (E-0147)
+; frame 16 of MetaSprites3BSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet31Frame16::
+MetaSprites3BSet31Frame16::
     db $80 ; end
 
-; meta-sprite set 50 of MetaSprites3B_507CTable: 32 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 50 of MetaSprites3BTable: 32 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites3B_507CSet32::
-    dw MetaSprites3B_507CSet32Frame0 ; entry 0
-    dw MetaSprites3B_507CSet32Frame1 ; entry 1
-    dw MetaSprites3B_507CSet32Frame2 ; entry 2
-    dw MetaSprites3B_507CSet32Frame3 ; entry 3
-    dw MetaSprites3B_507CSet32Frame4 ; entry 4
-    dw MetaSprites3B_507CSet32Frame5 ; entry 5
-    dw MetaSprites3B_507CSet32Frame6 ; entry 6
-    dw MetaSprites3B_507CSet32Frame7 ; entry 7
-    dw MetaSprites3B_507CSet32Frame8 ; entry 8
-    dw MetaSprites3B_507CSet32Frame8 ; entry 9
-    dw MetaSprites3B_507CSet32Frame8 ; entry 10
-    dw MetaSprites3B_507CSet32Frame8 ; entry 11
-    dw MetaSprites3B_507CSet32Frame8 ; entry 12
-    dw MetaSprites3B_507CSet32Frame8 ; entry 13
-    dw MetaSprites3B_507CSet32Frame8 ; entry 14
-    dw MetaSprites3B_507CSet32Frame8 ; entry 15
-    dw MetaSprites3B_507CSet32Frame8 ; entry 16
-    dw MetaSprites3B_507CSet32Frame8 ; entry 17
-    dw MetaSprites3B_507CSet32Frame8 ; entry 18
-    dw MetaSprites3B_507CSet32Frame8 ; entry 19
-    dw MetaSprites3B_507CSet32Frame8 ; entry 20
-    dw MetaSprites3B_507CSet32Frame8 ; entry 21
-    dw MetaSprites3B_507CSet32Frame8 ; entry 22
-    dw MetaSprites3B_507CSet32Frame8 ; entry 23
-    dw MetaSprites3B_507CSet32Frame8 ; entry 24
-    dw MetaSprites3B_507CSet32Frame8 ; entry 25
-    dw MetaSprites3B_507CSet32Frame8 ; entry 26
-    dw MetaSprites3B_507CSet32Frame8 ; entry 27
-    dw MetaSprites3B_507CSet32Frame8 ; entry 28
-    dw MetaSprites3B_507CSet32Frame8 ; entry 29
-    dw MetaSprites3B_507CSet32Frame8 ; entry 30
-    dw MetaSprites3B_507CSet32Frame8 ; entry 31
+MetaSprites3BSet32::
+    dw MetaSprites3BSet32Frame0 ; entry 0
+    dw MetaSprites3BSet32Frame1 ; entry 1
+    dw MetaSprites3BSet32Frame2 ; entry 2
+    dw MetaSprites3BSet32Frame3 ; entry 3
+    dw MetaSprites3BSet32Frame4 ; entry 4
+    dw MetaSprites3BSet32Frame5 ; entry 5
+    dw MetaSprites3BSet32Frame6 ; entry 6
+    dw MetaSprites3BSet32Frame7 ; entry 7
+    dw MetaSprites3BSet32Frame8 ; entry 8
+    dw MetaSprites3BSet32Frame8 ; entry 9
+    dw MetaSprites3BSet32Frame8 ; entry 10
+    dw MetaSprites3BSet32Frame8 ; entry 11
+    dw MetaSprites3BSet32Frame8 ; entry 12
+    dw MetaSprites3BSet32Frame8 ; entry 13
+    dw MetaSprites3BSet32Frame8 ; entry 14
+    dw MetaSprites3BSet32Frame8 ; entry 15
+    dw MetaSprites3BSet32Frame8 ; entry 16
+    dw MetaSprites3BSet32Frame8 ; entry 17
+    dw MetaSprites3BSet32Frame8 ; entry 18
+    dw MetaSprites3BSet32Frame8 ; entry 19
+    dw MetaSprites3BSet32Frame8 ; entry 20
+    dw MetaSprites3BSet32Frame8 ; entry 21
+    dw MetaSprites3BSet32Frame8 ; entry 22
+    dw MetaSprites3BSet32Frame8 ; entry 23
+    dw MetaSprites3BSet32Frame8 ; entry 24
+    dw MetaSprites3BSet32Frame8 ; entry 25
+    dw MetaSprites3BSet32Frame8 ; entry 26
+    dw MetaSprites3BSet32Frame8 ; entry 27
+    dw MetaSprites3BSet32Frame8 ; entry 28
+    dw MetaSprites3BSet32Frame8 ; entry 29
+    dw MetaSprites3BSet32Frame8 ; entry 30
+    dw MetaSprites3BSet32Frame8 ; entry 31
 
-; frame 0 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame0::
+; frame 0 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame0::
     db $d0, $28, $00, $00 ; entry 0
     db $d0, $e0, $00, $00 ; entry 1
     db $d0, $c0, $01, $00 ; entry 2
@@ -4798,9 +4797,9 @@ MetaSprites3B_507CSet32Frame0::
     db $d0, $fe, $02, $00 ; entry 7
     db $80 ; end
 
-; frame 1 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
+; frame 1 of MetaSprites3BSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet32Frame1::
+MetaSprites3BSet32Frame1::
     db $f0, $28, $00, $00 ; entry 0
     db $f0, $e0, $00, $00 ; entry 1
     db $f0, $c0, $01, $00 ; entry 2
@@ -4821,8 +4820,8 @@ MetaSprites3B_507CSet32Frame1::
     db $e8, $d0, $00, $00 ; entry 17
     db $80 ; end
 
-; frame 2 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame2::
+; frame 2 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame2::
     db $e8, $c0, $01, $00 ; entry 0
     db $f0, $f2, $02, $00 ; entry 1
     db $e0, $1f, $00, $20 ; entry 2
@@ -4845,8 +4844,8 @@ MetaSprites3B_507CSet32Frame2::
     db $d0, $b8, $02, $00 ; entry 19
     db $80 ; end
 
-; frame 3 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame3::
+; frame 3 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame3::
     db $e8, $d9, $00, $00 ; entry 0
     db $d8, $f8, $00, $00 ; entry 1
     db $d8, $be, $01, $00 ; entry 2
@@ -4869,8 +4868,8 @@ MetaSprites3B_507CSet32Frame3::
     db $d8, $ce, $03, $00 ; entry 19
     db $80 ; end
 
-; frame 4 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame4::
+; frame 4 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame4::
     db $f0, $18, $00, $20 ; entry 0
     db $f8, $e0, $01, $20 ; entry 1
     db $f8, $b8, $01, $20 ; entry 2
@@ -4890,9 +4889,9 @@ MetaSprites3B_507CSet32Frame4::
     db $dc, $38, $04, $00 ; entry 16
     db $80 ; end
 
-; frame 5 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
+; frame 5 of MetaSprites3BSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites3B_507CSet32Frame5::
+MetaSprites3BSet32Frame5::
     db $f0, $06, $02, $20 ; entry 0
     db $d0, $16, $02, $00 ; entry 1
     db $d0, $ce, $01, $00 ; entry 2
@@ -4913,8 +4912,8 @@ MetaSprites3B_507CSet32Frame5::
     db $f8, $cd, $05, $00 ; entry 17
     db $80 ; end
 
-; frame 6 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame6::
+; frame 6 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame6::
     db $f0, $38, $05, $20 ; entry 0
     db $ec, $e8, $05, $20 ; entry 1
     db $e4, $be, $05, $20 ; entry 2
@@ -4924,8 +4923,8 @@ MetaSprites3B_507CSet32Frame6::
     db $eb, $20, $03, $00 ; entry 6
     db $80 ; end
 
-; frame 7 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame7::
+; frame 7 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame7::
     db $ed, $2a, $03, $00 ; entry 0
     db $f8, $3c, $03, $00 ; entry 1
     db $f1, $ba, $03, $00 ; entry 2
@@ -4933,7 +4932,7 @@ MetaSprites3B_507CSet32Frame7::
     db $f8, $e6, $03, $00 ; entry 4
     db $80 ; end
 
-; frame 8 of MetaSprites3B_507CSet32; ends with $80 (E-0147)
-MetaSprites3B_507CSet32Frame8::
+; frame 8 of MetaSprites3BSet32; ends with $80 (E-0147)
+MetaSprites3BSet32Frame8::
     db $80 ; end
     ds $14f2, $00

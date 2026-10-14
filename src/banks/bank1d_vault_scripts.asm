@@ -6,7 +6,7 @@ SECTION "Bank 1D", ROMX[$4000], BANK[$1D]
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank1D::
-    ld de, StringCategories_1D_4016
+    ld de, BeginStringDisplay_Bank1D_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd
@@ -17,12 +17,12 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_1D_4016::
-    dw StringList_1D_4018 ; id 0
+BeginStringDisplay_Bank1D_StringCategories::
+    dw StringList_Bank1D_StringCategories_0 ; id 0
 
-; category list of StringCategories_1D_4016; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank1D_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_1D_4018::
+StringList_Bank1D_StringCategories_0::
     dw String_1D_00_00 ; id 0
     dw String_1D_00_00 ; id 1
     dw String_1D_00_02 ; id 2
@@ -151,229 +151,229 @@ String_1D_00_16::
     db "@"
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_1D_4335::
+Script_Hibernate::
     script_command SCRIPT_HIBERNATE
-Script_1D_4336::
+Script_Hibernate_2::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_434B, Script_1D_4348, Script_1D_4342, Script_1D_433C
-Script_1D_433C::
+    script_choice_jump Script_Hibernate_3, Script_ToHibernate_11, Script_ToHibernate_16, Script_ComeSeeMeIf
+Script_ComeSeeMeIf::
     script_command SCRIPT_HIBERNATE_CLOSE
     script_message $8015 ; '*: Come see me if you'
     script_command SCRIPT_HIBERNATE_CLOSE
     script_end
-Script_1D_4342::
-    script_jump Script_1D_448B
+Script_ToHibernate_16::
+    script_jump Script_Hibernate_16
     db $07, $6d, $44
 
-Script_1D_4348::
-    script_jump Script_1D_43D9
-Script_1D_434B::
+Script_ToHibernate_11::
+    script_jump Script_Hibernate_11
+Script_Hibernate_3::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_435C, Script_1D_4353, Script_1D_4350
-Script_1D_4350::
-    script_jump Script_1D_435F
-Script_1D_4353::
+    script_choice_jump Script_ToUhOhTheStable, Script_HuhThere, Script_ToWhichMonsterWillHibernate
+Script_ToWhichMonsterWillHibernate::
+    script_jump Script_WhichMonsterWillHibernate
+Script_HuhThere::
     script_message $c005 ; '*: Huh? There's no one on'
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_435C::
-    script_jump Script_1D_4389
-Script_1D_435F::
+    script_jump Script_Hibernate_2
+Script_ToUhOhTheStable::
+    script_jump Script_UhOhTheStable
+Script_WhichMonsterWillHibernate::
     script_message $c001 ; '*: Which monster will hibernate?'
-Script_1D_4362::
+Script_Hibernate_4::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_436C, Script_1D_4366
-Script_1D_4366::
+    script_choice_jump Script_SoThisOneShould, Script_DoYouNeedMe
+Script_DoYouNeedMe::
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_436C::
+    script_jump Script_Hibernate_2
+Script_SoThisOneShould::
     script_message $c003 ; '*: So this one should hibernate?'
-Script_1D_436F::
+Script_Hibernate_5::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_437B, Script_1D_437F, Script_1D_4374
-Script_1D_4374::
+    script_choice_jump Script_Hibernate_6, Script_OKMyFriendTime, Script_WhichMonsterWillHibernate_2
+Script_WhichMonsterWillHibernate_2::
     script_message $c001 ; '*: Which monster will hibernate?'
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_4362
-Script_1D_437B::
+    script_jump Script_Hibernate_4
+Script_Hibernate_6::
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_436F
-Script_1D_437F::
+    script_jump Script_Hibernate_5
+Script_OKMyFriendTime::
     script_message $c004 ; '*: OK my friend, time to'
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_4389::
+    script_jump Script_Hibernate_2
+Script_UhOhTheStable::
     script_message $c006 ; '*: Uh-oh, the stable is full!'
     script_message $c007 ; '*: Want to switch with someone?'
-Script_1D_438F::
+Script_Hibernate_7::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4399, Script_1D_4393
-Script_1D_4393::
+    script_choice_jump Script_WhoShouldIWake, Script_DoYouNeedMe_2
+Script_DoYouNeedMe_2::
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_4399::
+    script_jump Script_Hibernate_2
+Script_WhoShouldIWake::
     script_message $c008 ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_43A7, Script_1D_43A0
-Script_1D_43A0::
+    script_choice_jump Script_WakeThisMonsterUp, Script_WantToSwitchWith
+Script_WantToSwitchWith::
     script_command SCRIPT_HIBERNATE
     script_message $c007 ; '*: Want to switch with someone?'
-    script_jump Script_1D_438F
-Script_1D_43A7::
+    script_jump Script_Hibernate_7
+Script_WakeThisMonsterUp::
     script_message $c009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_43B1, Script_1D_43AE
-Script_1D_43AE::
-    script_jump Script_1D_4399
-Script_1D_43B1::
+    script_choice_jump Script_WhichOneShouldHibernate, Script_ToWhoShouldIWake
+Script_ToWhoShouldIWake::
+    script_jump Script_WhoShouldIWake
+Script_WhichOneShouldHibernate::
     script_command SCRIPT_HIBERNATE
     script_message $c00a ; '*: Which one should hibernate?'
-Script_1D_43B5::
+Script_Hibernate_8::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_43BC, Script_1D_43B9
-Script_1D_43B9::
-    script_jump Script_1D_4399
-Script_1D_43BC::
+    script_choice_jump Script_SoThisOneShould_2, Script_ToWhoShouldIWake_2
+Script_ToWhoShouldIWake_2::
+    script_jump Script_WhoShouldIWake
+Script_SoThisOneShould_2::
     script_message $c003 ; '*: So this one should hibernate?'
-Script_1D_43BF::
+Script_Hibernate_9::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_43CB, Script_1D_43CF, Script_1D_43C4
-Script_1D_43C4::
+    script_choice_jump Script_Hibernate_10, Script_SoSwitchHeroAnd, Script_WhichOneShouldHibernate_2
+Script_WhichOneShouldHibernate_2::
     script_message $c00a ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_43B5
-Script_1D_43CB::
+    script_jump Script_Hibernate_8
+Script_Hibernate_10::
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_43BF
-Script_1D_43CF::
+    script_jump Script_Hibernate_9
+Script_SoSwitchHeroAnd::
     script_message $c00b ; '*: So switch 0 and G,'
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_43D9::
+    script_jump Script_Hibernate_2
+Script_Hibernate_11::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_43F8, Script_1D_43EF, Script_1D_43F2, Script_1D_43E6, Script_1D_43E0
-Script_1D_43E0::
+    script_choice_jump Script_WhoShouldIWake_2, Script_ToHuhThere_3, Script_HuhThere_2, Script_HuhNoOne, Script_NoOneElseCan
+Script_NoOneElseCan::
     script_message $c017 ; '*: No one else can hibernate,I'
-    script_jump Script_1D_43E9
-Script_1D_43E6::
+    script_jump Script_DoYouNeedMe_3
+Script_HuhNoOne::
     script_message $c00e ; '*: Huh? No one's sleeping now.'
-Script_1D_43E9::
+Script_DoYouNeedMe_3::
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_43EF::
-    script_jump Script_1D_441B
-Script_1D_43F2::
+    script_jump Script_Hibernate_2
+Script_ToHuhThere_3::
+    script_jump Script_HuhThere_3
+Script_HuhThere_2::
     script_message $c00f ; '*: Huh? There's no room on'
-    script_jump Script_1D_43E9
-Script_1D_43F8::
+    script_jump Script_DoYouNeedMe_3
+Script_WhoShouldIWake_2::
     script_message $c00c ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4406, Script_1D_43FF
-Script_1D_43FF::
+    script_choice_jump Script_WakeThisMonsterUp_2, Script_DoYouNeedMe_4
+Script_DoYouNeedMe_4::
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_4406::
+    script_jump Script_Hibernate_2
+Script_WakeThisMonsterUp_2::
     script_message $c009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4410, Script_1D_440D
-Script_1D_440D::
-    script_jump Script_1D_43F8
-Script_1D_4410::
+    script_choice_jump Script_I_4, Script_ToWhoShouldIWake_2_2
+Script_ToWhoShouldIWake_2_2::
+    script_jump Script_WhoShouldIWake_2
+Script_I_4::
     script_message $c00d ; '*: I'll send G to the'
     script_command SCRIPT_HIBERNATE
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_441B::
+    script_jump Script_Hibernate_2
+Script_HuhThere_3::
     script_message $c00f ; '*: Huh? There's no room on'
     script_message $c010 ; '*: Should someone else hibernate?'
-Script_1D_4421::
+Script_Hibernate_12::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_442B, Script_1D_4425
-Script_1D_4425::
+    script_choice_jump Script_WhichOneShouldHibernate_3, Script_DoYouNeedMe_5
+Script_DoYouNeedMe_5::
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_442B::
+    script_jump Script_Hibernate_2
+Script_WhichOneShouldHibernate_3::
     script_message $c00a ; '*: Which one should hibernate?'
-Script_1D_442E::
+Script_Hibernate_13::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4438, Script_1D_4432
-Script_1D_4432::
+    script_choice_jump Script_SoThisOneShould_3, Script_ShouldSomeoneElseHibernate
+Script_ShouldSomeoneElseHibernate::
     script_message $c010 ; '*: Should someone else hibernate?'
-    script_jump Script_1D_4421
-Script_1D_4438::
+    script_jump Script_Hibernate_12
+Script_SoThisOneShould_3::
     script_message $c003 ; '*: So this one should hibernate?'
-Script_1D_443B::
+Script_Hibernate_14::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4447, Script_1D_444B, Script_1D_4440
-Script_1D_4440::
+    script_choice_jump Script_Hibernate_15, Script_WhoShouldIWake_3, Script_WhichOneShouldHibernate_4
+Script_WhichOneShouldHibernate_4::
     script_message $c00a ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_442E
-Script_1D_4447::
+    script_jump Script_Hibernate_13
+Script_Hibernate_15::
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_443B
-Script_1D_444B::
+    script_jump Script_Hibernate_14
+Script_WhoShouldIWake_3::
     script_message $c008 ; '*: Who should I wake up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4459, Script_1D_4452
-Script_1D_4452::
+    script_choice_jump Script_WakeThisMonsterUp_3, Script_WhichOneShouldHibernate_5
+Script_WhichOneShouldHibernate_5::
     script_message $c00a ; '*: Which one should hibernate?'
     script_command SCRIPT_HIBERNATE
-    script_jump Script_1D_442E
-Script_1D_4459::
+    script_jump Script_Hibernate_13
+Script_WakeThisMonsterUp_3::
     script_message $c009 ; '*: Wake this monster up?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4463, Script_1D_4460
-Script_1D_4460::
-    script_jump Script_1D_444B
-Script_1D_4463::
+    script_choice_jump Script_SoSwitchHeroAnd_2, Script_ToWhoShouldIWake_3
+Script_ToWhoShouldIWake_3::
+    script_jump Script_WhoShouldIWake_3
+Script_SoSwitchHeroAnd_2::
     script_message $c00b ; '*: So switch 0 and G,'
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
+    script_jump Script_Hibernate_2
     db $eb, $e4, $0a, $00, $00, $05, $c0, $00, $02, $c0, $07, $36, $43, $00, $11, $c0
     db $eb, $e4, $07, $00, $00, $02, $c0, $07, $36, $43, $eb, $07, $7d, $44
 
-Script_1D_448B::
+Script_Hibernate_16::
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_4498, Script_1D_448F
-Script_1D_448F::
+    script_choice_jump Script_WhoDoYouWant, Script_HuhNoOne_2
+Script_HuhNoOne_2::
     script_message $c00e ; '*: Huh? No one's sleeping now.'
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_4498::
+    script_jump Script_Hibernate_2
+Script_WhoDoYouWant::
     script_message $c012 ; '*: Who do you want to'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_44A6, Script_1D_449F
-Script_1D_449F::
+    script_choice_jump Script_It, Script_DoYouNeedMe_6
+Script_DoYouNeedMe_6::
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
-Script_1D_44A6::
+    script_jump Script_Hibernate_2
+Script_It::
     script_message $c013 ; '*: It'll disappear. Is that OK?'
     script_command SCRIPT_HIBERNATE
-    script_choice_jump Script_1D_44B0, Script_1D_44AD
-Script_1D_44AD::
-    script_jump Script_1D_4498
-Script_1D_44B0::
+    script_choice_jump Script_GWasReleasedIn, Script_ToWhoDoYouWant
+Script_ToWhoDoYouWant::
+    script_jump Script_WhoDoYouWant
+Script_GWasReleasedIn::
     script_message $c014 ; 'G was released in the wild.'
     script_command SCRIPT_HIBERNATE
     script_message $c002 ; '*: Do you need me for'
-    script_jump Script_1D_4336
+    script_jump Script_Hibernate_2
 
-VaultMenu_Store_Case00_WaitForVRAMAccess::
+VaultMenu_Store_WaitForVRAMAccess::
     ld a, [wScreenState]
     cp $03
     jr z, .skip
-    ld hl, BGMap1TileRun_1D_4547
+    ld hl, BGMap1TileRun_2
     jr .skip2
 
 .skip:
-    ld hl, BGMap1TileRun_1D_44E3
+    ld hl, BGMap1TileRun
 
 .skip2:
     ld de, vBGMap1 + $300
@@ -399,7 +399,7 @@ VaultMenu_Store_Case00_WaitForVRAMAccess::
 ; VaultMenu_Case03_Case00_Sub01 copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState =
 ; 3) (E-0226, C1)
 ; record: 99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F
-BGMap1TileRun_1D_44E3::
+BGMap1TileRun::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $a6, $cf, $a5, $a7, $df, $eb, $ad, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
     db $ba, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4
@@ -408,7 +408,7 @@ BGMap1TileRun_1D_44E3::
 
 ; VaultMenu_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other
 ; wScreenState) (E-0226, C1)
-BGMap1TileRun_1D_4547::
+BGMap1TileRun_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $ea, $eb, $ad, $ed, $ee, $ef, $ab, $ac, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
     db $ba, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4
@@ -416,20 +416,22 @@ BGMap1TileRun_1D_4547::
     db $7f ; end
 
 ; copies three tiles from bank $1F to vTiles2 + $7A0-$7C0, then draws the 4 x 1 rows
-; TileRect_1D_4603, 4607 and 460B at scroll + $62, $A2 and $E2 (E-0121)
-LoadThreeTilesAndDrawRows4603To460B::
+; LoadThreeTilesAndDrawRows_TileRect, 4607 and 460B at scroll + $62, $A2 and $E2 (E-0121) (E-0344:
+; the address in its name dropped or read as the label there; was
+; LoadThreeTilesAndDrawRows4603To460B; a trailing preposition left by the dropped address removed)
+LoadThreeTilesAndDrawRows::
     ld hl, vTiles2 + $7a0
-    ld de, Tiles2Plus210Tiles_1F_4130
+    ld de, Tiles2Plus210Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7b0
-    ld de, Tiles2Plus7B0Tiles_1F_4310
+    ld de, Tiles2Plus7B0Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $7c0
-    ld de, Tiles1Plus7C0Tiles_1F_4300
+    ld de, Tiles1Plus7C0Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -437,40 +439,40 @@ LoadThreeTilesAndDrawRows4603To460B::
     ld de, $0062
     add hl, de
     lb bc, $04, $01
-    ld de, TileRect_1D_4603
+    ld de, LoadThreeTilesAndDrawRows_TileRect
     call DrawRectSetTextCursorLoPlus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00a2
     add hl, de
     lb bc, $04, $01
-    ld de, TileRect_1D_4607
+    ld de, LoadThreeTilesAndDrawRows_TileRect_2
     call DrawRectSetTextCursorLoPlus21_Bank1D
     call BGMapAddressAtScroll_Bank1D
     ld de, $00e2
     add hl, de
     lb bc, $04, $01
-    ld de, TileRect_1D_460B
+    ld de, LoadThreeTilesAndDrawRows_TileRect_3
     call DrawRectSetTextCursorLoPlus21_Bank1D
     ret
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 4 x 1 tiles, one row per line
-TileRect_1D_4603::
+LoadThreeTilesAndDrawRows_TileRect::
     db $7a, $ad, $cf, $7b ; id 0
 
-TileRect_1D_4607::
+LoadThreeTilesAndDrawRows_TileRect_2::
     db $bf, $a7, $7c, $ee ; id 0
 
-TileRect_1D_460B::
+LoadThreeTilesAndDrawRows_TileRect_3::
     db $a9, $a4, $eb, $ad ; id 0
 
-VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
-    call VaultMenu_BlinkCursorBlinkEF_Bank1D_4801
+VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
+    call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
     ret z
     cp $01
-    jr z, .check_screen_byte_ed
+    jr z, .check_vault_mode
     cp $02
     jr z, .set_two_choice_cursor_to_06
     ret
@@ -483,8 +485,8 @@ VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
-.check_screen_byte_ed:
-    ld a, [wScreenByteED]
+.check_vault_mode:
+    ld a, [wVaultMode]
     and a
     jr z, .call_vault_menu_write_saved_sprite_clip_mode
     cp $01
@@ -580,12 +582,12 @@ VaultMenu_TakeOut_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
-VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
-    call VaultMenu_BlinkCursorBlinkEF_Bank1D_4801
+VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
+    call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
     ret z
     cp $01
-    jr z, .check_screen_byte_ed
+    jr z, .check_vault_mode
     cp $02
     jr z, .set_two_choice_cursor_to_06
     ret
@@ -598,8 +600,8 @@ VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
-.check_screen_byte_ed:
-    ld a, [wScreenByteED]
+.check_vault_mode:
+    ld a, [wVaultMode]
     and a
     jr z, .check_list_pages
     cp $01
@@ -693,53 +695,53 @@ VaultMenu_Store_Case03_WriteTwoChoiceCursorAndScreenStepEtc::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
-VaultMenu_BlinkCursorBlinkEF_Bank1D_4801::
+VaultMenu_BlinkCursorBlinkEF_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_draw_blank_tile_c3_481_f_bank1_d
+    jr nz, .call_draw_blank_tile_c3_bank1_d
     bit 7, a
-    jr nz, .call_draw_blank_tile_c3_481_f_bank1_d2
+    jr nz, .call_draw_blank_tile_c3_bank1_d2
     bit 0, a
-    jr nz, .call_vault_menu_shared01_bg_map_address_at
+    jr nz, .call_vault_menu_bg_map_address_at_scroll
     bit 1, a
     jp nz, .return_02
-    call BlinkCursorBlinkEF_Bank1D_4801
+    call BlinkCursorBlinkEF_Bank1D
     xor a
     ret
 
-.call_draw_blank_tile_c3_481_f_bank1_d:
-    call DrawBlankTileC3_481F_Bank1D
-    ld a, [wScreenByteED]
+.call_draw_blank_tile_c3_bank1_d:
+    call DrawBlankTileC3_Bank1D
+    ld a, [wVaultMode]
     and a
-    jr nz, .set_screen_byte_ed
+    jr nz, .set_vault_mode
     ld a, $02
-    jr .set_screen_byte_ed2
+    jr .set_vault_mode2
 
-.set_screen_byte_ed:
+.set_vault_mode:
     dec a
 
-.set_screen_byte_ed2:
-    ld [wScreenByteED], a
-    call DrawCursorTileBB_481B_Bank1D
+.set_vault_mode2:
+    ld [wVaultMode], a
+    call DrawCursorTileBB_Bank1D
     ld a, $69
     call QueueSoundEffect
     xor a
     ret
 
-.call_draw_blank_tile_c3_481_f_bank1_d2:
-    call DrawBlankTileC3_481F_Bank1D
-    ld a, [wScreenByteED]
+.call_draw_blank_tile_c3_bank1_d2:
+    call DrawBlankTileC3_Bank1D
+    ld a, [wVaultMode]
     cp $02
     jr c, .skip
     xor a
-    jr .set_screen_byte_ed2
+    jr .set_vault_mode2
 
 .skip:
     inc a
-    jr .set_screen_byte_ed2
+    jr .set_vault_mode2
 
-.call_vault_menu_shared01_bg_map_address_at:
-    call VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D
+.call_vault_menu_bg_map_address_at_scroll:
+    call VaultMenu_BGMapAddressAtScroll_Bank1D
     ld a, $69
     call QueueSoundEffect
     ld a, $01
@@ -750,38 +752,41 @@ VaultMenu_BlinkCursorBlinkEF_Bank1D_4801::
     ret
 
 ; cycles wCursorBlinkEF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
-; $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-BlinkCursorBlinkEF_Bank1D_4801::
+; $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was BlinkCursorBlinkEF_Bank1D_4801)
+BlinkCursorBlinkEF_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, DrawCursorTileBB_481B_Bank1D
+    jr c, DrawCursorTileBB_Bank1D
     ld a, [wCursorBlinkEF]
     inc a
     ld [wCursorBlinkEF], a
     cp $10
-    jr c, DrawCursorTileBB_481B_Bank1D
+    jr c, DrawCursorTileBB_Bank1D
     cp $18
-    jr c, DrawBlankTileC3_481F_Bank1D
+    jr c, DrawBlankTileC3_Bank1D
     xor a
     ld [wCursorBlinkEF], a
 
-; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-DrawCursorTileBB_481B_Bank1D::
+; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawCursorTileBB_481B_Bank1D)
+DrawCursorTileBB_Bank1D::
     ld b, $bb
-    jr VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_ReadScreenByteED
+    jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
 
-; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-DrawBlankTileC3_481F_Bank1D::
+; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawBlankTileC3_481F_Bank1D)
+DrawBlankTileC3_Bank1D::
     ld b, $c3
-    jr VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_ReadScreenByteED
+    jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
 
-VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D::
+VaultMenu_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
-VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_ReadScreenByteED::
-    ld a, [wScreenByteED]
+VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode::
+    ld a, [wVaultMode]
     add a
-    ld hl, VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data
+    ld hl, VaultMenu_BGMapAddressAtScroll_Bank1D_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -797,7 +802,7 @@ VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_ReadScreenByteED::
     ei
     ret
 
-VaultMenu_Shared01_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_BGMapAddressAtScroll_Bank1D_Data::
     db $61, $00, $a1, $00, $e1, $00
 
 ; draws rect $0088 (9 x 12) at vBGMap1 + $370 (SaveBGMapRectWithAttrs) and wScreenStep += 1 (E-0122)
@@ -812,7 +817,7 @@ DrawRect0088AtBGMap1370AndStep::
     ret
 
 ; draws rect $0140 (3 x 7) at vBGMap1 + $3E0; in state 3 also runs
-; ListDistinctInventoryItemsToItemGrid and Run64C7UnlessScreenStateIs3; wScreenStep += 1 (E-0122)
+; ListDistinctInventoryItemsToItemGrid and RunUnlessScreenStateIs3; wScreenStep += 1 (E-0122)
 DrawRect0140AtBGMap13E0AndStep::
     ld hl, $0140
     ld de, vBGMap1 + $3e0
@@ -822,7 +827,7 @@ DrawRect0140AtBGMap13E0AndStep::
     cp $03
     jr nz, .check_screen_step
     farcall ListDistinctInventoryItemsToItemGrid
-    farcall Run64C7UnlessScreenStateIs3
+    farcall RunUnlessScreenStateIs3
 
 .check_screen_step:
     ld a, [wScreenStep]
@@ -830,7 +835,7 @@ DrawRect0140AtBGMap13E0AndStep::
     ld [wScreenStep], a
     ret
 
-VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
+VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld a, $01
     ld [wArg1], a
     call VaultMenu_Store_CountNonZeroItemGridBytes
@@ -841,7 +846,7 @@ VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld de, $0088
     add hl, de
     lb bc, $0c, $09
-    ld de, TileRect_1D_48FC
+    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
     jr .check_is_cgb
@@ -851,7 +856,7 @@ VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld de, $0088
     add hl, de
     lb bc, $0c, $09
-    ld de, TileRect_1D_4968
+    ld de, VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2
     push hl
     call DrawRectSetTextCursorLoPlus21_Bank1D
 
@@ -911,7 +916,7 @@ VaultMenu_Store_Case07_DrawRectSetTextCursorLoPlus21_Bank1D::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 9 tiles, one row per line
-TileRect_1D_48FC::
+VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -922,7 +927,7 @@ TileRect_1D_48FC::
     db $b6, $c3, $d8, $d9, $da, $db, $dc, $dd, $de, $aa, $ca, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $c5, $c3, $c3, $be, $c3, $c3, $c6, $b5 ; id 8
 
-TileRect_1D_4968::
+VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -933,7 +938,7 @@ TileRect_1D_4968::
     db $b6, $c3, $d8, $d9, $da, $db, $dc, $dd, $de, $aa, $ca, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-VaultMenu_Store_Case08_HLToDecimalDigits::
+VaultMenu_Store_HLToDecimalDigits::
     xor a
     ld [wArg1], a
     call VaultMenu_Store_CountNonZeroItemGridBytes
@@ -1065,31 +1070,32 @@ VaultMenu_WriteSavedSpriteClipModeAndListPages::
     ret
 
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
-; for $10-$17 (E-0122)
-BlinkCursorSelectedRecord_Bank1D_4A9A::
+; for $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; BlinkCursorSelectedRecord_Bank1D_4A9A)
+BlinkCursorSelectedRecord_Bank1D::
     ld a, [wSelectedRecord]
     inc a
     ld [wSelectedRecord], a
     cp $10
     jr c, .skip
     cp $18
-    jr c, VaultMenu_Store_Shared03_ReadItemGridX
+    jr c, VaultMenu_Store_ReadItemGridX
     xor a
     ld [wSelectedRecord], a
 
 .skip:
     ld b, $bb
-    jr VaultMenu_Store_Shared03_ReadItemGridX_ReadItemGridX
+    jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
 
-VaultMenu_Store_Shared03_ReadItemGridX::
+VaultMenu_Store_ReadItemGridX::
     ld b, $c3
-    jr VaultMenu_Store_Shared03_ReadItemGridX_ReadItemGridX
+    jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
     db $06, $bc
 
-VaultMenu_Store_Shared03_ReadItemGridX_ReadItemGridX::
+VaultMenu_Store_ReadItemGridX_ReadItemGridX::
     ld a, [wItemGridX]
     add a
-    ld hl, VaultMenu_Store_Shared03_ReadItemGridX_Data
+    ld hl, VaultMenu_Store_ReadItemGridX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1105,11 +1111,11 @@ VaultMenu_Store_Shared03_ReadItemGridX_ReadItemGridX::
     ei
     ret
 
-VaultMenu_Store_Shared03_ReadItemGridX_Data::
+VaultMenu_Store_ReadItemGridX_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
-VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
-    ld hl, VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc_Data
+VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
+    ld hl, VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data
     ld de, wScreenList
     ld c, $00
 
@@ -1209,10 +1215,10 @@ VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
 .read_digits:
     ld a, [wDigits + $1]
     add $e0
-    ld [wScreenByte93], a
+    ld [wDigitWorkA], a
     ld a, [wDigits + $2]
     add $e0
-    ld [wScreenByte94], a
+    ld [wDigitWorkB], a
     call BGMapAddressAtScroll_Bank1D
     ld de, $0140
     add hl, de
@@ -1273,25 +1279,25 @@ VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc::
     ld [wScreenStep], a
     ret
 
-VaultMenu_Store_Case0A_WriteDigitsAndScreenByte93Etc_Data::
+VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
-VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
+VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
-    jr nz, .call_run64_c7_unless_screen_state_is3
+    jr nz, .call_run_unless_screen_state_is3
     bit 4, a
     jr nz, .check_saved_sprite_slot_count
     bit 5, a
     jr nz, .check_saved_sprite_slot_count2
     bit 6, a
-    jp nz, .call_draw_blank_tile_c3_4_d5_f_bank1_d
+    jp nz, .call_draw_blank_tile_c3_bank1_d_2
     bit 7, a
-    jp nz, .call_draw_blank_tile_c3_4_d5_f_bank1_d2
+    jp nz, .call_draw_blank_tile_c3_bank1_d_22
     bit 0, a
     jp nz, .call_queue_sound_effect
-    call BlinkCursorSelectedRecord_Bank1D_4D41
+    call BlinkCursorSelectedRecord_Bank1D_2
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     ret z
@@ -1309,15 +1315,15 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
     ld [wScriptStartRequest], a
     ret
 
-.call_run64_c7_unless_screen_state_is3:
-    farcall Run64C7UnlessScreenStateIs3
+.call_run_unless_screen_state_is3:
+    farcall RunUnlessScreenStateIs3
     ld a, [wScreenStep]
     sub $04
     ld [wScreenStep], a
     ret
 
 .loop:
-    call BlinkCursorSelectedRecord_Bank1D_4D41
+    call BlinkCursorSelectedRecord_Bank1D_2
     ret
 
 .check_saved_sprite_slot_count:
@@ -1358,12 +1364,12 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
     dec a
     jp .set_item_grid_y
 
-.call_draw_blank_tile_c3_4_d5_f_bank1_d:
-    call DrawBlankTileC3_4D5F_Bank1D
+.call_draw_blank_tile_c3_bank1_d_2:
+    call DrawBlankTileC3_Bank1D_2
     ld a, [wItemGridX]
     and a
     jr nz, .set_item_grid_x
-    ld a, [wChoiceCursorF0]
+    ld a, [wMenuChoice]
     jr .set_item_grid_x2
 
 .set_item_grid_x:
@@ -1371,7 +1377,7 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 
 .set_item_grid_x2:
     ld [wItemGridX], a
-    call DrawCursorTileBB_4D5B_Bank1D
+    call DrawCursorTileBB_Bank1D_2
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
@@ -1379,9 +1385,9 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
     call QueueSoundEffect
     ret
 
-.call_draw_blank_tile_c3_4_d5_f_bank1_d2:
-    call DrawBlankTileC3_4D5F_Bank1D
-    ld a, [wChoiceCursorF0]
+.call_draw_blank_tile_c3_bank1_d_22:
+    call DrawBlankTileC3_Bank1D_2
+    ld a, [wMenuChoice]
     ld b, a
     ld a, [wItemGridX]
     cp b
@@ -1394,7 +1400,7 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 
 .set_item_grid_x4:
     ld [wItemGridX], a
-    call DrawCursorTileBB_4D5B_Bank1D
+    call DrawCursorTileBB_Bank1D_2
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
@@ -1405,11 +1411,11 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D
+    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D
     ld a, [wScreenState]
     cp $04
     jr z, .check_screen_step
-    call VaultMenu_Store_Case0B_Sub01_ReadItemGridYAndItemGridX
+    call VaultMenu_Store_ReadItemGridYAndItemGridX
     and a
     jr z, .check_screen_step
     cp $fe
@@ -1461,38 +1467,41 @@ VaultMenu_Store_Case0B_BlinkCursorSelectedRecord_Bank1D_4D41::
     ret
 
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
-; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-BlinkCursorSelectedRecord_Bank1D_4D41::
+; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was BlinkCursorSelectedRecord_Bank1D_4D41)
+BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, DrawCursorTileBB_4D5B_Bank1D
+    jr c, DrawCursorTileBB_Bank1D_2
     ld a, [wSelectedRecord]
     inc a
     ld [wSelectedRecord], a
     cp $10
-    jr c, DrawCursorTileBB_4D5B_Bank1D
+    jr c, DrawCursorTileBB_Bank1D_2
     cp $18
-    jr c, DrawBlankTileC3_4D5F_Bank1D
+    jr c, DrawBlankTileC3_Bank1D_2
     xor a
     ld [wSelectedRecord], a
 
-; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-DrawCursorTileBB_4D5B_Bank1D::
+; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawCursorTileBB_4D5B_Bank1D)
+DrawCursorTileBB_Bank1D_2::
     ld b, $bb
-    jr VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_ReadItemGridX
+    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
 
-; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-DrawBlankTileC3_4D5F_Bank1D::
+; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawBlankTileC3_4D5F_Bank1D)
+DrawBlankTileC3_Bank1D_2::
     ld b, $c3
-    jr VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_ReadItemGridX
+    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
 
-VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
-VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
     ld a, [wItemGridX]
     add a
-    ld hl, VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_Data
+    ld hl, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1508,10 +1517,10 @@ VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
     ei
     ret
 
-VaultMenu_Store_Case0B_Sub01_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
-VaultMenu_Store_Case0B_Sub01_ReadItemGridYAndItemGridX::
+VaultMenu_Store_ReadItemGridYAndItemGridX::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -1554,21 +1563,21 @@ VaultMenu_Store_Case0B_Sub01_ReadItemGridYAndItemGridX::
     xor a
     ret
 
-VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
+VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_02
     bit 4, a
-    jr nz, .call_vault_menu_store_case0_d_sub01_bg_map
+    jr nz, .call_vault_menu_store_bg_map_address_at
     bit 5, a
-    jr nz, .call_vault_menu_store_case0_d_sub01_bg_map2
+    jr nz, .call_vault_menu_store_bg_map_address_at2
     bit 6, a
     jp nz, .call_queue_sound_effect
     bit 7, a
     jp nz, .call_queue_sound_effect2
     bit 0, a
-    jp nz, .call_vault_menu_store_case0_d_sub01_bg_map3
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    jp nz, .call_vault_menu_store_bg_map_address_at3
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .set_two_choice_cursor_to_02:
@@ -1591,8 +1600,8 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     ld [wScriptStartRequest], a
     ret
 
-.call_vault_menu_store_case0_d_sub01_bg_map:
-    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
+.call_vault_menu_store_bg_map_address_at:
+    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
     ld a, [wNumberEditPos]
     cp $01
     jr nz, .set_number_edit_pos
@@ -1604,13 +1613,13 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 
 .set_number_edit_pos2:
     ld [wNumberEditPos], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_vault_menu_store_case0_d_sub01_bg_map2:
-    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
+.call_vault_menu_store_bg_map_address_at2:
+    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
     ld a, [wNumberEditPos]
     and a
     jr nz, .skip
@@ -1663,7 +1672,7 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     pop af
     cp b
     jp nc, .loop
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .read_count_tens:
@@ -1686,7 +1695,7 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     ld a, [wCountOnes]
     cp b
     jr nz, .check_number_tens
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .check_number_tens:
@@ -1701,13 +1710,13 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 
 .set_number_ones:
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .set_number_ones2:
     inc a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .call_queue_sound_effect2:
@@ -1734,7 +1743,7 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 .read_count_tens2:
     ld a, [wCountTens]
     ld [wNumberTens], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .set_number_tens2:
@@ -1743,14 +1752,14 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     ld b, a
     ld a, [wNumberOnes]
     or b
-    jr nz, .call_blink_cursor_blink_cd_bank1_d_4_f99
+    jr nz, .call_blink_cursor_blink_cd_bank1_d
     ld a, $01
     ld [wNumberOnes], a
     call DrawNumberTensNumberOnesDigitsAtScroll161
     ret
 
-.call_blink_cursor_blink_cd_bank1_d_4_f99:
-    call BlinkCursorBlinkCD_Bank1D_4F99
+.call_blink_cursor_blink_cd_bank1_d:
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .check_number_tens2:
@@ -1783,17 +1792,17 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
 .set_number_ones_to_09:
     ld a, $09
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
 .set_number_ones3:
     dec a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1D_4F99
+    call BlinkCursorBlinkCD_Bank1D
     ret
 
-.call_vault_menu_store_case0_d_sub01_bg_map3:
-    call VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
+.call_vault_menu_store_bg_map_address_at3:
+    call VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
     ld a, [wNumberTens]
     and a
     jr nz, .call_queue_sound_effect3
@@ -1806,14 +1815,14 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     call QueueSoundEffect
     ld a, [wScreenState]
     cp $03
-    jr z, .call_vault_menu_store_case0_d_sub01_write
+    jr z, .call_vault_menu_store_write_text_counter1_and
     call CheckListPagesPlusNumberAtMost18
     and a
     jr z, .clear_two_choice_cursor
     jr .set_two_choice_cursor_to_01
 
-.call_vault_menu_store_case0_d_sub01_write:
-    call VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3
+.call_vault_menu_store_write_text_counter1_and:
+    call VaultMenu_Store_WriteTextCounter1AndTextCounter3
     and a
     jr z, .clear_two_choice_cursor
 
@@ -1839,22 +1848,23 @@ VaultMenu_Store_Case0D_BlinkCursorBlinkCD_Bank1D_4F99::
     ret
 
 ; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
-; $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-BlinkCursorBlinkCD_Bank1D_4F99::
+; $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was BlinkCursorBlinkCD_Bank1D_4F99)
+BlinkCursorBlinkCD_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
+    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
     cp $10
-    jr c, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D
+    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2
     cp $18
-    jr c, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Skip
+    jr c, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip
     xor a
     ld [wCursorBlinkCD], a
 
-VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
     ld a, [wNumberEditPos]
     and a
     jr nz, .read_number_ones
@@ -1867,15 +1877,15 @@ VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D::
 .skip:
     add $e0
     ld b, a
-    jr VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_ReadNumberEditPos
+    jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos
 
-VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Skip::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip::
     ld b, $cb
 
-VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_ReadNumberEditPos::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
-    ld hl, VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Data
+    ld hl, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -1891,7 +1901,7 @@ VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_ReadNumberEditPos::
     ei
     ret
 
-VaultMenu_Store_Case0D_Sub01_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2::
     db $61, $01, $62, $01
 
 ; writes wNumberTens and wNumberOnes as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and +
@@ -1936,7 +1946,7 @@ CheckListPagesPlusNumberAtMost18::
     xor a
     ret
 
-VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3::
+VaultMenu_Store_WriteTextCounter1AndTextCounter3::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -2002,7 +2012,7 @@ VaultMenu_Store_Case0D_Sub01_WriteTextCounter1AndTextCounter3::
     ld a, $ff
     ret
 
-VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes::
+VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     ld hl, wItemStorage
     ld a, [wItemGridY]
     ld e, a
@@ -2068,7 +2078,7 @@ VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes::
     jr c, .check_saved_sprite_clip_mode
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
 .check_saved_sprite_clip_mode:
     ld a, [wSavedSpriteClipMode]
@@ -2076,14 +2086,14 @@ VaultMenu_Store_Case0E_TenTimesNumberTensPlusNumberOnes::
     jr nz, .set_two_choice_cursor_to_02
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
 .set_two_choice_cursor_to_02:
     ld a, $02
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
-VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc::
+VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld hl, wInventory
     ld c, $00
 
@@ -2103,7 +2113,7 @@ VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .loop
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
 .skip:
     ld hl, wItemStorage
@@ -2132,7 +2142,7 @@ VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .skip2
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jr VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
+    jr VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
 .skip2:
     ld hl, wItemStorage
@@ -2163,7 +2173,7 @@ VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld a, $02
     ld [wTwoChoiceCursor], a
 
-VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1::
+VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1::
     xor a
     ld [wTextCounter1], a
     ld [wTextCounter3], a
@@ -2171,7 +2181,7 @@ VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1:
     inc a
     and $01
     ld [wCounterPtr0Lo], a
-    farcall Run64C7UnlessScreenStateIs3
+    farcall RunUnlessScreenStateIs3
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2180,11 +2190,11 @@ VaultMenu_Store_Case0E_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1:
 ; two $FF-terminated lists holding the numbers $01-$62 in two different orders; no reader was found,
 ; directly or by a computed base (E-0227, C1)
 ; record: 95 numbers, then $FF
-OrderList_1D_5186::
+OrderList1D_1::
     db $21, $28, $29, $2a, $2e, $1f, $20, $2b, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $19, $1a, $1b, $1c, $1d, $1e, $13, $14, $15, $16, $17, $18, $0d, $0e, $0f, $10, $11, $12, $2c, $2d, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $62, $22, $23, $24, $25, $26, $27, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d ; entry 0
     db $ff ; end
 
-OrderList_1D_51E6::
+OrderList1D_2::
     db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $22, $23, $24, $25, $26, $27, $19, $1a, $1b, $1c, $1d, $1e, $13, $14, $15, $16, $17, $18, $0d, $0e, $0f, $10, $11, $12, $2c, $2d, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $62, $21, $28, $29, $2a, $2e, $1f, $20, $2b, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $3a, $3b, $3c, $3d ; entry 0
     db $ff ; end
 
@@ -2206,7 +2216,7 @@ ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
     jr nz, .loop
     ret
 
-VaultMenu_Store_Case0F_WriteScreenStepAndScriptCommandTypeEtc::
+VaultMenu_Store_WriteScreenStepAndScriptCommandTypeEtc::
     ld a, [wTwoChoiceCursor]
     cp $02
     jr z, .set_screen_step_to_07
@@ -2283,25 +2293,25 @@ VaultMenu_Store_Number24ToPackedBCD::
     ldh a, [hTemp2]
     and $f0
     swap a
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ldh a, [hTemp2]
     and $0f
     ld [wListEntries2], a
     ldh a, [hTemp1]
     and $f0
     swap a
-    ld [wScreenByteBF], a
+    ld [wMenuWordBuf], a
     ldh a, [hTemp1]
     and $0f
-    ld [wScreenByteC0], a
+    ld [wMenuWordBuf1], a
     ldh a, [hTemp0]
     and $f0
     swap a
-    ld [wScreenByteC1], a
+    ld [wMenuWordBuf2], a
     ldh a, [hTemp0]
     and $0f
     ld [wTextCounter0], a
-    ld hl, wScreenByteBD
+    ld hl, wSharedMenuWork
     ld c, $00
 
 .loop2:
@@ -2317,8 +2327,8 @@ VaultMenu_Store_Number24ToPackedBCD::
     jr c, .loop2
 
 .skip:
-    ld hl, wScreenByteBD
-    ld de, wScreenByte93
+    ld hl, wSharedMenuWork
+    ld de, wDigitWorkA
     ld a, [hli]
     add $e0
     ld [de], a
@@ -2406,9 +2416,9 @@ VaultMenu_Store_Number24ToPackedBCD_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
     ld hl, wScreenList
-    ld de, VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D_Data
+    ld de, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3
     ld c, $00
 
 .loop:
@@ -2508,10 +2518,10 @@ VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D::
     ld [wItemGrid], a
     jp .check_screen_step
 
-VaultMenu_Store_Case14_BGMapAddressAtScroll_Bank1D_Data::
+VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc::
+VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
     ret z
@@ -2647,7 +2657,7 @@ VaultMenu_Store_Case15_WriteScreenStepAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
-VaultMenu_TakeOut_Case15_WriteScreenStepAndTwoChoiceCursorEtc::
+VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
     ret z
@@ -2799,7 +2809,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jp nz, .call_queue_sound_effect4
     bit 5, a
     jp nz, .call_queue_sound_effect5
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     ret
 
 .call_queue_sound_effect:
@@ -2866,8 +2876,8 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
 .set_three_digits:
     inc a
     ld [wThreeDigits], a
-    call VaultMenu_Shared02_WriteThreeDigits
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteThreeDigits
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -2882,15 +2892,15 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .loop
     xor a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
 .loop:
     inc a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared02_WriteThreeDigits
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteThreeDigits
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -2926,7 +2936,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .set_three_digits2
     ld a, b
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -2936,14 +2946,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .set_three_digits2
     xor a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits2:
     inc a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -2974,7 +2984,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
 .set_three_digits3:
     dec a
     ld [wThreeDigits], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3009,14 +3019,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits4
     ld a, $09
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits4:
     dec a
     ld [wThreeDigits + $1], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3036,7 +3046,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits5
     ld a, [wItemGrid]
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3046,14 +3056,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits5
     ld a, $09
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits5:
     dec a
     ld [wThreeDigits + $2], a
-    call VaultMenu_Shared02_WriteCursorBlinkCD
+    call VaultMenu_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3104,7 +3114,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     xor a
     ret
 
-VaultMenu_Shared02_WriteCursorBlinkCD::
+VaultMenu_WriteCursorBlinkCD::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .read_number_edit_pos
@@ -3133,7 +3143,7 @@ VaultMenu_Shared02_WriteCursorBlinkCD::
 .read_number_edit_pos3:
     ld a, [wNumberEditPos]
     add a
-    ld hl, VaultMenu_Shared02_WriteCursorBlinkCD_Data
+    ld hl, VaultMenu_WriteCursorBlinkCD_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3149,7 +3159,7 @@ VaultMenu_Shared02_WriteCursorBlinkCD::
     ei
     ret
 
-VaultMenu_Shared02_WriteCursorBlinkCD_Data::
+VaultMenu_WriteCursorBlinkCD_Data::
     db $6e, $00, $6f, $00, $70, $00
 
 ; writes the three bytes at wThreeDigits as digit tiles ($E0 + digit) at the BG map entry
@@ -3218,7 +3228,7 @@ SaveBGMapRectWithAttrs::
     pop de
     pop bc
     ld a, c
-    ld [wCursorBlinkB8], a
+    ld [wListCursorBlink], a
     push hl
     push hl
 
@@ -3252,7 +3262,7 @@ SaveBGMapRectWithAttrs::
     inc de
     dec c
     jp nz, .loop
-    ld a, [wCursorBlinkB8]
+    ld a, [wListCursorBlink]
     ld c, a
     pop hl
     ld a, l
@@ -3512,7 +3522,7 @@ TenTimesNumberTensPlusNumberOnes::
     add_a_to_hl
     ret
 
-VaultMenu_Shared02_WriteThreeDigits::
+VaultMenu_WriteThreeDigits::
     ld a, [wCountTens]
     ld b, a
     ld a, [wThreeDigits]
@@ -3575,24 +3585,24 @@ VaultMenu_Store_CountNonZeroItemGridBytes::
     ld a, [wItemGridY]
     inc a
     cp l
-    jr c, .set_choice_cursor_f0_to_03
+    jr c, .set_menu_choice_to_03
     pop af
     push af
     and a
-    jr nz, .set_choice_cursor_f0
+    jr nz, .set_menu_choice
     ld a, [wItemGridY]
     inc a
     cp l
-    jr z, .set_choice_cursor_f0_to_03
+    jr z, .set_menu_choice_to_03
     ld a, [wItemGridY]
     dec a
     ld [wItemGridY], a
-    jr .set_choice_cursor_f0_to_03
+    jr .set_menu_choice_to_03
 
-.set_choice_cursor_f0:
+.set_menu_choice:
     pop af
     dec a
-    ld [wChoiceCursorF0], a
+    ld [wMenuChoice], a
     ld b, a
     ld a, [wItemGridX]
     cp b
@@ -3603,7 +3613,7 @@ VaultMenu_Store_CountNonZeroItemGridBytes::
     ld a, [wArg1]
     and a
     jr nz, .restore
-    call VaultMenu_Store_Shared03_ReadItemGridX
+    call VaultMenu_Store_ReadItemGridX
 
 .restore:
     pop hl
@@ -3612,10 +3622,10 @@ VaultMenu_Store_CountNonZeroItemGridBytes::
     ld [wItemGridX], a
     jr .return
 
-.set_choice_cursor_f0_to_03:
+.set_menu_choice_to_03:
     pop af
     ld a, $03
-    ld [wChoiceCursorF0], a
+    ld [wMenuChoice], a
 
 .return:
     ret
@@ -3823,25 +3833,26 @@ DrawListEntriesCell5SpeciesSprite::
     ret
 
 ; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at
-; HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf
-; (E-0126)
-LoadListEntriesCell5RecordAndContinue5CAF::
+; HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
+; (E-0126) (E-0344: the address in its name dropped or read as the label there; was
+; LoadListEntriesCell5RecordAndContinue5CAF)
+LoadListEntriesCell5RecordAndContinue::
     call SetArg5ToListEntriesCell5
     ld a, $0a
     ld [rRAMG2], a
     xor a
     ld [rRAMB], a
     ld a, [hl]
-    jr HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf
+    jr HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
 
-HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld a, $0a
     ld [rRAMG2], a
     xor a
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
-HibernateMenu_ChooseRecords_Case3E_CopyRecordNameToNameGlyphBuf_CallCopyRecordNameToNameGlyphBuf::
+HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
     ld a, $f0
@@ -4176,8 +4187,9 @@ ListPartyRecordsWithState2ToListEntries::
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wListEntries, then appends the
 ; number of every record whose byte 0 is 1 and byte $6E is 0; wListCount = the list length,
-; wRecordsFlagged = how many state-1 records had byte $6E set (E-0104)
-ListRecordsState1WithByte6EClear::
+; wRecordsFlagged = how many state-1 records had byte $6E set (E-0104) (E-0345: record byte $6E is
+; MON_EGG; was ListRecordsState1WithByte6EClear)
+ListRecordsState1NotEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
     ld b, $1e
@@ -4248,8 +4260,9 @@ ListRecordsState1WithByte6EClear::
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries and wListEntries2 (30 bytes each),
 ; then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wListCount = the list length,
-; wRecordsFlagged = how many in-use records had byte $6E set (E-0104)
-ListRecordsInUseWithByte6EClear::
+; wRecordsFlagged = how many in-use records had byte $6E set (E-0104) (E-0345: record byte $6E is
+; MON_EGG; was ListRecordsInUseWithByte6EClear)
+ListRecordsInUseNotEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
     ld b, $1e
@@ -4434,8 +4447,9 @@ MovePartyRecordsToFrontOfList::
 ; over the first wRecordCapacity SRAM records ($A5 bytes each from sRecords; wRecordCapacity is set
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose
 ; byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104) (C2 from E-0325:
-; Evaluate with no egg in any record shows 'You don't have any eggs')
-ListRecordsInUseWithByte6ESet::
+; Evaluate with no egg in any record shows 'You don't have any eggs') (E-0345: record byte $6E is
+; MON_EGG; was ListRecordsInUseWithByte6ESet)
+ListRecordsInUseEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
     ld b, $1e
@@ -4875,7 +4889,7 @@ DrawRecordListNameTiles_Bank1D_Data::
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
 ; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-BGMapAddressAtScroll_Bank1D_62FF::
+BGMapAddressAtScroll_Bank1D_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
     and $f8
@@ -4960,7 +4974,7 @@ DrawRecordListPageMarks::
     pop bc
     push bc
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     push hl
     ld a, [wArg2]
     and a
@@ -5067,18 +5081,18 @@ DrawRecordListPageMarks_Data5::
 DrawRecordListPageMarks_Data6::
     db $83, $c3, $ab, $c3, $d3, $c3, $fb, $c3
 
-SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E::
+SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_draw_blank_tile_c3_64_ac_bank1_d2
+    jr nz, .call_draw_blank_tile_c3_bank1_d_32
     bit 7, a
-    jr nz, .call_draw_blank_tile_c3_64_ac_bank1_d3
+    jr nz, .call_draw_blank_tile_c3_bank1_d_33
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, .call_queue_sound_effect
     bit 1, a
-    jr nz, .call_draw_blank_tile_c3_64_ac_bank1_d
-    call BlinkCursorBlinkB8_Bank1D_648E
+    jr nz, .call_draw_blank_tile_c3_bank1_d_3
+    call BlinkCursorBlinkB8_Bank1D
     xor a
     ld [wMenuInputResult], a
     ret
@@ -5086,88 +5100,91 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D_648E::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap
+    call SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap
     ld a, $ff
     ld [wMenuInputResult], a
     ret
 
-.call_draw_blank_tile_c3_64_ac_bank1_d:
-    call DrawBlankTileC3_64AC_Bank1D
+.call_draw_blank_tile_c3_bank1_d_3:
+    call DrawBlankTileC3_Bank1D_3
     ld a, $fe
     ld [wMenuInputResult], a
     ret
 
-.call_draw_blank_tile_c3_64_ac_bank1_d2:
-    call DrawBlankTileC3_64AC_Bank1D
-    ld a, [wChoiceCursorF0]
+.call_draw_blank_tile_c3_bank1_d_32:
+    call DrawBlankTileC3_Bank1D_3
+    ld a, [wMenuChoice]
     and a
     jr nz, .skip
     ld a, $01
-    jr .set_choice_cursor_f02
+    jr .set_menu_choice2
 
 .skip:
     dec a
-    jr .set_choice_cursor_f02
+    jr .set_menu_choice2
 
-.call_draw_blank_tile_c3_64_ac_bank1_d3:
-    call DrawBlankTileC3_64AC_Bank1D
-    ld a, [wChoiceCursorF0]
+.call_draw_blank_tile_c3_bank1_d_33:
+    call DrawBlankTileC3_Bank1D_3
+    ld a, [wMenuChoice]
     cp $01
-    jr c, .set_choice_cursor_f0
+    jr c, .set_menu_choice
     xor a
-    jr .set_choice_cursor_f02
+    jr .set_menu_choice2
 
-.set_choice_cursor_f0:
+.set_menu_choice:
     inc a
 
-.set_choice_cursor_f02:
-    ld [wChoiceCursorF0], a
-    call DrawCursorTileBB_64A8_Bank1D
+.set_menu_choice2:
+    ld [wMenuChoice], a
+    call DrawCursorTileBB_Bank1D_3
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
     ld [wMenuInputResult], a
     ret
 
-; cycles wCursorBlinkB8 through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
-; $10-$17 (after the joypad repeat timer reaches $14) (E-0122)
-BlinkCursorBlinkB8_Bank1D_648E::
+; cycles wListCursorBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
+; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was BlinkCursorBlinkB8_Bank1D_648E)
+BlinkCursorBlinkB8_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, DrawCursorTileBB_64A8_Bank1D
-    ld a, [wCursorBlinkB8]
+    jr c, DrawCursorTileBB_Bank1D_3
+    ld a, [wListCursorBlink]
     inc a
-    ld [wCursorBlinkB8], a
+    ld [wListCursorBlink], a
     cp $10
-    jr c, DrawCursorTileBB_64A8_Bank1D
+    jr c, DrawCursorTileBB_Bank1D_3
     cp $18
-    jr c, DrawBlankTileC3_64AC_Bank1D
+    jr c, DrawBlankTileC3_Bank1D_3
     xor a
-    ld [wCursorBlinkB8], a
+    ld [wListCursorBlink], a
 
-; B = $BB (cursor tile) and joins the cursor draw (E-0122)
-DrawCursorTileBB_64A8_Bank1D::
+; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawCursorTileBB_64A8_Bank1D)
+DrawCursorTileBB_Bank1D_3::
     ld b, $bb
-    jr SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
+    jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
 
-; B = $C3 (blank tile) and joins the cursor draw (E-0122)
-DrawBlankTileC3_64AC_Bank1D::
+; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
+; or read as the label there; was DrawBlankTileC3_64AC_Bank1D)
+DrawBlankTileC3_Bank1D_3::
     ld b, $c3
-    jr SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0
+    jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
 
-SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap::
+SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursorF0::
-    ld a, [wChoiceCursorF0]
+SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice::
+    ld a, [wMenuChoice]
     add a
-    ld hl, SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -5178,7 +5195,7 @@ SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_ReadChoi
     ei
     ret
 
-SwapMonstersMenu_ChooseToView_Shared01_StepBGMapAddressBackOnScrollWrap_Data::
+SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_Data::
     db $28, $01, $68, $01
 
 ; up/down moves wListCursor over wListCount entries ($FD), A selects ($FF, sound $69), B cancels
@@ -5365,7 +5382,7 @@ DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -5400,7 +5417,7 @@ UpdateListCursorListCursor::
     ret
 
 .call_update_list_cursor_list_cursor_read_list:
-    call UpdateListCursorListCursor_ReadListCursor_Sub03
+    call UpdateListCursorListCursor_ReadListCursor_2
     ld a, [wListCursor]
     and a
     jr nz, .set_list_cursor
@@ -5415,7 +5432,7 @@ UpdateListCursorListCursor::
     jr .clear_list_cursor_aux
 
 .call_update_list_cursor_list_cursor_read_list2:
-    call UpdateListCursorListCursor_ReadListCursor_Sub03
+    call UpdateListCursorListCursor_ReadListCursor_2
     ld a, [wListCount]
     dec a
     ld b, a
@@ -5463,7 +5480,7 @@ UpdateListCursorListCursor_WriteListCursorAux::
     cp $10
     jr c, UpdateListCursorListCursor_ReadListCursor
     cp $18
-    jr c, UpdateListCursorListCursor_ReadListCursor_Sub03
+    jr c, UpdateListCursorListCursor_ReadListCursor_2
     xor a
     ld [wListCursorAux], a
 
@@ -5471,7 +5488,7 @@ UpdateListCursorListCursor_ReadListCursor::
     ld b, $bb
     jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 
-UpdateListCursorListCursor_ReadListCursor_Sub03::
+UpdateListCursorListCursor_ReadListCursor_2::
     ld b, $c3
     jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 
@@ -5487,7 +5504,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -5577,7 +5594,7 @@ UpdatePagedListCursor::
     jp .set_list_page_index
 
 .call_update_paged_list_cursor_read_menu_input:
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
     ld a, [wListCursor]
     and a
     jr nz, .set_list_cursor2
@@ -5599,7 +5616,7 @@ UpdatePagedListCursor::
     jr .clear_list_cursor_aux
 
 .call_update_paged_list_cursor_read_menu_input2:
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
+    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
     ld a, [wListLastRow]
     ld b, a
     ld a, [wListCursor]
@@ -5633,7 +5650,7 @@ UpdatePagedListCursor::
     ret
 
 .call_update_paged_list_cursor_bg_map_address:
-    call UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF
+    call UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2
     ld a, $69
     call QueueSoundEffect
     ld a, $ff
@@ -5655,29 +5672,29 @@ UpdatePagedListCursor_WriteListCursorAux::
     cp $10
     jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor
     cp $18
-    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03
+    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
     xor a
     ld [wListCursorAux], a
 
 UpdatePagedListCursor_ReadMenuInputResultAndListCursor::
     ld b, $bb
-    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_ReadMenuInputResult
+    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 
-UpdatePagedListCursor_ReadMenuInputResultAndListCursor_Sub03::
+UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2::
     ld b, $c3
-    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_ReadMenuInputResult
+    jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF::
+UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2::
     ld b, $bc
 
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_ReadMenuInputResult::
+UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult::
     ld a, [wMenuInputResult]
     ld c, a
     add a
     add a
     add c
     add a
-    ld hl, UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_Data
+    ld hl, UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_Data
     add_a_to_hl
     ld a, [wListCursor]
     add a
@@ -5686,7 +5703,7 @@ UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_ReadMenuInputResult::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -5697,7 +5714,7 @@ UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_ReadMenuInputResult::
     ei
     ret
 
-UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_62FF_Data::
+UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $28, $00, $68, $00, $a8, $00
     db $e8, $00, $28, $01, $a8, $00, $e8, $00, $28, $01, $68, $01, $a8, $01, $a6, $00
     db $e6, $00, $26, $01, $66, $01, $a6, $01, $a4, $00, $e4, $00, $24, $01, $64, $01
@@ -6063,13 +6080,13 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
-DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
+DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
     jr DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 
 ; C = 0, then falls into the sprite part draw
-; (DrawThreeMetaSpritePartsFor5050_WriteSpriteAttrXorAndSpriteTileOffsetEtc body) (E-0122)
+; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc body) (E-0122)
 DrawMetaSpritePartC0::
     ld c, $00
 
@@ -6188,7 +6205,7 @@ MarkPartyMembersInRecordListPage::
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank1D_62FF
+    call BGMapAddressAtScroll_Bank1D_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -6222,7 +6239,7 @@ MarkPartyMembersInRecordListPage_Data1::
 MarkPartyMembersInRecordListPage_Data2::
     db $20, $00, $60, $00, $a0, $00, $e0, $00, $20, $01
 
-SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries::
+SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries::
     ld hl, wTextWindowTileLo
     xor a
     ld [hli], a
@@ -6235,7 +6252,7 @@ SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries::
     and a
     jr z, .call_list_party_records_with_state2_to_list
     cp $01
-    jp z, .call_list_records_state1_with_byte6_e_clear
+    jp z, .call_list_records_state1_not_eggs
     cp $02
     jp z, .read_screen_state2
     cp $03
@@ -6274,8 +6291,8 @@ SwapMonstersMenu_Case03_ListPartyRecordsWithState2ToListEntries::
     ld [wScriptStartRequest], a
     ret
 
-.call_list_records_state1_with_byte6_e_clear:
-    farcall ListRecordsState1WithByte6EClear
+.call_list_records_state1_not_eggs:
+    farcall ListRecordsState1NotEggs
     ld a, [wListCount]
     and a
     jr nz, .read_screen_state
@@ -6430,10 +6447,11 @@ CopyTileBytesToVRAM_Bank1D::
     jr nz, .loop
     ret
 
-; HL = SetupTileMap6D84AtBGMap1_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then
-; continues at LoadTileList6DC4SixPerFrame_Loop (E-0126)
-SetupTileMap6D84AtBGMap1::
-    ld hl, SetupTileMap6D84AtBGMap1_Data
+; HL = SetupTileMapAtBGMap1_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then continues
+; at LoadTileListSixPerFrame_Loop (E-0126) (E-0344: the address in its name dropped or read as the
+; label there; was SetupTileMap6D84AtBGMap1)
+SetupTileMapAtBGMap1::
+    ld hl, SetupTileMapAtBGMap1_Data
     ld a, $9c
     ld [wArg1], a
     xor a
@@ -6441,12 +6459,13 @@ SetupTileMap6D84AtBGMap1::
     ld de, vBGMap1
     xor a
     ld [wGlyphListPos], a
-    jr LoadTileList6DC4SixPerFrame_Loop
+    jr LoadTileListSixPerFrame_Loop
 
-; copies tiles listed in LoadTileList6DC4SixPerFrame_Data to vBGMap1 + $200 onward six per call; at
-; the $FF end resets the counters and wScreenStep += 1 (E-0127)
-LoadTileList6DC4SixPerFrame::
-    ld hl, LoadTileList6DC4SixPerFrame_Data
+; copies tiles listed in LoadTileListSixPerFrame_Data to vBGMap1 + $200 onward six per call; at the
+; $FF end resets the counters and wScreenStep += 1 (E-0127) (E-0344: the address in its name dropped
+; or read as the label there; was LoadTileList6DC4SixPerFrame)
+LoadTileListSixPerFrame::
+    ld hl, LoadTileListSixPerFrame_Data
     ld a, $9e
     ld [wArg1], a
     xor a
@@ -6455,7 +6474,7 @@ LoadTileList6DC4SixPerFrame::
     xor a
     ld [wGlyphListPos], a
 
-LoadTileList6DC4SixPerFrame_Loop::
+LoadTileListSixPerFrame_Loop::
     push hl
     push de
     ld a, [wGlyphListStart]
@@ -6496,7 +6515,7 @@ LoadTileList6DC4SixPerFrame_Loop::
     inc a
     ld [wGlyphListPos], a
     cp $06
-    jr c, LoadTileList6DC4SixPerFrame_Loop
+    jr c, LoadTileListSixPerFrame_Loop
     ret
 
 .restore:
@@ -6509,10 +6528,11 @@ LoadTileList6DC4SixPerFrame_Loop::
     inc [hl]
     ret
 
-; copies tiles from Tiles_1D_6D20: two to vTiles2 + $6E0 and three to vTiles2 + $7C0
-; (CopyTileBytesToVRAM_Bank1D) (E-0118)
-UploadTilesFromData6D20::
-    ld hl, Tiles_1D_6D20
+; copies tiles from UploadTilesFromData_Tiles: two to vTiles2 + $6E0 and three to vTiles2 + $7C0
+; (CopyTileBytesToVRAM_Bank1D) (E-0118) (E-0344: the address in its name dropped or read as the
+; label there; was UploadTilesFromData6D20)
+UploadTilesFromData::
+    ld hl, UploadTilesFromData_Tiles
     ld de, vTiles2 + $6e0
     call CopyTileBytesToVRAM_Bank1D
     call CopyTileBytesToVRAM_Bank1D
@@ -6524,7 +6544,7 @@ UploadTilesFromData6D20::
 
 ; HL = $6D20 and 5 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_1D_6D20::
+UploadTilesFromData_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $ff ; entry 0
     db $ff, $ff, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 1
     db $ff, $ff, $ff, $ff, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 2
@@ -6549,13 +6569,13 @@ LoadRecordCapacityFromFarmLevelTable::
 LoadRecordCapacityFromFarmLevelTable_Data::
     db $0a, $14, $1e
 
-SetupTileMap6D84AtBGMap1_Data::
+SetupTileMapAtBGMap1_Data::
     db $40, $8a, $50, $8a, $60, $8a, $70, $8a, $80, $8a, $90, $8a, $a0, $8a, $b0, $8a
     db $c0, $8a, $d0, $8a, $e0, $8a, $f0, $8a, $e0, $8e, $f0, $8e, $00, $8f, $10, $8f
     db $20, $8f, $30, $8f, $40, $8f, $50, $8f, $60, $8f, $70, $8f, $80, $8f, $90, $8f
     db $a0, $8f, $b0, $8f, $c0, $8f, $d0, $8f, $e0, $8f, $f0, $8f, $b0, $8e, $ff, $ff
 
-LoadTileList6DC4SixPerFrame_Data::
+LoadTileListSixPerFrame_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
     db $f0, $8b, $a0, $8e, $b0, $8e, $c0, $8e, $d0, $8e, $ff, $ff
 

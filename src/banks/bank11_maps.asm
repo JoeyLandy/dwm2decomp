@@ -210,12 +210,12 @@ CheckWarpAtPlayer::
 CheckWarpsAtPlayerPosition::
     ld a, [wMapType]
     bit 7, a
-    jr z, .call_check_map_exit_table4480
+    jr z, .call_check_map_exit_table
     farcall CheckWarpsByMapType
     ret
 
-.call_check_map_exit_table4480:
-    call CheckMapExitTable4480
+.call_check_map_exit_table:
+    call CheckMapExitTable
     bit 0, c
     ret nz
     ldh a, [hMapId]
@@ -586,16 +586,17 @@ StartWarpTransition::
     ld [wFieldTransitionKind], a
     ret
 
-; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable4480_Data and runs
-; CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc with its entry (or wKeyWorldGoal); unlisted maps
-; clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125)
-CheckMapExitTable4480::
+; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable_Data and runs
+; CheckMapExitTable_WriteWarpPendingAndMapIdEtc with its entry (or wKeyWorldGoal); unlisted maps
+; clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125) (E-0344: the address in its name
+; dropped or read as the label there; was CheckMapExitTable4480)
+CheckMapExitTable::
     ldh a, [hMapId]
     cp $20
     jr c, .check_player_state_flags
     ld c, a
     ld b, $00
-    ld hl, CheckMapExitTable4480_Data
+    ld hl, CheckMapExitTable_Data
 
 .skip:
     ld a, [hl]
@@ -628,17 +629,17 @@ CheckMapExitTable4480::
     cp b
     jr nz, .skip3
     ld de, wKeyWorldGoal
-    call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
+    call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
     ret
 
 .skip3:
     ld e, l
     ld d, h
     inc de
-    call CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc
+    call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
     ret
 
-CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc::
+CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ldh a, [hPlayerX]
     and $f0
     ld c, a
@@ -681,7 +682,7 @@ CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc::
     inc de
     ld a, [de]
     dec a
-    ld hl, CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data
+    ld hl, CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -713,12 +714,12 @@ CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc::
     ld c, $01
     ret
 
-CheckMapExitTable4480_Data::
+CheckMapExitTable_Data::
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $b4, $03, $70, $44, $b4, $04
     db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08
     db $c8, $44, $01, $09, $d1, $44, $00, $0a, $da, $44, $00, $0b, $ff
 
-CheckMapExitTable4480_WriteWarpPendingAndMapIdEtc_Data::
+CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2
 
 ; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (Map38Tileset) the game

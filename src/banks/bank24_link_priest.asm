@@ -33,7 +33,7 @@ GameMode6_Init::
     ld a, [wRecordBufA]
     and a
     jr z, .skip
-    ld a, [wLinkSceneByte4C]
+    ld a, [wLinkSceneArg]
     ld [wArg1], a
     xor a
     ld [wArg2], a
@@ -58,7 +58,7 @@ GameMode6_Init::
 
 .skip:
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -69,7 +69,7 @@ GameMode6_Init::
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
-    farcall LoadPalette0FromData53C6
+    farcall LoadPalette0FromData_3
     farcall SendSGBFieldPaletteSet
     ld hl, vTiles1
     ld a, l
@@ -108,7 +108,7 @@ GameMode6_Init::
     jr .call_decompress_to_ram_locked
 
 .skip3:
-    ld de, Tiles1Plus600Gfx_24_6E13
+    ld de, Tiles1Plus600Gfx
     ld b, $24
 
 .call_decompress_to_ram_locked:
@@ -213,13 +213,13 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
     jr .call_copy_rect_to20_byte_rows_jp_bank24
 
 .skip2:
-    ld de, TileRect_24_5792
+    ld de, GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24_TileRect
 
 .call_copy_rect_to20_byte_rows_jp_bank24:
     ld hl, wWindowTileBuffer + $7a
     lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
-    call GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess
+    call GameMode6_Update_ObtainedEgg_WaitForVRAMAccess
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $06
     ld de, $01cc
@@ -267,7 +267,7 @@ GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
     jr nz, .check_battle_scene
 
 .loop:
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 .check_battle_scene:
@@ -321,14 +321,14 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable
     dw GameMode6_Update_SavePrompt_RunSaveGameSteps
     dw GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep
-    dw GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_51A3
+    dw GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub
     dw GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D
-    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    dw GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneAndGameModeEtc
     dw GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg
     dw GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor
     dw GameMode6_Update_SavePrompt_SetScreenStepTo05
     dw GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24
-    dw GameMode6_Update_SavePrompt_ReturnStub_51A3
+    dw GameMode6_Update_SavePrompt_ReturnStub
     dw GameMode6_Update_SavePrompt_DecompressToVRAM
     dw GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep
     dw GameMode6_Update_SavePrompt_ObjectScene_GameMode6_Update_UpdateAndDrawSpriteSlots
@@ -417,7 +417,7 @@ GameMode6_Update_SavePrompt_RunSaveGameSteps::
     ld a, [wSaveStep]
     bit 7, a
     ret z
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep::
@@ -428,15 +428,15 @@ GameMode6_Update_SavePrompt_ToShowStringAInDefaultWindow_Bank24AndStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_51A3::
+GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub::
     ld a, $6c
     call QueueSoundEffect
     call GameMode6_Update_SavePrompt_ShowYesNo
-    ld de, TileRect_24_5A0A
+    ld de, GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRowsJp_Bank24
-    call ReturnStub_51A3
+    call ReturnStub
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
@@ -480,19 +480,19 @@ GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc::
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+GameMode6_Update_SavePrompt_ToGameMode6_Update_WriteLinkSceneAndGameModeEtc::
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
     ld a, $6c
     call QueueSoundEffect
     call GameMode6_Update_ShowMonsterEg
-    ld de, TileRect_24_5A50
+    ld de, GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $10e
     lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
-    call ReturnStub_51A3
+    call ReturnStub
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
@@ -505,7 +505,7 @@ GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
     ret
 
 GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
-    call GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc
+    call GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc
     ld a, [wMenuInputResult]
     and a
     ret z
@@ -518,12 +518,12 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
 .check_two_choice_cursor:
     ld a, [wTwoChoiceCursor]
     and a
-    jr nz, .call_list_records_in_use_with_byte6_e_set
-    farcall ListRecordsInUseWithByte6EClear
+    jr nz, .call_list_records_in_use_eggs
+    farcall ListRecordsInUseNotEggs
     jr .read_screen_step
 
-.call_list_records_in_use_with_byte6_e_set:
-    farcall ListRecordsInUseWithByte6ESet
+.call_list_records_in_use_eggs:
+    farcall ListRecordsInUseEggs
 
 .read_screen_step:
     ld a, [wScreenStep]
@@ -533,15 +533,15 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
 
 .call_game_mode6_update_save_prompt_show_yes:
     call GameMode6_Update_SavePrompt_ShowYesNo
-    ld de, TileRect_24_5A0A
+    ld de, GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRowsJp_Bank24
     xor a
     ld b, $bc
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
-    call ReturnStub_51A3
+    call StoreBAtWordTableEntry_Bank24_2
+    call ReturnStub
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
@@ -549,7 +549,7 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
     xor a
     ld b, $c3
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     xor a
     ld [wTwoChoiceCursor], a
     ld a, $05
@@ -579,13 +579,13 @@ GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24::
     ld a, [wTwoChoiceCursor]
     ld b, $bc
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SavePrompt_ReturnStub_51A3::
+GameMode6_Update_SavePrompt_ReturnStub::
     ld a, [wBattleScene]
     cp $08
     jr nz, .call_game_mode6_update_copy_rect_to20_byte
@@ -596,18 +596,18 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
     jr .call_bg_map_address_at_scroll_bank24
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM
 
 .call_bg_map_address_at_scroll_bank24:
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
-    ld de, TileRect_24_5942
+    ld de, GameMode6_Update_SavePrompt_ReturnStub_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $14, $05
     call CopyRectTo20ByteRowsJp_Bank24
-    call ReturnStub_51A3
+    call ReturnStub
     call BGMapAddressAtScroll_Bank24
     ld de, $01a0
     add hl, de
@@ -621,7 +621,7 @@ GameMode6_Update_SavePrompt_ReturnStub_51A3::
 
 GameMode6_Update_SavePrompt_DecompressToVRAM::
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     ld de, vTiles1
@@ -629,16 +629,16 @@ GameMode6_Update_SavePrompt_DecompressToVRAM::
 
 .loop:
     push bc
-    ld hl, Tiles_24_44FE
-    call CopyTileBytesToVRAM_Bank24_52BA
+    ld hl, GameMode6_Update_SavePrompt_DecompressToVRAM_Tiles
+    call CopyTileBytesToVRAM_Bank24_2
     pop bc
     dec b
     jr nz, .loop
-    ld de, TileRect_24_59A6
+    ld de, GameMode6_Update_SavePrompt_DecompressToVRAM_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $14, $05
     call CopyRectTo20ByteRowsJp_Bank24
-    call ReturnStub_51A3
+    call ReturnStub
     call BGMapAddressAtScroll_Bank24
     ld de, $01a0
     add hl, de
@@ -660,7 +660,7 @@ GameMode6_Update_SavePrompt_DecompressToVRAM::
 
 ; HL = $44FE and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_24_44FE::
+GameMode6_Update_SavePrompt_DecompressToVRAM_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
 GameMode6_Update_SavePrompt_ToGameMode6_Update_Save_TestFlagBitAndStep::
@@ -717,7 +717,7 @@ GameMode6_Update_Save_RunSaveGameSteps::
     ld a, [wSaveStep]
     bit 7, a
     ret z
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 ; by wScreenStep: a paged record list with strings (ShowStringAInDefaultWindow_Bank24), record
@@ -732,8 +732,8 @@ GameMode6_Update_ChooseRecordList::
     dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_ChooseRecordList_AdvanceScreenStep
-    dw GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE
-    dw GameMode6_Update_Case04_PageList
+    dw GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2
+    dw GameMode6_Update_PageList
     dw GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D
     dw GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg
@@ -754,33 +754,34 @@ GameMode6_Update_ChooseRecordList_AdvanceScreenStep::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE::
+GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; moves the paged cursor, copies a rectangle and sets the sub-step
-GameMode6_Update_Case04_PageList::
+; (E-0345: was GameMode6_Update_Case04_PageList) moves the paged cursor, copies a rectangle and sets
+; the sub-step
+GameMode6_Update_PageList::
     ld a, [wScreenSubStep]
     jumptable
-    dw GameMode6_Update_Case04_PageList_UpdatePagedListCursor
-    dw GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24
-    dw GameMode6_Update_Case04_PageList_SetScreenSubStep
+    dw GameMode6_Update_PageList_UpdatePagedListCursor
+    dw GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24
+    dw GameMode6_Update_PageList_SetScreenSubStep
 
-GameMode6_Update_Case04_PageList_UpdatePagedListCursor::
+GameMode6_Update_PageList_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
     farcall UpdatePagedListCursor
@@ -796,7 +797,7 @@ GameMode6_Update_Case04_PageList_UpdatePagedListCursor::
     cp $fe
     jr z, .check_screen_sub_step
     cp $ff
-    jr z, .call_game_mode6_update_case04_page_list
+    jr z, .call_game_mode6_update_page_list_read_party
     ret
 
 .read_screen_step:
@@ -817,8 +818,8 @@ GameMode6_Update_Case04_PageList_UpdatePagedListCursor::
     ld [wScreenSubStep], a
     ret
 
-.call_game_mode6_update_case04_page_list:
-    call GameMode6_Update_Case04_PageList_Case00_ReadPartyCountAndListCursorEtc
+.call_game_mode6_update_page_list_read_party:
+    call GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc
     cp $ff
     jr nz, .read_list_cursor
     ld a, $02
@@ -830,43 +831,43 @@ GameMode6_Update_Case04_PageList_UpdatePagedListCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
-    ld de, TileRect_24_5814
+GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24::
+    ld de, GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_TileRect_2
     ld hl, wWindowTileBuffer + $64
     lb bc, $0e, $0d
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wTwoChoiceCursor]
     ld b, $bb
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wBattleScene]
     cp $08
-    jr nz, .check_link_byte_eb
+    jr nz, .check_link_breed_result
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f7
     lb bc, $06, $06
     call CopyRectTo20ByteRowsJp_Bank24
     jr .skip
 
-.check_link_byte_eb:
-    ld a, [wLinkByteEB]
+.check_link_breed_result:
+    ld a, [wLinkBreedResult]
     and a
     jr nz, .skip
-    ld de, TileRect_24_57F2
+    ld de, GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_TileRect
     ld hl, wWindowTileBuffer + $7a
     lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip:
-    ld de, TileRect_24_5A50
+    ld de, GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $10e
     lb bc, $0a, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -877,7 +878,7 @@ GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
     ld a, [wTwoChoiceCursor]
     ld b, $c3
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     xor a
     ld [wScreenSubStep], a
     ld [wListPageIndex], a
@@ -890,7 +891,7 @@ GameMode6_Update_Case04_PageList_CopyRectTo20ByteRowsJp_Bank24::
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_Case04_PageList_SetScreenSubStep::
+GameMode6_Update_PageList_SetScreenSubStep::
     xor a
     ld [wScreenSubStep], a
     ret
@@ -932,19 +933,19 @@ GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
 .check_party_count:
     ld a, [wPartyCount]
     cp $02
-    jr nc, .call_game_mode6_update_choose_record_list
+    jr nc, .call_game_mode6_update_choose_record_list_set
     ld a, [wListPageIndex]
     and a
-    jr nz, .call_game_mode6_update_choose_record_list
+    jr nz, .call_game_mode6_update_choose_record_list_set
     ld a, [wListCursor]
     and a
-    jr nz, .call_game_mode6_update_choose_record_list
+    jr nz, .call_game_mode6_update_choose_record_list_set
     ld a, $12
     call ShowStringAInDefaultWindow_Bank24
     jr .check_screen_step
 
-.call_game_mode6_update_choose_record_list:
-    call GameMode6_Update_ChooseRecordList_Case0A_SetArg5ToListEntriesCell5
+.call_game_mode6_update_choose_record_list_set:
+    call GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5_2
     ld a, $0a
     call ShowStringAInDefaultWindow_Bank24
     ld a, [wScreenStep]
@@ -953,14 +954,14 @@ GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
     ret
 
 GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
-    ld de, TileRect_24_5A28
+    ld de, GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     xor a
     ld b, $bc
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
@@ -968,8 +969,8 @@ GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     sub $03
     ld [wScreenStep], a
@@ -1024,7 +1025,7 @@ GameMode6_Update_ChooseRecordList_RunSaveGameSteps::
     ld a, [wSaveStep]
     bit 7, a
     ret z
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 ; by wScreenStep: a paged record list, the 'Info / OK / Yes / No' window, the monster-egg message
@@ -1038,7 +1039,7 @@ GameMode6_Update_ChooseRecordAndSave::
     dw GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageSpeciesNames
     dw GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageMarks
     dw GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor
-    dw GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_52CE
+    dw GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_2
     dw GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN
     dw GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D
     dw GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg
@@ -1053,7 +1054,7 @@ GameMode6_Update_ChooseRecordAndSave_ToGameMode6_Update_FillTilesFromRequestAndS
     ret
 
 GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep::
-    ld de, TileRect_24_5B10
+    ld de, GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0d, $09
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1096,7 +1097,7 @@ GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageSpeciesNames::
     ret
 
 GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageMarks::
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
@@ -1148,19 +1149,19 @@ GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     farcall CopyListEntriesCell5NameToTextBuf0
     ld a, [wScreenStep]
     add $02
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_52CE::
+GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wTwoChoiceCursor]
     ld b, $c3
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, $04
     ld [wScreenState], a
     ld a, $08
@@ -1187,10 +1188,10 @@ GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN::
     ld [wStringCategory], a
     ld a, $0d
     ld [wStringIndex], a ; 'InfoOKYesN'
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_24_5B85
+    ld de, GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1255,7 +1256,7 @@ GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
     ld h, a
     ld a, [wArg6]
     ld l, a
-    call GameMode6_Update_ChooseRecordAndSave_Case08_Multiply8
+    call GameMode6_Update_ChooseRecordAndSave_Multiply8
     call CopyMonsterNameToBuffer_B24
     ld a, $0a
     call ShowStringAInDefaultWindow_Bank24
@@ -1265,14 +1266,14 @@ GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
     ret
 
 GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
-    ld de, TileRect_24_5A82
+    ld de, GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, $01
     ld b, $bc
     ld hl, GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    call StoreBAtWordTableEntry_Bank24_2
     call GameMode6_Update_ShowMonsterEg
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
@@ -1280,8 +1281,8 @@ GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
     call DrawScreenBufferRectToBGMap_24
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     sub $04
     ld [wScreenStep], a
@@ -1337,7 +1338,7 @@ GameMode6_Update_ChooseRecordAndSave_RunSaveGameSteps::
     ld a, [wSaveStep]
     bit 7, a
     ret z
-    call GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc
+    call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 GameMode6_Update_Return::
@@ -1375,15 +1376,15 @@ GameMode6_Update_SwitchEgg::
     ld a, [wScreenStep]
     jumptable
     dw GameMode6_Update_SwitchEgg_ShowInfoOKYesN
-    dw GameMode6_Update_SwitchEgg_ListRecordsInUseWithByte6ESet
+    dw GameMode6_Update_SwitchEgg_ListRecordsInUseEggs
     dw GameMode6_Update_SwitchEgg_DrawRecordListPageSpeciesNames
     dw GameMode6_Update_SwitchEgg_DrawRecordListPageMarks
     dw GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg
-    dw GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_52CE
+    dw GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_2
 
 GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1400,7 +1401,7 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     ld [wStringCategory], a
     ld a, $0d
     ld [wStringIndex], a ; 'InfoOKYesN'
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     call GameMode6_Update_FillTilesFromRequest
     ld a, [wBattleScene]
     cp $08
@@ -1412,24 +1413,24 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     jr .skip
 
 .call_game_mode6_update_copy_rect_to20_byte:
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM
 
 .skip:
-    ld de, TileRect_24_5B10
+    ld de, GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0d, $09
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SwitchEgg_ListRecordsInUseWithByte6ESet::
-    farcall ListRecordsInUseWithByte6ESet
+GameMode6_Update_SwitchEgg_ListRecordsInUseEggs::
+    farcall ListRecordsInUseEggs
     farcall ClampRecordListPageCursor4
     ld a, [wListPages]
     cp $02
@@ -1459,7 +1460,7 @@ GameMode6_Update_SwitchEgg_DrawRecordListPageSpeciesNames::
     ret
 
 GameMode6_Update_SwitchEgg_DrawRecordListPageMarks::
-    ld de, Tiles2Plus420Tiles_1F_4990
+    ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
     ld b, $1f
     ld c, $10
@@ -1475,7 +1476,7 @@ GameMode6_Update_SwitchEgg_DrawRecordListPageMarks::
     ret
 
 GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg::
-    ld de, TileRect_24_5B85
+    ld de, GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
     lb bc, $08, $05
     call CopyRectTo20ByteRowsJp_Bank24
@@ -1493,17 +1494,17 @@ GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg::
     ld [wStringCategory], a
     ld a, $09
     ld [wStringIndex], a ; 'Switch which egg?'
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_52CE::
+GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     call BGMapAddressAtScroll_Bank24
     lb bc, $14, $0d
     ld de, $01cc
@@ -1549,7 +1550,7 @@ GameMode6_Update_SwitchMonster::
     ld a, [wScreenStep]
     jumptable
     dw GameMode6_Update_SwitchMonster_ShowInfoOKYesN
-    dw GameMode6_Update_SwitchMonster_ListRecordsInUseWithByte6EClear
+    dw GameMode6_Update_SwitchMonster_ListRecordsInUseNotEggs
     dw GameMode6_Update_SwitchMonster_DrawRecordListPageNames
     dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
@@ -1559,7 +1560,7 @@ GameMode6_Update_SwitchMonster::
 
 GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld b, $46
-    ld de, Tiles1Gfx_46_4001
+    ld de, Tiles1Gfx
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles2 + $700
@@ -1576,18 +1577,18 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld [wStringCategory], a
     ld a, $0d
     ld [wStringIndex], a ; 'InfoOKYesN'
-    farcall ShowString_Bank33_7045
-    call GameMode6_Update_SwitchMonster_Case00_FillTilesFromRequest
+    farcall ShowString_Bank33_2
+    call GameMode6_Update_SwitchMonster_FillTilesFromRequest
     ld a, [wBattleScene]
     cp $08
     jr z, .check_battle_scene
-    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM
+    call GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM
 
 .check_battle_scene:
     ld a, [wBattleScene]
     cp $08
     jr z, .skip
-    call GameMode6_Update_SwitchMonster_Case00_LoadSRAMRecordWord
+    call GameMode6_Update_SwitchMonster_LoadSRAMRecordWord
     jr .skip2
 
 .skip:
@@ -1597,21 +1598,21 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     call CopyRectTo20ByteRowsJp_Bank24
 
 .skip2:
-    ld de, TileRect_24_5AB8
+    ld de, GameMode6_Update_SwitchMonster_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank24
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data
-    call StoreBAtWordTableEntry_Bank24_52CE
+    ld hl, GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data
+    call StoreBAtWordTableEntry_Bank24_2
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-GameMode6_Update_SwitchMonster_ListRecordsInUseWithByte6EClear::
-    farcall ListRecordsInUseWithByte6EClear
+GameMode6_Update_SwitchMonster_ListRecordsInUseNotEggs::
+    farcall ListRecordsInUseNotEggs
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
     cp $02
@@ -1664,22 +1665,22 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     ld [wStringIndex], a ; 'Switch with which?'
     xor a
     ld [wStringCategory], a
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     farcall EggServiceMenu_Bank1B
     ret
 
-GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_Shared01_DecompressToVRAM::
-    ld a, [wLinkByteEB]
+GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM::
+    ld a, [wLinkBreedResult]
     and a
     ret nz
-    call GameMode6_Update_Shared01_DecompressToVRAM
-    ld de, TileRect_24_57F2
+    call GameMode6_Update_DecompressToVRAM
+    ld de, GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_TileRect
     ld hl, wWindowTileBuffer + $7a
     lb bc, $11, $02
     call CopyRectTo20ByteRowsJp_Bank24
     ret
 
-GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess::
+GameMode6_Update_ObtainedEgg_WaitForVRAMAccess::
     ld a, [wIsCGB]
     and a
     ret z
@@ -1689,7 +1690,7 @@ GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess::
     ld a, $b8
     ld [hli], a
     ei
-    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data2
+    ld de, GameMode6_Update_ObtainedEgg_WaitForVRAMAccess_Data2
     ld b, $08
 
 .loop:
@@ -1701,7 +1702,7 @@ GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess::
     inc de
     dec b
     jr nz, .loop
-    ld de, GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data1
+    ld de, GameMode6_Update_ObtainedEgg_WaitForVRAMAccess_Data1
     ld hl, wWindowAttrBuffer + $7b
     ld b, $1c
 
@@ -1728,7 +1729,7 @@ GameMode6_Update_SavePrompt_ShowYesNo::
     ld [wStringCategory], a
     ld a, $0c
     ld [wStringIndex], a ; 'YesNo'
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     xor a
     ld [wTextFlags], a
     ld [wTextControl], a
@@ -1759,7 +1760,7 @@ GameMode6_Update_ShowMonsterEg::
     ld [wStringCategory], a
     ld a, $0b
     ld [wStringIndex], a ; 'MonsterE?g'
-    farcall ShowString_Bank33_7045
+    farcall ShowString_Bank33_2
     xor a
     ld [wTextFlags], a
     ld [wTextControl], a
@@ -1775,7 +1776,7 @@ GameMode6_Update_ShowMonsterEg::
     ld [wTextWindowWidth], a
     ret
 
-GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc::
+GameMode6_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -1787,7 +1788,7 @@ GameMode6_Update_WriteLinkSceneByte4BAndGameModeEtc::
     or c
     jr nz, .loop
     xor a
-    ld [wLinkSceneByte4B], a
+    ld [wLinkScene], a
     ld a, $05
     ld [wGameMode], a
     ld a, $01
@@ -1945,19 +1946,19 @@ BGMapAddressAtScroll_Bank24::
 
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
-CopyBytesDEToHL_Bank24_4ECC::
+CopyBytesDEToHL_Bank24_2::
     ld a, [de]
     inc de
     ld [hli], a
     dec bc
     ld a, b
     or c
-    jr nz, CopyBytesDEToHL_Bank24_4ECC
+    jr nz, CopyBytesDEToHL_Bank24_2
     ret
 
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
 ; 19 bytes appear in 5 banks)
-CopyLow3BitsToWRAMBank2_Bank24_4ED5::
+CopyLow3BitsToWRAMBank2_Bank24_2::
     ld a, $02
     ldh [rSVBK], a
 
@@ -1990,7 +1991,7 @@ ShowStringAInDefaultWindow_Bank24::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    farcall BeginStringDisplay_Bank33_7037
+    farcall BeginStringDisplay_Bank33_2
     ret
 
 ; HL = wRecordBufB + $1, then copies up to 10 name bytes to wTextBuf0 with a $F0 terminator (E-0124)
@@ -2024,7 +2025,7 @@ CopyRecordBufANameNameToTextBuf0_Skip::
     ld [de], a
     ret
 
-GameMode6_Update_Case04_PageList_Case00_ReadPartyCountAndListCursorEtc::
+GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc::
     ld a, [wPartyCount]
     cp $02
     jr nc, .return_0
@@ -2041,7 +2042,7 @@ GameMode6_Update_Case04_PageList_Case00_ReadPartyCountAndListCursorEtc::
     xor a
     ret
 
-GameMode6_Update_ChooseRecordAndSave_Case08_Multiply8::
+GameMode6_Update_ChooseRecordAndSave_Multiply8::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -2100,7 +2101,7 @@ CopyMonsterNameToBuffer_B24::
     call CopyFromBankWaitVRAM
     ret
 
-GameMode6_Update_ChooseRecordList_Case0A_SetArg5ToListEntriesCell5::
+GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5_2::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -2132,7 +2133,7 @@ GameMode6_Update_ChooseRecordList_Case0A_SetArg5ToListEntriesCell5::
     ld [de], a
     ret
 
-GameMode6_Update_SwitchMonster_Case00_FillTilesFromRequest::
+GameMode6_Update_SwitchMonster_FillTilesFromRequest::
     ld hl, vTiles1 + $500
     ld a, l
     ld [wTextWindowTileLo], a
@@ -2185,7 +2186,7 @@ GameMode6_Update_SwitchMonster_Case00_FillTilesFromRequest::
     call FillTilesFromRequest
     ret
 
-GameMode6_Update_Shared01_DecompressToVRAM::
+GameMode6_Update_DecompressToVRAM::
     and $01
     and a
     jr nz, .skip
@@ -2194,7 +2195,7 @@ GameMode6_Update_Shared01_DecompressToVRAM::
     jr .call_decompress_to_vram
 
 .skip:
-    ld de, Tiles1Plus600Gfx_24_6E13
+    ld de, Tiles1Plus600Gfx
     ld b, $24
 
 .call_decompress_to_vram:
@@ -2211,7 +2212,7 @@ GameMode6_Init_UploadBGPalettes::
     jp z, .check_battle_scene
     ld hl, wBattlerRecords + BATTLER_SPECIES
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld e, a
     ld d, [hl]
@@ -2223,16 +2224,16 @@ GameMode6_Init_UploadBGPalettes::
     ldh [hTemp0], a
     call BGMapAddressAtScroll_Bank24
     xor a
-    call GameMode6_Init_Sub01_ReadScreenByteBD
+    call GameMode6_Init_ReadSharedMenuWork
     add hl, de
     pop de
     call LoadMonsterPictureAttributes
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     cp $01
     jr z, .check_battle_scene
     ld hl, wBattlerRecordSlot1 + BATTLER_SPECIES
     ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld e, a
     ld d, [hl]
@@ -2244,16 +2245,16 @@ GameMode6_Init_UploadBGPalettes::
     ldh [hTemp0], a
     call BGMapAddressAtScroll_Bank24
     ld a, $02
-    call GameMode6_Init_Sub01_ReadScreenByteBD
+    call GameMode6_Init_ReadSharedMenuWork
     add hl, de
     pop de
     call LoadMonsterPictureAttributes
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     cp $02
     jr z, .check_battle_scene
     ld hl, wBattlerRecordSlot2 + BATTLER_SPECIES
     ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld e, a
     ld d, [hl]
@@ -2265,7 +2266,7 @@ GameMode6_Init_UploadBGPalettes::
     ldh [hTemp0], a
     call BGMapAddressAtScroll_Bank24
     ld a, $04
-    call GameMode6_Init_Sub01_ReadScreenByteBD
+    call GameMode6_Init_ReadSharedMenuWork
     add hl, de
     pop de
     call LoadMonsterPictureAttributes
@@ -2273,12 +2274,12 @@ GameMode6_Init_UploadBGPalettes::
 .check_battle_scene:
     ld a, [wBattleScene]
     cp $08
-    jp nz, GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24
+    jp nz, GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24
     ld hl, wWindowTileBuffer + $f7
-    call GameMode6_Init_Sub01_WriteVRAMByteInc
+    call GameMode6_Init_WriteVRAMByteInc
     ld hl, wScreenTileBuffer + $93
 
-GameMode6_Init_Sub01_WriteVRAMByteInc::
+GameMode6_Init_WriteVRAMByteInc::
     ld bc, $0606
     ld d, $20
 
@@ -2316,10 +2317,10 @@ GameMode6_Init_Sub01_WriteVRAMByteInc::
     ld b, $06
     dec c
     jr nz, .loop2
-    call ReturnStub_51A3
+    call ReturnStub
     ret
 
-GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
+GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
     call BGMapAddressAtScroll_Bank24
     ld de, $00e0
     add hl, de
@@ -2327,11 +2328,11 @@ GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     dec a
     ld c, $78
     call Multiply8
-    ld de, TileRect_1F_720D
+    ld de, GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect
     add hl, de
     ld a, h
     ld [wArg1], a
@@ -2346,18 +2347,18 @@ GameMode6_Init_Sub01_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
     farcall DrawTileRectFromArg1Params
     ret
 
-GameMode6_Init_Sub01_ReadScreenByteBD::
+GameMode6_Init_ReadSharedMenuWork::
     push hl
     ld e, a
     ld d, $00
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     dec a
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data1
+    ld hl, GameMode6_Init_ReadSharedMenuWork_Data1
     jr z, .skip
     dec a
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data2
+    ld hl, GameMode6_Init_ReadSharedMenuWork_Data2
     jr z, .skip
-    ld hl, GameMode6_Init_Sub01_ReadScreenByteBD_Data3
+    ld hl, GameMode6_Init_ReadSharedMenuWork_Data3
 
 .skip:
     add hl, de
@@ -2368,31 +2369,32 @@ GameMode6_Init_Sub01_ReadScreenByteBD::
     pop hl
     ret
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data1::
+GameMode6_Init_ReadSharedMenuWork_Data1::
     db $e7, $00, $00, $00, $00, $00
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data2::
+GameMode6_Init_ReadSharedMenuWork_Data2::
     db $e4, $00, $ea, $00, $00, $00
 
-GameMode6_Init_Sub01_ReadScreenByteBD_Data3::
+GameMode6_Init_ReadSharedMenuWork_Data3::
     db $e1, $00, $e7, $00, $ed, $00
 
-; a bare ret (E-0115)
-ReturnStub_51A3::
+; a bare ret (E-0115) (E-0344: the address in its name dropped or read as the label there; was
+; ReturnStub_51A3)
+ReturnStub::
     ret
 
-; on CGB with wBattleScene = 8: copies the 6 x 6 block
-; CopyAttributeBlock51D3ToBattlerRecordSlot64_Data into the WRAM-bank-2 buffer at wWindowAttrBuffer
-; + $F7 (20-byte rows) (E-0124) (E-0340: the address in its name read as its RAM name; was
-; CopyAttributeBlock51D3ToWD25F)
-CopyAttributeBlock51D3ToBattlerRecordSlot64::
+; on CGB with wBattleScene = 8: copies the 6 x 6 block CopyAttributeBlockToBattlerRecordSlot64_Data
+; into the WRAM-bank-2 buffer at wWindowAttrBuffer + $F7 (20-byte rows) (E-0124) (E-0340: the
+; address in its name read as its RAM name; was CopyAttributeBlock51D3ToWD25F) (E-0344: the address
+; in its name dropped or read as the label there; was CopyAttributeBlock51D3ToBattlerRecordSlot64)
+CopyAttributeBlockToBattlerRecordSlot64::
     ld a, [wIsCGB]
     and a
     ret z
     ld a, [wBattleScene]
     cp $08
     ret nz
-    ld hl, CopyAttributeBlock51D3ToBattlerRecordSlot64_Data
+    ld hl, CopyAttributeBlockToBattlerRecordSlot64_Data
     ld de, wWindowAttrBuffer + $f7
     ld a, $02
     ldh [rSVBK], a
@@ -2417,11 +2419,11 @@ CopyAttributeBlock51D3ToBattlerRecordSlot64::
     ldh [rSVBK], a
     ret
 
-CopyAttributeBlock51D3ToBattlerRecordSlot64_Data::
+CopyAttributeBlockToBattlerRecordSlot64_Data::
     ds $24, $01
 
-GameMode6_Init_ReadLinkSceneByte4B::
-    ld a, [wLinkSceneByte4B]
+GameMode6_Init_ReadLinkScene::
+    ld a, [wLinkScene]
     and a
     jr nz, .done
     ret
@@ -2434,10 +2436,10 @@ GameMode6_Init_ReadLinkSceneByte4B::
 GameMode6_Init_LoadMonsterPicture::
     ld a, [wBattleScene]
     cp $08
-    jr nz, .call_game_mode6_init_read_link_scene_byte4_b
+    jr nz, .call_game_mode6_init_read_link_scene
     ld hl, wBattlerRecords + BATTLER_SPECIES
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld e, a
     ld d, [hl]
@@ -2445,13 +2447,13 @@ GameMode6_Init_LoadMonsterPicture::
     ld c, $01
     call LoadMonsterPicture
     ld a, $01
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
-.call_game_mode6_init_read_link_scene_byte4_b:
+.call_game_mode6_init_read_link_scene:
     ld hl, wBattlerRecords + BATTLER_SPECIES
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld e, a
     ld d, [hl]
@@ -2460,7 +2462,7 @@ GameMode6_Init_LoadMonsterPicture::
     call LoadMonsterPicture
     ld hl, wBattlerRecordSlot1 + BATTLER_SPECIES
     ld de, wBattlerRecordSlot5 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld b, a
     ld a, [hld]
@@ -2468,7 +2470,7 @@ GameMode6_Init_LoadMonsterPicture::
     and a
     jr nz, .skip
     ld a, $01
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
 .skip:
@@ -2480,7 +2482,7 @@ GameMode6_Init_LoadMonsterPicture::
     call LoadMonsterPicture
     ld hl, wBattlerRecordSlot2 + BATTLER_SPECIES
     ld de, wBattlerRecordSlot6 + BATTLER_SPECIES
-    call GameMode6_Init_ReadLinkSceneByte4B
+    call GameMode6_Init_ReadLinkScene
     ld a, [hli]
     ld b, a
     ld a, [hld]
@@ -2488,7 +2490,7 @@ GameMode6_Init_LoadMonsterPicture::
     and a
     jr nz, .skip2
     ld a, $02
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
 .skip2:
@@ -2499,10 +2501,10 @@ GameMode6_Init_LoadMonsterPicture::
     ld c, $05
     call LoadMonsterPicture
     ld a, $03
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
-GameMode6_Update_SwitchMonster_Case00_LoadSRAMRecordWord::
+GameMode6_Update_SwitchMonster_LoadSRAMRecordWord::
     ld a, [wListPageIndex]
     ld b, a
     sla a
@@ -2537,7 +2539,7 @@ GameMode6_Update_SwitchMonster_Case00_LoadSRAMRecordWord::
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A; HL and DE advance (the same 20 bytes appear in 3 banks)
-CopyTileBytesToVRAM_Bank24_52BA::
+CopyTileBytesToVRAM_Bank24_2::
     xor a
 
 .loop:
@@ -2560,7 +2562,7 @@ CopyTileBytesToVRAM_Bank24_52BA::
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
 ; A, DE, HL (the same 16 bytes appear in 4 banks)
-StoreBAtWordTableEntry_Bank24_52CE::
+StoreBAtWordTableEntry_Bank24_2::
     push bc
     sla a
     add_a_to_hl
@@ -3053,24 +3055,24 @@ GameMode6_Update_UpdateAndDrawSpriteSlots::
     ret
 
 GameMode6_Update_Save_TestFlagBit::
-    ld de, $0000
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip
     ld hl, GameMode6_Update_Save_TestFlagBit_Data5
     jr .call_copy_bytes_de_from_hl_bank24
 
 .skip:
-    ld hl, SpriteSlotsInit_24_5BF9
+    ld hl, GameMode6_Update_Save_TestFlagBit_SpriteSlotsInit
 
 .call_copy_bytes_de_from_hl_bank24:
     ld de, wSpriteSlots
     ld b, $10
     call CopyBytesDEFromHL_Bank24
-    ld hl, Object1Init_24_5C09
+    ld hl, Object1Init
     ld de, wObject1
     ld b, $10
     call CopyBytesDEFromHL_Bank24
-    ld de, $0000
+    ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .skip2
     ld hl, GameMode6_Update_Save_TestFlagBit_Data1
@@ -3126,7 +3128,7 @@ GameMode6_Update_Save_TestFlagBit::
     jr .call_copy_bytes_de_from_hl_bank243
 
 .skip3:
-    ld hl, Object2Init_24_5C29
+    ld hl, Object2Init
 
 .call_copy_bytes_de_from_hl_bank243:
     ld de, wObject2
@@ -3190,7 +3192,7 @@ CopyBytesDEFromHL_Bank24::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 17 x 2 tiles, one row per line
-TileRect_24_5792::
+GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24_TileRect::
     db $e0, $e1, $e2, $e3, $e4, $e5, $c3, $e6, $e7, $e8, $e9, $ea, $eb, $ec, $ed, $ee, $ef ; id 0
     db $f0, $f1, $f2, $f3, $f4, $f5, $c3, $f6, $f7, $f8, $f9, $fa, $fb, $fc, $fd, $fe, $ff ; id 1
 
@@ -3199,15 +3201,15 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24_Data::
     db $c3, $c3, $c3, $c3, $c3, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c3, $c3
     db $c3, $c3
 
-GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data1::
+GameMode6_Update_ObtainedEgg_WaitForVRAMAccess_Data1::
     ds $1c, $07
 
-TileRect_24_57F2::
+GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_TileRect::
     db $00, $01, $02, $03, $04, $05, $c3, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f ; id 0
     db $10, $11, $12, $13, $14, $15, $c3, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f ; id 1
 
 ; record: 14 x 13 tiles, one row per line
-TileRect_24_5814::
+GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_TileRect_2::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 2
@@ -3226,14 +3228,14 @@ GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data::
     ds $78, $c3
 
 ; record: 20 x 5 tiles, one row per line
-TileRect_24_5942::
+GameMode6_Update_SavePrompt_ReturnStub_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-TileRect_24_59A6::
+GameMode6_Update_SavePrompt_DecompressToVRAM_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3241,7 +3243,7 @@ TileRect_24_59A6::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 6 x 5 tiles, one row per line
-TileRect_24_5A0A::
+GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $6d, $6e, $6f, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3251,7 +3253,7 @@ TileRect_24_5A0A::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-TileRect_24_5A28::
+GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg_TileRect::
     db $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $b2, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3259,14 +3261,14 @@ TileRect_24_5A28::
     db $b5, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 10 x 5 tiles, one row per line
-TileRect_24_5A50::
+GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
     db $b6, $c3, $7d, $7f, $7f, $c3, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-TileRect_24_5A82::
+GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg_TileRect::
     db $b5, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3276,11 +3278,11 @@ TileRect_24_5A82::
 GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor_Data::
     db $23, $c4, $4b, $c4
 
-GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_52CE_Data::
+GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4
 
 ; record: 8 x 11 tiles, one row per line
-TileRect_24_5AB8::
+GameMode6_Update_SwitchMonster_ShowInfoOKYesN_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3294,7 +3296,7 @@ TileRect_24_5AB8::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 ; record: 13 x 9 tiles, one row per line
-TileRect_24_5B10::
+GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3308,7 +3310,7 @@ TileRect_24_5B10::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
-TileRect_24_5B85::
+GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -3335,12 +3337,12 @@ GameMode6_Update_Save_TestFlagBit_Data5::
 
 ; CopyBytesDEFromHL_Bank24 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-SpriteSlotsInit_24_5BF9::
+GameMode6_Update_Save_TestFlagBit_SpriteSlotsInit::
     db $00, $01, $01, $00, $a0, $40, $01, $03, $00, $00, $00, $a0, $40, $04, $00, $00 ; entry 0
 
 ; CopyBytesDEFromHL_Bank24 copies these 16 bytes to wObject1 (E-0264)
 ; record: 16 bytes copied to wObject1
-Object1Init_24_5C09::
+Object1Init::
     db $00, $01, $0c, $00, $e0, $40, $05, $01, $10, $00, $00, $e0, $40, $04, $00, $00 ; entry 0
 
 GameMode6_Update_Save_TestFlagBit_Data6::
@@ -3348,27 +3350,27 @@ GameMode6_Update_Save_TestFlagBit_Data6::
 
 ; CopyBytesDEFromHL_Bank24 copies these 16 bytes to wObject2 (E-0264)
 ; record: 16 bytes copied to wObject2
-Object2Init_24_5C29::
+Object2Init::
     db $00, $00, $00, $00, $b0, $40, $02, $03, $20, $00, $00, $b0, $40, $04, $00, $00 ; entry 0
 
-GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
+GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_game_mode6_update_save_prompt_case08
+    jr nz, .call_game_mode6_update_save_prompt_read_two
     bit 7, a
-    jr nz, .call_game_mode6_update_save_prompt_case082
+    jr nz, .call_game_mode6_update_save_prompt_read_two2
     ld a, [wJoypadPressed]
     bit 0, a
-    jr nz, .call_game_mode6_update_save_prompt_case083
+    jr nz, .call_game_mode6_update_save_prompt_step_bg
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call GameMode6_Update_SavePrompt_Case08_Sub01_WriteScreenCounter
+    call GameMode6_Update_SavePrompt_WriteScreenCounter
     xor a
     ld [wMenuInputResult], a
     ret
 
-.call_game_mode6_update_save_prompt_case08:
-    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+.call_game_mode6_update_save_prompt_read_two:
+    call GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2
     ld a, [wTwoChoiceCursor]
     and a
     jr nz, .set_two_choice_cursor
@@ -3381,8 +3383,8 @@ GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
     ld [wTwoChoiceCursor], a
     jr .clear_screen_counter
 
-.call_game_mode6_update_save_prompt_case082:
-    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+.call_game_mode6_update_save_prompt_read_two2:
+    call GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2
     ld a, [wTwoChoiceCursor]
     cp $01
     jr c, .set_two_choice_cursor2
@@ -3397,15 +3399,15 @@ GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
 .clear_screen_counter:
     xor a
     ld [wScreenCounter], a
-    call GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
+    call GameMode6_Update_SavePrompt_ReadTwoChoiceCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
     ld [wMenuInputResult], a
     ret
 
-.call_game_mode6_update_save_prompt_case083:
-    call GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap
+.call_game_mode6_update_save_prompt_step_bg:
+    call GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap
     ld a, $69
     call QueueSoundEffect
     ld a, $ff
@@ -3417,41 +3419,41 @@ GameMode6_Update_SavePrompt_Case08_WriteMenuInputResultAndTwoChoiceCursorEtc::
     ld [wMenuInputResult], a
     ret
 
-GameMode6_Update_SavePrompt_Case08_Sub01_WriteScreenCounter::
+GameMode6_Update_SavePrompt_WriteScreenCounter::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
+    jr c, GameMode6_Update_SavePrompt_ReadTwoChoiceCursor
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
     cp $10
-    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor
+    jr c, GameMode6_Update_SavePrompt_ReadTwoChoiceCursor
     cp $18
-    jr c, GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03
+    jr c, GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2
     xor a
     ld [wScreenCounter], a
 
-GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor::
+GameMode6_Update_SavePrompt_ReadTwoChoiceCursor::
     ld b, $bb
-    jr GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-GameMode6_Update_SavePrompt_Case08_Sub01_ReadTwoChoiceCursor_Sub03::
+GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2::
     ld b, $c3
-    jr GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
+    jr GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap::
+GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
+GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     add a
-    ld hl, GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank24_5CEB
+    call BGMapAddressAtScroll_Bank24_3
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -3464,7 +3466,7 @@ GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_ReadTw
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
 ; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-BGMapAddressAtScroll_Bank24_5CEB::
+BGMapAddressAtScroll_Bank24_3::
     ld hl, vBGMap0
     ldh a, [hScrollY]
     and $f8
@@ -3482,12 +3484,12 @@ BGMapAddressAtScroll_Bank24_5CEB::
     add_a_to_hl
     ret
 
-GameMode6_Update_SavePrompt_Case08_Sub01_StepBGMapAddressBackOnScrollWrap_Data::
+GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_Data::
     db $2b, $01, $6b, $01
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank24::
-    ld de, StringCategories_24_5D25
+    ld de, BeginStringDisplay_Bank24_StringCategories
     call BeginStringDisplay
     ret
     db $11, $25, $5d, $cd, $fe, $25, $c9
@@ -3501,12 +3503,12 @@ ShowString_Bank24::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_24_5D25::
-    dw StringList_24_5D27 ; id 0
+BeginStringDisplay_Bank24_StringCategories::
+    dw StringList_Bank24_StringCategories_0 ; id 0
 
-; category list of StringCategories_24_5D25; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank24_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_24_5D27::
+StringList_Bank24_StringCategories_0::
     dw String_24_00_00 ; id 0
     dw String_24_00_00 ; id 1
     dw String_24_00_02 ; id 2
@@ -3663,7 +3665,7 @@ PriestMenu_ShowServices::
     jumptable
     dw PriestMenu_ShowServices_ShowRviDoxUncurt
     dw PriestMenu_ShowServices_DrawGoldPanel_Bank24
-    dw PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_6866
+    dw PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_2
 
 PriestMenu_ShowServices_ShowRviDoxUncurt::
     ld hl, wTextWindowTileLo
@@ -3693,7 +3695,7 @@ PriestMenu_ShowServices_ShowRviDoxUncurt::
     ret
 
 PriestMenu_ShowServices_DrawGoldPanel_Bank24::
-    ld de, TileRect_24_6B8B
+    ld de, PriestMenu_ShowServices_DrawGoldPanel_Bank24_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank24
@@ -3703,8 +3705,8 @@ PriestMenu_ShowServices_DrawGoldPanel_Bank24::
     ld [wScreenStep], a
     ret
 
-PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_6866::
-    call BGMapAddressAtScroll_Bank24_6866
+PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_2::
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0b
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
@@ -3777,7 +3779,7 @@ PriestMenu_PayForService_UpdateListCursorListCursor::
 
 .call_priest_menu_pay_for_service_load_sram:
     ld b, $80
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld a, $01
@@ -3785,7 +3787,7 @@ PriestMenu_PayForService_UpdateListCursorListCursor::
 
 .call_priest_menu_pay_for_service_load_sram2:
     ld b, $04
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld a, $02
@@ -3793,7 +3795,7 @@ PriestMenu_PayForService_UpdateListCursorListCursor::
 
 .call_priest_menu_pay_for_service_load_sram3:
     ld b, $01
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld a, $03
@@ -3820,12 +3822,12 @@ PriestMenu_PayForService_UpdateListCursorListCursor::
 PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24::
     ld a, [wListCursor]
     ld [wTwoChoiceCursor], a
-    ld hl, Tiles_24_6239
+    ld hl, PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles
     ld de, vTiles1 + $7e0
     call CopyTileBytesToVRAM_Bank24
-    ld hl, Tiles_24_6249
+    ld hl, PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_2
     call CopyTileBytesToVRAM_Bank24
-    ld hl, Tiles_24_6259
+    ld hl, PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_3
     ld de, vTiles1 + $6f0
     call CopyTileBytesToVRAM_Bank24
     ld a, [wScreenStep]
@@ -3839,24 +3841,24 @@ PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24::
 
 ; HL = $6239 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
 ; record: tile (16 bytes, 2 bits per pixel)
-Tiles_24_6239::
+PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles::
     db $ff, $06, $ff, $06, $ff, $06, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
 ; HL = $6249 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
-Tiles_24_6249::
+PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $f8, $ff, $fc, $ff, $0e, $ff, $06, $ff, $06 ; entry 0
 
 ; HL = $6259 and 1 calls to a 16-byte VRAM copier (CopyTileBytesToVRAM_*), one tile each (E-0238)
-Tiles_24_6259::
+PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_3::
     db $ff, $60, $ff, $60, $ff, $60, $ff, $1f, $ff, $3f, $ff, $70, $ff, $60, $ff, $60 ; entry 0
 
 PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
-    ld de, TileRect_24_6C49
+    ld de, PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24_TileRect
     ld hl, wWindowTileBuffer + $dc
     lb bc, $0b, $07
     call CopyRectTo20ByteRows_Bank24
-    call PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0
-    call BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_PriestMenu_PayForService_WriteMarkC0
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
@@ -3866,7 +3868,7 @@ PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
     ret
 
 PriestMenu_PayForService_WriteScreenStepAndTwoChoiceCursorEtc::
-    call PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc
+    call PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc
     ld a, [wMenuInputResult]
     and a
     ret z
@@ -3909,8 +3911,8 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
     ld [wArg1], a
     ld a, $0b
     ld [wArg2], a
-    call PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24
-    ld de, TileRect_24_6B8B
+    call PriestMenu_PayForService_CopyBytesDEToHL_Bank24
+    ld de, PriestMenu_ShowServices_DrawGoldPanel_Bank24_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $0a, $09
     call CopyRectTo20ByteRows_Bank24
@@ -3919,7 +3921,7 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
     ld b, $bb
     ld hl, PriestMenu_PayForService_UpdateListCursorListCursor_Data
     call StoreBAtWordTableEntry_Bank24
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
@@ -4095,7 +4097,7 @@ PriestMenu_PayForService_WriteListEntriesAndGrid2CursorXEtc::
 PriestMenu_PayForService_QueueSoundEffect::
     ld a, $6c
     call QueueSoundEffect
-    ld de, TileRect_24_6479
+    ld de, PriestMenu_PayForService_QueueSoundEffect_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank24
@@ -4103,7 +4105,7 @@ PriestMenu_PayForService_QueueSoundEffect::
     ld b, $bc
     ld hl, PriestMenu_PayForService_QueueSoundEffect_Data
     call StoreBAtWordTableEntry_Bank24
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
@@ -4117,7 +4119,7 @@ PriestMenu_PayForService_QueueSoundEffect::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
-TileRect_24_6479::
+PriestMenu_PayForService_QueueSoundEffect_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -4136,7 +4138,7 @@ PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
     ret
 
 .loop:
-    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2
     xor a
     ld [wScreenSubStep], a
     ld a, $02
@@ -4166,7 +4168,7 @@ PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
     ld a, [wArg1]
     cp $ff
     jr z, .set_screen_sub_step_to_01
-    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -4187,7 +4189,7 @@ PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
     jr .set_two_choice_cursor
 
 PriestMenu_PayForService_WriteScreenStepAndScriptCommandTypeEtc::
-    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866
+    call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2
     ld a, [wScreenSubStep]
     and a
     jr nz, .set_screen_step_to_04
@@ -4223,7 +4225,7 @@ PriestMenu_PayForService_SubtractArg1AmountFromGold::
     ld [wArg1], a
     farcall SubtractArg1AmountFromGold
     call DrawGoldPanel_Bank24
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
@@ -4316,7 +4318,7 @@ PriestMenu_PayForService_QueueMusic::
     call CopyBytesDEToHL_Bank24
     ld a, [wIsCGB]
     and a
-    jr z, .call_bg_map_address_at_scroll_bank24_6866
+    jr z, .call_bg_map_address_at_scroll_bank24_2
     ld hl, wWindowAttrBuffer + $64
     ld de, wScreenAttrBuffer
     ld bc, $0104
@@ -4326,12 +4328,12 @@ PriestMenu_PayForService_QueueMusic::
     ld bc, $0064
     call CopyLow3BitsToWRAMBank2_Bank24
 
-.call_bg_map_address_at_scroll_bank24_6866:
-    call BGMapAddressAtScroll_Bank24_6866
+.call_bg_map_address_at_scroll_bank24_2:
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     ld de, $01a0
     add hl, de
     lb bc, $14, $05
@@ -4356,11 +4358,11 @@ PriestMenu_PayForService_FillTilesFromRequest::
     ld [hli], a
     ld [hl], $12
     call FillTilesFromRequest
-    ld de, TileRect_24_6BE5
+    ld de, PriestMenu_PayForService_FillTilesFromRequest_TileRect
     ld hl, wWindowTileBuffer
     lb bc, $14, $05
     call CopyRectTo20ByteRows_Bank24
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     ld de, $01a0
     add hl, de
     lb bc, $14, $05
@@ -4391,7 +4393,7 @@ PriestMenu_PayForService_CopyBuffers::
     ld a, [wScreenSubStep]
     jumptable
     dw PriestMenu_PayForService_CopyBuffers_CopyBytes
-    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_SetBGPaletteUploadRequest
+    dw PriestMenu_PayForService_CopyBuffers_CopyBytes_2
 
 PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld a, [wIsCGB]
@@ -4408,7 +4410,7 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld [wScreenSubStep], a
     ret
 
-PriestMenu_PayForService_CopyBuffers_CopyBytes_SetBGPaletteUploadRequest::
+PriestMenu_PayForService_CopyBuffers_CopyBytes_2::
     ld a, [wScreenCounter]
     sra a
     sra a
@@ -4554,15 +4556,15 @@ PriestMenu_PayForService_SRAMRecordAddress_Data::
 
 PriestMenu_PayForService_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld b, $80
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld b, $04
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld b, $01
-    call PriestMenu_PayForService_LoadSRAMRecordByte_Shared01
+    call PriestMenu_PayForService_LoadSRAMRecordByte_2
     cp $ff
     jr z, .clear_two_choice_cursor
     ld a, $01
@@ -4679,7 +4681,7 @@ DrawScreenBufferRectNoOrigin_Bank24::
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
 ; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
-BGMapAddressAtScroll_Bank24_6866::
+BGMapAddressAtScroll_Bank24_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
     and $f8
@@ -4742,11 +4744,11 @@ StoreBAtWordTableEntry_Bank24::
     ld [de], a
     ret
 
-; copies an 8 x 3 frame (TileRect_24_68EB) into the screen buffer at wWindowTileBuffer + $70,
-; converts wGold to packed BCD (Number24ToPackedBCD) and UnpackBCDToDigitsArg1, then writes the
-; digits as tiles $E0 + d at wWindowTileBuffer + $86 (E-0074)
+; copies an 8 x 3 frame (DrawGoldPanel_Bank24_TileRect) into the screen buffer at wWindowTileBuffer
+; + $70, converts wGold to packed BCD (Number24ToPackedBCD) and UnpackBCDToDigitsArg1, then writes
+; the digits as tiles $E0 + d at wWindowTileBuffer + $86 (E-0074)
 DrawGoldPanel_Bank24::
-    ld de, TileRect_24_68EB
+    ld de, DrawGoldPanel_Bank24_TileRect
     ld hl, wWindowTileBuffer + $70
     lb bc, $08, $03
     call CopyRectTo20ByteRows_Bank24
@@ -4776,12 +4778,12 @@ DrawGoldPanel_Bank24::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-TileRect_24_68EB::
+DrawGoldPanel_Bank24_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
-PriestMenu_PayForService_LoadSRAMRecordByte_Shared01::
+PriestMenu_PayForService_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -4827,7 +4829,7 @@ PriestMenu_PayForService_LoadSRAMRecordByte_Shared01::
     ld a, $ff
     ret
 
-PriestMenu_PayForService_Case02_PriestMenu_PayForService_WriteMarkC0::
+PriestMenu_PayForService_PriestMenu_PayForService_WriteMarkC0::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -4922,24 +4924,24 @@ PriestMenu_PayForService_WriteMarkC1_Data::
 PriestMenu_PayForService_WriteMarkC2_Data::
     db $f9, $c3, $21, $c4, $49, $c4
 
-PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
+PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_priest_menu_pay_for_service_case03_sub01
+    jr nz, .call_priest_menu_pay_for_service_read_choice
     bit 7, a
-    jr nz, .call_priest_menu_pay_for_service_case03_sub012
+    jr nz, .call_priest_menu_pay_for_service_read_choice2
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, .call_queue_sound_effect
     bit 1, a
     jr nz, .set_menu_input_result_to_FE
-    call PriestMenu_PayForService_Case03_Sub01_WriteCursorBlinkAE
+    call PriestMenu_PayForService_WriteCursorBlinkAE
     xor a
     ld [wMenuInputResult], a
     ret
 
-.call_priest_menu_pay_for_service_case03_sub01:
-    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
+.call_priest_menu_pay_for_service_read_choice:
+    call PriestMenu_PayForService_ReadChoiceCursor_2
     ld a, [wChoiceCursor]
     and a
     jr nz, .set_choice_cursor
@@ -4953,8 +4955,8 @@ PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
     ld [wChoiceCursor], a
     jr .clear_cursor_blink_ae
 
-.call_priest_menu_pay_for_service_case03_sub012:
-    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
+.call_priest_menu_pay_for_service_read_choice2:
+    call PriestMenu_PayForService_ReadChoiceCursor_2
     ld a, [wPartyCount]
     dec a
     ld b, a
@@ -4972,7 +4974,7 @@ PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
 .clear_cursor_blink_ae:
     xor a
     ld [wCursorBlinkAE], a
-    call PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
+    call PriestMenu_PayForService_ReadChoiceCursor
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
@@ -4982,7 +4984,7 @@ PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap
+    call PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap
     ld a, $ff
     ld [wMenuInputResult], a
     ret
@@ -4992,41 +4994,41 @@ PriestMenu_PayForService_Case03_WriteMenuInputResultAndChoiceCursorEtc::
     ld [wMenuInputResult], a
     ret
 
-PriestMenu_PayForService_Case03_Sub01_WriteCursorBlinkAE::
+PriestMenu_PayForService_WriteCursorBlinkAE::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
+    jr c, PriestMenu_PayForService_ReadChoiceCursor
     ld a, [wCursorBlinkAE]
     inc a
     ld [wCursorBlinkAE], a
     cp $10
-    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor
+    jr c, PriestMenu_PayForService_ReadChoiceCursor
     cp $18
-    jr c, PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03
+    jr c, PriestMenu_PayForService_ReadChoiceCursor_2
     xor a
     ld [wCursorBlinkAE], a
 
-PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor::
+PriestMenu_PayForService_ReadChoiceCursor::
     ld b, $bb
-    jr PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-PriestMenu_PayForService_Case03_Sub01_ReadChoiceCursor_Sub03::
+PriestMenu_PayForService_ReadChoiceCursor_2::
     ld b, $c3
-    jr PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
+    jr PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap::
+PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
+PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
-    ld hl, PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data
+    ld hl, PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
     ld d, [hl]
     push de
-    call BGMapAddressAtScroll_Bank24_6866
+    call BGMapAddressAtScroll_Bank24_2
     pop de
     add hl, de
     call StepBGMapAddressBackOnScrollWrap
@@ -5037,10 +5039,10 @@ PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_ReadChoic
     ei
     ret
 
-PriestMenu_PayForService_Case03_Sub01_StepBGMapAddressBackOnScrollWrap_Data::
+PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_Data::
     db $e1, $00, $21, $01, $61, $01
 
-PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24::
+PriestMenu_PayForService_CopyBytesDEToHL_Bank24::
     push bc
     push hl
     push de
@@ -5096,36 +5098,36 @@ PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24::
 
 .next:
     dec c
-    jr nz, PriestMenu_PayForService_Case04_CopyBytesDEToHL_Bank24
+    jr nz, PriestMenu_PayForService_CopyBytesDEToHL_Bank24
     ret
 
-PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_6866::
+PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
     ld c, $00
-    call PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
+    call PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2
     ld a, [wIsCGB]
     and a
-    jr z, .call_bg_map_address_at_scroll_bank24_6866
+    jr z, .call_bg_map_address_at_scroll_bank24_2
     ldh a, [rSVBK]
     set 1, a
     ldh [rSVBK], a
     ld hl, wWindowAttrBuffer + $112
     ld de, wWorkBuf + $11
     ld c, $00
-    call PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
+    call PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2
     ldh a, [rSVBK]
     res 1, a
     ldh [rSVBK], a
 
-.call_bg_map_address_at_scroll_bank24_6866:
-    call BGMapAddressAtScroll_Bank24_6866
+.call_bg_map_address_at_scroll_bank24_2:
+    call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0d
     ld de, $01cc
     call DrawScreenBufferRectNoOrigin_Bank24
     ret
 
-PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24::
+PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2::
     push hl
     push de
     push bc
@@ -5146,7 +5148,7 @@ PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24::
     inc c
     ld a, c
     cp $05
-    jr c, PriestMenu_PayForService_Shared02_CopyBytesDEToHL_Bank24
+    jr c, PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2
     ret
 
 PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf::
@@ -5209,7 +5211,7 @@ CopyTileBytesToVRAM_Bank24::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 10 x 9 tiles, one row per line
-TileRect_24_6B8B::
+PriestMenu_ShowServices_DrawGoldPanel_Bank24_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $f0, $cf, $f1, $f2, $f1, $cf, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -5221,7 +5223,7 @@ TileRect_24_6B8B::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
 ; record: 20 x 5 tiles, one row per line
-TileRect_24_6BE5::
+PriestMenu_PayForService_FillTilesFromRequest_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $8b, $8c, $8d, $8e, $8f, $90, $91, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -5229,7 +5231,7 @@ TileRect_24_6BE5::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 11 x 7 tiles, one row per line
-TileRect_24_6C49::
+PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24_TileRect::
     db $ef, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $fe, $ff ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $c3, $c3, $c3, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -5244,7 +5246,7 @@ PriestMenu_PayForService_UpdateListCursorListCursor_Data::
 PriestMenu_PayForService_QueueSoundEffect_Data::
     db $f1, $c3, $19, $c4, $41, $c4
 
-GameMode6_Update_ObtainedEgg_Case00_WaitForVRAMAccess_Data2::
+GameMode6_Update_ObtainedEgg_WaitForVRAMAccess_Data2::
     ds $38, $00
     db $1f, $00, $ff, $7f, $00, $7e, $00, $00
 
@@ -5253,8 +5255,8 @@ GameMode6_Init_Data1::
     INCBIN "gfx/misc/game_mode6_init_data1.lz"
 
 ; LZSS-compressed: 315 bytes that expand to 512 (E-0016, E-0017)
-Tiles1Plus600Gfx_24_6E13::
-    INCBIN "gfx/misc/tiles1_plus600_gfx_24_6_e13.lz"
+Tiles1Plus600Gfx::
+    INCBIN "gfx/misc/tiles1_plus600_gfx.lz"
 
 ; LZSS-compressed: 247 bytes that expand to 512 (E-0016, E-0017)
 GameMode6_Init_Data2::
@@ -5313,7 +5315,7 @@ StepItemDescriptionText::
     jp z, .clear_text_counter1
     cp $f1
     jp z, .read_text_counter12
-    ld [wCursorBlinkB8], a
+    ld [wListCursorBlink], a
     push hl
     ld hl, $4010
     swap a
@@ -5327,7 +5329,7 @@ StepItemDescriptionText::
     ld e, l
     ld d, h
     push de
-    ld a, [wCursorBlinkB8]
+    ld a, [wListCursorBlink]
     cp $8d
     jr z, .read_text_counter4
     cp $8e
@@ -5358,7 +5360,7 @@ StepItemDescriptionText::
     pop de
     ld b, $1f
     ld c, $10
-    ld a, [wCursorBlinkB8]
+    ld a, [wListCursorBlink]
     cp $8d
     jr z, .call_or_from_bank_wait_vram
     cp $8e
@@ -5480,8 +5482,8 @@ ItemDescriptionTable::
     dw ItemDescription_HarMirror ; id 55
     dw ItemDescription_Sky ; id 56
     dw ItemDescription_Heaven ; id 57
-    dw ItemDescription_Heaven_78A7 ; id 58
-    dw ItemDescription_Heaven_78CB ; id 59
+    dw ItemDescription_Heaven_2 ; id 58
+    dw ItemDescription_Heaven_3 ; id 59
     dw ItemDescription_WizStone ; id 60
     dw ItemDescription_Pretty ; id 61
     dw ItemDescription_Accessory ; id 62
@@ -5496,7 +5498,7 @@ ItemDescriptionTable::
     dw ItemDescription_DrakScale ; id 71
     dw ItemDescription_AGL ; id 72
     dw ItemDescription_Starry ; id 73
-    dw ItemDescription_Smart_79F7 ; id 74
+    dw ItemDescription_Smart_2 ; id 74
     dw ItemDescription_Wise ; id 75
     dw ItemDescription_MagicCape ; id 76
     dw ItemDescription_DracoCape ; id 77
@@ -5745,11 +5747,11 @@ ItemDescription_Heaven::
     db "A legendary helmet<LINE>"
     db "found in a cave.@"
 
-ItemDescription_Heaven_78A7::
+ItemDescription_Heaven_2::
     db "A legendary armor<LINE>"
     db "found in a tower.@"
 
-ItemDescription_Heaven_78CB::
+ItemDescription_Heaven_3::
     db "A legendary sword<LINE>"
     db "found in a castle.@"
 
@@ -5798,7 +5800,7 @@ ItemDescription_AGL::
 ItemDescription_Starry::
     db "Raises AGL by 50.@"
 
-ItemDescription_Smart_79F7::
+ItemDescription_Smart_2::
     db "Raises INT by 50.@"
 
 ItemDescription_Wise::

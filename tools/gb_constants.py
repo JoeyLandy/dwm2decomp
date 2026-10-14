@@ -70,11 +70,13 @@ def write_constants_inc(path, consts: dict, events: dict | None = None, status: 
     if events:
         lines += ["; Story flags (wStoryFlags; TestFlagBit, SetFlagBit, script_set_flag, object selectors), named after",
                   "; what their first setter says: a talk routine's message, a scene, a script's last scene command or",
-                  "; message before the flag is set (D-009). Flags only tested, or set by routines whose names say",
-                  "; nothing, keep their numbers."]
-        for flag, (name, setters) in sorted(events.items()):
-            more = f" and {len(setters) - 2} more" if len(setters) > 2 else ""
-            lines.append(f"DEF {name} EQU ${flag:03X} ; set by {', '.join(setters[:2])}{more}")
+                  "; message before the flag is set (D-009), or else the last message the setting routine shows; a",
+                  "; flag no code sets is named after a routine that tests it (E-0346). The rest keep their numbers."]
+        for flag, (name, routines, how) in sorted(events.items()):
+            more = f" and {len(routines) - 2} more" if len(routines) > 2 else ""
+            verb = {"set": "set by", "tested": "no setter found; tested by",
+                    "hand": "named by reading (config/story_flags.json); used by"}[how]
+            lines.append(f"DEF {name} EQU ${flag:03X} ; {verb} {', '.join(routines[:2])}{more}")
         lines.append("")
     if status:
         lines += ["; Bits of a battle slot's status bytes wBattleStatus ... wBattleStatus8 (config/battle_status.json, D-009):",

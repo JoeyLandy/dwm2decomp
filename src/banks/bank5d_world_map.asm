@@ -5,15 +5,15 @@ SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
     db $5d
 
 ; LZSS-compressed: 312 bytes that expand to 1024 (E-0016, E-0017)
-Tiles2Gfx_5D_4001::
-    INCBIN "gfx/misc/tiles2_gfx_5_d_4001.lz"
+Tiles2Gfx_2::
+    INCBIN "gfx/misc/tiles2_gfx_2.lz"
 
 ; RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank;
 ; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other
 ; palette is $7C00 fill, read by nothing found (E-0185, C1)
 ; record: one CGB palette: 4 BGR555 colours
-Palettes_5D_4139::
-BGPaletteBufferData_5D_4139::
+RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData::
+RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData_2::
     dw $318c, $7fff, $5294, $0000 ; id 0
     dw $7c00, $7c00, $7c00, $7c00 ; id 1
     dw $7c00, $7c00, $7c00, $7c00 ; id 2
@@ -134,14 +134,14 @@ WorldMapView10::
     db $38, $39 ; id 0
 
 ; LZSS-compressed: 439 bytes that expand to 2048 (E-0016, E-0017)
-Tiles2Gfx_5D_43AE::
-    INCBIN "gfx/misc/tiles2_gfx_5_d_43_ae.lz"
+Tiles2Gfx_3::
+    INCBIN "gfx/misc/tiles2_gfx_3.lz"
 
 ; 64 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
-Palettes_5D_4565::
-BGPaletteBufferData_5D_4565::
+Palettes_5D::
+RunWorldMapState_CopyScrollToHardware_DecompressToVRAM_BGPaletteBufferData::
     dw $014d, $6bff, $2a55, $0000 ; id 0
     dw $294a, $7fff, $4a52, $0000 ; id 1
     dw $294a, $7fff, $4a52, $0000 ; id 2

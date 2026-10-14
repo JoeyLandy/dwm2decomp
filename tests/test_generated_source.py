@@ -239,8 +239,14 @@ class BankSwitchingCallSites(unittest.TestCase):
                         if not k.startswith("_") and v["name"].startswith(self.HELPERS)]
         self.assertTrue(helper_names)
         call = re.compile(r"\s+call (" + "|".join(helper_names) + r")$")
-        # Data_BBB_AAAA, or a name ending in _BB_AAAA (E-0264, E-0267 keep bank and address in the name)
-        ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), (?:Data_|\w+_)([0-9A-F]{2,3})_[0-9A-F]{4}$")
+        # a label's bank is the bank file that defines it (E-0344 names no longer spell bank and address)
+        bank_of = {}
+        for f in BANKS.glob("bank*.asm"):
+            b = int(f.stem[4:], 16)
+            if b:
+                for lab in re.findall(r"^([A-Za-z_]\w*)::", f.read_text(encoding="utf-8"), re.M):
+                    bank_of[lab] = b
+        ld_ptr = re.compile(r"\s+ld (?:hl|de|bc), ([A-Za-z_]\w*)$")
         ld_b = re.compile(r"\s+ld b, \$([0-9A-F]{2})$")
         barrier = re.compile(r"(\S+::|\s+(?:call|ret|reti|jp|jr|farcall|farcall_b|rst|add_a_to_hl)\b)")  # add_a_to_hl hides a jr
         checked, wrong = 0, []
@@ -258,13 +264,14 @@ class BankSwitchingCallSites(unittest.TestCase):
                     if not b_seen and back.strip().startswith("ld b,"):
                         b_seen = True  # the nearest write to B decides; a non-literal one means no bank
                         bnk = ld_b.match(back)
-                    if ld_ptr.match(back):
-                        ptrs.append(ld_ptr.match(back))
+                    m = ld_ptr.match(back)
+                    if m and m.group(1) in bank_of:
+                        ptrs.append(m.group(1))
                 if bnk and ptrs:
-                    for m in ptrs:
+                    for lab in ptrs:
                         checked += 1
-                        if int(m.group(1), 16) != int(bnk.group(1), 16):
-                            wrong.append(f"{f.name}:{i + 1} {m.group(0).strip()} with ld b,${bnk.group(1)}")
+                        if bank_of[lab] != int(bnk.group(1), 16):
+                            wrong.append(f"{f.name}:{i + 1} {lab} with ld b,${bnk.group(1)}")
         self.assertGreater(checked, 100)
         self.assertEqual(wrong[:5], [], f"{len(wrong)} of {checked} pointer labels disagree with ld b")
 
@@ -440,19 +447,23 @@ class EventScripts(unittest.TestCase):
 
     def test_script_uses_macros_and_labels(self):
         text = (BANKS / "bank10.asm").read_text(encoding="utf-8")
-        self.assertIn("Script_4F66::", text)
-        self.assertIn("    script_skip_if_no Script_4F6F\n", text)
+        # E-0344: scripts are named by their first message or command, not their address
+        target = re.search(r"^    script_skip_if_no (Script_\w+)\n", text, re.M)
+        self.assertIsNotNone(target)
+        self.assertRegex(text, rf"(?m)^{target.group(1)}::")
         self.assertGreater(text.count("    script_end\n"), 100)
 
     def test_callers_name_their_script(self):
         text = (BANKS / "bank13.asm").read_text(encoding="utf-8")
-        self.assertRegex(text, r"    ld hl, Script_6083(?: ; script '[^'\n]+')?\n    call StartScriptAtHL_B13\n")
-        self.assertIn("ld hl, Script_6083 ; script '", text)  # E-0342: the script's first message
+        calls = re.findall(r"    ld hl, (Script_\w+)( ; script '[^'\n]+')?\n    call StartScriptAtHL_B13\n", text)
+        self.assertGreater(len(calls), 50)
+        self.assertGreater(sum(1 for _, quote in calls if quote), 50)  # E-0342: the script's first message
 
     def test_choice_jump_takes_one_offset_per_option(self):
         """E-0188: $E4 has as many offsets as menu options; the first target follows them."""
         text = (BANKS / "bank10.asm").read_text(encoding="utf-8")
-        self.assertIn("    script_choice_jump Script_668F, Script_6688, Script_6685\nScript_6685::", text)
+        # the last offset listed is the option that falls through to the bytes right after the command
+        self.assertRegex(text, r"    script_choice_jump (?:Script_\w+, )+(Script_\w+)\n\1::")
         macros = (BANKS.parents[1] / "src" / "macros.inc").read_text(encoding="utf-8")
         self.assertIn("    REPT _NARG\n", macros[macros.index("MACRO script_choice_jump"):])
 
@@ -460,9 +471,10 @@ class EventScripts(unittest.TestCase):
         """E-0184: wDataBank stores at the routine head or after the start call are found."""
         text = "".join(p.read_text(encoding="utf-8") for p in BANKS.glob("bank*.asm"))
         self.assertNotIn("data bank not known here", text)
-        self.assertIn("Script_5559::", text)
-        self.assertIn("    script_jump_data_bank Script_0C_7A51\n", text)
-        self.assertIn("Script_0C_7A51::", text)
+        targets = re.findall(r"^    script_jump_data_bank (\w+)\n", text, re.M)
+        self.assertTrue(targets)
+        for t in targets:
+            self.assertRegex(text, rf"(?m)^{t}::")
 
 
 class BufferOffsetAliases(unittest.TestCase):

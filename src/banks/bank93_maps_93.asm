@@ -130,8 +130,8 @@ Map2FTileset::
     INCBIN "maps/map2_f/tileset.lz"
 
 ; LZSS-compressed: 359 bytes that expand to 366 (E-0016, E-0017)
-Gfx_93_56F3::
-    INCBIN "gfx/misc/gfx_93_56_f3.lz"
+Gfx93_1::
+    INCBIN "gfx/misc/gfx93_1.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
@@ -204,24 +204,24 @@ Map2FScreens0_Y1X0::
     INCBIN "maps/map2_f/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 179 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_93_5B36::
-    INCBIN "maps/screen_maps/93_5_b36.lz"
+ScreenMap_ScreenAnimationTable_2::
+    INCBIN "maps/screen_maps/screen_animation_table_2.lz"
 
 ; LZSS-compressed: 176 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_93_5BE9::
-    INCBIN "maps/screen_maps/93_5_be9.lz"
+ScreenMap_ScreenAnimationTable_6::
+    INCBIN "maps/screen_maps/screen_animation_table_6.lz"
 
 ; LZSS-compressed: 178 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_93_5C99::
-    INCBIN "maps/screen_maps/93_5_c99.lz"
+ScreenMap_ScreenAnimationTable_10::
+    INCBIN "maps/screen_maps/screen_animation_table_10.lz"
 
 ; LZSS-compressed: 170 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_93_5D4B::
-    INCBIN "maps/screen_maps/93_5_d4_b.lz"
+ScreenMap_ScreenAnimationTable_14::
+    INCBIN "maps/screen_maps/screen_animation_table_14.lz"
 
 ; LZSS-compressed: 161 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_93_5DF5::
-    INCBIN "maps/screen_maps/93_5_df5.lz"
+ScreenMap_ScreenAnimationTable_18::
+    INCBIN "maps/screen_maps/screen_animation_table_18.lz"
 
 ; LZSS-compressed: 159 bytes that expand to 360 (E-0016, E-0017)
 Map2FScreens4_Y1X0::
@@ -259,32 +259,32 @@ Map2FAttrs0_Y1X0::
     db $06, $03, $7a, $0f, $05, $03, $a5, $0f, $4d, $03, $05, $1f, $4d, $01, $01
 
 ; LZSS-compressed: 65 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_93_6153::
-    INCBIN "gfx/misc/script_screen_attr_map_93_6153.lz"
+ScriptScreenAttrMap_ScreenAnimationTable_3::
+    INCBIN "gfx/misc/script_screen_attr_map_screen_animation_table_3.lz"
 
 ; LZSS-compressed: 59 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_93_6194::
+ScriptScreenAttrMap_ScreenAnimationTable_7::
     db $68, $01, $03, $01, $03, $00, $01, $03, $f2, $ff, $0e, $03, $00, $02, $03, $04
     db $02, $03, $05, $02, $03, $27, $04, $03, $27, $06, $03, $39, $09, $02, $02, $02
     db $02, $03, $39, $0c, $03, $58, $0e, $03, $5a, $00, $03, $37, $0c, $03, $7e, $0f
     db $01, $03, $a5, $0f, $4d, $03, $05, $1f, $4d, $01, $01
 
 ; LZSS-compressed: 57 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_93_61CF::
+ScriptScreenAttrMap_ScreenAnimationTable_11::
     db $68, $01, $03, $01, $03, $00, $01, $03, $f3, $ff, $00, $03, $04, $01, $03, $04
     db $03, $03, $13, $04, $03, $13, $06, $03, $25, $0c, $03, $37, $0d, $02, $02, $02
     db $02, $03, $48, $0f, $0f, $03, $5a, $00, $03, $23, $0c, $03, $7e, $0f, $01, $03
     db $a5, $0f, $4d, $03, $05, $1f, $4d, $01, $01
 
 ; LZSS-compressed: 52 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_93_6208::
+ScriptScreenAttrMap_ScreenAnimationTable_15::
     db $68, $01, $03, $01, $03, $00, $02, $03, $fc, $f2, $03, $fb, $f8, $03, $12, $05
     db $03, $0f, $0f, $00, $03, $25, $0f, $10, $02, $02, $02, $02, $03, $48, $0f, $0f
     db $03, $5a, $00, $03, $10, $0c, $03, $7e, $0f, $01, $03, $a5, $0f, $4d, $03, $05
     db $1f, $4d, $01, $01
 
 ; LZSS-compressed: 42 bytes that expand to 360 (E-0016, E-0017)
-ScriptScreenAttrMap_93_623C::
+ScriptScreenAttrMap_ScreenAnimationTable_19::
     db $68, $01, $03, $01, $03, $00, $08, $03, $fd, $fc, $03, $10, $0f, $28, $02, $02
     db $02, $02, $03, $48, $0f, $0f, $03, $5a, $00, $03, $0e, $0c, $03, $7e, $0f, $01
     db $03, $a5, $0f, $4d, $03, $05, $1f, $4d, $01, $01

@@ -73,83 +73,83 @@ SendSGBPaletteSetPacket_WaitSGBActive::
 
 SendSGBPaletteSetPacket_WaitSGBActive_Data::
     db $ff, $40, $0f, $41
-    dw PointerRun_17_4059_Entry00
-    dw PointerRun_17_4059_Entry01
-    dw PointerRun_17_4059_Entry02
-    dw PointerRun_17_4059_Entry03
-    dw PointerRun_17_4059_Entry04
-    dw PointerRun_17_4059_Entry05
-    dw PointerRun_17_4059_Entry06
-    dw PointerRun_17_4059_Entry07
-    dw PointerRun_17_4059_Entry08
-    dw PointerRun_17_4059_Entry09
-    dw PointerRun_17_4059_Entry0A
-    dw PointerRun_17_4059_Entry0B
-    dw PointerRun_17_4059_Entry0C
-    dw PointerRun_17_4059_Entry0D
-    dw PointerRun_17_4059_Entry0E
-    dw PointerRun_17_4059_Entry0F
-    dw PointerRun_17_4059_Entry10
-    dw PointerRun_17_4059_Entry11
-    dw PointerRun_17_4059_Entry12
+    dw PointerRun_Entry00
+    dw PointerRun_Entry01
+    dw PointerRun_Entry02
+    dw PointerRun_Entry03_2
+    dw PointerRun_Entry04_2
+    dw PointerRun_Entry05
+    dw PointerRun_Entry06_2
+    dw PointerRun_Entry07_2
+    dw PointerRun_Entry08_2
+    dw PointerRun_Entry09_2
+    dw PointerRun_Entry0A_2
+    dw PointerRun_Entry0B
+    dw PointerRun_Entry0C
+    dw PointerRun_Entry0D
+    dw PointerRun_Entry0E
+    dw PointerRun_Entry0F
+    dw PointerRun_Entry10
+    dw PointerRun_Entry11
+    dw PointerRun_Entry12
 
-PointerRun_17_4059_Entry00::
+PointerRun_Entry00::
     db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry01::
+PointerRun_Entry01::
     db $79, $52, $08, $00, $0b, $a9, $e7, $9f, $01, $c0, $7e, $e8, $e8, $e8, $e8, $e0
 
-PointerRun_17_4059_Entry02::
+PointerRun_Entry02::
     db $79, $47, $08, $00, $0b, $c4, $d0, $16, $a5, $cb, $c9, $05, $d0, $10, $a2, $28
 
-PointerRun_17_4059_Entry03::
+PointerRun_Entry03_2::
     db $79, $3c, $08, $00, $0b, $f0, $12, $a5, $c9, $c9, $c8, $d0, $1c, $a5, $ca, $c9
 
-PointerRun_17_4059_Entry04::
+PointerRun_Entry04_2::
     db $79, $31, $08, $00, $0b, $0c, $a5, $ca, $c9, $7e, $d0, $06, $a5, $cb, $c9, $7e
 
-PointerRun_17_4059_Entry05::
+PointerRun_Entry05::
     db $79, $26, $08, $00, $0b, $39, $cd, $48, $0c, $d0, $34, $a5, $c9, $c9, $80, $d0
 
-PointerRun_17_4059_Entry06::
+PointerRun_Entry06_2::
     db $79, $1b, $08, $00, $0b, $ea, $ea, $ea, $ea, $ea, $a9, $01, $cd, $4f, $0c, $d0
 
-PointerRun_17_4059_Entry07::
+PointerRun_Entry07_2::
     db $79, $10, $08, $00, $0b, $4c, $20, $08, $ea, $ea, $ea, $ea, $ea, $60, $ea, $ea
     db $b9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $b9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry08::
+PointerRun_Entry08_2::
     db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry09::
+PointerRun_Entry09_2::
     db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0A::
+PointerRun_Entry0A_2::
     db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0B::
+PointerRun_Entry0B::
     db $a9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0C::
+PointerRun_Entry0C::
     db $51, $00, $00, $01, $00, $02, $00, $03, $00, $c0, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0D::
+PointerRun_Entry0D::
     db $a1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0E::
+PointerRun_Entry0E::
     db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry0F::
+PointerRun_Entry0F::
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry10::
+PointerRun_Entry10::
     db $c9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry11::
+PointerRun_Entry11::
     db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_17_4059_Entry12::
+PointerRun_Entry12::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; when the Super Game Boy is active, builds a PAL_SET ($51) packet from
@@ -324,7 +324,7 @@ SGBPaletteSets::
     db $de, $6f, $1f, $33, $3c, $12, $00, $00, $de, $6f, $1f, $33, $3c, $12, $00, $00
 
 ; LZSS-compressed: 7 bytes that expand to 90 (E-0016, E-0017)
-Gfx_17_448C::
+BootAndMainLoop_CallDisableVBlankTimerSerialJoypadInterrupts_Gfx::
     db $5a, $00, $01, $01, $a0, $ff, $47
 
 ; Super Game Boy border set 0: border tiles $00-$7F (4096 bytes, sent with packet set $10);

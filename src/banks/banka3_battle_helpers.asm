@@ -247,8 +247,9 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122) (E-0340: the address in its
-; name read as its RAM name; was RunA3414FAndMarkWDA5B3)
-RunA3414FAndMarkSlotMarks3::
+; name read as its RAM name; was RunA3414FAndMarkWDA5B3) (E-0344: the address in its name dropped or
+; read as the label there; was RunA3414FAndMarkSlotMarks3)
+RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3::
     call ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld hl, wSlotMarks
@@ -370,7 +371,7 @@ FindFormationForSide::
     call CheckSlotStatusBlock
     jr c, .restore
     ldh a, [hTemp0]
-    call SlotHasStatus3Or4Bits_BankA3_4278
+    call SlotHasStatus3Or4Bits_BankA3_2
     jr nz, .restore
 
 .next:
@@ -390,7 +391,7 @@ FindFormationForSide::
     jr c, .restore
     ldh a, [hTemp0]
     inc a
-    call SlotHasStatus3Or4Bits_BankA3_4278
+    call SlotHasStatus3Or4Bits_BankA3_2
     jr nz, .restore
 
 .next2:
@@ -412,7 +413,7 @@ FindFormationForSide::
     ldh a, [hTemp0]
     inc a
     inc a
-    call SlotHasStatus3Or4Bits_BankA3_4278
+    call SlotHasStatus3Or4Bits_BankA3_2
     jr nz, .restore
 
 .check_link_mode:
@@ -465,7 +466,7 @@ FindFormationForSide::
 ; A = slot: with HL = wBattleStatus3 + 9 * A (status byte 3 of wBattleStatus), A = byte 3 & $C0, or
 ; byte 4 & $0C when that is zero; Z set when both are clear; HL kept (E-0067) (the same 17 bytes
 ; appear in 13 banks)
-SlotHasStatus3Or4Bits_BankA3_4278::
+SlotHasStatus3Or4Bits_BankA3_2::
     push hl
     ld hl, wBattleStatus3
     call AddAx9ToHL
@@ -611,14 +612,14 @@ FormationCompatibilityRoll::
     ld a, $03
     call DivideBByA
     or a
-    jr z, .call_personality_index_of_slot_bank_a3_497_e
+    jr z, .call_personality_index_of_slot_bank_a3_2
     dec a
-    jr z, .call_personality_index_of_slot_bank_a3_497_e2
+    jr z, .call_personality_index_of_slot_bank_a3_22
     ld a, $01
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     push af
     ld a, $02
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     ld l, a
     ld h, $00
     add hl, hl
@@ -649,12 +650,12 @@ FormationCompatibilityRoll::
 .skip:
     jr .read_temp0
 
-.call_personality_index_of_slot_bank_a3_497_e:
+.call_personality_index_of_slot_bank_a3_2:
     ld a, $00
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     push af
     ld a, $01
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     ld l, a
     ld h, $00
     add hl, hl
@@ -685,12 +686,12 @@ FormationCompatibilityRoll::
 .skip2:
     jr .read_temp0
 
-.call_personality_index_of_slot_bank_a3_497_e2:
+.call_personality_index_of_slot_bank_a3_22:
     ld a, $00
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     push af
     ld a, $02
-    call PersonalityIndexOfSlot_BankA3_497E
+    call PersonalityIndexOfSlot_BankA3_2
     ld l, a
     ld h, $00
     add hl, hl
@@ -900,7 +901,7 @@ ActorActionIsD0ToE3::
 ; g(wSlotPersonalityLo[A]) with g(v) = 0 for v >= $C0, 1 for v >= $40, else 2 (the same index
 ; PersonalityIndexOfRecord builds from a save record; E-0031); HL and BC are kept (the same 87 bytes
 ; appear in 13 banks)
-PersonalityIndexOfSlot_BankA3_497E::
+PersonalityIndexOfSlot_BankA3_2::
     push hl
     push bc
     ld c, a
@@ -1157,7 +1158,7 @@ StoreBattleStateToPartyRecords_BankA3::
     ld a, [wPartyCount]
     ld b, a
     ld hl, wPartyList
-    ld de, wBattleBuffer72
+    ld de, wBattleStateBuffer
 
 .loop:
     inc de

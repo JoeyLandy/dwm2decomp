@@ -1194,357 +1194,357 @@ SkillPrerequisites_TailWind::
 
 AddSkillCToFreeSlotUnlessExcluded_Data::
     db $df, $5e
-    dw PointerRun_1A_5D8D_Entry00
+    dw PointerRun_Entry00_2
     db $5e, $5f, $5d, $5f
-    dw PointerRun_1A_5D93_Entry00
+    dw PointerRun_Entry00_3
     db $61, $5f, $60, $5f
-    dw PointerRun_1A_5D99_Entry00
+    dw PointerRun_Entry00_4
     db $64, $5f, $63, $5f
-    dw PointerRun_1A_5D9F_Entry00
+    dw PointerRun_Entry00_5
     db $67, $5f, $66, $5f
-    dw PointerRun_1A_5DA5_Entry00
+    dw PointerRun_Entry00_6
     db $6a, $5f, $69, $5f
-    dw PointerRun_1A_5DAB_Entry00
+    dw PointerRun_Entry00_7
     db $6d, $5f, $6c, $5f
-    dw PointerRun_1A_5DB1_Entry00
+    dw PointerRun_Entry00_8
     db $6f, $5f, $e7, $5e
-    dw PointerRun_1A_5DB7_Entry00
+    dw PointerRun_Entry00_9
     db $72, $5f, $71, $5f
-    dw PointerRun_1A_5DBD_Entry00
+    dw PointerRun_Entry00_10
     db $74, $5f, $ea, $5e
-    dw PointerRun_1A_5DC3_Entry00
+    dw PointerRun_Entry00_11
     db $76, $5f, $eb, $5e
-    dw PointerRun_1A_5DC9_Entry00
+    dw PointerRun_Entry00_12
     db $ec, $5e
-    dw PointerRun_1A_5DCD_Entry00
+    dw PointerRun_Entry00_13
     db $ee, $5e
-    dw PointerRun_1A_5DD1_Entry00
+    dw PointerRun_Entry00_14
     db $f0, $5e
-    dw PointerRun_1A_5DD5_Entry00
+    dw PointerRun_Entry00_15
     db $7b, $5f
-    dw PointerRun_1A_5DD9_Entry00
+    dw PointerRun_Entry00_16
     db $7d, $5f
-    dw PointerRun_1A_5DDD_Entry00
+    dw PointerRun_Entry00_17
     db $7f, $5f
-    dw PointerRun_1A_5DE1_Entry00
+    dw PointerRun_Entry00_18
     db $81, $5f
-    dw PointerRun_1A_5DE5_Entry00
+    dw PointerRun_Entry00_19
     db $f6, $5e
-    dw PointerRun_1A_5DE9_Entry00
+    dw PointerRun_Entry00_20
     db $83, $5f
-    dw PointerRun_1A_5DED_Entry00
+    dw PointerRun_Entry00_21
     db $f9, $5e
-    dw PointerRun_1A_5DF1_Entry00
+    dw PointerRun_Entry00_22
     db $fb, $5e
-    dw PointerRun_1A_5DF5_Entry00
+    dw PointerRun_Entry00_23
     db $fd, $5e
-    dw PointerRun_1A_5DF9_Entry00
-    dw PointerRun_1A_5DF9_Entry01
-    dw PointerRun_1A_5DF9_Entry02
-    dw PointerRun_1A_5DF9_Entry03
-    dw PointerRun_1A_5DF9_Entry04
-    dw PointerRun_1A_5DF9_Entry05
-    dw PointerRun_1A_5DF9_Entry06
-    dw PointerRun_1A_5DF9_Entry07
-    dw PointerRun_1A_5DF9_Entry08
-    dw PointerRun_1A_5DF9_Entry09
-    dw PointerRun_1A_5DF9_Entry0A
+    dw PointerRun_Entry00_24
+    dw PointerRun_Entry01_2
+    dw PointerRun_Entry02_2
+    dw PointerRun_Entry03_3
+    dw PointerRun_Entry04_3
+    dw PointerRun_Entry05_2
+    dw PointerRun_Entry06_3
+    dw PointerRun_Entry07_3
+    dw PointerRun_Entry08_3
+    dw PointerRun_Entry09_3
+    dw PointerRun_Entry0A_3
     db $88, $5f, $87, $5f, $07, $5f, $8d, $5f, $8c, $5f, $8b, $5f
-    dw PointerRun_1A_5E1B_Entry00
+    dw PointerRun_Entry00_25
     db $8f, $5f, $09, $5f
-    dw PointerRun_1A_5E21_Entry00
+    dw PointerRun_Entry00_26
     db $0b, $5f, $91, $5f
-    dw PointerRun_1A_5E27_Entry00
+    dw PointerRun_Entry00_27
     db $93, $5f, $0d, $5f
-    dw PointerRun_1A_5E2D_Entry00
+    dw PointerRun_Entry00_28
     db $0f, $5f, $10, $5f
-    dw PointerRun_1A_5E33_Entry00
+    dw PointerRun_Entry00_29
     db $12, $5f, $13, $5f
-    dw PointerRun_1A_5E39_Entry00
+    dw PointerRun_Entry00_30
     db $15, $5f, $16, $5f
-    dw PointerRun_1A_5E3F_Entry00
+    dw PointerRun_Entry00_31
     db $18, $5f, $19, $5f
-    dw PointerRun_1A_5E45_Entry00
+    dw PointerRun_Entry00_32
     db $1b, $5f, $1c, $5f
-    dw PointerRun_1A_5E4B_Entry00
+    dw PointerRun_Entry00_33
     db $1e, $5f, $1f, $5f
-    dw PointerRun_1A_5E51_Entry00
+    dw PointerRun_Entry00_34
     db $95, $5f, $21, $5f
-    dw PointerRun_1A_5E57_Entry00
+    dw PointerRun_Entry00_35
     db $23, $5f, $24, $5f
-    dw PointerRun_1A_5E5D_Entry00
+    dw PointerRun_Entry00_36
     db $26, $5f, $27, $5f
-    dw PointerRun_1A_5E63_Entry00
+    dw PointerRun_Entry00_37
     db $29, $5f, $2a, $5f
-    dw PointerRun_1A_5E69_Entry00
+    dw PointerRun_Entry00_38
     db $2c, $5f, $2d, $5f
-    dw PointerRun_1A_5E6F_Entry00
+    dw PointerRun_Entry00_39
     db $2f, $5f, $97, $5f
-    dw PointerRun_1A_5E75_Entry00
+    dw PointerRun_Entry00_40
     db $31, $5f, $99, $5f
-    dw PointerRun_1A_5E7B_Entry00
+    dw PointerRun_Entry00_41
     db $33, $5f, $34, $5f
-    dw PointerRun_1A_5E81_Entry00
+    dw PointerRun_Entry00_42
     db $36, $5f, $37, $5f
-    dw PointerRun_1A_5E87_Entry00
+    dw PointerRun_Entry00_43
     db $39, $5f, $3a, $5f
-    dw PointerRun_1A_5E8D_Entry00
+    dw PointerRun_Entry00_44
     db $3c, $5f, $3d, $5f
-    dw PointerRun_1A_5E93_Entry00
+    dw PointerRun_Entry00_45
     db $3f, $5f, $9d, $5f
-    dw PointerRun_1A_5E99_Entry00
+    dw PointerRun_Entry00_46
     db $9b, $5f
-    dw PointerRun_1A_5E9D_Entry00
+    dw PointerRun_Entry00_47
     db $41, $5f
-    dw PointerRun_1A_5EA1_Entry00
+    dw PointerRun_Entry00_48
     db $9f, $5f
-    dw PointerRun_1A_5EA5_Entry00
+    dw PointerRun_Entry00_49
     db $a1, $5f
-    dw PointerRun_1A_5EA9_Entry00
+    dw PointerRun_Entry00_50
     db $45, $5f
-    dw PointerRun_1A_5EAD_Entry00
+    dw PointerRun_Entry00_51
     db $47, $5f
-    dw PointerRun_1A_5EB1_Entry00
+    dw PointerRun_Entry00_52
     db $49, $5f
-    dw PointerRun_1A_5EB5_Entry00
+    dw PointerRun_Entry00_53
     db $4b, $5f
-    dw PointerRun_1A_5EB9_Entry00
+    dw PointerRun_Entry00_54
     db $a3, $5f
-    dw PointerRun_1A_5EBD_Entry00
+    dw PointerRun_Entry00_55
     db $a5, $5f
-    dw PointerRun_1A_5EC1_Entry00
+    dw PointerRun_Entry00_56
     db $4f, $5f
-    dw PointerRun_1A_5EC5_Entry00
+    dw PointerRun_Entry00_57
     db $51, $5f
-    dw PointerRun_1A_5EC9_Entry00
+    dw PointerRun_Entry00_58
     db $53, $5f
-    dw PointerRun_1A_5ECD_Entry00
+    dw PointerRun_Entry00_59
     db $55, $5f
-    dw PointerRun_1A_5ED1_Entry00
+    dw PointerRun_Entry00_60
     db $57, $5f
-    dw PointerRun_1A_5ED5_Entry00
+    dw PointerRun_Entry00_61
     db $59, $5f
-    dw PointerRun_1A_5ED9_Entry00
+    dw PointerRun_Entry00_62
     db $5b, $5f
-    dw PointerRun_1A_5EDD_Entry00
+    dw PointerRun_Entry00_63
     db $ff
 
-PointerRun_1A_5D8D_Entry00::
+PointerRun_Entry00_2::
     db $ff
 
-PointerRun_1A_5D93_Entry00::
+PointerRun_Entry00_3::
     db $ff
 
-PointerRun_1A_5D99_Entry00::
+PointerRun_Entry00_4::
     db $ff
 
-PointerRun_1A_5D9F_Entry00::
+PointerRun_Entry00_5::
     db $ff
 
-PointerRun_1A_5DA5_Entry00::
+PointerRun_Entry00_6::
     db $ff
 
-PointerRun_1A_5DAB_Entry00::
+PointerRun_Entry00_7::
     db $ff
 
-PointerRun_1A_5DB1_Entry00::
+PointerRun_Entry00_8::
     db $ff, $ff
 
-PointerRun_1A_5DB7_Entry00::
+PointerRun_Entry00_9::
     db $ff
 
-PointerRun_1A_5DBD_Entry00::
+PointerRun_Entry00_10::
     db $ff, $ff, $ff, $ff
 
-PointerRun_1A_5DCD_Entry00::
+PointerRun_Entry00_13::
     db $ff, $ff
 
-PointerRun_1A_5DD1_Entry00::
+PointerRun_Entry00_14::
     db $ff, $ff
 
-PointerRun_1A_5DD5_Entry00::
+PointerRun_Entry00_15::
     db $ff
 
-PointerRun_1A_5DD9_Entry00::
+PointerRun_Entry00_16::
     db $ff
 
-PointerRun_1A_5DDD_Entry00::
+PointerRun_Entry00_17::
     db $ff
 
-PointerRun_1A_5DE1_Entry00::
+PointerRun_Entry00_18::
     db $ff
 
-PointerRun_1A_5DE5_Entry00::
+PointerRun_Entry00_19::
     db $ff, $ff
 
-PointerRun_1A_5DE9_Entry00::
+PointerRun_Entry00_20::
     db $ff
 
-PointerRun_1A_5DED_Entry00::
+PointerRun_Entry00_21::
     db $ff, $ff
 
-PointerRun_1A_5DF1_Entry00::
+PointerRun_Entry00_22::
     db $ff, $ff
 
-PointerRun_1A_5DF5_Entry00::
+PointerRun_Entry00_23::
     db $ff, $ff
 
-PointerRun_1A_5DF9_Entry01::
+PointerRun_Entry01_2::
     db $ff
 
-PointerRun_1A_5DF9_Entry02::
+PointerRun_Entry02_2::
     db $ff
 
-PointerRun_1A_5DF9_Entry03::
+PointerRun_Entry03_3::
     db $ff
 
-PointerRun_1A_5DF9_Entry04::
+PointerRun_Entry04_3::
     db $ff
 
-PointerRun_1A_5DF9_Entry05::
+PointerRun_Entry05_2::
     db $ff
 
-PointerRun_1A_5DF9_Entry06::
+PointerRun_Entry06_3::
     db $ff
 
-PointerRun_1A_5DF9_Entry07::
+PointerRun_Entry07_3::
     db $ff
 
-PointerRun_1A_5DF9_Entry08::
+PointerRun_Entry08_3::
     db $ff
 
-PointerRun_1A_5DF9_Entry09::
+PointerRun_Entry09_3::
     db $ff, $ff
 
-PointerRun_1A_5E1B_Entry00::
+PointerRun_Entry00_25::
     db $ff, $ff
 
-PointerRun_1A_5E21_Entry00::
+PointerRun_Entry00_26::
     db $ff, $ff
 
-PointerRun_1A_5E27_Entry00::
+PointerRun_Entry00_27::
     db $ff, $ff
 
-PointerRun_1A_5E2D_Entry00::
+PointerRun_Entry00_28::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E33_Entry00::
+PointerRun_Entry00_29::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E39_Entry00::
+PointerRun_Entry00_30::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E3F_Entry00::
+PointerRun_Entry00_31::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E45_Entry00::
+PointerRun_Entry00_32::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E4B_Entry00::
+PointerRun_Entry00_33::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E51_Entry00::
+PointerRun_Entry00_34::
     db $ff, $ff
 
-PointerRun_1A_5E57_Entry00::
+PointerRun_Entry00_35::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E5D_Entry00::
+PointerRun_Entry00_36::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E63_Entry00::
+PointerRun_Entry00_37::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E69_Entry00::
+PointerRun_Entry00_38::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E6F_Entry00::
+PointerRun_Entry00_39::
     db $ff, $ff
 
-PointerRun_1A_5E75_Entry00::
+PointerRun_Entry00_40::
     db $ff, $ff
 
-PointerRun_1A_5E7B_Entry00::
+PointerRun_Entry00_41::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E81_Entry00::
+PointerRun_Entry00_42::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E87_Entry00::
+PointerRun_Entry00_43::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E8D_Entry00::
+PointerRun_Entry00_44::
     db $ff, $ff, $ff
 
-PointerRun_1A_5E93_Entry00::
+PointerRun_Entry00_45::
     db $ff, $ff
 
-PointerRun_1A_5E9D_Entry00::
+PointerRun_Entry00_47::
     db $ff, $ff
 
-PointerRun_1A_5EA1_Entry00::
+PointerRun_Entry00_48::
     db $ff
 
-PointerRun_1A_5EA5_Entry00::
+PointerRun_Entry00_49::
     db $ff
 
-PointerRun_1A_5EA9_Entry00::
+PointerRun_Entry00_50::
     db $ff, $ff
 
-PointerRun_1A_5EAD_Entry00::
+PointerRun_Entry00_51::
     db $ff, $ff
 
-PointerRun_1A_5EB1_Entry00::
+PointerRun_Entry00_52::
     db $ff, $ff
 
-PointerRun_1A_5EB5_Entry00::
+PointerRun_Entry00_53::
     db $ff, $ff
 
-PointerRun_1A_5EB9_Entry00::
+PointerRun_Entry00_54::
     db $ff
 
-PointerRun_1A_5EBD_Entry00::
+PointerRun_Entry00_55::
     db $ff
 
-PointerRun_1A_5EC1_Entry00::
+PointerRun_Entry00_56::
     db $ff, $ff
 
-PointerRun_1A_5EC5_Entry00::
+PointerRun_Entry00_57::
     db $ff, $ff
 
-PointerRun_1A_5EC9_Entry00::
+PointerRun_Entry00_58::
     db $ff, $ff
 
-PointerRun_1A_5ECD_Entry00::
+PointerRun_Entry00_59::
     db $ff, $ff
 
-PointerRun_1A_5ED1_Entry00::
+PointerRun_Entry00_60::
     db $ff, $ff
 
-PointerRun_1A_5ED5_Entry00::
+PointerRun_Entry00_61::
     db $ff, $ff
 
-PointerRun_1A_5ED9_Entry00::
+PointerRun_Entry00_62::
     db $ff, $ff
 
-PointerRun_1A_5EDD_Entry00::
+PointerRun_Entry00_63::
     db $ff, $02, $01, $ff, $05, $04, $ff, $08, $07, $ff, $0b, $0a, $ff, $0e, $0d, $ff
     db $11, $10, $ff, $13, $ff, $17, $16, $ff, $19, $ff, $1c
 
-PointerRun_1A_5DC3_Entry00::
+PointerRun_Entry00_11::
     db $1b, $ff
 
-PointerRun_1A_5DC9_Entry00::
+PointerRun_Entry00_12::
     db $1e, $ff, $25, $ff, $27, $ff, $29, $ff, $2b, $ff, $2f, $ff
 
-PointerRun_1A_5DF9_Entry00::
+PointerRun_Entry00_24::
     db $36, $ff, $42, $41
 
-PointerRun_1A_5DF9_Entry0A::
+PointerRun_Entry0A_3::
     db $40, $ff, $46, $45, $44, $ff, $48, $ff, $4c, $ff, $4e, $ff, $63, $ff, $73, $ff
     db $76, $ff, $87
 
-PointerRun_1A_5E99_Entry00::
+PointerRun_Entry00_46::
     db $86, $85, $ff, $8b, $ff, $8d, $ff, $97, $ff, $99, $ff
 
 ; copies the record's eight skills to wWorkBuf and, for each skill in SkillRequirementTable, checks
@@ -1949,14 +1949,14 @@ FindNewlyLearnableSkills::
     ldh [hTemp6], a
     ld a, c
     cp $3d
-    jr nz, .call_find_byte_then_continue61_fe
+    jr nz, .call_find_byte_then_continue
     ld a, [hl]
-    call FindByteThenContinue61FE
+    call FindByteThenContinue
     jr nz, .restore
     jr .next
 
-.call_find_byte_then_continue61_fe:
-    call FindByteThenContinue61FE
+.call_find_byte_then_continue:
+    call FindByteThenContinue
     jr nz, .restore
     jr FindNewlyLearnableSkills_ReadTemp6
 
@@ -1965,25 +1965,25 @@ FindNewlyLearnableSkills::
     ld a, [hl]
     cp $ff
     jr z, .restore
-    call FindByteThenContinue61FE
+    call FindByteThenContinue
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Restore
-    call FindByteThenContinue61FE
+    call FindByteThenContinue
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Restore
-    call FindByteThenContinue61FE
+    call FindByteThenContinue
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Restore
-    call FindByteThenContinue61FE
+    call FindByteThenContinue
     jr nz, .restore
     jr FindNewlyLearnableSkills_Restore
 
@@ -2045,16 +2045,17 @@ FindNewlyLearnableSkills_Restore::
     jr FindNewlyLearnableSkills_Return
 
 ; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at
-; FindNewlyLearnableSkills_Return (E-0126)
-FindByteThenContinue61FE::
+; FindNewlyLearnableSkills_Return (E-0126) (E-0344: the address in its name dropped or read as the
+; label there; was FindByteThenContinue61FE)
+FindByteThenContinue::
     push de
-    call FindByteAtHLInEightAtDE_Bank1A_6232
+    call FindByteAtHLInEightAtDE_Bank1A_2
     pop de
     jr FindNewlyLearnableSkills_Return
 
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B
 ; = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
-FindByteAtHLInEightAtDE_Bank1A_6232::
+FindByteAtHLInEightAtDE_Bank1A_2::
     ld b, $08
 
 .loop:
@@ -2104,7 +2105,7 @@ BattleEnd_Step3_LoadSpeciesRecord::
 .loop:
     ld a, [de]
     inc de
-    call BattleEnd_Step3_Sub02_BattleEnd_Step3_RecordKnowsSkill
+    call BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill
     jr z, .skip
     call BattleEnd_Step3_FindSkillInTable
 
@@ -2136,7 +2137,7 @@ BattleEnd_Step3_LoadSpeciesRecord::
     jr nz, .loop3
     ret
 
-BattleEnd_Step3_Sub02_BattleEnd_Step3_RecordKnowsSkill::
+BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
     cp $c8
@@ -3113,128 +3114,162 @@ StatGrowthTable::
     db $0d, $11, $14, $0f, $0a, $0b, $0c, $0d, $0e, $14, $13 ; gains for levels 78-88
     db $12, $14, $11, $0a, $0c, $12, $13, $10, $14, $0e, $0e ; gains for levels 89-99
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_7345 (E-0079)
-CopyRectRecord7345ToScreenBuffer::
-    ld hl, TileRect_1A_7345
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_TileRect (E-0079)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord7345ToScreenBuffer)
+CopyRectRecordToScreenBuffer::
+    ld hl, CopyRectRecordToScreenBuffer_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_73AD (E-0114)
-CopyRectRecord73ADToScreenBuffer::
-    ld hl, TileRect_1A_73AD
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_2_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord73ADToScreenBuffer)
+CopyRectRecordToScreenBuffer_2::
+    ld hl, CopyRectRecordToScreenBuffer_2_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_73F7 (E-0114)
-CopyRectRecord73F7ToScreenBuffer::
-    ld hl, TileRect_1A_73F7
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_3_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord73F7ToScreenBuffer)
+CopyRectRecordToScreenBuffer_3::
+    ld hl, CopyRectRecordToScreenBuffer_3_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_747F (E-0114)
-CopyRectRecord747FToScreenBuffer::
-    ld hl, TileRect_1A_747F
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_4_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord747FToScreenBuffer)
+CopyRectRecordToScreenBuffer_4::
+    ld hl, CopyRectRecordToScreenBuffer_4_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_755F (E-0114)
-CopyRectRecord755FToScreenBuffer::
-    ld hl, TileRect_1A_755F
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_5_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord755FToScreenBuffer)
+CopyRectRecordToScreenBuffer_5::
+    ld hl, CopyRectRecordToScreenBuffer_5_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_75AB (E-0114)
-CopyRectRecord75ABToScreenBuffer::
-    ld hl, TileRect_1A_75AB
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_6_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord75ABToScreenBuffer)
+CopyRectRecordToScreenBuffer_6::
+    ld hl, CopyRectRecordToScreenBuffer_6_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_7600 (E-0114)
-CopyRectRecord7600ToScreenBuffer::
-    ld hl, TileRect_1A_7600
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_7_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord7600ToScreenBuffer)
+CopyRectRecordToScreenBuffer_7::
+    ld hl, CopyRectRecordToScreenBuffer_7_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_76AC (E-0114)
-CopyRectRecord76ACToScreenBuffer::
-    ld hl, TileRect_1A_76AC
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_8_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord76ACToScreenBuffer)
+CopyRectRecordToScreenBuffer_8::
+    ld hl, CopyRectRecordToScreenBuffer_8_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_76F8 (E-0114)
-CopyRectRecord76F8ToScreenBuffer::
-    ld hl, TileRect_1A_76F8
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_9_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord76F8ToScreenBuffer)
+CopyRectRecordToScreenBuffer_9::
+    ld hl, CopyRectRecordToScreenBuffer_9_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with TileRect_1A_7600, then with TileRect_1A_7734 (E-0114)
-CopyRectRecords7600And7734ToScreenBuffer::
-    ld hl, TileRect_1A_7600
+; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordToScreenBuffer_7_TileRect, then with
+; CopyRectRecordsAndToScreenBuffer_TileRect (E-0114) (E-0344: the address in its name dropped or
+; read as the label there; was CopyRectRecords7600And7734ToScreenBuffer)
+CopyRectRecordsAndToScreenBuffer::
+    ld hl, CopyRectRecordToScreenBuffer_7_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
-    ld hl, TileRect_1A_7734
-    call CopyRecordRectToScreenBuffer_Bank1A
-    ret
-
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_7750 (E-0114)
-CopyRectRecord7750ToScreenBuffer::
-    ld hl, TileRect_1A_7750
+    ld hl, CopyRectRecordsAndToScreenBuffer_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with TileRect_1A_77B6 and TileRect_1A_79CB, then
-; QueueSoundEffect $6C (E-0115)
-CopyRectRecords77B6And79CBAndPlaySound6C::
-    ld hl, TileRect_1A_77B6
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_10_TileRect (E-0114)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord7750ToScreenBuffer)
+CopyRectRecordToScreenBuffer_10::
+    ld hl, CopyRectRecordToScreenBuffer_10_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
-    ld hl, TileRect_1A_79CB
+    ret
+
+; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordsAndPlaySound6C_TileRect and
+; CopyRectRecordsAndPlaySound6C_TileRect_2, then QueueSoundEffect $6C (E-0115) (E-0344: the address
+; in its name dropped or read as the label there; was CopyRectRecords77B6And79CBAndPlaySound6C)
+CopyRectRecordsAndPlaySound6C::
+    ld hl, CopyRectRecordsAndPlaySound6C_TileRect
+    call CopyRecordRectToScreenBuffer_Bank1A
+    ld hl, CopyRectRecordsAndPlaySound6C_TileRect_2
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6c
     call QueueSoundEffect
     ret
 
-; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle TileRect_1A_7826 to the screen
-; buffer and plays sound $6C (E-0122)
-LoadCursorTileAndRect7826::
-    ld de, Tiles1Plus6F0Tiles_1F_4330
+; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle LoadCursorTileAndRect_TileRect to
+; the screen buffer and plays sound $6C (E-0122) (E-0344: the address in its name dropped or read as
+; the label there; was LoadCursorTileAndRect7826)
+LoadCursorTileAndRect::
+    ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $6d0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld hl, TileRect_1A_7826
+    ld hl, LoadCursorTileAndRect_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6c
     call QueueSoundEffect
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_7848 (E-0115)
-CopyRectRecord7848ToScreenBuffer::
-    ld hl, TileRect_1A_7848
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_11_TileRect (E-0115)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord7848ToScreenBuffer)
+CopyRectRecordToScreenBuffer_11::
+    ld hl, CopyRectRecordToScreenBuffer_11_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_787E, then QueueSoundEffect $6C (E-0079)
-CopyRectRecord787EAndPlaySound6C::
-    ld hl, TileRect_1A_787E
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordAndPlaySound6C_TileRect, then
+; QueueSoundEffect $6C (E-0079) (E-0344: the address in its name dropped or read as the label there;
+; was CopyRectRecord787EAndPlaySound6C)
+CopyRectRecordAndPlaySound6C::
+    ld hl, CopyRectRecordAndPlaySound6C_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6c
     call QueueSoundEffect
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_78AA (E-0115)
-CopyRectRecord78AAToScreenBuffer::
-    ld hl, TileRect_1A_78AA
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_12_TileRect (E-0115)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord78AAToScreenBuffer)
+CopyRectRecordToScreenBuffer_12::
+    ld hl, CopyRectRecordToScreenBuffer_12_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_7923 (E-0115)
-CopyRectRecord7923ToScreenBuffer::
-    ld hl, TileRect_1A_7923
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_13_TileRect (E-0115)
+; (E-0344: the address in its name dropped or read as the label there; was
+; CopyRectRecord7923ToScreenBuffer)
+CopyRectRecordToScreenBuffer_13::
+    ld hl, CopyRectRecordToScreenBuffer_13_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
-; CopyRecordRectToScreenBuffer_Bank1A with HL = TileRect_1A_796F, then QueueSoundEffect $6C (E-0115)
-CopyRectRecord796FToScreenBufferAndPlaySound6C::
-    ld hl, TileRect_1A_796F
+; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBufferAndPlaySound6C_TileRect,
+; then QueueSoundEffect $6C (E-0115) (E-0344: the address in its name dropped or read as the label
+; there; was CopyRectRecord796FToScreenBufferAndPlaySound6C)
+CopyRectRecordToScreenBufferAndPlaySound6C::
+    ld hl, CopyRectRecordToScreenBufferAndPlaySound6C_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
     ld a, $6c
     call QueueSoundEffect
@@ -3281,7 +3316,7 @@ CopyRecordRectToScreenBuffer_Bank1A::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
-TileRect_1A_7345::
+CopyRectRecordToScreenBuffer_TileRect::
     dw $01a0 ; entry 0: offset into wScreenTileBuffer
     db $14, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3291,7 +3326,7 @@ TileRect_1A_7345::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $01A0 (row 13, column 0); 14 x 5 tiles
-TileRect_1A_73AD::
+CopyRectRecordToScreenBuffer_2_TileRect::
     dw $01a0 ; entry 0: offset into wScreenTileBuffer
     db $0e, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3301,7 +3336,7 @@ TileRect_1A_73AD::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $00E0 (row 7, column 0); 12 x 11 tiles
-TileRect_1A_73F7::
+CopyRectRecordToScreenBuffer_3_TileRect::
     dw $00e0 ; entry 0: offset into wScreenTileBuffer
     db $0c, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3317,7 +3352,7 @@ TileRect_1A_73F7::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
 ; record: offset $00E0 (row 7, column 0); 20 x 11 tiles
-TileRect_1A_747F::
+CopyRectRecordToScreenBuffer_4_TileRect::
     dw $00e0 ; entry 0: offset into wScreenTileBuffer
     db $14, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3334,7 +3369,7 @@ TileRect_1A_747F::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $0120 (row 9, column 0); 8 x 9 tiles
-TileRect_1A_755F::
+CopyRectRecordToScreenBuffer_5_TileRect::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3348,7 +3383,7 @@ TileRect_1A_755F::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0120 (row 9, column 0); 9 x 9 tiles
-TileRect_1A_75AB::
+CopyRectRecordToScreenBuffer_6_TileRect::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3362,7 +3397,7 @@ TileRect_1A_75AB::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0120 (row 9, column 0); 12 x 9 tiles
-TileRect_1A_7600::
+CopyRectRecordToScreenBuffer_7_TileRect::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $0c, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3379,7 +3414,7 @@ TileRect_1A_7600::
     db $89, $8a, $8b, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7, $b6, $8c, $8d, $8e
     db $8f, $90, $91, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-TileRect_1A_76AC::
+CopyRectRecordToScreenBuffer_8_TileRect::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3393,7 +3428,7 @@ TileRect_1A_76AC::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0160 (row 11, column 0); 8 x 7 tiles
-TileRect_1A_76F8::
+CopyRectRecordToScreenBuffer_9_TileRect::
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $08, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3406,7 +3441,7 @@ TileRect_1A_76F8::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $01CC (row 14, column 12); 8 x 3 tiles
-TileRect_1A_7734::
+CopyRectRecordsAndToScreenBuffer_TileRect::
     dw $01cc ; entry 0: offset into wScreenTileBuffer
     db $08, $03 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3414,7 +3449,7 @@ TileRect_1A_7734::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 2
 
 ; record: offset $0160 (row 11, column 0); 14 x 7 tiles
-TileRect_1A_7750::
+CopyRectRecordToScreenBuffer_10_TileRect::
     dw $0160 ; entry 0: offset into wScreenTileBuffer
     db $0e, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3426,7 +3461,7 @@ TileRect_1A_7750::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
 ; record: offset $0008 (row 0, column 8); 12 x 9 tiles
-TileRect_1A_77B6::
+CopyRectRecordsAndPlaySound6C_TileRect::
     dw $0008 ; entry 0: offset into wScreenTileBuffer
     db $0c, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3440,7 +3475,7 @@ TileRect_1A_77B6::
     db $b3, $b4, $b4, $b4, $b4, $b4, $c5, $c3, $be, $c3, $c6, $b5 ; row 8
 
 ; record: offset $010E (row 8, column 14); 6 x 5 tiles
-TileRect_1A_7826::
+LoadCursorTileAndRect_TileRect::
     dw $010e ; entry 0: offset into wScreenTileBuffer
     db $06, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3451,7 +3486,7 @@ TileRect_1A_7826::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $010A (row 8, column 10); 10 x 5 tiles
-TileRect_1A_7848::
+CopyRectRecordToScreenBuffer_11_TileRect::
     dw $010a ; entry 0: offset into wScreenTileBuffer
     db $0a, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3461,7 +3496,7 @@ TileRect_1A_7848::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $010C (row 8, column 12); 8 x 5 tiles
-TileRect_1A_787E::
+CopyRectRecordAndPlaySound6C_TileRect::
     dw $010c ; entry 0: offset into wScreenTileBuffer
     db $08, $05 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3471,7 +3506,7 @@ TileRect_1A_787E::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 ; record: offset $0080 (row 4, column 0); 13 x 9 tiles
-TileRect_1A_78AA::
+CopyRectRecordToScreenBuffer_12_TileRect::
     dw $0080 ; entry 0: offset into wScreenTileBuffer
     db $0d, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3485,7 +3520,7 @@ TileRect_1A_78AA::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
 ; record: offset $0000 (row 0, column 0); 8 x 9 tiles
-TileRect_1A_7923::
+CopyRectRecordToScreenBuffer_13_TileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3500,7 +3535,7 @@ TileRect_1A_7923::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
-TileRect_1A_796F::
+CopyRectRecordToScreenBufferAndPlaySound6C_TileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $0b ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -3516,7 +3551,7 @@ TileRect_1A_796F::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
 ; record: offset $0120 (row 9, column 0); 20 x 9 tiles
-TileRect_1A_79CB::
+CopyRectRecordsAndPlaySound6C_TileRect_2::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $14, $09 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0

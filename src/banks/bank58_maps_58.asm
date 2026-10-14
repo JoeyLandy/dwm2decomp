@@ -104,12 +104,12 @@ Map40Screens0_Y0X0::
     INCBIN "maps/map40/screens0_y0_x0.lz"
 
 ; LZSS-compressed: 245 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_58_4706::
-    INCBIN "maps/screen_maps/58_4706.lz"
+ScreenMap58_1::
+    INCBIN "gfx/misc/screen_map58_1.lz"
 
 ; LZSS-compressed: 243 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_58_47FB::
-    INCBIN "maps/screen_maps/58_47_fb.lz"
+ScreenMap58_2::
+    INCBIN "gfx/misc/screen_map58_2.lz"
 
 ; LZSS-compressed: 188 bytes that expand to 360 (E-0016, E-0017)
 Map40Screens2_Y0X0::
@@ -128,12 +128,12 @@ Map40Attrs0_Y0X0::
     INCBIN "maps/map40/attrs0_y0_x0.lz"
 
 ; LZSS-compressed: 137 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_58_4C42::
-    INCBIN "maps/screen_maps/58_4_c42.lz"
+ScreenMap58_3::
+    INCBIN "gfx/misc/screen_map58_3.lz"
 
 ; LZSS-compressed: 113 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_58_4CCB::
-    INCBIN "maps/screen_maps/58_4_ccb.lz"
+ScreenMap58_4::
+    INCBIN "gfx/misc/screen_map58_4.lz"
 
 ; LZSS-compressed: 86 bytes that expand to 360 (E-0016, E-0017)
 Map40Attrs2_Y0X0::

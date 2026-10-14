@@ -525,6 +525,7 @@ ACTION_KEEPS_A = re.compile(r"^\s+(?:cp a, |jr (?:z|nz|c|nc), |jp (?:z|nz|c|nc),
 
 
 FLAG_CALL = re.compile(r"^\s+(?:call|farcall) (SetFlagBit|ClearFlagBit|TestFlagBit)\w*\s*(?:;.*)?$")
+FLAG_LD_HALF = re.compile(r"^(\s+ld ([de]), )\$([0-9A-F]{2})\s*$")
 FLAG_LD_DE = re.compile(r"^(\s+ld de, )\$([0-9A-F]{4})(\s*;.*)?$")
 FLAG_MACRO = re.compile(r"^(\s+(?:script_set_flag|objsel_unless_flag|objsel_skip_if_clear|objsel_skip_if_set) )"
                         r"\$([0-9A-Fa-f]{4})\b")
@@ -544,9 +545,10 @@ def flag_descriptor(routine: str, script_cmd: str | None, quote: str | None) -> 
     if routine.startswith("Script_"):
         if script_cmd:
             return re.sub(r"^SCRIPT_", "", script_cmd)
-        return _words(quote) if quote else None
-    m = re.match(r"^(?:Talk(?:Msg|Script)?[0-9A-F]{4}|IfFlag[0-9A-F]{4}Msg[0-9A-F]{4})_([A-Za-z0-9]+)", routine)
-    if m:
+        own = re.sub(r"(?:_\d+)+$", "", routine[len("Script_"):])  # a script named by its first message (E-0344)
+        return _words(quote) if quote else (_words(own, 6) if re.search(r"[A-Za-z]{3}", own) else None)
+    m = re.match(r"^(?:Talk(?:Msg|Script)?(?:[0-9A-F]{4})?|IfFlag[0-9A-F]{4}Msg[0-9A-F]{4})_([A-Za-z][A-Za-z0-9]+)", routine)
+    if m:  # TalkMsg0413_X, Talk0B56_X, and Talk_X since E-0344 dropped script addresses
         return _words(m.group(1))
     m = re.match(r"^(Scene[A-Za-z0-9]+)", routine)
     if m:
@@ -557,21 +559,32 @@ def flag_descriptor(routine: str, script_cmd: str | None, quote: str | None) -> 
     return None
 
 
-def name_story_flags(texts: list[str]) -> tuple[list[str], dict[int, tuple[str, list[str]]], int]:
+QUOTE_NOTE = re.compile(r"; (?:script |battle text )?'(.+)'\s*$")  # greedy: quotes hold apostrophes (I'll)
+
+
+def name_story_flags(texts: list[str], hand: dict[int, str] | None = None
+                     ) -> tuple[list[str], dict[int, tuple[str, list[str], str]], int]:
     """D-009: a story flag (TestFlagBit/SetFlagBit/ClearFlagBit with DE = flag number, script_set_flag, object
     selectors) is named EVENT_<what its first setter says> when a setter says something; the constant's comment lists
-    the setters. Flags only tested, or set by routines whose names say nothing, keep their numbers."""
+    the setters. E-0346: a setter whose name says nothing is described by the last message its routine shows before
+    setting the flag; a flag no code sets is named after its first tester that says something (the tester's name, or
+    the message shown right after the test), and its comment says no setter was found. The rest keep their numbers."""
     setters: dict[int, list[tuple[str, str | None]]] = {}
+    testers: dict[int, list[tuple[str, str | None]]] = {}
     for text in texts:
-        routine, cmd, quote, de = "?", None, None, None
-        for ln in text.split("\n"):
+        routine, cmd, quote, any_quote, de, half = "?", None, None, None, None, {}
+        ls = text.split("\n")
+        for i, ln in enumerate(ls):
             m = re.match(r"^([A-Za-z_]\w*)::", ln)
             if m and "address name" not in ln:
-                routine, cmd, quote = m.group(1), None, None
+                routine, cmd, quote, any_quote = m.group(1), None, None, None
             code = ln.split(";")[0].strip()
             q = re.search(r"; '([^']+)'", ln)
             if code.startswith("script_message") and q:
                 quote = q.group(1)
+            qa = QUOTE_NOTE.search(ln)
+            if qa and code:
+                any_quote = qa.group(1)
             m = re.match(r"script_command (SCRIPT_\w+)", code)
             if m:
                 cmd = m.group(1)
@@ -579,29 +592,66 @@ def name_story_flags(texts: list[str]) -> tuple[list[str], dict[int, tuple[str, 
             if m:
                 de = int(m.group(2), 16)
                 continue
+            m = FLAG_LD_HALF.match(ln)
+            if m:  # DE loaded as two bytes, `ld e, $01` / `ld d, $00`
+                half[m.group(2)] = int(m.group(3), 16)
+                if len(half) == 2:
+                    de = half["d"] << 8 | half["e"]
+                continue
+            half = {}
             m = FLAG_CALL.match(ln)
             if m and de is not None and m.group(1) == "SetFlagBit":
-                setters.setdefault(de, []).append((routine, flag_descriptor(routine, cmd, quote)))
+                later = next((QUOTE_NOTE.search(x).group(1) for x in ls[i + 1:i + 7] if QUOTE_NOTE.search(x)), None)
+                desc = (flag_descriptor(routine, cmd, quote) or (_words(any_quote) if any_quote else None)
+                        or (_words(later) if later else None))  # a message shown just after the flag is set
+                setters.setdefault(de, []).append((routine, desc))
+            elif m and de is not None and m.group(1) == "TestFlagBit":
+                after = next((QUOTE_NOTE.search(x).group(1) for x in ls[i + 1:i + 7] if QUOTE_NOTE.search(x)), None)
+                desc = flag_descriptor(routine, cmd, quote) or (_words(after) if after else None)
+                testers.setdefault(de, []).append((routine, desc))
             m = re.match(r"script_set_flag \$([0-9A-Fa-f]{4})", code)
             if m:
                 setters.setdefault(int(m.group(1), 16), []).append((routine, flag_descriptor(routine, cmd, quote)))
+            m = re.match(r"objsel_unless_flag \$([0-9A-Fa-f]{4}),", code)
+            mo = re.match(r"ObjSelector_Map([0-9A-F]{2})_\d+$", routine)  # listed in that map's screen table
+            if m and mo:  # E-0346: the map's objects show only while the flag is clear
+                testers.setdefault(int(m.group(1), 16), []).append((routine, f"MAP_{mo.group(1)}_OBJECT_REMOVED"))
             if code:
                 de = None
-    names: dict[int, tuple[str, list[str]]] = {}
+    names: dict[int, tuple[str, list[str], str]] = {}
     used: set[str] = set()
-    for flag in sorted(setters):
-        desc = next((d for _r, d in setters[flag] if d), None)
-        if not desc:
+    for flag in sorted(set(setters) | set(testers)):
+        how = "set" if flag in setters else "tested"
+        pool = setters.get(flag) or testers.get(flag, [])
+        desc = next((d for _r, d in pool if d), None)
+        if not desc and how == "set":  # setters that say nothing: a tester that says something names it
+            desc = next((d for _r, d in testers.get(flag, []) if d), None)
+        if not desc or not re.search(r"[A-Z]{2}", desc):
             continue
         name = f"EVENT_{desc}"
         if name in used:
             name = f"{name}_{flag:03X}"
         used.add(name)
-        names[flag] = (name, sorted({r for r, _d in setters[flag]}))
+        names[flag] = (name, sorted({r for r, _d in pool}), how)
+    for flag, name in (hand or {}).items():  # config/story_flags.json: names read by hand win over the rules
+        if name not in used:
+            how = "hand"
+            if flag in names:
+                used.discard(names[flag][0])
+            used.add(name)
+            names[flag] = (name, sorted({r for r, _d in setters.get(flag) or testers.get(flag, [])}), how)
     out, n = [], 0
     for text in texts:
         ls = text.split("\n")
         for i, ln in enumerate(ls):
+            m, m2 = FLAG_LD_HALF.match(ln), FLAG_LD_HALF.match(ls[i + 1]) if i + 1 < len(ls) else None
+            if m and m2 and m.group(2) == "e" and m2.group(2) == "d" and i + 2 < len(ls) and FLAG_CALL.match(ls[i + 2]):
+                flag = int(m2.group(3), 16) << 8 | int(m.group(3), 16)
+                if flag in names:
+                    ls[i] = f"{m.group(1)}LOW({names[flag][0]})"
+                    ls[i + 1] = f"{m2.group(1)}HIGH({names[flag][0]})"
+                    n += 1
+                continue
             m = FLAG_LD_DE.match(ln)
             if m and int(m.group(2), 16) in names:
                 nxt = next((x for x in ls[i + 1:i + 4] if x.strip() and not x.lstrip().startswith(";")), "")
@@ -660,6 +710,17 @@ def name_steps_by_text(texts: list[str], uncalled_only: bool = False) -> tuple[l
                 root0 = re.split(r"_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d", lab)[0]
                 tag = next((c for c in calls if not STEP_GENERIC.match(c) and c not in lab and not c.startswith(root0)
                             and not re.match(r"(?:Func|Jump|Data)_", c) and not PURE_STRUCT.match(c)), "")
+                if not tag and any(re.match(r"^\s+(?:rst \$00|jumptable)", x) for x in body[:3]):
+                    # a dispatcher of its own: after its first described step (..._PleaseWaitSteps)
+                    for x in body:
+                        md = re.match(r"^\s+dw (\w+)", x)
+                        if not md:
+                            continue
+                        step = re.sub(r"(?:_\d+)+$", "", md.group(1))
+                        step = step[len(root0) + 1:] if step.startswith(root0 + "_") else ""
+                        if step and not PURE_STRUCT.match(step) and not re.match(r"(?:Set|Advance|Back)[A-Z]", step):
+                            tag = step.split("_")[-1] + "Steps"
+                            break
                 if not tag:  # else its first write to a named RAM byte: Advance<X> (inc [hl]) or Set<X>
                     for k, x in enumerate(body):
                         mw = re.match(r"^\s+ldh? \[([wh]([A-Z]\w*))\], a", x)
@@ -704,6 +765,327 @@ def name_indexed_cases(texts: list[str], tables: list[dict], consts: dict) -> tu
                 new = f"{spec['name']}_{stem}"
                 if stem and new not in labels and new not in rename.values():
                     rename[target] = new
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
+
+
+ADDR_DATA = re.compile(r"^([A-Z][A-Za-z]*?)(?:_[0-9A-F]{2})?_([4-7][0-9A-F]{3})$")  # Kind[_BB]_AAAA
+TOP_INDEX = {"MapObjectTable": "Map"}  # id-indexed top tables: what their index is
+
+
+def _camel_words(text: str, n: int = 4) -> str:
+    words = re.sub(r"[^A-Za-z0-9 ]", " ", text.replace("0", "Hero ").replace("'", "")).split()[:n]
+    return "".join(w[:1].upper() + w[1:] for w in words)
+
+
+def name_data_by_reference(texts: list[str]) -> tuple[list[str], int]:
+    """E-0344: a data label still named by its address (Kind_AAAA, Kind_BB_AAAA) is named by what it holds or what
+    refers to it: a script by its first message (or scene command), a string by its words, otherwise by its first
+    referrer: an entry `; id N` of an id-indexed top table (MapObjectScreens_Map30), an entry of a named block
+    (ObjSelector_Map30_1), or the routine that loads it (TileRect_DrawSwapMenuWindow). Meta-sprite tables named by
+    address become table ordinals. Repeated until nothing changes, so children follow their renamed parents."""
+    total = 0
+    labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+    meta = sorted({(m.group(1), m.group(2)) for lab in labels
+                   for m in [re.match(r"^MetaSprites([0-9A-F]{2})_([4-7][0-9A-F]{3})", lab)] if m})
+    order = {}
+    for bank, addr in meta:
+        order[(bank, addr)] = sum(1 for b, _a in order if b == bank) + 1
+    pre: dict[str, str] = {}
+    for lab in labels:
+        m = re.match(r"^MetaSprites([0-9A-F]{2})_([4-7][0-9A-F]{3})(\w*)$", lab)
+        if m:
+            rest = re.sub(r"(Set|Frame)", r"_\1", m.group(3))
+            pre[lab] = f"MetaSprites{m.group(1)}_Table{order[(m.group(1), m.group(2))]}{rest}"
+    if pre:
+        pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(pre, key=len, reverse=True))) + r")\b")
+        texts = [pat.sub(lambda mm: pre[mm.group(1)], t) for t in texts]
+        total += len(pre)
+    for _round in range(8):
+        labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+        rename: dict[str, str] = {}
+        taken = set(labels)
+
+        def give(old: str, new: str) -> None:
+            new = re.sub(r"_+", "_", new).strip("_")
+            if not new or new == old:
+                return
+            cand, k = new, 2
+            while cand in taken:
+                cand, k = f"{new}_{k}", k + 1
+            rename[old] = cand
+            taken.add(cand)
+
+        # bodies and first references
+        first_ref: dict[str, tuple[str, int, str]] = {}  # label -> (enclosing label, entry index, line)
+        bodies: dict[str, list[str]] = {}
+        for t in texts:
+            cur, idx = None, 0
+            for ln in t.split("\n"):
+                m = re.match(r"^([A-Za-z_]\w*)::", ln)
+                if m and "address name" not in ln:
+                    cur, idx = m.group(1), 0
+                    bodies[cur] = []
+                    continue
+                if cur is None or not ln.startswith("    "):
+                    continue
+                bodies[cur].append(ln)
+                code = ln.split(";")[0]
+                for r in re.findall(r"\b([A-Z][A-Za-z]*?(?:_[0-9A-F]{2})?_[4-7][0-9A-F]{3})\b", code):
+                    if r != cur and r not in first_ref:
+                        mid = re.search(r"; id (\d+)", ln)
+                        first_ref[r] = (cur, int(mid.group(1)) if mid else idx, ln)
+                if code.strip().startswith(("dw ", "objsel_", "dfar ")):
+                    idx += 1
+        for lab in sorted(labels):
+            ms = re.match(r"^String_[0-9A-F]{2}_[4-7][0-9A-F]{3}_[0-9A-F]{2}_[0-9A-F]{2}$", lab)
+            if ms:  # a string of another bank's category table: by its words, else by its commands
+                raw = " ".join(re.findall(r'"([^"]*)"', " ".join(bodies.get(lab, []))))
+                tag = _camel_words(re.sub(r"<[A-Z_0-9]+>", " ", raw).replace("@", ""))
+                if not tag:
+                    tag = "".join(w.capitalize() for w in re.findall(r"<([A-Z]+)\d*>", raw)[1:4] or ["Empty"])
+                if tag:
+                    give(lab, f"Text_{tag}")
+                continue
+            m = ADDR_DATA.match(lab)
+            if not m or lab.startswith(("Func_", "Jump_", "Data_")):
+                continue
+            kind = m.group(1)
+            body = bodies.get(lab, [])
+            if kind == "Script":
+                q = next((re.search(r"'([^']{3,})'", b) for b in body if re.search(r"'([^']{3,})'", b)), None)
+                c = next((re.search(r"script_command SCRIPT_(\w+)", b) for b in body if "script_command SCRIPT_" in b), None)
+                tag = _camel_words(q.group(1)) if q else ("".join(w.capitalize() for w in c.group(1).split("_")) if c else "")
+                first = body[0].split(";")[0].split() if body else []
+                if not tag and first[:1] == ["script_jump"]:  # E-0346: a jump script by where it goes
+                    if ADDR_DATA.match(first[1]):
+                        continue  # the target is named first (next round)
+                    tag = "To" + re.sub(r"^Script_", "", first[1])
+                elif not tag and first and first[0].startswith("script_"):  # else by its first command
+                    tag = "".join(w.capitalize() for w in first[0][len("script_"):].split("_"))
+                if tag:
+                    give(lab, f"Script_{tag}")
+                continue
+            if kind == "String":
+                s = " ".join(re.findall(r'"([^"]*)"', " ".join(body[:2])))
+                s = re.sub(r"<[A-Z_0-9]+>", " ", s).replace("@", "")
+                tag = _camel_words(s)
+                if tag:
+                    give(lab, f"Text_{tag}")
+                continue
+            ref = first_ref.get(lab)
+            if not ref:
+                continue
+            parent, n, line = ref
+            if ADDR_DATA.match(parent) or parent.startswith(("Func_", "Jump_", "Data_")):
+                continue  # the parent is named first (next round)
+            if parent in TOP_INDEX:
+                give(lab, f"{kind}_{TOP_INDEX[parent]}{n:02X}")
+            elif re.match(r"\s+(?:dw|dfar|objsel_\w+) ", line):
+                core = re.sub(r"^[A-Z][A-Za-z]*?_", "", parent) if "_" in parent else parent
+                give(lab, f"{kind}_{core}_{n}")
+            else:  # loaded by a routine: <Routine>_<Kind>, as data named after its reader (E-0285)
+                give(lab, f"{parent}_{kind}")
+        # E-0346: a map object selector found by tiling a gap is listed in no map's screen table; it is named after the
+        # listed selector right before it (ObjSelector_Map94_3_Unlisted), among whose map's selectors it sits
+        for t in texts:
+            prev = None
+            for m in re.finditer(r"^([A-Za-z_]\w*)::", t, re.M):
+                lab = m.group(1)
+                if re.match(r"^ObjSelector_Map[0-9A-F]{2}_\d+$", lab):
+                    prev = lab
+                elif re.match(r"^ObjSelector_(?:[0-9A-F]{2}_)?[4-7][0-9A-F]{3}$", lab) and prev and lab not in rename:
+                    give(lab, f"{prev}_Unlisted")
+        for lab in labels:  # a label that extends a renamed parent follows it (PointerRun_0A_438D_Entry03)
+            for old, nw in list(rename.items()):
+                if lab.startswith(old + "_") and lab not in rename:
+                    give(lab, nw + lab[len(old):])
+                    break
+        if not rename:
+            break
+        pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+        texts = [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts]
+        total += len(rename)
+    # what is left is referenced only through computed pointers: number it within its kind and bank
+    labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::", t, re.M)}
+    rename, count = {}, {}
+    for lab in sorted(labels, key=lambda s: (ADDR_DATA.match(s).group(1), s) if ADDR_DATA.match(s) else ("", s)):
+        m = ADDR_DATA.match(lab)
+        mt = re.match(r"^(TalkScript)[0-9A-F]{4}_(\w+)$", lab)
+        if mt:
+            new = f"TalkScript_{mt.group(2)}"
+        elif m and not lab.startswith(("Func_", "Jump_", "Data_")):
+            bank = re.search(r"_([0-9A-F]{2})_[4-7][0-9A-F]{3}$", lab)
+            key = (m.group(1), bank.group(1) if bank else "")
+            count[key] = count.get(key, 0) + 1
+            new = f"{m.group(1)}{key[1]}_{count[key]}" if key[1] else f"{m.group(1)}_{count[key]}"
+        else:
+            continue
+        while new in labels or new in rename.values():
+            new += "_"
+        rename[lab] = new.rstrip("_") if new.rstrip("_") not in labels and new.rstrip("_") not in rename.values() else new
+    if rename:
+        pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+        texts = [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts]
+        total += len(rename)
+    return texts, total
+
+
+def _numbered(name: str, used: set[str]) -> str:
+    """The first of name_2, name_3 ... not in `used`."""
+    k = 2
+    while f"{name}_{k}" in used:
+        k += 1
+    return f"{name}_{k}"
+
+
+ADDR_TOKEN = re.compile(r"_(?:[0-9A-F]{2}_)?[4-7][0-9A-F]{3}(?=_|$)")
+
+
+def strip_address_tokens(texts: list[str], given: set[str] = frozenset(), uncalled_only: bool = False) -> tuple[list[str], int]:
+    """E-0344: a ROM address kept in a name only to tell copies apart (ChooseTarget_SquallHit_543C,
+    PointerRun_0A_438D_Entry03, ..._DrawRow9_74B4) is dropped; names that would then collide get _2, _3 in address
+    order. Address names themselves (Func_/Jump_/Data_) stay as aliases."""
+    labels = [m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::(?! ; address name)", t, re.M)]
+    called = ({m for t in texts for m in re.findall(r"^\s+(?:call|farcall|farcall_b)(?: \w+,)? (\w+)", t, re.M)}
+              if uncalled_only else set())
+    present = set(labels)
+    groups: dict[str, list[str]] = {}
+    for lab in labels:
+        if lab.startswith(("Func_", "Jump_", "Data_", "MetaSprites")) or lab in called or lab in given or not ADDR_TOKEN.search(lab):
+            continue
+        if ADDR_DATA.match(lab) or re.match(r"^String_[0-9A-F]{2}_[4-7][0-9A-F]{3}_", lab):
+            continue  # named by its content or referrer (name_data_by_reference)
+        base = re.sub(r"_+", "_", ADDR_TOKEN.sub("", lab)).strip("_")
+        if base and re.search(r"[A-Za-z]", base):
+            groups.setdefault(base, []).append(lab)
+    rename: dict[str, str] = {}
+    for base, labs in groups.items():
+        k = 1
+        for lab in sorted(labs):
+            new = base if k == 1 else f"{base}_{k}"
+            while new in present and new not in labs:
+                k += 1
+                new = f"{base}_{k}"
+            rename[lab] = new
+            k += 1
+    rename = {a: b for a, b in rename.items() if a != b}
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
+
+
+INWORD_ADDR = re.compile(r"(?:Func|Data|Script|Rect|Record)?([4-7][0-9A-F]{3})(?=[A-Z_]|$)")
+
+
+def resolve_embedded_addresses(texts: list[str], given: set[str] = frozenset(), uncalled_only: bool = False) -> tuple[list[str], int]:
+    """E-0344: an address written inside a name (LoadPalette0FromData53C6, RunFunc722AAnd6EB7, TalkScript514F) stands
+    for something the routine uses. When the routine's body refers to a label at that address (its address-name alias
+    in the listing ends in it), the address is replaced by that label's name (minus a Script_/Data_ kind prefix);
+    otherwise it is dropped. Names that would collide get _2, _3."""
+    addr_of: dict[str, str] = {}  # label -> its 4-digit address, from the alias lines
+    for t in texts:
+        prev = None
+        for ln in t.split("\n"):
+            m = re.match(r"^([A-Za-z_]\w*)::", ln)
+            if not m:
+                continue
+            a = re.match(r"^(?:Func|Jump|Data)_[0-9A-F]{3}_([0-9A-F]{4}):: ; address name", ln)
+            if a and prev:
+                addr_of[prev] = a.group(1)
+            elif "address name" not in ln:
+                prev = m.group(1)
+    labels = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::(?! ; address name)", t, re.M)}
+    called = ({m for t in texts for m in re.findall(r"^\s+(?:call|farcall|farcall_b)(?: \w+,)? (\w+)", t, re.M)}
+              if uncalled_only else set())
+    rename: dict[str, str] = {}
+    taken = set(labels)
+    for t in texts:
+        ls = t.split("\n")
+        heads = [i for i, ln in enumerate(ls) if re.match(r"^[A-Za-z_]\w*::", ln) and "address name" not in ln]
+        for j, i in enumerate(heads):
+            lab = ls[i].split("::")[0]
+            if lab in called or lab in given or lab.startswith(("Func_", "Jump_", "Data_")) or not re.search(r"[a-z]", lab):
+                continue
+            if not INWORD_ADDR.search(re.sub(r"^[A-Z][A-Za-z]*?_[0-9A-F]{2}_", "", lab)):
+                continue
+            end = heads[j + 1] if j + 1 < len(heads) else len(ls)
+            first = next((x.split(";")[0].split() for x in ls[i + 1:end]
+                          if x.startswith("    ") and x.split(";")[0].strip()), [""])[0]
+            if first in ("db", "dw", "dfar", "ds", "DS", "d24", "INCBIN") or first.startswith(("script_", "objsel_")):
+                continue  # data: named by its content or referrer (name_data_by_reference)
+            refs = re.findall(r"\b([A-Z][A-Za-z0-9_]*)\b", " ".join(x.split(";")[0] for x in ls[i + 1:end]))
+            by_addr = {addr_of[r]: r for r in refs if r in addr_of}
+
+            def sub(m):
+                r = by_addr.get(m.group(1))
+                if r and not re.search(r"[4-7][0-9A-F]{3}", r):
+                    return re.sub(r"^(?:Script|Data|Text)_", "", r)
+                kind = re.match(r"[A-Za-z]*", m.group(0)).group(0)
+                return "" if kind == "Func" else kind  # StartScript5709 keeps "Script" when 5709 has no name
+            new = INWORD_ADDR.sub(sub, lab)
+            new = re.sub(r"(?:And){2,}", "And", new)  # an address dropped between two Ands
+            new = re.sub(r"And(?=_|$)|(?<=_)And", "", new)
+            new = re.sub(r"_+", "_", new).strip("_")
+            if not new or new == lab or not re.search(r"[A-Za-z]{3}", new):
+                continue
+            cand, k = new, 2
+            while cand in taken:
+                cand, k = f"{new}_{k}", k + 1
+            rename[lab] = cand
+            taken.add(cand)
+    for lab in sorted(labels):  # labels that extend a renamed routine (its _Data, _Skip ...) follow it
+        for old in sorted(rename, key=len, reverse=True):
+            if lab.startswith(old + "_") and lab not in rename:
+                cand, k = rename[old] + lab[len(old):], 2
+                base = cand
+                while cand in taken:
+                    cand, k = f"{base}_{k}", k + 1
+                rename[lab] = cand
+                taken.add(cand)
+                break
+    if not rename:
+        return texts, 0
+    pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
+    return [pat.sub(lambda mm: rename[mm.group(1)], t) for t in texts], len(rename)
+
+
+STRUCT_TOKEN = re.compile(r"_(?:Case|Sub|Shared)[0-9A-F]{2}|_Table\d")
+
+
+def strip_structural_tokens(texts: list[str], given: set[str], uncalled_only: bool = False) -> tuple[list[str], int]:
+    """E-0344: a step whose name says what it does and also carries its place in a state machine
+    (Parent_Case0F_SetDataBankSave, Parent_Sub01_Table2_Case00_DrawX) drops the structural parts
+    (Parent_SetDataBankSave); steps that would then share a name get _2, _3 in address order. A name with nothing
+    after its structural parts, or given in config/names.json, keeps them."""
+    labels = [m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::(?! ; address name)", t, re.M)]
+    present = set(labels)
+    called = ({m for t in texts for m in re.findall(r"^\s+(?:call|farcall|farcall_b)(?: \w+,)? (\w+)", t, re.M)}
+              if uncalled_only else set())
+    dispatchers = {m for t in texts for m in re.findall(r"^([A-Za-z_]\w*)::.*\n(?:(?:\w+:: ; address name|;.*)\n)*"
+                                                        r"(?:\s+ld a, \[\w+(?: \+ \$\w+)?\]\n)?\s+(?:rst \$00|jumptable)\n",
+                                                        t, re.M)}
+    groups: dict[str, list[str]] = {}
+    for lab in labels:
+        if lab in given or lab in called or not STRUCT_TOKEN.search(lab):
+            continue
+        base = re.sub(r"_+", "_", STRUCT_TOKEN.sub("", lab)).strip("_")
+        if PURE_STRUCT.match(lab) and base in dispatchers:
+            continue  # Dispatcher_Case05 with nothing else to say keeps its case number
+        groups.setdefault(base, []).append(lab)
+    rename: dict[str, str] = {}
+    for base, labs in groups.items():
+        k = 1
+        for lab in labs:
+            new = base if k == 1 else f"{base}_{k}"
+            while new in present or new in rename.values():
+                k += 1
+                new = f"{base}_{k}"
+            rename[lab] = new
+            k += 1
     if not rename:
         return texts, 0
     pat = re.compile(r"\b(" + "|".join(map(re.escape, sorted(rename, key=len, reverse=True))) + r")\b")
@@ -2771,9 +3153,7 @@ class Rom:
             stem = re.sub(r"_Bank[0-9A-F]{2}$", "", src)
             name = f"{stem}_Bank{b:02X}"
             if name in used:
-                name = f"{stem}_{b:02X}_{a:04X}"
-            if name in used:
-                continue
+                name = _numbered(name, used)  # a second copy in the bank is _2 (E-0344; was _BB_AAAA)
             used.add(name)
             self.alias[(b, a)] = self.labels[b][a]
             self.labels[b][a] = name
@@ -2813,7 +3193,7 @@ class Rom:
                 if len(found) > 1:
                     name += f"_Bank{bank:02X}"
                 if name in used:
-                    name += f"_{addr:04X}"  # another copy or variant in this bank has the name
+                    name = _numbered(name, used)  # another copy or variant in this bank has the name (E-0344)
                 used.add(name)
                 info = {"name": name, "evidence": fam.get("evidence", "reading")}
                 if fam.get("note"):
@@ -2858,7 +3238,7 @@ class Rom:
                         base = BANK_SUFFIX_RE.sub("", info["name"])  # a copy of X_Bank39 is X_BankBB (E-0105)
                         name = f"{base}_Bank{cb:02X}"
                         if name in used:
-                            name += f"_{ca:04X}"
+                            name = _numbered(name, used)  # E-0344: _2, not the address
                         used.add(name)
                         self.names[(cb, ca)] = {"name": name, "evidence": info.get("evidence", "reading"),
                                                 "note": f"the same {size} bytes as {info['name']} ({bank:02X}:{addr:04X})"}
@@ -6065,6 +6445,13 @@ def main() -> int:
     texts, nidx = name_indexed_cases(texts, idx_cfg, rom.consts)  # E-0342
     log(f"jump-table entries named after their id: {nidx}")
     texts, nsteps = name_steps_by_text(texts)  # E-0340, before branch targets are named after their callees
+    given_names = {v["name"] for v in rom.names.values() if isinstance(v, dict) and "name" in v}
+    texts, naddr = strip_address_tokens(texts, given_names)  # E-0344
+    log(f"addresses dropped from names: {naddr}")
+    texts, nemb = resolve_embedded_addresses(texts, given_names)
+    log(f"addresses inside names resolved: {nemb}")
+    texts, nstruct = strip_structural_tokens(texts, given_names)
+    log(f"structural parts dropped from described steps: {nstruct}")
     log(f"structural steps named after what they show, call or write: {nsteps}")
     texts, nlocal = localize_jump_labels(texts)
     log(f"branch targets made local labels: {nlocal}")
@@ -6086,14 +6473,24 @@ def main() -> int:
     sp_fields = extra["species"]
     texts, nact = name_id_compares(texts, rom.consts)
     log(f"id compares named: {nact}")
-    texts, events, nev = name_story_flags(texts)
-    log(f"story flags named: {len(events)}, {nev} uses")
     bstat_cfg = json.loads((ROOT / "config/battle_status.json").read_text(encoding="utf-8"))["bits"]
     bstat = {(b["byte"], b["bit"]): f"BSTAT{b['byte']}_{b['name']}" for b in bstat_cfg}
     texts, nbs = name_status_bits(texts, bstat)
     log(f"battle status bits named: {nbs} uses")
     texts, nsteps2 = name_steps_by_text(texts, uncalled_only=True)  # E-0340: the rest, once every name is final
     log(f"structural steps named in the final pass: {nsteps2}")
+    texts, ndata = name_data_by_reference(texts)
+    log(f"data labels named by content or referrer: {ndata}")
+    texts, naddr2 = strip_address_tokens(texts, given_names, uncalled_only=True)
+    log(f"addresses dropped from names in the final pass: {naddr2}")
+    texts, nemb2 = resolve_embedded_addresses(texts, given_names, uncalled_only=True)
+    log(f"addresses inside names resolved in the final pass: {nemb2}")
+    texts, nstruct2 = strip_structural_tokens(texts, given_names, uncalled_only=True)
+    log(f"structural parts dropped in the final pass: {nstruct2}")
+    # E-0346: after the final passes, so scripts and object selectors carry their names
+    flag_cfg = json.loads((ROOT / "config/story_flags.json").read_text(encoding="utf-8"))["flags"]
+    texts, events, nev = name_story_flags(texts, {int(k, 16): v["name"] for k, v in flag_cfg.items()})
+    log(f"story flags named: {len(events)}, {nev} uses")
 
     out = ROOT / "build/listing"  # the annotated listing; tools/present.py writes src/banks from it
     out.mkdir(parents=True, exist_ok=True)

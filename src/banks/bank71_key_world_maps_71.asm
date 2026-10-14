@@ -36,20 +36,20 @@ KeyWorldRoom12_Y3X3_Tiles::
     INCBIN "maps/key_worlds/room12_y3_x3_tiles.lz"
 
 ; LZSS-compressed: 105 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_45D1::
-    INCBIN "maps/screen_maps/71_45_d1.lz"
+ScreenMap71_1::
+    INCBIN "gfx/misc/screen_map71_1.lz"
 
 ; LZSS-compressed: 190 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_463A::
-    INCBIN "maps/screen_maps/71_463_a.lz"
+ScreenMap71_2::
+    INCBIN "gfx/misc/screen_map71_2.lz"
 
 ; LZSS-compressed: 218 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_46F8::
-    INCBIN "maps/screen_maps/71_46_f8.lz"
+ScreenMap71_3::
+    INCBIN "gfx/misc/screen_map71_3.lz"
 
 ; LZSS-compressed: 191 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_47D2::
-    INCBIN "maps/screen_maps/71_47_d2.lz"
+ScreenMap71_4::
+    INCBIN "gfx/misc/screen_map71_4.lz"
 
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom06_Y3X1_Tiles::
@@ -104,8 +104,8 @@ KeyWorldRoom12_Y3X3_Attrs::
     INCBIN "maps/key_worlds/room12_y3_x3_attrs.lz"
 
 ; LZSS-compressed: 664 bytes that expand to 771 (E-0016, E-0017)
-Gfx_71_4E34::
-    INCBIN "gfx/misc/gfx_71_4_e34.lz"
+Gfx71_1::
+    INCBIN "gfx/misc/gfx71_1.lz"
 
 ; LZSS-compressed: 91 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom06_Y3X1_Attrs::
@@ -156,20 +156,20 @@ KeyWorldRoom19_Y1X0_Tiles::
     INCBIN "maps/key_worlds/room19_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_56B3::
-    INCBIN "maps/screen_maps/71_56_b3.lz"
+ScreenMap71_5::
+    INCBIN "gfx/misc/screen_map71_5.lz"
 
 ; LZSS-compressed: 161 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_56FB::
-    INCBIN "maps/screen_maps/71_56_fb.lz"
+ScreenMap71_6::
+    INCBIN "gfx/misc/screen_map71_6.lz"
 
 ; LZSS-compressed: 204 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_579C::
-    INCBIN "maps/screen_maps/71_579_c.lz"
+ScreenMap71_7::
+    INCBIN "gfx/misc/screen_map71_7.lz"
 
 ; LZSS-compressed: 227 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_5868::
-    INCBIN "maps/screen_maps/71_5868.lz"
+ScreenMap71_8::
+    INCBIN "gfx/misc/screen_map71_8.lz"
 
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8A_Y1X1_Tiles::
@@ -219,22 +219,22 @@ KeyWorldRoom19_Y1X0_Attrs::
     INCBIN "maps/key_worlds/room19_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 36 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_5C00::
+KeyWorldScreen71_1::
     db $68, $01, $03, $02, $03, $00, $0f, $1c, $01, $01, $01, $01, $03, $20, $0f, $4d
     db $03, $80, $0f, $4d, $03, $00, $00, $00, $02, $03, $ff, $fe, $03, $fc, $ff, $01
     db $03, $94, $0f, $35
 
 ; LZSS-compressed: 76 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_5C24::
-    INCBIN "maps/key_worlds/screen_71_5_c24.lz"
+KeyWorldScreen71_2::
+    INCBIN "maps/key_worlds/screen71_2.lz"
 
 ; LZSS-compressed: 88 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_5C70::
-    INCBIN "maps/key_worlds/screen_71_5_c70.lz"
+KeyWorldScreen71_3::
+    INCBIN "maps/key_worlds/screen71_3.lz"
 
 ; LZSS-compressed: 82 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_5CC8::
-    INCBIN "maps/key_worlds/screen_71_5_cc8.lz"
+KeyWorldScreen71_4::
+    INCBIN "maps/key_worlds/screen71_4.lz"
 
 ; LZSS-compressed: 72 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom8A_Y1X1_Attrs::
@@ -273,20 +273,20 @@ KeyWorldRoom25_Y0X1_Tiles::
     INCBIN "maps/key_worlds/room25_y0_x1_tiles.lz"
 
 ; LZSS-compressed: 89 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_62DF::
-    INCBIN "maps/screen_maps/71_62_df.lz"
+ScreenMap71_9::
+    INCBIN "gfx/misc/screen_map71_9.lz"
 
 ; LZSS-compressed: 181 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_6338::
-    INCBIN "maps/screen_maps/71_6338.lz"
+ScreenMap71_10::
+    INCBIN "gfx/misc/screen_map71_10.lz"
 
 ; LZSS-compressed: 209 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_63ED::
-    INCBIN "maps/screen_maps/71_63_ed.lz"
+ScreenMap71_11::
+    INCBIN "gfx/misc/screen_map71_11.lz"
 
 ; LZSS-compressed: 180 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_64BE::
-    INCBIN "maps/screen_maps/71_64_be.lz"
+ScreenMap71_12::
+    INCBIN "gfx/misc/screen_map71_12.lz"
 
 ; LZSS-compressed: 231 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom1B_Y0X1_Tiles::
@@ -346,23 +346,23 @@ KeyWorldRoom25_Y0X1_Attrs::
     INCBIN "maps/key_worlds/room25_y0_x1_attrs.lz"
 
 ; LZSS-compressed: 52 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_6A83::
+KeyWorldScreen71_5::
     db $68, $01, $03, $02, $03, $00, $0f, $4d, $03, $18, $0f, $04, $01, $03, $78, $03
     db $00, $03, $77, $05, $03, $76, $07, $00, $03, $82, $0f, $00, $03, $81, $0f, $16
     db $03, $d0, $00, $03, $86, $0c, $03, $fc, $f0, $03, $86, $02, $03, $ef, $0f, $4d
     db $03, $08, $1f, $05
 
 ; LZSS-compressed: 102 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_6AB7::
-    INCBIN "maps/key_worlds/screen_71_6_ab7.lz"
+KeyWorldScreen71_6::
+    INCBIN "maps/key_worlds/screen71_6.lz"
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_6B1D::
-    INCBIN "maps/key_worlds/screen_71_6_b1_d.lz"
+KeyWorldScreen71_7::
+    INCBIN "maps/key_worlds/screen71_7.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_6B6E::
-    INCBIN "maps/key_worlds/screen_71_6_b6_e.lz"
+KeyWorldScreen71_8::
+    INCBIN "maps/key_worlds/screen71_8.lz"
 
 ; LZSS-compressed: 77 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom1B_Y0X1_Attrs::
@@ -411,19 +411,19 @@ KeyWorldRoom3A_Y3X2_Tiles::
     INCBIN "maps/key_worlds/room3_a_y3_x2_tiles.lz"
 
 ; LZSS-compressed: 83 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_7293::
-    INCBIN "maps/screen_maps/71_7293.lz"
+ScreenMap71_13::
+    INCBIN "gfx/misc/screen_map71_13.lz"
 
 ; LZSS-compressed: 148 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_72E6::
-    INCBIN "maps/screen_maps/71_72_e6.lz"
+ScreenMap71_14::
+    INCBIN "gfx/misc/screen_map71_14.lz"
 
-ScreenMap_71_737A::
-    INCBIN "maps/screen_maps/71_737_a.lz"
+ScreenMap71_15::
+    INCBIN "gfx/misc/screen_map71_15.lz"
 
 ; LZSS-compressed: 242 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_7456::
-    INCBIN "maps/screen_maps/71_7456.lz"
+ScreenMap71_16::
+    INCBIN "gfx/misc/screen_map71_16.lz"
 
 ; LZSS-compressed: 212 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom14_Y2X1_Tiles::
@@ -434,12 +434,12 @@ KeyWorldRoom53_Y1X0_Tiles::
     INCBIN "maps/key_worlds/room53_y1_x0_tiles.lz"
 
 ; LZSS-compressed: 238 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_76FE::
-    INCBIN "maps/screen_maps/71_76_fe.lz"
+ScreenMap71_17::
+    INCBIN "gfx/misc/screen_map71_17.lz"
 
 ; LZSS-compressed: 175 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_71_77EC::
-    INCBIN "maps/screen_maps/71_77_ec.lz"
+ScreenMap71_18::
+    INCBIN "gfx/misc/screen_map71_18.lz"
 
 ; LZSS-compressed: 30 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom02_Y0X1_Attrs::
@@ -491,22 +491,22 @@ KeyWorldRoom3A_Y3X2_Attrs::
     db $00, $52, $04, $00, $10, $1f, $0b, $00, $00, $0f, $13
 
 ; LZSS-compressed: 39 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7A3D::
+KeyWorldScreen71_9::
     db $68, $01, $03, $02, $03, $00, $0f, $4d, $03, $1e, $0f, $0a, $01, $03, $7e, $01
     db $00, $03, $7d, $03, $03, $78, $09, $00, $03, $86, $0f, $00, $03, $85, $0f, $36
     db $03, $f5, $0f, $4d, $03, $08, $1e
 
 ; LZSS-compressed: 67 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7A64::
-    INCBIN "maps/key_worlds/screen_71_7_a64.lz"
+KeyWorldScreen71_10::
+    INCBIN "maps/key_worlds/screen71_10.lz"
 
 ; LZSS-compressed: 74 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7AA7::
-    INCBIN "maps/key_worlds/screen_71_7_aa7.lz"
+KeyWorldScreen71_11::
+    INCBIN "maps/key_worlds/screen71_11.lz"
 
 ; LZSS-compressed: 80 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7AF1::
-    INCBIN "maps/key_worlds/screen_71_7_af1.lz"
+KeyWorldScreen71_12::
+    INCBIN "maps/key_worlds/screen71_12.lz"
 
 ; LZSS-compressed: 78 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom14_Y2X1_Attrs::
@@ -516,12 +516,12 @@ KeyWorldRoom53_Y1X0_Attrs::
     INCBIN "maps/key_worlds/room53_y1_x0_attrs.lz"
 
 ; LZSS-compressed: 84 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7BDD::
-    INCBIN "maps/key_worlds/screen_71_7_bdd.lz"
+KeyWorldScreen71_13::
+    INCBIN "maps/key_worlds/screen71_13.lz"
 
 ; LZSS-compressed: 70 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7C31::
-    INCBIN "maps/key_worlds/screen_71_7_c31.lz"
+KeyWorldScreen71_14::
+    INCBIN "maps/key_worlds/screen71_14.lz"
 
 ; LZSS-compressed: 31 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom05_Y1X0_Tiles::
@@ -529,19 +529,19 @@ KeyWorldRoom05_Y1X0_Tiles::
     db $fe, $ff, $4d, $01, $5e, $0f, $4d, $01, $be, $0f, $47, $01, $3f, $1f, $15
 
 ; LZSS-compressed: 130 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7C96::
-    INCBIN "maps/key_worlds/screen_71_7_c96.lz"
+KeyWorldScreen71_15::
+    INCBIN "maps/key_worlds/screen71_15.lz"
 
 ; LZSS-compressed: 122 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7D18::
-    INCBIN "maps/key_worlds/screen_71_7_d18.lz"
+KeyWorldScreen71_16::
+    INCBIN "maps/key_worlds/screen71_16.lz"
 
-KeyWorldScreen_71_7D92::
-    INCBIN "maps/key_worlds/screen_71_7_d92.lz"
+KeyWorldScreen71_17::
+    INCBIN "maps/key_worlds/screen71_17.lz"
 
 ; LZSS-compressed: 126 bytes that expand to 360 (E-0016, E-0017)
-KeyWorldScreen_71_7E0C::
-    INCBIN "maps/key_worlds/screen_71_7_e0_c.lz"
+KeyWorldScreen71_18::
+    INCBIN "maps/key_worlds/screen71_18.lz"
 
 ; LZSS-compressed: 28 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom05_Y1X0_Attrs::

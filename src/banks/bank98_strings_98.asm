@@ -70,128 +70,128 @@ CopyStringToBuffer_Bank89_Overflow::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_98_4070::
+StringCategories_98::
 MessageStrings_Bank2B_Overflow::
-    dw StringList_98_4072 ; id 0
+    dw StringList_Bank2B_Overflow_0 ; id 0
 
-; category list of StringCategories_98_4070; one pointer per wStringIndex (E-0217)
+; category list of StringCategories_98; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_98_4072::
-    dw String_98_4070_00_00 ; id 0
-    dw String_98_4070_00_01 ; id 1
-    dw String_98_4070_00_02 ; id 2
-    dw String_98_4070_00_03 ; id 3
-    dw String_98_4070_00_04 ; id 4
-    dw String_98_4070_00_05 ; id 5
-    dw String_98_4070_00_06 ; id 6
-    dw String_98_4070_00_07 ; id 7
-    dw String_98_4070_00_08 ; id 8
-    dw String_98_4070_00_09 ; id 9
-    dw String_98_4070_00_0A ; id 10
-    dw String_98_4070_00_0B ; id 11
-    dw String_98_4070_00_0C ; id 12
-    dw String_98_4070_00_0D ; id 13
-    dw String_98_4070_00_0E ; id 14
-    dw String_98_4070_00_0F ; id 15
-    dw String_98_4070_00_10 ; id 16
-    dw String_98_4070_00_11 ; id 17
-    dw String_98_4070_00_12 ; id 18
-    dw String_98_4070_00_13 ; id 19
-    dw String_98_4070_00_14 ; id 20
-    dw String_98_4070_00_15 ; id 21
-    dw String_98_4070_00_16 ; id 22
-    dw String_98_4070_00_17 ; id 23
-    dw String_98_4070_00_18 ; id 24
-    dw String_98_4070_00_19 ; id 25
-    dw String_98_4070_00_1A ; id 26
-    dw String_98_4070_00_1B ; id 27
-    dw String_98_4070_00_1C ; id 28
-    dw String_98_4070_00_1D ; id 29
-    dw String_98_4070_00_1E ; id 30
-    dw String_98_4070_00_1F ; id 31
-    dw String_98_4070_00_20 ; id 32
-    dw String_98_4070_00_21 ; id 33
-    dw String_98_4070_00_22 ; id 34
-    dw String_98_4070_00_23 ; id 35
-    dw String_98_4070_00_24 ; id 36
-    dw String_98_4070_00_25 ; id 37
-    dw String_98_4070_00_26 ; id 38
-    dw String_98_4070_00_27 ; id 39
-    dw String_98_4070_00_28 ; id 40
-    dw String_98_4070_00_29 ; id 41
-    dw String_98_4070_00_2A ; id 42
-    dw String_98_4070_00_2B ; id 43
-    dw String_98_4070_00_2C ; id 44
-    dw String_98_4070_00_2D ; id 45
-    dw String_98_4070_00_2E ; id 46
-    dw String_98_4070_00_2F ; id 47
-    dw String_98_4070_00_30 ; id 48
-    dw String_98_4070_00_30 ; id 49
-    dw String_98_4070_00_30 ; id 50
-    dw String_98_4070_00_30 ; id 51
-    dw String_98_4070_00_30 ; id 52
-    dw String_98_4070_00_30 ; id 53
-    dw String_98_4070_00_30 ; id 54
-    dw String_98_4070_00_30 ; id 55
-    dw String_98_4070_00_30 ; id 56
-    dw String_98_4070_00_39 ; id 57
-    dw String_98_4070_00_39 ; id 58
-    dw String_98_4070_00_39 ; id 59
-    dw String_98_4070_00_39 ; id 60
-    dw String_98_4070_00_39 ; id 61
-    dw String_98_4070_00_39 ; id 62
-    dw String_98_4070_00_39 ; id 63
-    dw String_98_4070_00_39 ; id 64
-    dw String_98_4070_00_39 ; id 65
-    dw String_98_4070_00_39 ; id 66
-    dw String_98_4070_00_39 ; id 67
-    dw String_98_4070_00_39 ; id 68
-    dw String_98_4070_00_39 ; id 69
-    dw String_98_4070_00_39 ; id 70
-    dw String_98_4070_00_39 ; id 71
-    dw String_98_4070_00_39 ; id 72
-    dw String_98_4070_00_39 ; id 73
-    dw String_98_4070_00_39 ; id 74
-    dw String_98_4070_00_39 ; id 75
-    dw String_98_4070_00_39 ; id 76
-    dw String_98_4070_00_39 ; id 77
-    dw String_98_4070_00_39 ; id 78
-    dw String_98_4070_00_39 ; id 79
-    dw String_98_4070_00_39 ; id 80
-    dw String_98_4070_00_39 ; id 81
-    dw String_98_4070_00_39 ; id 82
-    dw String_98_4070_00_39 ; id 83
-    dw String_98_4070_00_39 ; id 84
-    dw String_98_4070_00_39 ; id 85
-    dw String_98_4070_00_39 ; id 86
-    dw String_98_4070_00_39 ; id 87
-    dw String_98_4070_00_39 ; id 88
-    dw String_98_4070_00_39 ; id 89
-    dw String_98_4070_00_39 ; id 90
-    dw String_98_4070_00_39 ; id 91
-    dw String_98_4070_00_39 ; id 92
-    dw String_98_4070_00_39 ; id 93
-    dw String_98_4070_00_39 ; id 94
-    dw String_98_4070_00_39 ; id 95
-    dw String_98_4070_00_39 ; id 96
-    dw String_98_4070_00_39 ; id 97
-    dw String_98_4070_00_39 ; id 98
-    dw String_98_4070_00_39 ; id 99
-    dw String_98_4070_00_39 ; id 100
-    dw String_98_4070_00_39 ; id 101
-    dw String_98_4070_00_39 ; id 102
-    dw String_98_4070_00_39 ; id 103
-    dw String_98_4070_00_39 ; id 104
-    dw String_98_4070_00_39 ; id 105
-    dw String_98_4070_00_39 ; id 106
-    dw String_98_4070_00_39 ; id 107
-    dw String_98_4070_00_39 ; id 108
-    dw String_98_4070_00_39 ; id 109
-    dw String_98_4070_00_39 ; id 110
-    dw String_98_4070_00_39 ; id 111
-    dw String_98_4070_00_39 ; id 112
+StringList_Bank2B_Overflow_0::
+    dw Text_AWoodsmanCameBy ; id 0
+    dw Text_HelloHowMayI ; id 1
+    dw Text_TheLakeIsFrozen ; id 2
+    dw Text_ThisIsWestaniaCastle ; id 3
+    dw Text_NobodyFailsToBe ; id 4
+    dw Text_IveBroughtWithMe ; id 5
+    dw Text_WhenIBalanceOn ; id 6
+    dw Text_IHurlKnivesWith ; id 7
+    dw Text_PleaseLineUpAnd ; id 8
+    dw Text_OhLadyYunaTo ; id 9
+    dw Text_ReadTheSignCome ; id 10
+    dw Text_KamehaWellIfIt ; id 11
+    dw Text_ItsAMeanOld ; id 12
+    dw Text_TheCastleIsIn ; id 13
+    dw Text_LadyYunaUsedTo ; id 14
+    dw Text_InTheEastLives ; id 15
+    dw Text_WhatHappenedToLady ; id 16
+    dw Text_BeforeLadyYunaWould ; id 17
+    dw Text_ThisLeadsToLady ; id 18
+    dw Text_YoureHereToCheer ; id 19
+    dw Text_YoureHereToCheer_2 ; id 20
+    dw Text_YoureHereToCheer_3 ; id 21
+    dw Text_EnoughEnoughOfThat ; id 22
+    dw Text_IAmTheKing ; id 23
+    dw Text_KingMagnificentDontYou ; id 24
+    dw Text_LineWait ; id 25
+    dw Text_KingSighNotEven ; id 26
+    dw Text_ManyHaveTriedTo ; id 27
+    dw Text_ThisIsTheCastle ; id 28
+    dw Text_QueenHelenCameBy ; id 29
+    dw Text_TheSpiritsSpringHas ; id 30
+    dw Text_QueenHelensDreamsCome ; id 31
+    dw Text_OurQueenIsA ; id 32
+    dw Text_ATeacherFromThe ; id 33
+    dw Text_ThereIsASpring ; id 34
+    dw Text_IHeardThisOn ; id 35
+    dw Text_TheQueenLooksHaggard ; id 36
+    dw Text_AroundThesePartsThere ; id 37
+    dw Text_ThisIsNoPlace ; id 38
+    dw Text_OhAnEnvoyFrom ; id 39
+    dw Text_IBegYourPardon ; id 40
+    dw Text_HelloWhatMayI ; id 41
+    dw Text_ABotanistDoesLive ; id 42
+    dw Text_IRetiredAsA ; id 43
+    dw Text_LadyYunaWasA ; id 44
+    dw Text_OhYoureRushedFor ; id 45
+    dw Text_IWantToReturn ; id 46
+    dw Text_QueenHelenHasBeen ; id 47
+    dw Text_Wait_2 ; id 48
+    dw Text_Wait_2 ; id 49
+    dw Text_Wait_2 ; id 50
+    dw Text_Wait_2 ; id 51
+    dw Text_Wait_2 ; id 52
+    dw Text_Wait_2 ; id 53
+    dw Text_Wait_2 ; id 54
+    dw Text_Wait_2 ; id 55
+    dw Text_Wait_2 ; id 56
+    dw Text_Empty_6 ; id 57
+    dw Text_Empty_6 ; id 58
+    dw Text_Empty_6 ; id 59
+    dw Text_Empty_6 ; id 60
+    dw Text_Empty_6 ; id 61
+    dw Text_Empty_6 ; id 62
+    dw Text_Empty_6 ; id 63
+    dw Text_Empty_6 ; id 64
+    dw Text_Empty_6 ; id 65
+    dw Text_Empty_6 ; id 66
+    dw Text_Empty_6 ; id 67
+    dw Text_Empty_6 ; id 68
+    dw Text_Empty_6 ; id 69
+    dw Text_Empty_6 ; id 70
+    dw Text_Empty_6 ; id 71
+    dw Text_Empty_6 ; id 72
+    dw Text_Empty_6 ; id 73
+    dw Text_Empty_6 ; id 74
+    dw Text_Empty_6 ; id 75
+    dw Text_Empty_6 ; id 76
+    dw Text_Empty_6 ; id 77
+    dw Text_Empty_6 ; id 78
+    dw Text_Empty_6 ; id 79
+    dw Text_Empty_6 ; id 80
+    dw Text_Empty_6 ; id 81
+    dw Text_Empty_6 ; id 82
+    dw Text_Empty_6 ; id 83
+    dw Text_Empty_6 ; id 84
+    dw Text_Empty_6 ; id 85
+    dw Text_Empty_6 ; id 86
+    dw Text_Empty_6 ; id 87
+    dw Text_Empty_6 ; id 88
+    dw Text_Empty_6 ; id 89
+    dw Text_Empty_6 ; id 90
+    dw Text_Empty_6 ; id 91
+    dw Text_Empty_6 ; id 92
+    dw Text_Empty_6 ; id 93
+    dw Text_Empty_6 ; id 94
+    dw Text_Empty_6 ; id 95
+    dw Text_Empty_6 ; id 96
+    dw Text_Empty_6 ; id 97
+    dw Text_Empty_6 ; id 98
+    dw Text_Empty_6 ; id 99
+    dw Text_Empty_6 ; id 100
+    dw Text_Empty_6 ; id 101
+    dw Text_Empty_6 ; id 102
+    dw Text_Empty_6 ; id 103
+    dw Text_Empty_6 ; id 104
+    dw Text_Empty_6 ; id 105
+    dw Text_Empty_6 ; id 106
+    dw Text_Empty_6 ; id 107
+    dw Text_Empty_6 ; id 108
+    dw Text_Empty_6 ; id 109
+    dw Text_Empty_6 ; id 110
+    dw Text_Empty_6 ; id 111
+    dw Text_Empty_6 ; id 112
 
-String_98_4070_00_00::
+Text_AWoodsmanCameBy::
     db "<VOICE1>*: A woodsman came<LINE>"
     db "by a while back.<PROMPT>"
     db "<NEXT>He said something"
@@ -208,12 +208,12 @@ String_98_4070_00_00::
     db "<NEXT>ordinary, but…<WAIT>"
     db "@"
 
-String_98_4070_00_01::
+Text_HelloHowMayI::
     db "<VOICE1>*: Hello! How may I<LINE>"
     db "serve you?<WAIT>"
     db "@"
 
-String_98_4070_00_02::
+Text_TheLakeIsFrozen::
     db "<VOICE1>*: The lake is<LINE>"
     db "frozen, so I can't<PROMPT>"
     db "<NEXT>very well take my"
@@ -224,7 +224,7 @@ String_98_4070_00_02::
     db "<NEXT>for some reason.<WAIT>"
     db "@"
 
-String_98_4070_00_03::
+Text_ThisIsWestaniaCastle::
     db "<VOICE1>*: This is Westania<LINE>"
     db "Castle.<PROMPT>"
     db "<NEXT>Westania is the"
@@ -233,7 +233,7 @@ String_98_4070_00_03::
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_4070_00_04::
+Text_NobodyFailsToBe::
     db "<VOICE1>*: Nobody fails to<LINE>"
     db "be impressed when<PROMPT>"
     db "<NEXT>I breathe fire,"
@@ -244,7 +244,7 @@ String_98_4070_00_04::
     db "<NEXT>act.<WAIT>"
     db "@"
 
-String_98_4070_00_05::
+Text_IveBroughtWithMe::
     db "<VOICE1>*: I've brought with<LINE>"
     db "me a necklace that<PROMPT>"
     db "<NEXT>is studded with"
@@ -253,14 +253,14 @@ String_98_4070_00_05::
     db "<NEXT>delighted by it!<WAIT>"
     db "@"
 
-String_98_4070_00_06::
+Text_WhenIBalanceOn::
     db "<VOICE1>*: When I balance<LINE>"
     db "on my ball, people<PROMPT>"
     db "<NEXT>simply go wild."
     db "<NEXT>Just watch me!<WAIT>"
     db "@"
 
-String_98_4070_00_07::
+Text_IHurlKnivesWith::
     db "<VOICE1>*: I hurl knives<LINE>"
     db "with incredible<PROMPT>"
     db "<NEXT>accuracy."
@@ -271,7 +271,7 @@ String_98_4070_00_07::
     db "<NEXT>out of her funk.<WAIT>"
     db "@"
 
-String_98_4070_00_08::
+Text_PleaseLineUpAnd::
     db "<VOICE1>*: Please, line up!<LINE>"
     db "And quit pushing!<PROMPT>"
     db "<NEXT>Everyone will get"
@@ -280,7 +280,7 @@ String_98_4070_00_08::
     db "<NEXT>after the reward…<WAIT>"
     db "@"
 
-String_98_4070_00_09::
+Text_OhLadyYunaTo::
     db "<VOICE1>*: Oh… Lady Yuna…<LINE>"
     db "To think that I<PROMPT>"
     db "<NEXT>won't get to see"
@@ -293,7 +293,7 @@ String_98_4070_00_09::
     db "<NEXT>eavesdropping!<WAIT>"
     db "@"
 
-String_98_4070_00_0A::
+Text_ReadTheSignCome::
     db "<BUF0> read the<LINE>"
     db "sign.<PROMPT>"
     db "<NEXT>'Come all who have"
@@ -306,7 +306,7 @@ String_98_4070_00_0A::
     db "<NEXT>generous reward.", $95, "<WAIT>"
     db "@"
 
-String_98_4070_00_0B::
+Text_KamehaWellIfIt::
     db "<VOICE1>Kameha: Well, if<LINE>"
     db "it isn't <BUF0>!<PROMPT>"
     db "<NEXT>You managed to get"
@@ -319,7 +319,7 @@ String_98_4070_00_0B::
     db "<NEXT>will be mine!<WAIT>"
     db "@"
 
-String_98_4070_00_0C::
+Text_ItsAMeanOld::
     db "<VOICE1>*: It's a mean old<LINE>"
     db "world out there.<PROMPT>"
     db "<NEXT>I've heard there"
@@ -332,19 +332,19 @@ String_98_4070_00_0C::
     db "<NEXT>anything of note.<WAIT>"
     db "@"
 
-String_98_4070_00_0D::
+Text_TheCastleIsIn::
     db "<VOICE1>*: The Castle is in<LINE>"
     db "an uproar.<WAIT>"
     db "@"
 
-String_98_4070_00_0E::
+Text_LadyYunaUsedTo::
     db "<VOICE1>*: Lady Yuna used<LINE>"
     db "to be very lively.<PROMPT>"
     db "<NEXT>It makes no sense,"
     db "<NEXT>her depression.<WAIT>"
     db "@"
 
-String_98_4070_00_0F::
+Text_InTheEastLives::
     db "<VOICE1>*: In the east<LINE>"
     db "lives an old man<PROMPT>"
     db "<NEXT>who had tutored"
@@ -353,14 +353,14 @@ String_98_4070_00_0F::
     db "<NEXT>the best.<WAIT>"
     db "@"
 
-String_98_4070_00_10::
+Text_WhatHappenedToLady::
     db "<VOICE1>*: What happened to<LINE>"
     db "Lady Yuna?<PROMPT>"
     db "<NEXT>It's as if she is"
     db "<NEXT>a soulless puppet…<WAIT>"
     db "@"
 
-String_98_4070_00_11::
+Text_BeforeLadyYunaWould::
     db "<VOICE1>*: Before, Lady<LINE>"
     db "Yuna would be up<PROMPT>"
     db "<NEXT>and out playing at"
@@ -369,21 +369,21 @@ String_98_4070_00_11::
     db "<NEXT>ventures out…<WAIT>"
     db "@"
 
-String_98_4070_00_12::
+Text_ThisLeadsToLady::
     db "<VOICE1>*: This leads to<LINE>"
     db "Lady Yuna's room.<PROMPT>"
     db "<NEXT>You may not go"
     db "<NEXT>beyond here.<WAIT>"
     db "@"
 
-String_98_4070_00_13::
+Text_YoureHereToCheer::
     db "<VOICE1>*: You're here to<LINE>"
     db "cheer Lady Yuna.<PROMPT>"
     db "<NEXT>Please go right"
     db "<NEXT>through.<WAIT>"
     db "@"
 
-String_98_4070_00_14::
+Text_YoureHereToCheer_2::
     db "<VOICE1>*: You're here to<LINE>"
     db "cheer Lady Yuna.<PROMPT>"
     db "<NEXT>Oh? Your monsters"
@@ -394,7 +394,7 @@ String_98_4070_00_14::
     db "<NEXT>leave, I'm afraid.<WAIT>"
     db "@"
 
-String_98_4070_00_15::
+Text_YoureHereToCheer_3::
     db "<VOICE1>*: You're here to<LINE>"
     db "cheer Lady Yuna.<PROMPT>"
     db "<NEXT>Oh? You haven't"
@@ -405,27 +405,27 @@ String_98_4070_00_15::
     db "<NEXT>leave, I'm afraid.<WAIT>"
     db "@"
 
-String_98_4070_00_16::
+Text_EnoughEnoughOfThat::
     db "<VOICE2>*: Enough… Enough<LINE>"
     db "of that dancing!<WAIT>"
     db "@"
 
-String_98_4070_00_17::
+Text_IAmTheKing::
     db "<VOICE1>*: I am the King.<LINE>"
     db "What is your act?<WAIT>"
     db "@"
 
-String_98_4070_00_18::
+Text_KingMagnificentDontYou::
     db "<VOICE1>King: Magnificent!<LINE>"
     db "Don't you agree?<WAIT>"
     db "@"
 
-String_98_4070_00_19::
+Text_LineWait::
     db "<VOICE2>*: …………<LINE>"
     db "<WAIT>"
     db "@"
 
-String_98_4070_00_1A::
+Text_KingSighNotEven::
     db "<VOICE1>King: …Sigh…<LINE>"
     db "Not even this…<PROMPT>"
     db "<NEXT>You were superb,"
@@ -446,7 +446,7 @@ String_98_4070_00_1A::
     db "<NEXT>idea what to do…<WAIT>"
     db "@"
 
-String_98_4070_00_1B::
+Text_ManyHaveTriedTo::
     db "<VOICE1>*: Many have tried<LINE>"
     db "to cheer Lady Yuna<PROMPT>"
     db "<NEXT>up to the way she"
@@ -457,14 +457,14 @@ String_98_4070_00_1B::
     db "<NEXT>her smile again?<WAIT>"
     db "@"
 
-String_98_4070_00_1C::
+Text_ThisIsTheCastle::
     db "<VOICE1>*: This is the<LINE>"
     db "Castle of Estria,<PROMPT>"
     db "<NEXT>the eastern"
     db "<NEXT>kingdom.<WAIT>"
     db "@"
 
-String_98_4070_00_1D::
+Text_QueenHelenCameBy::
     db "<VOICE1>*: Queen Helen came<LINE>"
     db "by a while ago, so<PROMPT>"
     db "<NEXT>I greeted her. But"
@@ -475,7 +475,7 @@ String_98_4070_00_1D::
     db "<NEXT>us warmly before…<WAIT>"
     db "@"
 
-String_98_4070_00_1E::
+Text_TheSpiritsSpringHas::
     db "<VOICE2>*: The spirit's<LINE>"
     db "spring has frozen.<PROMPT>"
     db "<NEXT>The lake is full"
@@ -484,7 +484,7 @@ String_98_4070_00_1E::
     db "<NEXT>omens…<WAIT>"
     db "@"
 
-String_98_4070_00_1F::
+Text_QueenHelensDreamsCome::
     db "<VOICE1>*: Queen Helen's<LINE>"
     db "dreams come true.<PROMPT>"
     db "<NEXT>If she hadn't"
@@ -493,7 +493,7 @@ String_98_4070_00_1F::
     db "<NEXT>much worse.<WAIT>"
     db "@"
 
-String_98_4070_00_20::
+Text_OurQueenIsA::
     db "<VOICE1>*: Our Queen is a<LINE>"
     db "kind person who<PROMPT>"
     db "<NEXT>has a friendly"
@@ -502,7 +502,7 @@ String_98_4070_00_20::
     db "<NEXT>looks grim…<WAIT>"
     db "@"
 
-String_98_4070_00_21::
+Text_ATeacherFromThe::
     db "<VOICE2>*: A teacher from<LINE>"
     db "the west lives<PROMPT>"
     db "<NEXT>over there."
@@ -511,7 +511,7 @@ String_98_4070_00_21::
     db "<NEXT>princess.<WAIT>"
     db "@"
 
-String_98_4070_00_22::
+Text_ThereIsASpring::
     db "<VOICE1>*: There is a<LINE>"
     db "spring in the far<PROMPT>"
     db "<NEXT>north that is home"
@@ -522,7 +522,7 @@ String_98_4070_00_22::
     db "<NEXT>harsh conditions.<WAIT>"
     db "@"
 
-String_98_4070_00_23::
+Text_IHeardThisOn::
     db "<VOICE2>*: I heard this on<LINE>"
     db "the sly from my<PROMPT>"
     db "<NEXT>sister who works"
@@ -537,7 +537,7 @@ String_98_4070_00_23::
     db "<NEXT>seems so cranky…<WAIT>"
     db "@"
 
-String_98_4070_00_24::
+Text_TheQueenLooksHaggard::
     db "<VOICE1>*: The Queen looks<LINE>"
     db "haggard recently.<PROMPT>"
     db "<NEXT>Lack of sleep must"
@@ -546,7 +546,7 @@ String_98_4070_00_24::
     db "<NEXT>rather irritable.<WAIT>"
     db "@"
 
-String_98_4070_00_25::
+Text_AroundThesePartsThere::
     db "<VOICE2>*: Around these<LINE>"
     db "parts, there are<PROMPT>"
     db "<NEXT>times of perpetual"
@@ -559,27 +559,27 @@ String_98_4070_00_25::
     db "<NEXT>It works!<WAIT>"
     db "@"
 
-String_98_4070_00_26::
+Text_ThisIsNoPlace::
     db "<VOICE1>*: This is no place<LINE>"
     db "for a child!<WAIT>"
     db "@"
 
-String_98_4070_00_27::
+Text_OhAnEnvoyFrom::
     db "<VOICE1>*: Oh? An envoy<LINE>"
     db "from the spirit!<WAIT>"
     db "@"
 
-String_98_4070_00_28::
+Text_IBegYourPardon::
     db "<VOICE1>*: I beg your<LINE>"
     db "pardon, please!<WAIT>"
     db "@"
 
-String_98_4070_00_29::
+Text_HelloWhatMayI::
     db "<VOICE1>*: Hello! What may<LINE>"
     db "I do for you?<WAIT>"
     db "@"
 
-String_98_4070_00_2A::
+Text_ABotanistDoesLive::
     db "<VOICE2>*: A botanist does<LINE>"
     db "live here…<PROMPT>"
     db "<NEXT>But he's been gone"
@@ -590,7 +590,7 @@ String_98_4070_00_2A::
     db "<NEXT>could be now.<WAIT>"
     db "@"
 
-String_98_4070_00_2B::
+Text_IRetiredAsA::
     db "<VOICE1>*: I retired as a<LINE>"
     db "teacher and came<PROMPT>"
     db "<NEXT>back home."
@@ -603,7 +603,7 @@ String_98_4070_00_2B::
     db "<NEXT>old man reminisce?<CHOICE>"
     db "@"
 
-String_98_4070_00_2C::
+Text_LadyYunaWasA::
     db "<VOICE1>*: Lady Yuna was a<LINE>"
     db "rambunctious soul.<PROMPT>"
     db "<NEXT>She was much more"
@@ -624,12 +624,12 @@ String_98_4070_00_2C::
     db "<NEXT>indeed! Fwohohoho!<WAIT>"
     db "@"
 
-String_98_4070_00_2D::
+Text_OhYoureRushedFor::
     db "<VOICE1>*: Oh, you're rushed<LINE>"
     db "for time… Sorry…<WAIT>"
     db "@"
 
-String_98_4070_00_2E::
+Text_IWantToReturn::
     db "<VOICE1>*: I want to return<LINE>"
     db "to the north, but<PROMPT>"
     db "<NEXT>there are no ships"
@@ -640,7 +640,7 @@ String_98_4070_00_2E::
     db "<NEXT>attempt crossing.<WAIT>"
     db "@"
 
-String_98_4070_00_2F::
+Text_QueenHelenHasBeen::
     db "<VOICE1>*: Queen Helen has<LINE>"
     db "been suffering<PROMPT>"
     db "<NEXT>from nightmares"
@@ -651,132 +651,132 @@ String_98_4070_00_2F::
     db "<NEXT>for her health…<WAIT>"
     db "@"
 
-String_98_4070_00_30::
+Text_Wait_2::
     db "<VOICE2>*: …………?<WAIT>"
     db "@"
 
-String_98_4070_00_39::
+Text_Empty_6::
     db $f0
 
-StringCategories_98_572E::
+StringCategories_98_2::
 MessageStrings_Bank2C_Overflow::
-    dw StringList_98_5730 ; id 0
+    dw StringList_Bank2C_Overflow_0 ; id 0
 
-; category list of StringCategories_98_572E; one pointer per wStringIndex (E-0217)
-StringList_98_5730::
-    dw String_98_572E_00_00 ; id 0
-    dw String_98_572E_00_01 ; id 1
-    dw String_98_572E_00_02 ; id 2
-    dw String_98_572E_00_03 ; id 3
-    dw String_98_572E_00_04 ; id 4
-    dw String_98_572E_00_05 ; id 5
-    dw String_98_572E_00_06 ; id 6
-    dw String_98_572E_00_07 ; id 7
-    dw String_98_572E_00_08 ; id 8
-    dw String_98_572E_00_09 ; id 9
-    dw String_98_572E_00_0A ; id 10
-    dw String_98_572E_00_0B ; id 11
-    dw String_98_572E_00_0C ; id 12
-    dw String_98_572E_00_0D ; id 13
-    dw String_98_572E_00_0E ; id 14
-    dw String_98_572E_00_0F ; id 15
-    dw String_98_572E_00_10 ; id 16
-    dw String_98_572E_00_11 ; id 17
-    dw String_98_572E_00_12 ; id 18
-    dw String_98_572E_00_13 ; id 19
-    dw String_98_572E_00_14 ; id 20
-    dw String_98_572E_00_15 ; id 21
-    dw String_98_572E_00_16 ; id 22
-    dw String_98_572E_00_17 ; id 23
-    dw String_98_572E_00_18 ; id 24
-    dw String_98_572E_00_19 ; id 25
-    dw String_98_572E_00_1A ; id 26
-    dw String_98_572E_00_1A ; id 27
-    dw String_98_572E_00_1A ; id 28
-    dw String_98_572E_00_1A ; id 29
-    dw String_98_572E_00_1A ; id 30
-    dw String_98_572E_00_1A ; id 31
-    dw String_98_572E_00_20 ; id 32
-    dw String_98_572E_00_21 ; id 33
-    dw String_98_572E_00_22 ; id 34
-    dw String_98_572E_00_23 ; id 35
-    dw String_98_572E_00_24 ; id 36
-    dw String_98_572E_00_25 ; id 37
-    dw String_98_572E_00_26 ; id 38
-    dw String_98_572E_00_27 ; id 39
-    dw String_98_572E_00_28 ; id 40
-    dw String_98_572E_00_29 ; id 41
-    dw String_98_572E_00_2A ; id 42
-    dw String_98_572E_00_2B ; id 43
-    dw String_98_572E_00_2C ; id 44
-    dw String_98_572E_00_2D ; id 45
-    dw String_98_572E_00_2E ; id 46
-    dw String_98_572E_00_2F ; id 47
-    dw String_98_572E_00_30 ; id 48
-    dw String_98_572E_00_31 ; id 49
-    dw String_98_572E_00_32 ; id 50
-    dw String_98_572E_00_33 ; id 51
-    dw String_98_572E_00_34 ; id 52
-    dw String_98_572E_00_35 ; id 53
-    dw String_98_572E_00_36 ; id 54
-    dw String_98_572E_00_37 ; id 55
-    dw String_98_572E_00_38 ; id 56
-    dw String_98_572E_00_39 ; id 57
-    dw String_98_572E_00_3A ; id 58
-    dw String_98_572E_00_3B ; id 59
-    dw String_98_572E_00_3C ; id 60
-    dw String_98_572E_00_3D ; id 61
-    dw String_98_572E_00_3E ; id 62
-    dw String_98_572E_00_3F ; id 63
-    dw String_98_572E_00_40 ; id 64
-    dw String_98_572E_00_41 ; id 65
-    dw String_98_572E_00_42 ; id 66
-    dw String_98_572E_00_42 ; id 67
-    dw String_98_572E_00_42 ; id 68
-    dw String_98_572E_00_42 ; id 69
-    dw String_98_572E_00_42 ; id 70
-    dw String_98_572E_00_42 ; id 71
-    dw String_98_572E_00_42 ; id 72
-    dw String_98_572E_00_42 ; id 73
-    dw String_98_572E_00_42 ; id 74
-    dw String_98_572E_00_42 ; id 75
-    dw String_98_572E_00_42 ; id 76
-    dw String_98_572E_00_42 ; id 77
-    dw String_98_572E_00_42 ; id 78
-    dw String_98_572E_00_42 ; id 79
-    dw String_98_572E_00_42 ; id 80
-    dw String_98_572E_00_42 ; id 81
-    dw String_98_572E_00_42 ; id 82
-    dw String_98_572E_00_42 ; id 83
-    dw String_98_572E_00_42 ; id 84
-    dw String_98_572E_00_42 ; id 85
-    dw String_98_572E_00_42 ; id 86
-    dw String_98_572E_00_42 ; id 87
-    dw String_98_572E_00_42 ; id 88
-    dw String_98_572E_00_42 ; id 89
-    dw String_98_572E_00_42 ; id 90
-    dw String_98_572E_00_42 ; id 91
-    dw String_98_572E_00_42 ; id 92
-    dw String_98_572E_00_42 ; id 93
-    dw String_98_572E_00_42 ; id 94
-    dw String_98_572E_00_42 ; id 95
-    dw String_98_572E_00_42 ; id 96
-    dw String_98_572E_00_42 ; id 97
-    dw String_98_572E_00_42 ; id 98
-    dw String_98_572E_00_42 ; id 99
-    dw String_98_572E_00_42 ; id 100
-    dw String_98_572E_00_42 ; id 101
-    dw String_98_572E_00_42 ; id 102
-    dw String_98_572E_00_42 ; id 103
-    dw String_98_572E_00_42 ; id 104
-    dw String_98_572E_00_42 ; id 105
-    dw String_98_572E_00_42 ; id 106
-    dw String_98_572E_00_42 ; id 107
-    dw String_98_572E_00_42 ; id 108
-    dw String_98_572E_00_42 ; id 109
-    dw String_98_572E_00_42 ; id 110
+; category list of StringCategories_98_2; one pointer per wStringIndex (E-0217)
+StringList_Bank2C_Overflow_0::
+    dw Text_WaHeyCanYou_2 ; id 0
+    dw Text_SomeTimeAgoLightning ; id 1
+    dw Text_WhoDisturbsMySleep ; id 2
+    dw Text_IHeardOnMy ; id 3
+    dw Text_TheMonsterKingDisappeared ; id 4
+    dw Text_WhenTheMonsterKing ; id 5
+    dw Text_TheCastleIsNow ; id 6
+    dw Text_RumorHasItThat ; id 7
+    dw Text_WhereHasOurKing ; id 8
+    dw Text_TheresNoPointStaying ; id 9
+    dw Text_IfIHadThe ; id 10
+    dw Text_ReadTheSignTown ; id 11
+    dw Text_TheMayorIsBeyond ; id 12
+    dw Text_IveBecomeTheMayor ; id 13
+    dw Text_ReleasedTheGravesButton ; id 14
+    dw Text_TheCastlesLordSummons ; id 15
+    dw Text_AButtonHidesBehind ; id 16
+    dw Text_CheckedBehindTheGrave ; id 17
+    dw Text_TheKingsGoneWhat ; id 18
+    dw Text_SouthBeyondTheMountains ; id 19
+    dw Text_SeveralAncientRuinsRemain ; id 20
+    dw Text_IWasTakingA ; id 21
+    dw Text_ThisWayHereHere ; id 22
+    dw Text_WhereIsMyCasket ; id 23
+    dw Text_CheckedTheNoticeGuide ; id 24
+    dw Text_ReadTheSignDetermine ; id 25
+    dw Text_ILostAgainI ; id 26
+    dw Text_ILostAgainI ; id 27
+    dw Text_ILostAgainI ; id 28
+    dw Text_ILostAgainI ; id 29
+    dw Text_ILostAgainI ; id 30
+    dw Text_ILostAgainI ; id 31
+    dw Text_GoodLetsGetStarted ; id 32
+    dw Text_IllBeHereFor ; id 33
+    dw Text_ILostAgainI_2 ; id 34
+    dw Text_WhenYouBreedThe ; id 35
+    dw Text_DoYouKnowAll ; id 36
+    dw Text_IfYouEatAny ; id 37
+    dw Text_HmLittleOneAre ; id 38
+    dw Text_GoodLetsGetThis ; id 39
+    dw Text_OhTooBadAnother ; id 40
+    dw Text_IfYouGetAn ; id 41
+    dw Text_NoctoKingIsMyName ; id 42
+    dw Text_ILearnedHowTo ; id 43
+    dw Text_YoUpCloseYou ; id 44
+    dw Text_ILikeYourStyle ; id 45
+    dw Text_WhatAreYouSure ; id 46
+    dw Text_AllRightyWellDo ; id 47
+    dw Text_ArrMateyImCaptDead ; id 48
+    dw Text_IStrikeWithMy ; id 49
+    dw Text_WelcomeImTheChristener ; id 50
+    dw Text_WelcomeImTheChristener_2 ; id 51
+    dw Text_CheckedTheBookshelfHandbook ; id 52
+    dw Text_CheckedTheBookshelfHandbook_2 ; id 53
+    dw Text_CheckedTheBookshelfHandbook_3 ; id 54
+    dw Text_IWasOnceA ; id 55
+    dw Text_HaveYouShownThem ; id 56
+    dw Text_YouveNotFoundAny ; id 57
+    dw Text_ThatKeyIUsed ; id 58
+    dw Text_CheckedTheShelfSouvenirs ; id 59
+    dw Text_CheckedTheShelfObtained ; id 60
+    dw Text_CheckedTheShelfFound ; id 61
+    dw Text_PeeredIntoTheVase_5 ; id 62
+    dw Text_ReadTheSignMonster ; id 63
+    dw Text_ThereAreTimesWhen ; id 64
+    dw Text_UpAheadIsThe ; id 65
+    dw Text_Empty_7 ; id 66
+    dw Text_Empty_7 ; id 67
+    dw Text_Empty_7 ; id 68
+    dw Text_Empty_7 ; id 69
+    dw Text_Empty_7 ; id 70
+    dw Text_Empty_7 ; id 71
+    dw Text_Empty_7 ; id 72
+    dw Text_Empty_7 ; id 73
+    dw Text_Empty_7 ; id 74
+    dw Text_Empty_7 ; id 75
+    dw Text_Empty_7 ; id 76
+    dw Text_Empty_7 ; id 77
+    dw Text_Empty_7 ; id 78
+    dw Text_Empty_7 ; id 79
+    dw Text_Empty_7 ; id 80
+    dw Text_Empty_7 ; id 81
+    dw Text_Empty_7 ; id 82
+    dw Text_Empty_7 ; id 83
+    dw Text_Empty_7 ; id 84
+    dw Text_Empty_7 ; id 85
+    dw Text_Empty_7 ; id 86
+    dw Text_Empty_7 ; id 87
+    dw Text_Empty_7 ; id 88
+    dw Text_Empty_7 ; id 89
+    dw Text_Empty_7 ; id 90
+    dw Text_Empty_7 ; id 91
+    dw Text_Empty_7 ; id 92
+    dw Text_Empty_7 ; id 93
+    dw Text_Empty_7 ; id 94
+    dw Text_Empty_7 ; id 95
+    dw Text_Empty_7 ; id 96
+    dw Text_Empty_7 ; id 97
+    dw Text_Empty_7 ; id 98
+    dw Text_Empty_7 ; id 99
+    dw Text_Empty_7 ; id 100
+    dw Text_Empty_7 ; id 101
+    dw Text_Empty_7 ; id 102
+    dw Text_Empty_7 ; id 103
+    dw Text_Empty_7 ; id 104
+    dw Text_Empty_7 ; id 105
+    dw Text_Empty_7 ; id 106
+    dw Text_Empty_7 ; id 107
+    dw Text_Empty_7 ; id 108
+    dw Text_Empty_7 ; id 109
+    dw Text_Empty_7 ; id 110
 
-String_98_572E_00_00::
+Text_WaHeyCanYou_2::
     db "<VOICE1>*: Wa-hey! Can you<LINE>"
     db "hear me, <BUF0>?<PROMPT>"
     db "<NEXT>Things have turned"
@@ -787,7 +787,7 @@ String_98_572E_00_00::
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_572E_00_01::
+Text_SomeTimeAgoLightning::
     db "<VOICE1>*: Some time ago,<LINE>"
     db "lightning struck<PROMPT>"
     db "<NEXT>the tower, causing"
@@ -796,7 +796,7 @@ String_98_572E_00_01::
     db "<NEXT>out of the rubble.<WAIT>"
     db "@"
 
-String_98_572E_00_02::
+Text_WhoDisturbsMySleep::
     db "<VOICE1>*: Who disturbs my<LINE>"
     db "sleep?<PROMPT>"
     db "<NEXT>The visitor from"
@@ -811,7 +811,7 @@ String_98_572E_00_02::
     db "<NEXT>world…<WAIT>"
     db "@"
 
-String_98_572E_00_03::
+Text_IHeardOnMy::
     db "<VOICE1>*: I heard on my<LINE>"
     db "travels that the<PROMPT>"
     db "<NEXT>monster King has"
@@ -822,14 +822,14 @@ String_98_572E_00_03::
     db "<NEXT>bad thing.<WAIT>"
     db "@"
 
-String_98_572E_00_04::
+Text_TheMonsterKingDisappeared::
     db "<VOICE1>*: The monster King<LINE>"
     db "disappeared.<PROMPT>"
     db "<NEXT>He", $44, " made monsters"
     db "<NEXT>obey using magic.<WAIT>"
     db "@"
 
-String_98_572E_00_05::
+Text_WhenTheMonsterKing::
     db "<VOICE1>*: When the monster<LINE>"
     db "King disappeared,<PROMPT>"
     db "<NEXT>we all gained our"
@@ -840,14 +840,14 @@ String_98_572E_00_05::
     db "<NEXT>no one's quit!<WAIT>"
     db "@"
 
-String_98_572E_00_06::
+Text_TheCastleIsNow::
     db "<VOICE1>*: The Castle is<LINE>"
     db "now managed by all<PROMPT>"
     db "<NEXT>of us in the town."
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_572E_00_07::
+Text_RumorHasItThat::
     db "<VOICE1>*: Rumor has it<LINE>"
     db "that almost no one<PROMPT>"
     db "<NEXT>has seen the"
@@ -856,19 +856,19 @@ String_98_572E_00_07::
     db "<NEXT>weak and frail.<WAIT>"
     db "@"
 
-String_98_572E_00_08::
+Text_WhereHasOurKing::
     db "<VOICE1>*: Where has our<LINE>"
     db "King gone?<WAIT>"
     db "@"
 
-String_98_572E_00_09::
+Text_TheresNoPointStaying::
     db "<VOICE1>*: There's no point<LINE>"
     db "staying in the<PROMPT>"
     db "<NEXT>army. I should go"
     db "<NEXT>back home.<WAIT>"
     db "@"
 
-String_98_572E_00_0A::
+Text_IfIHadThe::
     db "<VOICE1>*: If I had the<LINE>"
     db "LightOrb, even I<PROMPT>"
     db "<NEXT>could become the"
@@ -879,7 +879,7 @@ String_98_572E_00_0A::
     db "<NEXT>LightOrb?<WAIT>"
     db "@"
 
-String_98_572E_00_0B::
+Text_ReadTheSignTown::
     db "<BUF0> read the<LINE>"
     db "sign.<PROMPT>"
     db "<NEXT>'Town of Hitano"
@@ -889,52 +889,52 @@ String_98_572E_00_0B::
     db "<NEXT>hunters gather.", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_0C::
+Text_TheMayorIsBeyond::
     db "<VOICE1>*: The Mayor is<LINE>"
     db "beyond here.<PROMPT>"
     db "<NEXT>Please watch your"
     db "<NEXT>manners.<WAIT>"
     db "@"
 
-String_98_572E_00_0D::
+Text_IveBecomeTheMayor::
     db "<VOICE1>*: I've become the<LINE>"
     db "Mayor, but what<PROMPT>"
     db "<NEXT>exactly should I"
     db "<NEXT>be doing?<WAIT>"
     db "@"
 
-String_98_572E_00_0E::
+Text_ReleasedTheGravesButton::
     db "<BUF0> released the<LINE>"
     db "grave's button.<WAIT>"
     db "@"
 
-String_98_572E_00_0F::
+Text_TheCastlesLordSummons::
     db "<VOICE1>*: The castle's lord<LINE>"
     db "summons monsters…<WAIT>"
     db "@"
 
-String_98_572E_00_10::
+Text_AButtonHidesBehind::
     db "<VOICE1>*: A button hides<LINE>"
     db "behind a grave…<PROMPT>"
     db "<NEXT>A button that"
     db "<NEXT>opens a door…<WAIT>"
     db "@"
 
-String_98_572E_00_11::
+Text_CheckedBehindTheGrave::
     db "<BUF0> checked<LINE>"
     db "behind the grave.<PROMPT>"
     db "<NEXT>There was nothing"
     db "<NEXT>of interest.<WAIT>"
     db "@"
 
-String_98_572E_00_12::
+Text_TheKingsGoneWhat::
     db "<VOICE1>*: The King's gone.<LINE>"
     db "What should I do?<PROMPT>"
     db "<NEXT>I guess there's no"
     db "<NEXT>Sirloin for me.<WAIT>"
     db "@"
 
-String_98_572E_00_13::
+Text_SouthBeyondTheMountains::
     db "<VOICE1>*: South beyond the<LINE>"
     db "mountains is the<PROMPT>"
     db "<NEXT>King's castle."
@@ -943,7 +943,7 @@ String_98_572E_00_13::
     db "<NEXT>treasure hunters.<WAIT>"
     db "@"
 
-String_98_572E_00_14::
+Text_SeveralAncientRuinsRemain::
     db "<VOICE1>*: Several ancient<LINE>"
     db "ruins remain in<PROMPT>"
     db "<NEXT>the southern part"
@@ -952,7 +952,7 @@ String_98_572E_00_14::
     db "<NEXT>hidden in them.<WAIT>"
     db "@"
 
-String_98_572E_00_15::
+Text_IWasTakingA::
     db "<VOICE1>*: I was taking a<LINE>"
     db "walk outside with<PROMPT>"
     db "<NEXT>my friend Roboster"
@@ -969,26 +969,26 @@ String_98_572E_00_15::
     db "<NEXT>bird's attention.<WAIT>"
     db "@"
 
-String_98_572E_00_16::
+Text_ThisWayHereHere::
     db "<VOICE1>*: ……This way…<LINE>"
     db "…Here… …Here…<WAIT>"
     db "@"
 
-String_98_572E_00_17::
+Text_WhereIsMyCasket::
     db "<VOICE2>*: …Where is my<LINE>"
     db "casket… Where…<PROMPT>"
     db "<NEXT>Ring the bell…"
     db "<NEXT>…Please…<WAIT>"
     db "@"
 
-String_98_572E_00_18::
+Text_CheckedTheNoticeGuide::
     db "<BUF0> checked the<LINE>"
     db "notice.<PROMPT>"
     db "<NEXT>'Guide the lost"
     db "<NEXT>souls…", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_19::
+Text_ReadTheSignDetermine::
     db "<BUF0> read the<LINE>"
     db "sign.<PROMPT>"
     db "<NEXT>'Determine where"
@@ -997,7 +997,7 @@ String_98_572E_00_19::
     db "<NEXT>off.", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_1A::
+Text_ILostAgainI::
     db "<VOICE2>*: I lost again.<LINE>"
     db "I need to train my<PROMPT>"
     db "<NEXT>monsters a lot"
@@ -1014,19 +1014,19 @@ String_98_572E_00_1A::
     db "<NEXT>Who knows?<WAIT>"
     db "@"
 
-String_98_572E_00_20::
+Text_GoodLetsGetStarted::
     db "<VOICE2>*: Good! Let's get<LINE>"
     db "started!<WAIT>"
     db "@"
 
-String_98_572E_00_21::
+Text_IllBeHereFor::
     db "<VOICE2>*: I'll be here for<LINE>"
     db "a while longer.<PROMPT>"
     db "<NEXT>If you change your"
     db "<NEXT>mind, come back.<WAIT>"
     db "@"
 
-String_98_572E_00_22::
+Text_ILostAgainI_2::
     db "<VOICE2>*: I lost again.<LINE>"
     db "I need to train my<PROMPT>"
     db "<NEXT>monsters a lot"
@@ -1043,7 +1043,7 @@ String_98_572E_00_22::
     db "<NEXT>Who knows?<WAIT>"
     db "@"
 
-String_98_572E_00_23::
+Text_WhenYouBreedThe::
     db "<VOICE2>*: When you breed,<LINE>"
     db "the offspring<PROMPT>"
     db "<NEXT>inherit the"
@@ -1054,7 +1054,7 @@ String_98_572E_00_23::
     db "<NEXT>monsters.<WAIT>"
     db "@"
 
-String_98_572E_00_24::
+Text_DoYouKnowAll::
     db "<VOICE1>*: Do you know all<LINE>"
     db "the kinds of meat?<PROMPT>"
     db "<NEXT>There's BeefJerky,"
@@ -1067,14 +1067,14 @@ String_98_572E_00_24::
     db "<NEXT>heavenly tasty!<WAIT>"
     db "@"
 
-String_98_572E_00_25::
+Text_IfYouEatAny::
     db "<VOICE1>*: If you eat any<LINE>"
     db "BadMeat like me,<PROMPT>"
     db "<NEXT>you'll get"
     db "<NEXT>poisoned.<WAIT>"
     db "@"
 
-String_98_572E_00_26::
+Text_HmLittleOneAre::
     db "<VOICE1>*: Hm? Little one,<LINE>"
     db "are you a master?<PROMPT>"
     db "<NEXT>How would you like"
@@ -1083,19 +1083,19 @@ String_98_572E_00_26::
     db "<NEXT>my Armorpede?<CHOICE>"
     db "@"
 
-String_98_572E_00_27::
+Text_GoodLetsGetThis::
     db "<VOICE1>*: Good! Let's get<LINE>"
     db "this started!<WAIT>"
     db "@"
 
-String_98_572E_00_28::
+Text_OhTooBadAnother::
     db "<VOICE1>*: Oh, too bad.<LINE>"
     db "Another time.<PROMPT>"
     db "<NEXT>Tell me if you"
     db "<NEXT>change your mind.<WAIT>"
     db "@"
 
-String_98_572E_00_29::
+Text_IfYouGetAn::
     db "<VOICE1>*: If you get an<LINE>"
     db "EvilArmor, I", $44, "<PROMPT>"
     db "<NEXT>breed it with a"
@@ -1104,7 +1104,7 @@ String_98_572E_00_29::
     db "<NEXT>tough combo.<WAIT>"
     db "@"
 
-String_98_572E_00_2A::
+Text_NoctoKingIsMyName::
     db "<VOICE1>*: NoctoKing is my<LINE>"
     db "name!<PROMPT>"
     db "<NEXT>Darkness is my"
@@ -1117,7 +1117,7 @@ String_98_572E_00_2A::
     db "<NEXT>gender.<WAIT>"
     db "@"
 
-String_98_572E_00_2B::
+Text_ILearnedHowTo::
     db "<VOICE1>*: I learned how to<LINE>"
     db "Massacre!<PROMPT>"
     db "<NEXT>But I ended up"
@@ -1126,7 +1126,7 @@ String_98_572E_00_2B::
     db "<NEXT>Ehehe.<WAIT>"
     db "@"
 
-String_98_572E_00_2C::
+Text_YoUpCloseYou::
     db "<VOICE1>*: Yo! Up close,<LINE>"
     db "you look tougher<PROMPT>"
     db "<NEXT>than you first"
@@ -1137,19 +1137,19 @@ String_98_572E_00_2C::
     db "<NEXT>that sound good?<CHOICE>"
     db "@"
 
-String_98_572E_00_2D::
+Text_ILikeYourStyle::
     db "<VOICE1>*: I like your<LINE>"
     db "style!<PROMPT>"
     db "<NEXT>Let's get started"
     db "<NEXT>with this.<WAIT>"
     db "@"
 
-String_98_572E_00_2E::
+Text_WhatAreYouSure::
     db "<VOICE1>*: What? Are you<LINE>"
     db "sure about that?<WAIT>"
     db "@"
 
-String_98_572E_00_2F::
+Text_AllRightyWellDo::
     db "<VOICE1>*: All righty!<LINE>"
     db "<PROMPT>"
     db "<NEXT>"
@@ -1157,7 +1157,7 @@ String_98_572E_00_2F::
     db "<NEXT>next time too!<WAIT>"
     db "@"
 
-String_98_572E_00_30::
+Text_ArrMateyImCaptDead::
     db "<VOICE1>*: Arr, matey!<LINE>"
     db "I'm CaptDead!<PROMPT>"
     db "<NEXT>A dashing zombie"
@@ -1168,14 +1168,14 @@ String_98_572E_00_30::
     db "<NEXT>cutlasses ready!<WAIT>"
     db "@"
 
-String_98_572E_00_31::
+Text_IStrikeWithMy::
     db "<VOICE1>*: I strike with my<LINE>"
     db "eight tentacles.<PROMPT>"
     db "<NEXT>That means I hit"
     db "<NEXT>eight times!<WAIT>"
     db "@"
 
-String_98_572E_00_32::
+Text_WelcomeImTheChristener::
     db "<VOICE2>*: Welcome. I'm the<LINE>"
     db "Christener.<PROMPT>"
     db "<NEXT>I can rename your"
@@ -1183,13 +1183,13 @@ String_98_572E_00_32::
     db "<NEXT>Do you wish to"
     db "<NEXT>rename one?@"
 
-String_98_572E_00_33::
+Text_WelcomeImTheChristener_2::
     db "<VOICE2>*: Welcome. I'm the<LINE>"
     db "Christener.<PROMPT>"
     db "<NEXT>Do you wish to"
     db "<NEXT>rename someone?@"
 
-String_98_572E_00_34::
+Text_CheckedTheBookshelfHandbook::
     db "<BUF0> checked the<LINE>"
     db "bookshelf.<PROMPT>"
     db "<NEXT>'Handbook on"
@@ -1200,7 +1200,7 @@ String_98_572E_00_34::
     db "<NEXT>identification.", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_35::
+Text_CheckedTheBookshelfHandbook_2::
     db "<BUF0> checked the<LINE>"
     db "bookshelf.<PROMPT>"
     db "<NEXT>'Handbook on"
@@ -1211,7 +1211,7 @@ String_98_572E_00_35::
     db "<NEXT>of a name.", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_36::
+Text_CheckedTheBookshelfHandbook_3::
     db "<BUF0> checked the<LINE>"
     db "bookshelf.<PROMPT>"
     db "<NEXT>'Handbook on"
@@ -1224,7 +1224,7 @@ String_98_572E_00_36::
     db "<NEXT>monster?", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_37::
+Text_IWasOnceA::
     db "<VOICE1>*: I was once a<LINE>"
     db "great master who<PROMPT>"
     db "<NEXT>traveled from"
@@ -1235,7 +1235,7 @@ String_98_572E_00_37::
     db "<NEXT>Magic Keys, yes?<CHOICE>"
     db "@"
 
-String_98_572E_00_38::
+Text_HaveYouShownThem::
     db "<VOICE1>*: Have you shown<LINE>"
     db "them to the Key<PROMPT>"
     db "<NEXT>Shop's boss?"
@@ -1244,7 +1244,7 @@ String_98_572E_00_38::
     db "<NEXT>other worlds.<WAIT>"
     db "@"
 
-String_98_572E_00_39::
+Text_YouveNotFoundAny::
     db "<VOICE1>*: You've not found<LINE>"
     db "any yet?<PROMPT>"
     db "<NEXT>That's a"
@@ -1255,7 +1255,7 @@ String_98_572E_00_39::
     db "<NEXT>of my keys.<WAIT>"
     db "@"
 
-String_98_572E_00_3A::
+Text_ThatKeyIUsed::
     db "<VOICE1>*: That key, I used<LINE>"
     db "on my travels to<PROMPT>"
     db "<NEXT>other worlds in my"
@@ -1266,7 +1266,7 @@ String_98_572E_00_3A::
     db "<NEXT>have it.<WAIT>"
     db "@"
 
-String_98_572E_00_3B::
+Text_CheckedTheShelfSouvenirs::
     db "<BUF0> checked the<LINE>"
     db "shelf.<PROMPT>"
     db "<NEXT>Souvenirs from"
@@ -1275,14 +1275,14 @@ String_98_572E_00_3B::
     db "<NEXT>haphazardly.<WAIT>"
     db "@"
 
-String_98_572E_00_3C::
+Text_CheckedTheShelfObtained::
     db "<BUF0> checked the<LINE>"
     db "shelf.<PROMPT>"
     db "<NEXT><BUF0> obtained a"
     db "<NEXT>Magic Key.<MUSIC_WAIT>", $58, "<WAIT>"
     db "<MAP_MUSIC>@"
 
-String_98_572E_00_3D::
+Text_CheckedTheShelfFound::
     db "<BUF0> checked the<LINE>"
     db "shelf.<PROMPT>"
     db "<NEXT><BUF0> found a"
@@ -1293,14 +1293,14 @@ String_98_572E_00_3D::
     db "<NEXT>Magic Key back.<WAIT>"
     db "@"
 
-String_98_572E_00_3E::
+Text_PeeredIntoTheVase_5::
     db "<BUF0> peered into<LINE>"
     db "the vase.<PROMPT>"
     db "<NEXT>It was full of"
     db "<NEXT>esoteric junk.<WAIT>"
     db "@"
 
-String_98_572E_00_3F::
+Text_ReadTheSignMonster::
     db "<BUF0> read the<LINE>"
     db "sign.<PROMPT>"
     db "<NEXT>'Monster Arena,"
@@ -1309,7 +1309,7 @@ String_98_572E_00_3F::
     db "<NEXT>Downstairs!", $95, "<WAIT>"
     db "@"
 
-String_98_572E_00_40::
+Text_ThereAreTimesWhen::
     db "<VOICE1>*: There are times<LINE>"
     db "when you have to<PROMPT>"
     db "<NEXT>take weak monsters"
@@ -1320,7 +1320,7 @@ String_98_572E_00_40::
     db "<NEXT>Repellent.<WAIT>"
     db "@"
 
-String_98_572E_00_41::
+Text_UpAheadIsThe::
     db "<VOICE1>*: Up ahead is the<LINE>"
     db "Starry Shrine and<PROMPT>"
     db "<NEXT>the Egg Evaluator's"
@@ -1335,55 +1335,55 @@ String_98_572E_00_41::
     db "<NEXT>one else.<WAIT>"
     db "@"
 
-String_98_572E_00_42::
+Text_Empty_7::
     db $f0
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_98_7032::
+StringCategories_98_3::
 MessageStrings_Bank89_Overflow::
-    dw StringList_98_7034 ; id 0
+    dw StringList_Bank89_Overflow_0 ; id 0
 
-; category list of StringCategories_98_7032; one pointer per wStringIndex (E-0217)
+; category list of StringCategories_98_3; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_98_7034::
-    dw String_98_7032_00_00 ; id 0
-    dw String_98_7032_00_01 ; id 1
-    dw String_98_7032_00_02 ; id 2
-    dw String_98_7032_00_03 ; id 3
-    dw String_98_7032_00_04 ; id 4
-    dw String_98_7032_00_05 ; id 5
-    dw String_98_7032_00_06 ; id 6
-    dw String_98_7032_00_07 ; id 7
-    dw String_98_7032_00_08 ; id 8
-    dw String_98_7032_00_09 ; id 9
-    dw String_98_7032_00_0A ; id 10
-    dw String_98_7032_00_0B ; id 11
-    dw String_98_7032_00_0C ; id 12
-    dw String_98_7032_00_0D ; id 13
-    dw String_98_7032_00_0E ; id 14
-    dw String_98_7032_00_0F ; id 15
-    dw String_98_7032_00_10 ; id 16
-    dw String_98_7032_00_11 ; id 17
-    dw String_98_7032_00_12 ; id 18
-    dw String_98_7032_00_13 ; id 19
-    dw String_98_7032_00_14 ; id 20
-    dw String_98_7032_00_15 ; id 21
-    dw String_98_7032_00_16 ; id 22
-    dw String_98_7032_00_17 ; id 23
-    dw String_98_7032_00_18 ; id 24
-    dw String_98_7032_00_19 ; id 25
-    dw String_98_7032_00_1A ; id 26
-    dw String_98_7032_00_1B ; id 27
-    dw String_98_7032_00_1B ; id 28
-    dw String_98_7032_00_1B ; id 29
-    dw String_98_7032_00_1B ; id 30
-    dw String_98_7032_00_1B ; id 31
-    dw String_98_7032_00_1B ; id 32
-    dw String_98_7032_00_1B ; id 33
+StringList_Bank89_Overflow_0::
+    dw Text_WhatYouDontKnow ; id 0
+    dw Text_ABeautifulVoiceEchoed ; id 1
+    dw Text_HelenIThankYou ; id 2
+    dw Text_SeeingTheLivelinessOf ; id 3
+    dw Text_CheckedTheTombstoneThere ; id 4
+    dw Text_TheSeaIsHuge ; id 5
+    dw Text_HuhHasTheSea ; id 6
+    dw Text_TheWaterFlowedRight ; id 7
+    dw Text_LookAMadCondorIt ; id 8
+    dw Text_HeyYouveBefriendedA ; id 9
+    dw Text_HeyYouveBefriendedA_2 ; id 10
+    dw Text_HeyYouveBefriendedA_3 ; id 11
+    dw Text_HeyYouveBefriendedA_4 ; id 12
+    dw Text_HeyYouveBefriendedA_5 ; id 13
+    dw Text_HeyYouveBefriendedA_6 ; id 14
+    dw Text_HeyYouveBefriendedA_7 ; id 15
+    dw Text_HeyYouveBefriendedA_8 ; id 16
+    dw Text_CongratulationsYouveCatalogedEvery ; id 17
+    dw Text_WelcomeToTheLibrary ; id 18
+    dw Text_WeNeedFanfareRight ; id 19
+    dw Text_TheWeatherHasBeen ; id 20
+    dw Text_LadyYunaHasCome ; id 21
+    dw Text_TheQueensLostHer ; id 22
+    dw Text_TheKingdomsOfThe ; id 23
+    dw Text_TheScholarWhoWas ; id 24
+    dw Text_WarubouWaHeyFeel ; id 25
+    dw Text_ZZZZZSsssZZZZZSsss ; id 26
+    dw Text_HeroHeroHeroHero_2 ; id 27
+    dw Text_HeroHeroHeroHero_2 ; id 28
+    dw Text_HeroHeroHeroHero_2 ; id 29
+    dw Text_HeroHeroHeroHero_2 ; id 30
+    dw Text_HeroHeroHeroHero_2 ; id 31
+    dw Text_HeroHeroHeroHero_2 ; id 32
+    dw Text_HeroHeroHeroHero_2 ; id 33
 
-String_98_7032_00_00::
+Text_WhatYouDontKnow::
     db "<VOICE1>*: What? You don't<LINE>"
     db "know about the<PROMPT>"
     db "<NEXT>Starry Shrine or"
@@ -1396,12 +1396,12 @@ String_98_7032_00_00::
     db "<NEXT>the word!<WAIT>"
     db "@"
 
-String_98_7032_00_01::
+Text_ABeautifulVoiceEchoed::
     db "A beautiful voice<LINE>"
     db "echoed…<WAIT>"
     db "@"
 
-String_98_7032_00_02::
+Text_HelenIThankYou::
     db "<VOICE2>Helen: I thank you<LINE>"
     db "from the heart.<PROMPT>"
     db "<NEXT>Please give my"
@@ -1410,21 +1410,21 @@ String_98_7032_00_02::
     db "<NEXT>spring.<WAIT>"
     db "@"
 
-String_98_7032_00_03::
+Text_SeeingTheLivelinessOf::
     db "<VOICE1>*: Seeing the<LINE>"
     db "liveliness of<PROMPT>"
     db "<NEXT>Lady Yuna lifts"
     db "<NEXT>our spirits.<WAIT>"
     db "@"
 
-String_98_7032_00_04::
+Text_CheckedTheTombstoneThere::
     db "<BUF0> checked the<LINE>"
     db "tombstone.<PROMPT>"
     db "<NEXT>There appeared to"
     db "<NEXT>be nothing.<WAIT>"
     db "@"
 
-String_98_7032_00_05::
+Text_TheSeaIsHuge::
     db "<VOICE1>*: The sea is huge<LINE>"
     db "and mysterious.<PROMPT>"
     db "<NEXT>There must be"
@@ -1433,14 +1433,14 @@ String_98_7032_00_05::
     db "<NEXT>sea.<WAIT>"
     db "@"
 
-String_98_7032_00_06::
+Text_HuhHasTheSea::
     db "<VOICE1>*: Huh? Has the sea<LINE>"
     db "risen?<PROMPT>"
     db "<NEXT>Oh, well. I'm a"
     db "<NEXT>good swimmer.<WAIT>"
     db "@"
 
-String_98_7032_00_07::
+Text_TheWaterFlowedRight::
     db "<VOICE1>*: The water flowed<LINE>"
     db "right over the<PROMPT>"
     db "<NEXT>ground almost"
@@ -1449,14 +1449,14 @@ String_98_7032_00_07::
     db "<NEXT>safe?<WAIT>"
     db "@"
 
-String_98_7032_00_08::
+Text_LookAMadCondorIt::
     db "Look! A MadCondor!<LINE>"
     db "It has something!<PROMPT>"
     db "<NEXT>It clutched a"
     db "<NEXT>glowing ball!<WAIT>"
     db "@"
 
-String_98_7032_00_09::
+Text_HeyYouveBefriendedA::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1467,7 +1467,7 @@ String_98_7032_00_09::
     db "<NEXT>get some more!<WAIT>"
     db "@"
 
-String_98_7032_00_0A::
+Text_HeyYouveBefriendedA_2::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1480,7 +1480,7 @@ String_98_7032_00_0A::
     db "<NEXT>the Library.<WAIT>"
     db "@"
 
-String_98_7032_00_0B::
+Text_HeyYouveBefriendedA_3::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1493,7 +1493,7 @@ String_98_7032_00_0B::
     db "<NEXT>of your monsters.<WAIT>"
     db "@"
 
-String_98_7032_00_0C::
+Text_HeyYouveBefriendedA_4::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1506,7 +1506,7 @@ String_98_7032_00_0C::
     db "<NEXT>rare Magic Keys.<WAIT>"
     db "@"
 
-String_98_7032_00_0D::
+Text_HeyYouveBefriendedA_5::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1519,7 +1519,7 @@ String_98_7032_00_0D::
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_7032_00_0E::
+Text_HeyYouveBefriendedA_6::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1534,7 +1534,7 @@ String_98_7032_00_0E::
     db "<NEXT>his approval.<WAIT>"
     db "@"
 
-String_98_7032_00_0F::
+Text_HeyYouveBefriendedA_7::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1549,7 +1549,7 @@ String_98_7032_00_0F::
     db "<NEXT>you?<WAIT>"
     db "@"
 
-String_98_7032_00_10::
+Text_HeyYouveBefriendedA_8::
     db "<VOICE1>*: Hey, <BUF0>!<LINE>"
     db "You've befriended<PROMPT>"
     db "<NEXT>a good number of"
@@ -1566,7 +1566,7 @@ String_98_7032_00_10::
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_7032_00_11::
+Text_CongratulationsYouveCatalogedEvery::
     db "<VOICE1>*: Congratulations,<LINE>"
     db "<BUF0>!<PROMPT>"
     db "<NEXT>You've cataloged"
@@ -1585,14 +1585,14 @@ String_98_7032_00_11::
     db "<NEXT>the monsters.<WAIT>"
     db "@"
 
-String_98_7032_00_12::
+Text_WelcomeToTheLibrary::
     db "<VOICE2>*: Welcome to the<LINE>"
     db "Library!<PROMPT>"
     db "<NEXT>Your monster"
     db "<NEXT>Catalog is done!<MUSIC_WAIT>", $4d, "<WAIT>"
     db "<MAP_MUSIC>@"
 
-String_98_7032_00_13::
+Text_WeNeedFanfareRight::
     db "<VOICE2>*: We need fanfare<LINE>"
     db "right about now…<PROMPT>"
     db "<NEXT>Congratulations,"
@@ -1603,14 +1603,14 @@ String_98_7032_00_13::
     db "<NEXT>you like to check?<WAIT>"
     db "@"
 
-String_98_7032_00_14::
+Text_TheWeatherHasBeen::
     db "<VOICE1>*: The weather has<LINE>"
     db "been mild.<PROMPT>"
     db "<NEXT>It's a good thing."
     db "<NEXT><WAIT>"
     db "@"
 
-String_98_7032_00_15::
+Text_LadyYunaHasCome::
     db "<VOICE1>*: Lady Yuna has<LINE>"
     db "come out of her<PROMPT>"
     db "<NEXT>depression. I've"
@@ -1621,12 +1621,12 @@ String_98_7032_00_15::
     db "<NEXT>have to say.<WAIT>"
     db "@"
 
-String_98_7032_00_16::
+Text_TheQueensLostHer::
     db "<VOICE1>*: The Queen's lost<LINE>"
     db "her scary look!<WAIT>"
     db "@"
 
-String_98_7032_00_17::
+Text_TheKingdomsOfThe::
     db "<VOICE1>*: The kingdoms of<LINE>"
     db "the north and west<PROMPT>"
     db "<NEXT>have reconciled"
@@ -1635,26 +1635,26 @@ String_98_7032_00_17::
     db "<NEXT>mine.<WAIT>"
     db "@"
 
-String_98_7032_00_18::
+Text_TheScholarWhoWas::
     db "<VOICE1>*: The scholar who<LINE>"
     db "was in the tavern?<PROMPT>"
     db "<NEXT>I think he went"
     db "<NEXT>back home.<WAIT>"
     db "@"
 
-String_98_7032_00_19::
+Text_WarubouWaHeyFeel::
     db "<VOICE1>Warubou: Wa-hey?<LINE>"
     db "Feel that, warooh?<PROMPT>"
     db "<NEXT>Did something"
     db "<NEXT>shake?<WAIT>"
     db "@"
 
-String_98_7032_00_1A::
+Text_ZZZZZSsssZZZZZSsss::
     db "<VOICE1>*: ZZZZZ… Ssss…<LINE>"
     db "ZZZZZ… Ssss…<WAIT>"
     db "@"
 
-String_98_7032_00_1B::
+Text_HeroHeroHeroHero_2::
     db "000000000000000000000000000000000000000000000000000000000000"
     db "000000000000000000000000000000000000000000000000000000000000"
     db "000000000000000000000000000000000000000000000000000000000000"

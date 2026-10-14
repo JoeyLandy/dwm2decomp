@@ -4,119 +4,121 @@
 SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7f
 
-; DrawMetaSpriteAt_40CC with DE = MetaSprites7F_4008Table (E-0116)
-DrawMetaSprite4008::
-    ld de, MetaSprites7F_4008Table
-    call DrawMetaSpriteAt_40CC
+; DrawMetaSpriteAt_40CC with DE = MetaSprites7FTable (E-0116) (E-0344: the address in its name
+; dropped or read as the label there; was DrawMetaSprite4008)
+DrawMetaSprite_2::
+    ld de, MetaSprites7FTable
+    call DrawMetaSpriteAt_2
     ret
 
-; the caller of DrawMetaSprite4008 passes DE = $MetaSprites7F_4008Table; the builder takes the word
-; at DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98
-; words, up to the next code or data (E-0147, C1)
+; the caller of DrawMetaSprite4008 passes DE = $MetaSprites7FTable; the builder takes the word at DE
+; + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98 words,
+; up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
-MetaSprites7F_4008Table::
-    dw MetaSprites7F_4008Set00 ; id 0
-    dw MetaSprites7F_4008Set01 ; id 1
-    dw MetaSprites7F_4008Set02 ; id 2
-    dw MetaSprites7F_4008Set03 ; id 3
-    dw MetaSprites7F_4008Set04 ; id 4
-    dw MetaSprites7F_4008Set05 ; id 5
-    dw MetaSprites7F_4008Set06 ; id 6
-    dw MetaSprites7F_4008Set07 ; id 7
-    dw MetaSprites7F_4008Set08 ; id 8
-    dw MetaSprites7F_4008Set09 ; id 9
-    dw MetaSprites7F_4008Set0A ; id 10
-    dw MetaSprites7F_4008Set0B ; id 11
-    dw MetaSprites7F_4008Set0C ; id 12
-    dw MetaSprites7F_4008Set0D ; id 13
-    dw MetaSprites7F_4008Set0E ; id 14
-    dw MetaSprites7F_4008Set0F ; id 15
-    dw MetaSprites7F_4008Set10 ; id 16
-    dw MetaSprites7F_4008Set11 ; id 17
-    dw MetaSprites7F_4008Set12 ; id 18
-    dw MetaSprites7F_4008Set13 ; id 19
-    dw MetaSprites7F_4008Set14 ; id 20
-    dw MetaSprites7F_4008Set15 ; id 21
-    dw MetaSprites7F_4008Set16 ; id 22
-    dw MetaSprites7F_4008Set17 ; id 23
-    dw MetaSprites7F_4008Set18 ; id 24
-    dw MetaSprites7F_4008Set19 ; id 25
-    dw MetaSprites7F_4008Set1A ; id 26
-    dw MetaSprites7F_4008Set1B ; id 27
-    dw MetaSprites7F_4008Set1C ; id 28
-    dw MetaSprites7F_4008Set1D ; id 29
-    dw MetaSprites7F_4008Set1E ; id 30
-    dw MetaSprites7F_4008Set1F ; id 31
-    dw MetaSprites7F_4008Set20 ; id 32
-    dw MetaSprites7F_4008Set21 ; id 33
-    dw MetaSprites7F_4008Set22 ; id 34
-    dw MetaSprites7F_4008Set23 ; id 35
-    dw MetaSprites7F_4008Set24 ; id 36
-    dw MetaSprites7F_4008Set25 ; id 37
-    dw MetaSprites7F_4008Set26 ; id 38
-    dw MetaSprites7F_4008Set27 ; id 39
-    dw MetaSprites7F_4008Set28 ; id 40
-    dw MetaSprites7F_4008Set29 ; id 41
-    dw MetaSprites7F_4008Set2A ; id 42
-    dw MetaSprites7F_4008Set2B ; id 43
-    dw MetaSprites7F_4008Set2C ; id 44
-    dw MetaSprites7F_4008Set2D ; id 45
-    dw MetaSprites7F_4008Set2E ; id 46
-    dw MetaSprites7F_4008Set2F ; id 47
-    dw MetaSprites7F_4008Set30 ; id 48
-    dw MetaSprites7F_4008Set31 ; id 49
-    dw MetaSprites7F_4008Set32 ; id 50
-    dw MetaSprites7F_4008Set33 ; id 51
-    dw MetaSprites7F_4008Set34 ; id 52
-    dw MetaSprites7F_4008Set35 ; id 53
-    dw MetaSprites7F_4008Set36 ; id 54
-    dw MetaSprites7F_4008Set37 ; id 55
-    dw MetaSprites7F_4008Set38 ; id 56
-    dw MetaSprites7F_4008Set39 ; id 57
-    dw MetaSprites7F_4008Set3A ; id 58
-    dw MetaSprites7F_4008Set3B ; id 59
-    dw MetaSprites7F_4008Set3C ; id 60
-    dw MetaSprites7F_4008Set3D ; id 61
-    dw MetaSprites7F_4008Set3E ; id 62
-    dw MetaSprites7F_4008Set3F ; id 63
-    dw MetaSprites7F_4008Set40 ; id 64
-    dw MetaSprites7F_4008Set41 ; id 65
-    dw MetaSprites7F_4008Set42 ; id 66
-    dw MetaSprites7F_4008Set43 ; id 67
-    dw MetaSprites7F_4008Set44 ; id 68
-    dw MetaSprites7F_4008Set45 ; id 69
-    dw MetaSprites7F_4008Set46 ; id 70
-    dw MetaSprites7F_4008Set47 ; id 71
-    dw MetaSprites7F_4008Set48 ; id 72
-    dw MetaSprites7F_4008Set49 ; id 73
-    dw MetaSprites7F_4008Set4A ; id 74
-    dw MetaSprites7F_4008Set4B ; id 75
-    dw MetaSprites7F_4008Set4C ; id 76
-    dw MetaSprites7F_4008Set4D ; id 77
-    dw MetaSprites7F_4008Set4E ; id 78
-    dw MetaSprites7F_4008Set4F ; id 79
-    dw MetaSprites7F_4008Set50 ; id 80
-    dw MetaSprites7F_4008Set51 ; id 81
-    dw MetaSprites7F_4008Set52 ; id 82
-    dw MetaSprites7F_4008Set53 ; id 83
-    dw MetaSprites7F_4008Set54 ; id 84
-    dw MetaSprites7F_4008Set55 ; id 85
-    dw MetaSprites7F_4008Set56 ; id 86
-    dw MetaSprites7F_4008Set57 ; id 87
-    dw MetaSprites7F_4008Set58 ; id 88
-    dw MetaSprites7F_4008Set59 ; id 89
-    dw MetaSprites7F_4008Set5A ; id 90
-    dw MetaSprites7F_4008Set5B ; id 91
-    dw MetaSprites7F_4008Set5C ; id 92
-    dw MetaSprites7F_4008Set46 ; id 93
-    dw MetaSprites7F_4008Set46 ; id 94
-    dw MetaSprites7F_4008Set5F ; id 95
-    dw MetaSprites7F_4008Set46 ; id 96
-    dw MetaSprites7F_4008Set61 ; id 97
+MetaSprites7FTable::
+    dw MetaSprites7FSet00 ; id 0
+    dw MetaSprites7FSet01 ; id 1
+    dw MetaSprites7FSet02 ; id 2
+    dw MetaSprites7FSet03 ; id 3
+    dw MetaSprites7FSet04 ; id 4
+    dw MetaSprites7FSet05 ; id 5
+    dw MetaSprites7FSet06 ; id 6
+    dw MetaSprites7FSet07 ; id 7
+    dw MetaSprites7FSet08 ; id 8
+    dw MetaSprites7FSet09 ; id 9
+    dw MetaSprites7FSet0A ; id 10
+    dw MetaSprites7FSet0B ; id 11
+    dw MetaSprites7FSet0C ; id 12
+    dw MetaSprites7FSet0D ; id 13
+    dw MetaSprites7FSet0E ; id 14
+    dw MetaSprites7FSet0F ; id 15
+    dw MetaSprites7FSet10 ; id 16
+    dw MetaSprites7FSet11 ; id 17
+    dw MetaSprites7FSet12 ; id 18
+    dw MetaSprites7FSet13 ; id 19
+    dw MetaSprites7FSet14 ; id 20
+    dw MetaSprites7FSet15 ; id 21
+    dw MetaSprites7FSet16 ; id 22
+    dw MetaSprites7FSet17 ; id 23
+    dw MetaSprites7FSet18 ; id 24
+    dw MetaSprites7FSet19 ; id 25
+    dw MetaSprites7FSet1A ; id 26
+    dw MetaSprites7FSet1B ; id 27
+    dw MetaSprites7FSet1C ; id 28
+    dw MetaSprites7FSet1D ; id 29
+    dw MetaSprites7FSet1E ; id 30
+    dw MetaSprites7FSet1F ; id 31
+    dw MetaSprites7FSet20 ; id 32
+    dw MetaSprites7FSet21 ; id 33
+    dw MetaSprites7FSet22 ; id 34
+    dw MetaSprites7FSet23 ; id 35
+    dw MetaSprites7FSet24 ; id 36
+    dw MetaSprites7FSet25 ; id 37
+    dw MetaSprites7FSet26 ; id 38
+    dw MetaSprites7FSet27 ; id 39
+    dw MetaSprites7FSet28 ; id 40
+    dw MetaSprites7FSet29 ; id 41
+    dw MetaSprites7FSet2A ; id 42
+    dw MetaSprites7FSet2B ; id 43
+    dw MetaSprites7FSet2C ; id 44
+    dw MetaSprites7FSet2D ; id 45
+    dw MetaSprites7FSet2E ; id 46
+    dw MetaSprites7FSet2F ; id 47
+    dw MetaSprites7FSet30 ; id 48
+    dw MetaSprites7FSet31 ; id 49
+    dw MetaSprites7FSet32 ; id 50
+    dw MetaSprites7FSet33 ; id 51
+    dw MetaSprites7FSet34 ; id 52
+    dw MetaSprites7FSet35 ; id 53
+    dw MetaSprites7FSet36 ; id 54
+    dw MetaSprites7FSet37 ; id 55
+    dw MetaSprites7FSet38 ; id 56
+    dw MetaSprites7FSet39 ; id 57
+    dw MetaSprites7FSet3A ; id 58
+    dw MetaSprites7FSet3B ; id 59
+    dw MetaSprites7FSet3C ; id 60
+    dw MetaSprites7FSet3D ; id 61
+    dw MetaSprites7FSet3E ; id 62
+    dw MetaSprites7FSet3F ; id 63
+    dw MetaSprites7FSet40 ; id 64
+    dw MetaSprites7FSet41 ; id 65
+    dw MetaSprites7FSet42 ; id 66
+    dw MetaSprites7FSet43 ; id 67
+    dw MetaSprites7FSet44 ; id 68
+    dw MetaSprites7FSet45 ; id 69
+    dw MetaSprites7FSet46 ; id 70
+    dw MetaSprites7FSet47 ; id 71
+    dw MetaSprites7FSet48 ; id 72
+    dw MetaSprites7FSet49 ; id 73
+    dw MetaSprites7FSet4A ; id 74
+    dw MetaSprites7FSet4B ; id 75
+    dw MetaSprites7FSet4C ; id 76
+    dw MetaSprites7FSet4D ; id 77
+    dw MetaSprites7FSet4E ; id 78
+    dw MetaSprites7FSet4F ; id 79
+    dw MetaSprites7FSet50 ; id 80
+    dw MetaSprites7FSet51 ; id 81
+    dw MetaSprites7FSet52 ; id 82
+    dw MetaSprites7FSet53 ; id 83
+    dw MetaSprites7FSet54 ; id 84
+    dw MetaSprites7FSet55 ; id 85
+    dw MetaSprites7FSet56 ; id 86
+    dw MetaSprites7FSet57 ; id 87
+    dw MetaSprites7FSet58 ; id 88
+    dw MetaSprites7FSet59 ; id 89
+    dw MetaSprites7FSet5A ; id 90
+    dw MetaSprites7FSet5B ; id 91
+    dw MetaSprites7FSet5C ; id 92
+    dw MetaSprites7FSet46 ; id 93
+    dw MetaSprites7FSet46 ; id 94
+    dw MetaSprites7FSet5F ; id 95
+    dw MetaSprites7FSet46 ; id 96
+    dw MetaSprites7FSet61 ; id 97
 
 ; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-DrawMetaSpriteAt_40CC::
+; (E-0344: the address in its name dropped or read as the label there; was DrawMetaSpriteAt_40CC)
+DrawMetaSpriteAt_2::
     ldh a, [hOamNextEntry]
     cp $27
     ret nc
@@ -455,7 +457,7 @@ DrawMetaSpriteAt_40CC::
 .call_bg_tile_under_point_is_sprite_hide_tile:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F_4312
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
     jr nc, .loop4
     inc e
     ldh a, [hSpriteTileOffset]
@@ -557,7 +559,7 @@ DrawMetaSpriteAt_40CC::
 .call_bg_tile_under_point_is_sprite_hide_tile2:
     ld a, c
     ld [de], a
-    call BGTileUnderPointIsSpriteHideTile_Bank7F_4312
+    call BGTileUnderPointIsSpriteHideTile_Bank7F_2
     jr nc, .loop6
     inc e
     ldh a, [hSpriteTileOffset]
@@ -583,7 +585,7 @@ DrawMetaSpriteAt_40CC::
 ; entry under (X + hScrollX - 4, Y + hScrollY - 12), rows wrapping inside the map; reads it after
 ; rSTAT bit 1 clears (interrupts off) and compares with hSpriteHideTile: Z set when equal, A = the
 ; tile; BC, HL kept (E-0065) (the same 54 bytes appear in 6 banks)
-BGTileUnderPointIsSpriteHideTile_Bank7F_4312::
+BGTileUnderPointIsSpriteHideTile_Bank7F_2::
     push hl
     push bc
     ldh a, [hScrollY]
@@ -628,4348 +630,4276 @@ BGTileUnderPointIsSpriteHideTile_Bank7F_4312::
     pop hl
     ret
 
-; meta-sprite set 0 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 0 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set00::
-    dw MetaSprites7F_4008Set00Frame0 ; entry 0
-    dw MetaSprites7F_4008Set00Frame1 ; entry 1
-    dw MetaSprites7F_4008Set00Frame2 ; entry 2
-    dw MetaSprites7F_4008Set00Frame3 ; entry 3
-    dw MetaSprites7F_4008Set00Frame4 ; entry 4
-    dw MetaSprites7F_4008Set00Frame5 ; entry 5
+MetaSprites7FSet00::
+    dw MetaSprites7FSet00Frame0 ; entry 0
+    dw MetaSprites7FSet00Frame1 ; entry 1
+    dw MetaSprites7FSet00Frame2 ; entry 2
+    dw MetaSprites7FSet00Frame3 ; entry 3
+    dw MetaSprites7FSet00Frame4 ; entry 4
+    dw MetaSprites7FSet00Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set00Frame0::
+MetaSprites7FSet00Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
-MetaSprites7F_4008Set00Frame1::
+; frame 1 of MetaSprites7FSet00; ends with $80 (E-0147)
+MetaSprites7FSet00Frame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $ff, $02, $20 ; entry 2
     db $f9, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
-MetaSprites7F_4008Set00Frame2::
+; frame 2 of MetaSprites7FSet00; ends with $80 (E-0147)
+MetaSprites7FSet00Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
-MetaSprites7F_4008Set00Frame3::
+; frame 3 of MetaSprites7FSet00; ends with $80 (E-0147)
+MetaSprites7FSet00Frame3::
     db $f1, $f8, $04, $00 ; entry 0
     db $f1, $00, $05, $00 ; entry 1
     db $f9, $f8, $08, $00 ; entry 2
     db $f9, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set00Frame4::
+MetaSprites7FSet00Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set00; ends with $80 (E-0147)
-MetaSprites7F_4008Set00Frame5::
+; frame 5 of MetaSprites7FSet00; ends with $80 (E-0147)
+MetaSprites7FSet00Frame5::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $f8, $0e, $00 ; entry 2
     db $f9, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 1 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 1 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set01::
-    dw MetaSprites7F_4008Set01Frame0 ; entry 0
-    dw MetaSprites7F_4008Set01Frame1 ; entry 1
-    dw MetaSprites7F_4008Set01Frame2 ; entry 2
-    dw MetaSprites7F_4008Set01Frame3 ; entry 3
-    dw MetaSprites7F_4008Set01Frame4 ; entry 4
-    dw MetaSprites7F_4008Set01Frame5 ; entry 5
+MetaSprites7FSet01::
+    dw MetaSprites7FSet01Frame0 ; entry 0
+    dw MetaSprites7FSet01Frame1 ; entry 1
+    dw MetaSprites7FSet01Frame2 ; entry 2
+    dw MetaSprites7FSet01Frame3 ; entry 3
+    dw MetaSprites7FSet01Frame4 ; entry 4
+    dw MetaSprites7FSet01Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet01; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set01Frame0::
+MetaSprites7FSet01Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
-MetaSprites7F_4008Set01Frame1::
+; frame 1 of MetaSprites7FSet01; ends with $80 (E-0147)
+MetaSprites7FSet01Frame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $00, $02, $20 ; entry 2
     db $f9, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
-MetaSprites7F_4008Set01Frame2::
+; frame 2 of MetaSprites7FSet01; ends with $80 (E-0147)
+MetaSprites7FSet01Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
-MetaSprites7F_4008Set01Frame3::
+; frame 3 of MetaSprites7FSet01; ends with $80 (E-0147)
+MetaSprites7FSet01Frame3::
     db $f1, $f8, $04, $00 ; entry 0
     db $f1, $00, $05, $00 ; entry 1
     db $f9, $f8, $08, $00 ; entry 2
     db $f9, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet01; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set01Frame4::
+MetaSprites7FSet01Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set01; ends with $80 (E-0147)
-MetaSprites7F_4008Set01Frame5::
+; frame 5 of MetaSprites7FSet01; ends with $80 (E-0147)
+MetaSprites7FSet01Frame5::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $f8, $0e, $00 ; entry 2
     db $f9, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 2 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 2 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set02::
-    dw MetaSprites7F_4008Set02Frame0 ; entry 0
-    dw MetaSprites7F_4008Set02Frame1 ; entry 1
-    dw MetaSprites7F_4008Set02Frame2 ; entry 2
-    dw MetaSprites7F_4008Set02Frame3 ; entry 3
-    dw MetaSprites7F_4008Set02Frame4 ; entry 4
-    dw MetaSprites7F_4008Set02Frame5 ; entry 5
+MetaSprites7FSet02::
+    dw MetaSprites7FSet02Frame0 ; entry 0
+    dw MetaSprites7FSet02Frame1 ; entry 1
+    dw MetaSprites7FSet02Frame2 ; entry 2
+    dw MetaSprites7FSet02Frame3 ; entry 3
+    dw MetaSprites7FSet02Frame4 ; entry 4
+    dw MetaSprites7FSet02Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet02; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set02Frame0::
+MetaSprites7FSet02Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
-MetaSprites7F_4008Set02Frame1::
+; frame 1 of MetaSprites7FSet02; ends with $80 (E-0147)
+MetaSprites7FSet02Frame1::
     db $f1, $00, $00, $20 ; entry 0
     db $f1, $f8, $01, $20 ; entry 1
     db $f9, $00, $02, $20 ; entry 2
     db $f9, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
-MetaSprites7F_4008Set02Frame2::
+; frame 2 of MetaSprites7FSet02; ends with $80 (E-0147)
+MetaSprites7FSet02Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
-MetaSprites7F_4008Set02Frame3::
+; frame 3 of MetaSprites7FSet02; ends with $80 (E-0147)
+MetaSprites7FSet02Frame3::
     db $f1, $f8, $08, $00 ; entry 0
     db $f1, $00, $09, $00 ; entry 1
     db $f9, $f8, $0a, $00 ; entry 2
     db $f9, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet02; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set02Frame4::
+MetaSprites7FSet02Frame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0d, $00 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set02; ends with $80 (E-0147)
-MetaSprites7F_4008Set02Frame5::
+; frame 5 of MetaSprites7FSet02; ends with $80 (E-0147)
+MetaSprites7FSet02Frame5::
     db $f1, $00, $0c, $20 ; entry 0
     db $f1, $f8, $0d, $20 ; entry 1
     db $f9, $00, $0e, $20 ; entry 2
     db $f9, $f8, $0f, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 3 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 3 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set03::
-    dw MetaSprites7F_4008Set03Frame0 ; entry 0
-    dw MetaSprites7F_4008Set03Frame1 ; entry 1
-    dw MetaSprites7F_4008Set03Frame2 ; entry 2
-    dw MetaSprites7F_4008Set03Frame3 ; entry 3
-    dw MetaSprites7F_4008Set03Frame4 ; entry 4
-    dw MetaSprites7F_4008Set03Frame5 ; entry 5
+MetaSprites7FSet03::
+    dw MetaSprites7FSet03Frame0 ; entry 0
+    dw MetaSprites7FSet03Frame1 ; entry 1
+    dw MetaSprites7FSet03Frame2 ; entry 2
+    dw MetaSprites7FSet03Frame3 ; entry 3
+    dw MetaSprites7FSet03Frame4 ; entry 4
+    dw MetaSprites7FSet03Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet03; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set03Frame0::
+MetaSprites7FSet03Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
-MetaSprites7F_4008Set03Frame1::
+; frame 1 of MetaSprites7FSet03; ends with $80 (E-0147)
+MetaSprites7FSet03Frame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $ff, $02, $20 ; entry 2
     db $f9, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
-MetaSprites7F_4008Set03Frame2::
+; frame 2 of MetaSprites7FSet03; ends with $80 (E-0147)
+MetaSprites7FSet03Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
-MetaSprites7F_4008Set03Frame3::
+; frame 3 of MetaSprites7FSet03; ends with $80 (E-0147)
+MetaSprites7FSet03Frame3::
     db $f1, $f8, $04, $00 ; entry 0
     db $f1, $00, $05, $00 ; entry 1
     db $f9, $f8, $08, $00 ; entry 2
     db $f9, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet03; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set03Frame4::
+MetaSprites7FSet03Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set03; ends with $80 (E-0147)
-MetaSprites7F_4008Set03Frame5::
+; frame 5 of MetaSprites7FSet03; ends with $80 (E-0147)
+MetaSprites7FSet03Frame5::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $ff, $0c, $20 ; entry 2
     db $f9, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 4 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 4 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set04::
-    dw MetaSprites7F_4008Set04Frame0 ; entry 0
-    dw MetaSprites7F_4008Set04Frame1 ; entry 1
-    dw MetaSprites7F_4008Set04Frame2 ; entry 2
-    dw MetaSprites7F_4008Set04Frame3 ; entry 3
-    dw MetaSprites7F_4008Set04Frame4 ; entry 4
-    dw MetaSprites7F_4008Set04Frame5 ; entry 5
+MetaSprites7FSet04::
+    dw MetaSprites7FSet04Frame0 ; entry 0
+    dw MetaSprites7FSet04Frame1 ; entry 1
+    dw MetaSprites7FSet04Frame2 ; entry 2
+    dw MetaSprites7FSet04Frame3 ; entry 3
+    dw MetaSprites7FSet04Frame4 ; entry 4
+    dw MetaSprites7FSet04Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet04; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set04Frame0::
+MetaSprites7FSet04Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
-MetaSprites7F_4008Set04Frame1::
+; frame 1 of MetaSprites7FSet04; ends with $80 (E-0147)
+MetaSprites7FSet04Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
-MetaSprites7F_4008Set04Frame2::
+; frame 2 of MetaSprites7FSet04; ends with $80 (E-0147)
+MetaSprites7FSet04Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
-MetaSprites7F_4008Set04Frame3::
+; frame 3 of MetaSprites7FSet04; ends with $80 (E-0147)
+MetaSprites7FSet04Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet04; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set04Frame4::
+MetaSprites7FSet04Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set04; ends with $80 (E-0147)
-MetaSprites7F_4008Set04Frame5::
+; frame 5 of MetaSprites7FSet04; ends with $80 (E-0147)
+MetaSprites7FSet04Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 5 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 5 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set05::
-    dw MetaSprites7F_4008Set05Frame0 ; entry 0
-    dw MetaSprites7F_4008Set05Frame1 ; entry 1
-    dw MetaSprites7F_4008Set05Frame2 ; entry 2
-    dw MetaSprites7F_4008Set05Frame3 ; entry 3
-    dw MetaSprites7F_4008Set05Frame4 ; entry 4
-    dw MetaSprites7F_4008Set05Frame5 ; entry 5
+MetaSprites7FSet05::
+    dw MetaSprites7FSet05Frame0 ; entry 0
+    dw MetaSprites7FSet05Frame1 ; entry 1
+    dw MetaSprites7FSet05Frame2 ; entry 2
+    dw MetaSprites7FSet05Frame3 ; entry 3
+    dw MetaSprites7FSet05Frame4 ; entry 4
+    dw MetaSprites7FSet05Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet05; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set05Frame0::
+MetaSprites7FSet05Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
-MetaSprites7F_4008Set05Frame1::
+; frame 1 of MetaSprites7FSet05; ends with $80 (E-0147)
+MetaSprites7FSet05Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
-MetaSprites7F_4008Set05Frame2::
+; frame 2 of MetaSprites7FSet05; ends with $80 (E-0147)
+MetaSprites7FSet05Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
-MetaSprites7F_4008Set05Frame3::
+; frame 3 of MetaSprites7FSet05; ends with $80 (E-0147)
+MetaSprites7FSet05Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet05; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set05Frame4::
+MetaSprites7FSet05Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set05; ends with $80 (E-0147)
-MetaSprites7F_4008Set05Frame5::
+; frame 5 of MetaSprites7FSet05; ends with $80 (E-0147)
+MetaSprites7FSet05Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 6 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 6 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set06::
-    dw MetaSprites7F_4008Set06Frame0 ; entry 0
-    dw MetaSprites7F_4008Set06Frame1 ; entry 1
-    dw MetaSprites7F_4008Set06Frame2 ; entry 2
-    dw MetaSprites7F_4008Set06Frame3 ; entry 3
-    dw MetaSprites7F_4008Set06Frame4 ; entry 4
-    dw MetaSprites7F_4008Set06Frame5 ; entry 5
+MetaSprites7FSet06::
+    dw MetaSprites7FSet06Frame0 ; entry 0
+    dw MetaSprites7FSet06Frame1 ; entry 1
+    dw MetaSprites7FSet06Frame2 ; entry 2
+    dw MetaSprites7FSet06Frame3 ; entry 3
+    dw MetaSprites7FSet06Frame4 ; entry 4
+    dw MetaSprites7FSet06Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet06; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set06Frame0::
+MetaSprites7FSet06Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
-MetaSprites7F_4008Set06Frame1::
+; frame 1 of MetaSprites7FSet06; ends with $80 (E-0147)
+MetaSprites7FSet06Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
-MetaSprites7F_4008Set06Frame2::
+; frame 2 of MetaSprites7FSet06; ends with $80 (E-0147)
+MetaSprites7FSet06Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
-MetaSprites7F_4008Set06Frame3::
+; frame 3 of MetaSprites7FSet06; ends with $80 (E-0147)
+MetaSprites7FSet06Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet06; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set06Frame4::
+MetaSprites7FSet06Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set06; ends with $80 (E-0147)
-MetaSprites7F_4008Set06Frame5::
+; frame 5 of MetaSprites7FSet06; ends with $80 (E-0147)
+MetaSprites7FSet06Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 7 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 7 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set07::
-    dw MetaSprites7F_4008Set07Frame0 ; entry 0
-    dw MetaSprites7F_4008Set07Frame1 ; entry 1
-    dw MetaSprites7F_4008Set07Frame2 ; entry 2
-    dw MetaSprites7F_4008Set07Frame3 ; entry 3
-    dw MetaSprites7F_4008Set07Frame4 ; entry 4
-    dw MetaSprites7F_4008Set07Frame5 ; entry 5
+MetaSprites7FSet07::
+    dw MetaSprites7FSet07Frame0 ; entry 0
+    dw MetaSprites7FSet07Frame1 ; entry 1
+    dw MetaSprites7FSet07Frame2 ; entry 2
+    dw MetaSprites7FSet07Frame3 ; entry 3
+    dw MetaSprites7FSet07Frame4 ; entry 4
+    dw MetaSprites7FSet07Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet07; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set07Frame0::
+MetaSprites7FSet07Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
-MetaSprites7F_4008Set07Frame1::
+; frame 1 of MetaSprites7FSet07; ends with $80 (E-0147)
+MetaSprites7FSet07Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
-MetaSprites7F_4008Set07Frame2::
+; frame 2 of MetaSprites7FSet07; ends with $80 (E-0147)
+MetaSprites7FSet07Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
-MetaSprites7F_4008Set07Frame3::
+; frame 3 of MetaSprites7FSet07; ends with $80 (E-0147)
+MetaSprites7FSet07Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet07; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set07Frame4::
+MetaSprites7FSet07Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set07; ends with $80 (E-0147)
-MetaSprites7F_4008Set07Frame5::
+; frame 5 of MetaSprites7FSet07; ends with $80 (E-0147)
+MetaSprites7FSet07Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 8 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 8 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set08::
-    dw MetaSprites7F_4008Set08Frame0 ; entry 0
-    dw MetaSprites7F_4008Set08Frame1 ; entry 1
-    dw MetaSprites7F_4008Set08Frame2 ; entry 2
-    dw MetaSprites7F_4008Set08Frame3 ; entry 3
-    dw MetaSprites7F_4008Set08Frame4 ; entry 4
-    dw MetaSprites7F_4008Set08Frame5 ; entry 5
+MetaSprites7FSet08::
+    dw MetaSprites7FSet08Frame0 ; entry 0
+    dw MetaSprites7FSet08Frame1 ; entry 1
+    dw MetaSprites7FSet08Frame2 ; entry 2
+    dw MetaSprites7FSet08Frame3 ; entry 3
+    dw MetaSprites7FSet08Frame4 ; entry 4
+    dw MetaSprites7FSet08Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet08; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set08Frame0::
+MetaSprites7FSet08Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
-MetaSprites7F_4008Set08Frame1::
+; frame 1 of MetaSprites7FSet08; ends with $80 (E-0147)
+MetaSprites7FSet08Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
-MetaSprites7F_4008Set08Frame2::
+; frame 2 of MetaSprites7FSet08; ends with $80 (E-0147)
+MetaSprites7FSet08Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
-MetaSprites7F_4008Set08Frame3::
+; frame 3 of MetaSprites7FSet08; ends with $80 (E-0147)
+MetaSprites7FSet08Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet08; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set08Frame4::
+MetaSprites7FSet08Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set08; ends with $80 (E-0147)
-MetaSprites7F_4008Set08Frame5::
+; frame 5 of MetaSprites7FSet08; ends with $80 (E-0147)
+MetaSprites7FSet08Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 9 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 9 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set09::
-    dw MetaSprites7F_4008Set09Frame0 ; entry 0
-    dw MetaSprites7F_4008Set09Frame1 ; entry 1
-    dw MetaSprites7F_4008Set09Frame2 ; entry 2
-    dw MetaSprites7F_4008Set09Frame3 ; entry 3
-    dw MetaSprites7F_4008Set09Frame4 ; entry 4
-    dw MetaSprites7F_4008Set09Frame5 ; entry 5
+MetaSprites7FSet09::
+    dw MetaSprites7FSet09Frame0 ; entry 0
+    dw MetaSprites7FSet09Frame1 ; entry 1
+    dw MetaSprites7FSet09Frame2 ; entry 2
+    dw MetaSprites7FSet09Frame3 ; entry 3
+    dw MetaSprites7FSet09Frame4 ; entry 4
+    dw MetaSprites7FSet09Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet09; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set09Frame0::
+MetaSprites7FSet09Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
-MetaSprites7F_4008Set09Frame1::
+; frame 1 of MetaSprites7FSet09; ends with $80 (E-0147)
+MetaSprites7FSet09Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
-MetaSprites7F_4008Set09Frame2::
+; frame 2 of MetaSprites7FSet09; ends with $80 (E-0147)
+MetaSprites7FSet09Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
-MetaSprites7F_4008Set09Frame3::
+; frame 3 of MetaSprites7FSet09; ends with $80 (E-0147)
+MetaSprites7FSet09Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet09; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set09Frame4::
+MetaSprites7FSet09Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set09; ends with $80 (E-0147)
-MetaSprites7F_4008Set09Frame5::
+; frame 5 of MetaSprites7FSet09; ends with $80 (E-0147)
+MetaSprites7FSet09Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 10 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 10 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0A::
-    dw MetaSprites7F_4008Set0AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0AFrame5 ; entry 5
+MetaSprites7FSet0A::
+    dw MetaSprites7FSet0AFrame0 ; entry 0
+    dw MetaSprites7FSet0AFrame1 ; entry 1
+    dw MetaSprites7FSet0AFrame2 ; entry 2
+    dw MetaSprites7FSet0AFrame3 ; entry 3
+    dw MetaSprites7FSet0AFrame4 ; entry 4
+    dw MetaSprites7FSet0AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0AFrame0::
+MetaSprites7FSet0AFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
-MetaSprites7F_4008Set0AFrame1::
+; frame 1 of MetaSprites7FSet0A; ends with $80 (E-0147)
+MetaSprites7FSet0AFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
-MetaSprites7F_4008Set0AFrame2::
+; frame 2 of MetaSprites7FSet0A; ends with $80 (E-0147)
+MetaSprites7FSet0AFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
-MetaSprites7F_4008Set0AFrame3::
+; frame 3 of MetaSprites7FSet0A; ends with $80 (E-0147)
+MetaSprites7FSet0AFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0AFrame4::
+MetaSprites7FSet0AFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0A; ends with $80 (E-0147)
-MetaSprites7F_4008Set0AFrame5::
+; frame 5 of MetaSprites7FSet0A; ends with $80 (E-0147)
+MetaSprites7FSet0AFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 11 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 11 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0B::
-    dw MetaSprites7F_4008Set0BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0BFrame5 ; entry 5
+MetaSprites7FSet0B::
+    dw MetaSprites7FSet0BFrame0 ; entry 0
+    dw MetaSprites7FSet0BFrame1 ; entry 1
+    dw MetaSprites7FSet0BFrame2 ; entry 2
+    dw MetaSprites7FSet0BFrame3 ; entry 3
+    dw MetaSprites7FSet0BFrame4 ; entry 4
+    dw MetaSprites7FSet0BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0BFrame0::
+MetaSprites7FSet0BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
-MetaSprites7F_4008Set0BFrame1::
+; frame 1 of MetaSprites7FSet0B; ends with $80 (E-0147)
+MetaSprites7FSet0BFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
-MetaSprites7F_4008Set0BFrame2::
+; frame 2 of MetaSprites7FSet0B; ends with $80 (E-0147)
+MetaSprites7FSet0BFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
-MetaSprites7F_4008Set0BFrame3::
+; frame 3 of MetaSprites7FSet0B; ends with $80 (E-0147)
+MetaSprites7FSet0BFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0BFrame4::
+MetaSprites7FSet0BFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0B; ends with $80 (E-0147)
-MetaSprites7F_4008Set0BFrame5::
+; frame 5 of MetaSprites7FSet0B; ends with $80 (E-0147)
+MetaSprites7FSet0BFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 12 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 12 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0C::
-    dw MetaSprites7F_4008Set0CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0CFrame5 ; entry 5
+MetaSprites7FSet0C::
+    dw MetaSprites7FSet0CFrame0 ; entry 0
+    dw MetaSprites7FSet0CFrame1 ; entry 1
+    dw MetaSprites7FSet0CFrame2 ; entry 2
+    dw MetaSprites7FSet0CFrame3 ; entry 3
+    dw MetaSprites7FSet0CFrame4 ; entry 4
+    dw MetaSprites7FSet0CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0CFrame0::
+MetaSprites7FSet0CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
-MetaSprites7F_4008Set0CFrame1::
+; frame 1 of MetaSprites7FSet0C; ends with $80 (E-0147)
+MetaSprites7FSet0CFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
-MetaSprites7F_4008Set0CFrame2::
+; frame 2 of MetaSprites7FSet0C; ends with $80 (E-0147)
+MetaSprites7FSet0CFrame2::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
-MetaSprites7F_4008Set0CFrame3::
+; frame 3 of MetaSprites7FSet0C; ends with $80 (E-0147)
+MetaSprites7FSet0CFrame3::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $0a, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0CFrame4::
+MetaSprites7FSet0CFrame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f0, $00, $0c, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0C; ends with $80 (E-0147)
-MetaSprites7F_4008Set0CFrame5::
+; frame 5 of MetaSprites7FSet0C; ends with $80 (E-0147)
+MetaSprites7FSet0CFrame5::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f0, $00, $0c, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 13 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 13 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0D::
-    dw MetaSprites7F_4008Set0DFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0DFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0DFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0DFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0DFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0DFrame5 ; entry 5
+MetaSprites7FSet0D::
+    dw MetaSprites7FSet0DFrame0 ; entry 0
+    dw MetaSprites7FSet0DFrame1 ; entry 1
+    dw MetaSprites7FSet0DFrame2 ; entry 2
+    dw MetaSprites7FSet0DFrame3 ; entry 3
+    dw MetaSprites7FSet0DFrame4 ; entry 4
+    dw MetaSprites7FSet0DFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0DFrame0::
+MetaSprites7FSet0DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
-MetaSprites7F_4008Set0DFrame1::
+; frame 1 of MetaSprites7FSet0D; ends with $80 (E-0147)
+MetaSprites7FSet0DFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
-MetaSprites7F_4008Set0DFrame2::
+; frame 2 of MetaSprites7FSet0D; ends with $80 (E-0147)
+MetaSprites7FSet0DFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
-MetaSprites7F_4008Set0DFrame3::
+; frame 3 of MetaSprites7FSet0D; ends with $80 (E-0147)
+MetaSprites7FSet0DFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0DFrame4::
+MetaSprites7FSet0DFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0D; ends with $80 (E-0147)
-MetaSprites7F_4008Set0DFrame5::
+; frame 5 of MetaSprites7FSet0D; ends with $80 (E-0147)
+MetaSprites7FSet0DFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 14 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 14 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0E::
-    dw MetaSprites7F_4008Set0EFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0EFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0EFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0EFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0EFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0EFrame5 ; entry 5
+MetaSprites7FSet0E::
+    dw MetaSprites7FSet0EFrame0 ; entry 0
+    dw MetaSprites7FSet0EFrame1 ; entry 1
+    dw MetaSprites7FSet0EFrame2 ; entry 2
+    dw MetaSprites7FSet0EFrame3 ; entry 3
+    dw MetaSprites7FSet0EFrame4 ; entry 4
+    dw MetaSprites7FSet0EFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0EFrame0::
+MetaSprites7FSet0EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
-MetaSprites7F_4008Set0EFrame1::
+; frame 1 of MetaSprites7FSet0E; ends with $80 (E-0147)
+MetaSprites7FSet0EFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
-MetaSprites7F_4008Set0EFrame2::
+; frame 2 of MetaSprites7FSet0E; ends with $80 (E-0147)
+MetaSprites7FSet0EFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
-MetaSprites7F_4008Set0EFrame3::
+; frame 3 of MetaSprites7FSet0E; ends with $80 (E-0147)
+MetaSprites7FSet0EFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0EFrame4::
+MetaSprites7FSet0EFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0E; ends with $80 (E-0147)
-MetaSprites7F_4008Set0EFrame5::
+; frame 5 of MetaSprites7FSet0E; ends with $80 (E-0147)
+MetaSprites7FSet0EFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $00, $0c, $20 ; entry 2
     db $f8, $f8, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 15 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 15 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set0F::
-    dw MetaSprites7F_4008Set0FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set0FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set0FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set0FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set0FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set0FFrame5 ; entry 5
+MetaSprites7FSet0F::
+    dw MetaSprites7FSet0FFrame0 ; entry 0
+    dw MetaSprites7FSet0FFrame1 ; entry 1
+    dw MetaSprites7FSet0FFrame2 ; entry 2
+    dw MetaSprites7FSet0FFrame3 ; entry 3
+    dw MetaSprites7FSet0FFrame4 ; entry 4
+    dw MetaSprites7FSet0FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet0F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0FFrame0::
+MetaSprites7FSet0FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
-MetaSprites7F_4008Set0FFrame1::
+; frame 1 of MetaSprites7FSet0F; ends with $80 (E-0147)
+MetaSprites7FSet0FFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
-MetaSprites7F_4008Set0FFrame2::
+; frame 2 of MetaSprites7FSet0F; ends with $80 (E-0147)
+MetaSprites7FSet0FFrame2::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $06, $00 ; entry 2
     db $f0, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
-MetaSprites7F_4008Set0FFrame3::
+; frame 3 of MetaSprites7FSet0F; ends with $80 (E-0147)
+MetaSprites7FSet0FFrame3::
     db $f8, $f8, $0a, $00 ; entry 0
     db $f8, $00, $0b, $00 ; entry 1
     db $f0, $f8, $06, $00 ; entry 2
     db $f0, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet0F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set0FFrame4::
+MetaSprites7FSet0FFrame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0c, $20 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0d, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set0F; ends with $80 (E-0147)
-MetaSprites7F_4008Set0FFrame5::
+; frame 5 of MetaSprites7FSet0F; ends with $80 (E-0147)
+MetaSprites7FSet0FFrame5::
     db $f8, $f8, $0e, $00 ; entry 0
     db $f8, $00, $0e, $20 ; entry 1
     db $f0, $f8, $0c, $00 ; entry 2
     db $f0, $00, $0c, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 16 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 16 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set10::
-    dw MetaSprites7F_4008Set10Frame0 ; entry 0
-    dw MetaSprites7F_4008Set10Frame1 ; entry 1
-    dw MetaSprites7F_4008Set10Frame2 ; entry 2
-    dw MetaSprites7F_4008Set10Frame3 ; entry 3
-    dw MetaSprites7F_4008Set10Frame4 ; entry 4
-    dw MetaSprites7F_4008Set10Frame5 ; entry 5
+MetaSprites7FSet10::
+    dw MetaSprites7FSet10Frame0 ; entry 0
+    dw MetaSprites7FSet10Frame1 ; entry 1
+    dw MetaSprites7FSet10Frame2 ; entry 2
+    dw MetaSprites7FSet10Frame3 ; entry 3
+    dw MetaSprites7FSet10Frame4 ; entry 4
+    dw MetaSprites7FSet10Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet10; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set10Frame0::
+MetaSprites7FSet10Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
-MetaSprites7F_4008Set10Frame1::
+; frame 1 of MetaSprites7FSet10; ends with $80 (E-0147)
+MetaSprites7FSet10Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
-MetaSprites7F_4008Set10Frame2::
+; frame 2 of MetaSprites7FSet10; ends with $80 (E-0147)
+MetaSprites7FSet10Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
-MetaSprites7F_4008Set10Frame3::
+; frame 3 of MetaSprites7FSet10; ends with $80 (E-0147)
+MetaSprites7FSet10Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet10; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set10Frame4::
+MetaSprites7FSet10Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set10; ends with $80 (E-0147)
-MetaSprites7F_4008Set10Frame5::
+; frame 5 of MetaSprites7FSet10; ends with $80 (E-0147)
+MetaSprites7FSet10Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 17 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 17 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set11::
-    dw MetaSprites7F_4008Set11Frame0 ; entry 0
-    dw MetaSprites7F_4008Set11Frame1 ; entry 1
-    dw MetaSprites7F_4008Set11Frame2 ; entry 2
-    dw MetaSprites7F_4008Set11Frame3 ; entry 3
-    dw MetaSprites7F_4008Set11Frame4 ; entry 4
-    dw MetaSprites7F_4008Set11Frame5 ; entry 5
+MetaSprites7FSet11::
+    dw MetaSprites7FSet11Frame0 ; entry 0
+    dw MetaSprites7FSet11Frame1 ; entry 1
+    dw MetaSprites7FSet11Frame2 ; entry 2
+    dw MetaSprites7FSet11Frame3 ; entry 3
+    dw MetaSprites7FSet11Frame4 ; entry 4
+    dw MetaSprites7FSet11Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet11; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set11Frame0::
+MetaSprites7FSet11Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
-MetaSprites7F_4008Set11Frame1::
+; frame 1 of MetaSprites7FSet11; ends with $80 (E-0147)
+MetaSprites7FSet11Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
-MetaSprites7F_4008Set11Frame2::
+; frame 2 of MetaSprites7FSet11; ends with $80 (E-0147)
+MetaSprites7FSet11Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
-MetaSprites7F_4008Set11Frame3::
+; frame 3 of MetaSprites7FSet11; ends with $80 (E-0147)
+MetaSprites7FSet11Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet11; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set11Frame4::
+MetaSprites7FSet11Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set11; ends with $80 (E-0147)
-MetaSprites7F_4008Set11Frame5::
+; frame 5 of MetaSprites7FSet11; ends with $80 (E-0147)
+MetaSprites7FSet11Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 18 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 18 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set12::
-    dw MetaSprites7F_4008Set12Frame0 ; entry 0
-    dw MetaSprites7F_4008Set12Frame1 ; entry 1
-    dw MetaSprites7F_4008Set12Frame2 ; entry 2
-    dw MetaSprites7F_4008Set12Frame3 ; entry 3
-    dw MetaSprites7F_4008Set12Frame4 ; entry 4
-    dw MetaSprites7F_4008Set12Frame5 ; entry 5
+MetaSprites7FSet12::
+    dw MetaSprites7FSet12Frame0 ; entry 0
+    dw MetaSprites7FSet12Frame1 ; entry 1
+    dw MetaSprites7FSet12Frame2 ; entry 2
+    dw MetaSprites7FSet12Frame3 ; entry 3
+    dw MetaSprites7FSet12Frame4 ; entry 4
+    dw MetaSprites7FSet12Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet12; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set12Frame0::
+MetaSprites7FSet12Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
-MetaSprites7F_4008Set12Frame1::
+; frame 1 of MetaSprites7FSet12; ends with $80 (E-0147)
+MetaSprites7FSet12Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
-MetaSprites7F_4008Set12Frame2::
+; frame 2 of MetaSprites7FSet12; ends with $80 (E-0147)
+MetaSprites7FSet12Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
-MetaSprites7F_4008Set12Frame3::
+; frame 3 of MetaSprites7FSet12; ends with $80 (E-0147)
+MetaSprites7FSet12Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet12; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set12Frame4::
+MetaSprites7FSet12Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set12; ends with $80 (E-0147)
-MetaSprites7F_4008Set12Frame5::
+; frame 5 of MetaSprites7FSet12; ends with $80 (E-0147)
+MetaSprites7FSet12Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 19 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 19 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set13::
-    dw MetaSprites7F_4008Set13Frame0 ; entry 0
-    dw MetaSprites7F_4008Set13Frame1 ; entry 1
-    dw MetaSprites7F_4008Set13Frame2 ; entry 2
-    dw MetaSprites7F_4008Set13Frame3 ; entry 3
-    dw MetaSprites7F_4008Set13Frame4 ; entry 4
-    dw MetaSprites7F_4008Set13Frame5 ; entry 5
+MetaSprites7FSet13::
+    dw MetaSprites7FSet13Frame0 ; entry 0
+    dw MetaSprites7FSet13Frame1 ; entry 1
+    dw MetaSprites7FSet13Frame2 ; entry 2
+    dw MetaSprites7FSet13Frame3 ; entry 3
+    dw MetaSprites7FSet13Frame4 ; entry 4
+    dw MetaSprites7FSet13Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet13; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set13Frame0::
+MetaSprites7FSet13Frame0::
     db $f0, $fa, $00, $00 ; entry 0
     db $f0, $02, $01, $00 ; entry 1
     db $f8, $fa, $02, $00 ; entry 2
     db $f8, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
-MetaSprites7F_4008Set13Frame1::
+; frame 1 of MetaSprites7FSet13; ends with $80 (E-0147)
+MetaSprites7FSet13Frame1::
     db $f0, $fa, $00, $00 ; entry 0
     db $f0, $02, $01, $00 ; entry 1
     db $f8, $02, $03, $00 ; entry 2
     db $f8, $fa, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
-MetaSprites7F_4008Set13Frame2::
+; frame 2 of MetaSprites7FSet13; ends with $80 (E-0147)
+MetaSprites7FSet13Frame2::
     db $f0, $f6, $05, $00 ; entry 0
     db $f0, $fe, $06, $00 ; entry 1
     db $f8, $f6, $07, $00 ; entry 2
     db $f8, $fe, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
-MetaSprites7F_4008Set13Frame3::
+; frame 3 of MetaSprites7FSet13; ends with $80 (E-0147)
+MetaSprites7FSet13Frame3::
     db $f0, $f6, $05, $00 ; entry 0
     db $f0, $fe, $06, $00 ; entry 1
     db $f8, $f6, $07, $00 ; entry 2
     db $f8, $fe, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet13; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set13Frame4::
+MetaSprites7FSet13Frame4::
     db $f0, $f6, $0a, $00 ; entry 0
     db $f0, $fe, $0b, $00 ; entry 1
     db $f8, $f6, $0c, $00 ; entry 2
     db $f8, $fe, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set13; ends with $80 (E-0147)
-MetaSprites7F_4008Set13Frame5::
+; frame 5 of MetaSprites7FSet13; ends with $80 (E-0147)
+MetaSprites7FSet13Frame5::
     db $f0, $f6, $0a, $00 ; entry 0
     db $f0, $fe, $0b, $00 ; entry 1
     db $f8, $f6, $0c, $00 ; entry 2
     db $f8, $fe, $0e, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 20 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 20 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set14::
-    dw MetaSprites7F_4008Set14Frame0 ; entry 0
-    dw MetaSprites7F_4008Set14Frame1 ; entry 1
-    dw MetaSprites7F_4008Set14Frame2 ; entry 2
-    dw MetaSprites7F_4008Set14Frame3 ; entry 3
-    dw MetaSprites7F_4008Set14Frame4 ; entry 4
-    dw MetaSprites7F_4008Set14Frame5 ; entry 5
+MetaSprites7FSet14::
+    dw MetaSprites7FSet14Frame0 ; entry 0
+    dw MetaSprites7FSet14Frame1 ; entry 1
+    dw MetaSprites7FSet14Frame2 ; entry 2
+    dw MetaSprites7FSet14Frame3 ; entry 3
+    dw MetaSprites7FSet14Frame4 ; entry 4
+    dw MetaSprites7FSet14Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet14; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set14Frame0::
+MetaSprites7FSet14Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
-MetaSprites7F_4008Set14Frame1::
+; frame 1 of MetaSprites7FSet14; ends with $80 (E-0147)
+MetaSprites7FSet14Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
-MetaSprites7F_4008Set14Frame2::
+; frame 2 of MetaSprites7FSet14; ends with $80 (E-0147)
+MetaSprites7FSet14Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
-MetaSprites7F_4008Set14Frame3::
+; frame 3 of MetaSprites7FSet14; ends with $80 (E-0147)
+MetaSprites7FSet14Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet14; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set14Frame4::
+MetaSprites7FSet14Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set14; ends with $80 (E-0147)
-MetaSprites7F_4008Set14Frame5::
+; frame 5 of MetaSprites7FSet14; ends with $80 (E-0147)
+MetaSprites7FSet14Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 21 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 21 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set15::
-    dw MetaSprites7F_4008Set15Frame0 ; entry 0
-    dw MetaSprites7F_4008Set15Frame1 ; entry 1
-    dw MetaSprites7F_4008Set15Frame2 ; entry 2
-    dw MetaSprites7F_4008Set15Frame3 ; entry 3
-    dw MetaSprites7F_4008Set15Frame4 ; entry 4
-    dw MetaSprites7F_4008Set15Frame5 ; entry 5
+MetaSprites7FSet15::
+    dw MetaSprites7FSet15Frame0 ; entry 0
+    dw MetaSprites7FSet15Frame1 ; entry 1
+    dw MetaSprites7FSet15Frame2 ; entry 2
+    dw MetaSprites7FSet15Frame3 ; entry 3
+    dw MetaSprites7FSet15Frame4 ; entry 4
+    dw MetaSprites7FSet15Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet15; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set15Frame0::
+MetaSprites7FSet15Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
-MetaSprites7F_4008Set15Frame1::
+; frame 1 of MetaSprites7FSet15; ends with $80 (E-0147)
+MetaSprites7FSet15Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
-MetaSprites7F_4008Set15Frame2::
+; frame 2 of MetaSprites7FSet15; ends with $80 (E-0147)
+MetaSprites7FSet15Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
-MetaSprites7F_4008Set15Frame3::
+; frame 3 of MetaSprites7FSet15; ends with $80 (E-0147)
+MetaSprites7FSet15Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet15; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set15Frame4::
+MetaSprites7FSet15Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set15; ends with $80 (E-0147)
-MetaSprites7F_4008Set15Frame5::
+; frame 5 of MetaSprites7FSet15; ends with $80 (E-0147)
+MetaSprites7FSet15Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 22 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 22 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set16::
-    dw MetaSprites7F_4008Set16Frame0 ; entry 0
-    dw MetaSprites7F_4008Set16Frame1 ; entry 1
-    dw MetaSprites7F_4008Set16Frame2 ; entry 2
-    dw MetaSprites7F_4008Set16Frame3 ; entry 3
-    dw MetaSprites7F_4008Set16Frame4 ; entry 4
-    dw MetaSprites7F_4008Set16Frame5 ; entry 5
+MetaSprites7FSet16::
+    dw MetaSprites7FSet16Frame0 ; entry 0
+    dw MetaSprites7FSet16Frame1 ; entry 1
+    dw MetaSprites7FSet16Frame2 ; entry 2
+    dw MetaSprites7FSet16Frame3 ; entry 3
+    dw MetaSprites7FSet16Frame4 ; entry 4
+    dw MetaSprites7FSet16Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet16; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set16Frame0::
+MetaSprites7FSet16Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
-MetaSprites7F_4008Set16Frame1::
+; frame 1 of MetaSprites7FSet16; ends with $80 (E-0147)
+MetaSprites7FSet16Frame1::
     db $f0, $ff, $00, $20 ; entry 0
     db $f0, $f7, $01, $20 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
-MetaSprites7F_4008Set16Frame2::
+; frame 2 of MetaSprites7FSet16; ends with $80 (E-0147)
+MetaSprites7FSet16Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
-MetaSprites7F_4008Set16Frame3::
+; frame 3 of MetaSprites7FSet16; ends with $80 (E-0147)
+MetaSprites7FSet16Frame3::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet16; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set16Frame4::
+MetaSprites7FSet16Frame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0d, $00 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set16; ends with $80 (E-0147)
-MetaSprites7F_4008Set16Frame5::
+; frame 5 of MetaSprites7FSet16; ends with $80 (E-0147)
+MetaSprites7FSet16Frame5::
     db $f0, $ff, $0c, $20 ; entry 0
     db $f0, $f7, $0d, $20 ; entry 1
     db $f8, $ff, $0e, $20 ; entry 2
     db $f8, $f7, $0f, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 23 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 23 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set17::
-    dw MetaSprites7F_4008Set17Frame0 ; entry 0
-    dw MetaSprites7F_4008Set17Frame1 ; entry 1
-    dw MetaSprites7F_4008Set17Frame2 ; entry 2
-    dw MetaSprites7F_4008Set17Frame3 ; entry 3
-    dw MetaSprites7F_4008Set17Frame4 ; entry 4
-    dw MetaSprites7F_4008Set17Frame5 ; entry 5
+MetaSprites7FSet17::
+    dw MetaSprites7FSet17Frame0 ; entry 0
+    dw MetaSprites7FSet17Frame1 ; entry 1
+    dw MetaSprites7FSet17Frame2 ; entry 2
+    dw MetaSprites7FSet17Frame3 ; entry 3
+    dw MetaSprites7FSet17Frame4 ; entry 4
+    dw MetaSprites7FSet17Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet17; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set17Frame0::
+MetaSprites7FSet17Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
-MetaSprites7F_4008Set17Frame1::
+; frame 1 of MetaSprites7FSet17; ends with $80 (E-0147)
+MetaSprites7FSet17Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
-MetaSprites7F_4008Set17Frame2::
+; frame 2 of MetaSprites7FSet17; ends with $80 (E-0147)
+MetaSprites7FSet17Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
-MetaSprites7F_4008Set17Frame3::
+; frame 3 of MetaSprites7FSet17; ends with $80 (E-0147)
+MetaSprites7FSet17Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet17; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set17Frame4::
+MetaSprites7FSet17Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set17; ends with $80 (E-0147)
-MetaSprites7F_4008Set17Frame5::
+; frame 5 of MetaSprites7FSet17; ends with $80 (E-0147)
+MetaSprites7FSet17Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 24 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 24 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set18::
-    dw MetaSprites7F_4008Set18Frame0 ; entry 0
-    dw MetaSprites7F_4008Set18Frame1 ; entry 1
-    dw MetaSprites7F_4008Set18Frame2 ; entry 2
-    dw MetaSprites7F_4008Set18Frame3 ; entry 3
-    dw MetaSprites7F_4008Set18Frame4 ; entry 4
-    dw MetaSprites7F_4008Set18Frame5 ; entry 5
+MetaSprites7FSet18::
+    dw MetaSprites7FSet18Frame0 ; entry 0
+    dw MetaSprites7FSet18Frame1 ; entry 1
+    dw MetaSprites7FSet18Frame2 ; entry 2
+    dw MetaSprites7FSet18Frame3 ; entry 3
+    dw MetaSprites7FSet18Frame4 ; entry 4
+    dw MetaSprites7FSet18Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet18; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set18Frame0::
+MetaSprites7FSet18Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
-MetaSprites7F_4008Set18Frame1::
+; frame 1 of MetaSprites7FSet18; ends with $80 (E-0147)
+MetaSprites7FSet18Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
-MetaSprites7F_4008Set18Frame2::
+; frame 2 of MetaSprites7FSet18; ends with $80 (E-0147)
+MetaSprites7FSet18Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
-MetaSprites7F_4008Set18Frame3::
+; frame 3 of MetaSprites7FSet18; ends with $80 (E-0147)
+MetaSprites7FSet18Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet18; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set18Frame4::
+MetaSprites7FSet18Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set18; ends with $80 (E-0147)
-MetaSprites7F_4008Set18Frame5::
+; frame 5 of MetaSprites7FSet18; ends with $80 (E-0147)
+MetaSprites7FSet18Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 25 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 25 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set19::
-    dw MetaSprites7F_4008Set19Frame0 ; entry 0
-    dw MetaSprites7F_4008Set19Frame1 ; entry 1
-    dw MetaSprites7F_4008Set19Frame2 ; entry 2
-    dw MetaSprites7F_4008Set19Frame3 ; entry 3
-    dw MetaSprites7F_4008Set19Frame4 ; entry 4
-    dw MetaSprites7F_4008Set19Frame5 ; entry 5
+MetaSprites7FSet19::
+    dw MetaSprites7FSet19Frame0 ; entry 0
+    dw MetaSprites7FSet19Frame1 ; entry 1
+    dw MetaSprites7FSet19Frame2 ; entry 2
+    dw MetaSprites7FSet19Frame3 ; entry 3
+    dw MetaSprites7FSet19Frame4 ; entry 4
+    dw MetaSprites7FSet19Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet19; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set19Frame0::
+MetaSprites7FSet19Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
-MetaSprites7F_4008Set19Frame1::
+; frame 1 of MetaSprites7FSet19; ends with $80 (E-0147)
+MetaSprites7FSet19Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
-MetaSprites7F_4008Set19Frame2::
+; frame 2 of MetaSprites7FSet19; ends with $80 (E-0147)
+MetaSprites7FSet19Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
-MetaSprites7F_4008Set19Frame3::
+; frame 3 of MetaSprites7FSet19; ends with $80 (E-0147)
+MetaSprites7FSet19Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet19; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set19Frame4::
+MetaSprites7FSet19Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set19; ends with $80 (E-0147)
-MetaSprites7F_4008Set19Frame5::
+; frame 5 of MetaSprites7FSet19; ends with $80 (E-0147)
+MetaSprites7FSet19Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 26 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 26 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1A::
-    dw MetaSprites7F_4008Set1AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1AFrame5 ; entry 5
+MetaSprites7FSet1A::
+    dw MetaSprites7FSet1AFrame0 ; entry 0
+    dw MetaSprites7FSet1AFrame1 ; entry 1
+    dw MetaSprites7FSet1AFrame2 ; entry 2
+    dw MetaSprites7FSet1AFrame3 ; entry 3
+    dw MetaSprites7FSet1AFrame4 ; entry 4
+    dw MetaSprites7FSet1AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1AFrame0::
+MetaSprites7FSet1AFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
-MetaSprites7F_4008Set1AFrame1::
+; frame 1 of MetaSprites7FSet1A; ends with $80 (E-0147)
+MetaSprites7FSet1AFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
-MetaSprites7F_4008Set1AFrame2::
+; frame 2 of MetaSprites7FSet1A; ends with $80 (E-0147)
+MetaSprites7FSet1AFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
-MetaSprites7F_4008Set1AFrame3::
+; frame 3 of MetaSprites7FSet1A; ends with $80 (E-0147)
+MetaSprites7FSet1AFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1AFrame4::
+MetaSprites7FSet1AFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1A; ends with $80 (E-0147)
-MetaSprites7F_4008Set1AFrame5::
+; frame 5 of MetaSprites7FSet1A; ends with $80 (E-0147)
+MetaSprites7FSet1AFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 27 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 27 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1B::
-    dw MetaSprites7F_4008Set1BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1BFrame5 ; entry 5
+MetaSprites7FSet1B::
+    dw MetaSprites7FSet1BFrame0 ; entry 0
+    dw MetaSprites7FSet1BFrame1 ; entry 1
+    dw MetaSprites7FSet1BFrame2 ; entry 2
+    dw MetaSprites7FSet1BFrame3 ; entry 3
+    dw MetaSprites7FSet1BFrame4 ; entry 4
+    dw MetaSprites7FSet1BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1BFrame0::
+MetaSprites7FSet1BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
-MetaSprites7F_4008Set1BFrame1::
+; frame 1 of MetaSprites7FSet1B; ends with $80 (E-0147)
+MetaSprites7FSet1BFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
-MetaSprites7F_4008Set1BFrame2::
+; frame 2 of MetaSprites7FSet1B; ends with $80 (E-0147)
+MetaSprites7FSet1BFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
-MetaSprites7F_4008Set1BFrame3::
+; frame 3 of MetaSprites7FSet1B; ends with $80 (E-0147)
+MetaSprites7FSet1BFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1BFrame4::
+MetaSprites7FSet1BFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1B; ends with $80 (E-0147)
-MetaSprites7F_4008Set1BFrame5::
+; frame 5 of MetaSprites7FSet1B; ends with $80 (E-0147)
+MetaSprites7FSet1BFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 28 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 28 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1C::
-    dw MetaSprites7F_4008Set1CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1CFrame5 ; entry 5
+MetaSprites7FSet1C::
+    dw MetaSprites7FSet1CFrame0 ; entry 0
+    dw MetaSprites7FSet1CFrame1 ; entry 1
+    dw MetaSprites7FSet1CFrame2 ; entry 2
+    dw MetaSprites7FSet1CFrame3 ; entry 3
+    dw MetaSprites7FSet1CFrame4 ; entry 4
+    dw MetaSprites7FSet1CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1CFrame0::
+MetaSprites7FSet1CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
-MetaSprites7F_4008Set1CFrame1::
+; frame 1 of MetaSprites7FSet1C; ends with $80 (E-0147)
+MetaSprites7FSet1CFrame1::
     db $f0, $ff, $00, $20 ; entry 0
     db $f0, $f7, $01, $20 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
-MetaSprites7F_4008Set1CFrame2::
+; frame 2 of MetaSprites7FSet1C; ends with $80 (E-0147)
+MetaSprites7FSet1CFrame2::
     db $f0, $f9, $04, $00 ; entry 0
     db $f0, $01, $05, $00 ; entry 1
     db $f8, $f9, $06, $00 ; entry 2
     db $f8, $01, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
-MetaSprites7F_4008Set1CFrame3::
+; frame 3 of MetaSprites7FSet1C; ends with $80 (E-0147)
+MetaSprites7FSet1CFrame3::
     db $f8, $f9, $0a, $00 ; entry 0
     db $f8, $01, $0b, $00 ; entry 1
     db $f0, $f9, $08, $00 ; entry 2
     db $f0, $01, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1CFrame4::
+MetaSprites7FSet1CFrame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0d, $00 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1C; ends with $80 (E-0147)
-MetaSprites7F_4008Set1CFrame5::
+; frame 5 of MetaSprites7FSet1C; ends with $80 (E-0147)
+MetaSprites7FSet1CFrame5::
     db $f0, $ff, $0c, $20 ; entry 0
     db $f0, $f7, $0d, $20 ; entry 1
     db $f8, $ff, $0e, $20 ; entry 2
     db $f8, $f7, $0f, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 29 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 29 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1D::
-    dw MetaSprites7F_4008Set1DFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1DFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1DFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1DFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1DFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1DFrame5 ; entry 5
+MetaSprites7FSet1D::
+    dw MetaSprites7FSet1DFrame0 ; entry 0
+    dw MetaSprites7FSet1DFrame1 ; entry 1
+    dw MetaSprites7FSet1DFrame2 ; entry 2
+    dw MetaSprites7FSet1DFrame3 ; entry 3
+    dw MetaSprites7FSet1DFrame4 ; entry 4
+    dw MetaSprites7FSet1DFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1DFrame0::
+MetaSprites7FSet1DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
-MetaSprites7F_4008Set1DFrame1::
+; frame 1 of MetaSprites7FSet1D; ends with $80 (E-0147)
+MetaSprites7FSet1DFrame1::
     db $f0, $00, $00, $20 ; entry 0
     db $f0, $f8, $01, $20 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
-MetaSprites7F_4008Set1DFrame2::
+; frame 2 of MetaSprites7FSet1D; ends with $80 (E-0147)
+MetaSprites7FSet1DFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
-MetaSprites7F_4008Set1DFrame3::
+; frame 3 of MetaSprites7FSet1D; ends with $80 (E-0147)
+MetaSprites7FSet1DFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1DFrame4::
+MetaSprites7FSet1DFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1D; ends with $80 (E-0147)
-MetaSprites7F_4008Set1DFrame5::
+; frame 5 of MetaSprites7FSet1D; ends with $80 (E-0147)
+MetaSprites7FSet1DFrame5::
     db $f0, $00, $0a, $20 ; entry 0
     db $f0, $f8, $0b, $20 ; entry 1
     db $f8, $00, $0c, $20 ; entry 2
     db $f8, $f8, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 30 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 30 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1E::
-    dw MetaSprites7F_4008Set1EFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1EFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1EFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1EFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1EFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1EFrame5 ; entry 5
+MetaSprites7FSet1E::
+    dw MetaSprites7FSet1EFrame0 ; entry 0
+    dw MetaSprites7FSet1EFrame1 ; entry 1
+    dw MetaSprites7FSet1EFrame2 ; entry 2
+    dw MetaSprites7FSet1EFrame3 ; entry 3
+    dw MetaSprites7FSet1EFrame4 ; entry 4
+    dw MetaSprites7FSet1EFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1EFrame0::
+MetaSprites7FSet1EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
-MetaSprites7F_4008Set1EFrame1::
+; frame 1 of MetaSprites7FSet1E; ends with $80 (E-0147)
+MetaSprites7FSet1EFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
-MetaSprites7F_4008Set1EFrame2::
+; frame 2 of MetaSprites7FSet1E; ends with $80 (E-0147)
+MetaSprites7FSet1EFrame2::
     db $f0, $f8, $06, $00 ; entry 0
     db $f8, $f8, $08, $00 ; entry 1
     db $f8, $00, $09, $00 ; entry 2
     db $f0, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
-MetaSprites7F_4008Set1EFrame3::
+; frame 3 of MetaSprites7FSet1E; ends with $80 (E-0147)
+MetaSprites7FSet1EFrame3::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $00, $0a, $00 ; entry 2
     db $f8, $f8, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1EFrame4::
+MetaSprites7FSet1EFrame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f8, $f8, $0c, $00 ; entry 1
     db $f8, $00, $0d, $00 ; entry 2
     db $f0, $ff, $0b, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1E; ends with $80 (E-0147)
-MetaSprites7F_4008Set1EFrame5::
+; frame 5 of MetaSprites7FSet1E; ends with $80 (E-0147)
+MetaSprites7FSet1EFrame5::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f8, $f8, $0e, $00 ; entry 1
     db $f8, $00, $0f, $00 ; entry 2
     db $f0, $ff, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 31 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 31 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set1F::
-    dw MetaSprites7F_4008Set1FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set1FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set1FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set1FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set1FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set1FFrame5 ; entry 5
+MetaSprites7FSet1F::
+    dw MetaSprites7FSet1FFrame0 ; entry 0
+    dw MetaSprites7FSet1FFrame1 ; entry 1
+    dw MetaSprites7FSet1FFrame2 ; entry 2
+    dw MetaSprites7FSet1FFrame3 ; entry 3
+    dw MetaSprites7FSet1FFrame4 ; entry 4
+    dw MetaSprites7FSet1FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet1F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1FFrame0::
+MetaSprites7FSet1FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
-MetaSprites7F_4008Set1FFrame1::
+; frame 1 of MetaSprites7FSet1F; ends with $80 (E-0147)
+MetaSprites7FSet1FFrame1::
     db $f0, $f7, $00, $00 ; entry 0
     db $f0, $ff, $01, $00 ; entry 1
     db $f8, $fe, $02, $20 ; entry 2
     db $f8, $f6, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
-MetaSprites7F_4008Set1FFrame2::
+; frame 2 of MetaSprites7FSet1F; ends with $80 (E-0147)
+MetaSprites7FSet1FFrame2::
     db $f0, $f7, $04, $00 ; entry 0
     db $f8, $f7, $06, $00 ; entry 1
     db $f8, $ff, $07, $00 ; entry 2
     db $f0, $ff, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
-MetaSprites7F_4008Set1FFrame3::
+; frame 3 of MetaSprites7FSet1F; ends with $80 (E-0147)
+MetaSprites7FSet1FFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet1F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set1FFrame4::
+MetaSprites7FSet1FFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f8, $f8, $0c, $00 ; entry 1
     db $f8, $00, $0d, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set1F; ends with $80 (E-0147)
-MetaSprites7F_4008Set1FFrame5::
+; frame 5 of MetaSprites7FSet1F; ends with $80 (E-0147)
+MetaSprites7FSet1FFrame5::
     db $f0, $f9, $0a, $00 ; entry 0
     db $f8, $00, $0c, $20 ; entry 1
     db $f8, $f8, $0d, $20 ; entry 2
     db $f0, $01, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 32 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 32 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set20::
-    dw MetaSprites7F_4008Set20Frame0 ; entry 0
-    dw MetaSprites7F_4008Set20Frame1 ; entry 1
-    dw MetaSprites7F_4008Set20Frame2 ; entry 2
-    dw MetaSprites7F_4008Set20Frame3 ; entry 3
-    dw MetaSprites7F_4008Set20Frame4 ; entry 4
-    dw MetaSprites7F_4008Set20Frame5 ; entry 5
+MetaSprites7FSet20::
+    dw MetaSprites7FSet20Frame0 ; entry 0
+    dw MetaSprites7FSet20Frame1 ; entry 1
+    dw MetaSprites7FSet20Frame2 ; entry 2
+    dw MetaSprites7FSet20Frame3 ; entry 3
+    dw MetaSprites7FSet20Frame4 ; entry 4
+    dw MetaSprites7FSet20Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet20; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set20Frame0::
+MetaSprites7FSet20Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
-MetaSprites7F_4008Set20Frame1::
+; frame 1 of MetaSprites7FSet20; ends with $80 (E-0147)
+MetaSprites7FSet20Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
-MetaSprites7F_4008Set20Frame2::
+; frame 2 of MetaSprites7FSet20; ends with $80 (E-0147)
+MetaSprites7FSet20Frame2::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
-MetaSprites7F_4008Set20Frame3::
+; frame 3 of MetaSprites7FSet20; ends with $80 (E-0147)
+MetaSprites7FSet20Frame3::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $0a, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet20; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set20Frame4::
+MetaSprites7FSet20Frame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f8, $f8, $0c, $00 ; entry 1
     db $f8, $00, $0d, $00 ; entry 2
     db $f0, $ff, $0b, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set20; ends with $80 (E-0147)
-MetaSprites7F_4008Set20Frame5::
+; frame 5 of MetaSprites7FSet20; ends with $80 (E-0147)
+MetaSprites7FSet20Frame5::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f0, $ff, $0b, $20 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 33 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 33 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set21::
-    dw MetaSprites7F_4008Set21Frame0 ; entry 0
-    dw MetaSprites7F_4008Set21Frame1 ; entry 1
-    dw MetaSprites7F_4008Set21Frame2 ; entry 2
-    dw MetaSprites7F_4008Set21Frame3 ; entry 3
-    dw MetaSprites7F_4008Set21Frame4 ; entry 4
-    dw MetaSprites7F_4008Set21Frame5 ; entry 5
+MetaSprites7FSet21::
+    dw MetaSprites7FSet21Frame0 ; entry 0
+    dw MetaSprites7FSet21Frame1 ; entry 1
+    dw MetaSprites7FSet21Frame2 ; entry 2
+    dw MetaSprites7FSet21Frame3 ; entry 3
+    dw MetaSprites7FSet21Frame4 ; entry 4
+    dw MetaSprites7FSet21Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set21Frame0::
+MetaSprites7FSet21Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
-MetaSprites7F_4008Set21Frame1::
+; frame 1 of MetaSprites7FSet21; ends with $80 (E-0147)
+MetaSprites7FSet21Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
-MetaSprites7F_4008Set21Frame2::
+; frame 2 of MetaSprites7FSet21; ends with $80 (E-0147)
+MetaSprites7FSet21Frame2::
     db $f0, $f7, $04, $00 ; entry 0
     db $f0, $ff, $05, $00 ; entry 1
     db $f8, $f7, $06, $00 ; entry 2
     db $f8, $ff, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
-MetaSprites7F_4008Set21Frame3::
+; frame 3 of MetaSprites7FSet21; ends with $80 (E-0147)
+MetaSprites7FSet21Frame3::
     db $f8, $f7, $08, $00 ; entry 0
     db $f8, $ff, $09, $00 ; entry 1
     db $f0, $f7, $04, $00 ; entry 2
     db $f0, $ff, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set21Frame4::
+MetaSprites7FSet21Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set21; ends with $80 (E-0147)
-MetaSprites7F_4008Set21Frame5::
+; frame 5 of MetaSprites7FSet21; ends with $80 (E-0147)
+MetaSprites7FSet21Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 34 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 34 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set22::
-    dw MetaSprites7F_4008Set22Frame0 ; entry 0
-    dw MetaSprites7F_4008Set22Frame1 ; entry 1
-    dw MetaSprites7F_4008Set22Frame2 ; entry 2
-    dw MetaSprites7F_4008Set22Frame3 ; entry 3
-    dw MetaSprites7F_4008Set22Frame4 ; entry 4
-    dw MetaSprites7F_4008Set22Frame5 ; entry 5
+MetaSprites7FSet22::
+    dw MetaSprites7FSet22Frame0 ; entry 0
+    dw MetaSprites7FSet22Frame1 ; entry 1
+    dw MetaSprites7FSet22Frame2 ; entry 2
+    dw MetaSprites7FSet22Frame3 ; entry 3
+    dw MetaSprites7FSet22Frame4 ; entry 4
+    dw MetaSprites7FSet22Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet22; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set22Frame0::
+MetaSprites7FSet22Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
-MetaSprites7F_4008Set22Frame1::
+; frame 1 of MetaSprites7FSet22; ends with $80 (E-0147)
+MetaSprites7FSet22Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
-MetaSprites7F_4008Set22Frame2::
+; frame 2 of MetaSprites7FSet22; ends with $80 (E-0147)
+MetaSprites7FSet22Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
-MetaSprites7F_4008Set22Frame3::
+; frame 3 of MetaSprites7FSet22; ends with $80 (E-0147)
+MetaSprites7FSet22Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet22; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set22Frame4::
+MetaSprites7FSet22Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set22; ends with $80 (E-0147)
-MetaSprites7F_4008Set22Frame5::
+; frame 5 of MetaSprites7FSet22; ends with $80 (E-0147)
+MetaSprites7FSet22Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $00, $0c, $20 ; entry 2
     db $f8, $f8, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 35 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 35 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set23::
-    dw MetaSprites7F_4008Set23Frame0 ; entry 0
-    dw MetaSprites7F_4008Set23Frame1 ; entry 1
-    dw MetaSprites7F_4008Set23Frame2 ; entry 2
-    dw MetaSprites7F_4008Set23Frame3 ; entry 3
-    dw MetaSprites7F_4008Set23Frame4 ; entry 4
-    dw MetaSprites7F_4008Set23Frame5 ; entry 5
+MetaSprites7FSet23::
+    dw MetaSprites7FSet23Frame0 ; entry 0
+    dw MetaSprites7FSet23Frame1 ; entry 1
+    dw MetaSprites7FSet23Frame2 ; entry 2
+    dw MetaSprites7FSet23Frame3 ; entry 3
+    dw MetaSprites7FSet23Frame4 ; entry 4
+    dw MetaSprites7FSet23Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set23Frame0::
+MetaSprites7FSet23Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
-MetaSprites7F_4008Set23Frame1::
+; frame 1 of MetaSprites7FSet23; ends with $80 (E-0147)
+MetaSprites7FSet23Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
-MetaSprites7F_4008Set23Frame2::
+; frame 2 of MetaSprites7FSet23; ends with $80 (E-0147)
+MetaSprites7FSet23Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
-MetaSprites7F_4008Set23Frame3::
+; frame 3 of MetaSprites7FSet23; ends with $80 (E-0147)
+MetaSprites7FSet23Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set23Frame4::
+MetaSprites7FSet23Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set23; ends with $80 (E-0147)
-MetaSprites7F_4008Set23Frame5::
+; frame 5 of MetaSprites7FSet23; ends with $80 (E-0147)
+MetaSprites7FSet23Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $00, $0c, $20 ; entry 2
     db $f8, $f8, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 36 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 36 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set24::
-    dw MetaSprites7F_4008Set24Frame0 ; entry 0
-    dw MetaSprites7F_4008Set24Frame1 ; entry 1
-    dw MetaSprites7F_4008Set24Frame2 ; entry 2
-    dw MetaSprites7F_4008Set24Frame3 ; entry 3
-    dw MetaSprites7F_4008Set24Frame4 ; entry 4
-    dw MetaSprites7F_4008Set24Frame5 ; entry 5
+MetaSprites7FSet24::
+    dw MetaSprites7FSet24Frame0 ; entry 0
+    dw MetaSprites7FSet24Frame1 ; entry 1
+    dw MetaSprites7FSet24Frame2 ; entry 2
+    dw MetaSprites7FSet24Frame3 ; entry 3
+    dw MetaSprites7FSet24Frame4 ; entry 4
+    dw MetaSprites7FSet24Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet24; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set24Frame0::
+MetaSprites7FSet24Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
-MetaSprites7F_4008Set24Frame1::
+; frame 1 of MetaSprites7FSet24; ends with $80 (E-0147)
+MetaSprites7FSet24Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
-MetaSprites7F_4008Set24Frame2::
+; frame 2 of MetaSprites7FSet24; ends with $80 (E-0147)
+MetaSprites7FSet24Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
-MetaSprites7F_4008Set24Frame3::
+; frame 3 of MetaSprites7FSet24; ends with $80 (E-0147)
+MetaSprites7FSet24Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet24; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set24Frame4::
+MetaSprites7FSet24Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set24; ends with $80 (E-0147)
-MetaSprites7F_4008Set24Frame5::
+; frame 5 of MetaSprites7FSet24; ends with $80 (E-0147)
+MetaSprites7FSet24Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 37 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 37 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set25::
-    dw MetaSprites7F_4008Set25Frame0 ; entry 0
-    dw MetaSprites7F_4008Set25Frame1 ; entry 1
-    dw MetaSprites7F_4008Set25Frame2 ; entry 2
-    dw MetaSprites7F_4008Set25Frame3 ; entry 3
-    dw MetaSprites7F_4008Set25Frame4 ; entry 4
-    dw MetaSprites7F_4008Set25Frame5 ; entry 5
+MetaSprites7FSet25::
+    dw MetaSprites7FSet25Frame0 ; entry 0
+    dw MetaSprites7FSet25Frame1 ; entry 1
+    dw MetaSprites7FSet25Frame2 ; entry 2
+    dw MetaSprites7FSet25Frame3 ; entry 3
+    dw MetaSprites7FSet25Frame4 ; entry 4
+    dw MetaSprites7FSet25Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set25Frame0::
+MetaSprites7FSet25Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
-MetaSprites7F_4008Set25Frame1::
+; frame 1 of MetaSprites7FSet25; ends with $80 (E-0147)
+MetaSprites7FSet25Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
-MetaSprites7F_4008Set25Frame2::
+; frame 2 of MetaSprites7FSet25; ends with $80 (E-0147)
+MetaSprites7FSet25Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
-MetaSprites7F_4008Set25Frame3::
+; frame 3 of MetaSprites7FSet25; ends with $80 (E-0147)
+MetaSprites7FSet25Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set25Frame4::
+MetaSprites7FSet25Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set25; ends with $80 (E-0147)
-MetaSprites7F_4008Set25Frame5::
+; frame 5 of MetaSprites7FSet25; ends with $80 (E-0147)
+MetaSprites7FSet25Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 38 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 38 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set26::
-    dw MetaSprites7F_4008Set26Frame0 ; entry 0
-    dw MetaSprites7F_4008Set26Frame1 ; entry 1
-    dw MetaSprites7F_4008Set26Frame2 ; entry 2
-    dw MetaSprites7F_4008Set26Frame3 ; entry 3
-    dw MetaSprites7F_4008Set26Frame4 ; entry 4
-    dw MetaSprites7F_4008Set26Frame5 ; entry 5
+MetaSprites7FSet26::
+    dw MetaSprites7FSet26Frame0 ; entry 0
+    dw MetaSprites7FSet26Frame1 ; entry 1
+    dw MetaSprites7FSet26Frame2 ; entry 2
+    dw MetaSprites7FSet26Frame3 ; entry 3
+    dw MetaSprites7FSet26Frame4 ; entry 4
+    dw MetaSprites7FSet26Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set26Frame0::
+MetaSprites7FSet26Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
-MetaSprites7F_4008Set26Frame1::
+; frame 1 of MetaSprites7FSet26; ends with $80 (E-0147)
+MetaSprites7FSet26Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
-MetaSprites7F_4008Set26Frame2::
+; frame 2 of MetaSprites7FSet26; ends with $80 (E-0147)
+MetaSprites7FSet26Frame2::
     db $f0, $f7, $04, $00 ; entry 0
     db $f0, $ff, $05, $00 ; entry 1
     db $f8, $f7, $06, $00 ; entry 2
     db $f8, $ff, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
-MetaSprites7F_4008Set26Frame3::
+; frame 3 of MetaSprites7FSet26; ends with $80 (E-0147)
+MetaSprites7FSet26Frame3::
     db $f8, $f7, $08, $00 ; entry 0
     db $f8, $ff, $09, $00 ; entry 1
     db $f0, $f7, $04, $00 ; entry 2
     db $f0, $ff, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set26Frame4::
+MetaSprites7FSet26Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set26; ends with $80 (E-0147)
-MetaSprites7F_4008Set26Frame5::
+; frame 5 of MetaSprites7FSet26; ends with $80 (E-0147)
+MetaSprites7FSet26Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 39 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 39 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set27::
-    dw MetaSprites7F_4008Set27Frame0 ; entry 0
-    dw MetaSprites7F_4008Set27Frame1 ; entry 1
-    dw MetaSprites7F_4008Set27Frame2 ; entry 2
-    dw MetaSprites7F_4008Set27Frame3 ; entry 3
-    dw MetaSprites7F_4008Set27Frame4 ; entry 4
-    dw MetaSprites7F_4008Set27Frame5 ; entry 5
+MetaSprites7FSet27::
+    dw MetaSprites7FSet27Frame0 ; entry 0
+    dw MetaSprites7FSet27Frame1 ; entry 1
+    dw MetaSprites7FSet27Frame2 ; entry 2
+    dw MetaSprites7FSet27Frame3 ; entry 3
+    dw MetaSprites7FSet27Frame4 ; entry 4
+    dw MetaSprites7FSet27Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set27Frame0::
+MetaSprites7FSet27Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
-MetaSprites7F_4008Set27Frame1::
+; frame 1 of MetaSprites7FSet27; ends with $80 (E-0147)
+MetaSprites7FSet27Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
-MetaSprites7F_4008Set27Frame2::
+; frame 2 of MetaSprites7FSet27; ends with $80 (E-0147)
+MetaSprites7FSet27Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
-MetaSprites7F_4008Set27Frame3::
+; frame 3 of MetaSprites7FSet27; ends with $80 (E-0147)
+MetaSprites7FSet27Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet27; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set27Frame4::
+MetaSprites7FSet27Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set27; ends with $80 (E-0147)
-MetaSprites7F_4008Set27Frame5::
+; frame 5 of MetaSprites7FSet27; ends with $80 (E-0147)
+MetaSprites7FSet27Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 40 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 40 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set28::
-    dw MetaSprites7F_4008Set28Frame0 ; entry 0
-    dw MetaSprites7F_4008Set28Frame1 ; entry 1
-    dw MetaSprites7F_4008Set28Frame2 ; entry 2
-    dw MetaSprites7F_4008Set28Frame3 ; entry 3
-    dw MetaSprites7F_4008Set28Frame4 ; entry 4
-    dw MetaSprites7F_4008Set28Frame5 ; entry 5
+MetaSprites7FSet28::
+    dw MetaSprites7FSet28Frame0 ; entry 0
+    dw MetaSprites7FSet28Frame1 ; entry 1
+    dw MetaSprites7FSet28Frame2 ; entry 2
+    dw MetaSprites7FSet28Frame3 ; entry 3
+    dw MetaSprites7FSet28Frame4 ; entry 4
+    dw MetaSprites7FSet28Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet28; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set28Frame0::
+MetaSprites7FSet28Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
-MetaSprites7F_4008Set28Frame1::
+; frame 1 of MetaSprites7FSet28; ends with $80 (E-0147)
+MetaSprites7FSet28Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
-MetaSprites7F_4008Set28Frame2::
+; frame 2 of MetaSprites7FSet28; ends with $80 (E-0147)
+MetaSprites7FSet28Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
-MetaSprites7F_4008Set28Frame3::
+; frame 3 of MetaSprites7FSet28; ends with $80 (E-0147)
+MetaSprites7FSet28Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet28; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set28Frame4::
+MetaSprites7FSet28Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set28; ends with $80 (E-0147)
-MetaSprites7F_4008Set28Frame5::
+; frame 5 of MetaSprites7FSet28; ends with $80 (E-0147)
+MetaSprites7FSet28Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 41 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 41 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set29::
-    dw MetaSprites7F_4008Set29Frame0 ; entry 0
-    dw MetaSprites7F_4008Set29Frame1 ; entry 1
-    dw MetaSprites7F_4008Set29Frame2 ; entry 2
-    dw MetaSprites7F_4008Set29Frame3 ; entry 3
-    dw MetaSprites7F_4008Set29Frame4 ; entry 4
-    dw MetaSprites7F_4008Set29Frame5 ; entry 5
+MetaSprites7FSet29::
+    dw MetaSprites7FSet29Frame0 ; entry 0
+    dw MetaSprites7FSet29Frame1 ; entry 1
+    dw MetaSprites7FSet29Frame2 ; entry 2
+    dw MetaSprites7FSet29Frame3 ; entry 3
+    dw MetaSprites7FSet29Frame4 ; entry 4
+    dw MetaSprites7FSet29Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set29Frame0::
+MetaSprites7FSet29Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
-MetaSprites7F_4008Set29Frame1::
+; frame 1 of MetaSprites7FSet29; ends with $80 (E-0147)
+MetaSprites7FSet29Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
-MetaSprites7F_4008Set29Frame2::
+; frame 2 of MetaSprites7FSet29; ends with $80 (E-0147)
+MetaSprites7FSet29Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
-MetaSprites7F_4008Set29Frame3::
+; frame 3 of MetaSprites7FSet29; ends with $80 (E-0147)
+MetaSprites7FSet29Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set29Frame4::
+MetaSprites7FSet29Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set29; ends with $80 (E-0147)
-MetaSprites7F_4008Set29Frame5::
+; frame 5 of MetaSprites7FSet29; ends with $80 (E-0147)
+MetaSprites7FSet29Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 42 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 42 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2A::
-    dw MetaSprites7F_4008Set2AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2AFrame5 ; entry 5
+MetaSprites7FSet2A::
+    dw MetaSprites7FSet2AFrame0 ; entry 0
+    dw MetaSprites7FSet2AFrame1 ; entry 1
+    dw MetaSprites7FSet2AFrame2 ; entry 2
+    dw MetaSprites7FSet2AFrame3 ; entry 3
+    dw MetaSprites7FSet2AFrame4 ; entry 4
+    dw MetaSprites7FSet2AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2AFrame0::
+MetaSprites7FSet2AFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
-MetaSprites7F_4008Set2AFrame1::
+; frame 1 of MetaSprites7FSet2A; ends with $80 (E-0147)
+MetaSprites7FSet2AFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
-MetaSprites7F_4008Set2AFrame2::
+; frame 2 of MetaSprites7FSet2A; ends with $80 (E-0147)
+MetaSprites7FSet2AFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
-MetaSprites7F_4008Set2AFrame3::
+; frame 3 of MetaSprites7FSet2A; ends with $80 (E-0147)
+MetaSprites7FSet2AFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2AFrame4::
+MetaSprites7FSet2AFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2A; ends with $80 (E-0147)
-MetaSprites7F_4008Set2AFrame5::
+; frame 5 of MetaSprites7FSet2A; ends with $80 (E-0147)
+MetaSprites7FSet2AFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 43 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 43 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2B::
-    dw MetaSprites7F_4008Set2BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2BFrame5 ; entry 5
+MetaSprites7FSet2B::
+    dw MetaSprites7FSet2BFrame0 ; entry 0
+    dw MetaSprites7FSet2BFrame1 ; entry 1
+    dw MetaSprites7FSet2BFrame2 ; entry 2
+    dw MetaSprites7FSet2BFrame3 ; entry 3
+    dw MetaSprites7FSet2BFrame4 ; entry 4
+    dw MetaSprites7FSet2BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2BFrame0::
+MetaSprites7FSet2BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
-MetaSprites7F_4008Set2BFrame1::
+; frame 1 of MetaSprites7FSet2B; ends with $80 (E-0147)
+MetaSprites7FSet2BFrame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
-MetaSprites7F_4008Set2BFrame2::
+; frame 2 of MetaSprites7FSet2B; ends with $80 (E-0147)
+MetaSprites7FSet2BFrame2::
     db $f0, $f8, $05, $00 ; entry 0
     db $f0, $00, $06, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
-MetaSprites7F_4008Set2BFrame3::
+; frame 3 of MetaSprites7FSet2B; ends with $80 (E-0147)
+MetaSprites7FSet2BFrame3::
     db $f1, $f8, $05, $00 ; entry 0
     db $f1, $00, $06, $00 ; entry 1
     db $f9, $00, $08, $00 ; entry 2
     db $f9, $f8, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2BFrame4::
+MetaSprites7FSet2BFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2B; ends with $80 (E-0147)
-MetaSprites7F_4008Set2BFrame5::
+; frame 5 of MetaSprites7FSet2B; ends with $80 (E-0147)
+MetaSprites7FSet2BFrame5::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $00, $0e, $00 ; entry 2
     db $f9, $f8, $0c, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 44 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 44 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2C::
-    dw MetaSprites7F_4008Set2CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2CFrame5 ; entry 5
+MetaSprites7FSet2C::
+    dw MetaSprites7FSet2CFrame0 ; entry 0
+    dw MetaSprites7FSet2CFrame1 ; entry 1
+    dw MetaSprites7FSet2CFrame2 ; entry 2
+    dw MetaSprites7FSet2CFrame3 ; entry 3
+    dw MetaSprites7FSet2CFrame4 ; entry 4
+    dw MetaSprites7FSet2CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2CFrame0::
+MetaSprites7FSet2CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
-MetaSprites7F_4008Set2CFrame1::
+; frame 1 of MetaSprites7FSet2C; ends with $80 (E-0147)
+MetaSprites7FSet2CFrame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
-MetaSprites7F_4008Set2CFrame2::
+; frame 2 of MetaSprites7FSet2C; ends with $80 (E-0147)
+MetaSprites7FSet2CFrame2::
     db $f0, $f8, $05, $00 ; entry 0
     db $f0, $00, $06, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
-MetaSprites7F_4008Set2CFrame3::
+; frame 3 of MetaSprites7FSet2C; ends with $80 (E-0147)
+MetaSprites7FSet2CFrame3::
     db $f1, $f8, $05, $00 ; entry 0
     db $f1, $00, $06, $00 ; entry 1
     db $f9, $00, $08, $00 ; entry 2
     db $f9, $f8, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2CFrame4::
+MetaSprites7FSet2CFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $fd, $0a, $20 ; entry 1
     db $f8, $f8, $0b, $00 ; entry 2
     db $f8, $00, $0c, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2C; ends with $80 (E-0147)
-MetaSprites7F_4008Set2CFrame5::
+; frame 5 of MetaSprites7FSet2C; ends with $80 (E-0147)
+MetaSprites7FSet2CFrame5::
     db $f9, $f8, $0e, $00 ; entry 0
     db $f9, $00, $0f, $00 ; entry 1
     db $f1, $f8, $0d, $00 ; entry 2
     db $f1, $fd, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 45 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 45 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2D::
-    dw MetaSprites7F_4008Set2DFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2DFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2DFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2DFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2DFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2DFrame5 ; entry 5
+MetaSprites7FSet2D::
+    dw MetaSprites7FSet2DFrame0 ; entry 0
+    dw MetaSprites7FSet2DFrame1 ; entry 1
+    dw MetaSprites7FSet2DFrame2 ; entry 2
+    dw MetaSprites7FSet2DFrame3 ; entry 3
+    dw MetaSprites7FSet2DFrame4 ; entry 4
+    dw MetaSprites7FSet2DFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2DFrame0::
+MetaSprites7FSet2DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
-MetaSprites7F_4008Set2DFrame1::
+; frame 1 of MetaSprites7FSet2D; ends with $80 (E-0147)
+MetaSprites7FSet2DFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
-MetaSprites7F_4008Set2DFrame2::
+; frame 2 of MetaSprites7FSet2D; ends with $80 (E-0147)
+MetaSprites7FSet2DFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
-MetaSprites7F_4008Set2DFrame3::
+; frame 3 of MetaSprites7FSet2D; ends with $80 (E-0147)
+MetaSprites7FSet2DFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2DFrame4::
+MetaSprites7FSet2DFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2D; ends with $80 (E-0147)
-MetaSprites7F_4008Set2DFrame5::
+; frame 5 of MetaSprites7FSet2D; ends with $80 (E-0147)
+MetaSprites7FSet2DFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 46 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 46 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2E::
-    dw MetaSprites7F_4008Set2EFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2EFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2EFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2EFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2EFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2EFrame5 ; entry 5
+MetaSprites7FSet2E::
+    dw MetaSprites7FSet2EFrame0 ; entry 0
+    dw MetaSprites7FSet2EFrame1 ; entry 1
+    dw MetaSprites7FSet2EFrame2 ; entry 2
+    dw MetaSprites7FSet2EFrame3 ; entry 3
+    dw MetaSprites7FSet2EFrame4 ; entry 4
+    dw MetaSprites7FSet2EFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2EFrame0::
+MetaSprites7FSet2EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
-MetaSprites7F_4008Set2EFrame1::
+; frame 1 of MetaSprites7FSet2E; ends with $80 (E-0147)
+MetaSprites7FSet2EFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
-MetaSprites7F_4008Set2EFrame2::
+; frame 2 of MetaSprites7FSet2E; ends with $80 (E-0147)
+MetaSprites7FSet2EFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
-MetaSprites7F_4008Set2EFrame3::
+; frame 3 of MetaSprites7FSet2E; ends with $80 (E-0147)
+MetaSprites7FSet2EFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2EFrame4::
+MetaSprites7FSet2EFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2E; ends with $80 (E-0147)
-MetaSprites7F_4008Set2EFrame5::
+; frame 5 of MetaSprites7FSet2E; ends with $80 (E-0147)
+MetaSprites7FSet2EFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 47 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 47 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set2F::
-    dw MetaSprites7F_4008Set2FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set2FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set2FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set2FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set2FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set2FFrame5 ; entry 5
+MetaSprites7FSet2F::
+    dw MetaSprites7FSet2FFrame0 ; entry 0
+    dw MetaSprites7FSet2FFrame1 ; entry 1
+    dw MetaSprites7FSet2FFrame2 ; entry 2
+    dw MetaSprites7FSet2FFrame3 ; entry 3
+    dw MetaSprites7FSet2FFrame4 ; entry 4
+    dw MetaSprites7FSet2FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2FFrame0::
+MetaSprites7FSet2FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
-MetaSprites7F_4008Set2FFrame1::
+; frame 1 of MetaSprites7FSet2F; ends with $80 (E-0147)
+MetaSprites7FSet2FFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
-MetaSprites7F_4008Set2FFrame2::
+; frame 2 of MetaSprites7FSet2F; ends with $80 (E-0147)
+MetaSprites7FSet2FFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
-MetaSprites7F_4008Set2FFrame3::
+; frame 3 of MetaSprites7FSet2F; ends with $80 (E-0147)
+MetaSprites7FSet2FFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet2F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set2FFrame4::
+MetaSprites7FSet2FFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set2F; ends with $80 (E-0147)
-MetaSprites7F_4008Set2FFrame5::
+; frame 5 of MetaSprites7FSet2F; ends with $80 (E-0147)
+MetaSprites7FSet2FFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 48 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 48 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set30::
-    dw MetaSprites7F_4008Set30Frame0 ; entry 0
-    dw MetaSprites7F_4008Set30Frame1 ; entry 1
-    dw MetaSprites7F_4008Set30Frame2 ; entry 2
-    dw MetaSprites7F_4008Set30Frame3 ; entry 3
-    dw MetaSprites7F_4008Set30Frame4 ; entry 4
-    dw MetaSprites7F_4008Set30Frame5 ; entry 5
+MetaSprites7FSet30::
+    dw MetaSprites7FSet30Frame0 ; entry 0
+    dw MetaSprites7FSet30Frame1 ; entry 1
+    dw MetaSprites7FSet30Frame2 ; entry 2
+    dw MetaSprites7FSet30Frame3 ; entry 3
+    dw MetaSprites7FSet30Frame4 ; entry 4
+    dw MetaSprites7FSet30Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set30Frame0::
+MetaSprites7FSet30Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
-MetaSprites7F_4008Set30Frame1::
+; frame 1 of MetaSprites7FSet30; ends with $80 (E-0147)
+MetaSprites7FSet30Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f6, $00, $00 ; entry 2
     db $f0, $fe, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
-MetaSprites7F_4008Set30Frame2::
+; frame 2 of MetaSprites7FSet30; ends with $80 (E-0147)
+MetaSprites7FSet30Frame2::
     db $f0, $f6, $04, $00 ; entry 0
     db $f0, $fe, $05, $00 ; entry 1
     db $f8, $f6, $06, $00 ; entry 2
     db $f8, $fe, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
-MetaSprites7F_4008Set30Frame3::
+; frame 3 of MetaSprites7FSet30; ends with $80 (E-0147)
+MetaSprites7FSet30Frame3::
     db $f8, $f7, $08, $00 ; entry 0
     db $f8, $ff, $09, $00 ; entry 1
     db $f0, $f7, $04, $00 ; entry 2
     db $f0, $ff, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet30; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set30Frame4::
+MetaSprites7FSet30Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set30; ends with $80 (E-0147)
-MetaSprites7F_4008Set30Frame5::
+; frame 5 of MetaSprites7FSet30; ends with $80 (E-0147)
+MetaSprites7FSet30Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f6, $0a, $00 ; entry 2
     db $f0, $fe, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 49 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 49 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set31::
-    dw MetaSprites7F_4008Set31Frame0 ; entry 0
-    dw MetaSprites7F_4008Set31Frame1 ; entry 1
-    dw MetaSprites7F_4008Set31Frame2 ; entry 2
-    dw MetaSprites7F_4008Set31Frame3 ; entry 3
-    dw MetaSprites7F_4008Set31Frame4 ; entry 4
-    dw MetaSprites7F_4008Set31Frame5 ; entry 5
+MetaSprites7FSet31::
+    dw MetaSprites7FSet31Frame0 ; entry 0
+    dw MetaSprites7FSet31Frame1 ; entry 1
+    dw MetaSprites7FSet31Frame2 ; entry 2
+    dw MetaSprites7FSet31Frame3 ; entry 3
+    dw MetaSprites7FSet31Frame4 ; entry 4
+    dw MetaSprites7FSet31Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set31Frame0::
+MetaSprites7FSet31Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
-MetaSprites7F_4008Set31Frame1::
+; frame 1 of MetaSprites7FSet31; ends with $80 (E-0147)
+MetaSprites7FSet31Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
-MetaSprites7F_4008Set31Frame2::
+; frame 2 of MetaSprites7FSet31; ends with $80 (E-0147)
+MetaSprites7FSet31Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
-MetaSprites7F_4008Set31Frame3::
+; frame 3 of MetaSprites7FSet31; ends with $80 (E-0147)
+MetaSprites7FSet31Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet31; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set31Frame4::
+MetaSprites7FSet31Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set31; ends with $80 (E-0147)
-MetaSprites7F_4008Set31Frame5::
+; frame 5 of MetaSprites7FSet31; ends with $80 (E-0147)
+MetaSprites7FSet31Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 50 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 50 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set32::
-    dw MetaSprites7F_4008Set32Frame0 ; entry 0
-    dw MetaSprites7F_4008Set32Frame1 ; entry 1
-    dw MetaSprites7F_4008Set32Frame2 ; entry 2
-    dw MetaSprites7F_4008Set32Frame3 ; entry 3
-    dw MetaSprites7F_4008Set32Frame4 ; entry 4
-    dw MetaSprites7F_4008Set32Frame5 ; entry 5
+MetaSprites7FSet32::
+    dw MetaSprites7FSet32Frame0 ; entry 0
+    dw MetaSprites7FSet32Frame1 ; entry 1
+    dw MetaSprites7FSet32Frame2 ; entry 2
+    dw MetaSprites7FSet32Frame3 ; entry 3
+    dw MetaSprites7FSet32Frame4 ; entry 4
+    dw MetaSprites7FSet32Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set32Frame0::
+MetaSprites7FSet32Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
-MetaSprites7F_4008Set32Frame1::
+; frame 1 of MetaSprites7FSet32; ends with $80 (E-0147)
+MetaSprites7FSet32Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
-MetaSprites7F_4008Set32Frame2::
+; frame 2 of MetaSprites7FSet32; ends with $80 (E-0147)
+MetaSprites7FSet32Frame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
-MetaSprites7F_4008Set32Frame3::
+; frame 3 of MetaSprites7FSet32; ends with $80 (E-0147)
+MetaSprites7FSet32Frame3::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet32; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set32Frame4::
+MetaSprites7FSet32Frame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set32; ends with $80 (E-0147)
-MetaSprites7F_4008Set32Frame5::
+; frame 5 of MetaSprites7FSet32; ends with $80 (E-0147)
+MetaSprites7FSet32Frame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 51 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 51 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set33::
-    dw MetaSprites7F_4008Set33Frame0 ; entry 0
-    dw MetaSprites7F_4008Set33Frame1 ; entry 1
-    dw MetaSprites7F_4008Set33Frame2 ; entry 2
-    dw MetaSprites7F_4008Set33Frame3 ; entry 3
-    dw MetaSprites7F_4008Set33Frame4 ; entry 4
-    dw MetaSprites7F_4008Set33Frame5 ; entry 5
+MetaSprites7FSet33::
+    dw MetaSprites7FSet33Frame0 ; entry 0
+    dw MetaSprites7FSet33Frame1 ; entry 1
+    dw MetaSprites7FSet33Frame2 ; entry 2
+    dw MetaSprites7FSet33Frame3 ; entry 3
+    dw MetaSprites7FSet33Frame4 ; entry 4
+    dw MetaSprites7FSet33Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet33; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set33Frame0::
+MetaSprites7FSet33Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
-MetaSprites7F_4008Set33Frame1::
+; frame 1 of MetaSprites7FSet33; ends with $80 (E-0147)
+MetaSprites7FSet33Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
-MetaSprites7F_4008Set33Frame2::
+; frame 2 of MetaSprites7FSet33; ends with $80 (E-0147)
+MetaSprites7FSet33Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
-MetaSprites7F_4008Set33Frame3::
+; frame 3 of MetaSprites7FSet33; ends with $80 (E-0147)
+MetaSprites7FSet33Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet33; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set33Frame4::
+MetaSprites7FSet33Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set33; ends with $80 (E-0147)
-MetaSprites7F_4008Set33Frame5::
+; frame 5 of MetaSprites7FSet33; ends with $80 (E-0147)
+MetaSprites7FSet33Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 52 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 52 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set34::
-    dw MetaSprites7F_4008Set34Frame0 ; entry 0
-    dw MetaSprites7F_4008Set34Frame1 ; entry 1
-    dw MetaSprites7F_4008Set34Frame2 ; entry 2
-    dw MetaSprites7F_4008Set34Frame3 ; entry 3
-    dw MetaSprites7F_4008Set34Frame4 ; entry 4
-    dw MetaSprites7F_4008Set34Frame5 ; entry 5
+MetaSprites7FSet34::
+    dw MetaSprites7FSet34Frame0 ; entry 0
+    dw MetaSprites7FSet34Frame1 ; entry 1
+    dw MetaSprites7FSet34Frame2 ; entry 2
+    dw MetaSprites7FSet34Frame3 ; entry 3
+    dw MetaSprites7FSet34Frame4 ; entry 4
+    dw MetaSprites7FSet34Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet34; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set34Frame0::
+MetaSprites7FSet34Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
-MetaSprites7F_4008Set34Frame1::
+; frame 1 of MetaSprites7FSet34; ends with $80 (E-0147)
+MetaSprites7FSet34Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
-MetaSprites7F_4008Set34Frame2::
+; frame 2 of MetaSprites7FSet34; ends with $80 (E-0147)
+MetaSprites7FSet34Frame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
-MetaSprites7F_4008Set34Frame3::
+; frame 3 of MetaSprites7FSet34; ends with $80 (E-0147)
+MetaSprites7FSet34Frame3::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet34; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set34Frame4::
+MetaSprites7FSet34Frame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set34; ends with $80 (E-0147)
-MetaSprites7F_4008Set34Frame5::
+; frame 5 of MetaSprites7FSet34; ends with $80 (E-0147)
+MetaSprites7FSet34Frame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 53 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 53 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set35::
-    dw MetaSprites7F_4008Set35Frame0 ; entry 0
-    dw MetaSprites7F_4008Set35Frame1 ; entry 1
-    dw MetaSprites7F_4008Set35Frame2 ; entry 2
-    dw MetaSprites7F_4008Set35Frame3 ; entry 3
-    dw MetaSprites7F_4008Set35Frame4 ; entry 4
-    dw MetaSprites7F_4008Set35Frame5 ; entry 5
+MetaSprites7FSet35::
+    dw MetaSprites7FSet35Frame0 ; entry 0
+    dw MetaSprites7FSet35Frame1 ; entry 1
+    dw MetaSprites7FSet35Frame2 ; entry 2
+    dw MetaSprites7FSet35Frame3 ; entry 3
+    dw MetaSprites7FSet35Frame4 ; entry 4
+    dw MetaSprites7FSet35Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet35; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set35Frame0::
+MetaSprites7FSet35Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
-MetaSprites7F_4008Set35Frame1::
+; frame 1 of MetaSprites7FSet35; ends with $80 (E-0147)
+MetaSprites7FSet35Frame1::
     db $f8, $fe, $02, $20 ; entry 0
     db $f8, $f6, $03, $20 ; entry 1
     db $f0, $f7, $00, $00 ; entry 2
     db $f0, $ff, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
-MetaSprites7F_4008Set35Frame2::
+; frame 2 of MetaSprites7FSet35; ends with $80 (E-0147)
+MetaSprites7FSet35Frame2::
     db $f0, $f9, $04, $00 ; entry 0
     db $f0, $01, $05, $00 ; entry 1
     db $f8, $f9, $06, $00 ; entry 2
     db $f8, $01, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
-MetaSprites7F_4008Set35Frame3::
+; frame 3 of MetaSprites7FSet35; ends with $80 (E-0147)
+MetaSprites7FSet35Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet35; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set35Frame4::
+MetaSprites7FSet35Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set35; ends with $80 (E-0147)
-MetaSprites7F_4008Set35Frame5::
+; frame 5 of MetaSprites7FSet35; ends with $80 (E-0147)
+MetaSprites7FSet35Frame5::
     db $f8, $00, $0c, $20 ; entry 0
     db $f8, $f8, $0d, $20 ; entry 1
     db $f0, $f9, $0a, $00 ; entry 2
     db $f0, $01, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 54 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 54 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set36::
-    dw MetaSprites7F_4008Set36Frame0 ; entry 0
-    dw MetaSprites7F_4008Set36Frame1 ; entry 1
-    dw MetaSprites7F_4008Set36Frame2 ; entry 2
-    dw MetaSprites7F_4008Set36Frame3 ; entry 3
-    dw MetaSprites7F_4008Set36Frame4 ; entry 4
-    dw MetaSprites7F_4008Set36Frame5 ; entry 5
+MetaSprites7FSet36::
+    dw MetaSprites7FSet36Frame0 ; entry 0
+    dw MetaSprites7FSet36Frame1 ; entry 1
+    dw MetaSprites7FSet36Frame2 ; entry 2
+    dw MetaSprites7FSet36Frame3 ; entry 3
+    dw MetaSprites7FSet36Frame4 ; entry 4
+    dw MetaSprites7FSet36Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet36; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set36Frame0::
+MetaSprites7FSet36Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
-MetaSprites7F_4008Set36Frame1::
+; frame 1 of MetaSprites7FSet36; ends with $80 (E-0147)
+MetaSprites7FSet36Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
-MetaSprites7F_4008Set36Frame2::
+; frame 2 of MetaSprites7FSet36; ends with $80 (E-0147)
+MetaSprites7FSet36Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
-MetaSprites7F_4008Set36Frame3::
+; frame 3 of MetaSprites7FSet36; ends with $80 (E-0147)
+MetaSprites7FSet36Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet36; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set36Frame4::
+MetaSprites7FSet36Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set36; ends with $80 (E-0147)
-MetaSprites7F_4008Set36Frame5::
+; frame 5 of MetaSprites7FSet36; ends with $80 (E-0147)
+MetaSprites7FSet36Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 55 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 55 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set37::
-    dw MetaSprites7F_4008Set37Frame0 ; entry 0
-    dw MetaSprites7F_4008Set37Frame1 ; entry 1
-    dw MetaSprites7F_4008Set37Frame2 ; entry 2
-    dw MetaSprites7F_4008Set37Frame3 ; entry 3
-    dw MetaSprites7F_4008Set37Frame4 ; entry 4
-    dw MetaSprites7F_4008Set37Frame5 ; entry 5
+MetaSprites7FSet37::
+    dw MetaSprites7FSet37Frame0 ; entry 0
+    dw MetaSprites7FSet37Frame1 ; entry 1
+    dw MetaSprites7FSet37Frame2 ; entry 2
+    dw MetaSprites7FSet37Frame3 ; entry 3
+    dw MetaSprites7FSet37Frame4 ; entry 4
+    dw MetaSprites7FSet37Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet37; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set37Frame0::
+MetaSprites7FSet37Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
-MetaSprites7F_4008Set37Frame1::
+; frame 1 of MetaSprites7FSet37; ends with $80 (E-0147)
+MetaSprites7FSet37Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
-MetaSprites7F_4008Set37Frame2::
+; frame 2 of MetaSprites7FSet37; ends with $80 (E-0147)
+MetaSprites7FSet37Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
-MetaSprites7F_4008Set37Frame3::
+; frame 3 of MetaSprites7FSet37; ends with $80 (E-0147)
+MetaSprites7FSet37Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet37; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set37Frame4::
+MetaSprites7FSet37Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set37; ends with $80 (E-0147)
-MetaSprites7F_4008Set37Frame5::
+; frame 5 of MetaSprites7FSet37; ends with $80 (E-0147)
+MetaSprites7FSet37Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 56 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 56 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set38::
-    dw MetaSprites7F_4008Set38Frame0 ; entry 0
-    dw MetaSprites7F_4008Set38Frame1 ; entry 1
-    dw MetaSprites7F_4008Set38Frame2 ; entry 2
-    dw MetaSprites7F_4008Set38Frame3 ; entry 3
-    dw MetaSprites7F_4008Set38Frame4 ; entry 4
-    dw MetaSprites7F_4008Set38Frame5 ; entry 5
+MetaSprites7FSet38::
+    dw MetaSprites7FSet38Frame0 ; entry 0
+    dw MetaSprites7FSet38Frame1 ; entry 1
+    dw MetaSprites7FSet38Frame2 ; entry 2
+    dw MetaSprites7FSet38Frame3 ; entry 3
+    dw MetaSprites7FSet38Frame4 ; entry 4
+    dw MetaSprites7FSet38Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet38; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set38Frame0::
+MetaSprites7FSet38Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
-MetaSprites7F_4008Set38Frame1::
+; frame 1 of MetaSprites7FSet38; ends with $80 (E-0147)
+MetaSprites7FSet38Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
-MetaSprites7F_4008Set38Frame2::
+; frame 2 of MetaSprites7FSet38; ends with $80 (E-0147)
+MetaSprites7FSet38Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
-MetaSprites7F_4008Set38Frame3::
+; frame 3 of MetaSprites7FSet38; ends with $80 (E-0147)
+MetaSprites7FSet38Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet38; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set38Frame4::
+MetaSprites7FSet38Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set38; ends with $80 (E-0147)
-MetaSprites7F_4008Set38Frame5::
+; frame 5 of MetaSprites7FSet38; ends with $80 (E-0147)
+MetaSprites7FSet38Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 57 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 57 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set39::
-    dw MetaSprites7F_4008Set39Frame0 ; entry 0
-    dw MetaSprites7F_4008Set39Frame1 ; entry 1
-    dw MetaSprites7F_4008Set39Frame2 ; entry 2
-    dw MetaSprites7F_4008Set39Frame3 ; entry 3
-    dw MetaSprites7F_4008Set39Frame4 ; entry 4
-    dw MetaSprites7F_4008Set39Frame5 ; entry 5
+MetaSprites7FSet39::
+    dw MetaSprites7FSet39Frame0 ; entry 0
+    dw MetaSprites7FSet39Frame1 ; entry 1
+    dw MetaSprites7FSet39Frame2 ; entry 2
+    dw MetaSprites7FSet39Frame3 ; entry 3
+    dw MetaSprites7FSet39Frame4 ; entry 4
+    dw MetaSprites7FSet39Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet39; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set39Frame0::
+MetaSprites7FSet39Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
-MetaSprites7F_4008Set39Frame1::
+; frame 1 of MetaSprites7FSet39; ends with $80 (E-0147)
+MetaSprites7FSet39Frame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
-MetaSprites7F_4008Set39Frame2::
+; frame 2 of MetaSprites7FSet39; ends with $80 (E-0147)
+MetaSprites7FSet39Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
-MetaSprites7F_4008Set39Frame3::
+; frame 3 of MetaSprites7FSet39; ends with $80 (E-0147)
+MetaSprites7FSet39Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet39; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set39Frame4::
+MetaSprites7FSet39Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set39; ends with $80 (E-0147)
-MetaSprites7F_4008Set39Frame5::
+; frame 5 of MetaSprites7FSet39; ends with $80 (E-0147)
+MetaSprites7FSet39Frame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 58 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 58 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3A::
-    dw MetaSprites7F_4008Set3AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3AFrame5 ; entry 5
+MetaSprites7FSet3A::
+    dw MetaSprites7FSet3AFrame0 ; entry 0
+    dw MetaSprites7FSet3AFrame1 ; entry 1
+    dw MetaSprites7FSet3AFrame2 ; entry 2
+    dw MetaSprites7FSet3AFrame3 ; entry 3
+    dw MetaSprites7FSet3AFrame4 ; entry 4
+    dw MetaSprites7FSet3AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3AFrame0::
+MetaSprites7FSet3AFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
-MetaSprites7F_4008Set3AFrame1::
+; frame 1 of MetaSprites7FSet3A; ends with $80 (E-0147)
+MetaSprites7FSet3AFrame1::
     db $f8, $ff, $02, $20 ; entry 0
     db $f8, $f7, $03, $20 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
-MetaSprites7F_4008Set3AFrame2::
+; frame 2 of MetaSprites7FSet3A; ends with $80 (E-0147)
+MetaSprites7FSet3AFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
-MetaSprites7F_4008Set3AFrame3::
+; frame 3 of MetaSprites7FSet3A; ends with $80 (E-0147)
+MetaSprites7FSet3AFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3AFrame4::
+MetaSprites7FSet3AFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3A; ends with $80 (E-0147)
-MetaSprites7F_4008Set3AFrame5::
+; frame 5 of MetaSprites7FSet3A; ends with $80 (E-0147)
+MetaSprites7FSet3AFrame5::
     db $f8, $ff, $0c, $20 ; entry 0
     db $f8, $f7, $0d, $20 ; entry 1
     db $f0, $f8, $0a, $00 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 59 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 59 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3B::
-    dw MetaSprites7F_4008Set3BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3BFrame5 ; entry 5
+MetaSprites7FSet3B::
+    dw MetaSprites7FSet3BFrame0 ; entry 0
+    dw MetaSprites7FSet3BFrame1 ; entry 1
+    dw MetaSprites7FSet3BFrame2 ; entry 2
+    dw MetaSprites7FSet3BFrame3 ; entry 3
+    dw MetaSprites7FSet3BFrame4 ; entry 4
+    dw MetaSprites7FSet3BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3BFrame0::
+MetaSprites7FSet3BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
-MetaSprites7F_4008Set3BFrame1::
+; frame 1 of MetaSprites7FSet3B; ends with $80 (E-0147)
+MetaSprites7FSet3BFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $00, $20 ; entry 1
     db $f8, $00, $01, $20 ; entry 2
     db $f8, $f8, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
-MetaSprites7F_4008Set3BFrame2::
+; frame 2 of MetaSprites7FSet3B; ends with $80 (E-0147)
+MetaSprites7FSet3BFrame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
-MetaSprites7F_4008Set3BFrame3::
+; frame 3 of MetaSprites7FSet3B; ends with $80 (E-0147)
+MetaSprites7FSet3BFrame3::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3BFrame4::
+MetaSprites7FSet3BFrame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $00, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3B; ends with $80 (E-0147)
-MetaSprites7F_4008Set3BFrame5::
+; frame 5 of MetaSprites7FSet3B; ends with $80 (E-0147)
+MetaSprites7FSet3BFrame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $00, $09, $20 ; entry 1
     db $f8, $00, $0a, $20 ; entry 2
     db $f8, $f8, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 60 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 60 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3C::
-    dw MetaSprites7F_4008Set3CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3CFrame5 ; entry 5
+MetaSprites7FSet3C::
+    dw MetaSprites7FSet3CFrame0 ; entry 0
+    dw MetaSprites7FSet3CFrame1 ; entry 1
+    dw MetaSprites7FSet3CFrame2 ; entry 2
+    dw MetaSprites7FSet3CFrame3 ; entry 3
+    dw MetaSprites7FSet3CFrame4 ; entry 4
+    dw MetaSprites7FSet3CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3CFrame0::
+MetaSprites7FSet3CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
-MetaSprites7F_4008Set3CFrame1::
+; frame 1 of MetaSprites7FSet3C; ends with $80 (E-0147)
+MetaSprites7FSet3CFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $ff, $01, $20 ; entry 1
     db $f8, $f7, $02, $20 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
-MetaSprites7F_4008Set3CFrame2::
+; frame 2 of MetaSprites7FSet3C; ends with $80 (E-0147)
+MetaSprites7FSet3CFrame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
-MetaSprites7F_4008Set3CFrame3::
+; frame 3 of MetaSprites7FSet3C; ends with $80 (E-0147)
+MetaSprites7FSet3CFrame3::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3CFrame4::
+MetaSprites7FSet3CFrame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f8, $f8, $0a, $00 ; entry 1
     db $f8, $00, $0b, $00 ; entry 2
     db $f0, $ff, $09, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3C; ends with $80 (E-0147)
-MetaSprites7F_4008Set3CFrame5::
+; frame 5 of MetaSprites7FSet3C; ends with $80 (E-0147)
+MetaSprites7FSet3CFrame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f8, $ff, $0a, $20 ; entry 1
     db $f8, $f7, $0b, $20 ; entry 2
     db $f0, $ff, $09, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 61 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 61 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3D::
-    dw MetaSprites7F_4008Set3DFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3DFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3DFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3DFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3DFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3DFrame5 ; entry 5
+MetaSprites7FSet3D::
+    dw MetaSprites7FSet3DFrame0 ; entry 0
+    dw MetaSprites7FSet3DFrame1 ; entry 1
+    dw MetaSprites7FSet3DFrame2 ; entry 2
+    dw MetaSprites7FSet3DFrame3 ; entry 3
+    dw MetaSprites7FSet3DFrame4 ; entry 4
+    dw MetaSprites7FSet3DFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3DFrame0::
+MetaSprites7FSet3DFrame0::
     db $f8, $f8, $02, $00 ; entry 0
     db $f8, $00, $03, $00 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
-MetaSprites7F_4008Set3DFrame1::
+; frame 1 of MetaSprites7FSet3D; ends with $80 (E-0147)
+MetaSprites7FSet3DFrame1::
     db $f0, $ff, $00, $20 ; entry 0
     db $f0, $f7, $01, $20 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
-MetaSprites7F_4008Set3DFrame2::
+; frame 2 of MetaSprites7FSet3D; ends with $80 (E-0147)
+MetaSprites7FSet3DFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
-MetaSprites7F_4008Set3DFrame3::
+; frame 3 of MetaSprites7FSet3D; ends with $80 (E-0147)
+MetaSprites7FSet3DFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3DFrame4::
+MetaSprites7FSet3DFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3D; ends with $80 (E-0147)
-MetaSprites7F_4008Set3DFrame5::
+; frame 5 of MetaSprites7FSet3D; ends with $80 (E-0147)
+MetaSprites7FSet3DFrame5::
     db $f0, $ff, $0a, $20 ; entry 0
     db $f0, $f7, $0b, $20 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 62 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 62 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3E::
-    dw MetaSprites7F_4008Set3EFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3EFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3EFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3EFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3EFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3EFrame5 ; entry 5
+MetaSprites7FSet3E::
+    dw MetaSprites7FSet3EFrame0 ; entry 0
+    dw MetaSprites7FSet3EFrame1 ; entry 1
+    dw MetaSprites7FSet3EFrame2 ; entry 2
+    dw MetaSprites7FSet3EFrame3 ; entry 3
+    dw MetaSprites7FSet3EFrame4 ; entry 4
+    dw MetaSprites7FSet3EFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3EFrame0::
+MetaSprites7FSet3EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
-MetaSprites7F_4008Set3EFrame1::
+; frame 1 of MetaSprites7FSet3E; ends with $80 (E-0147)
+MetaSprites7FSet3EFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $ff, $01, $20 ; entry 1
     db $f8, $f7, $02, $20 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
-MetaSprites7F_4008Set3EFrame2::
+; frame 2 of MetaSprites7FSet3E; ends with $80 (E-0147)
+MetaSprites7FSet3EFrame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
-MetaSprites7F_4008Set3EFrame3::
+; frame 3 of MetaSprites7FSet3E; ends with $80 (E-0147)
+MetaSprites7FSet3EFrame3::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3EFrame4::
+MetaSprites7FSet3EFrame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f8, $f8, $0a, $00 ; entry 1
     db $f8, $00, $0b, $00 ; entry 2
     db $f0, $ff, $09, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3E; ends with $80 (E-0147)
-MetaSprites7F_4008Set3EFrame5::
+; frame 5 of MetaSprites7FSet3E; ends with $80 (E-0147)
+MetaSprites7FSet3EFrame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f8, $ff, $0a, $20 ; entry 1
     db $f8, $f7, $0b, $20 ; entry 2
     db $f0, $ff, $09, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 63 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 63 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set3F::
-    dw MetaSprites7F_4008Set3FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set3FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set3FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set3FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set3FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set3FFrame5 ; entry 5
+MetaSprites7FSet3F::
+    dw MetaSprites7FSet3FFrame0 ; entry 0
+    dw MetaSprites7FSet3FFrame1 ; entry 1
+    dw MetaSprites7FSet3FFrame2 ; entry 2
+    dw MetaSprites7FSet3FFrame3 ; entry 3
+    dw MetaSprites7FSet3FFrame4 ; entry 4
+    dw MetaSprites7FSet3FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet3F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3FFrame0::
+MetaSprites7FSet3FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
-MetaSprites7F_4008Set3FFrame1::
+; frame 1 of MetaSprites7FSet3F; ends with $80 (E-0147)
+MetaSprites7FSet3FFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $ff, $01, $20 ; entry 1
     db $f8, $f7, $02, $20 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
-MetaSprites7F_4008Set3FFrame2::
+; frame 2 of MetaSprites7FSet3F; ends with $80 (E-0147)
+MetaSprites7FSet3FFrame2::
     db $f0, $f5, $03, $00 ; entry 0
     db $f0, $fd, $04, $00 ; entry 1
     db $f8, $f5, $05, $00 ; entry 2
     db $f8, $fd, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
-MetaSprites7F_4008Set3FFrame3::
+; frame 3 of MetaSprites7FSet3F; ends with $80 (E-0147)
+MetaSprites7FSet3FFrame3::
     db $f0, $fd, $04, $00 ; entry 0
     db $f0, $f5, $07, $00 ; entry 1
     db $f8, $f5, $08, $00 ; entry 2
     db $f8, $fd, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet3F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set3FFrame4::
+MetaSprites7FSet3FFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $ff, $0a, $20 ; entry 1
     db $f8, $f8, $0b, $00 ; entry 2
     db $f8, $00, $0c, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set3F; ends with $80 (E-0147)
-MetaSprites7F_4008Set3FFrame5::
+; frame 5 of MetaSprites7FSet3F; ends with $80 (E-0147)
+MetaSprites7FSet3FFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $ff, $0a, $20 ; entry 1
     db $f8, $ff, $0b, $20 ; entry 2
     db $f8, $f7, $0c, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 64 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 64 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set40::
-    dw MetaSprites7F_4008Set40Frame0 ; entry 0
-    dw MetaSprites7F_4008Set40Frame1 ; entry 1
-    dw MetaSprites7F_4008Set40Frame2 ; entry 2
-    dw MetaSprites7F_4008Set40Frame3 ; entry 3
-    dw MetaSprites7F_4008Set40Frame4 ; entry 4
-    dw MetaSprites7F_4008Set40Frame5 ; entry 5
+MetaSprites7FSet40::
+    dw MetaSprites7FSet40Frame0 ; entry 0
+    dw MetaSprites7FSet40Frame1 ; entry 1
+    dw MetaSprites7FSet40Frame2 ; entry 2
+    dw MetaSprites7FSet40Frame3 ; entry 3
+    dw MetaSprites7FSet40Frame4 ; entry 4
+    dw MetaSprites7FSet40Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet40; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set40Frame0::
+MetaSprites7FSet40Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
-MetaSprites7F_4008Set40Frame1::
+; frame 1 of MetaSprites7FSet40; ends with $80 (E-0147)
+MetaSprites7FSet40Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $ff, $01, $20 ; entry 1
     db $f8, $f7, $02, $20 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
-MetaSprites7F_4008Set40Frame2::
+; frame 2 of MetaSprites7FSet40; ends with $80 (E-0147)
+MetaSprites7FSet40Frame2::
     db $f0, $f5, $03, $00 ; entry 0
     db $f0, $fd, $04, $00 ; entry 1
     db $f8, $f5, $05, $00 ; entry 2
     db $f8, $fd, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
-MetaSprites7F_4008Set40Frame3::
+; frame 3 of MetaSprites7FSet40; ends with $80 (E-0147)
+MetaSprites7FSet40Frame3::
     db $f0, $fd, $04, $00 ; entry 0
     db $f0, $f5, $07, $00 ; entry 1
     db $f8, $f5, $08, $00 ; entry 2
     db $f8, $fd, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet40; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set40Frame4::
+MetaSprites7FSet40Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $ff, $0a, $20 ; entry 1
     db $f8, $f8, $0b, $00 ; entry 2
     db $f8, $00, $0c, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set40; ends with $80 (E-0147)
-MetaSprites7F_4008Set40Frame5::
+; frame 5 of MetaSprites7FSet40; ends with $80 (E-0147)
+MetaSprites7FSet40Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $ff, $0a, $20 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 65 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 65 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set41::
-    dw MetaSprites7F_4008Set41Frame0 ; entry 0
-    dw MetaSprites7F_4008Set41Frame1 ; entry 1
-    dw MetaSprites7F_4008Set41Frame2 ; entry 2
-    dw MetaSprites7F_4008Set41Frame3 ; entry 3
-    dw MetaSprites7F_4008Set41Frame4 ; entry 4
-    dw MetaSprites7F_4008Set41Frame5 ; entry 5
+MetaSprites7FSet41::
+    dw MetaSprites7FSet41Frame0 ; entry 0
+    dw MetaSprites7FSet41Frame1 ; entry 1
+    dw MetaSprites7FSet41Frame2 ; entry 2
+    dw MetaSprites7FSet41Frame3 ; entry 3
+    dw MetaSprites7FSet41Frame4 ; entry 4
+    dw MetaSprites7FSet41Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet41; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set41Frame0::
+MetaSprites7FSet41Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f8, $00, $02, $00 ; entry 2
     db $f0, $00, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
-MetaSprites7F_4008Set41Frame1::
+; frame 1 of MetaSprites7FSet41; ends with $80 (E-0147)
+MetaSprites7FSet41Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $00, $20 ; entry 1
     db $f8, $00, $01, $20 ; entry 2
     db $f8, $f8, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
-MetaSprites7F_4008Set41Frame2::
+; frame 2 of MetaSprites7FSet41; ends with $80 (E-0147)
+MetaSprites7FSet41Frame2::
     db $f0, $f7, $03, $00 ; entry 0
     db $f0, $ff, $04, $00 ; entry 1
     db $f8, $f7, $05, $00 ; entry 2
     db $f8, $ff, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
-MetaSprites7F_4008Set41Frame3::
+; frame 3 of MetaSprites7FSet41; ends with $80 (E-0147)
+MetaSprites7FSet41Frame3::
     db $f0, $ff, $04, $00 ; entry 0
     db $f0, $f7, $07, $00 ; entry 1
     db $f8, $f7, $08, $00 ; entry 2
     db $f8, $ff, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet41; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set41Frame4::
+MetaSprites7FSet41Frame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f8, $f8, $0c, $00 ; entry 1
     db $f8, $00, $0d, $00 ; entry 2
     db $f0, $00, $0b, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set41; ends with $80 (E-0147)
-MetaSprites7F_4008Set41Frame5::
+; frame 5 of MetaSprites7FSet41; ends with $80 (E-0147)
+MetaSprites7FSet41Frame5::
     db $f0, $00, $0b, $20 ; entry 0
     db $f8, $00, $0c, $20 ; entry 1
     db $f8, $f8, $0d, $20 ; entry 2
     db $f0, $f8, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 66 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 66 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set42::
-    dw MetaSprites7F_4008Set42Frame0 ; entry 0
-    dw MetaSprites7F_4008Set42Frame1 ; entry 1
-    dw MetaSprites7F_4008Set42Frame2 ; entry 2
-    dw MetaSprites7F_4008Set42Frame3 ; entry 3
-    dw MetaSprites7F_4008Set42Frame4 ; entry 4
-    dw MetaSprites7F_4008Set42Frame5 ; entry 5
+MetaSprites7FSet42::
+    dw MetaSprites7FSet42Frame0 ; entry 0
+    dw MetaSprites7FSet42Frame1 ; entry 1
+    dw MetaSprites7FSet42Frame2 ; entry 2
+    dw MetaSprites7FSet42Frame3 ; entry 3
+    dw MetaSprites7FSet42Frame4 ; entry 4
+    dw MetaSprites7FSet42Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet42; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set42Frame0::
+MetaSprites7FSet42Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $02, $00 ; entry 1
     db $f8, $00, $03, $00 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
-MetaSprites7F_4008Set42Frame1::
+; frame 1 of MetaSprites7FSet42; ends with $80 (E-0147)
+MetaSprites7FSet42Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
-MetaSprites7F_4008Set42Frame2::
+; frame 2 of MetaSprites7FSet42; ends with $80 (E-0147)
+MetaSprites7FSet42Frame2::
     db $f0, $f7, $04, $00 ; entry 0
     db $f0, $ff, $05, $00 ; entry 1
     db $f8, $f7, $06, $00 ; entry 2
     db $f8, $ff, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
-MetaSprites7F_4008Set42Frame3::
+; frame 3 of MetaSprites7FSet42; ends with $80 (E-0147)
+MetaSprites7FSet42Frame3::
     db $f0, $ff, $05, $00 ; entry 0
     db $f0, $f7, $08, $00 ; entry 1
     db $f8, $f7, $09, $00 ; entry 2
     db $f8, $ff, $0a, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet42; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set42Frame4::
+MetaSprites7FSet42Frame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f0, $00, $0c, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set42; ends with $80 (E-0147)
-MetaSprites7F_4008Set42Frame5::
+; frame 5 of MetaSprites7FSet42; ends with $80 (E-0147)
+MetaSprites7FSet42Frame5::
     db $f0, $ff, $0b, $20 ; entry 0
     db $f0, $f7, $0c, $20 ; entry 1
     db $f8, $ff, $0d, $20 ; entry 2
     db $f8, $f7, $0e, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 67 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 67 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set43::
-    dw MetaSprites7F_4008Set43Frame0 ; entry 0
-    dw MetaSprites7F_4008Set43Frame1 ; entry 1
-    dw MetaSprites7F_4008Set43Frame2 ; entry 2
-    dw MetaSprites7F_4008Set43Frame3 ; entry 3
-    dw MetaSprites7F_4008Set43Frame4 ; entry 4
-    dw MetaSprites7F_4008Set43Frame5 ; entry 5
+MetaSprites7FSet43::
+    dw MetaSprites7FSet43Frame0 ; entry 0
+    dw MetaSprites7FSet43Frame1 ; entry 1
+    dw MetaSprites7FSet43Frame2 ; entry 2
+    dw MetaSprites7FSet43Frame3 ; entry 3
+    dw MetaSprites7FSet43Frame4 ; entry 4
+    dw MetaSprites7FSet43Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet43; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set43Frame0::
+MetaSprites7FSet43Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
-MetaSprites7F_4008Set43Frame1::
+; frame 1 of MetaSprites7FSet43; ends with $80 (E-0147)
+MetaSprites7FSet43Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
-MetaSprites7F_4008Set43Frame2::
+; frame 2 of MetaSprites7FSet43; ends with $80 (E-0147)
+MetaSprites7FSet43Frame2::
     db $f0, $f7, $03, $00 ; entry 0
     db $f0, $ff, $04, $00 ; entry 1
     db $f8, $f7, $05, $00 ; entry 2
     db $f8, $ff, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
-MetaSprites7F_4008Set43Frame3::
+; frame 3 of MetaSprites7FSet43; ends with $80 (E-0147)
+MetaSprites7FSet43Frame3::
     db $f0, $f7, $03, $00 ; entry 0
     db $f0, $ff, $04, $00 ; entry 1
     db $f8, $f7, $07, $00 ; entry 2
     db $f8, $ff, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet43; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set43Frame4::
+MetaSprites7FSet43Frame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set43; ends with $80 (E-0147)
-MetaSprites7F_4008Set43Frame5::
+; frame 5 of MetaSprites7FSet43; ends with $80 (E-0147)
+MetaSprites7FSet43Frame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $ff, $0a, $20 ; entry 2
     db $f8, $f7, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 68 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 68 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set44::
-    dw MetaSprites7F_4008Set44Frame0 ; entry 0
-    dw MetaSprites7F_4008Set44Frame1 ; entry 1
-    dw MetaSprites7F_4008Set44Frame2 ; entry 2
-    dw MetaSprites7F_4008Set44Frame3 ; entry 3
-    dw MetaSprites7F_4008Set44Frame4 ; entry 4
-    dw MetaSprites7F_4008Set44Frame5 ; entry 5
+MetaSprites7FSet44::
+    dw MetaSprites7FSet44Frame0 ; entry 0
+    dw MetaSprites7FSet44Frame1 ; entry 1
+    dw MetaSprites7FSet44Frame2 ; entry 2
+    dw MetaSprites7FSet44Frame3 ; entry 3
+    dw MetaSprites7FSet44Frame4 ; entry 4
+    dw MetaSprites7FSet44Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet44; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set44Frame0::
+MetaSprites7FSet44Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
-MetaSprites7F_4008Set44Frame1::
+; frame 1 of MetaSprites7FSet44; ends with $80 (E-0147)
+MetaSprites7FSet44Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
-MetaSprites7F_4008Set44Frame2::
+; frame 2 of MetaSprites7FSet44; ends with $80 (E-0147)
+MetaSprites7FSet44Frame2::
     db $f0, $f8, $03, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $00, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
-MetaSprites7F_4008Set44Frame3::
+; frame 3 of MetaSprites7FSet44; ends with $80 (E-0147)
+MetaSprites7FSet44Frame3::
     db $f8, $f8, $07, $00 ; entry 0
     db $f8, $00, $08, $00 ; entry 1
     db $f0, $f7, $03, $00 ; entry 2
     db $f0, $ff, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet44; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set44Frame4::
+MetaSprites7FSet44Frame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set44; ends with $80 (E-0147)
-MetaSprites7F_4008Set44Frame5::
+; frame 5 of MetaSprites7FSet44; ends with $80 (E-0147)
+MetaSprites7FSet44Frame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $ff, $0a, $20 ; entry 2
     db $f8, $f7, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 69 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 69 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set45::
-    dw MetaSprites7F_4008Set45Frame0 ; entry 0
-    dw MetaSprites7F_4008Set45Frame1 ; entry 1
-    dw MetaSprites7F_4008Set45Frame2 ; entry 2
-    dw MetaSprites7F_4008Set45Frame3 ; entry 3
-    dw MetaSprites7F_4008Set45Frame4 ; entry 4
-    dw MetaSprites7F_4008Set45Frame5 ; entry 5
+MetaSprites7FSet45::
+    dw MetaSprites7FSet45Frame0 ; entry 0
+    dw MetaSprites7FSet45Frame1 ; entry 1
+    dw MetaSprites7FSet45Frame2 ; entry 2
+    dw MetaSprites7FSet45Frame3 ; entry 3
+    dw MetaSprites7FSet45Frame4 ; entry 4
+    dw MetaSprites7FSet45Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet45; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set45Frame0::
+MetaSprites7FSet45Frame0::
     db $f8, $f8, $02, $00 ; entry 0
     db $f0, $f8, $00, $00 ; entry 1
     db $f0, $00, $01, $00 ; entry 2
     db $f8, $ff, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
-MetaSprites7F_4008Set45Frame1::
+; frame 1 of MetaSprites7FSet45; ends with $80 (E-0147)
+MetaSprites7FSet45Frame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f9, $f8, $03, $00 ; entry 1
     db $f1, $00, $01, $00 ; entry 2
     db $f9, $ff, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
-MetaSprites7F_4008Set45Frame2::
+; frame 2 of MetaSprites7FSet45; ends with $80 (E-0147)
+MetaSprites7FSet45Frame2::
     db $f0, $f7, $04, $00 ; entry 0
     db $f0, $ff, $05, $00 ; entry 1
     db $f8, $f7, $06, $00 ; entry 2
     db $f8, $ff, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
-MetaSprites7F_4008Set45Frame3::
+; frame 3 of MetaSprites7FSet45; ends with $80 (E-0147)
+MetaSprites7FSet45Frame3::
     db $f9, $f7, $08, $00 ; entry 0
     db $f9, $ff, $09, $00 ; entry 1
     db $f1, $f8, $04, $00 ; entry 2
     db $f1, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet45; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set45Frame4::
+MetaSprites7FSet45Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f8, $f8, $0c, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f0, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set45; ends with $80 (E-0147)
-MetaSprites7F_4008Set45Frame5::
+; frame 5 of MetaSprites7FSet45; ends with $80 (E-0147)
+MetaSprites7FSet45Frame5::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $f8, $0d, $00 ; entry 2
     db $f9, $ff, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 70 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 70 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set46::
-    dw MetaSprites7F_4008Set46Frame0 ; entry 0
-    dw MetaSprites7F_4008Set46Frame1 ; entry 1
-    dw MetaSprites7F_4008Set46Frame2 ; entry 2
-    dw MetaSprites7F_4008Set46Frame3 ; entry 3
-    dw MetaSprites7F_4008Set46Frame4 ; entry 4
-    dw MetaSprites7F_4008Set46Frame5 ; entry 5
+MetaSprites7FSet46::
+    dw MetaSprites7FSet46Frame0 ; entry 0
+    dw MetaSprites7FSet46Frame1 ; entry 1
+    dw MetaSprites7FSet46Frame2 ; entry 2
+    dw MetaSprites7FSet46Frame3 ; entry 3
+    dw MetaSprites7FSet46Frame4 ; entry 4
+    dw MetaSprites7FSet46Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet46; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set46Frame0::
+MetaSprites7FSet46Frame0::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
-MetaSprites7F_4008Set46Frame1::
+; frame 1 of MetaSprites7FSet46; ends with $80 (E-0147)
+MetaSprites7FSet46Frame1::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
-MetaSprites7F_4008Set46Frame2::
+; frame 2 of MetaSprites7FSet46; ends with $80 (E-0147)
+MetaSprites7FSet46Frame2::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
-MetaSprites7F_4008Set46Frame3::
+; frame 3 of MetaSprites7FSet46; ends with $80 (E-0147)
+MetaSprites7FSet46Frame3::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet46; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set46Frame4::
+MetaSprites7FSet46Frame4::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set46; ends with $80 (E-0147)
-MetaSprites7F_4008Set46Frame5::
+; frame 5 of MetaSprites7FSet46; ends with $80 (E-0147)
+MetaSprites7FSet46Frame5::
     db $ef, $fa, $00, $00 ; entry 0
     db $ef, $02, $01, $00 ; entry 1
     db $f7, $fa, $02, $00 ; entry 2
     db $f7, $02, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 71 of MetaSprites7F_4008Table: 3 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 71 of MetaSprites7FTable: 3 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set47::
-    dw MetaSprites7F_4008Set47Frame0 ; entry 0
-    dw MetaSprites7F_4008Set47Frame1 ; entry 1
-    dw MetaSprites7F_4008Set47Frame2 ; entry 2
+MetaSprites7FSet47::
+    dw MetaSprites7FSet47Frame0 ; entry 0
+    dw MetaSprites7FSet47Frame1 ; entry 1
+    dw MetaSprites7FSet47Frame2 ; entry 2
 
-; frame 0 of MetaSprites7F_4008Set47; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet47; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set47Frame0::
+MetaSprites7FSet47Frame0::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $f8, $01, $00 ; entry 1
     db $e0, $00, $02, $00 ; entry 2
@@ -4990,8 +4920,8 @@ MetaSprites7F_4008Set47Frame0::
     db $f2, $e6, $10, $20 ; entry 17
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set47; ends with $80 (E-0147)
-MetaSprites7F_4008Set47Frame1::
+; frame 1 of MetaSprites7FSet47; ends with $80 (E-0147)
+MetaSprites7FSet47Frame1::
     db $e0, $f0, $11, $00 ; entry 0
     db $e0, $f8, $12, $00 ; entry 1
     db $e0, $07, $11, $20 ; entry 2
@@ -5014,8 +4944,8 @@ MetaSprites7F_4008Set47Frame1::
     db $f8, $ff, $1a, $20 ; entry 19
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set47; ends with $80 (E-0147)
-MetaSprites7F_4008Set47Frame2::
+; frame 2 of MetaSprites7FSet47; ends with $80 (E-0147)
+MetaSprites7FSet47Frame2::
     db $e0, $08, $00, $20 ; entry 0
     db $e0, $00, $01, $20 ; entry 1
     db $e0, $f8, $02, $20 ; entry 2
@@ -5036,17 +4966,16 @@ MetaSprites7F_4008Set47Frame2::
     db $f2, $12, $10, $00 ; entry 17
     db $80 ; end
 
-; meta-sprite set 72 of MetaSprites7F_4008Table: 3 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 72 of MetaSprites7FTable: 3 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set48::
-    dw MetaSprites7F_4008Set48Frame0 ; entry 0
-    dw MetaSprites7F_4008Set48Frame1 ; entry 1
-    dw MetaSprites7F_4008Set48Frame2 ; entry 2
+MetaSprites7FSet48::
+    dw MetaSprites7FSet48Frame0 ; entry 0
+    dw MetaSprites7FSet48Frame1 ; entry 1
+    dw MetaSprites7FSet48Frame2 ; entry 2
 
-; frame 0 of MetaSprites7F_4008Set48; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet48; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set48Frame0::
+MetaSprites7FSet48Frame0::
     db $f0, $f0, $08, $00 ; entry 0
     db $f0, $f8, $09, $00 ; entry 1
     db $f0, $00, $0a, $00 ; entry 2
@@ -5065,8 +4994,8 @@ MetaSprites7F_4008Set48Frame0::
     db $e8, $08, $07, $00 ; entry 15
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set48; ends with $80 (E-0147)
-MetaSprites7F_4008Set48Frame1::
+; frame 1 of MetaSprites7FSet48; ends with $80 (E-0147)
+MetaSprites7FSet48Frame1::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $00, $0a, $00 ; entry 1
     db $f8, $f0, $0c, $00 ; entry 2
@@ -5084,8 +5013,8 @@ MetaSprites7F_4008Set48Frame1::
     db $f0, $08, $15, $00 ; entry 14
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set48; ends with $80 (E-0147)
-MetaSprites7F_4008Set48Frame2::
+; frame 2 of MetaSprites7FSet48; ends with $80 (E-0147)
+MetaSprites7FSet48Frame2::
     db $f0, $00, $0a, $00 ; entry 0
     db $f8, $f0, $0c, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
@@ -5103,693 +5032,681 @@ MetaSprites7F_4008Set48Frame2::
     db $f0, $08, $1c, $00 ; entry 14
     db $80 ; end
 
-; meta-sprite set 73 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 73 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set49::
-    dw MetaSprites7F_4008Set49Frame0 ; entry 0
-    dw MetaSprites7F_4008Set49Frame1 ; entry 1
-    dw MetaSprites7F_4008Set49Frame2 ; entry 2
-    dw MetaSprites7F_4008Set49Frame3 ; entry 3
-    dw MetaSprites7F_4008Set49Frame4 ; entry 4
-    dw MetaSprites7F_4008Set49Frame5 ; entry 5
+MetaSprites7FSet49::
+    dw MetaSprites7FSet49Frame0 ; entry 0
+    dw MetaSprites7FSet49Frame1 ; entry 1
+    dw MetaSprites7FSet49Frame2 ; entry 2
+    dw MetaSprites7FSet49Frame3 ; entry 3
+    dw MetaSprites7FSet49Frame4 ; entry 4
+    dw MetaSprites7FSet49Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet49; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set49Frame0::
+MetaSprites7FSet49Frame0::
     db $ee, $f8, $00, $00 ; entry 0
     db $ee, $00, $01, $00 ; entry 1
     db $f6, $f8, $02, $00 ; entry 2
     db $f6, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
-MetaSprites7F_4008Set49Frame1::
+; frame 1 of MetaSprites7FSet49; ends with $80 (E-0147)
+MetaSprites7FSet49Frame1::
     db $ee, $00, $00, $20 ; entry 0
     db $ee, $f8, $01, $20 ; entry 1
     db $f6, $00, $02, $20 ; entry 2
     db $f6, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
-MetaSprites7F_4008Set49Frame2::
+; frame 2 of MetaSprites7FSet49; ends with $80 (E-0147)
+MetaSprites7FSet49Frame2::
     db $ee, $f8, $04, $00 ; entry 0
     db $ee, $00, $05, $00 ; entry 1
     db $f6, $f8, $06, $00 ; entry 2
     db $f6, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
-MetaSprites7F_4008Set49Frame3::
+; frame 3 of MetaSprites7FSet49; ends with $80 (E-0147)
+MetaSprites7FSet49Frame3::
     db $ee, $f8, $08, $00 ; entry 0
     db $ee, $00, $09, $00 ; entry 1
     db $f6, $f8, $0a, $00 ; entry 2
     db $f6, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet49; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set49Frame4::
+MetaSprites7FSet49Frame4::
     db $ee, $f8, $0c, $00 ; entry 0
     db $ee, $00, $0d, $00 ; entry 1
     db $f6, $f8, $0e, $00 ; entry 2
     db $f6, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set49; ends with $80 (E-0147)
-MetaSprites7F_4008Set49Frame5::
+; frame 5 of MetaSprites7FSet49; ends with $80 (E-0147)
+MetaSprites7FSet49Frame5::
     db $ee, $00, $0c, $20 ; entry 0
     db $ee, $f8, $0d, $20 ; entry 1
     db $f6, $00, $0e, $20 ; entry 2
     db $f6, $f8, $0f, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 74 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 74 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4A::
-    dw MetaSprites7F_4008Set4AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4AFrame5 ; entry 5
+MetaSprites7FSet4A::
+    dw MetaSprites7FSet4AFrame0 ; entry 0
+    dw MetaSprites7FSet4AFrame1 ; entry 1
+    dw MetaSprites7FSet4AFrame2 ; entry 2
+    dw MetaSprites7FSet4AFrame3 ; entry 3
+    dw MetaSprites7FSet4AFrame4 ; entry 4
+    dw MetaSprites7FSet4AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4AFrame0::
+MetaSprites7FSet4AFrame0::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
-MetaSprites7F_4008Set4AFrame1::
+; frame 1 of MetaSprites7FSet4A; ends with $80 (E-0147)
+MetaSprites7FSet4AFrame1::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
-MetaSprites7F_4008Set4AFrame2::
+; frame 2 of MetaSprites7FSet4A; ends with $80 (E-0147)
+MetaSprites7FSet4AFrame2::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
-MetaSprites7F_4008Set4AFrame3::
+; frame 3 of MetaSprites7FSet4A; ends with $80 (E-0147)
+MetaSprites7FSet4AFrame3::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4AFrame4::
+MetaSprites7FSet4AFrame4::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4A; ends with $80 (E-0147)
-MetaSprites7F_4008Set4AFrame5::
+; frame 5 of MetaSprites7FSet4A; ends with $80 (E-0147)
+MetaSprites7FSet4AFrame5::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 75 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 75 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4B::
-    dw MetaSprites7F_4008Set4BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4BFrame5 ; entry 5
+MetaSprites7FSet4B::
+    dw MetaSprites7FSet4BFrame0 ; entry 0
+    dw MetaSprites7FSet4BFrame1 ; entry 1
+    dw MetaSprites7FSet4BFrame2 ; entry 2
+    dw MetaSprites7FSet4BFrame3 ; entry 3
+    dw MetaSprites7FSet4BFrame4 ; entry 4
+    dw MetaSprites7FSet4BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4BFrame0::
+MetaSprites7FSet4BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f8, $00, $02, $00 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
-MetaSprites7F_4008Set4BFrame1::
+; frame 1 of MetaSprites7FSet4B; ends with $80 (E-0147)
+MetaSprites7FSet4BFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
-MetaSprites7F_4008Set4BFrame2::
+; frame 2 of MetaSprites7FSet4B; ends with $80 (E-0147)
+MetaSprites7FSet4BFrame2::
     db $f0, $f9, $03, $00 ; entry 0
     db $f0, $01, $04, $00 ; entry 1
     db $f8, $f9, $05, $00 ; entry 2
     db $f8, $01, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
-MetaSprites7F_4008Set4BFrame3::
+; frame 3 of MetaSprites7FSet4B; ends with $80 (E-0147)
+MetaSprites7FSet4BFrame3::
     db $f0, $f9, $03, $00 ; entry 0
     db $f0, $01, $04, $00 ; entry 1
     db $f8, $f9, $07, $00 ; entry 2
     db $f8, $01, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4BFrame4::
+MetaSprites7FSet4BFrame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4B; ends with $80 (E-0147)
-MetaSprites7F_4008Set4BFrame5::
+; frame 5 of MetaSprites7FSet4B; ends with $80 (E-0147)
+MetaSprites7FSet4BFrame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $ff, $0a, $20 ; entry 2
     db $f8, $f7, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 76 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 76 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4C::
-    dw MetaSprites7F_4008Set4CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4CFrame5 ; entry 5
+MetaSprites7FSet4C::
+    dw MetaSprites7FSet4CFrame0 ; entry 0
+    dw MetaSprites7FSet4CFrame1 ; entry 1
+    dw MetaSprites7FSet4CFrame2 ; entry 2
+    dw MetaSprites7FSet4CFrame3 ; entry 3
+    dw MetaSprites7FSet4CFrame4 ; entry 4
+    dw MetaSprites7FSet4CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4CFrame0::
+MetaSprites7FSet4CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
-MetaSprites7F_4008Set4CFrame1::
+; frame 1 of MetaSprites7FSet4C; ends with $80 (E-0147)
+MetaSprites7FSet4CFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
-MetaSprites7F_4008Set4CFrame2::
+; frame 2 of MetaSprites7FSet4C; ends with $80 (E-0147)
+MetaSprites7FSet4CFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
-MetaSprites7F_4008Set4CFrame3::
+; frame 3 of MetaSprites7FSet4C; ends with $80 (E-0147)
+MetaSprites7FSet4CFrame3::
     db $f0, $00, $05, $00 ; entry 0
     db $f0, $f8, $08, $00 ; entry 1
     db $f8, $f8, $09, $00 ; entry 2
     db $f8, $00, $0a, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4CFrame4::
+MetaSprites7FSet4CFrame4::
     db $f0, $f8, $0b, $00 ; entry 0
     db $f0, $00, $0c, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4C; ends with $80 (E-0147)
-MetaSprites7F_4008Set4CFrame5::
+; frame 5 of MetaSprites7FSet4C; ends with $80 (E-0147)
+MetaSprites7FSet4CFrame5::
     db $f0, $00, $0c, $00 ; entry 0
     db $f0, $f8, $0f, $00 ; entry 1
     db $f8, $ff, $0d, $20 ; entry 2
     db $f8, $f7, $0e, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 77 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 77 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4D::
-    dw MetaSprites7F_4008Set4DFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4DFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4DFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4DFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4DFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4DFrame5 ; entry 5
+MetaSprites7FSet4D::
+    dw MetaSprites7FSet4DFrame0 ; entry 0
+    dw MetaSprites7FSet4DFrame1 ; entry 1
+    dw MetaSprites7FSet4DFrame2 ; entry 2
+    dw MetaSprites7FSet4DFrame3 ; entry 3
+    dw MetaSprites7FSet4DFrame4 ; entry 4
+    dw MetaSprites7FSet4DFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4DFrame0::
+MetaSprites7FSet4DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f8, $00, $02, $00 ; entry 2
     db $f0, $ff, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
-MetaSprites7F_4008Set4DFrame1::
+; frame 1 of MetaSprites7FSet4D; ends with $80 (E-0147)
+MetaSprites7FSet4DFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $ff, $00, $20 ; entry 1
     db $f8, $ff, $01, $20 ; entry 2
     db $f8, $f7, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
-MetaSprites7F_4008Set4DFrame2::
+; frame 2 of MetaSprites7FSet4D; ends with $80 (E-0147)
+MetaSprites7FSet4DFrame2::
     db $f0, $f9, $03, $00 ; entry 0
     db $f0, $01, $04, $00 ; entry 1
     db $f8, $f9, $05, $00 ; entry 2
     db $f8, $01, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
-MetaSprites7F_4008Set4DFrame3::
+; frame 3 of MetaSprites7FSet4D; ends with $80 (E-0147)
+MetaSprites7FSet4DFrame3::
     db $f0, $f9, $03, $00 ; entry 0
     db $f0, $01, $04, $00 ; entry 1
     db $f8, $f9, $07, $00 ; entry 2
     db $f8, $01, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4DFrame4::
+MetaSprites7FSet4DFrame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4D; ends with $80 (E-0147)
-MetaSprites7F_4008Set4DFrame5::
+; frame 5 of MetaSprites7FSet4D; ends with $80 (E-0147)
+MetaSprites7FSet4DFrame5::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $ff, $09, $20 ; entry 1
     db $f8, $ff, $0a, $20 ; entry 2
     db $f8, $f7, $0b, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 78 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 78 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4E::
-    dw MetaSprites7F_4008Set4EFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4EFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4EFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4EFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4EFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4EFrame5 ; entry 5
+MetaSprites7FSet4E::
+    dw MetaSprites7FSet4EFrame0 ; entry 0
+    dw MetaSprites7FSet4EFrame1 ; entry 1
+    dw MetaSprites7FSet4EFrame2 ; entry 2
+    dw MetaSprites7FSet4EFrame3 ; entry 3
+    dw MetaSprites7FSet4EFrame4 ; entry 4
+    dw MetaSprites7FSet4EFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4EFrame0::
+MetaSprites7FSet4EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
-MetaSprites7F_4008Set4EFrame1::
+; frame 1 of MetaSprites7FSet4E; ends with $80 (E-0147)
+MetaSprites7FSet4EFrame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
-MetaSprites7F_4008Set4EFrame2::
+; frame 2 of MetaSprites7FSet4E; ends with $80 (E-0147)
+MetaSprites7FSet4EFrame2::
     db $f0, $f8, $05, $00 ; entry 0
     db $f0, $00, $06, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
-MetaSprites7F_4008Set4EFrame3::
+; frame 3 of MetaSprites7FSet4E; ends with $80 (E-0147)
+MetaSprites7FSet4EFrame3::
     db $f1, $f8, $05, $00 ; entry 0
     db $f1, $00, $06, $00 ; entry 1
     db $f9, $00, $08, $00 ; entry 2
     db $f9, $f8, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4EFrame4::
+MetaSprites7FSet4EFrame4::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $fd, $0a, $20 ; entry 1
     db $f9, $f8, $0d, $00 ; entry 2
     db $f9, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4E; ends with $80 (E-0147)
-MetaSprites7F_4008Set4EFrame5::
+; frame 5 of MetaSprites7FSet4E; ends with $80 (E-0147)
+MetaSprites7FSet4EFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $fd, $0a, $20 ; entry 1
     db $f8, $f8, $0b, $00 ; entry 2
     db $f8, $00, $0c, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 79 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 79 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set4F::
-    dw MetaSprites7F_4008Set4FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set4FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set4FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set4FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set4FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set4FFrame5 ; entry 5
+MetaSprites7FSet4F::
+    dw MetaSprites7FSet4FFrame0 ; entry 0
+    dw MetaSprites7FSet4FFrame1 ; entry 1
+    dw MetaSprites7FSet4FFrame2 ; entry 2
+    dw MetaSprites7FSet4FFrame3 ; entry 3
+    dw MetaSprites7FSet4FFrame4 ; entry 4
+    dw MetaSprites7FSet4FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet4F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4FFrame0::
+MetaSprites7FSet4FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
-MetaSprites7F_4008Set4FFrame1::
+; frame 1 of MetaSprites7FSet4F; ends with $80 (E-0147)
+MetaSprites7FSet4FFrame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
-MetaSprites7F_4008Set4FFrame2::
+; frame 2 of MetaSprites7FSet4F; ends with $80 (E-0147)
+MetaSprites7FSet4FFrame2::
     db $f0, $f8, $05, $00 ; entry 0
     db $f0, $00, $06, $00 ; entry 1
     db $f8, $f8, $07, $00 ; entry 2
     db $f8, $00, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
-MetaSprites7F_4008Set4FFrame3::
+; frame 3 of MetaSprites7FSet4F; ends with $80 (E-0147)
+MetaSprites7FSet4FFrame3::
     db $f1, $f8, $05, $00 ; entry 0
     db $f1, $00, $06, $00 ; entry 1
     db $f9, $00, $08, $00 ; entry 2
     db $f9, $f8, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet4F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set4FFrame4::
+MetaSprites7FSet4FFrame4::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $fd, $0a, $20 ; entry 1
     db $f9, $f8, $0b, $00 ; entry 2
     db $f9, $00, $0c, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set4F; ends with $80 (E-0147)
-MetaSprites7F_4008Set4FFrame5::
+; frame 5 of MetaSprites7FSet4F; ends with $80 (E-0147)
+MetaSprites7FSet4FFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $fd, $0a, $20 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 80 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 80 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set50::
-    dw MetaSprites7F_4008Set50Frame0 ; entry 0
-    dw MetaSprites7F_4008Set50Frame1 ; entry 1
-    dw MetaSprites7F_4008Set50Frame2 ; entry 2
-    dw MetaSprites7F_4008Set50Frame3 ; entry 3
-    dw MetaSprites7F_4008Set50Frame4 ; entry 4
-    dw MetaSprites7F_4008Set50Frame5 ; entry 5
+MetaSprites7FSet50::
+    dw MetaSprites7FSet50Frame0 ; entry 0
+    dw MetaSprites7FSet50Frame1 ; entry 1
+    dw MetaSprites7FSet50Frame2 ; entry 2
+    dw MetaSprites7FSet50Frame3 ; entry 3
+    dw MetaSprites7FSet50Frame4 ; entry 4
+    dw MetaSprites7FSet50Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet50; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set50Frame0::
+MetaSprites7FSet50Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
-MetaSprites7F_4008Set50Frame1::
+; frame 1 of MetaSprites7FSet50; ends with $80 (E-0147)
+MetaSprites7FSet50Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
-MetaSprites7F_4008Set50Frame2::
+; frame 2 of MetaSprites7FSet50; ends with $80 (E-0147)
+MetaSprites7FSet50Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
-MetaSprites7F_4008Set50Frame3::
+; frame 3 of MetaSprites7FSet50; ends with $80 (E-0147)
+MetaSprites7FSet50Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet50; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set50Frame4::
+MetaSprites7FSet50Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set50; ends with $80 (E-0147)
-MetaSprites7F_4008Set50Frame5::
+; frame 5 of MetaSprites7FSet50; ends with $80 (E-0147)
+MetaSprites7FSet50Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $00, $0c, $20 ; entry 2
     db $f8, $f8, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 81 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 81 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set51::
-    dw MetaSprites7F_4008Set51Frame0 ; entry 0
-    dw MetaSprites7F_4008Set51Frame1 ; entry 1
-    dw MetaSprites7F_4008Set51Frame2 ; entry 2
-    dw MetaSprites7F_4008Set51Frame3 ; entry 3
-    dw MetaSprites7F_4008Set51Frame4 ; entry 4
-    dw MetaSprites7F_4008Set51Frame5 ; entry 5
+MetaSprites7FSet51::
+    dw MetaSprites7FSet51Frame0 ; entry 0
+    dw MetaSprites7FSet51Frame1 ; entry 1
+    dw MetaSprites7FSet51Frame2 ; entry 2
+    dw MetaSprites7FSet51Frame3 ; entry 3
+    dw MetaSprites7FSet51Frame4 ; entry 4
+    dw MetaSprites7FSet51Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet51; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set51Frame0::
+MetaSprites7FSet51Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
-MetaSprites7F_4008Set51Frame1::
+; frame 1 of MetaSprites7FSet51; ends with $80 (E-0147)
+MetaSprites7FSet51Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
-MetaSprites7F_4008Set51Frame2::
+; frame 2 of MetaSprites7FSet51; ends with $80 (E-0147)
+MetaSprites7FSet51Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
-MetaSprites7F_4008Set51Frame3::
+; frame 3 of MetaSprites7FSet51; ends with $80 (E-0147)
+MetaSprites7FSet51Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet51; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set51Frame4::
+MetaSprites7FSet51Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set51; ends with $80 (E-0147)
-MetaSprites7F_4008Set51Frame5::
+; frame 5 of MetaSprites7FSet51; ends with $80 (E-0147)
+MetaSprites7FSet51Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 82 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 82 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set52::
-    dw MetaSprites7F_4008Set52Frame0 ; entry 0
-    dw MetaSprites7F_4008Set52Frame1 ; entry 1
-    dw MetaSprites7F_4008Set52Frame2 ; entry 2
-    dw MetaSprites7F_4008Set52Frame3 ; entry 3
-    dw MetaSprites7F_4008Set52Frame4 ; entry 4
-    dw MetaSprites7F_4008Set52Frame5 ; entry 5
+MetaSprites7FSet52::
+    dw MetaSprites7FSet52Frame0 ; entry 0
+    dw MetaSprites7FSet52Frame1 ; entry 1
+    dw MetaSprites7FSet52Frame2 ; entry 2
+    dw MetaSprites7FSet52Frame3 ; entry 3
+    dw MetaSprites7FSet52Frame4 ; entry 4
+    dw MetaSprites7FSet52Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet52; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set52Frame0::
+MetaSprites7FSet52Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
-MetaSprites7F_4008Set52Frame1::
+; frame 1 of MetaSprites7FSet52; ends with $80 (E-0147)
+MetaSprites7FSet52Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
-MetaSprites7F_4008Set52Frame2::
+; frame 2 of MetaSprites7FSet52; ends with $80 (E-0147)
+MetaSprites7FSet52Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
-MetaSprites7F_4008Set52Frame3::
+; frame 3 of MetaSprites7FSet52; ends with $80 (E-0147)
+MetaSprites7FSet52Frame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet52; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set52Frame4::
+MetaSprites7FSet52Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set52; ends with $80 (E-0147)
-MetaSprites7F_4008Set52Frame5::
+; frame 5 of MetaSprites7FSet52; ends with $80 (E-0147)
+MetaSprites7FSet52Frame5::
     db $f0, $ff, $0a, $20 ; entry 0
     db $f0, $f7, $0b, $20 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 83 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 83 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set53::
-    dw MetaSprites7F_4008Set53Frame0 ; entry 0
-    dw MetaSprites7F_4008Set53Frame1 ; entry 1
-    dw MetaSprites7F_4008Set53Frame2 ; entry 2
-    dw MetaSprites7F_4008Set53Frame3 ; entry 3
-    dw MetaSprites7F_4008Set53Frame4 ; entry 4
-    dw MetaSprites7F_4008Set53Frame5 ; entry 5
+MetaSprites7FSet53::
+    dw MetaSprites7FSet53Frame0 ; entry 0
+    dw MetaSprites7FSet53Frame1 ; entry 1
+    dw MetaSprites7FSet53Frame2 ; entry 2
+    dw MetaSprites7FSet53Frame3 ; entry 3
+    dw MetaSprites7FSet53Frame4 ; entry 4
+    dw MetaSprites7FSet53Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet53; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set53Frame0::
+MetaSprites7FSet53Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
-MetaSprites7F_4008Set53Frame1::
+; frame 1 of MetaSprites7FSet53; ends with $80 (E-0147)
+MetaSprites7FSet53Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
-MetaSprites7F_4008Set53Frame2::
+; frame 2 of MetaSprites7FSet53; ends with $80 (E-0147)
+MetaSprites7FSet53Frame2::
     db $f0, $f6, $04, $00 ; entry 0
     db $f0, $fe, $05, $00 ; entry 1
     db $f8, $f6, $06, $00 ; entry 2
     db $f8, $fe, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
-MetaSprites7F_4008Set53Frame3::
+; frame 3 of MetaSprites7FSet53; ends with $80 (E-0147)
+MetaSprites7FSet53Frame3::
     db $f8, $f6, $08, $00 ; entry 0
     db $f8, $fe, $09, $00 ; entry 1
     db $f0, $f6, $04, $00 ; entry 2
     db $f0, $fe, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet53; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set53Frame4::
+MetaSprites7FSet53Frame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $ff, $0c, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set53; ends with $80 (E-0147)
-MetaSprites7F_4008Set53Frame5::
+; frame 5 of MetaSprites7FSet53; ends with $80 (E-0147)
+MetaSprites7FSet53Frame5::
     db $f0, $f7, $0b, $20 ; entry 0
     db $f8, $ff, $0d, $20 ; entry 1
     db $f0, $ff, $0a, $20 ; entry 2
     db $f8, $f8, $0d, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 84 of MetaSprites7F_4008Table: 8 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 84 of MetaSprites7FTable: 8 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set54::
-    dw MetaSprites7F_4008Set54Frame0 ; entry 0
-    dw MetaSprites7F_4008Set54Frame1 ; entry 1
-    dw MetaSprites7F_4008Set54Frame2 ; entry 2
-    dw MetaSprites7F_4008Set54Frame3 ; entry 3
-    dw MetaSprites7F_4008Set54Frame4 ; entry 4
-    dw MetaSprites7F_4008Set54Frame5 ; entry 5
-    dw MetaSprites7F_4008Set54Frame6 ; entry 6
-    dw MetaSprites7F_4008Set54Frame7 ; entry 7
+MetaSprites7FSet54::
+    dw MetaSprites7FSet54Frame0 ; entry 0
+    dw MetaSprites7FSet54Frame1 ; entry 1
+    dw MetaSprites7FSet54Frame2 ; entry 2
+    dw MetaSprites7FSet54Frame3 ; entry 3
+    dw MetaSprites7FSet54Frame4 ; entry 4
+    dw MetaSprites7FSet54Frame5 ; entry 5
+    dw MetaSprites7FSet54Frame6 ; entry 6
+    dw MetaSprites7FSet54Frame7 ; entry 7
 
-; frame 0 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet54; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set54Frame0::
+MetaSprites7FSet54Frame0::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $08, $03, $00 ; entry 1
     db $e8, $07, $04, $20 ; entry 2
@@ -5808,8 +5725,8 @@ MetaSprites7F_4008Set54Frame0::
     db $f8, $f8, $09, $00 ; entry 15
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame1::
+; frame 1 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame1::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $08, $03, $00 ; entry 1
     db $e8, $07, $04, $20 ; entry 2
@@ -5828,8 +5745,8 @@ MetaSprites7F_4008Set54Frame1::
     db $e8, $ff, $19, $20 ; entry 15
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame2::
+; frame 2 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame2::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $08, $03, $00 ; entry 1
     db $e8, $07, $04, $20 ; entry 2
@@ -5848,8 +5765,8 @@ MetaSprites7F_4008Set54Frame2::
     db $e8, $f8, $19, $00 ; entry 15
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame3::
+; frame 3 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame3::
     db $e0, $f0, $00, $00 ; entry 0
     db $e8, $ff, $05, $20 ; entry 1
     db $f0, $07, $06, $20 ; entry 2
@@ -5868,9 +5785,9 @@ MetaSprites7F_4008Set54Frame3::
     db $e8, $07, $0c, $00 ; entry 15
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet54; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set54Frame4::
+MetaSprites7FSet54Frame4::
     db $e0, $f0, $00, $00 ; entry 0
     db $e8, $ff, $05, $20 ; entry 1
     db $f0, $07, $06, $20 ; entry 2
@@ -5890,8 +5807,8 @@ MetaSprites7F_4008Set54Frame4::
     db $e8, $0f, $0e, $00 ; entry 16
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame5::
+; frame 5 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame5::
     db $e0, $f0, $00, $00 ; entry 0
     db $e8, $ff, $05, $20 ; entry 1
     db $f0, $07, $06, $20 ; entry 2
@@ -5911,8 +5828,8 @@ MetaSprites7F_4008Set54Frame5::
     db $e8, $07, $11, $00 ; entry 16
     db $80 ; end
 
-; frame 6 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame6::
+; frame 6 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame6::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $08, $03, $00 ; entry 1
     db $e8, $07, $04, $20 ; entry 2
@@ -5931,8 +5848,8 @@ MetaSprites7F_4008Set54Frame6::
     db $f0, $ff, $07, $20 ; entry 15
     db $80 ; end
 
-; frame 7 of MetaSprites7F_4008Set54; ends with $80 (E-0147)
-MetaSprites7F_4008Set54Frame7::
+; frame 7 of MetaSprites7FSet54; ends with $80 (E-0147)
+MetaSprites7FSet54Frame7::
     db $e0, $f0, $00, $00 ; entry 0
     db $e0, $08, $03, $00 ; entry 1
     db $e8, $07, $04, $20 ; entry 2
@@ -5951,669 +5868,659 @@ MetaSprites7F_4008Set54Frame7::
     db $f0, $ff, $18, $20 ; entry 15
     db $80 ; end
 
-; meta-sprite set 85 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 85 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set55::
-    dw MetaSprites7F_4008Set55Frame0 ; entry 0
-    dw MetaSprites7F_4008Set55Frame1 ; entry 1
-    dw MetaSprites7F_4008Set55Frame2 ; entry 2
-    dw MetaSprites7F_4008Set55Frame3 ; entry 3
-    dw MetaSprites7F_4008Set55Frame4 ; entry 4
-    dw MetaSprites7F_4008Set55Frame5 ; entry 5
+MetaSprites7FSet55::
+    dw MetaSprites7FSet55Frame0 ; entry 0
+    dw MetaSprites7FSet55Frame1 ; entry 1
+    dw MetaSprites7FSet55Frame2 ; entry 2
+    dw MetaSprites7FSet55Frame3 ; entry 3
+    dw MetaSprites7FSet55Frame4 ; entry 4
+    dw MetaSprites7FSet55Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet55; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set55Frame0::
+MetaSprites7FSet55Frame0::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
-MetaSprites7F_4008Set55Frame1::
+; frame 1 of MetaSprites7FSet55; ends with $80 (E-0147)
+MetaSprites7FSet55Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
-MetaSprites7F_4008Set55Frame2::
+; frame 2 of MetaSprites7FSet55; ends with $80 (E-0147)
+MetaSprites7FSet55Frame2::
     db $f1, $f8, $06, $00 ; entry 0
     db $f1, $00, $07, $00 ; entry 1
     db $f9, $f8, $08, $00 ; entry 2
     db $f9, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
-MetaSprites7F_4008Set55Frame3::
+; frame 3 of MetaSprites7FSet55; ends with $80 (E-0147)
+MetaSprites7FSet55Frame3::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet55; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set55Frame4::
+MetaSprites7FSet55Frame4::
     db $f1, $ff, $00, $20 ; entry 0
     db $f1, $f7, $01, $20 ; entry 1
     db $f9, $f8, $0c, $00 ; entry 2
     db $f9, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set55; ends with $80 (E-0147)
-MetaSprites7F_4008Set55Frame5::
+; frame 5 of MetaSprites7FSet55; ends with $80 (E-0147)
+MetaSprites7FSet55Frame5::
     db $f0, $ff, $00, $20 ; entry 0
     db $f0, $f7, $01, $20 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 86 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 86 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set56::
-    dw MetaSprites7F_4008Set56Frame0 ; entry 0
-    dw MetaSprites7F_4008Set56Frame1 ; entry 1
-    dw MetaSprites7F_4008Set56Frame2 ; entry 2
-    dw MetaSprites7F_4008Set56Frame3 ; entry 3
-    dw MetaSprites7F_4008Set56Frame4 ; entry 4
-    dw MetaSprites7F_4008Set56Frame5 ; entry 5
+MetaSprites7FSet56::
+    dw MetaSprites7FSet56Frame0 ; entry 0
+    dw MetaSprites7FSet56Frame1 ; entry 1
+    dw MetaSprites7FSet56Frame2 ; entry 2
+    dw MetaSprites7FSet56Frame3 ; entry 3
+    dw MetaSprites7FSet56Frame4 ; entry 4
+    dw MetaSprites7FSet56Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet56; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set56Frame0::
+MetaSprites7FSet56Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
-MetaSprites7F_4008Set56Frame1::
+; frame 1 of MetaSprites7FSet56; ends with $80 (E-0147)
+MetaSprites7FSet56Frame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
-MetaSprites7F_4008Set56Frame2::
+; frame 2 of MetaSprites7FSet56; ends with $80 (E-0147)
+MetaSprites7FSet56Frame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
-MetaSprites7F_4008Set56Frame3::
+; frame 3 of MetaSprites7FSet56; ends with $80 (E-0147)
+MetaSprites7FSet56Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet56; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set56Frame4::
+MetaSprites7FSet56Frame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set56; ends with $80 (E-0147)
-MetaSprites7F_4008Set56Frame5::
+; frame 5 of MetaSprites7FSet56; ends with $80 (E-0147)
+MetaSprites7FSet56Frame5::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 87 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 87 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set57::
-    dw MetaSprites7F_4008Set57Frame0 ; entry 0
-    dw MetaSprites7F_4008Set57Frame1 ; entry 1
-    dw MetaSprites7F_4008Set57Frame2 ; entry 2
-    dw MetaSprites7F_4008Set57Frame3 ; entry 3
-    dw MetaSprites7F_4008Set57Frame4 ; entry 4
-    dw MetaSprites7F_4008Set57Frame5 ; entry 5
+MetaSprites7FSet57::
+    dw MetaSprites7FSet57Frame0 ; entry 0
+    dw MetaSprites7FSet57Frame1 ; entry 1
+    dw MetaSprites7FSet57Frame2 ; entry 2
+    dw MetaSprites7FSet57Frame3 ; entry 3
+    dw MetaSprites7FSet57Frame4 ; entry 4
+    dw MetaSprites7FSet57Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet57; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set57Frame0::
+MetaSprites7FSet57Frame0::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $ff, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
-MetaSprites7F_4008Set57Frame1::
+; frame 1 of MetaSprites7FSet57; ends with $80 (E-0147)
+MetaSprites7FSet57Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $ff, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
-MetaSprites7F_4008Set57Frame2::
+; frame 2 of MetaSprites7FSet57; ends with $80 (E-0147)
+MetaSprites7FSet57Frame2::
     db $f9, $f8, $06, $00 ; entry 0
     db $f9, $00, $07, $00 ; entry 1
     db $f1, $f8, $04, $00 ; entry 2
     db $f1, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
-MetaSprites7F_4008Set57Frame3::
+; frame 3 of MetaSprites7FSet57; ends with $80 (E-0147)
+MetaSprites7FSet57Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet57; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set57Frame4::
+MetaSprites7FSet57Frame4::
     db $f1, $f8, $0a, $00 ; entry 0
     db $f1, $00, $0b, $00 ; entry 1
     db $f9, $f8, $0c, $00 ; entry 2
     db $f9, $ff, $0c, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set57; ends with $80 (E-0147)
-MetaSprites7F_4008Set57Frame5::
+; frame 5 of MetaSprites7FSet57; ends with $80 (E-0147)
+MetaSprites7FSet57Frame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $ff, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 88 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 88 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set58::
-    dw MetaSprites7F_4008Set58Frame0 ; entry 0
-    dw MetaSprites7F_4008Set58Frame1 ; entry 1
-    dw MetaSprites7F_4008Set58Frame2 ; entry 2
-    dw MetaSprites7F_4008Set58Frame3 ; entry 3
-    dw MetaSprites7F_4008Set58Frame4 ; entry 4
-    dw MetaSprites7F_4008Set58Frame5 ; entry 5
+MetaSprites7FSet58::
+    dw MetaSprites7FSet58Frame0 ; entry 0
+    dw MetaSprites7FSet58Frame1 ; entry 1
+    dw MetaSprites7FSet58Frame2 ; entry 2
+    dw MetaSprites7FSet58Frame3 ; entry 3
+    dw MetaSprites7FSet58Frame4 ; entry 4
+    dw MetaSprites7FSet58Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet58; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set58Frame0::
+MetaSprites7FSet58Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
-MetaSprites7F_4008Set58Frame1::
+; frame 1 of MetaSprites7FSet58; ends with $80 (E-0147)
+MetaSprites7FSet58Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
-MetaSprites7F_4008Set58Frame2::
+; frame 2 of MetaSprites7FSet58; ends with $80 (E-0147)
+MetaSprites7FSet58Frame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
-MetaSprites7F_4008Set58Frame3::
+; frame 3 of MetaSprites7FSet58; ends with $80 (E-0147)
+MetaSprites7FSet58Frame3::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet58; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set58Frame4::
+MetaSprites7FSet58Frame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set58; ends with $80 (E-0147)
-MetaSprites7F_4008Set58Frame5::
+; frame 5 of MetaSprites7FSet58; ends with $80 (E-0147)
+MetaSprites7FSet58Frame5::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 89 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 89 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set59::
-    dw MetaSprites7F_4008Set59Frame0 ; entry 0
-    dw MetaSprites7F_4008Set59Frame1 ; entry 1
-    dw MetaSprites7F_4008Set59Frame2 ; entry 2
-    dw MetaSprites7F_4008Set59Frame3 ; entry 3
-    dw MetaSprites7F_4008Set59Frame4 ; entry 4
-    dw MetaSprites7F_4008Set59Frame5 ; entry 5
+MetaSprites7FSet59::
+    dw MetaSprites7FSet59Frame0 ; entry 0
+    dw MetaSprites7FSet59Frame1 ; entry 1
+    dw MetaSprites7FSet59Frame2 ; entry 2
+    dw MetaSprites7FSet59Frame3 ; entry 3
+    dw MetaSprites7FSet59Frame4 ; entry 4
+    dw MetaSprites7FSet59Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet59; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set59Frame0::
+MetaSprites7FSet59Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
-MetaSprites7F_4008Set59Frame1::
+; frame 1 of MetaSprites7FSet59; ends with $80 (E-0147)
+MetaSprites7FSet59Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
-MetaSprites7F_4008Set59Frame2::
+; frame 2 of MetaSprites7FSet59; ends with $80 (E-0147)
+MetaSprites7FSet59Frame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
-MetaSprites7F_4008Set59Frame3::
+; frame 3 of MetaSprites7FSet59; ends with $80 (E-0147)
+MetaSprites7FSet59Frame3::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet59; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set59Frame4::
+MetaSprites7FSet59Frame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set59; ends with $80 (E-0147)
-MetaSprites7F_4008Set59Frame5::
+; frame 5 of MetaSprites7FSet59; ends with $80 (E-0147)
+MetaSprites7FSet59Frame5::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 90 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 90 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set5A::
-    dw MetaSprites7F_4008Set5AFrame0 ; entry 0
-    dw MetaSprites7F_4008Set5AFrame1 ; entry 1
-    dw MetaSprites7F_4008Set5AFrame2 ; entry 2
-    dw MetaSprites7F_4008Set5AFrame3 ; entry 3
-    dw MetaSprites7F_4008Set5AFrame4 ; entry 4
-    dw MetaSprites7F_4008Set5AFrame5 ; entry 5
+MetaSprites7FSet5A::
+    dw MetaSprites7FSet5AFrame0 ; entry 0
+    dw MetaSprites7FSet5AFrame1 ; entry 1
+    dw MetaSprites7FSet5AFrame2 ; entry 2
+    dw MetaSprites7FSet5AFrame3 ; entry 3
+    dw MetaSprites7FSet5AFrame4 ; entry 4
+    dw MetaSprites7FSet5AFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet5A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5AFrame0::
+MetaSprites7FSet5AFrame0::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
-MetaSprites7F_4008Set5AFrame1::
+; frame 1 of MetaSprites7FSet5A; ends with $80 (E-0147)
+MetaSprites7FSet5AFrame1::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
-MetaSprites7F_4008Set5AFrame2::
+; frame 2 of MetaSprites7FSet5A; ends with $80 (E-0147)
+MetaSprites7FSet5AFrame2::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
-MetaSprites7F_4008Set5AFrame3::
+; frame 3 of MetaSprites7FSet5A; ends with $80 (E-0147)
+MetaSprites7FSet5AFrame3::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet5A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5AFrame4::
+MetaSprites7FSet5AFrame4::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set5A; ends with $80 (E-0147)
-MetaSprites7F_4008Set5AFrame5::
+; frame 5 of MetaSprites7FSet5A; ends with $80 (E-0147)
+MetaSprites7FSet5AFrame5::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 91 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 91 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set5B::
-    dw MetaSprites7F_4008Set5BFrame0 ; entry 0
-    dw MetaSprites7F_4008Set5BFrame1 ; entry 1
-    dw MetaSprites7F_4008Set5BFrame2 ; entry 2
-    dw MetaSprites7F_4008Set5BFrame3 ; entry 3
-    dw MetaSprites7F_4008Set5BFrame4 ; entry 4
-    dw MetaSprites7F_4008Set5BFrame5 ; entry 5
+MetaSprites7FSet5B::
+    dw MetaSprites7FSet5BFrame0 ; entry 0
+    dw MetaSprites7FSet5BFrame1 ; entry 1
+    dw MetaSprites7FSet5BFrame2 ; entry 2
+    dw MetaSprites7FSet5BFrame3 ; entry 3
+    dw MetaSprites7FSet5BFrame4 ; entry 4
+    dw MetaSprites7FSet5BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet5B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5BFrame0::
+MetaSprites7FSet5BFrame0::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
-MetaSprites7F_4008Set5BFrame1::
+; frame 1 of MetaSprites7FSet5B; ends with $80 (E-0147)
+MetaSprites7FSet5BFrame1::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
-MetaSprites7F_4008Set5BFrame2::
+; frame 2 of MetaSprites7FSet5B; ends with $80 (E-0147)
+MetaSprites7FSet5BFrame2::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
-MetaSprites7F_4008Set5BFrame3::
+; frame 3 of MetaSprites7FSet5B; ends with $80 (E-0147)
+MetaSprites7FSet5BFrame3::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet5B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5BFrame4::
+MetaSprites7FSet5BFrame4::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set5B; ends with $80 (E-0147)
-MetaSprites7F_4008Set5BFrame5::
+; frame 5 of MetaSprites7FSet5B; ends with $80 (E-0147)
+MetaSprites7FSet5BFrame5::
     db $f1, $f8, $00, $00 ; entry 0
     db $f1, $00, $01, $00 ; entry 1
     db $f9, $f8, $02, $00 ; entry 2
     db $f9, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 92 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 92 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set5C::
-    dw MetaSprites7F_4008Set5CFrame0 ; entry 0
-    dw MetaSprites7F_4008Set5CFrame1 ; entry 1
-    dw MetaSprites7F_4008Set5CFrame2 ; entry 2
-    dw MetaSprites7F_4008Set5CFrame3 ; entry 3
-    dw MetaSprites7F_4008Set5CFrame4 ; entry 4
-    dw MetaSprites7F_4008Set5CFrame5 ; entry 5
+MetaSprites7FSet5C::
+    dw MetaSprites7FSet5CFrame0 ; entry 0
+    dw MetaSprites7FSet5CFrame1 ; entry 1
+    dw MetaSprites7FSet5CFrame2 ; entry 2
+    dw MetaSprites7FSet5CFrame3 ; entry 3
+    dw MetaSprites7FSet5CFrame4 ; entry 4
+    dw MetaSprites7FSet5CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet5C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5CFrame0::
+MetaSprites7FSet5CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
-MetaSprites7F_4008Set5CFrame1::
+; frame 1 of MetaSprites7FSet5C; ends with $80 (E-0147)
+MetaSprites7FSet5CFrame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $ff, $02, $20 ; entry 2
     db $f8, $f7, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
-MetaSprites7F_4008Set5CFrame2::
+; frame 2 of MetaSprites7FSet5C; ends with $80 (E-0147)
+MetaSprites7FSet5CFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
-MetaSprites7F_4008Set5CFrame3::
+; frame 3 of MetaSprites7FSet5C; ends with $80 (E-0147)
+MetaSprites7FSet5CFrame3::
     db $f8, $f8, $08, $00 ; entry 0
     db $f8, $00, $09, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet5C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5CFrame4::
+MetaSprites7FSet5CFrame4::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $f8, $0c, $00 ; entry 2
     db $f8, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set5C; ends with $80 (E-0147)
-MetaSprites7F_4008Set5CFrame5::
+; frame 5 of MetaSprites7FSet5C; ends with $80 (E-0147)
+MetaSprites7FSet5CFrame5::
     db $f0, $f8, $0a, $00 ; entry 0
     db $f0, $00, $0b, $00 ; entry 1
     db $f8, $ff, $0c, $20 ; entry 2
     db $f8, $f7, $0d, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 95 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 95 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set5F::
-    dw MetaSprites7F_4008Set5FFrame0 ; entry 0
-    dw MetaSprites7F_4008Set5FFrame1 ; entry 1
-    dw MetaSprites7F_4008Set5FFrame2 ; entry 2
-    dw MetaSprites7F_4008Set5FFrame3 ; entry 3
-    dw MetaSprites7F_4008Set5FFrame4 ; entry 4
-    dw MetaSprites7F_4008Set5FFrame5 ; entry 5
+MetaSprites7FSet5F::
+    dw MetaSprites7FSet5FFrame0 ; entry 0
+    dw MetaSprites7FSet5FFrame1 ; entry 1
+    dw MetaSprites7FSet5FFrame2 ; entry 2
+    dw MetaSprites7FSet5FFrame3 ; entry 3
+    dw MetaSprites7FSet5FFrame4 ; entry 4
+    dw MetaSprites7FSet5FFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet5F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5FFrame0::
+MetaSprites7FSet5FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $02, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
-MetaSprites7F_4008Set5FFrame1::
+; frame 1 of MetaSprites7FSet5F; ends with $80 (E-0147)
+MetaSprites7FSet5FFrame1::
     db $f9, $00, $01, $20 ; entry 0
     db $f9, $f8, $02, $20 ; entry 1
     db $f1, $f8, $03, $00 ; entry 2
     db $f1, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
-MetaSprites7F_4008Set5FFrame2::
+; frame 2 of MetaSprites7FSet5F; ends with $80 (E-0147)
+MetaSprites7FSet5FFrame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
-MetaSprites7F_4008Set5FFrame3::
+; frame 3 of MetaSprites7FSet5F; ends with $80 (E-0147)
+MetaSprites7FSet5FFrame3::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet5F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set5FFrame4::
+MetaSprites7FSet5FFrame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0c, $20 ; entry 1
     db $f8, $f8, $0d, $00 ; entry 2
     db $f8, $00, $0e, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set5F; ends with $80 (E-0147)
-MetaSprites7F_4008Set5FFrame5::
+; frame 5 of MetaSprites7FSet5F; ends with $80 (E-0147)
+MetaSprites7FSet5FFrame5::
     db $f1, $f8, $0f, $00 ; entry 0
     db $f1, $00, $0f, $20 ; entry 1
     db $f9, $00, $0d, $20 ; entry 2
     db $f9, $f8, $0e, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 97 of MetaSprites7F_4008Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 97 of MetaSprites7FTable: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_4008Set61::
-    dw MetaSprites7F_4008Set61Frame0 ; entry 0
-    dw MetaSprites7F_4008Set61Frame1 ; entry 1
-    dw MetaSprites7F_4008Set61Frame2 ; entry 2
-    dw MetaSprites7F_4008Set61Frame3 ; entry 3
-    dw MetaSprites7F_4008Set61Frame4 ; entry 4
-    dw MetaSprites7F_4008Set61Frame5 ; entry 5
+MetaSprites7FSet61::
+    dw MetaSprites7FSet61Frame0 ; entry 0
+    dw MetaSprites7FSet61Frame1 ; entry 1
+    dw MetaSprites7FSet61Frame2 ; entry 2
+    dw MetaSprites7FSet61Frame3 ; entry 3
+    dw MetaSprites7FSet61Frame4 ; entry 4
+    dw MetaSprites7FSet61Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FSet61; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set61Frame0::
+MetaSprites7FSet61Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
-MetaSprites7F_4008Set61Frame1::
+; frame 1 of MetaSprites7FSet61; ends with $80 (E-0147)
+MetaSprites7FSet61Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
-MetaSprites7F_4008Set61Frame2::
+; frame 2 of MetaSprites7FSet61; ends with $80 (E-0147)
+MetaSprites7FSet61Frame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
-MetaSprites7F_4008Set61Frame3::
+; frame 3 of MetaSprites7FSet61; ends with $80 (E-0147)
+MetaSprites7FSet61Frame3::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FSet61; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_4008Set61Frame4::
+MetaSprites7FSet61Frame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_4008Set61; ends with $80 (E-0147)
-MetaSprites7F_4008Set61Frame5::
+; frame 5 of MetaSprites7FSet61; ends with $80 (E-0147)
+MetaSprites7FSet61Frame5::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; DE = MetaSprites7F_7011Table (the table of meta-sprite sets), then DrawMetaSpriteAt
+; DE = MetaSprites7FTable_2 (the table of meta-sprite sets), then DrawMetaSpriteAt
 DrawMetaSprite::
-    ld de, MetaSprites7F_7011Table
+    ld de, MetaSprites7FTable_2
     call DrawMetaSpriteAt
     ret
 
-; the caller of DrawMetaSprite passes DE = $MetaSprites7F_7011Table; the builder takes the word at
-; DE + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 42
-; words, up to the next code or data (E-0147, C1)
+; the caller of DrawMetaSprite passes DE = $MetaSprites7FTable_2; the builder takes the word at DE +
+; 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 42 words,
+; up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
-MetaSprites7F_7011Table::
-    dw MetaSprites7F_7011Set00 ; id 0
-    dw MetaSprites7F_7011Set01 ; id 1
-    dw MetaSprites7F_7011Set02 ; id 2
-    dw MetaSprites7F_7011Set03 ; id 3
-    dw MetaSprites7F_7011Set04 ; id 4
-    dw MetaSprites7F_7011Set05 ; id 5
-    dw MetaSprites7F_7011Set06 ; id 6
-    dw MetaSprites7F_7011Set07 ; id 7
-    dw MetaSprites7F_7011Set08 ; id 8
-    dw MetaSprites7F_7011Set09 ; id 9
-    dw MetaSprites7F_7011Set0A ; id 10
-    dw MetaSprites7F_7011Set0B ; id 11
-    dw MetaSprites7F_7011Set0C ; id 12
-    dw MetaSprites7F_7011Set0D ; id 13
-    dw MetaSprites7F_7011Set0E ; id 14
-    dw MetaSprites7F_7011Set0F ; id 15
-    dw MetaSprites7F_7011Set10 ; id 16
-    dw MetaSprites7F_7011Set11 ; id 17
-    dw MetaSprites7F_7011Set12 ; id 18
-    dw MetaSprites7F_7011Set13 ; id 19
-    dw MetaSprites7F_7011Set14 ; id 20
-    dw MetaSprites7F_7011Set15 ; id 21
-    dw MetaSprites7F_7011Set16 ; id 22
-    dw MetaSprites7F_7011Set17 ; id 23
-    dw MetaSprites7F_7011Set18 ; id 24
-    dw MetaSprites7F_7011Set19 ; id 25
-    dw MetaSprites7F_7011Set1A ; id 26
-    dw MetaSprites7F_7011Set1B ; id 27
-    dw MetaSprites7F_7011Set1C ; id 28
-    dw MetaSprites7F_7011Set1D ; id 29
-    dw MetaSprites7F_7011Set1E ; id 30
-    dw MetaSprites7F_7011Set1F ; id 31
-    dw MetaSprites7F_7011Set20 ; id 32
-    dw MetaSprites7F_7011Set21 ; id 33
-    dw MetaSprites7F_7011Set22 ; id 34
-    dw MetaSprites7F_7011Set23 ; id 35
-    dw MetaSprites7F_7011Set24 ; id 36
-    dw MetaSprites7F_7011Set25 ; id 37
-    dw MetaSprites7F_7011Set26 ; id 38
-    dw MetaSprites7F_7011Set27 ; id 39
-    dw MetaSprites7F_7011Set28 ; id 40
-    dw MetaSprites7F_7011Set29 ; id 41
+MetaSprites7FTable_2::
+    dw MetaSprites7FTable_2Set00 ; id 0
+    dw MetaSprites7FTable_2Set01 ; id 1
+    dw MetaSprites7FTable_2Set02 ; id 2
+    dw MetaSprites7FTable_2Set03 ; id 3
+    dw MetaSprites7FTable_2Set04 ; id 4
+    dw MetaSprites7FTable_2Set05 ; id 5
+    dw MetaSprites7FTable_2Set06 ; id 6
+    dw MetaSprites7FTable_2Set07 ; id 7
+    dw MetaSprites7FTable_2Set08 ; id 8
+    dw MetaSprites7FTable_2Set09 ; id 9
+    dw MetaSprites7FTable_2Set0A ; id 10
+    dw MetaSprites7FTable_2Set0B ; id 11
+    dw MetaSprites7FTable_2Set0C ; id 12
+    dw MetaSprites7FTable_2Set0D ; id 13
+    dw MetaSprites7FTable_2Set0E ; id 14
+    dw MetaSprites7FTable_2Set0F ; id 15
+    dw MetaSprites7FTable_2Set10 ; id 16
+    dw MetaSprites7FTable_2Set11 ; id 17
+    dw MetaSprites7FTable_2Set12 ; id 18
+    dw MetaSprites7FTable_2Set13 ; id 19
+    dw MetaSprites7FTable_2Set14 ; id 20
+    dw MetaSprites7FTable_2Set15 ; id 21
+    dw MetaSprites7FTable_2Set16 ; id 22
+    dw MetaSprites7FTable_2Set17 ; id 23
+    dw MetaSprites7FTable_2Set18 ; id 24
+    dw MetaSprites7FTable_2Set19 ; id 25
+    dw MetaSprites7FTable_2Set1A ; id 26
+    dw MetaSprites7FTable_2Set1B ; id 27
+    dw MetaSprites7FTable_2Set1C ; id 28
+    dw MetaSprites7FTable_2Set1D ; id 29
+    dw MetaSprites7FTable_2Set1E ; id 30
+    dw MetaSprites7FTable_2Set1F ; id 31
+    dw MetaSprites7FTable_2Set20 ; id 32
+    dw MetaSprites7FTable_2Set21 ; id 33
+    dw MetaSprites7FTable_2Set22 ; id 34
+    dw MetaSprites7FTable_2Set23 ; id 35
+    dw MetaSprites7FTable_2Set24 ; id 36
+    dw MetaSprites7FTable_2Set25 ; id 37
+    dw MetaSprites7FTable_2Set26 ; id 38
+    dw MetaSprites7FTable_2Set27 ; id 39
+    dw MetaSprites7FTable_2Set28 ; id 40
+    dw MetaSprites7FTable_2Set29 ; id 41
 
 ; DE = table of set pointers: returns at once when hOamNextEntry is $27 or more; otherwise converts
 ; the 16-bit position (hSpriteOriginX with hSpriteOriginXHi, hSpriteOriginY with hSpriteOriginYHi)
@@ -7132,835 +7039,804 @@ BGTileUnderPointIsSpriteHideTile_Bank7F::
     pop hl
     ret
 
-; meta-sprite set 0 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 0 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set00::
-    dw MetaSprites7F_7011Set00Frame0 ; entry 0
+MetaSprites7FTable_2Set00::
+    dw MetaSprites7FTable_2Set00Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set00; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set00; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set00Frame0::
+MetaSprites7FTable_2Set00Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 1 of MetaSprites7F_7011Table: 2 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set01::
-    dw MetaSprites7F_7011Set01Frame0 ; entry 0
-    dw MetaSprites7F_7011Set01Frame1 ; entry 1
+; meta-sprite set 1 of MetaSprites7FTable_2: 2 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set01::
+    dw MetaSprites7FTable_2Set01Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set01Frame1 ; entry 1
 
-; frame 0 of MetaSprites7F_7011Set01; ends with $80 (E-0147)
-MetaSprites7F_7011Set01Frame0::
+; frame 0 of MetaSprites7FTable_2Set01; ends with $80 (E-0147)
+MetaSprites7FTable_2Set01Frame0::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $02, $20 ; entry 1
     db $f8, $f8, $03, $00 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set01; ends with $80 (E-0147)
-MetaSprites7F_7011Set01Frame1::
+; frame 1 of MetaSprites7FTable_2Set01; ends with $80 (E-0147)
+MetaSprites7FTable_2Set01Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $00, $20 ; entry 1
     db $f8, $f8, $01, $00 ; entry 2
     db $f8, $00, $01, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 2 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 2 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set02::
-    dw MetaSprites7F_7011Set02Frame0 ; entry 0
+MetaSprites7FTable_2Set02::
+    dw MetaSprites7FTable_2Set02Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set02; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set02; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set02Frame0::
+MetaSprites7FTable_2Set02Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 3 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set03::
-    dw MetaSprites7F_7011Set03Frame0 ; entry 0
+; meta-sprite set 3 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set03::
+    dw MetaSprites7FTable_2Set03Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set03; ends with $80 (E-0147)
-MetaSprites7F_7011Set03Frame0::
+; frame 0 of MetaSprites7FTable_2Set03; ends with $80 (E-0147)
+MetaSprites7FTable_2Set03Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 4 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 4 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set04::
-    dw MetaSprites7F_7011Set04Frame0 ; entry 0
+MetaSprites7FTable_2Set04::
+    dw MetaSprites7FTable_2Set04Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set04; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set04; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set04Frame0::
+MetaSprites7FTable_2Set04Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 5 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set05::
-    dw MetaSprites7F_7011Set05Frame0 ; entry 0
+; meta-sprite set 5 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set05::
+    dw MetaSprites7FTable_2Set05Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set05; ends with $80 (E-0147)
-MetaSprites7F_7011Set05Frame0::
+; frame 0 of MetaSprites7FTable_2Set05; ends with $80 (E-0147)
+MetaSprites7FTable_2Set05Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 6 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 6 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set06::
-    dw MetaSprites7F_7011Set06Frame0 ; entry 0
+MetaSprites7FTable_2Set06::
+    dw MetaSprites7FTable_2Set06Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set06; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set06; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set06Frame0::
+MetaSprites7FTable_2Set06Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 7 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set07::
-    dw MetaSprites7F_7011Set07Frame0 ; entry 0
+; meta-sprite set 7 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set07::
+    dw MetaSprites7FTable_2Set07Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set07; ends with $80 (E-0147)
-MetaSprites7F_7011Set07Frame0::
+; frame 0 of MetaSprites7FTable_2Set07; ends with $80 (E-0147)
+MetaSprites7FTable_2Set07Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 8 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 8 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set08::
-    dw MetaSprites7F_7011Set08Frame0 ; entry 0
+MetaSprites7FTable_2Set08::
+    dw MetaSprites7FTable_2Set08Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set08; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set08; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set08Frame0::
+MetaSprites7FTable_2Set08Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 9 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set09::
-    dw MetaSprites7F_7011Set09Frame0 ; entry 0
+; meta-sprite set 9 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set09::
+    dw MetaSprites7FTable_2Set09Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set09; ends with $80 (E-0147)
-MetaSprites7F_7011Set09Frame0::
+; frame 0 of MetaSprites7FTable_2Set09; ends with $80 (E-0147)
+MetaSprites7FTable_2Set09Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 10 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 10 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set0A::
-    dw MetaSprites7F_7011Set0AFrame0 ; entry 0
+MetaSprites7FTable_2Set0A::
+    dw MetaSprites7FTable_2Set0AFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set0A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set0AFrame0::
+MetaSprites7FTable_2Set0AFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 11 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set0B::
-    dw MetaSprites7F_7011Set0BFrame0 ; entry 0
+; meta-sprite set 11 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set0B::
+    dw MetaSprites7FTable_2Set0BFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0B; ends with $80 (E-0147)
-MetaSprites7F_7011Set0BFrame0::
+; frame 0 of MetaSprites7FTable_2Set0B; ends with $80 (E-0147)
+MetaSprites7FTable_2Set0BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 12 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 12 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set0C::
-    dw MetaSprites7F_7011Set0CFrame0 ; entry 0
+MetaSprites7FTable_2Set0C::
+    dw MetaSprites7FTable_2Set0CFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set0C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set0CFrame0::
+MetaSprites7FTable_2Set0CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 13 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set0D::
-    dw MetaSprites7F_7011Set0DFrame0 ; entry 0
+; meta-sprite set 13 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set0D::
+    dw MetaSprites7FTable_2Set0DFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0D; ends with $80 (E-0147)
-MetaSprites7F_7011Set0DFrame0::
+; frame 0 of MetaSprites7FTable_2Set0D; ends with $80 (E-0147)
+MetaSprites7FTable_2Set0DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 14 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 14 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set0E::
-    dw MetaSprites7F_7011Set0EFrame0 ; entry 0
+MetaSprites7FTable_2Set0E::
+    dw MetaSprites7FTable_2Set0EFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0E; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set0E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set0EFrame0::
+MetaSprites7FTable_2Set0EFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 15 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set0F::
-    dw MetaSprites7F_7011Set0FFrame0 ; entry 0
+; meta-sprite set 15 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set0F::
+    dw MetaSprites7FTable_2Set0FFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set0F; ends with $80 (E-0147)
-MetaSprites7F_7011Set0FFrame0::
+; frame 0 of MetaSprites7FTable_2Set0F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set0FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 16 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 16 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set10::
-    dw MetaSprites7F_7011Set10Frame0 ; entry 0
+MetaSprites7FTable_2Set10::
+    dw MetaSprites7FTable_2Set10Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set10; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set10; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set10Frame0::
+MetaSprites7FTable_2Set10Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 17 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set11::
-    dw MetaSprites7F_7011Set11Frame0 ; entry 0
+; meta-sprite set 17 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set11::
+    dw MetaSprites7FTable_2Set11Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set11; ends with $80 (E-0147)
-MetaSprites7F_7011Set11Frame0::
+; frame 0 of MetaSprites7FTable_2Set11; ends with $80 (E-0147)
+MetaSprites7FTable_2Set11Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 18 of MetaSprites7F_7011Table: 4 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 18 of MetaSprites7FTable_2: 4 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set12::
-    dw MetaSprites7F_7011Set12Frame0 ; entry 0
-    dw MetaSprites7F_7011Set12Frame1 ; entry 1
-    dw MetaSprites7F_7011Set12Frame2 ; entry 2
-    dw MetaSprites7F_7011Set12Frame3 ; entry 3
+MetaSprites7FTable_2Set12::
+    dw MetaSprites7FTable_2Set12Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set12Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set12Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set12Frame3 ; entry 3
 
-; frame 0 of MetaSprites7F_7011Set12; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set12; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set12Frame0::
+MetaSprites7FTable_2Set12Frame0::
     db $ec, $f8, $00, $00 ; entry 0
     db $f4, $f8, $01, $00 ; entry 1
     db $f4, $00, $01, $20 ; entry 2
     db $ec, $00, $00, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set12; ends with $80 (E-0147)
-MetaSprites7F_7011Set12Frame1::
+; frame 1 of MetaSprites7FTable_2Set12; ends with $80 (E-0147)
+MetaSprites7FTable_2Set12Frame1::
     db $ed, $f8, $02, $00 ; entry 0
     db $f5, $f8, $03, $00 ; entry 1
     db $ed, $00, $02, $20 ; entry 2
     db $f5, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set12; ends with $80 (E-0147)
-MetaSprites7F_7011Set12Frame2::
+; frame 2 of MetaSprites7FTable_2Set12; ends with $80 (E-0147)
+MetaSprites7FTable_2Set12Frame2::
     db $ec, $f8, $04, $00 ; entry 0
     db $f4, $f8, $05, $00 ; entry 1
     db $ec, $00, $04, $20 ; entry 2
     db $f4, $00, $05, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set12; ends with $80 (E-0147)
-MetaSprites7F_7011Set12Frame3::
+; frame 3 of MetaSprites7FTable_2Set12; ends with $80 (E-0147)
+MetaSprites7FTable_2Set12Frame3::
     db $ed, $f8, $06, $00 ; entry 0
     db $f5, $f8, $07, $00 ; entry 1
     db $ed, $00, $06, $20 ; entry 2
     db $f5, $00, $07, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 19 of MetaSprites7F_7011Table: 4 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 19 of MetaSprites7FTable_2: 4 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set13::
-    dw MetaSprites7F_7011Set13Frame0 ; entry 0
-    dw MetaSprites7F_7011Set13Frame1 ; entry 1
-    dw MetaSprites7F_7011Set13Frame2 ; entry 2
-    dw MetaSprites7F_7011Set13Frame3 ; entry 3
+MetaSprites7FTable_2Set13::
+    dw MetaSprites7FTable_2Set13Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set13Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set13Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set13Frame3 ; entry 3
 
-; frame 0 of MetaSprites7F_7011Set13; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set13; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set13Frame0::
+MetaSprites7FTable_2Set13Frame0::
     db $f8, $f8, $02, $00 ; entry 0
     db $f8, $00, $03, $00 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set13; ends with $80 (E-0147)
-MetaSprites7F_7011Set13Frame1::
+; frame 1 of MetaSprites7FTable_2Set13; ends with $80 (E-0147)
+MetaSprites7FTable_2Set13Frame1::
     db $f8, $f8, $06, $00 ; entry 0
     db $f8, $00, $07, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set13; ends with $80 (E-0147)
-MetaSprites7F_7011Set13Frame2::
+; frame 2 of MetaSprites7FTable_2Set13; ends with $80 (E-0147)
+MetaSprites7FTable_2Set13Frame2::
     db $f8, $f8, $0a, $00 ; entry 0
     db $f8, $00, $0b, $00 ; entry 1
     db $f0, $f8, $08, $00 ; entry 2
     db $f0, $00, $09, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set13; ends with $80 (E-0147)
-MetaSprites7F_7011Set13Frame3::
+; frame 3 of MetaSprites7FTable_2Set13; ends with $80 (E-0147)
+MetaSprites7FTable_2Set13Frame3::
     db $f8, $f8, $0e, $00 ; entry 0
     db $f8, $00, $0f, $00 ; entry 1
     db $f0, $f8, $0c, $00 ; entry 2
     db $f0, $00, $0d, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 20 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 20 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set14::
-    dw MetaSprites7F_7011Set14Frame0 ; entry 0
+MetaSprites7FTable_2Set14::
+    dw MetaSprites7FTable_2Set14Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set14; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set14; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set14Frame0::
+MetaSprites7FTable_2Set14Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 21 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set15::
-    dw MetaSprites7F_7011Set15Frame0 ; entry 0
+; meta-sprite set 21 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set15::
+    dw MetaSprites7FTable_2Set15Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set15; ends with $80 (E-0147)
-MetaSprites7F_7011Set15Frame0::
+; frame 0 of MetaSprites7FTable_2Set15; ends with $80 (E-0147)
+MetaSprites7FTable_2Set15Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 22 of MetaSprites7F_7011Table: 2 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 22 of MetaSprites7FTable_2: 2 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set16::
-    dw MetaSprites7F_7011Set16Frame0 ; entry 0
-    dw MetaSprites7F_7011Set16Frame1 ; entry 1
+MetaSprites7FTable_2Set16::
+    dw MetaSprites7FTable_2Set16Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set16Frame1 ; entry 1
 
-; frame 0 of MetaSprites7F_7011Set16; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set16; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set16Frame0::
+MetaSprites7FTable_2Set16Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set16; ends with $80 (E-0147)
-MetaSprites7F_7011Set16Frame1::
+; frame 1 of MetaSprites7FTable_2Set16; ends with $80 (E-0147)
+MetaSprites7FTable_2Set16Frame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 23 of MetaSprites7F_7011Table: 3 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 23 of MetaSprites7FTable_2: 3 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set17::
-    dw MetaSprites7F_7011Set17Frame0 ; entry 0
-    dw MetaSprites7F_7011Set17Frame1 ; entry 1
-    dw MetaSprites7F_7011Set17Frame2 ; entry 2
+MetaSprites7FTable_2Set17::
+    dw MetaSprites7FTable_2Set17Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set17Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set17Frame2 ; entry 2
 
-; frame 0 of MetaSprites7F_7011Set17; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set17; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set17Frame0::
+MetaSprites7FTable_2Set17Frame0::
     db $ef, $f8, $00, $00 ; entry 0
     db $ef, $00, $01, $00 ; entry 1
     db $f7, $f8, $02, $00 ; entry 2
     db $f7, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set17; ends with $80 (E-0147)
-MetaSprites7F_7011Set17Frame1::
+; frame 1 of MetaSprites7FTable_2Set17; ends with $80 (E-0147)
+MetaSprites7FTable_2Set17Frame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set17; ends with $80 (E-0147)
-MetaSprites7F_7011Set17Frame2::
+; frame 2 of MetaSprites7FTable_2Set17; ends with $80 (E-0147)
+MetaSprites7FTable_2Set17Frame2::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 24 of MetaSprites7F_7011Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 24 of MetaSprites7FTable_2: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set18::
-    dw MetaSprites7F_7011Set18Frame0 ; entry 0
-    dw MetaSprites7F_7011Set18Frame1 ; entry 1
-    dw MetaSprites7F_7011Set18Frame2 ; entry 2
-    dw MetaSprites7F_7011Set18Frame3 ; entry 3
-    dw MetaSprites7F_7011Set18Frame4 ; entry 4
-    dw MetaSprites7F_7011Set18Frame5 ; entry 5
+MetaSprites7FTable_2Set18::
+    dw MetaSprites7FTable_2Set18Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set18Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set18Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set18Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set18Frame4 ; entry 4
+    dw MetaSprites7FTable_2Set18Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set18Frame0::
+MetaSprites7FTable_2Set18Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
-MetaSprites7F_7011Set18Frame1::
+; frame 1 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
+MetaSprites7FTable_2Set18Frame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $04, $00 ; entry 1
     db $f8, $f8, $04, $00 ; entry 2
     db $f8, $00, $04, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
-MetaSprites7F_7011Set18Frame2::
+; frame 2 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
+MetaSprites7FTable_2Set18Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
-MetaSprites7F_7011Set18Frame3::
+; frame 3 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
+MetaSprites7FTable_2Set18Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set18Frame4::
+MetaSprites7FTable_2Set18Frame4::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set18; ends with $80 (E-0147)
-MetaSprites7F_7011Set18Frame5::
+; frame 5 of MetaSprites7FTable_2Set18; ends with $80 (E-0147)
+MetaSprites7FTable_2Set18Frame5::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 25 of MetaSprites7F_7011Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 25 of MetaSprites7FTable_2: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set19::
-    dw MetaSprites7F_7011Set19Frame0 ; entry 0
-    dw MetaSprites7F_7011Set19Frame1 ; entry 1
-    dw MetaSprites7F_7011Set19Frame2 ; entry 2
-    dw MetaSprites7F_7011Set19Frame3 ; entry 3
-    dw MetaSprites7F_7011Set19Frame4 ; entry 4
-    dw MetaSprites7F_7011Set19Frame5 ; entry 5
+MetaSprites7FTable_2Set19::
+    dw MetaSprites7FTable_2Set19Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set19Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set19Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set19Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set19Frame4 ; entry 4
+    dw MetaSprites7FTable_2Set19Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set19Frame0::
+MetaSprites7FTable_2Set19Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
-MetaSprites7F_7011Set19Frame1::
+; frame 1 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
+MetaSprites7FTable_2Set19Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
-MetaSprites7F_7011Set19Frame2::
+; frame 2 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
+MetaSprites7FTable_2Set19Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
-MetaSprites7F_7011Set19Frame3::
+; frame 3 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
+MetaSprites7FTable_2Set19Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set19Frame4::
+MetaSprites7FTable_2Set19Frame4::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set19; ends with $80 (E-0147)
-MetaSprites7F_7011Set19Frame5::
+; frame 5 of MetaSprites7FTable_2Set19; ends with $80 (E-0147)
+MetaSprites7FTable_2Set19Frame5::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 26 of MetaSprites7F_7011Table: 2 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 26 of MetaSprites7FTable_2: 2 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set1A::
-    dw MetaSprites7F_7011Set1AFrame0 ; entry 0
-    dw MetaSprites7F_7011Set1AFrame1 ; entry 1
+MetaSprites7FTable_2Set1A::
+    dw MetaSprites7FTable_2Set1AFrame0 ; entry 0
+    dw MetaSprites7FTable_2Set1AFrame1 ; entry 1
 
-; frame 0 of MetaSprites7F_7011Set1A; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set1A; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1AFrame0::
+MetaSprites7FTable_2Set1AFrame0::
     db $f8, $f8, $02, $00 ; entry 0
     db $f8, $00, $03, $00 ; entry 1
     db $f0, $f8, $00, $00 ; entry 2
     db $f0, $00, $01, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set1A; ends with $80 (E-0147)
-MetaSprites7F_7011Set1AFrame1::
+; frame 1 of MetaSprites7FTable_2Set1A; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1AFrame1::
     db $f8, $f8, $06, $00 ; entry 0
     db $f8, $00, $07, $00 ; entry 1
     db $f0, $f8, $04, $00 ; entry 2
     db $f0, $00, $05, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 27 of MetaSprites7F_7011Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 27 of MetaSprites7FTable_2: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set1B::
-    dw MetaSprites7F_7011Set1BFrame0 ; entry 0
-    dw MetaSprites7F_7011Set1BFrame1 ; entry 1
-    dw MetaSprites7F_7011Set1BFrame2 ; entry 2
-    dw MetaSprites7F_7011Set1BFrame3 ; entry 3
-    dw MetaSprites7F_7011Set1BFrame4 ; entry 4
-    dw MetaSprites7F_7011Set1BFrame5 ; entry 5
+MetaSprites7FTable_2Set1B::
+    dw MetaSprites7FTable_2Set1BFrame0 ; entry 0
+    dw MetaSprites7FTable_2Set1BFrame1 ; entry 1
+    dw MetaSprites7FTable_2Set1BFrame2 ; entry 2
+    dw MetaSprites7FTable_2Set1BFrame3 ; entry 3
+    dw MetaSprites7FTable_2Set1BFrame4 ; entry 4
+    dw MetaSprites7FTable_2Set1BFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1BFrame0::
+MetaSprites7FTable_2Set1BFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
-MetaSprites7F_7011Set1BFrame1::
+; frame 1 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1BFrame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
-MetaSprites7F_7011Set1BFrame2::
+; frame 2 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1BFrame2::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
-MetaSprites7F_7011Set1BFrame3::
+; frame 3 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1BFrame3::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1BFrame4::
+MetaSprites7FTable_2Set1BFrame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set1B; ends with $80 (E-0147)
-MetaSprites7F_7011Set1BFrame5::
+; frame 5 of MetaSprites7FTable_2Set1B; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1BFrame5::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 28 of MetaSprites7F_7011Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 28 of MetaSprites7FTable_2: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set1C::
-    dw MetaSprites7F_7011Set1CFrame0 ; entry 0
-    dw MetaSprites7F_7011Set1CFrame1 ; entry 1
-    dw MetaSprites7F_7011Set1CFrame2 ; entry 2
-    dw MetaSprites7F_7011Set1CFrame3 ; entry 3
-    dw MetaSprites7F_7011Set1CFrame4 ; entry 4
-    dw MetaSprites7F_7011Set1CFrame5 ; entry 5
+MetaSprites7FTable_2Set1C::
+    dw MetaSprites7FTable_2Set1CFrame0 ; entry 0
+    dw MetaSprites7FTable_2Set1CFrame1 ; entry 1
+    dw MetaSprites7FTable_2Set1CFrame2 ; entry 2
+    dw MetaSprites7FTable_2Set1CFrame3 ; entry 3
+    dw MetaSprites7FTable_2Set1CFrame4 ; entry 4
+    dw MetaSprites7FTable_2Set1CFrame5 ; entry 5
 
-; frame 0 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1CFrame0::
+MetaSprites7FTable_2Set1CFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
-MetaSprites7F_7011Set1CFrame1::
+; frame 1 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1CFrame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
-MetaSprites7F_7011Set1CFrame2::
+; frame 2 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1CFrame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
-MetaSprites7F_7011Set1CFrame3::
+; frame 3 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1CFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1CFrame4::
+MetaSprites7FTable_2Set1CFrame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set1C; ends with $80 (E-0147)
-MetaSprites7F_7011Set1CFrame5::
+; frame 5 of MetaSprites7FTable_2Set1C; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1CFrame5::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 29 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 29 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set1D::
-    dw MetaSprites7F_7011Set1DFrame0 ; entry 0
+MetaSprites7FTable_2Set1D::
+    dw MetaSprites7FTable_2Set1DFrame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set1D; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set1D; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1DFrame0::
+MetaSprites7FTable_2Set1DFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 30 of MetaSprites7F_7011Table: 4 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set1E::
-    dw MetaSprites7F_7011Set1EFrame0 ; entry 0
-    dw MetaSprites7F_7011Set1EFrame1 ; entry 1
-    dw MetaSprites7F_7011Set1EFrame2 ; entry 2
-    dw MetaSprites7F_7011Set1EFrame3 ; entry 3
+; meta-sprite set 30 of MetaSprites7FTable_2: 4 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set1E::
+    dw MetaSprites7FTable_2Set1EFrame0 ; entry 0
+    dw MetaSprites7FTable_2Set1EFrame1 ; entry 1
+    dw MetaSprites7FTable_2Set1EFrame2 ; entry 2
+    dw MetaSprites7FTable_2Set1EFrame3 ; entry 3
 
-; frame 0 of MetaSprites7F_7011Set1E; ends with $80 (E-0147)
-MetaSprites7F_7011Set1EFrame0::
+; frame 0 of MetaSprites7FTable_2Set1E; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1EFrame0::
     db $f4, $fc, $00, $00 ; entry 0
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set1E; ends with $80 (E-0147)
-MetaSprites7F_7011Set1EFrame1::
+; frame 1 of MetaSprites7FTable_2Set1E; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1EFrame1::
     db $f4, $fc, $01, $00 ; entry 0
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set1E; ends with $80 (E-0147)
+; frame 2 of MetaSprites7FTable_2Set1E; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1EFrame2::
+MetaSprites7FTable_2Set1EFrame2::
     db $f0, $f8, $02, $00 ; entry 0
     db $f8, $f8, $03, $00 ; entry 1
     db $f0, $ff, $02, $20 ; entry 2
     db $f8, $ff, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set1E; ends with $80 (E-0147)
-MetaSprites7F_7011Set1EFrame3::
+; frame 3 of MetaSprites7FTable_2Set1E; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1EFrame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $ff, $04, $20 ; entry 1
     db $f8, $f8, $05, $00 ; entry 2
     db $f8, $ff, $05, $20 ; entry 3
     db $80 ; end
 
-; meta-sprite set 31 of MetaSprites7F_7011Table: 32 frame pointer(s), chosen by hSpriteSubIndex
+; meta-sprite set 31 of MetaSprites7FTable_2: 32 frame pointer(s), chosen by hSpriteSubIndex
 ; (E-0147)
 ; record: frame
-MetaSprites7F_7011Set1F::
-    dw MetaSprites7F_7011Set1FFrame0 ; entry 0
-    dw MetaSprites7F_7011Set1FFrame1 ; entry 1
-    dw MetaSprites7F_7011Set1FFrame2 ; entry 2
-    dw MetaSprites7F_7011Set1FFrame3 ; entry 3
-    dw MetaSprites7F_7011Set1FFrame4 ; entry 4
-    dw MetaSprites7F_7011Set1FFrame5 ; entry 5
-    dw MetaSprites7F_7011Set1FFrame6 ; entry 6
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 7
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 8
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 9
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 10
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 11
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 12
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 13
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 14
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 15
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 16
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 17
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 18
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 19
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 20
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 21
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 22
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 23
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 24
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 25
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 26
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 27
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 28
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 29
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 30
-    dw MetaSprites7F_7011Set1FFrame7 ; entry 31
+MetaSprites7FTable_2Set1F::
+    dw MetaSprites7FTable_2Set1FFrame0 ; entry 0
+    dw MetaSprites7FTable_2Set1FFrame1 ; entry 1
+    dw MetaSprites7FTable_2Set1FFrame2 ; entry 2
+    dw MetaSprites7FTable_2Set1FFrame3 ; entry 3
+    dw MetaSprites7FTable_2Set1FFrame4 ; entry 4
+    dw MetaSprites7FTable_2Set1FFrame5 ; entry 5
+    dw MetaSprites7FTable_2Set1FFrame6 ; entry 6
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 7
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 8
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 9
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 10
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 11
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 12
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 13
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 14
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 15
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 16
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 17
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 18
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 19
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 20
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 21
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 22
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 23
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 24
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 25
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 26
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 27
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 28
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 29
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 30
+    dw MetaSprites7FTable_2Set1FFrame7 ; entry 31
 
-; frame 0 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1FFrame0::
+MetaSprites7FTable_2Set1FFrame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame1::
+; frame 1 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame1::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame2::
+; frame 2 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame2::
     db $f0, $00, $04, $20 ; entry 0
     db $f0, $f8, $05, $20 ; entry 1
     db $f8, $00, $06, $20 ; entry 2
     db $f8, $f8, $07, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame3::
+; frame 3 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame3::
     db $f0, $f8, $08, $00 ; entry 0
     db $f0, $00, $09, $00 ; entry 1
     db $f8, $f8, $0a, $00 ; entry 2
     db $f8, $00, $0b, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set1FFrame4::
+MetaSprites7FTable_2Set1FFrame4::
     db $f0, $f8, $0c, $00 ; entry 0
     db $f0, $00, $0d, $00 ; entry 1
     db $f8, $f8, $0e, $00 ; entry 2
     db $f8, $00, $0f, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame5::
+; frame 5 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame5::
     db $f0, $f8, $10, $00 ; entry 0
     db $f0, $00, $11, $00 ; entry 1
     db $f8, $f8, $12, $00 ; entry 2
@@ -7972,8 +7848,8 @@ MetaSprites7F_7011Set1FFrame5::
     db $e6, $fc, $17, $00 ; entry 8
     db $80 ; end
 
-; frame 6 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame6::
+; frame 6 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame6::
     db $f0, $f8, $10, $00 ; entry 0
     db $f0, $00, $11, $00 ; entry 1
     db $f8, $f8, $14, $00 ; entry 2
@@ -7983,8 +7859,8 @@ MetaSprites7F_7011Set1FFrame6::
     db $f8, $0c, $17, $00 ; entry 6
     db $80 ; end
 
-; frame 7 of MetaSprites7F_7011Set1F; ends with $80 (E-0147)
-MetaSprites7F_7011Set1FFrame7::
+; frame 7 of MetaSprites7FTable_2Set1F; ends with $80 (E-0147)
+MetaSprites7FTable_2Set1FFrame7::
     db $08, $e0, $00, $00 ; entry 0
     db $08, $e8, $01, $00 ; entry 1
     db $08, $f0, $02, $00 ; entry 2
@@ -8051,330 +7927,320 @@ MetaSprites7F_7011Set1FFrame7::
     db $40, $18, $17, $00 ; entry 63
     db $80 ; end
 
-; meta-sprite set 32 of MetaSprites7F_7011Table: 7 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 32 of MetaSprites7FTable_2: 7 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set20::
-    dw MetaSprites7F_7011Set20Frame0 ; entry 0
-    dw MetaSprites7F_7011Set20Frame1 ; entry 1
-    dw MetaSprites7F_7011Set20Frame2 ; entry 2
-    dw MetaSprites7F_7011Set20Frame3 ; entry 3
-    dw MetaSprites7F_7011Set20Frame4 ; entry 4
-    dw MetaSprites7F_7011Set20Frame5 ; entry 5
-    dw MetaSprites7F_7011Set20Frame6 ; entry 6
+MetaSprites7FTable_2Set20::
+    dw MetaSprites7FTable_2Set20Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set20Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set20Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set20Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set20Frame4 ; entry 4
+    dw MetaSprites7FTable_2Set20Frame5 ; entry 5
+    dw MetaSprites7FTable_2Set20Frame6 ; entry 6
 
-; frame 0 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set20Frame0::
+MetaSprites7FTable_2Set20Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $00, $00, $20 ; entry 2
     db $f8, $00, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
-MetaSprites7F_7011Set20Frame1::
+; frame 1 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
+MetaSprites7FTable_2Set20Frame1::
     db $f0, $f8, $02, $00 ; entry 0
     db $f8, $f8, $03, $00 ; entry 1
     db $f0, $00, $02, $20 ; entry 2
     db $f8, $00, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
-MetaSprites7F_7011Set20Frame2::
+; frame 2 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
+MetaSprites7FTable_2Set20Frame2::
     db $f0, $f8, $04, $00 ; entry 0
     db $f8, $f8, $05, $00 ; entry 1
     db $f0, $00, $04, $20 ; entry 2
     db $f8, $00, $05, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
-MetaSprites7F_7011Set20Frame3::
+; frame 3 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
+MetaSprites7FTable_2Set20Frame3::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $f8, $08, $00 ; entry 2
     db $f8, $00, $08, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set20Frame4::
+MetaSprites7FTable_2Set20Frame4::
     db $f0, $f8, $09, $00 ; entry 0
     db $f0, $00, $0a, $00 ; entry 1
     db $f8, $f8, $0b, $00 ; entry 2
     db $f8, $00, $0b, $20 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
-MetaSprites7F_7011Set20Frame5::
+; frame 5 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
+MetaSprites7FTable_2Set20Frame5::
     db $f0, $00, $06, $20 ; entry 0
     db $f0, $f8, $07, $20 ; entry 1
     db $f8, $00, $08, $20 ; entry 2
     db $f8, $f8, $08, $00 ; entry 3
     db $80 ; end
 
-; frame 6 of MetaSprites7F_7011Set20; ends with $80 (E-0147)
-MetaSprites7F_7011Set20Frame6::
+; frame 6 of MetaSprites7FTable_2Set20; ends with $80 (E-0147)
+MetaSprites7FTable_2Set20Frame6::
     db $f0, $00, $09, $20 ; entry 0
     db $f0, $f8, $0a, $20 ; entry 1
     db $f8, $00, $0b, $20 ; entry 2
     db $f8, $f8, $0b, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 33 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 33 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set21::
-    dw MetaSprites7F_7011Set21Frame0 ; entry 0
+MetaSprites7FTable_2Set21::
+    dw MetaSprites7FTable_2Set21Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set21; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set21; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set21Frame0::
+MetaSprites7FTable_2Set21Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 34 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set22::
-    dw MetaSprites7F_7011Set22Frame0 ; entry 0
+; meta-sprite set 34 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set22::
+    dw MetaSprites7FTable_2Set22Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set22; ends with $80 (E-0147)
-MetaSprites7F_7011Set22Frame0::
+; frame 0 of MetaSprites7FTable_2Set22; ends with $80 (E-0147)
+MetaSprites7FTable_2Set22Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 35 of MetaSprites7F_7011Table: 5 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 35 of MetaSprites7FTable_2: 5 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set23::
-    dw MetaSprites7F_7011Set23Frame0 ; entry 0
-    dw MetaSprites7F_7011Set23Frame1 ; entry 1
-    dw MetaSprites7F_7011Set23Frame2 ; entry 2
-    dw MetaSprites7F_7011Set23Frame3 ; entry 3
-    dw MetaSprites7F_7011Set23Frame4 ; entry 4
+MetaSprites7FTable_2Set23::
+    dw MetaSprites7FTable_2Set23Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set23Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set23Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set23Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set23Frame4 ; entry 4
 
-; frame 0 of MetaSprites7F_7011Set23; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set23Frame0::
+MetaSprites7FTable_2Set23Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f8, $f8, $01, $00 ; entry 1
     db $f0, $ff, $00, $20 ; entry 2
     db $f8, $ff, $01, $20 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set23; ends with $80 (E-0147)
-MetaSprites7F_7011Set23Frame1::
+; frame 1 of MetaSprites7FTable_2Set23; ends with $80 (E-0147)
+MetaSprites7FTable_2Set23Frame1::
     db $f0, $f8, $02, $00 ; entry 0
     db $f0, $00, $03, $00 ; entry 1
     db $f8, $00, $02, $60 ; entry 2
     db $f8, $f8, $03, $60 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set23; ends with $80 (E-0147)
-MetaSprites7F_7011Set23Frame2::
+; frame 2 of MetaSprites7FTable_2Set23; ends with $80 (E-0147)
+MetaSprites7FTable_2Set23Frame2::
     db $f0, $00, $02, $20 ; entry 0
     db $f0, $f8, $03, $20 ; entry 1
     db $f8, $f8, $02, $40 ; entry 2
     db $f8, $00, $03, $40 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set23; ends with $80 (E-0147)
-MetaSprites7F_7011Set23Frame3::
+; frame 3 of MetaSprites7FTable_2Set23; ends with $80 (E-0147)
+MetaSprites7FTable_2Set23Frame3::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $00, $04, $60 ; entry 2
     db $f8, $f8, $05, $60 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set23; ends with $80 (E-0147)
+; frame 4 of MetaSprites7FTable_2Set23; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set23Frame4::
+MetaSprites7FTable_2Set23Frame4::
     db $f0, $f8, $06, $00 ; entry 0
     db $f0, $00, $07, $00 ; entry 1
     db $f8, $00, $06, $60 ; entry 2
     db $f8, $f8, $07, $60 ; entry 3
     db $80 ; end
 
-; meta-sprite set 36 of MetaSprites7F_7011Table: 5 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 36 of MetaSprites7FTable_2: 5 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set24::
-    dw MetaSprites7F_7011Set24Frame0 ; entry 0
-    dw MetaSprites7F_7011Set24Frame1 ; entry 1
-    dw MetaSprites7F_7011Set24Frame2 ; entry 2
-    dw MetaSprites7F_7011Set24Frame3 ; entry 3
-    dw MetaSprites7F_7011Set24Frame4 ; entry 4
+MetaSprites7FTable_2Set24::
+    dw MetaSprites7FTable_2Set24Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set24Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set24Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set24Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set24Frame4 ; entry 4
 
-; frame 0 of MetaSprites7F_7011Set24; ends with $80 (E-0147)
-MetaSprites7F_7011Set24Frame0::
+; frame 0 of MetaSprites7FTable_2Set24; ends with $80 (E-0147)
+MetaSprites7FTable_2Set24Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set24; ends with $80 (E-0147)
+; frame 1 of MetaSprites7FTable_2Set24; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set24Frame1::
+MetaSprites7FTable_2Set24Frame1::
     db $f0, $f9, $04, $00 ; entry 0
     db $f0, $01, $05, $00 ; entry 1
     db $f8, $f9, $06, $00 ; entry 2
     db $f8, $01, $07, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set24; ends with $80 (E-0147)
-MetaSprites7F_7011Set24Frame2::
+; frame 2 of MetaSprites7FTable_2Set24; ends with $80 (E-0147)
+MetaSprites7FTable_2Set24Frame2::
     db $f0, $00, $00, $20 ; entry 0
     db $f0, $f8, $01, $20 ; entry 1
     db $f8, $00, $02, $20 ; entry 2
     db $f8, $f8, $03, $20 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set24; ends with $80 (E-0147)
-MetaSprites7F_7011Set24Frame3::
+; frame 3 of MetaSprites7FTable_2Set24; ends with $80 (E-0147)
+MetaSprites7FTable_2Set24Frame3::
     db $f0, $01, $04, $20 ; entry 0
     db $f0, $f9, $05, $20 ; entry 1
     db $f8, $01, $06, $20 ; entry 2
     db $f8, $f9, $07, $20 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set24; ends with $80 (E-0147)
-MetaSprites7F_7011Set24Frame4::
+; frame 4 of MetaSprites7FTable_2Set24; ends with $80 (E-0147)
+MetaSprites7FTable_2Set24Frame4::
     db $f0, $f8, $04, $00 ; entry 0
     db $f0, $00, $05, $00 ; entry 1
     db $f8, $f8, $06, $00 ; entry 2
     db $f8, $00, $07, $00 ; entry 3
     db $80 ; end
 
-; meta-sprite set 37 of MetaSprites7F_7011Table: 5 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 37 of MetaSprites7FTable_2: 5 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set25::
-    dw MetaSprites7F_7011Set25Frame0 ; entry 0
-    dw MetaSprites7F_7011Set25Frame1 ; entry 1
-    dw MetaSprites7F_7011Set25Frame1 ; entry 2
-    dw MetaSprites7F_7011Set25Frame2 ; entry 3
-    dw MetaSprites7F_7011Set25Frame3 ; entry 4
+MetaSprites7FTable_2Set25::
+    dw MetaSprites7FTable_2Set25Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set25Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set25Frame1 ; entry 2
+    dw MetaSprites7FTable_2Set25Frame2 ; entry 3
+    dw MetaSprites7FTable_2Set25Frame3 ; entry 4
 
-; frame 0 of MetaSprites7F_7011Set25; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set25; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set25Frame0::
+MetaSprites7FTable_2Set25Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set25; ends with $80 (E-0147)
-MetaSprites7F_7011Set25Frame1::
+; frame 1 of MetaSprites7FTable_2Set25; ends with $80 (E-0147)
+MetaSprites7FTable_2Set25Frame1::
     db $f0, $f8, $01, $00 ; entry 0
     db $f0, $00, $02, $00 ; entry 1
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set25; ends with $80 (E-0147)
-MetaSprites7F_7011Set25Frame2::
+; frame 2 of MetaSprites7FTable_2Set25; ends with $80 (E-0147)
+MetaSprites7FTable_2Set25Frame2::
     db $f0, $f9, $03, $00 ; entry 0
     db $f0, $01, $04, $00 ; entry 1
     db $f8, $f9, $05, $00 ; entry 2
     db $f8, $01, $06, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set25; ends with $80 (E-0147)
-MetaSprites7F_7011Set25Frame3::
+; frame 3 of MetaSprites7FTable_2Set25; ends with $80 (E-0147)
+MetaSprites7FTable_2Set25Frame3::
     db $f8, $00, $07, $00 ; entry 0
     db $f8, $f8, $05, $00 ; entry 1
     db $80 ; end
 
-; meta-sprite set 38 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 38 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set26::
-    dw MetaSprites7F_7011Set26Frame0 ; entry 0
+MetaSprites7FTable_2Set26::
+    dw MetaSprites7FTable_2Set26Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set26; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set26; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set26Frame0::
+MetaSprites7FTable_2Set26Frame0::
     db $00, $00, $00, $00 ; entry 0
     db $80 ; end
 
-; meta-sprite set 39 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set27::
-    dw MetaSprites7F_7011Set27Frame0 ; entry 0
+; meta-sprite set 39 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set27::
+    dw MetaSprites7FTable_2Set27Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set27; ends with $80 (E-0147)
-MetaSprites7F_7011Set27Frame0::
+; frame 0 of MetaSprites7FTable_2Set27; ends with $80 (E-0147)
+MetaSprites7FTable_2Set27Frame0::
     db $00, $00, $00, $00 ; entry 0
     db $80 ; end
 
-; meta-sprite set 40 of MetaSprites7F_7011Table: 1 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
+; meta-sprite set 40 of MetaSprites7FTable_2: 1 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
 ; record: frame
-MetaSprites7F_7011Set28::
-    dw MetaSprites7F_7011Set28Frame0 ; entry 0
+MetaSprites7FTable_2Set28::
+    dw MetaSprites7FTable_2Set28Frame0 ; entry 0
 
-; frame 0 of MetaSprites7F_7011Set28; ends with $80 (E-0147)
+; frame 0 of MetaSprites7FTable_2Set28; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set28Frame0::
+MetaSprites7FTable_2Set28Frame0::
     db $00, $00, $00, $00 ; entry 0
     db $80 ; end
 
-; meta-sprite set 41 of MetaSprites7F_7011Table: 6 frame pointer(s), chosen by hSpriteSubIndex
-; (E-0147)
-MetaSprites7F_7011Set29::
-    dw MetaSprites7F_7011Set29Frame0 ; entry 0
-    dw MetaSprites7F_7011Set29Frame1 ; entry 1
-    dw MetaSprites7F_7011Set29Frame2 ; entry 2
-    dw MetaSprites7F_7011Set29Frame3 ; entry 3
-    dw MetaSprites7F_7011Set29Frame4 ; entry 4
-    dw MetaSprites7F_7011Set29Frame5 ; entry 5
+; meta-sprite set 41 of MetaSprites7FTable_2: 6 frame pointer(s), chosen by hSpriteSubIndex (E-0147)
+MetaSprites7FTable_2Set29::
+    dw MetaSprites7FTable_2Set29Frame0 ; entry 0
+    dw MetaSprites7FTable_2Set29Frame1 ; entry 1
+    dw MetaSprites7FTable_2Set29Frame2 ; entry 2
+    dw MetaSprites7FTable_2Set29Frame3 ; entry 3
+    dw MetaSprites7FTable_2Set29Frame4 ; entry 4
+    dw MetaSprites7FTable_2Set29Frame5 ; entry 5
 
-; frame 0 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
-MetaSprites7F_7011Set29Frame0::
+; frame 0 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
+MetaSprites7FTable_2Set29Frame0::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 1 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
-MetaSprites7F_7011Set29Frame1::
+; frame 1 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
+MetaSprites7FTable_2Set29Frame1::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 2 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
+; frame 2 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
 ; record: sprite: Y offset, X offset, tile, attribute
-MetaSprites7F_7011Set29Frame2::
+MetaSprites7FTable_2Set29Frame2::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 3 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
-MetaSprites7F_7011Set29Frame3::
+; frame 3 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
+MetaSprites7FTable_2Set29Frame3::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 4 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
-MetaSprites7F_7011Set29Frame4::
+; frame 4 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
+MetaSprites7FTable_2Set29Frame4::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2
     db $f8, $00, $03, $00 ; entry 3
     db $80 ; end
 
-; frame 5 of MetaSprites7F_7011Set29; ends with $80 (E-0147)
-MetaSprites7F_7011Set29Frame5::
+; frame 5 of MetaSprites7FTable_2Set29; ends with $80 (E-0147)
+MetaSprites7FTable_2Set29Frame5::
     db $f0, $f8, $00, $00 ; entry 0
     db $f0, $00, $01, $00 ; entry 1
     db $f8, $f8, $02, $00 ; entry 2

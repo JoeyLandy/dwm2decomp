@@ -1,0 +1,16 @@
+{
+  "_comment": "Story flags named by reading (E-0346, C1), where no setter or tester says anything or what they say misleads. tools/disasm_all.py name_story_flags uses these in place of its rule names; keys are flag numbers in hex.",
+  "flags": {
+    "000": {"name": "EVENT_NEVER_SET", "note": "no SetFlagBit, two-byte DE load or script_set_flag with flag 0 was found; about 20 routines test it, so their tests always see it clear; the tester rule had named it after the first of them (EVENT_SCENE_LONG_FACES)"},
+    "018": {"name": "EVENT_WARUBOU_OBJECTS_GATE", "note": "tested only by ObjSelector_76 (objsel_skip_if_clear), between the Warubou scene flags; no setter found"},
+    "019": {"name": "EVENT_SCRIPT_COMMAND20_TURNED", "note": "set by a step of ScriptCommand20_Run after it turns the sprite in front of the player; ObjSelector_76 shows MapObjects_91 while it is clear"},
+    "0B9": {"name": "EVENT_FOUND_ME_FOE_SCREEN0", "note": "SceneFoundMeBattle_SetFlagBit sets $B9 + hMapScreenX (screens 0-2) away from map $96; ObjSelector_12 shows its foe while the flag is clear"},
+    "0BA": {"name": "EVENT_FOUND_ME_FOE_SCREEN1", "note": "as EVENT_FOUND_ME_FOE_SCREEN0 for map screen 1 (ObjSelector_13)"},
+    "0BB": {"name": "EVENT_FOUND_ME_FOE_SCREEN2", "note": "as EVENT_FOUND_ME_FOE_SCREEN0 for map screen 2 (ObjSelector_14)"},
+    "201": {"name": "EVENT_FOUND_ME_FOE_MAP96", "note": "SceneFoundMeBattle_SetFlagBit sets it on map $96; ObjSelector_15 shows its foe while it is clear"},
+    "0C4": {"name": "EVENT_MAP_7A_OBJECT_ADDED", "note": "set by a script that plays sound $65 and walks; ObjSelector_Map7A_0 lists MapObjects_Map7A_0_1 only when it is set"},
+    "10E": {"name": "EVENT_WHEN_YOU_BREED_THE_OFFSPRING", "note": "tested by GreatLogTalkEvents_SaveScreenBufferToBGMap1: when set the talker says '*: When you breed, the offspring', otherwise 'I lost again'; no setter found"},
+    "188": {"name": "EVENT_ARENA_RANK1_KEY_GIVEN", "note": "ArenaMenu_SetFlagBit sets it when wArenaRank is 1 and gives a key (WriteKeyEntryTemp0)"},
+    "19F": {"name": "EVENT_STAFF_ROLL_PARTY_SAVED", "note": "DebugStaffRoll_Update_2 saves wPartyCount in wScriptTemp4 and sets it; the pause menu restores the party count and sets flag $025 when it is set and $025 is clear; LoadPlayerAndFollowerSpriteGraphics reads it for the sprite mode"}
+  }
+}

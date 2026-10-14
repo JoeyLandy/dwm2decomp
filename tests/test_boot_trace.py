@@ -32,7 +32,7 @@ class BootTrace(unittest.TestCase):
         self.assertGreater(len(self.strings), 8)
         for bank, ptr, cat, idx, text in self.strings:
             name = self.labels.get((bank, ptr), "")
-            self.assertRegex(name, r"^(String|Message)_", (bank, hex(ptr), text))
+            self.assertRegex(name, r"^(String|Message|Text)_", (bank, hex(ptr), text))  # Text_<words> since E-0344
             if name.startswith("String_"):
                 self.assertEqual(name.split("_")[-2:], [f"{cat:02X}", f"{idx:02X}"], (name, text))
 

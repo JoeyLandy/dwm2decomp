@@ -55,19 +55,19 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-13, after D-008)
+## Readability state (2026-10-13, after E-0346)
 
-Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run486).
+Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run526; full suite 278 OK).
 
 | Measure | State |
 | --- | --- |
 | Source form | pret style (D-005): no address aliases or machine bookkeeping in `src/`, `xor a` / `cp $10` / `[hli]` spelling, `jumptable` and `lb` macros, wrapped notes; one file per bank named by its contents (D-006) |
 | Text | 25,715 lines use the printer's command tokens (`<LINE>`, `<NEXT>`, `<PROMPT>`, `@`, ...; E-0336); no control byte is left raw in prose |
 | Ids | 9,278 uses of `MONSTER_*`, `SKILL_*`, `ITEM_*`, `ACTION_*` and `RESIST_*` (D-007, E-0338), in code comparisons and data tables |
-| Story flags and status | 229 story flags named `EVENT_*` after their setters (1,150 uses) and 36 battle status bits named `BSTATn_*` (112 uses), from forcing each bit in a battle or from the one skill that sets it (D-009, E-0339) |
+| Story flags and status | 347 story flags named `EVENT_*` (1,573 uses), after their setters, the message the setting routine shows, or (34 flags with no setter found) a routine that tests them, 11 by reading (`config/story_flags.json`); no flag number is left in a flag operand. All 72 battle status bits are named `BSTATn_*`, from forcing each bit in a battle, the skill that sets it, or the masks that treat two bits as one field; 8 with no reader or writer are `UNUSED_*` (D-009, E-0339, E-0346) |
 | Assets | 3,550 graphics and map files included by name (`gfx/monster_sprites/drak_slime.lz`), extracted from the reference at build time (D-008); no offset into the ROM is left in `src/` |
-| Labels | 33,212 global labels, none an address name and none spelling a RAM address (E-0340). 177 (0.5%) have no description beyond their structural part (`Parent_Case05`). The other steps say what they show, call or write (`RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780`, `..._SetDataBankSave`); 3,887 still carry a `_CaseNN`/`_SubNN` part, the step's index in its state machine (E-0340, E-0341) |
-| RAM | 958 named addresses; 104 still spell a byte number, mostly menu and battle work bytes reused for different values by different routines (`wScreenByteBD` holds price digits in the shop and an SRAM address in hibernation), where one name would mislead |
+| Labels | 33,212 global labels. None is an address name or spells a RAM or ROM address, none carries a `_CaseNN`/`_SubNN` state-machine index, and none lacks a description beyond its structure (E-0340, E-0344). Steps say what they show, call or write (`FhuntTalkEvents_ShowHeroCheckedBehindThe`, `..._SetDataBankSave`); data is named by its content or its reader (`Script_HowMayWeServe`, `MapObjects_Map94_3_Unlisted_0`). Copies and repeats are numbered `_2`, `_3` |
+| RAM | 958 named addresses; none spells a byte number. Work bytes that different routines reuse are named after their main use, and the note lists the others (E-0345) |
 | Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
 
 ## Source presentation (2026-10-13, decision D-005)

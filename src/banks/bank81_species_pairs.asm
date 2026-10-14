@@ -4,7 +4,7 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
-CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
+CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufB + MON_SPECIES + 1]
@@ -79,7 +79,7 @@ CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ldh [hTemp4], a
     ld a, [wAIWeights + $8]
     ldh [hTemp5], a
-    call CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    call CallInBank81KeepRegs_CompareHLToBC
     pop hl
     ld a, c
     or a
@@ -104,7 +104,7 @@ CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ldh [hTemp4], a
     ld a, [wAIWeights + $7]
     ldh [hTemp5], a
-    call CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    call CallInBank81KeepRegs_CompareHLToBC
     ld a, c
     or a
     jr nz, .set_species_id_lo
@@ -120,7 +120,7 @@ CallFunc4001InBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld [wSpeciesIdHi], a
     ret
 
-CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
+CallInBank81KeepRegs_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]
     inc hl
@@ -130,7 +130,7 @@ CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
     jr z, .skip
     cp $01
     jp z, .skip2
-    jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    jr CallInBank81KeepRegs_CompareHLToBC
 
 .read_temp0:
     ldh a, [hTemp0]
@@ -169,7 +169,7 @@ CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
     inc hl
     dec d
     jr nz, .loop2
-    jr CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    jr CallInBank81KeepRegs_CompareHLToBC
 
 .loop3:
     ld c, [hl]
@@ -197,7 +197,7 @@ CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
 .next:
     dec d
     jr nz, .loop3
-    jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    jp CallInBank81KeepRegs_CompareHLToBC
 
 .skip2:
     ld c, [hl]
@@ -218,7 +218,7 @@ CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC::
     inc hl
     dec d
     jr nz, .loop4
-    jp CallFunc4001InBank81KeepRegs_Sub01_CompareHLToBC
+    jp CallInBank81KeepRegs_CompareHLToBC
 
 .skip3:
     jr .loop3
@@ -1919,8 +1919,9 @@ SpeciesPairChecks_Anemon::
 
 ; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1))
 ; to wLinkMenuEntryBytes (E-0121) (E-0340: the address in its name read as its RAM name; was
-; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes)
-LoadTable555DEntryForWorkBuf9ToLinkMenuEntryBytes::
+; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes) (E-0344: the address in its name dropped or read
+; as the label there; was LoadTable555DEntryForWorkBuf9ToLinkMenuEntryBytes)
+LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes::
     ld a, [wWorkBuf + $9]
     ld l, a
     ld h, $00

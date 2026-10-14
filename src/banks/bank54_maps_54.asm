@@ -10,8 +10,8 @@ Map81Tileset::
     INCBIN "maps/map81/tileset.lz"
 
 ; LZSS-compressed: 1057 bytes that expand to 1239 (E-0016, E-0017)
-Gfx_54_4078::
-    INCBIN "gfx/misc/gfx_54_4078.lz"
+Gfx54_1::
+    INCBIN "gfx/misc/gfx54_1.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours

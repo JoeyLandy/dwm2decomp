@@ -20,7 +20,7 @@ CopyMonsterTableBytesFromMonsterTable::
     ld a, [wMonsterId]
     cp $50
     jr c, .read_monster_id
-    farcall CopyMonsterTableBytesFrom4056
+    farcall CopyMonsterTableBytes
     ret
 
 .read_monster_id:

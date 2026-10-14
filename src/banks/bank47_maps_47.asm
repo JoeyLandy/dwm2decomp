@@ -35,8 +35,8 @@ Map05Attrs7::
 Map05Screens0_Y0X0::
     INCBIN "maps/map05/screens0_y0_x0.lz"
 
-KeyWorldScreen_47_4884::
-    INCBIN "maps/key_worlds/screen_47_4884.lz"
+KeyWorldScreen47_1::
+    INCBIN "maps/key_worlds/screen47_1.lz"
 
 Map05Screens0_Y0X1::
     INCBIN "maps/map05/screens0_y0_x1.lz"
@@ -52,8 +52,8 @@ Map05Screens0_Y0X2::
 Map05Attrs0_Y0X0::
     INCBIN "maps/map05/attrs0_y0_x0.lz"
 
-KeyWorldScreen_47_4CD7::
-    INCBIN "maps/key_worlds/screen_47_4_cd7.lz"
+KeyWorldScreen47_2::
+    INCBIN "maps/key_worlds/screen47_2.lz"
 
 ; LZSS-compressed: 50 bytes that expand to 360 (E-0016, E-0017)
 Map05Attrs0_Y0X1::
@@ -263,7 +263,7 @@ Map0DTileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0DPalettes::
-BGPaletteBufferData_47_67E2::
+BreedMenu_RedrawListScreen_DecompressToVRAM_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $012f, $4fff, $01d8, $0c63 ; entry 1
     dw $1528, $2bff, $00ff, $0000 ; entry 2
@@ -344,8 +344,8 @@ Map0DScreens0_Y1X0::
     INCBIN "maps/map0_d/screens0_y1_x0.lz"
 
 ; LZSS-compressed: 107 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap_47_69D1::
-    INCBIN "maps/screen_maps/47_69_d1.lz"
+ScreenMap47_1::
+    INCBIN "gfx/misc/screen_map47_1.lz"
 
 ; LZSS-compressed: 206 bytes that expand to 360 (E-0016, E-0017)
 Map0DScreens0_Y1X1::

@@ -31,13 +31,13 @@ LoadMapObjectsForScreen::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
     jr nc, .read_map_id
-    ld de, $0058
+    ld de, EVENT_SCENE_MONSTERS_IN_TOW
     call TestFlagBit
     jr c, .read_map_id
     ld a, [wStoryFlags + $61]
     bit 3, a
     jr z, .read_map_id
-    ld hl, MapObjects_7E1E
+    ld hl, LoadMapObjectsForScreen_MapObjects
     jp .set_sprite_slot_count
 
 .read_map_id:
@@ -281,667 +281,667 @@ LoadMapObjectsForScreen::
 ; the first array at $433C (E-0163, C1)
 ; record: per-screen selector array of this map ($0000 = none)
 MapObjectTable::
-    dw MapObjectScreens_63B2 ; id 0
-    dw MapObjectScreens_6722 ; id 1
-    dw MapObjectScreens_6945 ; id 2
-    dw MapObjectScreens_7E4B ; id 3
-    dw MapObjectScreens_6AFB ; id 4
-    dw MapObjectScreens_6C32 ; id 5
-    dw MapObjectScreens_6D2D ; id 6
-    dw MapObjectScreens_6E3B ; id 7
-    dw MapObjectScreens_6E8B ; id 8
-    dw MapObjectScreens_6EB8 ; id 9
-    dw MapObjectScreens_6EEB ; id 10
-    dw MapObjectScreens_6F13 ; id 11
-    dw MapObjectScreens_6F46 ; id 12
-    dw MapObjectScreens_6FB1 ; id 13
-    dw MapObjectScreens_701F ; id 14
-    dw MapObjectScreens_7052 ; id 15
-    dw MapObjectScreens_7087 ; id 16
-    dw MapObjectScreens_70B4 ; id 17
-    dw MapObjectScreens_7104 ; id 18
-    dw MapObjectScreens_715C ; id 19
-    dw MapObjectScreens_716E ; id 20
-    dw MapObjectScreens_7196 ; id 21
-    dw MapObjectScreens_71EA ; id 22
-    dw MapObjectScreens_7212 ; id 23
-    dw MapObjectScreens_730F ; id 24
-    dw MapObjectScreens_7420 ; id 25
-    dw MapObjectScreens_756A ; id 26
-    dw MapObjectScreens_7E4B ; id 27
-    dw MapObjectScreens_76E4 ; id 28
-    dw MapObjectScreens_7708 ; id 29
-    dw MapObjectScreens_7E4B ; id 30
-    dw MapObjectScreens_7E4B ; id 31
-    dw MapObjectScreens_7E4B ; id 32
-    dw MapObjectScreens_7822 ; id 33
-    dw MapObjectScreens_787D ; id 34
-    dw MapObjectScreens_78A5 ; id 35
-    dw MapObjectScreens_78C2 ; id 36
-    dw MapObjectScreens_79B9 ; id 37
-    dw MapObjectScreens_7A91 ; id 38
-    dw MapObjectScreens_7E4B ; id 39
-    dw MapObjectScreens_7B5E ; id 40
-    dw MapObjectScreens_7E4B ; id 41
-    dw MapObjectScreens_7BAB ; id 42
-    dw MapObjectScreens_7BF9 ; id 43
-    dw MapObjectScreens_7E4B ; id 44
-    dw MapObjectScreens_7C4C ; id 45
-    dw MapObjectScreens_7CDC ; id 46
-    dw MapObjectScreens_7D31 ; id 47
-    dw MapObjectScreens_5D9D ; id 48
-    dw MapObjectScreens_5E57 ; id 49
-    dw MapObjectScreens_5EBD ; id 50
-    dw MapObjectScreens_5F73 ; id 51
-    dw MapObjectScreens_6026 ; id 52
-    dw MapObjectScreens_604E ; id 53
-    dw MapObjectScreens_7E4B ; id 54
-    dw MapObjectScreens_6080 ; id 55
-    dw MapObjectScreens_60A8 ; id 56
-    dw MapObjectScreens_60F0 ; id 57
-    dw MapObjectScreens_615C ; id 58
-    dw MapObjectScreens_6196 ; id 59
-    dw MapObjectScreens_61EC ; id 60
-    dw MapObjectScreens_627F ; id 61
-    dw MapObjectScreens_7E4B ; id 62
-    dw MapObjectScreens_7E4B ; id 63
-    dw MapObjectScreens_629C ; id 64
-    dw MapObjectScreens_62C0 ; id 65
-    dw MapObjectScreens_636E ; id 66
-    dw MapObjectScreens_6386 ; id 67
-    dw MapObjectScreens_639E ; id 68
-    dw MapObjectScreens_7E4B ; id 69
-    dw MapObjectScreens_7E4B ; id 70
-    dw MapObjectScreens_7E4B ; id 71
-    dw MapObjectScreens_7E4B ; id 72
-    dw MapObjectScreens_50F0 ; id 73
-    dw MapObjectScreens_51D4 ; id 74
-    dw MapObjectScreens_52C6 ; id 75
-    dw MapObjectScreens_52F3 ; id 76
-    dw MapObjectScreens_53FF ; id 77
-    dw MapObjectScreens_5420 ; id 78
-    dw MapObjectScreens_5436 ; id 79
-    dw MapObjectScreens_5528 ; id 80
-    dw MapObjectScreens_5576 ; id 81
-    dw MapObjectScreens_69_5593 ; id 82
-    dw MapObjectScreens_5616 ; id 83
-    dw MapObjectScreens_567C ; id 84
-    dw MapObjectScreens_568E ; id 85
-    dw MapObjectScreens_7E4B ; id 86
-    dw MapObjectScreens_56A2 ; id 87
-    dw MapObjectScreens_572B ; id 88
-    dw MapObjectScreens_57E1 ; id 89
-    dw MapObjectScreens_5810 ; id 90
-    dw MapObjectScreens_58CA ; id 91
-    dw MapObjectScreens_59AB ; id 92
-    dw MapObjectScreens_5A06 ; id 93
-    dw MapObjectScreens_5A85 ; id 94
-    dw MapObjectScreens_5BA8 ; id 95
-    dw MapObjectScreens_5C01 ; id 96
-    dw MapObjectScreens_5CD8 ; id 97
-    dw MapObjectScreens_7E4B ; id 98
-    dw MapObjectScreens_7E4B ; id 99
-    dw MapObjectScreens_7E4B ; id 100
-    dw MapObjectScreens_7E4B ; id 101
-    dw MapObjectScreens_7E4B ; id 102
-    dw MapObjectScreens_7E4B ; id 103
-    dw MapObjectScreens_7E4B ; id 104
-    dw MapObjectScreens_7E4B ; id 105
-    dw MapObjectScreens_7E4B ; id 106
-    dw MapObjectScreens_7E4B ; id 107
-    dw MapObjectScreens_7E4B ; id 108
-    dw MapObjectScreens_7E4B ; id 109
-    dw MapObjectScreens_7E4B ; id 110
-    dw MapObjectScreens_7E4B ; id 111
-    dw MapObjectScreens_7E4B ; id 112
-    dw MapObjectScreens_49F3 ; id 113
-    dw MapObjectScreens_4AA8 ; id 114
-    dw MapObjectScreens_7E4B ; id 115
-    dw MapObjectScreens_7E4B ; id 116
-    dw MapObjectScreens_7E4B ; id 117
-    dw MapObjectScreens_4ABA ; id 118
-    dw MapObjectScreens_4ADF ; id 119
-    dw MapObjectScreens_4B05 ; id 120
-    dw MapObjectScreens_4BBB ; id 121
-    dw MapObjectScreens_4BF5 ; id 122
-    dw MapObjectScreens_7E4B ; id 123
-    dw MapObjectScreens_4C60 ; id 124
-    dw MapObjectScreens_4D83 ; id 125
-    dw MapObjectScreens_4DA5 ; id 126
-    dw MapObjectScreens_4DE8 ; id 127
-    dw MapObjectScreens_7E4B ; id 128
-    dw MapObjectScreens_7E4B ; id 129
-    dw MapObjectScreens_7E4B ; id 130
-    dw MapObjectScreens_7E4B ; id 131
-    dw MapObjectScreens_4E42 ; id 132
-    dw MapObjectScreens_7E4B ; id 133
-    dw MapObjectScreens_7E4B ; id 134
-    dw MapObjectScreens_7E4B ; id 135
-    dw MapObjectScreens_7E4B ; id 136
-    dw MapObjectScreens_4E56 ; id 137
-    dw MapObjectScreens_7E4B ; id 138
-    dw MapObjectScreens_7E4B ; id 139
-    dw MapObjectScreens_4E99 ; id 140
-    dw MapObjectScreens_7E4B ; id 141
-    dw MapObjectScreens_4EBD ; id 142
-    dw MapObjectScreens_4F89 ; id 143
-    dw MapObjectScreens_4F9D ; id 144
-    dw MapObjectScreens_4FCD ; id 145
-    dw MapObjectScreens_7E4B ; id 146
-    dw MapObjectScreens_7E4B ; id 147
-    dw MapObjectScreens_4FE1 ; id 148
-    dw MapObjectScreens_5065 ; id 149
-    dw MapObjectScreens_5083 ; id 150
-    dw MapObjectScreens_7E4B ; id 151
-    dw MapObjectScreens_7E4B ; id 152
-    dw MapObjectScreens_7E4B ; id 153
-    dw MapObjectScreens_7E4B ; id 154
-    dw MapObjectScreens_50A5 ; id 155
-    dw MapObjectScreens_7E4B ; id 156
-    dw MapObjectScreens_7E4B ; id 157
-    dw MapObjectScreens_7E4B ; id 158
-    dw MapObjectScreens_7E4B ; id 159
-    dw MapObjectScreens_7E4B ; id 160
-    dw MapObjectScreens_49AF ; id 161
-    dw MapObjectScreens_7E4B ; id 162
-    dw MapObjectScreens_49D2 ; id 163
-    dw MapObjectScreens_7E4B ; id 164
-    dw MapObjectScreens_7E4B ; id 165
-    dw MapObjectScreens_7E4B ; id 166
-    dw MapObjectScreens_7E4B ; id 167
-    dw MapObjectScreens_7E4B ; id 168
-    dw MapObjectScreens_47AA ; id 169
-    dw MapObjectScreens_48B6 ; id 170
-    dw MapObjectScreens_493A ; id 171
-    dw MapObjectScreens_4957 ; id 172
-    dw MapObjectScreens_7E4B ; id 173
-    dw MapObjectScreens_7E4B ; id 174
-    dw MapObjectScreens_7E4B ; id 175
-    dw MapObjectScreens_7E4B ; id 176
-    dw MapObjectScreens_471D ; id 177
-    dw MapObjectScreens_7E4B ; id 178
-    dw MapObjectScreens_7E4B ; id 179
-    dw MapObjectScreens_7E4B ; id 180
-    dw MapObjectScreens_7E4B ; id 181
-    dw MapObjectScreens_477B ; id 182
-    dw MapObjectScreens_7E4B ; id 183
-    dw MapObjectScreens_7E4B ; id 184
-    dw MapObjectScreens_453D ; id 185
-    dw MapObjectScreens_45E8 ; id 186
-    dw MapObjectScreens_463D ; id 187
-    dw MapObjectScreens_46AB ; id 188
-    dw MapObjectScreens_46FE ; id 189
-    dw MapObjectScreens_7E4B ; id 190
-    dw MapObjectScreens_7E4B ; id 191
-    dw MapObjectScreens_7E4B ; id 192
-    dw MapObjectScreens_7E4B ; id 193
-    dw MapObjectScreens_7E4B ; id 194
-    dw MapObjectScreens_7E4B ; id 195
-    dw MapObjectScreens_7E4B ; id 196
-    dw MapObjectScreens_7E4B ; id 197
-    dw MapObjectScreens_7E4B ; id 198
-    dw MapObjectScreens_7E4B ; id 199
-    dw MapObjectScreens_7E4B ; id 200
-    dw MapObjectScreens_450E ; id 201
-    dw MapObjectScreens_44F8 ; id 202
-    dw MapObjectScreens_44E2 ; id 203
-    dw MapObjectScreens_44CC ; id 204
-    dw MapObjectScreens_44B6 ; id 205
-    dw MapObjectScreens_4492 ; id 206
-    dw MapObjectScreens_7E4B ; id 207
-    dw MapObjectScreens_7E4B ; id 208
-    dw MapObjectScreens_7E4B ; id 209
-    dw MapObjectScreens_4463 ; id 210
-    dw MapObjectScreens_444D ; id 211
-    dw MapObjectScreens_4437 ; id 212
-    dw MapObjectScreens_4421 ; id 213
-    dw MapObjectScreens_440B ; id 214
-    dw MapObjectScreens_43E7 ; id 215
-    dw MapObjectScreens_7E4B ; id 216
-    dw MapObjectScreens_7E4B ; id 217
-    dw MapObjectScreens_7E4B ; id 218
-    dw MapObjectScreens_43B8 ; id 219
-    dw MapObjectScreens_43A2 ; id 220
-    dw MapObjectScreens_438C ; id 221
-    dw MapObjectScreens_4376 ; id 222
-    dw MapObjectScreens_4360 ; id 223
-    dw MapObjectScreens_433C ; id 224
-    dw MapObjectScreens_7E4B ; id 225
-    dw MapObjectScreens_7E4B ; id 226
-    dw MapObjectScreens_7E4B ; id 227
+    dw MapObjectScreens_Map00 ; id 0
+    dw MapObjectScreens_Map01 ; id 1
+    dw MapObjectScreens_Map02 ; id 2
+    dw MapObjectScreens_Map03 ; id 3
+    dw MapObjectScreens_Map04 ; id 4
+    dw MapObjectScreens_Map05 ; id 5
+    dw MapObjectScreens_Map06 ; id 6
+    dw MapObjectScreens_Map07 ; id 7
+    dw MapObjectScreens_Map08 ; id 8
+    dw MapObjectScreens_Map09 ; id 9
+    dw MapObjectScreens_Map0A ; id 10
+    dw MapObjectScreens_Map0B ; id 11
+    dw MapObjectScreens_Map0C ; id 12
+    dw MapObjectScreens_Map0D ; id 13
+    dw MapObjectScreens_Map0E ; id 14
+    dw MapObjectScreens_Map0F ; id 15
+    dw MapObjectScreens_Map10 ; id 16
+    dw MapObjectScreens_Map11 ; id 17
+    dw MapObjectScreens_Map12 ; id 18
+    dw MapObjectScreens_Map13 ; id 19
+    dw MapObjectScreens_Map14 ; id 20
+    dw MapObjectScreens_Map15 ; id 21
+    dw MapObjectScreens_Map16 ; id 22
+    dw MapObjectScreens_Map17 ; id 23
+    dw MapObjectScreens_Map18 ; id 24
+    dw MapObjectScreens_Map19 ; id 25
+    dw MapObjectScreens_Map1A ; id 26
+    dw MapObjectScreens_Map03 ; id 27
+    dw MapObjectScreens_Map1C ; id 28
+    dw MapObjectScreens_Map1D ; id 29
+    dw MapObjectScreens_Map03 ; id 30
+    dw MapObjectScreens_Map03 ; id 31
+    dw MapObjectScreens_Map03 ; id 32
+    dw MapObjectScreens_Map21 ; id 33
+    dw MapObjectScreens_Map22 ; id 34
+    dw MapObjectScreens_Map23 ; id 35
+    dw MapObjectScreens_Map24 ; id 36
+    dw MapObjectScreens_Map25 ; id 37
+    dw MapObjectScreens_Map26 ; id 38
+    dw MapObjectScreens_Map03 ; id 39
+    dw MapObjectScreens_Map28 ; id 40
+    dw MapObjectScreens_Map03 ; id 41
+    dw MapObjectScreens_Map2A ; id 42
+    dw MapObjectScreens_Map2B ; id 43
+    dw MapObjectScreens_Map03 ; id 44
+    dw MapObjectScreens_Map2D ; id 45
+    dw MapObjectScreens_Map2E ; id 46
+    dw MapObjectScreens_Map2F ; id 47
+    dw MapObjectScreens_Map30 ; id 48
+    dw MapObjectScreens_Map31 ; id 49
+    dw MapObjectScreens_Map32 ; id 50
+    dw MapObjectScreens_Map33 ; id 51
+    dw MapObjectScreens_Map34 ; id 52
+    dw MapObjectScreens_Map35 ; id 53
+    dw MapObjectScreens_Map03 ; id 54
+    dw MapObjectScreens_Map37 ; id 55
+    dw MapObjectScreens_Map38 ; id 56
+    dw MapObjectScreens_Map39 ; id 57
+    dw MapObjectScreens_Map3A ; id 58
+    dw MapObjectScreens_Map3B ; id 59
+    dw MapObjectScreens_Map3C ; id 60
+    dw MapObjectScreens_Map3D ; id 61
+    dw MapObjectScreens_Map03 ; id 62
+    dw MapObjectScreens_Map03 ; id 63
+    dw MapObjectScreens_Map40 ; id 64
+    dw MapObjectScreens_Map41 ; id 65
+    dw MapObjectScreens_Map42 ; id 66
+    dw MapObjectScreens_Map43 ; id 67
+    dw MapObjectScreens_Map44 ; id 68
+    dw MapObjectScreens_Map03 ; id 69
+    dw MapObjectScreens_Map03 ; id 70
+    dw MapObjectScreens_Map03 ; id 71
+    dw MapObjectScreens_Map03 ; id 72
+    dw MapObjectScreens_Map49 ; id 73
+    dw MapObjectScreens_Map4A ; id 74
+    dw MapObjectScreens_Map4B ; id 75
+    dw MapObjectScreens_Map4C ; id 76
+    dw MapObjectScreens_Map4D ; id 77
+    dw MapObjectScreens_Map4E ; id 78
+    dw MapObjectScreens_Map4F ; id 79
+    dw MapObjectScreens_Map50 ; id 80
+    dw MapObjectScreens_Map51 ; id 81
+    dw MapObjectScreens_Map52 ; id 82
+    dw MapObjectScreens_Map53 ; id 83
+    dw MapObjectScreens_Map54 ; id 84
+    dw MapObjectScreens_Map55 ; id 85
+    dw MapObjectScreens_Map03 ; id 86
+    dw MapObjectScreens_Map57 ; id 87
+    dw MapObjectScreens_Map58 ; id 88
+    dw MapObjectScreens_Map59 ; id 89
+    dw MapObjectScreens_Map5A ; id 90
+    dw MapObjectScreens_Map5B ; id 91
+    dw MapObjectScreens_Map5C ; id 92
+    dw MapObjectScreens_Map5D ; id 93
+    dw MapObjectScreens_Map5E ; id 94
+    dw MapObjectScreens_Map5F ; id 95
+    dw MapObjectScreens_Map60 ; id 96
+    dw MapObjectScreens_Map61 ; id 97
+    dw MapObjectScreens_Map03 ; id 98
+    dw MapObjectScreens_Map03 ; id 99
+    dw MapObjectScreens_Map03 ; id 100
+    dw MapObjectScreens_Map03 ; id 101
+    dw MapObjectScreens_Map03 ; id 102
+    dw MapObjectScreens_Map03 ; id 103
+    dw MapObjectScreens_Map03 ; id 104
+    dw MapObjectScreens_Map03 ; id 105
+    dw MapObjectScreens_Map03 ; id 106
+    dw MapObjectScreens_Map03 ; id 107
+    dw MapObjectScreens_Map03 ; id 108
+    dw MapObjectScreens_Map03 ; id 109
+    dw MapObjectScreens_Map03 ; id 110
+    dw MapObjectScreens_Map03 ; id 111
+    dw MapObjectScreens_Map03 ; id 112
+    dw MapObjectScreens_Map71 ; id 113
+    dw MapObjectScreens_Map72 ; id 114
+    dw MapObjectScreens_Map03 ; id 115
+    dw MapObjectScreens_Map03 ; id 116
+    dw MapObjectScreens_Map03 ; id 117
+    dw MapObjectScreens_Map76 ; id 118
+    dw MapObjectScreens_Map77 ; id 119
+    dw MapObjectScreens_Map78 ; id 120
+    dw MapObjectScreens_Map79 ; id 121
+    dw MapObjectScreens_Map7A ; id 122
+    dw MapObjectScreens_Map03 ; id 123
+    dw MapObjectScreens_Map7C ; id 124
+    dw MapObjectScreens_Map7D ; id 125
+    dw MapObjectScreens_Map7E ; id 126
+    dw MapObjectScreens_Map7F ; id 127
+    dw MapObjectScreens_Map03 ; id 128
+    dw MapObjectScreens_Map03 ; id 129
+    dw MapObjectScreens_Map03 ; id 130
+    dw MapObjectScreens_Map03 ; id 131
+    dw MapObjectScreens_Map84 ; id 132
+    dw MapObjectScreens_Map03 ; id 133
+    dw MapObjectScreens_Map03 ; id 134
+    dw MapObjectScreens_Map03 ; id 135
+    dw MapObjectScreens_Map03 ; id 136
+    dw MapObjectScreens_Map89 ; id 137
+    dw MapObjectScreens_Map03 ; id 138
+    dw MapObjectScreens_Map03 ; id 139
+    dw MapObjectScreens_Map8C ; id 140
+    dw MapObjectScreens_Map03 ; id 141
+    dw MapObjectScreens_Map8E ; id 142
+    dw MapObjectScreens_Map8F ; id 143
+    dw MapObjectScreens_Map90 ; id 144
+    dw MapObjectScreens_Map91 ; id 145
+    dw MapObjectScreens_Map03 ; id 146
+    dw MapObjectScreens_Map03 ; id 147
+    dw MapObjectScreens_Map94 ; id 148
+    dw MapObjectScreens_Map95 ; id 149
+    dw MapObjectScreens_Map96 ; id 150
+    dw MapObjectScreens_Map03 ; id 151
+    dw MapObjectScreens_Map03 ; id 152
+    dw MapObjectScreens_Map03 ; id 153
+    dw MapObjectScreens_Map03 ; id 154
+    dw MapObjectScreens_Map9B ; id 155
+    dw MapObjectScreens_Map03 ; id 156
+    dw MapObjectScreens_Map03 ; id 157
+    dw MapObjectScreens_Map03 ; id 158
+    dw MapObjectScreens_Map03 ; id 159
+    dw MapObjectScreens_Map03 ; id 160
+    dw MapObjectScreens_MapA1 ; id 161
+    dw MapObjectScreens_Map03 ; id 162
+    dw MapObjectScreens_MapA3 ; id 163
+    dw MapObjectScreens_Map03 ; id 164
+    dw MapObjectScreens_Map03 ; id 165
+    dw MapObjectScreens_Map03 ; id 166
+    dw MapObjectScreens_Map03 ; id 167
+    dw MapObjectScreens_Map03 ; id 168
+    dw MapObjectScreens_MapA9 ; id 169
+    dw MapObjectScreens_MapAA ; id 170
+    dw MapObjectScreens_MapAB ; id 171
+    dw MapObjectScreens_MapAC ; id 172
+    dw MapObjectScreens_Map03 ; id 173
+    dw MapObjectScreens_Map03 ; id 174
+    dw MapObjectScreens_Map03 ; id 175
+    dw MapObjectScreens_Map03 ; id 176
+    dw MapObjectScreens_MapB1 ; id 177
+    dw MapObjectScreens_Map03 ; id 178
+    dw MapObjectScreens_Map03 ; id 179
+    dw MapObjectScreens_Map03 ; id 180
+    dw MapObjectScreens_Map03 ; id 181
+    dw MapObjectScreens_MapB6 ; id 182
+    dw MapObjectScreens_Map03 ; id 183
+    dw MapObjectScreens_Map03 ; id 184
+    dw MapObjectScreens_MapB9 ; id 185
+    dw MapObjectScreens_MapBA ; id 186
+    dw MapObjectScreens_MapBB ; id 187
+    dw MapObjectScreens_MapBC ; id 188
+    dw MapObjectScreens_MapBD ; id 189
+    dw MapObjectScreens_Map03 ; id 190
+    dw MapObjectScreens_Map03 ; id 191
+    dw MapObjectScreens_Map03 ; id 192
+    dw MapObjectScreens_Map03 ; id 193
+    dw MapObjectScreens_Map03 ; id 194
+    dw MapObjectScreens_Map03 ; id 195
+    dw MapObjectScreens_Map03 ; id 196
+    dw MapObjectScreens_Map03 ; id 197
+    dw MapObjectScreens_Map03 ; id 198
+    dw MapObjectScreens_Map03 ; id 199
+    dw MapObjectScreens_Map03 ; id 200
+    dw MapObjectScreens_MapC9 ; id 201
+    dw MapObjectScreens_MapCA ; id 202
+    dw MapObjectScreens_MapCB ; id 203
+    dw MapObjectScreens_MapCC ; id 204
+    dw MapObjectScreens_MapCD ; id 205
+    dw MapObjectScreens_MapCE ; id 206
+    dw MapObjectScreens_Map03 ; id 207
+    dw MapObjectScreens_Map03 ; id 208
+    dw MapObjectScreens_Map03 ; id 209
+    dw MapObjectScreens_MapD2 ; id 210
+    dw MapObjectScreens_MapD3 ; id 211
+    dw MapObjectScreens_MapD4 ; id 212
+    dw MapObjectScreens_MapD5 ; id 213
+    dw MapObjectScreens_MapD6 ; id 214
+    dw MapObjectScreens_MapD7 ; id 215
+    dw MapObjectScreens_Map03 ; id 216
+    dw MapObjectScreens_Map03 ; id 217
+    dw MapObjectScreens_Map03 ; id 218
+    dw MapObjectScreens_MapDB ; id 219
+    dw MapObjectScreens_MapDC ; id 220
+    dw MapObjectScreens_MapDD ; id 221
+    dw MapObjectScreens_MapDE ; id 222
+    dw MapObjectScreens_MapDF ; id 223
+    dw MapObjectScreens_MapE0 ; id 224
+    dw MapObjectScreens_Map03 ; id 225
+    dw MapObjectScreens_Map03 ; id 226
+    dw MapObjectScreens_Map03 ; id 227
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_433C::
+MapObjectScreens_MapE0::
     dw $0000 ; id 0
-    dw ObjSelector_4340 ; id 1
+    dw ObjSelector_MapE0_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4340::
-    objsel_unless_flag $01f6, MapObjects_4348
-    objsel_list MapObjects_4354
+ObjSelector_MapE0_1::
+    objsel_unless_flag EVENT_MAP_E0_OBJECT_REMOVED, MapObjects_MapE0_1_0
+    objsel_list MapObjects_MapE0_1_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4348::
+MapObjects_MapE0_1_0::
     db $01 ; entry 0
     db $85, $01, $41, $00, $00, $40, $20, $05, $00, $50, $a7
 
-MapObjects_4354::
+MapObjects_MapE0_1_1::
     db $01 ; entry 0
     db $85, $01, $41, $00, $00, $30, $20, $05, $00, $50, $a7
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4360::
+MapObjectScreens_MapDF::
     dw $0000 ; id 0
-    dw ObjSelector_4364 ; id 1
+    dw ObjSelector_MapDF_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4364::
-    objsel_unless_flag $01f2, MapObjects_436A
+ObjSelector_MapDF_1::
+    objsel_unless_flag EVENT_MAP_DF_OBJECT_REMOVED, MapObjects_MapDF_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_436A::
+MapObjects_MapDF_1_0::
     db $01 ; entry 0
     db $85, $00, $0d, $00, $00, $40, $30, $05, $00, $50, $a6
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4376::
+MapObjectScreens_MapDE::
     dw $0000 ; id 0
-    dw ObjSelector_437A ; id 1
+    dw ObjSelector_MapDE_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_437A::
-    objsel_unless_flag $00fc, MapObjects_4380
+ObjSelector_MapDE_1::
+    objsel_unless_flag EVENT_MAP_DE_OBJECT_REMOVED, MapObjects_MapDE_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4380::
+MapObjects_MapDE_1_0::
     db $01 ; entry 0
     db $85, $00, $5c, $00, $00, $40, $30, $05, $00, $50, $a5
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_438C::
+MapObjectScreens_MapDD::
     dw $0000 ; id 0
-    dw ObjSelector_4390 ; id 1
+    dw ObjSelector_MapDD_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4390::
-    objsel_unless_flag $00f8, MapObjects_4396
+ObjSelector_MapDD_1::
+    objsel_unless_flag EVENT_MAP_DD_OBJECT_REMOVED, MapObjects_MapDD_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4396::
+MapObjects_MapDD_1_0::
     db $01 ; entry 0
     db $85, $00, $55, $00, $00, $40, $30, $05, $00, $50, $a4
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_43A2::
+MapObjectScreens_MapDC::
     dw $0000 ; id 0
-    dw ObjSelector_43A6 ; id 1
+    dw ObjSelector_MapDC_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_43A6::
-    objsel_unless_flag $00df, MapObjects_43AC
+ObjSelector_MapDC_1::
+    objsel_unless_flag EVENT_MAP_DC_OBJECT_REMOVED, MapObjects_MapDC_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_43AC::
+MapObjects_MapDC_1_0::
     db $01 ; entry 0
     db $85, $00, $10, $00, $00, $40, $30, $05, $00, $50, $a3
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_43B8::
-    dw ObjSelector_43BC ; id 0
-    dw ObjSelector_43D7 ; id 1
+MapObjectScreens_MapDB::
+    dw ObjSelector_MapDB_0 ; id 0
+    dw ObjSelector_MapDB_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_43BC::
-    objsel_list MapObjects_43C0
+ObjSelector_MapDB_0::
+    objsel_list MapObjects_MapDB_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_43C0::
+MapObjects_MapDB_0_0::
     db $02 ; entry 0: object count
     db $85, $00, $63, $00, $00, $20, $40, $05, $00, $50, $a0 ; object 0
     db $86, $01, $52, $00, $00, $60, $30, $06, $02, $60, $a1 ; object 1
 
-ObjSelector_43D7::
-    objsel_list MapObjects_43DB
+ObjSelector_MapDB_1::
+    objsel_list MapObjects_MapDB_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_43DB::
+MapObjects_MapDB_1_0::
     db $01 ; entry 0
     db $85, $00, $59, $00, $00, $40, $30, $05, $00, $50, $a2
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_43E7::
+MapObjectScreens_MapD7::
     dw $0000 ; id 0
-    dw ObjSelector_43EB ; id 1
+    dw ObjSelector_MapD7_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_43EB::
-    objsel_unless_flag $00d9, MapObjects_43F3
-    objsel_list MapObjects_43FF
+ObjSelector_MapD7_1::
+    objsel_unless_flag EVENT_MAP_D7_OBJECT_REMOVED, MapObjects_MapD7_1_0
+    objsel_list MapObjects_MapD7_1_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_43F3::
+MapObjects_MapD7_1_0::
     db $01 ; entry 0
     db $85, $00, $9a, $00, $00, $40, $20, $05, $00, $50, $87
 
-MapObjects_43FF::
+MapObjects_MapD7_1_1::
     db $01 ; entry 0
     db $85, $00, $9a, $00, $00, $30, $20, $05, $00, $50, $87
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_440B::
+MapObjectScreens_MapD6::
     dw $0000 ; id 0
-    dw ObjSelector_440F ; id 1
+    dw ObjSelector_MapD6_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_440F::
-    objsel_unless_flag $00d5, MapObjects_4415
+ObjSelector_MapD6_1::
+    objsel_unless_flag EVENT_MAP_D6_OBJECT_REMOVED, MapObjects_MapD6_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4415::
+MapObjects_MapD6_1_0::
     db $01 ; entry 0
     db $85, $00, $8d, $00, $00, $40, $30, $05, $00, $50, $86
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4421::
+MapObjectScreens_MapD5::
     dw $0000 ; id 0
-    dw ObjSelector_4425 ; id 1
+    dw ObjSelector_MapD5_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4425::
-    objsel_unless_flag $017c, MapObjects_442B
+ObjSelector_MapD5_1::
+    objsel_unless_flag EVENT_MAP_D5_OBJECT_REMOVED, MapObjects_MapD5_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_442B::
+MapObjects_MapD5_1_0::
     db $01 ; entry 0
     db $85, $00, $80, $00, $00, $40, $30, $05, $00, $50, $85
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4437::
+MapObjectScreens_MapD4::
     dw $0000 ; id 0
-    dw ObjSelector_443B ; id 1
+    dw ObjSelector_MapD4_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_443B::
-    objsel_unless_flag $0178, MapObjects_4441
+ObjSelector_MapD4_1::
+    objsel_unless_flag EVENT_MAP_D4_OBJECT_REMOVED, MapObjects_MapD4_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4441::
+MapObjects_MapD4_1_0::
     db $01 ; entry 0
     db $85, $00, $92, $00, $00, $40, $30, $05, $00, $50, $84
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_444D::
+MapObjectScreens_MapD3::
     dw $0000 ; id 0
-    dw ObjSelector_4451 ; id 1
+    dw ObjSelector_MapD3_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4451::
-    objsel_unless_flag $0174, MapObjects_4457
+ObjSelector_MapD3_1::
+    objsel_unless_flag EVENT_MAP_D3_OBJECT_REMOVED, MapObjects_MapD3_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4457::
+MapObjects_MapD3_1_0::
     db $01 ; entry 0
     db $85, $00, $39, $00, $00, $40, $30, $05, $00, $50, $83
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4463::
-    dw ObjSelector_4467 ; id 0
-    dw ObjSelector_4482 ; id 1
+MapObjectScreens_MapD2::
+    dw ObjSelector_MapD2_0 ; id 0
+    dw ObjSelector_MapD2_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4467::
-    objsel_list MapObjects_446B
+ObjSelector_MapD2_0::
+    objsel_list MapObjects_MapD2_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_446B::
+MapObjects_MapD2_0_0::
     db $02 ; entry 0: object count
     db $85, $00, $15, $00, $00, $70, $40, $05, $00, $50, $80 ; object 0
     db $86, $01, $11, $00, $00, $10, $70, $06, $03, $60, $81 ; object 1
 
-ObjSelector_4482::
-    objsel_list MapObjects_4486
+ObjSelector_MapD2_1::
+    objsel_list MapObjects_MapD2_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4486::
+MapObjects_MapD2_1_0::
     db $01 ; entry 0
     db $85, $00, $51, $00, $00, $40, $30, $05, $00, $50, $82
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4492::
+MapObjectScreens_MapCE::
     dw $0000 ; id 0
-    dw ObjSelector_4496 ; id 1
+    dw ObjSelector_MapCE_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4496::
-    objsel_unless_flag $016e, MapObjects_449E
-    objsel_list MapObjects_44AA
+ObjSelector_MapCE_1::
+    objsel_unless_flag EVENT_MAP_CE_OBJECT_REMOVED, MapObjects_MapCE_1_0
+    objsel_list MapObjects_MapCE_1_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_449E::
+MapObjects_MapCE_1_0::
     db $01 ; entry 0
     db $85, $00, $ed, $00, $00, $40, $20, $05, $00, $50, $67
 
-MapObjects_44AA::
+MapObjects_MapCE_1_1::
     db $01 ; entry 0
     db $85, $00, $ed, $00, $00, $30, $20, $05, $00, $50, $67
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_44B6::
+MapObjectScreens_MapCD::
     dw $0000 ; id 0
-    dw ObjSelector_44BA ; id 1
+    dw ObjSelector_MapCD_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_44BA::
-    objsel_unless_flag $016a, MapObjects_44C0
+ObjSelector_MapCD_1::
+    objsel_unless_flag EVENT_MAP_CD_OBJECT_REMOVED, MapObjects_MapCD_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_44C0::
+MapObjects_MapCD_1_0::
     db $01 ; entry 0
     db $85, $00, $25, $01, $00, $40, $30, $05, $00, $50, $66
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_44CC::
+MapObjectScreens_MapCC::
     dw $0000 ; id 0
-    dw ObjSelector_44D0 ; id 1
+    dw ObjSelector_MapCC_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_44D0::
-    objsel_unless_flag $01dd, MapObjects_44D6
+ObjSelector_MapCC_1::
+    objsel_unless_flag EVENT_MAP_CC_OBJECT_REMOVED, MapObjects_MapCC_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_44D6::
+MapObjects_MapCC_1_0::
     db $01 ; entry 0
     db $85, $00, $2e, $01, $00, $40, $30, $05, $00, $50, $65
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_44E2::
+MapObjectScreens_MapCB::
     dw $0000 ; id 0
-    dw ObjSelector_44E6 ; id 1
+    dw ObjSelector_MapCB_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_44E6::
-    objsel_unless_flag $01d9, MapObjects_44EC
+ObjSelector_MapCB_1::
+    objsel_unless_flag EVENT_MAP_CB_OBJECT_REMOVED, MapObjects_MapCB_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_44EC::
+MapObjects_MapCB_1_0::
     db $01 ; entry 0
     db $85, $00, $55, $01, $00, $40, $30, $05, $00, $50, $64
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_44F8::
+MapObjectScreens_MapCA::
     dw $0000 ; id 0
-    dw ObjSelector_44FC ; id 1
+    dw ObjSelector_MapCA_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_44FC::
-    objsel_unless_flag $01d4, MapObjects_4502
+ObjSelector_MapCA_1::
+    objsel_unless_flag EVENT_MAP_CA_OBJECT_REMOVED, MapObjects_MapCA_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4502::
+MapObjects_MapCA_1_0::
     db $01 ; entry 0
     db $85, $00, $4e, $00, $00, $40, $30, $05, $00, $50, $63
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_450E::
-    dw ObjSelector_4512 ; id 0
-    dw ObjSelector_452D ; id 1
+MapObjectScreens_MapC9::
+    dw ObjSelector_MapC9_0 ; id 0
+    dw ObjSelector_MapC9_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4512::
-    objsel_list MapObjects_4516
+ObjSelector_MapC9_0::
+    objsel_list MapObjects_MapC9_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4516::
+MapObjects_MapC9_0_0::
     db $02 ; entry 0: object count
     db $85, $00, $47, $00, $00, $30, $30, $05, $00, $50, $60 ; object 0
     db $86, $01, $3e, $00, $00, $70, $50, $06, $03, $60, $61 ; object 1
 
-ObjSelector_452D::
-    objsel_list MapObjects_4531
+ObjSelector_MapC9_1::
+    objsel_list MapObjects_MapC9_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4531::
+MapObjects_MapC9_1_0::
     db $01 ; entry 0
     db $85, $00, $06, $00, $00, $40, $30, $05, $00, $50, $62
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_453D::
-    dw ObjSelector_4545 ; id 0
-    dw ObjSelector_456B ; id 1
-    dw ObjSelector_459C ; id 2
-    dw ObjSelector_45C2 ; id 3
+MapObjectScreens_MapB9::
+    dw ObjSelector_MapB9_0 ; id 0
+    dw ObjSelector_MapB9_1 ; id 1
+    dw ObjSelector_MapB9_2 ; id 2
+    dw ObjSelector_MapB9_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4545::
-    objsel_list MapObjects_4549
+ObjSelector_MapB9_0::
+    objsel_list MapObjects_MapB9_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4549::
+MapObjects_MapB9_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $0c, $00, $02, $40, $50, $05, $01, $50, $36 ; object 0
     db $86, $01, $0d, $00, $00, $20, $30, $06, $00, $60, $37 ; object 1
     db $87, $01, $08, $00, $00, $70, $20, $07, $03, $70, $38 ; object 2
 
-ObjSelector_456B::
-    objsel_list MapObjects_456F
+ObjSelector_MapB9_1::
+    objsel_list MapObjects_MapB9_1_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_456F::
+MapObjects_MapB9_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $09, $00, $00, $60, $50, $05, $03, $50, $39 ; object 0
     db $86, $01, $0a, $00, $00, $20, $60, $06, $00, $60, $3a ; object 1
     db $85, $01, $09, $00, $02, $20, $40, $05, $01, $50, $3b ; object 2
     db $87, $01, $15, $00, $00, $40, $20, $07, $00, $70, $3c ; object 3
 
-ObjSelector_459C::
-    objsel_list MapObjects_45A0
+ObjSelector_MapB9_2::
+    objsel_list MapObjects_MapB9_2_0
 
-MapObjects_45A0::
+MapObjects_MapB9_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $08, $00, $00, $30, $60, $05, $00, $50, $30 ; object 0
     db $86, $01, $09, $00, $00, $30, $40, $06, $01, $60, $31 ; object 1
     db $87, $01, $06, $00, $02, $60, $20, $07, $01, $70, $32 ; object 2
 
-ObjSelector_45C2::
-    objsel_list MapObjects_45C6
+ObjSelector_MapB9_3::
+    objsel_list MapObjects_MapB9_3_0
 
-MapObjects_45C6::
+MapObjects_MapB9_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $07, $00, $02, $20, $60, $05, $01, $50, $33 ; object 0
     db $86, $01, $0a, $00, $00, $60, $40, $06, $00, $60, $34 ; object 1
@@ -949,20 +949,20 @@ MapObjects_45C6::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_45E8::
-    dw ObjSelector_45EC ; id 0
-    dw ObjSelector_4617 ; id 1
+MapObjectScreens_MapBA::
+    dw ObjSelector_MapBA_0 ; id 0
+    dw ObjSelector_MapBA_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_45EC::
-    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_45F4
-    objsel_list MapObjects_460B
+ObjSelector_MapBA_0::
+    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_MapBA_0_0
+    objsel_list MapObjects_MapBA_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_45F4::
+MapObjects_MapBA_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $2a, $00, $00, $70, $60, $05, $03, $50, $43 ; object 0
     db $86, $01, $51, $00, $00, $30, $40, $06, $00, $60, $44 ; object 1
@@ -970,17 +970,17 @@ MapObjects_45F4::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_460B::
+MapObjects_MapBA_0_1::
     db $01 ; entry 0
     db $85, $01, $2a, $00, $00, $70, $60, $05, $03, $50, $43
 
-ObjSelector_4617::
-    objsel_list MapObjects_461B
+ObjSelector_MapBA_1::
+    objsel_list MapObjects_MapBA_1_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_461B::
+MapObjects_MapBA_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $16, $00, $00, $50, $60, $05, $00, $50, $40 ; object 0
     db $86, $01, $22, $00, $02, $50, $20, $06, $01, $60, $41 ; object 1
@@ -988,69 +988,69 @@ MapObjects_461B::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_463D::
-    dw ObjSelector_4641 ; id 0
-    dw ObjSelector_466B ; id 1
+MapObjectScreens_MapBB::
+    dw ObjSelector_MapBB_0 ; id 0
+    dw ObjSelector_MapBB_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4641::
+ObjSelector_MapBB_0::
     objsel_skip_if_set EVENT_SCENE_PENDANT_SELLER_1C0, $02, $00
     objsel_none
 
-ObjSelector_4649::
-    objsel_unless_flag EVENT_SCENE_MILAYOU_FOREST, MapObjects_4653
-    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_465F
+ObjSelector_MapBB_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MILAYOU_FOREST, MapObjects_MapBB_0_Unlisted_0
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_MapBB_0_Unlisted_1
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_4653::
+MapObjects_MapBB_0_Unlisted_0::
     db $01 ; entry 0
     db $85, $01, $43, $00, $00, $40, $20, $05, $02, $50, $3f
 
-MapObjects_465F::
+MapObjects_MapBB_0_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $43, $00, $00, $30, $20, $05, $00, $50, $3f
 
-ObjSelector_466B::
+ObjSelector_MapBB_1::
     objsel_skip_if_set EVENT_SCENE_PENDANT_SELLER, $02, $00
     objsel_none
 
-ObjSelector_4673::
-    objsel_unless_flag EVENT_SCENE_MERCY, MapObjects_467D
-    objsel_unless_flag EVENT_HERO_OPENED_THE_TREASURE_CHEST, MapObjects_469F
+ObjSelector_MapBB_1_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MERCY, MapObjects_MapBB_1_Unlisted_0
+    objsel_unless_flag EVENT_HERO_OPENED_THE_TREASURE_CHEST, MapObjects_MapBB_1_Unlisted_1
     objsel_none
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_467D::
+MapObjects_MapBB_1_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $00, $d3, $00, $00, $40, $10, $05, $01, $50, $45 ; object 0
     db $86, $00, $d3, $00, $00, $50, $10, $06, $03, $60, $46 ; object 1
     db $87, $01, $5a, $00, $00, $50, $e0, $07, $00, $70, $47 ; object 2
 
-MapObjects_469F::
+MapObjects_MapBB_1_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $5a, $00, $00, $50, $10, $05, $00, $50, $47
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_46AB::
-    dw ObjSelector_46AD ; id 0
+MapObjectScreens_MapBC::
+    dw ObjSelector_MapBC_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_46AD::
-    objsel_unless_flag EVENT_THANK_YOU_I_KNEW_YOU, MapObjects_46C5
-    objsel_unless_flag EVENT_THANK_YOU_FOR_GETTING_THE, MapObjects_46E7
-    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_46C5
-    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_46E7
-    objsel_unless_flag EVENT_MILAYOU_I_LOST_BUT_GOOD, MapObjects_46C5
-    objsel_list MapObjects_46E7
+ObjSelector_MapBC_0::
+    objsel_unless_flag EVENT_THANK_YOU_I_KNEW_YOU, MapObjects_MapBC_0_0
+    objsel_unless_flag EVENT_THANK_YOU_FOR_GETTING_THE, MapObjects_MapBC_0_1
+    objsel_unless_flag EVENT_SCENE_PENDANT_SELLER_1C0, MapObjects_MapBC_0_0
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_MapBC_0_1
+    objsel_unless_flag EVENT_MILAYOU_I_LOST_BUT_GOOD, MapObjects_MapBC_0_0
+    objsel_list MapObjects_MapBC_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_46C5::
+MapObjects_MapBC_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $3d ; object 0
     db $86, $01, $43, $00, $00, $70, $40, $06, $00, $60, $3f ; object 1
@@ -1059,51 +1059,51 @@ MapObjects_46C5::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_46E7::
+MapObjects_MapBC_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $15, $00, $00, $30, $20, $05, $00, $50, $3d ; object 0
     db $86, $01, $13, $00, $00, $70, $70, $06, $00, $60, $3e ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_46FE::
-    dw ObjSelector_4700 ; id 0
+MapObjectScreens_MapBD::
+    dw ObjSelector_MapBD_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4700::
-    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_4706
+ObjSelector_MapBD_0::
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN_2, MapObjects_MapBD_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4706::
+MapObjects_MapBD_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $51, $00, $00, $50, $20, $05, $00, $50, $48 ; object 0
     db $86, $01, $43, $00, $00, $e0, $e0, $06, $00, $60, $3f ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_471D::
-    dw ObjSelector_471F ; id 0
+MapObjectScreens_MapB1::
+    dw ObjSelector_MapB1_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_471F::
-    objsel_unless_flag EVENT_KIRAL_OH_FOOLISH_OF_ME, MapObjects_472B
-    objsel_unless_flag $0167, MapObjects_4742
-    objsel_list MapObjects_4759
+ObjSelector_MapB1_0::
+    objsel_unless_flag EVENT_KIRAL_OH_FOOLISH_OF_ME, MapObjects_MapB1_0_0
+    objsel_unless_flag EVENT_KIRAL_FETCH_ME_MY_167, MapObjects_MapB1_0_1
+    objsel_list MapObjects_MapB1_0_2
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_472B::
+MapObjects_MapB1_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $20, $00, $00, $30, $40, $05, $02, $50, $20 ; object 0
     db $86, $00, $2a, $01, $00, $40, $30, $06, $00, $60, $21 ; object 1
 
-MapObjects_4742::
+MapObjects_MapB1_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $20, $00, $00, $10, $40, $05, $02, $50, $20 ; object 0
     db $86, $00, $2a, $01, $00, $40, $30, $06, $00, $60, $21 ; object 1
@@ -1111,7 +1111,7 @@ MapObjects_4742::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4759::
+MapObjects_MapB1_0_2::
     db $03 ; entry 0: object count
     db $85, $01, $20, $00, $00, $60, $50, $05, $02, $50, $20 ; object 0
     db $86, $00, $2a, $01, $00, $40, $30, $06, $00, $60, $21 ; object 1
@@ -1119,20 +1119,20 @@ MapObjects_4759::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_477B::
-    dw ObjSelector_477D ; id 0
+MapObjectScreens_MapB6::
+    dw ObjSelector_MapB6_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_477D::
-    objsel_unless_flag EVENT_SCENE_BARREL, MapObjects_4787
-    objsel_unless_flag $0167, MapObjects_479E
+ObjSelector_MapB6_0::
+    objsel_unless_flag EVENT_SCENE_BARREL, MapObjects_MapB6_0_0
+    objsel_unless_flag EVENT_KIRAL_FETCH_ME_MY_167, MapObjects_MapB6_0_1
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4787::
+MapObjects_MapB6_0_0::
     db $02 ; entry 0: object count
     db $85, $00, $29, $01, $00, $40, $20, $05, $00, $50, $2d ; object 0
     db $86, $01, $61, $00, $00, $40, $e0, $06, $00, $60, $2d ; object 1
@@ -1140,54 +1140,54 @@ MapObjects_4787::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_479E::
+MapObjects_MapB6_0_1::
     db $01 ; entry 0
     db $85, $01, $61, $00, $00, $40, $20, $05, $00, $50, $2d
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_47AA::
-    dw ObjSelector_47B2 ; id 0
-    dw ObjSelector_47CD ; id 1
-    dw ObjSelector_486A ; id 2
-    dw ObjSelector_4890 ; id 3
+MapObjectScreens_MapA9::
+    dw ObjSelector_MapA9_0 ; id 0
+    dw ObjSelector_MapA9_1 ; id 1
+    dw ObjSelector_MapA9_2 ; id 2
+    dw ObjSelector_MapA9_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_47B2::
-    objsel_list MapObjects_47B6
+ObjSelector_MapA9_0::
+    objsel_list MapObjects_MapA9_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_47B6::
+MapObjects_MapA9_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $42, $00, $00, $50, $20, $05, $02, $50, $06 ; object 0
     db $86, $01, $32, $00, $00, $50, $40, $06, $00, $60, $07 ; object 1
 
-ObjSelector_47CD::
-    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_47E1
-    objsel_unless_flag EVENT_CYAL_LISTEN_HERO_WE_SHOULD, MapObjects_4803
-    objsel_unless_flag EVENT_ROLT_WAIT_GONE_ALREADY, MapObjects_4825
-    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_483C
-    objsel_list MapObjects_4848
+ObjSelector_MapA9_1::
+    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_MapA9_1_0
+    objsel_unless_flag EVENT_CYAL_LISTEN_HERO_WE_SHOULD, MapObjects_MapA9_1_1
+    objsel_unless_flag EVENT_ROLT_WAIT_GONE_ALREADY, MapObjects_MapA9_1_2
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_MapA9_1_3
+    objsel_list MapObjects_MapA9_1_4
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_47E1::
+MapObjects_MapA9_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0b ; object 0
     db $86, $01, $31, $00, $00, $40, $a0, $06, $02, $60, $01 ; object 1
     db $87, $01, $32, $00, $00, $40, $b0, $07, $02, $70, $02 ; object 2
 
-MapObjects_4803::
+MapObjects_MapA9_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0b ; object 0
     db $86, $01, $31, $00, $00, $60, $40, $06, $02, $60, $01 ; object 1
     db $87, $01, $32, $00, $00, $20, $70, $07, $00, $70, $02 ; object 2
 
-MapObjects_4825::
+MapObjects_MapA9_1_2::
     db $02 ; entry 0: object count
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0b ; object 0
     db $86, $01, $31, $00, $00, $60, $40, $06, $02, $60, $01 ; object 1
@@ -1195,31 +1195,31 @@ MapObjects_4825::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_483C::
+MapObjects_MapA9_1_3::
     db $01 ; entry 0
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0b
 
-MapObjects_4848::
+MapObjects_MapA9_1_4::
     db $03 ; entry 0: object count
     db $85, $01, $35, $00, $00, $70, $10, $05, $00, $50, $0b ; object 0
     db $86, $01, $31, $00, $00, $30, $50, $06, $02, $60, $01 ; object 1
     db $87, $01, $32, $00, $00, $40, $60, $07, $02, $70, $02 ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_486A::
-    objsel_list MapObjects_486E
+ObjSelector_MapA9_2::
+    objsel_list MapObjects_MapA9_2_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_486E::
+MapObjects_MapA9_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $33, $00, $00, $60, $60, $05, $01, $50, $08 ; object 0
     db $86, $01, $34, $00, $02, $20, $50, $06, $01, $60, $09 ; object 1
     db $87, $01, $37, $00, $00, $20, $30, $07, $00, $70, $0a ; object 2
 
-ObjSelector_4890::
-    objsel_list MapObjects_4894
+ObjSelector_MapA9_3::
+    objsel_list MapObjects_MapA9_3_0
 
-MapObjects_4894::
+MapObjects_MapA9_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $37, $00, $00, $80, $40, $05, $00, $50, $03 ; object 0
     db $86, $01, $34, $00, $00, $20, $30, $06, $01, $60, $04 ; object 1
@@ -1227,31 +1227,31 @@ MapObjects_4894::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_48B6::
-    dw ObjSelector_48BA ; id 0
-    dw ObjSelector_4916 ; id 1
+MapObjectScreens_MapAA::
+    dw ObjSelector_MapAA_0 ; id 0
+    dw ObjSelector_MapAA_1 ; id 1
 
-ObjSelector_48BA::
+ObjSelector_MapAA_0::
     objsel_skip_if_clear EVENT_SCENE_TOO_STRONG, $02, $00
     objsel_none
 
-ObjSelector_48C2::
+ObjSelector_MapAA_0_Unlisted::
     objsel_skip_if_clear EVENT_CYAL_LISTEN_HERO_WE_SHOULD, $04, $00
-    objsel_list MapObjects_48E9
+    objsel_list MapObjects_MapAA_0_Unlisted_1
 
-ObjSelector_48CC::
-    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_48D2
+ObjSelector_MapAA_0_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_ROLT_ELDER, MapObjects_MapAA_0_Unlisted_2_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_48D2::
+MapObjects_MapAA_0_Unlisted_2_0::
     db $02 ; entry 0: object count
     db $85, $01, $31, $00, $00, $40, $30, $05, $00, $50, $01 ; object 0
     db $86, $01, $32, $00, $00, $50, $20, $06, $00, $60, $02 ; object 1
 
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_48E9::
+MapObjects_MapAA_0_Unlisted_1::
     db $04 ; entry 0: object count
     db $85, $01, $32, $00, $00, $60, $10, $05, $00, $50, $02 ; object 0
     db $86, $00, $d5, $00, $00, $50, $20, $06, $00, $60, $00 ; object 1
@@ -1259,62 +1259,62 @@ MapObjects_48E9::
     db $87, $00, $57, $00, $00, $40, $30, $07, $00, $70, $0e ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4916::
+ObjSelector_MapAA_1::
     objsel_skip_if_clear EVENT_CYAL_EEEK_HERO_HELP_ME, $02, $00
     objsel_none
 
-ObjSelector_491E::
+ObjSelector_MapAA_1_Unlisted::
     objsel_skip_if_clear EVENT_CYAL_LISTEN_HERO_WE_SHOULD, $04, $00
-    objsel_list MapObjects_492E
+    objsel_list MapObjects_MapAA_1_Unlisted_1
 
-ObjSelector_4928::
-    objsel_unless_flag EVENT_SCENE_CYAL_SHINE, MapObjects_492E
+ObjSelector_MapAA_1_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_CYAL_SHINE, MapObjects_MapAA_1_Unlisted_1
     objsel_none
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_492E::
+MapObjects_MapAA_1_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $32, $00, $00, $40, $30, $05, $02, $50, $02
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_493A::
-    dw ObjSelector_493C ; id 0
+MapObjectScreens_MapAB::
+    dw ObjSelector_MapAB_0 ; id 0
 
-ObjSelector_493C::
-    objsel_list MapObjects_4940
+ObjSelector_MapAB_0::
+    objsel_list MapObjects_MapAB_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4940::
+MapObjects_MapAB_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $37, $00, $00, $50, $40, $05, $00, $50, $0f ; object 0
     db $86, $01, $38, $00, $00, $30, $20, $06, $03, $60, $10 ; object 1
 
-MapObjectScreens_4957::
-    dw ObjSelector_4959 ; id 0
+MapObjectScreens_MapAC::
+    dw ObjSelector_MapAC_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4959::
+ObjSelector_MapAC_0::
     objsel_skip_if_set EVENT_ROLT_WAIT_GONE_ALREADY, $02, $00
     objsel_none
 
-ObjSelector_4961::
-    objsel_unless_flag EVENT_SCENE_GIVE_BACK_CYAL, MapObjects_496B
-    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_498D
+ObjSelector_MapAC_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_GIVE_BACK_CYAL, MapObjects_MapAC_0_Unlisted_0
+    objsel_unless_flag EVENT_KEY_BOSS_BEATEN, MapObjects_MapAC_0_Unlisted_1
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_496B::
+MapObjects_MapAC_0_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $00, $d5, $00, $00, $40, $30, $05, $00, $50, $11 ; object 0
     db $86, $01, $32, $00, $00, $40, $20, $06, $00, $60, $02 ; object 1
     db $87, $01, $31, $00, $00, $40, $60, $07, $02, $70, $01 ; object 2
 
-MapObjects_498D::
+MapObjects_MapAC_0_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $00, $d5, $00, $00, $40, $30, $05, $00, $50, $11 ; object 0
     db $86, $01, $32, $00, $00, $40, $20, $06, $00, $60, $02 ; object 1
@@ -1322,64 +1322,64 @@ MapObjects_498D::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_49AF::
-    dw ObjSelector_49B5 ; id 0
+MapObjectScreens_MapA1::
+    dw ObjSelector_MapA1_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_49B5::
-    objsel_unless_flag EVENT_SCENE_DARCK_TAUNT, MapObjects_49BB
+ObjSelector_MapA1_0::
+    objsel_unless_flag EVENT_SCENE_DARCK_TAUNT, MapObjects_MapA1_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_49BB::
+MapObjects_MapA1_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $5c, $00, $00, $40, $30, $05, $00, $50, $00 ; object 0
     db $86, $00, $df, $00, $00, $40, $e0, $06, $00, $60, $00 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_49D2::
-    dw ObjSelector_49D6 ; id 0
+MapObjectScreens_MapA3::
+    dw ObjSelector_MapA3_0 ; id 0
     dw $0000 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_49D6::
-    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_49DC
+ObjSelector_MapA3_0::
+    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_MapA3_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_49DC::
+MapObjects_MapA3_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $4a, $00, $00, $40, $e0, $05, $00, $50, $00 ; object 0
     db $86, $01, $48, $00, $05, $48, $30, $06, $00, $60, $01 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_49F3::
-    dw ObjSelector_49F9 ; id 0
-    dw ObjSelector_4A51 ; id 1
-    dw ObjSelector_4A82 ; id 2
+MapObjectScreens_Map71::
+    dw ObjSelector_Map71_0 ; id 0
+    dw ObjSelector_Map71_1 ; id 1
+    dw ObjSelector_Map71_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_49F9::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map71_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_4A24
+    objsel_list MapObjects_Map71_0_2
 
-ObjSelector_4A09::
-    objsel_list MapObjects_4A0D
+ObjSelector_Map71_0_Unlisted::
+    objsel_list MapObjects_Map71_0_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_4A0D::
+MapObjects_Map71_0_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $00, $6d, $00, $00, $70, $20, $05, $00, $50, $0b ; object 0
     db $86, $00, $55, $01, $00, $20, $e0, $06, $00, $60, $00 ; object 1
@@ -1388,7 +1388,7 @@ MapObjects_4A0D::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4A24::
+MapObjects_Map71_0_2::
     db $04 ; entry 0: object count
     db $85, $00, $6d, $00, $00, $70, $20, $05, $00, $50, $0b ; object 0
     db $86, $00, $55, $01, $00, $20, $e0, $06, $00, $60, $00 ; object 1
@@ -1396,23 +1396,23 @@ MapObjects_4A24::
     db $83, $00, $75, $00, $00, $c0, $40, $03, $00, $30, $02 ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4A51::
-    objsel_list MapObjects_4A55
+ObjSelector_Map71_1::
+    objsel_list MapObjects_Map71_1_0
 
-MapObjects_4A55::
+MapObjects_Map71_1_0::
     db $04 ; entry 0: object count
     db $85, $00, $47, $00, $00, $50, $70, $05, $00, $50, $00 ; object 0
     db $86, $00, $63, $00, $00, $10, $60, $06, $01, $60, $01 ; object 1
     db $87, $00, $75, $00, $00, $70, $20, $07, $00, $70, $02 ; object 2
     db $86, $00, $63, $00, $00, $30, $30, $06, $00, $60, $03 ; object 3
 
-ObjSelector_4A82::
-    objsel_list MapObjects_4A86
+ObjSelector_Map71_2::
+    objsel_list MapObjects_Map71_2_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4A86::
+MapObjects_Map71_2_0::
     db $03 ; entry 0: object count
     db $85, $00, $6a, $00, $02, $30, $40, $05, $01, $50, $05 ; object 0
     db $86, $00, $51, $00, $00, $20, $60, $06, $02, $60, $04 ; object 1
@@ -1420,108 +1420,108 @@ MapObjects_4A86::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4AA8::
-    dw ObjSelector_4AAA ; id 0
+MapObjectScreens_Map72::
+    dw ObjSelector_Map72_0 ; id 0
 
-ObjSelector_4AAA::
-    objsel_list MapObjects_4AAE
+ObjSelector_Map72_0::
+    objsel_list MapObjects_Map72_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4AAE::
+MapObjects_Map72_0_0::
     db $01 ; entry 0
     db $85, $00, $77, $00, $00, $30, $10, $05, $00, $50, $00
 
-MapObjectScreens_4ABA::
-    dw ObjSelector_4AC2 ; id 0
+MapObjectScreens_Map76::
+    dw ObjSelector_Map76_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4AC2::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR, MapObjects_4AC8
+ObjSelector_Map76_0::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR, MapObjects_Map76_0_0
     objsel_none
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4AC8::
+MapObjects_Map76_0_0::
     db $02 ; entry 0: object count
     db $85, $00, $79, $00, $00, $6e, $ec, $05, $00, $50, $00 ; object 0
     db $86, $01, $5a, $00, $00, $40, $50, $06, $00, $60, $00 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4ADF::
+MapObjectScreens_Map77::
     dw $0000 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_4AE5 ; id 2
+    dw ObjSelector_Map77_2 ; id 2
 
-ObjSelector_4AE5::
-    objsel_unless_flag $0209, MapObjects_4AED
-    objsel_list MapObjects_4AF9
+ObjSelector_Map77_2::
+    objsel_unless_flag EVENT_HM_YOURE_FROM_THE_VILLAGE, MapObjects_Map77_2_0
+    objsel_list MapObjects_Map77_2_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4AED::
+MapObjects_Map77_2_0::
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $40, $20, $05, $00, $50, $16
 
-MapObjects_4AF9::
+MapObjects_Map77_2_1::
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $50, $20, $05, $03, $50, $16
 
-MapObjectScreens_4B05::
-    dw ObjSelector_4B0D ; id 0
-    dw ObjSelector_4B33 ; id 1
-    dw ObjSelector_4B59 ; id 2
-    dw ObjSelector_4B8A ; id 3
+MapObjectScreens_Map78::
+    dw ObjSelector_Map78_0 ; id 0
+    dw ObjSelector_Map78_1 ; id 1
+    dw ObjSelector_Map78_2 ; id 2
+    dw ObjSelector_Map78_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4B0D::
-    objsel_list MapObjects_4B11
+ObjSelector_Map78_0::
+    objsel_list MapObjects_Map78_0_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4B11::
+MapObjects_Map78_0_0::
     db $03 ; entry 0: object count
     db $85, $00, $53, $00, $00, $10, $70, $05, $01, $50, $1c ; object 0
     db $86, $00, $19, $01, $00, $10, $30, $06, $00, $60, $1b ; object 1
     db $87, $00, $06, $00, $00, $40, $40, $07, $00, $70, $1d ; object 2
 
-ObjSelector_4B33::
-    objsel_list MapObjects_4B37
+ObjSelector_Map78_1::
+    objsel_list MapObjects_Map78_1_0
 
-MapObjects_4B37::
+MapObjects_Map78_1_0::
     db $03 ; entry 0: object count
     db $85, $00, $5c, $00, $00, $50, $60, $05, $03, $50, $1e ; object 0
     db $86, $00, $2b, $00, $00, $30, $40, $06, $00, $60, $1f ; object 1
     db $87, $00, $6c, $00, $00, $20, $70, $07, $03, $70, $20 ; object 2
 
-ObjSelector_4B59::
-    objsel_list MapObjects_4B5D
+ObjSelector_Map78_2::
+    objsel_list MapObjects_Map78_2_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4B5D::
+MapObjects_Map78_2_0::
     db $04 ; entry 0: object count
     db $85, $00, $48, $00, $00, $50, $40, $05, $00, $50, $17 ; object 0
     db $85, $00, $48, $00, $00, $80, $70, $05, $03, $50, $1a ; object 1
     db $86, $00, $56, $00, $00, $70, $20, $06, $00, $60, $23 ; object 2
     db $87, $00, $6d, $00, $00, $10, $30, $07, $01, $70, $24 ; object 3
 
-ObjSelector_4B8A::
-    objsel_list MapObjects_4B8E
+ObjSelector_Map78_3::
+    objsel_list MapObjects_Map78_3_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_4B8E::
+MapObjects_Map78_3_0::
     db $04 ; entry 0: object count
     db $85, $00, $5f, $00, $00, $10, $20, $05, $00, $50, $21 ; object 0
     db $86, $00, $80, $00, $02, $10, $60, $06, $03, $60, $22 ; object 1
@@ -1530,29 +1530,29 @@ MapObjects_4B8E::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4BBB::
-    dw ObjSelector_4BBF ; id 0
-    dw ObjSelector_4BCF ; id 1
+MapObjectScreens_Map79::
+    dw ObjSelector_Map79_0 ; id 0
+    dw ObjSelector_Map79_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4BBF::
-    objsel_list MapObjects_4BC3
+ObjSelector_Map79_0::
+    objsel_list MapObjects_Map79_0_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4BC3::
+MapObjects_Map79_0_0::
     db $01 ; entry 0
     db $85, $00, $0c, $00, $00, $50, $60, $05, $00, $50, $6b
 
-ObjSelector_4BCF::
-    objsel_list MapObjects_4BD3
+ObjSelector_Map79_1::
+    objsel_list MapObjects_Map79_1_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4BD3::
+MapObjects_Map79_1_0::
     db $03 ; entry 0: object count
     db $85, $00, $53, $00, $00, $70, $10, $05, $00, $50, $00 ; object 0
     db $86, $00, $5d, $00, $00, $30, $20, $06, $03, $60, $6c ; object 1
@@ -1560,29 +1560,29 @@ MapObjects_4BD3::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4BF5::
-    dw ObjSelector_4BF9 ; id 0
-    dw ObjSelector_4C50 ; id 1
+MapObjectScreens_Map7A::
+    dw ObjSelector_Map7A_0 ; id 0
+    dw ObjSelector_Map7A_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4BF9::
-    objsel_skip_if_clear $00c4, $04, $00
-    objsel_list MapObjects_4C44
+ObjSelector_Map7A_0::
+    objsel_skip_if_clear EVENT_MAP_7A_OBJECT_ADDED, $04, $00
+    objsel_list MapObjects_Map7A_0_1
 
-ObjSelector_4C03::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4C0B
-    objsel_list MapObjects_4C2D
+ObjSelector_Map7A_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_Map7A_0_Unlisted_0
+    objsel_list MapObjects_Map7A_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_4C0B::
+MapObjects_Map7A_0_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $00, $1f, $01, $00, $50, $40, $05, $00, $50, $2a ; object 0
     db $86, $01, $5e, $00, $00, $40, $60, $06, $02, $60, $6a ; object 1
     db $87, $00, $79, $00, $00, $40, $20, $07, $00, $70, $5d ; object 2
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_4C2D::
+MapObjects_Map7A_0_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $00, $1f, $01, $00, $50, $40, $05, $00, $50, $2a ; object 0
     db $86, $01, $5e, $00, $00, $40, $60, $06, $02, $60, $6a ; object 1
@@ -1591,43 +1591,43 @@ MapObjects_4C2D::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4C44::
+MapObjects_Map7A_0_1::
     db $01 ; entry 0
     db $85, $00, $1f, $01, $00, $50, $40, $05, $00, $50, $2a
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4C50::
-    objsel_list MapObjects_4C54
+ObjSelector_Map7A_1::
+    objsel_list MapObjects_Map7A_1_0
 
-MapObjects_4C54::
+MapObjects_Map7A_1_0::
     db $01 ; entry 0
     db $85, $00, $79, $00, $00, $00, $e0, $05, $00, $50, $00
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4C60::
-    dw ObjSelector_4C68 ; id 0
-    dw ObjSelector_4CCA ; id 1
-    dw ObjSelector_4CFB ; id 2
-    dw ObjSelector_4D2C ; id 3
+MapObjectScreens_Map7C::
+    dw ObjSelector_Map7C_0 ; id 0
+    dw ObjSelector_Map7C_1 ; id 1
+    dw ObjSelector_Map7C_2 ; id 2
+    dw ObjSelector_Map7C_3 ; id 3
 
-ObjSelector_4C68::
+ObjSelector_Map7C_0::
     objsel_skip_if_clear EVENT_WHAT_YOU_HAVE_THE_THREE, $04, $00
-    objsel_list MapObjects_4CB3
+    objsel_list MapObjects_Map7C_0_1
 
-ObjSelector_4C72::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4C7A
-    objsel_list MapObjects_4C91
+ObjSelector_Map7C_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_Map7C_0_Unlisted_0
+    objsel_list MapObjects_Map7C_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_4C7A::
+MapObjects_Map7C_0_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $00, $59, $00, $00, $40, $50, $05, $00, $50, $34 ; object 0
     db $86, $00, $59, $00, $00, $50, $50, $06, $00, $60, $35 ; object 1
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_4C91::
+MapObjects_Map7C_0_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $00, $59, $00, $00, $40, $50, $05, $00, $50, $34 ; object 0
     db $86, $00, $59, $00, $00, $50, $50, $06, $00, $60, $35 ; object 1
@@ -1637,50 +1637,50 @@ MapObjects_4C91::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4CB3::
+MapObjects_Map7C_0_1::
     db $02 ; entry 0: object count
     db $85, $00, $59, $00, $00, $60, $60, $05, $00, $50, $35 ; object 0
     db $86, $00, $58, $00, $00, $20, $70, $06, $01, $60, $36 ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4CCA::
-    objsel_list MapObjects_4CCE
+ObjSelector_Map7C_1::
+    objsel_list MapObjects_Map7C_1_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4CCE::
+MapObjects_Map7C_1_0::
     db $04 ; entry 0: object count
     db $85, $00, $54, $00, $00, $10, $30, $05, $00, $50, $38 ; object 0
     db $86, $00, $03, $00, $02, $40, $60, $06, $01, $60, $39 ; object 1
     db $85, $00, $54, $00, $00, $80, $40, $05, $03, $50, $3a ; object 2
     db $87, $00, $58, $00, $00, $50, $10, $07, $00, $70, $3b ; object 3
 
-ObjSelector_4CFB::
-    objsel_list MapObjects_4CFF
+ObjSelector_Map7C_2::
+    objsel_list MapObjects_Map7C_2_0
 
-MapObjects_4CFF::
+MapObjects_Map7C_2_0::
     db $04 ; entry 0: object count
     db $85, $00, $63, $00, $02, $50, $60, $05, $01, $50, $30 ; object 0
     db $86, $00, $55, $00, $00, $20, $40, $06, $01, $60, $31 ; object 1
     db $87, $00, $62, $00, $00, $70, $10, $07, $00, $70, $32 ; object 2
     db $87, $00, $62, $00, $00, $70, $20, $07, $02, $70, $33 ; object 3
 
-ObjSelector_4D2C::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4D34
-    objsel_list MapObjects_4D56
+ObjSelector_Map7C_3::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_Map7C_3_0
+    objsel_list MapObjects_Map7C_3_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4D34::
+MapObjects_Map7C_3_0::
     db $03 ; entry 0: object count
     db $85, $00, $4e, $00, $00, $30, $70, $05, $00, $50, $2d ; object 0
     db $86, $00, $4d, $00, $02, $70, $10, $06, $03, $60, $2e ; object 1
     db $87, $00, $9b, $00, $00, $80, $40, $07, $02, $70, $2f ; object 2
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_4D56::
+MapObjects_Map7C_3_1::
     db $04 ; entry 0: object count
     db $85, $00, $4e, $00, $00, $30, $70, $05, $00, $50, $2d ; object 0
     db $86, $00, $4d, $00, $02, $70, $10, $06, $03, $60, $2e ; object 1
@@ -1689,40 +1689,40 @@ MapObjects_4D56::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4D83::
-    dw ObjSelector_4D85 ; id 0
+MapObjectScreens_Map7D::
+    dw ObjSelector_Map7D_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4D85::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4D8D
-    objsel_list MapObjects_4D99
+ObjSelector_Map7D_0::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_Map7D_0_0
+    objsel_list MapObjects_Map7D_0_1
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4D8D::
+MapObjects_Map7D_0_0::
     db $01 ; entry 0
     db $85, $00, $56, $00, $00, $10, $10, $05, $01, $50, $3d
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_4D99::
+MapObjects_Map7D_0_1::
     db $01 ; entry 0
     db $85, $00, $56, $00, $00, $10, $10, $05, $01, $50, $3f
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4DA5::
-    dw ObjSelector_4DA7 ; id 0
+MapObjectScreens_Map7E::
+    dw ObjSelector_Map7E_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4DA7::
-    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_4DAF
-    objsel_list MapObjects_4DBB
+ObjSelector_Map7E_0::
+    objsel_unless_flag EVENT_SCENE_MADCONDOR_CRY, MapObjects_Map7E_0_0
+    objsel_list MapObjects_Map7E_0_1
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4DAF::
+MapObjects_Map7E_0_0::
     db $01 ; entry 0
     db $85, $00, $80, $00, $00, $30, $10, $05, $00, $50, $43
 
@@ -1730,7 +1730,7 @@ MapObjects_4DAF::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4DBB::
+MapObjects_Map7E_0_1::
     db $04 ; entry 0: object count
     db $85, $00, $80, $00, $00, $30, $10, $05, $00, $50, $43 ; object 0
     db $86, $00, $5a, $00, $00, $40, $40, $06, $02, $60, $44 ; object 1
@@ -1739,104 +1739,104 @@ MapObjects_4DBB::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4DE8::
-    dw ObjSelector_4DEC ; id 0
-    dw ObjSelector_4E0C ; id 1
+MapObjectScreens_Map7F::
+    dw ObjSelector_Map7F_0 ; id 0
+    dw ObjSelector_Map7F_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4DEC::
-    objsel_unless_flag EVENT_SCENE_FOUND_ME, MapObjects_4DF4
-    objsel_list MapObjects_4E00
+ObjSelector_Map7F_0::
+    objsel_unless_flag EVENT_SCENE_FOUND_ME, MapObjects_Map7F_0_0
+    objsel_list MapObjects_Map7F_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4DF4::
+MapObjects_Map7F_0_0::
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $50, $40, $05, $00, $50, $5a
 
-MapObjects_4E00::
+MapObjects_Map7F_0_1::
     db $01 ; entry 0
     db $85, $00, $61, $00, $00, $40, $40, $05, $00, $50, $5a
 
-ObjSelector_4E0C::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_4E14
-    objsel_list MapObjects_4E36
+ObjSelector_Map7F_1::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_Map7F_1_0
+    objsel_list MapObjects_Map7F_1_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4E14::
+MapObjects_Map7F_1_0::
     db $03 ; entry 0: object count
     db $85, $00, $5a, $00, $00, $30, $30, $05, $01, $50, $57 ; object 0
     db $86, $00, $59, $00, $00, $70, $50, $06, $00, $60, $58 ; object 1
     db $87, $00, $57, $00, $00, $70, $70, $07, $02, $70, $59 ; object 2
 
-MapObjects_4E36::
+MapObjects_Map7F_1_1::
     db $01 ; entry 0
     db $85, $00, $5a, $00, $00, $30, $30, $05, $01, $50, $57
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4E42::
-    dw ObjSelector_4E44 ; id 0
+MapObjectScreens_Map84::
+    dw ObjSelector_Map84_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4E44::
-    objsel_unless_flag EVENT_HEH_YOU, MapObjects_4E4A
+ObjSelector_Map84_0::
+    objsel_unless_flag EVENT_HEH_YOU, MapObjects_Map84_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4E4A::
+MapObjects_Map84_0_0::
     db $01 ; entry 0
     db $85, $00, $12, $00, $00, $40, $30, $05, $00, $50, $4a
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4E56::
-    dw ObjSelector_4E5E ; id 0
+MapObjectScreens_Map89::
+    dw ObjSelector_Map89_0 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_4E6E ; id 2
-    dw ObjSelector_4E89 ; id 3
+    dw ObjSelector_Map89_2 ; id 2
+    dw ObjSelector_Map89_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4E5E::
-    objsel_list MapObjects_4E62
+ObjSelector_Map89_0::
+    objsel_list MapObjects_Map89_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4E62::
+MapObjects_Map89_0_0::
     db $01 ; entry 0
     db $85, $00, $5e, $00, $00, $80, $60, $05, $02, $50, $0a
 
-ObjSelector_4E6E::
-    objsel_list MapObjects_4E72
+ObjSelector_Map89_2::
+    objsel_list MapObjects_Map89_2_0
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4E72::
+MapObjects_Map89_2_0::
     db $02 ; entry 0: object count
     db $85, $00, $5d, $00, $00, $60, $60, $05, $00, $50, $09 ; object 0
     db $86, $00, $55, $00, $00, $10, $50, $06, $00, $60, $07 ; object 1
 
-ObjSelector_4E89::
-    objsel_list MapObjects_4E8D
+ObjSelector_Map89_3::
+    objsel_list MapObjects_Map89_3_0
 
-MapObjects_4E8D::
+MapObjects_Map89_3_0::
     db $01 ; entry 0
     db $85, $00, $50, $00, $00, $40, $60, $05, $02, $50, $08
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4E99::
-    dw ObjSelector_4EAB ; id 0
+MapObjectScreens_Map8C::
+    dw ObjSelector_Map8C_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
@@ -1847,87 +1847,87 @@ MapObjectScreens_4E99::
     dw $0000 ; id 8
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4EAB::
-    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C5, MapObjects_4EB1
+ObjSelector_Map8C_0::
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C5, MapObjects_Map8C_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4EB1::
+MapObjects_Map8C_0_0::
     db $01 ; entry 0
     db $85, $00, $0a, $01, $00, $20, $20, $05, $00, $50, $4c
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4EBD::
-    dw ObjSelector_4ECF ; id 0
-    dw ObjSelector_4EF7 ; id 1
-    dw ObjSelector_4F07 ; id 2
-    dw ObjSelector_4F2D ; id 3
-    dw ObjSelector_4F53 ; id 4
-    dw ObjSelector_4F63 ; id 5
+MapObjectScreens_Map8E::
+    dw ObjSelector_Map8E_0 ; id 0
+    dw ObjSelector_Map8E_1 ; id 1
+    dw ObjSelector_Map8E_2 ; id 2
+    dw ObjSelector_Map8E_3 ; id 3
+    dw ObjSelector_Map8E_4 ; id 4
+    dw ObjSelector_Map8E_5 ; id 5
     dw $0000 ; id 6
     dw $0000 ; id 7
     dw $0000 ; id 8
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4ECF::
-    objsel_list MapObjects_4ED5
+ObjSelector_Map8E_0::
+    objsel_list MapObjects_Map8E_0_0
 
-ObjSelector_4ED3::
+ObjSelector_Map8E_0_Unlisted::
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4ED5::
+MapObjects_Map8E_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $44, $00, $00, $30, $30, $05, $00, $50, $69 ; object 0
     db $86, $01, $44, $00, $00, $60, $40, $06, $00, $60, $69 ; object 1
     db $87, $01, $44, $00, $00, $80, $20, $07, $01, $70, $69 ; object 2
 
-ObjSelector_4EF7::
-    objsel_list MapObjects_4EFB
+ObjSelector_Map8E_1::
+    objsel_list MapObjects_Map8E_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4EFB::
+MapObjects_Map8E_1_0::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $30, $50, $05, $00, $50, $69
 
-ObjSelector_4F07::
-    objsel_list MapObjects_4F0B
+ObjSelector_Map8E_2::
+    objsel_list MapObjects_Map8E_2_0
 
-MapObjects_4F0B::
+MapObjects_Map8E_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $44, $00, $00, $10, $30, $05, $03, $50, $69 ; object 0
     db $86, $01, $44, $00, $00, $20, $50, $06, $01, $60, $69 ; object 1
     db $87, $01, $44, $00, $00, $30, $60, $07, $00, $70, $69 ; object 2
 
-ObjSelector_4F2D::
-    objsel_list MapObjects_4F31
+ObjSelector_Map8E_3::
+    objsel_list MapObjects_Map8E_3_0
 
-MapObjects_4F31::
+MapObjects_Map8E_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $44, $00, $00, $30, $70, $05, $01, $50, $69 ; object 0
     db $86, $01, $44, $00, $00, $50, $30, $06, $03, $60, $69 ; object 1
     db $87, $01, $44, $00, $00, $80, $40, $07, $02, $70, $69 ; object 2
 
-ObjSelector_4F53::
-    objsel_list MapObjects_4F57
+ObjSelector_Map8E_4::
+    objsel_list MapObjects_Map8E_4_0
 
-MapObjects_4F57::
+MapObjects_Map8E_4_0::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $30, $30, $05, $01, $50, $69
 
-ObjSelector_4F63::
-    objsel_list MapObjects_4F67
+ObjSelector_Map8E_5::
+    objsel_list MapObjects_Map8E_5_0
 
-MapObjects_4F67::
+MapObjects_Map8E_5_0::
     db $03 ; entry 0: object count
     db $85, $01, $44, $00, $00, $10, $30, $05, $02, $50, $69 ; object 0
     db $86, $01, $44, $00, $00, $20, $70, $06, $02, $60, $69 ; object 1
@@ -1935,275 +1935,275 @@ MapObjects_4F67::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4F89::
-    dw ObjSelector_4F8B ; id 0
+MapObjectScreens_Map8F::
+    dw ObjSelector_Map8F_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4F8B::
-    objsel_unless_flag EVENT_SCENE_GRAVESTONE, MapObjects_4F91
+ObjSelector_Map8F_0::
+    objsel_unless_flag EVENT_SCENE_GRAVESTONE, MapObjects_Map8F_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4F91::
+MapObjects_Map8F_0_0::
     db $01 ; entry 0
     db $85, $00, $f6, $00, $00, $40, $40, $05, $00, $50, $4f
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4F9D::
-    dw ObjSelector_4FA9 ; id 0
-    dw ObjSelector_4FBB ; id 1
+MapObjectScreens_Map90::
+    dw ObjSelector_Map90_0 ; id 0
+    dw ObjSelector_Map90_1 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
     dw $0000 ; id 5
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4FA9::
-    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C6, MapObjects_4FAF
+ObjSelector_Map90_0::
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C6, MapObjects_Map90_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4FAF::
+MapObjects_Map90_0_0::
     db $01 ; entry 0
     db $85, $00, $0a, $01, $00, $50, $20, $05, $00, $50, $6e
 
-ObjSelector_4FBB::
-    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C7, MapObjects_4FC1
+ObjSelector_Map90_1::
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY_0C7, MapObjects_Map90_1_0
     objsel_none
 
-MapObjects_4FC1::
+MapObjects_Map90_1_0::
     db $01 ; entry 0
     db $85, $00, $0a, $01, $00, $80, $50, $05, $03, $50, $6f
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4FCD::
-    dw ObjSelector_4FCF ; id 0
+MapObjectScreens_Map91::
+    dw ObjSelector_Map91_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4FCF::
-    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY, MapObjects_4FD5
+ObjSelector_Map91_0::
+    objsel_unless_flag EVENT_SCENE_BEATEN_FAIRLY, MapObjects_Map91_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_4FD5::
+MapObjects_Map91_0_0::
     db $01 ; entry 0
     db $85, $00, $10, $01, $00, $40, $30, $05, $00, $50, $55
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_4FE1::
+MapObjectScreens_Map94::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
-    dw ObjSelector_4FF3 ; id 3
-    dw ObjSelector_500D ; id 4
-    dw ObjSelector_5027 ; id 5
+    dw ObjSelector_Map94_3 ; id 3
+    dw ObjSelector_Map94_4 ; id 4
+    dw ObjSelector_Map94_5 ; id 5
     dw $0000 ; id 6
-    dw ObjSelector_5041 ; id 7
-    dw ObjSelector_5053 ; id 8
+    dw ObjSelector_Map94_7 ; id 7
+    dw ObjSelector_Map94_8 ; id 8
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_4FF3::
+ObjSelector_Map94_3::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_4FFB::
-    objsel_unless_flag $00b9, MapObjects_5001
+ObjSelector_Map94_3_Unlisted::
+    objsel_unless_flag EVENT_FOUND_ME_FOE_SCREEN0, MapObjects_Map94_3_Unlisted_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_5001::
+MapObjects_Map94_3_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
-ObjSelector_500D::
+ObjSelector_Map94_4::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_5015::
-    objsel_unless_flag $00ba, MapObjects_501B
+ObjSelector_Map94_4_Unlisted::
+    objsel_unless_flag EVENT_FOUND_ME_FOE_SCREEN1, MapObjects_Map94_4_Unlisted_0
     objsel_none
 
-MapObjects_501B::
+MapObjects_Map94_4_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
-ObjSelector_5027::
+ObjSelector_Map94_5::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_502F::
-    objsel_unless_flag $00bb, MapObjects_5035
+ObjSelector_Map94_5_Unlisted::
+    objsel_unless_flag EVENT_FOUND_ME_FOE_SCREEN2, MapObjects_Map94_5_Unlisted_0
     objsel_none
 
-MapObjects_5035::
+MapObjects_Map94_5_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $ec, $00, $00, $40, $20, $05, $00, $50, $5c
 
-ObjSelector_5041::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5047
+ObjSelector_Map94_7::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map94_7_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5047::
+MapObjects_Map94_7_0::
     db $01 ; entry 0
     db $85, $00, $d6, $00, $00, $40, $20, $05, $00, $50, $5f
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5053::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5059
+ObjSelector_Map94_8::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map94_8_0
     objsel_none
 
-MapObjects_5059::
+MapObjects_Map94_8_0::
     db $01 ; entry 0
     db $85, $00, $d6, $00, $00, $30, $40, $05, $03, $50, $60
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5065::
+MapObjectScreens_Map95::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
-    dw ObjSelector_5071 ; id 5
+    dw ObjSelector_Map95_5 ; id 5
 
-ObjSelector_5071::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_5077
+ObjSelector_Map95_5::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map95_5_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5077::
+MapObjects_Map95_5_0::
     db $01 ; entry 0
     db $85, $00, $d6, $00, $00, $80, $40, $05, $00, $50, $61
 
-MapObjectScreens_5083::
+MapObjectScreens_Map96::
     dw $0000 ; id 0
-    dw ObjSelector_508B ; id 1
+    dw ObjSelector_Map96_1 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_508B::
+ObjSelector_Map96_1::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_5093::
-    objsel_unless_flag $0201, MapObjects_5099
+ObjSelector_Map96_1_Unlisted::
+    objsel_unless_flag EVENT_FOUND_ME_FOE_MAP96, MapObjects_Map96_1_Unlisted_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_5099::
+MapObjects_Map96_1_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $ec, $00, $00, $10, $40, $05, $01, $50, $5c
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_50A5::
-    dw ObjSelector_50AB ; id 0
-    dw ObjSelector_50DE ; id 1
+MapObjectScreens_Map9B::
+    dw ObjSelector_Map9B_0 ; id 0
+    dw ObjSelector_Map9B_1 ; id 1
     dw $0000 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_50AB::
+ObjSelector_Map9B_0::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS_0C3, $02, $00
     objsel_none
 
-ObjSelector_50B3::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_50BB
-    objsel_list MapObjects_50D2
+ObjSelector_Map9B_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C2, MapObjects_Map9B_0_Unlisted_0
+    objsel_list MapObjects_Map9B_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_50BB::
+MapObjects_Map9B_0_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $03, $00, $00, $40, $20, $05, $00, $50, $5c ; object 0
     db $86, $01, $48, $00, $05, $48, $c0, $06, $00, $60, $00 ; object 1
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_50D2::
+MapObjects_Map9B_0_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $03, $00, $00, $50, $30, $05, $02, $50, $5c
 
-ObjSelector_50DE::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_BATTLE, MapObjects_50E4
+ObjSelector_Map9B_1::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_BATTLE, MapObjects_Map9B_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_50E4::
+MapObjects_Map9B_1_0::
     db $01 ; entry 0
     db $85, $01, $54, $00, $04, $48, $20, $05, $00, $50, $67
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_50F0::
-    dw ObjSelector_50F2 ; id 0
+MapObjectScreens_Map49::
+    dw ObjSelector_Map49_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_50F2::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map49_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_519C
+    objsel_list MapObjects_Map49_0_2
 
-ObjSelector_5102::
+ObjSelector_Map49_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $02, $00
     objsel_none
 
-ObjSelector_510A::
+ObjSelector_Map49_0_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_SHIELD_1E4, $04, $00
-    objsel_list MapObjects_5158
+    objsel_list MapObjects_Map49_0_Unlisted_2_1
 
-ObjSelector_5114::
+ObjSelector_Map49_0_Unlisted_3::
     objsel_skip_if_clear EVENT_HERO_CHECKED_THE_TREASURE_CHEST, $08, $00
-    objsel_unless_flag EVENT_SCENE_SHIELD, MapObjects_5158
-    objsel_list MapObjects_517A
+    objsel_unless_flag EVENT_SCENE_SHIELD, MapObjects_Map49_0_Unlisted_2_1
+    objsel_list MapObjects_Map49_0_Unlisted_3_2
 
-ObjSelector_5122::
-    objsel_unless_flag EVENT_BLINK_SPRITES, MapObjects_512A
-    objsel_list MapObjects_5141
+ObjSelector_Map49_0_Unlisted_4::
+    objsel_unless_flag EVENT_BLINK_SPRITES, MapObjects_Map49_0_Unlisted_4_0
+    objsel_list MapObjects_Map49_0_Unlisted_4_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_512A::
+MapObjects_Map49_0_Unlisted_4_0::
     db $02 ; entry 0: object count
     db $85, $01, $5b, $00, $00, $40, $30, $05, $00, $50, $14 ; object 0
     db $86, $01, $5a, $00, $00, $60, $e0, $06, $00, $60, $a0 ; object 1
 
-MapObjects_5141::
+MapObjects_Map49_0_Unlisted_4_1::
     db $02 ; entry 0: object count
     db $85, $01, $5b, $00, $00, $40, $30, $05, $00, $50, $14 ; object 0
     db $86, $01, $5a, $00, $00, $60, $70, $06, $00, $60, $a0 ; object 1
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_5158::
+MapObjects_Map49_0_Unlisted_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $5b, $00, $00, $40, $30, $05, $00, $50, $14 ; object 0
     db $86, $01, $5c, $00, $00, $40, $e0, $06, $00, $60, $9f ; object 1
     db $87, $01, $53, $00, $00, $40, $e0, $07, $00, $70, $00 ; object 2
 
-MapObjects_517A::
+MapObjects_Map49_0_Unlisted_3_2::
     db $03 ; entry 0: object count
     db $85, $01, $5b, $00, $00, $40, $30, $05, $00, $50, $14 ; object 0
     db $86, $01, $5c, $00, $00, $40, $40, $06, $00, $60, $9f ; object 1
@@ -2213,7 +2213,7 @@ MapObjects_517A::
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_519C::
+MapObjects_Map49_0_2::
     db $05 ; entry 0: object count
     db $85, $01, $53, $00, $00, $40, $e0, $05, $00, $50, $00 ; object 0
     db $86, $01, $3a, $00, $00, $40, $50, $06, $02, $60, $72 ; object 1
@@ -2223,61 +2223,61 @@ MapObjects_519C::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_51D4::
-    dw ObjSelector_51DC ; id 0
-    dw ObjSelector_523E ; id 1
-    dw ObjSelector_5264 ; id 2
-    dw ObjSelector_5295 ; id 3
+MapObjectScreens_Map4A::
+    dw ObjSelector_Map4A_0 ; id 0
+    dw ObjSelector_Map4A_1 ; id 1
+    dw ObjSelector_Map4A_2 ; id 2
+    dw ObjSelector_Map4A_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_51DC::
-    objsel_unless_flag EVENT_WHAT_IS_THAT_DIRTY_MEDAL, MapObjects_51E4
-    objsel_list MapObjects_5211
+ObjSelector_Map4A_0::
+    objsel_unless_flag EVENT_WHAT_IS_THAT_DIRTY_MEDAL, MapObjects_Map4A_0_0
+    objsel_list MapObjects_Map4A_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_51E4::
+MapObjects_Map4A_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $40, $10, $05, $00, $50, $0b ; object 0
     db $85, $01, $10, $00, $00, $50, $10, $05, $00, $50, $0c ; object 1
     db $86, $01, $2f, $00, $00, $10, $40, $06, $01, $60, $09 ; object 2
     db $87, $01, $30, $00, $00, $70, $70, $07, $02, $70, $0a ; object 3
 
-MapObjects_5211::
+MapObjects_Map4A_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $20, $05, $00, $50, $0b ; object 0
     db $85, $01, $10, $00, $02, $60, $30, $05, $00, $50, $0c ; object 1
     db $86, $01, $2f, $00, $00, $10, $40, $06, $01, $60, $09 ; object 2
     db $87, $01, $30, $00, $00, $70, $70, $07, $02, $70, $0a ; object 3
 
-ObjSelector_523E::
-    objsel_list MapObjects_5242
+ObjSelector_Map4A_1::
+    objsel_list MapObjects_Map4A_1_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5242::
+MapObjects_Map4A_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $60, $70, $05, $03, $50, $05 ; object 0
     db $86, $01, $2d, $00, $02, $40, $50, $06, $01, $60, $06 ; object 1
     db $87, $01, $12, $00, $00, $20, $30, $07, $00, $70, $82 ; object 2
 
-ObjSelector_5264::
-    objsel_list MapObjects_5268
+ObjSelector_Map4A_2::
+    objsel_list MapObjects_Map4A_2_0
 
-MapObjects_5268::
+MapObjects_Map4A_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $60, $60, $05, $00, $50, $00 ; object 0
     db $86, $01, $2e, $00, $00, $80, $50, $06, $02, $60, $01 ; object 1
     db $87, $01, $30, $00, $00, $10, $40, $07, $01, $70, $02 ; object 2
     db $86, $01, $2e, $00, $00, $20, $10, $06, $00, $60, $03 ; object 3
 
-ObjSelector_5295::
-    objsel_list MapObjects_5299
+ObjSelector_Map4A_3::
+    objsel_list MapObjects_Map4A_3_0
 
-MapObjects_5299::
+MapObjects_Map4A_3_0::
     db $04 ; entry 0: object count
     db $85, $01, $2f, $00, $02, $50, $50, $05, $01, $50, $04 ; object 0
     db $85, $01, $2f, $00, $00, $30, $40, $05, $03, $50, $07 ; object 1
@@ -2286,19 +2286,19 @@ MapObjects_5299::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_52C6::
-    dw ObjSelector_52C8 ; id 0
+MapObjectScreens_Map4B::
+    dw ObjSelector_Map4B_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_52C8::
-    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_52D0
-    objsel_list MapObjects_52E7
+ObjSelector_Map4B_0::
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_Map4B_0_0
+    objsel_list MapObjects_Map4B_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_52D0::
+MapObjects_Map4B_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $60, $20, $05, $01, $50, $12 ; object 0
     db $86, $01, $15, $00, $00, $20, $50, $06, $01, $60, $13 ; object 1
@@ -2306,46 +2306,46 @@ MapObjects_52D0::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_52E7::
+MapObjects_Map4B_0_1::
     db $01 ; entry 0
     db $85, $01, $2e, $00, $00, $60, $20, $05, $01, $50, $12
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_52F3::
-    dw ObjSelector_52FB ; id 0
-    dw ObjSelector_537E ; id 1
-    dw ObjSelector_538E ; id 2
-    dw ObjSelector_53EF ; id 3
+MapObjectScreens_Map4C::
+    dw ObjSelector_Map4C_0 ; id 0
+    dw ObjSelector_Map4C_1 ; id 1
+    dw ObjSelector_Map4C_2 ; id 2
+    dw ObjSelector_Map4C_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_52FB::
+ObjSelector_Map4C_0::
     objsel_skip_if_clear EVENT_SCENE_PLAN_RUINED_094, $04, $00
-    objsel_list MapObjects_5367
+    objsel_list MapObjects_Map4C_0_1
 
-ObjSelector_5305::
+ObjSelector_Map4C_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_PLAN_RUINED, $04, $00
-    objsel_list MapObjects_5350
+    objsel_list MapObjects_Map4C_0_Unlisted_1
 
-ObjSelector_530F::
-    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_5317
-    objsel_list MapObjects_532E
+ObjSelector_Map4C_0_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_Map4C_0_Unlisted_2_0
+    objsel_list MapObjects_Map4C_0_Unlisted_2_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_5317::
+MapObjects_Map4C_0_Unlisted_2_0::
     db $02 ; entry 0: object count
     db $85, $01, $0e, $00, $00, $40, $30, $05, $00, $50, $00 ; object 0
     db $86, $01, $10, $00, $00, $40, $70, $06, $02, $60, $18 ; object 1
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_532E::
+MapObjects_Map4C_0_Unlisted_2_1::
     db $03 ; entry 0: object count
     db $85, $00, $d5, $00, $00, $40, $e0, $05, $02, $50, $4d ; object 0
     db $86, $01, $0e, $00, $00, $40, $50, $06, $02, $60, $48 ; object 1
     db $87, $01, $0e, $00, $00, $40, $40, $07, $00, $70, $4d ; object 2
 
-MapObjects_5350::
+MapObjects_Map4C_0_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $00, $d5, $00, $00, $40, $40, $05, $00, $50, $4d ; object 0
     db $86, $01, $0e, $00, $00, $40, $50, $06, $02, $60, $48 ; object 1
@@ -2354,42 +2354,42 @@ MapObjects_5350::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5367::
+MapObjects_Map4C_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $0e, $00, $00, $40, $30, $05, $00, $50, $48 ; object 0
     db $86, $01, $0e, $00, $00, $e0, $e0, $06, $00, $60, $00 ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_537E::
-    objsel_list MapObjects_5382
+ObjSelector_Map4C_1::
+    objsel_list MapObjects_Map4C_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5382::
+MapObjects_Map4C_1_0::
     db $01 ; entry 0
     db $85, $01, $12, $00, $00, $20, $20, $05, $02, $50, $17
 
-ObjSelector_538E::
+ObjSelector_Map4C_2::
     objsel_skip_if_clear EVENT_SCENE_REPORT_TO_KING, $04, $00
-    objsel_list MapObjects_53D8
+    objsel_list MapObjects_Map4C_2_1
 
-ObjSelector_5398::
+ObjSelector_Map4C_2_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_SPIRIT_ENVOY, $04, $00
-    objsel_list MapObjects_53AA
+    objsel_list MapObjects_Map4C_2_Unlisted_1
 
-ObjSelector_53A2::
-    objsel_unless_flag EVENT_AH_YOU_ARE_THE_SPIRIT, MapObjects_53AA
-    objsel_list MapObjects_53C1
+ObjSelector_Map4C_2_Unlisted_2::
+    objsel_unless_flag EVENT_AH_YOU_ARE_THE_SPIRIT, MapObjects_Map4C_2_Unlisted_1
+    objsel_list MapObjects_Map4C_2_Unlisted_2_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_53AA::
+MapObjects_Map4C_2_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $50, $00, $05, $00, $50, $15 ; object 0
     db $86, $01, $10, $00, $00, $40, $00, $06, $00, $60, $18 ; object 1
 
-MapObjects_53C1::
+MapObjects_Map4C_2_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $50, $00, $05, $00, $50, $15 ; object 0
     db $86, $01, $10, $00, $00, $40, $e0, $06, $00, $60, $18 ; object 1
@@ -2398,73 +2398,73 @@ MapObjects_53C1::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_53D8::
+MapObjects_Map4C_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $60, $20, $05, $00, $50, $15 ; object 0
     db $86, $01, $10, $00, $00, $30, $30, $06, $00, $60, $18 ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_53EF::
-    objsel_list MapObjects_53F3
+ObjSelector_Map4C_3::
+    objsel_list MapObjects_Map4C_3_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_53F3::
+MapObjects_Map4C_3_0::
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $80, $30, $05, $00, $50, $16
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_53FF::
+MapObjectScreens_Map4D::
     dw $0000 ; id 0
-    dw ObjSelector_5403 ; id 1
+    dw ObjSelector_Map4D_1 ; id 1
 
-ObjSelector_5403::
-    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_5409
+ObjSelector_Map4D_1::
+    objsel_unless_flag EVENT_SCENE_WALL_EXIT, MapObjects_Map4D_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5409::
+MapObjects_Map4D_1_0::
     db $02 ; entry 0: object count
     db $85, $01, $0e, $00, $00, $70, $30, $05, $00, $50, $48 ; object 0
     db $86, $01, $03, $00, $00, $30, $50, $06, $03, $60, $49 ; object 1
 
-MapObjectScreens_5420::
-    dw ObjSelector_5426 ; id 0
+MapObjectScreens_Map4E::
+    dw ObjSelector_Map4E_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5426::
-    objsel_list MapObjects_542A
+ObjSelector_Map4E_0::
+    objsel_list MapObjects_Map4E_0_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_542A::
+MapObjects_Map4E_0_0::
     db $01 ; entry 0
     db $85, $01, $2e, $00, $00, $50, $30, $05, $00, $50, $1c
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5436::
-    dw ObjSelector_543E ; id 0
-    dw ObjSelector_546F ; id 1
-    dw ObjSelector_54C6 ; id 2
-    dw ObjSelector_54F7 ; id 3
+MapObjectScreens_Map4F::
+    dw ObjSelector_Map4F_0 ; id 0
+    dw ObjSelector_Map4F_1 ; id 1
+    dw ObjSelector_Map4F_2 ; id 2
+    dw ObjSelector_Map4F_3 ; id 3
 
-ObjSelector_543E::
-    objsel_list MapObjects_5442
+ObjSelector_Map4F_0::
+    objsel_list MapObjects_Map4F_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5442::
+MapObjects_Map4F_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $30, $00, $00, $30, $50, $05, $00, $50, $1d ; object 0
     db $85, $01, $30, $00, $00, $50, $40, $05, $00, $50, $1f ; object 1
@@ -2472,11 +2472,11 @@ MapObjects_5442::
     db $87, $01, $12, $00, $00, $70, $20, $07, $00, $70, $2c ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_546F::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5477
-    objsel_list MapObjects_54A4
+ObjSelector_Map4F_1::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_Map4F_1_0
+    objsel_list MapObjects_Map4F_1_1
 
-MapObjects_5477::
+MapObjects_Map4F_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $16, $00, $00, $10, $30, $05, $01, $50, $29 ; object 0
     db $86, $01, $15, $00, $00, $70, $20, $06, $00, $60, $2a ; object 1
@@ -2486,26 +2486,26 @@ MapObjects_5477::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_54A4::
+MapObjects_Map4F_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $16, $00, $00, $10, $30, $05, $01, $50, $29 ; object 0
     db $86, $01, $15, $00, $00, $70, $20, $06, $00, $60, $2a ; object 1
     db $86, $01, $15, $00, $00, $80, $40, $06, $03, $60, $2b ; object 2
 
-ObjSelector_54C6::
-    objsel_list MapObjects_54CA
+ObjSelector_Map4F_2::
+    objsel_list MapObjects_Map4F_2_0
 
-MapObjects_54CA::
+MapObjects_Map4F_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $10, $20, $05, $00, $50, $21 ; object 0
     db $86, $01, $2d, $00, $02, $40, $50, $06, $01, $60, $22 ; object 1
     db $85, $01, $2e, $00, $00, $60, $60, $05, $00, $50, $23 ; object 2
     db $87, $01, $2f, $00, $00, $70, $10, $07, $03, $70, $24 ; object 3
 
-ObjSelector_54F7::
-    objsel_list MapObjects_54FB
+ObjSelector_Map4F_3::
+    objsel_list MapObjects_Map4F_3_0
 
-MapObjects_54FB::
+MapObjects_Map4F_3_0::
     db $04 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $40, $50, $05, $00, $50, $1e ; object 0
     db $86, $01, $30, $00, $00, $80, $20, $06, $03, $60, $25 ; object 1
@@ -2514,18 +2514,18 @@ MapObjects_54FB::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5528::
-    dw ObjSelector_552A ; id 0
+MapObjectScreens_Map50::
+    dw ObjSelector_Map50_0 ; id 0
 
-ObjSelector_552A::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5532
-    objsel_list MapObjects_555F
+ObjSelector_Map50_0::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_Map50_0_0
+    objsel_list MapObjects_Map50_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5532::
+MapObjects_Map50_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $16, $00, $00, $20, $20, $05, $01, $50, $31 ; object 0
     db $85, $01, $16, $00, $00, $40, $30, $05, $02, $50, $32 ; object 1
@@ -2535,55 +2535,55 @@ MapObjects_5532::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_555F::
+MapObjects_Map50_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $16, $00, $00, $20, $20, $05, $01, $50, $31 ; object 0
     db $86, $01, $17, $00, $00, $40, $50, $06, $00, $60, $33 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5576::
-    dw ObjSelector_5578 ; id 0
+MapObjectScreens_Map51::
+    dw ObjSelector_Map51_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5578::
-    objsel_list MapObjects_557C
+ObjSelector_Map51_0::
+    objsel_list MapObjects_Map51_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_557C::
+MapObjects_Map51_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $10, $10, $05, $01, $50, $36 ; object 0
     db $86, $01, $29, $00, $00, $20, $70, $06, $02, $60, $37 ; object 1
 
-MapObjectScreens_69_5593::
+MapObjectScreens_Map52::
     db $99, $55, $00, $00, $b4, $55
 
-ObjSelector_5599::
-    objsel_list MapObjects_559D
+ObjSelector_Map51_0_Unlisted::
+    objsel_list MapObjects_Map51_0_Unlisted_0
 
-MapObjects_559D::
+MapObjects_Map51_0_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $52, $00, $00, $40, $30, $05, $00, $50, $3c ; object 0
     db $86, $01, $52, $00, $00, $70, $40, $06, $03, $60, $3d ; object 1
 
-ObjSelector_55B4::
-    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_55BC
-    objsel_list MapObjects_55E9
+ObjSelector_Map51_0_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_Map51_0_Unlisted_2_0
+    objsel_list MapObjects_Map51_0_Unlisted_2_1
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_55BC::
+MapObjects_Map51_0_Unlisted_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $38 ; object 0
     db $85, $01, $10, $00, $00, $00, $40, $05, $01, $50, $39 ; object 1
     db $85, $01, $10, $00, $00, $00, $50, $05, $01, $50, $3a ; object 2
     db $86, $01, $16, $00, $00, $70, $60, $06, $00, $60, $3b ; object 3
 
-MapObjects_55E9::
+MapObjects_Map51_0_Unlisted_2_1::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $38 ; object 0
     db $85, $01, $10, $00, $00, $60, $40, $05, $00, $50, $39 ; object 1
@@ -2592,10 +2592,10 @@ MapObjects_55E9::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5616::
+MapObjectScreens_Map53::
     dw $0000 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_5636 ; id 2
+    dw ObjSelector_Map53_2 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
     dw $0000 ; id 5
@@ -2605,232 +2605,232 @@ MapObjectScreens_5616::
     dw $0000 ; id 9
     dw $0000 ; id 10
     dw $0000 ; id 11
-    dw ObjSelector_5646 ; id 12
+    dw ObjSelector_Map53_12 ; id 12
     dw $0000 ; id 13
     dw $0000 ; id 14
     dw $0000 ; id 15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5636::
-    objsel_list MapObjects_563A
+ObjSelector_Map53_2::
+    objsel_list MapObjects_Map53_2_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_563A::
+MapObjects_Map53_2_0::
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $70, $30, $05, $00, $50, $3f
 
-ObjSelector_5646::
-    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_564E
-    objsel_list MapObjects_5670
+ObjSelector_Map53_12::
+    objsel_unless_flag EVENT_SCENE_PLAN_RUINED_094, MapObjects_Map53_12_0
+    objsel_list MapObjects_Map53_12_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_564E::
+MapObjects_Map53_12_0::
     db $03 ; entry 0: object count
     db $85, $01, $52, $00, $00, $40, $60, $05, $02, $50, $3c ; object 0
     db $86, $01, $52, $00, $00, $50, $60, $06, $02, $60, $3d ; object 1
     db $87, $01, $16, $00, $02, $50, $20, $07, $01, $70, $3e ; object 2
 
-MapObjects_5670::
+MapObjects_Map53_12_1::
     db $01 ; entry 0
     db $85, $01, $16, $00, $02, $50, $20, $05, $01, $50, $3e
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_567C::
-    dw ObjSelector_567E ; id 0
+MapObjectScreens_Map54::
+    dw ObjSelector_Map54_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_567E::
-    objsel_list MapObjects_5682
+ObjSelector_Map54_0::
+    objsel_list MapObjects_Map54_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5682::
+MapObjects_Map54_0_0::
     db $01 ; entry 0
     db $85, $01, $52, $00, $00, $60, $30, $05, $00, $50, $40
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_568E::
+MapObjectScreens_Map55::
     dw $0000 ; id 0
-    dw ObjSelector_5692 ; id 1
+    dw ObjSelector_Map55_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5692::
-    objsel_list MapObjects_5696
+ObjSelector_Map55_1::
+    objsel_list MapObjects_Map55_1_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5696::
+MapObjects_Map55_1_0::
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $50, $50, $05, $03, $50, $41
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_56A2::
-    dw ObjSelector_56A8 ; id 0
-    dw ObjSelector_56BA ; id 1
-    dw ObjSelector_570E ; id 2
+MapObjectScreens_Map57::
+    dw ObjSelector_Map57_0 ; id 0
+    dw ObjSelector_Map57_1 ; id 1
+    dw ObjSelector_Map57_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_56A8::
-    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_56AE
+ObjSelector_Map57_0::
+    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_Map57_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_56AE::
+MapObjects_Map57_0_0::
     db $01 ; entry 0
     db $85, $01, $16, $00, $02, $60, $10, $05, $01, $50, $44
 
-ObjSelector_56BA::
+ObjSelector_Map57_1::
     objsel_skip_if_clear EVENT_SCENE_GOT_TO, $02, $00
     objsel_none
 
-ObjSelector_56C2::
-    objsel_unless_flag EVENT_SCENE_EXPLOSION, MapObjects_56CA
-    objsel_list MapObjects_56EC
+ObjSelector_Map57_1_Unlisted::
+    objsel_unless_flag EVENT_SCENE_EXPLOSION, MapObjects_Map57_1_Unlisted_0
+    objsel_list MapObjects_Map57_1_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_56CA::
+MapObjects_Map57_1_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $00, $34, $01, $00, $40, $e0, $05, $00, $50, $46 ; object 0
     db $86, $01, $10, $00, $00, $b0, $10, $06, $02, $60, $00 ; object 1
     db $87, $01, $52, $00, $00, $e0, $10, $07, $00, $70, $00 ; object 2
 
-MapObjects_56EC::
+MapObjects_Map57_1_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $00, $34, $01, $00, $40, $20, $05, $00, $50, $46 ; object 0
     db $86, $01, $10, $00, $00, $b0, $10, $06, $02, $60, $00 ; object 1
     db $87, $01, $52, $00, $00, $e0, $10, $07, $00, $70, $00 ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_570E::
-    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_5714
+ObjSelector_Map57_2::
+    objsel_unless_flag EVENT_SCENE_GOT_TO, MapObjects_Map57_2_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5714::
+MapObjects_Map57_2_0::
     db $02 ; entry 0: object count
     db $85, $01, $16, $00, $02, $30, $10, $05, $01, $50, $42 ; object 0
     db $86, $01, $10, $00, $00, $70, $30, $06, $02, $60, $43 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_572B::
-    dw ObjSelector_5733 ; id 0
-    dw ObjSelector_5764 ; id 1
-    dw ObjSelector_5795 ; id 2
-    dw ObjSelector_57C6 ; id 3
+MapObjectScreens_Map58::
+    dw ObjSelector_Map58_0 ; id 0
+    dw ObjSelector_Map58_1 ; id 1
+    dw ObjSelector_Map58_2 ; id 2
+    dw ObjSelector_Map58_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5733::
-    objsel_list MapObjects_5737
+ObjSelector_Map58_0::
+    objsel_list MapObjects_Map58_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5737::
+MapObjects_Map58_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $52, $00, $00, $60, $40, $05, $00, $50, $56 ; object 0
     db $86, $01, $2e, $00, $00, $30, $70, $06, $03, $60, $57 ; object 1
     db $87, $01, $2f, $00, $00, $30, $10, $07, $00, $70, $58 ; object 2
     db $84, $01, $12, $00, $00, $70, $20, $04, $00, $40, $83 ; object 3
 
-ObjSelector_5764::
-    objsel_list MapObjects_5768
+ObjSelector_Map58_1::
+    objsel_list MapObjects_Map58_1_0
 
-MapObjects_5768::
+MapObjects_Map58_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $30, $00, $00, $10, $20, $05, $00, $50, $52 ; object 0
     db $86, $01, $2d, $00, $00, $80, $30, $06, $01, $60, $53 ; object 1
     db $87, $01, $2e, $00, $00, $70, $60, $07, $02, $70, $54 ; object 2
     db $87, $01, $2e, $00, $02, $40, $50, $07, $01, $70, $55 ; object 3
 
-ObjSelector_5795::
-    objsel_list MapObjects_5799
+ObjSelector_Map58_2::
+    objsel_list MapObjects_Map58_2_0
 
-MapObjects_5799::
+MapObjects_Map58_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $2f, $00, $00, $40, $40, $05, $00, $50, $4e ; object 0
     db $86, $01, $2e, $00, $00, $10, $60, $06, $01, $60, $4f ; object 1
     db $87, $01, $15, $00, $00, $70, $50, $07, $00, $70, $50 ; object 2
     db $85, $01, $2f, $00, $02, $30, $10, $05, $00, $50, $51 ; object 3
 
-ObjSelector_57C6::
-    objsel_list MapObjects_57CA
+ObjSelector_Map58_3::
+    objsel_list MapObjects_Map58_3_0
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_57CA::
+MapObjects_Map58_3_0::
     db $02 ; entry 0: object count
     db $85, $01, $2d, $00, $00, $30, $50, $05, $00, $50, $59 ; object 0
     db $86, $01, $30, $00, $02, $60, $40, $06, $01, $60, $5a ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_57E1::
-    dw ObjSelector_57E5 ; id 0
-    dw ObjSelector_5800 ; id 1
+MapObjectScreens_Map59::
+    dw ObjSelector_Map59_0 ; id 0
+    dw ObjSelector_Map59_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_57E5::
-    objsel_list MapObjects_57E9
+ObjSelector_Map59_0::
+    objsel_list MapObjects_Map59_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_57E9::
+MapObjects_Map59_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $80, $10, $05, $00, $50, $5e ; object 0
     db $86, $01, $15, $00, $00, $60, $10, $06, $00, $60, $5f ; object 1
 
-ObjSelector_5800::
-    objsel_list MapObjects_5804
+ObjSelector_Map59_1::
+    objsel_list MapObjects_Map59_1_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5804::
+MapObjects_Map59_1_0::
     db $01 ; entry 0
     db $85, $01, $29, $00, $00, $20, $20, $05, $00, $50, $60
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5810::
-    dw ObjSelector_5814 ; id 0
-    dw ObjSelector_585D ; id 1
+MapObjectScreens_Map5A::
+    dw ObjSelector_Map5A_0 ; id 0
+    dw ObjSelector_Map5A_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5814::
+ObjSelector_Map5A_0::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
-    objsel_list MapObjects_5851
+    objsel_list MapObjects_Map5A_0_1
 
-ObjSelector_581E::
-    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_5824
+ObjSelector_Map5A_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_Map5A_0_Unlisted_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_5824::
+MapObjects_Map5A_0_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $52, $00, $00, $80, $60, $05, $00, $50, $61 ; object 0
     db $85, $01, $52, $00, $00, $40, $50, $05, $00, $50, $67 ; object 1
@@ -2841,22 +2841,22 @@ MapObjects_5824::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5851::
+MapObjects_Map5A_0_1::
     db $01 ; entry 0
     db $87, $01, $42, $00, $00, $30, $50, $07, $00, $70, $2e
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_585D::
+ObjSelector_Map5A_1::
     objsel_skip_if_clear EVENT_SCENE_CHEER_YUNA, $04, $00
-    objsel_list MapObjects_58A8
+    objsel_list MapObjects_Map5A_1_1
 
-ObjSelector_5867::
-    objsel_unless_flag EVENT_GATHER_FOLLOWERS, MapObjects_586F
-    objsel_list MapObjects_589C
+ObjSelector_Map5A_1_Unlisted::
+    objsel_unless_flag EVENT_GATHER_FOLLOWERS, MapObjects_Map5A_1_Unlisted_0
+    objsel_list MapObjects_Map5A_1_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_586F::
+MapObjects_Map5A_1_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $52, $00, $00, $30, $40, $05, $01, $50, $66 ; object 0
     db $86, $01, $4c, $00, $00, $40, $40, $06, $02, $60, $62 ; object 1
@@ -2864,7 +2864,7 @@ MapObjects_586F::
     db $87, $01, $03, $00, $00, $40, $a0, $07, $02, $70, $00 ; object 3
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_589C::
+MapObjects_Map5A_1_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $52, $00, $00, $30, $50, $05, $00, $50, $66
 
@@ -2872,7 +2872,7 @@ MapObjects_589C::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_58A8::
+MapObjects_Map5A_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $52, $00, $00, $20, $50, $05, $00, $50, $66 ; object 0
     db $86, $01, $52, $00, $00, $70, $60, $06, $03, $60, $61 ; object 1
@@ -2880,43 +2880,43 @@ MapObjects_58A8::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_58CA::
-    dw ObjSelector_58D2 ; id 0
-    dw ObjSelector_58ED ; id 1
-    dw ObjSelector_5944 ; id 2
-    dw ObjSelector_595F ; id 3
+MapObjectScreens_Map5B::
+    dw ObjSelector_Map5B_0 ; id 0
+    dw ObjSelector_Map5B_1 ; id 1
+    dw ObjSelector_Map5B_2 ; id 2
+    dw ObjSelector_Map5B_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_58D2::
-    objsel_list MapObjects_58D6
+ObjSelector_Map5B_0::
+    objsel_list MapObjects_Map5B_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_58D6::
+MapObjects_Map5B_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $52, $00, $00, $70, $40, $05, $00, $50, $6e ; object 0
     db $86, $01, $14, $00, $00, $20, $10, $06, $02, $60, $6b ; object 1
 
-ObjSelector_58ED::
+ObjSelector_Map5B_1::
     objsel_skip_if_clear EVENT_YOU_WILL_THANK_YOU_LET, $04, $00
-    objsel_list MapObjects_5938
+    objsel_list MapObjects_Map5B_1_1
 
-ObjSelector_58F7::
-    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_58FF
-    objsel_list MapObjects_5921
+ObjSelector_Map5B_1_Unlisted::
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_Map5B_1_Unlisted_0
+    objsel_list MapObjects_Map5B_1_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_58FF::
+MapObjects_Map5B_1_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $01, $0e, $00, $00, $40, $20, $05, $00, $50, $71 ; object 0
     db $86, $01, $3a, $00, $00, $50, $20, $06, $00, $60, $72 ; object 1
     db $87, $01, $03, $00, $00, $40, $40, $07, $02, $70, $00 ; object 2
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_5921::
+MapObjects_Map5B_1_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $0e, $00, $00, $40, $20, $05, $00, $50, $71 ; object 0
     db $86, $01, $3a, $00, $00, $50, $20, $06, $00, $60, $72 ; object 1
@@ -2925,37 +2925,37 @@ MapObjects_5921::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5938::
+MapObjects_Map5B_1_1::
     db $01 ; entry 0
     db $85, $01, $0e, $00, $00, $40, $20, $05, $00, $50, $71
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5944::
-    objsel_list MapObjects_5948
+ObjSelector_Map5B_2::
+    objsel_list MapObjects_Map5B_2_0
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5948::
+MapObjects_Map5B_2_0::
     db $02 ; entry 0: object count
     db $86, $01, $12, $00, $00, $30, $60, $06, $03, $60, $6c ; object 0
     db $87, $01, $52, $00, $00, $10, $20, $07, $02, $70, $6a ; object 1
 
-ObjSelector_595F::
-    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_5967
-    objsel_list MapObjects_5989
+ObjSelector_Map5B_3::
+    objsel_unless_flag EVENT_SCENE_CHEER_YUNA, MapObjects_Map5B_3_0
+    objsel_list MapObjects_Map5B_3_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5967::
+MapObjects_Map5B_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $12, $00, $00, $40, $10, $05, $00, $50, $6f ; object 0
     db $86, $01, $52, $00, $00, $50, $10, $06, $00, $60, $69 ; object 1
     db $87, $01, $52, $00, $02, $60, $40, $07, $01, $70, $6d ; object 2
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_5989::
+MapObjects_Map5B_3_1::
     db $03 ; entry 0: object count
     db $85, $01, $12, $00, $00, $30, $30, $05, $00, $50, $6f ; object 0
     db $86, $01, $52, $00, $00, $60, $20, $06, $00, $60, $69 ; object 1
@@ -2963,28 +2963,28 @@ MapObjects_5989::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_59AB::
+MapObjectScreens_Map5C::
     dw $0000 ; id 0
-    dw ObjSelector_59AF ; id 1
+    dw ObjSelector_Map5C_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_59AF::
+ObjSelector_Map5C_1::
     objsel_skip_if_clear EVENT_SCENE_PRINCESS_MEDICINE_09D, $04, $00
-    objsel_list MapObjects_59FA
+    objsel_list MapObjects_Map5C_1_1
 
-ObjSelector_59B9::
-    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_59C1
-    objsel_list MapObjects_59D8
+ObjSelector_Map5C_1_Unlisted::
+    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_Map5C_1_Unlisted_0
+    objsel_list MapObjects_Map5C_1_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_59C1::
+MapObjects_Map5C_1_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $3a, $00, $00, $e0, $e0, $05, $03, $50, $72 ; object 0
     db $86, $01, $59, $00, $00, $80, $10, $06, $00, $60, $9a ; object 1
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_59D8::
+MapObjects_Map5C_1_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $3a, $00, $00, $60, $30, $05, $03, $50, $72 ; object 0
     db $86, $01, $59, $00, $00, $80, $10, $06, $00, $60, $9a ; object 1
@@ -2994,40 +2994,40 @@ MapObjects_59D8::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_59FA::
+MapObjects_Map5C_1_1::
     db $01 ; entry 0
     db $85, $01, $3a, $00, $00, $60, $30, $05, $03, $50, $72
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5A06::
+MapObjectScreens_Map5D::
     dw $0000 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_5A26 ; id 2
+    dw ObjSelector_Map5D_2 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
     dw $0000 ; id 5
-    dw ObjSelector_5A67 ; id 6
+    dw ObjSelector_Map5D_6 ; id 6
     dw $0000 ; id 7
     dw $0000 ; id 8
     dw $0000 ; id 9
-    dw ObjSelector_5A6D ; id 10
+    dw ObjSelector_Map5D_10 ; id 10
     dw $0000 ; id 11
     dw $0000 ; id 12
     dw $0000 ; id 13
-    dw ObjSelector_5A73 ; id 14
+    dw ObjSelector_Map5D_14 ; id 14
     dw $0000 ; id 15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5A26::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5A2E
-    objsel_list MapObjects_5A50
+ObjSelector_Map5D_2::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_Map5D_2_0
+    objsel_list MapObjects_Map5D_2_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5A2E::
+MapObjects_Map5D_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $30, $50, $05, $01, $50, $92 ; object 0
     db $86, $01, $2f, $00, $02, $60, $30, $06, $01, $60, $93 ; object 1
@@ -3036,48 +3036,48 @@ MapObjects_5A2E::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5A50::
+MapObjects_Map5D_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $30, $50, $05, $01, $50, $92 ; object 0
     db $86, $01, $2f, $00, $02, $60, $30, $06, $01, $60, $93 ; object 1
 
-ObjSelector_5A67::
-    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2, MapObjects_5A79
+ObjSelector_Map5D_6::
+    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2, MapObjects_Map5D_6_0
     objsel_none
 
-ObjSelector_5A6D::
-    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2_099, MapObjects_5A79
+ObjSelector_Map5D_10::
+    objsel_unless_flag EVENT_SCENE_SPIRIT_ENVOY2_099, MapObjects_Map5D_6_0
     objsel_none
 
-ObjSelector_5A73::
-    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_5A79
+ObjSelector_Map5D_14::
+    objsel_unless_flag EVENT_YOU_WILL_THANK_YOU_LET, MapObjects_Map5D_6_0
     objsel_none
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5A79::
+MapObjects_Map5D_6_0::
     db $01 ; entry 0
     db $85, $01, $3a, $00, $00, $50, $40, $05, $02, $50, $99
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5A85::
-    dw ObjSelector_5A8D ; id 0
-    dw ObjSelector_5AE4 ; id 1
-    dw ObjSelector_5B46 ; id 2
-    dw ObjSelector_5B77 ; id 3
+MapObjectScreens_Map5E::
+    dw ObjSelector_Map5E_0 ; id 0
+    dw ObjSelector_Map5E_1 ; id 1
+    dw ObjSelector_Map5E_2 ; id 2
+    dw ObjSelector_Map5E_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5A8D::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5A95
-    objsel_list MapObjects_5AB7
+ObjSelector_Map5E_0::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_Map5E_0_0
+    objsel_list MapObjects_Map5E_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5A95::
+MapObjects_Map5E_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $2f, $00, $00, $60, $50, $05, $00, $50, $78 ; object 0
     db $86, $01, $2f, $00, $00, $40, $20, $06, $00, $60, $7e ; object 1
@@ -3086,45 +3086,45 @@ MapObjects_5A95::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5AB7::
+MapObjects_Map5E_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $2f, $00, $00, $60, $50, $05, $00, $50, $78 ; object 0
     db $85, $01, $2f, $00, $00, $40, $10, $05, $02, $50, $7e ; object 1
     db $86, $01, $14, $00, $00, $80, $30, $06, $03, $60, $7f ; object 2
     db $87, $01, $21, $00, $00, $50, $20, $07, $00, $70, $9b ; object 3
 
-ObjSelector_5AE4::
-    objsel_unless_flag EVENT_OH_AN_ENVOY_FROM_THE, MapObjects_5AEC
-    objsel_list MapObjects_5B19
+ObjSelector_Map5E_1::
+    objsel_unless_flag EVENT_OH_AN_ENVOY_FROM_THE, MapObjects_Map5E_1_0
+    objsel_list MapObjects_Map5E_1_1
 
-MapObjects_5AEC::
+MapObjects_Map5E_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $40, $10, $05, $00, $50, $7c ; object 0
     db $85, $01, $10, $00, $00, $50, $10, $05, $00, $50, $7c ; object 1
     db $86, $01, $2e, $00, $00, $70, $70, $06, $03, $60, $79 ; object 2
     db $87, $01, $2d, $00, $02, $60, $40, $07, $01, $70, $77 ; object 3
 
-MapObjects_5B19::
+MapObjects_Map5E_1_1::
     db $04 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $30, $05, $00, $50, $7c ; object 0
     db $85, $01, $10, $00, $00, $60, $20, $05, $00, $50, $7c ; object 1
     db $86, $01, $2e, $00, $00, $70, $70, $06, $03, $60, $79 ; object 2
     db $87, $01, $2d, $00, $02, $60, $40, $07, $01, $70, $77 ; object 3
 
-ObjSelector_5B46::
-    objsel_list MapObjects_5B4A
+ObjSelector_Map5E_2::
+    objsel_list MapObjects_Map5E_2_0
 
-MapObjects_5B4A::
+MapObjects_Map5E_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $70, $40, $05, $01, $50, $74 ; object 0
     db $86, $01, $2f, $00, $00, $60, $70, $06, $01, $60, $75 ; object 1
     db $85, $01, $2e, $00, $00, $40, $50, $05, $02, $50, $76 ; object 2
     db $87, $01, $12, $00, $00, $50, $10, $07, $00, $70, $80 ; object 3
 
-ObjSelector_5B77::
-    objsel_list MapObjects_5B7B
+ObjSelector_Map5E_3::
+    objsel_list MapObjects_Map5E_3_0
 
-MapObjects_5B7B::
+MapObjects_Map5E_3_0::
     db $04 ; entry 0: object count
     db $85, $01, $30, $00, $00, $60, $60, $05, $00, $50, $73 ; object 0
     db $86, $01, $2f, $00, $00, $20, $50, $06, $03, $60, $7a ; object 1
@@ -3133,19 +3133,19 @@ MapObjects_5B7B::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5BA8::
-    dw ObjSelector_5BAA ; id 0
+MapObjectScreens_Map5F::
+    dw ObjSelector_Map5F_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5BAA::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_5BB2
-    objsel_list MapObjects_5BDF
+ObjSelector_Map5F_0::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_1E5, MapObjects_Map5F_0_0
+    objsel_list MapObjects_Map5F_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5BB2::
+MapObjects_Map5F_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $40, $60, $05, $02, $50, $86 ; object 0
     db $86, $01, $15, $00, $00, $20, $20, $06, $00, $60, $87 ; object 1
@@ -3155,7 +3155,7 @@ MapObjects_5BB2::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5BDF::
+MapObjects_Map5F_0_1::
     db $03 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $40, $60, $05, $02, $50, $86 ; object 0
     db $86, $01, $2e, $00, $00, $50, $40, $06, $03, $60, $88 ; object 1
@@ -3163,31 +3163,31 @@ MapObjects_5BDF::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5C01::
-    dw ObjSelector_5C07 ; id 0
-    dw ObjSelector_5C71 ; id 1
-    dw ObjSelector_5CB2 ; id 2
+MapObjectScreens_Map60::
+    dw ObjSelector_Map60_0 ; id 0
+    dw ObjSelector_Map60_1 ; id 1
+    dw ObjSelector_Map60_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5C07::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map60_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_5C39
+    objsel_list MapObjects_Map60_0_2
 
-ObjSelector_5C17::
+ObjSelector_Map60_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
-    objsel_list MapObjects_5C2D
+    objsel_list MapObjects_Map60_0_Unlisted_1
 
-ObjSelector_5C21::
+ObjSelector_Map60_0_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_PRINCESS_MEDICINE_09D, $02, $00
     objsel_none
 
-ObjSelector_5C29::
-    objsel_list MapObjects_5C2D
+ObjSelector_Map60_0_Unlisted_3::
+    objsel_list MapObjects_Map60_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_5C2D::
+MapObjects_Map60_0_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $0f, $00, $00, $40, $10, $05, $00, $50, $90
 
@@ -3195,7 +3195,7 @@ MapObjects_5C2D::
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5C39::
+MapObjects_Map60_0_2::
     db $05 ; entry 0: object count
     db $85, $01, $0f, $00, $00, $40, $10, $05, $00, $50, $90 ; object 0
     db $86, $01, $10, $00, $00, $30, $60, $06, $00, $60, $8e ; object 1
@@ -3204,14 +3204,14 @@ MapObjects_5C39::
     db $83, $01, $30, $00, $00, $40, $b0, $03, $02, $30, $73 ; object 4
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5C71::
-    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5C79
-    objsel_list MapObjects_5C9B
+ObjSelector_Map60_1::
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_Map60_1_0
+    objsel_list MapObjects_Map60_1_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5C79::
+MapObjects_Map60_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $10, $05, $01, $50, $8e ; object 0
     db $86, $01, $12, $00, $00, $20, $50, $06, $02, $60, $8f ; object 1
@@ -3220,16 +3220,16 @@ MapObjects_5C79::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5C9B::
+MapObjects_Map60_1_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $10, $05, $01, $50, $8e ; object 0
     db $86, $01, $12, $00, $00, $20, $50, $06, $02, $60, $8f ; object 1
 
-ObjSelector_5CB2::
-    objsel_list MapObjects_5CB6
+ObjSelector_Map60_2::
+    objsel_list MapObjects_Map60_2_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
-MapObjects_5CB6::
+MapObjects_Map60_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $10, $05, $00, $50, $8a ; object 0
     db $86, $01, $10, $00, $02, $50, $40, $06, $01, $60, $8b ; object 1
@@ -3237,49 +3237,49 @@ MapObjects_5CB6::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5CD8::
-    dw ObjSelector_5CDC ; id 0
-    dw ObjSelector_5D8B ; id 1
+MapObjectScreens_Map61::
+    dw ObjSelector_Map61_0 ; id 0
+    dw ObjSelector_Map61_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5CDC::
+ObjSelector_Map61_0::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_1E5, $04, $00
-    objsel_list MapObjects_5D7F
+    objsel_list MapObjects_Map61_0_1
 
-ObjSelector_5CE6::
+ObjSelector_Map61_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_SHIELD_GUARDIAN_1E2, $04, $00
-    objsel_list MapObjects_5D68
+    objsel_list MapObjects_Map61_0_Unlisted_1
 
-ObjSelector_5CF0::
+ObjSelector_Map61_0_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_SHIELD_GUARDIAN, $04, $00
-    objsel_list MapObjects_5D46
+    objsel_list MapObjects_Map61_0_Unlisted_2_1
 
-ObjSelector_5CFA::
-    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5D02
-    objsel_list MapObjects_5D24
+ObjSelector_Map61_0_Unlisted_3::
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_Map61_0_Unlisted_3_0
+    objsel_list MapObjects_Map61_0_Unlisted_3_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_5D02::
+MapObjects_Map61_0_Unlisted_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90 ; object 0
     db $86, $01, $2a, $00, $00, $50, $70, $06, $02, $60, $8d ; object 1
     db $87, $00, $e0, $00, $00, $40, $e0, $07, $00, $70, $9e ; object 2
 
-MapObjects_5D24::
+MapObjects_Map61_0_Unlisted_3_1::
     db $03 ; entry 0: object count
     db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90 ; object 0
     db $86, $01, $2a, $00, $00, $50, $40, $06, $02, $60, $8d ; object 1
     db $87, $00, $e0, $00, $00, $40, $e0, $07, $00, $70, $9e ; object 2
 
-MapObjects_5D46::
+MapObjects_Map61_0_Unlisted_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $46, $00, $00, $40, $30, $05, $00, $50, $90 ; object 0
     db $86, $01, $2a, $00, $00, $50, $40, $06, $02, $60, $8d ; object 1
     db $87, $00, $e0, $00, $00, $40, $20, $07, $00, $70, $9e ; object 2
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_5D68::
+MapObjects_Map61_0_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $0f, $00, $00, $60, $40, $05, $00, $50, $90 ; object 0
     db $86, $01, $2a, $00, $02, $30, $50, $06, $00, $60, $8d ; object 1
@@ -3288,22 +3288,22 @@ MapObjects_5D68::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5D7F::
+MapObjects_Map61_0_1::
     db $01 ; entry 0
     db $85, $01, $2a, $00, $02, $30, $50, $05, $01, $50, $8d
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5D8B::
-    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_5D91
+ObjSelector_Map61_1::
+    objsel_unless_flag EVENT_SCENE_MEDICINE_GIVEN, MapObjects_Map61_1_0
     objsel_none
 
-MapObjects_5D91::
+MapObjects_Map61_1_0::
     db $01 ; entry 0
     db $85, $01, $2a, $00, $00, $70, $60, $05, $03, $50, $8d
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5D9D::
+MapObjectScreens_Map30::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3327,7 +3327,7 @@ MapObjectScreens_5D9D::
     dw $0000 ; id 20
     dw $0000 ; id 21
     dw $0000 ; id 22
-    dw ObjSelector_5E1D ; id 23
+    dw ObjSelector_Map30_23 ; id 23
     dw $0000 ; id 24
     dw $0000 ; id 25
     dw $0000 ; id 26
@@ -3349,7 +3349,7 @@ MapObjectScreens_5D9D::
     dw $0000 ; id 42
     dw $0000 ; id 43
     dw $0000 ; id 44
-    dw ObjSelector_5E37 ; id 45
+    dw ObjSelector_Map30_45 ; id 45
     dw $0000 ; id 46
     dw $0000 ; id 47
     dw $0000 ; id 48
@@ -3369,50 +3369,50 @@ MapObjectScreens_5D9D::
     dw $0000 ; id 62
     dw $0000 ; id 63
 
-ObjSelector_5E1D::
+ObjSelector_Map30_23::
     objsel_skip_if_set EVENT_SCENE_MERMAID_KINGDOM_022, $02, $00
     objsel_none
 
-ObjSelector_5E25::
-    objsel_unless_flag EVENT_THICK_SUCTION_CUPPED_TENTACLES_SNAKED, MapObjects_5E2B
+ObjSelector_Map30_23_Unlisted::
+    objsel_unless_flag EVENT_THICK_SUCTION_CUPPED_TENTACLES_SNAKED, MapObjects_Map30_23_Unlisted_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_5E2B::
+MapObjects_Map30_23_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $53, $01, $00, $50, $50, $05, $00, $50, $6c
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5E37::
+ObjSelector_Map30_45::
     objsel_skip_if_clear EVENT_SCENE_CRATE, $02, $00
     objsel_none
 
-ObjSelector_5E3F::
+ObjSelector_Map30_45_Unlisted::
     objsel_skip_if_set EVENT_WELCOME_YOUNG_HUMAN_I_HEARD, $02, $00
     objsel_none
 
-ObjSelector_5E47::
-    objsel_list MapObjects_5E4B
+ObjSelector_Map30_45_Unlisted_2::
+    objsel_list MapObjects_Map30_45_Unlisted_2_0
 
-MapObjects_5E4B::
+MapObjects_Map30_45_Unlisted_2_0::
     db $01 ; entry 0
     db $85, $01, $55, $00, $02, $40, $40, $05, $00, $50, $46
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5E57::
-    dw ObjSelector_5E5B ; id 0
-    dw ObjSelector_5E8C ; id 1
+MapObjectScreens_Map31::
+    dw ObjSelector_Map31_0 ; id 0
+    dw ObjSelector_Map31_1 ; id 1
 
-ObjSelector_5E5B::
-    objsel_list MapObjects_5E5F
+ObjSelector_Map31_0::
+    objsel_list MapObjects_Map31_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5E5F::
+MapObjects_Map31_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $0c, $00, $00, $20, $30, $05, $01, $50, $04 ; object 0
     db $86, $01, $0b, $00, $00, $50, $40, $06, $00, $60, $05 ; object 1
@@ -3420,10 +3420,10 @@ MapObjects_5E5F::
     db $87, $01, $06, $00, $00, $70, $50, $07, $00, $70, $03 ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5E8C::
-    objsel_list MapObjects_5E90
+ObjSelector_Map31_1::
+    objsel_list MapObjects_Map31_1_0
 
-MapObjects_5E90::
+MapObjects_Map31_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $08, $00, $00, $60, $60, $05, $00, $50, $00 ; object 0
     db $86, $01, $09, $00, $00, $80, $40, $06, $03, $60, $01 ; object 1
@@ -3432,20 +3432,20 @@ MapObjects_5E90::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5EBD::
-    dw ObjSelector_5EC5 ; id 0
-    dw ObjSelector_5EF6 ; id 1
-    dw ObjSelector_5F1C ; id 2
-    dw ObjSelector_5F4D ; id 3
+MapObjectScreens_Map32::
+    dw ObjSelector_Map32_0 ; id 0
+    dw ObjSelector_Map32_1 ; id 1
+    dw ObjSelector_Map32_2 ; id 2
+    dw ObjSelector_Map32_3 ; id 3
 
-ObjSelector_5EC5::
-    objsel_list MapObjects_5EC9
+ObjSelector_Map32_0::
+    objsel_list MapObjects_Map32_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5EC9::
+MapObjects_Map32_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $0b, $00, $00, $20, $20, $05, $01, $50, $1a ; object 0
     db $86, $01, $08, $00, $02, $60, $40, $06, $01, $60, $1b ; object 1
@@ -3453,32 +3453,32 @@ MapObjects_5EC9::
     db $86, $01, $08, $00, $00, $30, $70, $06, $02, $60, $1c ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5EF6::
-    objsel_list MapObjects_5EFA
+ObjSelector_Map32_1::
+    objsel_list MapObjects_Map32_1_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5EFA::
+MapObjects_Map32_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $08, $00, $00, $50, $60, $05, $03, $50, $1e ; object 0
     db $86, $01, $09, $00, $02, $30, $40, $06, $01, $60, $1f ; object 1
     db $87, $01, $15, $00, $00, $70, $20, $07, $00, $70, $20 ; object 2
 
-ObjSelector_5F1C::
-    objsel_list MapObjects_5F20
+ObjSelector_Map32_2::
+    objsel_list MapObjects_Map32_2_0
 
-MapObjects_5F20::
+MapObjects_Map32_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $0a, $00, $00, $80, $40, $05, $03, $50, $21 ; object 0
     db $86, $01, $15, $00, $00, $40, $50, $06, $03, $60, $22 ; object 1
     db $85, $01, $0a, $00, $00, $60, $20, $05, $00, $50, $24 ; object 2
     db $87, $01, $12, $00, $00, $30, $10, $07, $00, $70, $1d ; object 3
 
-ObjSelector_5F4D::
-    objsel_list MapObjects_5F51
+ObjSelector_Map32_3::
+    objsel_list MapObjects_Map32_3_0
 
-MapObjects_5F51::
+MapObjects_Map32_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $0c, $00, $00, $70, $60, $05, $00, $50, $25 ; object 0
     db $86, $01, $09, $00, $00, $60, $30, $06, $00, $60, $26 ; object 1
@@ -3486,21 +3486,21 @@ MapObjects_5F51::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_5F73::
-    dw ObjSelector_5F77 ; id 0
-    dw ObjSelector_5FE5 ; id 1
+MapObjectScreens_Map33::
+    dw ObjSelector_Map33_0 ; id 0
+    dw ObjSelector_Map33_1 ; id 1
 
-ObjSelector_5F77::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map33_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_5FB8
+    objsel_list MapObjects_Map33_0_2
 
-ObjSelector_5F87::
-    objsel_list MapObjects_5F8B
+ObjSelector_Map33_0_Unlisted::
+    objsel_list MapObjects_Map33_0_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_5F8B::
+MapObjects_Map33_0_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $16, $00, $00, $50, $30, $05, $00, $50, $30 ; object 0
     db $86, $01, $29, $00, $00, $70, $50, $06, $00, $60, $31 ; object 1
@@ -3511,7 +3511,7 @@ MapObjects_5F8B::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5FB8::
+MapObjects_Map33_0_2::
     db $04 ; entry 0: object count
     db $85, $01, $16, $00, $00, $50, $30, $05, $00, $50, $30 ; object 0
     db $86, $01, $06, $00, $00, $40, $b0, $06, $02, $60, $23 ; object 1
@@ -3519,14 +3519,14 @@ MapObjects_5FB8::
     db $83, $01, $0c, $00, $00, $20, $40, $03, $01, $30, $33 ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_5FE5::
-    objsel_unless_flag EVENT_THE_PIRATES, MapObjects_5FED
-    objsel_list MapObjects_600F
+ObjSelector_Map33_1::
+    objsel_unless_flag EVENT_THE_PIRATES, MapObjects_Map33_1_0
+    objsel_list MapObjects_Map33_1_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_5FED::
+MapObjects_Map33_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $00, $40, $e0, $05, $00, $50, $00 ; object 0
     db $86, $01, $28, $00, $00, $30, $d0, $06, $00, $60, $00 ; object 1
@@ -3535,25 +3535,25 @@ MapObjects_5FED::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_600F::
+MapObjects_Map33_1_1::
     db $02 ; entry 0: object count
     db $85, $01, $0a, $00, $00, $60, $10, $05, $00, $50, $3b ; object 0
     db $86, $01, $29, $00, $00, $60, $30, $06, $02, $60, $3c ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6026::
-    dw ObjSelector_6028 ; id 0
+MapObjectScreens_Map34::
+    dw ObjSelector_Map34_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6028::
-    objsel_list MapObjects_602C
+ObjSelector_Map34_0::
+    objsel_list MapObjects_Map34_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_602C::
+MapObjects_Map34_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $0a, $00, $00, $30, $10, $05, $00, $50, $2c ; object 0
     db $86, $01, $16, $00, $00, $20, $50, $06, $00, $60, $2d ; object 1
@@ -3561,7 +3561,7 @@ MapObjects_602C::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_604E::
+MapObjectScreens_Map35::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3577,51 +3577,51 @@ MapObjectScreens_604E::
     dw $0000 ; id 12
     dw $0000 ; id 13
     dw $0000 ; id 14
-    dw ObjSelector_606E ; id 15
+    dw ObjSelector_Map35_15 ; id 15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_606E::
-    objsel_unless_flag EVENT_SCENE_WATCH_OUT_078, MapObjects_6074
+ObjSelector_Map35_15::
+    objsel_unless_flag EVENT_SCENE_WATCH_OUT_078, MapObjects_Map35_15_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6074::
+MapObjects_Map35_15_0::
     db $01 ; entry 0
     db $85, $00, $4f, $01, $00, $40, $30, $05, $03, $50, $34
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6080::
-    dw ObjSelector_6086 ; id 0
+MapObjectScreens_Map37::
+    dw ObjSelector_Map37_0 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_6098 ; id 2
+    dw ObjSelector_Map37_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6086::
-    objsel_unless_flag EVENT_HOW_COULD_WE_DIE_BEFORE, MapObjects_608C
+ObjSelector_Map37_0::
+    objsel_unless_flag EVENT_HOW_COULD_WE_DIE_BEFORE, MapObjects_Map37_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_608C::
+MapObjects_Map37_0_0::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $70, $10, $05, $00, $50, $47
 
-ObjSelector_6098::
-    objsel_list MapObjects_609C
+ObjSelector_Map37_2::
+    objsel_list MapObjects_Map37_2_0
 
-MapObjects_609C::
+MapObjects_Map37_2_0::
     db $01 ; entry 0
     db $85, $01, $56, $00, $00, $70, $60, $05, $00, $50, $4d
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_60A8::
+MapObjectScreens_Map38::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -3636,19 +3636,19 @@ MapObjectScreens_60A8::
     dw $0000 ; id 11
     dw $0000 ; id 12
     dw $0000 ; id 13
-    dw ObjSelector_60C8 ; id 14
+    dw ObjSelector_Map38_14 ; id 14
     dw $0000 ; id 15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_60C8::
-    objsel_unless_flag $007b, MapObjects_60CE
+ObjSelector_Map38_14::
+    objsel_unless_flag EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING, MapObjects_Map38_14_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_60CE::
+MapObjects_Map38_14_0::
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $00, $50, $a0, $05, $02, $50, $00 ; object 0
     db $86, $01, $28, $00, $00, $50, $b0, $06, $02, $60, $00 ; object 1
@@ -3656,13 +3656,13 @@ MapObjects_60CE::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_60F0::
+MapObjectScreens_Map39::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
-    dw ObjSelector_6108 ; id 5
+    dw ObjSelector_Map39_5 ; id 5
     dw $0000 ; id 6
     dw $0000 ; id 7
     dw $0000 ; id 8
@@ -3671,23 +3671,23 @@ MapObjectScreens_60F0::
     dw $0000 ; id 11
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6108::
+ObjSelector_Map39_5::
     objsel_skip_if_clear EVENT_SCENE_CREW_FOLLOWS, $02, $00
     objsel_none
 
-ObjSelector_6110::
-    objsel_unless_flag EVENT_SCENE_CREW_FOLLOWS_07D, MapObjects_6118
-    objsel_list MapObjects_613A
+ObjSelector_Map39_5_Unlisted::
+    objsel_unless_flag EVENT_SCENE_CREW_FOLLOWS_07D, MapObjects_Map39_5_Unlisted_0
+    objsel_list MapObjects_Map39_5_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6118::
+MapObjects_Map39_5_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $00, $40, $50, $05, $03, $50, $00 ; object 0
     db $86, $01, $28, $00, $00, $60, $60, $06, $00, $60, $00 ; object 1
     db $87, $01, $29, $00, $00, $50, $20, $07, $01, $70, $00 ; object 2
 
-MapObjects_613A::
+MapObjects_Map39_5_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $00, $60, $50, $05, $01, $50, $00 ; object 0
     db $86, $01, $28, $00, $00, $50, $50, $06, $01, $60, $00 ; object 1
@@ -3695,9 +3695,9 @@ MapObjects_613A::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_615C::
+MapObjectScreens_Map3A::
     dw $0000 ; id 0
-    dw ObjSelector_616E ; id 1
+    dw ObjSelector_Map3A_1 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
@@ -3707,15 +3707,15 @@ MapObjectScreens_615C::
     dw $0000 ; id 8
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_616E::
-    objsel_unless_flag EVENT_SCENE_KAMEHA_FLEES, MapObjects_6174
+ObjSelector_Map3A_1::
+    objsel_unless_flag EVENT_SCENE_KAMEHA_FLEES, MapObjects_Map3A_1_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6174::
+MapObjects_Map3A_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $03, $00, $00, $60, $a0, $05, $02, $50, $00 ; object 0
     db $86, $01, $28, $00, $00, $60, $b0, $06, $02, $60, $00 ; object 1
@@ -3723,27 +3723,27 @@ MapObjects_6174::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6196::
-    dw ObjSelector_6198 ; id 0
+MapObjectScreens_Map3B::
+    dw ObjSelector_Map3B_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6198::
+ObjSelector_Map3B_0::
     objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_05F, $02, $00
     objsel_none
 
-ObjSelector_61A0::
-    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_07F, MapObjects_61A8
-    objsel_list MapObjects_61CA
+ObjSelector_Map3B_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_07F, MapObjects_Map3B_0_Unlisted_0
+    objsel_list MapObjects_Map3B_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_61A8::
+MapObjects_Map3B_0_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $01, $28, $00, $00, $50, $e0, $05, $00, $50, $00 ; object 0
     db $86, $01, $29, $00, $00, $50, $d0, $06, $00, $60, $00 ; object 1
     db $87, $01, $03, $00, $00, $50, $f0, $07, $00, $70, $00 ; object 2
 
-MapObjects_61CA::
+MapObjects_Map3B_0_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $45, $00, $00, $80, $40, $05, $00, $50, $00 ; object 0
     db $86, $00, $e3, $00, $00, $50, $40, $06, $00, $60, $00 ; object 1
@@ -3751,50 +3751,50 @@ MapObjects_61CA::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_61EC::
-    dw ObjSelector_61F2 ; id 0
-    dw ObjSelector_6228 ; id 1
-    dw ObjSelector_6259 ; id 2
+MapObjectScreens_Map3C::
+    dw ObjSelector_Map3C_0 ; id 0
+    dw ObjSelector_Map3C_1 ; id 1
+    dw ObjSelector_Map3C_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_61F2::
-    objsel_unless_flag $006f, MapObjects_61FA
-    objsel_list MapObjects_6211
+ObjSelector_Map3C_0::
+    objsel_unless_flag EVENT_IN_THE_PAST_MERMAIDS_ARE, MapObjects_Map3C_0_0
+    objsel_list MapObjects_Map3C_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_61FA::
+MapObjects_Map3C_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $13, $00, $00, $60, $20, $05, $00, $50, $13 ; object 0
     db $86, $01, $4e, $00, $00, $e0, $40, $06, $00, $60, $3d ; object 1
 
-MapObjects_6211::
+MapObjects_Map3C_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $13, $00, $00, $60, $20, $05, $00, $50, $13 ; object 0
     db $86, $01, $4e, $00, $00, $30, $40, $06, $01, $60, $3d ; object 1
 
-ObjSelector_6228::
-    objsel_list MapObjects_622C
+ObjSelector_Map3C_1::
+    objsel_list MapObjects_Map3C_1_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_622C::
+MapObjects_Map3C_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $09, $00, $00, $60, $60, $05, $00, $50, $0f ; object 0
     db $86, $01, $0d, $00, $00, $20, $20, $06, $00, $60, $16 ; object 1
     db $87, $01, $0c, $00, $02, $70, $50, $07, $01, $70, $11 ; object 2
     db $87, $01, $0c, $00, $00, $30, $40, $07, $01, $70, $17 ; object 3
 
-ObjSelector_6259::
-    objsel_list MapObjects_625D
+ObjSelector_Map3C_2::
+    objsel_list MapObjects_Map3C_2_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_625D::
+MapObjects_Map3C_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $13, $00, $00, $70, $20, $05, $00, $50, $15 ; object 0
     db $86, $01, $07, $00, $00, $20, $10, $06, $00, $60, $12 ; object 1
@@ -3802,63 +3802,63 @@ MapObjects_625D::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_627F::
-    dw ObjSelector_6281 ; id 0
+MapObjectScreens_Map3D::
+    dw ObjSelector_Map3D_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6281::
-    objsel_list MapObjects_6285
+ObjSelector_Map3D_0::
+    objsel_list MapObjects_Map3D_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6285::
+MapObjects_Map3D_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $0a, $00, $00, $70, $10, $05, $00, $50, $14 ; object 0
     db $86, $01, $12, $00, $00, $40, $10, $06, $00, $60, $6d ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_629C::
-    dw ObjSelector_62A0 ; id 0
+MapObjectScreens_Map40::
+    dw ObjSelector_Map40_0 ; id 0
     dw $0000 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_62A0::
-    objsel_unless_flag $007a, MapObjects_62A8
-    objsel_list MapObjects_62B4
+ObjSelector_Map40_0::
+    objsel_unless_flag EVENT_THE_PIRATES_WERE_SWALLOWED_BY, MapObjects_Map40_0_0
+    objsel_list MapObjects_Map40_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_62A8::
+MapObjects_Map40_0_0::
     db $01 ; entry 0
     db $85, $01, $58, $00, $00, $e0, $18, $05, $00, $50, $00
 
-MapObjects_62B4::
+MapObjects_Map40_0_1::
     db $01 ; entry 0
     db $85, $01, $58, $00, $00, $48, $18, $05, $00, $50, $00
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_62C0::
-    dw ObjSelector_62C4 ; id 0
-    dw ObjSelector_633D ; id 1
+MapObjectScreens_Map41::
+    dw ObjSelector_Map41_0 ; id 0
+    dw ObjSelector_Map41_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_62C4::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map41_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_6305
+    objsel_list MapObjects_Map41_0_2
 
-ObjSelector_62D4::
-    objsel_list MapObjects_62D8
+ObjSelector_Map41_0_Unlisted::
+    objsel_list MapObjects_Map41_0_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_62D8::
+MapObjects_Map41_0_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $4f, $00, $00, $40, $20, $05, $00, $50, $45 ; object 0
     db $86, $01, $2c, $00, $02, $50, $40, $06, $01, $60, $43 ; object 1
@@ -3869,7 +3869,7 @@ MapObjects_62D8::
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6305::
+MapObjects_Map41_0_2::
     db $05 ; entry 0: object count
     db $85, $01, $4f, $00, $00, $40, $20, $05, $00, $50, $45 ; object 0
     db $86, $01, $2c, $00, $00, $40, $50, $06, $02, $60, $43 ; object 1
@@ -3878,13 +3878,13 @@ MapObjects_6305::
     db $87, $01, $13, $00, $00, $50, $30, $07, $00, $70, $15 ; object 4
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_633D::
-    objsel_list MapObjects_6341
+ObjSelector_Map41_1::
+    objsel_list MapObjects_Map41_1_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6341::
+MapObjects_Map41_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $2c, $00, $00, $60, $30, $05, $01, $50, $3e ; object 0
     db $86, $01, $2c, $00, $00, $40, $70, $06, $01, $60, $3f ; object 1
@@ -3893,111 +3893,111 @@ MapObjects_6341::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_636E::
-    dw ObjSelector_6374 ; id 0
+MapObjectScreens_Map42::
+    dw ObjSelector_Map42_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
 
-ObjSelector_6374::
-    objsel_unless_flag EVENT_THE_TREASURES_ARE_OURS_NO, MapObjects_637A
+ObjSelector_Map42_0::
+    objsel_unless_flag EVENT_THE_TREASURES_ARE_OURS_NO, MapObjects_Map42_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_637A::
+MapObjects_Map42_0_0::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $80, $60, $05, $00, $50, $48
 
-MapObjectScreens_6386::
-    dw ObjSelector_638C ; id 0
+MapObjectScreens_Map43::
+    dw ObjSelector_Map43_0 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_638C::
-    objsel_unless_flag EVENT_IT_NAGS_AND_NAGS_THAT, MapObjects_6392
+ObjSelector_Map43_0::
+    objsel_unless_flag EVENT_IT_NAGS_AND_NAGS_THAT, MapObjects_Map43_0_0
     objsel_none
 
-MapObjects_6392::
+MapObjects_Map43_0_0::
     db $01 ; entry 0
     db $85, $01, $44, $00, $00, $60, $30, $05, $00, $50, $49
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_639E::
-    dw ObjSelector_63A0 ; id 0
+MapObjectScreens_Map44::
+    dw ObjSelector_Map44_0 ; id 0
 
-ObjSelector_63A0::
-    objsel_unless_flag EVENT_GIVE_ITEM_BLINK, MapObjects_63A6
+ObjSelector_Map44_0::
+    objsel_unless_flag EVENT_GIVE_ITEM_BLINK, MapObjects_Map44_0_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_63A6::
+MapObjects_Map44_0_0::
     db $01 ; entry 0
     db $85, $00, $06, $01, $00, $60, $20, $05, $00, $50, $4a
 
-MapObjectScreens_63B2::
+MapObjectScreens_Map00::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
-    dw ObjSelector_63CA ; id 4
-    dw ObjSelector_641B ; id 5
-    dw ObjSelector_647D ; id 6
-    dw ObjSelector_64AB ; id 7
-    dw ObjSelector_65AF ; id 8
-    dw ObjSelector_662F ; id 9
-    dw ObjSelector_663F ; id 10
-    dw ObjSelector_66BD ; id 11
+    dw ObjSelector_Map00_4 ; id 4
+    dw ObjSelector_Map00_5 ; id 5
+    dw ObjSelector_Map00_6 ; id 6
+    dw ObjSelector_Map00_7 ; id 7
+    dw ObjSelector_Map00_8 ; id 8
+    dw ObjSelector_Map00_9 ; id 9
+    dw ObjSelector_Map00_10 ; id 10
+    dw ObjSelector_Map00_11 ; id 11
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_63CA::
-    objsel_unless_flag EVENT_SCENE_WARUBOU_LEAVES, MapObjects_63D6
-    objsel_unless_flag $0006, MapObjects_63F8
-    objsel_list MapObjects_6404
+ObjSelector_Map00_4::
+    objsel_unless_flag EVENT_SCENE_WARUBOU_LEAVES, MapObjects_Map00_4_0
+    objsel_unless_flag EVENT_MAP_00_OBJECT_REMOVED, MapObjects_Map00_4_1
+    objsel_list MapObjects_Map00_4_2
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_63D6::
+MapObjects_Map00_4_0::
     db $03 ; entry 0: object count
     db $85, $01, $1a, $00, $00, $40, $00, $05, $00, $50, $0a ; object 0
     db $86, $01, $03, $00, $00, $40, $60, $06, $00, $60, $18 ; object 1
     db $87, $01, $02, $00, $00, $50, $60, $07, $00, $70, $17 ; object 2
 
-MapObjects_63F8::
+MapObjects_Map00_4_1::
     db $01 ; entry 0
     db $85, $01, $1a, $00, $00, $40, $00, $05, $00, $50, $0a
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6404::
+MapObjects_Map00_4_2::
     db $02 ; entry 0: object count
     db $85, $01, $1a, $00, $00, $20, $10, $05, $00, $50, $0a ; object 0
     db $86, $01, $10, $00, $00, $40, $e0, $06, $00, $60, $00 ; object 1
 
-ObjSelector_641B::
+ObjSelector_Map00_5::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
-    objsel_list MapObjects_645B
+    objsel_list MapObjects_Map00_5_1
 
-ObjSelector_6425::
-    objsel_unless_flag EVENT_REWARD_ITEM_OR_KEY, MapObjects_642D
-    objsel_list MapObjects_6444
+ObjSelector_Map00_5_Unlisted::
+    objsel_unless_flag EVENT_REWARD_ITEM_OR_KEY, MapObjects_Map00_5_Unlisted_0
+    objsel_list MapObjects_Map00_5_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_642D::
+MapObjects_Map00_5_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $04, $00, $00, $60, $30, $05, $01, $50, $07 ; object 0
     db $86, $00, $5a, $00, $00, $60, $e0, $06, $00, $60, $4b ; object 1
 
-MapObjects_6444::
+MapObjects_Map00_5_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $04, $00, $00, $60, $30, $05, $01, $50, $07 ; object 0
     db $86, $00, $5a, $00, $00, $60, $20, $06, $00, $60, $4b ; object 1
@@ -4006,25 +4006,25 @@ MapObjects_6444::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_645B::
+MapObjects_Map00_5_1::
     db $03 ; entry 0: object count
     db $85, $01, $04, $00, $00, $50, $30, $05, $01, $50, $07 ; object 0
     db $86, $00, $5a, $00, $00, $60, $20, $06, $00, $60, $4b ; object 1
     db $87, $00, $01, $01, $00, $30, $60, $07, $00, $70, $7c ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_647D::
+ObjSelector_Map00_6::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
-    objsel_list MapObjects_649F
+    objsel_list MapObjects_Map00_6_1
 
-ObjSelector_6487::
+ObjSelector_Map00_6_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_VAULT_SETTLED, $04, $00
-    objsel_unless_flag EVENT_SCENE_LONG_FACES, MapObjects_6493
+    objsel_unless_flag EVENT_SCENE_LONG_FACES_002, MapObjects_Map00_6_Unlisted_1
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6493::
+MapObjects_Map00_6_Unlisted_1::
     db $01 ; entry 0
     db $85, $00, $0a, $00, $00, $80, $40, $05, $00, $50, $08
 
@@ -4032,49 +4032,49 @@ MapObjects_6493::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_649F::
+MapObjects_Map00_6_1::
     db $01 ; entry 0
     db $85, $00, $f0, $00, $00, $80, $30, $05, $00, $50, $98
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_64AB::
-    objsel_skip_if_clear $0025, $08, $00
-    objsel_unless_flag $0000, MapObjects_655F
-    objsel_list MapObjects_653D
+ObjSelector_Map00_7::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $08, $00
+    objsel_unless_flag EVENT_NEVER_SET, MapObjects_Map00_7_1
+    objsel_list MapObjects_Map00_7_2
 
-ObjSelector_64B9::
-    objsel_skip_if_set $0020, $12, $00
-    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $08, $00
-    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_64ED
-    objsel_list MapObjects_6504
+ObjSelector_Map00_7_Unlisted::
+    objsel_skip_if_set EVENT_COBI_HERO_WHILE_YOURE, $12, $00
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES_002, $08, $00
+    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_Map00_7_Unlisted_2
+    objsel_list MapObjects_Map00_7_Unlisted_3
 
-ObjSelector_64CD::
-    objsel_list MapObjects_651B
+ObjSelector_Map00_7_Unlisted_2::
+    objsel_list MapObjects_Map00_7_Unlisted_2_0
 
-ObjSelector_64D1::
+ObjSelector_Map00_7_Unlisted_3::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $0e, $00
-    objsel_skip_if_set $0181, $08, $00
-    objsel_unless_flag $0000, MapObjects_6598
-    objsel_list MapObjects_6581
+    objsel_skip_if_set EVENT_OH_YOU_BOUGHT_THE_LOVE, $08, $00
+    objsel_unless_flag EVENT_NEVER_SET, MapObjects_Map00_7_Unlisted_3_2
+    objsel_list MapObjects_Map00_7_Unlisted_3_3
 
-ObjSelector_64E5::
-    objsel_unless_flag $0000, MapObjects_655F
-    objsel_list MapObjects_653D
+ObjSelector_Map00_7_Unlisted_4::
+    objsel_unless_flag EVENT_NEVER_SET, MapObjects_Map00_7_1
+    objsel_list MapObjects_Map00_7_2
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_64ED::
+MapObjects_Map00_7_Unlisted_2::
     db $02 ; entry 0: object count
     db $85, $01, $04, $00, $00, $40, $00, $05, $00, $50, $07 ; object 0
     db $86, $00, $0a, $00, $00, $50, $00, $06, $00, $60, $08 ; object 1
 
-MapObjects_6504::
+MapObjects_Map00_7_Unlisted_3::
     db $02 ; entry 0: object count
     db $85, $01, $04, $00, $00, $30, $20, $05, $00, $50, $07 ; object 0
     db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1a ; object 1
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_651B::
+MapObjects_Map00_7_Unlisted_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $04, $00, $00, $30, $20, $05, $00, $50, $07 ; object 0
     db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1a ; object 1
@@ -4084,13 +4084,13 @@ MapObjects_651B::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_653D::
+MapObjects_Map00_7_2::
     db $03 ; entry 0: object count
     db $85, $01, $00, $00, $00, $60, $30, $05, $00, $50, $1b ; object 0
     db $86, $00, $01, $00, $02, $50, $50, $06, $01, $60, $1a ; object 1
     db $84, $00, $24, $00, $00, $70, $60, $04, $03, $40, $b2 ; object 2
 
-MapObjects_655F::
+MapObjects_Map00_7_1::
     db $03 ; entry 0: object count
     db $85, $01, $01, $00, $00, $60, $30, $05, $00, $50, $1c ; object 0
     db $86, $00, $01, $00, $02, $50, $50, $06, $03, $60, $1a ; object 1
@@ -4098,44 +4098,44 @@ MapObjects_655F::
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6581::
+MapObjects_Map00_7_Unlisted_3_3::
     db $02 ; entry 0: object count
     db $85, $01, $00, $00, $00, $60, $30, $05, $00, $50, $1b ; object 0
     db $86, $00, $24, $00, $00, $70, $60, $06, $03, $60, $b2 ; object 1
 
-MapObjects_6598::
+MapObjects_Map00_7_Unlisted_3_2::
     db $02 ; entry 0: object count
     db $85, $01, $01, $00, $00, $60, $30, $05, $00, $50, $1c ; object 0
     db $86, $00, $24, $00, $00, $70, $60, $06, $03, $60, $b2 ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_65AF::
+ObjSelector_Map00_8::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
-    objsel_list MapObjects_660D
+    objsel_list MapObjects_Map00_8_1
 
-ObjSelector_65B9::
+ObjSelector_Map00_8_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
-    objsel_list MapObjects_65F6
+    objsel_list MapObjects_Map00_8_Unlisted_1
 
-ObjSelector_65C3::
+ObjSelector_Map00_8_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
-    objsel_list MapObjects_65DF
+    objsel_list MapObjects_Map00_8_Unlisted_2_1
 
-ObjSelector_65CD::
-    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_65D3
+ObjSelector_Map00_8_Unlisted_3::
+    objsel_unless_flag EVENT_SCENE_VAULT_SETTLED, MapObjects_Map00_8_Unlisted_3_0
     objsel_none
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_65D3::
+MapObjects_Map00_8_Unlisted_3_0::
     db $01 ; entry 0
     db $85, $00, $01, $00, $02, $20, $50, $05, $01, $50, $1a
 
-MapObjects_65DF::
+MapObjects_Map00_8_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $30, $20, $05, $00, $50, $b3 ; object 0
     db $86, $01, $04, $00, $00, $20, $30, $06, $01, $60, $07 ; object 1
 
-MapObjects_65F6::
+MapObjects_Map00_8_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $30, $20, $05, $00, $50, $b3 ; object 0
     db $86, $00, $d8, $00, $00, $50, $10, $06, $00, $60, $4a ; object 1
@@ -4144,51 +4144,51 @@ MapObjects_65F6::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_660D::
+MapObjects_Map00_8_1::
     db $03 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $30, $20, $05, $00, $50, $b3 ; object 0
     db $86, $00, $d8, $00, $00, $50, $10, $06, $00, $60, $4a ; object 1
     db $87, $00, $2a, $00, $00, $40, $60, $07, $00, $70, $7b ; object 2
 
-ObjSelector_662F::
-    objsel_list MapObjects_6633
+ObjSelector_Map00_9::
+    objsel_list MapObjects_Map00_9_0
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6633::
+MapObjects_Map00_9_0::
     db $01 ; entry 0
     db $86, $00, $91, $00, $00, $30, $30, $06, $01, $60, $04
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_663F::
+ObjSelector_Map00_10::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
-    objsel_list MapObjects_669B
+    objsel_list MapObjects_Map00_10_1
 
-ObjSelector_6649::
+ObjSelector_Map00_10_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
-    objsel_list MapObjects_6684
+    objsel_list MapObjects_Map00_10_Unlisted_1
 
-ObjSelector_6653::
-    objsel_skip_if_clear $0020, $04, $00
-    objsel_list MapObjects_666D
+ObjSelector_Map00_10_Unlisted_2::
+    objsel_skip_if_clear EVENT_COBI_HERO_WHILE_YOURE, $04, $00
+    objsel_list MapObjects_Map00_10_Unlisted_2_1
 
-ObjSelector_665D::
-    objsel_list MapObjects_6661
+ObjSelector_Map00_10_Unlisted_3::
+    objsel_list MapObjects_Map00_10_Unlisted_3_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6661::
+MapObjects_Map00_10_Unlisted_3_0::
     db $01 ; entry 0
     db $85, $00, $b9, $00, $02, $40, $20, $05, $01, $50, $09
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_666D::
+MapObjects_Map00_10_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $00, $b9, $00, $02, $40, $20, $05, $01, $50, $09 ; object 0
     db $86, $01, $04, $00, $00, $50, $40, $06, $03, $60, $07 ; object 1
 
-MapObjects_6684::
+MapObjects_Map00_10_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $00, $b9, $00, $02, $40, $20, $05, $01, $50, $09 ; object 0
     db $86, $00, $f6, $00, $00, $60, $40, $06, $00, $60, $b4 ; object 1
@@ -4197,36 +4197,36 @@ MapObjects_6684::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_669B::
+MapObjects_Map00_10_1::
     db $03 ; entry 0: object count
     db $85, $00, $b9, $00, $02, $40, $20, $05, $01, $50, $09 ; object 0
     db $86, $00, $f6, $00, $00, $60, $40, $06, $00, $60, $b4 ; object 1
     db $87, $00, $b1, $00, $00, $70, $30, $07, $00, $70, $d4 ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_66BD::
+ObjSelector_Map00_11::
     objsel_skip_if_clear EVENT_SCENE_SHIELD2_023, $04, $00
-    objsel_list MapObjects_6700
+    objsel_list MapObjects_Map00_11_1
 
-ObjSelector_66C7::
+ObjSelector_Map00_11_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
-    objsel_list MapObjects_66E9
+    objsel_list MapObjects_Map00_11_Unlisted_1
 
-ObjSelector_66D1::
+ObjSelector_Map00_11_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
-    objsel_list MapObjects_66DD
+    objsel_list MapObjects_Map00_11_Unlisted_2_1
 
-ObjSelector_66DB::
+ObjSelector_Map00_11_Unlisted_3::
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_66DD::
+MapObjects_Map00_11_Unlisted_2_1::
     db $01 ; entry 0
     db $85, $00, $3d, $00, $00, $40, $10, $05, $01, $50, $7d
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_66E9::
+MapObjects_Map00_11_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $00, $3d, $00, $00, $40, $10, $05, $01, $50, $7d ; object 0
     db $86, $00, $2e, $00, $00, $20, $30, $06, $00, $60, $7e ; object 1
@@ -4235,7 +4235,7 @@ MapObjects_66E9::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6700::
+MapObjects_Map00_11_1::
     db $03 ; entry 0: object count
     db $85, $00, $3d, $00, $00, $40, $10, $05, $01, $50, $7d ; object 0
     db $86, $00, $2e, $00, $00, $20, $30, $06, $00, $60, $7e ; object 1
@@ -4243,104 +4243,104 @@ MapObjects_6700::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6722::
-    dw ObjSelector_673A ; id 0
-    dw ObjSelector_674A ; id 1
+MapObjectScreens_Map01::
+    dw ObjSelector_Map01_0 ; id 0
+    dw ObjSelector_Map01_1 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
-    dw ObjSelector_675A ; id 4
-    dw ObjSelector_676A ; id 5
-    dw ObjSelector_679D ; id 6
-    dw ObjSelector_67BA ; id 7
-    dw ObjSelector_67D2 ; id 8
-    dw ObjSelector_6822 ; id 9
-    dw ObjSelector_6867 ; id 10
-    dw ObjSelector_6908 ; id 11
+    dw ObjSelector_Map01_4 ; id 4
+    dw ObjSelector_Map01_5 ; id 5
+    dw ObjSelector_Map01_6 ; id 6
+    dw ObjSelector_Map01_7 ; id 7
+    dw ObjSelector_Map01_8 ; id 8
+    dw ObjSelector_Map01_9 ; id 9
+    dw ObjSelector_Map01_10 ; id 10
+    dw ObjSelector_Map01_11 ; id 11
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_673A::
-    objsel_list MapObjects_673E
+ObjSelector_Map01_0::
+    objsel_list MapObjects_Map01_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_673E::
+MapObjects_Map01_0_0::
     db $01 ; entry 0
     db $85, $01, $11, $00, $00, $20, $60, $05, $01, $50, $80
 
-ObjSelector_674A::
-    objsel_list MapObjects_674E
+ObjSelector_Map01_1::
+    objsel_list MapObjects_Map01_1_0
 
-MapObjects_674E::
+MapObjects_Map01_1_0::
     db $01 ; entry 0
     db $85, $01, $1a, $00, $00, $80, $40, $05, $01, $50, $da
 
-ObjSelector_675A::
-    objsel_list MapObjects_675E
+ObjSelector_Map01_4::
+    objsel_list MapObjects_Map01_4_0
 
-MapObjects_675E::
+MapObjects_Map01_4_0::
     db $01 ; entry 0
     db $85, $01, $19, $00, $00, $20, $60, $05, $01, $50, $22
 
-ObjSelector_676A::
+ObjSelector_Map01_5::
     objsel_skip_if_clear EVENT_WHAT, $02, $00
     objsel_none
 
-ObjSelector_6772::
-    objsel_unless_flag $0107, MapObjects_677A
-    objsel_list MapObjects_6791
+ObjSelector_Map01_5_Unlisted::
+    objsel_unless_flag EVENT_TAKE_THIS_SLIDE_AS_A, MapObjects_Map01_5_Unlisted_0
+    objsel_list MapObjects_Map01_5_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_677A::
+MapObjects_Map01_5_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $50, $20, $05, $00, $50, $20 ; object 0
     db $86, $01, $18, $00, $00, $70, $70, $06, $03, $60, $21 ; object 1
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6791::
+MapObjects_Map01_5_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $50, $20, $05, $00, $50, $20
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_679D::
-    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_67A3
+ObjSelector_Map01_6::
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_Map01_6_0
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_67A3::
+MapObjects_Map01_6_0::
     db $02 ; entry 0: object count
     db $85, $01, $15, $00, $00, $50, $60, $05, $02, $50, $b7 ; object 0
     db $86, $01, $12, $00, $00, $50, $70, $06, $02, $60, $b8 ; object 1
 
-ObjSelector_67BA::
-    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $02, $00
+ObjSelector_Map01_7::
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES_002, $02, $00
     objsel_none
 
-ObjSelector_67C2::
-    objsel_list MapObjects_67C6
+ObjSelector_Map01_7_Unlisted::
+    objsel_list MapObjects_Map01_7_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_67C6::
+MapObjects_Map01_7_Unlisted_0::
     db $01 ; entry 0
     db $85, $01, $1a, $00, $00, $40, $60, $05, $00, $50, $ea
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_67D2::
-    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_67DE
-    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_67F5
-    objsel_list MapObjects_67DE
+ObjSelector_Map01_8::
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_Map01_8_0
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_Map01_8_1
+    objsel_list MapObjects_Map01_8_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_67DE::
+MapObjects_Map01_8_0::
     db $02 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $60, $70, $05, $03, $50, $12 ; object 0
     db $86, $01, $10, $00, $00, $20, $50, $06, $00, $60, $0b ; object 1
@@ -4348,32 +4348,32 @@ MapObjects_67DE::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_67F5::
+MapObjects_Map01_8_1::
     db $04 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $60, $70, $05, $03, $50, $12 ; object 0
     db $86, $01, $10, $00, $00, $20, $50, $06, $00, $60, $0b ; object 1
     db $87, $01, $03, $00, $00, $30, $80, $07, $02, $70, $18 ; object 2
     db $84, $01, $02, $00, $00, $40, $80, $04, $02, $40, $17 ; object 3
 
-ObjSelector_6822::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_685B
+ObjSelector_Map01_9::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map01_9_1
 
-ObjSelector_682C::
+ObjSelector_Map01_9_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_6834::
-    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6844
-    objsel_skip_if_set $0107, $02, $00
+ObjSelector_Map01_9_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_Map01_9_Unlisted_2_0
+    objsel_skip_if_set EVENT_TAKE_THIS_SLIDE_AS_A, $02, $00
     objsel_none
 
-ObjSelector_6840::
-    objsel_list MapObjects_685B
+ObjSelector_Map01_9_Unlisted_3::
+    objsel_list MapObjects_Map01_9_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6844::
+MapObjects_Map01_9_Unlisted_2_0::
     db $02 ; entry 0: object count
     db $85, $01, $1d, $00, $00, $20, $40, $05, $00, $50, $15 ; object 0
     db $86, $01, $10, $00, $00, $50, $40, $06, $00, $60, $20 ; object 1
@@ -4382,23 +4382,23 @@ MapObjects_6844::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_685B::
+MapObjects_Map01_9_1::
     db $01 ; entry 0
     db $85, $01, $18, $00, $00, $70, $60, $05, $00, $50, $21
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6867::
-    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_687F
-    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_6896
-    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_687F
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_68C3
-    objsel_unless_flag $0025, MapObjects_68E5
-    objsel_list MapObjects_68F1
+ObjSelector_Map01_10::
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY, MapObjects_Map01_10_0
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_Map01_10_1
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_Map01_10_0
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map01_10_3
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY_025, MapObjects_Map01_10_4
+    objsel_list MapObjects_Map01_10_5
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_687F::
+MapObjects_Map01_10_0::
     db $02 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $50, $00, $05, $00, $50, $0c ; object 0
     db $86, $01, $1d, $00, $00, $50, $60, $06, $00, $60, $16 ; object 1
@@ -4406,7 +4406,7 @@ MapObjects_687F::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6896::
+MapObjects_Map01_10_1::
     db $04 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $50, $00, $05, $00, $50, $0c ; object 0
     db $86, $01, $03, $00, $00, $30, $60, $06, $03, $60, $18 ; object 1
@@ -4417,7 +4417,7 @@ MapObjects_6896::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_68C3::
+MapObjects_Map01_10_3::
     db $03 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $40, $30, $05, $00, $50, $0c ; object 0
     db $86, $01, $08, $00, $02, $e0, $e0, $06, $01, $60, $b9 ; object 1
@@ -4426,34 +4426,34 @@ MapObjects_68C3::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_68E5::
+MapObjects_Map01_10_4::
     db $01 ; entry 0
     db $85, $01, $1c, $00, $00, $50, $60, $05, $00, $50, $0c
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_68F1::
+MapObjects_Map01_10_5::
     db $02 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $40, $30, $05, $00, $50, $0c ; object 0
     db $86, $01, $08, $00, $02, $30, $40, $06, $01, $60, $b9 ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6908::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_692E
+ObjSelector_Map01_11::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map01_11_1
 
-ObjSelector_6912::
+ObjSelector_Map01_11_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $02, $00
     objsel_none
 
-ObjSelector_691A::
-    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6922
-    objsel_list MapObjects_692E
+ObjSelector_Map01_11_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_Map01_11_Unlisted_2_0
+    objsel_list MapObjects_Map01_11_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6922::
+MapObjects_Map01_11_Unlisted_2_0::
     db $01 ; entry 0
     db $85, $01, $1b, $00, $02, $40, $40, $05, $01, $50, $14
 
@@ -4461,52 +4461,52 @@ MapObjects_6922::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_692E::
+MapObjects_Map01_11_1::
     db $02 ; entry 0: object count
     db $85, $01, $1a, $00, $00, $30, $60, $05, $00, $50, $1e ; object 0
     db $86, $01, $10, $00, $00, $20, $40, $06, $01, $60, $eb ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6945::
-    dw ObjSelector_694B ; id 0
-    dw ObjSelector_6A33 ; id 1
-    dw ObjSelector_6A74 ; id 2
+MapObjectScreens_Map02::
+    dw ObjSelector_Map02_0 ; id 0
+    dw ObjSelector_Map02_1 ; id 1
+    dw ObjSelector_Map02_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_694B::
+ObjSelector_Map02_0::
     objsel_skip_if_clear EVENT_REWARD_ITEM_OR_KEY_2, $08, $00
-    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_69D9
-    objsel_list MapObjects_6A06
+    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_Map02_0_1
+    objsel_list MapObjects_Map02_0_2
 
-ObjSelector_6959::
+ObjSelector_Map02_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
-    objsel_list MapObjects_69AC
+    objsel_list MapObjects_Map02_0_Unlisted_1
 
-ObjSelector_6963::
+ObjSelector_Map02_0_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_021, $04, $00
-    objsel_list MapObjects_6995
+    objsel_list MapObjects_Map02_0_Unlisted_2_1
 
-ObjSelector_696D::
-    objsel_unless_flag EVENT_THAT_WEIRD_APE_THING_IS, MapObjects_6973
+ObjSelector_Map02_0_Unlisted_3::
+    objsel_unless_flag EVENT_HERO_RECEIVED_THE_GREAT_LOG, MapObjects_Map02_0_Unlisted_3_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6973::
+MapObjects_Map02_0_Unlisted_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10 ; object 0
     db $86, $01, $03, $00, $00, $e0, $40, $06, $01, $60, $00 ; object 1
     db $87, $01, $02, $00, $00, $e0, $10, $07, $00, $70, $00 ; object 2
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6995::
+MapObjects_Map02_0_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $1d, $00, $00, $40, $30, $05, $00, $50, $15 ; object 0
     db $86, $01, $1d, $00, $00, $40, $40, $06, $02, $60, $16 ; object 1
 
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_69AC::
+MapObjects_Map02_0_Unlisted_1::
     db $04 ; entry 0: object count
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10 ; object 0
     db $85, $01, $15, $00, $00, $20, $40, $05, $03, $50, $7f ; object 1
@@ -4517,14 +4517,14 @@ MapObjects_69AC::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_69D9::
+MapObjects_Map02_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10 ; object 0
     db $85, $01, $15, $00, $00, $20, $50, $05, $03, $50, $7f ; object 1
     db $86, $01, $57, $00, $00, $80, $60, $06, $02, $60, $00 ; object 2
     db $87, $00, $b9, $00, $02, $40, $40, $07, $01, $70, $cd ; object 3
 
-MapObjects_6A06::
+MapObjects_Map02_0_2::
     db $04 ; entry 0: object count
     db $85, $01, $15, $00, $00, $60, $50, $05, $02, $50, $10 ; object 0
     db $85, $01, $15, $00, $00, $10, $40, $05, $01, $50, $7f ; object 1
@@ -4532,14 +4532,14 @@ MapObjects_6A06::
     db $87, $00, $b9, $00, $00, $20, $50, $07, $01, $70, $cd ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6A33::
-    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6A3B
-    objsel_list MapObjects_6A52
+ObjSelector_Map02_1::
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_Map02_1_0
+    objsel_list MapObjects_Map02_1_1
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6A3B::
+MapObjects_Map02_1_0::
     db $02 ; entry 0: object count
     db $85, $01, $15, $00, $00, $40, $10, $05, $00, $50, $11 ; object 0
     db $86, $01, $1c, $00, $00, $10, $50, $06, $00, $60, $aa ; object 1
@@ -4547,35 +4547,35 @@ MapObjects_6A3B::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6A52::
+MapObjects_Map02_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $15, $00, $00, $40, $10, $05, $00, $50, $11 ; object 0
     db $86, $01, $1d, $00, $02, $50, $30, $06, $03, $60, $0f ; object 1
     db $87, $01, $1c, $00, $00, $10, $50, $07, $00, $70, $aa ; object 2
 
-ObjSelector_6A74::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_6AC2
+ObjSelector_Map02_2::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map02_2_1
 
-ObjSelector_6A7E::
+ObjSelector_Map02_2_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
-    objsel_list MapObjects_6AE4
+    objsel_list MapObjects_Map02_2_Unlisted_1
 
-ObjSelector_6A88::
-    objsel_unless_flag $0005, MapObjects_6A94
-    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_6AB6
-    objsel_list MapObjects_6AC2
+ObjSelector_Map02_2_Unlisted_2::
+    objsel_unless_flag EVENT_OH_ITS_ALL_SPINNING_AROUND, MapObjects_Map02_2_Unlisted_2_0
+    objsel_unless_flag EVENT_SCENE_MERMAID_KINGDOM_022, MapObjects_Map02_2_Unlisted_2_1
+    objsel_list MapObjects_Map02_2_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6A94::
+MapObjects_Map02_2_Unlisted_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $1d, $00, $00, $40, $40, $05, $02, $50, $0e ; object 0
     db $86, $01, $02, $00, $00, $50, $30, $06, $01, $60, $00 ; object 1
     db $87, $01, $03, $00, $00, $40, $30, $07, $01, $70, $00 ; object 2
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6AB6::
+MapObjects_Map02_2_Unlisted_2_1::
     db $01 ; entry 0
     db $85, $01, $1d, $00, $00, $40, $40, $05, $00, $50, $0e
 
@@ -4583,7 +4583,7 @@ MapObjects_6AB6::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6AC2::
+MapObjects_Map02_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $1d, $00, $00, $40, $40, $05, $00, $50, $0e ; object 0
     db $86, $01, $1d, $00, $00, $20, $50, $06, $00, $60, $15 ; object 1
@@ -4591,72 +4591,72 @@ MapObjects_6AC2::
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6AE4::
+MapObjects_Map02_2_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $1d, $00, $00, $40, $30, $05, $00, $50, $15 ; object 0
     db $86, $01, $1d, $00, $00, $40, $40, $06, $02, $60, $16 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6AFB::
-    dw ObjSelector_6B01 ; id 0
-    dw ObjSelector_6B27 ; id 1
-    dw ObjSelector_6B42 ; id 2
+MapObjectScreens_Map04::
+    dw ObjSelector_Map04_0 ; id 0
+    dw ObjSelector_Map04_1 ; id 1
+    dw ObjSelector_Map04_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6B01::
-    objsel_list MapObjects_6B05
+ObjSelector_Map04_0::
+    objsel_list MapObjects_Map04_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6B05::
+MapObjects_Map04_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $16, $00, $00, $40, $10, $05, $01, $50, $64 ; object 0
     db $86, $01, $11, $00, $00, $50, $20, $06, $02, $60, $c3 ; object 1
     db $87, $01, $10, $00, $00, $60, $10, $07, $03, $70, $c4 ; object 2
 
-ObjSelector_6B27::
-    objsel_list MapObjects_6B2B
+ObjSelector_Map04_1::
+    objsel_list MapObjects_Map04_1_0
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6B2B::
+MapObjects_Map04_1_0::
     db $02 ; entry 0: object count
     db $85, $01, $17, $00, $00, $40, $10, $05, $00, $50, $00 ; object 0
     db $86, $01, $17, $00, $00, $50, $10, $06, $00, $60, $00 ; object 1
 
-ObjSelector_6B42::
-    objsel_skip_if_clear $0025, $0c, $00
-    objsel_unless_flag $00cb, MapObjects_6BCC
-    objsel_unless_flag $00cc, MapObjects_6BEE
-    objsel_list MapObjects_6C10
+ObjSelector_Map04_2::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $0c, $00
+    objsel_unless_flag EVENT_MAP_04_OBJECT_REMOVED, MapObjects_Map04_2_1
+    objsel_unless_flag EVENT_MAP_04_OBJECT_REMOVED_0CC, MapObjects_Map04_2_2
+    objsel_list MapObjects_Map04_2_3
 
-ObjSelector_6B54::
+ObjSelector_Map04_2_Unlisted::
     objsel_skip_if_set EVENT_SCENE_MERMAID_KINGDOM_022, $04, $00
-    objsel_list MapObjects_6B66
+    objsel_list MapObjects_Map04_2_Unlisted_1
 
-ObjSelector_6B5E::
-    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_6B88
-    objsel_list MapObjects_6BAA
+ObjSelector_Map04_2_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_SHIELD2_023, MapObjects_Map04_2_Unlisted_2_0
+    objsel_list MapObjects_Map04_2_Unlisted_2_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6B66::
+MapObjects_Map04_2_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $11, $00, $00, $50, $20, $05, $00, $50, $66 ; object 0
     db $86, $00, $fa, $00, $00, $60, $40, $06, $00, $60, $67 ; object 1
     db $87, $00, $f8, $00, $00, $60, $50, $07, $02, $70, $68 ; object 2
 
-MapObjects_6B88::
+MapObjects_Map04_2_Unlisted_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $22, $00, $00, $50, $20, $05, $00, $50, $8e ; object 0
     db $86, $00, $58, $00, $00, $60, $40, $06, $00, $60, $67 ; object 1
     db $87, $00, $e5, $00, $00, $60, $50, $07, $02, $70, $68 ; object 2
 
-MapObjects_6BAA::
+MapObjects_Map04_2_Unlisted_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $28, $00, $00, $50, $20, $05, $00, $50, $9c ; object 0
     db $86, $00, $06, $01, $00, $60, $40, $06, $00, $60, $67 ; object 1
@@ -4666,19 +4666,19 @@ MapObjects_6BAA::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6BCC::
+MapObjects_Map04_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $2e, $00, $00, $50, $20, $05, $00, $50, $f1 ; object 0
     db $86, $00, $7b, $00, $00, $60, $40, $06, $00, $60, $67 ; object 1
     db $87, $00, $2e, $01, $00, $60, $50, $07, $02, $70, $68 ; object 2
 
-MapObjects_6BEE::
+MapObjects_Map04_2_2::
     db $03 ; entry 0: object count
     db $85, $01, $14, $00, $00, $50, $20, $05, $00, $50, $f1 ; object 0
     db $86, $00, $32, $01, $00, $60, $40, $06, $00, $60, $36 ; object 1
     db $87, $00, $31, $01, $00, $60, $50, $07, $02, $70, $37 ; object 2
 
-MapObjects_6C10::
+MapObjects_Map04_2_3::
     db $03 ; entry 0: object count
     db $85, $01, $5f, $00, $00, $50, $20, $05, $00, $50, $f2 ; object 0
     db $86, $00, $a5, $00, $00, $60, $40, $06, $00, $60, $28 ; object 1
@@ -4686,71 +4686,71 @@ MapObjects_6C10::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6C32::
+MapObjectScreens_Map05::
     dw $0000 ; id 0
-    dw ObjSelector_6C38 ; id 1
+    dw ObjSelector_Map05_1 ; id 1
     dw $0000 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6C38::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_6D0B
+ObjSelector_Map05_1::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map05_1_1
 
-ObjSelector_6C42::
-    objsel_skip_if_clear $019f, $04, $00
-    objsel_list MapObjects_6C8C
+ObjSelector_Map05_1_Unlisted::
+    objsel_skip_if_clear EVENT_STAFF_ROLL_PARTY_SAVED, $04, $00
+    objsel_list MapObjects_Map05_1_Unlisted_1
 
-ObjSelector_6C4C::
+ObjSelector_Map05_1_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_6CE8
+    objsel_list MapObjects_Map05_1_Unlisted_2_1
 
-ObjSelector_6C56::
+ObjSelector_Map05_1_Unlisted_3::
     objsel_skip_if_clear EVENT_SCENE_THREE_ITEMS, $04, $00
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C3, MapObjects_6CD1
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS_0C3, MapObjects_Map05_1_Unlisted_3_1
     objsel_skip_if_clear EVENT_SCENE_WARUBOU_FOOD2_00C, $0e, $00
-    objsel_skip_if_clear $0018, $04, $00
-    objsel_unless_flag $0019, MapObjects_6CFF
-    objsel_list MapObjects_6CC5
+    objsel_skip_if_clear EVENT_WARUBOU_OBJECTS_GATE, $04, $00
+    objsel_unless_flag EVENT_SCRIPT_COMMAND20_TURNED, MapObjects_Map05_1_Unlisted_3_4
+    objsel_list MapObjects_Map05_1_Unlisted_3_5
 
-ObjSelector_6C74::
-    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_6C80
-    objsel_unless_flag EVENT_SCENE_WARUBOU_FOOD2, MapObjects_6C8C
-    objsel_list MapObjects_6CAE
+ObjSelector_Map05_1_Unlisted_4::
+    objsel_unless_flag EVENT_SCENE_WARUBOU_SMELLS, MapObjects_Map05_1_Unlisted_4_0
+    objsel_unless_flag EVENT_SCENE_WARUBOU_FOOD2, MapObjects_Map05_1_Unlisted_1
+    objsel_list MapObjects_Map05_1_Unlisted_4_2
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6C80::
+MapObjects_Map05_1_Unlisted_4_0::
     db $01 ; entry 0
     db $85, $01, $4a, $00, $00, $40, $30, $05, $00, $50, $a9
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6C8C::
+MapObjects_Map05_1_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $4a, $00, $00, $40, $30, $05, $00, $50, $a9 ; object 0
     db $86, $01, $02, $00, $00, $78, $30, $06, $03, $60, $19 ; object 1
     db $87, $01, $03, $00, $00, $58, $30, $07, $01, $70, $00 ; object 2
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6CAE::
+MapObjects_Map05_1_Unlisted_4_2::
     db $02 ; entry 0: object count
     db $85, $01, $02, $00, $00, $80, $30, $05, $00, $50, $19 ; object 0
     db $86, $01, $03, $00, $00, $40, $40, $06, $02, $60, $00 ; object 1
 
-MapObjects_6CC5::
+MapObjects_Map05_1_Unlisted_3_5::
     db $01 ; entry 0
     db $85, $01, $49, $00, $00, $40, $30, $05, $00, $50, $19
 
-MapObjects_6CD1::
+MapObjects_Map05_1_Unlisted_3_1::
     db $02 ; entry 0: object count
     db $85, $01, $49, $00, $00, $40, $30, $05, $01, $50, $19 ; object 0
     db $86, $01, $03, $00, $00, $50, $40, $06, $03, $60, $00 ; object 1
 
-MapObjects_6CE8::
+MapObjects_Map05_1_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $49, $00, $00, $40, $30, $05, $00, $50, $19 ; object 0
     db $86, $01, $4a, $00, $00, $40, $e0, $06, $00, $60, $00 ; object 1
 
-MapObjects_6CFF::
+MapObjects_Map05_1_Unlisted_3_4::
     db $01 ; entry 0
     db $85, $01, $49, $00, $00, $e0, $30, $05, $00, $50, $19
 
@@ -4758,7 +4758,7 @@ MapObjects_6CFF::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6D0B::
+MapObjects_Map05_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $4a, $00, $00, $e0, $e0, $05, $00, $50, $a9 ; object 0
     db $86, $01, $02, $00, $00, $50, $20, $06, $00, $60, $19 ; object 1
@@ -4766,86 +4766,86 @@ MapObjects_6D0B::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6D2D::
-    dw ObjSelector_6D2F ; id 0
+MapObjectScreens_Map06::
+    dw ObjSelector_Map06_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6D2F::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_6D61
+ObjSelector_Map06_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map06_0_1
 
-ObjSelector_6D39::
-    objsel_skip_if_set EVENT_SCENE_LONG_FACES, $08, $00
-    objsel_unless_flag $0017, MapObjects_6D61
-    objsel_list MapObjects_6D9B
+ObjSelector_Map06_0_Unlisted::
+    objsel_skip_if_set EVENT_SCENE_LONG_FACES_002, $08, $00
+    objsel_unless_flag EVENT_HERO_RECEIVED_THE_GREAT_LOG_017, MapObjects_Map06_0_1
+    objsel_list MapObjects_Map06_0_Unlisted_2
 
-ObjSelector_6D47::
-    objsel_skip_if_clear $0020, $0c, $00
-    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_6D61
-    objsel_unless_flag $0181, MapObjects_6DA7
-    objsel_list MapObjects_6D61
+ObjSelector_Map06_0_Unlisted_2::
+    objsel_skip_if_clear EVENT_COBI_HERO_WHILE_YOURE, $0c, $00
+    objsel_unless_flag EVENT_SCENE_RIVAL_DEFEATED_021, MapObjects_Map06_0_1
+    objsel_unless_flag EVENT_OH_YOU_BOUGHT_THE_LOVE, MapObjects_Map06_0_Unlisted_2_2
+    objsel_list MapObjects_Map06_0_1
 
-ObjSelector_6D59::
-    objsel_unless_flag $0001, MapObjects_6D6D
-    objsel_list MapObjects_6D84
+ObjSelector_Map06_0_Unlisted_3::
+    objsel_unless_flag EVENT_IN_THE_MIDDLE_OF_THE, MapObjects_Map06_0_Unlisted_3_0
+    objsel_list MapObjects_Map06_0_Unlisted_3_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6D61::
+MapObjects_Map06_0_1::
     db $01 ; entry 0
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6D6D::
+MapObjects_Map06_0_Unlisted_3_0::
     db $02 ; entry 0: object count
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02 ; object 0
     db $86, $01, $00, $00, $00, $70, $70, $06, $03, $60, $1b ; object 1
 
-MapObjects_6D84::
+MapObjects_Map06_0_Unlisted_3_1::
     db $02 ; entry 0: object count
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02 ; object 0
     db $86, $01, $01, $00, $00, $70, $70, $06, $03, $60, $1c ; object 1
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_6D9B::
+MapObjects_Map06_0_Unlisted_2::
     db $01 ; entry 0
     db $85, $00, $0a, $00, $00, $50, $a0, $05, $00, $50, $08
 
-MapObjects_6DA7::
+MapObjects_Map06_0_Unlisted_2_2::
     db $02 ; entry 0: object count
     db $85, $01, $05, $00, $00, $40, $30, $05, $00, $50, $02 ; object 0
     db $86, $00, $01, $00, $00, $20, $10, $06, $02, $60, $1a ; object 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6DBE::
-    objsel_list MapObjects_6DC2
+ObjSelector_Map06_0_Unlisted_4::
+    objsel_list MapObjects_Map06_0_Unlisted_4_0
 
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_6DC2::
+MapObjects_Map06_0_Unlisted_4_0::
     db $04 ; entry 0: object count
     db $85, $01, $4a, $00, $00, $40, $30, $05, $00, $50, $9f ; object 0
     db $85, $01, $4a, $00, $00, $60, $40, $05, $00, $50, $cf ; object 1
     db $85, $01, $4a, $00, $00, $70, $50, $05, $03, $50, $0d ; object 2
     db $86, $01, $5f, $00, $00, $70, $70, $06, $03, $60, $a7 ; object 3
 
-ObjSelector_6DEF::
-    objsel_list MapObjects_6DF3
+ObjSelector_Map06_0_Unlisted_5::
+    objsel_list MapObjects_Map06_0_Unlisted_5_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_6DF3::
+MapObjects_Map06_0_Unlisted_5_0::
     db $03 ; entry 0: object count
     db $85, $01, $40, $00, $00, $40, $30, $05, $00, $50, $a4 ; object 0
     db $86, $01, $15, $00, $00, $60, $20, $06, $00, $60, $a6 ; object 1
     db $87, $01, $10, $00, $00, $70, $10, $07, $00, $70, $ac ; object 2
 
-ObjSelector_6E15::
-    objsel_list MapObjects_6E19
+ObjSelector_Map06_0_Unlisted_6::
+    objsel_list MapObjects_Map06_0_Unlisted_6_0
 
-MapObjects_6E19::
+MapObjects_Map06_0_Unlisted_6_0::
     db $03 ; entry 0: object count
     db $85, $00, $7e, $01, $00, $40, $30, $05, $00, $50, $35 ; object 0
     db $86, $00, $7d, $01, $00, $20, $40, $06, $00, $60, $34 ; object 1
@@ -4853,28 +4853,28 @@ MapObjects_6E19::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6E3B::
-    dw ObjSelector_6E3F ; id 0
-    dw ObjSelector_6E65 ; id 1
+MapObjectScreens_Map07::
+    dw ObjSelector_Map07_0 ; id 0
+    dw ObjSelector_Map07_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6E3F::
-    objsel_list MapObjects_6E43
+ObjSelector_Map07_0::
+    objsel_list MapObjects_Map07_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6E43::
+MapObjects_Map07_0_0::
     db $03 ; entry 0: object count
     db $85, $00, $93, $00, $00, $40, $30, $05, $01, $50, $4c ; object 0
     db $86, $00, $5e, $00, $00, $30, $70, $06, $00, $60, $4d ; object 1
     db $87, $00, $76, $00, $00, $80, $50, $07, $00, $70, $b5 ; object 2
 
-ObjSelector_6E65::
-    objsel_list MapObjects_6E69
+ObjSelector_Map07_1::
+    objsel_list MapObjects_Map07_1_0
 
-MapObjects_6E69::
+MapObjects_Map07_1_0::
     db $03 ; entry 0: object count
     db $85, $00, $4e, $01, $00, $50, $40, $05, $03, $50, $4e ; object 0
     db $86, $00, $8e, $00, $00, $20, $50, $06, $01, $60, $4f ; object 1
@@ -4882,44 +4882,44 @@ MapObjects_6E69::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6E8B::
-    dw ObjSelector_6E8D ; id 0
+MapObjectScreens_Map08::
+    dw ObjSelector_Map08_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6E8D::
-    objsel_unless_flag EVENT_SCENE_LONG_FACES, MapObjects_6E95
-    objsel_list MapObjects_6EA1
+ObjSelector_Map08_0::
+    objsel_unless_flag EVENT_SCENE_LONG_FACES_002, MapObjects_Map08_0_0
+    objsel_list MapObjects_Map08_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6E95::
+MapObjects_Map08_0_0::
     db $01 ; entry 0
     db $85, $01, $15, $00, $00, $40, $20, $05, $00, $50, $14
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6EA1::
+MapObjects_Map08_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $15, $00, $00, $40, $20, $05, $00, $50, $14 ; object 0
     db $86, $01, $10, $00, $00, $60, $60, $06, $00, $60, $1d ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6EB8::
-    dw ObjSelector_6EBA ; id 0
+MapObjectScreens_Map09::
+    dw ObjSelector_Map09_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6EBA::
-    objsel_list MapObjects_6EBE
+ObjSelector_Map09_0::
+    objsel_list MapObjects_Map09_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6EBE::
+MapObjects_Map09_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $30, $20, $05, $00, $50, $92 ; object 0
     db $86, $01, $1a, $00, $00, $20, $60, $06, $03, $60, $93 ; object 1
@@ -4928,18 +4928,18 @@ MapObjects_6EBE::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6EEB::
-    dw ObjSelector_6EED ; id 0
+MapObjectScreens_Map0A::
+    dw ObjSelector_Map0A_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6EED::
-    objsel_list MapObjects_6EF1
+ObjSelector_Map0A_0::
+    objsel_list MapObjects_Map0A_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6EF1::
+MapObjects_Map0A_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $2a, $00, $00, $50, $30, $05, $00, $50, $69 ; object 0
     db $86, $01, $15, $00, $00, $10, $60, $06, $01, $60, $b7 ; object 1
@@ -4947,18 +4947,18 @@ MapObjects_6EF1::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6F13::
-    dw ObjSelector_6F15 ; id 0
+MapObjectScreens_Map0B::
+    dw ObjSelector_Map0B_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6F15::
-    objsel_list MapObjects_6F19
+ObjSelector_Map0B_0::
+    objsel_list MapObjects_Map0B_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6F19::
+MapObjects_Map0B_0_0::
     db $04 ; entry 0: object count
     db $84, $01, $00, $00, $00, $70, $30, $04, $03, $40, $00 ; object 0
     db $85, $00, $01, $00, $00, $60, $40, $05, $03, $50, $00 ; object 1
@@ -4967,111 +4967,111 @@ MapObjects_6F19::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6F46::
-    dw ObjSelector_6F4A ; id 0
-    dw ObjSelector_6F71 ; id 1
+MapObjectScreens_Map0C::
+    dw ObjSelector_Map0C_0 ; id 0
+    dw ObjSelector_Map0C_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6F4A::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_6F5A
+ObjSelector_Map0C_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map0C_0_1
 
-ObjSelector_6F54::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_6F5A
+ObjSelector_Map0C_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map0C_0_1
     objsel_none
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6F5A::
+MapObjects_Map0C_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $40, $70, $05, $02, $50, $25 ; object 0
     db $86, $01, $1f, $00, $00, $40, $60, $06, $00, $60, $26 ; object 1
 
-ObjSelector_6F71::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_6F83
+ObjSelector_Map0C_1::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map0C_1_1
 
-ObjSelector_6F7B::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_6F83
-    objsel_list MapObjects_6F9A
+ObjSelector_Map0C_1_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map0C_1_1
+    objsel_list MapObjects_Map0C_1_Unlisted_1
 
-MapObjects_6F83::
+MapObjects_Map0C_1_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $50, $30, $05, $00, $50, $23 ; object 0
     db $86, $01, $10, $00, $00, $60, $70, $06, $03, $60, $24 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_6F9A::
+MapObjects_Map0C_1_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $40, $50, $05, $00, $50, $23 ; object 0
     db $86, $01, $10, $00, $00, $50, $50, $06, $00, $60, $24 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_6FB1::
+MapObjectScreens_Map0D::
     dw $0000 ; id 0
-    dw ObjSelector_6FC1 ; id 1
+    dw ObjSelector_Map0D_1 ; id 1
     dw $0000 ; id 2
     dw $0000 ; id 3
     dw $0000 ; id 4
-    dw ObjSelector_6FDC ; id 5
-    dw ObjSelector_700D ; id 6
+    dw ObjSelector_Map0D_5 ; id 5
+    dw ObjSelector_Map0D_6 ; id 6
     dw $0000 ; id 7
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_6FC1::
-    objsel_list MapObjects_6FC5
+ObjSelector_Map0D_1::
+    objsel_list MapObjects_Map0D_1_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6FC5::
+MapObjects_Map0D_1_0::
     db $02 ; entry 0: object count
     db $85, $01, $0c, $00, $00, $40, $30, $05, $00, $50, $6a ; object 0
     db $86, $01, $18, $00, $00, $60, $60, $06, $03, $60, $6b ; object 1
 
-ObjSelector_6FDC::
-    objsel_list MapObjects_6FE0
+ObjSelector_Map0D_5::
+    objsel_list MapObjects_Map0D_5_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_6FE0::
+MapObjects_Map0D_5_0::
     db $04 ; entry 0: object count
     db $85, $01, $12, $00, $00, $30, $40, $05, $03, $50, $70 ; object 0
     db $86, $01, $10, $00, $00, $20, $30, $06, $00, $60, $6f ; object 1
     db $86, $01, $10, $00, $02, $20, $50, $06, $02, $60, $71 ; object 2
     db $84, $01, $11, $00, $02, $70, $20, $04, $01, $40, $e3 ; object 3
 
-ObjSelector_700D::
-    objsel_unless_flag $0025, MapObjects_7013
+ObjSelector_Map0D_6::
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY_025, MapObjects_Map0D_6_0
     objsel_none
 
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7013::
+MapObjects_Map0D_6_0::
     db $01 ; entry 0
     db $85, $01, $16, $00, $00, $40, $60, $05, $01, $50, $a8
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_701F::
-    dw ObjSelector_7021 ; id 0
+MapObjectScreens_Map0E::
+    dw ObjSelector_Map0E_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7021::
-    objsel_list MapObjects_7025
+ObjSelector_Map0E_0::
+    objsel_list MapObjects_Map0E_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7025::
+MapObjects_Map0E_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $70, $40, $05, $03, $50, $38 ; object 0
     db $86, $01, $1d, $00, $00, $60, $50, $06, $02, $60, $39 ; object 1
@@ -5080,21 +5080,21 @@ MapObjects_7025::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7052::
-    dw ObjSelector_7054 ; id 0
+MapObjectScreens_Map0F::
+    dw ObjSelector_Map0F_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7054::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_7070
+ObjSelector_Map0F_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map0F_0_1
 
-ObjSelector_705E::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7064
+ObjSelector_Map0F_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map0F_0_Unlisted_0
     objsel_none
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_7064::
+MapObjects_Map0F_0_Unlisted_0::
     db $01 ; entry 0
     db $85, $01, $1a, $00, $00, $10, $20, $05, $00, $50, $3e
 
@@ -5102,63 +5102,63 @@ MapObjects_7064::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7070::
+MapObjects_Map0F_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $20, $40, $05, $02, $50, $42 ; object 0
     db $86, $01, $1a, $00, $00, $30, $30, $06, $03, $60, $3e ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7087::
-    dw ObjSelector_7089 ; id 0
+MapObjectScreens_Map10::
+    dw ObjSelector_Map10_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7089::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7091
-    objsel_list MapObjects_709D
+ObjSelector_Map10_0::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map10_0_0
+    objsel_list MapObjects_Map10_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7091::
+MapObjects_Map10_0_0::
     db $01 ; entry 0
     db $85, $01, $1b, $00, $00, $60, $50, $05, $01, $50, $42
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_709D::
+MapObjects_Map10_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $60, $40, $05, $00, $50, $42 ; object 0
     db $86, $01, $1a, $00, $00, $60, $50, $06, $02, $60, $3e ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_70B4::
-    dw ObjSelector_70B8 ; id 0
-    dw ObjSelector_70D3 ; id 1
+MapObjectScreens_Map11::
+    dw ObjSelector_Map11_0 ; id 0
+    dw ObjSelector_Map11_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_70B8::
-    objsel_list MapObjects_70BC
+ObjSelector_Map11_0::
+    objsel_list MapObjects_Map11_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_70BC::
+MapObjects_Map11_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $50, $30, $05, $00, $50, $2b ; object 0
     db $86, $01, $18, $00, $00, $10, $40, $06, $01, $60, $af ; object 1
 
-ObjSelector_70D3::
-    objsel_list MapObjects_70D7
+ObjSelector_Map11_1::
+    objsel_list MapObjects_Map11_1_0
 
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_70D7::
+MapObjects_Map11_1_0::
     db $04 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $40, $20, $05, $00, $50, $29 ; object 0
     db $86, $01, $1a, $00, $00, $30, $40, $06, $03, $60, $2c ; object 1
@@ -5167,21 +5167,21 @@ MapObjects_70D7::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7104::
-    dw ObjSelector_7106 ; id 0
+MapObjectScreens_Map12::
+    dw ObjSelector_Map12_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7106::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_713A
+ObjSelector_Map12_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map12_0_1
 
-ObjSelector_7110::
-    objsel_unless_flag EVENT_SCENE_MASTER_THANKS, MapObjects_7118
-    objsel_list MapObjects_713A
+ObjSelector_Map12_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_MASTER_THANKS, MapObjects_Map12_0_Unlisted_0
+    objsel_list MapObjects_Map12_0_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_7118::
+MapObjects_Map12_0_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $00, $02, $00, $00, $e0, $30, $05, $00, $50, $ad ; object 0
     db $86, $01, $1e, $00, $00, $60, $60, $06, $00, $60, $77 ; object 1
@@ -5191,7 +5191,7 @@ MapObjects_7118::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_713A::
+MapObjects_Map12_0_1::
     db $03 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $60, $60, $05, $00, $50, $77 ; object 0
     db $86, $01, $19, $00, $00, $40, $40, $06, $02, $60, $27 ; object 1
@@ -5199,35 +5199,35 @@ MapObjects_713A::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_715C::
-    dw ObjSelector_715E ; id 0
+MapObjectScreens_Map13::
+    dw ObjSelector_Map13_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_715E::
-    objsel_list MapObjects_7162
+ObjSelector_Map13_0::
+    objsel_list MapObjects_Map13_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7162::
+MapObjects_Map13_0_0::
     db $01 ; entry 0
     db $85, $01, $21, $00, $00, $40, $30, $05, $00, $50, $46
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_716E::
-    dw ObjSelector_7170 ; id 0
+MapObjectScreens_Map14::
+    dw ObjSelector_Map14_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7170::
-    objsel_list MapObjects_7174
+ObjSelector_Map14_0::
+    objsel_list MapObjects_Map14_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7174::
+MapObjects_Map14_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $0c, $00, $00, $50, $90, $05, $02, $50, $00 ; object 0
     db $86, $00, $01, $00, $00, $50, $a0, $06, $00, $60, $00 ; object 1
@@ -5235,28 +5235,28 @@ MapObjects_7174::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7196::
-    dw ObjSelector_7198 ; id 0
+MapObjectScreens_Map15::
+    dw ObjSelector_Map15_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7198::
-    objsel_unless_flag EVENT_DESK_KEY, MapObjects_71B0
-    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE, MapObjects_71DE
-    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE_207, MapObjects_71DE
-    objsel_unless_flag EVENT_THAT_KEY_IUSED_03E, MapObjects_71B0
-    objsel_unless_flag EVENT_DESK_KEY_0C8, MapObjects_71C7
-    objsel_list MapObjects_71DE
+ObjSelector_Map15_0::
+    objsel_unless_flag EVENT_DESK_KEY, MapObjects_Map15_0_0
+    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE, MapObjects_Map15_0_1
+    objsel_unless_flag EVENT_SCENE_CHEST_BATTLE_207, MapObjects_Map15_0_1
+    objsel_unless_flag EVENT_THAT_KEY_IUSED_03E, MapObjects_Map15_0_0
+    objsel_unless_flag EVENT_DESK_KEY_0C8, MapObjects_Map15_0_4
+    objsel_list MapObjects_Map15_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_71B0::
+MapObjects_Map15_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $50, $30, $05, $00, $50, $8f ; object 0
     db $86, $01, $5d, $00, $00, $60, $08, $06, $00, $60, $db ; object 1
 
-MapObjects_71C7::
+MapObjects_Map15_0_4::
     db $02 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $40, $30, $05, $00, $50, $8f ; object 0
     db $86, $01, $5d, $00, $00, $60, $08, $06, $00, $60, $db ; object 1
@@ -5264,24 +5264,24 @@ MapObjects_71C7::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_71DE::
+MapObjects_Map15_0_1::
     db $01 ; entry 0
     db $85, $01, $1e, $00, $00, $50, $30, $05, $00, $50, $8f
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_71EA::
-    dw ObjSelector_71EC ; id 0
+MapObjectScreens_Map16::
+    dw ObjSelector_Map16_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_71EC::
-    objsel_list MapObjects_71F0
+ObjSelector_Map16_0::
+    objsel_list MapObjects_Map16_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_71F0::
+MapObjects_Map16_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $60, $30, $05, $00, $50, $72 ; object 0
     db $86, $01, $1f, $00, $00, $30, $60, $06, $00, $60, $73 ; object 1
@@ -5289,30 +5289,30 @@ MapObjects_71F0::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7212::
-    dw ObjSelector_7214 ; id 0
+MapObjectScreens_Map17::
+    dw ObjSelector_Map17_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7214::
-    objsel_skip_if_clear $0025, $0c, $00
-    objsel_unless_flag $00c9, MapObjects_7288
-    objsel_unless_flag $00ca, MapObjects_72B5
-    objsel_list MapObjects_72E2
+ObjSelector_Map17_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $0c, $00
+    objsel_unless_flag EVENT_MAP_17_OBJECT_REMOVED, MapObjects_Map17_0_1
+    objsel_unless_flag EVENT_MAP_17_OBJECT_REMOVED_0CA, MapObjects_Map17_0_2
+    objsel_list MapObjects_Map17_0_3
 
-ObjSelector_7226::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_722E
-    objsel_list MapObjects_725B
+ObjSelector_Map17_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map17_0_Unlisted_0
+    objsel_list MapObjects_Map17_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_722E::
+MapObjects_Map17_0_Unlisted_0::
     db $04 ; entry 0: object count
     db $87, $01, $15, $00, $00, $40, $30, $07, $03, $70, $89 ; object 0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86 ; object 1
     db $85, $01, $16, $00, $00, $10, $60, $05, $02, $50, $87 ; object 2
     db $86, $01, $12, $00, $00, $50, $50, $06, $01, $60, $88 ; object 3
 
-MapObjects_725B::
+MapObjects_Map17_0_Unlisted_1::
     db $04 ; entry 0: object count
     db $87, $01, $21, $00, $00, $40, $30, $07, $03, $70, $89 ; object 0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86 ; object 1
@@ -5323,21 +5323,21 @@ MapObjects_725B::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7288::
+MapObjects_Map17_0_1::
     db $04 ; entry 0: object count
     db $87, $01, $2a, $00, $00, $40, $30, $07, $03, $70, $f0 ; object 0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86 ; object 1
     db $85, $01, $16, $00, $00, $10, $60, $05, $02, $50, $87 ; object 2
     db $86, $01, $12, $00, $00, $50, $50, $06, $01, $60, $88 ; object 3
 
-MapObjects_72B5::
+MapObjects_Map17_0_2::
     db $04 ; entry 0: object count
     db $87, $01, $13, $00, $00, $40, $30, $07, $03, $70, $f0 ; object 0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86 ; object 1
     db $85, $01, $16, $00, $00, $10, $60, $05, $02, $50, $87 ; object 2
     db $86, $01, $12, $00, $00, $50, $50, $06, $01, $60, $88 ; object 3
 
-MapObjects_72E2::
+MapObjects_Map17_0_3::
     db $04 ; entry 0: object count
     db $87, $01, $17, $00, $00, $40, $30, $07, $03, $70, $f0 ; object 0
     db $85, $01, $16, $00, $00, $70, $40, $05, $03, $50, $86 ; object 1
@@ -5346,73 +5346,73 @@ MapObjects_72E2::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_730F::
-    dw ObjSelector_731B ; id 0
-    dw ObjSelector_734C ; id 1
-    dw ObjSelector_7372 ; id 2
-    dw ObjSelector_73A3 ; id 3
-    dw ObjSelector_73C9 ; id 4
-    dw ObjSelector_73EF ; id 5
+MapObjectScreens_Map18::
+    dw ObjSelector_Map18_0 ; id 0
+    dw ObjSelector_Map18_1 ; id 1
+    dw ObjSelector_Map18_2 ; id 2
+    dw ObjSelector_Map18_3 ; id 3
+    dw ObjSelector_Map18_4 ; id 4
+    dw ObjSelector_Map18_5 ; id 5
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_731B::
-    objsel_list MapObjects_731F
+ObjSelector_Map18_0::
+    objsel_list MapObjects_Map18_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_731F::
+MapObjects_Map18_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $19, $00, $00, $40, $40, $05, $00, $50, $56 ; object 0
     db $86, $00, $55, $00, $00, $40, $50, $06, $02, $60, $57 ; object 1
     db $87, $01, $1d, $00, $00, $70, $60, $07, $00, $70, $bb ; object 2
     db $85, $01, $07, $00, $02, $60, $70, $05, $01, $50, $bc ; object 3
 
-ObjSelector_734C::
-    objsel_list MapObjects_7350
+ObjSelector_Map18_1::
+    objsel_list MapObjects_Map18_1_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7350::
+MapObjects_Map18_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $1b, $00, $00, $70, $60, $05, $00, $50, $61 ; object 0
     db $86, $01, $1e, $00, $00, $50, $50, $06, $02, $60, $bd ; object 1
     db $87, $01, $06, $00, $02, $20, $70, $07, $01, $70, $be ; object 2
 
-ObjSelector_7372::
-    objsel_list MapObjects_7376
+ObjSelector_Map18_2::
+    objsel_list MapObjects_Map18_2_0
 
-MapObjects_7376::
+MapObjects_Map18_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $10, $40, $05, $00, $50, $5b ; object 0
     db $86, $01, $1f, $00, $00, $20, $50, $06, $03, $60, $bf ; object 1
     db $87, $01, $10, $00, $02, $30, $60, $07, $01, $70, $5c ; object 2
     db $85, $01, $1e, $00, $00, $70, $70, $05, $03, $50, $c0 ; object 3
 
-ObjSelector_73A3::
-    objsel_list MapObjects_73A7
+ObjSelector_Map18_3::
+    objsel_list MapObjects_Map18_3_0
 
-MapObjects_73A7::
+MapObjects_Map18_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $12, $00, $00, $60, $20, $05, $00, $50, $58 ; object 0
     db $86, $00, $91, $00, $00, $50, $30, $06, $01, $60, $59 ; object 1
     db $87, $00, $33, $00, $00, $60, $40, $07, $02, $70, $5a ; object 2
 
-ObjSelector_73C9::
-    objsel_list MapObjects_73CD
+ObjSelector_Map18_4::
+    objsel_list MapObjects_Map18_4_0
 
-MapObjects_73CD::
+MapObjects_Map18_4_0::
     db $03 ; entry 0: object count
     db $85, $01, $15, $00, $00, $50, $20, $05, $00, $50, $5d ; object 0
     db $86, $00, $5f, $00, $00, $60, $40, $06, $03, $60, $5f ; object 1
     db $87, $00, $26, $01, $02, $20, $50, $07, $01, $70, $60 ; object 2
 
-ObjSelector_73EF::
-    objsel_list MapObjects_73F3
+ObjSelector_Map18_5::
+    objsel_list MapObjects_Map18_5_0
 
-MapObjects_73F3::
+MapObjects_Map18_5_0::
     db $04 ; entry 0: object count
     db $85, $01, $1c, $00, $00, $50, $50, $05, $03, $50, $55 ; object 0
     db $86, $01, $1d, $00, $00, $20, $30, $06, $00, $60, $5e ; object 1
@@ -5421,30 +5421,30 @@ MapObjects_73F3::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7420::
-    dw ObjSelector_742C ; id 0
+MapObjectScreens_Map19::
+    dw ObjSelector_Map19_0 ; id 0
     dw $0000 ; id 1
-    dw ObjSelector_74A3 ; id 2
-    dw ObjSelector_74F9 ; id 3
-    dw ObjSelector_754A ; id 4
+    dw ObjSelector_Map19_2 ; id 2
+    dw ObjSelector_Map19_3 ; id 3
+    dw ObjSelector_Map19_4 ; id 4
     dw $0000 ; id 5
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_742C::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_745F
+ObjSelector_Map19_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map19_0_1
 
-ObjSelector_7436::
+ObjSelector_Map19_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_7481
+    objsel_list MapObjects_Map19_0_Unlisted_1
 
-ObjSelector_7440::
-    objsel_unless_flag EVENT_WHAT, MapObjects_7448
-    objsel_list MapObjects_745F
+ObjSelector_Map19_0_Unlisted_2::
+    objsel_unless_flag EVENT_WHAT, MapObjects_Map19_0_Unlisted_2_0
+    objsel_list MapObjects_Map19_0_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_7448::
+MapObjects_Map19_0_Unlisted_2_0::
     db $02 ; entry 0: object count
     db $85, $01, $3b, $00, $00, $40, $20, $05, $00, $50, $81 ; object 0
     db $86, $01, $12, $00, $00, $60, $30, $06, $03, $60, $82 ; object 1
@@ -5453,35 +5453,35 @@ MapObjects_7448::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_745F::
+MapObjects_Map19_0_1::
     db $03 ; entry 0: object count
     db $85, $01, $3b, $00, $00, $40, $20, $05, $00, $50, $81 ; object 0
     db $86, $01, $12, $00, $00, $60, $30, $06, $03, $60, $82 ; object 1
     db $87, $01, $10, $00, $00, $20, $40, $07, $02, $70, $20 ; object 2
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_7481::
+MapObjects_Map19_0_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $3b, $00, $00, $40, $20, $05, $00, $50, $81 ; object 0
     db $86, $01, $03, $00, $00, $30, $40, $06, $01, $60, $99 ; object 1
     db $87, $01, $1a, $00, $00, $60, $60, $07, $02, $70, $0a ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_74A3::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_74CB
+ObjSelector_Map19_2::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map19_2_1
 
-ObjSelector_74AD::
+ObjSelector_Map19_2_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_74D7
+    objsel_list MapObjects_Map19_2_Unlisted_1
 
-ObjSelector_74B7::
-    objsel_unless_flag EVENT_SCENE_KAMEHA_BACK, MapObjects_74BF
-    objsel_list MapObjects_74CB
+ObjSelector_Map19_2_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_KAMEHA_BACK, MapObjects_Map19_2_Unlisted_2_0
+    objsel_list MapObjects_Map19_2_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_74BF::
+MapObjects_Map19_2_Unlisted_2_0::
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83
 
@@ -5489,88 +5489,88 @@ MapObjects_74BF::
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_74CB::
+MapObjects_Map19_2_1::
     db $01 ; entry 0
     db $85, $01, $10, $00, $00, $30, $60, $05, $02, $50, $83
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_74D7::
+MapObjects_Map19_2_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $40, $70, $05, $02, $50, $83 ; object 0
     db $86, $01, $1b, $00, $00, $30, $40, $06, $00, $60, $12 ; object 1
     db $87, $01, $1d, $00, $00, $60, $50, $07, $03, $70, $15 ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_74F9::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_7511
+ObjSelector_Map19_3::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map19_3_1
 
-ObjSelector_7503::
+ObjSelector_Map19_3_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_7528
+    objsel_list MapObjects_Map19_3_Unlisted_1
 
-ObjSelector_750D::
-    objsel_list MapObjects_7511
+ObjSelector_Map19_3_Unlisted_2::
+    objsel_list MapObjects_Map19_3_1
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7511::
+MapObjects_Map19_3_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $20, $30, $05, $01, $50, $84 ; object 0
     db $86, $01, $10, $00, $00, $20, $60, $06, $01, $60, $85 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
-MapObjects_7528::
+MapObjects_Map19_3_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $50, $70, $05, $00, $50, $84 ; object 0
     db $86, $01, $1c, $00, $02, $30, $30, $06, $01, $60, $0c ; object 1
     db $87, $01, $1e, $00, $00, $70, $40, $07, $00, $70, $25 ; object 2
 
-ObjSelector_754A::
-    objsel_unless_flag $0025, MapObjects_7552
-    objsel_list MapObjects_755E
+ObjSelector_Map19_4::
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY_025, MapObjects_Map19_4_0
+    objsel_list MapObjects_Map19_4_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7552::
+MapObjects_Map19_4_0::
     db $01 ; entry 0
     db $85, $01, $03, $00, $00, $30, $30, $05, $00, $50, $99
 
-MapObjects_755E::
+MapObjects_Map19_4_1::
     db $01 ; entry 0
     db $85, $01, $03, $00, $00, $d0, $30, $05, $00, $50, $99
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_756A::
-    dw ObjSelector_7570 ; id 0
-    dw ObjSelector_75C6 ; id 1
-    dw ObjSelector_7679 ; id 2
+MapObjectScreens_Map1A::
+    dw ObjSelector_Map1A_0 ; id 0
+    dw ObjSelector_Map1A_1 ; id 1
+    dw ObjSelector_Map1A_2 ; id 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7570::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_7582
+ObjSelector_Map1A_0::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map1A_0_1
 
-ObjSelector_757A::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7582
-    objsel_list MapObjects_7599
+ObjSelector_Map1A_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map1A_0_1
+    objsel_list MapObjects_Map1A_0_Unlisted_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7582::
+MapObjects_Map1A_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $40, $60, $05, $00, $50, $8a ; object 0
     db $86, $01, $1f, $00, $00, $50, $20, $06, $02, $60, $d9 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_7599::
+MapObjects_Map1A_0_Unlisted_1::
     db $04 ; entry 0: object count
     db $85, $01, $1e, $00, $00, $40, $60, $05, $00, $50, $8a ; object 0
     db $86, $01, $1f, $00, $00, $50, $20, $06, $02, $60, $d9 ; object 1
@@ -5578,44 +5578,44 @@ MapObjects_7599::
     db $87, $01, $1b, $00, $00, $70, $40, $07, $02, $70, $dd ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_75C6::
-    objsel_skip_if_clear $0025, $04, $00
-    objsel_list MapObjects_75E6
+ObjSelector_Map1A_1::
+    objsel_skip_if_clear EVENT_THANKS_FOR_COMING_BY_025, $04, $00
+    objsel_list MapObjects_Map1A_1_1
 
-ObjSelector_75D0::
+ObjSelector_Map1A_1_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $08, $00
-    objsel_unless_flag $0001, MapObjects_761F
-    objsel_list MapObjects_764C
+    objsel_unless_flag EVENT_IN_THE_MIDDLE_OF_THE, MapObjects_Map1A_1_Unlisted_1
+    objsel_list MapObjects_Map1A_1_Unlisted_2
 
-ObjSelector_75DE::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_75E6
-    objsel_list MapObjects_75F2
+ObjSelector_Map1A_1_Unlisted_2::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map1A_1_1
+    objsel_list MapObjects_Map1A_1_Unlisted_2_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_75E6::
+MapObjects_Map1A_1_1::
     db $01 ; entry 0
     db $85, $01, $12, $00, $00, $30, $50, $05, $00, $50, $8d
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_75F2::
+MapObjects_Map1A_1_Unlisted_2_1::
     db $04 ; entry 0: object count
     db $85, $01, $1a, $00, $00, $30, $50, $05, $00, $50, $de ; object 0
     db $85, $01, $1a, $00, $00, $20, $10, $05, $02, $50, $df ; object 1
     db $86, $01, $10, $00, $00, $50, $20, $06, $02, $60, $e0 ; object 2
     db $87, $01, $11, $00, $02, $70, $30, $07, $01, $70, $e1 ; object 3
 
-MapObjects_761F::
+MapObjects_Map1A_1_Unlisted_1::
     db $04 ; entry 0: object count
     db $85, $01, $04, $00, $00, $80, $20, $05, $03, $50, $00 ; object 0
     db $86, $01, $05, $00, $00, $80, $30, $06, $03, $60, $00 ; object 1
     db $87, $01, $00, $00, $00, $80, $40, $07, $03, $70, $00 ; object 2
     db $84, $01, $02, $00, $00, $e0, $30, $04, $01, $40, $00 ; object 3
 
-MapObjects_764C::
+MapObjects_Map1A_1_Unlisted_2::
     db $04 ; entry 0: object count
     db $85, $01, $04, $00, $00, $80, $20, $05, $03, $50, $00 ; object 0
     db $86, $01, $05, $00, $00, $80, $30, $06, $03, $60, $00 ; object 1
@@ -5623,17 +5623,17 @@ MapObjects_764C::
     db $84, $01, $02, $00, $00, $e0, $30, $04, $01, $40, $00 ; object 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7679::
-    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_7689
-    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_76AB
-    objsel_unless_flag $0025, MapObjects_7689
-    objsel_list MapObjects_76C2
+ObjSelector_Map1A_2::
+    objsel_unless_flag EVENT_SCENE_THREE_ITEMS, MapObjects_Map1A_2_0
+    objsel_unless_flag EVENT_SCENE_DARCK_DEFEATED, MapObjects_Map1A_2_1
+    objsel_unless_flag EVENT_THANKS_FOR_COMING_BY_025, MapObjects_Map1A_2_0
+    objsel_list MapObjects_Map1A_2_3
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7689::
+MapObjects_Map1A_2_0::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $20, $20, $05, $00, $50, $8c ; object 0
     db $86, $00, $7a, $00, $00, $40, $40, $06, $02, $60, $d7 ; object 1
@@ -5642,12 +5642,12 @@ MapObjects_7689::
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_76AB::
+MapObjects_Map1A_2_1::
     db $02 ; entry 0: object count
     db $85, $01, $10, $00, $00, $30, $20, $05, $00, $50, $8c ; object 0
     db $86, $01, $12, $00, $00, $60, $30, $06, $01, $60, $8d ; object 1
 
-MapObjects_76C2::
+MapObjects_Map1A_2_3::
     db $03 ; entry 0: object count
     db $85, $01, $10, $00, $00, $20, $20, $05, $00, $50, $8c ; object 0
     db $86, $00, $7a, $00, $00, $50, $40, $06, $02, $60, $d7 ; object 1
@@ -5655,71 +5655,71 @@ MapObjects_76C2::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_76E4::
-    dw ObjSelector_76E8 ; id 0
-    dw ObjSelector_69_76F8 ; id 1
+MapObjectScreens_Map1C::
+    dw ObjSelector_Map1C_0 ; id 0
+    dw ObjSelector_Map1C_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_76E8::
-    objsel_list MapObjects_76EC
+ObjSelector_Map1C_0::
+    objsel_list MapObjects_Map1C_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_76EC::
+MapObjects_Map1C_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $57, $00, $00, $45, $80, $05, $02, $50, $00 ; object 0
-ObjSelector_69_76F8::
+ObjSelector_Map1C_1::
     db $fe, $ff, $fc, $76, $01, $85, $01, $57, $00, $00, $45 ; object 1
     db $a0, $05, $02, $50, $00
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7708::
-    dw ObjSelector_770C ; id 0
-    dw ObjSelector_776E ; id 1
+MapObjectScreens_Map1D::
+    dw ObjSelector_Map1D_0 ; id 0
+    dw ObjSelector_Map1D_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_770C::
-    objsel_unless_flag $0001, MapObjects_7714
-    objsel_list MapObjects_7741
+ObjSelector_Map1D_0::
+    objsel_unless_flag EVENT_IN_THE_MIDDLE_OF_THE, MapObjects_Map1D_0_0
+    objsel_list MapObjects_Map1D_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7714::
+MapObjects_Map1D_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $04, $00, $00, $50, $10, $05, $00, $50, $32 ; object 0
     db $86, $01, $05, $00, $00, $40, $10, $06, $00, $60, $31 ; object 1
     db $87, $01, $28, $00, $00, $80, $40, $07, $01, $70, $30 ; object 2
     db $84, $01, $00, $00, $00, $b0, $50, $04, $03, $40, $00 ; object 3
 
-MapObjects_7741::
+MapObjects_Map1D_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $04, $00, $00, $50, $10, $05, $00, $50, $32 ; object 0
     db $86, $01, $05, $00, $00, $40, $10, $06, $00, $60, $31 ; object 1
     db $87, $01, $28, $00, $00, $80, $40, $07, $01, $70, $30 ; object 2
     db $84, $01, $01, $00, $00, $b0, $50, $04, $03, $40, $00 ; object 3
 
-ObjSelector_776E::
+ObjSelector_Map1D_1::
     objsel_skip_if_set EVENT_SCENE_AT_SEA, $08, $00
-    objsel_unless_flag $0001, MapObjects_7784
-    objsel_list MapObjects_77B1
+    objsel_unless_flag EVENT_IN_THE_MIDDLE_OF_THE, MapObjects_Map1D_1_1
+    objsel_list MapObjects_Map1D_1_2
 
-ObjSelector_777C::
-    objsel_unless_flag $0001, MapObjects_77DE
-    objsel_list MapObjects_7800
+ObjSelector_Map1D_1_Unlisted::
+    objsel_unless_flag EVENT_IN_THE_MIDDLE_OF_THE, MapObjects_Map1D_1_Unlisted_0
+    objsel_list MapObjects_Map1D_1_Unlisted_1
 
-MapObjects_7784::
+MapObjects_Map1D_1_1::
     db $04 ; entry 0: object count
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2d ; object 0
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2e ; object 1
     db $87, $01, $00, $00, $00, $e0, $50, $07, $01, $70, $2f ; object 2
     db $86, $01, $29, $00, $00, $20, $e0, $06, $02, $60, $00 ; object 3
 
-MapObjects_77B1::
+MapObjects_Map1D_1_2::
     db $04 ; entry 0: object count
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2d ; object 0
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2e ; object 1
@@ -5728,13 +5728,13 @@ MapObjects_77B1::
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_77DE::
+MapObjects_Map1D_1_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2d ; object 0
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2e ; object 1
     db $87, $01, $00, $00, $00, $30, $40, $07, $01, $70, $2f ; object 2
 
-MapObjects_7800::
+MapObjects_Map1D_1_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $29, $00, $02, $50, $30, $05, $01, $50, $2d ; object 0
     db $86, $01, $29, $00, $00, $10, $60, $06, $00, $60, $2e ; object 1
@@ -5742,32 +5742,32 @@ MapObjects_7800::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7822::
-    dw ObjSelector_7826 ; id 0
-    dw ObjSelector_7857 ; id 1
+MapObjectScreens_Map21::
+    dw ObjSelector_Map21_0 ; id 0
+    dw ObjSelector_Map21_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7826::
-    objsel_list MapObjects_782A
+ObjSelector_Map21_0::
+    objsel_list MapObjects_Map21_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_782A::
+MapObjects_Map21_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $23, $00, $00, $40, $70, $05, $01, $50, $00 ; object 0
     db $86, $01, $24, $00, $00, $10, $60, $06, $02, $60, $01 ; object 1
     db $87, $01, $25, $00, $00, $10, $50, $07, $00, $70, $02 ; object 2
     db $87, $01, $25, $00, $00, $70, $30, $07, $00, $70, $03 ; object 3
 
-ObjSelector_7857::
-    objsel_list MapObjects_785B
+ObjSelector_Map21_1::
+    objsel_list MapObjects_Map21_1_0
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_785B::
+MapObjects_Map21_1_0::
     db $03 ; entry 0: object count
     db $85, $01, $26, $00, $00, $60, $50, $05, $00, $50, $04 ; object 0
     db $86, $01, $25, $00, $02, $30, $60, $06, $01, $60, $05 ; object 1
@@ -5775,18 +5775,18 @@ MapObjects_785B::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_787D::
-    dw ObjSelector_787F ; id 0
+MapObjectScreens_Map22::
+    dw ObjSelector_Map22_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_787F::
-    objsel_list MapObjects_7883
+ObjSelector_Map22_0::
+    objsel_list MapObjects_Map22_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7883::
+MapObjects_Map22_0_0::
     db $03 ; entry 0: object count
     db $85, $01, $24, $00, $00, $30, $40, $05, $01, $50, $0a ; object 0
     db $86, $01, $25, $00, $00, $80, $70, $06, $03, $60, $0b ; object 1
@@ -5794,153 +5794,153 @@ MapObjects_7883::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_78A5::
-    dw ObjSelector_78A7 ; id 0
+MapObjectScreens_Map23::
+    dw ObjSelector_Map23_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_78A7::
-    objsel_list MapObjects_78AB
+ObjSelector_Map23_0::
+    objsel_list MapObjects_Map23_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_78AB::
+MapObjects_Map23_0_0::
     db $02 ; entry 0: object count
     db $85, $01, $24, $00, $00, $10, $60, $05, $02, $50, $1f ; object 0
     db $86, $01, $24, $00, $00, $50, $10, $06, $00, $60, $20 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_78C2::
-    dw ObjSelector_78CA ; id 0
-    dw ObjSelector_792C ; id 1
-    dw ObjSelector_7947 ; id 2
-    dw ObjSelector_7978 ; id 3
+MapObjectScreens_Map24::
+    dw ObjSelector_Map24_0 ; id 0
+    dw ObjSelector_Map24_1 ; id 1
+    dw ObjSelector_Map24_2 ; id 2
+    dw ObjSelector_Map24_3 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_78CA::
-    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_78D2
-    objsel_list MapObjects_78FF
+ObjSelector_Map24_0::
+    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_Map24_0_0
+    objsel_list MapObjects_Map24_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_78D2::
+MapObjects_Map24_0_0::
     db $04 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $40, $10, $05, $00, $50, $13 ; object 0
     db $85, $01, $4d, $00, $00, $50, $10, $05, $00, $50, $14 ; object 1
     db $86, $01, $24, $00, $00, $70, $60, $06, $03, $60, $0d ; object 2
     db $87, $01, $25, $00, $00, $30, $70, $07, $00, $70, $15 ; object 3
 
-MapObjects_78FF::
+MapObjects_Map24_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $30, $20, $05, $00, $50, $13 ; object 0
     db $85, $01, $4d, $00, $02, $60, $30, $05, $00, $50, $14 ; object 1
     db $86, $01, $24, $00, $00, $70, $60, $06, $03, $60, $0d ; object 2
     db $87, $01, $25, $00, $00, $30, $70, $07, $00, $70, $15 ; object 3
 
-ObjSelector_792C::
-    objsel_list MapObjects_7930
+ObjSelector_Map24_1::
+    objsel_list MapObjects_Map24_1_0
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7930::
+MapObjects_Map24_1_0::
     db $02 ; entry 0: object count
     db $85, $01, $12, $00, $00, $60, $30, $05, $00, $50, $17 ; object 0
     db $86, $01, $4d, $00, $00, $20, $60, $06, $01, $60, $0e ; object 1
 
-ObjSelector_7947::
-    objsel_list MapObjects_794B
+ObjSelector_Map24_2::
+    objsel_list MapObjects_Map24_2_0
 
-MapObjects_794B::
+MapObjects_Map24_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $26, $00, $00, $70, $70, $05, $03, $50, $0c ; object 0
     db $86, $01, $24, $00, $00, $20, $40, $06, $00, $60, $10 ; object 1
     db $87, $01, $15, $00, $00, $80, $20, $07, $00, $70, $12 ; object 2
     db $85, $01, $26, $00, $02, $60, $50, $05, $01, $50, $11 ; object 3
 
-ObjSelector_7978::
-    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_7980
-    objsel_list MapObjects_79A2
+ObjSelector_Map24_3::
+    objsel_unless_flag EVENT_SCENE_MONSTER_INSPECTION, MapObjects_Map24_3_0
+    objsel_list MapObjects_Map24_3_1
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7980::
+MapObjects_Map24_3_0::
     db $03 ; entry 0: object count
     db $85, $01, $25, $00, $00, $20, $60, $05, $03, $50, $0f ; object 0
     db $86, $01, $24, $00, $00, $50, $50, $06, $00, $60, $16 ; object 1
     db $87, $01, $4b, $00, $00, $40, $30, $07, $00, $70, $18 ; object 2
 
-MapObjects_79A2::
+MapObjects_Map24_3_1::
     db $02 ; entry 0: object count
     db $85, $01, $25, $00, $00, $20, $60, $05, $03, $50, $0f ; object 0
     db $86, $01, $24, $00, $00, $50, $50, $06, $00, $60, $16 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_79B9::
-    dw ObjSelector_79BD ; id 0
-    dw ObjSelector_7A32 ; id 1
+MapObjectScreens_Map25::
+    dw ObjSelector_Map25_0 ; id 0
+    dw ObjSelector_Map25_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_79BD::
+ObjSelector_Map25_0::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_79ED
+    objsel_list MapObjects_Map25_0_1
 
-ObjSelector_79C7::
+ObjSelector_Map25_0_Unlisted::
     objsel_skip_if_set EVENT_SCENE_MONSTER_INSPECTION, $02, $00
     objsel_none
 
-ObjSelector_79CF::
+ObjSelector_Map25_0_Unlisted_2::
     objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
-    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7A10
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_Map25_0_Unlisted_2_1
     objsel_none
 
-ObjSelector_79DB::
+ObjSelector_Map25_0_Unlisted_3::
     objsel_skip_if_clear EVENT_YOU_WILL_SO_WE_CAN, $04, $00
-    objsel_list MapObjects_79ED
+    objsel_list MapObjects_Map25_0_1
 
-ObjSelector_79E5::
-    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_79ED
-    objsel_list MapObjects_7A04
+ObjSelector_Map25_0_Unlisted_4::
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_Map25_0_1
+    objsel_list MapObjects_Map25_0_Unlisted_4_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_79ED::
+MapObjects_Map25_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $30, $50, $05, $00, $50, $27 ; object 0
     db $86, $01, $24, $00, $02, $60, $40, $06, $00, $60, $28 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_7A04::
+MapObjects_Map25_0_Unlisted_4_1::
     db $01 ; entry 0
     db $85, $01, $4d, $00, $00, $30, $50, $05, $00, $50, $27
 
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_7A10::
+MapObjects_Map25_0_Unlisted_2_1::
     db $03 ; entry 0: object count
     db $85, $01, $22, $00, $00, $40, $18, $05, $00, $50, $2b ; object 0
     db $86, $01, $4d, $00, $00, $30, $50, $06, $00, $60, $27 ; object 1
     db $87, $01, $24, $00, $00, $60, $40, $07, $00, $70, $28 ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7A32::
+ObjSelector_Map25_1::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_7A6F
+    objsel_list MapObjects_Map25_1_1
 
-ObjSelector_7A3C::
-    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7A42
+ObjSelector_Map25_1_Unlisted::
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_Map25_1_Unlisted_0
     objsel_none
 
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_7A42::
+MapObjects_Map25_1_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $4c, $00, $00, $20, $10, $05, $03, $50, $22 ; object 0
     db $85, $01, $4c, $00, $00, $20, $20, $05, $03, $50, $23 ; object 1
@@ -5951,7 +5951,7 @@ MapObjects_7A42::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7A6F::
+MapObjects_Map25_1_1::
     db $03 ; entry 0: object count
     db $85, $01, $4c, $00, $00, $20, $10, $05, $03, $50, $22 ; object 0
     db $85, $01, $4c, $00, $00, $20, $20, $05, $03, $50, $23 ; object 1
@@ -5959,46 +5959,46 @@ MapObjects_7A6F::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7A91::
-    dw ObjSelector_7A93 ; id 0
+MapObjectScreens_Map26::
+    dw ObjSelector_Map26_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7A93::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map26_0::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_7B26
+    objsel_list MapObjects_Map26_0_2
 
-ObjSelector_7AA3::
+ObjSelector_Map26_0_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_7ACB
+    objsel_list MapObjects_Map26_0_Unlisted_1
 
-ObjSelector_7AAD::
+ObjSelector_Map26_0_Unlisted_2::
     objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
-    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7AEE
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_Map26_0_Unlisted_2_1
     objsel_none
 
-ObjSelector_7AB9::
+ObjSelector_Map26_0_Unlisted_3::
     objsel_skip_if_clear EVENT_YOU_WILL_SO_WE_CAN, $04, $00
-    objsel_list MapObjects_7ACB
+    objsel_list MapObjects_Map26_0_Unlisted_1
 
-ObjSelector_7AC3::
-    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_7ACB
-    objsel_list MapObjects_7AE2
+ObjSelector_Map26_0_Unlisted_4::
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_Map26_0_Unlisted_1
+    objsel_list MapObjects_Map26_0_Unlisted_4_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_7ACB::
+MapObjects_Map26_0_Unlisted_1::
     db $02 ; entry 0: object count
     db $85, $01, $24, $00, $00, $50, $a0, $05, $02, $50, $28 ; object 0
     db $86, $01, $22, $00, $00, $40, $10, $06, $00, $60, $2b ; object 1
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_7AE2::
+MapObjects_Map26_0_Unlisted_4_1::
     db $01 ; entry 0
     db $85, $01, $24, $00, $00, $50, $40, $05, $00, $50, $28
 
 ; record: count, then 5 object(s), the layout of the other object lists
-MapObjects_7AEE::
+MapObjects_Map26_0_Unlisted_2_1::
     db $05 ; entry 0: object count
     db $85, $01, $22, $00, $00, $40, $10, $05, $00, $50, $2b ; object 0
     db $87, $01, $4d, $00, $00, $50, $50, $07, $02, $70, $00 ; object 1
@@ -6010,7 +6010,7 @@ MapObjects_7AEE::
 ; record: count, then 5 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7B26::
+MapObjects_Map26_0_2::
     db $05 ; entry 0: object count
     db $85, $01, $22, $00, $00, $40, $10, $05, $00, $50, $2b ; object 0
     db $86, $01, $24, $00, $00, $60, $20, $06, $00, $60, $28 ; object 1
@@ -6020,32 +6020,32 @@ MapObjects_7B26::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7B5E::
-    dw ObjSelector_7B62 ; id 0
-    dw ObjSelector_7B72 ; id 1
+MapObjectScreens_Map28::
+    dw ObjSelector_Map28_0 ; id 0
+    dw ObjSelector_Map28_1 ; id 1
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7B62::
-    objsel_list MapObjects_7B66
+ObjSelector_Map28_0::
+    objsel_list MapObjects_Map28_0_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7B66::
+MapObjects_Map28_0_0::
     db $01 ; entry 0
     db $85, $00, $4f, $00, $00, $50, $20, $05, $00, $50, $3b
 
-ObjSelector_7B72::
+ObjSelector_Map28_1::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $02, $00
     objsel_none
 
-ObjSelector_7B7A::
-    objsel_list MapObjects_7B7E
+ObjSelector_Map28_1_Unlisted::
+    objsel_list MapObjects_Map28_1_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_7B7E::
+MapObjects_Map28_1_Unlisted_0::
     db $04 ; entry 0: object count
     db $85, $01, $5c, $00, $00, $40, $10, $05, $00, $50, $3c ; object 0
     db $86, $01, $22, $00, $00, $40, $a0, $06, $02, $60, $2b ; object 1
@@ -6054,44 +6054,44 @@ MapObjects_7B7E::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7BAB::
-    dw ObjSelector_7BAD ; id 0
+MapObjectScreens_Map2A::
+    dw ObjSelector_Map2A_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7BAD::
-    objsel_skip_if_set $004a, $08, $00
-    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_7BBF
-    objsel_list MapObjects_7BCB
+ObjSelector_Map2A_0::
+    objsel_skip_if_set EVENT_WHAT_OPEN_THE_CANAL_GATE, $08, $00
+    objsel_unless_flag EVENT_KING_WHAT_NEVER_MIND_THEN, MapObjects_Map2A_0_1
+    objsel_list MapObjects_Map2A_0_2
 
-ObjSelector_7BBB::
-    objsel_list MapObjects_7BE2
+ObjSelector_Map2A_0_Unlisted::
+    objsel_list MapObjects_Map2A_0_Unlisted_0
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 1 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7BBF::
+MapObjects_Map2A_0_1::
     db $01 ; entry 0
     db $85, $01, $26, $00, $00, $20, $40, $05, $00, $50, $09
 
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7BCB::
+MapObjects_Map2A_0_2::
     db $02 ; entry 0: object count
     db $85, $01, $22, $00, $00, $20, $50, $05, $02, $50, $2b ; object 0
     db $86, $01, $26, $00, $00, $20, $40, $06, $00, $60, $09 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_7BE2::
+MapObjects_Map2A_0_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $22, $00, $00, $e0, $e0, $05, $02, $50, $2b ; object 0
     db $86, $01, $26, $00, $00, $20, $10, $06, $00, $60, $09 ; object 1
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7BF9::
+MapObjectScreens_Map2B::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2
@@ -6101,7 +6101,7 @@ MapObjectScreens_7BF9::
     dw $0000 ; id 6
     dw $0000 ; id 7
     dw $0000 ; id 8
-    dw ObjSelector_7C19 ; id 9
+    dw ObjSelector_Map2B_9 ; id 9
     dw $0000 ; id 10
     dw $0000 ; id 11
     dw $0000 ; id 12
@@ -6110,50 +6110,50 @@ MapObjectScreens_7BF9::
     dw $0000 ; id 15
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7C19::
+ObjSelector_Map2B_9::
     objsel_skip_if_clear EVENT_SCENE_WATER_SOLVED, $02, $00
     objsel_none
 
-ObjSelector_7C21::
-    objsel_unless_flag EVENT_YOU_WILL_SO_WE_CAN, MapObjects_7C29
-    objsel_list MapObjects_7C40
+ObjSelector_Map2B_9_Unlisted::
+    objsel_unless_flag EVENT_YOU_WILL_SO_WE_CAN, MapObjects_Map2B_9_Unlisted_0
+    objsel_list MapObjects_Map2B_9_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_7C29::
+MapObjects_Map2B_9_Unlisted_0::
     db $02 ; entry 0: object count
     db $85, $01, $22, $00, $00, $30, $70, $05, $02, $50, $2b ; object 0
     db $86, $00, $4f, $00, $00, $30, $60, $06, $00, $60, $37 ; object 1
 
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_7C40::
+MapObjects_Map2B_9_Unlisted_1::
     db $01 ; entry 0
     db $85, $01, $22, $00, $00, $30, $70, $05, $02, $50, $2b
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7C4C::
-    dw ObjSelector_7C4E ; id 0
+MapObjectScreens_Map2D::
+    dw ObjSelector_Map2D_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7C4E::
+ObjSelector_Map2D_0::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_7CAF
+    objsel_list MapObjects_Map2D_0_1
 
-ObjSelector_7C58::
-    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7C60
-    objsel_list MapObjects_7C82
+ObjSelector_Map2D_0_Unlisted::
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_Map2D_0_Unlisted_0
+    objsel_list MapObjects_Map2D_0_Unlisted_1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_7C60::
+MapObjects_Map2D_0_Unlisted_0::
     db $03 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $50, $30, $05, $00, $50, $2c ; object 0
     db $86, $01, $4d, $00, $00, $20, $40, $06, $02, $60, $2d ; object 1
     db $87, $01, $24, $00, $00, $20, $20, $07, $00, $70, $00 ; object 2
 
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_7C82::
+MapObjects_Map2D_0_Unlisted_1::
     db $04 ; entry 0: object count
     db $85, $01, $24, $00, $00, $20, $20, $05, $00, $50, $00 ; object 0
     db $86, $01, $4b, $00, $00, $20, $60, $06, $02, $60, $00 ; object 1
@@ -6164,7 +6164,7 @@ MapObjects_7C82::
 ; record: count, then 4 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7CAF::
+MapObjects_Map2D_0_1::
     db $04 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $50, $30, $05, $00, $50, $2c ; object 0
     db $86, $01, $27, $00, $00, $30, $70, $06, $00, $60, $00 ; object 1
@@ -6173,34 +6173,34 @@ MapObjects_7CAF::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7CDC::
-    dw ObjSelector_7CDE ; id 0
+MapObjectScreens_Map2E::
+    dw ObjSelector_Map2E_0 ; id 0
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7CDE::
+ObjSelector_Map2E_0::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_7CF8
+    objsel_list MapObjects_Map2E_0_1
 
-ObjSelector_7CE8::
+ObjSelector_Map2E_0_Unlisted::
     objsel_skip_if_clear EVENT_KING_THE_TOWN, $06, $00
-    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_7D0F
+    objsel_unless_flag EVENT_SCENE_TREASURE_THEFT, MapObjects_Map2E_0_Unlisted_1
     objsel_none
 
-ObjSelector_7CF4::
-    objsel_list MapObjects_7CF8
+ObjSelector_Map2E_0_Unlisted_2::
+    objsel_list MapObjects_Map2E_0_1
 
 ; an object list of LoadMapObjectsForScreen (E-0163)
 ; record: count, then 2 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7CF8::
+MapObjects_Map2E_0_1::
     db $02 ; entry 0: object count
     db $85, $01, $4d, $00, $00, $40, $40, $05, $00, $50, $25 ; object 0
     db $85, $01, $4d, $00, $00, $50, $40, $05, $00, $50, $26 ; object 1
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 3 object(s), the layout of the other object lists
-MapObjects_7D0F::
+MapObjects_Map2E_0_Unlisted_1::
     db $03 ; entry 0: object count
     db $85, $01, $22, $00, $00, $30, $60, $05, $01, $50, $2b ; object 0
     db $86, $01, $4d, $00, $00, $60, $50, $06, $02, $60, $25 ; object 1
@@ -6208,58 +6208,58 @@ MapObjects_7D0F::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7D31::
-    dw ObjSelector_7D39 ; id 0
-    dw ObjSelector_7D51 ; id 1
-    dw ObjSelector_7DDD ; id 2
+MapObjectScreens_Map2F::
+    dw ObjSelector_Map2F_0 ; id 0
+    dw ObjSelector_Map2F_1 ; id 1
+    dw ObjSelector_Map2F_2 ; id 2
     dw $0000 ; id 3
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7D39::
+ObjSelector_Map2F_0::
     objsel_skip_if_set EVENT_SCENE_RIVAL_DEFEATED_05A, $02, $00
     objsel_none
 
-ObjSelector_7D41::
-    objsel_list MapObjects_7D45
+ObjSelector_Map2F_0_Unlisted::
+    objsel_list MapObjects_Map2F_0_Unlisted_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 1 object(s), the layout of the other object lists
-MapObjects_7D45::
+MapObjects_Map2F_0_Unlisted_0::
     db $01 ; entry 0
     db $85, $00, $4f, $00, $00, $30, $60, $05, $01, $50, $3d
 
-ObjSelector_7D51::
-    objsel_skip_if_set $0025, $0a, $00
+ObjSelector_Map2F_1::
+    objsel_skip_if_set EVENT_THANKS_FOR_COMING_BY_025, $0a, $00
     objsel_skip_if_clear EVENT_SCENE_DARCK_DEFEATED, $04, $00
-    objsel_list MapObjects_7DBB
+    objsel_list MapObjects_Map2F_1_2
 
-ObjSelector_7D61::
+ObjSelector_Map2F_1_Unlisted::
     objsel_skip_if_clear EVENT_SCENE_WATER_REWARD, $04, $00
-    objsel_list MapObjects_7DAF
+    objsel_list MapObjects_Map2F_1_Unlisted_1
 
-ObjSelector_7D6B::
+ObjSelector_Map2F_1_Unlisted_2::
     objsel_skip_if_clear EVENT_SCENE_RIVAL_DEFEATED_05A, $04, $00
-    objsel_list MapObjects_7D98
+    objsel_list MapObjects_Map2F_1_Unlisted_2_1
 
-ObjSelector_7D75::
-    objsel_skip_if_set $0058, $02, $00
+ObjSelector_Map2F_1_Unlisted_3::
+    objsel_skip_if_set EVENT_SCENE_MONSTERS_IN_TOW, $02, $00
     objsel_none
 
-ObjSelector_7D7D::
-    objsel_list MapObjects_7D81
+ObjSelector_Map2F_1_Unlisted_4::
+    objsel_list MapObjects_Map2F_1_Unlisted_4_0
 
 ; record: count, then 2 object(s), the layout of the other object lists
-MapObjects_7D81::
+MapObjects_Map2F_1_Unlisted_4_0::
     db $02 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $30, $60, $05, $00, $50, $3a ; object 0
     db $85, $00, $4f, $00, $00, $60, $40, $05, $03, $50, $3b ; object 1
 
-MapObjects_7D98::
+MapObjects_Map2F_1_Unlisted_2_1::
     db $02 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $30, $60, $05, $00, $50, $3a ; object 0
     db $85, $00, $4f, $00, $00, $60, $40, $05, $00, $50, $37 ; object 1
 
-MapObjects_7DAF::
+MapObjects_Map2F_1_Unlisted_1::
     db $01 ; entry 0
     db $85, $00, $4f, $00, $00, $30, $60, $05, $00, $50, $3a
 
@@ -6267,34 +6267,34 @@ MapObjects_7DAF::
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number
 ; (2 bytes), slot byte 0, X, Y, palette slot, facing (slot byte 7, E-0247), talk event group, slot
 ; byte 15
-MapObjects_7DBB::
+MapObjects_Map2F_1_2::
     db $03 ; entry 0: object count
     db $85, $00, $4f, $00, $00, $40, $e0, $05, $00, $50, $37 ; object 0
     db $85, $00, $4f, $00, $00, $50, $e0, $05, $00, $50, $37 ; object 1
     db $85, $00, $4f, $00, $00, $40, $e0, $05, $00, $50, $3a ; object 2
 
 ; map object selector (E-0163): the first entry that applies picks the object list
-ObjSelector_7DDD::
-    objsel_skip_if_clear $0058, $02, $00
+ObjSelector_Map2F_2::
+    objsel_skip_if_clear EVENT_SCENE_MONSTERS_IN_TOW, $02, $00
     objsel_none
 
-ObjSelector_7DE5::
+ObjSelector_Map2F_2_Unlisted::
     objsel_skip_if_set EVENT_SCENE_TREASURE_THEFT, $02, $00
     objsel_none
 
-ObjSelector_7DED::
-    objsel_list MapObjects_7DF1
+ObjSelector_Map2F_2_Unlisted_2::
+    objsel_list MapObjects_Map2F_2_Unlisted_2_0
 
 ; an object list found by tiling a gap between map object layouts (E-0218)
 ; record: count, then 4 object(s), the layout of the other object lists
-MapObjects_7DF1::
+MapObjects_Map2F_2_Unlisted_2_0::
     db $04 ; entry 0: object count
     db $85, $01, $22, $00, $00, $60, $60, $05, $02, $50, $2b ; object 0
     db $86, $01, $4d, $00, $00, $10, $40, $06, $02, $60, $25 ; object 1
     db $86, $01, $4d, $00, $02, $20, $70, $06, $02, $60, $26 ; object 2
     db $86, $01, $4d, $00, $00, $80, $50, $06, $02, $60, $2d ; object 3
 
-MapObjects_7E1E::
+LoadMapObjectsForScreen_MapObjects::
     db $04 ; entry 0: object count
     db $85, $01, $22, $00, $00, $60, $30, $05, $03, $50, $2b ; object 0
     db $86, $01, $4d, $00, $00, $10, $10, $06, $02, $60, $25 ; object 1
@@ -6303,7 +6303,7 @@ MapObjects_7E1E::
 
 ; one selector per screen, row by row (E-0163)
 ; record: selector for this screen
-MapObjectScreens_7E4B::
+MapObjectScreens_Map03::
     dw $0000 ; id 0
     dw $0000 ; id 1
     dw $0000 ; id 2

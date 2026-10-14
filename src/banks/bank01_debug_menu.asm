@@ -22,8 +22,8 @@ GameMode0_Init::
     ld [wDebugSubState], a
     ld [wDebugCounter], a
     xor a
-    ld [wDebugByteF6], a
-    ld [wDebugByteF7], a
+    ld [wDebugUnusedA], a
+    ld [wDebugUnusedB], a
     call DebugMode_InitByModeState
     ld a, $fc
     call StartPaletteFade
@@ -52,7 +52,7 @@ DebugMode_InitByModeState::
 
 ; init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 DebugMessageTest_Init::
-    call LoadPalette0FromData4ACC
+    call LoadPalette0FromData
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -84,32 +84,32 @@ DebugMessageTest_Init::
     ld a, h
     ld [wTextCursorHi], a
     ld hl, vTiles2 + $200
-    ld de, Tiles2Plus200Tiles_1F_4160
+    ld de, Tiles2Plus200Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $210
-    ld de, Tiles2Plus210Tiles_1F_4130
+    ld de, Tiles2Plus210Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $220
-    ld de, Tiles1Plus6E0Tiles_1F_4180
+    ld de, Tiles1Plus6E0Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $230
-    ld de, Tiles2Plus230Tiles_1F_4190
+    ld de, Tiles2Plus230Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $240
-    ld de, Tiles2Plus240Tiles_1F_4170
+    ld de, Tiles2Plus240Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
     ld hl, vTiles2 + $250
-    ld de, Tiles2Plus250Tiles_1F_41D0
+    ld de, Tiles2Plus250Tiles
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
@@ -123,7 +123,7 @@ DebugMessageTest_Init::
     ld [wDebugSubState], a
     ld [wDebugCounter], a
     ld a, $01
-    ld de, TileRect_01_412F
+    ld de, DebugMessageTest_Init_TileRect
     ld hl, vBGMap0
     lb bc, $14, $12
     call CopyRectFromBankToVRAM
@@ -139,7 +139,7 @@ DebugMessageTest_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
-TileRect_01_412F::
+DebugMessageTest_Init_TileRect::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -167,7 +167,7 @@ DebugMonsterRecordViewer_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, TileRect_01_42BC
+    ld de, DebugMonsterRecordViewer_Init_TileRect
     ld hl, vBGMap0
     lb bc, $14, $12
     call CopyRectFromBankToVRAM
@@ -178,7 +178,7 @@ DebugMonsterRecordViewer_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
-TileRect_01_42BC::
+DebugMonsterRecordViewer_Init_TileRect::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $11, $40, $41, $42, $43, $44, $45, $46, $47, $48, $00, $00, $00 ; id 1
     db $00, $12, $13, $14, $15, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -206,7 +206,7 @@ DebugSkillViewer_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, TileRect_01_6F30
+    ld de, DebugSkillViewer_Init_TileRect
     ld hl, vBGMap0
     lb bc, $14, $12
     call CopyRectFromBankToVRAM
@@ -243,7 +243,7 @@ DebugStaffRoll_Init::
 
 ; init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 DebugResultsDisplay_Init::
-    call LoadPalette0FromData4ACC
+    call LoadPalette0FromData
     ld hl, vTiles2 + $100
     ld a, l
     ld [wTextWindowTileLo], a
@@ -273,7 +273,7 @@ DebugResultsDisplay_Init::
     ld [wStringCategory], a
     ld a, $27
     ld [wStringIndex], a ; 'RESULTS DISPLAY Species Gender'
-    farcall ShowString_Bank1B_4C94
+    farcall ShowString_Bank1B_2
     ld hl, vBGMap0 + $60
     lb bc, $10, $01
     ld a, $80
@@ -297,17 +297,17 @@ DebugResultsDisplay_Init::
     ld a, $fb
     ld [vBGMap0 + $1c1], a
     ld [vBGMap0 + $221], a
-    ld de, Tiles1Plus7E0Tiles_1F_4A80
+    ld de, Tiles1Plus7E0Tiles
     ld hl, vTiles1 + $7e0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus7F0Tiles_1F_4A90
+    ld de, Tiles1Plus7F0Tiles_2
     ld hl, vTiles1 + $7f0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus7C0Tiles_1F_4780
+    ld de, Tiles1Plus7C0Tiles_2
     ld hl, vTiles1 + $7c0
     ld b, $1f
     ld c, $10
@@ -317,12 +317,12 @@ DebugResultsDisplay_Init::
     ld b, $1f
     ld c, $10
     call OrFromBankWaitVRAM
-    ld de, Tiles2Plus200Tiles_1F_4160
+    ld de, Tiles2Plus200Tiles
     ld hl, vTiles1 + $7d0
     ld b, $1f
     ld c, $10
     call CopyFromBankWaitVRAM
-    ld de, Tiles1Plus7B0Tiles_1F_4480
+    ld de, Tiles1Plus7B0Tiles
     ld hl, vTiles1 + $7b0
     ld b, $1f
     ld c, $10
@@ -397,7 +397,7 @@ DebugResultsDisplay_Init::
 
 ; init for debug-mode state 0: the screen shows the debug menu (E-0041)
 DebugMainMenu_Init::
-    call LoadPalette0FromData4ACC
+    call LoadPalette0FromData
     ld hl, vTiles1
     ld a, l
     ld [wTextWindowTileLo], a
@@ -456,7 +456,7 @@ DebugMapEditor_Init::
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, TileRect_01_46A4
+    ld de, DebugMapEditor_Init_TileRect
     ld hl, vBGMap0 + $ea
     lb bc, $10, $01
     call CopyRectFromBankToVRAM
@@ -479,7 +479,7 @@ DebugMapEditor_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 16 x 1 tiles, one row per line
-TileRect_01_46A4::
+DebugMapEditor_Init_TileRect::
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
@@ -519,7 +519,7 @@ DebugAutomap_Init::
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, TileRect_01_4733
+    ld de, DebugAutomap_Init_TileRect
     ld hl, vBGMap0 + $ea
     lb bc, $10, $01
     call CopyRectFromBankToVRAM
@@ -540,7 +540,7 @@ DebugAutomap_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 16 x 1 tiles, one row per line
-TileRect_01_4733::
+DebugAutomap_Init_TileRect::
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
 ; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite
@@ -581,7 +581,7 @@ DebugMonsterPictureViewer_Init::
     ld a, $80
     call FillRectWithTileSequence
     ld a, $01
-    ld de, TileRect_01_47DE
+    ld de, DebugMonsterPictureViewer_Init_TileRect
     ld hl, vBGMap0 + $124
     lb bc, $06, $06
     call CopyRectFromBankToVRAM
@@ -592,7 +592,7 @@ DebugMonsterPictureViewer_Init::
     ld a, $01
     ldh [c], a
     ld a, $01
-    ld de, TileRect_01_4802
+    ld de, DebugMonsterPictureViewer_Init_TileRect_2
     ld hl, vBGMap0 + $124
     lb bc, $06, $06
     call CopyRectFromBankToVRAM
@@ -616,7 +616,7 @@ DebugMonsterPictureViewer_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
-TileRect_01_47DE::
+DebugMonsterPictureViewer_Init_TileRect::
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2a, $2b ; id 1
     db $2c, $2d, $2e, $2f, $30, $31 ; id 2
@@ -624,7 +624,7 @@ TileRect_01_47DE::
     db $38, $39, $3a, $3b, $3c, $3d ; id 4
     db $3e, $3f, $40, $41, $42, $43 ; id 5
 
-TileRect_01_4802::
+DebugMonsterPictureViewer_Init_TileRect_2::
     db $01, $01, $01, $01, $01, $01 ; id 0
     db $01, $01, $01, $01, $01, $01 ; id 1
     db $01, $01, $01, $01, $01, $01 ; id 2
@@ -665,7 +665,7 @@ DebugSoundTest_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, TileRect_01_488A
+    ld de, DebugSoundTest_Init_TileRect
     ld hl, vBGMap0 + $a3
     lb bc, $0b, $04
     call CopyRectFromBankToVRAM
@@ -679,7 +679,7 @@ DebugSoundTest_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 11 x 4 tiles, one row per line
-TileRect_01_488A::
+DebugSoundTest_Init_TileRect::
     db $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a ; id 0
     db $90, $91, $92, $93, $94, $95, $96, $97, $98, $99, $9a ; id 1
     db $a0, $a1, $a2, $a3, $a4, $a5, $10, $10, $a8, $10, $12 ; id 2
@@ -719,7 +719,7 @@ DebugBattleSetup_Init::
     ld [wStringIndex], a
     farcall ShowString_Bank08
     ld a, $01
-    ld de, TileRect_01_495D
+    ld de, DebugBattleSetup_Init_TileRect
     ld hl, vBGMap0 + $40
     lb bc, $14, $0e
     call CopyRectFromBankToVRAM
@@ -758,7 +758,7 @@ DebugBattleSetup_Init::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 14 tiles, one row per line
-TileRect_01_495D::
+DebugBattleSetup_Init_TileRect::
     db $00, $00, $00, $00, $80, $81, $82, $83, $84, $85, $86, $87, $88, $89, $8a, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $8b, $8c, $8d, $8e, $8f, $90, $91, $10, $10, $10, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 2
@@ -809,19 +809,20 @@ FillRectWithTileSequence::
     ldh [c], a
     ret
 
-; on CGB copies the 8-byte palette LoadPalette0FromData4ACC_Data into wBGPaletteBuffer twice and
-; sets wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117)
-LoadPalette0FromData4ACC::
+; on CGB copies the 8-byte palette LoadPalette0FromData_Data into wBGPaletteBuffer twice and sets
+; wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117) (E-0344: the address in its
+; name dropped or read as the label there; was LoadPalette0FromData4ACC)
+LoadPalette0FromData::
     ld a, [wIsCGB]
     or a
     ret z
-    ld de, LoadPalette0FromData4ACC_Data
+    ld de, LoadPalette0FromData_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
     ld a, $7f
     ld [wBGPaletteUploadRequest], a
-    ld de, LoadPalette0FromData4ACC_Data
+    ld de, LoadPalette0FromData_Data
     ld hl, wBGPaletteBuffer
     ld bc, $0008
     call CopyBytesDEToHL_Bank00
@@ -829,7 +830,7 @@ LoadPalette0FromData4ACC::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-LoadPalette0FromData4ACC_Data::
+LoadPalette0FromData_Data::
     db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
 ; per-frame routine for wGameMode = 0
@@ -856,7 +857,7 @@ DebugMessageTest_Update::
     ret nz
     ld a, [wJoypadPressed]
     and $01
-    jp z, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat
+    jp z, DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat
     ld a, [wMenuRowCount]
     ld [wStringIndex], a
     ld a, [wTemp1]
@@ -894,19 +895,19 @@ DebugMessageTest_Update::
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank83
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1D
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank8A
-    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86
+    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_2
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1F
-    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0
+    dw DebugMessageTest_Update_ToBeginStringDisplay_BankF0_2
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0D
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank24
-    dw DebugMessageTest_Update_CallUpdate_Case1C_Sub01_BeginStringDisplay
+    dw DebugMessageTest_Update_CallUpdate_BeginStringDisplay
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0E
     dw DebugMessageTest_Update_ToBeginStringDisplay_BankF2
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank33_2
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0B
-    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C
+    dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank08::
     farcall BeginStringDisplay_Bank08
@@ -992,36 +993,36 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank8A::
     farcall BeginStringDisplay_Bank8A
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_BankF0_4001::
-    farcall BeginStringDisplay_BankF0_4001
+DebugMessageTest_Update_ToBeginStringDisplay_BankF0::
+    farcall BeginStringDisplay_BankF0
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_4C86::
-    farcall BeginStringDisplay_Bank1B_4C86
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_2::
+    farcall BeginStringDisplay_Bank1B_2
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1F::
     farcall BeginStringDisplay_Bank1F
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_BankF0_48A0::
-    farcall BeginStringDisplay_BankF0_48A0
+DebugMessageTest_Update_ToBeginStringDisplay_BankF0_2::
+    farcall BeginStringDisplay_BankF0_2
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0D::
     farcall BeginStringDisplay_Bank0D
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_Bank33_6490::
-    farcall BeginStringDisplay_Bank33_6490
+DebugMessageTest_Update_ToBeginStringDisplay_Bank33::
+    farcall BeginStringDisplay_Bank33
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank24::
     farcall BeginStringDisplay_Bank24
     ret
 
-DebugMessageTest_Update_CallUpdate_Case1C_Sub01_BeginStringDisplay::
-    farcall DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01
+DebugMessageTest_Update_CallUpdate_BeginStringDisplay::
+    farcall DebugMessageTest_Update_BeginStringDisplay
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0E::
@@ -1032,31 +1033,31 @@ DebugMessageTest_Update_ToBeginStringDisplay_BankF2::
     farcall BeginStringDisplay_BankF2
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_Bank33_7037::
-    farcall BeginStringDisplay_Bank33_7037
+DebugMessageTest_Update_ToBeginStringDisplay_Bank33_2::
+    farcall BeginStringDisplay_Bank33_2
     ret
 
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0B::
     farcall BeginStringDisplay_Bank0B
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C::
-    farcall BeginStringDisplay_Bank1B_480C
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
+    farcall BeginStringDisplay_Bank1B
     ret
 
-DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepeat::
+DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
     ld a, [wMenuState]
     cp $00
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
     ld a, [wMenuState]
     sub $01
     jr nc, .set_menu_state
@@ -1073,13 +1074,13 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     jr z, .read_menu_state
     ld a, [wMenuState]
     cp $00
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
+    call z, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
     ld a, [wMenuState]
     add $01
     cp $03
@@ -1101,7 +1102,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     and $10
     jr z, .check_joypad_pressed_repeat2
     inc [hl]
-    call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
+    call DebugMessageTest_Update_WriteTemp1AndMenuRowCount
     jr .call_queue_sound_effect
 
 .check_joypad_pressed_repeat2:
@@ -1109,7 +1110,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     and $20
     jr z, .check_joypad_pressed
     dec [hl]
-    call DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount
+    call DebugMessageTest_Update_WriteTemp1AndMenuRowCount
     jr .call_queue_sound_effect
 
 .check_joypad_pressed:
@@ -1125,7 +1126,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     ld a, [wMenuState]
     ld b, $21
     cp $00
-    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
     add a
     ld hl, DebugMessageTestTable
@@ -1145,7 +1146,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     ld b, a
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
     ld a, [wTemp0]
     add a
     ld hl, DebugMessageTestTable
@@ -1174,7 +1175,7 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
     ld b, a
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
 
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
@@ -1189,58 +1190,58 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_480C_CheckJoypadPressedRepea
 .check_menu_state3:
     ld a, [wMenuState]
     cp $00
-    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState
+    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE
+    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE
     xor a
     ld hl, vBGMap0 + $6d
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE::
+DebugMessageTest_Update_WriteHexByteTilesAtDE::
     ld a, [wTemp0]
     ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_CheckMenuState::
+DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState::
     ld a, [wMenuState]
     cp $01
-    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo
+    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02
+    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_2
     xor a
     ld hl, vBGMap0 + $ad
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02::
+DebugMessageTest_Update_WriteHexByteTilesAtDE_2::
     ld a, [wTemp1]
     ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub02_CheckFrameCounterLo::
+DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03
+    jr nz, DebugMessageTest_Update_WriteHexByteTilesAtDE_3
     xor a
     ld hl, vBGMap0 + $ed
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03::
+DebugMessageTest_Update_WriteHexByteTilesAtDE_3::
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
-    jr DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState
+    jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
-DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState::
+DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
     ld a, [wMenuState]
     cp $00
     jr z, .check_menu_state
@@ -1267,7 +1268,7 @@ DebugMessageTest_Update_Case21_WriteHexByteTilesAtDE_Sub03_CheckMenuState::
 .return:
     ret
 
-DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc::
+DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
     push af
     ld a, [wMenuState]
     ld hl, wTemp0
@@ -1315,7 +1316,7 @@ DebugMessageTest_Update_Case21_ReadMenuStateAndTemp0Etc::
     pop af
     ret
 
-DebugMessageTest_Update_Case21_WriteTemp1AndMenuRowCount::
+DebugMessageTest_Update_WriteTemp1AndMenuRowCount::
     ld a, [wMenuState]
     cp $00
     jr nz, .cp_01
@@ -2130,9 +2131,9 @@ DebugStaffRoll_Update::
 DebugResultsDisplay_Update::
     ld a, [wScreenState]
     and a
-    jp z, DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat
+    jp z, DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat
     cp $01
-    jp z, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1
+    jp z, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2155,21 +2156,21 @@ DebugResultsDisplay_Update::
     call DebugResultsDisplay_Update_HLToDecimalDigits
     xor a
     ld [wScreenState], a
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
 .check_debug_cursor:
     ld a, [wDebugCursor]
     cp $04
-    jr nz, .read_screen_byte_bd
+    jr nz, .read_shared_menu_work
     ld hl, wGridCursorY
-    jr .read_screen_byte_bd2
+    jr .read_shared_menu_work2
 
-.read_screen_byte_bd:
+.read_shared_menu_work:
     ld hl, wDebugResultsBuf
 
-.read_screen_byte_bd2:
-    ld a, [wScreenByteBD]
+.read_shared_menu_work2:
+    ld a, [wSharedMenuWork]
     add_a_to_hl
     ld a, [hl]
     and a
@@ -2185,15 +2186,15 @@ DebugResultsDisplay_Update::
 .check_debug_cursor2:
     ld a, [wDebugCursor]
     cp $04
-    jr nz, .read_screen_byte_bd3
+    jr nz, .read_shared_menu_work3
     ld hl, wGridCursorY
-    jr .read_screen_byte_bd4
+    jr .read_shared_menu_work4
 
-.read_screen_byte_bd3:
+.read_shared_menu_work3:
     ld hl, wDebugResultsBuf
 
-.read_screen_byte_bd4:
-    ld a, [wScreenByteBD]
+.read_shared_menu_work4:
+    ld a, [wSharedMenuWork]
     add_a_to_hl
     ld a, [hl]
     cp $03
@@ -2208,27 +2209,27 @@ DebugResultsDisplay_Update::
 
 .call_debug_results_display_update_hl_to2:
     call DebugResultsDisplay_Update_HLToDecimalDigits
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     cp $1a
-    jr c, .set_screen_byte_bd
+    jr c, .set_shared_menu_work
     ld a, $ff
 
-.set_screen_byte_bd:
+.set_shared_menu_work:
     inc a
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
 .call_debug_results_display_update_hl_to3:
     call DebugResultsDisplay_Update_HLToDecimalDigits
-    ld a, [wScreenByteBD]
+    ld a, [wSharedMenuWork]
     and a
-    jr nz, .set_screen_byte_bd2
+    jr nz, .set_shared_menu_work2
     ld a, $1b
 
-.set_screen_byte_bd2:
+.set_shared_menu_work2:
     dec a
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
@@ -2239,28 +2240,28 @@ DebugResultsDisplay_Update_WriteDebugCounter::
     cp $10
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits
     cp $18
-    jr c, DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb
+    jr c, DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs
     xor a
     ld [wDebugCounter], a
 
 DebugResultsDisplay_Update_HLToDecimalDigits::
     ld a, [wDebugCursor]
     cp $04
-    jr nz, .read_screen_byte_bd
+    jr nz, .read_shared_menu_work
     ld hl, wGridCursorY
-    jr .read_screen_byte_bd2
+    jr .read_shared_menu_work2
 
-.read_screen_byte_bd:
+.read_shared_menu_work:
     ld hl, wDebugResultsBuf
 
-.read_screen_byte_bd2:
-    ld a, [wScreenByteBD]
+.read_shared_menu_work2:
+    ld a, [wSharedMenuWork]
     add_a_to_hl
     ld a, [hl]
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
+    call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
     ld a, [wDigits + $2]
     add $10
     ld c, a
@@ -2271,8 +2272,8 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
     ei
     ret
 
-DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub02_ReadDeb::
-    call DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD
+DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs::
+    call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
     di
     call WaitForVRAMAccess
     xor a
@@ -2280,18 +2281,18 @@ DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Sub0
     ei
     ret
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
+DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     ld a, [wDebugCursor]
     cp $04
-    jr nz, .check_screen_byte_bd
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data1
-    jr .check_screen_byte_bd2
+    jr nz, .check_shared_menu_work
+    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data1
+    jr .check_shared_menu_work2
 
-.check_screen_byte_bd:
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2
+.check_shared_menu_work:
+    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2
 
-.check_screen_byte_bd2:
-    ld a, [wScreenByteBD]
+.check_shared_menu_work2:
+    ld a, [wSharedMenuWork]
     cp $0e
     jr c, .skip
     sub $0e
@@ -2309,13 +2310,13 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD::
     add_a_to_hl
     ret
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data1::
+DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data1::
     db $86, $99, $a6, $99
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2::
+DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
     db $e6, $99, $06, $9a
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1::
+DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1::
     ld a, [wArg1]
     and a
     jr z, .call_compute_breeding_child
@@ -2343,7 +2344,7 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1:
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data3
+    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data3
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -2444,19 +2445,19 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1:
     ld c, a
     ld de, vBGMap0 + $2
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_WaitForVRAMAccess
     ld hl, wChildRecord + MON_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_WaitForVRAMAccess
     ld hl, wChildRecord + MON_MAX_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess
+    call DebugResultsDisplay_Update_WaitForVRAMAccess
     ld hl, wChildRecord + MON_RESISTANCES
     ld de, vBGMap0 + $6
     ld c, $00
@@ -2495,7 +2496,7 @@ DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data2_CheckArg1:
     ld [wNameEntryState], a
     ret
 
-DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess::
+DebugResultsDisplay_Update_WaitForVRAMAccess::
     ld a, c
     and $f0
     swap a
@@ -2518,7 +2519,7 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess::
     ei
     ret
 
-DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepeat::
+DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2551,7 +2552,7 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wGridCursorY
-    call CopySpeciesExpCurveBBytesFromIndexCToDE
+    call CopySpeciesResistancesFromIndexCToDE
     ld a, [wDebugValue3]
     ld [wArg2], a
     ld a, [wDebugState]
@@ -2563,7 +2564,7 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
     farcall LoadSpeciesRecord
     ld c, $00
     ld de, wDebugResultsBuf
-    call CopySpeciesExpCurveBBytesFromIndexCToDE
+    call CopySpeciesResistancesFromIndexCToDE
     ld hl, wGridCursorY
     ld de, vBGMap0 + $186
     ld c, $00
@@ -2630,12 +2631,14 @@ DebugResultsDisplay_Update_Sub02_Sub01_WaitForVRAMAccess_CheckJoypadPressedRepea
 
 ; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE
 ; (E-0122) (E-0340: the address in its name read as its RAM name; was CopyWD01ABytesFromIndexCToDE)
-CopySpeciesExpCurveBBytesFromIndexCToDE::
+; (E-0345: copies from wSpeciesRecord + $12 (SPECIES_RESISTANCES); was
+; CopySpeciesExpCurveBBytesFromIndexCToDE)
+CopySpeciesResistancesFromIndexCToDE::
     push bc
     push de
     ld a, c
     ld [wArg4], a
-    farcall LoadSpeciesExpCurveBByteArg4
+    farcall LoadSpeciesResistanceArg4
     pop de
     pop bc
     ld a, [wArg5]
@@ -2644,7 +2647,7 @@ CopySpeciesExpCurveBBytesFromIndexCToDE::
     inc c
     ld a, c
     cp $1b
-    jr c, CopySpeciesExpCurveBBytesFromIndexCToDE
+    jr c, CopySpeciesResistancesFromIndexCToDE
     ret
 
 ; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following
@@ -2687,7 +2690,7 @@ DebugToggleArg1Marker_CheckDebugCursor::
     inc a
     ld [wScreenState], a
     xor a
-    ld [wScreenByteBD], a
+    ld [wSharedMenuWork], a
     ret
 
 DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
@@ -3608,7 +3611,7 @@ DebugAutomap_Update_RollKeyContentsForLevelTemp0::
     ldh a, [hTemp3]
     ld [hl], a
     ld [wPartyStrength], a
-    farcall DebugAutomap_Update_Sub01_DebugAutomap_Update_MergeKeyWorldAreas
+    farcall DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
@@ -4538,7 +4541,7 @@ DebugSoundTest_Update::
     jr .read_menu_state
 
 .call_debug_sound_test_update_write_hex_byte:
-    call DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
+    call DebugSoundTest_Update_WriteHexByteTilesAtDE_2
 
 .read_menu_state:
     ld a, [wMenuState]
@@ -4605,30 +4608,30 @@ DebugSoundTest_Update::
     ld hl, vBGMap0 + $e9
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
 DebugSoundTest_Update_WriteHexByteTilesAtDE::
     ld a, [wTemp0]
     ld de, vBGMap0 + $e9
     call WriteHexByteTilesAtDE
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
 DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
-    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02
+    jr nz, DebugSoundTest_Update_WriteHexByteTilesAtDE_2
     xor a
     ld hl, vBGMap0 + $109
     call WriteVRAMByteInc
     call WriteVRAMByte
-    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return
+    jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
-DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_2::
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
-DebugSoundTest_Update_WriteHexByteTilesAtDE_Sub02_Return::
+DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return::
     ret
 
 DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
@@ -4825,7 +4828,7 @@ DebugBattleSetup_Update_ClearMenuState::
     ld a, [wWorkBuf + $8]
     or a
     jr nz, .call_debug_battle_setup_update_write_map_id
-    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01
+    call DebugBattleSetup_Update_SRAMRecordAddressMapped
     jr .set_game_mode_to_04
 
 .call_debug_battle_setup_update_write_map_id:
@@ -4845,7 +4848,7 @@ DebugBattleSetup_Update_ClearMenuState::
     ret
 
 ; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries
-; load the setup into wEncounterMonsters-wWildByteE5 and handle input (E-0131)
+; load the setup into wEncounterMonsters-wEncounterClass and handle input (E-0131)
 DebugBattleSetupLoadWords::
     ld a, [de]
     inc de
@@ -4884,7 +4887,7 @@ DebugBattleSetupLoadWords_SetEncounterMonsters::
     ld a, [hli]
     ld [wEncounterMonsters + $5], a
     ld a, [hli]
-    ld [wWildByteE5], a
+    ld [wEncounterClass], a
     jr DebugBattleSetup_Update_ClearMenuState
 
 DebugBattleSetupLoadWords_CheckJoypadPressed::
@@ -5157,7 +5160,7 @@ ClampDebugValueToTableLimit::
     ld [hl], d
     ret
 
-DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
+DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ld a, [wPartyCount]
     or a
     jr z, .call_check_save_data
@@ -5182,7 +5185,7 @@ DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
     jr nc, .call_check_save_data
     push bc
     push hl
-    call DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped
+    call DebugBattleSetup_Update_SRAMRecordAddressMapped_2
     pop hl
     pop bc
     jr nz, .call_check_save_data
@@ -5202,7 +5205,7 @@ DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped_Sub01::
     call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
     ret
 
-DebugBattleSetup_Update_Sub01_SRAMRecordAddressMapped::
+DebugBattleSetup_Update_SRAMRecordAddressMapped_2::
     ld c, MON_STATE
     call SRAMRecordAddressMapped
     ld a, [hl]
@@ -5573,10 +5576,10 @@ DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
     xor a
     ld [wTinyMedalsHi], a
     call DebugBattleSetup_ClearKeyList
-    call DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82
+    call DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82
     ret
 
-DebugBattleSetup_Update_Shared01_PickRandomMonsterSkipping7ETo82::
+DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82::
     ld b, $1e
     xor a
     ld [wBattleArg0], a
@@ -5642,7 +5645,7 @@ PickRandomMonsterSkipping7ETo82::
     call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
     ret
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
     ldh a, [hTemp3]
     push af
     ld a, e
@@ -5675,7 +5678,7 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
 
 .skip:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data1
+    ld hl, CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -5861,12 +5864,12 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
     ld [wWorkBuf + $2], a
     ld a, h
     ld [wWorkBuf + $3], a
-    farcall CreateMonsterRecordOfKindTemp1_Sub01_Sub01_ReadWorkBuf
+    farcall CreateMonsterRecordOfKindTemp1_ReadWorkBuf
     jr .read_species_id_lo
 
 .skip6:
     push hl
-    ld hl, CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2
+    ld hl, CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2
     add a
     add_a_to_hl
     ld e, [hl]
@@ -5891,7 +5894,7 @@ CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord::
     ld [wRecordBufA + MON_SPECIES], a
     ld a, h
     ld [wRecordBufA + MON_SPECIES + 1], a
-    farcall LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp
+    farcall LoadTableEntryForRecordBufASpeciesToRecordBufAExp
     ld a, [wBattleArg0]
     ld c, MON_EXP
     call SRAMRecordAddress
@@ -5987,7 +5990,7 @@ PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
 
 CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
     ld [wBattleArg0], a
-    call CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord
+    call CreateMonsterRecordOfKindTemp1_LoadMonsterRecord
     ret
 
 ; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this
@@ -6021,7 +6024,7 @@ DebugBattleSetup_ClearKeyList_Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
-TileRect_01_6F30::
+DebugSkillViewer_Init_TileRect::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $11, $12, $13, $35, $0e, $00, $00, $00, $00, $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $00 ; id 2
@@ -6045,47 +6048,47 @@ CreateMonsterRecordOfKindTemp1_Data::
     db $83, $01, $63, $02, $64, $02, $58, $02, $59, $02, $1b, $00, $7a, $02, $79, $02
     db $78, $02
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data1::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data1::
     db $00, $00, $01, $00, $00, $00, $01, $00, $00
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2::
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry00
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry01
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry02
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry03
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry04
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry05
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry06
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry07
-    dw CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry08
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2::
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry00
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry01
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry02
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry03
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry04
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry05
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry06
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry07
+    dw CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry08
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry00::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry00::
     db $0b, $2c, $2c, $31, $32, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry01::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry01::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry02::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry02::
     db $0e, $2a, $2a, $f0, $f0, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry03::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry03::
     db $20, $24, $35, $38, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry04::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry04::
     db $19, $28, $37, $2c, $0b, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry05::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry05::
     db $1c, $34, $38, $2c, $3d, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry06::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry06::
     db $15, $24, $30, $2c, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry07::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry07::
     db $1c, $24, $37, $30, $24, $f0, $f0, $f0, $f0, $f0
 
-CreateMonsterRecordOfKindTemp1_Sub01_LoadMonsterRecord_Data2_Entry08::
+CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Data2_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
     ds $4a6, $00
 
-DebugResultsDisplay_Update_Sub02_ReadDebugCursorAndScreenByteBD_Data3::
+DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data3::
     ds $a3b, $00

@@ -991,9 +991,9 @@
     "evidence": "E-0132"
   },
   "FFE3": {
-    "name": "hSndChanByteE3",
-    "note": "sound channel copy: cleared when a track starts; no other use found",
-    "evidence": "E-0132"
+    "name": "hSndChanUnused",
+    "note": "sound channel copy cleared when a track starts; no other use found (E-0345, C1: named from its users; was hSndChanByteE3)",
+    "evidence": "E-0132; E-0345"
   },
   "FFE4": {
     "name": "hSndBranchIndex",
@@ -1061,9 +1061,9 @@
     "evidence": "E-0132"
   },
   "FFF1": {
-    "name": "hSndA8Param",
-    "note": "sound channel copy: parameter of command $A8 (its high nibble picks the wave table set)",
-    "evidence": "E-0132"
+    "name": "hSndWaveParam",
+    "note": "parameter of sound command $A8: its high nibble picks the wave table set (E-0345, C1: named from its users; was hSndA8Param)",
+    "evidence": "E-0132; E-0345"
   },
   "FFF2": {
     "name": "hSndEnvTimer",
@@ -1218,9 +1218,9 @@
     "evidence": "E-0133"
   },
   "C197": {
-    "name": "wMapHeaderByte11",
-    "note": "map header byte ($2C or $30 on the special maps; read by TryHeaderTileTalkEvent)",
-    "evidence": "E-0133"
+    "name": "wMapEventTile",
+    "note": "map header byte: the tile that runs talk event 2/0 when the player faces it (TryHeaderTileTalkEvent; $2C or $30 on the special maps) (E-0345, C1: named from its users; was wMapHeaderByte11)",
+    "evidence": "E-0133; E-0345"
   },
   "C468": {
     "name": "wFieldActionRequest",
@@ -1662,14 +1662,14 @@
     "evidence": "E-0133"
   },
   "C598": {
-    "name": "wBattleSetupByte98",
-    "note": "set by the battle setup (RunBattlePhaseWhenTextIdle_A0) and the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wIntroOrFamilyCount",
+    "note": "work byte shared by the battle intro (a random value) and the link egg exchange (a family count, MarkBitBInFamilyBitsAndCount) (E-0345, C1: named from its users; was wBattleSetupByte98)",
+    "evidence": "E-0133; E-0345"
   },
   "C599": {
-    "name": "wBankF0Byte99",
-    "note": "byte set and read by the bank-$F0 screen routines (Func_0F0_4CA0 tables)",
-    "evidence": "E-0133"
+    "name": "wLinkEggState",
+    "note": "link egg exchange: zero until an egg has been taken from the gift record (RunLinkSession8Exchange_*) (E-0345, C1: named from its users; was wBankF0Byte99)",
+    "evidence": "E-0133; E-0345"
   },
   "C59A": {
     "name": "wBattleSetupFlagsLo",
@@ -1682,34 +1682,34 @@
     "evidence": "E-0133"
   },
   "C5A3": {
-    "name": "wBankF0ByteA3",
-    "note": "byte set by the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkEggFamilyBit",
+    "note": "link egg exchange: the family bit marked by MarkBitBInFamilyBitsAndCount (E-0345, C1: named from its users; was wBankF0ByteA3)",
+    "evidence": "E-0133; E-0345"
   },
   "C5A7": {
-    "name": "wBankF0BlockA7",
-    "note": "work bytes of the bank-$F0 screens ($C5A7-$C5AB)",
-    "evidence": "E-0133"
+    "name": "wLinkEggData",
+    "note": "link egg exchange: the egg's data block ($C5A7-$C5AB) sent over the link (E-0345, C1: named from its users; was wBankF0BlockA7)",
+    "evidence": "E-0133; E-0345"
   },
   "C5A8": {
-    "name": "wBankF0ByteA8",
-    "note": "work byte of the bank-$F0 screens (read by Run67EEWithArg1ForF0ScreenKind)",
-    "evidence": "E-0133"
+    "name": "wLinkEggSpeciesLo",
+    "note": "link egg exchange: the egg's species (from wGiftRecord + MON_SPECIES), low byte; drawn as the egg's sprite and named in 'G hatched from the egg' (E-0345, C1: named from its users; was wBankF0ByteA8)",
+    "evidence": "E-0133; E-0345"
   },
   "C5A9": {
-    "name": "wBankF0ByteA9",
-    "note": "work byte of the bank-$F0 screens (read by Run67EEWithArg1ForF0ScreenKind)",
-    "evidence": "E-0133"
+    "name": "wLinkEggSpeciesHi",
+    "note": "link egg exchange: the egg's species, high byte (E-0345, C1: named from its users; was wBankF0ByteA9)",
+    "evidence": "E-0133; E-0345"
   },
   "C5AA": {
-    "name": "wBankF0ByteAA",
-    "note": "work byte of the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkEggFamily",
+    "note": "link egg exchange: the egg's family (from wGiftRecord + MON_FAMILY) (E-0345, C1: named from its users; was wBankF0ByteAA)",
+    "evidence": "E-0133; E-0345"
   },
   "C5AB": {
-    "name": "wBankF0BlockAB",
-    "note": "work bytes of the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkEggExtra",
+    "note": "link egg exchange: the rest of the egg's data block (E-0345, C1: named from its users; was wBankF0BlockAB)",
+    "evidence": "E-0133; E-0345"
   },
   "C5B7": {
     "name": "wLinkPartnerName",
@@ -1737,14 +1737,14 @@
     "evidence": "E-0133"
   },
   "C5BC": {
-    "name": "wBattleSetupByteBC",
-    "note": "set by RunBattleSetup_Case08 and read by the link screens",
-    "evidence": "E-0133"
+    "name": "wLinkPartnerCommandA",
+    "note": "link battle: a command byte exchanged at set-up (RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc); the key trade stores it in a key entry (E-0345, C1: named from its users; was wBattleSetupByteBC)",
+    "evidence": "E-0133; E-0345"
   },
   "C5BD": {
-    "name": "wBattleSetupByteBD",
-    "note": "set by RunBattleSetup_Case08",
-    "evidence": "E-0133"
+    "name": "wLinkPartnerCommandB",
+    "note": "link battle: the second command byte exchanged at set-up (E-0345, C1: named from its users; was wBattleSetupByteBD)",
+    "evidence": "E-0133; E-0345"
   },
   "C5C6": {
     "name": "wLinkTradeByte",
@@ -1752,24 +1752,24 @@
     "evidence": "E-0133"
   },
   "C5C7": {
-    "name": "wBankF0BlockC7",
-    "note": "work bytes of the bank-$F0 screens and game mode 8",
-    "evidence": "E-0133"
+    "name": "wLinkHatchData",
+    "note": "link egg exchange: the received egg's data block (pointed at as the link buffer) (E-0345, C1: named from its users; was wBankF0BlockC7)",
+    "evidence": "E-0133; E-0345"
   },
   "C5C8": {
-    "name": "wBankF0ByteC8",
-    "note": "work byte of the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkHatchSpeciesLo",
+    "note": "link egg exchange: the received egg's species, low byte (sprite and 'G hatched from the egg') (E-0345, C1: named from its users; was wBankF0ByteC8)",
+    "evidence": "E-0133; E-0345"
   },
   "C5C9": {
-    "name": "wBankF0ByteC9",
-    "note": "work byte of the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkHatchSpeciesHi",
+    "note": "link egg exchange: the received egg's species, high byte (E-0345, C1: named from its users; was wBankF0ByteC9)",
+    "evidence": "E-0133; E-0345"
   },
   "C5CB": {
-    "name": "wBankF0BlockCB",
-    "note": "work block of the bank-$F0 screens",
-    "evidence": "E-0133"
+    "name": "wLinkEggMessageBlock",
+    "note": "link egg exchange: the block the egg messages read ('Hero received your egg', 'Eggs were traded with') (E-0345, C1: named from its users; was wBankF0BlockCB)",
+    "evidence": "E-0133; E-0345"
   },
   "C5D7": {
     "name": "wVBlankLY",
@@ -1812,9 +1812,9 @@
     "evidence": "E-0133"
   },
   "C5E5": {
-    "name": "wSoundFadeNR50",
-    "note": "saved rNR50 for the sound fade",
-    "evidence": "E-0133"
+    "name": "wSoundFadeVolume",
+    "note": "the saved master volume (rNR50) during a sound fade (E-0345, C1: named from its users; was wSoundFadeNR50)",
+    "evidence": "E-0133; E-0345"
   },
   "C5E7": {
     "name": "wRandomLo",
@@ -1857,14 +1857,14 @@
     "evidence": "E-0133"
   },
   "C5F6": {
-    "name": "wDebugByteF6",
-    "note": "cleared by GameMode0_Init (debug menu)",
-    "evidence": "E-0133"
+    "name": "wDebugUnusedA",
+    "note": "cleared by GameMode0_Init (debug menu); no other use found (E-0345, C1: named from its users; was wDebugByteF6)",
+    "evidence": "E-0133; E-0345"
   },
   "C5F7": {
-    "name": "wDebugByteF7",
-    "note": "cleared by GameMode0_Init (debug menu)",
-    "evidence": "E-0133"
+    "name": "wDebugUnusedB",
+    "note": "cleared by GameMode0_Init (debug menu); no other use found (E-0345, C1: named from its users; was wDebugByteF7)",
+    "evidence": "E-0133; E-0345"
   },
   "C5F8": {
     "name": "wDebugCursor",
@@ -2127,9 +2127,9 @@
     "evidence": "E-0133"
   },
   "C892": {
-    "name": "wTalkEventByte92",
-    "note": "set by script command $F7 and read by talk event 1/$65",
-    "evidence": "E-0133"
+    "name": "wArenaOutcome",
+    "note": "set by the arena menu (ArenaMenu_SetFlagBit, script command $F7), read by GreatLog's talk event 1/$65 to clear the arena data (E-0345, C1: named from its users; was wTalkEventByte92)",
+    "evidence": "E-0133; E-0345"
   },
   "C893": {
     "name": "wKeyWorldRefresh",
@@ -2137,9 +2137,9 @@
     "evidence": "E-0133"
   },
   "C894": {
-    "name": "wLinkByte94",
-    "note": "link setting byte (GameMode5_Init, script command $7C)",
-    "evidence": "E-0133"
+    "name": "wLinkSetting",
+    "note": "link setting chosen on the title's link screen (GameMode5_Init, script command $7C); bit 0 picks the screen (E-0345, C1: named from its users; was wLinkByte94)",
+    "evidence": "E-0133; E-0345"
   },
   "C895": {
     "name": "wKeyNameBuf",
@@ -2167,14 +2167,14 @@
     "evidence": "E-0133"
   },
   "C89B": {
-    "name": "wBattleResultByte9B",
-    "note": "set by the battle results screen",
-    "evidence": "E-0133"
+    "name": "wResultsUnreadWordLo",
+    "note": "written from HL by the battle results screen; no reader found (E-0345, C1: named from its users; was wBattleResultByte9B)",
+    "evidence": "E-0133; E-0345"
   },
   "C89C": {
-    "name": "wBattleResultByte9C",
-    "note": "set by the battle results screen",
-    "evidence": "E-0133"
+    "name": "wResultsUnreadWordHi",
+    "note": "the high byte of wResultsUnreadWordLo (E-0345, C1: named from its users; was wBattleResultByte9C)",
+    "evidence": "E-0133; E-0345"
   },
   "C89D": {
     "name": "wThreeOptionResult",
@@ -2337,9 +2337,9 @@
     "evidence": "E-0134"
   },
   "C908": {
-    "name": "wTransitionByte08",
-    "note": "battle transition work byte",
-    "evidence": "E-0134"
+    "name": "wTransitionWork",
+    "note": "battle transition work byte (RunBattleTransitionStep) (E-0345, C1: named from its users; was wTransitionByte08)",
+    "evidence": "E-0134; E-0345"
   },
   "C909": {
     "name": "wTransitionBGPtrLo",
@@ -2478,9 +2478,9 @@
     "evidence": "E-0134"
   },
   "C934": {
-    "name": "wFieldStateByte34",
-    "note": "set by CheckTileInFrontOnA (E-0339)",
-    "evidence": "E-0134"
+    "name": "wTileActionKind",
+    "note": "the special-tile kind CheckTileInFrontOnA found in front of the player (E-0345, C1: named from its users; was wFieldStateByte34)",
+    "evidence": "E-0134; E-0345"
   },
   "C935": {
     "name": "wPendingFieldEvent",
@@ -2534,14 +2534,14 @@
     "evidence": "E-0134"
   },
   "C94B": {
-    "name": "wLinkSceneByte4B",
-    "note": "link/scene byte (game modes 5 and 6)",
-    "evidence": "E-0134"
+    "name": "wLinkScene",
+    "note": "link scene state of game modes 5 and 6 (LinkExchangeJoypadPerFrame, GameMode6_Update) (E-0345, C1: named from its users; was wLinkSceneByte4B)",
+    "evidence": "E-0134; E-0345"
   },
   "C94C": {
-    "name": "wLinkSceneByte4C",
-    "note": "link/scene byte read by GameMode6_Init",
-    "evidence": "E-0134"
+    "name": "wLinkSceneArg",
+    "note": "link scene argument read by GameMode6_Init (E-0345, C1: named from its users; was wLinkSceneByte4C)",
+    "evidence": "E-0134; E-0345"
   },
   "C94D": {
     "name": "wFollowerDelay",
@@ -2549,9 +2549,9 @@
     "evidence": "E-0134"
   },
   "C94E": {
-    "name": "wSaveByte4E",
-    "note": "read by the save steps",
-    "evidence": "E-0134"
+    "name": "wSaveClearFlag",
+    "note": "read by the save steps before clearing SRAM banks 2 and 3 (E-0345, C1: named from its users; was wSaveByte4E)",
+    "evidence": "E-0134; E-0345"
   },
   "C94F": {
     "name": "wKeyWorldPlaceFlag",
@@ -2559,9 +2559,9 @@
     "evidence": "E-0134"
   },
   "C950": {
-    "name": "wGameMode2Byte50",
-    "note": "read by the game-mode-2 screens, set by script command $E0",
-    "evidence": "E-0134"
+    "name": "wWorldMapByFieldSkill",
+    "note": "1 when a field skill opened the world map (PauseMenu_Skills_UseFieldSkill); map transitions, the inn and the field menu clear it; the world map then uses the cursor cell (E-0345, C1: named from its users; was wGameMode2Byte50)",
+    "evidence": "E-0134; E-0345"
   },
   "C951": {
     "name": "wTriggerEnable",
@@ -2569,9 +2569,9 @@
     "evidence": "E-0134"
   },
   "C952": {
-    "name": "wEffectFlags52",
-    "note": "set by SelectEffectByEffectFlags",
-    "evidence": "E-0134"
+    "name": "wEffectAnimFlags",
+    "note": "battle effect animation flags (SelectEffectByEffectFlags, RunBattleEffectAnimation) (E-0345, C1: named from its users; was wEffectFlags52)",
+    "evidence": "E-0134; E-0345"
   },
   "C953": {
     "name": "wFormationSlot0",
@@ -2599,19 +2599,19 @@
     "evidence": "E-0134"
   },
   "C958": {
-    "name": "wBattleByte58",
-    "note": "battle work byte",
-    "evidence": "E-0134"
+    "name": "wBattleTextWork",
+    "note": "battle work byte used while building names and texts (BattlePhase0_Step2, BattleEnd_Step1) (E-0345, C1: named from its users; was wBattleByte58)",
+    "evidence": "E-0134; E-0345"
   },
   "C962": {
-    "name": "wBattleByte62",
-    "note": "battle work byte",
-    "evidence": "E-0134"
+    "name": "wBattleTextWork2",
+    "note": "battle work byte used while building names (BattlePhase0_Step2) (E-0345, C1: named from its users; was wBattleByte62)",
+    "evidence": "E-0134; E-0345"
   },
   "C963": {
-    "name": "wBattleByte63",
-    "note": "battle work byte",
-    "evidence": "E-0134"
+    "name": "wLinkFightInfo",
+    "note": "link fight information byte (RunLinkSession6Exchange_FightInfoEx) (E-0345, C1: named from its users; was wBattleByte63)",
+    "evidence": "E-0134; E-0345"
   },
   "C964": {
     "name": "wTextSpeed",
@@ -2619,9 +2619,9 @@
     "evidence": "E-0134; E-0336"
   },
   "C965": {
-    "name": "wScriptByte65",
-    "note": "read by script command $9F",
-    "evidence": "E-0134"
+    "name": "wLinkSaveStateFlag",
+    "note": "set by LinkMessageEvent_SetSaveStateFlag and the link joypad exchange (script command $9F) (E-0345, C1: named from its users; was wScriptByte65)",
+    "evidence": "E-0134; E-0345"
   },
   "C966": {
     "name": "wKeyRetryCount",
@@ -2634,9 +2634,9 @@
     "evidence": "E-0134"
   },
   "C968": {
-    "name": "wScriptByte68",
-    "note": "set by script command $F2",
-    "evidence": "E-0134"
+    "name": "wGreatLogEventFlag",
+    "note": "set by script command $F2 and GreatLog's talk events, read by the key appraisal's save (E-0345, C1: named from its users; was wScriptByte68)",
+    "evidence": "E-0134; E-0345"
   },
   "C969": {
     "name": "wKeyWorldLevelBase",
@@ -2659,19 +2659,19 @@
     "evidence": "E-0134"
   },
   "C96D": {
-    "name": "wItemMenuByte6D",
-    "note": "item menu work byte",
-    "evidence": "E-0134"
+    "name": "wItemMenuSavedSpriteCount",
+    "note": "wSpriteSlotCount saved while the item menu runs and restored by ResetInventoryMenuToFirstPage (E-0345, C1: named from its users; was wItemMenuByte6D)",
+    "evidence": "E-0134; E-0345"
   },
   "C96E": {
-    "name": "wItemMenuByte6E",
-    "note": "item menu work byte",
-    "evidence": "E-0134"
+    "name": "wItemMenuSavedScreenFlag",
+    "note": "wScreenSavedFlag saved while the item menu runs and restored with wItemMenuSavedSpriteCount (E-0345, C1: named from its users; was wItemMenuByte6E)",
+    "evidence": "E-0134; E-0345"
   },
   "C96F": {
-    "name": "wEffectByte6F",
-    "note": "set by battle text, read by the LoveRain effect",
-    "evidence": "E-0134"
+    "name": "wLoveRainFlag",
+    "note": "set by the battle text routine with the action text it picks; LoveRain's effect tests it (E-0345, C1: named from its users; was wEffectByte6F)",
+    "evidence": "E-0134; E-0345"
   },
   "C970": {
     "name": "wActionRepeatFlag",
@@ -2684,9 +2684,9 @@
     "evidence": "E-0134; E-0337"
   },
   "C972": {
-    "name": "wBattleBuffer72",
-    "note": "battle work bytes from $C972",
-    "evidence": "E-0134",
+    "name": "wBattleStateBuffer",
+    "note": "battle state bytes from $C972, stored to the party records after a battle (StoreBattleStateToPartyRecords) (E-0345, C1: named from its users; was wBattleBuffer72)",
+    "evidence": "E-0134; E-0345",
     "size": "F"
   },
   "C981": {
@@ -2715,9 +2715,9 @@
     "evidence": "E-0134"
   },
   "C9F7": {
-    "name": "wRecordBufAByte71",
-    "note": "record buffer A byte $71",
-    "evidence": "E-0134"
+    "name": "wRecordBufAPersonality3",
+    "note": "record buffer A byte $71, the third personality axis (MonsterTable byte 24) (E-0345, C1: named from its users; was wRecordBufAByte71)",
+    "evidence": "E-0134; E-0345"
   },
   "CB75": {
     "name": "wSequencePtrLo",
@@ -2873,9 +2873,9 @@
     "evidence": "E-0135"
   },
   "CD06": {
-    "name": "wKeyWorldByte06",
-    "note": "key-world setting read by SetupKeyWorldObjectsForMapType",
-    "evidence": "E-0135"
+    "name": "wKeyWorldSetting",
+    "note": "key-world setting read by SetupKeyWorldObjectsForMapType and the special map header (E-0345, C1: named from its users; was wKeyWorldByte06)",
+    "evidence": "E-0135; E-0345"
   },
   "CD07": {
     "name": "wKeyWorldFlags",
@@ -3001,9 +3001,9 @@
     "size": "10"
   },
   "CE8B": {
-    "name": "wKeyWorldByte8B",
-    "note": "key-world byte",
-    "evidence": "E-0135"
+    "name": "wKeyWorldMenuFlag",
+    "note": "key-world byte read by the walking state's menu check and the debug automap (E-0345, C1: named from its users; was wKeyWorldByte8B)",
+    "evidence": "E-0135; E-0345"
   },
   "CE93": {
     "name": "wVisitedScreens",
@@ -3147,9 +3147,9 @@
     "evidence": "E-0135"
   },
   "CFAC": {
-    "name": "wNameEntryByteAC",
-    "note": "name-entry work byte",
-    "evidence": "E-0135"
+    "name": "wNameEntryTimer2",
+    "note": "name entry timer written with wNameEntryTimer (E-0345, C1: named from its users; was wNameEntryByteAC)",
+    "evidence": "E-0135; E-0345"
   },
   "CFAD": {
     "name": "wNameEntryText",
@@ -3158,9 +3158,9 @@
     "size": "F"
   },
   "CFBC": {
-    "name": "wNameEntryByteBC",
-    "note": "name-entry work byte",
-    "evidence": "E-0135"
+    "name": "wNameEntryFlag",
+    "note": "name entry work byte (RunNameEntryStateWhenNotFading) (E-0345, C1: named from its users; was wNameEntryByteBC)",
+    "evidence": "E-0135; E-0345"
   },
   "CFBD": {
     "name": "wNameEntryMenuCursor",
@@ -3193,14 +3193,14 @@
     "evidence": "E-0135"
   },
   "CFC3": {
-    "name": "wNameEntryByteC3",
-    "note": "name-entry work byte",
-    "evidence": "E-0135"
+    "name": "wNameEntryMarkPending",
+    "note": "name entry: a mark ($8D/$8E) waits to be added to the chosen character (E-0345, C1: named from its users; was wNameEntryByteC3)",
+    "evidence": "E-0135; E-0345"
   },
   "CFC4": {
-    "name": "wNameEntryByteC4",
-    "note": "name-entry work byte",
-    "evidence": "E-0135"
+    "name": "wNameEntryDrawStep",
+    "note": "name entry: counts the drawing steps of FillTilesFromRequest (E-0345, C1: named from its users; was wNameEntryByteC4)",
+    "evidence": "E-0135; E-0345"
   },
   "CFC5": {
     "name": "wBattleKind",
@@ -3258,9 +3258,9 @@
     "evidence": "E-0135"
   },
   "CFD8": {
-    "name": "wBattleSetupD8",
-    "note": "battle set-up work bytes ($CFD8-$CFDA)",
-    "evidence": "E-0135",
+    "name": "wBattleLoadWork",
+    "note": "battle set-up work bytes ($CFD8-$CFDA, LoadBattleSlotFromBattlerRecord) (E-0345, C1: named from its users; was wBattleSetupD8)",
+    "evidence": "E-0135; E-0345",
     "size": "3"
   },
   "CFDB": {
@@ -3290,9 +3290,9 @@
     "evidence": "E-0135"
   },
   "CFE5": {
-    "name": "wWildByteE5",
-    "note": "encounter work byte",
-    "evidence": "E-0135"
+    "name": "wEncounterClass",
+    "note": "encounter class: set by the debug set-up and the key-world boss battle, read by the results screen and ComputeBattleResultRank (E-0345, C1: named from its users; was wWildByteE5)",
+    "evidence": "E-0135; E-0345"
   },
   "D000": {
     "name": "wScreenAttrBuffer",
@@ -3378,14 +3378,14 @@
     "size": "A"
   },
   "D057": {
-    "name": "wLinkRuleWork57",
-    "note": "rule work bytes tested by LinkRuleCheckWD044Bit6",
-    "evidence": "E-0136"
+    "name": "wLinkRuleFlags",
+    "note": "link rule bits tested by the CheckLinkRules1Rule* routines (E-0345, C1: named from its users; was wLinkRuleWork57)",
+    "evidence": "E-0136; E-0345"
   },
   "D058": {
-    "name": "wBattleInitByte58",
-    "note": "set by the battle set-up (GameMode4_Init_Sub01_Sub01)",
-    "evidence": "E-0136"
+    "name": "wLinkRuleState",
+    "note": "set by the battle set-up, read by CheckLinkRuleViolation (E-0345, C1: named from its users; was wBattleInitByte58)",
+    "evidence": "E-0136; E-0345"
   },
   "D059": {
     "name": "wLinkSetupMode",
@@ -3414,9 +3414,9 @@
     "evidence": "E-0136"
   },
   "D068": {
-    "name": "wNewRecordByte0D",
-    "note": "value for byte $0D of a new or changed record (RollRecordField0DState, BattleEnd_Step6_Case02)",
-    "evidence": "E-0136"
+    "name": "wNewRecordFamily",
+    "note": "value for byte $0D (MON_FAMILY) of a new or changed record (RollRecordField0DState) (E-0345, C1: named from its users; was wNewRecordByte0D)",
+    "evidence": "E-0136; E-0345"
   },
   "D069": {
     "name": "wTalkCountdown",
@@ -3479,9 +3479,9 @@
     "evidence": "E-0136"
   },
   "D093": {
-    "name": "wBattleByte93",
-    "note": "battle byte tested by BattleEnd_Step4_Sub02_Case09_Case00",
-    "evidence": "E-0136"
+    "name": "wLearnSkillState",
+    "note": "state of learning a skill at the battle end (BattleEnd_GainExperience_LearnSkill) (E-0345, C1: named from its users; was wBattleByte93)",
+    "evidence": "E-0136; E-0345"
   },
   "D095": {
     "name": "wLevelUpGains",
@@ -3664,9 +3664,9 @@
     "evidence": "E-0136"
   },
   "D2CD": {
-    "name": "wTransitionByteCD",
-    "note": "set by the battle transition (RunWC904Step_Case00)",
-    "evidence": "E-0136"
+    "name": "wTransitionMusic",
+    "note": "set by the battle transition, read when the battle end restores the music (E-0345, C1: named from its users; was wTransitionByteCD)",
+    "evidence": "E-0136; E-0345"
   },
   "D2CE": {
     "name": "wBattleEndTimer",
@@ -3680,14 +3680,14 @@
     "size": "6"
   },
   "D586": {
-    "name": "wArenaByte86",
-    "note": "arena byte set by ArenaMenu_Case15",
-    "evidence": "E-0136"
+    "name": "wArenaFeeLo",
+    "note": "the arena's entry fee, low byte (subtracted from the gold) (E-0345, C1: named from its users; was wArenaByte86)",
+    "evidence": "E-0136; E-0345"
   },
   "D587": {
-    "name": "wArenaByte87",
-    "note": "arena byte set by ArenaMenu_Case15",
-    "evidence": "E-0136"
+    "name": "wArenaFeeHi",
+    "note": "the arena's entry fee, high byte (E-0345, C1: named from its users; was wArenaByte87)",
+    "evidence": "E-0136; E-0345"
   },
   "D588": {
     "name": "wArenaRound",
@@ -3771,9 +3771,9 @@
     "evidence": "E-0136"
   },
   "D78D": {
-    "name": "wScreenByte8D",
-    "note": "set by script command $E2",
-    "evidence": "E-0136"
+    "name": "wShopNumberTens",
+    "note": "the shop's tens digit of a quantity or price (E-0345, C1: named from its users; was wScreenByte8D)",
+    "evidence": "E-0136; E-0345"
   },
   "D78E": {
     "name": "wScreenCountPlusOne",
@@ -3781,44 +3781,44 @@
     "evidence": "E-0136"
   },
   "D790": {
-    "name": "wScreenByte90",
-    "note": "set by script command $E2",
-    "evidence": "E-0136"
+    "name": "wShopScrollA",
+    "note": "shop list scroll work byte (ShopMenu_Sell_StepBGMapAddressBackOnScrollWrap) (E-0345, C1: named from its users; was wScreenByte90)",
+    "evidence": "E-0136; E-0345"
   },
   "D791": {
-    "name": "wScreenByte91",
-    "note": "set by script command $E2",
-    "evidence": "E-0136"
+    "name": "wShopScrollB",
+    "note": "shop list scroll work byte (E-0345, C1: named from its users; was wScreenByte91)",
+    "evidence": "E-0136; E-0345"
   },
   "D792": {
-    "name": "wScreenBlock92",
-    "note": "bytes pointed at by script command $E2",
-    "evidence": "E-0136"
+    "name": "wGoldDigits",
+    "note": "digits of a gold amount (shop, vault, item list) (E-0345, C1: named from its users; was wScreenBlock92)",
+    "evidence": "E-0136; E-0345"
   },
   "D793": {
-    "name": "wScreenByte93",
-    "note": "set by script commands $E2 and $E5",
-    "evidence": "E-0136"
+    "name": "wDigitWorkA",
+    "note": "digit work byte of the shop and the vault (E-0345, C1: named from its users; was wScreenByte93)",
+    "evidence": "E-0136; E-0345"
   },
   "D794": {
-    "name": "wScreenByte94",
-    "note": "set by script commands $E2 and $E5",
-    "evidence": "E-0136"
+    "name": "wDigitWorkB",
+    "note": "digit work byte of the shop and the vault (E-0345, C1: named from its users; was wScreenByte94)",
+    "evidence": "E-0136; E-0345"
   },
   "D799": {
-    "name": "wScreenByte99",
-    "note": "set by script command $F6 case 1, read by case 7",
-    "evidence": "E-0136"
+    "name": "wLibraryScrollY",
+    "note": "the library's saved scroll (set by script command $F6 case 1, read by case 7) (E-0345, C1: named from its users; was wScreenByte99)",
+    "evidence": "E-0136; E-0345"
   },
   "D79A": {
-    "name": "wScreenByte9A",
-    "note": "set by script command $F6 case 1, read by case 7",
-    "evidence": "E-0136"
+    "name": "wLibraryScrollX",
+    "note": "the library's saved scroll, X (E-0345, C1: named from its users; was wScreenByte9A)",
+    "evidence": "E-0136; E-0345"
   },
   "D79C": {
-    "name": "wScreenBlock9C",
-    "note": "bytes written by LibraryMenu_Case10_Case01",
-    "evidence": "E-0136"
+    "name": "wLibraryEntryBlock",
+    "note": "bytes of the monster library entry being shown (E-0345, C1: named from its users; was wScreenBlock9C)",
+    "evidence": "E-0136; E-0345"
   },
   "D7A2": {
     "name": "wDebugResultsBuf",
@@ -3906,14 +3906,14 @@
     "evidence": "E-0136"
   },
   "D7B7": {
-    "name": "wChoiceCursorF0",
-    "note": "cursor of the bank-$F0 two-entry choice (HandleTwoChoiceCursorInput_F0)",
-    "evidence": "E-0136"
+    "name": "wMenuChoice",
+    "note": "menu work byte: the two-choice cursor in some menus, an entry count in the shop and vault lists (E-0345, C1: named from its users; was wChoiceCursorF0)",
+    "evidence": "E-0136; E-0345"
   },
   "D7B8": {
-    "name": "wCursorBlinkB8",
-    "note": "cursor blink counter (BlinkCursorWD7B8_*)",
-    "evidence": "E-0136"
+    "name": "wListCursorBlink",
+    "note": "blink counter of the list cursor (shop, vault, swap menu) (E-0345, C1: named from its users; was wCursorBlinkB8)",
+    "evidence": "E-0136; E-0345"
   },
   "D7B9": {
     "name": "wRecordsFlagged",
@@ -3936,9 +3936,9 @@
     "evidence": "E-0136"
   },
   "D7BD": {
-    "name": "wScreenByteBD",
-    "note": "screen work byte (debug results, script commands $EF and $F3)",
-    "evidence": "E-0136"
+    "name": "wSharedMenuWork",
+    "note": "work byte shared by the debug results, the shop's sell price, game mode 6 and the medal prizes (E-0345, C1: named from its users; was wScreenByteBD)",
+    "evidence": "E-0136; E-0345"
   },
   "D7BE": {
     "name": "wListEntries2",
@@ -3946,19 +3946,19 @@
     "evidence": "E-0136"
   },
   "D7BF": {
-    "name": "wScreenByteBF",
-    "note": "screen work byte (script commands $E2, $E5, $EB)",
-    "evidence": "E-0136"
+    "name": "wMenuWordBuf",
+    "note": "three work bytes: price digits in the shop and the vault, an SRAM bank and address in hibernation (E-0345, C1: named from its users; was wScreenByteBF)",
+    "evidence": "E-0136; E-0345"
   },
   "D7C0": {
-    "name": "wScreenByteC0",
-    "note": "screen work byte (script commands $E2, $E5, $EB)",
-    "evidence": "E-0136"
+    "name": "wMenuWordBuf1",
+    "note": "second byte of wMenuWordBuf (E-0345, C1: named from its users; was wScreenByteC0)",
+    "evidence": "E-0136; E-0345"
   },
   "D7C1": {
-    "name": "wScreenByteC1",
-    "note": "screen work byte (script commands $E2, $E5, $EB)",
-    "evidence": "E-0136"
+    "name": "wMenuWordBuf2",
+    "note": "third byte of wMenuWordBuf (E-0345, C1: named from its users; was wScreenByteC1)",
+    "evidence": "E-0136; E-0345"
   },
   "D7C2": {
     "name": "wTextCounter0",
@@ -4027,14 +4027,14 @@
     "size": "3"
   },
   "D7D1": {
-    "name": "wScreenByteD1",
-    "note": "screen work byte (script command $E2)",
-    "evidence": "E-0136"
+    "name": "wShopCursorToggle",
+    "note": "toggled between 0 and 1 by the shop's blinking cursor (ShopMenu_*_BlinkCursorBlinkD2) (E-0345, C1: named from its users; was wScreenByteD1)",
+    "evidence": "E-0136; E-0345"
   },
   "D7D2": {
-    "name": "wCursorBlinkD2",
-    "note": "cursor blink counter (BlinkCursorWD7D2_*)",
-    "evidence": "E-0136"
+    "name": "wShopCursorBlink",
+    "note": "blink counter of the shop's quantity cursor (E-0345, C1: named from its users; was wCursorBlinkD2)",
+    "evidence": "E-0136; E-0345"
   },
   "D7D3": {
     "name": "wCountTens",
@@ -4085,24 +4085,24 @@
     "evidence": "E-0136; E-0343"
   },
   "D7E8": {
-    "name": "wLinkByteE8",
-    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
-    "evidence": "E-0136"
+    "name": "wLinkSceneSpeciesLo",
+    "note": "species shown by the link object scene, low byte (E-0345, C1: named from its users; was wLinkByteE8)",
+    "evidence": "E-0136; E-0345"
   },
   "D7E9": {
-    "name": "wLinkByteE9",
-    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
-    "evidence": "E-0136"
+    "name": "wLinkSceneSpeciesHi",
+    "note": "species shown by the link object scene, high byte (E-0345, C1: named from its users; was wLinkByteE9)",
+    "evidence": "E-0136; E-0345"
   },
   "D7EA": {
-    "name": "wLinkByteEA",
-    "note": "read by GameMode5_Update_Case07_Sub01_Sub02 and the bank-$F0 screens",
-    "evidence": "E-0136"
+    "name": "wLinkSceneFamily",
+    "note": "family of the link object scene's monster (E-0345, C1: named from its users; was wLinkByteEA)",
+    "evidence": "E-0136; E-0345"
   },
   "D7EB": {
-    "name": "wLinkByteEB",
-    "note": "set by the link screen, read by game mode 6",
-    "evidence": "E-0136"
+    "name": "wLinkBreedResult",
+    "note": "set by the link screen's breeding (ComputeBreedingChild), read by game mode 6 (E-0345, C1: named from its users; was wLinkByteEB)",
+    "evidence": "E-0136; E-0345"
   },
   "D7EC": {
     "name": "wF0ScreenKind",
@@ -4110,14 +4110,14 @@
     "evidence": "E-0136"
   },
   "D7ED": {
-    "name": "wScreenByteED",
-    "note": "set and read by script command $E5",
-    "evidence": "E-0136"
+    "name": "wVaultMode",
+    "note": "0 or 1, set by the vault's storing steps and tested by the take-out steps to pick their path (script command $E5) (E-0345, C1: named from its users; was wScreenByteED)",
+    "evidence": "E-0136; E-0345"
   },
   "D7EE": {
-    "name": "wScreenByteEE",
-    "note": "screen work byte (game mode 5, script command $E2)",
-    "evidence": "E-0136"
+    "name": "wMenuCounter",
+    "note": "menu counter byte (shop prices, game mode 5's joypad exchange) (E-0345, C1: named from its users; was wScreenByteEE)",
+    "evidence": "E-0136; E-0345"
   },
   "D7EF": {
     "name": "wCursorBlinkEF",
@@ -4215,9 +4215,9 @@
     "evidence": "E-0137"
   },
   "D806": {
-    "name": "wEffectByte06",
-    "note": "effect animation work byte",
-    "evidence": "E-0137"
+    "name": "wEffectFlashState",
+    "note": "state of an effect animation's screen flashes (E-0345, C1: named from its users; was wEffectByte06)",
+    "evidence": "E-0137; E-0345"
   },
   "D807": {
     "name": "wEffectCounter",
@@ -4474,15 +4474,15 @@
     "size": "8"
   },
   "D93F": {
-    "name": "wBattleWordArray3F",
-    "note": "word per slot after wBattleINT (ActorBattleWordArray3FBand, AddActorBattleWordArray3FDiv16ToBattleArg2)",
-    "evidence": "E-0137",
+    "name": "wBattleExtraStat",
+    "note": "a word per battle slot after wBattleINT (ActorBattleWordArray3FBand) (E-0345, C1: named from its users; was wBattleWordArray3F)",
+    "evidence": "E-0137; E-0345",
     "size": "10"
   },
   "D94F": {
-    "name": "wBattleBytes4F",
-    "note": "bytes indexed by 3 * slot (ActionEffect_ActionB0, ActionEffect_ActionC8)",
-    "evidence": "E-0137"
+    "name": "wBattleSlotTriples",
+    "note": "three bytes per battle slot (ActionEffect_ActionB0, ActionEffect_ActionC8) (E-0345, C1: named from its users; was wBattleBytes4F)",
+    "evidence": "E-0137; E-0345"
   },
   "D960": {
     "name": "wBattlePictureIds",
@@ -4589,9 +4589,9 @@
     "evidence": "E-0137"
   },
   "DAAD": {
-    "name": "wBattleByteAD",
-    "note": "set by the battle set-up",
-    "evidence": "E-0137"
+    "name": "wSealPrayState",
+    "note": "set by the battle set-up, read by the SealPray shatter checks (E-0345, C1: named from its users; was wBattleByteAD)",
+    "evidence": "E-0137; E-0345"
   },
   "DAAE": {
     "name": "wSpecialSlotMonsters",
@@ -4604,14 +4604,14 @@
     "evidence": "E-0137; E-0337"
   },
   "DAB3": {
-    "name": "wEffectByteB3",
-    "note": "effect selection byte (SelectEffectByEffectFlags)",
-    "evidence": "E-0137"
+    "name": "wEffectAnimId",
+    "note": "effect animation chosen by SelectEffectByEffectFlags (E-0345, C1: named from its users; was wEffectByteB3)",
+    "evidence": "E-0137; E-0345"
   },
   "DAB5": {
-    "name": "wEffectByteB5",
-    "note": "effect selection byte",
-    "evidence": "E-0137"
+    "name": "wEffectAnimArg",
+    "note": "argument of the chosen effect animation (E-0345, C1: named from its users; was wEffectByteB5)",
+    "evidence": "E-0137; E-0345"
   },
   "DAB7": {
     "name": "wEffectSpriteAttrXor",
@@ -4689,9 +4689,9 @@
     "evidence": "E-0137"
   },
   "DAD7": {
-    "name": "wBattleSetupD7",
-    "note": "set by the battle set-up",
-    "evidence": "E-0137"
+    "name": "wCommandMenuState",
+    "note": "state of the battle command menu (E-0345, C1: named from its users; was wBattleSetupD7)",
+    "evidence": "E-0137; E-0345"
   },
   "DAD8": {
     "name": "wSideControl",
@@ -4700,24 +4700,24 @@
     "size": "8"
   },
   "DAE0": {
-    "name": "wResolveBytesE0",
-    "note": "bytes cleared by RunCommandEntryResolveStep_Case01",
-    "evidence": "E-0137"
+    "name": "wActorActionBytes",
+    "note": "bytes cleared per action by the command entry's resolve step (E-0345, C1: named from its users; was wResolveBytesE0)",
+    "evidence": "E-0137; E-0345"
   },
   "DAE8": {
-    "name": "wCommandByteE8",
-    "note": "set by RunBattleCommandEntry_Case00",
-    "evidence": "E-0137"
+    "name": "wCommandEntryMonster",
+    "note": "the monster whose command is being entered (RunBattleCommandEntry) (E-0345, C1: named from its users; was wCommandByteE8)",
+    "evidence": "E-0137; E-0345"
   },
   "DAE9": {
-    "name": "wCommandBytesE9",
-    "note": "bytes indexed per slot (ChooseTargetForActor, AddCommandWeightToAIChoiceWeights)",
-    "evidence": "E-0137"
+    "name": "wSlotCommands",
+    "note": "the command chosen for each slot (ChooseTargetForActor, the AI weights) (E-0345, C1: named from its users; was wCommandBytesE9)",
+    "evidence": "E-0137; E-0345"
   },
   "DAEA": {
-    "name": "wCommandByteEA",
-    "note": "set by the battle set-up",
-    "evidence": "E-0137"
+    "name": "wPartnerCommand",
+    "note": "the link partner's command, set at battle set-up (E-0345, C1: named from its users; was wCommandByteEA)",
+    "evidence": "E-0137; E-0345"
   },
   "DAF1": {
     "name": "wEffectFrameCounter",
@@ -4725,9 +4725,9 @@
     "evidence": "E-0137"
   },
   "DAF2": {
-    "name": "wBattleSetupF2",
-    "note": "three bytes written by RunBattleSetup_Case00_Case00",
-    "evidence": "E-0137"
+    "name": "wFleeWork",
+    "note": "three bytes of the flee command (E-0345, C1: named from its users; was wBattleSetupF2)",
+    "evidence": "E-0137; E-0345"
   },
   "DAFA": {
     "name": "wHealFlags",
@@ -4780,9 +4780,9 @@
     "evidence": "E-0137"
   },
   "DD0C": {
-    "name": "wSoundTickByte0C",
-    "note": "set by SoundTick, read by SoundNextEvent",
-    "evidence": "E-0137"
+    "name": "wSoundNoteWork",
+    "note": "set by SoundTick, read by ComputeNotePitch (E-0345, C1: named from its users; was wSoundTickByte0C)",
+    "evidence": "E-0137; E-0345"
   },
   "DD0D": {
     "name": "wSoundRegBase",
@@ -4790,24 +4790,24 @@
     "evidence": "E-0137"
   },
   "DD0E": {
-    "name": "wSoundTickBuf0E",
-    "note": "SoundTick work bytes",
-    "evidence": "E-0137"
+    "name": "wSoundTickBuf",
+    "note": "SoundTick work bytes (E-0345, C1: named from its users; was wSoundTickBuf0E)",
+    "evidence": "E-0137; E-0345"
   },
   "DD12": {
-    "name": "wSoundTimer12",
-    "note": "sound timer (InitSoundHardware_Sub01, SoundTick_Sub02)",
-    "evidence": "E-0137"
+    "name": "wSoundChannelMask",
+    "note": "channel mask the sound tick waits on (compared with wSoundChannelsDone) (E-0345, C1: named from its users; was wSoundTimer12)",
+    "evidence": "E-0137; E-0345"
   },
   "DD13": {
-    "name": "wSoundTimer13",
-    "note": "sound timer reload",
-    "evidence": "E-0137"
+    "name": "wSoundChannelMaskCount",
+    "note": "the count in its low nibble that the sound tick uses with wSoundChannelMask (E-0345, C1: named from its users; was wSoundTimer13)",
+    "evidence": "E-0137; E-0345"
   },
   "DD14": {
-    "name": "wSoundTimer14",
-    "note": "sound timer (SoundTick_Sub01)",
-    "evidence": "E-0137"
+    "name": "wSoundChannelsDone",
+    "note": "channel bits the sound tick ORs in until they cover wSoundChannelMask (E-0345, C1: named from its users; was wSoundTimer14)",
+    "evidence": "E-0137; E-0345"
   },
   "DD15": {
     "name": "wSoundEngineState",
@@ -4820,19 +4820,19 @@
     "evidence": "E-0137"
   },
   "DD17": {
-    "name": "wSoundEventByte17",
-    "note": "SoundNextEvent work byte",
-    "evidence": "E-0137"
+    "name": "wSoundEventArg",
+    "note": "argument of the sound event being run (SoundNextEvent) (E-0345, C1: named from its users; was wSoundEventByte17)",
+    "evidence": "E-0137; E-0345"
   },
   "DD18": {
-    "name": "wSoundEventByte18",
-    "note": "SoundNextEvent work byte",
-    "evidence": "E-0137"
+    "name": "wSoundBranchArg",
+    "note": "SoundNextEvent's branch argument (E-0345, C1: named from its users; was wSoundEventByte18)",
+    "evidence": "E-0137; E-0345"
   },
   "DD19": {
-    "name": "wSoundInitByte19",
-    "note": "set by InitSoundHardware, read by SoundTick",
-    "evidence": "E-0137"
+    "name": "wSoundWaveReload",
+    "note": "set by InitSoundHardware and SoundNextEvent; the sound tick reloads the wave channel when it is set (E-0345, C1: named from its users; was wSoundInitByte19)",
+    "evidence": "E-0137; E-0345"
   },
   "DFFF": {
     "name": "wStackTop",
@@ -4924,9 +4924,9 @@
     "evidence": "E-0137; E-0343"
   },
   "BD97": {
-    "name": "sSavedLinkByte94",
-    "note": "saved wLinkByte94",
-    "evidence": "E-0137"
+    "name": "sSavedLinkSetting",
+    "note": "the saved wLinkSetting (E-0345, C1: named from its users; was sSavedLinkByte94)",
+    "evidence": "E-0137; E-0345"
   },
   "BE0D": {
     "name": "sSavedMapType",
@@ -4934,9 +4934,9 @@
     "evidence": "E-0137"
   },
   "BEC0": {
-    "name": "sSavedCE9BBlock",
-    "note": "SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveGM2TimerFramesBlockToSRAMBank1)",
-    "evidence": "E-0137"
+    "name": "sSavedTimerBlock",
+    "note": "SRAM bank 1: copy of the $D8-byte block at wGM2TimerFrames (SaveGM2TimerFramesBlockToSRAMBank1) (E-0345, C1: named from its users; was sSavedCE9BBlock)",
+    "evidence": "E-0137; E-0345"
   },
   "BEF3": {
     "name": "sSavedGM2Mode",
@@ -4969,13 +4969,23 @@
     "evidence": "E-0137"
   },
   "CCCD": {
-    "name": "wNameBufUnknown",
-    "note": "name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte)",
-    "evidence": "E-0137"
+    "name": "wNameBufPlaceholder",
+    "note": "name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte) (E-0345, C1: named from its users; was wNameBufUnknown)",
+    "evidence": "E-0137; E-0345"
   },
   "D00F": {
     "name": "wSpeciesExpCurve",
     "note": "species record byte 7: the ExpTable row (EXP curve) of the species (LoadTable4E60EntryForWC991ToWC9DE)",
     "evidence": "E-0148"
+  },
+  "FF80": {
+    "name": "hOAMDMARoutine",
+    "note": "the OAM DMA routine: InstallOamDmaRoutine copies OamDmaRoutineTemplate here and the VBlank handler calls it (E-0345)",
+    "evidence": "reading (E-0122); E-0345"
+  },
+  "FFF8": {
+    "name": "hUnusedTail",
+    "note": "no read or write of this byte was found; it is listed only because UpdatePlayerMovement loads $FFF8, the step delta -8, into HL (E-0345)",
+    "evidence": "E-0345"
   }
 }

@@ -143,12 +143,12 @@ AIScore_Blaze::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for55_be_and5731
+    jr nz, .call_ai_add_scores_for_link_rule_check_link
     ld bc, $000c
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for55_be_and5731:
-    call AIAddScoresFor55BEAnd5731
+.call_ai_add_scores_for_link_rule_check_link:
+    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -206,12 +206,12 @@ AIScore_Firebal::
     farcall InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for55_be_and5731
+    jr nz, .call_ai_add_scores_for_link_rule_check_link
     ld bc, $000d
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for55_be_and5731:
-    call AIAddScoresFor55BEAnd5731
+.call_ai_add_scores_for_link_rule_check_link:
+    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
     and a
@@ -290,14 +290,14 @@ AIScore_Beat::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_add_scores_for55_be_and5731
+    jr nz, .call_ai_add_scores_for_link_rule_check_link
     ld bc, $00cd
     call AccumulateBank6WordToDA6E
     ld bc, $00cf
     call AccumulateBank6WordToDA70
 
-.call_ai_add_scores_for55_be_and5731:
-    call AIAddScoresFor55BEAnd5731
+.call_ai_add_scores_for_link_rule_check_link:
+    call AIAddScoresForLinkRuleCheckLinkRules1Bit6
     farcall FewerThanTwoFoesPresent
     ld a, c
     and a
@@ -473,7 +473,7 @@ AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
 
 .read_battle_actor:
     ld a, [wBattleActor]
-    call AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty
     farcall ActorHPIsNotOne
     ld a, c
     and a
@@ -545,7 +545,7 @@ AIScore_Vivify::
     ld a, c
     and a
     ret z
-    call AIAddPenaltyFor5758And5CF1
+    call AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes
     farcall AIGateCompareAllyStatAverages
     ld a, c
     cp $01
@@ -567,7 +567,7 @@ AIScore_Farewell::
     ld a, c
     and a
     ret z
-    call AIAddPenaltyFor5758And5CF1
+    call AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes
     farcall SetCToZero
     ld a, c
     and a
@@ -1151,14 +1151,14 @@ AIScore_StopSpell::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks
     ld bc, $00cc
     call AccumulateBank6WordToDA6E
     ld bc, $00d1
     call AccumulateBank6WordToDA70
 
-.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+.call_ai_mode_at_least2_and_foe_lacks:
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .call_fail_if_any_foe_fully_resistant
@@ -1259,7 +1259,7 @@ AIScore_Ironize::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall SetCToZero
     ld a, c
@@ -1284,12 +1284,12 @@ AIScore_MagicBack::
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks
     ld bc, $00c0
     call AccumulateBank6WordToDA70
 
-.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+.call_ai_mode_at_least2_and_foe_lacks:
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -1333,7 +1333,7 @@ AIScore_MagicWall::
     and a
     ret z
     call WeighLinkRules1RuleBit5
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -1466,7 +1466,7 @@ AIScore_Chance::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_MegaMagic::
-    farcall AIScore_MegaMagic_AIAttackSkillUsable_74D1
+    farcall AIScore_MegaMagic_AIAttackSkillUsable
     ld a, c
     and a
     ret z
@@ -1559,7 +1559,7 @@ AIScore_MegaMagic::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 AIScore_BigBang::
-    farcall AIAttackSkillUsable_74D1
+    farcall AIAttackSkillUsable
     ld a, c
     and a
     ret z
@@ -1656,7 +1656,7 @@ AIScore_BigBang::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_FireAir::
-    farcall AIScore_FireAir_AIAttackSkillUsable_74D1
+    farcall AIScore_FireAir_AIAttackSkillUsable
     ld a, c
     and a
     ret z
@@ -1728,14 +1728,14 @@ AIScore_FireAir::
     farcall CheckFoeStatus6Bit3
     ld a, c
     cp $01
-    jr z, .call_any_ally_lacks_status2_bit2_5_d31
+    jr z, .call_any_ally_lacks_status2_bit2_2
     and a
-    jr nz, .call_any_ally_lacks_status2_bit2_5_d31
+    jr nz, .call_any_ally_lacks_status2_bit2_2
     ld bc, $004a
     call AccumulateBank6WordToDA70
 
-.call_any_ally_lacks_status2_bit2_5_d31:
-    farcall AnyAllyLacksStatus2Bit2_5D31
+.call_any_ally_lacks_status2_bit2_2:
+    farcall AnyAllyLacksStatus2Bit2_2
     ld a, c
     and a
     jr nz, .call_fail_if_any_foe_fully_resistant
@@ -1760,7 +1760,7 @@ AIScore_FireAir::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_WindBeast::
-    farcall AIAttackSkillUsable_74D1
+    farcall AIAttackSkillUsable
     ld a, c
     and a
     ret z
@@ -1822,7 +1822,7 @@ AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 AIScore_Vacuum::
-    farcall AIAttackSkillUsable_74D1
+    farcall AIAttackSkillUsable
     ld a, c
     and a
     ret z
@@ -1862,7 +1862,7 @@ AIScore_Vacuum::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_RockThrow::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -1942,7 +1942,7 @@ AIScore_RockThrow::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_Watershot::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -2004,7 +2004,7 @@ AIScore_Watershot::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_Tidalwave::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -2076,7 +2076,7 @@ AIScore_Tidalwave::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 AIScore_CallHelp::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -2176,7 +2176,7 @@ AIScore_CallHelp::
 ; IceSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1
 ; (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 AIScore_FireSlash::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -2888,7 +2888,7 @@ AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_GigaSlash::
-    farcall AIFunc74D1AndFoeLacksStatus3And4
+    farcall AIAndFoeLacksStatus3And4
     ld a, c
     and a
     ret z
@@ -3273,7 +3273,7 @@ AIScore_TwinSlash::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_Berserker::
-    farcall AIAttackSkillUsable_779F
+    farcall AIAttackSkillUsable_3
     ld a, c
     and a
     ret z
@@ -3366,7 +3366,7 @@ AIScore_Berserker::
     call AccumulateBank6WordToDA70
 
 .call_ai_score_berserker_read_slot_ai_mode:
-    farcall AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_4024
+    farcall AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2
     ld a, c
     cp $01
     jr z, .call_actor_lacks_status2_bit1_and4_bits01
@@ -3391,7 +3391,7 @@ AIScore_Berserker::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_Ramming::
-    farcall AIFunc779FAnd43F2AndActorHPNotOne
+    farcall AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
     and a
     ret z
@@ -3411,7 +3411,7 @@ AIScore_Ramming::
     call AccumulateBank6WordToDA70
 
 .call_ai_score_ramming_read_slot_ai_mode:
-    farcall AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_4024
+    farcall AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2
     ld a, c
     cp $01
     jr z, AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates
@@ -3481,11 +3481,11 @@ AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_Kamikaze::
-    farcall AIScore_Kamikaze_AIFunc779FAnd43F2AndActorHPNotOne
+    farcall AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
     and a
     ret z
-    farcall AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_4024
+    farcall AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_2
     ld a, c
     cp $01
     jr z, .skip
@@ -3786,13 +3786,13 @@ AIScore_KODance::
 .return:
     ret
 
-; table-B AI score: AIScore_LureDance, then AIAddScoresFor5ECEAnd5FC7 when usable (E-0122)
+; table-B AI score: AIScore_LureDance, then AIAddScoresForTwoLists when usable (E-0122)
 AIScoreB_LureDance::
     call AIScore_LureDance
     ld a, c
     and a
     ret z
-    call AIAddScoresFor5ECEAnd5FC7
+    call AIAddScoresForTwoLists
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -3846,14 +3846,14 @@ AIScore_LureDance::
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7
+    jr z, .call_ai_add_scores_for_two_lists
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
+    jr nz, .call_ai_add_scores_for_two_lists
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7:
-    call AIAddScoresFor5ECEAnd5FC7
+.call_ai_add_scores_for_two_lists:
+    call AIAddScoresForTwoLists
     ld c, $01
     ret
 
@@ -3915,7 +3915,7 @@ AIScore_Hustle::
     and a
     ret z
     ld a, [wBattleActor]
-    call ForEachPresentSlotOfSideRun66DC
+    call ForEachPresentSlotOfSideRun
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
     and a
@@ -4282,7 +4282,7 @@ AIScore_ThickFog::
 
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -4368,7 +4368,7 @@ AIScore_SuckAir::
 
 .call_weigh_link_rules1_rule_bit3:
     call WeighLinkRules1RuleBit3
-    farcall AnyAllyLacksStatus2Bit2_5D31
+    farcall AnyAllyLacksStatus2Bit2_2
     ld a, c
     and a
     jr nz, .return
@@ -4408,13 +4408,13 @@ AIScore_Focus::
     call WeighLinkRules1RuleBit5
     ret
 
-; table-B AI score: AIScore_LushLicks, then AIAddScoresFor5ECEAnd5FC7 when usable (E-0122)
+; table-B AI score: AIScore_LushLicks, then AIAddScoresForTwoLists when usable (E-0122)
 AIScoreB_LushLicks::
     call AIScore_LushLicks
     ld a, c
     and a
     ret z
-    call AIAddScoresFor5ECEAnd5FC7
+    call AIAddScoresForTwoLists
     ret
 
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4422,7 +4422,7 @@ AIScoreB_LushLicks::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_LushLicks::
-    farcall AILickSkillUsable_7AD8
+    farcall AILickSkillUsable
     ld a, c
     and a
     ret z
@@ -4448,14 +4448,14 @@ AIScore_LushLicks::
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7
+    jr z, .call_ai_add_scores_for_two_lists
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
+    jr nz, .call_ai_add_scores_for_two_lists
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7:
-    call AIAddScoresFor5ECEAnd5FC7
+.call_ai_add_scores_for_two_lists:
+    call AIAddScoresForTwoLists
     ld c, $01
     ret
 
@@ -4518,23 +4518,23 @@ AIScore_SickLick::
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7
+    jr z, .call_ai_add_scores_for_two_lists
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
+    jr nz, .call_ai_add_scores_for_two_lists
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7:
-    call AIAddScoresFor5ECEAnd5FC7
+.call_ai_add_scores_for_two_lists:
+    call AIAddScoresForTwoLists
     ret
 
-; table-B AI score: AIScore_LegSweep, then AIAddScoresFor5ECEAnd5FC7 when usable (E-0122)
+; table-B AI score: AIScore_LegSweep, then AIAddScoresForTwoLists when usable (E-0122)
 AIScoreB_LegSweep::
     call AIScore_LegSweep
     ld a, c
     and a
     ret z
-    call AIAddScoresFor5ECEAnd5FC7
+    call AIAddScoresForTwoLists
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4568,24 +4568,24 @@ AIScore_LegSweep::
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7
+    jr z, .call_ai_add_scores_for_two_lists
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
+    jr nz, .call_ai_add_scores_for_two_lists
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7:
-    call AIAddScoresFor5ECEAnd5FC7
+.call_ai_add_scores_for_two_lists:
+    call AIAddScoresForTwoLists
     ld c, $01
     ret
 
-; table-B AI score: AIScore_Ahhh, then AIAddScoresFor5ECEAnd5FC7 when usable (E-0122)
+; table-B AI score: AIScore_Ahhh, then AIAddScoresForTwoLists when usable (E-0122)
 AIScoreB_Ahhh::
     call AIScore_Ahhh
     ld a, c
     and a
     ret z
-    call AIAddScoresFor5ECEAnd5FC7
+    call AIAddScoresForTwoLists
     ret
 
 ; AI scoring routine for 2 skill(s) of the per-skill far table (AIScoreRoutineTableA and
@@ -4593,7 +4593,7 @@ AIScoreB_Ahhh::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 AIScore_Ahhh::
-    farcall AILickSkillUsable_7AD8
+    farcall AILickSkillUsable
     ld a, c
     and a
     ret z
@@ -4625,14 +4625,14 @@ AIScore_Ahhh::
     farcall ResistanceAverageGateForFoeAIMode3
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7
+    jr z, .call_ai_add_scores_for_two_lists
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7
+    jr nz, .call_ai_add_scores_for_two_lists
     ld bc, $0009
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7:
-    call AIAddScoresFor5ECEAnd5FC7
+.call_ai_add_scores_for_two_lists:
+    call AIAddScoresForTwoLists
     ld c, $01
     ret
 
@@ -4735,7 +4735,7 @@ AIScore_StrongD::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     ld a, [wBattleActor]
     call AIScore_StrongD_HPBandOfSlotTemp0
@@ -4769,7 +4769,7 @@ AIScore_Dodge::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall SetCToZero
     ld a, c
@@ -4789,11 +4789,11 @@ AIScore_Dodge::
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083)
 AIScore_BladeD::
-    farcall AIGuardSkillUsable_7C45
+    farcall AIGuardSkillUsable
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall SetCToZero
     ld a, c
@@ -4817,7 +4817,7 @@ AIScore_Cover::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     ld a, [wBattleActor]
     call AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty
@@ -4939,7 +4939,7 @@ AIScore_SealPray::
 
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -4960,7 +4960,7 @@ AIScore_SuckAll::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall AllOtherAlliesHaveStatus0Bit6
     ld a, c
@@ -5010,7 +5010,7 @@ AIScore_Imitate::
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -5041,7 +5041,7 @@ AIScore_Imitate::
 
 .call_weigh_link_rules1_rule_bit5:
     call WeighLinkRules1RuleBit5
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -5145,7 +5145,7 @@ AIScore_LoveRain::
 
 .read_battle_actor:
     ld a, [wBattleActor]
-    call ForEachPresentSlotOfSideRun66DC
+    call ForEachPresentSlotOfSideRun
     farcall ActorHPIsNotOne
     ld a, c
     and a
@@ -5199,8 +5199,9 @@ AIScore_Whistle::
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 170 Ahhh. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
-; interpreted (E-0083)
-AIScore_Ahhh_6401::
+; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
+; AIScore_Ahhh_6401)
+AIScore_Ahhh_2::
     farcall AIStatusLickUsable
     ld a, c
     and a
@@ -5272,8 +5273,9 @@ AIScore_Guard::
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 173 PanicAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
-; interpreted (E-0083)
-AIScore_PanicAll_6473::
+; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
+; AIScore_PanicAll_6473)
+AIScore_PanicAll_2::
     farcall AIPanicAllUsable
     ld a, c
     and a
@@ -5291,23 +5293,24 @@ AIScore_PanicAll_6473::
 ; AI scoring routine for 1 skill(s) of the per-skill far table (AIScoreRoutineTableA and
 ; AIScoreRoutineTableB, indexed by skill number): 174 Ironize. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
-; interpreted (E-0083)
-AIScore_Ironize_648D::
+; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
+; AIScore_Ironize_648D)
+AIScore_Ironize_2::
     farcall AIIronizeUsable
     ld a, c
     and a
     ret z
-    call AIScoreGuardSkill_67CF
+    call AIScoreGuardSkill
     ret z
     farcall SetCToZero
     ld a, c
     and a
-    jr nz, .call_ai_mode_at_least2_and_foe_lacks6_d1_a
+    jr nz, .call_ai_mode_at_least2_and_foe_lacks
     ld bc, $0038
     call AccumulateBank6WordToDA6E
 
-.call_ai_mode_at_least2_and_foe_lacks6_d1_a:
-    farcall AIModeAtLeast2AndFoeLacks6D1A
+.call_ai_mode_at_least2_and_foe_lacks:
+    farcall AIModeAtLeast2AndFoeLacks
     ld a, c
     cp $01
     jr z, .return
@@ -5553,7 +5556,7 @@ AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     jr c, .next
     ldh [hTemp0], a
     push bc
-    call AIScore_SuckAll_Sub01_HPBandOfSlotTemp0
+    call AIScore_SuckAll_HPBandOfSlotTemp0
     pop bc
 
 .next:
@@ -5562,7 +5565,7 @@ AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-AIScore_SuckAll_Sub01_HPBandOfSlotTemp0::
+AIScore_SuckAll_HPBandOfSlotTemp0::
     farcall HPBandOfSlotTemp0
     ld a, c
     cp $02
@@ -5623,7 +5626,7 @@ AIScore_Meditate_HPBandOfSlotTemp0::
 .return:
     ret
 
-AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
     ld b, $03
@@ -5634,7 +5637,7 @@ AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
     jr c, .next
     ldh [hTemp0], a
     push bc
-    call AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0
+    call AIScore_HealUs_HPBandOfSlotTemp0
     pop bc
 
 .next:
@@ -5643,7 +5646,7 @@ AIScore_HealUs_Sub01_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
+AIScore_HealUs_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5651,9 +5654,9 @@ AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data1
+    ld hl, AIScore_HealUs_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data2
+    ld hl, AIScore_HealUs_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5663,16 +5666,16 @@ AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data1::
+AIScore_HealUs_HPBandOfSlotTemp0_Data1::
     db $1e, $1f, $20, $21, $22, $22
 
-AIScore_HealUs_Sub01_Sub01_HPBandOfSlotTemp0_Data2::
+AIScore_HealUs_HPBandOfSlotTemp0_Data2::
     db $ab, $ac, $ad, $ae, $af, $af
 
-; for the three slots of the side in A (bit 2), runs
-; ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0 with hTemp0 = slot for each occupied one
-; (E-0122)
-ForEachPresentSlotOfSideRun66DC::
+; for the three slots of the side in A (bit 2), runs ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0
+; with hTemp0 = slot for each occupied one (E-0122) (E-0344: the address in its name dropped or read
+; as the label there; was ForEachPresentSlotOfSideRun66DC)
+ForEachPresentSlotOfSideRun::
     and $04
     ld c, a
     ld b, $03
@@ -5683,7 +5686,7 @@ ForEachPresentSlotOfSideRun66DC::
     jr c, .next
     ldh [hTemp0], a
     push bc
-    call ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0
+    call ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0
     pop bc
 
 .next:
@@ -5692,7 +5695,7 @@ ForEachPresentSlotOfSideRun66DC::
     jr nz, .loop
     ret
 
-ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
+ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5700,9 +5703,9 @@ ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data1
+    ld hl, ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data2
+    ld hl, ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5712,10 +5715,10 @@ ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data1::
+ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1::
     db $1d, $1e, $1f, $20, $21, $22
 
-ForEachPresentSlotOfSideRun66DC_HPBandOfSlotTemp0_Data2::
+ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
 AIScore_Ramming_HPBandOfSlotTemp0::
@@ -5747,7 +5750,7 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr c, .next
     ldh [hTemp0], a
     push bc
-    call AIScore_Cover_Sub01_HPBandOfSlotTemp0
+    call AIScore_Cover_HPBandOfSlotTemp0
     pop bc
 
 .next:
@@ -5756,7 +5759,7 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-AIScore_Cover_Sub01_HPBandOfSlotTemp0::
+AIScore_Cover_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5764,9 +5767,9 @@ AIScore_Cover_Sub01_HPBandOfSlotTemp0::
     ld b, a
     ld a, [wBattleActor]
     cp c
-    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data1
+    ld hl, AIScore_Cover_HPBandOfSlotTemp0_Data1
     jr z, .skip
-    ld hl, AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data2
+    ld hl, AIScore_Cover_HPBandOfSlotTemp0_Data2
 
 .skip:
     ld a, b
@@ -5776,10 +5779,10 @@ AIScore_Cover_Sub01_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data1::
+AIScore_Cover_HPBandOfSlotTemp0_Data1::
     db $21, $20, $1f, $1e, $1d, $1d
 
-AIScore_Cover_Sub01_HPBandOfSlotTemp0_Data2::
+AIScore_Cover_HPBandOfSlotTemp0_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
 AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
@@ -5799,7 +5802,7 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
     ret
 
 AIScore_Sap_AccumulateBank6WordToDA70::
-    farcall AIScore_Sap_Sub01_CarryUnlessBattleSlotOutSlotEmpty
+    farcall AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
     and a
     jr nz, .call_accumulate_bank6_word_to_da6_e
@@ -5843,16 +5846,18 @@ AIScore_TailWind_AccumulateBank6WordToDA70::
     ret
 
 ; returns when MaxNegativeScoreWhenAIFlagBit0 applies; otherwise continues with
-; AIScore_TailWind_Sub02 (E-0122)
-AIScoreGuardSkill_67CF::
+; AIScore_TailWind_Sub02 (E-0122) (E-0344: the address in its name dropped or read as the label
+; there; was AIScoreGuardSkill_67CF)
+AIScoreGuardSkill::
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
     jr AIScore_TailWind_AccumulateBank6WordToDA70
 
 ; WeighWD044RuleBit4, then adds score word $29 to wAISkillScore when
 ; AllySlotsCheckThenFewerThanTwoFoes fails and again when PassIfSide0FlagOrAllySlotEmpty fails
-; (E-0122)
-AIAddPenaltyFor5758And5CF1::
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; AIAddPenaltyFor5758And5CF1)
+AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes::
     call WeighLinkRules1RuleBit4
     farcall AllySlotsCheckThenFewerThanTwoFoes
     ld a, c
@@ -5872,21 +5877,22 @@ AIAddPenaltyFor5758And5CF1::
 .return:
     ret
 
-; adds score word $B1 when AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05 fails and $B2 when
-; AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02 fails (results of 1 count as passing)
-; (E-0124)
-AIAddScoresFor5ECEAnd5FC7::
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05
+; adds score word $B1 when AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when
+; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2 fails (results of 1 count as passing)
+; (E-0124) (E-0344: the address in its name dropped or read as the label there; was
+; AIAddScoresFor5ECEAnd5FC7; a trailing preposition left by the dropped address removed)
+AIAddScoresForTwoLists::
+    farcall AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp $01
-    jr z, .call_ai_add_scores_for5_ece_and5_fc7_read
+    jr z, .call_ai_add_scores_for_two_lists_read_slot_ai
     and a
-    jr nz, .call_ai_add_scores_for5_ece_and5_fc7_read
+    jr nz, .call_ai_add_scores_for_two_lists_read_slot_ai
     ld bc, $00b1
     call AccumulateBank6WordToDA6E
 
-.call_ai_add_scores_for5_ece_and5_fc7_read:
-    farcall AIAddScoresFor5ECEAnd5FC7_ReadSlotAIModeIndexed_Bank05_Sub02
+.call_ai_add_scores_for_two_lists_read_slot_ai:
+    farcall AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2
     ld a, c
     cp $01
     jr z, .return
@@ -5899,8 +5905,9 @@ AIAddScoresFor5ECEAnd5FC7::
     ret
 
 ; adds score word $0E to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails and $0F to
-; wAISkillScore when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122)
-AIAddScoresFor55BEAnd5731::
+; wAISkillScore when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122) (E-0344: the address in
+; its name dropped or read as the label there; was AIAddScoresFor55BEAnd5731)
+AIAddScoresForLinkRuleCheckLinkRules1Bit6::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
     and a

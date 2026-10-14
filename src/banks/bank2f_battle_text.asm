@@ -6,7 +6,7 @@ SECTION "Bank 2F", ROMX[$4000], BANK[$2F]
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank2F::
-    ld de, StringCategories_2F_4016
+    ld de, BeginStringDisplay_Bank2F_StringCategories
     call BeginStringDisplay
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9
@@ -20,17 +20,17 @@ ShowString_Bank2F::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_2F_4016::
-    dw StringList_2F_4022 ; id 0
-    dw StringList_2F_4134 ; id 1
-    dw StringList_2F_4334 ; id 2
-    dw StringList_2F_433C ; id 3
-    dw StringList_2F_433E ; id 4
-    dw StringList_2F_4340 ; id 5
+BeginStringDisplay_Bank2F_StringCategories::
+    dw StringList_Bank2F_StringCategories_0 ; id 0
+    dw StringList_Bank2F_StringCategories_1 ; id 1
+    dw StringList_Bank2F_StringCategories_2 ; id 2
+    dw StringList_Bank2F_StringCategories_3 ; id 3
+    dw StringList_Bank2F_StringCategories_4 ; id 4
+    dw StringList_Bank2F_StringCategories_5 ; id 5
 
-; category list of StringCategories_2F_4016; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank2F_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_2F_4022::
+StringList_Bank2F_StringCategories_0::
     dw String_2F_00_00 ; id 0
     dw String_2F_00_01 ; id 1
     dw String_2F_00_02 ; id 2
@@ -169,7 +169,7 @@ StringList_2F_4022::
     dw String_2F_00_87 ; id 135
     dw String_2F_00_88 ; id 136
 
-StringList_2F_4134::
+StringList_Bank2F_StringCategories_1::
     dw String_2F_01_00 ; id 0
     dw String_2F_01_01 ; id 1
     dw String_2F_01_02 ; id 2
@@ -427,19 +427,19 @@ StringList_2F_4134::
     dw String_2F_01_FE ; id 254
     dw String_2F_01_FF ; id 255
 
-StringList_2F_4334::
+StringList_Bank2F_StringCategories_2::
     dw String_2F_02_00 ; id 0
     dw String_2F_02_01 ; id 1
     dw String_2F_02_02 ; id 2
     dw String_2F_02_03 ; id 3
 
-StringList_2F_433C::
+StringList_Bank2F_StringCategories_3::
     dw String_2F_03_00 ; id 0
 
-StringList_2F_433E::
+StringList_Bank2F_StringCategories_4::
     dw String_2F_03_00 ; id 0
 
-StringList_2F_4340::
+StringList_Bank2F_StringCategories_5::
     dw String_2F_05_00 ; id 0
     dw String_2F_05_01 ; id 1
     dw String_2F_05_02 ; id 2

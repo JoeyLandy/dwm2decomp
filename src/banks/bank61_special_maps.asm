@@ -368,8 +368,8 @@ LoadMapHeaderByMapType::
     dw LoadKeyWorldTilesetAndHeader
     dw LoadMapHeaderByMapType_DecompressToVRAM
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
-    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2
+    dw LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2
     dw LoadMapType5TilesetAndHeader
     dw LoadMapHeaderByMapType_WriteTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
@@ -462,7 +462,7 @@ LoadMapType5TilesetAndHeader::
     ld a, $10
     ld [wMapSpriteKind], a
     ld a, $2a
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
     xor a
     ld [wMapTallTileMin], a
     ld a, $a3
@@ -521,7 +521,7 @@ LoadMapHeaderByMapType_DecompressToVRAM::
     ld a, [wIsCGB]
     or a
     jr z, .set_max_blocking_tile_to_3F
-    ld de, BGPaletteBufferData_6E_77E0
+    ld de, LoadMapHeaderByMapType_DecompressToVRAM_BGPaletteBufferData
     ld b, $6e
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -593,11 +593,11 @@ LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
 .read_temp0:
     ldh a, [hTemp0]
     sub $61
-    ld [wKeyWorldByte06], a
+    ld [wKeyWorldSetting], a
     call LoadSpecialMapHeader
     ret
 
-LoadMapHeaderByMapType_LoadSpecialMapHeader_Case03_SetTemp0::
+LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
@@ -684,7 +684,7 @@ LoadKeyWorldTilesetAndHeader::
 .clear_map_tall_tile_min:
     xor a
     ld [wMapTallTileMin], a
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
     ld a, [wKeyWorldGoalKind]
     ld hl, LoadKeyWorldTilesetAndHeader_Data
     add_a_to_hl
@@ -700,7 +700,7 @@ LoadKeyWorldTilesetAndHeader::
     and $f0
     jr z, .return
     ld a, $2c
-    ld [wMapHeaderByte11], a
+    ld [wMapEventTile], a
 
 .return:
     ret
@@ -712,22 +712,22 @@ LoadMapScreen_ReadMapType::
     ld a, [wMapType]
     and $07
     jumptable
-    dw LoadMapScreen_Sub03_WriteSVBK
-    dw LoadMapScreen_Sub03_Return
+    dw LoadMapScreen_WriteSVBK_2
+    dw LoadMapScreen_Return
     dw LoadMapScreen_SetTemp0
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0
-    dw LoadMapScreen_Sub03_WriteTemp0AndSVBK
-    dw LoadMapScreen_Sub03_WriteTemp0
-    dw LoadMapScreen_Sub03_LoadMapScreenFromChunk
+    dw LoadMapScreen_LoadMapScreenFromChunk_SetTemp0
+    dw LoadMapScreen_LoadMapScreenFromChunk_SetTemp0
+    dw LoadMapScreen_WriteTemp0AndSVBK
+    dw LoadMapScreen_WriteTemp0_2
+    dw LoadMapScreen_LoadMapScreenFromChunk
 
-LoadMapScreen_Sub03_LoadMapScreenFromChunk::
+LoadMapScreen_LoadMapScreenFromChunk::
     ld a, $66
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
-LoadMapScreen_Sub03_WriteTemp0::
+LoadMapScreen_WriteTemp0_2::
     ld a, [wKeyWorldFloor]
     sla a
     sla a
@@ -833,7 +833,7 @@ DrawDoorTilesForKeyWorldFloor::
     ldh [rSVBK], a
     ret
 
-LoadMapScreen_Sub03_WriteTemp0AndSVBK::
+LoadMapScreen_WriteTemp0AndSVBK::
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
@@ -1552,7 +1552,7 @@ KeyWorldScreenSpotRecords::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
 
-LoadMapScreen_Sub03_Return::
+LoadMapScreen_Return::
     ret
     db $c9
 
@@ -1569,7 +1569,7 @@ LoadMapScreen_SetTemp0::
     call LoadMapScreenFromChunk
     ret
 
-LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0::
+LoadMapScreen_LoadMapScreenFromChunk_SetTemp0::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
     swap a
@@ -1580,7 +1580,7 @@ LoadMapScreen_Sub03_LoadMapScreenFromChunk_Case03_SetTemp0::
     call LoadMapScreenFromChunk
     ret
 
-LoadMapScreen_Sub03_WriteSVBK::
+LoadMapScreen_WriteSVBK_2::
     ldh a, [hMapScreenY]
     and $fc
     add a
@@ -2151,45 +2151,46 @@ CheckWarpAtPlayer_ReadMapType::
     ld a, [wMapType]
     and $07
     jumptable
-    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
-    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01
-    dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
-    dw CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable
-    dw CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83
-    dw CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldFloorInfo1EntryAtScreen14
-    dw CheckWarpAtPlayer_Sub01_ReturnAfterSetup
-    dw CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1
+    dw CheckWarpAtPlayer_ReturnAfterSetup
+    dw CheckWarpAtPlayer_ReturnAfterSetup_2
+    dw CheckWarpAtPlayer_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1
+    dw CheckWarpAtPlayer_ToCheckKeyWorldWarpTable
+    dw CheckWarpAtPlayer_ToWarpToScreen01Event83
+    dw CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14
+    dw CheckWarpAtPlayer_ReturnAfterSetup
+    dw CheckWarpAtPlayer_ToCallFOnScreenY1
 
-CheckWarpAtPlayer_Sub01_ReturnAfterSetup::
+CheckWarpAtPlayer_ReturnAfterSetup::
     ld c, $00
     ret
 
-CheckWarpAtPlayer_Sub01_ReturnAfterSetup_Case01::
+CheckWarpAtPlayer_ReturnAfterSetup_2::
     ld c, $00
     ret
 
-CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
+CheckWarpAtPlayer_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
-CheckWarpAtPlayer_Sub01_ToCheckKeyWorldWarpTable::
+CheckWarpAtPlayer_ToCheckKeyWorldWarpTable::
     call CheckKeyWorldWarpTable
     ret
 
-CheckWarpAtPlayer_Sub01_ToWarpToScreen01Event83::
+CheckWarpAtPlayer_ToWarpToScreen01Event83::
     call WarpToScreen01Event83
     ret
 
-CheckWarpAtPlayer_Sub01_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
+CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
     call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 
-CheckWarpAtPlayer_Sub01_ToCallF4268OnScreenY1::
-    call CallF4268OnScreenY1
+CheckWarpAtPlayer_ToCallFOnScreenY1::
+    call CallFOnScreenY1
     ret
 
 ; C = 0 unless hMapScreenY = 1, in which case far-calls WarpToLinkedMapForCurrentMap (E-0122)
-CallF4268OnScreenY1::
+; (E-0344: the address in its name dropped or read as the label there; was CallF4268OnScreenY1)
+CallFOnScreenY1::
     ldh a, [hMapScreenY]
     cp $01
     jr z, .call_warp_to_linked_map_for_current_map
@@ -2476,51 +2477,54 @@ CheckWarpsByMapType::
     ld a, [wMapType]
     and $07
     jumptable
-    dw CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00
-    dw CheckWarpsByMapType_ToReturnStub_5CCF
-    dw CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc_Case02
-    dw CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc_Case03
+    dw CheckWarpsByMapType_RunThreeWarpChecks
+    dw CheckWarpsByMapType_ToReturnStub_2
+    dw CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc
+    dw CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc
     dw CheckWarpsByMapType_Return
-    dw CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Case05
-    dw CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06
+    dw CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc
+    dw CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc
     dw CheckWarpsByMapType_Return
 
 CheckWarpsByMapType_Return::
     ret
 
-CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc_Case00::
-    call CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc
+; entry 0 of the rst $00 table in CheckWarpsByMapType: calls CheckWarpsByMapType_KeyWorldGoalWarp
+; and two further warp checks in turn and returns at the first that returns A nonzero (E-0344
+; reading; was CheckWarpsByMapType_WriteFieldReturnPhaseAndFieldTransitionStepEtc)
+CheckWarpsByMapType_RunThreeWarpChecks::
+    call CheckWarpsByMapType_KeyWorldGoalWarp
     or a
     ret nz
-    call CheckWarpsByMapType_Case00_WriteWarpDestXAndWarpDestYEtc
+    call CheckWarpsByMapType_RunThreeWarpChecks_WriteWarpDestXAndWarpDestYEtc
     or a
     ret nz
-    call CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc
+    call CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc
     or a
     ret nz
     ret
 
-CheckWarpsByMapType_ToReturnStub_5CCF::
-    call ReturnStub_5CCF
+CheckWarpsByMapType_ToReturnStub_2::
+    call ReturnStub_2
     ret
 
-CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc_Case02::
-    call CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc
+CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc::
+    call CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2
     ret
 
-CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc_Case03::
-    call CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc
+CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc::
+    call CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2
     ret
 
-CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Case05::
-    call CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc
+CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc::
+    call CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2
     ret
 
-CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Case06::
-    call CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc
+CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc::
+    call CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2
     ret
 
-CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc::
+CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2559,7 +2563,7 @@ CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc::
     ld a, [de]
     swap a
     and $0f
-    ld hl, CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data
+    ld hl, CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2593,10 +2597,10 @@ CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc::
     ld c, $01
     ret
 
-CheckWarpsByMapType_Case06_WriteKeyWorldAreaAndMapScreenXEtc_Data::
+CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data::
     db $00, $30, $11, $22, $03, $33
 
-CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
+CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2656,7 +2660,7 @@ CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
     and $0f
     cp $0f
     jp z, .skip
-    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     cp b
@@ -2666,7 +2670,7 @@ CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
     ld a, [de]
     swap a
     and $0f
-    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     cp b
@@ -2774,7 +2778,7 @@ CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
     and $0f
 
 .skip2:
-    ld hl, CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2808,10 +2812,10 @@ CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc::
     ld c, $01
     ret
 
-CheckWarpsByMapType_Case05_WritePlayerStateFlagsAndTemp0Etc_Data::
+CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data::
     db $00, $30, $11, $22, $03, $33
 
-CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc::
+CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2852,7 +2856,7 @@ CheckWarpsByMapType_Case02_WriteMapToggleRequestAndKeyWorldFloorEtc::
     ld [wFieldTransitionKind], a
     ret
 
-CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc::
+CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2::
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState
@@ -2983,11 +2987,12 @@ CheckWarpsByMapType_Case03_WritePlayerStateFlagsAndWarpDestFacingEtc::
     ld c, $00
     ret
 
-; a bare ret (E-0116)
-ReturnStub_5CCF::
+; a bare ret (E-0116) (E-0344: the address in its name dropped or read as the label there; was
+; ReturnStub_5CCF)
+ReturnStub_2::
     ret
 
-CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc::
+CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     ld hl, wKeyWorldFloorInfo + $3
     xor a
     ldh [hTemp1], a
@@ -3177,7 +3182,7 @@ CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc::
     add_a_to_hl
     ld a, [hl]
     and $0f
-    ld hl, CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data
+    ld hl, CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -3230,10 +3235,14 @@ CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc::
     ldh [hTemp1], a
     jp .skip
 
-CheckWarpsByMapType_Case00_WriteTemp1AndPlayerStateFlagsEtc_Data::
+CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc_Data::
     db $00, $30, $11, $22, $03, $33
 
-CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc::
+; when a key world is active (wKeyWorldActive) and the key in wKeyWorldKey bit 7 is for
+; wKeyWorldSlot, compares the map screen with wKeyWorldGoalCell and the player cell with
+; wKeyWorldGoal before writing the field return and transition state (E-0344 reading; was
+; CheckWarpsByMapType_WriteFieldReturnPhaseAndFieldTransitionStepEtc_2)
+CheckWarpsByMapType_KeyWorldGoalWarp::
     ld a, [wKeyWorldActive]
     or a
     jr z, .read_map_screen_x
@@ -3331,7 +3340,7 @@ CheckWarpsByMapType_Case00_WriteFieldReturnPhaseAndFieldTransitionStepEtc::
     ld a, $01
     ret
 
-CheckWarpsByMapType_Case00_WriteWarpDestXAndWarpDestYEtc::
+CheckWarpsByMapType_RunThreeWarpChecks_WriteWarpDestXAndWarpDestYEtc::
     ldh a, [hPlayerX]
     ld c, a
     ldh a, [hPlayerY]

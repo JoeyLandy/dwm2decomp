@@ -255,7 +255,7 @@ RunBattleCommandEntry_BankA1::
     ld a, [wBattleSubPhase]
     jumptable
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty
-    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetBattleActor
+    dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2
     dw RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_BankA1_ChooseActionTarget
     dw RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
@@ -296,7 +296,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
     inc [hl]
     ret
 
-RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetBattleActor::
+RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
     cp $08
@@ -389,8 +389,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
     cp $02
     jr nz, .next
     ld a, e
-    call RunBattleCommandEntry_BankA1_Case04_RandomInRange
-    call RunBattleCommandEntry_BankA1_Case04_WriteRecordBufferAndBattleArg0Etc
+    call RunBattleCommandEntry_BankA1_RandomInRange
+    call RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc
     ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
@@ -538,7 +538,7 @@ RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
     ld bc, $0005
     call FillBytes
     farcall SaveActionChoicesAndPickFormations
-    call RunBattleCommandEntry_BankA1_Case06_CarryUnlessBattleSlotOutSlotEmpty
+    call RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
@@ -551,7 +551,7 @@ AddWordAtHLToBC_BankA1::
     ld b, a
     ret
 
-RunBattleCommandEntry_BankA1_Case06_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld c, $00
     ld b, $08
 
@@ -577,7 +577,7 @@ RunBattleCommandEntry_BankA1_Case06_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-RunBattleCommandEntry_BankA1_Case04_RandomInRange::
+RunBattleCommandEntry_BankA1_RandomInRange::
     push de
     call NextTableByteSecondStream
     ld a, e
@@ -599,7 +599,7 @@ RunBattleCommandEntry_BankA1_Case04_RandomInRange::
     pop de
     ret
 
-RunBattleCommandEntry_BankA1_Case04_WriteRecordBufferAndBattleArg0Etc::
+RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
     ld hl, wBattleActionChoice
@@ -731,7 +731,7 @@ MarkVisitedMapScreenInVisitedScreens::
     ld [hl], a
     ret
 
-RunMenuStateMenuState_Case05_ReadKeyWorldFloor::
+RunMenuStateMenuState_ReadKeyWorldFloor::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
     bit 7, a
@@ -864,32 +864,32 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
-    ld de, Tiles0Gfx_7E_4EB3
+    ld de, Tiles0Gfx_2
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_7E_5B27
+    ld de, Tiles0Plus100Gfx_3
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Tiles0Plus200Gfx_7E_5B46
+    ld de, Tiles0Plus200Gfx
     ld b, $7e
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld de, Tiles2Gfx_5D_43AE
+    ld de, Tiles2Gfx_3
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
     call FillBGMap0With57
-    call RunWorldMapState_Case04_WriteVRAMByteInc
+    call RunWorldMapState_WriteVRAMByteInc
     ld a, [wMapType]
     bit 7, a
-    jr nz, .call_run_world_map_state_case04_store_temp5
-    call RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX
+    jr nz, .call_run_world_map_state_store_temp5_values
+    call RunWorldMapState_StoreTemp5ValuesToCursorCellX_2
     jr .skip
 
-.call_run_world_map_state_case04_store_temp5:
-    call RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX_Sub01
+.call_run_world_map_state_store_temp5_values:
+    call RunWorldMapState_StoreTemp5ValuesToCursorCellX
 
 .skip:
     ld hl, wDMGPaletteBGP
@@ -903,7 +903,7 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     or a
     jr z, .done
     ld a, $40
-    ld de, OBJPaletteBufferData_7E_4BBD
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
     add e
     ld e, a
     jr nc, .skip2
@@ -914,14 +914,14 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, OBJPaletteBufferPlus8Data_7E_5AF6
+    ld de, OBJPaletteBufferPlus8Data_3
     ld b, $7e
     ld hl, wOBJPaletteBuffer + $8
     ld c, $10
     call CopyFromBank
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
-    ld de, BGPaletteBufferData_5D_4565
+    ld de, RunWorldMapState_CopyScrollToHardware_DecompressToVRAM_BGPaletteBufferData
     ld b, $5d
     ld hl, wBGPaletteBuffer
     ld c, $40
@@ -934,8 +934,8 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     inc [hl]
     ret
 
-RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX_Sub01::
-    call RunWorldMapState_Case04_Sub01_RunGameMode2MapTypeState
+RunWorldMapState_StoreTemp5ValuesToCursorCellX::
+    call RunWorldMapState_RunGameMode2MapTypeState
     call StoreTemp5ValuesToCursorCellX
     ld hl, vBGMap0
     ld c, $12
@@ -981,7 +981,7 @@ RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX_Sub01::
     pop de
     or a
     jr z, .check_temp9
-    call RunWorldMapState_Case04_Sub01_WriteTemp0AndTemp1
+    call RunWorldMapState_WriteTemp0AndTemp1
 
 .check_temp9:
     ldh a, [hTemp9]
@@ -1018,7 +1018,7 @@ RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX_Sub01::
     jr nz, .loop
     ret
 
-RunWorldMapState_Case04_Sub01_WriteTemp0AndTemp1::
+RunWorldMapState_WriteTemp0AndTemp1::
     push hl
     ldh a, [hTemp8]
     and $fc
@@ -1115,7 +1115,7 @@ RunWorldMapState_Case04_Sub01_WriteTemp0AndTemp1::
     call WriteVRAMByte
     ret
 
-RunWorldMapState_Case04_Sub01_RunGameMode2MapTypeState::
+RunWorldMapState_RunGameMode2MapTypeState::
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1190,10 +1190,10 @@ RunGameMode2MapTypeState::
     dw RunGameMode2MapTypeState_Return
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc
-    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03
-    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03
-    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03
-    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03
+    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2
+    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2
+    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2
+    dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2
     dw RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer
 
 RunGameMode2MapTypeState_Return::
@@ -1215,7 +1215,7 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
     ld a, [hl]
     jr SetMapScreenFromAAndCenterPlayer
 
-RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_Case03::
+RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
     ld a, [wKeyWorldFloor]
     and $07
     add a
@@ -1271,8 +1271,8 @@ SetMapScreenFromAAndCenterPlayer::
     ldh [hPlayerY], a
     ret
 
-RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX::
-    call RunWorldMapState_Case04_Sub02_WriteTemp3AndTemp4Etc
+RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
+    call RunWorldMapState_WriteTemp3AndTemp4Etc
     call StoreTemp5ValuesToCursorCellX
     ldh a, [hTemp0]
     ld e, a
@@ -1382,7 +1382,7 @@ RunWorldMapState_Case04_StoreTemp5ValuesToCursorCellX::
     jp nz, .loop
     ret
 
-RunWorldMapState_Case04_Sub02_WriteTemp3AndTemp4Etc::
+RunWorldMapState_WriteTemp3AndTemp4Etc::
     ldh a, [hPlayerX]
     ld l, a
     ldh a, [hMapScreenX]
@@ -1393,7 +1393,7 @@ RunWorldMapState_Case04_Sub02_WriteTemp3AndTemp4Etc::
     ldh a, [hMapScreenY]
     ld h, a
     push hl
-    call RunWorldMapState_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc
+    call RunWorldMapState_WriteMapScreenXAndMapScreenYEtc
     ld a, [wWorldMapRegion]
     add a
     add a
@@ -1581,7 +1581,7 @@ WorldMapScreenCellTable::
     db $21 ; id 10: size: width in screens (high nibble), height in screens (low nibble)
     dfar WorldMapScreenCells10 ; screen cell grid: 25 bytes (5 x 5) per screen
 
-RunWorldMapState_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc::
+RunWorldMapState_WriteMapScreenXAndMapScreenYEtc::
     ldh a, [hMapId]
     ld c, $01
     cp $29
@@ -1739,11 +1739,11 @@ StoreTemp5ValuesToCursorCellX::
 RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
     ld a, [wJoypadPressed]
     bit 1, a
-    jr nz, RunWorldMapState_Case02_UploadBGPalettes
+    jr nz, RunWorldMapState_UploadBGPalettes_2
     bit 2, a
-    jr z, RunWorldMapState_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8
+    jr z, RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8
 
-RunWorldMapState_Case02_UploadBGPalettes::
+RunWorldMapState_UploadBGPalettes_2::
     ld hl, wDMGPaletteBGP
     ld a, $00
     ld [hli], a
@@ -1767,15 +1767,15 @@ RunWorldMapState_Case02_UploadBGPalettes::
     inc [hl]
     ret
 
-RunWorldMapState_Case02_UploadBGPalettes_CallDrawBlinkingMetaSprite8::
+RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
     call DrawBlinkingMetaSprite8
-    call RunWorldMapState_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc
-    call RunWorldMapState_Case02_Sub01_WaitMapType
-    call RunWorldMapState_Case02_Sub01_WaitGameMode2Byte50
-    call RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2
+    call RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc
+    call RunWorldMapState_WaitMapType
+    call RunWorldMapState_WaitWorldMapByFieldSkill
+    call RunWorldMapState_WriteTemp1AndTemp2
     ret
 
-RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2::
+RunWorldMapState_WriteTemp1AndTemp2::
     ld a, [wMapType]
     bit 7, a
     jp nz, .check_key_world_active2
@@ -1823,7 +1823,7 @@ RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWorldMapState_Case02_Sub01_Sub01_Multiply8
+    call RunWorldMapState_Multiply8
     ret
 
 .skip:
@@ -1837,7 +1837,7 @@ RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2::
     ldh [hTemp1], a
     ld a, [hl]
     ldh [hTemp2], a
-    call RunWorldMapState_Case02_Sub01_Sub01_Multiply8
+    call RunWorldMapState_Multiply8
     ret
 
 .check_key_world_active2:
@@ -1856,7 +1856,7 @@ RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2::
     ldh [hTemp1], a
     ld a, [wKeyWorldGoal]
     ldh [hTemp2], a
-    call RunWorldMapState_Case02_Sub01_Sub01_Multiply8
+    call RunWorldMapState_Multiply8
     ret
 
 .read_key_world_goal_screen:
@@ -1870,10 +1870,10 @@ RunWorldMapState_Case02_Sub01_WriteTemp1AndTemp2::
     swap a
     or c
     ldh [hTemp2], a
-    call RunWorldMapState_Case02_Sub01_Sub01_Multiply8
+    call RunWorldMapState_Multiply8
     ret
 
-RunWorldMapState_Case02_Sub01_Sub01_Multiply8::
+RunWorldMapState_Multiply8::
     ld a, [wCursorCellY]
     ld c, a
     ldh a, [hTemp1]
@@ -1950,8 +1950,8 @@ RunWorldMapState_Case02_Sub01_Sub01_Multiply8::
 .return:
     ret
 
-RunWorldMapState_Case02_Sub01_WaitGameMode2Byte50::
-    ld a, [wGameMode2Byte50]
+RunWorldMapState_WaitWorldMapByFieldSkill::
+    ld a, [wWorldMapByFieldSkill]
     or a
     ret z
     ld a, [wMapType]
@@ -2174,7 +2174,7 @@ RunWorldMapState_Case02_Sub01_WaitGameMode2Byte50::
     ret
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
-RunWorldMapState_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc::
+RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     ld a, [wMapType]
     bit 7, a
     jp nz, .skip
@@ -2328,7 +2328,7 @@ RunWorldMapState_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc::
     pop de
     ld a, l
     ldh [hSpriteOriginY], a
-    ld a, [wGameMode2Byte50]
+    ld a, [wWorldMapByFieldSkill]
     or a
     jr nz, .read_cursor_cell_x
     ld a, [de]
@@ -2386,7 +2386,7 @@ RunWorldMapState_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc::
     inc de
     jp .skip2
 
-RunWorldMapState_Case02_Sub01_WaitMapType::
+RunWorldMapState_WaitMapType::
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -2404,9 +2404,9 @@ RunWorldMapState_Case02_Sub01_WaitMapType::
     dec de
     dec de
     dec de
-    call RunWorldMapState_Case02_Sub01_Sub04_Multiply8
+    call RunWorldMapState_Multiply8_2
     inc de
-    call RunWorldMapState_Case02_Sub01_Sub04_Multiply8
+    call RunWorldMapState_Multiply8_2
     pop de
     inc de
     inc de
@@ -2414,7 +2414,7 @@ RunWorldMapState_Case02_Sub01_WaitMapType::
     inc de
     jp .skip
 
-RunWorldMapState_Case02_Sub01_Sub04_Multiply8::
+RunWorldMapState_Multiply8_2::
     ld a, [wCursorCellY]
     ld c, a
     ld a, [de]
@@ -2446,7 +2446,7 @@ RunWorldMapState_Case02_Sub01_Sub04_Multiply8::
     pop de
     ld a, l
     ldh [hSpriteOriginY], a
-    ld a, [wGameMode2Byte50]
+    ld a, [wWorldMapByFieldSkill]
     or a
     jr nz, .read_cursor_cell_x
     ld a, [de]
@@ -2555,19 +2555,19 @@ RunWorldMapState_CopyScrollToHardware::
     ldh [hScrollX], a
     ldh [hScrollY], a
     call CopyScrollToHardware
-    ld de, Tiles0Gfx_7E_4EB3
+    ld de, Tiles0Gfx_2
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_7E_5B0E
+    ld de, Tiles0Plus100Gfx_2
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Tiles2Gfx_5D_4001
+    ld de, Tiles2Gfx_2
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
-    ld de, Tiles2Plus500Gfx_5E_4001
+    ld de, Tiles2Plus500Gfx
     ld b, $5e
     ld hl, vTiles2 + $500
     call DecompressToVRAM
@@ -2577,11 +2577,11 @@ RunWorldMapState_CopyScrollToHardware::
     ld hl, vBGMap0
     call CopyRectFromBankToVRAM
     call DrawRect12x12FromBankA1
-    call RunWorldMapState_Case01_WriteVRAMByteInc
+    call RunWorldMapState_WriteVRAMByteInc_2
     ld a, [wMapType]
     bit 7, a
     jr nz, .call_run_world_map_state_set_temp0
-    call RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC
+    call RunWorldMapState_CenteredBGMapOriginForSizeBC
     jr .skip
 
 .call_run_world_map_state_set_temp0:
@@ -2599,7 +2599,7 @@ RunWorldMapState_CopyScrollToHardware::
     or a
     jr z, .done
     ld a, $40
-    ld de, OBJPaletteBufferData_7E_4BBD
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
     add e
     ld e, a
     jr nc, .skip2
@@ -2610,19 +2610,19 @@ RunWorldMapState_CopyScrollToHardware::
     ld hl, wOBJPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, OBJPaletteBufferPlus8Data_7E_5AF6
+    ld de, OBJPaletteBufferPlus8Data_3
     ld b, $7e
     ld hl, wOBJPaletteBuffer + $8
     ld c, $08
     call CopyFromBank
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
-    ld de, BGPaletteBufferData_5D_4139
+    ld de, RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData_2
     ld b, $5d
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBank
-    ld de, BGPaletteBufferPlus8Data_5E_422F
+    ld de, BGPaletteBufferPlus8Data
     ld b, $5e
     ld hl, wBGPaletteBuffer + $8
     ld c, $08
@@ -2639,23 +2639,23 @@ RunWorldMapState_WriteWorldMapState::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit2
-    call RunWorldMapState_Case02_UploadBGPalettes
+    call RunWorldMapState_UploadBGPalettes_2
     ld a, $06
     ld [wWorldMapState], a
     ret
 
 .check_bit2:
     bit 2, a
-    jr z, .call_run_world_map_state_case02_wait_frame
+    jr z, .call_run_world_map_state_wait_frame_counter
     ld hl, wWorldMapState
     inc [hl]
     ret
 
-.call_run_world_map_state_case02_wait_frame:
-    call RunWorldMapState_Case02_WaitFrameCounterLo
-    call RunWorldMapState_Case02_WriteSpriteOriginXAndSpriteOriginY
-    call RunWorldMapState_Case02_WaitMapType
-    call RunWorldMapState_Case02_WriteTemp1
+.call_run_world_map_state_wait_frame_counter:
+    call RunWorldMapState_WaitFrameCounterLo
+    call RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY
+    call RunWorldMapState_WaitMapType_2
+    call RunWorldMapState_WriteTemp1
     ret
 
 RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
@@ -2719,10 +2719,10 @@ RunWorldMapState_SetTemp0::
     ldh a, [hTemp5]
     ld d, a
     ld a, [de]
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2740,10 +2740,10 @@ RunWorldMapState_SetTemp0::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -2769,10 +2769,10 @@ RunWorldMapState_SetTemp0::
     ld a, d
     ldh [hTemp5], a
     ld a, [de]
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
     push af
     ldh a, [hTemp0]
     ld e, a
@@ -2790,10 +2790,10 @@ RunWorldMapState_SetTemp0::
     ld a, d
     ldh [hTemp1], a
     pop af
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
-    call RunWorldMapState_Case01_Sub01_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
+    call RunWorldMapState_WriteTemp0
     ldh a, [hTemp0]
     ld e, a
     ldh a, [hTemp1]
@@ -2910,7 +2910,7 @@ RunWorldMapState_SetTemp0::
     jr nz, .loop4
     ret
 
-RunWorldMapState_Case01_Sub01_WriteTemp0::
+RunWorldMapState_WriteTemp0::
     sra a
     push af
     jr c, .skip
@@ -3020,7 +3020,7 @@ RunGameMode2State_CenterName::
     pop hl
     ret
 
-RunWorldMapState_Case01_CenteredBGMapOriginForSizeBC::
+RunWorldMapState_CenteredBGMapOriginForSizeBC::
     ld a, [wWorldMapRegion]
     add a
     add a
@@ -3118,7 +3118,7 @@ WorldMapViewTable::
     db $01, $02 ; rows, width
     db $da, $00, $00, $00 ; a map number ($20, $30, $48 ...) and three zero bytes; not read here
 
-RunWorldMapState_Case02_WriteTemp1::
+RunWorldMapState_WriteTemp1::
     ld a, [wMapType]
     bit 7, a
     jp nz, .check_key_world_active2
@@ -3244,7 +3244,7 @@ DrawCursorSpriteAtTemp1Cell::
     farcall DrawMetaSprite
     ret
 
-RunWorldMapState_Case02_WaitFrameCounterLo::
+RunWorldMapState_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 5, a
     ret z
@@ -3423,11 +3423,11 @@ SetSpriteYFromCursorCellY_CheckMapType::
     dw SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03
-    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2
+    dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3
 
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
     ld a, [wKeyWorldFloor]
@@ -3446,7 +3446,7 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
     call SetSpriteXYFromCellA
     ret
 
-SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03::
+SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2::
     ld a, [wKeyWorldFloor]
     and $07
     add a
@@ -3457,7 +3457,7 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case03::
     call SetSpriteXYFromCellA
     ret
 
-SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_Case07::
+SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3::
     ld a, [wKeyWorldActive]
     or a
     jr z, .read_key_world_goal_screen
@@ -3523,7 +3523,7 @@ DrawMetaSpriteSet08::
     farcall DrawMetaSprite
     ret
 
-RunWorldMapState_Case02_WriteSpriteOriginXAndSpriteOriginY::
+RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY::
     ld a, [wMapType]
     bit 7, a
     jr nz, .skip
@@ -3582,7 +3582,7 @@ RunWorldMapState_Case02_WriteSpriteOriginXAndSpriteOriginY::
     dec de
     dec de
     ld a, [de]
-    ld a, [wGameMode2Byte50]
+    ld a, [wWorldMapByFieldSkill]
     or a
     jr nz, .skip3
     ld a, [de]
@@ -3646,7 +3646,7 @@ DrawMetaSpriteSet26::
     farcall DrawMetaSprite
     ret
 
-RunWorldMapState_Case02_WaitMapType::
+RunWorldMapState_WaitMapType_2::
     ld a, [wMapType]
     bit 7, a
     ret z
@@ -3660,9 +3660,9 @@ RunWorldMapState_Case02_WaitMapType::
     dec de
     dec de
     dec de
-    call RunWorldMapState_Case02_Sub05_IsMapScreenAVisited
+    call RunWorldMapState_IsMapScreenAVisited
     inc de
-    call RunWorldMapState_Case02_Sub05_IsMapScreenAVisited
+    call RunWorldMapState_IsMapScreenAVisited
     pop de
     ld a, $04
     add e
@@ -3673,8 +3673,8 @@ RunWorldMapState_Case02_WaitMapType::
 .skip2:
     jr .skip
 
-RunWorldMapState_Case02_Sub05_IsMapScreenAVisited::
-    ld a, [wGameMode2Byte50]
+RunWorldMapState_IsMapScreenAVisited::
+    ld a, [wWorldMapByFieldSkill]
     or a
     jr nz, .skip
     ld a, [de]
@@ -3769,7 +3769,7 @@ FillBGMap0With57::
     jr nz, .loop
     ret
 
-RunWorldMapState_Case04_WriteVRAMByteInc::
+RunWorldMapState_WriteVRAMByteInc::
     ld a, [wIsCGB]
     or a
     ret z
@@ -3791,7 +3791,7 @@ RunWorldMapState_Case04_WriteVRAMByteInc::
     ldh [c], a
     ret
 
-RunWorldMapState_Case01_WriteVRAMByteInc::
+RunWorldMapState_WriteVRAMByteInc_2::
     ld a, [wIsCGB]
     or a
     ret z
@@ -3843,7 +3843,7 @@ DrawRect12x12FromBankA1::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 12 tiles, one row per line
-TileRect_A1_5808::
+TileRectA1_1::
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 0
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 1
     db $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34, $34 ; id 2
@@ -4050,10 +4050,10 @@ TryOpenWorldMap::
     ret
     db $01, $01
 
-; RunWorldMapState_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip2 reads the record at
-; $59D6 + 4 * wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles);
-; 11 indexes, so record 10's first two bytes are the tail and its other two would be
-; WorldMapCursorSpriteLists' first word (E-0215, C1)
+; RunWorldMapState_WriteMapScreenXAndMapScreenYEtc.skip2 reads the record at $59D6 + 4 *
+; wGameMode2Byte44 with LoadMapPositionFromHL (hMapScreenX/Y, hPlayerX/Y from nibbles); 11 indexes,
+; so record 10's first two bytes are the tail and its other two would be WorldMapCursorSpriteLists'
+; first word (E-0215, C1)
 ; record: screen X/Y and position X/Y nibbles; two bytes not read here
 WorldMapStartPositions::
     db $00, $44, $39, $31 ; id 0
@@ -4068,7 +4068,7 @@ WorldMapStartPositions::
     db $00, $44, $01, $01 ; id 9
     db $00, $44 ; end
 
-; RunWorldMapState_Case02_WriteSpriteOriginXAndSpriteOriginY reads word wGameMode2Byte44 and draws
+; RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY reads word wGameMode2Byte44 and draws
 ; DrawMetaSpriteSet26 once per entry at wCursorCellX * 8 + X, wCursorCellY * 8 + Y; the lists run to
 ; $5A49 (E-0215, C1)
 ; record: list
@@ -4132,8 +4132,8 @@ WorldMapCursorSprites009::
 WorldMapCursorSprites00A::
     db $01, $09, $01 ; id 0
 
-; RunWorldMapState_Case02_Sub01_WriteSpriteOriginXAndSpriteOriginYEtc reads word wGameMode2Byte44
-; and walks count entries of two bytes; the lists run to $5A92 (E-0215, C1)
+; RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc reads word wGameMode2Byte44 and walks count
+; entries of two bytes; the lists run to $5A92 (E-0215, C1)
 ; record: list
 WorldMapMarkerLists::
     dw WorldMapMarkers000 ; id 0
@@ -4351,10 +4351,10 @@ WorldMapCursorCellTable::
     db $df, $09, $01, $00, $00 ; id 148
     db $e0, $09, $01, $00, $00 ; id 149
 
-; the routine before RunWorldMapState_Case04_Sub02_Sub01_WriteMapScreenXAndMapScreenYEtc.skip scans
-; 5-byte records from $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4
-; when wLastWarpIndex = 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero
-; padding from $606E (E-0215, C1)
+; the routine before RunWorldMapState_WriteMapScreenXAndMapScreenYEtc.skip scans 5-byte records from
+; $5D80 for the map id and loads LoadMapPositionFromHL from bytes 1-2, or 3-4 when wLastWarpIndex =
+; 2; 150 records with the same map ids as WorldMapCursorCellTable, then zero padding from $606E
+; (E-0215, C1)
 ; record: map id; screen / position nibbles; the same for wLastWarpIndex = 2
 WorldMapScreenPositionTable::
     db $21, $21, $44, $00, $00 ; id 0

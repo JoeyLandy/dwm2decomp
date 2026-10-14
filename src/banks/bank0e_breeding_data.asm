@@ -4,11 +4,11 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0e
 
-DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay_Sub01::
+DebugMessageTest_Update_BeginStringDisplay::
     ld a, [wStringIndex]
     cp $88
     jr c, .call_begin_string_display
-    farcall DebugMessageTest_Update_Case1C_Sub01_BeginStringDisplay
+    farcall DebugMessageTest_Update_BeginStringDisplay_2
     ret
 
 .call_begin_string_display:
@@ -34,13 +34,13 @@ CopyStringToBuffer_Bank0E::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_0E_4032::
+StringCategories_0E::
 MessageStrings_Bank0E::
-    dw StringList_0E_4034 ; id 0
+    dw StringList_Bank0E_0 ; id 0
 
-; category list of StringCategories_0E_4032; one pointer per wStringIndex (E-0217)
+; category list of StringCategories_0E; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_0E_4034::
+StringList_Bank0E_0::
     dw MessageBank0E_00 ; id 0
     dw MessageBank0E_00 ; id 1
     dw MessageBank0E_00 ; id 2
@@ -674,7 +674,7 @@ MessageBank0E_87::
 
 ; ld de, this bank's string table / BeginStringDisplay
 BeginStringDisplay_Bank0E::
-    ld de, StringCategories_0E_5385
+    ld de, BeginStringDisplay_Bank0E_StringCategories
     call BeginStringDisplay
     ret
     db $11, $85, $53, $cd, $fe, $25, $c9
@@ -688,135 +688,135 @@ ShowString_Bank0E::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-StringCategories_0E_5385::
-    dw StringList_0E_5387 ; id 0
+BeginStringDisplay_Bank0E_StringCategories::
+    dw StringList_Bank0E_StringCategories_0 ; id 0
 
-; category list of StringCategories_0E_5385; one pointer per wStringIndex (E-0217)
+; category list of BeginStringDisplay_Bank0E_StringCategories; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_0E_5387::
-    dw String_0E_5385_00_00 ; id 0
-    dw String_0E_5385_00_00 ; id 1
-    dw String_0E_5385_00_02 ; id 2
-    dw String_0E_5385_00_03 ; id 3
-    dw String_0E_5385_00_04 ; id 4
-    dw String_0E_5385_00_05 ; id 5
-    dw String_0E_5385_00_06 ; id 6
-    dw String_0E_5385_00_07 ; id 7
-    dw String_0E_5385_00_08 ; id 8
-    dw String_0E_5385_00_09 ; id 9
-    dw String_0E_5385_00_0A ; id 10
-    dw String_0E_5385_00_0B ; id 11
-    dw String_0E_5385_00_0C ; id 12
-    dw String_0E_5385_00_0D ; id 13
-    dw String_0E_5385_00_0E ; id 14
-    dw String_0E_5385_00_0F ; id 15
-    dw String_0E_5385_00_10 ; id 16
-    dw String_0E_5385_00_11 ; id 17
-    dw String_0E_5385_00_12 ; id 18
-    dw String_0E_5385_00_13 ; id 19
-    dw String_0E_5385_00_14 ; id 20
-    dw String_0E_5385_00_15 ; id 21
-    dw String_0E_5385_00_16 ; id 22
+StringList_Bank0E_StringCategories_0::
+    dw Text_ReadyToStartBreeding ; id 0
+    dw Text_ReadyToStartBreeding ; id 1
+    dw Text_YouRefusedBreeding ; id 2
+    dw Text_YourPalRefusedBreeding ; id 3
+    dw Text_IsThisOneOK ; id 4
+    dw Text_ThisOneIsToo ; id 5
+    dw Text_ChooseFromTheFarms ; id 6
+    dw Text_PleaseWait ; id 7
+    dw Text_IdenticalGendersCantBreed ; id 8
+    dw Text_ChooseTheMonsterFor ; id 9
+    dw Text_TheCoupleIsIncompatible ; id 10
+    dw Text_ProceedWithBreeding ; id 11
+    dw Text_IsItOKTo ; id 12
+    dw Text_TheMonstersLikeEach ; id 13
+    dw Text_InfoOK ; id 14
+    dw Text_BredInfoExit ; id 15
+    dw Text_ATKDEFGLINWMextvlBas ; id 16
+    dw Text_BreedingWentWrongSomehow ; id 17
+    dw Text_TheGameLinkFailed ; id 18
+    dw Text_YouRefusedBreeding_2 ; id 19
+    dw Text_YourPalRefusedBreeding_2 ; id 20
+    dw Text_ForBreedingWithTerrys ; id 21
+    dw Text_AccessoriesWillBeIn ; id 22
 
-String_0E_5385_00_00::
+Text_ReadyToStartBreeding::
     db "Ready to start<LINE>"
     db "breeding.<PROMPT>"
     db "@"
 
-String_0E_5385_00_02::
+Text_YouRefusedBreeding::
     db "You refused<LINE>"
     db "breeding.<PROMPT>"
     db "@"
 
-String_0E_5385_00_03::
+Text_YourPalRefusedBreeding::
     db "Your pal refused<LINE>"
     db "breeding.<PROMPT>"
     db "@"
 
-String_0E_5385_00_04::
+Text_IsThisOneOK::
     db "Is this one OK for<LINE>"
     db "breeding?@"
 
-String_0E_5385_00_05::
+Text_ThisOneIsToo::
     db "This one is too<LINE>"
     db "young to breed.<PROMPT>"
     db "<NEXT>It needs to be"
     db "<NEXT>leveled up more.<PROMPT>"
     db "@"
 
-String_0E_5385_00_06::
+Text_ChooseFromTheFarms::
     db "Choose from the<LINE>"
     db "farm's roster.<PROMPT>"
     db "@"
 
-String_0E_5385_00_07::
+Text_PleaseWait::
     db "Please wait.@"
 
-String_0E_5385_00_08::
+Text_IdenticalGendersCantBreed::
     db "Identical genders<LINE>"
     db "can't breed.<PROMPT>"
     db "@"
 
-String_0E_5385_00_09::
+Text_ChooseTheMonsterFor::
     db "Choose the monster<LINE>"
     db "for breeding.@"
 
-String_0E_5385_00_0A::
+Text_TheCoupleIsIncompatible::
     db "The couple is<LINE>"
     db "incompatible.<PROMPT>"
     db "@"
 
-String_0E_5385_00_0B::
+Text_ProceedWithBreeding::
     db "Proceed with<LINE>"
     db "breeding?@"
 
-String_0E_5385_00_0C::
+Text_IsItOKTo::
     db "Is it OK to record<LINE>"
     db "the results?@"
 
-String_0E_5385_00_0D::
+Text_TheMonstersLikeEach::
     db "The monsters like<LINE>"
     db "each other.<PROMPT>"
     db "<NEXT>Breeding will be"
     db "<NEXT>started.@"
 
-String_0E_5385_00_0E::
+Text_InfoOK::
     db "InfoOK@"
 
-String_0E_5385_00_0F::
+Text_BredInfoExit::
     db "BredInfoExit@"
 
-String_0E_5385_00_10::
+Text_ATKDEFGLINWMextvlBas::
     db "ATKDEFGLINWMextvlBas        + @"
 
-String_0E_5385_00_11::
+Text_BreedingWentWrongSomehow::
     db "Breeding went<LINE>"
     db "wrong somehow.<PROMPT>"
     db "<NEXT>Breeding will be"
     db "<NEXT>canceled.<WAIT>"
     db "@"
 
-String_0E_5385_00_12::
+Text_TheGameLinkFailed::
     db "The Game Link<LINE>"
     db "failed.<PROMPT>"
     db "<NEXT>Breeding will be"
     db "<NEXT>canceled.<WAIT>"
     db "@"
 
-String_0E_5385_00_13::
+Text_YouRefusedBreeding_2::
     db "You refused<LINE>"
     db "breeding.@"
 
-String_0E_5385_00_14::
+Text_YourPalRefusedBreeding_2::
     db "Your pal refused<LINE>"
     db "breeding.@"
 
-String_0E_5385_00_15::
+Text_ForBreedingWithTerrys::
     db "For breeding with<LINE>"
     db "Terry's monsters.<WAIT>"
     db "@"
 
-String_0E_5385_00_16::
+Text_AccessoriesWillBeIn::
     db "<VOICE1>*: Accessories will<LINE>"
     db "be in the Vault.<WAIT>"
     db "@"
@@ -1243,7 +1243,7 @@ ComputeBreedingChild::
     ld d, b
     pop bc
     push bc
-    call AdjustStatForRecordBufAByte7133AndRecordBufBItem
+    call AdjustStatForRecordBufAAndBItems
     add hl, de
     srl h
     rr l
@@ -1409,10 +1409,11 @@ ComputeBreedingChild::
     ret
 
 ; when wRecordBufA + $A4 or wRecordBufB + $A4 is set and listed for stat C
-; (AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1), subtracts
-; AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2[value] from DE (unless it is at 999)
-; (E-0130) (E-0340: the address in its name read as its RAM name; was AdjustStatForWCA2AAndWCACF)
-AdjustStatForRecordBufAByte7133AndRecordBufBItem::
+; (AdjustStatForRecordBufAAndBItems_Data1), subtracts AdjustStatForRecordBufAAndBItems_Data2[value]
+; from DE (unless it is at 999) (E-0130) (E-0340: the address in its name read as its RAM name; was
+; AdjustStatForWCA2AAndWCACF) (E-0345: $CA2A and $CACF are the MON_ITEM of wRecordBufA and
+; wRecordBufB; was AdjustStatForRecordBufAByte7133AndRecordBufBItem)
+AdjustStatForRecordBufAAndBItems::
     ld a, [wRecordBufA + MON_ITEM]
     and a
     jr z, .check_record_buf_b2
@@ -1420,7 +1421,7 @@ AdjustStatForRecordBufAByte7133AndRecordBufBItem::
     push hl
     ld a, c
     add a
-    ld hl, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1
+    ld hl, AdjustStatForRecordBufAAndBItems_Data1
     add_a_to_hl
     push de
     ld e, [hl]
@@ -1452,7 +1453,7 @@ AdjustStatForRecordBufAByte7133AndRecordBufBItem::
 
 .skip2:
     ld a, b
-    ld hl, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2
+    ld hl, AdjustStatForRecordBufAAndBItems_Data2
     add_a_to_hl
     ld a, [hl]
     ld b, a
@@ -1474,7 +1475,7 @@ AdjustStatForRecordBufAByte7133AndRecordBufBItem::
     push de
     ld a, c
     add a
-    ld de, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1
+    ld de, AdjustStatForRecordBufAAndBItems_Data1
     add e
     ld e, a
     jr nc, .skip3
@@ -1513,7 +1514,7 @@ AdjustStatForRecordBufAByte7133AndRecordBufBItem::
 
 .skip5:
     ld a, b
-    ld de, AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2
+    ld de, AdjustStatForRecordBufAAndBItems_Data2
     add e
     ld e, a
     jr nc, .skip6
@@ -1533,35 +1534,35 @@ AdjustStatForRecordBufAByte7133AndRecordBufBItem::
     pop de
     ret
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1::
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry04
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry05
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry06
-    dw AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry07
+AdjustStatForRecordBufAAndBItems_Data1::
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry02
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry02
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry04
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry05
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry06
+    dw AdjustStatForRecordBufAAndBItems_Data1_Entry07
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry00::
+AdjustStatForRecordBufAAndBItems_Data1_Entry00::
     db $01, $02, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry02::
+AdjustStatForRecordBufAAndBItems_Data1_Entry02::
     db $03, $04, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry04::
+AdjustStatForRecordBufAAndBItems_Data1_Entry04::
     db $05, $06, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry05::
+AdjustStatForRecordBufAAndBItems_Data1_Entry05::
     db $07, $08, $14, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry06::
+AdjustStatForRecordBufAAndBItems_Data1_Entry06::
     db $09, $0a, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data1_Entry07::
+AdjustStatForRecordBufAAndBItems_Data1_Entry07::
     db $0b, $0c, $ff
 
-AdjustStatForRecordBufAByte7133AndRecordBufBItem_Data2::
+AdjustStatForRecordBufAAndBItems_Data2::
     db $00, $1e, $50, $1e, $50, $0a, $32, $0a, $32, $0a, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
 
@@ -1596,7 +1597,7 @@ BuildChildRecordSkillListCandidateList::
     call CopyEightBytesDEToHL
     ld de, wRecordBufB + MON_SKILLS
     call CopyEightBytesDEToHL
-    call MapChildRecordSkillListEntriesThroughTable5B03
+    call MapChildRecordSkillListEntriesThroughTable
     call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
     call CompactChildRecordSkillListRemovingFF
     call BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills
@@ -1604,8 +1605,9 @@ BuildChildRecordSkillListCandidateList::
 
 ; replaces each of the $19 bytes at wChildRecord + $3C (other than $FF) by SkillLineBaseTable[byte]
 ; (E-0124) (E-0340: the address in its name read as its RAM name; was
-; MapWCB0CEntriesThroughTable5B03)
-MapChildRecordSkillListEntriesThroughTable5B03::
+; MapWCB0CEntriesThroughTable5B03) (E-0344: the address in its name dropped or read as the label
+; there; was MapChildRecordSkillListEntriesThroughTable5B03)
+MapChildRecordSkillListEntriesThroughTable::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $19
 
@@ -1816,7 +1818,7 @@ RefreshRecordResistancesFromSpecies::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadSpeciesExpCurveBByteArg4
+    call LoadSpeciesResistanceArg4
     ld a, [wArg5]
     pop bc
     pop hl
@@ -1856,7 +1858,7 @@ RollChildResistancesToChildRecordResistances::
     push bc
     ld a, c
     ld [wArg4], a
-    call LoadSpeciesExpCurveBByteArg4
+    call LoadSpeciesResistanceArg4
     ld a, [wArg5]
     cp $03
     jr nc, .restore
@@ -1864,22 +1866,22 @@ RollChildResistancesToChildRecordResistances::
     push bc
     ld a, [wArg5]
     cp $02
-    jr z, .call_sum_func5_dcd_of_record_buf_a_byte712
+    jr z, .call_sum_record_buf_a_and_b_resistance_tests
     ld b, $03
-    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances
+    call SumRecordBufAAndBResistanceTests
     ld a, b
     cp $ff
     jr z, .restore
-    call RollChildRecordPlusForCaseB_5D16
+    call RollChildRecordPlusForCaseB
     jr .restore
 
-.call_sum_func5_dcd_of_record_buf_a_byte712:
+.call_sum_record_buf_a_and_b_resistance_tests:
     ld b, $05
-    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances
+    call SumRecordBufAAndBResistanceTests
     ld a, b
     cp $ff
     jr z, .restore
-    call RollChildRecordPlusForCaseB_5D77
+    call RollChildRecordPlusForCaseB_2
 
 .restore:
     pop bc
@@ -1901,8 +1903,9 @@ RollChildResistancesToChildRecordResistances::
 
 ; when wChildRecord + $6D is set rolls RollWCB3DChanceOrIncArg5 with factor 1, 3 or 10 (then 3) for
 ; B = 3, 4, 5, or 5 after counting otherwise (E-0125) (E-0340: the address in its name read as its
-; RAM name; was RollWCB3DForCaseB_5D16)
-RollChildRecordPlusForCaseB_5D16::
+; RAM name; was RollWCB3DForCaseB_5D16) (E-0344: the address in its name dropped or read as the
+; label there; was RollChildRecordPlusForCaseB_5D16)
+RollChildRecordPlusForCaseB::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -1980,8 +1983,9 @@ RollChildRecordPlusChanceOrIncArg5::
 
 ; when wChildRecord + $6D is set: B = 5 rolls a random value against wChildRecord + $6D (A = $FF on
 ; success), other values roll factor 2 (E-0125) (E-0340: the address in its name read as its RAM
-; name; was RollWCB3DForCaseB_5D77)
-RollChildRecordPlusForCaseB_5D77::
+; name; was RollWCB3DForCaseB_5D77) (E-0344: the address in its name dropped or read as the label
+; there; was RollChildRecordPlusForCaseB_5D77)
+RollChildRecordPlusForCaseB_2::
     push bc
     ld hl, wChildRecord + MON_PLUS
     ld a, [hl]
@@ -2026,18 +2030,18 @@ RollChildRecordPlusForCaseB_5D77::
     pop bc
     ret
 
-; B = SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry(wRecordBufA + $73) +
-; SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry(wRecordBufB + $73) when both are
+; B = TestResistanceEntry(wRecordBufA + $73) + TestResistanceEntry(wRecordBufB + $73) when both are
 ; valid and the sum is at least B; otherwise B = $FF (E-0124) (E-0340: the address in its name read
-; as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E)
-SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances::
+; as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E) (E-0345: $C9F9 and $CA9E are the MON_RESISTANCES
+; of wRecordBufA and wRecordBufB; was SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances)
+SumRecordBufAAndBResistanceTests::
     ld hl, wRecordBufA + MON_RESISTANCES
-    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry
+    call TestResistanceEntry
     cp $ff
     jr z, .done
     ld e, a
     ld hl, wRecordBufB + MON_RESISTANCES
-    call SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry
+    call TestResistanceEntry
     cp $ff
     jr z, .done
     add e
@@ -2050,9 +2054,10 @@ SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances::
     ld b, $ff
     ret
 
-; for entry C: when it is 2 and the byte $31 later is 1-$1B and its table byte equals C, returns $FF
-; (E-0340: the address in its name read as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E_TestEntry)
-SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry::
+; (E-0345: was SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry) for entry C: when
+; it is 2 and the byte $31 later is 1-$1B and its table byte equals C, returns $FF (E-0340: the
+; address in its name read as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E_TestEntry)
+TestResistanceEntry::
     push hl
     ld a, c
     add_a_to_hl
@@ -2076,7 +2081,7 @@ SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry::
     cp $1c
     jr nc, .restore2
     dec a
-    ld hl, SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry_Data
+    ld hl, TestResistanceEntry_Data
     add_a_to_hl
     ld a, [hl]
     cp c
@@ -2090,13 +2095,14 @@ SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry::
     pop af
     jr .done
 
-SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry_Data::
+TestResistanceEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
 
 ; wArg5 = the byte at wSpeciesRecord + $12 + wArg4 (E-0114) (E-0340: the address in its name read as
-; its RAM name; was LoadWD01AByteArg4)
-LoadSpeciesExpCurveBByteArg4::
+; its RAM name; was LoadWD01AByteArg4) (E-0345: reads wSpeciesRecord + $12 (SPECIES_RESISTANCES):
+; the resistance in arg 4; was LoadSpeciesExpCurveBByteArg4)
+LoadSpeciesResistanceArg4::
     ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, [wArg4]
     add_a_to_hl
@@ -8200,9 +8206,9 @@ FamilyBreedResults009::
 
 ; E-0199 (C1: stage 4, when stage 3 finds nothing: the row at $7E83 + 2 * parent A's family, word
 ; [parent B's family]: $FFFF = parent A's species, $FExx = no child (wNameEntryState = 6, wArg5 =
-; $FF), otherwise the child's species; 11 rows of 11 words end at Script_0E_7F8B) C2 from E-0328 for
-; rows 4 (plant) x columns 3 and 5: base Gulpple with a Dracky mate gives WingTree and with a
-; family-5 mate CactiBall in the game's own breeding.
+; $FF), otherwise the child's species; 11 rows of 11 words end at Script_ItsAccessoryIsIn) C2 from
+; E-0328 for rows 4 (plant) x columns 3 and 5: base Gulpple with a Dracky mate gives WingTree and
+; with a family-5 mate CactiBall in the game's own breeding.
 ; record: list
 FamilyPairResultTable::
     dw FamilyPairResults000 ; id 0
@@ -8375,65 +8381,65 @@ FamilyPairResults00A::
     dw $ffff ; parent A's species
 
 ; event script (E-0152: opcodes and inline bytes C2 from the fetch handlers; command meanings C1)
-Script_0E_7F8B::
+Script_ItsAccessoryIsIn::
     script_command SCRIPT_NPC_BREED
     script_message_by_screen $c003 ; screen 0: '*: Its accessory is in the'
-Script_0E_7F8F::
+Script_NpcBreed::
     script_command SCRIPT_NPC_BREED
-    script_choice_jump Script_0E_7F99, Script_0E_7F93
-Script_0E_7F93::
+    script_choice_jump Script_ItsAccessoryIsIn_3, Script_ItsAccessoryIsIn_2
+Script_ItsAccessoryIsIn_2::
     script_command SCRIPT_MENU_CLOSE
     script_message_by_screen $8002 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0E_7F99::
+Script_ItsAccessoryIsIn_3::
     script_message_by_screen $c005 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_NPC_BREED
-Script_0E_7F9D::
-    script_choice_jump Script_0E_7FA8, Script_0E_7FAC, Script_0E_7FA1
-Script_0E_7FA1::
+Script_ChoiceJump_2::
+    script_choice_jump Script_NpcBreed_2, Script_NpcBreed_3, Script_ItsAccessoryIsIn_4
+Script_ItsAccessoryIsIn_4::
     script_message_by_screen $c004 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_NPC_BREED
-    script_jump Script_0E_7F8F
-Script_0E_7FA8::
+    script_jump Script_NpcBreed
+Script_NpcBreed_2::
     script_command SCRIPT_NPC_BREED
-    script_jump Script_0E_7F9D
-Script_0E_7FAC::
+    script_jump Script_ChoiceJump_2
+Script_NpcBreed_3::
     script_command SCRIPT_NPC_BREED
-    script_choice_jump Script_0E_7FC1, Script_0E_7FB7, Script_0E_7FB1
-Script_0E_7FB1::
+    script_choice_jump Script_NpcBreed_4, Script_ItsAccessoryIsIn_6, Script_ItsAccessoryIsIn_5
+Script_ItsAccessoryIsIn_5::
     script_message_by_screen $c006 ; screen 0: '*: Its accessory is in the'
-    script_jump Script_0E_7FBA
-Script_0E_7FB7::
+    script_jump Script_ItsAccessoryIsIn_7
+Script_ItsAccessoryIsIn_6::
     script_message_by_screen $c007 ; screen 0: '*: Its accessory is in the'
-Script_0E_7FBA::
+Script_ItsAccessoryIsIn_7::
     script_message_by_screen $c003 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_NPC_BREED
-    script_jump Script_0E_7F8F
-Script_0E_7FC1::
+    script_jump Script_NpcBreed
+Script_NpcBreed_4::
     script_command SCRIPT_NPC_BREED
-    script_choice_jump Script_0E_7FC5, Script_0E_7FC8
-Script_0E_7FC5::
-    script_jump Script_0E_7FCB
-Script_0E_7FC8::
+    script_choice_jump Script_ToNpcBreed_5, Script_IsItOKTo
+Script_ToNpcBreed_5::
+    script_jump Script_NpcBreed_5
+Script_IsItOKTo::
     script_message_by_screen $c00c ; screen 0: '*: Is it OK to save'
-Script_0E_7FCB::
+Script_NpcBreed_5::
     script_command SCRIPT_NPC_BREED
-    script_choice_jump Script_0E_7FD5, Script_0E_7FCF
-Script_0E_7FCF::
+    script_choice_jump Script_ItsAccessoryIsIn_9, Script_ItsAccessoryIsIn_8
+Script_ItsAccessoryIsIn_8::
     script_message_by_screen $c008 ; screen 0: '*: Its accessory is in the'
-    script_jump Script_0E_7FD8
-Script_0E_7FD5::
+    script_jump Script_NpcBreed_6
+Script_ItsAccessoryIsIn_9::
     script_message_by_screen $c00b ; screen 0: '*: Its accessory is in the'
-Script_0E_7FD8::
+Script_NpcBreed_6::
     script_command SCRIPT_NPC_BREED
-    script_choice_jump Script_0E_7FE2, Script_0E_7FDC
-Script_0E_7FDC::
+    script_choice_jump Script_ItsAccessoryIsIn_11, Script_ItsAccessoryIsIn_10
+Script_ItsAccessoryIsIn_10::
     script_command SCRIPT_MENU_CLOSE
     script_message_by_screen $8002 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_MENU_CLOSE
     script_end
-Script_0E_7FE2::
+Script_ItsAccessoryIsIn_11::
     script_command SCRIPT_NPC_BREED
     script_message_by_screen $c009 ; screen 0: '*: Its accessory is in the'
     script_command SCRIPT_NPC_BREED

@@ -544,28 +544,28 @@ ArenaRounds::
     ld a, [wScriptStep]
     jumptable
     dw ArenaRounds_ScriptStartFadeAndAdvanceStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A_SetBit2AtHL_B12
+    dw ArenaRounds_RunMessageBoxThenContinue_SetBit2AtHL_B12
     dw ArenaRounds_SetBit2AtHL_B12
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaRounds_StartArenaRankMessage_Case05_BackRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_StartArenaRankMessage_BackRecordCapacity_2
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
     dw ArenaRounds_ToStartArenaRankMessageAndStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaRounds_StartArenaRankMessage_BackRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
     dw ArenaRounds_ToStartArenaRankMessageAndStep_AdvanceScriptStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaRounds_StartArenaRankMessage
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_QueueSoundEffect
     dw ArenaRounds_FullyHealParty
     dw ArenaRounds_RestartMapMusic
@@ -602,7 +602,7 @@ ArenaRounds_StartArenaRankMessage_BackRecordCapacity::
     farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
     ret
 
-ArenaRounds_StartArenaRankMessage_Case05_BackRecordCapacity::
+ArenaRounds_StartArenaRankMessage_BackRecordCapacity_2::
     ld hl, wRecordCapacity
     dec [hl]
     ld a, [wRecordCapacity]
@@ -625,11 +625,11 @@ ArenaRounds_StartArenaRankMessage_Case05_BackRecordCapacity::
     farcall ArenaRounds_WriteBattleIntroKindAndEncounterKind
     ret
 
-ArenaRounds_RunMessageBoxThenContinue_684A_SetBit2AtHL_B12::
+ArenaRounds_RunMessageBoxThenContinue_SetBit2AtHL_B12::
     ld a, $0e
     ldh [hFieldDrawFlags], a
     xor a
-    call RunMessageBoxThenContinue_684A
+    call RunMessageBoxThenContinue
     ret nc
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
@@ -679,29 +679,29 @@ ArenaGridBattle::
     ld a, [wScriptStep]
     jumptable
     dw ArenaGridBattle_ScriptStartFadeAndAdvanceStep
-    dw ArenaGridBattle_RunMessageBoxThenContinue_684A
-    dw ArenaGridBattle_RunMessageBoxThenContinue_684A_SetBit2AtHL_B12
+    dw ArenaGridBattle_RunMessageBoxThenContinue
+    dw ArenaGridBattle_RunMessageBoxThenContinue_SetBit2AtHL_B12
     dw ArenaRounds_SetBit2AtHL_B12
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
-    dw ArenaGridBattle_StartArenaRankMessage_Case06_SetupScreenCountPlusOneFromRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity_2
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
     dw ArenaRounds_ToStartArenaRankMessageAndStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_SetupMap0BMonsterObjects
     dw ArenaRounds_WriteMessageIndexAndSpriteSlotCount
     dw ArenaRounds_ClearBit2AtHL_Bank12
     dw ArenaRounds_ToStartArenaRankMessageAndStep_AdvanceScriptStep
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_StepScriptParam0Counter_Bank12
     dw ArenaGridBattle_StartArenaRankMessage
-    dw ArenaRounds_RunMessageBoxThenContinue_684A
+    dw ArenaRounds_RunMessageBoxThenContinue
     dw ArenaRounds_QueueSoundEffect
     dw ArenaRounds_FullyHealParty
     dw ArenaRounds_RestartMapMusic
@@ -956,7 +956,7 @@ ArenaRounds_SetupMap0BMonsterObjects::
     inc [hl]
     ret
 
-ArenaGridBattle_StartArenaRankMessage_Case06_SetupScreenCountPlusOneFromRecordCapacity::
+ArenaGridBattle_StartArenaRankMessage_SetupScreenCountPlusOneFromRecordCapacity_2::
     ld a, $03
     call StartArenaRankMessage
     ld hl, wScriptStep
@@ -1002,9 +1002,9 @@ ArenaRounds_StepScriptParam0Counter_Bank12::
     farcall SetModeState3AndSaveScreen
     ret
 
-ArenaRounds_RunMessageBoxThenContinue_684A::
+ArenaRounds_RunMessageBoxThenContinue::
     xor a
-    call RunMessageBoxThenContinue_684A
+    call RunMessageBoxThenContinue
     ret nc
     xor a
     ld [wMessageIndex], a
@@ -1131,9 +1131,9 @@ ArenaRounds_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-ArenaGridBattle_RunMessageBoxThenContinue_684A_SetBit2AtHL_B12::
+ArenaGridBattle_RunMessageBoxThenContinue_SetBit2AtHL_B12::
     xor a
-    call RunMessageBoxThenContinue_684A
+    call RunMessageBoxThenContinue
     ret nc
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B12
@@ -1159,9 +1159,9 @@ ArenaGridBattle_RunMessageBoxThenContinue_684A_SetBit2AtHL_B12::
     inc [hl]
     ret
 
-ArenaGridBattle_RunMessageBoxThenContinue_684A::
+ArenaGridBattle_RunMessageBoxThenContinue::
     xor a
-    call RunMessageBoxThenContinue_684A
+    call RunMessageBoxThenContinue
     ret nc
     ld a, $01
     call StartArenaRankMessage
@@ -1250,29 +1250,29 @@ LinkMessageEvent::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetSaveStateFlag
 
 LinkMessageEvent_SetSaveStateFlag::
-    ld a, [wScriptByte65]
+    ld a, [wLinkSaveStateFlag]
     ld [wSaveStateFlag], a
     ld a, $08
     ld [wGameMode], a
@@ -1294,25 +1294,25 @@ NpcBreedWarp::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw NpcBreedWarp_WriteMapIdAndMapScreenXEtc
     dw NpcBreedWarp_WriteSpriteSlotsAndTalkEventIndexEtc
 
@@ -1386,27 +1386,27 @@ BreedChildScene::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_DecompressGraphicsTemp0ToTemp4
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -1450,17 +1450,17 @@ BreedChildSprite::
     dw NpcBreedWarp_ScriptStartFadeAndAdvanceStep
     dw BreedChildSprite_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedChildSprite_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedChildScene_RunFieldCommandTemp0AndStep
     dw BreedChildScene_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedChildScene_CopyStringToBuffer_Bank08
     dw BreedChildScene_RunMessageBoxCarryWhenIdle_Bank12
     dw BreedChildScene_WriteMapIdAndMapScreenXEtc
@@ -1644,25 +1644,25 @@ BreedFade::
     dw LinkMessageEvent_WriteSpriteWindowClipModeAndFieldDrawFlagsEtc
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject1AndScriptParam0
     dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteObject2AndScriptParam0
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_WriteFieldInitFlagAndMapIdEtc
     dw LinkMessageEvent_ToStartMessageAAndStep
     dw LinkMessageEvent_RunMessageBoxCarryWhenIdle_Bank12
     dw LinkMessageEvent_ClearBit2AtHL_Bank12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetObject5
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw LinkMessageEvent_SetBit2AtHL_B12
-    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep
+    dw LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2
     dw BreedFade_StartPaletteFade
     dw BreedFade_WaitFadeState
 
@@ -1807,7 +1807,7 @@ LinkMessageEvent_WriteObject1AndScriptParam0::
     inc [hl]
     ret
 
-LinkMessageEvent_StepScriptParam0Counter_Bank12_Case03_AdvanceScriptStep::
+LinkMessageEvent_StepScriptParam0Counter_Bank12_AdvanceScriptStep_2::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -2390,15 +2390,15 @@ MapLinkWarp_WriteScriptStartRequestAndMapIdEtc::
     ld b, a
     ld a, [wKeyWorldActive]
     or a
-    jr z, .call_map_link_warp_case01_write_warp_dest_x
+    jr z, .call_map_link_warp_write_warp_dest_x_and_warp
     ld a, [wKeyWorldKey]
     dec a
     cp b
-    jr nz, .call_map_link_warp_case01_write_warp_dest_x
+    jr nz, .call_map_link_warp_write_warp_dest_x_and_warp
     ld de, wKeyWorldGoal
 
-.call_map_link_warp_case01_write_warp_dest_x:
-    call MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc
+.call_map_link_warp_write_warp_dest_x_and_warp:
+    call MapLinkWarp_WriteWarpDestXAndWarpDestYEtc
     ret
 
 ; the code at MapLinkWarp_WriteScriptStartRequestAndMapIdEtc walks 5-byte records up to $FF for the
@@ -2455,7 +2455,7 @@ MapExitWarpTable_CheckKeyWorldActive::
     cp c
     jr nz, .read_key_world_goal_pos
     ld de, wKeyWorldGoal
-    call MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc
+    call MapLinkWarp_WriteWarpDestXAndWarpDestYEtc
     ret
 
 .read_key_world_goal_pos:
@@ -2464,10 +2464,10 @@ MapExitWarpTable_CheckKeyWorldActive::
     ld a, [wKeyWorldGoalPos2]
     ld [wWarpDestY], a
     ld de, wKeyWorldGoalScreen
-    call MapLinkWarp_Case01_StartPaletteFade
+    call MapLinkWarp_StartPaletteFade
     ret
 
-MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc::
+MapLinkWarp_WriteWarpDestXAndWarpDestYEtc::
     ld a, [de]
     and $f0
     ld [wWarpDestX], a
@@ -2477,7 +2477,7 @@ MapLinkWarp_Case01_WriteWarpDestXAndWarpDestYEtc::
     ld [wWarpDestY], a
     inc de
 
-MapLinkWarp_Case01_StartPaletteFade::
+MapLinkWarp_StartPaletteFade::
     ld a, [de]
     swap a
     and $0f
@@ -2728,7 +2728,7 @@ HealPartyEvent_TestFlagBit_AdvanceScriptStep::
     inc [hl]
     ld a, $03
     ldh [hPlayerFacing], a
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     ret nc
     ld a, $02
@@ -2765,7 +2765,7 @@ HealPartyEvent_TestFlagBit::
     call StartMessageA
 
 .call_test_flag_bit:
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .clear_object1
     ld a, $01
@@ -2869,7 +2869,7 @@ StartReturnWarpByFlag25::
     ld [wWarpDestY], a
     xor a
     ld [wWarpDestFacing], a
-    ld de, $0025
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .set_field_transition_kind_to_03
     ld a, $04
@@ -2889,8 +2889,8 @@ StartReturnWarpByFlag25::
 ReturnMessage_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
-    farcall ReturnMessage_Case00_WriteGoldHiAndGoldMidEtc
-    ld de, $0025
+    farcall ReturnMessage_WriteGoldHiAndGoldMidEtc
+    ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .clear_object1
     ld a, $0c
@@ -3294,7 +3294,7 @@ KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0::
 
 KeyWorldBossBattle_WriteScriptParam0::
     xor a
-    call KeyWorldBossBattle_Case05_ReadMessageState
+    call KeyWorldBossBattle_ReadMessageState_2
     ret nc
     xor a
     ld [wScriptParam0], a
@@ -3384,7 +3384,7 @@ KeyWorldBossBattle_RunMessageBoxFar_Bank12::
     ld a, h
     ld [wEncounterMonsters + $5], a
     ld a, [wKeyWorldEncounter + $8]
-    ld [wWildByteE5], a
+    ld [wEncounterClass], a
     ld a, $02
     ld [wEncounterKind], a
 
@@ -3494,7 +3494,7 @@ RandomGoldOrItem::
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
     dw RandomGoldOrItem_WriteSVBKAndFieldDrawFlags
-    dw RandomGoldOrItem_ToRandomGoldOrItem_Case04_NextRandomSeed
+    dw RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed
     dw RandomGoldOrItem_AddStepDeltaToPointedByte
     dw RandomGoldOrItem_Number24ToPackedBCD
     dw RandomGoldOrItem_RunMessageBoxCarryWhenIdle_Bank12
@@ -3580,8 +3580,8 @@ RandomGoldOrItem_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-RandomGoldOrItem_ToRandomGoldOrItem_Case04_NextRandomSeed::
-    farcall RandomGoldOrItem_Case04_NextRandomSeed
+RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed::
+    farcall RandomGoldOrItem_NextRandomSeed
     ret
 
 RandomGoldOrItem_WriteSVBKAndFieldDrawFlags::
@@ -3799,7 +3799,7 @@ SpawnScriptSpriteInFrontOfPlayer::
     jr SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM
 
 .skip:
-    ld de, Tiles0Plus700Gfx_7E_5A9A
+    ld de, Tiles0Plus700Gfx_4
     ld b, $7e
 
 SpawnScriptSpriteInFrontOfPlayer_CallDecompressToVRAM::
@@ -3902,7 +3902,7 @@ FieldScene01::
 .skip:
     dec a
     jr nz, .call_field_scene01_write_joypad_held_and
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03_SetJoypadHeld
+    call FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2
     ret
 
 .call_field_scene01_write_joypad_held_and:
@@ -3915,10 +3915,10 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld::
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     jumptable
-    dw FieldScene01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
-    dw FieldScene01_Sub01_AddStepDeltaToPointedByte
+    dw FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
+    dw FieldScene01_AddStepDeltaToPointedByte
 
-FieldScene01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
+FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
     ldh a, [hPlayerStateFlags]
     and $f7
     ldh [hPlayerStateFlags], a
@@ -3935,7 +3935,7 @@ FieldScene01_Sub01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
     inc [hl]
     ret
 
-FieldScene01_Sub01_AddStepDeltaToPointedByte::
+FieldScene01_AddStepDeltaToPointedByte::
     ld de, hPlayerY
     ld a, e
     ld [wStepPtrLo], a
@@ -4024,10 +4024,10 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed::
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw FieldScene01_Sub02_DecompressToVRAM
-    dw FieldScene01_Sub02_StepScriptParam0Counter_Bank12
-    dw FieldScene01_Sub02_AddStepDeltaToPointedByte
-    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
+    dw FieldScene01_DecompressToVRAM
+    dw FieldScene01_StepScriptParam0Counter_Bank12
+    dw FieldScene01_AddStepDeltaToPointedByte_2
+    dw FieldScene01_DrawScriptMetaSprite21AtScrollOffset
     dw FieldScene01_AdvanceScriptStep
     dw FieldScene01_SetStepPtrLo
 
@@ -4109,7 +4109,7 @@ FieldScene01_AdvanceScriptStep::
 .read_map_id:
     ldh a, [hMapId]
     ld c, a
-    ld hl, FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data
+    ld hl, FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data
 
 .loop:
     ld a, [hli]
@@ -4123,11 +4123,11 @@ FieldScene01_AdvanceScriptStep::
     call QueueMusic
     ret
 
-FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset_Case07_Data::
+FieldScene01_DrawScriptMetaSprite21AtScrollOffset_Data::
     db $30, $ff
 
-FieldScene01_Sub02_DecompressToVRAM::
-    ld de, Tiles0Plus700Gfx_7E_58FF
+FieldScene01_DecompressToVRAM::
+    ld de, Tiles0Plus700Gfx_2
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -4200,7 +4200,7 @@ FieldScene01_Sub02_DecompressToVRAM::
     inc [hl]
     ret
 
-FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03_SetJoypadHeld::
+FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4209,15 +4209,15 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_Sub03_SetJoypadHeld::
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
     dw ScriptStepMoveFollowersToLeader
-    dw FieldScene01_Sub03_DecompressToVRAM
-    dw FieldScene01_Sub02_StepScriptParam0Counter_Bank12
-    dw FieldScene01_Sub02_AddStepDeltaToPointedByte
-    dw FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset
-    dw FieldScene01_Sub03_AddStepDeltaToPointedByte
-    dw FieldScene01_Sub03_WaitFieldActionRequest
+    dw FieldScene01_DecompressToVRAM_2
+    dw FieldScene01_StepScriptParam0Counter_Bank12
+    dw FieldScene01_AddStepDeltaToPointedByte_2
+    dw FieldScene01_DrawScriptMetaSprite21AtScrollOffset
+    dw FieldScene01_AddStepDeltaToPointedByte_3
+    dw FieldScene01_WaitFieldActionRequest
     dw FieldScene01_SetTriggerEnable
 
-FieldScene01_Sub02_StepScriptParam0Counter_Bank12::
+FieldScene01_StepScriptParam0Counter_Bank12::
     ld b, $1e
     call StepScriptParam0Counter_Bank12
     ret nc
@@ -4225,7 +4225,7 @@ FieldScene01_Sub02_StepScriptParam0Counter_Bank12::
     inc [hl]
     ret
 
-FieldScene01_Sub02_AddStepDeltaToPointedByte::
+FieldScene01_AddStepDeltaToPointedByte_2::
     ld de, hPlayerY
     ld a, e
     ld [wStepPtrLo], a
@@ -4318,7 +4318,7 @@ FieldScene01_SetTriggerEnable::
 .return:
     ret
 
-FieldScene01_Sub03_WaitFieldActionRequest::
+FieldScene01_WaitFieldActionRequest::
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -4381,16 +4381,16 @@ FieldScene01_Sub03_WaitFieldActionRequest::
 .check_sprite_slot_count:
     ld a, [wSpriteSlotCount]
     or a
-    jr z, .call_read_tile_buffer2x2_at_pixel_bank12_6854
+    jr z, .call_read_tile_buffer2x2_at_pixel_bank12_2
     ld a, [wSpriteSlots + $b]
     cp b
-    jr nz, .call_read_tile_buffer2x2_at_pixel_bank12_6854
+    jr nz, .call_read_tile_buffer2x2_at_pixel_bank12_2
     ld a, [wSpriteSlots + $c]
     cp c
     jr z, .check_player_facing
 
-.call_read_tile_buffer2x2_at_pixel_bank12_6854:
-    call ReadTileBuffer2x2AtPixel_Bank12_6854
+.call_read_tile_buffer2x2_at_pixel_bank12_2:
+    call ReadTileBuffer2x2AtPixel_Bank12_2
     ld b, $04
     ld hl, wTilesUnderPoint
     ld b, $02
@@ -4433,7 +4433,7 @@ FieldScene01_Sub03_WaitFieldActionRequest::
     ld [wJoypadHeld], a
     ret
 
-FieldScene01_Sub03_AddStepDeltaToPointedByte::
+FieldScene01_AddStepDeltaToPointedByte_3::
     ld de, hPlayerY
     ld a, e
     ld [wStepPtrLo], a
@@ -4495,7 +4495,7 @@ FieldScene01_Sub03_AddStepDeltaToPointedByte::
     dec [hl]
     ret
 
-FieldScene01_Sub02_DrawScriptMetaSprite21AtScrollOffset::
+FieldScene01_DrawScriptMetaSprite21AtScrollOffset::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -4584,8 +4584,8 @@ DrawScriptMetaSprite21AtScrollOffset::
     farcall DrawMetaSprite
     ret
 
-FieldScene01_Sub03_DecompressToVRAM::
-    ld de, Tiles0Plus700Gfx_7E_594A
+FieldScene01_DecompressToVRAM_2::
+    ld de, Tiles0Plus700Gfx_3
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -4691,7 +4691,7 @@ KeyWorldDoorItem::
     dw KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor
 
 KeyWorldDoorItem_DrawDoorTilesForKeyWorldFloor::
-    farcall KeyWorldDoorItem_Case04_RandomModulo29_BankF0
+    farcall KeyWorldDoorItem_RandomModulo29_BankF0
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $3
@@ -5525,7 +5525,7 @@ RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-KeyWorldBossBattle_Case05_Sub01_ReadMessageState::
+KeyWorldBossBattle_ReadMessageState::
     push af
     ld a, [wMessageState]
     cp $ff
@@ -5535,12 +5535,12 @@ KeyWorldBossBattle_Case05_Sub01_ReadMessageState::
 
 .skip:
     jumptable
-    dw KeyWorldBossBattle_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags
-    dw KeyWorldBossBattle_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A
-    dw KeyWorldBossBattle_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc
+    dw KeyWorldBossBattle_SetBit1OfPlayerAndObjectFlags
+    dw KeyWorldBossBattle_BeginStringDisplay_Bank8A
+    dw KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc
     dw RunMessageBox_Bank12_WriteMessageState
 
-KeyWorldBossBattle_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags::
+KeyWorldBossBattle_SetBit1OfPlayerAndObjectFlags::
     pop af
     or a
     jr nz, .call_fill_tiles_request
@@ -5570,7 +5570,7 @@ KeyWorldBossBattle_Case05_Sub01_Sub01_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-KeyWorldBossBattle_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A::
+KeyWorldBossBattle_BeginStringDisplay_Bank8A::
     pop af
     ld a, [wTextWindowState]
     and $03
@@ -5584,7 +5584,7 @@ KeyWorldBossBattle_Case05_Sub01_Sub01_BeginStringDisplay_Bank8A::
     inc [hl]
     ret
 
-KeyWorldBossBattle_Case05_Sub01_Sub01_WriteTextWindowStateAndTextWindowStepEtc::
+KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc::
     pop af
     ld a, [wTextFlags]
     bit 0, a
@@ -5656,20 +5656,21 @@ RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState::
     ret
 
 ; runs RunMessageBoxStateIfActive_Bank12, then continues at
-; RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState (E-0126)
-RunMessageBoxThenContinue_684A::
+; RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState (E-0126) (E-0344: the address in its name
+; dropped or read as the label there; was RunMessageBoxThenContinue_684A)
+RunMessageBoxThenContinue::
     call RunMessageBoxStateIfActive_Bank12
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
 
-KeyWorldBossBattle_Case05_ReadMessageState::
-    call KeyWorldBossBattle_Case05_Sub01_ReadMessageState
+KeyWorldBossBattle_ReadMessageState_2::
+    call KeyWorldBossBattle_ReadMessageState
     jr RunMessageBoxCarryWhenIdle_Bank12_CheckMessageState
 
 ; B = X pixel, C = Y pixel: HL = wScreenTileBuffer + 20 * (C / 8) + B / 8 (rows of 20 entries);
 ; copies the 2 x 2 entries there to wTilesUnderPoint, wTilesUnderPoint + $1 (top row) and
 ; wTilesUnderPoint + $2, wTilesUnderPoint + $3 (bottom row); HL ends on the bottom-right entry
 ; (E-0064) (the same 63 bytes appear in 3 banks)
-ReadTileBuffer2x2AtPixel_Bank12_6854::
+ReadTileBuffer2x2AtPixel_Bank12_2::
     ld a, c
     srl a
     srl a
@@ -5704,11 +5705,12 @@ ReadTileBuffer2x2AtPixel_Bank12_6854::
     ld [wTilesUnderPoint + $3], a
     ret
 
-; runs DrawTriggerMarkerSprite and RunFunc722AAnd6EB7_WaitFieldActionRequest; shared by the field
-; mode states (E-0122)
-RunFunc722AAnd6EB7::
+; runs DrawTriggerMarkerSprite and RunDrawTriggerMarkerSprite_WaitFieldActionRequest; shared by the
+; field mode states (E-0122) (E-0344: the address in its name dropped or read as the label there;
+; was RunFunc722AAnd6EB7)
+RunDrawTriggerMarkerSprite::
     call DrawTriggerMarkerSprite
-    call RunFunc722AAnd6EB7_WaitFieldActionRequest
+    call RunDrawTriggerMarkerSprite_WaitFieldActionRequest
     ret
 
 ; writes a generated key (kind $FE) into a free key slot, rerolling while it duplicates an existing
@@ -6120,9 +6122,10 @@ PlaceSpecialMapObjectsOnEntry::
     ld [wObject5], a
     ret
 
-; decompresses Tiles0Plus700Gfx_7E_5595 to vTiles0 + $300 (or + $700 when hTemp0 is set),
-; wSpriteFloatY = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125)
-LoadSpriteGraphics7E5595ToTiles0::
+; decompresses Tiles0Plus700Gfx to vTiles0 + $300 (or + $700 when hTemp0 is set), wSpriteFloatY =
+; $30, and on CGB copies an 8-byte palette from bank $7E (E-0125) (E-0344: the address in its name
+; dropped or read as the label there; was LoadSpriteGraphics7E5595ToTiles0)
+LoadSpriteGraphics7EToTiles0::
     ldh a, [hTemp0]
     or a
     jr nz, .skip
@@ -6133,7 +6136,7 @@ LoadSpriteGraphics7E5595ToTiles0::
     ld hl, vTiles0 + $700
 
 .call_decompress_to_vram:
-    ld de, Tiles0Plus700Gfx_7E_5595
+    ld de, Tiles0Plus700Gfx
     ld b, $7e
     call DecompressToVRAM
     ld a, $30
@@ -6154,7 +6157,7 @@ LoadSpriteGraphics7E5595ToTiles0::
     ld hl, wOBJPaletteBuffer
     add_a_to_hl
     ld a, $d8
-    ld de, OBJPaletteBufferData_7E_4BBD
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
     add e
     ld e, a
     jr nc, .call_copy_from_bank
@@ -6229,24 +6232,24 @@ RunFieldCommandTemp0::
     ldh a, [hTemp0]
     jumptable
     dw RunFieldCommandTemp0_WriteObject5
-    dw RunFieldCommandTemp0_WriteObject5_Case01_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case02_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case03_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case04_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case05_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case06_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case07_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case08_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case09_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case0A_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case0B_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case0C_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case0D_SetObject5
-    dw RunFieldCommandTemp0_WriteObject5_Case0D_SetObject5
-    dw RunFieldCommandTemp0_WriteObject5_Case0F_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case10_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case11_RunFieldCommandTemp0_DecompressToVRAM
-    dw RunFieldCommandTemp0_WriteObject5_Case12_RunFieldCommandTemp0_DecompressToVRAM
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6
+    dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
+    dw RunFieldCommandTemp0_WriteObject5_SetObject5_2
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3
+    dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2
     dw RunFieldCommandTemp0_WriteObject5_SetObject5
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
     dw RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM
@@ -6288,7 +6291,7 @@ RunFieldCommandTemp0_WriteObject5_SetObject5::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case12_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_2::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6307,7 +6310,7 @@ RunFieldCommandTemp0_WriteObject5_Case12_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case11_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_3::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6326,7 +6329,7 @@ RunFieldCommandTemp0_WriteObject5_Case11_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case10_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_4::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6344,7 +6347,7 @@ RunFieldCommandTemp0_WriteObject5_Case10_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0F_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_5::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6362,7 +6365,7 @@ RunFieldCommandTemp0_WriteObject5_Case0F_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0D_SetObject5::
+RunFieldCommandTemp0_WriteObject5_SetObject5_2::
     call RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6387,7 +6390,7 @@ RunFieldCommandTemp0_WriteObject5_Case0D_SetObject5::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0C_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_6::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6412,7 +6415,7 @@ RunFieldCommandTemp0_WriteObject5_Case0C_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0B_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_7::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6437,7 +6440,7 @@ RunFieldCommandTemp0_WriteObject5_Case0B_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case0A_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_8::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6455,7 +6458,7 @@ RunFieldCommandTemp0_WriteObject5_Case0A_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case09_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_9::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6473,7 +6476,7 @@ RunFieldCommandTemp0_WriteObject5_Case09_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case08_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_10::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6491,7 +6494,7 @@ RunFieldCommandTemp0_WriteObject5_Case08_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case07_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_11::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6509,7 +6512,7 @@ RunFieldCommandTemp0_WriteObject5_Case07_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case06_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_12::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6532,7 +6535,7 @@ RunFieldCommandTemp0_WriteObject5_Case06_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5 + $7], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case05_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_13::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6550,7 +6553,7 @@ RunFieldCommandTemp0_WriteObject5_Case05_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case04_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_14::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6568,7 +6571,7 @@ RunFieldCommandTemp0_WriteObject5_Case04_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case03_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_15::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6582,7 +6585,7 @@ RunFieldCommandTemp0_WriteObject5_Case03_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case02_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_16::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6600,7 +6603,7 @@ RunFieldCommandTemp0_WriteObject5_Case02_RunFieldCommandTemp0_DecompressToVRAM::
     ld [wObject5], a
     ret
 
-RunFieldCommandTemp0_WriteObject5_Case01_RunFieldCommandTemp0_DecompressToVRAM::
+RunFieldCommandTemp0_WriteObject5_RunFieldCommandTemp0_DecompressToVRAM_17::
     call RunFieldCommandTemp0_DecompressToVRAM
     push af
     ld hl, wObject5 + SCRIPTOBJ_TILE_OFFSET
@@ -6732,7 +6735,7 @@ RunFieldCommandTemp0_DecompressToVRAM_SetOBJPaletteUploadRequest::
     ld a, [hl]
     ret
 
-RunFunc722AAnd6EB7_WaitFieldActionRequest::
+RunDrawTriggerMarkerSprite_WaitFieldActionRequest::
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -6811,7 +6814,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $13
     jr nz, .cp_1A
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data1
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -6820,7 +6823,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $1a
     jr nz, .cp_17
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data2
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -6829,7 +6832,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $17
     jr nz, .cp_1F
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data3
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -6838,7 +6841,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $1f
     jr nz, .cp_1E
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data4
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data5
     add_a_to_hl
@@ -6850,7 +6853,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $1e
     jr nz, .cp_18
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data6
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -6859,7 +6862,7 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $18
     jr nz, .cp_20
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data7
-    call DrawFieldSprites_Sub01_WriteObject5
+    call DrawFieldSprites_WriteObject5
     ld a, [wObject5 + $7]
     ldh [hSpriteSubIndex], a
     ret
@@ -6868,14 +6871,14 @@ DrawFieldSprites_WriteSpriteSubIndex::
     cp $20
     jr nz, .return
     ld hl, DrawFieldSprites_WriteSpriteSubIndex_Data8
-    call DrawFieldSprites_Sub01_WriteObject5_Sub02
+    call DrawFieldSprites_WriteObject5_2
     ldh [hSpriteSubIndex], a
     ret
 
 .return:
     ret
 
-DrawFieldSprites_Sub01_WriteObject5::
+DrawFieldSprites_WriteObject5::
     ld a, [wObject5 + $7]
     add_a_to_hl
     ld a, [hl]
@@ -6901,7 +6904,7 @@ DrawFieldSprites_Sub01_WriteObject5::
 .return:
     ret
 
-DrawFieldSprites_Sub01_WriteObject5_Sub02::
+DrawFieldSprites_WriteObject5_2::
     push hl
     ld a, [wObject5 + $7]
     add a
@@ -6965,49 +6968,49 @@ DrawFieldSprites_WriteSpriteSubIndex_Data8::
 ; (E-0238, C1)
 ; record: bank-$7E graphics stream; palette index; returned byte
 FieldCommandSpriteTable::
-    dw Tiles0Plus300Gfx_7E_4F22 ; id 0
+    dw Tiles0Plus300Gfx ; id 0
     db $0a, $00
-    dw Tiles0Plus300Gfx_7E_4F22 ; id 1
+    dw Tiles0Plus300Gfx ; id 1
     db $0a, $00
-    dw Tiles0Gfx_7E_4CED ; id 2
+    dw Tiles0Gfx ; id 2
     db $00, $00
-    dw Gfx_7E_56C3 ; id 3
+    dw Gfx_FieldCommandSpriteTable_3 ; id 3
     db $1d, $00
-    dw Tiles0Gfx_7E_4CED ; id 4
+    dw Tiles0Gfx ; id 4
     db $00, $00
-    dw Tiles0Plus600Gfx_7E_52BC ; id 5
+    dw Tiles0Plus600Gfx ; id 5
     db $15, $00
-    dw Gfx_7E_51A8 ; id 6
+    dw Gfx_FieldCommandSpriteTable_6 ; id 6
     db $93, $00
-    dw Gfx_7E_52F9 ; id 7
+    dw Gfx_FieldCommandSpriteTable_7 ; id 7
     db $16, $00
-    dw Gfx_7E_4FE8 ; id 8
+    dw Gfx_FieldCommandSpriteTable_8 ; id 8
     db $0d, $00
-    dw Gfx_7E_50EB ; id 9
+    dw Gfx_FieldCommandSpriteTable_9 ; id 9
     db $11, $00
-    dw Gfx_7E_5027 ; id 10
+    dw Gfx_FieldCommandSpriteTable_10 ; id 10
     db $0e, $00
-    dw Gfx_7E_5513 ; id 11
+    dw Gfx_FieldCommandSpriteTable_11 ; id 11
     db $9a, $00
-    dw Gfx_7E_5370 ; id 12
+    dw Gfx_FieldCommandSpriteTable_12 ; id 12
     db $97, $00
-    dw Gfx_7E_5756 ; id 13
+    dw Gfx_FieldCommandSpriteTable_13 ; id 13
     db $1f, $00
-    dw Gfx_7E_5756 ; id 14
+    dw Gfx_FieldCommandSpriteTable_13 ; id 14
     db $9f, $00
-    dw Gfx_7E_4F63 ; id 15
+    dw Gfx_FieldCommandSpriteTable_15 ; id 15
     db $0b, $00
-    dw Gfx_7E_4EF1 ; id 16
+    dw Gfx_FieldCommandSpriteTable_16 ; id 16
     db $09, $00
-    dw Tiles0Plus100Gfx_7E_5706 ; id 17
+    dw Tiles0Plus100Gfx ; id 17
     db $9e, $00
-    dw Gfx_7E_541A ; id 18
+    dw Gfx_FieldCommandSpriteTable_18 ; id 18
     db $98, $00
-    dw Tiles0Gfx_7E_4CED ; id 19
+    dw Tiles0Gfx ; id 19
     db $00, $00
-    dw Gfx_7E_5870 ; id 20
+    dw Gfx_FieldCommandSpriteTable_20 ; id 20
     db $20, $00
-    dw Gfx_7E_5870 ; id 21
+    dw Gfx_FieldCommandSpriteTable_20 ; id 21
     db $a0, $00
 
 ; wTriggerKind = $FF; on town maps (or special maps of type 0) finds the wMapObjects entry for the
@@ -7162,7 +7165,7 @@ FindTriggerEntryForCurrentScreen_ScreenTriggers_SetTriggerCell::
     ret z
     ld [wTriggerKind], a
 
-RandomGoldOrItem_Case04_Sub01_DecompressToVRAM::
+RandomGoldOrItem_DecompressToVRAM::
     ld a, [wTriggerKind]
     ld c, a
     add a
@@ -7218,34 +7221,34 @@ TriggerSpriteRecord0::
 ; TriggerSpriteRecord0 (E-0239, C1)
 ; record: graphics stream, bank; palette offset; two bytes
 TriggerSpriteTable::
-    dfar Gfx_7E_4EF1 ; id 1: compressed sprite graphics
+    dfar Gfx_FieldCommandSpriteTable_16 ; id 1: compressed sprite graphics
     db $48 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4D1A ; id 2: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_2 ; id 2: compressed sprite graphics
     db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4D1A ; id 3: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_2 ; id 3: compressed sprite graphics
     db $08 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4D4F ; id 4: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_4 ; id 4: compressed sprite graphics
     db $10 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4D8A ; id 5: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_5 ; id 5: compressed sprite graphics
     db $18 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4DCC ; id 6: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_6 ; id 6: compressed sprite graphics
     db $20 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4E06 ; id 7: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_7 ; id 7: compressed sprite graphics
     db $28 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4E37 ; id 8: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_8 ; id 8: compressed sprite graphics
     db $30 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Gfx_7E_4E79 ; id 9: compressed sprite graphics
+    dfar Gfx_TriggerSpriteTable_9 ; id 9: compressed sprite graphics
     db $38 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
-    dfar Tiles0Gfx_7E_4EB3 ; id 10: compressed sprite graphics
+    dfar Tiles0Gfx_2 ; id 10: compressed sprite graphics
     db $40 ; palette byte offset from 7E:$4BBD (ObjPalettes_7E_4BBD)
     db $00, $00 ; not read here
 
@@ -7699,7 +7702,7 @@ FieldState_WalkAMenu_WaitTextWindowState::
 
 .read_key_world_floor:
     ld a, [wKeyWorldFloor]
-    ld hl, wKeyWorldByte8B
+    ld hl, wKeyWorldMenuFlag
     add_a_to_hl
     ld a, [hl]
     ld [wScriptParam0], a
@@ -7876,9 +7879,9 @@ RunPeriodicFieldEventChecks::
     ret c
     call TriggerEventC3IfGoldDigitSum30
     ret c
-    call TriggerEventC6IfGoldAtLeast5000
+    call TriggerEventC6IfGoldAtLeast
     ret c
-    call TriggerEventForStatusedMemberHP_781E
+    call TriggerEventForStatusedMemberHP
     ret c
     call TriggerEventC7IfGold1000AndNoItems19To1C
     ret c
@@ -7897,7 +7900,7 @@ EventCheckGoldAtLeast10000::
     ld de, EVENT_KING_YOU_WILL_I_KNEW
     call TestFlagBit
     jr nc, .done
-    ld de, $0193
+    ld de, EVENT_KING_IF_YOU_SEE
     call TestFlagBit
     jr c, .done
     ld a, [wGoldHi]
@@ -7930,7 +7933,7 @@ TriggerEventCDIfPartyHPTotalBelow100::
     ld de, EVENT_KING_YOU_WILL_I_KNEW_195
     call TestFlagBit
     jr nc, .done
-    ld de, $0196
+    ld de, EVENT_KING_IF_YOU_SEE_196
     call TestFlagBit
     jr c, .done
     ld a, [wPartyCount]
@@ -7991,7 +7994,7 @@ TriggerEventCEIfPartyMPTotalBelow100::
     ld de, EVENT_KING_YOU_WILL_I_KNEW_198
     call TestFlagBit
     jr nc, .done
-    ld de, $0199
+    ld de, EVENT_KING_IF_YOU_SEE_199
     call TestFlagBit
     jr c, .done
     ld a, [wPartyCount]
@@ -8052,7 +8055,7 @@ TriggerEventCFIfPartyLevelTotalBelow100::
     ld de, EVENT_KING_YOU_WILL_I_KNEW_19B
     call TestFlagBit
     jr nc, .done
-    ld de, $019c
+    ld de, EVENT_KING_IF_YOU_SEE_19C
     call TestFlagBit
     jr c, .done
     ld a, [wPartyCount]
@@ -8185,8 +8188,9 @@ TriggerEventC9IfExpDigitsRepeat::
     ret
 
 ; with at least 1000 gold: checks party members with status bits 7, 2 or 0 of field $55 against half
-; their max HP and may set an event (E-0128)
-TriggerEventForStatusedMemberHP_781E::
+; their max HP and may set an event (E-0128) (E-0344: the address in its name dropped or read as the
+; label there; was TriggerEventForStatusedMemberHP_781E)
+TriggerEventForStatusedMemberHP::
     ld a, [wGoldHi]
     or a
     jr nz, .read_party_count
@@ -8426,8 +8430,9 @@ TriggerEventC7IfGold1000AndNoItems19To1C::
     ret
 
 ; when wEventItemSlot is $FF or 0 and the gold is at least 5000, wPendingFieldEvent = $C6 and carry;
-; otherwise A = 0, no carry (E-0124)
-TriggerEventC6IfGoldAtLeast5000::
+; otherwise A = 0, no carry (E-0124) (E-0344: the address in its name dropped or read as the label
+; there; was TriggerEventC6IfGoldAtLeast5000)
+TriggerEventC6IfGoldAtLeast::
     ld a, [wEventItemSlot]
     cp $ff
     jr z, .check_gold_hi
@@ -9248,7 +9253,7 @@ FindPartyMemberWithSkill76To7DOr92::
     ld [rRAMG], a
     ret
 
-GreatLogTalkEvents_CaseCC_WriteTemp1::
+GreatLogTalkEvents_WriteTemp1::
     xor a
     ldh [hTemp1], a
     ret
@@ -9335,7 +9340,7 @@ AddGoldCapped::
     ld [wGoldHi], a
     ret
 
-ReturnMessage_Case00_WriteGoldHiAndGoldMidEtc::
+ReturnMessage_WriteGoldHiAndGoldMidEtc::
     ld a, [wGoldHi]
     srl a
     ld [wGoldHi], a
