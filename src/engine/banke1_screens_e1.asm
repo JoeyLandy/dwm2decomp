@@ -119,13 +119,15 @@ RunBankE1Routine::
     call RunBankE1Routine_WaitOamNextEntry
     ret
 
-; data read by RunBankE1Routine (2 bytes)
+; data read by RunBankE1Routine (2 bytes) (E-0347)
 RunBankE1Routine_Data::
     db $3c, $5d
 
 ; called from RunBankE1Routine: returns if hOamNextEntry is at least $27; sets hMetaSpriteYLo; sets
 ; hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at hMetaSpriteXLo is $80;
-; branches on the byte at hMetaSpriteXLo; branches on B; ...
+; branches on the byte at hMetaSpriteXLo; branches on B; increments hOamNextEntry; branches on
+; hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches on the byte at
+; hMetaSpriteXLo; branches on B; then 18 more steps (see the code) (E-0347)
 RunBankE1Routine_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

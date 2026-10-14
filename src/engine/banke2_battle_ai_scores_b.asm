@@ -113,7 +113,9 @@ AIScore_Fight::
 ; individual checks are not interpreted (E-0083)
 ; code: calls AIFireSkillUsable; returns if C is 0; calls FailIfFoeAIDamageEstimatesAtLeastEstimate;
 ; branches on C; calls AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2;
-; branches on C; ...
+; branches on C; calls AccumulateBank6WordToDA6E; calls SetCToZero; branches on C; calls
+; AccumulateBank6WordToDA6E; calls InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; then 6
+; more steps (see the code) (E-0347)
 AIScore_Blaze::
     farcall AIFireSkillUsable
     ld a, c
@@ -169,7 +171,8 @@ AIScore_Blaze::
 ; not interpreted (E-0083)
 ; code: calls AIFireSkillUsable; returns if C is 0; calls AIGateFoeStatus1Mask22; branches on C;
 ; calls AccumulateBank6WordToDA70; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C;
-; ...
+; calls AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls
+; AccumulateBank6WordToDA6E; calls SetCToZero; then 18 more steps (see the code) (E-0347)
 AIScore_Firebal::
     farcall AIFireSkillUsable
     ld a, c
@@ -279,7 +282,10 @@ AIScoreB_Beat::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Beat_Conditions; returns if C is 0; calls AIGateFoeStatus1Mask22; branches on
-; C; calls AccumulateBank6WordToDA70; calls SetCToZero; branches on C; ...
+; C; calls AccumulateBank6WordToDA70; calls SetCToZero; branches on C; calls
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls
+; AIAddScoresForLinkRuleCheckLinkRules1Bit6; calls FewerThanTwoFoesPresent; branches on C; then 13
+; more steps (see the code) (E-0347)
 AIScore_Beat::
     farcall AIScore_Beat_Conditions
     ld a, c
@@ -442,7 +448,7 @@ AIScore_Sacrifice::
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the
 ; individual checks are not interpreted (E-0083)
 ; code: calls AIHealUsable; returns if C is 0; calls FailIfTwoAlliesBelowHalfHP; may continue in
-; AIScore_HealUs_AnyFoeLacksStatus0MaskCC; calls AccumulateBank6WordToDA70
+; AIScore_HealUs_AnyFoeLacksStatus0MaskCC; calls AccumulateBank6WordToDA70 (E-0347)
 AIScore_Heal::
     farcall AIHealUsable
     ld a, c
@@ -459,7 +465,9 @@ AIScore_Heal::
 
 ; called from AIScore_HealUs: calls AnyFoeLacksStatus0MaskCC; branches on C; calls
 ; AccumulateBank6WordToDA6E; calls AnyFoeHasClearStatus3; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AnyAllyHPAtMostThreeQuarters; ...
+; AccumulateBank6WordToDA6E; calls AnyAllyHPAtMostThreeQuarters; branches on C; calls
+; AccumulateBank6WordToDA70; calls AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty; calls
+; ActorHPIsNotOne; branches on C; then 5 more steps (see the code) (E-0347)
 AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
@@ -514,7 +522,7 @@ AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
 ; checks are not interpreted (E-0083)
 ; code: calls AIHealUsable; returns if C is 0; calls AIScore_HealUs_AnyFoeLacksStatus0MaskCC; calls
 ; FewerThanTwoAlliesAtHP1; branches on C; calls AccumulateBank6WordToDA6E; calls
-; FailIfTwoAlliesBelowHalfHP; ...
+; FailIfTwoAlliesBelowHalfHP; branches on C; calls AccumulateBank6WordToDA6E (E-0347)
 AIScore_HealUs::
     farcall AIHealUsable
     ld a, c
@@ -545,7 +553,7 @@ AIScore_HealUs::
 ; AIScoreRoutineTableB, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs
 ; checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the
 ; individual checks are not interpreted (E-0083)
-; code: calls AIScore_MPass_ActorLacksStatus4Bits67; returns if C is 0
+; code: calls AIScore_MPass_ActorLacksStatus4Bits67; returns if C is 0 (E-0347)
 AIScore_MPass::
     farcall AIScore_MPass_ActorLacksStatus4Bits67
     ld a, c
@@ -559,7 +567,7 @@ AIScore_MPass::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Vivify_Conditions; returns if C is 0; calls
 ; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes; calls AIGateCompareAllyStatAverages; branches
-; on C; calls AccumulateBank6WordToDA70
+; on C; calls AccumulateBank6WordToDA70 (E-0347)
 AIScore_Vivify::
     farcall AIScore_Vivify_Conditions
     ld a, c
@@ -672,7 +680,8 @@ AIScore_CurseOff::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Upper_Conditions; returns if C is 0; calls
 ; CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70; calls
-; WeighLinkRules1RuleBit5; calls AIScore_Upper_CompareFoeAverageATKWithAllyDEF; ...
+; WeighLinkRules1RuleBit5; calls AIScore_Upper_CompareFoeAverageATKWithAllyDEF; calls SetCToZero;
+; branches on C; calls AccumulateBank6WordToDA70 (E-0347)
 AIScore_Upper::
     farcall AIScore_Upper_Conditions
     ld a, c
@@ -704,7 +713,9 @@ AIScore_Upper::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Sap_Conditions; returns if C is 0; calls
 ; CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70; calls
-; PassIfFoeAverageDEFAtMostTwiceAllyATK; branches on C; ...
+; PassIfFoeAverageDEFAtMostTwiceAllyATK; branches on C; calls AccumulateBank6WordToDA6E; calls
+; PassIfTwiceATKAboveLowestFoeDEF; branches on C; calls AccumulateBank6WordToDA6E; calls SetCToZero;
+; then 14 more steps (see the code) (E-0347)
 AIScore_Sap::
     farcall AIScore_Sap_Conditions
     ld a, c
@@ -788,7 +799,7 @@ AIScore_Sap::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Speed_Conditions; returns if C is 0; calls FastestFoeAGLAbove31PercentOfActor;
 ; branches on C; calls AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; branches on C;
-; ...
+; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5 (E-0347)
 AIScore_Speed::
     farcall AIScore_Speed_Conditions
     ld a, c
@@ -820,7 +831,9 @@ AIScore_Speed::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Slow_Conditions; returns if C is 0; calls AIGateFoeStatus1Mask22; branches on
-; C; calls AccumulateBank6WordToDA70; calls FastestFoeAGLAbove31PercentOfActor; branches on C; ...
+; C; calls AccumulateBank6WordToDA70; calls FastestFoeAGLAbove31PercentOfActor; branches on C; calls
+; AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; branches on C; calls
+; AccumulateBank6WordToDA6E; calls SetCToZero; then 13 more steps (see the code) (E-0347)
 AIScore_Slow::
     farcall AIScore_Slow_Conditions
     ld a, c
@@ -1062,7 +1075,9 @@ AIScore_Surround::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Sleep_Conditions; returns if C is 0; calls AIGateFoeStatus1Mask22; branches on
-; C; calls AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; branches on C; ...
+; C; calls AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; branches on C; calls
+; AccumulateBank6WordToDA6E; calls SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls
+; WeighLinkRules1RuleBit5; then 6 more steps (see the code) (E-0347)
 AIScore_Sleep::
     farcall AIScore_Sleep_Conditions
     ld a, c
@@ -1310,7 +1325,8 @@ AIScore_Ironize::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_MagicBack_Conditions; returns if C is 0; calls SetCToZero; branches on C;
-; calls AccumulateBank6WordToDA70; calls AIModeAtLeast2AndFoeLacks; branches on C; ...
+; calls AccumulateBank6WordToDA70; calls AIModeAtLeast2AndFoeLacks; branches on C; calls
+; AccumulateBank6WordToDA6E (E-0347)
 AIScore_MagicBack::
     farcall AIScore_MagicBack_Conditions
     ld a, c
@@ -1595,7 +1611,9 @@ AIScore_MegaMagic::
 ; checks are not interpreted (E-0083)
 ; code: calls AIAttackSkillUsable; returns if C is 0; calls ActorLacksStatus4Bits67; branches on C;
 ; calls AccumulateBank6WordToDA6E; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C;
-; ...
+; calls AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls
+; AccumulateBank6WordToDA6E; calls InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; then
+; 21 more steps (see the code) (E-0347)
 AIScore_BigBang::
     farcall AIAttackSkillUsable
     ld a, c
@@ -1811,7 +1829,9 @@ AIScore_WindBeast::
 
 ; called from AIScore_Vacuum: calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls
 ; AccumulateBank6WordToDA70; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls
-; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; ...
+; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls
+; AccumulateBank6WordToDA6E; calls InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate;
+; branches on C; calls AccumulateBank6WordToDA6E; then 4 more steps (see the code) (E-0347)
 AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -1864,7 +1884,9 @@ AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
 ; checks are not interpreted (E-0083)
 ; code: calls AIAttackSkillUsable; returns if C is 0; calls
 ; AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates; calls FewerThanTwoFoesPresent; branches on
-; C; calls AccumulateBank6WordToDA6E; calls CheckFoeStatus6Bit3; ...
+; C; calls AccumulateBank6WordToDA6E; calls CheckFoeStatus6Bit3; branches on C; calls
+; AccumulateBank6WordToDA70; calls FailIfAnyFoeFullyResistant; branches on C; calls
+; AccumulateBank6WordToDA70 (E-0347)
 AIScore_Vacuum::
     farcall AIAttackSkillUsable
     ld a, c
@@ -2121,7 +2143,9 @@ AIScore_Tidalwave::
 ; checks are not interpreted (E-0083)
 ; code: calls AIAndFoeLacksStatus3And4; returns if C is 0; calls
 ; CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70; calls
-; FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; ...
+; FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls AccumulateBank6WordToDA70; calls
+; PassIfFoesAverageResistanceAtLeast2; branches on C; calls AccumulateBank6WordToDA6E; calls
+; ActorLacksStatus1Bits23And4Bits01; then 22 more steps (see the code) (E-0347)
 AIScore_CallHelp::
     farcall AIAndFoeLacksStatus3And4
     ld a, c
@@ -2224,7 +2248,9 @@ AIScore_CallHelp::
 ; (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; code: calls AIAndFoeLacksStatus3And4; returns if C is 0; calls
 ; CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70; calls
-; CheckFoeStatus7Bit2; branches on C; ...
+; CheckFoeStatus7Bit2; branches on C; calls AccumulateBank6WordToDA70; calls
+; FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls AccumulateBank6WordToDA70; calls
+; PassIfFoesAverageResistanceAtLeast2; then 21 more steps (see the code) (E-0347)
 AIScore_FireSlash::
     farcall AIAndFoeLacksStatus3And4
     ld a, c
@@ -2329,7 +2355,9 @@ AIScore_SlimeBlow::
 
 ; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
 ; calls CheckFoeStatus7Bit2; branches on C; calls AccumulateBank6WordToDA70; calls
-; ActorLacksStatus1Bits23And4Bits01; ...
+; ActorLacksStatus1Bits23And4Bits01; branches on C; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit1; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C; then 10 more
+; steps (see the code) (E-0347)
 AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -2534,7 +2562,9 @@ AIScore_PoisonHit::
 
 ; Calls ActorLacksStatus1Bits23And4Bits01; branches on C; calls AccumulateBank6WordToDA6E; calls
 ; WeighLinkRules1RuleBit1; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C; calls
-; AccumulateBank6WordToDA6E; ...
+; AccumulateBank6WordToDA6E; calls FoeHPCheckReadsWrongSlot; branches on C; calls
+; AccumulateBank6WordToDA6E; calls CheckActorSlot0To3OrLinkModeSet; branches on C; then 13 more
+; steps (see the code) (E-0347)
 AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
@@ -2723,7 +2753,9 @@ AIScore_SquallHit::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore; returns if C is 0; calls
 ; CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70; calls
-; ActorLacksStatus1Bits23And4Bits01; branches on C; ...
+; ActorLacksStatus1Bits23And4Bits01; branches on C; calls AccumulateBank6WordToDA6E; calls
+; SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls WeighLinkRules1RuleBit1; then 18
+; more steps (see the code) (E-0347)
 AIScore_BiAttack::
     farcall AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -2890,7 +2922,9 @@ AIScore_MultiCut::
 
 ; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
 ; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls AccumulateBank6WordToDA70;
-; calls PassIfFoesAverageResistanceAtLeast2; ...
+; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls AccumulateBank6WordToDA6E; calls
+; InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls
+; AccumulateBank6WordToDA6E; then 7 more steps (see the code) (E-0347)
 AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3484,7 +3518,9 @@ AIScore_Ramming::
 
 ; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
 ; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls AccumulateBank6WordToDA6E; calls
-; AIScore_Ramming_HPBandOfSlotTemp0; ...
+; AIScore_Ramming_HPBandOfSlotTemp0; calls ActorLacksStatus1Bits23And4Bits01; branches on C; calls
+; AccumulateBank6WordToDA70; calls SetCToZero; branches on C; then 9 more steps (see the code)
+; (E-0347)
 AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3578,13 +3614,14 @@ AIScore_SleepAir::
     ld bc, $00bc
     call AccumulateBank6WordToDA70
 
-; Calls WeighLinkRules1RuleBit3
+; Calls WeighLinkRules1RuleBit3 (E-0347)
 AIScore_SleepAir_CallWeighLinkRules1RuleBit3::
     call WeighLinkRules1RuleBit3
 
 ; Calls FewerThanTwoFoesPresent; branches on C; calls AccumulateBank6WordToDA6E; calls
 ; FailIfAnyFoeFullyResistant; branches on C; calls AccumulateBank6WordToDA70; calls
-; ResistanceAverageGateForAISide; ...
+; ResistanceAverageGateForAISide; branches on C; calls AccumulateBank6WordToDA6E; calls
+; ResistanceAverageGateForFoeAIMode3; branches on C; calls AccumulateBank6WordToDA6E (E-0347)
 AIScore_SleepAir_CallFewerThanTwoFoesPresent::
     farcall FewerThanTwoFoesPresent
     ld a, c
@@ -3684,7 +3721,10 @@ AIScore_Curse::
 ; adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_OddDance_Conditions; returns if C is 0; calls AccumulateBank6WordToDA6E; calls
-; SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; ...
+; SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit2; calls ResistanceAverageGateForAISide; branches on C; calls
+; AccumulateBank6WordToDA6E; calls ResistanceAverageGateForFoeAIMode3; then 2 more steps (see the
+; code) (E-0347)
 AIScore_OddDance::
     farcall AIScore_OddDance_Conditions
     ld a, c
@@ -4114,7 +4154,8 @@ AIScore_SandStorm::
 
 ; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
 ; calls PassIfFoeAverageATKAtMostTwiceAllyDEF; branches on C; calls AccumulateBank6WordToDA6E; calls
-; SetCToZero; ...
+; SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls WeighLinkRules1RuleBit5; calls
+; FewerThanTwoFoesPresent; branches on C; then 13 more steps (see the code) (E-0347)
 AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -4374,7 +4415,9 @@ AIScore_ThickFog::
 ; (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
 ; code: calls AIScore_TatsuCall_Conditions; returns if C is 0; calls AllOtherAlliesHaveStatus0Bit6;
 ; branches on C; calls AccumulateBank6WordToDA6E; calls CheckLoneFoeHPNotBelowAIDamageEstimates;
-; branches on C; ...
+; branches on C; calls AccumulateBank6WordToDA70; calls SetCToZero; branches on C; calls
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; then 4 more steps (see the code)
+; (E-0347)
 AIScore_TatsuCall::
     farcall AIScore_TatsuCall_Conditions
     ld a, c
@@ -4620,7 +4663,8 @@ AIScoreB_LegSweep::
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_LegSweep_Conditions; returns if C is 0; calls SetCToZero; branches on C; calls
 ; AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5; calls ResistanceAverageGateForAISide;
-; ...
+; branches on C; calls AccumulateBank6WordToDA6E; calls ResistanceAverageGateForFoeAIMode3; branches
+; on C; calls AccumulateBank6WordToDA6E; then 1 more step (see the code) (E-0347)
 AIScore_LegSweep::
     farcall AIScore_LegSweep_Conditions
     ld a, c
@@ -4673,7 +4717,10 @@ AIScoreB_Ahhh::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AILickSkillUsable; returns if C is 0; calls SetCToZero; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; ...
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit5; calls ResistanceAverageGateForAISide; branches on C; calls
+; AccumulateBank6WordToDA6E; calls ResistanceAverageGateForFoeAIMode3; then 3 more steps (see the
+; code) (E-0347)
 AIScore_Ahhh::
     farcall AILickSkillUsable
     ld a, c
@@ -4895,7 +4942,9 @@ AIScore_BladeD::
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
 ; code: calls AIScore_Cover_Conditions; returns if C is 0; calls AIScoreGuardSkill; may return
-; early; calls AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty; calls SetCToZero; branches on C; ...
+; early; calls AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty; calls SetCToZero; branches on C;
+; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5
+; (E-0347)
 AIScore_Cover::
     farcall AIScore_Cover_Conditions
     ld a, c
@@ -4931,7 +4980,7 @@ AIScore_TailWind::
     ret z
 
 ; Calls FailIfFoeKnowsSkills42To47; branches on C; calls AccumulateBank6WordToDA6E; calls
-; SetCToZero; branches on C; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5
+; SetCToZero; branches on C; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5 (E-0347)
 AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
@@ -5410,16 +5459,16 @@ AIScore_Ironize_2::
 
 ; AI scoring routine (a lone ret: leaves the score unchanged) for skill numbers 175-191 of the
 ; per-skill far tables (AIScoreRoutineTableA/B, 201 entries); the skill-name table gives these
-; numbers the placeholder name 'HighJump'
+; numbers the placeholder name 'HighJump' (E-0316)
 AIScore_NoWeightA:: ; configured code entry (E-0316); C0
     ret
 
-; AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables
+; AI scoring routine (a lone ret) for skill numbers 192-199 of the per-skill far tables (E-0316)
 AIScore_NoWeightB:: ; configured code entry (E-0316); C0
     ret
 
 ; AI scoring routine for skill number 200: advances the random value and, when wRandomLo bit 7 is
-; clear, sets wAISkillScore to $0000 and the next word to $FFFF (ResetAISkillScoreE2)
+; clear, sets wAISkillScore to $0000 and the next word to $FFFF (ResetAISkillScoreE2) (E-0316)
 AIScore_Skill200:: ; configured code entry (E-0316); C0
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -5430,7 +5479,7 @@ AIScore_Skill200:: ; configured code entry (E-0316); C0
 
 ; word = ReadBank6TableWord; if its low byte is $FF the value is 5000, which is added to
 ; wAISkillScore; a positive word is added to wAISkillScore; a negative word's magnitude is added to
-; wAISkillScore2
+; wAISkillScore2 (E-0351)
 AccumulateBank6WordToDA6E::
     call ReadBank6TableWord
     cp $ff
@@ -5462,7 +5511,7 @@ AccumulateBank6WordToDA6E::
     ret
 
 ; the mirror of AccumulateBank6WordToDA6E: $FF (5000) and positive words go to wAISkillScore2,
-; negative words' magnitude goes to wAISkillScore
+; negative words' magnitude goes to wAISkillScore (E-0351)
 AccumulateBank6WordToDA70::
     call ReadBank6TableWord
     cp $ff
@@ -5493,7 +5542,7 @@ AccumulateBank6WordToDA70::
 .return:
     ret
 
-; the 16-bit word at [HL] += BC; HL is unchanged
+; the 16-bit word at [HL] += BC; HL is unchanged (E-0351)
 AddBCToWordAtHL::
     push hl
     deref_hl
@@ -5508,7 +5557,7 @@ AddBCToWordAtHL::
     db $e5, $2a, $66, $6f, $7d, $91, $6f, $7c, $98, $67, $cb, $7c, $28, $03, $21, $00
     db $00, $44, $4d, $e1, $71, $23, $70, $c9
 
-; wAISkillScore = $0000 and the next word = $FFFF
+; wAISkillScore = $0000 and the next word = $FFFF (E-0316)
 ResetAISkillScoreE2::
     xor a
     ld hl, wAISkillScore
@@ -5520,7 +5569,7 @@ ResetAISkillScoreE2::
     ret
 
 ; BC = the 16-bit word at ROM bank 6, $4001 + $36 * BC + 2 * wPersonalityIndex (rows of 27 words); A
-; = its low byte; clobbers HL, E
+; = its low byte; clobbers HL, E (E-0351)
 ReadBank6TableWord::
     ld a, $36
     call Multiply8By16
@@ -5543,6 +5592,7 @@ ReadBank6TableWord::
 
 ; called from AIScore_StrongD: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
 ; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
+; (E-0347)
 AIScore_StrongD_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5590,6 +5640,7 @@ AIScore_StrongD_HPBandOfSlotTemp0::
 
 ; called from AIScore_AquaWall: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
 ; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70
+; (E-0347)
 AIScore_AquaWall_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5636,7 +5687,7 @@ AIScore_AquaWall_HPBandOfSlotTemp0::
     ret
 
 ; called from AIScore_SuckAll: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_SuckAll_HPBandOfSlotTemp0
+; AIScore_SuckAll_HPBandOfSlotTemp0 (E-0347)
 AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5658,7 +5709,7 @@ AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; Calls HPBandOfSlotTemp0; branches on C; calls AccumulateBank6WordToDA6E; calls
-; AccumulateBank6WordToDA70
+; AccumulateBank6WordToDA70 (E-0347)
 AIScore_SuckAll_HPBandOfSlotTemp0::
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5677,6 +5728,7 @@ AIScore_SuckAll_HPBandOfSlotTemp0::
 
 ; called from AIScore_Meditate: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
 ; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
+; (E-0347)
 AIScore_Meditate_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5723,6 +5775,7 @@ AIScore_Meditate_HPBandOfSlotTemp0::
     ret
 
 ; Calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls AIScore_HealUs_HPBandOfSlotTemp0
+; (E-0347)
 AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5743,7 +5796,7 @@ AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E (E-0347)
 AIScore_HealUs_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5764,7 +5817,7 @@ AIScore_HealUs_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-; data read by AIScore_HealUs_HPBandOfSlotTemp0 (6 bytes)
+; data read by AIScore_HealUs_HPBandOfSlotTemp0 (6 bytes) (E-0347)
 AIScore_HealUs_HPBandOfSlotTemp0_Data1::
     db $1e, $1f, $20, $21, $22, $22
 
@@ -5795,7 +5848,7 @@ ForEachPresentSlotOfSideRun::
     ret
 
 ; called from ForEachPresentSlotOfSideRun: calls HPBandOfSlotTemp0; branches on wBattleActor; calls
-; AccumulateBank6WordToDA6E
+; AccumulateBank6WordToDA6E (E-0347)
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5816,7 +5869,7 @@ ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-; data read by ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0 (6 bytes)
+; data read by ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0 (6 bytes) (E-0347)
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1::
     db $1d, $1e, $1f, $20, $21, $22
 
@@ -5824,6 +5877,7 @@ ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
 ; called from AIScore_Ramming: sets hTemp0; calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E
+; (E-0347)
 AIScore_Ramming_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     push bc
@@ -5839,12 +5893,12 @@ AIScore_Ramming_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-; data read by AIScore_Ramming_HPBandOfSlotTemp0 (6 bytes)
+; data read by AIScore_Ramming_HPBandOfSlotTemp0 (6 bytes) (E-0347)
 AIScore_Ramming_HPBandOfSlotTemp0_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
 ; called from AIScore_Cover: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_Cover_HPBandOfSlotTemp0
+; AIScore_Cover_HPBandOfSlotTemp0 (E-0347)
 AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5865,7 +5919,7 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E (E-0347)
 AIScore_Cover_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5886,7 +5940,7 @@ AIScore_Cover_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
-; data read by AIScore_Cover_HPBandOfSlotTemp0 (6 bytes)
+; data read by AIScore_Cover_HPBandOfSlotTemp0 (6 bytes) (E-0347)
 AIScore_Cover_HPBandOfSlotTemp0_Data1::
     db $21, $20, $1f, $1e, $1d, $1d
 
@@ -5894,7 +5948,7 @@ AIScore_Cover_HPBandOfSlotTemp0_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
 ; called from AIScore_Upper: calls CompareFoeAverageATKWithAllyDEF; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70 (E-0347)
 AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -5912,7 +5966,7 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
     ret
 
 ; called from AIScore_Sap: calls AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls
-; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
+; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E (E-0347)
 AIScore_Sap_AccumulateBank6WordToDA70::
     farcall AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
@@ -5948,6 +6002,7 @@ MaxNegativeScoreWhenAIFlagBit0::
     ret
 
 ; called from AIScore_TailWind: returns unless wBattleTurn is 0; calls AccumulateBank6WordToDA70
+; (E-0347)
 AIScore_TailWind_AccumulateBank6WordToDA70::
     ld a, [wBattleTurn]
     ld c, a
@@ -6040,7 +6095,7 @@ AIAddScoresForLinkRuleCheckLinkRules1Bit6::
     ret
 
 ; called from AIScore_Sacrifice: calls LinkRuleCheckLinkRules1Bit6; branches on C; calls
-; AccumulateBank6WordToDA70
+; AccumulateBank6WordToDA70 (E-0347)
 AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
@@ -6127,33 +6182,33 @@ GetBattleATK_BankE2::
     ld hl, wBattleATK
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip
+; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
 GetBattleDEF_BankE2::
     ld hl, wBattleDEF
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip
+; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
 GetBattleMaxHP_BankE2::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip
+; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
 GetBattleMaxMP_BankE2::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip
+; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
 GetBattleHP_BankE2::
     ld hl, wBattleHP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip
+; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
 GetBattleMP_BankE2::
     ld hl, wBattleMP
     jr GetBattleMP_BankE2_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A
+; Takes HL and A; changes HL and A (E-0347)
 GetBattleMP_BankE2_Skip::
     add a
     add_a_to_hl
@@ -6161,7 +6216,7 @@ GetBattleMP_BankE2_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks)
+; appear in 12 banks) (E-0351)
 AddDoubleAToHL_BankE2::
     add a
     add_a_to_hl
@@ -6207,7 +6262,7 @@ TargetOnLocalSide_BankE2::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D
+; Takes DE; changes HL, A and D (E-0347)
 ClearBattleStatusBitsWithMaskD_BankE2::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data
@@ -6221,12 +6276,12 @@ ClearBattleStatusBitsWithMaskD_BankE2::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_BankE2 (7 bytes)
+; data read by ClearBattleStatusBitsWithMaskD_BankE2 (7 bytes) (E-0347)
 ClearBattleStatusBitsWithMaskD_BankE2_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit0OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6236,7 +6291,7 @@ SetBit0OfLevelUpGainsIndexed_BankE2::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit1OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains
@@ -6246,7 +6301,7 @@ SetBit1OfLevelUpGainsIndexed_BankE2::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit2OfLevelUpGainsIndexed_BankE2::
     push hl
     ld hl, wLevelUpGains

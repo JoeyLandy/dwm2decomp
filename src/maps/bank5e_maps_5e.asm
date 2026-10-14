@@ -19,7 +19,7 @@ BGPaletteBufferPlus8Data::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 20 x 18 tiles, one row per line
-TileRect5E_1::
+RunWorldMapState_CopyScrollToHardware_TileRect::
     db $6e, $53, $57, $54, $55, $53, $54, $53, $54, $55, $55, $57, $53, $55, $54, $55, $54, $58, $59, $5a ; id 0
     db $66, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $51, $5c, $5d, $5e, $5f ; id 1
     db $60, $51, $51, $74, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $75, $61, $62, $63 ; id 2

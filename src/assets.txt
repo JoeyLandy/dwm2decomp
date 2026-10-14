@@ -186,7 +186,6 @@ gfx/misc/gfx7_e_3.lz	$1F90A9	$42
 gfx/misc/gfx7_e_4.lz	$1F9128	$80
 gfx/misc/gfx7_e_6.lz	$1F9640	$83
 gfx/misc/gfx7_e_7.lz	$1F9994	$81
-gfx/misc/gfx7_e_8.lz	$1F9A15	$85
 gfx/misc/gfx93_1.lz	$24D6F3	$6D
 gfx/misc/gfx_field_command_sprite_table_11.lz	$1F9513	$82
 gfx/misc/gfx_field_command_sprite_table_12.lz	$1F9370	$AA
@@ -292,6 +291,7 @@ gfx/misc/screen_map71_7.lz	$1C579C	$CC
 gfx/misc/screen_map71_8.lz	$1C5868	$E3
 gfx/misc/screen_map71_9.lz	$1C62DF	$59
 gfx/misc/script_screen_attr_map_screen_animation_table_3.lz	$24E153	$41
+gfx/misc/spawn_script_sprite_in_front_of_player_data.lz	$1F9A15	$85
 gfx/misc/tiles0_gfx_3.lz	$1F9B63	$55
 gfx/misc/tiles0_gfx_4.lz	$38577C	$AF
 gfx/misc/tiles0_plus100_gfx.lz	$1F9706	$50

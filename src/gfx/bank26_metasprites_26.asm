@@ -295,7 +295,9 @@ MetaSprites26Attrs::
 
 ; called from DrawMetaSpriteSet_Bank26: returns if hOamNextEntry is at least $27; sets
 ; hMetaSpriteYLo; sets hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at
-; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; ...
+; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; increments
+; hOamNextEntry; branches on hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches
+; on the byte at hMetaSpriteXLo; branches on B; then 18 more steps (see the code) (E-0347)
 DrawMetaSpriteSet_Bank26_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

@@ -5,7 +5,7 @@ SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0e
 
 ; called from DebugMessageTest_Update_CallUpdate_BeginStringDisplay: branches on wStringIndex; calls
-; DebugMessageTest_Update_BeginStringDisplay_2; calls BeginStringDisplay
+; DebugMessageTest_Update_BeginStringDisplay_2; calls BeginStringDisplay (E-0347)
 DebugMessageTest_Update_BeginStringDisplay::
     ld a, [wStringIndex]
     cp $88
@@ -37,7 +37,7 @@ CopyStringToBuffer_Bank0E::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_0E::
-; data read by DebugMessageTest_Update_BeginStringDisplay (1 word)
+; data read by DebugMessageTest_Update_BeginStringDisplay (1 word) (E-0347)
 MessageStrings_Bank0E::
     dw StringList_Bank0E_0 ; id 0
 
@@ -675,7 +675,7 @@ MessageBank0E_87::
     db "a monster.<WAIT>"
     db "@"
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_Bank0E::
     ld de, BeginStringDisplay_Bank0E_StringCategories
     call BeginStringDisplay
@@ -683,6 +683,7 @@ BeginStringDisplay_Bank0E::
     db $11, $85, $53, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_Bank0E (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0351)
 ShowString_Bank0E::
     call BeginStringDisplay_Bank0E
     call RunStringDisplayToEnd
@@ -1537,7 +1538,7 @@ AdjustStatForRecordBufAAndBItems::
     pop de
     ret
 
-; data read by AdjustStatForRecordBufAAndBItems (8 words)
+; data read by AdjustStatForRecordBufAAndBItems (8 words) (E-0347)
 AdjustStatForRecordBufAAndBItems_Data1::
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
@@ -2100,7 +2101,7 @@ TestResistanceEntry::
     pop af
     jr .done
 
-; data read by TestResistanceEntry (27 bytes)
+; data read by TestResistanceEntry (27 bytes) (E-0347)
 TestResistanceEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
@@ -2162,7 +2163,7 @@ CopySixBytesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
-; data read by CopySixBytesByChildRecordFamilyBit4Table (12 bytes)
+; data read by CopySixBytesByChildRecordFamilyBit4Table (12 bytes) (E-0347)
 CopySixBytesByChildRecordFamilyBit4Table_Data1::
     db $91, $c9, $92, $c9, $36, $ca, $37, $ca, $f3, $c9, $98, $ca
 
@@ -2241,7 +2242,7 @@ CopyFourNamesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
-; data read by CopyFourNamesByChildRecordFamilyBit4Table (8 bytes)
+; data read by CopyFourNamesByChildRecordFamilyBit4Table (8 bytes) (E-0347)
 CopyFourNamesByChildRecordFamilyBit4Table_Data1::
     db $87, $c9, $2c, $ca, $95, $c9, $3a, $ca
 
@@ -2379,7 +2380,7 @@ ApplyBreedingBonusToChildStats::
     jr nz, .loop
     ret
 
-; data read by ApplyBreedingBonusToChildStats (8 bytes)
+; data read by ApplyBreedingBonusToChildStats (8 bytes) (E-0347)
 ApplyBreedingBonusToChildStats_Data::
     db $5b, $5d, $5f, $61, $63, $65, $67, $69
 
@@ -2492,7 +2493,7 @@ CombinedPersonalityLevelIndexOfRecord::
     add b
     ret
 
-; the same 13 bytes as GradeTemp0 (GradeTemp0)
+; the same 13 bytes as GradeTemp0 (GradeTemp0) (E-0105)
 GradeTemp0_Bank0E::
     ldh a, [hTemp0]
     ld c, $00

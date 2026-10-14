@@ -9,33 +9,33 @@ GetBattleATK_BankA1::
     ld hl, wBattleATK
     jr GetBattleMP_BankA1_Skip
 
-; Changes HL; continues in GetBattleMP_BankA1_Skip
+; Changes HL; continues in GetBattleMP_BankA1_Skip (E-0347)
 GetBattleDEF_BankA1::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA1_Skip
 
-; Changes HL; continues in GetBattleMP_BankA1_Skip
+; Changes HL; continues in GetBattleMP_BankA1_Skip (E-0347)
 GetBattleMaxHP_BankA1::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA1_Skip
 
-; Changes HL; continues in GetBattleMP_BankA1_Skip
+; Changes HL; continues in GetBattleMP_BankA1_Skip (E-0347)
 GetBattleMaxMP_BankA1::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA1_Skip
 
-; Changes HL; continues in GetBattleMP_BankA1_Skip
+; Changes HL; continues in GetBattleMP_BankA1_Skip (E-0347)
 GetBattleHP_BankA1::
     ld hl, wBattleHP
     jr GetBattleMP_BankA1_Skip
 
-; Changes HL; continues in GetBattleMP_BankA1_Skip
+; Changes HL; continues in GetBattleMP_BankA1_Skip (E-0347)
 GetBattleMP_BankA1::
     ld hl, wBattleMP
     jr GetBattleMP_BankA1_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A
+; Takes HL and A; changes HL and A (E-0347)
 GetBattleMP_BankA1_Skip::
     add a
     add_a_to_hl
@@ -43,7 +43,7 @@ GetBattleMP_BankA1_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks)
+; appear in 12 banks) (E-0351)
 AddDoubleAToHL_BankA1::
     add a
     add_a_to_hl
@@ -118,7 +118,7 @@ ClearBitMaskTable_BankA1::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -128,7 +128,7 @@ SetBit0OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -138,7 +138,7 @@ SetBit1OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit2OfLevelUpGainsIndexed_BankA1:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -270,6 +270,7 @@ RunBattleCommandEntry_BankA1::
 
 ; step 0 of RunBattleCommandEntry_BankA1: sets wLinkSendByte to 0; sets wBattleActor to 0; branches
 ; on the byte at wSlotMarks + $4; calls CarryUnlessBattleSlotOutSlotEmpty; advances wBattleSubPhase
+; (E-0347)
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
     xor a
     ld [wLinkSendByte], a
@@ -306,7 +307,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; step 1 of RunBattleCommandEntry_BankA1: calls NextTableByteSecondStream; branches on wBattleActor;
 ; branches on the byte at wSlotMarks; copies E to wBattleActor; calls
-; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; ...
+; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; sets
+; wBattleResolveStep to 0; advances wBattleSubPhase (E-0347)
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2::
     call NextTableByteSecondStream
     ld a, [wBattleActor]
@@ -345,13 +347,13 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_2::
 .return:
     ret
 
-; step 2 of RunBattleCommandEntry_BankA1: calls RunCommandEntryResolveStep
+; step 2 of RunBattleCommandEntry_BankA1: calls RunCommandEntryResolveStep (E-0347)
 RunBattleCommandEntry_BankA1_ToRunCommandEntryResolveStep::
     farcall RunCommandEntryResolveStep
     ret
 
 ; step 3 of RunBattleCommandEntry_BankA1: calls ChooseActionTarget; sets wSlotMarks to 2; sets
-; wBattleSubPhase to 1; increments wBattleActor
+; wBattleSubPhase to 1; increments wBattleActor (E-0347)
 RunBattleCommandEntry_BankA1_ChooseActionTarget::
     farcall ChooseActionTarget
     ld a, [wBattleActor]
@@ -371,7 +373,10 @@ RunBattleCommandEntry_BankA1_ChooseActionTarget::
 
 ; step 4 of RunBattleCommandEntry_BankA1: calls FillBytes; sets wActionQueuePos to 0; sets wLoadSlot
 ; to 0; copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; ...
+; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; calls
+; RunBattleCommandEntry_BankA1_RandomInRange; calls
+; RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc; increments wLoadSlot; increments
+; wBattleTempPtrLo; advances wBattleSubPhase (E-0347)
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
@@ -434,7 +439,8 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos
 
 ; step 5 of RunBattleCommandEntry_BankA1: copies L to wBattleTempPtrLo; copies H to
 ; wBattleTempPtrHi; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to
-; wTargetEstimates; branches on E; increments wBattleTempPtrLo; ...
+; wTargetEstimates; branches on E; increments wBattleTempPtrLo; branches on E; branches on the byte
+; at wBattleArg0; sets wActionQueuePos to 0; advances wBattleSubPhase (E-0347)
 RunBattleCommandEntry_BankA1_CompareHLToBC::
     ld d, $08
 
@@ -532,7 +538,8 @@ RunBattleCommandEntry_BankA1_CompareHLToBC::
 
 ; step 6 of RunBattleCommandEntry_BankA1: calls AddWordAtHLToBC_BankA1; copies C to
 ; wBattleCommandArgs; calls AddWordAtHLToBC_BankA1; advances wBattleStep; sets wBattleSubPhase to 0;
-; calls FillBytes; calls SaveActionChoicesAndPickFormations; ...
+; calls FillBytes; calls SaveActionChoicesAndPickFormations; calls
+; RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3 (E-0347)
 RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
     ld hl, wBattleHP
     ld bc, $0000
@@ -564,7 +571,7 @@ RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1::
     call RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3
     ret
 
-; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks)
+; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0351)
 AddWordAtHLToBC_BankA1::
     ld a, [hli]
     add c
@@ -576,7 +583,7 @@ AddWordAtHLToBC_BankA1::
 
 ; called from RunBattleCommandEntry_BankA1_AddWordAtHLToBC_BankA1: calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleActionChoice; sets
-; BSTAT6_BERSERK of wBattleStatus6
+; BSTAT6_BERSERK of wBattleStatus6 (E-0347)
 RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld c, $00
     ld b, $08
@@ -604,7 +611,7 @@ RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_3::
     ret
 
 ; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
-; calls NextTableByteSecondStream; calls RandomInRange
+; calls NextTableByteSecondStream; calls RandomInRange (E-0347)
 RunBattleCommandEntry_BankA1_RandomInRange::
     push de
     call NextTableByteSecondStream
@@ -630,7 +637,8 @@ RunBattleCommandEntry_BankA1_RandomInRange::
 ; called from RunBattleCommandEntry_BankA1_CarryUnlessBattleSlotOutSlotEmpty_SetActionQueuePos:
 ; branches on the byte at wBattleActionChoice; copies the byte at wBattleActionChoice to
 ; wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to
-; wBattleArg3; calls LoadSkillRecordPart; ...
+; wBattleArg3; calls LoadSkillRecordPart; copies L to wBattleArg2; copies H to wBattleArg3; copies L
+; to wBattleArg0; copies H to wBattleArg1; calls NextTableByteSecondStream (E-0347)
 RunBattleCommandEntry_BankA1_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -764,7 +772,7 @@ MarkVisitedMapScreenInVisitedScreens::
     ret
 
 ; called from RunMenuStateMenuState_InitSoundHardware: changes HL, BC and A; branches on
-; wKeyWorldFloor
+; wKeyWorldFloor (E-0347)
 RunMenuStateMenuState_ReadKeyWorldFloor::
     ld hl, wKeyWorldAreaExits
     ld a, [wKeyWorldFloor]
@@ -895,7 +903,9 @@ RunWorldMapState::
 
 ; step 4 of RunWorldMapState: sets hScrollX to 0; sets hScrollY to 0; calls CopyScrollToHardware;
 ; calls DecompressToVRAM; calls FillBGMap0With57; calls RunWorldMapState_WriteVRAMByteInc; branches
-; on wMapType; ...
+; on wMapType; calls RunWorldMapState_StoreTemp5ValuesToCursorCellX_2; calls
+; RunWorldMapState_StoreTemp5ValuesToCursorCellX; branches on wIsCGB; calls CopyFromBank; sets
+; wOBJPaletteUploadRequest to $7f; then 3 more steps (see the code) (E-0347)
 RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
     xor a
     ldh [hScrollX], a
@@ -973,7 +983,9 @@ RunWorldMapState_CopyScrollToHardware_DecompressToVRAM::
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: calls
 ; RunWorldMapState_RunGameMode2MapTypeState; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
-; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8; ...
+; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8;
+; branches on hTemp4; calls IsMapScreenAVisited; calls RunWorldMapState_WriteTemp0AndTemp1; branches
+; on hTemp9; increments hTempA; then 6 more steps (see the code) (E-0347)
 RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     call RunWorldMapState_RunGameMode2MapTypeState
     call StoreTemp5ValuesToCursorCellX
@@ -1059,7 +1071,7 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX::
     ret
 
 ; Calls ReadByteInBank; copies L to hTemp0; copies H to hTemp1; calls ReadByteInBank; calls
-; WriteVRAMByte
+; WriteVRAMByte (E-0347)
 RunWorldMapState_WriteTemp0AndTemp1::
     push hl
     ldh a, [hTemp8]
@@ -1159,7 +1171,8 @@ RunWorldMapState_WriteTemp0AndTemp1::
 
 ; Calls RunGameMode2MapTypeState; copies wKeyWorldWidth to hTemp3; copies wKeyWorldHeight to hTemp4;
 ; copies hMapScreenX-1 to hTemp7; copies hMapScreenY-1 to hTemp8; branches on hPlayerX & $0f;
-; increments hTemp7; ...
+; increments hTemp7; sets hTemp5; branches on hPlayerY & $0f; increments hTemp8; sets hTemp6; copies
+; L to hPlayerY; then 3 more steps (see the code) (E-0347)
 RunWorldMapState_RunGameMode2MapTypeState::
     ldh a, [hPlayerX]
     ld l, a
@@ -1241,12 +1254,12 @@ RunGameMode2MapTypeState::
     dw RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2
     dw RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer
 
-; step 0 of RunGameMode2MapTypeState: returns at once
+; step 0 of RunGameMode2MapTypeState: returns at once (E-0347)
 RunGameMode2MapTypeState_Return::
     ret
 
 ; step 1 of RunGameMode2MapTypeState: changes HL and A; branches on wKeyWorldFloor; continues in
-; SetMapScreenFromAAndCenterPlayer
+; SetMapScreenFromAAndCenterPlayer (E-0347)
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
     ld a, [wKeyWorldFloor]
     and $07
@@ -1264,7 +1277,7 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc::
     jr SetMapScreenFromAAndCenterPlayer
 
 ; step 3 of RunGameMode2MapTypeState: changes HL and A; continues in
-; SetMapScreenFromAAndCenterPlayer
+; SetMapScreenFromAAndCenterPlayer (E-0347)
 RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
     ld a, [wKeyWorldFloor]
     and $07
@@ -1277,7 +1290,8 @@ RunGameMode2MapTypeState_WriteMapScreenXAndMapScreenYEtc_2::
 
 ; step 7 of RunGameMode2MapTypeState: branches on wKeyWorldActive; branches on wKeyWorldKey;
 ; branches on wKeyWorldSlot; calls SetMapScreenFromAAndCenterPlayer; copies wKeyWorldGoal & $f0 to
-; hPlayerX; copies wKeyWorldGoal & $0f to hPlayerY; calls SetMapScreenFromAAndCenterPlayer; ...
+; hPlayerX; copies wKeyWorldGoal & $0f to hPlayerY; calls SetMapScreenFromAAndCenterPlayer; copies
+; wKeyWorldGoalPos to hPlayerX; copies wKeyWorldGoalPos2 to hPlayerY (E-0347)
 RunGameMode2MapTypeState_SetMapScreenFromAAndCenterPlayer::
     ld a, [wKeyWorldActive]
     or a
@@ -1326,7 +1340,9 @@ SetMapScreenFromAAndCenterPlayer::
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: calls
 ; RunWorldMapState_WriteTemp3AndTemp4Etc; calls StoreTemp5ValuesToCursorCellX; copies hTemp5 to
-; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8; ...
+; hTemp9; copies hTemp7 to hTempA; branches on hTempA; branches on hTemp3; branches on hTemp8;
+; branches on hTemp4; calls ReadByteInBank; calls WriteVRAMByte; branches on hTemp9; increments
+; hTempA; then 5 more steps (see the code) (E-0347)
 RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
     call RunWorldMapState_WriteTemp3AndTemp4Etc
     call StoreTemp5ValuesToCursorCellX
@@ -1441,7 +1457,9 @@ RunWorldMapState_StoreTemp5ValuesToCursorCellX_2::
 ; Calls RunWorldMapState_WriteMapScreenXAndMapScreenYEtc; copies the byte at WorldMapScreenCellTable
 ; & $0f to hTemp3; copies the byte at WorldMapScreenCellTable & $0f to hTemp4; copies the byte at
 ; WorldMapScreenCellTable to hTemp0; copies the byte at WorldMapScreenCellTable to hTemp1; copies
-; the byte at WorldMapScreenCellTable to hTemp2; copies C to hTemp7; ...
+; the byte at WorldMapScreenCellTable to hTemp2; copies C to hTemp7; copies L to hTemp0; copies H to
+; hTemp1; copies C to hTemp8; copies L to hTemp0; copies H to hTemp1; then 18 more steps (see the
+; code) (E-0347)
 RunWorldMapState_WriteTemp3AndTemp4Etc::
     ldh a, [hPlayerX]
     ld l, a
@@ -1642,7 +1660,9 @@ WorldMapScreenCellTable::
     dfar WorldMapScreenCells10 ; screen cell grid: 25 bytes (5 x 5) per screen
 
 ; Branches on hMapId; returns if hMapId is $20; returns if hMapId is $30; returns if hMapId is $48;
-; returns if hMapId is $70; returns if hMapId is $a0; returns if hMapId is $a8; ...
+; returns if hMapId is $70; returns if hMapId is $a0; returns if hMapId is $a8; returns if hMapId is
+; $b0; returns if hMapId is $b8; returns if hMapId is $c8; returns if hMapId is $d1; returns if
+; hMapId is $da; then 9 more steps (see the code) (E-0347)
 RunWorldMapState_WriteMapScreenXAndMapScreenYEtc::
     ldh a, [hMapId]
     ld c, $01
@@ -1799,7 +1819,7 @@ StoreTemp5ValuesToCursorCellX::
     ret
 
 ; step 5 of RunWorldMapState: changes A; may continue in RunWorldMapState_UploadBGPalettes_2; may
-; continue in RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8
+; continue in RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8 (E-0347)
 RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -1809,7 +1829,7 @@ RunWorldMapState_WriteBGPaletteUploadRequestAndOBJPaletteUploadRequest::
 
 ; called from RunWorldMapState_WriteWorldMapState: branches on wIsCGB; calls FillBytes; sets
 ; wBGPaletteUploadRequest to $7f; sets wOBJPaletteUploadRequest to $7f; calls UploadBGPalettes;
-; advances wWorldMapState
+; advances wWorldMapState (E-0347)
 RunWorldMapState_UploadBGPalettes_2::
     ld hl, wDMGPaletteBGP
     ld a, $00
@@ -1836,7 +1856,7 @@ RunWorldMapState_UploadBGPalettes_2::
 
 ; Calls DrawBlinkingMetaSprite8; calls RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc; calls
 ; RunWorldMapState_WaitMapType; calls RunWorldMapState_WaitWorldMapByFieldSkill; calls
-; RunWorldMapState_WriteTemp1AndTemp2
+; RunWorldMapState_WriteTemp1AndTemp2 (E-0347)
 RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
     call DrawBlinkingMetaSprite8
     call RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc
@@ -1847,7 +1867,9 @@ RunWorldMapState_UploadBGPalettes_2_CallDrawBlinkingMetaSprite8::
 
 ; Branches on wMapType; branches on hMapId; branches on wKeyWorldActive; branches on wKeyWorldKey;
 ; copies wKeyWorldGoalCell to hTemp1; copies wKeyWorldGoal to hTemp2; calls
-; RunWorldMapState_Multiply8; ...
+; RunWorldMapState_Multiply8; copies the byte at WorldMapStartPositions to hTemp1; copies the byte
+; at WorldMapStartPositions to hTemp2; calls RunWorldMapState_Multiply8; branches on
+; wKeyWorldActive; branches on wKeyWorldKey; then 7 more steps (see the code) (E-0347)
 RunWorldMapState_WriteTemp1AndTemp2::
     ld a, [wMapType]
     bit 7, a
@@ -1947,7 +1969,9 @@ RunWorldMapState_WriteTemp1AndTemp2::
     ret
 
 ; Copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
-; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets hSpriteSetIndex to $28; ...
+; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets hSpriteSetIndex to $28; sets
+; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets hSpriteOriginYHi to 0; calls DrawMetaSprite
+; (E-0347)
 RunWorldMapState_Multiply8::
     ld a, [wCursorCellY]
     ld c, a
@@ -2027,7 +2051,8 @@ RunWorldMapState_Multiply8::
 
 ; Returns if wWorldMapByFieldSkill is 0; branches on wMapType; branches on the byte at wMapObjects;
 ; copies L to hSpriteOriginX; copies L to hSpriteOriginY; sets hSpriteOriginX; sets hSpriteOriginY;
-; ...
+; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 2; sets hSpriteSetIndex to $27; sets
+; hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; then 14 more steps (see the code) (E-0347)
 RunWorldMapState_WaitWorldMapByFieldSkill::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -2251,12 +2276,14 @@ RunWorldMapState_WaitWorldMapByFieldSkill::
     jp nz, .loop2
     ret
 
-; data read by RunWorldMapState (16 bytes)
+; data read by RunWorldMapState (16 bytes) (E-0347)
 RunWorldMapState_WaitWorldMapByFieldSkill_Data::
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 
 ; Branches on wMapType; may return early; copies L to hSpriteOriginX; copies L to hSpriteOriginY;
-; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; ...
+; sets hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1;
+; sets hSpriteSetIndex to $28; sets hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets
+; hSpriteOriginYHi to 0; then 15 more steps (see the code) (E-0347)
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     ld a, [wMapType]
     bit 7, a
@@ -2470,7 +2497,7 @@ RunWorldMapState_WriteSpriteOriginXAndSpriteOriginYEtc::
     jp .skip2
 
 ; Returns unless bit 7 of wMapType is set; branches on the byte at wKeyWorldObjects; calls
-; RunWorldMapState_Multiply8_2
+; RunWorldMapState_Multiply8_2 (E-0347)
 RunWorldMapState_WaitMapType::
     ld a, [wMapType]
     bit 7, a
@@ -2500,7 +2527,9 @@ RunWorldMapState_WaitMapType::
     jp .skip
 
 ; May return early; copies L to hSpriteOriginX; may return early; copies L to hSpriteOriginY;
-; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; ...
+; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; sets
+; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $20; sets hSpriteAttrXor to 1; sets
+; hSpriteSetIndex to $28; then 4 more steps (see the code) (E-0347)
 RunWorldMapState_Multiply8_2::
     ld a, [wCursorCellY]
     ld c, a
@@ -2614,7 +2643,7 @@ DrawBlinkingMetaSprite8::
     ret
 
 ; step 0 of RunWorldMapState: sets wSpriteSlotCount to 0; branches on wIsCGB; calls FillBytes; sets
-; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; advances wWorldMapState
+; wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; advances wWorldMapState (E-0347)
 RunWorldMapState_UploadBGPalettes::
     xor a
     ld [wSpriteSlotCount], a
@@ -2641,7 +2670,9 @@ RunWorldMapState_UploadBGPalettes::
 
 ; step 1 of RunWorldMapState: sets hScrollX to 0; sets hScrollY to 0; calls CopyScrollToHardware;
 ; calls DecompressToVRAM; calls CopyRectFromBankToVRAM; calls DrawRect12x12FromBankA1; calls
-; RunWorldMapState_WriteVRAMByteInc_2; ...
+; RunWorldMapState_WriteVRAMByteInc_2; branches on wMapType; calls
+; RunWorldMapState_CenteredBGMapOriginForSizeBC; calls RunWorldMapState_SetTemp0; branches on
+; wIsCGB; calls CopyFromBank; then 4 more steps (see the code) (E-0347)
 RunWorldMapState_CopyScrollToHardware::
     xor a
     ldh [hScrollX], a
@@ -2663,7 +2694,7 @@ RunWorldMapState_CopyScrollToHardware::
     ld b, $5e
     ld hl, vTiles2 + $500
     call DecompressToVRAM
-    ld de, $4238
+    ld de, RunWorldMapState_CopyScrollToHardware_TileRect
     ld a, $5e
     lb bc, $14, $12
     ld hl, vBGMap0
@@ -2730,7 +2761,7 @@ RunWorldMapState_CopyScrollToHardware::
 ; step 2 of RunWorldMapState: branches on wJoypadPressed; calls RunWorldMapState_UploadBGPalettes_2;
 ; sets wWorldMapState to 6; branches on $06; advances wWorldMapState; calls
 ; RunWorldMapState_WaitFrameCounterLo; calls RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY;
-; ...
+; calls RunWorldMapState_WaitMapType_2; calls RunWorldMapState_WriteTemp1 (E-0347)
 RunWorldMapState_WriteWorldMapState::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -2754,14 +2785,15 @@ RunWorldMapState_WriteWorldMapState::
     call RunWorldMapState_WriteTemp1
     ret
 
-; step 6 of RunWorldMapState: calls EnterGameMode1WithDefaultPalettes
+; step 6 of RunWorldMapState: calls EnterGameMode1WithDefaultPalettes (E-0347)
 RunWorldMapState_ToEnterGameMode1WithDefaultPalettes::
     call EnterGameMode1WithDefaultPalettes
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; copies L to
 ; hTemp0; copies H to hTemp1; copies L to hTemp2; copies H to hTemp3; copies L to hTemp4; copies H
-; to hTemp5; ...
+; to hTemp5; copies L to hTemp6; copies H to hTemp7; calls RunWorldMapState_WriteTemp0; copies E to
+; hTemp0; copies D to hTemp1; then 28 more steps (see the code) (E-0347)
 RunWorldMapState_SetTemp0::
     ld a, [wKeyWorldHeight]
     ld c, a
@@ -3010,7 +3042,7 @@ RunWorldMapState_SetTemp0::
     jr nz, .loop4
     ret
 
-; Increments hTemp0; calls ReadByteInBank; calls WriteVRAMByte; increments hTemp0
+; Increments hTemp0; calls ReadByteInBank; calls WriteVRAMByte; increments hTemp0 (E-0347)
 RunWorldMapState_WriteTemp0::
     sra a
     push af
@@ -3061,7 +3093,7 @@ RunWorldMapState_WriteTemp0::
     ret
 
 ; counts the characters of wNameGlyphBuf (not the dakuten marks) and shifts it to center it in 13
-; tiles
+; tiles (E-0305)
 RunGameMode2State_CenterName::
     push hl
     push de
@@ -3123,7 +3155,8 @@ RunGameMode2State_CenterName::
 
 ; called from RunWorldMapState_CopyScrollToHardware: calls CenteredBGMapOriginForSizeBC; calls
 ; CopyRectFromBankToVRAM; calls WriteVRAMByteInc; sets wStringIndex; sets wStringCategory to 0;
-; copies E to wStringDestLo; copies D to wStringDestHi; ...
+; copies E to wStringDestLo; copies D to wStringDestHi; calls CopyStringToBuffer_Bank08; calls
+; RunGameMode2State_CenterName; calls CopyGlyphTilesToVRAM; calls WriteVRAMByteInc (E-0347)
 RunWorldMapState_CenteredBGMapOriginForSizeBC::
     ld a, [wWorldMapRegion]
     add a
@@ -3225,7 +3258,9 @@ WorldMapViewTable::
 
 ; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; branches on hMapId;
 ; branches on wKeyWorldActive; branches on wKeyWorldKey; copies wKeyWorldGoalCell to hTemp1; calls
-; DrawCursorSpriteAtTemp1Cell; copies the byte at WorldMapStartPositions to hTemp1; ...
+; DrawCursorSpriteAtTemp1Cell; copies the byte at WorldMapStartPositions to hTemp1; calls
+; DrawCursorSpriteAtTemp1Cell; branches on wKeyWorldActive; branches on wKeyWorldKey; branches on
+; wKeyWorldSlot; copies wKeyWorldGoalCell to hTemp1; then 3 more steps (see the code) (E-0347)
 RunWorldMapState_WriteTemp1::
     ld a, [wMapType]
     bit 7, a
@@ -3356,7 +3391,8 @@ DrawCursorSpriteAtTemp1Cell::
 ; may continue in SetSpriteYFromCursorCellY_CheckMapType; may continue in
 ; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive; may continue in
 ; SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX; branches on the byte at
-; WorldMapCursorCellTable; calls SetSpriteXFromCursorCellX; calls SetSpriteYFromCursorCellY; ...
+; WorldMapCursorCellTable; calls SetSpriteXFromCursorCellX; calls SetSpriteYFromCursorCellY; calls
+; DrawMetaSpriteSet08 (E-0347)
 RunWorldMapState_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 5, a
@@ -3452,7 +3488,7 @@ RunWorldMapState_WaitFrameCounterLo::
     ret
 
 ; step 0 of SetSpriteYFromCursorCellY: calls SetSpriteXFromCursorCellX; calls
-; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08
+; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08 (E-0347)
 SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
     ldh a, [hMapScreenX]
     sla a
@@ -3469,7 +3505,7 @@ SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX::
 
 ; Branches on wKeyWorldActive; branches on wKeyWorldKey; calls SetSpriteXFromCursorCellX; calls
 ; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08; calls SetSpriteXFromCursorCellX; calls
-; SetSpriteYFromCursorCellY; ...
+; SetSpriteYFromCursorCellY; calls DrawMetaSpriteSet08 (E-0347)
 SetSpriteYFromCursorCellY_SetSpriteXFromCursorCellX_CheckKeyWorldActive::
     ld a, [wKeyWorldActive]
     or a
@@ -3534,7 +3570,7 @@ SetSpriteYFromCursorCellY::
     ldh [hSpriteOriginY], a
     ret
 
-; Dispatches on wMapType & $07
+; Dispatches on wMapType & $07 (E-0347)
 SetSpriteYFromCursorCellY_CheckMapType::
     ld a, [wMapType]
     and $07
@@ -3549,6 +3585,7 @@ SetSpriteYFromCursorCellY_CheckMapType::
     dw SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3
 
 ; step 1 of SetSpriteYFromCursorCellY: branches on wKeyWorldFloor; calls SetSpriteXYFromCellA
+; (E-0347)
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
     ld a, [wKeyWorldFloor]
     and $07
@@ -3566,7 +3603,7 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA::
     call SetSpriteXYFromCellA
     ret
 
-; step 3 of SetSpriteYFromCursorCellY: calls SetSpriteXYFromCellA
+; step 3 of SetSpriteYFromCursorCellY: calls SetSpriteXYFromCellA (E-0347)
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2::
     ld a, [wKeyWorldFloor]
     and $07
@@ -3579,7 +3616,7 @@ SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_2::
     ret
 
 ; step 7 of SetSpriteYFromCursorCellY: branches on wKeyWorldActive; branches on wKeyWorldKey;
-; branches on wKeyWorldSlot; calls SetSpriteXYFromCellA
+; branches on wKeyWorldSlot; calls SetSpriteXYFromCellA (E-0347)
 SetSpriteYFromCursorCellY_SetSpriteXYFromCellA_3::
     ld a, [wKeyWorldActive]
     or a
@@ -3648,7 +3685,8 @@ DrawMetaSpriteSet08::
 
 ; called from RunWorldMapState_WriteWorldMapState: branches on wMapType; may return early; sets
 ; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26; returns if the byte at
-; wKeyWorldFloorInfo + $3 is $ff; branches on wWorldMapByFieldSkill; ...
+; wKeyWorldFloorInfo + $3 is $ff; branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; sets
+; hSpriteOriginX; sets hSpriteOriginY; calls DrawMetaSpriteSet26 (E-0347)
 RunWorldMapState_WriteSpriteOriginXAndSpriteOriginY::
     ld a, [wMapType]
     bit 7, a
@@ -3773,7 +3811,7 @@ DrawMetaSpriteSet26::
     ret
 
 ; called from RunWorldMapState_WriteWorldMapState: returns unless bit 7 of wMapType is set; returns
-; if the byte at wKeyWorldObjects is $ff; calls RunWorldMapState_IsMapScreenAVisited
+; if the byte at wKeyWorldObjects is $ff; calls RunWorldMapState_IsMapScreenAVisited (E-0347)
 RunWorldMapState_WaitMapType_2::
     ld a, [wMapType]
     bit 7, a
@@ -3802,7 +3840,9 @@ RunWorldMapState_WaitMapType_2::
     jr .skip
 
 ; Branches on wWorldMapByFieldSkill; calls IsMapScreenAVisited; may return early; sets
-; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; ...
+; hSpriteOriginX; sets hSpriteOriginY; sets hSpriteTileOffset to $10; sets hSpriteAttrXor to 1; sets
+; hSpriteSetIndex to $26; sets hSpriteSubIndex to 0; sets hSpriteOriginXHi to 0; sets
+; hSpriteOriginYHi to 0; calls DrawMetaSprite (E-0347)
 RunWorldMapState_IsMapScreenAVisited::
     ld a, [wWorldMapByFieldSkill]
     or a
@@ -3900,7 +3940,7 @@ FillBGMap0With57::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware_DecompressToVRAM: returns if wIsCGB is 0; calls
-; WriteVRAMByteInc
+; WriteVRAMByteInc (E-0347)
 RunWorldMapState_WriteVRAMByteInc::
     ld a, [wIsCGB]
     or a
@@ -3924,7 +3964,7 @@ RunWorldMapState_WriteVRAMByteInc::
     ret
 
 ; called from RunWorldMapState_CopyScrollToHardware: returns if wIsCGB is 0; calls WriteVRAMByteInc;
-; calls WriteVRAMByte
+; calls WriteVRAMByte (E-0347)
 RunWorldMapState_WriteVRAMByteInc_2::
     ld a, [wIsCGB]
     or a

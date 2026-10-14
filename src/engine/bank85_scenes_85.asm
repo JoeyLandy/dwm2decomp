@@ -14,7 +14,7 @@ SceneKeyShop::
     dw SceneKeyShop_StepObjectTowardCoord
 
 ; step 1 of SceneKeyShop: sets wStepPtrHi to 0; sets wStepTarget to 1; sets wStepPtrLo to $60; calls
-; StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptStartRequest to $80
+; StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptStartRequest to $80 (E-0347)
 SceneKeyShop_StepObjectTowardCoord::
     ld a, $00
     ld [wStepPtrHi], a
@@ -33,6 +33,7 @@ SceneKeyShop_StepObjectTowardCoord::
     ret
 
 ; step 0 of SceneKeyShop: advances wScriptStep; may return early; sets wScriptStartRequest to $80
+; (E-0347)
 SceneKeyShop_WriteScriptStartRequest::
     ld hl, wScriptStep
     inc [hl]
@@ -80,7 +81,7 @@ SceneWatchOut::
 
 ; step 16 of SceneWatchOut: sets hTemp1 to 5; copies wArg5 to hTemp2; sets hTemp3 to 1; calls
 ; CreateMonsterRecordOfKindTemp1; shows 'N headed off to the farm.'; decrements wSpriteSlotCount;
-; decrements wScriptStep
+; decrements wScriptStep (E-0347)
 SceneWatchOut_ShowNHeadedOffTo::
     ld a, $05
     ldh [hTemp1], a
@@ -89,7 +90,7 @@ SceneWatchOut_ShowNHeadedOffTo::
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld hl, $4d52 ; 'N headed off to the farm.'
+    ld hl, MSG_KEEP_OPEN | $0d52 ; 'N headed off to the farm.'
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
     dec [hl]
@@ -99,7 +100,8 @@ SceneWatchOut_ShowNHeadedOffTo::
 
 ; step 15 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; calls
 ; RestoreScreenBufferFromBGMap1; decrements wSpriteSlotCount; calls DrawFullScreenBufferAtScroll;
-; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; ...
+; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; calls PlayMapMusic; sets
+; EVENT_SCENE_WATCH_OUT_078; sets wScriptStartRequest to $80 (E-0347)
 SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1::
     xor a
     call RunMessageBoxFar_Bank85
@@ -120,7 +122,9 @@ SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1::
 
 ; step 14 of SceneWatchOut: sets hTemp1 to 5; copies wArg5 to hTemp2; sets hTemp3 to 2; calls
 ; CreateMonsterRecordOfKindTemp1; increments wPartyCount; calls MoveIncapacitatedPartyMembersBack;
-; calls LoadRecordListNameTiles; ...
+; calls LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; decrements wSpriteSlotCount; shows 'N joined the party.';
+; advances wScriptStep (E-0347)
 SceneWatchOut_CreateMonsterRecordOfKindTemp1::
     ld a, $05
     ldh [hTemp1], a
@@ -159,7 +163,7 @@ SceneWatchOut_CreateMonsterRecordOfKindTemp1::
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ld hl, $4d51 ; 'N joined the party.'
+    ld hl, MSG_KEEP_OPEN | $0d51 ; 'N joined the party.'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -167,7 +171,8 @@ SceneWatchOut_CreateMonsterRecordOfKindTemp1::
 
 ; step 13 of SceneWatchOut: calls RestoreScreenBufferFromBGMap1; calls
 ; DrawScreenBufferAtScrollOrigin; branches on wScriptMsgSelect; sets wScriptStep to $10; calls
-; CopyRecordFields5DTo5BAnd61To5FAndMark; increments wScriptMsgSelect; decrements wPartyCount; ...
+; CopyRecordFields5DTo5BAnd61To5FAndMark; increments wScriptMsgSelect; decrements wPartyCount;
+; advances wScriptStep; continues in SceneWatchOut_CreateMonsterRecordOfKindTemp1 (E-0347)
 SceneWatchOut_RestoreScreenBufferFromBGMap1::
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -192,7 +197,7 @@ SceneWatchOut_RestoreScreenBufferFromBGMap1::
 
 ; step 7 of SceneWatchOut: calls CopyGlyphTilesToVRAM; sets wScriptSubStep to 0; sets
 ; wScriptMsgSelect to 0; calls ShowBoxFromTable; calls SetBit1OfPlayerAndObjectFlags; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
@@ -207,7 +212,9 @@ SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
 
 ; step 2 of SceneWatchOut: branches on wTextYesNoResult; calls
 ; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; calls StartMessageHL_B85; advances
-; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; ...
+; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; calls SaveScreenBufferToBGMap1;
+; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; calls StartMessageHL_B85;
+; advances wScriptStep; then 2 more steps (see the code) (E-0347)
 SceneWatchOut_ShowTheFarmHasNo::
     ld a, [wTextYesNoResult]
     or a
@@ -253,7 +260,7 @@ SceneWatchOut_ShowTheFarmHasNo::
     ret
 
 ; step 0 of SceneWatchOut: sets wNameGlyphBuf to $1c; shows 'Hm, you are quite strong…'; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneWatchOut_ShowHmYouAreQuite::
     ld a, $1c
     ld [wNameGlyphBuf], a
@@ -273,7 +280,7 @@ SceneWatchOut_ShowHmYouAreQuite::
     ld a, $f0
     ld [wNameGlyphBuf + $5], a
     ld [wTextBuf1 + $c], a
-    ld hl, $4d0f ; '*: Hm, you are quite strong…'
+    ld hl, MSG_KEEP_OPEN | $0d0f ; '*: Hm, you are quite strong…'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -306,6 +313,7 @@ SceneWaterReward::
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep
 
 ; step 18 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; sets wScriptStep to $0e
+; (E-0347)
 SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep::
     xor a
     call RunMessageBoxFar_Bank85
@@ -315,7 +323,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep::
     ret
 
 ; step 17 of SceneWatchOut: calls StepObjectCoordByDirection16Frames; may return early; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneWatchOut_StepObjectCoordByDirection16Frames::
     ld hl, wObject1 + OBJ_STATE
     call StepObjectCoordByDirection16Frames
@@ -327,7 +335,7 @@ SceneWatchOut_StepObjectCoordByDirection16Frames::
 
 ; step 16 of SceneWaterReward: sets hTemp1 to 0; copies wArg5 to hTemp2; sets hTemp3 to 1; calls
 ; CreateMonsterRecordOfKindTemp1; shows 'N headed off to the farm.'; decrements wSpriteSlotCount;
-; decrements wScriptStep
+; decrements wScriptStep (E-0347)
 SceneWaterReward_ShowNHeadedOffTo::
     ld a, $00
     ldh [hTemp1], a
@@ -336,7 +344,7 @@ SceneWaterReward_ShowNHeadedOffTo::
     ld a, $01
     ldh [hTemp3], a
     farcall CreateMonsterRecordOfKindTemp1
-    ld hl, $4d52 ; 'N headed off to the farm.'
+    ld hl, MSG_KEEP_OPEN | $0d52 ; 'N headed off to the farm.'
     call StartMessageHL_B85
     ld hl, wSpriteSlotCount
     dec [hl]
@@ -346,7 +354,8 @@ SceneWaterReward_ShowNHeadedOffTo::
 
 ; step 15 of SceneWaterReward: calls RunMessageBoxFar_Bank85; may return early; calls
 ; RestoreScreenBufferFromBGMap1; decrements wSpriteSlotCount; calls DrawFullScreenBufferAtScroll;
-; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; ...
+; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; calls PlayMapMusic; sets
+; EVENT_SCENE_WATER_REWARD; sets wScriptStartRequest to $80 (E-0347)
 SceneWaterReward_RunMessageBoxFar_Bank85::
     xor a
     call RunMessageBoxFar_Bank85
@@ -367,7 +376,9 @@ SceneWaterReward_RunMessageBoxFar_Bank85::
 
 ; step 14 of SceneWaterReward: sets hTemp1 to 0; copies wArg5 to hTemp2; sets hTemp3 to 2; calls
 ; CreateMonsterRecordOfKindTemp1; increments wPartyCount; calls MoveIncapacitatedPartyMembersBack;
-; calls LoadRecordListNameTiles; ...
+; calls LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; decrements wSpriteSlotCount; shows 'N joined the party.';
+; advances wScriptStep (E-0347)
 SceneWaterReward_CreateMonsterRecordOfKindTemp1::
     ld a, $00
     ldh [hTemp1], a
@@ -406,7 +417,7 @@ SceneWaterReward_CreateMonsterRecordOfKindTemp1::
     ld [wOBJPaletteUploadRequest], a
     ld hl, wSpriteSlotCount
     dec [hl]
-    ld hl, $4d51 ; 'N joined the party.'
+    ld hl, MSG_KEEP_OPEN | $0d51 ; 'N joined the party.'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -414,7 +425,9 @@ SceneWaterReward_CreateMonsterRecordOfKindTemp1::
 
 ; step 13 of SceneWaterReward: calls StepObjectCoordByDirection16Frames; may return early; calls
 ; RestoreScreenBufferFromBGMap1; calls DrawScreenBufferAtScrollOrigin; branches on wScriptMsgSelect;
-; sets wScriptStep to $10; calls CopyRecordFields5DTo5BAnd61To5FAndMark; ...
+; sets wScriptStep to $10; calls CopyRecordFields5DTo5BAnd61To5FAndMark; increments
+; wScriptMsgSelect; decrements wPartyCount; advances wScriptStep; continues in
+; SceneWaterReward_CreateMonsterRecordOfKindTemp1 (E-0347)
 SceneWaterReward_StepObjectCoordByDirection16Frames::
     ld hl, wObject1 + OBJ_STATE
     call StepObjectCoordByDirection16Frames
@@ -489,7 +502,7 @@ StepObjectCoordByDirection16Frames::
     ret
 
 ; step 10 of SceneWatchOut: branches on wScriptMsgSelect; advances wScriptStep; calls
-; ScriptStepMoveFollowersToLeader
+; ScriptStepMoveFollowersToLeader (E-0347)
 SceneWatchOut_ReadScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     cp $03
@@ -504,7 +517,7 @@ SceneWatchOut_ReadScriptMsgSelect::
 
 ; step 9 of SceneWatchOut: calls RestoreScreenBufferFromBGMap1; calls
 ; DrawScreenBufferAtScrollOrigin; calls StartMessageHL_B85; calls ClearBit1OfPlayerAndObjectFlags;
-; sets wScriptStep to 1
+; sets wScriptStep to 1 (E-0347)
 SceneWatchOut_ShowLetMeJoinYour::
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -515,14 +528,14 @@ SceneWatchOut_ShowLetMeJoinYour::
     ld [wScriptStep], a
     ret
 
-; step 8 of SceneWatchOut: calls SceneWatchOut_ReadJoypadPressedAndFrameCounterLo
+; step 8 of SceneWatchOut: calls SceneWatchOut_ReadJoypadPressedAndFrameCounterLo (E-0347)
 SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     call SceneWatchOut_ReadJoypadPressedAndFrameCounterLo
     ret
 
 ; step 7 of SceneWaterReward: calls CopyGlyphTilesToVRAM; sets wScriptSubStep to 0; sets
 ; wScriptMsgSelect to 0; calls ShowBoxFromTable; calls SetBit1OfPlayerAndObjectFlags; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
@@ -535,9 +548,9 @@ SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
     inc [hl]
     ret
 
-; step 5 of SceneWatchOut: shows 'Pick the monster to go to'; advances wScriptStep
+; step 5 of SceneWatchOut: shows 'Pick the monster to go to'; advances wScriptStep (E-0347)
 SceneWatchOut_Msg_PickTheMonsterTo::
-    ld hl, $4d50 ; 'Pick the monster to go to'
+    ld hl, MSG_KEEP_OPEN | $0d50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -545,7 +558,9 @@ SceneWatchOut_Msg_PickTheMonsterTo::
 
 ; step 2 of SceneWaterReward: branches on wTextYesNoResult; calls
 ; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; calls StartMessageHL_B85; advances
-; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; ...
+; wScriptStep; branches on wPartyCount; calls StartMessageHL_B85; calls SaveScreenBufferToBGMap1;
+; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; calls StartMessageHL_B85;
+; advances wScriptStep; then 2 more steps (see the code) (E-0347)
 SceneWaterReward_ShowWaitTheFarmIs::
     ld a, [wTextYesNoResult]
     or a
@@ -591,7 +606,7 @@ SceneWaterReward_ShowWaitTheFarmIs::
     ret
 
 ; step 0 of SceneWaterReward: sets wNameGlyphBuf to $0b; shows 'Cooh, I heard from others'; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneWaterReward_ShowCoohIHeardFrom::
     ld a, $0b
     ld [wNameGlyphBuf], a
@@ -613,7 +628,7 @@ SceneWaterReward_ShowCoohIHeardFrom::
     ld a, $f0
     ld [wNameGlyphBuf + $6], a
     ld [wTextBuf1 + $c], a
-    ld hl, $41b7 ; '*: Cooh, I heard from others'
+    ld hl, MSG_KEEP_OPEN | $01b7 ; '*: Cooh, I heard from others'
     call StartMessageHL_B85
     ld hl, wScriptStep
     inc [hl]
@@ -622,7 +637,8 @@ SceneWaterReward_ShowCoohIHeardFrom::
 ; called from SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo: branches on
 ; wJoypadPressed; advances wScriptStep; branches on wJoypadPressed; calls
 ; SceneWatchOut_WriteScriptMsgSelect; calls WriteVRAMByte; plays sound $69; advances wScriptStep;
-; ...
+; calls SceneWatchOut_WriteScriptMsgSelect; calls WriteVRAMByte; decrements wScriptMsgSelect; plays
+; sound $69; calls SceneWatchOut_WriteScriptMsgSelect; then 6 more steps (see the code) (E-0347)
 SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -681,7 +697,7 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     call WriteVRAMByte
     ret
 
-; Copies wScriptMsgSelect & $03 to wScriptMsgSelect
+; Copies wScriptMsgSelect & $03 to wScriptMsgSelect (E-0347)
 SceneWatchOut_WriteScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     and $03
@@ -877,7 +893,8 @@ SceneWarubouLeaves::
 
 ; step 3 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 3; sets wStepPtrLo to $e0;
 ; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 3; sets wStepPtrLo to $e0;
-; ...
+; calls StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptStartRequest to $80
+; (E-0347)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
@@ -902,7 +919,8 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
 
 ; step 2 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 3; sets wStepPtrLo to $e0;
 ; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $20;
-; ...
+; calls StepObjectTowardCoord; continues in
+; SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived (E-0347)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2::
     ld a, $01
     ld [wStepPtrHi], a
@@ -922,7 +940,8 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2::
 
 ; step 1 of SceneWarubouLeaves: sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $30;
 ; calls StepObjectTowardCoord; sets wStepPtrHi to 1; sets wStepTarget to 2; sets wStepPtrLo to $20;
-; ...
+; calls StepObjectTowardCoord; continues in
+; SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived (E-0347)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3::
     ld a, $02
     ld [wStepPtrHi], a
@@ -942,7 +961,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3::
 
 ; step 0 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 2; sets wStepPtrLo to $50;
 ; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 3; sets wStepPtrLo to $40;
-; ...
+; calls StepObjectTowardCoord (E-0347)
 SceneWarubouLeaves_StepObjectTowardCoord::
     ld a, $01
     ld [wStepPtrHi], a
@@ -959,7 +978,7 @@ SceneWarubouLeaves_StepObjectTowardCoord::
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-; Returns if wStepArrived is 0; advances wScriptStep
+; Returns if wStepArrived is 0; advances wScriptStep (E-0347)
 SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived::
     ld a, [wStepArrived]
     or a
@@ -1006,14 +1025,16 @@ SaveScreen::
     dw SaveScreen_BufferToBGMap1
     dw SaveScreen_SetScriptStartRequestTo80
 
-; step 1 of SaveScreen: sets wScriptStartRequest to $80
+; step 1 of SaveScreen: sets wScriptStartRequest to $80 (E-0347)
 SaveScreen_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
 ; step 0 of SaveScreen: calls SaveScreenBufferToBGMap1; sets wFieldReturnPhase to 1; sets wGameMode
-; to 2; sets wModeState to $0c; sets wWorldMapState to 0; sets wTemp0 to 0; sets wTemp1 to 0; ...
+; to 2; sets wModeState to $0c; sets wWorldMapState to 0; sets wTemp0 to 0; sets wTemp1 to 0; sets
+; wJoypadHeld to 0; sets wJoypadPressed to 0; sets wScriptRunning to 0; advances wScriptStep
+; (E-0347)
 SaveScreen_BufferToBGMap1::
     farcall SaveScreenBufferToBGMap1
     ld a, $01
@@ -1045,10 +1066,10 @@ SceneThisWay::
     ldh a, [hMapScreenY]
     cp $02
     ret z
-    ld de, $4783
+    ld de, SceneThisWay_Data1
     or a
     jr z, .read_map_screen_x
-    ld de, SceneThisWay_Data
+    ld de, SceneThisWay_Data2
 
 .read_map_screen_x:
     ldh a, [hMapScreenX]
@@ -1071,10 +1092,12 @@ SceneThisWay::
     add_a_to_hl
     inc de
     jr .skip2
+
+; data read by SceneThisWay (12 bytes) (E-0347)
+SceneThisWay_Data1::
     db $00, $00, $01, $ff, $00, $ff, $ff, $ff, $03, $01, $00, $ff
 
-; data read by SceneThisWay (12 bytes)
-SceneThisWay_Data::
+SceneThisWay_Data2::
     db $01, $03, $02, $ff, $01, $ff, $ff, $ff, $02, $02, $01, $ff
 
 ; implements script command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the
@@ -1090,14 +1113,15 @@ SceneChestServant::
     dw SceneChestServant_ScriptStartFadeAndAdvanceStep
     dw SceneChestServant_SetScriptStartRequestTo80
 
-; step 5 of SceneChestServant: sets wScriptStartRequest to $80
+; step 5 of SceneChestServant: sets wScriptStartRequest to $80 (E-0347)
 SceneChestServant_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
 ; step 4 of SceneChestServant: sets hPlayerX to $e0; sets hFieldDrawFlags to 0; sets hMapId to $48;
-; sets hMapScreenX to 8; sets hMapScreenY to 7; sets wWarpDestX to $40; sets wWarpDestY to $40; ...
+; sets hMapScreenX to 8; sets hMapScreenY to 7; sets wWarpDestX to $40; sets wWarpDestY to $40; sets
+; wFieldTransitionKind to 1; calls ScriptStartFadeAndAdvanceStep (E-0347)
 SceneChestServant_ScriptStartFadeAndAdvanceStep::
     ld a, $e0
     ldh [hPlayerX], a
@@ -1122,7 +1146,7 @@ SceneChestServant_ScriptStartFadeAndAdvanceStep::
     ret
 
 ; step 1 of SceneChestServant: sets wStepPtrLo; calls StepPlayerUpTowardStepPtrLo; returns if
-; wStepArrived is 0; sets hFieldDrawFlags; increments wScriptParam0; advances wScriptStep
+; wStepArrived is 0; sets hFieldDrawFlags; increments wScriptParam0; advances wScriptStep (E-0347)
 SceneChestServant_StepPlayerUpTowardStepPtrLo::
     ld a, [wScriptParam0]
     swap a
@@ -1145,7 +1169,7 @@ SceneChestServant_StepPlayerUpTowardStepPtrLo::
     ret
 
 ; step 0 of SceneChestServant: plays sound $65; sets hFieldDrawFlags to 1; sets wScriptParam0 to 0;
-; advances wScriptStep
+; advances wScriptStep (E-0347)
 SceneChestServant_QueueSoundEffectAndStep::
     ld a, $65
     call QueueSoundEffect
@@ -1253,7 +1277,7 @@ SetFlagRedraw::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SetFlagRedraw (4 bytes)
+; data read by SetFlagRedraw (4 bytes) (E-0347)
 SetFlagRedraw_Data::
     db $20, $40, $50, $80
 
@@ -1270,7 +1294,7 @@ SceneKamehaKeyBattle2::
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
 ; step 3 of SceneKamehaKeyBattle2: branches on wScriptParam0; shows '0 received the Magic Key.';
-; advances wScriptStep
+; advances wScriptStep (E-0347)
 SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
     ld hl, $0b9d
     ld a, [wScriptParam0]
@@ -1286,7 +1310,8 @@ SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
 
 ; step 1 of SceneKamehaKeyBattle2: branches on wBattleScene; sets EVENT_SCENE_KAMEHA_KEY_BATTLE2;
 ; sets hTemp0 to 9; calls KeyListHasKindTemp0; branches on hTemp0; calls CountKeysOrFull; branches
-; on hTemp0; ...
+; on hTemp0; shows 'Kameha: That was a good warmup!'; sets wScriptStep to 4; sets hTemp1 to 9;
+; checks EVENT_KEY_BOSS_BEATEN_2_205; sets hTemp1 to $49; then 10 more steps (see the code) (E-0347)
 SceneKamehaKeyBattle2_SetFlagBit::
     ld a, [wBattleScene]
     or a
@@ -1351,7 +1376,7 @@ SceneKamehaKeyBattle2_SetFlagBit::
     ret
 
 ; step 0 of SceneKamehaKeyBattle2: sets hTemp0 to $30; calls StartScriptedEncounterTemp0; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneKamehaKeyBattle2_StartScriptedEncounterTemp0AndStep::
     ld a, $30
     ldh [hTemp0], a
@@ -1373,7 +1398,7 @@ SceneKamehaKeyBattle::
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
 ; step 3 of SceneKamehaKeyBattle: branches on wScriptParam0; shows '0 received the Magic Key.';
-; advances wScriptStep
+; advances wScriptStep (E-0347)
 SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
     ld hl, $0b93
     ld a, [wScriptParam0]
@@ -1389,7 +1414,8 @@ SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
 
 ; step 1 of SceneKamehaKeyBattle: branches on wBattleScene; sets EVENT_SCENE_KAMEHA_KEY_BATTLE; sets
 ; hTemp0 to 7; calls KeyListHasKindTemp0; branches on hTemp0; calls CountKeysOrFull; branches on
-; hTemp0; ...
+; hTemp0; shows 'Kameha: Well, uh, luck and status'; sets wScriptStep to 4; sets hTemp1 to 7; checks
+; EVENT_KEY_BOSS_BEATEN_203; sets hTemp1 to $47; then 10 more steps (see the code) (E-0347)
 SceneKamehaKeyBattle_SetFlagBit::
     ld a, [wBattleScene]
     or a
@@ -1454,7 +1480,7 @@ SceneKamehaKeyBattle_SetFlagBit::
     ret
 
 ; step 0 of SceneKamehaKeyBattle: sets hTemp0 to $2f; calls StartScriptedEncounterTemp0; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneKamehaKeyBattle_StartScriptedEncounterTemp0AndStep::
     ld a, $2f
     ldh [hTemp0], a
@@ -1474,7 +1500,7 @@ SceneArenaChallenge::
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
 ; step 1 of SceneArenaChallenge: advances wScriptStep; branches on wBattleScene; shows 'Aww… I lose.
-; You are'; shows 'Yay! I won! Am I'
+; You are'; shows 'Yay! I won! Am I' (E-0347)
 SceneArenaChallenge_ShowAwwILoseYou::
     ld hl, wScriptStep
     inc [hl]
@@ -1491,7 +1517,7 @@ SceneArenaChallenge_ShowAwwILoseYou::
     ret
 
 ; step 0 of SceneArenaChallenge: sets hTemp0 to $15; calls StartScriptedEncounterTemp0; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneArenaChallenge_StartScriptedEncounterTemp0AndStep::
     ld a, $15
     ldh [hTemp0], a
@@ -1512,7 +1538,7 @@ SceneTerryBattle::
 
 ; step 1 of SceneTerryBattle: advances wScriptStep; branches on wBattleScene; shows 'Terry: Well,
 ; this proves that I'; sets wLinkSetting to 1; sets EVENT_SCENE_TERRY_BATTLE_038; shows 'Terry:
-; Humph… Don't take it hard.'
+; Humph… Don't take it hard.' (E-0347)
 SceneTerryBattle_ShowTerryWellThisProves::
     ld hl, wScriptStep
     inc [hl]
@@ -1533,7 +1559,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
     ret
 
 ; step 0 of SceneTerryBattle: sets EVENT_SCENE_TERRY_BATTLE; sets hTemp0 to $14; calls
-; StartScriptedEncounterTemp0; advances wScriptStep
+; StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
 SceneTerryBattle_SetFlagBitAndStep::
     ld de, EVENT_SCENE_TERRY_BATTLE
     call SetFlagBit
@@ -1656,7 +1682,8 @@ SceneLimboMonster2::
 
 ; step 15 of SceneLimboMonster2: sets hFieldDrawFlags to 0; sets wStepTarget to 1; sets wStepPtrHi
 ; to 1; sets wStepPtrLo to $c0; calls StepObjectTowardCoord; returns if wStepArrived is 0; sets
-; hTemp1 to 3; ...
+; hTemp1 to 3; copies wArg5 to hTemp2; sets hTemp3 to 1; calls CreateMonsterRecordOfKindTemp1; sets
+; EVENT_SCENE_LIMBO_MONSTER2; sets wScriptStartRequest to $80 (E-0347)
 SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags::
     xor a
     ldh [hFieldDrawFlags], a
@@ -1685,7 +1712,9 @@ SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags::
 
 ; step 14 of SceneLimboMonster2: sets wStepPtrHi to 1; branches on wScriptParam0; sets wStepTarget
 ; to 1; sets wStepPtrLo to $70; calls StepObjectTowardCoord; returns if wStepArrived is 0;
-; increments wScriptParam0; ...
+; increments wScriptParam0; sets wStepTarget to 0; sets wStepPtrLo to $40; calls
+; StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptParam0 to 0; then 1 more step
+; (see the code) (E-0347)
 SceneLimboMonster2_StepObjectTowardCoord::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1720,6 +1749,7 @@ SceneLimboMonster2_StepObjectTowardCoord::
     ret
 
 ; step 12 of SceneLimboMonster2: shows 'Warubou: Wa-hey, my kid has a'; advances wScriptStep
+; (E-0347)
 SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
     ld hl, $0ba7 ; 'Warubou: Wa-hey, my kid has a'
     call StartMessageHL_B85
@@ -1727,7 +1757,7 @@ SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
     inc [hl]
     ret
 
-; step 9 of SceneLimboMonster2: calls ScriptStepAdjust32TimesThenMessage_Bank85
+; step 9 of SceneLimboMonster2: calls ScriptStepAdjust32TimesThenMessage_Bank85 (E-0347)
 SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
     ld de, wObject2 + OBJ_Y
     ld hl, $0ba6
@@ -1737,7 +1767,7 @@ SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
 ; step 3 of SceneLimboMonster2: branches on wTextYesNoResult; calls StartMessageHL_B85; copies the
 ; byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X; copies the byte at
 ; SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances wScriptStep; calls
-; StartMessageHL_B85; sets wScriptStep to 1
+; StartMessageHL_B85; sets wScriptStep to 1 (E-0347)
 SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
@@ -1763,13 +1793,13 @@ SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ld [wScriptStep], a
     ret
 
-; data read by SceneLimboMonster2 (8 bytes)
+; data read by SceneLimboMonster2 (8 bytes) (E-0347)
 SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
 ; step 0 of SceneLimboMonster2: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
 ; shows 'Warubou: Wa-hey! I was thinking… GreatLog'; advances wScriptStep; shows 'Warubou: Wa-hey! I
-; was thinking… GreatLog'; sets wScriptStep to 2
+; was thinking… GreatLog'; sets wScriptStep to 2 (E-0347)
 SceneLimboMonster2_ShowWarubouWaheyIWas::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -1782,7 +1812,7 @@ SceneLimboMonster2_ShowWarubouWaheyIWas::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $4ba4 ; 'Warubou: Wa-hey! I was thinking… GreatLog'
+    ld hl, MSG_KEEP_OPEN | $0ba4 ; 'Warubou: Wa-hey! I was thinking… GreatLog'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -1812,7 +1842,9 @@ SceneLimboMonster::
 
 ; step 12 of SceneLimboMonster: branches on wScriptParam0; plays sound $65; sets wScriptParam0;
 ; copies E to wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; sets
-; wScriptParam0; ...
+; wScriptParam0; copies wObject2 + OBJ_STATE & $03 to wObject2 + OBJ_STATE; decrements wObject2 +
+; OBJ_X; increments wScriptParam0; returns unless wScriptParam0 is $40; shows 'Warubou: Wa-hey, my
+; kid has a'; then 8 more steps (see the code) (E-0347)
 SceneLimboMonster_AddStepDeltaToPointedByte::
     ld a, [wScriptParam0]
     or a
@@ -1870,7 +1902,7 @@ SceneLimboMonster_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 9 of SceneLimboMonster: calls ScriptStepAdjust32TimesThenMessage_Bank85
+; step 9 of SceneLimboMonster: calls ScriptStepAdjust32TimesThenMessage_Bank85 (E-0347)
 SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85::
     ld de, wObject2 + OBJ_Y
     ld hl, $0b2b
@@ -1879,7 +1911,9 @@ SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85::
 
 ; step 8 of SceneLimboMonster2: sets hFieldDrawFlags to $0e; branches on wScriptParam0; plays sound
 ; $65; sets wScriptParam0; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
-; AddStepDeltaToPointedByte; ...
+; AddStepDeltaToPointedByte; sets wScriptParam0; copies wObject2 + OBJ_STATE & $03 to wObject2 +
+; OBJ_STATE; increments wObject2 + OBJ_X; increments wScriptParam0; returns unless wScriptParam0 is
+; $40; then 4 more steps (see the code) (E-0347)
 SceneLimboMonster2_AddStepDeltaToPointedByte::
     ld a, $0e
     ldh [hFieldDrawFlags], a
@@ -1930,7 +1964,7 @@ SceneLimboMonster2_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 5 of SceneLimboMonster2: calls ScriptStepMoveFollowersToLeader
+; step 5 of SceneLimboMonster2: calls ScriptStepMoveFollowersToLeader (E-0347)
 SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
     farcall ScriptStepMoveFollowersToLeader
     ret
@@ -1938,7 +1972,7 @@ SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
 ; step 3 of SceneLimboMonster: branches on wTextYesNoResult; calls StartMessageHL_B85; copies the
 ; byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X; copies the byte at
 ; SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances wScriptStep; calls
-; StartMessageHL_B85; sets wScriptStep to 1
+; StartMessageHL_B85; sets wScriptStep to 1 (E-0347)
 SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
@@ -1964,13 +1998,13 @@ SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ld [wScriptStep], a
     ret
 
-; data read by SceneLimboMonster (8 bytes)
+; data read by SceneLimboMonster (8 bytes) (E-0347)
 SceneLimboMonster_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
 ; step 0 of SceneLimboMonster: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows
 ; 'Warubou: Wa-hey, I have a favor'; advances wScriptStep; shows 'Warubou: Wa-hey, I have a favor';
-; sets wScriptStep to 2
+; sets wScriptStep to 2 (E-0347)
 SceneLimboMonster_ShowWarubouWaheyIHave::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -1983,7 +2017,7 @@ SceneLimboMonster_ShowWarubouWaheyIHave::
     ret
 
 .call_start_message_hl_b85:
-    ld hl, $4b29 ; 'Warubou: Wa-hey, I have a favor'
+    ld hl, MSG_KEEP_OPEN | $0b29 ; 'Warubou: Wa-hey, I have a favor'
     call StartMessageHL_B85
     ld a, $02
     ld [wScriptStep], a
@@ -2016,7 +2050,7 @@ ScenePoorChurch::
     dw ScenePoorChurch_NextRandomSeed
 
 ; step 3 of ScenePoorChurch: calls NextRandomSeed; increments wScriptParam0; returns unless
-; wScriptParam0 is $3c; sets wScriptStartRequest to $80
+; wScriptParam0 is $3c; sets wScriptStartRequest to $80 (E-0347)
 ScenePoorChurch_NextRandomSeed::
     ld a, [wScriptParam0]
     and $07
@@ -2048,7 +2082,8 @@ ScenePoorChurch_NextRandomSeed::
 
 ; step 2 of ScenePoorChurch: increments wScriptParam0; returns unless wScriptParam0 is $01; sets
 ; wScriptParam0 to 0; branches on wScriptParam1; increments wScriptParam1; decrements wScriptStep;
-; advances wScriptStep; ...
+; advances wScriptStep; checks EVENT_SCENE_TREASURE_THEFT; may return early; sets
+; wScriptStartRequest to $80 (E-0347)
 ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
     ld a, [wScriptParam0]
     inc a
@@ -2081,7 +2116,7 @@ ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
 
 ; step 1 of ScenePoorChurch: calls DecompressToVRAM; branches on wIsCGB; sets rSVBK to 2; calls
 ; DecompressToVRAM; sets rSVBK to 0; calls DrawFullScreenBufferAtScroll; increments wScriptParam0;
-; ...
+; returns unless wScriptParam0 is $04; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 ScenePoorChurch_WriteSVBKAndScriptParam0::
     ld a, [wScriptParam1]
     add a
@@ -2165,7 +2200,8 @@ ScreenAnimationTable::
 
 ; step 0 of ScenePoorChurch: checks EVENT_SCENE_TREASURE_THEFT; sets wStepPtrHi to 1; sets
 ; wStepTarget to 2; sets wStepPtrLo to $10; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets
-; wStepTarget to 2; ...
+; wStepTarget to 2; sets wStepPtrLo to $40; calls StepObjectTowardCoord; sets wStepPtrHi to 3; sets
+; wStepTarget to 2; sets wStepPtrLo to $20; then 8 more steps (see the code) (E-0347)
 ScenePoorChurch_TestFlagBit::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
@@ -2227,20 +2263,20 @@ SceneGiveBackCyal::
     dw SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
-; step 10 of SceneGiveBackCyal: sets wScriptStartRequest to $80
+; step 10 of SceneGiveBackCyal: sets wScriptStartRequest to $80 (E-0347)
 SceneGiveBackCyal_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 9 of SceneGiveBackCyal: calls SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
+; step 9 of SceneGiveBackCyal: calls SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc (E-0347)
 SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld b, $1e
     call SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     ret
 
 ; step 8 of SceneGiveBackCyal: increments wObject2 + OBJ_X; returns unless wObject2 + OBJ_X is $60;
-; calls ClearBit1AtHL_Bank85; advances wScriptStep
+; calls ClearBit1AtHL_Bank85; advances wScriptStep (E-0347)
 SceneGiveBackCyal_ClearBit1AtHL_Bank85::
     ld a, [wObject2 + OBJ_X]
     inc a
@@ -2258,7 +2294,7 @@ SceneGiveBackCyal_ClearBit1AtHL_Bank85::
 
 ; step 7 of SceneGiveBackCyal: increments wScriptParam0; returns if wScriptParam0 is below $04;
 ; plays sound $66; may return early; calls ClearBit2AtHL_Bank85; calls SetBit1AtHL_Bank85; sets
-; wObject2 + OBJ_STATE to 3; ...
+; wObject2 + OBJ_STATE to 3; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneGiveBackCyal_ClearBit2AtHL_Bank85::
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2289,7 +2325,7 @@ SceneGiveBackCyal_ClearBit2AtHL_Bank85::
     inc [hl]
     ret
 
-; step 5 of SceneGiveBackCyal: shows 'Humph… How boring…'; advances wScriptStep
+; step 5 of SceneGiveBackCyal: shows 'Humph… How boring…'; advances wScriptStep (E-0347)
 SceneGiveBackCyal_ShowHumphHowBoring::
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2301,7 +2337,8 @@ SceneGiveBackCyal_ShowHumphHowBoring::
 
 ; step 0 of SceneGiveBackCyal: calls SetBit2AtHL_B0F_Bank85; branches on wScriptParam0; increments
 ; wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $48; plays sound $63; increments
-; wScriptParam0; decrements wObject2 + OBJ_Y; ...
+; wScriptParam0; decrements wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $40; calls
+; RedrawColumnsBesideScreen; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneGiveBackCyal_SetBit2AtHL_B0F_Bank85::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F_Bank85
@@ -2335,7 +2372,8 @@ SceneGiveBackCyal_SetBit2AtHL_B0F_Bank85::
 
 ; called from SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc: branches on
 ; wFrameCounterLo & $03; sets hScrollX; sets hScrollXHi; sets hScrollX; sets hScrollXHi; increments
-; wScriptParam0; returns unless wScriptParam0 is b; ...
+; wScriptParam0; returns unless wScriptParam0 is b; sets hScrollX to 0; sets hScrollXHi to 0; sets
+; wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld a, [wFrameCounterLo]
     and $03
@@ -2391,7 +2429,7 @@ SceneYouDidIt::
 
 ; step 0 of SceneYouDidIt: advances wScriptStep; returns if the byte at
 ; SceneYouDidIt_StartMessageHL_B85_Data is $ff; branches on the byte at
-; SceneYouDidIt_StartMessageHL_B85_Data; calls StartMessageHL_B85
+; SceneYouDidIt_StartMessageHL_B85_Data; calls StartMessageHL_B85 (E-0347)
 SceneYouDidIt_StartMessageHL_B85::
     ld hl, wScriptStep
     inc [hl]
@@ -2418,7 +2456,7 @@ SceneYouDidIt_StartMessageHL_B85::
     call StartMessageHL_B85
     ret
 
-; data read by SceneYouDidIt (25 bytes)
+; data read by SceneYouDidIt (25 bytes) (E-0347)
 SceneYouDidIt_StartMessageHL_B85_Data::
     db $ca, $4a, $cb, $4b, $cc, $4c, $cd, $4d, $d3, $4e, $d4, $4f, $d5, $50, $d6, $51
     db $dc, $52, $dd, $53, $de, $54, $df, $55, $ff
@@ -2443,7 +2481,7 @@ GrowthLimitInfo::
     dw GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc
 
 ; step 2 of GrowthLimitInfo: sets wScriptStep to 0; increments wScriptParam1; returns unless
-; wPartyCount is c; sets wScriptStartRequest to $80
+; wPartyCount is c; sets wScriptStartRequest to $80 (E-0347)
 GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
     xor a
     ld [wScriptStep], a
@@ -2460,7 +2498,7 @@ GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
 
 ; step 0 of GrowthLimitInfo: advances wScriptStep; sets rRAMG to $0a; calls
 ; CopyRecordNameToNameGlyphBuf; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on hTemp0; calls
-; StartMessageHL_B85; ...
+; StartMessageHL_B85; calls HLToDecimalDigits; calls StartMessageHL_B85 (E-0347)
 GrowthLimitInfo_CopyRecordNameToNameGlyphBuf::
     ld hl, wScriptStep
     inc [hl]
@@ -2542,7 +2580,7 @@ SceneBarrel::
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
 ; step 8 of SceneBarrel: sets wObject1 + OBJ_Y to $20; shows '…Roboster stopped moving…'; sets
-; wScriptParam0 to 0; advances wScriptStep
+; wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneBarrel_ShowRobosterStoppedMoving::
     ld a, $e0
     ld [wSpriteSlots + $c], a
@@ -2558,7 +2596,7 @@ SceneBarrel_ShowRobosterStoppedMoving::
 
 ; step 7 of SceneBarrel: branches on wScriptParam0; sets wObject1 + OBJ_Y to $e0; sets wObject1 +
 ; OBJ_Y to $20; increments wScriptParam0; returns unless wScriptParam0 is $78; sets wObject1 + OBJ_Y
-; to $20; sets wScriptParam0 to 0; ...
+; to $20; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneBarrel_WriteSpriteSlotsAndObject1Etc::
     ld a, [wScriptParam0]
     cp $1e
@@ -2609,7 +2647,7 @@ SceneBarrel_WriteSpriteSlotsAndObject1Etc::
     ret
 
 ; step 5 of SceneBarrel: increments wScriptParam0; calls SceneBarrel_NextTableByte; returns unless
-; wScriptParam0 is $78; sets wScriptParam0 to 0; advances wScriptStep
+; wScriptParam0 is $78; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneBarrel_WriteScriptParam0::
     ld a, [wScriptParam0]
     inc a
@@ -2629,7 +2667,7 @@ SceneBarrel_WriteScriptParam0::
     ret
 
 ; called from SceneBarrel_WriteScriptParam0: calls NextTableByte; may continue in
-; SceneBarrel_NextTableByte; sets wObject1 + OBJ_X
+; SceneBarrel_NextTableByte; sets wObject1 + OBJ_X (E-0347)
 SceneBarrel_NextTableByte::
     call NextTableByte
     ld a, [wRandomHi]
@@ -2645,7 +2683,7 @@ SceneBarrel_NextTableByte::
 
 ; step 4 of SceneBarrel: branches on wScriptParam1 & $03; sets $015f; checks
 ; EVENT_KIRAL_PLEASE_GO_STOP_HIM; sets wScriptStartRequest to $80; sets EVENT_SCENE_BARREL; shows
-; 'PROFE… SOR… ORDER… MUST… OBEY…'; sets wScriptParam0 to 0; ...
+; 'PROFE… SOR… ORDER… MUST… OBEY…'; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneBarrel_SetFlagBit::
     ld a, [wScriptParam1]
     and $03
@@ -2680,7 +2718,7 @@ SceneBarrel_SetFlagBit::
     ret
 
 ; step 3 of SceneBarrel: copies the byte at SceneBarrel_StartScriptedEncounterTemp0_Data to hTemp0;
-; calls StartScriptedEncounterTemp0; advances wScriptStep
+; calls StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
 SceneBarrel_StartScriptedEncounterTemp0::
     ld a, [wScriptParam1]
     and $03
@@ -2698,11 +2736,11 @@ SceneBarrel_StartScriptedEncounterTemp0::
     inc [hl]
     ret
 
-; data read by SceneBarrel (4 bytes)
+; data read by SceneBarrel (4 bytes) (E-0347)
 SceneBarrel_StartScriptedEncounterTemp0_Data::
     db $0d, $0e, $0f, $10
 
-; step 1 of SceneBarrel: calls StartMessageHL_B85; advances wScriptStep
+; step 1 of SceneBarrel: calls StartMessageHL_B85; advances wScriptStep (E-0347)
 SceneBarrel_StartMessageHL_B85::
     ld a, [wScriptParam1]
     and $03
@@ -2724,13 +2762,14 @@ SceneBarrel_StartMessageHL_B85::
     inc [hl]
     ret
 
-; data read by SceneBarrel (8 bytes)
+; data read by SceneBarrel (8 bytes) (E-0347)
 SceneBarrel_StartMessageHL_B85_Data::
     db $6c, $07, $6f, $07, $72, $07, $75, $07
 
 ; step 0 of SceneBarrel: advances wScriptStep; sets wScriptParam1 to 0; checks
 ; EVENT_KIRAL_FETCH_ME_MY; may return early; increments wScriptParam1; checks
-; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY; may return early; ...
+; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY; may return early; increments wScriptParam1; checks
+; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161; may return early; increments wScriptParam1 (E-0347)
 SceneBarrel_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
@@ -2777,7 +2816,7 @@ SceneLimbo::
     dw SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest
 
 ; step 15 of SceneLimbo: branches on the byte at wInventory; sets wInventory to $36; sets wInventory
-; to $37; sets wInventory to $38; sets wInventorySortFlags; sets wScriptStartRequest to $80
+; to $37; sets wInventory to $38; sets wInventorySortFlags; sets wScriptStartRequest to $80 (E-0347)
 SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
     ld hl, wInventory
 
@@ -2805,7 +2844,8 @@ SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
 
 ; step 3 of SceneLimbo: increments wObject5 + SCRIPTOBJ_Y; increments wObject5 + SCRIPTOBJ_X;
 ; increments wObject5 + SCRIPTOBJ_Y; decrements wObject5 + SCRIPTOBJ_X; increments wObject5 +
-; SCRIPTOBJ_Y; calls ScriptApplyStepDeltaAtDE_Bank85; may return early; ...
+; SCRIPTOBJ_Y; calls ScriptApplyStepDeltaAtDE_Bank85; may return early; sets wObject5 to 0; advances
+; wScriptStep (E-0347)
 SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2::
     ld a, [wSpriteSlots + $7]
     or a
@@ -2845,6 +2885,7 @@ SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2::
 
 ; step 2 of SceneLimbo: increments wScriptParam0; returns unless wScriptParam0 is $3c; calls
 ; StartMessageHL_B85; sets wScriptParam0 to 0; increments wScriptParam1; advances wScriptStep
+; (E-0347)
 SceneLimbo_StartMessageHL_B85::
     ld a, [wScriptParam0]
     inc a
@@ -2864,7 +2905,7 @@ SceneLimbo_StartMessageHL_B85::
     ret
 
 ; step 1 of SceneLimbo: sets wObject5 to $80; decrements wObject5 + SCRIPTOBJ_Y; calls
-; ScriptApplyStepDeltaAtDE_Bank85; may return early; advances wScriptStep
+; ScriptApplyStepDeltaAtDE_Bank85; may return early; advances wScriptStep (E-0347)
 SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85::
     ld a, $80
     ld [wObject5], a
@@ -2879,7 +2920,7 @@ SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85::
 
 ; step 0 of SceneLimbo: copies the byte at SceneLimbo_RunFieldCommandTemp0_Data to hTemp0; calls
 ; RunFieldCommandTemp0; sets wObject5 + SCRIPTOBJ_X to $40; sets wObject5 + SCRIPTOBJ_Y to $30; sets
-; wObject5 to 0; advances wScriptStep
+; wObject5 to 0; advances wScriptStep (E-0347)
 SceneLimbo_RunFieldCommandTemp0::
     ld a, [wScriptParam1]
     ld hl, SceneLimbo_RunFieldCommandTemp0_Data
@@ -2897,7 +2938,7 @@ SceneLimbo_RunFieldCommandTemp0::
     inc [hl]
     ret
 
-; data read by SceneLimbo (3 bytes)
+; data read by SceneLimbo (3 bytes) (E-0347)
 SceneLimbo_RunFieldCommandTemp0_Data::
     db $03, $08, $0a
 
@@ -2915,7 +2956,7 @@ SceneFoundMeBattle::
     dw SceneFoundMeBattle_SetFlagBit
 
 ; step 5 of SceneFoundMeBattle: sets wSpriteSlotCount to 0; branches on hMapId; branches on
-; hMapScreenX; sets $00b9; sets wScriptStartRequest to $80
+; hMapScreenX; sets $00b9; sets wScriptStartRequest to $80 (E-0347)
 SceneFoundMeBattle_SetFlagBit::
     xor a
     ld [wSpriteSlotCount], a
@@ -2943,7 +2984,8 @@ SceneFoundMeBattle_SetFlagBit::
 
 ; step 4 of SceneFoundMeBattle: sets wStepPtrLo to $e0; sets wStepPtrHi to 0; branches on hMapId;
 ; sets wStepTarget to 2; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances
-; wScriptStep; ...
+; wScriptStep; sets wStepTarget to 3; calls StepObjectTowardCoord; returns if wStepArrived is 0;
+; advances wScriptStep (E-0347)
 SceneFoundMeBattle_StepObjectTowardCoord::
     ld a, $e0
     ld [wStepPtrLo], a
@@ -2979,6 +3021,7 @@ SceneFoundMeBattle_StepObjectTowardCoord::
 
 ; step 3 of SceneFoundMeBattle: sets hTemp1 to $20; branches on hMapId; sets hTemp1 to $40; sets
 ; hTemp0 to 0; calls ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wScriptStep to 5
+; (E-0347)
 SceneFoundMeBattle_ScriptStepBlinkObjectTemp0::
     ld a, $20
     ldh [hTemp1], a
@@ -3000,7 +3043,7 @@ SceneFoundMeBattle_ScriptStepBlinkObjectTemp0::
     ret
 
 ; step 2 of SceneFoundMeBattle: branches on wScriptParam1; sets wScriptStep to 4; sets hTemp0 to
-; $1b; calls StartScriptedEncounterTemp0; advances wScriptStep
+; $1b; calls StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
 SceneFoundMeBattle_WriteScriptStepAndTemp0::
     ld a, [wScriptParam1]
     cp $01
@@ -3019,7 +3062,8 @@ SceneFoundMeBattle_WriteScriptStepAndTemp0::
 
 ; step 0 of SceneFoundMeBattle: advances wScriptStep; branches on hPlayerSpriteOverride; sets
 ; wScriptParam1 to 0; shows 'You! I've never seen you'; branches on hPlayerSpriteStreamHi; branches
-; on hPlayerSpriteStreamLo; sets wScriptParam1 to 1; ...
+; on hPlayerSpriteStreamLo; sets wScriptParam1 to 1; shows 'Oh, you're the cooking crew.'; sets
+; wScriptParam1 to 2; shows 'Hm? Are you a new' (E-0347)
 SceneFoundMeBattle_StartMessageHL_B85::
     ld hl, wScriptStep
     inc [hl]
@@ -3069,7 +3113,7 @@ ScenePirateGhosts::
     dw ScenePirateGhosts_ScriptStepBlinkObjectTemp0
 
 ; step 0 of ScenePirateGhosts: advances wScriptStep; branches on hMapId; advances wScriptStep; shows
-; 'Check the wooden crate…'
+; 'Check the wooden crate…' (E-0347)
 ScenePirateGhosts_ReadMapId::
     ld hl, wScriptStep
     inc [hl]
@@ -3086,7 +3130,8 @@ ScenePirateGhosts_ReadMapId::
     ret
 
 ; step 2 of ScenePirateGhosts: branches on hMapId; branches on $10; sets hTemp1 to $30; sets hTemp0
-; to 0; calls ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; ...
+; to 0; calls ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; sets
+; wScriptStartRequest to $80 (E-0347)
 ScenePirateGhosts_ScriptStepBlinkObjectTemp0::
     ldh a, [hMapId]
     cp $37
@@ -3135,7 +3180,8 @@ SceneTreasureTheft::
 
 ; step 8 of SceneTreasureTheft: sets wStepPtrHi to 1; branches on the byte at wObject1 + OBJ_X; sets
 ; wStepTarget to 1; sets wStepPtrLo to $50; calls StepObjectTowardCoord; sets wStepTarget to 0; sets
-; wStepPtrLo to $b0; ...
+; wStepPtrLo to $b0; calls StepObjectTowardCoord; advances wStepPtrHi; branches on wObject3 + OBJ_X;
+; sets wScriptParam0 to 1; returns if wScriptParam0 is 0; then 11 more steps (see the code) (E-0347)
 SceneTreasureTheft_StepObjectTowardCoord_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
@@ -3210,7 +3256,8 @@ SceneTreasureTheft_StepObjectTowardCoord_SetStepPtrHi::
 
 ; step 6 of SceneTreasureTheft: sets wStepTarget to 2; sets wStepPtrLo to $40; sets wStepPtrHi to 1;
 ; calls StepObjectTowardCoord; sets wStepPtrHi to 3; calls StepObjectTowardCoord; sets wStepPtrHi to
-; 4; ...
+; 4; calls StepObjectTowardCoord; returns if wStepArrived is 0; shows 'King: Good! Your valor be
+; praised!'; advances wScriptStep (E-0347)
 SceneTreasureTheft_ShowKingGoodYourValor::
     ld a, $02
     ld [wStepTarget], a
@@ -3235,7 +3282,7 @@ SceneTreasureTheft_ShowKingGoodYourValor::
     ret
 
 ; step 5 of SceneTreasureTheft: increments wScriptParam0; returns unless wScriptParam0 is $3c; sets
-; wScriptParam0 to 0; advances wScriptStep
+; wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneTreasureTheft_WriteScriptParam0::
     ld a, [wScriptParam0]
     inc a
@@ -3249,7 +3296,7 @@ SceneTreasureTheft_WriteScriptParam0::
     ret
 
 ; step 4 of SceneTreasureTheft: sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $40;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep
+; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep (E-0347)
 SceneTreasureTheft_StepObjectTowardCoord::
     ld a, $02
     ld [wStepPtrHi], a
@@ -3267,7 +3314,7 @@ SceneTreasureTheft_StepObjectTowardCoord::
 
 ; step 3 of SceneTreasureTheft: calls NextRandomSeed; calls NextTableByte; increments wScriptParam0;
 ; returns unless wScriptParam0 is $f0; sets wObject1 + OBJ_STATE to 2; sets wObject2 + OBJ_STATE to
-; 2; sets wObject3 + OBJ_STATE to 2; ...
+; 2; sets wObject3 + OBJ_STATE to 2; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
 SceneTreasureTheft_NextRandomSeed::
     ld a, [wScriptParam0]
     and $0f
@@ -3304,7 +3351,7 @@ SceneTreasureTheft_NextRandomSeed::
     inc [hl]
     ret
 
-; step 1 of SceneTreasureTheft: sets hFieldDrawFlags to $0e; advances wScriptStep
+; step 1 of SceneTreasureTheft: sets hFieldDrawFlags to $0e; advances wScriptStep (E-0347)
 SceneTreasureTheft_WriteFieldDrawFlags::
     ld a, $0e
     ldh [hFieldDrawFlags], a
@@ -3314,7 +3361,7 @@ SceneTreasureTheft_WriteFieldDrawFlags::
 
 ; step 0 of SceneTreasureTheft: sets hMapId to $26; sets hMapScreenX to 0; sets hMapScreenY to 0;
 ; sets wWarpDestX to $60; sets wWarpDestY to $20; sets wFieldTransitionKind to 1; calls
-; ScriptStartFadeAndAdvanceStep; ...
+; ScriptStartFadeAndAdvanceStep; shows 'King: The hideout of the thieves' (E-0347)
 SceneTreasureTheft_ShowKingTheHideoutOf::
     ld a, $26
     ldh [hMapId], a
@@ -3347,7 +3394,7 @@ SceneCanalGate::
     dw SceneCanalGate_ClearBit1AtHL_Bank85
 
 ; step 6 of SceneCanalGate: decrements wObject1 + OBJ_Y; returns unless wObject1 + OBJ_Y is $10;
-; calls ClearBit1AtHL_Bank85; sets wScriptStartRequest to $80
+; calls ClearBit1AtHL_Bank85; sets wScriptStartRequest to $80 (E-0347)
 SceneCanalGate_ClearBit1AtHL_Bank85::
     ld a, [wObject1 + OBJ_Y]
     dec a
@@ -3363,7 +3410,7 @@ SceneCanalGate_ClearBit1AtHL_Bank85::
 
 ; step 5 of SceneCanalGate: sets wStepPtrHi to 0; sets wStepTarget to $82; sets wStepPtrLo to $50;
 ; calls StepObjectTowardCoord; returns if wStepArrived is 0; calls SetBit1AtHL_Bank85; plays sound
-; $63; ...
+; $63; advances wScriptStep (E-0347)
 SceneCanalGate_StepObjectTowardCoord::
     xor a
     ld [wStepPtrHi], a
@@ -3384,7 +3431,7 @@ SceneCanalGate_StepObjectTowardCoord::
     ret
 
 ; step 4 of SceneCanalGate: increments wScriptParam0; may return early; sets wScriptParam0 to 0;
-; advances wScriptStep
+; advances wScriptStep (E-0347)
 SceneCanalGate_WriteScriptParam0AndSpriteSlots::
     ld a, [wScriptParam0]
     inc a
@@ -3402,7 +3449,7 @@ SceneCanalGate_WriteScriptParam0AndSpriteSlots::
     inc [hl]
     ret
 
-; step 2 of SceneCanalGate: shows 'King: Arrgh! I know that! I'; advances wScriptStep
+; step 2 of SceneCanalGate: shows 'King: Arrgh! I know that! I'; advances wScriptStep (E-0347)
 SceneCanalGate_Msg0172_KingArrghIKnow::
     ld hl, $0172 ; 'King: Arrgh! I know that! I'
     call StartMessageHL_B85
@@ -3411,7 +3458,7 @@ SceneCanalGate_Msg0172_KingArrghIKnow::
     ret
 
 ; step 0 of SceneCanalGate: calls ScriptApplyStepDeltaAtDE_Bank85; may return early; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneCanalGate_ScriptApplyStepDeltaAtDE_Bank85::
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE_Bank85
@@ -3434,7 +3481,9 @@ SceneGreatlogKey::
 
 ; step 4 of SceneGreatlogKey: branches on wScriptParam0; plays sound $65; branches on wScriptParam1;
 ; decrements wObject5 + SCRIPTOBJ_X; copies the byte at SceneGreatlogKey_QueueSoundEffect_Data to
-; wObject5 + SCRIPTOBJ_X; increments wObject5 + SCRIPTOBJ_Y; copies E to wStepPtrLo; ...
+; wObject5 + SCRIPTOBJ_X; increments wObject5 + SCRIPTOBJ_Y; copies E to wStepPtrLo; copies D to
+; wStepPtrHi; calls AddStepDeltaToPointedByte; increments wScriptParam0; returns unless
+; wScriptParam0 is $20; sets wObject5 to 0; then 1 more step (see the code) (E-0347)
 SceneGreatlogKey_QueueSoundEffect::
     ld a, [wScriptParam0]
     or a
@@ -3480,14 +3529,14 @@ SceneGreatlogKey_QueueSoundEffect::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SceneGreatlogKey (32 bytes)
+; data read by SceneGreatlogKey (32 bytes) (E-0347)
 SceneGreatlogKey_QueueSoundEffect_Data::
     db $42, $45, $47, $4a, $4c, $4f, $51, $54, $56, $59, $5b, $5e, $60, $63, $65, $68
     db $6a, $6d, $6f, $72, $74, $77, $79, $7c, $7e, $81, $83, $86, $88, $8b, $8d, $90
 
 ; step 2 of SceneGreatlogKey: sets wObject5 to $80; decrements wObject5 + SCRIPTOBJ_Y; calls
 ; ScriptApplyStepDeltaAtDE_Bank85; may return early; shows 'Warubou: This you use to come'; advances
-; wScriptStep
+; wScriptStep (E-0347)
 SceneGreatlogKey_ShowWarubouThisYouUse::
     ld a, $80
     ld [wObject5], a
@@ -3504,7 +3553,9 @@ SceneGreatlogKey_ShowWarubouThisYouUse::
 
 ; step 0 of SceneGreatlogKey: sets hTemp0 to 2; calls RunFieldCommandTemp0; sets wObject5 +
 ; SCRIPTOBJ_X to $40; sets wObject5 + SCRIPTOBJ_Y to $30; shows 'Warubou: Wa-hey! Forgot
-; something!'; advances wScriptStep; branches on hPlayerX; ...
+; something!'; advances wScriptStep; branches on hPlayerX; sets hPlayerFacing to 1; sets
+; wFollowerRecords to 1; sets wScriptParam1 to 0; sets hPlayerFacing to 3; sets wFollowerRecords to
+; 3; then 1 more step (see the code) (E-0347)
 SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
     ld a, $02
     ldh [hTemp0], a
@@ -3539,28 +3590,28 @@ SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
     ld [wScriptParam1], a
     ret
 
-; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks)
+; [HL] |= $02; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
 SetBit1AtHL_Bank85::
     ld a, [hl]
     or $02
     ld [hl], a
     ret
 
-; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks)
+; [HL] &= $FD; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
 ClearBit1AtHL_Bank85::
     ld a, [hl]
     and $fd
     ld [hl], a
     ret
 
-; the same 5 bytes as SetBit2AtHL_B0F (SetBit2AtHL_B0F)
+; the same 5 bytes as SetBit2AtHL_B0F (SetBit2AtHL_B0F) (E-0105)
 SetBit2AtHL_B0F_Bank85::
     ld a, [hl]
     or $04
     ld [hl], a
     ret
 
-; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks)
+; [HL] &= $FB; clobbers A (the same 5 bytes appear in 4 banks) (E-0351)
 ClearBit2AtHL_Bank85::
     ld a, [hl]
     and $fb
@@ -3579,7 +3630,7 @@ RotateDirectionAtDEEvery32_Bank85::
     ld [de], a
     ret
 
-; the same 34 bytes as ScriptApplyStepDeltaAtDE (ScriptApplyStepDeltaAtDE)
+; the same 34 bytes as ScriptApplyStepDeltaAtDE (ScriptApplyStepDeltaAtDE) (E-0062)
 ScriptApplyStepDeltaAtDE_Bank85::
     ld a, e
     ld [wStepPtrLo], a
@@ -3623,7 +3674,7 @@ ScriptStepAdjust32TimesThenMessage_Bank85::
     inc [hl]
     ret
 
-; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0
+; HL is stored in wMessageIndex (low) and wMessageGroup (high); then wMessageState = 0 (E-0351)
 StartMessageHL_B85::
     ld a, l
     ld [wMessageIndex], a
@@ -3649,6 +3700,7 @@ RunMessageBoxFar_Bank85::
     ret
 
 ; step 1 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; advances wScriptStep
+; (E-0347)
 SceneWatchOut_RunMessageBoxFar_Bank85::
     xor a
     call RunMessageBoxFar_Bank85
@@ -3658,7 +3710,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85::
     ret
 
 ; step 3 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; sets wScriptStartRequest
-; to $80
+; to $80 (E-0347)
 SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest::
     xor a
     call RunMessageBoxFar_Bank85
@@ -3719,7 +3771,7 @@ PartyHasField6FAtLeastC0Without55Bit7::
 
 ; called from FhuntTalkEvents_ShowBeGoneIfYour: branches on wPartyCount; sets rRAMG to 0; sets
 ; hTemp0 to 0; sets rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls
-; LoadSRAMRecordWord; ...
+; LoadSRAMRecordWord; sets rRAMG to 0; sets hTemp0 to 1 (E-0347)
 FhuntTalkEvents_WriteRAMGAndTemp0::
     ld a, [wPartyCount]
     or a
@@ -3770,7 +3822,9 @@ FhuntTalkEvents_WriteRAMGAndTemp0::
 
 ; called from FhuntTalkEvents_TestFlagBit_Kweeeeeh: branches on hPlayerSpriteOverride; branches on
 ; the byte at TalkEvent29WordList; sets hTemp0 to 1; branches on wPartyCount; sets hTemp0 to 0; sets
-; rRAMG to $0a; calls LoadSRAMRecordByte; ...
+; rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on
+; the byte at TalkEvent29WordList; sets rRAMG to 0; sets hTemp0 to 0; then 1 more step (see the
+; code) (E-0347)
 FhuntTalkEvents_WriteTemp0AndRAMG::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -3905,7 +3959,7 @@ TalkEvent29WordList::
 
 ; called from FhuntTalkEvents_ShowHeroCheckedTheSmall: checks EVENT_NEVER_SET; branches on
 ; hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteOverride; sets hTemp0 to 0;
-; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2
+; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2 (E-0347)
 FhuntTalkEvents_TestFlagBit_3::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -3986,7 +4040,7 @@ TalkEvent47WordList::
     dw $0144, $0000
 
 ; Branches on hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteStreamHi; branches
-; on hPlayerSpriteStreamLo; sets hTemp1 to 1
+; on hPlayerSpriteStreamLo; sets hTemp1 to 1 (E-0347)
 FhuntTalkEvents_WriteTemp0AndTemp1::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4021,7 +4075,8 @@ FhuntTalkEvents_WriteTemp0AndTemp1::
 
 ; called from Talk04CB_ThatKeyIUsed: returns if wPartyCount is 0; sets rRAMG to $0a; calls
 ; LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on the byte at
-; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data; sets rRAMG to 0; ...
+; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data; sets rRAMG to 0; sets hTemp0 to 0; sets rRAMG to 0;
+; sets hTemp0 to 1 (E-0347)
 Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte::
     ld a, [wPartyCount]
     or a
@@ -4095,7 +4150,7 @@ Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte::
     ldh [hTemp0], a
     ret
 
-; data read by Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte (12 bytes)
+; data read by Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte (12 bytes) (E-0347)
 Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data::
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
@@ -4304,7 +4359,7 @@ SetupMap0BMonsterObjects::
     jr nz, .loop
     ret
 
-; data read by SetupMap0BMonsterObjects (20 bytes)
+; data read by SetupMap0BMonsterObjects (20 bytes) (E-0347)
 SetupMap0BMonsterObjects_Data1::
     db $06, $19, $18, $00, $15, $09, $16, $00, $14, $1e, $2a, $00, $0d, $2b, $12, $00
     db $28, $11, $20, $00
@@ -4316,7 +4371,9 @@ SetupMap0BMonsterObjects_Data2::
 ; called from RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: branches on wTriggerKind; branches
 ; on wPendingFieldEvent; calls NextRandomSeed; sets wTriggerMarkerFlags to 0; sets
 ; wScriptStartRequest to $80; calls RandomGoldOrItem_NextRandomSeed_2; sets wTriggerMarkerFlags to
-; $80; ...
+; $80; calls ComputePartyStrengthLevelPartyStrength; calls NextRandomSeed; sets wTriggerMarkerFlags;
+; sets wTriggerMarkerFlags to $80; calls RandomGoldOrItem_NextRandomSeed_2; then 12 more steps (see
+; the code) (E-0347)
 RandomGoldOrItem_NextRandomSeed::
     ld a, [wTriggerKind]
     cp $ff
@@ -4445,7 +4502,7 @@ RandomGoldOrItem_NextRandomSeed::
     inc [hl]
     ret
 
-; Calls NextRandomSeed; may continue in RandomGoldOrItem_NextRandomSeed_2
+; Calls NextRandomSeed; may continue in RandomGoldOrItem_NextRandomSeed_2 (E-0347)
 RandomGoldOrItem_NextRandomSeed_2::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -4454,7 +4511,7 @@ RandomGoldOrItem_NextRandomSeed_2::
     jr nc, RandomGoldOrItem_NextRandomSeed_2
     ret
 
-; data read by RandomGoldOrItem_NextRandomSeed (16 bytes)
+; data read by RandomGoldOrItem_NextRandomSeed (16 bytes) (E-0347)
 RandomGoldOrItem_NextRandomSeed_Data1::
     db $19, $1a, $1b, $1b, $1c, $2c, $00, $00, $01, $07, $28, $22, $0c, $2c, $00, $00
 
@@ -4514,13 +4571,13 @@ AddHundredToPartyINTCapped999::
 ; copies the 48-byte preset $5E11, $5E41 or $5E71 (C = 0, 1, other) to wSpeciesFlags (E-0124)
 LoadSpeciesFlagsPresetC::
     ld a, c
-    ld de, $5e11
+    ld de, LoadSpeciesFlagsPresetC_Data1
     or a
     jr z, .skip
-    ld de, $5e41
+    ld de, LoadSpeciesFlagsPresetC_Data2
     dec a
     jr z, .skip
-    ld de, LoadSpeciesFlagsPresetC_Data
+    ld de, LoadSpeciesFlagsPresetC_Data3
 
 .skip:
     ld b, $30
@@ -4533,14 +4590,18 @@ LoadSpeciesFlagsPresetC::
     dec b
     jr nz, .loop
     ret
+
+; data read by LoadSpeciesFlagsPresetC (15 bytes) (E-0347)
+LoadSpeciesFlagsPresetC_Data1::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $3f
     ds $21, $00
+
+LoadSpeciesFlagsPresetC_Data2::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $ff, $ff
     db $1f, $e0, $ff, $ff, $ff, $00, $ff, $ff, $ff, $03, $f8, $ff, $ff, $ff, $c1
     ds $11, $00
 
-; data read by LoadSpeciesFlagsPresetC (47 bytes)
-LoadSpeciesFlagsPresetC_Data::
+LoadSpeciesFlagsPresetC_Data3::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $ff, $ff
     db $1f, $e0, $ff, $ff, $ff, $00, $ff, $ff, $ff, $03, $f8, $ff, $ff, $ff, $c1, $ff
     db $ff, $ff, $01, $fe, $ff, $ff, $ff, $f1, $ff, $ff, $ff, $8f, $ff, $ff, $1f

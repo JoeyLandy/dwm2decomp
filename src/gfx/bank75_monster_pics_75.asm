@@ -17,7 +17,7 @@ MonsterPic_Serpentia::
     INCBIN "gfx/monster_pics/serpentia.lz"
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $040 (Divinegon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPic_Divinegon::
     INCBIN "gfx/monster_pics/divinegon.lz"
 

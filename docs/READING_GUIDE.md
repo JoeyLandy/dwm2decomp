@@ -37,7 +37,7 @@ The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit t
   - A name like `Parent_Step` is a step of `Parent`: a case of its jump table or a routine only it calls.
   - `_Bank36` marks one of several identical copies of a helper, one per bank.
   - Every routine has a comment above it. A note written by reading says what the routine does, its inputs and outputs (`A = level`, `HL = ...`, `carry = success`), and the evidence for it (`E-0337`, see below).
-  - A comment with no evidence id is generated from the instructions by `tools/describe.py` (E-0347). It says what the code does, not why: `; step 1 of SceneRoltElder: increments wObject1 + OBJ_X; decrements wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $60; ...`. "step N of P" is entry N of P's jump table, and "may return early" or "branches on X" marks control flow that the one line leaves out.
+  - A comment ending in `(E-0347)` is generated from the instructions by `tools/describe.py`. It says what the code does, not why: `; step 1 of SceneRoltElder: increments wObject1 + OBJ_X; decrements wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $60; ...`. "step N of P" is entry N of P's jump table, and "may return early" or "branches on X" marks control flow that the one line leaves out.
   - A written note that says the body was not read is followed by a `; code:` line, which restates the body the same way.
 - **Local labels** start with a dot (`.loop`, `.skip`, `.read_battle_target`) and belong to the routine above them.
 - **Data** labels name what is there, and each table has one comment above its first label (text needs none; the text is its own documentation). A small block with no note is described by its reader and size (`; data read by VaultMenu (8 bytes)`). `String_08_04_01` is string 1 of category 4 in bank `$08` (a skill name), `Message_00_00` the first story message, `MonsterSprite_DrakSlime` a compressed sprite, `SoundTrack_...` a music track.
@@ -55,7 +55,7 @@ The files are generated from `config/*.json` by `tools/disasm_all.py`, so edit t
   ```
 
 - `farcall Label` calls a routine in another bank; `dfar Label` is a pointer with its bank in data.
-- `lb bc, $14, $08` loads B and C separately (B = 20, C = 8). The source uses it before calls to the rectangle routines, which take a width in B and a number of rows in C.
+- `lb bc, $14, $08` loads B and C separately (B = 20, C = 8). The source uses it wherever a pair holds two bytes: rectangles (B = width, C = rows), resolve messages (B = argument, C = flags; H = target, L = actor), sprite steps toward a point (D = X, E = Y), text windows. Negative constants are written signed (`ld hl, -999`), amounts in decimal (`ld hl, 20000`). A message word reads `MSG_KEEP_OPEN | $0487`: the low byte is the message, H bits 0-5 its group, and bits 6-7 the box flags in `constants.inc`.
 - `add_a_to_hl` (`hl += a`) and `deref_hl` (`hl = [hl]`, a word) are short helper idioms.
 - `script_*` macros write the event-script language that runs scenes and conversations: `script_message`, `script_walk`, `script_set_flag`, `script_jump`, and the command types named in `macros.inc`.
 - `objsel_*` macros write the map object selectors, which choose which people and objects a map shows from story flags.

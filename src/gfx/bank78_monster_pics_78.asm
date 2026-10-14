@@ -215,7 +215,7 @@ MonsterPic_Mummy::
     INCBIN "gfx/monster_pics/mummy.lz"
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $0FB (DarkCrab) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPic_DarkCrab::
     INCBIN "gfx/monster_pics/dark_crab.lz"
 

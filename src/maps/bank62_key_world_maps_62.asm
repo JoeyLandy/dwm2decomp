@@ -4,7 +4,7 @@
 SECTION "Bank 62", ROMX[$4000], BANK[$62]
     db $62
 
-; data read by KeyWorldChunkGroup01 (8 bytes)
+; data read by KeyWorldChunkGroup01 (8 bytes) (E-0347)
 KeyWorld01_0_Y2X1_Header::
     db $03, $02, $04, $0b, $0d, $33, $01, $00
 

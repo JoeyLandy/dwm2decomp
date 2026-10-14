@@ -181,7 +181,9 @@ SetupKeyWorldObjectsForMapType::
     ret
 
 ; called from SetupKeyWorldObjectsForMapType: may return early; branches on E; sets wSpriteSlotCount
-; to 0; branches on 0; sets wSpriteSlotCount; copies B to hTempA; sets hTemp4 to 0; ...
+; to 0; branches on 0; sets wSpriteSlotCount; copies B to hTempA; sets hTemp4 to 0; sets hTemp5;
+; sets hTemp2; branches on hTemp9; sets hTemp0; sets hTemp1; then 12 more steps (see the code)
+; (E-0347)
 SetupKeyWorldObjectsForMapType_Multiply8::
     ld a, [hli]
     ld e, a
@@ -547,7 +549,7 @@ DecompressGraphicsTemp0ToTemp4::
     add a
     add a
     add a
-    ld de, $4b15
+    ld de, FieldSpritePalettes
     add e
     ld e, a
     jr nc, .read_temp3
@@ -834,7 +836,7 @@ UpdateSpriteSlots::
     ld b, a
     ld hl, wSpriteSlots
 
-; Dispatches through the table that follows
+; Dispatches through the table that follows (E-0347)
 UpdateSpriteSlots_Loop::
     push bc
     push hl
@@ -848,7 +850,7 @@ UpdateSpriteSlots_Loop::
     dw UpdateSpriteSlots_WriteTemp0AndTemp1
     dw UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0
 
-; Changes HL, BC and A; may continue in UpdateSpriteSlots_Loop
+; Changes HL, BC and A; may continue in UpdateSpriteSlots_Loop (E-0347)
 UpdateSpriteSlots_Restore::
     pop hl
     pop bc
@@ -858,7 +860,7 @@ UpdateSpriteSlots_Restore::
     jr nz, UpdateSpriteSlots_Loop
     ret
 
-; step 0 of UpdateSpriteSlots: changes HL and A
+; step 0 of UpdateSpriteSlots: changes HL and A (E-0347)
 UpdateSpriteSlots_RestoreRegisters::
     pop hl
     ld a, $0d
@@ -877,7 +879,7 @@ UpdateSpriteSlots_RestoreRegisters::
 .skip:
     ld a, [hl]
 
-; Takes HL and A; changes HL, BC and A; may continue in UpdateSpriteSlots_Loop
+; Takes HL and A; changes HL, BC and A; may continue in UpdateSpriteSlots_Loop (E-0347)
 UpdateSpriteSlots_RestoreRegisters_Skip::
     ld c, a
     inc hl
@@ -946,7 +948,8 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
 ; step 2 of UpdateSpriteSlots: branches on wScriptRunning; calls NextTableByte; branches on
 ; wRandomLo & $03; calls IsTileUnderCellBlocking; calls
 ; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls IsTileUnderCellBlocking; calls
-; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; ...
+; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; continues in
+; UpdateSpriteSlots_RestoreRegisters_Skip (E-0347)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     pop hl
     push hl
@@ -1128,14 +1131,16 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     ld a, [hl]
     jp UpdateSpriteSlots_RestoreRegisters_Skip
 
-; step 1 of UpdateSpriteSlots: returns at once
+; step 1 of UpdateSpriteSlots: returns at once (E-0347)
 UpdateSpriteSlots_Return::
     ret
 
 ; step 3 of UpdateSpriteSlots: branches on wScriptRunning; calls NextTableByte; calls
 ; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
 ; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
-; RunPendingFieldEventType0AOrOther; ...
+; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2; calls
+; RunPendingFieldEventType0AOrOther; calls UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2;
+; continues in UpdateSpriteSlots_RestoreRegisters_Skip (E-0347)
 UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     pop hl
     push hl
@@ -1398,24 +1403,24 @@ RunPendingFieldEventType0AOrOther::
     ret
 
 ; step 4 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1; continues in
-; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
+; UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore (E-0347)
 UpdateSpriteSlots_WriteTemp0AndTemp1::
-    ld hl, $48d6
+    ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
     jr UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
 
-; step 5 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1
+; step 5 of UpdateSpriteSlots: copies L to hTemp0; copies H to hTemp1 (E-0347)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
-    ld hl, $48fa
+    ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
-; Changes HL, DE, A and C; continues in UpdateSpriteSlots_Restore
+; Changes HL, DE, A and C; continues in UpdateSpriteSlots_Restore (E-0347)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
     pop hl
     ld a, $0d
@@ -1494,9 +1499,15 @@ UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
     inc hl
     ld [hl], a
     jp UpdateSpriteSlots_Restore
+
+; data read by UpdateSpriteSlots (36 bytes) (E-0347)
+UpdateSpriteSlots_WriteTemp0AndTemp1_Data::
     db $00, $0e, $03, $0a, $04, $0e, $05, $0a, $00, $0e, $03, $0a, $04, $0e, $05, $0a
     db $00, $10, $01, $0e, $02, $0e, $01, $0e, $02, $0e, $00, $20, $06, $0e, $07, $20
-    db $06, $0e, $ff, $ff, $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
+    db $06, $0e, $ff, $ff
+
+UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2::
+    db $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
 
 ; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A
 ; = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
@@ -1564,7 +1575,7 @@ IsTileUnderCellBlocking::
     ret
 
 ; called from RunPendingFieldEventType0AOrOther: takes DE and BC; changes HL, DE, BC and A; branches
-; on wMapTallTileMin
+; on wMapTallTileMin (E-0347)
 RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     push bc
     push de
@@ -1629,7 +1640,7 @@ RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
     ret
 
 ; Copies C & $0f to hTemp0; copies B & $0f to hTemp1; branches on hTemp1; branches on hTemp0;
-; branches on wPartyCount; branches on hTemp1; branches on hTemp0
+; branches on wPartyCount; branches on hTemp1; branches on hTemp0 (E-0347)
 UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2::
     push bc
     ld a, c
@@ -1993,7 +2004,7 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
-    ld de, $4bbd
+    ld de, LoadPlayerAndFollowerSpriteGraphics_LoadSRAMRecordByte_OBJPaletteBufferData_2
     ld a, e
     add $08
     ld e, a
@@ -2034,7 +2045,7 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
 
 ; step 0 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
 ; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawPartyFollowerSprites
+; DrawPartyFollowerSprites (E-0347)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites::
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawPartyFollowerSprites
@@ -2042,7 +2053,7 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPartyFollowerSprites::
 
 ; step 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
 ; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawFollowerSpriteIfFlag1B
+; DrawFollowerSpriteIfFlag1B (E-0347)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B::
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawFollowerSpriteIfFlag1B
@@ -2050,7 +2061,7 @@ AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawFollowerSpriteIfFlag1B::
 
 ; step 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode: calls
 ; AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80; calls
-; DrawPlayerOverlaySprite21Or22
+; DrawPlayerOverlaySprite21Or22 (E-0347)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_DrawPlayerOverlaySprite21Or22::
     call AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80
     call DrawPlayerOverlaySprite21Or22
@@ -2161,7 +2172,9 @@ DrawFollowerSpriteIfFlag1B::
 
 ; Returns if bit 0 of hFieldDrawFlags is set; copies hPlayerSpriteVariant to hSpriteSetIndex; sets
 ; hSpriteAttrXor to 0; calls IsFadingAtMap5AScreen00Y80; branches on hPlayerFacing; sets
-; hSpriteAttrXor to $20; sets hSpriteSubIndex; ...
+; hSpriteAttrXor to $20; sets hSpriteSubIndex; sets hSpriteTileOffset to 0; sets hSpriteOriginX;
+; sets hSpriteOriginXHi; sets hSpriteOriginY; sets hSpriteOriginYHi; then 12 more steps (see the
+; code) (E-0347)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode_IsFadingAtMap5AScreen00Y80::
     ldh a, [hFieldDrawFlags]
     bit 0, a
@@ -2480,7 +2493,7 @@ IsFadingAtMap5AScreen00Y80::
     add_a_to_hl
     jr .skip2
 
-; data read by IsFadingAtMap5AScreen00Y80 (55 bytes)
+; data read by IsFadingAtMap5AScreen00Y80 (55 bytes) (E-0347)
 IsFadingAtMap5AScreen00Y80_Data::
     db $05, $02, $00, $50, $00, $28, $2b, $03, $03, $20, $00, $18, $5a, $00, $00, $40
     db $10, $48, $5a, $00, $00, $70, $30, $48, $5c, $00, $01, $30, $78, $90, $7a, $00
@@ -3225,7 +3238,7 @@ KeyWorldObjectList_6_0_1::
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
-; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0351)
 StartMessageCommand09HL_B04::
     ld a, l
     ld [wScriptParam0], a
@@ -3280,6 +3293,7 @@ StartScriptAtHL_B04::
     ret
 
 ; talk category $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf")
+; (E-0288)
 ReadableTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -3319,7 +3333,7 @@ ReadableTalkEvents::
     dw IfFlag00D1Msg0D39_AhGreatLogsMightyHero
     dw IfFlag00D1Msg0D3A_ToBeHonestI
 
-; starts Script_InTheMiddleOf: 'In the middle of the sea'
+; starts Script_InTheMiddleOf: 'In the middle of the sea' (E-0248)
 ReadableTalkEvents_TestFlagBit::
     ld de, EVENT_IN_THE_MIDDLE_OF_THE
     call TestFlagBit
@@ -3337,7 +3351,7 @@ ReadableTalkEvents_TestFlagBit::
 ; newcomers?' (E-0271; was Talk_HehSoTheseAreTheNewcomers) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HehSoTheseAreTheNewcomers; shortened from
 ; TalkScript_HehSoTheseAreTheNewcomers)
-; starts Script_HehSoTheseAre: '*: Heh, so these are the'
+; starts Script_HehSoTheseAre: '*: Heh, so these are the' (E-0248)
 Talk_HehSoTheseAreTheNewcomers::
     ld hl, Script_HehSoTheseAre ; script '*: Heh, so these are the'
     call StartScriptAtHL_B04
@@ -3347,7 +3361,7 @@ Talk_HehSoTheseAreTheNewcomers::
 ; Quit your horsing' (E-0271; was Talk_ListenYouTwoQuitYourHorsing) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_ListenYouTwoQuitYourHorsing; shortened from
 ; TalkScript_ListenYouTwoQuitYourHorsing)
-; starts Script_ListenYouTwoQuit: '*: Listen you two! Quit your'
+; starts Script_ListenYouTwoQuit: '*: Listen you two! Quit your' (E-0248)
 Talk_ListenYouTwoQuitYourHorsing::
     ld hl, Script_ListenYouTwoQuit ; script '*: Listen you two! Quit your'
     call StartScriptAtHL_B04
@@ -3356,7 +3370,7 @@ Talk_ListenYouTwoQuitYourHorsing::
 
 ; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119) (E-0344: the address in its
 ; name dropped or read as the label there; was StartScriptAndSetFlag5)
-; starts Script_OhIt: '*: Oh… It's… all spinning around…'
+; starts Script_OhIt: '*: Oh… It's… all spinning around…' (E-0248)
 StartScriptAndSetFlag5::
     ld hl, Script_OhIt ; script '*: Oh… It's… all spinning around…'
     call StartScriptAtHL_B04
@@ -3367,7 +3381,7 @@ StartScriptAndSetFlag5::
 ; map event: starts script $4F7C, runs RunFieldCommandTemp0 with hTemp0 = 0 and sets story flag 6
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
 ; StartScriptAndSetFlag06)
-; starts Script_SceneSpinning
+; starts Script_SceneSpinning (E-0248)
 StartScriptAndSetFlag06::
     ld hl, Script_SceneSpinning
     call StartScriptAtHL_B04
@@ -3380,7 +3394,7 @@ StartScriptAndSetFlag06::
 
 ; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119) (E-0344: the address in
 ; its name dropped or read as the label there; was IfFlag000AStartScript)
-; starts Script_WarubouCalmDownAnd: 'Warubou: Calm down and listen! What'
+; starts Script_WarubouCalmDownAnd: 'Warubou: Calm down and listen! What' (E-0248)
 IfFlag000AStartScript::
     ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
@@ -3394,7 +3408,9 @@ IfFlag000AStartScript::
 ; string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_LONG_FACES_002; checks
 ; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_THANKS_FOR_COMING_BY; sets hTemp0 to 1; calls
-; RunFieldCommandTemp0; starts Script_YouMustBeThe; ...
+; RunFieldCommandTemp0; starts Script_YouMustBeThe; sets EVENT_THANKS_FOR_COMING_BY; shows 'Thanks
+; for coming by. I'll'; shows 'You say the island will'; sets wDataBank to $10; checks
+; EVENT_OH_HI_GOOD_TO; then 5 more steps (see the code) (E-0347)
 Talk0046_ThanksForComingBy::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -3455,7 +3471,7 @@ Talk0046_ThanksForComingBy::
 ; starts message $0047 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 read the notice. We guarantee the' (E-0268, the E-0082 shape; was
 ; TalkMsg0047_HeroReadTheNoticeWeGuarantee)
-; starts Script_HeroCheckedThePedestal: '0 checked the pedestal. It's the'
+; starts Script_HeroCheckedThePedestal: '0 checked the pedestal. It's the' (E-0248)
 TalkMsg0047_HeroReadTheNoticeWeGuarantee::
     ld hl, $0047 ; '0 read the notice. 'We guarantee'
     call StartMessageCommand09HL_B04
@@ -3465,7 +3481,7 @@ TalkMsg0047_HeroReadTheNoticeWeGuarantee::
 ; the pedestal. It's the' (E-0271; was Talk_HeroCheckedThePedestalIts) (E-0344: the address in its
 ; name dropped or read as the label there; was Talk_HeroCheckedThePedestalIts; shortened from
 ; TalkScript_HeroCheckedThePedestalIts)
-; starts Script_HeroCheckedThePedestal: '0 checked the pedestal. It's the'
+; starts Script_HeroCheckedThePedestal: '0 checked the pedestal. It's the' (E-0248)
 Talk_HeroCheckedThePedestalIts::
     ld hl, Script_HeroCheckedThePedestal ; script '0 checked the pedestal. It's the'
     call StartScriptAtHL_B04
@@ -3474,7 +3490,9 @@ Talk_HeroCheckedThePedestalIts::
 ; step 10 of ReadableTalkEvents: branches on hPlayerX; sets wDataBank to $1f; checks
 ; EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_WELCOME_TO_THE_LIBRARY; starts
 ; Script_WelcomeToTheLibrary; starts Script_WelcomeToTheLibrary_2; calls
-; TotalSpeciesFlaggedOrListed; ...
+; TotalSpeciesFlaggedOrListed; branches on hTemp1; branches on hTemp0; checks
+; EVENT_HELLO_OUR_YOUNG_SAVIOR; starts Script_HelloOurYoungSavior; checks
+; EVENT_WELCOME_TO_THE_LIBRARY_19E; then 1 more step (see the code) (E-0347)
 ReadableTalkEvents_TestFlagBit_2::
     ldh a, [hPlayerX]
     cp $40
@@ -3628,7 +3646,7 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
     ret
 
 ; step 23 of ReadableTalkEvents: checks EVENT_THANKS_FOR_COMING_BY_025; checks
-; EVENT_SCENE_THREE_ITEMS; may return early; shows '0 read the sign. 'Danger! Stay'
+; EVENT_SCENE_THREE_ITEMS; may return early; shows '0 read the sign. 'Danger! Stay' (E-0347)
 ReadableTalkEvents_TestFlagBit_3::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -3769,7 +3787,7 @@ IfFlag00D1Msg0D3A_ToBeHonestI::
     ret
 
 ; talk category 3: jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz
-; (messages $0800-$088F)
+; (messages $0800-$088F) (E-0288)
 YoldTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -3962,7 +3980,7 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
 
 ; step 6 of YoldTalkEvents: checks EVENT_SCENE_MERMAID_KINGDOM_05F; checks
 ; EVENT_THE_BIRDS_ARE_NOISY_ITS; starts Script_TheBirdsAreNoisy; sets EVENT_THE_BIRDS_ARE_NOISY_ITS;
-; shows 'I hope the volcanic island'; shows 'My grandson just shivers now…'
+; shows 'I hope the volcanic island'; shows 'My grandson just shivers now…' (E-0347)
 YoldTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -3987,6 +4005,7 @@ YoldTalkEvents_TestFlagBit::
     ret
 
 ; step 7 of YoldTalkEvents: sets wScreenTableIndex to 4; sets wDataBank to $10; starts Script_IDon
+; (E-0347)
 YoldTalkEvents_StartScriptAtHL_B04::
     ld a, $04
     ld [wScreenTableIndex], a
@@ -4106,7 +4125,8 @@ TalkMsg080F_YoureNotSupposedToGoNear::
 ; step 19 of YoldTalkEvents: checks EVENT_IN_THE_PAST_MERMAIDS_ARE; calls
 ; FindPartyMemberWithSkill76To7DOr92; branches on hTemp1; starts Script_InThePastMermaids; calls
 ; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts Script_InThePastMermaids_4;
-; ...
+; sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; calls CopyBytes; calls
+; ReadBank08TableWordForA; then 4 more steps (see the code) (E-0347)
 YoldTalkEvents_TestFlagBit_InThePastMermaids::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
@@ -4163,7 +4183,7 @@ YoldTalkEvents_TestFlagBit_InThePastMermaids::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!'
+; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
@@ -4175,7 +4195,7 @@ YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn::
 ; legend about' (E-0271; was Talk_HaveYouHeardTheLegendAbout) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_HaveYouHeardTheLegendAbout; shortened from
 ; TalkScript_HaveYouHeardTheLegendAbout)
-; starts Script_HaveYouHeardThe: '*: Have you heard the legend'
+; starts Script_HaveYouHeardThe: '*: Have you heard the legend' (E-0248)
 Talk_HaveYouHeardTheLegendAbout::
     ld hl, Script_HaveYouHeardThe ; script '*: Have you heard the legend'
     call StartScriptAtHL_B04
@@ -4260,7 +4280,7 @@ TalkMsg081F_TheresThisOldSailorManIn::
 ; begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_HowMayOurChurchServeYou;
 ; shortened from TalkScript_HowMayOurChurchServeYou)
-; starts Script_HowMayOurChurch: '*: How may our church serve'
+; starts Script_HowMayOurChurch: '*: How may our church serve' (E-0248)
 Talk_HowMayOurChurchServeYou::
     ld a, $1f
     ld [wDataBank], a
@@ -4284,7 +4304,7 @@ TalkMsg0822_IWentToPolonaAWhile::
     ret
 
 ; step 32 of YoldTalkEvents: sets wScreenTableIndex to 6; sets wDataBank to $10; starts
-; Script_IOfferQualityMerchandise
+; Script_IOfferQualityMerchandise (E-0347)
 YoldTalkEvents_StartScriptAtHL_B04_IOfferQualityMerchandise::
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4389,7 +4409,7 @@ TalkMsg082B_ListenDidYouKnowMermaids::
 ; starts message $088D through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the oven. Two shiny' (E-0268, the E-0082 shape; was
 ; TalkMsg088D_HeroPeeredIntoTheOvenTwo)
-; starts Script_HeroTriedToCheck: '0 tried to check the chest.'
+; starts Script_HeroTriedToCheck: '0 tried to check the chest.' (E-0248)
 TalkMsg088D_HeroPeeredIntoTheOvenTwo::
     ld hl, $088d ; '0 peered into the oven. Two'
     call StartMessageCommand09HL_B04
@@ -4399,7 +4419,7 @@ TalkMsg088D_HeroPeeredIntoTheOvenTwo::
 ; the chest.' (E-0271; was Talk_HeroTriedToCheckTheChest) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HeroTriedToCheckTheChest; shortened from
 ; TalkScript_HeroTriedToCheckTheChest)
-; starts Script_HeroTriedToCheck: '0 tried to check the chest.'
+; starts Script_HeroTriedToCheck: '0 tried to check the chest.' (E-0248)
 Talk_HeroTriedToCheckTheChest::
     ld hl, Script_HeroTriedToCheck ; script '0 tried to check the chest.'
     call StartScriptAtHL_B04
@@ -4426,7 +4446,7 @@ BarrelItem_TinyMedal_Flag0063::
     call StartTreasureFlagDE_B04
     ret
 
-; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!'
+; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_StartScriptAtHL_B04_WelcomeToOurInn_2::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
@@ -4453,7 +4473,7 @@ TalkMsg082F_ThisAreaWasALotMore::
 
 ; starts message $0830 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'When you're out at sea, you get' (E-0268, the E-0082 shape; was TalkMsg0830_WhenYoureOutAtSeaYou)
-; starts Script_SceneWhoAreYou
+; starts Script_SceneWhoAreYou (E-0248)
 TalkMsg0830_WhenYoureOutAtSeaYou::
     ld hl, $0830 ; '*: When you're out at sea,'
     call StartMessageCommand09HL_B04
@@ -4461,7 +4481,7 @@ TalkMsg0830_WhenYoureOutAtSeaYou::
 
 ; starts Script_SceneWhoAreYou (StartScriptAtHL_B04) (E-0271; was TalkScript) (E-0344: the address
 ; in its name dropped or read as the label there; was TalkScript)
-; starts Script_SceneWhoAreYou
+; starts Script_SceneWhoAreYou (E-0248)
 TalkScript::
     ld hl, Script_SceneWhoAreYou
     call StartScriptAtHL_B04
@@ -4530,7 +4550,9 @@ TalkMsg0836_TheVolcanicIslandOffTheCoast::
 ; step 51 of YoldTalkEvents: checks EVENT_SCENE_MERMAID_KINGDOM_05F; checks
 ; EVENT_THE_PIRATES_WERE_SWALLOWED_BY; checks EVENT_THE_PIRATES; calls
 ; PartyHasSpeciesLo3CTo5BWithHiSet; sets wObject3 + OBJ_STATE to 1; shows 'Hnnnr… Hic… Gnn… Zzz…
-; Gfffff…'; starts Script_ZzzZzzHuhWatch; ...
+; Gfffff…'; starts Script_ZzzZzzHuhWatch; starts Script_WhatAreYouHere; calls
+; PartyHasSpeciesLo3CTo5BWithHiSet; sets wObject3 + OBJ_STATE to 1; shows 'Hnnnr… Hic… Gnn… Zzz…
+; Gfffff…'; starts Script_ZzzZzzHuhWatch_2; then 1 more step (see the code) (E-0347)
 YoldTalkEvents_ShowHnnnrHicGnnZzz::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -4616,7 +4638,7 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
 
 ; step 52 of YoldTalkEvents: checks EVENT_SCENE_WATCH_OUT; checks EVENT_WHO_ARE_YOU_THIS_IS; starts
 ; Script_WhoAreYouThis; sets EVENT_WHO_ARE_YOU_THIS_IS; starts Script_YouCanKeepTrying; starts
-; Script_SceneWatchOut
+; Script_SceneWatchOut (E-0347)
 YoldTalkEvents_TestFlagBit_WhoAreYouThis::
     ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
@@ -4733,7 +4755,7 @@ TalkMsg0844_WatchMeDanceAndYoullWant::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_DoYouWantTo_2: '*: Do you want to go'
+; starts Script_DoYouWantTo_2: '*: Do you want to go' (E-0248)
 YoldTalkEvents_TestFlagBit_DoYouWantTo::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
@@ -4743,7 +4765,7 @@ YoldTalkEvents_TestFlagBit_DoYouWantTo::
     ret
 
 ; step 62 of YoldTalkEvents: checks EVENT_THIS_IS_THE_MERMAID; shows 'This is the mermaid kingdom.';
-; sets EVENT_THIS_IS_THE_MERMAID; starts Script_ThisIsTheMermaid
+; sets EVENT_THIS_IS_THE_MERMAID; starts Script_ThisIsTheMermaid (E-0347)
 YoldTalkEvents_ShowThisIsTheMermaid::
     ld de, EVENT_THIS_IS_THE_MERMAID
     call TestFlagBit
@@ -4845,7 +4867,9 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
 
 ; step 69 of YoldTalkEvents: checks EVENT_HERO_RECEIVED_THE_SAILOR_RING; checks EVENT_SCENE_CRATE;
 ; checks EVENT_WELCOME_YOUNG_HUMAN_I_HEARD; starts Script_WelcomeYoungHumanI; shows 'The MoonRock is
-; on the'; calls InventoryHasFreeSlotCheck; shows 'Welcome, my young hero! No'; ...
+; on the'; calls InventoryHasFreeSlotCheck; shows 'Welcome, my young hero! No'; sets
+; wInventorySortFlags; starts Script_WelcomeMyYoungHero; shows 'Welcome, young hero! No words'
+; (E-0347)
 YoldTalkEvents_TestFlagBit_WelcomeYoungHumanI::
     ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
@@ -4889,7 +4913,7 @@ YoldTalkEvents_TestFlagBit_WelcomeYoungHumanI::
 ; starts Script_SceneSailorRing (StartScriptAtHL_B04) (E-0271; was Talk_SceneSailorRing) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_SceneSailorRing; named after
 ; the script it starts, Script_SceneSailorRing)
-; starts Script_SceneSailorRing
+; starts Script_SceneSailorRing (E-0248)
 Talk_SceneSailorRing::
     ld hl, Script_SceneSailorRing
     call StartScriptAtHL_B04
@@ -4899,7 +4923,7 @@ Talk_SceneSailorRing::
 ; before enjoying' (E-0271; was Talk_HowCouldWeDieBeforeEnjoying) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_HowCouldWeDieBeforeEnjoying; shortened from
 ; TalkScript_HowCouldWeDieBeforeEnjoying)
-; starts Script_HowCouldWeDie: '*: How could we die before'
+; starts Script_HowCouldWeDie: '*: How could we die before' (E-0248)
 Talk_HowCouldWeDieBeforeEnjoying::
     ld hl, Script_HowCouldWeDie ; script '*: How could we die before'
     call StartScriptAtHL_B04
@@ -4909,7 +4933,7 @@ Talk_HowCouldWeDieBeforeEnjoying::
 ; are ours No one' (E-0271; was Talk_TheTreasuresAreOursNoOne) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_TheTreasuresAreOursNoOne; shortened from
 ; TalkScript_TheTreasuresAreOursNoOne)
-; starts Script_TheTreasuresAreOurs: '*: The treasures are ours… No'
+; starts Script_TheTreasuresAreOurs: '*: The treasures are ours… No' (E-0248)
 Talk_TheTreasuresAreOursNoOne::
     ld hl, Script_TheTreasuresAreOurs ; script '*: The treasures are ours… No'
     call StartScriptAtHL_B04
@@ -4918,13 +4942,13 @@ Talk_TheTreasuresAreOursNoOne::
 ; starts Script_ItNagsAndNags (StartScriptAtHL_B04); its first message begins 'It nags and nags that
 ; we' (E-0271; was Talk_ItNagsAndNagsThatWe) (E-0344: the address in its name dropped or read as the
 ; label there; was Talk_ItNagsAndNagsThatWe; shortened from TalkScript_ItNagsAndNagsThatWe)
-; starts Script_ItNagsAndNags: '*: It nags and nags that'
+; starts Script_ItNagsAndNags: '*: It nags and nags that' (E-0248)
 Talk_ItNagsAndNagsThatWe::
     ld hl, Script_ItNagsAndNags ; script '*: It nags and nags that'
     call StartScriptAtHL_B04
     ret
 
-; starts Script_WhoDisturbsUsIn: '*: Who disturbs us in our'
+; starts Script_WhoDisturbsUsIn: '*: Who disturbs us in our' (E-0248)
 YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn::
     ld de, EVENT_WHO_DISTURBS_US_IN_OUR
     call TestFlagBit
@@ -4941,7 +4965,7 @@ YoldTalkEvents_TestFlagBit_WhoDisturbsUsIn::
     ret
 
 ; step 75 of YoldTalkEvents: calls InventoryHasFreeSlotCheck; shows '0 checked the treasure chest.
-; There'; sets wInventorySortFlags; starts Script_HeroCheckedTheTreasure
+; There'; sets wInventorySortFlags; starts Script_HeroCheckedTheTreasure (E-0347)
 YoldTalkEvents_ShowHeroCheckedTheTreasure::
     call InventoryHasFreeSlotCheck
     jr c, .read_inventory_sort_flags
@@ -4958,7 +4982,7 @@ YoldTalkEvents_ShowHeroCheckedTheTreasure::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_HeroCheckedTheCrate: '0 checked the crate. There was'
+; starts Script_HeroCheckedTheCrate: '0 checked the crate. There was' (E-0248)
 YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate::
     ld hl, Script_HeroCheckedTheCrate ; script '0 checked the crate. There was'
     call StartScriptAtHL_B04
@@ -4966,7 +4990,7 @@ YoldTalkEvents_StartScriptAtHL_B04_HeroCheckedTheCrate::
     call SetFlagBit
     ret
 
-; step 77 of YoldTalkEvents: takes A; changes A
+; step 77 of YoldTalkEvents: takes A; changes A (E-0347)
 YoldTalkEvents_SetSpriteSlotsPlus7::
     xor a
     ld [wSpriteSlots + $7], a
@@ -4987,7 +5011,7 @@ ChestItem_LogTwig::
 
 ; step 79 of YoldTalkEvents: checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets hTemp0 to $31; calls
 ; FindTemp0InInventoryList; returns unless bit 7 of hTemp0 is set; shows '0 checked the pedestal. It
-; has'; shows '0 checked the pedestal. The MoonRock'
+; has'; shows '0 checked the pedestal. The MoonRock' (E-0347)
 YoldTalkEvents_ShowHeroCheckedThePedestal::
     ld de, EVENT_THE_PIRATES_WERE_SWALLOWED_BY
     call TestFlagBit
@@ -5009,7 +5033,7 @@ YoldTalkEvents_ShowHeroCheckedThePedestal::
 
 ; step 80 of YoldTalkEvents: returns unless hPlayerY is $30; sets
 ; EVENT_KAMEHA_WAHAHAHAH_THANKS_FOR_GUIDING; starts Script_KamehaWahahahahThanksFor; returns unless
-; hPlayerX is $50; sets wObject1 + OBJ_X to $40; sets wObject2 + OBJ_X to $40
+; hPlayerX is $50; sets wObject1 + OBJ_X to $40; sets wObject2 + OBJ_X to $40 (E-0347)
 YoldTalkEvents_SetFlagBit::
     ldh a, [hPlayerY]
     cp $30
@@ -5031,7 +5055,7 @@ YoldTalkEvents_SetFlagBit::
 ; catch up?' (E-0271; was Talk_KamehaUrkHowYouCatchUp) (E-0344: the address in its name dropped or
 ; read as the label there; was Talk_KamehaUrkHowYouCatchUp; shortened from
 ; TalkScript_KamehaUrkHowYouCatchUp)
-; starts Script_KamehaUrkHowYou: 'Kameha: Urk! How you catch up?'
+; starts Script_KamehaUrkHowYou: 'Kameha: Urk! How you catch up?' (E-0248)
 Talk_KamehaUrkHowYouCatchUp::
     ld hl, Script_KamehaUrkHowYou ; script 'Kameha: Urk! How you catch up?'
     call StartScriptAtHL_B04
@@ -5041,7 +5065,7 @@ Talk_KamehaUrkHowYouCatchUp::
 ; clear the way! I'm' (E-0271; was Talk_KamehaArrrrhClearTheWayIm) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_KamehaArrrrhClearTheWayIm; shortened from
 ; TalkScript_KamehaArrrrhClearTheWayIm)
-; starts Script_KamehaArrrrhClearThe: 'Kameha: Arrrrh, clear the way! I'm'
+; starts Script_KamehaArrrrhClearThe: 'Kameha: Arrrrh, clear the way! I'm' (E-0248)
 Talk_KamehaArrrrhClearTheWayIm::
     ld hl, Script_KamehaArrrrhClearThe ; script 'Kameha: Arrrrh, clear the way! I'm'
     call StartScriptAtHL_B04
@@ -5050,7 +5074,7 @@ Talk_KamehaArrrrhClearTheWayIm::
 ; starts Script_SceneMermaidKingdom (StartScriptAtHL_B04) (E-0271; was Talk_SceneMermaidKingdom)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneMermaidKingdom;
 ; named after the script it starts, Script_SceneMermaidKingdom)
-; starts Script_SceneMermaidKingdom
+; starts Script_SceneMermaidKingdom (E-0248)
 Talk_SceneMermaidKingdom::
     ld hl, Script_SceneMermaidKingdom
     call StartScriptAtHL_B04
@@ -5317,13 +5341,13 @@ TalkMsg0862_HeroPeeredIntoTheBarrelThere::
 ; starts message $0864 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the ledger. Voyage Log Sunrise' (E-0268, the E-0082 shape; was
 ; TalkMsg0864_HeroCheckedTheLedgerVoyage)
-; starts Script_SceneKamehaEscape
+; starts Script_SceneKamehaEscape (E-0248)
 TalkMsg0864_HeroCheckedTheLedgerVoyage::
     ld hl, $0864 ; '0 checked the ledger. 'Voyage Log…'
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_SceneKamehaEscape
+; starts Script_SceneKamehaEscape (E-0248)
 YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
     ld hl, Script_SceneKamehaEscape
     call StartScriptAtHL_B04
@@ -5337,7 +5361,7 @@ YoldTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
 
 ; starts message $00FF through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Composing' (E-0268, the E-0082 shape; was TalkMsg00FF_Composing)
-; starts Script_ThickSuctionCuppedTentacles: 'Thick, suction- cupped tentacles snaked out'
+; starts Script_ThickSuctionCuppedTentacles: 'Thick, suction- cupped tentacles snaked out' (E-0248)
 TalkMsg00FF_Composing::
     ld hl, $00ff ; 'Composing'
     call StartMessageCommand09HL_B04
@@ -5347,7 +5371,7 @@ TalkMsg00FF_Composing::
 ; suction- cupped tentacles snaked out' (E-0271; was Talk_ThickSuctionCuppedTentacles) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_ThickSuctionCuppedTentacles;
 ; shortened from TalkScript_ThickSuctionCuppedTentacles)
-; starts Script_ThickSuctionCuppedTentacles: 'Thick, suction- cupped tentacles snaked out'
+; starts Script_ThickSuctionCuppedTentacles: 'Thick, suction- cupped tentacles snaked out' (E-0248)
 Talk_ThickSuctionCuppedTentacles::
     ld hl, Script_ThickSuctionCuppedTentacles ; script 'Thick, suction- cupped tentacles snaked out'
     call StartScriptAtHL_B04
@@ -5355,7 +5379,7 @@ Talk_ThickSuctionCuppedTentacles::
 
 ; step 109 of YoldTalkEvents: sets wDataBank to $1f; checks EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202;
 ; starts Script_OurChurchIsImpoverished_2; sets EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202; starts
-; Script_IAmAServant_3
+; Script_IAmAServant_3 (E-0347)
 YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ld a, $1f
     ld [wDataBank], a
@@ -5374,7 +5398,7 @@ YoldTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ret
 
 ; talk category 2: jumps by wTalkEventGroup to the talk handlers of the Kalka oasis world (messages
-; $0130-$01CF)
+; $0130-$01CF) (E-0288)
 KalkaTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -5607,7 +5631,7 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
     ret
 
 ; step 10 of KalkaTalkEvents: branches on hPlayerX; starts Script_WelcomeToOurInn; sets wDataBank to
-; $10
+; $10 (E-0347)
 KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
     ldh a, [hPlayerX]
     cp $30
@@ -5757,7 +5781,7 @@ TalkMsg013F_TheCircusMasterWasTrying::
 
 ; step 18 of KalkaTalkEvents: sets wScreenTableIndex to 3; sets wDataBank to $10; checks
 ; EVENT_WELCOME_TO_MY_ITEM_SHOP; starts Script_WelcomeToMyItem; sets EVENT_WELCOME_TO_MY_ITEM_SHOP;
-; starts Script_HelloHowMayI_2
+; starts Script_HelloHowMayI_2 (E-0347)
 KalkaTalkEvents_TestFlagBit::
     ld a, $03
     ld [wScreenTableIndex], a
@@ -5846,6 +5870,7 @@ TalkMsg0143_WhenWeGetAHotSpell::
 
 ; step 23 of KalkaTalkEvents: sets wDataBank to $1f; checks EVENT_THE_CHURCH_WELCOMES_YOU_WE; starts
 ; Script_TheChurchWelcomesYou; sets EVENT_THE_CHURCH_WELCOMES_YOU_WE; starts Script_IAmAServant
+; (E-0347)
 KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
     ld a, $1f
     ld [wDataBank], a
@@ -5865,7 +5890,9 @@ KalkaTalkEvents_TestFlagBit_TheChurchWelcomesYou::
 
 ; step 24 of KalkaTalkEvents: checks EVENT_DID_YOU_SAY_YES_YES; branches on wPartyCount; calls
 ; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts Script_IAmTheLeader; starts
-; Script_IAmTheLeader_2; starts Script_IAmTheLeader_3; ...
+; Script_IAmTheLeader_2; starts Script_IAmTheLeader_3; branches on wPartyCount; calls
+; SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; starts
+; Script_AhThreeHealthyMonsters; shows 'Oh, you need a trio' (E-0347)
 KalkaTalkEvents_TestFlagBit_IAmTheLeader::
     ld de, EVENT_DID_YOU_SAY_YES_YES
     call TestFlagBit
@@ -5961,13 +5988,13 @@ TalkMsg01BE_HeroCheckedTheDresserThere::
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0037_HeroTriedToOpenTheChest_04) (E-0344: the address in its name dropped or read as the
 ; label there; was TalkMsg0037_HeroTriedToOpenTheChest_04)
-; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!'
+; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!' (E-0248)
 TalkMsg0037_HeroTriedToOpenTheChest_04::
     ld hl, $0037 ; '0 tried to open the chest.'
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!'
+; starts Script_WelcomeToOurInn_2: '*: Welcome to our inn!' (E-0248)
 KalkaTalkEvents_StartScriptAtHL_B04::
     ld hl, Script_WelcomeToOurInn_2 ; script '*: Welcome to our inn!'
     call StartScriptAtHL_B04
@@ -6115,7 +6142,7 @@ TalkMsg0159_WhatSeeHisMajestysTreasure::
 
 ; step 39 of KalkaTalkEvents: checks EVENT_SCENE_RIVAL_DEFEATED_05A; checks
 ; EVENT_YOU_WILL_SO_WE_CAN; starts Script_WhyAreYouSnooping; shows 'Our King worked to save'; shows
-; 'Welcome, our honored guests! The'
+; 'Welcome, our honored guests! The' (E-0347)
 KalkaTalkEvents_TestFlagBit_WhyAreYouSnooping::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
@@ -6163,7 +6190,7 @@ TalkMsg015A_HisMajestyIsHonestAndMost::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_ScenePoorChurch
+; starts Script_ScenePoorChurch (E-0248)
 KalkaTalkEvents_StartScriptAtHL_B04_2::
     ld a, [wStoryFlags + $61]
     bit 3, a
@@ -6183,7 +6210,10 @@ TalkMsg015F_HeroCheckedTheDresserThere::
 ; step 43 of KalkaTalkEvents: checks EVENT_SCENE_RIVAL_DEFEATED_05A; checks
 ; EVENT_SCENE_TREASURE_THEFT; checks EVENT_SCENE_WATER_SOLVED; checks
 ; EVENT_KING_WHAT_NEVER_MIND_THEN; checks EVENT_STRONG_MONSTERS_ARE_IN_THE; checks
-; EVENT_KING_THEN_MAKE_WAY_TO; checks EVENT_KING_YOU_WISH_TO; ...
+; EVENT_KING_THEN_MAKE_WAY_TO; checks EVENT_KING_YOU_WISH_TO; starts Script_KingAhYou_5; starts
+; Script_KingSoHaveYou; shows 'King: Investigate what concerns my people'; starts
+; Script_SoHaveYouDiscovered; shows 'I discovered why the water'; then 3 more steps (see the code)
+; (E-0347)
 KalkaTalkEvents_TestFlagBit_KingAhYou::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
@@ -6279,7 +6309,7 @@ TalkMsg0167_HumphAMirageLakeHeSays::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_WhatOpenTheCanal: '*: What? Open the Canal Gate'
+; starts Script_WhatOpenTheCanal: '*: What? Open the Canal Gate' (E-0248)
 KalkaTalkEvents_TestFlagBit_WhatOpenTheCanal::
     ld de, EVENT_KING_WHAT_NEVER_MIND_THEN
     call TestFlagBit
@@ -6394,7 +6424,7 @@ ChestItem_AGL::
     call StartTreasureFlagDE_B04
     ret
 
-; starts Script_I_13: '*: I'm making a new home'
+; starts Script_I_13: '*: I'm making a new home' (E-0248)
 KalkaTalkEvents_TestFlagBit_I::
     ld de, EVENT_SCENE_RIVAL_DEFEATED_05A
     call TestFlagBit
@@ -6410,7 +6440,8 @@ KalkaTalkEvents_TestFlagBit_I::
 
 ; step 56 of KalkaTalkEvents: checks EVENT_SCENE_TREASURE_THEFT; may return early; checks
 ; EVENT_CHECK_ITEM; sets hTemp0 to $19; calls FindTemp0InInventoryList; branches on hTemp0; sets
-; hTemp0 to $1a; ...
+; hTemp0 to $1a; calls FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $1b; calls
+; FindTemp0InInventoryList; branches on hTemp0; then 6 more steps (see the code) (E-0347)
 KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
@@ -6456,7 +6487,7 @@ KalkaTalkEvents_TestFlagBit_WhwhereIsEverybodyI::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_SceneMonstersInTow
+; starts Script_SceneMonstersInTow (E-0248)
 KalkaTalkEvents_StartScriptAtHL_B04_FindTemp0InInventoryList::
     ld a, [wStoryFlags + $61]
     set 4, a
@@ -6505,6 +6536,7 @@ TalkMsg0195_TheLeaderOfTheThievesIs::
 
 ; step 60 of KalkaTalkEvents: sets hTemp0 to 3; calls RunFieldCommandTemp0; checks
 ; EVENT_HEH_YOU_HAVE_MONSTERS_IN; starts Script_HehYouHaveMonsters; starts Script_YouAgainYou
+; (E-0347)
 KalkaTalkEvents_RunFieldCommandTemp0::
     ld a, $03
     ldh [hTemp0], a
@@ -6574,7 +6606,7 @@ VaseItem_BeefJerky::
     call StartTreasureFlagDE_B04
     ret
 
-; starts Script_SceneRivalFade
+; starts Script_SceneRivalFade (E-0248)
 KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     ld de, EVENT_SCENE_MONSTERS_IN_TOW
     call TestFlagBit
@@ -6583,7 +6615,7 @@ KalkaTalkEvents_TestFlagBit_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-; step 68 of KalkaTalkEvents: changes A; may return early
+; step 68 of KalkaTalkEvents: changes A; may return early (E-0347)
 KalkaTalkEvents_WaitStoryFlagsPlus61::
     ld a, [wStoryFlags + $61]
     bit 4, a
@@ -6594,7 +6626,7 @@ KalkaTalkEvents_WaitStoryFlagsPlus61::
 
 ; step 69 of KalkaTalkEvents: sets wDataBank to $1f; checks EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO;
 ; starts Script_OurChurchIsImpoverished; sets EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO; starts
-; Script_IAmAServant_2
+; Script_IAmAServant_2 (E-0347)
 KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ld a, $1f
     ld [wDataBank], a
@@ -6613,7 +6645,7 @@ KalkaTalkEvents_TestFlagBit_OurChurchIsImpoverished::
     ret
 
 ; talk category 6: two flag-tested handlers that start Darck's scripts ("Darck Fawahahah! You chased
-; your treasures")
+; your treasures") (E-0288)
 DarckTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -6622,7 +6654,8 @@ DarckTalkEvents::
 
 ; step 0 of DarckTalkEvents: checks EVENT_TAKE_ITEM; sets hTemp0 to $36; calls
 ; FindTemp0InInventoryList; branches on hTemp0; sets hTemp0 to $37; calls FindTemp0InInventoryList;
-; branches on hTemp0; ...
+; branches on hTemp0; sets hTemp0 to $38; calls FindTemp0InInventoryList; branches on hTemp0; starts
+; Script_IHeardFromLord_2; starts Script_IHeardFromLord; then 1 more step (see the code) (E-0347)
 DarckTalkEvents_TestFlagBit::
     ld de, EVENT_TAKE_ITEM
     call TestFlagBit
@@ -6659,7 +6692,7 @@ DarckTalkEvents_TestFlagBit::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_DarckFawahahahYouChased: 'Darck: Fawahahah! You chased your treasures'
+; starts Script_DarckFawahahahYouChased: 'Darck: Fawahahah! You chased your treasures' (E-0248)
 DarckTalkEvents_TestFlagBit_DarckFawahahahYouChased::
     ld de, EVENT_DARCK_FAWAHAHAH_YOU_CHASED_YOUR
     call TestFlagBit
@@ -6722,7 +6755,7 @@ FieldTalkEvents::
 ; starts Script_CountdownMessage (StartScriptAtHL_B04) (E-0271; was Talk_CountdownMessage) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_CountdownMessage; named after
 ; the script it starts, Script_CountdownMessage)
-; starts Script_CountdownMessage
+; starts Script_CountdownMessage (E-0248)
 Talk_CountdownMessage::
     ld hl, Script_CountdownMessage
     call StartScriptAtHL_B04
@@ -6731,13 +6764,13 @@ Talk_CountdownMessage::
 ; starts Script_EncounterMessage (StartScriptAtHL_B04) (E-0271; was Talk_EncounterMessage) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_EncounterMessage; named after
 ; the script it starts, Script_EncounterMessage)
-; starts Script_EncounterMessage
+; starts Script_EncounterMessage (E-0248)
 Talk_EncounterMessage::
     ld hl, Script_EncounterMessage
     call StartScriptAtHL_B04
     ret
 
-; step 28 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1c
+; step 28 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1c (E-0347)
 FieldTalkEvents_TestFlagBit_2::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -6749,7 +6782,7 @@ FieldTalkEvents_TestFlagBit_2::
     call StartScriptAtHL_B04
     ret
 
-; step 27 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1b
+; step 27 of FieldTalkEvents: checks EVENT_SCENE_THREE_ITEMS; starts Script_ObjectPath1b (E-0347)
 FieldTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_THREE_ITEMS
     call TestFlagBit
@@ -6764,7 +6797,7 @@ FieldTalkEvents_TestFlagBit::
 ; starts Script_HealParty (StartScriptAtHL_B04) (E-0271; was Talk_HealParty) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_HealParty; named after the script it starts,
 ; Script_HealParty)
-; starts Script_HealParty
+; starts Script_HealParty (E-0248)
 Talk_HealParty::
     ld hl, Script_HealParty
     call StartScriptAtHL_B04
@@ -6773,7 +6806,7 @@ Talk_HealParty::
 ; starts Script_RandomBattle (StartScriptAtHL_B04) (E-0271; was Talk_RandomBattle) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_RandomBattle; named after the
 ; script it starts, Script_RandomBattle)
-; starts Script_RandomBattle
+; starts Script_RandomBattle (E-0248)
 Talk_RandomBattle::
     ld hl, Script_RandomBattle
     call StartScriptAtHL_B04
@@ -6782,7 +6815,7 @@ Talk_RandomBattle::
 ; starts Script_ArenaGridBattle (StartScriptAtHL_B04) (E-0271; was Talk_ArenaGridBattle) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_ArenaGridBattle; named after
 ; the script it starts, Script_ArenaGridBattle)
-; starts Script_ArenaGridBattle
+; starts Script_ArenaGridBattle (E-0248)
 Talk_ArenaGridBattle::
     ld hl, Script_ArenaGridBattle
     call StartScriptAtHL_B04
@@ -6791,7 +6824,7 @@ Talk_ArenaGridBattle::
 ; starts Script_ArenaRounds (StartScriptAtHL_B04) (E-0271; was Talk_ArenaRounds) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_ArenaRounds; named after the
 ; script it starts, Script_ArenaRounds)
-; starts Script_ArenaRounds
+; starts Script_ArenaRounds (E-0248)
 Talk_ArenaRounds::
     ld hl, Script_ArenaRounds
     call StartScriptAtHL_B04
@@ -6800,7 +6833,7 @@ Talk_ArenaRounds::
 ; starts Script_BreedFade (StartScriptAtHL_B04) (E-0271; was Talk_BreedFade) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_BreedFade; named after the script it starts,
 ; Script_BreedFade)
-; starts Script_BreedFade
+; starts Script_BreedFade (E-0248)
 Talk_BreedFade::
     ld hl, Script_BreedFade
     call StartScriptAtHL_B04
@@ -6809,7 +6842,7 @@ Talk_BreedFade::
 ; starts Script_BreedChildSprite (StartScriptAtHL_B04) (E-0271; was Talk_BreedChildSprite) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_BreedChildSprite; named after
 ; the script it starts, Script_BreedChildSprite)
-; starts Script_BreedChildSprite
+; starts Script_BreedChildSprite (E-0248)
 Talk_BreedChildSprite::
     ld hl, Script_BreedChildSprite
     call StartScriptAtHL_B04
@@ -6818,7 +6851,7 @@ Talk_BreedChildSprite::
 ; starts Script_BreedChildScene (StartScriptAtHL_B04) (E-0271; was Talk_BreedChildScene) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_BreedChildScene; named after
 ; the script it starts, Script_BreedChildScene)
-; starts Script_BreedChildScene
+; starts Script_BreedChildScene (E-0248)
 Talk_BreedChildScene::
     ld hl, Script_BreedChildScene
     call StartScriptAtHL_B04
@@ -6827,7 +6860,7 @@ Talk_BreedChildScene::
 ; starts Script_NpcBreedWarp (StartScriptAtHL_B04) (E-0271; was Talk_NpcBreedWarp) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_NpcBreedWarp; named after the
 ; script it starts, Script_NpcBreedWarp)
-; starts Script_NpcBreedWarp
+; starts Script_NpcBreedWarp (E-0248)
 Talk_NpcBreedWarp::
     ld hl, Script_NpcBreedWarp
     call StartScriptAtHL_B04
@@ -6836,14 +6869,14 @@ Talk_NpcBreedWarp::
 ; starts Script_LinkMessage (StartScriptAtHL_B04) (E-0271; was Talk_LinkMessage) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_LinkMessage; named after the
 ; script it starts, Script_LinkMessage)
-; starts Script_LinkMessage
+; starts Script_LinkMessage (E-0248)
 Talk_LinkMessage::
     ld hl, Script_LinkMessage
     call StartScriptAtHL_B04
     ret
 
 ; step 34 of FieldTalkEvents: returns if wFollowerDelay is 0; copies hPlayerFacing & $03 to
-; wFollowerRecords; sets wScriptParam1 to 0; starts Script_PersonalityMessage
+; wFollowerRecords; sets wScriptParam1 to 0; starts Script_PersonalityMessage (E-0347)
 FieldTalkEvents_StartScriptAtHL_B04::
     ld a, [wFollowerDelay]
     or a
@@ -6860,7 +6893,7 @@ FieldTalkEvents_StartScriptAtHL_B04::
     ret
 
 ; step 35 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 1; starts
-; Script_PersonalityMessage
+; Script_PersonalityMessage (E-0347)
 FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     ld a, [wFollowerDelay]
     or a
@@ -6880,7 +6913,7 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1::
     ret
 
 ; step 36 of FieldTalkEvents: returns if wFollowerDelay is 0; sets wScriptParam1 to 2; starts
-; Script_PersonalityMessage
+; Script_PersonalityMessage (E-0347)
 FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2::
     ld a, [wFollowerDelay]
     or a
@@ -6901,7 +6934,7 @@ FieldTalkEvents_StartScriptAtHL_B04_SetScriptParam1_2::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_SceneKamehaStole
+; starts Script_SceneKamehaStole (E-0248)
 FieldTalkEvents_StartScriptAtHL_B04_2::
     ld a, [wFollowerDelay]
     or a
@@ -6910,7 +6943,7 @@ FieldTalkEvents_StartScriptAtHL_B04_2::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_FollowersStep10
+; starts Script_FollowersStep10 (E-0248)
 FieldTalkEvents_SetFollowerDelay::
     xor a
     ld [wFollowerDelay], a
@@ -6919,7 +6952,7 @@ FieldTalkEvents_SetFollowerDelay::
 ; starts Script_FollowersStep10 (StartScriptAtHL_B04) (E-0271; was Talk_FollowersStep10) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_FollowersStep10; named after
 ; the script it starts, Script_FollowersStep10)
-; starts Script_FollowersStep10
+; starts Script_FollowersStep10 (E-0248)
 Talk_FollowersStep10::
     ld hl, Script_FollowersStep10
     call StartScriptAtHL_B04
@@ -6928,7 +6961,7 @@ Talk_FollowersStep10::
 ; starts Script_FollowersStep11 (StartScriptAtHL_B04) (E-0271; was Talk_FollowersStep11) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_FollowersStep11; named after
 ; the script it starts, Script_FollowersStep11)
-; starts Script_FollowersStep11
+; starts Script_FollowersStep11 (E-0248)
 Talk_FollowersStep11::
     ld hl, Script_FollowersStep11
     call StartScriptAtHL_B04
@@ -6937,7 +6970,7 @@ Talk_FollowersStep11::
 ; starts Script_PlayerAndFollowersStep (StartScriptAtHL_B04) (E-0271; was
 ; Talk_PlayerAndFollowersStep) (E-0344: the address in its name dropped or read as the label there;
 ; was Talk_PlayerAndFollowersStep; named after the script it starts, Script_PlayerAndFollowersStep)
-; starts Script_PlayerAndFollowersStep
+; starts Script_PlayerAndFollowersStep (E-0248)
 Talk_PlayerAndFollowersStep::
     ld hl, Script_PlayerAndFollowersStep
     call StartScriptAtHL_B04
@@ -6946,7 +6979,7 @@ Talk_PlayerAndFollowersStep::
 ; starts Script_WarpWithFollowers (StartScriptAtHL_B04) (E-0271; was Talk_WarpWithFollowers)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_WarpWithFollowers;
 ; named after the script it starts, Script_WarpWithFollowers)
-; starts Script_WarpWithFollowers
+; starts Script_WarpWithFollowers (E-0248)
 Talk_WarpWithFollowers::
     ld hl, Script_WarpWithFollowers
     call StartScriptAtHL_B04
@@ -6955,20 +6988,20 @@ Talk_WarpWithFollowers::
 ; starts Script_FollowersStep14 (StartScriptAtHL_B04) (E-0271; was Talk_FollowersStep14) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_FollowersStep14; named after
 ; the script it starts, Script_FollowersStep14)
-; starts Script_FollowersStep14
+; starts Script_FollowersStep14 (E-0248)
 Talk_FollowersStep14::
     ld hl, Script_FollowersStep14
     call StartScriptAtHL_B04
     ret
 
-; starts Script_FieldScene01
+; starts Script_FieldScene01 (E-0248)
 FieldTalkEvents_Return::
     ret
 
 ; starts Script_FieldScene01 (StartScriptAtHL_B04) (E-0271; was Talk_FieldScene01) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_FieldScene01; named after the
 ; script it starts, Script_FieldScene01)
-; starts Script_FieldScene01
+; starts Script_FieldScene01 (E-0248)
 Talk_FieldScene01::
     ld hl, Script_FieldScene01
     call StartScriptAtHL_B04
@@ -6977,7 +7010,7 @@ Talk_FieldScene01::
 ; starts Script_RandomGoldOrItem (StartScriptAtHL_B04) (E-0271; was Talk_RandomGoldOrItem) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_RandomGoldOrItem; named after
 ; the script it starts, Script_RandomGoldOrItem)
-; starts Script_RandomGoldOrItem
+; starts Script_RandomGoldOrItem (E-0248)
 Talk_RandomGoldOrItem::
     ld hl, Script_RandomGoldOrItem
     call StartScriptAtHL_B04
@@ -6986,7 +7019,7 @@ Talk_RandomGoldOrItem::
 ; starts Script_PartyDefeatedReturn (StartScriptAtHL_B04) (E-0271; was Talk_PartyDefeatedReturn)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_PartyDefeatedReturn;
 ; named after the script it starts, Script_PartyDefeatedReturn)
-; starts Script_PartyDefeatedReturn
+; starts Script_PartyDefeatedReturn (E-0248)
 Talk_PartyDefeatedReturn::
     ld hl, Script_PartyDefeatedReturn
     call StartScriptAtHL_B04
@@ -6995,7 +7028,7 @@ Talk_PartyDefeatedReturn::
 ; starts Script_ReturnMessage (StartScriptAtHL_B04) (E-0271; was Talk_ReturnMessage) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_ReturnMessage; named after the
 ; script it starts, Script_ReturnMessage)
-; starts Script_ReturnMessage
+; starts Script_ReturnMessage (E-0248)
 Talk_ReturnMessage::
     ld hl, Script_ReturnMessage
     call StartScriptAtHL_B04
@@ -7004,7 +7037,7 @@ Talk_ReturnMessage::
 ; starts Script_ReturnWarp (StartScriptAtHL_B04) (E-0271; was Talk_ReturnWarp) (E-0344: the address
 ; in its name dropped or read as the label there; was Talk_ReturnWarp; named after the script it
 ; starts, Script_ReturnWarp)
-; starts Script_ReturnWarp
+; starts Script_ReturnWarp (E-0248)
 Talk_ReturnWarp::
     ld hl, Script_ReturnWarp
     call StartScriptAtHL_B04
@@ -7013,7 +7046,7 @@ Talk_ReturnWarp::
 ; starts Script_MapExitWarp (StartScriptAtHL_B04) (E-0271; was Talk_MapExitWarp) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_MapExitWarp; named after the
 ; script it starts, Script_MapExitWarp)
-; starts Script_MapExitWarp
+; starts Script_MapExitWarp (E-0248)
 Talk_MapExitWarp::
     ld hl, Script_MapExitWarp
     call StartScriptAtHL_B04
@@ -7022,7 +7055,7 @@ Talk_MapExitWarp::
 ; starts Script_MapLinkWarp (StartScriptAtHL_B04) (E-0271; was Talk_MapLinkWarp) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_MapLinkWarp; named after the
 ; script it starts, Script_MapLinkWarp)
-; starts Script_MapLinkWarp
+; starts Script_MapLinkWarp (E-0248)
 Talk_MapLinkWarp::
     ld hl, Script_MapLinkWarp
     call StartScriptAtHL_B04
@@ -7031,7 +7064,7 @@ Talk_MapLinkWarp::
 ; starts Script_PlayerSpriteFlash (StartScriptAtHL_B04) (E-0271; was Talk_PlayerSpriteFlash)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_PlayerSpriteFlash;
 ; named after the script it starts, Script_PlayerSpriteFlash)
-; starts Script_PlayerSpriteFlash
+; starts Script_PlayerSpriteFlash (E-0248)
 Talk_PlayerSpriteFlash::
     ld hl, Script_PlayerSpriteFlash
     call StartScriptAtHL_B04
@@ -7040,7 +7073,7 @@ Talk_PlayerSpriteFlash::
 ; starts Script_PlayerSpriteMessage (StartScriptAtHL_B04) (E-0271; was Talk_PlayerSpriteMessage)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_PlayerSpriteMessage;
 ; named after the script it starts, Script_PlayerSpriteMessage)
-; starts Script_PlayerSpriteMessage
+; starts Script_PlayerSpriteMessage (E-0248)
 Talk_PlayerSpriteMessage::
     ld hl, Script_PlayerSpriteMessage
     call StartScriptAtHL_B04
@@ -7049,7 +7082,7 @@ Talk_PlayerSpriteMessage::
 ; starts Script_KeyWorldDoorItem (StartScriptAtHL_B04) (E-0271; was Talk_KeyWorldDoorItem) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_KeyWorldDoorItem; named after
 ; the script it starts, Script_KeyWorldDoorItem)
-; starts Script_KeyWorldDoorItem
+; starts Script_KeyWorldDoorItem (E-0248)
 Talk_KeyWorldDoorItem::
     ld hl, Script_KeyWorldDoorItem
     call StartScriptAtHL_B04
@@ -7058,7 +7091,7 @@ Talk_KeyWorldDoorItem::
 ; starts Script_AreaItem (StartScriptAtHL_B04) (E-0271; was Talk_AreaItem) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_AreaItem; named after the script it starts,
 ; Script_AreaItem)
-; starts Script_AreaItem
+; starts Script_AreaItem (E-0248)
 Talk_AreaItem::
     ld hl, Script_AreaItem
     call StartScriptAtHL_B04
@@ -7067,14 +7100,14 @@ Talk_AreaItem::
 ; starts Script_StepTriggerReward (StartScriptAtHL_B04) (E-0271; was Talk_StepTriggerReward)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_StepTriggerReward;
 ; named after the script it starts, Script_StepTriggerReward)
-; starts Script_StepTriggerReward
+; starts Script_StepTriggerReward (E-0248)
 Talk_StepTriggerReward::
     ld hl, Script_StepTriggerReward
     call StartScriptAtHL_B04
     ret
 
 ; talk category 7: jumps by wTalkEventGroup to the talk handlers of the Elven village world
-; (messages $0700-$07BF, $0C00-$0CFF)
+; (messages $0700-$07BF, $0C00-$0CFF) (E-0288)
 ElvenVillageTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -7264,7 +7297,7 @@ ElvenVillageTalkEvents::
     dw ChestItem_LoveWater_Flag01FA
     ds $10, $00
 
-; starts Script_SceneCyalShine
+; starts Script_SceneCyalShine (E-0248)
 ElvenVillageTalkEvents_TestFlagBit::
     ld de, EVENT_SCENE_CYAL_SHINE
     call TestFlagBit
@@ -7286,7 +7319,9 @@ ElvenVillageTalkEvents_TestFlagBit::
 
 ; step 1 of ElvenVillageTalkEvents: checks EVENT_KEY_BOSS_BEATEN; checks EVENT_SCENE_GIVE_BACK_CYAL;
 ; checks EVENT_SCENE_TOO_STRONG; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_CYAL_YAY_YOU; checks
-; EVENT_YOURE_AHUMAN_HOW; shows 'You're a human. How did'; ...
+; EVENT_YOURE_AHUMAN_HOW; shows 'You're a human. How did'; sets EVENT_YOURE_AHUMAN_HOW; checks
+; EVENT_ARE_YOU_MAYBE_A; shows 'Even worse, you have monsters.'; starts Script_SoCyalTookA; shows
+; 'Rolt: Go south in the plains,'; then 5 more steps (see the code) (E-0347)
 ElvenVillageTalkEvents_ShowYoureAHumanHow::
     ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
@@ -7355,7 +7390,8 @@ ElvenVillageTalkEvents_ShowYoureAHumanHow::
 ; step 2 of ElvenVillageTalkEvents: checks EVENT_CYAL_I_HOPE_YOULL_STAY; checks
 ; EVENT_KEY_BOSS_BEATEN; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_CYAL_YAY_YOU; starts
 ; Script_AreYouMaybeA; shows 'Cyal: We're going back home now.'; sets EVENT_YOURE_AHUMAN_HOW_145;
-; ...
+; starts Script_CyalListenHeroWe; shows 'Cyal: I hope you'll stay my'; sets
+; EVENT_CYAL_I_HOPE_YOULL_STAY; shows 'Cyal: I ought to become a' (E-0347)
 ElvenVillageTalkEvents_TestFlagBit_AreYouMaybeA::
     ld de, EVENT_CYAL_I_HOPE_YOULL_STAY
     call TestFlagBit
@@ -7599,7 +7635,7 @@ TalkMsg0752_IveHeardThatHumansAre::
     ret
 
 ; step 10 of ElvenVillageTalkEvents: sets wScreenTableIndex to $10; sets wDataBank to $10; starts
-; Script_WelcomeHowMayI_5
+; Script_WelcomeHowMayI_5 (E-0347)
 ElvenVillageTalkEvents_StartScriptAtHL_B04::
     ld a, $10
     ld [wScreenTableIndex], a
@@ -7611,7 +7647,9 @@ ElvenVillageTalkEvents_StartScriptAtHL_B04::
 
 ; step 11 of ElvenVillageTalkEvents: checks EVENT_KEY_BOSS_BEATEN; checks EVENT_WELL_WELL_IT_IS_14D;
 ; checks EVENT_ROLT_WAIT_GONE_ALREADY; checks EVENT_SCENE_ROLT_ELDER; checks EVENT_WELL_WELL_IT_IS;
-; checks EVENT_YOURE_AHUMAN_HOW_145; shows 'Well, well… It is a'; ...
+; checks EVENT_YOURE_AHUMAN_HOW_145; shows 'Well, well… It is a'; sets EVENT_WELL_WELL_IT_IS; starts
+; Script_WellWellAHuman; checks EVENT_YOURE_AHUMAN_HOW_145; shows 'I'm the Village Elder. By the';
+; starts Script_I_18; then 5 more steps (see the code) (E-0347)
 ElvenVillageTalkEvents_ShowWellWellItIs::
     ld de, EVENT_KEY_BOSS_BEATEN
     call TestFlagBit
@@ -7677,7 +7715,7 @@ ElvenVillageTalkEvents_ShowWellWellItIs::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_MasterAgDevilAHuman: '*: Master AgDevil, a human, ruff!'
+; starts Script_MasterAgDevilAHuman: '*: Master AgDevil, a human, ruff!' (E-0248)
 ElvenVillageTalkEvents_TestFlagBit_MasterAgDevilAHuman::
     ld de, EVENT_CYAL_EEEK_HERO_HELP_ME
     call TestFlagBit
@@ -7703,7 +7741,7 @@ TalkMsg0723_TchWeHaveToEatThe::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_That_3: '*: That's what we'll do, kid.'
+; starts Script_That_3: '*: That's what we'll do, kid.' (E-0248)
 ElvenVillageTalkEvents_TestFlagBit_That::
     ld de, EVENT_THAT
     call TestFlagBit
@@ -7780,7 +7818,7 @@ TalkMsg0730_HorridMonstersThatAttack::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_TheHumanInThe: '*: The human in the forest'
+; starts Script_TheHumanInThe: '*: The human in the forest' (E-0248)
 ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe::
     ld de, EVENT_THE_HUMAN_IN_THE_FOREST
     call TestFlagBit
@@ -7796,7 +7834,7 @@ ElvenVillageTalkEvents_TestFlagBit_TheHumanInThe::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_RoltI: 'Rolt: I've found you at last!'
+; starts Script_RoltI: 'Rolt: I've found you at last!' (E-0248)
 ElvenVillageTalkEvents_TestFlagBit_RoltI::
     ld de, EVENT_ROLT_WAIT_GONE_ALREADY
     call TestFlagBit
@@ -7914,7 +7952,10 @@ TalkMsg0757_HeroCheckedTheOvenASharp::
 ; string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_WIZSTONE; checks EVENT_SCENE_BARREL;
 ; checks EVENT_KIRAL_PLEASE_GO_STOP_HIM; checks EVENT_KIRAL_FETCH_ME_MY; checks
-; EVENT_KIRAL_OH_FOOLISH_OF_ME; checks EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR; ...
+; EVENT_KIRAL_OH_FOOLISH_OF_ME; checks EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR; starts
+; Script_HohAhExcuseMy; starts Script_KiralINeedHelp; shows 'Kiral: Fetch me my treasure from';
+; starts Script_KiralAhBackThe; shows 'Kiral: Please… Go stop him. You'; then 18 more steps (see the
+; code) (E-0347)
 Talk075F_KiralFetchMeMy::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8021,6 +8062,7 @@ Talk075F_KiralFetchMeMy::
 ; string begins 'Pii Ggzz Piiiiii'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_WIZSTONE; sets wObject1 + OBJ_STATE
 ; to 0; shows 'Pii… Ggzz… Piiiiii…'; shows 'I AM THE LATEST ROBOSTER.'; shows 'MY NAME IS LEO. THE'
+; (E-0347)
 Talk075A_PiiGgzzPiiiiii::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8129,9 +8171,9 @@ TalkMsg0766_HeroPeeredIntoTheBarrelA::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0768, whose
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; starts Script_HeroPeeredIntoThe_2: '0 peered into the barrel. A'
+; starts Script_HeroPeeredIntoThe_2: '0 peered into the barrel. A' (E-0248)
 ; code: checks EVENT_HERO_PEERED_INTO_THE_BARREL; starts Script_HeroPeeredIntoThe_2; shows '0 peered
-; into the barrel. There'
+; into the barrel. There' (E-0347)
 Talk0768_HeroPeeredIntoThe::
     ld de, EVENT_HERO_PEERED_INTO_THE_BARREL
     call TestFlagBit
@@ -8150,9 +8192,9 @@ Talk0768_HeroPeeredIntoThe::
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; Talk0768_HeroPeeredIntoThe_2)
-; starts Script_HeroPeeredIntoThe_3: '0 peered into the barrel. A'
+; starts Script_HeroPeeredIntoThe_3: '0 peered into the barrel. A' (E-0248)
 ; code: checks EVENT_HERO_PEERED_INTO_THE_BARREL_15E; starts Script_HeroPeeredIntoThe_3; shows '0
-; peered into the barrel. There'
+; peered into the barrel. There' (E-0347)
 Talk0768_HeroPeeredIntoThe_2::
     ld de, EVENT_HERO_PEERED_INTO_THE_BARREL_15E
     call TestFlagBit
@@ -8172,7 +8214,8 @@ Talk0768_HeroPeeredIntoThe_2::
 ; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_BARREL; checks
 ; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161; checks EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY; checks
 ; EVENT_KIRAL_FETCH_ME_MY; starts Script_PROFESSORSAYGUARDTREASURE; starts Script_PROSORAYGGGGUARD;
-; ...
+; starts Script_PIPIPIGGGGGGAGAGAGA; starts Script_PIPI; shows 'Roboster stopped moving entirely…';
+; shows 'WELCOME. I AM ROB-N. I' (E-0347)
 Talk078E_RobosterStoppedMovingEntirely::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8223,7 +8266,8 @@ Talk078E_RobosterStoppedMovingEntirely::
 ; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_HERO_PEERED_INTO_THE; checks EVENT_SCENE_BARREL; starts
 ; Script_HeroPeeredIntoThe_4; calls InventoryHasFreeSlotCheck; shows '0 peered into the barrel.
-; There'; sets wInventorySortFlags; shows '0 peered into the barrel. There'; ...
+; There'; sets wInventorySortFlags; shows '0 peered into the barrel. There'; sets
+; EVENT_HERO_PEERED_INTO_THE; shows '0 peered into the barrel. There' (E-0347)
 Talk077B_HeroPeeredIntoThe::
     ld de, EVENT_HERO_PEERED_INTO_THE
     call TestFlagBit
@@ -8391,7 +8435,9 @@ TalkMsg0794_YouAppearToHave::
 ; string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks
 ; EVENT_HERO_OPENED_THE_TREASURE_CHEST; checks EVENT_THANK_YOU_I_KNEW_YOU; starts Script_Sigh;
-; checks EVENT_COULD_YOU_HUMOR_THIS; shows 'Could you humor this old'; ...
+; checks EVENT_COULD_YOU_HUMOR_THIS; shows 'Could you humor this old'; sets
+; EVENT_COULD_YOU_HUMOR_THIS; shows 'My daughter wedded a man'; sets hTemp0 to $3d; calls
+; FindTemp0InInventoryList; branches on hTemp0; then 4 more steps (see the code) (E-0347)
 Talk07A4_CouldYouHumorThis::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8451,7 +8497,10 @@ Talk07A4_CouldYouHumorThis::
 ; string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_HERO_RECEIVED_A_SAGE_ROCK; checks
 ; EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_THANK_YOU_I_KNEW_YOU; starts Script_Sigh_2; shows
-; 'Our daughter's only memento was'; calls InventoryHasFreeSlotCheck; ...
+; 'Our daughter's only memento was'; calls InventoryHasFreeSlotCheck; starts
+; Script_ThankYouForRecovering; sets Script_ThankYouForRecovering to $0b; sets wInventorySortFlags;
+; starts Script_ThankYouForRecovering_2; shows 'We are grateful that you'; then 1 more step (see the
+; code) (E-0347)
 Talk07A6_OurDaughtersOnlyMemento::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8684,7 +8733,10 @@ TalkMsg079F_IfYouTravelWest::
 ; string begins 'Milayou I've been checking around,'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_MILAYOU_IEBEEN; checks EVENT_MILAYOU_HOW_DO_I_KNOW; checks
 ; EVENT_KEY_BOSS_BEATEN_2; checks EVENT_SCENE_MILAYOU_FOREST; checks EVENT_SCENE_PENDANT_SELLER_1C0;
-; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_I_CAN; ...
+; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_I_CAN; starts Script_ExcuseMeAreYou; starts
+; Script_HaveYouChangedYour; shows 'Milayou: I've been checking around, and'; starts
+; Script_MilayouIThoughtThis; shows 'Milayou: Please defeat the dark master'; then 5 more steps (see
+; the code) (E-0347)
 Talk07D7_MilayouIEBeen::
     ld de, EVENT_MILAYOU_IEBEEN
     call TestFlagBit
@@ -8802,7 +8854,7 @@ TalkMsg07AA_ThatDealerHowExpensive::
 ; string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks
 ; EVENT_SCENE_MERCY; starts Script_LatelyTheTownOf; shows 'What? Monsters attacked you in'; shows
-; 'The thieving monsters had a'; shows 'People say you can't judge'
+; 'The thieving monsters had a'; shows 'People say you can't judge' (E-0347)
 Talk07C1_WhatMonstersAttackedYou::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8872,7 +8924,10 @@ TalkMsg07AE_ThatDealersWaresCould::
 ; string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
 ; code: checks EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_YOU_DEFEATED_THE_MONSTERS_YOU; checks
 ; EVENT_SCENE_MERCY; checks EVENT_THANK_YOU_I_KNEW_YOU; checks EVENT_HOW_DOES_THIS_ORNAMENT; shows
-; 'How does this ornament look?'; sets EVENT_HOW_DOES_THIS_ORNAMENT; ...
+; 'How does this ornament look?'; sets EVENT_HOW_DOES_THIS_ORNAMENT; checks
+; EVENT_HOW_DOES_THIS_ORNAMENT_1B4; shows 'How does this jewelry look?'; sets
+; EVENT_HOW_DOES_THIS_ORNAMENT_1B4; checks EVENT_HOW_DOES_THIS_ORNAMENT_1B5; shows 'How does this
+; grand vase'; then 16 more steps (see the code) (E-0347)
 Talk07AF_HowDoesThisOrnament::
     ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
@@ -8995,7 +9050,7 @@ TalkMsg07B8_WhoAreYou::
 
 ; map event: starts script $64A6 if story flag $1BA is set, else $6496 (E-0122) (E-0344: the address
 ; in its name dropped or read as the label there; was StartScriptOrByFlag1BA)
-; starts Script_You_12: '*: You're going to regret seeing'
+; starts Script_You_12: '*: You're going to regret seeing' (E-0248)
 StartScriptOrByFlag1BA::
     ld de, EVENT_YOU_1BA
     call TestFlagBit
@@ -9013,7 +9068,7 @@ StartScriptOrByFlag1BA::
 ; constant message(s) depending on story flags and state; the first one in the code is $07BF, whose
 ; string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
 ; code: calls InventoryHasFreeSlotCheck; shows '0 found the Pretty Ring. But'; sets
-; wInventorySortFlags; starts Script_HeroOpenedTheTreasure
+; wInventorySortFlags; starts Script_HeroOpenedTheTreasure (E-0347)
 Talk07BF_HeroFoundThePretty::
     call InventoryHasFreeSlotCheck
     jr c, .read_inventory_sort_flags
@@ -9032,7 +9087,7 @@ Talk07BF_HeroFoundThePretty::
 
 ; map event: starts script $652C if story flag $1C2 is set, else $6509 (E-0122) (E-0344: the address
 ; in its name dropped or read as the label there; was StartScriptOrByFlag1C2)
-; starts Script_WhatIsItYou: '*: What is it, you little'
+; starts Script_WhatIsItYou: '*: What is it, you little' (E-0248)
 StartScriptOrByFlag1C2::
     ld de, EVENT_WHAT_IS_IT_YOU
     call TestFlagBit
@@ -9189,7 +9244,7 @@ ChestItem_Friend::
 ; the treasure chest. The' (E-0271; was Talk_HeroCheckedTheTreasureChest) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_HeroCheckedTheTreasureChest; shortened from
 ; TalkScript_HeroCheckedTheTreasureChest)
-; starts Script_HeroCheckedTheTreasure_3: '0 checked the treasure chest. The'
+; starts Script_HeroCheckedTheTreasure_3: '0 checked the treasure chest. The' (E-0248)
 Talk_HeroCheckedTheTreasureChest::
     ld hl, Script_HeroCheckedTheTreasure_3 ; script '0 checked the treasure chest. The'
     call StartScriptAtHL_B04
@@ -9212,7 +9267,7 @@ TalkMsg0C02_OnlyAHandfulOfMastersHave::
     ret
 
 ; step 98 of ElvenVillageTalkEvents: checks EVENT_THIS_IS_THE_POWER; shows 'This is the Power
-; Tower.'; sets EVENT_THIS_IS_THE_POWER; shows 'If you win, you'll earn'
+; Tower.'; sets EVENT_THIS_IS_THE_POWER; shows 'If you win, you'll earn' (E-0347)
 ElvenVillageTalkEvents_ShowThisIsThePower::
     ld de, EVENT_THIS_IS_THE_POWER
     call TestFlagBit
@@ -9231,7 +9286,7 @@ ElvenVillageTalkEvents_ShowThisIsThePower::
 ; starts Script_SceneChestBattle (StartScriptAtHL_B04) (E-0271; was Talk_SceneChestBattle) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_SceneChestBattle; named after
 ; the script it starts, Script_SceneChestBattle)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 Talk_SceneChestBattle::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
@@ -9240,9 +9295,9 @@ Talk_SceneChestBattle::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C17, an
 ; empty string on the normal path; the branching is not interpreted (E-0097)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 ; code: checks EVENT_MAP_CE_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Power Tower.'
+; the Power Tower.' (E-0347)
 Talk0C17::
     ld de, EVENT_MAP_CE_OBJECT_REMOVED
     call TestFlagBit
@@ -9468,7 +9523,7 @@ ChestItem_TinyMedal_Flag0172::
 ; the treasure chest. It' (E-0271; was Talk_HeroCheckedTheTreasureChest_2) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_HeroCheckedTheTreasureChest_2; shortened
 ; from TalkScript_HeroCheckedTheTreasureChest_2)
-; starts Script_HeroCheckedTheTreasure_4: '0 checked the treasure chest. It'
+; starts Script_HeroCheckedTheTreasure_4: '0 checked the treasure chest. It' (E-0248)
 Talk_HeroCheckedTheTreasureChest_2::
     ld hl, Script_HeroCheckedTheTreasure_4 ; script '0 checked the treasure chest. It'
     call StartScriptAtHL_B04
@@ -9490,7 +9545,7 @@ TalkMsg0C1A_InThisTowerYourOpponents::
     ret
 
 ; step 130 of ElvenVillageTalkEvents: checks EVENT_THIS_IS_THE_BAFFLE; shows 'This is the Baffle
-; Tower.'; sets EVENT_THIS_IS_THE_BAFFLE; shows 'If you win, you'll earn'
+; Tower.'; sets EVENT_THIS_IS_THE_BAFFLE; shows 'If you win, you'll earn' (E-0347)
 ElvenVillageTalkEvents_ShowThisIsTheBaffle::
     ld de, EVENT_THIS_IS_THE_BAFFLE
     call TestFlagBit
@@ -9509,7 +9564,7 @@ ElvenVillageTalkEvents_ShowThisIsTheBaffle::
 ; starts Script_SceneChestBattle (StartScriptAtHL_B04) (E-0271; was Talk_SceneChestBattle_2)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_SceneChestBattle_2;
 ; named after the script it starts, Script_SceneChestBattle)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 Talk_SceneChestBattle_2::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
@@ -9518,9 +9573,9 @@ Talk_SceneChestBattle_2::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C2F, an
 ; empty string on the normal path; the branching is not interpreted (E-0097)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 ; code: checks EVENT_MAP_D7_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Baffle Tower.'
+; the Baffle Tower.' (E-0347)
 Talk0C2F::
     ld de, EVENT_MAP_D7_OBJECT_REMOVED
     call TestFlagBit
@@ -9759,7 +9814,7 @@ TalkMsg0C32_TheMonstersHereAreAwfulIm::
     ret
 
 ; step 162 of ElvenVillageTalkEvents: checks EVENT_IF_YOUVE_MADE_IT; shows 'If you've made it to';
-; sets EVENT_IF_YOUVE_MADE_IT; shows 'This Tower is terribly tough.'
+; sets EVENT_IF_YOUVE_MADE_IT; shows 'This Tower is terribly tough.' (E-0347)
 ElvenVillageTalkEvents_ShowIfYouveMadeIt::
     ld de, EVENT_IF_YOUVE_MADE_IT
     call TestFlagBit
@@ -9777,7 +9832,7 @@ ElvenVillageTalkEvents_ShowIfYouveMadeIt::
 
 ; starts Script_SceneChestBattle (StartScriptAtHL_B04) (E-0271; was Talk_0C) (E-0344: the address in
 ; its name dropped or read as the label there; was Talk_0C; shortened from TalkScript_0C)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 Talk_0C::
     ld hl, Script_SceneChestBattle
     call StartScriptAtHL_B04
@@ -9786,9 +9841,9 @@ Talk_0C::
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C47, an
 ; empty string on the normal path; the branching is not interpreted (E-0097)
-; starts Script_SceneChestBattle
+; starts Script_SceneChestBattle (E-0248)
 ; code: checks EVENT_MAP_E0_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Soul Tower.'
+; the Soul Tower.' (E-0347)
 Talk0C47::
     ld de, EVENT_MAP_E0_OBJECT_REMOVED
     call TestFlagBit
@@ -10028,7 +10083,7 @@ KeyWorldTalkEvents::
 ; starts Script_KeyWorldBossBattle (StartScriptAtHL_B04) (E-0271; was Talk_KeyWorldBossBattle)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_KeyWorldBossBattle;
 ; named after the script it starts, Script_KeyWorldBossBattle)
-; starts Script_KeyWorldBossBattle
+; starts Script_KeyWorldBossBattle (E-0248)
 Talk_KeyWorldBossBattle::
     ld hl, Script_KeyWorldBossBattle
     call StartScriptAtHL_B04
@@ -10036,7 +10091,7 @@ Talk_KeyWorldBossBattle::
 
 ; step 1 of KeyWorldTalkEvents: sets wDataBank to $10; branches on the byte at wKeyWorldFloorInfo +
 ; $1; sets wScreenTableIndex to $0f; starts Script_WarubouWaHeyYou_2; branches on
-; wKeyWorldFloorState; sets wScreenTableIndex to $13; starts Script_WarubouWaHeyYou_2
+; wKeyWorldFloorState; sets wScreenTableIndex to $13; starts Script_WarubouWaHeyYou_2 (E-0347)
 KeyWorldTalkEvents_StartScriptAtHL_B04::
     ld a, $10
     ld [wDataBank], a
@@ -10071,7 +10126,7 @@ KeyWorldTalkEvents_StartScriptAtHL_B04::
     call StartScriptAtHL_B04
     ret
 
-; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!'
+; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!' (E-0248)
 KeyWorldTalkEvents_StartScriptAtHL_B04_WarubouWaheyYouDid::
     ld a, [wMapType]
     cp $84
@@ -10155,7 +10210,7 @@ IsPlayerAtKeyWorldGoalKindTriggerColumn::
 ; starts Script_KeyWorldFloorBattle (StartScriptAtHL_B04) (E-0271; was Talk_KeyWorldFloorBattle)
 ; (E-0344: the address in its name dropped or read as the label there; was Talk_KeyWorldFloorBattle;
 ; named after the script it starts, Script_KeyWorldFloorBattle)
-; starts Script_KeyWorldFloorBattle
+; starts Script_KeyWorldFloorBattle (E-0248)
 Talk_KeyWorldFloorBattle::
     ld hl, Script_KeyWorldFloorBattle
     call StartScriptAtHL_B04
@@ -10178,7 +10233,7 @@ TalkMsg0122_WarubouWaheyYouDidItHero::
     ret
 
 ; step 6 of KeyWorldTalkEvents: returns if wKeyWorldGoalKind is $05; returns if wKeyWorldGoalKind is
-; $07; returns if wKeyWorldGoalKind is $08; shows 'Warubou: Use a Magic Key and'
+; $07; returns if wKeyWorldGoalKind is $08; shows 'Warubou: Use a Magic Key and' (E-0347)
 KeyWorldTalkEvents_ShowWarubouUseAMagic::
     ld a, [wKeyWorldGoalKind]
     cp $05
@@ -10195,7 +10250,7 @@ KeyWorldTalkEvents_ShowWarubouUseAMagic::
 ; message begins 'Warubou Wa-hey! You did it, 0!' (E-0271; was Talk_WarubouWaheyYouDidItHero)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; Talk_WarubouWaheyYouDidItHero; shortened from TalkScript_WarubouWaheyYouDidItHero)
-; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!'
+; starts Script_WarubouWaHeyYou_3: 'Warubou: Wa-hey! You did it, 0!' (E-0248)
 Talk_WarubouWaheyYouDidItHero::
     ld a, $10
     ld [wDataBank], a
@@ -10207,7 +10262,7 @@ Talk_WarubouWaheyYouDidItHero::
 ; begins 'Warubou Wa-hey! So, this is it?' (E-0271; was Talk_WarubouWaheySoThisIsIt) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_WarubouWaheySoThisIsIt; shortened
 ; from TalkScript_WarubouWaheySoThisIsIt)
-; starts Script_WarubouWaHeySo: 'Warubou: Wa-hey! So, this is it?'
+; starts Script_WarubouWaHeySo: 'Warubou: Wa-hey! So, this is it?' (E-0248)
 Talk_WarubouWaheySoThisIsIt::
     ld a, $1f
     ld [wDataBank], a

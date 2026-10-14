@@ -197,7 +197,7 @@ MonsterSprite_GoatHorn::
     INCBIN "gfx/monster_sprites/goat_horn.lz"
 
 ; compressed sprite graphics of monster id $0E1 (Orc) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Orc::
     INCBIN "gfx/monster_sprites/orc.lz"
 
@@ -250,7 +250,7 @@ MonsterSprite_EvilWell::
     INCBIN "gfx/monster_sprites/evil_well.lz"
 
 ; compressed sprite graphics of monster id $0EA (Gigantes) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Gigantes::
     INCBIN "gfx/monster_sprites/gigantes.lz"
 
@@ -291,7 +291,7 @@ MonsterSprite_LampGenie::
     INCBIN "gfx/monster_sprites/lamp_genie.lz"
 
 ; compressed sprite graphics of monster id $0F6 (Spooky) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Spooky::
     INCBIN "gfx/monster_sprites/spooky.lz"
 
@@ -386,7 +386,7 @@ MonsterSprite_FoxFire::
     INCBIN "gfx/monster_sprites/fox_fire.lz"
 
 ; compressed sprite graphics of monster id $106 (CaptDead) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_CaptDead::
     INCBIN "gfx/monster_sprites/capt_dead.lz"
 

@@ -54,18 +54,22 @@ class PresentLineTest(unittest.TestCase):
         self.assertTrue(all(len(ln) <= present.WIDTH and ln.startswith("; ") for ln in lines))
 
 
-def _code(text: str) -> list[str]:
-    """The code and data lines, without comments, aliases or label tags, in the presented spelling."""
-    out = []
+def _code(text: str, names=None, bank=None) -> list[str]:
+    """The code and data lines, without comments, aliases or label tags, in the presented spelling. Operand forms
+    are applied before comments go, as tools/present.py does (a message word is recognised by its quote)."""
+    lines = []
     for ln in text.split("\n"):
         if present.ALIAS.match(ln) or ln.lstrip().startswith(";") or not ln.strip():
             continue
         m = present.LABEL_TAG.match(ln)
         ln = m.group(1) if m else ln
+        lines.append(present.code_line(ln) if not present.LABEL.match(ln) else ln)
+    out = []
+    for ln in present.operand_forms(lines, names, bank):
         code = present.split_code(ln)[0].rstrip()
         if code.lstrip().startswith("INCBIN"):
             code = "    INCBIN"  # D-008: src names the slice as an asset file (checked by test_assets_*)
-        out.append(present.code_line(code) if not present.LABEL.match(code) else code)
+        out.append(code)
     return out
 
 
@@ -81,8 +85,10 @@ class PresentedTreeTest(unittest.TestCase):
 
     def test_no_code_or_data_line_is_lost(self):
         titles = present.bank_titles()
+        texts = {p.name: p.read_text(encoding="utf-8") for p in sorted(LISTING.glob("bank*.asm"))}
+        names = present.Names(texts)
         for p in sorted(LISTING.glob("bank*.asm")):
-            want = present.rect_sizes(_code(p.read_text(encoding="utf-8")))
+            want = _code(texts[p.name], names, int(p.name[4:6], 16))
             got = [present.split_code(ln)[0].rstrip()
                    for ln in (SRC / present.src_name(p.name, titles)).read_text(encoding="utf-8").split("\n")
                    if ln.strip() and not ln.lstrip().startswith(";")]

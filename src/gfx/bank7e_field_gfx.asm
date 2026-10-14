@@ -384,8 +384,8 @@ Gfx7E_7::
     INCBIN "gfx/misc/gfx7_e_7.lz"
 
 ; LZSS-compressed: 133 bytes that expand to 256 (E-0016, E-0017)
-Gfx7E_8::
-    INCBIN "gfx/misc/gfx7_e_8.lz"
+SpawnScriptSpriteInFrontOfPlayer_Data::
+    INCBIN "gfx/misc/spawn_script_sprite_in_front_of_player_data.lz"
 
 ; LZSS-compressed: 92 bytes that expand to 256 (E-0016, E-0017)
 Tiles0Plus700Gfx_4::

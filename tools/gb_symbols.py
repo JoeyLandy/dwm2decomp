@@ -132,4 +132,6 @@ def write_hardware_inc(path) -> None:
     for base, name in sorted(VRAM):
         lines.append(f"DEF {name} EQU ${base:04X} ; {DESCRIPTION[name]}")
     lines.append("")
+    lines.append("DEF PAL_WHITE EQU $7FFF ; a CGB colour: 5 bits each of red, green and blue, all 31 (white)")
+    lines.append("")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")

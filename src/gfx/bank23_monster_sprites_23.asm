@@ -179,7 +179,7 @@ MonsterSprite_LavaMan::
     INCBIN "gfx/monster_sprites/lava_man.lz"
 
 ; compressed sprite graphics of monster id $12E (IceMan) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_IceMan::
     INCBIN "gfx/monster_sprites/ice_man.lz"
 
@@ -430,7 +430,7 @@ MonsterSprite_Pumpoise::
     INCBIN "gfx/monster_sprites/pumpoise.lz"
 
 ; compressed sprite graphics of monster id $15B (Starfish) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Starfish::
     INCBIN "gfx/monster_sprites/starfish.lz"
     ds $42d, $00

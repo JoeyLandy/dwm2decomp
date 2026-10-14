@@ -41,7 +41,7 @@ MonsterPic_SlimeNite::
     INCBIN "gfx/monster_pics/slime_nite.lz"
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $007 (Babble) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPic_Babble::
     INCBIN "gfx/monster_pics/babble.lz"
 
@@ -202,7 +202,7 @@ MonsterPic_Poisongon::
     INCBIN "gfx/monster_pics/poisongon.lz"
 
 ; compressed 6 x 6 picture (36 tiles) of monster id $02B (Swordgon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPic_Swordgon::
     INCBIN "gfx/monster_pics/swordgon.lz"
 

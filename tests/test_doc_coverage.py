@@ -38,6 +38,29 @@ class Coverage(unittest.TestCase):
     def test_comments_name_only_labels_symbols_and_constants(self):
         self.assertEqual(dict(doc_coverage.stale_names(FILES).most_common(10)), {})
 
+    def test_every_routine_comment_and_table_header_cites_evidence(self):
+        """E-0350: a routine's comment and the header comment of each table cite an evidence or decision id."""
+        import re
+        missing = []
+        for f in FILES:
+            header = False
+            for name, kind, comment, line, _ in doc_coverage.scan(f):
+                if kind == "code":
+                    header = False
+                    if comment and not re.search(r"[ED]-\d{3,4}", comment):
+                        missing.append(f"{f.name}:{line} {name}")
+                elif comment and not header:
+                    header = True
+                    if not re.search(r"[ED]-\d{3,4}", comment):
+                        missing.append(f"{f.name}:{line} {name}")
+        self.assertEqual(missing[:10], [], f"{len(missing)} comments cite no evidence")
+
+    def test_no_operand_is_a_bare_address(self):
+        """E-0350: no `ld rr, $XXXX`, `call $XXXX` or `jp $XXXX` with an address-like number is left: pointers name
+        their label, values are written as what they are (lb pairs, signed or decimal numbers, named constants)."""
+        import readability
+        self.assertEqual(readability.measure()["raw_pointer_operands"], 0)
+
 
 class Summaries(unittest.TestCase):
     """tools/describe.py restates instructions; these pin its reading of common shapes."""

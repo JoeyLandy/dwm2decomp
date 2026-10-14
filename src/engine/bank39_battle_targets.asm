@@ -256,6 +256,7 @@ TargetRandomOtherSlot::
     ret
 
 ; Calls CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls AdvanceRandom; branches on wRandomLo
+; (E-0347)
 TargetRandomOtherSlot_Skip::
     ld c, a
     ld b, $03
@@ -2634,7 +2635,9 @@ ActionTargetRoutines9::
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: calls FillBytes; sets wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; SlotStatus4Bits23; calls EstimateAndPickWeakestTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls AnySlotStatusMaskSet; ...
+; calls AnySlotStatusMaskSet; calls EstimateThreeTargets; calls CarryUnlessBattleSlotOutSlotEmpty;
+; calls AnySlotStatusMaskSet; calls ComputeDamageEstimateForAction; calls GetBattleHP_Bank39; then 6
+; more steps (see the code) (E-0347)
 ChooseTarget_SquallHit::
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -2749,7 +2752,9 @@ ChooseTarget_SquallHit::
 ; in its name dropped or read as the label there; was ChooseTarget_SquallHit_2)
 ; code: calls FillBytes; sets wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; SlotStatus4Bits23; calls EstimateAndPickWeakestTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls AnySlotStatusMaskSet; ...
+; calls AnySlotStatusMaskSet; calls TestSlotStatus2Bit3OrStatus5Bits67; calls EstimateThreeTargets;
+; calls AnySlotStatusMaskSet; calls TestSlotStatus2Bit3OrStatus5Bits67; calls CheckSlotStatusBlock;
+; then 12 more steps (see the code) (E-0347)
 ChooseTarget_SquallHit_2::
     ld hl, wBattleDamageLo
     ld bc, $0008
@@ -2887,7 +2892,7 @@ ChooseTarget_SquallHit_2::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 22 Heal, 23 HealMore, 24 HealAll; writes the
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: changes DE and A
+; code: changes DE and A (E-0347)
 ChooseTarget_Heal::
     ld a, [wBattleActor]
     and $04
@@ -2896,7 +2901,7 @@ ChooseTarget_Heal::
 
 ; Copies E to wBattleArg3; copies D to wNameSlot; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleMaxHP_Bank39; may continue in ChooseTarget_Heal_Loop; calls
-; ChooseTarget_Heal_WriteTemp0AndTemp1Etc
+; ChooseTarget_Heal_WriteTemp0AndTemp1Etc (E-0347)
 ChooseTarget_Heal_Loop::
     ld a, e
     ld [wBattleArg3], a
@@ -2971,7 +2976,8 @@ ChooseTarget_Heal_Loop::
 ; in its name dropped or read as the label there; was ChooseTarget_Heal_2)
 ; code: sets wBattleArg0 to 0; copies C to wBattleArg3; copies B to wNameSlot; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; increments wBattleArg0; calls GetBattleMaxHP_Bank39; branches
-; on the byte at wSlotBodyFlags; ...
+; on the byte at wSlotBodyFlags; sets hTemp0; sets hTemp1; sets hTemp2; copies L to wBattleTempBuf;
+; sets wBattleArg2 to $ff; then 12 more steps (see the code) (E-0347)
 ChooseTarget_Heal_2::
     ld a, [wBattleActor]
     and $04
@@ -3129,7 +3135,8 @@ ChooseTarget_Heal_2::
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; branches on
-; the byte at wBattleSlotOut; increments hTemp0; branches on the byte at wBattleSlotOut; ...
+; the byte at wBattleSlotOut; increments hTemp0; branches on the byte at wBattleSlotOut; branches on
+; hTemp0; branches on the byte at hTemp1; calls AdvanceRandom; branches on e (E-0347)
 ChooseTarget_Vivify::
     ld a, [wBattleActor]
     and $04
@@ -3212,7 +3219,9 @@ ChooseTarget_Vivify::
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on hTemp1; copies C to hTemp0; branches on hTemp1; ...
+; CarryUnlessBattleSlotOutSlotEmpty; branches on hTemp1; copies C to hTemp0; branches on hTemp1;
+; branches on D; calls AdvanceRandom; branches on wRandomLo; branches on hTemp1; copies C to hTemp0;
+; then 9 more steps (see the code) (E-0347)
 ChooseTarget_Antidote::
     ld a, [wBattleActor]
     and $04
@@ -3347,7 +3356,8 @@ ChooseTarget_Antidote::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus; branches on
-; wBattleStatus; calls GetBattleATK_Bank39; ...
+; wBattleStatus; calls GetBattleATK_Bank39; copies C to hTemp0; copies L to hTemp1; copies H to
+; hTemp2; calls AdvanceRandom; branches on wRandomLo; then 6 more steps (see the code) (E-0347)
 ChooseTarget_TwinHits::
     ld a, [wBattleActor]
     and $04
@@ -3431,7 +3441,7 @@ ChooseTarget_TwinHits::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank39; calls BuffCapOfBaseDEF; copies C to
-; hTemp1; ...
+; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0 (E-0347)
 ChooseTarget_Upper::
     ld a, [wBattleActor]
     and $04
@@ -3496,7 +3506,9 @@ ChooseTarget_Upper::
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on wBattleStatus2; copies C to
+; hTemp3; calls GetBattleDEF_Bank39; branches on H; branches on L; then 6 more steps (see the code)
+; (E-0347)
 ChooseTarget_Sap::
     ld a, [wBattleActor]
     and $04
@@ -3557,7 +3569,9 @@ ChooseTarget_Sap::
 ; 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on wBattleStatus2; copies C to
+; hTemp3; calls GetBattleAGL_Bank39; branches on H; branches on L; then 6 more steps (see the code)
+; (E-0347)
 ChooseTarget_Slow::
     ld a, [wBattleActor]
     and $04
@@ -3619,7 +3633,7 @@ ChooseTarget_Slow::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank39; calls BuffCapOfBaseAGL; copies C to
-; hTemp1; ...
+; hTemp1; copies B to hTemp2; copies C to hTemp0; branches on hTemp0 (E-0347)
 ChooseTarget_Speed::
     ld a, [wBattleActor]
     and $04
@@ -3684,7 +3698,8 @@ ChooseTarget_Speed::
 ; 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; calls GetBattleDEF_Bank39; branches on H;
+; branches on L; calls GetBattleAGL_Bank39; branches on H; then 8 more steps (see the code) (E-0347)
 ChooseTarget_UltraDown::
     ld a, [wBattleActor]
     and $04
@@ -3748,7 +3763,9 @@ ChooseTarget_UltraDown::
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: copies wBattleActor & $04 to hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to
-; $ff; sets hTemp3 to $ff; sets hTemp4 to $ff; sets hTemp5 to $ff; ...
+; $ff; sets hTemp3 to $ff; sets hTemp4 to $ff; sets hTemp5 to $ff; calls
+; CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; sets hTemp4; calls GetBattleMaxHP_Bank39; calls
+; GetBattleHP_Bank39; then 5 more steps (see the code) (E-0347)
 ChooseTarget_Cover::
     ld a, [wBattleActor]
     ld e, a
@@ -3813,7 +3830,9 @@ ChooseTarget_Cover::
 ; 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; calls
+; ChooseTarget_MouthShut_CountMouthSkills; copies C to hTemp3; branches on wBattleStatus1; copies C
+; to hTemp4; then 6 more steps (see the code) (E-0347)
 ChooseTarget_MouthShut::
     ld a, [wBattleActor]
     and $04
@@ -3870,7 +3889,9 @@ ChooseTarget_MouthShut::
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; calls
+; GetBattleDEF_Bank39; branches on H; branches on L; copies C to hTemp3; then 8 more steps (see the
+; code) (E-0347)
 ChooseTarget_SickLick::
     ld a, [wBattleActor]
     and $04
@@ -3940,7 +3961,9 @@ ChooseTarget_SickLick::
 ; 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on
+; wSlotBodyFlags; copies C to hTemp3; branches on the byte at wBattleStatus; copies C to hTemp4;
+; then 6 more steps (see the code) (E-0347)
 ChooseTarget_LegSweep::
     ld a, [wBattleActor]
     and $04
@@ -4005,7 +4028,9 @@ ChooseTarget_LegSweep::
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on the byte at wBattleStatus;
+; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1;
+; then 3 more steps (see the code) (E-0347)
 ChooseTarget_NapAttack::
     ld a, [wBattleActor]
     and $04
@@ -4063,7 +4088,9 @@ ChooseTarget_NapAttack::
 ; 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; calls GetBattleMP_Bank39; copies C to
+; hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1; then 3 more
+; steps (see the code) (E-0347)
 ChooseTarget_OddDance::
     ld a, [wBattleActor]
     and $04
@@ -4115,7 +4142,9 @@ ChooseTarget_OddDance::
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; branches on wSlotBodyFlags; calls
+; GetBattleHP_Bank39; calls GetBattleDEF_Bank39; copies L to hTemp1; copies H to hTemp2; then 2 more
+; steps (see the code) (E-0347)
 ChooseTarget_MetalCut::
     ld a, [wBattleActor]
     and $04
@@ -4170,7 +4199,7 @@ ChooseTarget_MetalCut::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_DrakSlash::
     ld d, $01
     call TargetWeakestFoeOfFamilyD
@@ -4179,7 +4208,7 @@ ChooseTarget_DrakSlash::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_BeastCut::
     ld d, $02
     call TargetWeakestFoeOfFamilyD
@@ -4188,7 +4217,7 @@ ChooseTarget_BeastCut::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_BirdBlow::
     ld d, $03
     call TargetWeakestFoeOfFamilyD
@@ -4197,7 +4226,7 @@ ChooseTarget_BirdBlow::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_DevilCut::
     ld d, $06
     call TargetWeakestFoeOfFamilyD
@@ -4206,7 +4235,7 @@ ChooseTarget_DevilCut::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_ZombieCut::
     ld d, $07
     call TargetWeakestFoeOfFamilyD
@@ -4215,7 +4244,7 @@ ChooseTarget_ZombieCut::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_CleanCut::
     ld d, $08
     call TargetWeakestFoeOfFamilyD
@@ -4224,7 +4253,7 @@ ChooseTarget_CleanCut::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_SlimeBlow::
     ld d, $00
     call TargetWeakestFoeOfFamilyD
@@ -4233,7 +4262,7 @@ ChooseTarget_SlimeBlow::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_BugBlow::
     ld d, $05
     call TargetWeakestFoeOfFamilyD
@@ -4242,7 +4271,7 @@ ChooseTarget_BugBlow::
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: calls TargetWeakestFoeOfFamilyD
+; code: calls TargetWeakestFoeOfFamilyD (E-0347)
 ChooseTarget_Shears::
     ld d, $04
     call TargetWeakestFoeOfFamilyD
@@ -4252,7 +4281,9 @@ ChooseTarget_Shears::
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; copies C to hTemp3; calls
+; ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1; copies C to hTemp0; then
+; 2 more steps (see the code) (E-0347)
 ChooseTarget_PoisonHit::
     ld a, [wBattleActor]
     and $04
@@ -4303,7 +4334,9 @@ ChooseTarget_PoisonHit::
 ; 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; copies C to hTemp3; calls
+; ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1; copies C to hTemp0; then
+; 2 more steps (see the code) (E-0347)
 ChooseTarget_Paralyze::
     ld a, [wBattleActor]
     and $04
@@ -4356,7 +4389,9 @@ ChooseTarget_Paralyze::
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
 ; to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on the byte at wBattleStatus;
+; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1;
+; then 3 more steps (see the code) (E-0347)
 ChooseTarget_LushLicks::
     ld a, [wBattleActor]
     and $04
@@ -4414,7 +4449,9 @@ ChooseTarget_LushLicks::
 ; 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp3 to $ff; sets hTemp1 to 0; sets hTemp2 to 0;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; calls GetBattleMaxHP_Bank39; calls
+; GetBattleMaxMP_Bank39; copies L to hTemp1; copies H to hTemp2; copies hTemp3 to hTemp0; then 1
+; more step (see the code) (E-0347)
 ChooseTarget_Transform::
     ld a, [wBattleActor]
     and $04
@@ -4466,7 +4503,9 @@ ChooseTarget_Transform::
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to 0;
-; sets hTemp4 to 0; sets hTemp5 to $ff; ...
+; sets hTemp4 to 0; sets hTemp5 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp5;
+; branches on wBattleStatus2; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 22
+; more steps (see the code) (E-0347)
 ChooseTarget_Beat::
     ld a, [wBattleActor]
     and $04
@@ -4647,7 +4686,8 @@ ChooseTarget_Beat::
 ; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: copies wBattleActionId to wRecordBuffer; sets wBattleArg1 to 2; copies L to wBattleArg2;
 ; copies H to wBattleArg3; branches on wLinkMode; copies E to wBattleArg0; calls
-; LoadSkillRecordPart; ...
+; LoadSkillRecordPart; sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets
+; hTemp3 to $ff; then 22 more steps (see the code) (E-0347)
 ChooseTarget_Blaze::
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -4791,7 +4831,9 @@ ChooseTarget_Blaze::
 ; 228 entries each, indexed by action id) for action(s) 111 Ramming, 112 Kamikaze; writes the target
 ; to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp3 to $ff; sets hTemp4 to $ff; sets hTemp1 to 0;
-; sets hTemp2 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp2 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; calls
+; ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp4; calls GetBattleHP_Bank39; copies L to hTemp1;
+; then 18 more steps (see the code) (E-0347)
 ChooseTarget_Ramming::
     ld a, [wBattleActor]
     and $04
@@ -4935,7 +4977,9 @@ ChooseTarget_Ramming::
 ; 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on the byte at
+; wBattleStatus; copies C to hTemp3; branches on the byte at wBattleStatus; copies C to hTemp4; then
+; 6 more steps (see the code) (E-0347)
 ChooseTarget_Sleep::
     ld a, [wBattleActor]
     and $04
@@ -4999,7 +5043,9 @@ ChooseTarget_Sleep::
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; calls GetBattleMP_Bank39; copies C to
+; hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; copies E to hTemp1; then 3 more
+; steps (see the code) (E-0347)
 ChooseTarget_RobMagic::
     ld a, [wBattleActor]
     and $04
@@ -5057,7 +5103,9 @@ ChooseTarget_RobMagic::
 ; 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_FireSlash::
     ld a, [wBattleActor]
     and $04
@@ -5137,7 +5185,9 @@ ChooseTarget_FireSlash::
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_BoltSlash::
     ld a, [wBattleActor]
     and $04
@@ -5217,7 +5267,9 @@ ChooseTarget_BoltSlash::
 ; 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_VacuSlash::
     ld a, [wBattleActor]
     and $04
@@ -5298,7 +5350,9 @@ ChooseTarget_VacuSlash::
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_IceSlash::
     ld a, [wBattleActor]
     and $04
@@ -5379,7 +5433,9 @@ ChooseTarget_IceSlash::
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_WindBeast::
     ld a, [wBattleActor]
     and $04
@@ -5452,7 +5508,9 @@ ChooseTarget_WindBeast::
 ; 228 entries each, indexed by action id) for action(s) 103 GigaSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets wBattleTarget; sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff;
-; sets hTemp3 to $ff; sets wBattleDamageLo to $ff; ...
+; sets hTemp3 to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls SlotStatus4Bits23; calls EstimateAndPickWeakestTarget;
+; calls CarryUnlessBattleSlotOutSlotEmpty; then 19 more steps (see the code) (E-0347)
 ChooseTarget_GigaSlash::
     ld a, [wBattleActor]
     and $04
@@ -5575,7 +5633,9 @@ ChooseTarget_GigaSlash::
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_AquaCut::
     ld a, [wBattleActor]
     and $04
@@ -5656,7 +5716,9 @@ ChooseTarget_AquaCut::
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_Watershot::
     ld a, [wBattleActor]
     and $04
@@ -5729,7 +5791,9 @@ ChooseTarget_Watershot::
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; sets hTemp5 to $ff; ...
+; sets hTemp4 to $ff; sets hTemp5 to $ff; sets wTargetEstimates to $ff; sets wBattleDamageLo to 0;
+; sets wBattleDamageHi to 0; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; then 14 more
+; steps (see the code) (E-0347)
 ChooseTarget_MegaMagic::
     ld a, [wBattleActor]
     and $04
@@ -5880,7 +5944,9 @@ TargetFoeWeightedBySlotOrder::
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
 ; in its name dropped or read as the label there; was ChooseTarget_SquallHit_3)
 ; code: calls AdvanceRandom; sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3
-; to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; sets wTargetEstimates to $ff;
+; sets wEffectTemp0 to $ff; sets wEffectTemp1 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; GetBattleHP_Bank39; then 14 more steps (see the code) (E-0347)
 ChooseTarget_SquallHit_3::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -6016,7 +6082,9 @@ ChooseTarget_SquallHit_3::
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
 ; in its name dropped or read as the label there; was ChooseTarget_Heal_3)
 ; code: sets wWorkBuf to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank39; calls
-; GetBattleMaxHP_Bank39; sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; ...
+; GetBattleMaxHP_Bank39; sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0;
+; sets hTemp4 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; copies L to hTemp5; copies H to hTemp6;
+; then 6 more steps (see the code) (E-0347)
 ChooseTarget_Heal_3::
     ld a, [wBattleActor]
     and $04
@@ -6190,7 +6258,9 @@ ChooseTarget_Heal_3::
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
 ; in its name dropped or read as the label there; was ChooseTarget_Heal_4)
 ; code: sets hTemp0 to 0; sets hTemp4 to 0; sets hTemp5 to 0; sets hTemp1 to $ff; sets hTemp2 to
-; $ff; sets hTemp3 to $ff; sets wBattleDamageLo to $ff; ...
+; $ff; sets hTemp3 to $ff; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; sets
+; wTargetEstimates to $ff; sets wEffectTemp0 to $ff; sets wEffectTemp1 to $ff; calls
+; CarryUnlessBattleSlotOutSlotEmpty; then 15 more steps (see the code) (E-0347)
 ChooseTarget_Heal_4::
     ld a, [wBattleActor]
     and $04
@@ -6331,7 +6401,7 @@ ChooseTarget_Heal_4::
 ; 228 entries each, indexed by action id) for action(s) 30 Vivify, 31 Revive; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Vivify_2)
-; code: continues in ChooseTarget_Vivify
+; code: continues in ChooseTarget_Vivify (E-0347)
 ChooseTarget_Vivify_2::
     jp ChooseTarget_Vivify
 
@@ -6339,7 +6409,7 @@ ChooseTarget_Vivify_2::
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Antidote_2)
-; code: continues in ChooseTarget_Antidote
+; code: continues in ChooseTarget_Antidote (E-0347)
 ChooseTarget_Antidote_2::
     jp ChooseTarget_Antidote
 
@@ -6347,7 +6417,7 @@ ChooseTarget_Antidote_2::
 ; 228 entries each, indexed by action id) for action(s) 45 TwinHits; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_TwinHits_2)
-; code: continues in ChooseTarget_TwinHits
+; code: continues in ChooseTarget_TwinHits (E-0347)
 ChooseTarget_TwinHits_2::
     jp ChooseTarget_TwinHits
 
@@ -6355,7 +6425,7 @@ ChooseTarget_TwinHits_2::
 ; 228 entries each, indexed by action id) for action(s) 37 Upper; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Upper_2)
-; code: continues in ChooseTarget_Upper
+; code: continues in ChooseTarget_Upper (E-0347)
 ChooseTarget_Upper_2::
     jp ChooseTarget_Upper
 
@@ -6363,7 +6433,7 @@ ChooseTarget_Upper_2::
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Sap_2)
-; code: continues in ChooseTarget_Sap
+; code: continues in ChooseTarget_Sap (E-0347)
 ChooseTarget_Sap_2::
     jp ChooseTarget_Sap
 
@@ -6371,7 +6441,7 @@ ChooseTarget_Sap_2::
 ; 228 entries each, indexed by action id) for action(s) 43 Slow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Slow_2)
-; code: continues in ChooseTarget_Slow
+; code: continues in ChooseTarget_Slow (E-0347)
 ChooseTarget_Slow_2::
     jp ChooseTarget_Slow
 
@@ -6379,7 +6449,7 @@ ChooseTarget_Slow_2::
 ; 228 entries each, indexed by action id) for action(s) 41 Speed; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Speed_2)
-; code: continues in ChooseTarget_Speed
+; code: continues in ChooseTarget_Speed (E-0347)
 ChooseTarget_Speed_2::
     jp ChooseTarget_Speed
 
@@ -6387,7 +6457,7 @@ ChooseTarget_Speed_2::
 ; 228 entries each, indexed by action id) for action(s) 130 UltraDown; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_UltraDown_2)
-; code: continues in ChooseTarget_UltraDown
+; code: continues in ChooseTarget_UltraDown (E-0347)
 ChooseTarget_UltraDown_2::
     jp ChooseTarget_UltraDown
 
@@ -6395,7 +6465,7 @@ ChooseTarget_UltraDown_2::
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Cover_2)
-; code: continues in ChooseTarget_Cover
+; code: continues in ChooseTarget_Cover (E-0347)
 ChooseTarget_Cover_2::
     jp ChooseTarget_Cover
 
@@ -6403,7 +6473,7 @@ ChooseTarget_Cover_2::
 ; 228 entries each, indexed by action id) for action(s) 147 MouthShut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_MouthShut_2)
-; code: continues in ChooseTarget_MouthShut
+; code: continues in ChooseTarget_MouthShut (E-0347)
 ChooseTarget_MouthShut_2::
     jp ChooseTarget_MouthShut
 
@@ -6411,7 +6481,7 @@ ChooseTarget_MouthShut_2::
 ; 228 entries each, indexed by action id) for action(s) 140 SickLick; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_SickLick_2)
-; code: continues in ChooseTarget_SickLick
+; code: continues in ChooseTarget_SickLick (E-0347)
 ChooseTarget_SickLick_2::
     jp ChooseTarget_SickLick
 
@@ -6419,7 +6489,7 @@ ChooseTarget_SickLick_2::
 ; 228 entries each, indexed by action id) for action(s) 141 LegSweep; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_LegSweep_2)
-; code: continues in ChooseTarget_LegSweep
+; code: continues in ChooseTarget_LegSweep (E-0347)
 ChooseTarget_LegSweep_2::
     jp ChooseTarget_LegSweep
 
@@ -6427,7 +6497,7 @@ ChooseTarget_LegSweep_2::
 ; 228 entries each, indexed by action id) for action(s) 97 NapAttack; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_NapAttack_2)
-; code: continues in ChooseTarget_NapAttack
+; code: continues in ChooseTarget_NapAttack (E-0347)
 ChooseTarget_NapAttack_2::
     jp ChooseTarget_NapAttack
 
@@ -6435,7 +6505,7 @@ ChooseTarget_NapAttack_2::
 ; 228 entries each, indexed by action id) for action(s) 118 OddDance, 119 RobDance; writes the
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
 ; in its name dropped or read as the label there; was ChooseTarget_OddDance_2)
-; code: continues in ChooseTarget_OddDance
+; code: continues in ChooseTarget_OddDance (E-0347)
 ChooseTarget_OddDance_2::
     jp ChooseTarget_OddDance
 
@@ -6443,7 +6513,7 @@ ChooseTarget_OddDance_2::
 ; 228 entries each, indexed by action id) for action(s) 94 MetalCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_MetalCut_2)
-; code: continues in ChooseTarget_MetalCut
+; code: continues in ChooseTarget_MetalCut (E-0347)
 ChooseTarget_MetalCut_2::
     jp ChooseTarget_MetalCut
 
@@ -6451,7 +6521,7 @@ ChooseTarget_MetalCut_2::
 ; 228 entries each, indexed by action id) for action(s) 85 DrakSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_DrakSlash_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_DrakSlash_2::
     ld d, $01
     call TargetRandomFoeOfFamilyD
@@ -6461,7 +6531,7 @@ ChooseTarget_DrakSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 86 BeastCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_BeastCut_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_BeastCut_2::
     ld d, $02
     call TargetRandomFoeOfFamilyD
@@ -6471,7 +6541,7 @@ ChooseTarget_BeastCut_2::
 ; 228 entries each, indexed by action id) for action(s) 87 BirdBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_BirdBlow_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_BirdBlow_2::
     ld d, $03
     call TargetRandomFoeOfFamilyD
@@ -6481,7 +6551,7 @@ ChooseTarget_BirdBlow_2::
 ; 228 entries each, indexed by action id) for action(s) 90 DevilCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_DevilCut_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_DevilCut_2::
     ld d, $06
     call TargetRandomFoeOfFamilyD
@@ -6491,7 +6561,7 @@ ChooseTarget_DevilCut_2::
 ; 228 entries each, indexed by action id) for action(s) 91 ZombieCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_ZombieCut_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_ZombieCut_2::
     ld d, $07
     call TargetRandomFoeOfFamilyD
@@ -6501,7 +6571,7 @@ ChooseTarget_ZombieCut_2::
 ; 228 entries each, indexed by action id) for action(s) 92 CleanCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_CleanCut_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_CleanCut_2::
     ld d, $08
     call TargetRandomFoeOfFamilyD
@@ -6511,7 +6581,7 @@ ChooseTarget_CleanCut_2::
 ; 228 entries each, indexed by action id) for action(s) 84 SlimeBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_SlimeBlow_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_SlimeBlow_2::
     ld d, $00
     call TargetRandomFoeOfFamilyD
@@ -6521,7 +6591,7 @@ ChooseTarget_SlimeBlow_2::
 ; 228 entries each, indexed by action id) for action(s) 88 BugBlow; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_BugBlow_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_BugBlow_2::
     ld d, $05
     call TargetRandomFoeOfFamilyD
@@ -6531,7 +6601,7 @@ ChooseTarget_BugBlow_2::
 ; 228 entries each, indexed by action id) for action(s) 89 Shears; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Shears_2)
-; code: calls TargetRandomFoeOfFamilyD
+; code: calls TargetRandomFoeOfFamilyD (E-0347)
 ChooseTarget_Shears_2::
     ld d, $04
     call TargetRandomFoeOfFamilyD
@@ -6541,7 +6611,7 @@ ChooseTarget_Shears_2::
 ; 228 entries each, indexed by action id) for action(s) 95 PoisonHit; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_PoisonHit_2)
-; code: continues in ChooseTarget_PoisonHit
+; code: continues in ChooseTarget_PoisonHit (E-0347)
 ChooseTarget_PoisonHit_2::
     jp ChooseTarget_PoisonHit
 
@@ -6549,7 +6619,7 @@ ChooseTarget_PoisonHit_2::
 ; 228 entries each, indexed by action id) for action(s) 96 Paralyze; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Paralyze_2)
-; code: continues in ChooseTarget_Paralyze
+; code: continues in ChooseTarget_Paralyze (E-0347)
 ChooseTarget_Paralyze_2::
     jp ChooseTarget_Paralyze
 
@@ -6557,7 +6627,7 @@ ChooseTarget_Paralyze_2::
 ; 228 entries each, indexed by action id) for action(s) 139 LushLicks, 143 Ahhh; writes the target
 ; to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_LushLicks_2)
-; code: continues in ChooseTarget_LushLicks
+; code: continues in ChooseTarget_LushLicks (E-0347)
 ChooseTarget_LushLicks_2::
     jp ChooseTarget_LushLicks
 
@@ -6565,7 +6635,7 @@ ChooseTarget_LushLicks_2::
 ; 228 entries each, indexed by action id) for action(s) 58 Transform; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Transform_2)
-; code: continues in ChooseTarget_Transform
+; code: continues in ChooseTarget_Transform (E-0347)
 ChooseTarget_Transform_2::
     jp ChooseTarget_Transform
 
@@ -6573,7 +6643,7 @@ ChooseTarget_Transform_2::
 ; 228 entries each, indexed by action id) for action(s) 19 Beat; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Beat_2)
-; code: continues in ChooseTarget_Beat
+; code: continues in ChooseTarget_Beat (E-0347)
 ChooseTarget_Beat_2::
     jp ChooseTarget_Beat
 
@@ -6581,14 +6651,14 @@ ChooseTarget_Beat_2::
 ; 228 entries each, indexed by action id) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost, $D1, $DF;
 ; writes the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344:
 ; the address in its name dropped or read as the label there; was ChooseTarget_Blaze_2)
-; code: continues in ChooseTarget_Blaze
+; code: continues in ChooseTarget_Blaze (E-0347)
 ChooseTarget_Blaze_2::
     jp ChooseTarget_Blaze
 
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 110 Berserker, 111 Ramming; writes the
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
-; code: continues in ChooseTarget_Ramming
+; code: continues in ChooseTarget_Ramming (E-0347)
 ChooseTarget_Berserker::
     jp ChooseTarget_Ramming
 
@@ -6596,7 +6666,7 @@ ChooseTarget_Berserker::
 ; 228 entries each, indexed by action id) for action(s) 47 Sleep; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Sleep_2)
-; code: continues in ChooseTarget_Sleep
+; code: continues in ChooseTarget_Sleep (E-0347)
 ChooseTarget_Sleep_2::
     jp ChooseTarget_Sleep
 
@@ -6604,7 +6674,7 @@ ChooseTarget_Sleep_2::
 ; 228 entries each, indexed by action id) for action(s) 50 RobMagic; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_RobMagic_2)
-; code: continues in ChooseTarget_RobMagic
+; code: continues in ChooseTarget_RobMagic (E-0347)
 ChooseTarget_RobMagic_2::
     jp ChooseTarget_RobMagic
 
@@ -6612,7 +6682,7 @@ ChooseTarget_RobMagic_2::
 ; 228 entries each, indexed by action id) for action(s) 80 FireSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_FireSlash_2)
-; code: continues in ChooseTarget_FireSlash
+; code: continues in ChooseTarget_FireSlash (E-0347)
 ChooseTarget_FireSlash_2::
     jp ChooseTarget_FireSlash
 
@@ -6620,7 +6690,7 @@ ChooseTarget_FireSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 82 BoltSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_BoltSlash_2)
-; code: continues in ChooseTarget_BoltSlash
+; code: continues in ChooseTarget_BoltSlash (E-0347)
 ChooseTarget_BoltSlash_2::
     jp ChooseTarget_BoltSlash
 
@@ -6628,7 +6698,7 @@ ChooseTarget_BoltSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 81 VacuSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_VacuSlash_2)
-; code: continues in ChooseTarget_VacuSlash
+; code: continues in ChooseTarget_VacuSlash (E-0347)
 ChooseTarget_VacuSlash_2::
     jp ChooseTarget_VacuSlash
 
@@ -6636,7 +6706,7 @@ ChooseTarget_VacuSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 83 IceSlash; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_IceSlash_2)
-; code: continues in ChooseTarget_IceSlash
+; code: continues in ChooseTarget_IceSlash (E-0347)
 ChooseTarget_IceSlash_2::
     jp ChooseTarget_IceSlash
 
@@ -6644,7 +6714,7 @@ ChooseTarget_IceSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 72 WindBeast; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_WindBeast_2)
-; code: continues in ChooseTarget_WindBeast
+; code: continues in ChooseTarget_WindBeast (E-0347)
 ChooseTarget_WindBeast_2::
     jp ChooseTarget_WindBeast
 
@@ -6653,7 +6723,9 @@ ChooseTarget_WindBeast_2::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_GigaSlash_2)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; ...
+; sets wBattleDamageLo to $ff; sets wBattleDamageHi to $ff; calls CarryUnlessBattleSlotOutSlotEmpty;
+; sets hTemp2; copies C to hTemp3; calls ReadByteAtHLPlus4APlus3C_Bank39; branches on hTemp1; then 9
+; more steps (see the code) (E-0347)
 ChooseTarget_GigaSlash_2::
     ld a, [wBattleActor]
     and $04
@@ -6726,7 +6798,7 @@ ChooseTarget_GigaSlash_2::
 ; 228 entries each, indexed by action id) for action(s) 93 AquaCut; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_AquaCut_2)
-; code: continues in ChooseTarget_AquaCut
+; code: continues in ChooseTarget_AquaCut (E-0347)
 ChooseTarget_AquaCut_2::
     jp ChooseTarget_AquaCut
 
@@ -6734,7 +6806,7 @@ ChooseTarget_AquaCut_2::
 ; 228 entries each, indexed by action id) for action(s) 76 Watershot; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Watershot_2)
-; code: continues in ChooseTarget_Watershot
+; code: continues in ChooseTarget_Watershot (E-0347)
 ChooseTarget_Watershot_2::
     jp ChooseTarget_Watershot
 
@@ -6742,7 +6814,9 @@ ChooseTarget_Watershot_2::
 ; 228 entries each, indexed by action id) for action(s) 173 PanicAll; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff;
-; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; sets hTemp4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp2; branches on the byte at
+; wBattleStatus; copies C to hTemp3; branches on the byte at wBattleStatus; copies C to hTemp4; then
+; 6 more steps (see the code) (E-0347)
 ChooseTarget_PanicAll::
     ld a, [wBattleActor]
     and $04
@@ -6806,7 +6880,7 @@ ChooseTarget_PanicAll::
 ; 228 entries each, indexed by action id) for action(s) 61 MegaMagic; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_MegaMagic_2)
-; code: continues in ChooseTarget_MegaMagic
+; code: continues in ChooseTarget_MegaMagic (E-0347)
 ChooseTarget_MegaMagic_2::
     jp ChooseTarget_MegaMagic
 
@@ -6814,7 +6888,7 @@ ChooseTarget_MegaMagic_2::
 ; 228 entries each, indexed by action id) for action(s) 33 Antidote; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Antidote_3)
-; code: changes HL, A and D; continues in TargetAllyWithStatusBit20_CallAddAx9ToHL
+; code: changes HL, A and D; continues in TargetAllyWithStatusBit20_CallAddAx9ToHL (E-0347)
 ChooseTarget_Antidote_3::
     ld a, [wBattleActor]
     and $04
@@ -6827,7 +6901,8 @@ ChooseTarget_Antidote_3::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Upper_3)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank39; calls BuffCapOfBaseDEF; ...
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank39; calls BuffCapOfBaseDEF; increments
+; hTemp0; may continue in PickWeightedTargetCandidate (E-0347)
 ChooseTarget_Upper_3::
     ld a, [wBattleActor]
     and $04
@@ -6881,7 +6956,8 @@ ChooseTarget_Upper_3::
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Speed_3)
 ; code: sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank39; calls BuffCapOfBaseAGL; ...
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank39; calls BuffCapOfBaseAGL; increments
+; hTemp0; may continue in PickWeightedTargetCandidate (E-0347)
 ChooseTarget_Speed_3::
     ld a, [wBattleActor]
     and $04
@@ -6934,7 +7010,7 @@ ChooseTarget_Speed_3::
 ; 228 entries each, indexed by action id) for action(s) 39 Sap; writes the target to
 ; wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address in its
 ; name dropped or read as the label there; was ChooseTarget_Sap_3)
-; code: changes DE; continues in TargetAllyWithStatusBit20_CheckBattleActor
+; code: changes DE; continues in TargetAllyWithStatusBit20_CheckBattleActor (E-0347)
 ChooseTarget_Sap_3::
     ld de, GetBattleDEF_Bank39
     jp TargetAllyWithStatusBit20_CheckBattleActor
@@ -6972,6 +7048,7 @@ TargetAllyWithStatusBit20::
 
 ; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; increments hTemp0; may continue in PickWeightedTargetCandidate
+; (E-0347)
 TargetAllyWithStatusBit20_CallAddAx9ToHL::
     ld c, a
     ld b, $03
@@ -7017,7 +7094,9 @@ TargetAllyWithStatusBit20_CallAddAx9ToHL::
     ret
 
 ; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls JumpToHL; branches on H; ...
+; CarryUnlessBattleSlotOutSlotEmpty; calls JumpToHL; branches on H; branches on L; increments
+; hTemp0; branches on L; may continue in TargetFoeWeightedBySlotOrder; calls
+; PickWeightedTargetCandidate (E-0347)
 TargetAllyWithStatusBit20_CheckBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -7068,7 +7147,9 @@ TargetAllyWithStatusBit20_CheckBattleActor::
 ; target to wBattleTargetChoice; the selection rule is not interpreted (E-0086) (E-0344: the address
 ; in its name dropped or read as the label there; was ChooseTarget_Heal_5)
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; sets hTemp4 to 0;
-; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank39; ...
+; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank39; calls GetBattleMaxHP_Bank39;
+; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; copies H to hTemp2; then 4 more
+; steps (see the code) (E-0347)
 ChooseTarget_Heal_5::
     ld a, [wBattleActor]
     and $04
@@ -7149,7 +7230,9 @@ ChooseTarget_Heal_5::
 ; 228 entries each, indexed by action id) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; writes
 ; the target to wBattleTargetChoice; the selection rule is not interpreted (E-0086)
 ; code: sets hTemp0 to $ff; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to 0; sets hTemp4 to 0;
-; branches on wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty; ...
+; branches on wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank39; calls
+; GetBattleMaxMP_Bank39; calls AdvanceRandom; branches on wRandomLo; copies L to hTemp1; then 6 more
+; steps (see the code) (E-0347)
 ChooseTarget_MPass::
     ld a, [wBattleActor]
     and $04
@@ -7334,7 +7417,7 @@ StoreSlotHPPlusDEFToTargetEstimates::
 
 ; HL = $FFFF, then falls into StoreHLToTargetEstimatesSlotC (E-0122)
 StoreFFFFToTargetEstimatesSlotC::
-    ld hl, $ffff
+    ld hl, -1
 
 ; stores HL in the word wTargetEstimates[C & 3] (E-0122)
 StoreHLToTargetEstimatesSlotC::
@@ -7480,7 +7563,7 @@ EstimateThreeTargets::
     ret
 
 ; called from ChooseTarget_Heal: sets hTemp0 to 0; sets hTemp1 to 1; sets hTemp2 to 2; copies hTemp1
-; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget
+; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget (E-0347)
 ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
     ld a, $00
     ldh [hTemp0], a
@@ -7609,7 +7692,7 @@ BuffCapOfBaseAGL::
 .return:
     ret
 
-; counts the slot's skills in $40-$47, $70-$75 or $89 (C1: the skills MouthShut blocks)
+; counts the slot's skills in $40-$47, $70-$75 or $89 (C1: the skills MouthShut blocks) (E-0305)
 ChooseTarget_MouthShut_CountMouthSkills::
     push bc
     ld hl, wBattleSkills
@@ -7710,7 +7793,7 @@ SetActorTargetFromHRAMChoice4::
     ret
 
 ; called from ChooseTarget_Cover: changes HL, A and E; branches on hTemp0; branches on hTemp5;
-; branches on hTemp4
+; branches on hTemp4 (E-0347)
 ChooseTarget_Cover_ReadBattleActorAndTemp0Etc::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -7852,7 +7935,9 @@ TargetWeakestFoeOfFamilyD::
 ; DevilCut, Shears, ...) (E-0096)
 ; code: sets hTempA; sets hTemp0 to $ff; sets hTemp3 to $ff; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; sets hTemp3; copies the byte at wBattleMonsterId to
-; wSpeciesIdLo; copies the byte at wBattleMonsterId to wSpeciesIdHi; ...
+; wSpeciesIdLo; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls LoadSpeciesFamily;
+; branches on wSpeciesRecord; branches on hTemp0; calls AdvanceRandom; copies hTemp3 to hTemp0; then
+; 1 more step (see the code) (E-0347)
 TargetRandomFoeOfFamilyD::
     ld a, [wBattleActor]
     and $04
@@ -7904,7 +7989,7 @@ TargetRandomFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
-; called from ChooseTarget_Blaze: takes A; changes HL and A
+; called from ChooseTarget_Blaze: takes A; changes HL and A (E-0347)
 ChooseTarget_Blaze_Multiply8By16::
     push af
     ldh a, [hTemp8]
@@ -7938,7 +8023,7 @@ ChooseTarget_Blaze_Multiply8By16::
 .return:
     ret
 
-; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39
+; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39 (E-0347)
 ChooseTarget_MegaMagic_GetBattleMP_Bank39::
     push af
     ld a, [wBattleActor]
@@ -7983,7 +8068,7 @@ ChooseTarget_MegaMagic_GetBattleMP_Bank39::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in
-; 2 banks)
+; 2 banks) (E-0351)
 ReadByteAtHLPlus4APlus3C_Bank39::
     add a
     add c
@@ -8044,14 +8129,14 @@ GetBattleAGL_Bank39::
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank39_Skip
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
 ReadSlotAIModeIndexed_Bank39::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; Takes HL and A; changes HL and A
+; Takes HL and A; changes HL and A (E-0347)
 ReadSlotAIModeIndexed_Bank39_Skip::
     add a
     add_a_to_hl
@@ -8059,7 +8144,7 @@ ReadSlotAIModeIndexed_Bank39_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks)
+; appear in 12 banks) (E-0351)
 AddDoubleAToHL_Bank39::
     add a
     add_a_to_hl
@@ -8105,7 +8190,7 @@ TargetOnLocalSide_Bank39::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D
+; Takes DE; changes HL, A and D (E-0347)
 ClearBattleStatusBitsWithMaskD_Bank39::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data
@@ -8119,12 +8204,12 @@ ClearBattleStatusBitsWithMaskD_Bank39::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank39 (7 bytes)
+; data read by ClearBattleStatusBitsWithMaskD_Bank39 (7 bytes) (E-0347)
 ClearBattleStatusBitsWithMaskD_Bank39_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit0OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8134,7 +8219,7 @@ SetBit0OfLevelUpGainsIndexed_Bank39::
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit1OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains
@@ -8144,7 +8229,7 @@ SetBit1OfLevelUpGainsIndexed_Bank39::
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit2OfLevelUpGainsIndexed_Bank39::
     push hl
     ld hl, wLevelUpGains

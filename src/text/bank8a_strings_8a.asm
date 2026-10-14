@@ -4,7 +4,7 @@
 SECTION "Bank 8A", ROMX[$4000], BANK[$8A]
     db $8a
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_Bank8A::
     ld de, BeginStringDisplay_Bank8A_StringCategories
     call BeginStringDisplay

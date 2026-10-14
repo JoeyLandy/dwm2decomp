@@ -179,9 +179,9 @@ Tiles1Plus7C0Tiles_2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 138
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 139
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 140
-RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM_Data::
+CopyGlyphTilesToVRAM_Data1::
     db $ff, $05, $ff, $05, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 141
-DebugResultsDisplay_Init_Data::
+CopyGlyphTilesToVRAM_Data2::
     db $ff, $02, $ff, $05, $ff, $02, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; id 142
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $30, $ff, $48, $ff, $48, $ff, $30 ; id 143
 Tiles2Plus710Tiles_3::
@@ -313,7 +313,7 @@ Tiles2Plus30Tiles::
 ; returns at once when wSGBActive is 0; otherwise sends the packet set chosen by wSGBPacketIndex
 ; ($FF = the buffer at wSGBPacketBuffer, else the pointer in the table at $5094): the packet count
 ; is the first byte's low 3 bits, each 16-byte packet is sent through rP1 as a $00/$30 reset pulse,
-; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit
+; 128 bits (a 1 bit is written as $10, a 0 bit as $20, each followed by $30) and a stop bit (E-0351)
 SendSGBPacketSet::
     ld a, [wSGBActive]
     or a
@@ -454,7 +454,7 @@ SgbIconEn_SGBPacketSetTable_19::
 SgbMaskEn_SGBPacketSetTable_20::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 20
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_Bank1F::
     ld de, BeginStringDisplay_Bank1F_StringCategories
     call BeginStringDisplay
@@ -1168,7 +1168,7 @@ DrawRecordListPageNames::
     ld [wScreenStep], a
     ret
 
-; data read by DrawRecordListPageNames (10 bytes)
+; data read by DrawRecordListPageNames (10 bytes) (E-0347)
 DrawRecordListPageNames_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
@@ -1249,7 +1249,7 @@ GlyphCopyArgsForA::
     ld c, $10
     ret
 
-; data read by GlyphCopyArgsForA (10 bytes)
+; data read by GlyphCopyArgsForA (10 bytes) (E-0347)
 GlyphCopyArgsForA_Data::
     db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
@@ -1258,7 +1258,7 @@ GlyphCopyArgsForA_Data::
 ; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
 ; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
 ; code: branches on rSTAT; branches on wIsCGB; branches on wArg7; sets rVBK to 1; branches on rSTAT;
-; sets rVBK to 0; branches on rSTAT
+; sets rVBK to 0; branches on rSTAT (E-0347)
 DrawTileRectFromArg1Params::
     ld hl, wArg1
     ld d, [hl]
@@ -1958,7 +1958,7 @@ LoadSixteenGlyphTilesFromTable::
     jr c, .loop
     ret
 
-; data read by LoadSixteenGlyphTilesFromTable (16 bytes)
+; data read by LoadSixteenGlyphTilesFromTable (16 bytes) (E-0347)
 LoadSixteenGlyphTilesFromTable_Data1::
     db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
@@ -2468,7 +2468,7 @@ DrawRects_3::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks)
+; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0351)
 BGMapAddressAtScroll_Bank1F::
     ldh a, [hScrollY]
     and $f8

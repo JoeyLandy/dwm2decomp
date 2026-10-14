@@ -7,7 +7,7 @@ SECTION "Bank 48", ROMX[$4000], BANK[$48]
 ; entry 0 of AreaPaletteTable (E-0145, C1)
 ; record: one CGB palette: 4 BGR555 colours
 AreaPalettes0::
-; data read by DebugStaffRoll_Scene00_DecompressToVRAM (32 words)
+; data read by DebugStaffRoll_Scene00_DecompressToVRAM (32 words) (E-0347)
 DebugStaffRoll_Scene00_DecompressToVRAM_BGPaletteBufferData::
     dw $7da0, $7fff, $7fe0, $0063 ; entry 0
     dw $7da0, $7fff, $5ad6, $0063 ; entry 1

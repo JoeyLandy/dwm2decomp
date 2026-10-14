@@ -726,6 +726,12 @@ DEF ITEM_6D EQU $6D
 DEF ITEM_6E EQU $6E
 DEF ITEM_6F EQU $6F
 
+; Message words (HL or DE for StartMessage*, ShowMessageHL, wMessageIndex/wMessageGroup): the low byte is the
+; message's index and H bits 0-5 its group, which selects the message bank (E-0079). RunMessageBox tests
+; H bits 6 and 7 (E-0350):
+DEF MSG_KEEP_OPEN EQU $4000 ; bit 6: the box stays open after the text (no closing sound $69, no closing step)
+DEF MSG_ALREADY_OPEN EQU $8000 ; bit 7: the box is already open (no tile fill, no opening sound, no opening step)
+
 ; Story flags (wStoryFlags; TestFlagBit, SetFlagBit, script_set_flag, object selectors), named after
 ; what their first setter says: a talk routine's message, a scene, a script's last scene command or
 ; message before the flag is set (D-009), or else the last message the setting routine shows; a

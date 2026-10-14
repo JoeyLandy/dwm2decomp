@@ -257,7 +257,7 @@ MonsterSprite_Andreal::
     INCBIN "gfx/monster_sprites/andreal.lz"
 
 ; compressed sprite graphics of monster id $034 (KingCobra) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_KingCobra::
     INCBIN "gfx/monster_sprites/king_cobra.lz"
 
@@ -328,7 +328,7 @@ MonsterSprite_Serpentia::
     INCBIN "gfx/monster_sprites/serpentia.lz"
 
 ; compressed sprite graphics of monster id $040 (Divinegon) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Divinegon::
     INCBIN "gfx/monster_sprites/divinegon.lz"
 

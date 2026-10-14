@@ -5,7 +5,7 @@ SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1a
 
 ; wRecordBuffer/wRecordBuffer + $1 (the first word of the record buffer) = skill number: copies the
-; 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wRecordBufferData
+; 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wRecordBufferData (E-0032)
 LoadSkillRecord::
     ld a, [wRecordBuffer]
     ld c, a
@@ -32,7 +32,7 @@ LoadSkillRecord::
 
 ; like LoadSkillRecord, but copies wBattleArg1 bytes starting wBattleArg0 bytes into the record to
 ; the address in wBattleArg2/wBattleArg3; with wRecordBuffer = $FF it zero-fills that destination
-; instead
+; instead (E-0351)
 LoadSkillRecordPart::
     ld a, [wRecordBuffer]
     ld c, a
@@ -86,7 +86,7 @@ LoadSkillRecordPart::
 
 ; called from ComputeDamageEstimateForAction: branches on wLinkMode; branches on wBattleActor;
 ; branches on the byte at wSlotAIMode; copies the byte at wSlotAIMode to wBattleDamageLo; copies the
-; byte at wSlotAIMode to wBattleDamageHi
+; byte at wSlotAIMode to wBattleDamageHi (E-0347)
 ComputeDamageEstimateForAction_Multiply8By16::
     ld a, [wBattleActionId]
     ld c, a
@@ -2009,11 +2009,11 @@ FindNewlyLearnableSkills::
     ld a, $ff
     ldh [hTemp4], a
 
-; Returns at once
+; Returns at once (E-0347)
 FindNewlyLearnableSkills_Return::
     ret
 
-; Copies C to hTemp3; sets hTemp4 to 0; continues in FindNewlyLearnableSkills_Return
+; Copies C to hTemp3; sets hTemp4 to 0; continues in FindNewlyLearnableSkills_Return (E-0347)
 FindNewlyLearnableSkills_Skip::
     ld a, $ff
     ld [de], a
@@ -2028,7 +2028,7 @@ FindNewlyLearnableSkills_Skip::
     jr FindNewlyLearnableSkills_Return
 
 ; Copies hTemp6 to hTemp5; copies C to hTemp3; sets hTemp4 to 1; continues in
-; FindNewlyLearnableSkills_Return
+; FindNewlyLearnableSkills_Return (E-0347)
 FindNewlyLearnableSkills_ReadTemp6::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2041,7 +2041,7 @@ FindNewlyLearnableSkills_ReadTemp6::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; Copies C to hTemp3; sets hTemp4 to 2; continues in FindNewlyLearnableSkills_Return
+; Copies C to hTemp3; sets hTemp4 to 2; continues in FindNewlyLearnableSkills_Return (E-0347)
 FindNewlyLearnableSkills_Restore::
     pop bc
     pop hl
@@ -2094,7 +2094,7 @@ FindCInWorkBuf38::
 
 ; called from BattleEnd_Step3: calls FillBytes; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi;
 ; calls LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
-; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf
+; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf (E-0347)
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2149,7 +2149,7 @@ BattleEnd_Step3_LoadSpeciesRecord::
     ret
 
 ; Calls BattleEnd_Step3_RecordKnowsSkill; branches on the byte at SkillPrerequisitePointers; calls
-; BattleEnd_Step3_RecordKnowsSkill
+; BattleEnd_Step3_RecordKnowsSkill (E-0347)
 BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
@@ -2191,7 +2191,7 @@ BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     ret
 
 ; searches 170 18-byte records of its table for A among their first five bytes; on a match checks
-; the record's skills (BattleEnd_Step3_RecordKnowsSkill)
+; the record's skills (BattleEnd_Step3_RecordKnowsSkill) (E-0305)
 BattleEnd_Step3_FindSkillInTable::
     push hl
     push de
@@ -2240,7 +2240,7 @@ BattleEnd_Step3_FindSkillInTable::
     pop hl
     jr .restore
 
-; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS)
+; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS) (E-0305)
 BattleEnd_Step3_RecordKnowsSkill::
     push bc
     ld hl, wRecordBufA + MON_SKILLS
@@ -2567,7 +2567,7 @@ ComputeLevelUpStatGainsForBattleArg1::
 
 ; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
 ; $ff; sets wGrowthTemp0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches on e;
-; ...
+; sets wGrowthTemp1 (E-0347)
 ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
     push de
     ld a, [wBattleArg1]
@@ -2811,7 +2811,7 @@ ClampDeltaTo999::
     ld a, [hli]
     ld d, [hl]
     ld e, a
-    ld hl, $fc19
+    ld hl, -999
     add hl, de
     ld a, h
     or l

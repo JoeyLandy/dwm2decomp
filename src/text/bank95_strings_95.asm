@@ -71,7 +71,7 @@ Map92Attrs0_Y0X0::
     db $02, $58, $0f, $37, $02, $2a, $0f, $15, $02, $28, $08, $02, $20, $0f, $01, $02
     db $00, $02
 
-; called from BeginStringDisplay_Bank08: sets wStringCategory; calls BeginStringDisplay
+; called from BeginStringDisplay_Bank08: sets wStringCategory; calls BeginStringDisplay (E-0347)
 BeginStringDisplay_Bank08_BeginStringDisplay::
     ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]
@@ -80,7 +80,7 @@ BeginStringDisplay_Bank08_BeginStringDisplay::
     call BeginStringDisplay
     ret
 
-; called from CopyStringToBuffer_Bank08: sets wStringCategory; calls CopyStringToBuffer
+; called from CopyStringToBuffer_Bank08: sets wStringCategory; calls CopyStringToBuffer (E-0347)
 CopyStringToBuffer_Bank08_CopyStringToBuffer::
     ld de, BeginStringDisplay_Bank08_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

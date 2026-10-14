@@ -55,9 +55,9 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Readability state (2026-10-13, after E-0349)
+## Readability state (2026-10-14, after E-0351)
 
-Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run536).
+Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays identical (build/run543).
 
 | Measure | State |
 | --- | --- |
@@ -68,8 +68,8 @@ Measured from `src/` by `tools/readability.py` and simple counts; the ROM stays 
 | Assets | 3,550 graphics and map files included by name (`gfx/monster_sprites/drak_slime.lz`), extracted from the reference at build time (D-008); no offset into the ROM is left in `src/` |
 | Labels | 33,212 global labels. None is an address name or spells a RAM or ROM address, none carries a `_CaseNN`/`_SubNN` state-machine index, and none lacks a description beyond its structure (E-0340, E-0344). Steps say what they show, call or write (`FhuntTalkEvents_ShowHeroCheckedBehindThe`, `..._SetDataBankSave`); data is named by its content or its reader (`Script_HowMayWeServe`, `MapObjects_Map94_3_Unlisted_0`). Copies and repeats are numbered `_2`, `_3` |
 | RAM | 958 named addresses; none spells a byte number. Work bytes that different routines reuse are named after their main use, and the note lists the others (E-0345) |
-| Pointers | Pointer operands name their target where its bank is clear (`ld hl, ActionEffect_LoveRain_Data`, `CursorPositionWords_Bank07 + $10`), and register pairs holding two bytes use `lb` (`lb de, $50, $30`). 167 raw operands remain (readability.py), mostly home-bank loads into a bank the caller maps and values the rules cannot tell from pointers (E-0348) |
-| Documentation | Every label has a comment: 9,822 code labels and 23,390 data labels (`tools/doc_coverage.py`). Notes written by reading carry evidence ids; the rest restate the instructions (`tools/describe.py`). Every written note that admits an unread body has a `; code:` restatement. No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347) |
+| Pointers | No operand is a bare address (readability.py raw_pointer_operands 0). Pointers name their target, in another bank where the code shows which (`ld de, GlyphFont`, `ld hl, MonsterAttributeMapTable`, `NameEntryTileSrcListB + $..`). Values say what they are: `lb bc, $40, $90` pairs, `ld hl, -999`, `ld hl, 20000`, `PAL_WHITE`, `MSG_KEEP_OPEN | $0487`. 99 operands were read one by one (config/operands.json, E-0348, E-0350) |
+| Documentation | Every label has a comment (9,822 code, 23,484 data; tools/doc_coverage.py), and every routine comment and table header cites an evidence or decision id. Notes written by reading cite their entry; restatements of the instructions cite E-0347; readings recorded before per-name ids cite E-0351. No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347, E-0350) |
 | Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
 
 ## Source presentation (2026-10-13, decision D-005)

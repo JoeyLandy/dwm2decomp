@@ -6,7 +6,7 @@ SECTION "Bank 33", ROMX[$4000], BANK[$33]
 
 ; DE = block number: the table at $405F gives each block an offset into wScreenTileBuffer (word), a
 ; width B and a height C, followed by B * C tile bytes; they are copied into wScreenTileBuffer rows
-; 32 bytes apart
+; 32 bytes apart (E-0351)
 CopyBlockToTileBuffer::
     ld d, $00
     ld hl, ScreenBlockTable
@@ -698,7 +698,8 @@ TileRect_ScreenBlockTable_45::
 ; called from GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame: calls
 ; LinkExchangeJoypadPerFrame; branches on wTitleScreenState; branches on wScreenState; returns
 ; unless wScreenSubStep is 0; branches on wScreenStep; calls DrawListEntriesCell5SpeciesSprite;
-; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; ...
+; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; branches on wScreenStep; calls
+; DrawRecordBufBSpeciesSpritePart_BankF1; calls DrawRecordBufBSpeciesSprites (E-0347)
 GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -751,6 +752,7 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_4::
 
 ; called from RunLinkSession6Exchange_LinkReceiveStepWithBuffer: branches on wTitleScreenState;
 ; dispatches on wTitleScreenSubState; returns unless wFadeState is 0; dispatches on wScreenState
+; (E-0347)
 RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wTitleScreenState]
     or a
@@ -797,7 +799,7 @@ RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
 
 ; step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
 ; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; calls
-; SetDefaultStringWindow_Bank33; advances wTitleScreenSubState
+; SetDefaultStringWindow_Bank33; advances wTitleScreenSubState (E-0347)
 RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
@@ -816,6 +818,7 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
 ; step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
 ; wLinkSendByte to 0; calls WriteGoldDigitsToScreenTileBufferRow1Col14; calls RunFourTimes; calls
 ; BGMapAddressAtScroll_Bank33; calls DrawScreenBufferRectToBGMap_33; advances wTitleScreenSubState
+; (E-0347)
 RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
     xor a
     ld [wLinkSendByte], a
@@ -833,7 +836,7 @@ RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
 
 ; step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
 ; wFadeState is 0; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte
-; to 0
+; to 0 (E-0347)
 RunLinkSession6Exchange_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
@@ -848,7 +851,9 @@ RunLinkSession6Exchange_ShowForTeamMode1Hero::
 
 ; step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; sets wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2;
-; calls BeginString_Bank07_Cat5; returns unless wTextFlags is 0; branches on wTextFlags; ...
+; calls BeginString_Bank07_Cat5; returns unless wTextFlags is 0; branches on wTextFlags; sets
+; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
+; BeginString_Bank07_Cat5; sets wTitleScreenSubState; then 7 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -915,7 +920,8 @@ RunLinkSession6Exchange_ShowYourPalRefusedThe::
 
 ; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; sets wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2;
-; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte to 0; ...
+; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte to 0; calls
+; BeginString_Bank07_Cat5; advances wTitleScreenSubState (E-0347)
 RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -958,7 +964,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ret
 
 ; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
-; wLinkSendByte to 0; advances wTitleScreenSubState; sets wLinkScreenFlag to 0
+; wLinkSendByte to 0; advances wTitleScreenSubState; sets wLinkScreenFlag to 0 (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_2::
     xor a
     ld [wLinkSendByte], a
@@ -968,7 +974,7 @@ RunLinkSession6Exchange_SetLinkSendByte_2::
     ld [wLinkScreenFlag], a
     ret
 
-; by its step: 'Choose a monster for the Team ...'
+; by its step: 'Choose a monster for the Team ...' (E-0294)
 RunLinkSession6Exchange_ChooseTeamMonster::
     ld a, [wLinkScreenFlag]
     jumptable
@@ -977,7 +983,7 @@ RunLinkSession6Exchange_ChooseTeamMonster::
     dw RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState
 
 ; step 0 of RunLinkSession6Exchange_ChooseTeamMonster: returns unless wTextFlags is 0; branches on
-; wTextFlags; increments wLinkScreenFlag
+; wTextFlags; increments wLinkScreenFlag (E-0347)
 RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -997,7 +1003,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
     ret
 
 ; step 1 of RunLinkSession6Exchange_ChooseTeamMonster: calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; increments wLinkScreenFlag
+; DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; increments wLinkScreenFlag (E-0347)
 RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -1010,7 +1016,7 @@ RunLinkSession6Exchange_ChooseTeamMonster_ShowChooseAMonsterFor::
     ret
 
 ; step 2 of RunLinkSession6Exchange_ChooseTeamMonster: sets wTitleScreenSubState to 0; sets
-; wLinkScreenFlag to 0; sets wTitleScreenState to 1; sets wScreenState to 0
+; wLinkScreenFlag to 0; sets wTitleScreenState to 1; sets wScreenState to 0 (E-0347)
 RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
     xor a
     ld [wTitleScreenSubState], a
@@ -1024,7 +1030,9 @@ RunLinkSession6Exchange_ChooseTeamMonster_SetTitleScreenSubState::
 
 ; step 7 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
 ; wTextFlags is 0; branches on wTextFlags; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $40;
-; advances wTitleScreenSubState; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $30; ...
+; advances wTitleScreenSubState; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $30; advances
+; wTitleScreenSubState; sets wGoldHi to $30; copies B to wGoldMid; copies C to wGoldLo; calls
+; BeginString_Bank07_Cat5; then 2 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
@@ -1079,7 +1087,7 @@ RunLinkSession6Exchange_ShowYouRefusedToPay::
 ; step 8 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; returns unless wLinkMessage is $20; decrements wTitleScreenSubState; sets
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5
+; BeginString_Bank07_Cat5 (E-0347)
 RunLinkSession6Exchange_BackTitleScreenSubState::
     ld a, [wLinkMessage]
     cp $fe
@@ -1106,7 +1114,7 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
 ; step 9 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; returns unless wLinkMessage is $40; advances wTitleScreenSubState; sets
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5
+; BeginString_Bank07_Cat5 (E-0347)
 RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1134,7 +1142,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_2::
 
 ; step 10 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets
-; wScreenState to 2
+; wScreenState to 2 (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
@@ -1149,7 +1157,9 @@ RunLinkSession6Exchange_SetLinkSendByte::
 ; step 11 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; returns unless wLinkMessage is $40; copies wLinkMessage to wLinkSendByte; calls
 ; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; calls
-; BeginString_Bank07_Cat5; ...
+; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; calls
+; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; then 6 more steps (see
+; the code) (E-0347)
 RunLinkSession6Exchange_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -1213,7 +1223,7 @@ RunLinkSession6Exchange_ShowYourPalRefusedTo::
 ; step 12 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; returns unless wLinkMessage is $20; sets wTitleScreenSubState to 5; sets
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5
+; BeginString_Bank07_Cat5 (E-0347)
 RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -1241,7 +1251,7 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
 
 ; step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
 ; wLinkMessage; returns unless wLinkMessage is $fe; sets wLinkSendByte to $fe; sets
-; wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets wScreenState to 2
+; wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets wScreenState to 2 (E-0347)
 RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3::
     ld a, [wLinkMessage]
     cp $10
@@ -1264,7 +1274,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc_3::
     ld [wScreenState], a
     ret
 
-; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07
+; A = string index: wStringIndex = A, wStringCategory = 5, then BeginStringDisplay_Bank07 (E-0351)
 BeginString_Bank07_Cat5::
     ld [wStringIndex], a
     ld a, $05
@@ -1273,14 +1283,14 @@ BeginString_Bank07_Cat5::
     ret
 
 ; step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
-; wScreenState
+; wScreenState (E-0347)
 RunLinkSession6Exchange_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
-; wTextFlags is 0; advances wScreenState
+; wTextFlags is 0; advances wScreenState (E-0347)
 RunLinkSession6Exchange_AdvanceScreenState_2::
     ld a, [wTextFlags]
     and a
@@ -1291,7 +1301,7 @@ RunLinkSession6Exchange_AdvanceScreenState_2::
     ret
 
 ; step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep
+; wScreenStep (E-0347)
 RunLinkSession6Exchange_PleaseWaitSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1302,7 +1312,7 @@ RunLinkSession6Exchange_PleaseWaitSteps::
     dw RunLinkSession6Exchange_AdvanceModeChangeRequest
 
 ; step 0 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wLinkMessage is $fe; sets
-; wLinkSendByte to 0; increments wScreenStep
+; wLinkSendByte to 0; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $fe
@@ -1315,7 +1325,7 @@ RunLinkSession6Exchange_SetLinkSendByte_3::
     ret
 
 ; step 1 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wTextFlags is 0; calls
-; ShowStringA10_Bank33; advances wScreenStep
+; ShowStringA10_Bank33; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_PleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1327,7 +1337,7 @@ RunLinkSession6Exchange_PleaseWait::
     ret
 
 ; step 2 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wTextFlags is 0; sets
-; wLinkSendByte to 1; advances wScreenStep
+; wLinkSendByte to 1; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_4::
     ld a, [wTextFlags]
     and a
@@ -1339,7 +1349,7 @@ RunLinkSession6Exchange_SetLinkSendByte_4::
     ret
 
 ; step 3 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wLinkMessage is $01; sets
-; wLinkSendByte to 0; advances wScreenStep
+; wLinkSendByte to 0; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $01
@@ -1351,7 +1361,7 @@ RunLinkSession6Exchange_SetLinkSendByte_5::
     ret
 
 ; step 4 of RunLinkSession6Exchange_PleaseWaitSteps: returns if bit 0 of wTextFlags is set; branches
-; on wTextFlags; increments wModeChangeRequest
+; on wTextFlags; increments wModeChangeRequest (E-0347)
 RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ld a, [wTextFlags]
     bit 0, a
@@ -1379,14 +1389,14 @@ RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ret
 
 ; step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
-; wScreenState
+; wScreenState (E-0347)
 RunLinkSession6Exchange_AdvanceScreenState_3::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep
+; wScreenStep (E-0347)
 RunLinkSession6Exchange_BreedMenuSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1408,6 +1418,7 @@ RunLinkSession6Exchange_BreedMenuSteps::
     dw RunLinkSession6Exchange_AdvanceScreenState_4
 
 ; step 0 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls BreedMenu
+; (E-0347)
 RunLinkSession6Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1415,7 +1426,7 @@ RunLinkSession6Exchange_BreedMenu::
     farcall BreedMenu
     ret
 
-; step 2 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawRecordListPageIndicators_1B
+; step 2 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawRecordListPageIndicators_1B (E-0347)
 RunLinkSession6Exchange_DrawRecordListPageIndicators_1B::
     farcall DrawRecordListPageIndicators_1B
     ret
@@ -1448,7 +1459,7 @@ CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
 ; step 7 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls
 ; StoreBAtWordTableEntry_Bank33; calls RunFourTimes; calls BGMapAddressAtScroll_Bank33; calls
 ; DrawScreenBufferRectToBGMap_33; calls StoreBAtWordTableEntry_Bank33; calls
-; SetDefaultStringWindow_Bank33; ...
+; SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_RunFourTimes::
     ld a, [wTextFlags]
     and a
@@ -1476,7 +1487,9 @@ RunLinkSession6Exchange_RunFourTimes::
 
 ; step 8 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; sets wScreenState to
 ; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wMenuInputResult to 0; ...
+; wLinkSendByte to $fe; sets wMenuInputResult to 0; calls UpdatePagedListCursor; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; sets wScreenState to 2;
+; then 9 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -1550,7 +1563,9 @@ RunLinkSession6Exchange_YourPalRefusedThe::
 
 ; step 9 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; ...
+; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B;
+; plays sound $6c; calls CopyRectTo20ByteRowsJp_Bank33; calls BGMapAddressAtScroll_Bank33; calls
+; DrawScreenBufferRectToBGMap_33; then 3 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_InfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -1589,7 +1604,9 @@ RunLinkSession6Exchange_InfoOKYesN::
 
 ; step 10 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; sets wScreenState to
 ; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wArg5 to 0; ...
+; wLinkSendByte to $fe; sets wArg5 to 0; calls HandleTwoChoiceCursorInput_0D; returns if wArg5 is 0;
+; branches on wArg5; advances wScreenStep; branches on wChoiceCursor; then 7 more steps (see the
+; code) (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1647,7 +1664,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_2::
 
 ; step 11 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls
 ; WriteC3AtWordTableEntries_Bank33; calls DrawBoxAndKeyRows; calls BGMapAddressAtScroll_Bank33;
-; calls DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wScreenStep
+; calls DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wScreenStep (E-0347)
 RunLinkSession6Exchange_ChooseAMonsterFor::
     ld a, [wTextFlags]
     and a
@@ -1669,7 +1686,7 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
 
 ; step 12 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawBoxAndKeyRows; calls
 ; BGMapAddressAtScroll_Bank33; calls DrawScreenBufferRectToBGMap_33; increments wPickCount; calls
-; ShowStringA10_Bank33; calls FinishPickedRecordsEntryAndStep_33
+; ShowStringA10_Bank33; calls FinishPickedRecordsEntryAndStep_33 (E-0347)
 RunLinkSession6Exchange_PleaseWait_2::
     call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -1685,7 +1702,8 @@ RunLinkSession6Exchange_PleaseWait_2::
 
 ; step 13 of RunLinkSession6Exchange_BreedMenuSteps: sets rRAMG to $0a; sets rRAMB to 0; calls
 ; SRAMRecordAddress; copies E to wLinkTimeoutLo; copies D to wLinkTimeoutHi; copies E to
-; wLinkBufferPtrLo; copies D to wLinkBufferPtrHi; ...
+; wLinkBufferPtrLo; copies D to wLinkBufferPtrHi; sets rRAMG to 0; sets wLinkScene to 0; sets
+; wLinkSendByte to 1; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkTimeoutLo::
     ld a, $0a
     ld [rRAMG], a
@@ -1724,7 +1742,9 @@ RunLinkSession6Exchange_SetLinkTimeoutLo::
 
 ; step 14 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; returns unless
 ; wLinkMessage is $fe; sets wScreenState to 2; sets wScreenStep to 0; sets wScreenSubStep to 0;
-; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $fe; ...
+; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $fe; copies L to wLinkBufferCountLo; copies H
+; to wLinkBufferCountHi; sets wLinkSendByte to $ff; sets wLinkReady to 1; advances wScreenStep
+; (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe_3::
     ld a, [wLinkMessage]
     cp $01
@@ -1757,7 +1777,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_3::
     ret
 
 ; step 15 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wLinkMessage is $f0; advances
-; wScreenState; sets wScreenStep to 0
+; wScreenState; sets wScreenStep to 0 (E-0347)
 RunLinkSession6Exchange_AdvanceScreenState_4::
     ld a, [wLinkMessage]
     cp $f0
@@ -1769,7 +1789,7 @@ RunLinkSession6Exchange_AdvanceScreenState_4::
     ret
 
 ; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep
+; wScreenStep (E-0347)
 RunLinkSession6Exchange_FightInfoExSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1793,7 +1813,7 @@ RunLinkSession6Exchange_FightInfoExSteps::
     dw RunLinkSession6Exchange_SetLinkSendByte_9
 
 ; step 0 of RunLinkSession6Exchange_FightInfoExSteps: advances wScreenStep; sets wLinkSendByte to 0;
-; calls CopyBBytesThenMark1
+; calls CopyBBytesThenMark1 (E-0347)
 RunLinkSession6Exchange_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
@@ -1818,6 +1838,7 @@ CopyBBytesThenMark1::
     ret
 
 ; step 1 of RunLinkSession6Exchange_FightInfoExSteps: sets wLinkSendByte to 1; advances wScreenStep
+; (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_6::
     ld a, $01
     ld [wLinkSendByte], a
@@ -1827,7 +1848,8 @@ RunLinkSession6Exchange_SetLinkSendByte_6::
 
 ; step 2 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $01; copies L
 ; to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
-; wLinkBufferPtrHi; sets wLinkBufferCountLo to $10; sets wLinkSendByte to $ff; ...
+; wLinkBufferPtrHi; sets wLinkBufferCountLo to $10; sets wLinkSendByte to $ff; advances wScreenStep
+; (E-0347)
 RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ld a, [wLinkMessage]
     cp $01
@@ -1851,7 +1873,7 @@ RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ret
 
 ; step 3 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $f0; sets
-; wLinkSendByte to 0; advances wScreenStep
+; wLinkSendByte to 0; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
@@ -1864,7 +1886,9 @@ RunLinkSession6Exchange_SetLinkSendByte_7::
 
 ; step 4 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyRectTo20ByteRowsJp_Bank33; copies L
 ; to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; ...
+; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; calls CopyGlyphTilesToVRAM; copies
+; wLinkTradeByte to wLinkFightInfo; calls RunFourTimes; copies L to wTextWindowTileLo; copies H to
+; wTextWindowTileHi; then 15 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_FightInfoEx::
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1934,7 +1958,7 @@ RunLinkSession6Exchange_FightInfoEx::
 
 ; step 5 of RunLinkSession6Exchange_FightInfoExSteps: calls BGMapAddressAtScroll_Bank33; calls
 ; DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wTwoChoiceCursor to 0;
-; advances wScreenStep
+; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_BattleInTeamMode::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -1950,7 +1974,9 @@ RunLinkSession6Exchange_BattleInTeamMode::
 
 ; step 6 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState to
 ; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; calls HandleThreeChoiceCursorInput_F1; ...
+; wLinkSendByte to $fe; calls HandleThreeChoiceCursorInput_F1; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wScreenState to 2; calls BeginString_Bank07_Cat5; sets
+; wScreenStep to 0; then 13 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe_4::
     ld a, [wLinkMessage]
     cp $fe
@@ -2021,7 +2047,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_4::
     ret
 
 ; step 7 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyBytes; calls
-; BeginString_Bank07_Cat5; sets wLinkSendByte to 0; advances wScreenStep
+; BeginString_Bank07_Cat5; sets wLinkSendByte to 0; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_TheBattleResultsWill::
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
@@ -2037,7 +2063,8 @@ RunLinkSession6Exchange_TheBattleResultsWill::
 
 ; step 8 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState to
 ; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; returns unless wTextFlags is 0; ...
+; wLinkSendByte to $fe; returns unless wTextFlags is 0; branches on wTextFlags; calls
+; BeginString_Bank07_Cat5; decrements wScreenStep; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe_5::
     ld a, [wLinkMessage]
     cp $fe
@@ -2074,7 +2101,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_5::
     ret
 
 ; step 9 of RunLinkSession6Exchange_FightInfoExSteps: advances wScreenStep; calls
-; BeginString_Bank07_Cat5
+; BeginString_Bank07_Cat5 (E-0347)
 RunLinkSession6Exchange_PleaseWait_3::
     ld hl, wScreenStep
     inc [hl]
@@ -2083,7 +2110,7 @@ RunLinkSession6Exchange_PleaseWait_3::
     ret
 
 ; step 10 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wTextFlags is 0; advances
-; wScreenStep; sets wLinkSendByte to 1
+; wScreenStep; sets wLinkSendByte to 1 (E-0347)
 RunLinkSession6Exchange_AdvanceScreenStep_2::
     ld a, [wTextFlags]
     and a
@@ -2096,7 +2123,8 @@ RunLinkSession6Exchange_AdvanceScreenStep_2::
 
 ; step 11 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState
 ; to 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wLinkSendByte to 0; ...
+; wLinkSendByte to $fe; sets wLinkSendByte to 0; advances wScreenStep; calls BeginString_Bank07_Cat5
+; (E-0347)
 RunLinkSession6Exchange_YourPalRefusedThe_6::
     ld a, [wLinkMessage]
     cp $fe
@@ -2128,7 +2156,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_6::
 
 ; step 12 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wTextFlags is 0; advances
 ; wScreenStep; copies wGoldLo to wWorkBuf; calls VerifySaveChecksum; copies wWorkBuf to wGoldLo;
-; sets wGoldMid; sets wGoldHi; ...
+; sets wGoldMid; sets wGoldHi; calls SaveGameToSRAMWithChecksum; sets wLinkSendByte to 5 (E-0347)
 RunLinkSession6Exchange_VerifySaveChecksum::
     ld a, [wTextFlags]
     and a
@@ -2155,7 +2183,7 @@ RunLinkSession6Exchange_VerifySaveChecksum::
 
 ; step 13 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $05; sets
 ; wLinkSendByte to 0; calls CopyBytes; calls SetArg5ToListEntriesCell5; copies the byte at
-; wRandomSeed2Hi to wLinkReceivedByte; increments wScreenStep
+; wRandomSeed2Hi to wLinkReceivedByte; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ld a, [wLinkMessage]
     cp $05
@@ -2180,7 +2208,9 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
 
 ; step 14 of RunLinkSession6Exchange_FightInfoExSteps: increments wScreenStep; copies wRandomLo to
 ; wBattleSetupFlagsLo; copies wRandomHi to wBattleSetupFlagsHi; copies L to wLinkTimeoutLo; copies H
-; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; ...
+; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets
+; wLinkBufferCountLo to 2; sets wLinkBufferCountHi to 0; sets wLinkSendByte to $ff; sets wLinkReady
+; to 1 (E-0347)
 RunLinkSession6Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2211,7 +2241,8 @@ RunLinkSession6Exchange_SetScreenStep::
 
 ; step 15 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $f0; sets
 ; wLinkSendByte to 0; sets wLinkReady to 0; branches on wLinkRole; copies wRandomLo to
-; wRandomSeed2Lo; copies wRandomHi to wRandomSeed2Hi; copies wRandomSeed2Lo to wRandomLo; ...
+; wRandomSeed2Lo; copies wRandomHi to wRandomSeed2Hi; copies wRandomSeed2Lo to wRandomLo; copies
+; wRandomSeed2Hi to wRandomHi; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_8::
     ld a, [wLinkMessage]
     cp $f0
@@ -2242,7 +2273,7 @@ RunLinkSession6Exchange_SetLinkSendByte_8::
     ret
 
 ; step 16 of RunLinkSession6Exchange_FightInfoExSteps: increments wScreenStep; sets wLinkSendByte to
-; $d2
+; $d2 (E-0347)
 RunLinkSession6Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
@@ -2253,7 +2284,8 @@ RunLinkSession6Exchange_SetScreenStep_2::
 
 ; step 17 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $d2; sets
 ; wLinkSendByte to 0; sets wGameMode to 7; sets wModeState to 0; sets wWorldMapState to 0; sets
-; wGameMode2Arg to 0; sets wModeChangeRequest to 1; ...
+; wGameMode2Arg to 0; sets wModeChangeRequest to 1; sets wLinkSession to 7; sets wLinkExchangeState
+; to 0; sets wLinkSendByte to 0; sets wLinkMessage to 0 (E-0347)
 RunLinkSession6Exchange_SetLinkSendByte_9::
     ld a, [wLinkMessage]
     cp $d2
@@ -2280,7 +2312,7 @@ RunLinkSession6Exchange_SetLinkSendByte_9::
 
 ; step 6 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
 ; SwapMonstersMenu; returns unless wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to
-; 0; sets wScreenState
+; 0; sets wScreenState (E-0347)
 RunLinkSession6Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2296,7 +2328,7 @@ RunLinkSession6Exchange_SwapMonstersMenu::
 
 ; step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
 ; RunScreenStateWhenNotFading_F1; returns unless wScreenState is $0e; copies wItemGridX to
-; wListCursor; copies wItemGridY to wListPageIndex
+; wListCursor; copies wItemGridY to wListPageIndex (E-0347)
 RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
@@ -2309,7 +2341,7 @@ RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     ret
 
 ; step 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep
+; wScreenStep (E-0347)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     ld a, [wScreenStep]
     jumptable
@@ -2325,7 +2357,8 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
 ; step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls ClearRecordPanelTiles; calls
 ; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; copies L to
 ; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; ...
+; wTextWindowWidth; sets wStringCategory to 1; sets wStringIndex to 1; calls ShowString_Bank07;
+; calls SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
@@ -2353,7 +2386,7 @@ RunLinkSession6Exchange_ClearRecordPanelTiles::
     ld [wScreenStep], a
     ret
 
-; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: advances wScreenStep
+; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: advances wScreenStep (E-0347)
 RunLinkSession6Exchange_AdvanceScreenStep_3::
     ld hl, wScreenStep
     inc [hl]
@@ -2361,7 +2394,9 @@ RunLinkSession6Exchange_AdvanceScreenStep_3::
 
 ; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls SetArg5ToListEntriesCell5;
 ; sets wArg1 to $c7; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; copies hTemp0 &
-; $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf; ...
+; $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf; sets rRAMG2 to 0; calls
+; CopyRectTo20ByteRowsJp_Bank33; sets wArg1; copies L to wArg2; copies H to wArg3; then 7 more steps
+; (see the code) (E-0347)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2458,14 +2493,16 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
 ; step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls
-; ClearAndDrawListEntriesCell5NameAtTiles1780
+; ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0347)
 RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
 ; step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls CopyRectTo20ByteRowsJp_Bank33;
 ; calls RunFourTimes; calls CopyRectTo20ByteRowsJp_Bank33; calls RunFourTimes; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; ...
+; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
+; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; calls CopyGlyphTilesToVRAM;
+; advances wScreenStep (E-0347)
 RunLinkSession6Exchange_RunFourTimes_2::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect_2
     ld hl, wWindowTileBuffer + $6e
@@ -2506,7 +2543,9 @@ RunLinkSession6Exchange_RunFourTimes_2::
 
 ; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: copies L to wTextWindowTileLo;
 ; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $20; calls ShowString_Bank1B; ...
+; wStringCategory to 0; sets wStringIndex to $20; calls ShowString_Bank1B; calls
+; CopyRectTo20ByteRowsJp_Bank33; calls CopyListEntriesCell5NameToTextBuf0_Bank33; calls
+; SetDefaultStringWindow_Bank33; sets wTwoChoiceCursor to 1; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_FightInfoEx_2::
     ld hl, vTiles2 + $300
     ld a, l
@@ -2539,7 +2578,8 @@ RunLinkSession6Exchange_FightInfoEx_2::
 ; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls BGMapAddressAtScroll_Bank33;
 ; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
 ; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
-; wReturnScreenState to wScreenState; ...
+; wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; calls
+; SetDefaultStringWindow_Bank33 (E-0347)
 RunLinkSession6Exchange_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2563,7 +2603,7 @@ RunLinkSession6Exchange_SetSpriteHideTile::
     ret
 
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep
+; wScreenStep (E-0347)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
     ld a, [wScreenStep]
     jumptable
@@ -2578,7 +2618,7 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
 
 ; step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls ClearRecordPanelTiles; calls
 ; CopyRectTo20ByteRowsJp_Bank33; calls StoreBAtWordTableEntry_Bank33; calls
-; DrawPlayerNameAndString0Category1; increments wScreenStep
+; DrawPlayerNameAndString0Category1; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect
@@ -2596,7 +2636,7 @@ RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     ret
 
 ; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CallDrawListEntriesCell5RecordPanel
+; CallDrawListEntriesCell5RecordPanel (E-0347)
 RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
@@ -2604,7 +2644,7 @@ RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
 ; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
 ; ListAvailableRecordsForSelection_Bank33; calls ClampRecordListPageCursor5; branches on wListPages;
 ; calls StoreC5BEC6AtHLStride2_Bank33; copies H to wArg1; copies L to wArg2; calls
-; DrawPageOfPagesAtArg1_Bank1E; ...
+; DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
 RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
@@ -2627,7 +2667,7 @@ RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     ret
 
 ; step 2 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls DrawRecordListPageNames;
-; sets wArg1 to 0; calls MarkPartyMembersInRecordListPage
+; sets wArg1 to 0; calls MarkPartyMembersInRecordListPage (E-0347)
 RunLinkSession6Exchange_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -2636,20 +2676,22 @@ RunLinkSession6Exchange_DrawRecordListPageNames::
     ret
 
 ; step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CallClearAndDrawListEntriesCell5Name
+; CallClearAndDrawListEntriesCell5Name (E-0347)
 RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
 ; step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
+; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep (E-0347)
 RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
     call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
 ; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: copies L to wTextWindowTileLo;
 ; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; ...
+; wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; calls
+; CopyListEntriesCell5NameToTextBuf0_Bank33; calls SetDefaultStringWindow_Bank33; sets wStringIndex
+; to $12; calls ShowString_Bank1B; calls RunFourTimes; then 3 more steps (see the code) (E-0347)
 RunLinkSession6Exchange_InfoOKYesN_2::
     ld hl, vTiles2 + $700
     ld a, l
@@ -2689,7 +2731,8 @@ RunLinkSession6Exchange_InfoOKYesN_2::
 ; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls BGMapAddressAtScroll_Bank33;
 ; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
 ; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
-; wReturnScreenState to wScreenState; ...
+; wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; calls
+; SetDefaultStringWindow_Bank33 (E-0347)
 RunLinkSession6Exchange_SetSpriteHideTile_2::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2859,7 +2902,7 @@ ListAvailableRecordsForSelection_Bank33::
     farcall MovePartyRecordsToFrontOfList
     ret
 
-; the same 16 bytes as ShowStringA10_Bank1B (ShowStringA10_Bank1B)
+; the same 16 bytes as ShowStringA10_Bank1B (ShowStringA10_Bank1B) (E-0063)
 ShowStringA10_Bank33::
     add $10
     ld [wStringIndex], a
@@ -2941,7 +2984,7 @@ FinishPickedRecordsEntryAndStep_33::
     ret
 
 ; HL = table of 16-bit addresses, A = index: stores B at the address in entry A; keeps BC; clobbers
-; A, DE, HL (the same 16 bytes appear in 4 banks)
+; A, DE, HL (the same 16 bytes appear in 4 banks) (E-0351)
 StoreBAtWordTableEntry_Bank33::
     push bc
     sla a
@@ -2956,7 +2999,7 @@ StoreBAtWordTableEntry_Bank33::
     ret
 
 ; HL = $9800 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX, hScrollY);
-; clobbers A, DE (the same 41 bytes appear in 3 banks)
+; clobbers A, DE (the same 41 bytes appear in 3 banks) (E-0351)
 BGMapAddressAtScroll_Bank33::
     ldh a, [hScrollY]
     and $f8
@@ -3193,7 +3236,7 @@ RunFourTimes::
     call RunFourTimes_HLToDecimalDigits
     call RunFourTimes_HLToDecimalDigits
 
-; called from RunFourTimes: calls HLToDecimalDigits
+; called from RunFourTimes: calls HLToDecimalDigits (E-0347)
 RunFourTimes_HLToDecimalDigits::
     push hl
     ld a, [de]
@@ -3290,7 +3333,7 @@ DrawPlayerNameAndString0Category1::
     ret
 
 ; [HL] = $C5, [HL+2] = $BE, [HL+4] = $C6; HL ends at HL+4; clobbers A (the same 14 bytes appear in 8
-; banks)
+; banks) (E-0351)
 StoreC5BEC6AtHLStride2_Bank33::
     ld a, $c5
     ld [hl], a

@@ -7,7 +7,7 @@ SECTION "Bank 11", ROMX[$4000], BANK[$11]
 ; unless a special mode is set (wMapType bit 7 hands over to CheckWarpAtPlayer_ReadMapType): walks
 ; the warp list MapWarpTable[hMapId]; an entry matching hPlayerFacing, the player's position and its
 ; screen nibbles starts a map change: wWarpPending = 1, sound effect $60 is queued, and the entry's
-; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored
+; new hMapId, hMapScreenX, hMapScreenY and position (wWarpDestX/wWarpDestY) are stored (E-0036)
 CheckWarpAtPlayer::
     ld a, [wMapType]
     bit 7, a
@@ -459,7 +459,7 @@ WarpToLinkedMapForCurrentMap::
     ld c, $01
     ret
 
-; data read by WarpToLinkedMapForCurrentMap (12 bytes)
+; data read by WarpToLinkedMapForCurrentMap (12 bytes) (E-0347)
 WarpToLinkedMapForCurrentMap_Data1::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2, $ff
 
@@ -470,7 +470,10 @@ WarpToLinkedMapForCurrentMap_Data2::
 
 ; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; copies
 ; wKeyWorldGoal & $f0 to wWarpDestX; copies wKeyWorldGoal & $0f to wWarpDestY; copies
-; wKeyWorldGoalCell & $f0 to hMapScreenX; copies wKeyWorldGoalCell & $0f to hMapScreenY; ...
+; wKeyWorldGoalCell & $f0 to hMapScreenX; copies wKeyWorldGoalCell & $0f to hMapScreenY; calls
+; StartWarpTransition; copies wKeyWorldGoalPos to wWarpDestX; copies wKeyWorldGoalPos2 to
+; wWarpDestY; copies wKeyWorldGoalScreen & $f0 to hMapScreenX; copies wKeyWorldGoalScreen & $0f to
+; hMapScreenY; then 1 more step (see the code) (E-0347)
 WarpToLinkedMapForCurrentMap_Data2_Cp87::
     cp $87
     jr z, .check_key_world_active
@@ -646,7 +649,8 @@ CheckMapExitTable::
 ; called from CheckMapExitTable: branches on hPlayerStateFlags; copies hPlayerStateFlags & $df to
 ; hPlayerStateFlags; sets wWarpPending to 1; plays sound $60; copies the byte at
 ; CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data to hMapId; sets hMapScreenX to 0; sets
-; hMapScreenY to 0; ...
+; hMapScreenY to 0; sets wWarpDestX to $40; sets wWarpDestY to $80; sets wLastWarpIndex to 0; sets
+; wFieldTransitionKind to 3; calls StartPaletteFade; then 6 more steps (see the code) (E-0347)
 CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ldh a, [hPlayerX]
     and $f0
@@ -722,7 +726,7 @@ CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ld c, $01
     ret
 
-; data read by CheckMapExitTable (45 bytes)
+; data read by CheckMapExitTable (45 bytes) (E-0347)
 CheckMapExitTable_Data::
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $b4, $03, $70, $44, $b4, $04
     db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08

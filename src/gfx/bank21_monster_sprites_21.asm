@@ -155,7 +155,7 @@ MonsterSprite_BigRoost::
     INCBIN "gfx/monster_sprites/big_roost.lz"
 
 ; compressed sprite graphics of monster id $076 (StubBird) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_StubBird::
     INCBIN "gfx/monster_sprites/stub_bird.lz"
 
@@ -172,7 +172,7 @@ MonsterSprite_MadGoose::
     INCBIN "gfx/monster_sprites/mad_goose.lz"
 
 ; compressed sprite graphics of monster id $079 (MadCondor) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_MadCondor::
     INCBIN "gfx/monster_sprites/mad_condor.lz"
 
@@ -195,7 +195,7 @@ MonsterSprite_Phoenix::
     INCBIN "gfx/monster_sprites/phoenix.lz"
 
 ; compressed sprite graphics of monster id $07D (ZapBird) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_ZapBird::
     INCBIN "gfx/monster_sprites/zap_bird.lz"
 
@@ -308,7 +308,7 @@ MonsterSprite_Oniono::
     INCBIN "gfx/monster_sprites/oniono.lz"
 
 ; compressed sprite graphics of monster id $098 (DanceVegi) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_DanceVegi::
     INCBIN "gfx/monster_sprites/dance_vegi.lz"
 
@@ -421,7 +421,7 @@ MonsterSprite_Gophecada::
     INCBIN "gfx/monster_sprites/gophecada.lz"
 
 ; compressed sprite graphics of monster id $0B3 (Butterfly) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_Butterfly::
     INCBIN "gfx/monster_sprites/butterfly.lz"
 

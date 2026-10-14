@@ -4,19 +4,20 @@
 SECTION "Bank 09", ROMX[$4000], BANK[$09]
     db $09
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call BeginStringDisplay
     ret
 
-; ld de, this bank's string table / CopyStringToBuffer
+; ld de, this bank's string table / CopyStringToBuffer (E-0351)
 CopyStringToBuffer_Bank09::
     ld de, BeginStringDisplay_Bank09_StringCategories
     call CopyStringToBuffer
     ret
 
 ; BeginStringDisplay_Bank09 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0351)
 ShowString_Bank09::
     call BeginStringDisplay_Bank09
     call RunStringDisplayToEnd
@@ -29,7 +30,7 @@ BeginStringDisplay_Bank09_StringCategories::
     dw StringList_Bank09_StringCategories_0 ; id 0
     dw StringList_Bank09_StringCategories_1 ; id 1
     dw StringList_Bank09_StringCategories_2 ; id 2
-    dw StringList_Bank09_StringCategories_3 ; id 3
+    dw CopyKeyNameWordToDE_StringList ; id 3
     dw StringList_Bank09_StringCategories_4 ; id 4
     dw StringList_Bank09_StringCategories_5 ; id 5
     dw StringList_Bank09_StringCategories_6 ; id 6
@@ -84,7 +85,7 @@ StringList_Bank09_StringCategories_2::
     dw String_09_02_08 ; id 8
     dw String_09_02_09 ; id 9
 
-StringList_Bank09_StringCategories_3::
+CopyKeyNameWordToDE_StringList::
     dw String_09_03_00 ; id 0
     dw String_09_03_01 ; id 1
     dw String_09_03_02 ; id 2

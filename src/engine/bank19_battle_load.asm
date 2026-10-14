@@ -5,7 +5,10 @@ SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
 ; called from GameMode4_Init: calls FillBytes; copies wDataBank to wDataBankSave; calls FillBytes;
-; sets wBattleKind; calls GameMode4_Init_FillBytes_2; branches on wLinkMode; calls FillBytes; ...
+; sets wBattleKind; calls GameMode4_Init_FillBytes_2; branches on wLinkMode; calls FillBytes; sets
+; rRAMG to $0a; sets rRAMB to 0; calls GameMode4_Init_ReadBattlePartyCount; calls
+; GameMode4_Init_LoadMonsterAndSpeciesForListEntryC; copies wBattlerRecordSlot4 + BATTLER_JOIN_CLASS
+; to wFoeJoinClass1; then 8 more steps (see the code) (E-0347)
 GameMode4_Init_FillBytes::
     ld a, [wBattleKind]
     push af
@@ -58,7 +61,9 @@ GameMode4_Init_FillBytes::
     ret
 
 ; Branches on wBattleKind; sets wCommandMenuState to 1; sets wEffectId to $ff; sets wQueuedActionId
-; to $ff; sets wSealPrayState to $ff; sets wBattleItemTarget to $ff; calls FillBytes; ...
+; to $ff; sets wSealPrayState to $ff; sets wBattleItemTarget to $ff; calls FillBytes; sets
+; wDebugValue3 to 0; sets wDebugState to 0; sets wDebugSubState to 0; calls FillBytes; sets
+; wDisplaySlot to $ff; then 28 more steps (see the code) (E-0347)
 GameMode4_Init_FillBytes_2::
     ld a, [wBattleKind]
     cp $04
@@ -177,7 +182,7 @@ GameMode4_Init_FillBytes_2::
     ld [wLinkRuleState], a
     ret
 
-; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use
+; A = 1, 2 or 3: how many $4E-byte battler records from HL are in use (E-0305)
 GameMode4_Init_CountBattlerRecords::
     ld de, $004e
     ld c, $01
@@ -199,7 +204,7 @@ GameMode4_Init_CountBattlerRecords::
 ; Calls GameMode4_Init_CopyGlyphTilesToVRAM; calls ClearAttributesAndScreenBuffer_Bank31; calls
 ; CopyRectRecordForBattlePartyCount_Bank31; calls LayoutTileBlocksForBattleFoeCount; calls
 ; DrawPartySlotStatusPanels; calls LoadBattleMonsterPictureAttributes; calls
-; CopyScreenTileBufferToVRAM_A0_Bank19; ...
+; CopyScreenTileBufferToVRAM_A0_Bank19; sets wBGPaletteUploadRequest to $7f (E-0347)
 GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
     farcall GameMode4_Init_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
@@ -215,7 +220,7 @@ GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
 
 ; Branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
 ; branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
-; branches on wLinkRole; ...
+; branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2 (E-0347)
 GameMode4_Init_LoadMonsterPicture::
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
@@ -257,7 +262,7 @@ GameMode4_Init_LoadMonsterPicture::
 .return:
     ret
 
-; Calls LoadMonsterPicture
+; Calls LoadMonsterPicture (E-0347)
 GameMode4_Init_LoadMonsterPicture_2::
     ld a, [de]
     push af
@@ -271,7 +276,8 @@ GameMode4_Init_LoadMonsterPicture_2::
 
 ; Branches on wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; branches on
 ; wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; calls AdjustSkillsForBattleStart;
-; branches on the byte at wBattleSlotOut; copies the byte at wBattleMonsterId to wSpeciesIdLo; ...
+; branches on the byte at wBattleSlotOut; copies the byte at wBattleMonsterId to wSpeciesIdLo;
+; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls LoadSpeciesRecord (E-0347)
 GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -752,7 +758,7 @@ InitSlotOutAndStatusFromRecordFlags::
     pop hl
     ret
 
-; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks)
+; DE += C; copies the byte at HL to [DE]; HL += 1 (the same 9 bytes appear in 2 banks) (E-0351)
 StoreByteAtDEPlusC_Bank19::
     ld a, c
     add e
@@ -766,7 +772,7 @@ StoreByteAtDEPlusC_Bank19::
     ret
 
 ; DE += 2 * C; copies the word at HL to [DE]; HL += 2, DE ends on the second byte written (the same
-; 13 bytes appear in 2 banks)
+; 13 bytes appear in 2 banks) (E-0351)
 StoreWordAtDEPlus2C_Bank19::
     ld a, c
     add a
@@ -852,7 +858,7 @@ PackResistanceFieldsToDE::
     ld [de], a
     ret
 
-; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (CopyScreenTileBufferToVRAM_A0)
+; the same 33 bytes as CopyScreenTileBufferToVRAM_A0 (CopyScreenTileBufferToVRAM_A0) (E-0124)
 CopyScreenTileBufferToVRAM_A0_Bank19::
     ld de, wScreenTileBuffer
     ld bc, $1412
@@ -896,7 +902,7 @@ ScaleHLToEightTenths_Bank19::
     pop bc
     ret
 
-; Branches on wBattleKind; plays music $13
+; Branches on wBattleKind; plays music $13 (E-0347)
 GameMode4_Init_QueueMusic::
     ld a, [wBattleKind]
     or a
@@ -915,7 +921,7 @@ GameMode4_Init_QueueMusic::
     call QueueMusic
     ret
 
-; Calls GameMode4_Init_SRAMRecordAddressMapped
+; Calls GameMode4_Init_SRAMRecordAddressMapped (E-0347)
 GameMode4_Init_ReadBattlePartyCount::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -931,7 +937,7 @@ GameMode4_Init_ReadBattlePartyCount::
     jr nz, .loop
     ret
 
-; Calls SRAMRecordAddressMapped; calls ApplyIncrementOffsetRows19ForA0DTo13
+; Calls SRAMRecordAddressMapped; calls ApplyIncrementOffsetRows19ForA0DTo13 (E-0347)
 GameMode4_Init_SRAMRecordAddressMapped::
     ld a, c
     ld c, MON_NAME
@@ -1130,7 +1136,7 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; Branches on wDisplaySlot & $03; calls LoadMonsterAndSpeciesForListEntryC
+; Branches on wDisplaySlot & $03; calls LoadMonsterAndSpeciesForListEntryC (E-0347)
 BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1165,7 +1171,7 @@ BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ret
 
 ; Branches on wBattleKind; calls LoadMonsterAndSpeciesForListEntryC; calls
-; GameMode4_Init_WriteBattleArg2AndBattleArg3Etc
+; GameMode4_Init_WriteBattleArg2AndBattleArg3Etc (E-0347)
 GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1243,7 +1249,9 @@ LoadMonsterAndSpeciesForListEntryC::
 
 ; Copies E to wBattleArg2; copies D to wBattleArg3; copies C to wBattleArg1; copies the byte at
 ; wWildLevel to hTemp1; branches on the byte at wWildLevel; sets hTemp1 to 1; copies L to
-; wSpeciesIdLo; ...
+; wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord; copies wSpeciesRecord +
+; SPECIES_GROWTH to hTemp0; calls StatFromGrowthRow; sets wBattleArg0 to 1; then 28 more steps (see
+; the code) (E-0347)
 GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
     push bc
     ld a, e
@@ -1514,7 +1522,7 @@ ScaleWordBy6Or12Capped10000::
     ld a, $0c
 
 ; Changes HL and A; may continue in ScaleWordBy6Or12Capped10000_SetTemp2; continues in
-; ScaleWordBy6Or12Capped10000_SetTemp2
+; ScaleWordBy6Or12Capped10000_SetTemp2 (E-0347)
 ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     call Multiply24By8
     ld a, d
@@ -1523,13 +1531,13 @@ ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     ld hl, $2710
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
-; Changes HL and BC
+; Changes HL and BC (E-0347)
 ScaleWordBy6Or12Capped10000_Restore::
     pop bc
     ld l, c
     ld h, b
 
-; Copies L to hTemp2; copies H to hTemp3
+; Copies L to hTemp2; copies H to hTemp3 (E-0347)
 ScaleWordBy6Or12Capped10000_SetTemp2::
     ld a, l
     ldh [hTemp2], a
@@ -1737,7 +1745,7 @@ AccumulateGrowthForLevelsTemp1::
     ld a, d
     or e
     jr z, .restore
-    ld hl, $ffff
+    ld hl, -1
 
 .restore:
     pop bc
@@ -1785,7 +1793,7 @@ Multiply24By8::
     ld d, a
     ret
 
-; called from LoadMonsterAndSpeciesForListEntryC: takes DE and BC; changes HL, DE, BC and A
+; called from LoadMonsterAndSpeciesForListEntryC: takes DE and BC; changes HL, DE, BC and A (E-0347)
 LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     push bc
     ld b, $0a
@@ -1916,7 +1924,7 @@ LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     ret
 
 ; called from LoadMonsterAndSpeciesForListEntryC: branches on wSpeciesRecord + SPECIES_SEX_RATIO;
-; calls NextTableByte; branches on wRandomLo; branches on wNewRecordFamily
+; calls NextTableByte; branches on wRandomLo; branches on wNewRecordFamily (E-0347)
 LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     ld a, $0c
     add e
@@ -1996,7 +2004,7 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
 
 ; May continue in LoadBattleSlotFromBattlerRecord; branches on C; calls
 ; LoadBattleSlotFromBattlerRecord; calls LoadBattleSlotFromBattlerRecord_2; calls
-; ClearSpeciesRecordBuffer_Bank19
+; ClearSpeciesRecordBuffer_Bank19 (E-0347)
 GameMode4_Init_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a
@@ -2445,7 +2453,7 @@ BattlerRecordAddress_Bank19::
 
 ; Branches on wLinkMode; calls CarryUnlessBattleSlotOutSlotEmpty; sets wSlotMarks + $4 to 1; sets
 ; wSlotMarks + $4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; sets
-; wSlotMarks to 0; ...
+; wSlotMarks to 0; sets wSlotMarks to 1; sets wSlotMarks to $ff (E-0347)
 GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a

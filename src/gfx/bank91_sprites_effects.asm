@@ -95,7 +95,7 @@ MonsterSprite_Mudou::
     INCBIN "gfx/monster_sprites/mudou.lz"
 
 ; compressed sprite graphics of monster id $16E (DeathMore) (MonsterSpriteTable; the debug viewer
-; decompresses it to vTiles0 + $200)
+; decompresses it to vTiles0 + $200) (E-0138)
 MonsterSprite_DeathMore::
     INCBIN "gfx/monster_sprites/death_more.lz"
 

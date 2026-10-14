@@ -39,14 +39,14 @@ GetBattleAGL_Bank05::
     ld hl, wBattleAGL
     jr ReadSlotAIModeIndexed_Bank05_2_Skip
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
 ReadSlotAIModeIndexed_Bank05_2::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; Takes HL and A; changes HL and A
+; Takes HL and A; changes HL and A (E-0347)
 ReadSlotAIModeIndexed_Bank05_2_Skip::
     add a
     add_a_to_hl
@@ -54,7 +54,7 @@ ReadSlotAIModeIndexed_Bank05_2_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks)
+; appear in 12 banks) (E-0351)
 AddDoubleAToHL_Bank05::
     add a
     add_a_to_hl
@@ -129,7 +129,7 @@ ClearBitMaskTable_Bank05::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -139,7 +139,7 @@ SetBit0OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -149,7 +149,7 @@ SetBit1OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit2OfLevelUpGainsIndexed_Bank05:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -515,7 +515,8 @@ AnyFoeHasMPReadsWrongOffset::
 ; called from AIScore_TakeMagic_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleSkillsPrefix; copies the byte at
 ; wBattleSkillsPrefix to wRecordBuffer; sets wBattleArg0 to 7; sets wBattleArg1 to 1; copies L to
-; wBattleArg2; ...
+; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on hTemp0; branches on
+; C; copies L to wRecordBuffer (E-0347)
 AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -715,7 +716,7 @@ AnyFoeHasSkillFlag10::
 
 ; called from AIScore_DanceShut_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus1; calls SlotHasSkillWithFlagD; sets
-; wRecordBuffer
+; wRecordBuffer (E-0347)
 AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -848,7 +849,7 @@ AnyFoeHasDEFAtLeast2::
     ret
 
 ; called from AIScore_SquallHit_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L
+; GetBattleAGL_Bank05; branches on H; branches on L (E-0347)
 AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -879,7 +880,7 @@ AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
-; Calls AnySlotLacksStatusMask
+; Calls AnySlotLacksStatusMask (E-0347)
 AIScore_FireAir_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -902,7 +903,7 @@ AnyFoeLacksStatus0Bit4::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_PoisonAir_Conditions: calls AnySlotLacksStatusMask
+; called from AIScore_PoisonAir_Conditions: calls AnySlotLacksStatusMask (E-0347)
 AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -938,7 +939,7 @@ AnyFoeLacksStatus0MaskCC::
     ret
 
 ; called from AIScore_AquaWall_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer
+; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer (E-0347)
 AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1132,7 +1133,7 @@ AnyFoeLacksStatus1Bit7::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_DanceShut_Conditions: calls AnySlotLacksStatusMask
+; called from AIScore_DanceShut_Conditions: calls AnySlotLacksStatusMask (E-0347)
 AIScore_DanceShut_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1168,7 +1169,7 @@ AnyFoeNotBlocked::
 
 ; called from AIScore_LegSweep_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wSlotBodyFlags; branches on the byte at wBattleStatus3 & $c0; branches on the byte at
-; wBattleStatus3 & $0c
+; wBattleStatus3 & $0c (E-0347)
 AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1277,7 +1278,7 @@ AIGateFoeStatus1Mask22::
     ret
 
 ; called from AIScore_FireAir: calls ReadSlotAIModeIndexed_Bank05; calls TestRecordBufferData1;
-; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2 & $40
+; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2 & $40 (E-0347)
 AIScore_FireAir_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1383,7 +1384,7 @@ ActorLacksStatus1Bit3::
     ld c, $ff
     ret
 
-; called from AIScore_TakeMagic_Conditions: changes HL, A and C; branches on wBattleStatus2
+; called from AIScore_TakeMagic_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
 AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1397,7 +1398,7 @@ AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld c, $ff
     ret
 
-; called from AIScore_TailWind_Conditions: changes HL, A and C; branches on wBattleStatus2
+; called from AIScore_TailWind_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
 AIScore_TailWind_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1460,7 +1461,7 @@ AllOtherAlliesHaveStatus0Bit6::
     ld c, $ff
     ret
 
-; called from AIScore_Antidote_Conditions: calls AnySlotHasStatusMask
+; called from AIScore_Antidote_Conditions: calls AnySlotHasStatusMask (E-0347)
 AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1470,7 +1471,7 @@ AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_NumbOff_Conditions: calls AnySlotHasStatusMask
+; called from AIScore_NumbOff_Conditions: calls AnySlotHasStatusMask (E-0347)
 AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1480,7 +1481,7 @@ AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_DeChaos_Conditions: calls AnySlotHasStatusMask
+; called from AIScore_DeChaos_Conditions: calls AnySlotHasStatusMask (E-0347)
 AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1490,7 +1491,7 @@ AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
-; called from AIScore_CurseOff_Conditions: calls AnySlotHasStatusMask
+; called from AIScore_CurseOff_Conditions: calls AnySlotHasStatusMask (E-0347)
 AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1508,7 +1509,7 @@ AnyAllySlotResistances4Bits2To5NotAllSet::
     and $04
 
 ; Calls ReadByteAtHLPlus4APlus3C_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wSlotResistances + $4 & $3c
+; byte at wSlotResistances + $4 & $3c (E-0347)
 AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, a
     ld b, $03
@@ -1542,75 +1543,75 @@ AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ret
 
 ; called from AIScore_SuckAir_Conditions: changes A; continues in
-; AnyAllySlotResistances4Bits2To5NotAllSet_Skip
+; AnyAllySlotResistances4Bits2To5NotAllSet_Skip (E-0347)
 AIScore_SuckAir_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
     xor $04
     jp AnyAllySlotResistances4Bits2To5NotAllSet_Skip
 
-; called from AIScore_SlimeBlow_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_SlimeBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $00
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_DrakSlash_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_DrakSlash_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent::
     ld e, $01
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BeastCut_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_BeastCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $02
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BirdBlow_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_BirdBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $03
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_BugBlow_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_BugBlow_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $05
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_Shears_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_Shears_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_Shears_Conditions_ToFoeOfFamilyEPresent::
     ld e, $04
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_DevilCut_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_DevilCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $06
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_ZombieCut_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_ZombieCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $07
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_CleanCut_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_CleanCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $08
     call FoeOfFamilyEPresent
     ret
 
-; called from AIScore_AquaCut_Conditions: calls FoeOfFamilyEPresent
+; called from AIScore_AquaCut_Conditions: calls FoeOfFamilyEPresent (E-0347)
 AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $09
     call FoeOfFamilyEPresent
     ret
 
 ; called from AIScore_MetalCut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wSlotBodyFlags
+; wSlotBodyFlags (E-0347)
 AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1643,7 +1644,7 @@ AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_UltraDown_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; ReadByteAtHLPlus4APlus3C_Bank05; calls GetBattleDEF_Bank05; branches on L; calls
-; GetBattleAGL_Bank05; branches on L; branches on wBattleStatus1
+; GetBattleAGL_Bank05; branches on L; branches on wBattleStatus1 (E-0347)
 AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1738,7 +1739,7 @@ AnyFoeOpenToSlotResistances1Field0::
 
 ; called from AIScore_StopSpell_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer
+; wRecordBuffer (E-0347)
 AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -1820,7 +1821,7 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
     ret
 
 ; called from AIScore_Sap_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleDEF_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05
+; GetBattleDEF_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
 AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1860,7 +1861,7 @@ AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_Slow_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleAGL_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05
+; GetBattleAGL_Bank05; branches on H; branches on L; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
 AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1976,7 +1977,7 @@ AnyFoeOpenToSlotResistances5Field3::
     ret
 
 ; called from AIScore_Curse_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; ReadByteAtHLPlus4APlus3C_Bank05
+; ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
 AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2014,7 +2015,7 @@ AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_DanceShut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
 ; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
-; wRecordBuffer
+; wRecordBuffer (E-0347)
 AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -2183,7 +2184,7 @@ AtLeastTwoFoesPresent::
     ret
 
 ; called from AIScore_TatsuCall_Conditions: changes HL, A and C; branches on the byte at
-; wBattleSlotOut
+; wBattleSlotOut (E-0347)
 AIScore_TatsuCall_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -2334,7 +2335,7 @@ AnyAllyMPAtMostThreeQuarters::
     ret
 
 ; called from AIScore_Upper_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Upper_Conditions_GetBattleDEF_Bank05
+; AIScore_Upper_Conditions_GetBattleDEF_Bank05 (E-0347)
 AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2360,7 +2361,7 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_Speed_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; AIScore_Speed_Conditions_GetBattleAGL_Bank05
+; AIScore_Speed_Conditions_GetBattleAGL_Bank05 (E-0347)
 AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2559,7 +2560,7 @@ AnyAllyLacksStatus1Bits23And4Bits01::
     ld c, $ff
     ret
 
-; called from AIScore_MagicWall_Conditions: calls AnySlotLacksStatusMask
+; called from AIScore_MagicWall_Conditions: calls AnySlotLacksStatusMask (E-0347)
 AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -2569,7 +2570,7 @@ AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
-; called from AIScore_SideStep_Conditions: changes HL, A and C
+; called from AIScore_SideStep_Conditions: changes HL, A and C (E-0347)
 AIScore_SideStep_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
@@ -2585,7 +2586,7 @@ AIScore_SideStep_Conditions_AddAx9ToHL::
     ret
 
 ; called from AIScore_Surge_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleStatus
+; byte at wBattleStatus (E-0347)
 AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2631,7 +2632,7 @@ AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; called from AIScore_DeMagic_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
-; byte at wBattleSlotOut
+; byte at wBattleSlotOut (E-0347)
 AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2719,7 +2720,7 @@ CheckBattleKindNot4Or5::
     ld c, $ff
     ret
 
-; called from AIScore_SealPray: changes A and C; branches on wQueuedActionId
+; called from AIScore_SealPray: changes A and C; branches on wQueuedActionId (E-0347)
 AIScore_SealPray_ReadQueuedActionId::
     ld a, [wQueuedActionId]
     and a
@@ -2795,7 +2796,8 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
 
 ; called from FailIfFoeAIDamageEstimatesAtLeastEstimate: branches on wRecordBuffer; branches on
 ; wLinkMode; branches on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches
-; on wBattleActor; ...
+; on wBattleActor; branches on H; branches on L; branches on wLinkMode; branches on wBattleActor;
+; calls SlotFamilyBelowWater; then 9 more steps (see the code) (E-0347)
 FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc::
     ld a, [wRecordBuffer]
     cp $48
@@ -3372,7 +3374,7 @@ PassIfTwiceATKAboveLowestFoeDEF::
     ret
 
 ; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
-; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05
+; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05 (E-0347)
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3415,7 +3417,7 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
 
 ; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
 ; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleATK_Bank05
+; GetBattleATK_Bank05 (E-0347)
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3806,7 +3808,8 @@ FailIfFoeKnowsSkills42To47::
 
 ; called from AIScore_Transform: calls ReadSlotAIModeIndexed_Bank05; calls GetBattleMaxHP_Bank05;
 ; copies L to hTemp0; copies H to hTemp1; calls GetBattleMaxMP_Bank05; copies L to hTemp2; copies H
-; to hTemp3; ...
+; to hTemp3; calls GetBattleATK_Bank05; copies L to hTemp4; copies H to hTemp5; calls
+; GetBattleDEF_Bank05; copies L to hTemp6; then 12 more steps (see the code) (E-0347)
 AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3917,7 +3920,7 @@ AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
     ld c, $01
     ret
 
-; C = 0
+; C = 0 (E-0351)
 SetCToZero::
     ld c, $00
     ret
@@ -4046,7 +4049,7 @@ ActorMPBelowThreeQuarters::
     ld c, $ff
     ret
 
-; called from AIScore_MagicBack_Conditions: changes HL, A and C
+; called from AIScore_MagicBack_Conditions: changes HL, A and C (E-0347)
 AIScore_MagicBack_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -4271,7 +4274,7 @@ CheckLinkRules1RuleBit1::
     ret
 
 ; called from AIScore_MegaMagic: changes HL, A and C; branches on wLinkMode; branches on wLinkRules
-; + $1; branches on wLinkRuleFlags
+; + $1; branches on wLinkRuleFlags (E-0347)
 AIScore_MegaMagic_ReadLinkModeAndBattleActor::
     ld a, [wLinkMode]
     and a
@@ -4479,7 +4482,7 @@ CheckFoeStatus6Bit3::
     ret
 
 ; called from AIScore_Sacrifice: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05; branches on
-; C; calls CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05
+; C; calls CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05 (E-0347)
 AIScore_Sacrifice_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5177,7 +5180,8 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
 
 ; called from AIScore_BeDragon: calls GetBattleMaxHP_Bank05; copies L to hTemp0; copies H to hTemp1;
 ; calls GetBattleMaxMP_Bank05; copies L to hTemp2; copies H to hTemp3; calls GetBattleATK_Bank05;
-; ...
+; copies L to hTemp4; copies H to hTemp5; calls GetBattleDEF_Bank05; copies L to hTemp6; copies H to
+; hTemp7; then 4 more steps (see the code) (E-0347)
 AIScore_BeDragon_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5383,7 +5387,7 @@ CheckBattleKindNot2Or3::
     ld c, $ff
     ret
 
-; called from AIScore_MegaMagic: changes A and C; branches on wLinkMode
+; called from AIScore_MegaMagic: changes A and C; branches on wLinkMode (E-0347)
 AIScore_MegaMagic_ReadLinkMode::
     ld a, [wLinkMode]
     and a
@@ -5609,7 +5613,7 @@ AnyFoeVulnerableBySlotResistances5Bits23::
     ret
 
 ; called from AIScore_EerieLite_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleStatus8; branches on the byte at wSlotResistances + $2 & $30
+; wBattleStatus8; branches on the byte at wSlotResistances + $2 & $30 (E-0347)
 AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5728,7 +5732,7 @@ AnyFoeVulnerableBySlotResistances3Bits67::
     ld c, $ff
     ret
 
-; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty
+; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty (E-0347)
 AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5765,7 +5769,7 @@ AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag; calls
 ; CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls SlotActionIs9C33Or92Or93; calls
-; SlotResistances5EntryHasBits2And3_Bank05_2
+; SlotResistances5EntryHasBits2And3_Bank05_2 (E-0347)
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -5955,7 +5959,7 @@ SlotCLacksSkill63Or64WithMP::
 
 ; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag;
 ; branches on C; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls
-; SlotCHasMP3AndSkill6B; calls SlotResistances5EntryHasBits2And3_Bank05
+; SlotCHasMP3AndSkill6B; calls SlotResistances5EntryHasBits2And3_Bank05 (E-0347)
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6234,7 +6238,7 @@ TestSlotStatus1Bit6::
     bit BSTAT1_DANCE_SEALED, [hl]
     ret
 
-; data read by SlotCHasCastableHealSkill (8 bytes)
+; data read by SlotCHasCastableHealSkill (8 bytes) (E-0347)
 SlotCHasCastableHealSkill_Data::
     db $02, $05, $07, $12, $24, $01, $0c, $1c
 
@@ -6309,7 +6313,7 @@ CheckAIFlagSetModeGated::
     ld c, $01
     ret
 
-; called from AIScore_AquaWall_Conditions: changes HL, A and C; branches on wBattleStatus2
+; called from AIScore_AquaWall_Conditions: changes HL, A and C; branches on wBattleStatus2 (E-0347)
 AIScore_AquaWall_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -6336,7 +6340,7 @@ UnreferencedEstimateStrongestFoeHit:: ; configured code entry (E-0237); C0
     xor $04
     ld c, a
     ld b, $03
-    ld de, $ffff
+    ld de, -1
 
 .loop:
     ld a, c
@@ -6396,12 +6400,12 @@ UnreferencedReturnC0:: ; configured code entry (E-0237); C0
     ld c, $00
     ret
 
-; Changes C
+; Changes C (E-0347)
 UnreferencedReturnC0_Done::
     ld c, $01
     ret
 
-; called from AIScore_Curse_Conditions: calls AnySlotLacksStatusMask
+; called from AIScore_Curse_Conditions: calls AnySlotLacksStatusMask (E-0347)
 AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -6413,7 +6417,7 @@ AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     ret
 
 ; called from AIScore_SuckAir_Conditions: copies the byte at wBattleSkillsPrefix to wRecordBuffer;
-; calls SlotHasSkillWithFlagD; sets wRecordBuffer
+; calls SlotHasSkillWithFlagD; sets wRecordBuffer (E-0347)
 AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
     ld a, [wBattleActor]
     swap a
@@ -6483,7 +6487,7 @@ AnyAllyHPBelow::
     ld c, $ff
     ret
 
-; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer
+; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer (E-0347)
 AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     push bc
     call GetBattleMaxHP_Bank05
@@ -6538,7 +6542,7 @@ AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     ret
 
 ; Branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank05; calls
-; GetBattleMaxMP_Bank05
+; GetBattleMaxMP_Bank05 (E-0347)
 AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     ld e, a
@@ -6671,7 +6675,7 @@ HPBandOfSlotTemp0_2::
     ret
 
 ; called from AIScore_MegaMagic: calls ReadSlotAIModeIndexed_Bank05; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05 (E-0347)
 AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6923,6 +6927,7 @@ CheckActorSlot0To3OrLinkModeSet::
     ret
 
 ; called from AIScore_Meditate_Conditions: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05
+; (E-0347)
 AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -7079,7 +7084,9 @@ SkillListHas19Or1AOr7COrA1::
     ret
 
 ; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleATK_Bank05; sets hTemp0; sets hTemp1; sets hTemp0 to 0; ...
+; GetBattleATK_Bank05; sets hTemp0; sets hTemp1; sets hTemp0 to 0; sets hTemp1 to 0; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; sets hTemp0; sets hTemp1; then 6
+; more steps (see the code) (E-0347)
 AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7376,6 +7383,7 @@ AddSlotStatSumToTemp0::
     ret
 
 ; called from AIScore_BiAttack: calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05
+; (E-0347)
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7426,7 +7434,7 @@ AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; called from AIScore_Berserker: calls ReadSlotAIModeIndexed_Bank05_2; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls GetBattleAGL_Bank05; calls
-; GetBattleHP_Bank05
+; GetBattleHP_Bank05 (E-0347)
 AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7499,7 +7507,7 @@ AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
 
 ; called from AIScore_Ramming: calls ReadSlotAIModeIndexed_Bank05_2; calls
 ; CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls Get2BitFieldEOfHL; calls
-; GetBattleHP_Bank05
+; GetBattleHP_Bank05 (E-0347)
 AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7579,7 +7587,10 @@ AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
 
 ; called from AIScore_Kamikaze: calls ReadSlotAIModeIndexed_Bank05_2; branches on wLinkMode;
 ; branches on wBattleKind; branches on wAIFlag; branches on C; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls ReadSlotAIModeIndexed_Bank05_2; ...
+; CarryUnlessBattleSlotOutSlotEmpty; calls ReadSlotAIModeIndexed_Bank05_2; calls
+; AIScore_Kamikaze_CheckSkills; calls CheckSlotStatusBlock; branches on the byte at wSlotMarks;
+; calls GetBattleHP_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; then 2 more steps (see the
+; code) (E-0347)
 AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7730,7 +7741,8 @@ ActorStatus4CheckReadsAddress::
     ret
 
 ; Sets hTemp3 to 0; sets hTemp4 to 0; sets hTemp5 to 0; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls GetBattleDEF_Bank05; sets hTemp4; sets hTemp5; ...
+; calls GetBattleDEF_Bank05; sets hTemp4; sets hTemp5; increments hTemp3; calls GetBattleATK_Bank05
+; (E-0347)
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, [wBattleActor]
     and $04
@@ -7974,7 +7986,7 @@ ResistanceAverageGateForFoeAIMode3::
     ld c, $01
     ret
 
-; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF
+; wAISkillScore = wAISkillScore + $1 = 0 and wAISkillScore2 = wAISkillScore2 + $1 = $FF (E-0351)
 ResetAISkillScore::
     xor a
     ld [wAISkillScore], a
@@ -8004,14 +8016,14 @@ AddBCToAISkillScore2::
     ld [wAISkillScore2 + $1], a
     ret
 
-; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks)
+; A = the byte at wSlotAIMode + A; clobbers HL (the same 10 bytes appear in 5 banks) (E-0351)
 ReadSlotAIModeIndexed_Bank05::
     ld hl, wSlotAIMode
     add_a_to_hl
     ld a, [hl]
     ret
 
-; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode; branches on C
+; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode; branches on C (E-0347)
 AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     call GetBattleDEF_Bank05
     ld a, l
@@ -8061,7 +8073,7 @@ AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     scf
     ret
 
-; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode; branches on C
+; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode; branches on C (E-0347)
 AIScore_Speed_Conditions_GetBattleAGL_Bank05::
     call GetBattleAGL_Bank05
     ld a, l
@@ -8340,7 +8352,8 @@ GetSlotSpeciesFamily::
 
 ; Sets hTemp0 to 0; sets hTemp1 to 0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; GetBattleDEF_Bank05; copies L to hTemp0; copies H to hTemp1; calls
-; CarryUnlessBattleSlotOutSlotEmpty; ...
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; copies L to hTemp0; copies H to
+; hTemp1 (E-0347)
 AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -8809,7 +8822,7 @@ CountSkillsInRanges_2::
     ret
 
 ; A = [HL + 4 * A + 3 * C], the offset computed in 8 bits; clobbers HL (the same 11 bytes appear in
-; 2 banks)
+; 2 banks) (E-0351)
 ReadByteAtHLPlus4APlus3C_Bank05::
     add a
     add c
@@ -8819,7 +8832,7 @@ ReadByteAtHLPlus4APlus3C_Bank05::
     ld a, [hl]
     ret
 
-; data read by AnyFoeNotFullyResistant (54 bytes)
+; data read by AnyFoeNotFullyResistant (54 bytes) (E-0347)
 AnyFoeNotFullyResistant_Data::
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03
@@ -8988,7 +9001,7 @@ ReadActorResistanceFieldForSkillA::
     ld a, e
     ret
 
-; scans the slot's eight wBattleSkills entries: 0 when one is $16-$1A, $7C or $A1
+; scans the slot's eight wBattleSkills entries: 0 when one is $16-$1A, $7C or $A1 (E-0305)
 AIScore_Kamikaze_CheckSkills::
     ld e, $00
     ld d, c
@@ -9123,7 +9136,8 @@ AIScore_Beat_Conditions::
 
 ; called from AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05; branches on C; calls
 ; SkillPassesStatus1Bit0Check; branches on C; calls SkillPassesSideFlagBit3Check; branches on C;
-; calls SkillPassesRepeatCheck; ...
+; calls SkillPassesRepeatCheck; branches on C; calls AnyFoeLacksStatus2Mask22; branches on C; calls
+; AnyFoeLacksStatus5Bits67; branches on C; then 11 more steps (see the code) (E-0347)
 AIScore_Sacrifice_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9209,7 +9223,8 @@ AIHealUsable::
     ret
 
 ; called from AIScore_MPass: branches on C; calls ActorLacksStatus4Bits67; branches on C; calls
-; AllOtherAlliesHaveStatus0Bit6; branches on C; calls SetCToZero; branches on C; ...
+; AllOtherAlliesHaveStatus0Bit6; branches on C; calls SetCToZero; branches on C; calls
+; AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls ResetAISkillScore (E-0347)
 AIScore_MPass_ActorLacksStatus4Bits67::
     ld a, c
     and a
@@ -9466,7 +9481,7 @@ AIScore_Slow_Conditions::
     ret
 
 ; called from AIScore_TwinHits: calls CheckSkillUsableStatusElseResetAISkillScore; returns if C is
-; 0; calls AnyAllyLacksStatus1Bits23And4Bits01; branches on C; calls ResetAISkillScore
+; 0; calls AnyAllyLacksStatus1Bits23And4Bits01; branches on C; calls ResetAISkillScore (E-0347)
 AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore::
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
@@ -9870,7 +9885,7 @@ CheckSkillUsableStatusElseResetAISkillScore::
 
 ; called from AIScore_MegaMagic: calls AIAttackSkillUsable; returns if C is 0; calls
 ; ActorLacksStatus4Bits67; branches on C; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C;
-; calls ResetAISkillScore
+; calls ResetAISkillScore (E-0347)
 AIScore_MegaMagic_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -9922,7 +9937,7 @@ AIAttackSkillUsable::
 
 ; called from AIScore_FireAir: calls AIAttackSkillUsable; returns if C is 0; calls
 ; PassUnlessRecordBufferData5Bit4AndActorStatusBit7; branches on C; calls
-; AIScore_FireAir_AnySlotLacksStatusMask; branches on C; calls ResetAISkillScore
+; AIScore_FireAir_AnySlotLacksStatusMask; branches on C; calls ResetAISkillScore (E-0347)
 AIScore_FireAir_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -10332,6 +10347,7 @@ AIScore_SquallHit_Conditions::
 
 ; called from AIScore_BiAttack: calls CheckSkillUsableElseResetAISkillScore; returns if C is 0;
 ; calls AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2; branches on C; calls ResetAISkillScore
+; (E-0347)
 AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -10560,7 +10576,7 @@ AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
 
 ; called from AIScore_Kamikaze: calls AIAndAnyFoeNotFullyResistantAndActorHPNotOne; returns if C is
 ; 0; calls AnyFoeNotBlocked; branches on C; calls AllOtherAlliesHaveStatus0Bit6; branches on C;
-; calls ResetAISkillScore
+; calls ResetAISkillScore (E-0347)
 AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
@@ -11592,7 +11608,7 @@ AIScore_AquaWall_Conditions::
     ret
 
 ; called from AIScore_SealPray: calls ActorCanPayMPCost_Bank05; branches on C; calls
-; ResetAISkillScore
+; ResetAISkillScore (E-0347)
 AIScore_SealPray_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c

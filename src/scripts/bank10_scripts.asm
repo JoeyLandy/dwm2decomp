@@ -4,7 +4,7 @@
 SECTION "Bank 10", ROMX[$4000], BANK[$10]
     db $10
 
-; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand
+; one frame of the event-script engine: FetchScriptCommand, then ExecuteScriptCommand (E-0038)
 RunEventScriptFrame::
     call FetchScriptCommand
     call ExecuteScriptCommand
@@ -15,7 +15,7 @@ RunEventScriptFrame::
 ; wScriptInDataBank is set) and jumps through a 13-entry opcode table; $FF ends the script
 ; (wScriptRunning, wScriptCommandType and wScriptInDataBank cleared, wModeState = 0, or 5 when
 ; wMapType bit 7 is set); the opcode handlers set wScriptCommandType and its parameters and advance
-; wScriptPointer
+; wScriptPointer (E-0038)
 FetchScriptCommand::
     ld a, [wFadeState]
     or a
@@ -30,7 +30,7 @@ FetchScriptCommand::
 
 ; Branches on wScriptInDataBank; calls ReadWordFromDataBank; sets wScriptRunning to 0; sets
 ; wScriptCommandType to 0; sets wScriptInDataBank to 0; branches on wMapType; sets wModeState to 0;
-; ...
+; sets wModeState to 5; dispatches on $05 (E-0347)
 FetchScriptCommand_ReadScriptPointerLo::
     ld a, [wScriptPointerLo]
     ld l, a
@@ -326,7 +326,7 @@ ScriptOpcodeHandlers::
     dw ScriptFetchF7 ; entry 247
     dw ScriptFetchF8 ; entry 248
 
-; the same five instructions as ScriptFetchGeneric, used by 30 opcodes
+; the same five instructions as ScriptFetchGeneric, used by 30 opcodes (E-0039)
 ScriptFetchGeneric2::
     pop hl
     dec hl
@@ -335,7 +335,7 @@ ScriptFetchGeneric2::
     call StartEventScript
     ret
 
-; fetch handler for script opcode 81 (entry 129 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 81 (entry 129 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch81::
     pop hl
     ld a, $81
@@ -351,7 +351,7 @@ ScriptFetch81::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 83 (entry 131 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 83 (entry 131 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch83::
     pop hl
     ld a, $83
@@ -378,7 +378,7 @@ ScriptFetch83::
     ld [wScriptParam1], a
     ret
 
-; fetch handler for script opcode 86 (entry 134 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 86 (entry 134 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch86::
     pop hl
     ld a, $86
@@ -394,7 +394,7 @@ ScriptFetch86::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 00 (entry 0 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 00 (entry 0 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch00::
     pop hl
     ld a, [wScriptInDataBank]
@@ -428,19 +428,19 @@ ScriptFetch00::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 01 (entry 1 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 01 (entry 1 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch01::
     ld a, $02
     ld [wScriptCommandType], a
     jr ScriptFetch02_Restore
 
-; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 02 (entry 2 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch02::
     ld a, $03
     ld [wScriptCommandType], a
 
 ; Sets wScriptParam0; sets wScriptParam1; sets wScriptStep to 0; copies L to wScriptPointerLo;
-; copies H to wScriptPointerHi
+; copies H to wScriptPointerHi (E-0347)
 ScriptFetch02_Restore::
     pop hl
     ld a, [hli]
@@ -459,7 +459,7 @@ ScriptFetch02_Restore::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 03 (entry 3 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 03 (entry 3 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch03::
     pop hl
     ld a, $04
@@ -474,7 +474,7 @@ ScriptFetch03::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 04 (entry 4 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 04 (entry 4 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch04::
     pop hl
     ld a, $05
@@ -492,7 +492,7 @@ ScriptFetch04::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 05 (entry 5 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 05 (entry 5 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch05::
     pop hl
     ld a, $06
@@ -507,7 +507,7 @@ ScriptFetch05::
     ld [wScriptPointerHi], a
     ret
 
-; the same 13 bytes as CopyCBytesToVRAMWaitSTAT (CopyCBytesToVRAMWaitSTAT)
+; the same 13 bytes as CopyCBytesToVRAMWaitSTAT (CopyCBytesToVRAMWaitSTAT) (E-0090)
 CopyCBytesToVRAMWaitSTAT_Bank10::
     ldh a, [rSTAT]
     bit 1, a
@@ -519,7 +519,7 @@ CopyCBytesToVRAMWaitSTAT_Bank10::
     jr nz, CopyCBytesToVRAMWaitSTAT_Bank10
     ret
 
-; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 06 (entry 6 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch06::
     push bc
     push de
@@ -579,7 +579,7 @@ ScriptFetch06::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 07 (entry 7 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch07::
     pop hl
     ld a, [wScriptInDataBank]
@@ -600,7 +600,7 @@ ScriptFetch07::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0A (entry 10 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0A::
     pop hl
     ld a, [hli]
@@ -614,7 +614,7 @@ ScriptFetch0A::
     call SetFlagBit
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0B (entry 11 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0B::
     pop hl
     ld a, $0c
@@ -629,7 +629,7 @@ ScriptFetch0B::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 0C (entry 12 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0C (entry 12 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0C::
     pop hl
     ld a, [hli]
@@ -649,7 +649,7 @@ ScriptFetch0C::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0D (entry 13 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0D::
     pop hl
     ld a, $0e
@@ -664,7 +664,7 @@ ScriptFetch0D::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode 0E (entry 14 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0E (entry 14 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0E::
     pop hl
     ld a, [hli]
@@ -678,7 +678,7 @@ ScriptFetch0E::
     farcall AddGoldCapped
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 0F (entry 15 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch0F::
     pop hl
     ld a, [hli]
@@ -704,7 +704,7 @@ ScriptFetch0F::
     jp FetchScriptCommand_ReadScriptPointerLo
 
 ; fetch handler shared by 123 opcodes: wScriptCommandType = the opcode byte, then StartEventScript
-; with the pointer just after it; the command reads its own arguments from the script
+; with the pointer just after it; the command reads its own arguments from the script (E-0039)
 ScriptFetchGeneric::
     pop hl
     dec hl
@@ -713,7 +713,7 @@ ScriptFetchGeneric::
     call StartEventScript
     ret
 
-; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 1C (entry 28 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch1C::
     pop hl
     ldh a, [hPlayerFacing]
@@ -746,7 +746,7 @@ ScriptFetch1C::
     ld [wMessageState], a
     ret
 
-; fetch handler for script opcode 1D (entry 29 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 1D (entry 29 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch1D::
     pop hl
     ld a, $1d
@@ -755,7 +755,7 @@ ScriptFetch1D::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
     jr c, .set_message_index
-    ld hl, $4097
+    ld hl, MSG_KEEP_OPEN | $0097
     ld a, l
     ld [wMessageIndex], a
     ld a, h
@@ -765,7 +765,7 @@ ScriptFetch1D::
     ret
 
 .set_message_index:
-    ld hl, $408d
+    ld hl, MSG_KEEP_OPEN | $008d
     ld a, l
     ld [wMessageIndex], a
     ld a, h
@@ -774,7 +774,7 @@ ScriptFetch1D::
     ld [wMessageState], a
     ret
 
-; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 23 (entry 35 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch23::
     pop hl
     ld a, [wStoryFlags + $61]
@@ -785,7 +785,7 @@ ScriptFetch23::
     call StartEventScript
     ret
 
-; fetch handler for script opcode 62 (entry 98 of ScriptOpcodeHandlers)
+; fetch handler for script opcode 62 (entry 98 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetch62::
     pop hl
     dec hl
@@ -798,7 +798,7 @@ ScriptFetch62::
     ld [wScriptParam1], a
     ret
 
-; fetch handler for script opcode E0 (entry 224 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E0 (entry 224 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE0::
     pop hl
     ld a, $e0
@@ -806,7 +806,7 @@ ScriptFetchE0::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E1 (entry 225 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E1 (entry 225 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE1::
     pop hl
     ld a, $e1
@@ -814,7 +814,7 @@ ScriptFetchE1::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E2 (entry 226 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E2 (entry 226 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE2::
     pop hl
     ld a, $e2
@@ -822,7 +822,7 @@ ScriptFetchE2::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E3 (entry 227 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E3 (entry 227 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE3::
     pop hl
     ld a, $e3
@@ -830,7 +830,7 @@ ScriptFetchE3::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E5 (entry 229 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E5 (entry 229 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE5::
     pop hl
     ld a, $e5
@@ -838,7 +838,7 @@ ScriptFetchE5::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E6 (entry 230 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E6 (entry 230 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE6::
     pop hl
     ld a, $e6
@@ -846,7 +846,7 @@ ScriptFetchE6::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E8 (entry 232 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E8 (entry 232 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE8::
     pop hl
     ld a, $e8
@@ -854,7 +854,7 @@ ScriptFetchE8::
     call StartEventScript
     ret
 
-; fetch handler for script opcode E9 (entry 233 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E9 (entry 233 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE9::
     pop hl
     ld a, $e9
@@ -862,7 +862,7 @@ ScriptFetchE9::
     call StartEventScript
     ret
 
-; fetch handler for script opcode EB (entry 235 of ScriptOpcodeHandlers)
+; fetch handler for script opcode EB (entry 235 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEB::
     pop hl
     ld a, $eb
@@ -870,7 +870,7 @@ ScriptFetchEB::
     call StartEventScript
     ret
 
-; fetch handler for script opcode EC (entry 236 of ScriptOpcodeHandlers)
+; fetch handler for script opcode EC (entry 236 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEC::
     pop hl
     ld a, $ec
@@ -878,7 +878,7 @@ ScriptFetchEC::
     call StartEventScript
     ret
 
-; fetch handler for script opcode ED (entry 237 of ScriptOpcodeHandlers)
+; fetch handler for script opcode ED (entry 237 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchED::
     pop hl
     ld a, $ed
@@ -886,7 +886,7 @@ ScriptFetchED::
     call StartEventScript
     ret
 
-; fetch handler for script opcode EE (entry 238 of ScriptOpcodeHandlers)
+; fetch handler for script opcode EE (entry 238 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEE::
     pop hl
     ld a, $ee
@@ -894,7 +894,7 @@ ScriptFetchEE::
     call StartEventScript
     ret
 
-; fetch handler for script opcode EF (entry 239 of ScriptOpcodeHandlers)
+; fetch handler for script opcode EF (entry 239 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEF::
     pop hl
     ld a, $ef
@@ -902,7 +902,7 @@ ScriptFetchEF::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F0 (entry 240 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F0 (entry 240 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF0::
     pop hl
     ld a, $f0
@@ -910,7 +910,7 @@ ScriptFetchF0::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F1 (entry 241 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F1 (entry 241 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF1::
     pop hl
     ld a, $f1
@@ -918,7 +918,7 @@ ScriptFetchF1::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F2 (entry 242 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F2 (entry 242 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF2::
     pop hl
     ld a, $f2
@@ -926,7 +926,7 @@ ScriptFetchF2::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F3 (entry 243 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F3 (entry 243 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF3::
     pop hl
     ld a, $f3
@@ -934,7 +934,7 @@ ScriptFetchF3::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F4 (entry 244 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F4 (entry 244 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF4::
     pop hl
     ld a, $f4
@@ -942,7 +942,7 @@ ScriptFetchF4::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F5 (entry 245 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F5 (entry 245 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF5::
     pop hl
     ld a, [wScriptInDataBank]
@@ -987,7 +987,7 @@ ScriptFetchF5::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode F6 (entry 246 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F6 (entry 246 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF6::
     pop hl
     ld a, $f6
@@ -995,7 +995,7 @@ ScriptFetchF6::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F7 (entry 247 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F7 (entry 247 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF7::
     pop hl
     ld a, $f7
@@ -1003,7 +1003,7 @@ ScriptFetchF7::
     call StartEventScript
     ret
 
-; fetch handler for script opcode F8 (entry 248 of ScriptOpcodeHandlers)
+; fetch handler for script opcode F8 (entry 248 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchF8::
     pop hl
     ld a, $f8
@@ -1011,7 +1011,7 @@ ScriptFetchF8::
     call StartEventScript
     ret
 
-; fetch handler for script opcode EA (entry 234 of ScriptOpcodeHandlers)
+; fetch handler for script opcode EA (entry 234 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchEA::
     pop hl
     ld a, [wScriptInDataBank]
@@ -1055,7 +1055,7 @@ ScriptFetchEA::
     ld [wScriptPointerHi], a
     ret
 
-; fetch handler for script opcode E7 (entry 231 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E7 (entry 231 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE7::
     pop hl
     ld a, $01
@@ -1071,7 +1071,7 @@ ScriptFetchE7::
     ld [wScriptPointerHi], a
     jp FetchScriptCommand_ReadScriptPointerLo
 
-; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers)
+; fetch handler for script opcode E4 (entry 228 of ScriptOpcodeHandlers) (E-0039)
 ScriptFetchE4::
     pop hl
     ld a, [wTwoChoiceCursor]
@@ -1109,7 +1109,7 @@ ScriptFetchE4::
     jp FetchScriptCommand_ReadScriptPointerLo
 
 ; HL = script address: clears wScriptParam0-wMessageState (parameters and step) and stores HL in
-; wScriptPointer; the script is run by RunEventScriptFrame (28 call sites)
+; wScriptPointer; the script is run by RunEventScriptFrame (28 call sites) (E-0038)
 StartEventScript::
     xor a
     ld [wScriptParam0], a
@@ -1125,7 +1125,7 @@ StartEventScript::
     ret
 
 ; does nothing during a fade or while wScriptCommandType is 0; otherwise jumps through
-; ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command
+; ScriptCommandHandlers[wScriptCommandType - 1] to run one frame of the current command (E-0038)
 ExecuteScriptCommand::
     ld a, [wFadeState]
     or a
@@ -1390,201 +1390,201 @@ ScriptCommandHandlers::
     dw ScriptCommandF7 ; entry 246
     dw ScriptCommandF8 ; entry 247
 
-; runs one frame of script command type 9E (entry 157 of ScriptCommandHandlers)
+; runs one frame of script command type 9E (entry 157 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9E::
     farcall KeyWorldFloorBattle
     ret
 
-; runs one frame of script command type 9D (entry 156 of ScriptCommandHandlers)
+; runs one frame of script command type 9D (entry 156 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9D::
     farcall CountdownMessage
     ret
 
-; runs one frame of script command type 9C (entry 155 of ScriptCommandHandlers)
+; runs one frame of script command type 9C (entry 155 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9C::
     farcall EncounterCounterMessage
     ret
 
-; runs one frame of script command type 9B (entry 154 of ScriptCommandHandlers)
+; runs one frame of script command type 9B (entry 154 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9B::
     farcall HealPartyEvent
     ret
 
-; runs one frame of script command type 9A (entry 153 of ScriptCommandHandlers)
+; runs one frame of script command type 9A (entry 153 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9A::
     farcall RandomBattleEvent
     ret
 
-; runs one frame of script command type 99 (entry 152 of ScriptCommandHandlers)
+; runs one frame of script command type 99 (entry 152 of ScriptCommandHandlers) (E-0038)
 ScriptCommand99::
     farcall ObjectPath1C
     ret
 
-; runs one frame of script command type 98 (entry 151 of ScriptCommandHandlers)
+; runs one frame of script command type 98 (entry 151 of ScriptCommandHandlers) (E-0038)
 ScriptCommand98::
     farcall ObjectPath1B
     ret
 
-; runs one frame of script command type 95 (entry 148 of ScriptCommandHandlers)
+; runs one frame of script command type 95 (entry 148 of ScriptCommandHandlers) (E-0038)
 ScriptCommand95::
     farcall ArenaGridBattle
     ret
 
-; runs one frame of script command type 96 (entry 149 of ScriptCommandHandlers)
+; runs one frame of script command type 96 (entry 149 of ScriptCommandHandlers) (E-0038)
 ScriptCommand96::
     farcall ArenaRounds
     ret
 
-; runs one frame of script command type 90 (entry 143 of ScriptCommandHandlers)
+; runs one frame of script command type 90 (entry 143 of ScriptCommandHandlers) (E-0038)
 ScriptCommand90::
     farcall FollowersStep10
     ret
 
-; runs one frame of script command type 91 (entry 144 of ScriptCommandHandlers)
+; runs one frame of script command type 91 (entry 144 of ScriptCommandHandlers) (E-0038)
 ScriptCommand91::
     farcall FollowersStep11
     ret
 
-; runs one frame of script command type 92 (entry 145 of ScriptCommandHandlers)
+; runs one frame of script command type 92 (entry 145 of ScriptCommandHandlers) (E-0038)
 ScriptCommand92::
     farcall PlayerAndFollowersStep
     ret
 
-; runs one frame of script command type 93 (entry 146 of ScriptCommandHandlers)
+; runs one frame of script command type 93 (entry 146 of ScriptCommandHandlers) (E-0038)
 ScriptCommand93::
     farcall WarpWithFollowers
     ret
 
-; runs one frame of script command type 94 (entry 147 of ScriptCommandHandlers)
+; runs one frame of script command type 94 (entry 147 of ScriptCommandHandlers) (E-0038)
 ScriptCommand94::
     farcall FollowersStep14
     ret
 
-; runs one frame of script command type 8D (entry 140 of ScriptCommandHandlers)
+; runs one frame of script command type 8D (entry 140 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8D::
     farcall BreedChildScene
     ret
 
-; runs one frame of script command type 8C (entry 139 of ScriptCommandHandlers)
+; runs one frame of script command type 8C (entry 139 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8C::
     farcall BreedChildSprite
     ret
 
-; runs one frame of script command type 8B (entry 138 of ScriptCommandHandlers)
+; runs one frame of script command type 8B (entry 138 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8B::
     farcall BreedFade
     ret
 
-; runs one frame of script command type 8F (entry 142 of ScriptCommandHandlers)
+; runs one frame of script command type 8F (entry 142 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8F::
     farcall NpcBreedWarp
     ret
 
-; runs one frame of script command type 9F (entry 158 of ScriptCommandHandlers)
+; runs one frame of script command type 9F (entry 158 of ScriptCommandHandlers) (E-0038)
 ScriptCommand9F::
     farcall LinkMessageEvent
     ret
 
-; runs one frame of script command type A0 (entry 159 of ScriptCommandHandlers)
+; runs one frame of script command type A0 (entry 159 of ScriptCommandHandlers) (E-0038)
 ScriptCommandA0::
     farcall PlayerSpriteFlash
     ret
 
-; runs one frame of script command type A1 (entry 160 of ScriptCommandHandlers)
+; runs one frame of script command type A1 (entry 160 of ScriptCommandHandlers) (E-0038)
 ScriptCommandA1::
     farcall PlayerSpriteMessage
     ret
 
-; runs one frame of script command type 8E (entry 141 of ScriptCommandHandlers)
+; runs one frame of script command type 8E (entry 141 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8E::
     farcall MapLinkWarp
     ret
 
-; runs one frame of script command type 8A (entry 137 of ScriptCommandHandlers)
+; runs one frame of script command type 8A (entry 137 of ScriptCommandHandlers) (E-0038)
 ScriptCommand8A::
     farcall MapExitWarp
     ret
 
-; runs one frame of script command type 80 (entry 127 of ScriptCommandHandlers)
+; runs one frame of script command type 80 (entry 127 of ScriptCommandHandlers) (E-0038)
 ScriptCommand80::
     farcall StepTriggerReward
     ret
 
-; runs one frame of script command type 81 (entry 128 of ScriptCommandHandlers)
+; runs one frame of script command type 81 (entry 128 of ScriptCommandHandlers) (E-0038)
 ScriptCommand81::
     farcall AreaItemEvent
     ret
 
-; runs one frame of script command type 86 (entry 133 of ScriptCommandHandlers)
+; runs one frame of script command type 86 (entry 133 of ScriptCommandHandlers) (E-0038)
 ScriptCommand86::
     farcall KeyWorldDoorItem
     ret
 
-; runs one frame of script command type 82 (entry 129 of ScriptCommandHandlers)
+; runs one frame of script command type 82 (entry 129 of ScriptCommandHandlers) (E-0038)
 ScriptCommand82::
     farcall GreatLogFieldEvents
     ret
 
-; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers)
+; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers) (E-0038)
 ScriptCommand83::
     farcall FieldScene01
     ret
 
-; runs one frame of script command type 84 (entry 131 of ScriptCommandHandlers)
+; runs one frame of script command type 84 (entry 131 of ScriptCommandHandlers) (E-0038)
 ScriptCommand84::
     farcall RandomGoldOrItem
     ret
 
-; runs one frame of script command type 85 (entry 132 of ScriptCommandHandlers)
+; runs one frame of script command type 85 (entry 132 of ScriptCommandHandlers) (E-0038)
 ScriptCommand85::
     farcall KeyWorldBossBattle
     ret
 
-; runs one frame of script command type 87 (entry 134 of ScriptCommandHandlers)
+; runs one frame of script command type 87 (entry 134 of ScriptCommandHandlers) (E-0038)
 ScriptCommand87::
     farcall PartyDefeatedReturn
     ret
 
-; runs one frame of script command type 88 (entry 135 of ScriptCommandHandlers)
+; runs one frame of script command type 88 (entry 135 of ScriptCommandHandlers) (E-0038)
 ScriptCommand88::
     farcall ReturnMessage
     ret
 
-; runs one frame of script command type 89 (entry 136 of ScriptCommandHandlers)
+; runs one frame of script command type 89 (entry 136 of ScriptCommandHandlers) (E-0038)
 ScriptCommand89::
     farcall ReturnWarp
     ret
 
-; runs one frame of script command type 06 (entry 5 of ScriptCommandHandlers)
+; runs one frame of script command type 06 (entry 5 of ScriptCommandHandlers) (E-0038)
 ScriptCommand06::
     farcall ScriptSetDirection
     ret
 
-; runs one frame of script command type 05 (entry 4 of ScriptCommandHandlers)
+; runs one frame of script command type 05 (entry 4 of ScriptCommandHandlers) (E-0038)
 ScriptCommand05::
     farcall ScriptCommand05_Run
     ret
 
-; runs one frame of script command type 04 (entry 3 of ScriptCommandHandlers)
+; runs one frame of script command type 04 (entry 3 of ScriptCommandHandlers) (E-0038)
 ScriptCommand04::
     farcall ScriptWaitFrames
     ret
 
-; runs one frame of script command type 03 (entry 2 of ScriptCommandHandlers)
+; runs one frame of script command type 03 (entry 2 of ScriptCommandHandlers) (E-0038)
 ScriptCommand03::
     farcall ScriptStepObject
 
-; runs one frame of script command type 02 (entry 1 of ScriptCommandHandlers)
+; runs one frame of script command type 02 (entry 1 of ScriptCommandHandlers) (E-0038)
 ScriptCommand02::
     farcall ScriptStepObject
     ret
 
-; runs one frame of script command type 0A (entry 9 of ScriptCommandHandlers)
+; runs one frame of script command type 0A (entry 9 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0A::
     farcall RunOneTimeTreasure
     ret
 
-; runs one frame of script command type 09 (entry 8 of ScriptCommandHandlers)
+; runs one frame of script command type 09 (entry 8 of ScriptCommandHandlers) (E-0038)
 ScriptCommand09::
     ld a, [wScriptStep]
     jumptable
@@ -1594,7 +1594,7 @@ ScriptCommand09::
     dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
 
 ; step 3 of ScriptCommand09: may return early; calls ClearBit1OfPlayerAndObjectFlags; sets
-; wScriptCommandType to 0; sets wScriptRunning to 0; sets wModeState to 0
+; wScriptCommandType to 0; sets wScriptRunning to 0; sets wModeState to 0 (E-0347)
 ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wTextWindowState]
     and $03
@@ -1608,7 +1608,7 @@ ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
     ld [wModeState], a
     ret
 
-; runs one frame of script command type 01 (entry 0 of ScriptCommandHandlers)
+; runs one frame of script command type 01 (entry 0 of ScriptCommandHandlers) (E-0038)
 ScriptCommand01::
     ld a, [wScriptStep]
     jumptable
@@ -1619,7 +1619,8 @@ ScriptCommand01::
 
 ; step 0 of ScriptCommand09: branches on wScriptParam1; calls SetBit1OfPlayerAndObjectFlags; calls
 ; FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1; sets
-; wTextWindowStep to 0; ...
+; wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on hPlayerY; sets wTextWindowState
+; to $81; sets hSpriteWindowClipMode to 1; advances wScriptStep (E-0347)
 ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1651,7 +1652,7 @@ ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     ret
 
 ; step 1 of ScriptCommand09: branches on wScriptParam1; returns if bit 7 of wScriptParam1 is set;
-; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep
+; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep (E-0347)
 ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1672,7 +1673,7 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
 
 ; step 2 of ScriptCommand09: returns if bit 0 of wTextFlags is set; branches on wScriptParam1; plays
 ; sound $69; sets hSpriteWindowClipMode to 0; sets wTextWindowState to 2; sets wTextWindowStep to 0;
-; branches on hPlayerY; ...
+; branches on hPlayerY; sets wTextWindowState to $82; advances wScriptStep (E-0347)
 ScriptCommand09_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -1701,7 +1702,7 @@ ScriptCommand09_QueueSoundEffect::
 
 ; step 3 of ScriptCommand01: branches on wScriptParam1; returns if bit 6 of wScriptParam1 is set;
 ; calls ClearBit1OfPlayerAndObjectFlags; sets wScriptCommandType to 0; sets wScriptStartRequest to
-; $80
+; $80 (E-0347)
 ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 6, a
@@ -1720,7 +1721,7 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
 
 ; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
 ; ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType; branches on wMessageMode;
-; copies L to wStringIndex; sets wStringCategory to 0
+; copies L to wStringIndex; sets wStringCategory to 0 (E-0347)
 ScriptCommand09_WriteStringIndexAndStringCategory::
     ld a, h
     and $3f
@@ -1759,14 +1760,14 @@ ScriptCommand09_WriteStringIndexAndStringCategory::
     rst $10
     ret
 
-; data read by ScriptCommand09 (33 bytes)
+; data read by ScriptCommand09 (33 bytes) (E-0347)
 ScriptCommand09_WriteStringIndexAndStringCategory_Data::
     db $01, $40, $f0, $01, $40, $f0, $0e, $52, $1f, $01, $40, $1d, $86, $4c, $1b, $d0
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
 ; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; copies L
-; to wStringIndex; sets wStringCategory to 0; dispatches on H
+; to wStringIndex; sets wStringCategory to 0; dispatches on H (E-0347)
 ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
     pop hl
     ld a, [wMapType]
@@ -1798,67 +1799,80 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
     dw ScriptCommand09_ToBeginStringDisplay_Bank89
 
 ; step 0 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank28
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
 ; step 1 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank29
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
 ; step 2 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2A
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; step 3 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2B
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; step 4 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2C
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; step 5 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2D
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; step 6 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2E
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; step 8 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank7C
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; step 9 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank80
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
 ; step 11 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank82
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
 ; step 12 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank86
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
 ; step 13 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank89
+; (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
 ; Branches on H; branches on L; copies L to wStringIndex; sets wStringCategory to 0; calls
-; BeginStringDisplay_Bank83; copies L to wStringIndex; sets wStringCategory to 0; ...
+; BeginStringDisplay_Bank83; copies L to wStringIndex; sets wStringCategory to 0; calls
+; BeginStringDisplay_Bank8A (E-0347)
 ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
     ld a, h
     or a
@@ -1880,647 +1894,647 @@ ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
     farcall BeginStringDisplay_Bank8A
     ret
 
-; runs one frame of script command type 0C (entry 11 of ScriptCommandHandlers)
+; runs one frame of script command type 0C (entry 11 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0C::
     farcall ScriptSlideObjectY
     ret
 
-; runs one frame of script command type 0E (entry 13 of ScriptCommandHandlers)
+; runs one frame of script command type 0E (entry 13 of ScriptCommandHandlers) (E-0038)
 ScriptCommand0E::
     farcall ScriptCommand0E_Run
     ret
 
-; runs one frame of script command type 11 (entry 16 of ScriptCommandHandlers)
+; runs one frame of script command type 11 (entry 16 of ScriptCommandHandlers) (E-0038)
 ScriptCommand11::
     farcall SceneFarmKids
     ret
 
-; runs one frame of script command type 12 (entry 17 of ScriptCommandHandlers)
+; runs one frame of script command type 12 (entry 17 of ScriptCommandHandlers) (E-0038)
 ScriptCommand12::
     farcall SceneLearnQuick
     ret
 
-; runs one frame of script command type 13 (entry 18 of ScriptCommandHandlers)
+; runs one frame of script command type 13 (entry 18 of ScriptCommandHandlers) (E-0038)
 ScriptCommand13::
     farcall SceneSpinning
     ret
 
-; runs one frame of script command type 14 (entry 19 of ScriptCommandHandlers)
+; runs one frame of script command type 14 (entry 19 of ScriptCommandHandlers) (E-0038)
 ScriptCommand14::
     farcall SceneWarubouSmells
     ret
 
-; runs one frame of script command type 15 (entry 20 of ScriptCommandHandlers)
+; runs one frame of script command type 15 (entry 20 of ScriptCommandHandlers) (E-0038)
 ScriptCommand15::
     farcall SceneWarubouFood
     ret
 
-; runs one frame of script command type 16 (entry 21 of ScriptCommandHandlers)
+; runs one frame of script command type 16 (entry 21 of ScriptCommandHandlers) (E-0038)
 ScriptCommand16::
     farcall SceneWarubouFood2
     ret
 
-; runs one frame of script command type 17 (entry 22 of ScriptCommandHandlers)
+; runs one frame of script command type 17 (entry 22 of ScriptCommandHandlers) (E-0038)
 ScriptCommand17::
     farcall ScenePackage
     ret
 
-; runs one frame of script command type 18 (entry 23 of ScriptCommandHandlers)
+; runs one frame of script command type 18 (entry 23 of ScriptCommandHandlers) (E-0038)
 ScriptCommand18::
     farcall SceneGreatlogKey
     ret
 
-; runs one frame of script command type 19 (entry 24 of ScriptCommandHandlers)
+; runs one frame of script command type 19 (entry 24 of ScriptCommandHandlers) (E-0038)
 ScriptCommand19::
     farcall SceneWarubouMagicKey
     ret
 
-; runs one frame of script command type 1A (entry 25 of ScriptCommandHandlers)
+; runs one frame of script command type 1A (entry 25 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1A::
     farcall SceneOasisKey
     ret
 
-; runs one frame of script command type 1B (entry 26 of ScriptCommandHandlers)
+; runs one frame of script command type 1B (entry 26 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1B::
     farcall SceneWarubouLeaves
     ret
 
-; runs one frame of script command type 1C (entry 27 of ScriptCommandHandlers)
+; runs one frame of script command type 1C (entry 27 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1C::
     farcall SceneWarubouWarning
     ret
 
-; runs one frame of script command type 1D (entry 28 of ScriptCommandHandlers)
+; runs one frame of script command type 1D (entry 28 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1D::
     farcall SceneLongFaces
     ret
 
-; runs one frame of script command type 1E (entry 29 of ScriptCommandHandlers)
+; runs one frame of script command type 1E (entry 29 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1E::
     farcall CheckItem
     ret
 
-; runs one frame of script command type 1F (entry 30 of ScriptCommandHandlers)
+; runs one frame of script command type 1F (entry 30 of ScriptCommandHandlers) (E-0038)
 ScriptCommand1F::
     farcall SceneMonsterInspection
     ret
 
-; runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers)
+; runs one frame of script command type 20 (entry 31 of ScriptCommandHandlers) (E-0038)
 ScriptCommand20::
     farcall ScriptCommand20_Run
     ret
 
-; runs one frame of script command type 21 (entry 32 of ScriptCommandHandlers)
+; runs one frame of script command type 21 (entry 32 of ScriptCommandHandlers) (E-0038)
 ScriptCommand21::
     farcall SceneKingAudience
     ret
 
-; runs one frame of script command type 22 (entry 33 of ScriptCommandHandlers)
+; runs one frame of script command type 22 (entry 33 of ScriptCommandHandlers) (E-0038)
 ScriptCommand22::
     farcall SceneCanalGate
     ret
 
-; runs one frame of script command type 23 (entry 34 of ScriptCommandHandlers)
+; runs one frame of script command type 23 (entry 34 of ScriptCommandHandlers) (E-0038)
 ScriptCommand23::
     farcall SceneWaterShortage
     ret
 
-; runs one frame of script command type 24 (entry 35 of ScriptCommandHandlers)
+; runs one frame of script command type 24 (entry 35 of ScriptCommandHandlers) (E-0038)
 ScriptCommand24::
     farcall SceneTreasureTheft
     ret
 
-; runs one frame of script command type 25 (entry 36 of ScriptCommandHandlers)
+; runs one frame of script command type 25 (entry 36 of ScriptCommandHandlers) (E-0038)
 ScriptCommand25::
     farcall SceneWaterSolved
     ret
 
-; runs one frame of script command type 26 (entry 37 of ScriptCommandHandlers)
+; runs one frame of script command type 26 (entry 37 of ScriptCommandHandlers) (E-0038)
 ScriptCommand26::
     farcall SceneMonstersInTow
     ret
 
-; runs one frame of script command type 27 (entry 38 of ScriptCommandHandlers)
+; runs one frame of script command type 27 (entry 38 of ScriptCommandHandlers) (E-0038)
 ScriptCommand27::
     farcall SceneRivalDefeated
     ret
 
-; runs one frame of script command type 28 (entry 39 of ScriptCommandHandlers)
+; runs one frame of script command type 28 (entry 39 of ScriptCommandHandlers) (E-0038)
 ScriptCommand28::
     farcall ShakeScreen
     ret
 
-; runs one frame of script command type 29 (entry 40 of ScriptCommandHandlers)
+; runs one frame of script command type 29 (entry 40 of ScriptCommandHandlers) (E-0038)
 ScriptCommand29::
     farcall SceneWhoAreYou
     ret
 
-; runs one frame of script command type 2A (entry 41 of ScriptCommandHandlers)
+; runs one frame of script command type 2A (entry 41 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2A::
     farcall SceneWatchOut
     ret
 
-; runs one frame of script command type 2B (entry 42 of ScriptCommandHandlers)
+; runs one frame of script command type 2B (entry 42 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2B::
     farcall SceneMermaidSong
     ret
 
-; runs one frame of script command type 2C (entry 43 of ScriptCommandHandlers)
+; runs one frame of script command type 2C (entry 43 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2C::
     farcall SceneDancing
     ret
 
-; runs one frame of script command type 2D (entry 44 of ScriptCommandHandlers)
+; runs one frame of script command type 2D (entry 44 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2D::
     farcall SceneMermaidSong2
     ret
 
-; runs one frame of script command type 2E (entry 45 of ScriptCommandHandlers)
+; runs one frame of script command type 2E (entry 45 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2E::
     farcall WarpMap41
     ret
 
-; runs one frame of script command type 2F (entry 46 of ScriptCommandHandlers)
+; runs one frame of script command type 2F (entry 46 of ScriptCommandHandlers) (E-0038)
 ScriptCommand2F::
     farcall SceneTentacles
     ret
 
-; runs one frame of script command type 30 (entry 47 of ScriptCommandHandlers)
+; runs one frame of script command type 30 (entry 47 of ScriptCommandHandlers) (E-0038)
 ScriptCommand30::
     farcall SceneSailorRing
     ret
 
-; runs one frame of script command type 31 (entry 48 of ScriptCommandHandlers)
+; runs one frame of script command type 31 (entry 48 of ScriptCommandHandlers) (E-0038)
 ScriptCommand31::
     farcall ScenePirateGhosts
     ret
 
-; runs one frame of script command type 32 (entry 49 of ScriptCommandHandlers)
+; runs one frame of script command type 32 (entry 49 of ScriptCommandHandlers) (E-0038)
 ScriptCommand32::
     farcall GiveItemBlink
     ret
 
-; runs one frame of script command type 33 (entry 50 of ScriptCommandHandlers)
+; runs one frame of script command type 33 (entry 50 of ScriptCommandHandlers) (E-0038)
 ScriptCommand33::
     farcall SceneCrate
     ret
 
-; runs one frame of script command type 34 (entry 51 of ScriptCommandHandlers)
+; runs one frame of script command type 34 (entry 51 of ScriptCommandHandlers) (E-0038)
 ScriptCommand34::
     farcall SetTilesFlag310
     ret
 
-; runs one frame of script command type 35 (entry 52 of ScriptCommandHandlers)
+; runs one frame of script command type 35 (entry 52 of ScriptCommandHandlers) (E-0038)
 ScriptCommand35::
     farcall SceneKamehaEscape
     ret
 
-; runs one frame of script command type 36 (entry 53 of ScriptCommandHandlers)
+; runs one frame of script command type 36 (entry 53 of ScriptCommandHandlers) (E-0038)
 ScriptCommand36::
     farcall SceneKamehaCaught
     ret
 
-; runs one frame of script command type 37 (entry 54 of ScriptCommandHandlers)
+; runs one frame of script command type 37 (entry 54 of ScriptCommandHandlers) (E-0038)
 ScriptCommand37::
     farcall SceneCrewFollows
     ret
 
-; runs one frame of script command type 38 (entry 55 of ScriptCommandHandlers)
+; runs one frame of script command type 38 (entry 55 of ScriptCommandHandlers) (E-0038)
 ScriptCommand38::
     farcall SceneKamehaFlees
     ret
 
-; runs one frame of script command type 39 (entry 56 of ScriptCommandHandlers)
+; runs one frame of script command type 39 (entry 56 of ScriptCommandHandlers) (E-0038)
 ScriptCommand39::
     farcall SceneMermaidKingdom
     ret
 
-; runs one frame of script command type 3A (entry 57 of ScriptCommandHandlers)
+; runs one frame of script command type 3A (entry 57 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3A::
     farcall SceneMasterThanks
     ret
 
-; runs one frame of script command type 3B (entry 58 of ScriptCommandHandlers)
+; runs one frame of script command type 3B (entry 58 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3B::
     farcall SceneMermaidKingdom
     ret
 
-; runs one frame of script command type 3C (entry 59 of ScriptCommandHandlers)
+; runs one frame of script command type 3C (entry 59 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3C::
     farcall RewardItemOrKey
     ret
 
-; runs one frame of script command type 3D (entry 60 of ScriptCommandHandlers)
+; runs one frame of script command type 3D (entry 60 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3D::
     farcall RewardItemOrKey2
     ret
 
-; runs one frame of script command type 3E (entry 61 of ScriptCommandHandlers)
+; runs one frame of script command type 3E (entry 61 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3E::
     farcall SceneStrongestMaster
     ret
 
-; runs one frame of script command type 3F (entry 62 of ScriptCommandHandlers)
+; runs one frame of script command type 3F (entry 62 of ScriptCommandHandlers) (E-0038)
 ScriptCommand3F::
     farcall BlinkSprites
     ret
 
-; runs one frame of script command type 40 (entry 63 of ScriptCommandHandlers)
+; runs one frame of script command type 40 (entry 63 of ScriptCommandHandlers) (E-0038)
 ScriptCommand40::
     farcall SceneSpiritEnvoy
     ret
 
-; runs one frame of script command type 41 (entry 64 of ScriptCommandHandlers)
+; runs one frame of script command type 41 (entry 64 of ScriptCommandHandlers) (E-0038)
 ScriptCommand41::
     farcall SceneExplosion
     ret
 
-; runs one frame of script command type 42 (entry 65 of ScriptCommandHandlers)
+; runs one frame of script command type 42 (entry 65 of ScriptCommandHandlers) (E-0038)
 ScriptCommand42::
     farcall SceneReportToKing
     ret
 
-; runs one frame of script command type 43 (entry 66 of ScriptCommandHandlers)
+; runs one frame of script command type 43 (entry 66 of ScriptCommandHandlers) (E-0038)
 ScriptCommand43::
     farcall SceneWallExit
     ret
 
-; runs one frame of script command type 44 (entry 67 of ScriptCommandHandlers)
+; runs one frame of script command type 44 (entry 67 of ScriptCommandHandlers) (E-0038)
 ScriptCommand44::
     farcall SceneRealKing
     ret
 
-; runs one frame of script command type 45 (entry 68 of ScriptCommandHandlers)
+; runs one frame of script command type 45 (entry 68 of ScriptCommandHandlers) (E-0038)
 ScriptCommand45::
     farcall ScenePlanRuined
     ret
 
-; runs one frame of script command type 46 (entry 69 of ScriptCommandHandlers)
+; runs one frame of script command type 46 (entry 69 of ScriptCommandHandlers) (E-0038)
 ScriptCommand46::
     farcall SceneCheerYuna
     ret
 
-; runs one frame of script command type 47 (entry 70 of ScriptCommandHandlers)
+; runs one frame of script command type 47 (entry 70 of ScriptCommandHandlers) (E-0038)
 ScriptCommand47::
     farcall SceneSpiritEnvoy2
     ret
 
-; runs one frame of script command type 48 (entry 71 of ScriptCommandHandlers)
+; runs one frame of script command type 48 (entry 71 of ScriptCommandHandlers) (E-0038)
 ScriptCommand48::
     farcall ScenePrincessMedicine
     ret
 
-; runs one frame of script command type 49 (entry 72 of ScriptCommandHandlers)
+; runs one frame of script command type 49 (entry 72 of ScriptCommandHandlers) (E-0038)
 ScriptCommand49::
     farcall SceneMedicineGiven
     ret
 
-; runs one frame of script command type 4A (entry 73 of ScriptCommandHandlers)
+; runs one frame of script command type 4A (entry 73 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4A::
     farcall SceneShield
     ret
 
-; runs one frame of script command type 4B (entry 74 of ScriptCommandHandlers)
+; runs one frame of script command type 4B (entry 74 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4B::
     farcall SceneShield2
     ret
 
-; runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers)
+; runs one frame of script command type 4C (entry 75 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4C::
     farcall ScriptCommand4C_Run
     ret
 
-; runs one frame of script command type 4D (entry 76 of ScriptCommandHandlers)
+; runs one frame of script command type 4D (entry 76 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4D::
     farcall SceneWaterReward
     ret
 
-; runs one frame of script command type 4E (entry 77 of ScriptCommandHandlers)
+; runs one frame of script command type 4E (entry 77 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4E::
     farcall SceneGrave
     ret
 
-; runs one frame of script command type 4F (entry 78 of ScriptCommandHandlers)
+; runs one frame of script command type 4F (entry 78 of ScriptCommandHandlers) (E-0038)
 ScriptCommand4F::
     farcall SetTilesD2
     ret
 
-; runs one frame of script command type 50 (entry 79 of ScriptCommandHandlers)
+; runs one frame of script command type 50 (entry 79 of ScriptCommandHandlers) (E-0038)
 ScriptCommand50::
     farcall SceneMadcondor
     ret
 
-; runs one frame of script command type 51 (entry 80 of ScriptCommandHandlers)
+; runs one frame of script command type 51 (entry 80 of ScriptCommandHandlers) (E-0038)
 ScriptCommand51::
     farcall SceneMadcondorCry
     ret
 
-; runs one frame of script command type 52 (entry 81 of ScriptCommandHandlers)
+; runs one frame of script command type 52 (entry 81 of ScriptCommandHandlers) (E-0038)
 ScriptCommand52::
     farcall SceneSmallHole
     ret
 
-; runs one frame of script command type 53 (entry 82 of ScriptCommandHandlers)
+; runs one frame of script command type 53 (entry 82 of ScriptCommandHandlers) (E-0038)
 ScriptCommand53::
     farcall SceneJustice
     ret
 
-; runs one frame of script command type 54 (entry 83 of ScriptCommandHandlers)
+; runs one frame of script command type 54 (entry 83 of ScriptCommandHandlers) (E-0038)
 ScriptCommand54::
     farcall SceneGravestone
     ret
 
-; runs one frame of script command type 55 (entry 84 of ScriptCommandHandlers)
+; runs one frame of script command type 55 (entry 84 of ScriptCommandHandlers) (E-0038)
 ScriptCommand55::
     farcall SetFlag322
     ret
 
-; runs one frame of script command type 56 (entry 85 of ScriptCommandHandlers)
+; runs one frame of script command type 56 (entry 85 of ScriptCommandHandlers) (E-0038)
 ScriptCommand56::
     farcall SceneBeatenFairly
     ret
 
-; runs one frame of script command type 57 (entry 86 of ScriptCommandHandlers)
+; runs one frame of script command type 57 (entry 86 of ScriptCommandHandlers) (E-0038)
 ScriptCommand57::
     farcall SceneThreeItemsBattle
     ret
 
-; runs one frame of script command type 58 (entry 87 of ScriptCommandHandlers)
+; runs one frame of script command type 58 (entry 87 of ScriptCommandHandlers) (E-0038)
 ScriptCommand58::
     farcall SceneThreeItems
     ret
 
-; runs one frame of script command type 59 (entry 88 of ScriptCommandHandlers)
+; runs one frame of script command type 59 (entry 88 of ScriptCommandHandlers) (E-0038)
 ScriptCommand59::
     farcall SceneSawKameha
     ret
 
-; runs one frame of script command type 5A (entry 89 of ScriptCommandHandlers)
+; runs one frame of script command type 5A (entry 89 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5A::
     farcall SceneSawKameha
     ret
 
-; runs one frame of script command type 5B (entry 90 of ScriptCommandHandlers)
+; runs one frame of script command type 5B (entry 90 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5B::
     farcall SceneLimbo
     ret
 
-; runs one frame of script command type 5C (entry 91 of ScriptCommandHandlers)
+; runs one frame of script command type 5C (entry 91 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5C::
     farcall TakeItem
     ret
 
-; runs one frame of script command type 5D (entry 92 of ScriptCommandHandlers)
+; runs one frame of script command type 5D (entry 92 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5D::
     farcall SceneDarckTaunt
     ret
 
-; runs one frame of script command type 5E (entry 93 of ScriptCommandHandlers)
+; runs one frame of script command type 5E (entry 93 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5E::
     farcall SceneDarckDefeated
     ret
 
-; runs one frame of script command type 5F (entry 94 of ScriptCommandHandlers)
+; runs one frame of script command type 5F (entry 94 of ScriptCommandHandlers) (E-0038)
 ScriptCommand5F::
     farcall SceneHomecoming
     ret
 
-; runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
+; runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers) (E-0038)
 ScriptCommand60::
     farcall ScriptCommand60_Run
     ret
 
-; runs one frame of script command type 61 (entry 96 of ScriptCommandHandlers)
+; runs one frame of script command type 61 (entry 96 of ScriptCommandHandlers) (E-0038)
 ScriptCommand61::
     farcall SceneKamehaStole
     ret
 
-; runs one frame of script command type 62 (entry 97 of ScriptCommandHandlers)
+; runs one frame of script command type 62 (entry 97 of ScriptCommandHandlers) (E-0038)
 ScriptCommand62::
     farcall PersonalityMessage
     ret
 
-; runs one frame of script command type 63 (entry 98 of ScriptCommandHandlers)
+; runs one frame of script command type 63 (entry 98 of ScriptCommandHandlers) (E-0038)
 ScriptCommand63::
     farcall SceneRivalFade
     ret
 
-; runs one frame of script command type 64 (entry 99 of ScriptCommandHandlers)
+; runs one frame of script command type 64 (entry 99 of ScriptCommandHandlers) (E-0038)
 ScriptCommand64::
     farcall GatherFollowers
     ret
 
-; runs one frame of script command type 65 (entry 100 of ScriptCommandHandlers)
+; runs one frame of script command type 65 (entry 100 of ScriptCommandHandlers) (E-0038)
 ScriptCommand65::
     farcall GrowthLimitInfo
     ret
 
-; runs one frame of script command type 66 (entry 101 of ScriptCommandHandlers)
+; runs one frame of script command type 66 (entry 101 of ScriptCommandHandlers) (E-0038)
 ScriptCommand66::
     farcall SceneShieldGuardian
     ret
 
-; runs one frame of script command type 67 (entry 102 of ScriptCommandHandlers)
+; runs one frame of script command type 67 (entry 102 of ScriptCommandHandlers) (E-0038)
 ScriptCommand67::
     farcall SceneJustice2
     ret
 
-; runs one frame of script command type 68 (entry 103 of ScriptCommandHandlers)
+; runs one frame of script command type 68 (entry 103 of ScriptCommandHandlers) (E-0038)
 ScriptCommand68::
     farcall SceneFoundMe
     ret
 
-; runs one frame of script command type 69 (entry 104 of ScriptCommandHandlers)
+; runs one frame of script command type 69 (entry 104 of ScriptCommandHandlers) (E-0038)
 ScriptCommand69::
     farcall SceneFoundMeBattle
     ret
 
-; runs one frame of script command type 6A (entry 105 of ScriptCommandHandlers)
+; runs one frame of script command type 6A (entry 105 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6A::
     farcall SceneHorsingAround
     ret
 
-; runs one frame of script command type 6B (entry 106 of ScriptCommandHandlers)
+; runs one frame of script command type 6B (entry 106 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6B::
     farcall SceneVaultSettled
     ret
 
-; runs one frame of script command type 6C (entry 107 of ScriptCommandHandlers)
+; runs one frame of script command type 6C (entry 107 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6C::
     farcall GiveMonster
     ret
 
-; runs one frame of script command type 6D (entry 108 of ScriptCommandHandlers)
+; runs one frame of script command type 6D (entry 108 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6D::
     farcall SceneLimboMonster
     ret
 
-; runs one frame of script command type 6E (entry 109 of ScriptCommandHandlers)
+; runs one frame of script command type 6E (entry 109 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6E::
     farcall SceneLimboMonster2
     ret
 
-; runs one frame of script command type 6F (entry 110 of ScriptCommandHandlers)
+; runs one frame of script command type 6F (entry 110 of ScriptCommandHandlers) (E-0038)
 ScriptCommand6F::
     farcall DeskKey
     ret
 
-; runs one frame of script command type 70 (entry 111 of ScriptCommandHandlers)
+; runs one frame of script command type 70 (entry 111 of ScriptCommandHandlers) (E-0038)
 ScriptCommand70::
     farcall SceneTerry
     ret
 
-; runs one frame of script command type 71 (entry 112 of ScriptCommandHandlers)
+; runs one frame of script command type 71 (entry 112 of ScriptCommandHandlers) (E-0038)
 ScriptCommand71::
     farcall SceneKamehaKeyBattle
     ret
 
-; runs one frame of script command type 72 (entry 113 of ScriptCommandHandlers)
+; runs one frame of script command type 72 (entry 113 of ScriptCommandHandlers) (E-0038)
 ScriptCommand72::
     farcall SceneKamehaKeyBattle2
     ret
 
-; runs one frame of script command type 73 (entry 114 of ScriptCommandHandlers)
+; runs one frame of script command type 73 (entry 114 of ScriptCommandHandlers) (E-0038)
 ScriptCommand73::
     farcall FollowerFacePlayer
     ret
 
-; runs one frame of script command type 74 (entry 115 of ScriptCommandHandlers)
+; runs one frame of script command type 74 (entry 115 of ScriptCommandHandlers) (E-0038)
 ScriptCommand74::
     farcall SetFlagRedraw
     ret
 
-; runs one frame of script command type 75 (entry 116 of ScriptCommandHandlers)
+; runs one frame of script command type 75 (entry 116 of ScriptCommandHandlers) (E-0038)
 ScriptCommand75::
     farcall SceneAtSea
     ret
 
-; runs one frame of script command type 76 (entry 117 of ScriptCommandHandlers)
+; runs one frame of script command type 76 (entry 117 of ScriptCommandHandlers) (E-0038)
 ScriptCommand76::
     farcall ScriptCommand76_Run
     ret
 
-; runs one frame of script command type 77 (entry 118 of ScriptCommandHandlers)
+; runs one frame of script command type 77 (entry 118 of ScriptCommandHandlers) (E-0038)
 ScriptCommand77::
     farcall SceneLandHo
     ret
 
-; runs one frame of script command type 78 (entry 119 of ScriptCommandHandlers)
+; runs one frame of script command type 78 (entry 119 of ScriptCommandHandlers) (E-0038)
 ScriptCommand78::
     farcall SaveScreen
     ret
 
-; runs one frame of script command type 79 (entry 120 of ScriptCommandHandlers)
+; runs one frame of script command type 79 (entry 120 of ScriptCommandHandlers) (E-0038)
 ScriptCommand79::
     farcall ScenePoorChurch
     ret
 
-; runs one frame of script command type 7A (entry 121 of ScriptCommandHandlers)
+; runs one frame of script command type 7A (entry 121 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7A::
     farcall SceneKamehaMissing
     ret
 
-; runs one frame of script command type 7B (entry 122 of ScriptCommandHandlers)
+; runs one frame of script command type 7B (entry 122 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7B::
     farcall SceneArenaChallenge
     ret
 
-; runs one frame of script command type 7C (entry 123 of ScriptCommandHandlers)
+; runs one frame of script command type 7C (entry 123 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7C::
     farcall SceneTerryBattle
     ret
 
-; runs one frame of script command type 7D (entry 124 of ScriptCommandHandlers)
+; runs one frame of script command type 7D (entry 124 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7D::
     farcall SceneThisWay
     ret
 
-; runs one frame of script command type 7E (entry 125 of ScriptCommandHandlers)
+; runs one frame of script command type 7E (entry 125 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7E::
     farcall SceneGotTo
     ret
 
-; runs one frame of script command type 7F (entry 126 of ScriptCommandHandlers)
+; runs one frame of script command type 7F (entry 126 of ScriptCommandHandlers) (E-0038)
 ScriptCommand7F::
     farcall SceneChestServant
     ret
 
-; runs one frame of script command type C0 (entry 191 of ScriptCommandHandlers)
+; runs one frame of script command type C0 (entry 191 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC0::
     farcall SceneRoltElder
     ret
 
-; runs one frame of script command type C1 (entry 192 of ScriptCommandHandlers)
+; runs one frame of script command type C1 (entry 192 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC1::
     farcall SceneTooStrong
     ret
 
-; runs one frame of script command type C2 (entry 193 of ScriptCommandHandlers)
+; runs one frame of script command type C2 (entry 193 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC2::
     farcall SceneGiveBackCyal
     ret
 
-; runs one frame of script command type C3 (entry 194 of ScriptCommandHandlers)
+; runs one frame of script command type C3 (entry 194 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC3::
     farcall KeyBossBeaten
     ret
 
-; runs one frame of script command type C6 (entry 197 of ScriptCommandHandlers)
+; runs one frame of script command type C6 (entry 197 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC6::
     farcall SceneCyalRolt
     ret
 
-; runs one frame of script command type C4 (entry 195 of ScriptCommandHandlers)
+; runs one frame of script command type C4 (entry 195 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC4::
     farcall SceneBarrel
     ret
 
-; runs one frame of script command type C5 (entry 196 of ScriptCommandHandlers)
+; runs one frame of script command type C5 (entry 196 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC5::
     farcall SceneWizstone
     ret
 
-; runs one frame of script command type C7 (entry 198 of ScriptCommandHandlers)
+; runs one frame of script command type C7 (entry 198 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC7::
     farcall ScenePendantSeller
     ret
 
-; runs one frame of script command type C8 (entry 199 of ScriptCommandHandlers)
+; runs one frame of script command type C8 (entry 199 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC8::
     farcall SceneMercy
     ret
 
-; runs one frame of script command type C9 (entry 200 of ScriptCommandHandlers)
+; runs one frame of script command type C9 (entry 200 of ScriptCommandHandlers) (E-0038)
 ScriptCommandC9::
     farcall SceneMilayouForest
     ret
 
-; runs one frame of script command type CA (entry 201 of ScriptCommandHandlers)
+; runs one frame of script command type CA (entry 201 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCA::
     farcall KeyBossBeaten2
     ret
 
-; runs one frame of script command type CB (entry 202 of ScriptCommandHandlers)
+; runs one frame of script command type CB (entry 202 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCB::
     farcall SceneChestBattle
     ret
 
-; runs one frame of script command type CC (entry 203 of ScriptCommandHandlers)
+; runs one frame of script command type CC (entry 203 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCC::
     farcall SceneCyalShine
     ret
 
-; runs one frame of script command type CD (entry 204 of ScriptCommandHandlers)
+; runs one frame of script command type CD (entry 204 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCD::
     farcall SceneYouDidIt
     ret
 
-; runs one frame of script command type CE (entry 205 of ScriptCommandHandlers)
+; runs one frame of script command type CE (entry 205 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCE::
     farcall HideSprites
     ret
 
-; runs one frame of script command type CF (entry 206 of ScriptCommandHandlers)
+; runs one frame of script command type CF (entry 206 of ScriptCommandHandlers) (E-0038)
 ScriptCommandCF::
     farcall SceneKeyShop
     ret
@@ -5557,92 +5571,92 @@ Script_WarubouWaHeySo::
     script_jump_data_bank Script_Priest
     db $ff
 
-; runs one frame of script command type E0 (entry 223 of ScriptCommandHandlers)
+; runs one frame of script command type E0 (entry 223 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE0::
     farcall InnMenu
     ret
 
-; runs one frame of script command type E1 (entry 224 of ScriptCommandHandlers)
+; runs one frame of script command type E1 (entry 224 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE1::
     farcall CloseInnMenu
     ret
 
-; runs one frame of script command type E2 (entry 225 of ScriptCommandHandlers)
+; runs one frame of script command type E2 (entry 225 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE2::
     farcall ShopMenu
     ret
 
-; runs one frame of script command type E3 (entry 226 of ScriptCommandHandlers)
+; runs one frame of script command type E3 (entry 226 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE3::
     farcall CloseShopMenu
     ret
 
-; runs one frame of script command type E5 (entry 228 of ScriptCommandHandlers)
+; runs one frame of script command type E5 (entry 228 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE5::
     farcall VaultMenu
     ret
 
-; runs one frame of script command type E6 (entry 229 of ScriptCommandHandlers)
+; runs one frame of script command type E6 (entry 229 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE6::
     farcall CloseVaultMenu
     ret
 
-; runs one frame of script command type E8 (entry 231 of ScriptCommandHandlers)
+; runs one frame of script command type E8 (entry 231 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE8::
     farcall SwapMonstersMenu
     ret
 
-; runs one frame of script command type E9 (entry 232 of ScriptCommandHandlers)
+; runs one frame of script command type E9 (entry 232 of ScriptCommandHandlers) (E-0038)
 ScriptCommandE9::
     farcall CloseMenuE9
     ret
 
-; runs one frame of script command type EB (entry 234 of ScriptCommandHandlers)
+; runs one frame of script command type EB (entry 234 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEB::
     farcall HibernateMenu
     ret
 
-; runs one frame of script command type EC (entry 235 of ScriptCommandHandlers)
+; runs one frame of script command type EC (entry 235 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEC::
     farcall CloseHibernateMenu
     ret
 
-; runs one frame of script command type ED (entry 236 of ScriptCommandHandlers)
+; runs one frame of script command type ED (entry 236 of ScriptCommandHandlers) (E-0038)
 ScriptCommandED::
     farcall BreedMenu
     ret
 
-; runs one frame of script command type EE (entry 237 of ScriptCommandHandlers)
+; runs one frame of script command type EE (entry 237 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEE::
     farcall CloseBreedMenu
     ret
 
-; runs one frame of script command type EF (entry 238 of ScriptCommandHandlers)
+; runs one frame of script command type EF (entry 238 of ScriptCommandHandlers) (E-0038)
 ScriptCommandEF::
     farcall EggServiceMenu
     ret
 
-; runs one frame of script command type F0 (entry 239 of ScriptCommandHandlers)
+; runs one frame of script command type F0 (entry 239 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF0::
     farcall RenameMenu
     ret
 
-; runs one frame of script command type F1 (entry 240 of ScriptCommandHandlers)
+; runs one frame of script command type F1 (entry 240 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF1::
     farcall CloseRenameMenu
     ret
 
-; runs one frame of script command type F2 (entry 241 of ScriptCommandHandlers)
+; runs one frame of script command type F2 (entry 241 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF2::
     farcall KeyAppraisalMenu
     ret
 
-; runs one frame of script command type F3 (entry 242 of ScriptCommandHandlers)
+; runs one frame of script command type F3 (entry 242 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF3::
     farcall MedalPrizeMenu
     ret
 
-; runs one frame of script command type F4 (entry 243 of ScriptCommandHandlers)
+; runs one frame of script command type F4 (entry 243 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF4::
     farcall NpcBreedMenu
     ret
@@ -5652,17 +5666,17 @@ CallScriptCommandE9Far::
     farcall ScriptCommandE9_RunFar
     ret
 
-; runs one frame of script command type F6 (entry 245 of ScriptCommandHandlers)
+; runs one frame of script command type F6 (entry 245 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF6::
     farcall LibraryMenu
     ret
 
-; runs one frame of script command type F7 (entry 246 of ScriptCommandHandlers)
+; runs one frame of script command type F7 (entry 246 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF7::
     farcall ArenaMenu
     ret
 
-; runs one frame of script command type F8 (entry 247 of ScriptCommandHandlers)
+; runs one frame of script command type F8 (entry 247 of ScriptCommandHandlers) (E-0038)
 ScriptCommandF8::
     farcall PriestMenu
     ret

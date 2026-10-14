@@ -7,7 +7,7 @@ SECTION "Bank 94", ROMX[$4000], BANK[$94]
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map19Palettes::
-; data read by DebugStaffRoll_Scene03_DecompressToVRAM (32 words)
+; data read by DebugStaffRoll_Scene03_DecompressToVRAM (32 words) (E-0347)
 DebugStaffRoll_Scene03_DecompressToVRAM_BGPaletteBufferData::
     dw $7d86, $7fff, $0214, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1

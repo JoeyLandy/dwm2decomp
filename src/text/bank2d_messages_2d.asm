@@ -37,7 +37,7 @@ CopyStringToBuffer_Bank2D::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_2D::
-; data read by BeginStringDisplay_Bank2D (1 word)
+; data read by BeginStringDisplay_Bank2D (1 word) (E-0347)
 MessageStrings_Bank2D::
     dw StringList_Bank2D_0 ; id 0
 

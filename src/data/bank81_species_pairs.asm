@@ -6,7 +6,8 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 
 ; called from CallInBank81KeepRegs: copies L to wAIWeights; copies L to wSpeciesIdLo; copies H to
 ; wSpeciesIdHi; calls LoadSpeciesFamily; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls
-; LoadSpeciesFamily; ...
+; LoadSpeciesFamily; copies E to hTemp0; copies D to hTemp1; copies E to hTemp2; copies D to hTemp3;
+; sets hTemp4; then 14 more steps (see the code) (E-0347)
 CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -124,7 +125,7 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ret
 
 ; Takes HL; changes HL, BC, A and D; continues in CallInBank81KeepRegs_CompareHLToBC; branches on b;
-; branches on hTemp5; continues in CallInBank81KeepRegs_CompareHLToBC
+; branches on hTemp5; continues in CallInBank81KeepRegs_CompareHLToBC (E-0347)
 CallInBank81KeepRegs_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]

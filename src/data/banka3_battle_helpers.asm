@@ -9,33 +9,33 @@ GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip
+; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip
+; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip
+; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip
+; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip
+; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
 GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleMP_BankA3_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A
+; Takes HL and A; changes HL and A (E-0347)
 GetBattleMP_BankA3_Skip::
     add a
     add_a_to_hl
@@ -43,7 +43,7 @@ GetBattleMP_BankA3_Skip::
     ret
 
 ; HL += 2 * A (A is doubled in 8 bits first, so it wraps above $7F); clobbers A (the same 7 bytes
-; appear in 12 banks)
+; appear in 12 banks) (E-0351)
 AddDoubleAToHL_BankA3::
     add a
     add_a_to_hl
@@ -118,7 +118,7 @@ ClearBitMaskTable_BankA3::
     db $bf ; id 6
 
 ; Sets bit 0 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -128,7 +128,7 @@ SetBit0OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 1 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -138,7 +138,7 @@ SetBit1OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; Sets bit 2 of the byte at wLevelUpGains + A; keeps HL; clobbers A (the same 13 bytes appear in 12
-; banks)
+; banks) (E-0351)
 SetBit2OfLevelUpGainsIndexed_BankA3:: ; configured code entry (E-0205); C0
     push hl
     ld hl, wLevelUpGains
@@ -297,7 +297,7 @@ ActorFormationSlotToTemp0::
     pop bc
     ret
 
-; data read by ActorFormationSlotToTemp0 (6 bytes)
+; data read by ActorFormationSlotToTemp0 (6 bytes) (E-0347)
 ActorFormationSlotToTemp0_Data::
     db $00, $01, $00, $02, $01, $02
 
@@ -819,7 +819,7 @@ PersonalityCompatibility::
     db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
-; called from SaveActionChoicesAndPickFormations: takes DE and BC; changes DE, BC and A
+; called from SaveActionChoicesAndPickFormations: takes DE and BC; changes DE, BC and A (E-0347)
 SaveActionChoicesAndPickFormations_DivideBByA::
     push bc
     push de
@@ -966,7 +966,7 @@ PersonalityIndexOfSlot_BankA3_2::
     ret
 
 ; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor; copies the
-; byte at wBattleMonsterId to hTemp0
+; byte at wBattleMonsterId to hTemp0 (E-0347)
 RollRandomLoBelowChance_WriteTemp0::
     ld a, [wLinkMode]
     or a
@@ -1117,7 +1117,7 @@ PickDuckBehindAlly::
 
 ; called from ActionEffect_Chance: calls AdvanceRandom; branches on wLinkMode; branches on
 ; wBattleKind; returns unless bit 2 of wBattleActor is set; may continue in
-; ActionEffect_Chance_AdvanceRandom
+; ActionEffect_Chance_AdvanceRandom (E-0347)
 ActionEffect_Chance_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -1162,11 +1162,11 @@ ActionEffect_Chance_AdvanceRandom::
     jr z, ActionEffect_Chance_AdvanceRandom
     ret
 
-; data read by ActionEffect_Chance_AdvanceRandom (14 bytes)
+; data read by ActionEffect_Chance_AdvanceRandom (14 bytes) (E-0347)
 ActionEffect_Chance_AdvanceRandom_Data::
     db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 
-; the same 76 bytes as StoreBattleStateToPartyRecords (StoreBattleStateToPartyRecords)
+; the same 76 bytes as StoreBattleStateToPartyRecords (StoreBattleStateToPartyRecords) (E-0289)
 StoreBattleStateToPartyRecords_BankA3::
     ld a, $0a
     ld [rRAMG], a

@@ -75,7 +75,7 @@ GameMode8_Init::
     ld a, $01
     jp ClearSGBPacketBuffer_CheckLinkMode
 
-; per-frame routine for wGameMode = 8
+; per-frame routine for wGameMode = 8 (E-0029)
 GameMode8_Update::
     ld a, [wFadeState]
     and a
@@ -106,7 +106,7 @@ GameMode8_Update::
     dw GameMode8_Update_ShowHeroReceivedGsEgg
     dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
 
-; step 0 of GameMode8_Update: calls GameMode8_Update_TestFlagBit; increments wScreenSubStep
+; step 0 of GameMode8_Update: calls GameMode8_Update_TestFlagBit; increments wScreenSubStep (E-0347)
 GameMode8_Update_WriteScreenSubStep::
     call GameMode8_Update_TestFlagBit
     ld a, [wScreenSubStep]
@@ -115,7 +115,7 @@ GameMode8_Update_WriteScreenSubStep::
     ret
 
 ; step 1 of GameMode8_Update: increments wScreenCounter; returns if wScreenCounter is below $10;
-; sets wScreenCounter to 0; increments wScreenSubStep
+; sets wScreenCounter to 0; increments wScreenSubStep (E-0347)
 GameMode8_Update_WriteScreenCounterAndScreenSubStep::
     ld a, [wScreenCounter]
     inc a
@@ -131,7 +131,7 @@ GameMode8_Update_WriteScreenCounterAndScreenSubStep::
 
 ; step 2 of GameMode8_Update: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1
 ; + OBJ_X; returns if wObject1 + OBJ_X is at least $59; sets wObject1 + OBJ_X to $58; sets wObject1
-; + OBJ_FLAGS; increments wScreenSubStep
+; + OBJ_FLAGS; increments wScreenSubStep (E-0347)
 GameMode8_Update_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -153,6 +153,7 @@ GameMode8_Update_WriteObject1AndScreenSubStep::
     ret
 
 ; step 4 of GameMode8_Update: sets wObject5 to $80; sets wArg1 to 1; increments wScreenSubStep
+; (E-0347)
 GameMode8_Update_SetObject5::
     ld a, $80
     ld [wObject5], a
@@ -163,7 +164,7 @@ GameMode8_Update_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-; step 5 of GameMode8_Update: may return early; increments wScreenSubStep
+; step 5 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -183,6 +184,7 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
     ret
 
 ; step 8 of GameMode8_Update: sets wObject5 to 0; sets wArg1 to 0; increments wScreenSubStep
+; (E-0347)
 GameMode8_Update_SetObject5_SetObject5::
     ld a, $00
     ld [wObject5], a
@@ -192,7 +194,7 @@ GameMode8_Update_SetObject5_SetObject5::
     ld [wScreenSubStep], a
     ret
 
-; step 11 of GameMode8_Update: may return early; increments wScreenSubStep
+; step 11 of GameMode8_Update: may return early; increments wScreenSubStep (E-0347)
 GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
     ld a, [wSpriteSlots + $d]
     res 1, a
@@ -215,7 +217,7 @@ GameMode8_Update_WriteSpriteSlotsAndScreenSubStep_SetScreenSubStep::
 
 ; step 12 of GameMode8_Update: calls GameMode8_Update_CopyStringMaxC; calls
 ; CopyMonsterNameToBuffer_BF2; calls GameMode8_Update_CopyStringMaxC; sets wStringIndex to $0e; sets
-; wStringCategory to 0; calls BeginStringDisplay_BankF0_2; advances wScreenSubStep
+; wStringCategory to 0; calls BeginStringDisplay_BankF0_2; advances wScreenSubStep (E-0347)
 GameMode8_Update_ShowHeroReceivedGsEgg::
     ld hl, wPlayerName
     ld de, wTextBuf0
@@ -241,7 +243,7 @@ GameMode8_Update_ShowHeroReceivedGsEgg::
     inc [hl]
     ret
 
-; copies a string from HL to DE, at most C bytes, ending it with $F0
+; copies a string from HL to DE, at most C bytes, ending it with $F0 (E-0305)
 GameMode8_Update_CopyStringMaxC::
     ld a, [hli]
     cp $f0
@@ -256,13 +258,13 @@ GameMode8_Update_CopyStringMaxC::
     ld [de], a
     ret
 
-; step 13 of GameMode8_Update: calls GameMode8_Update_WriteLinkSceneAndGameModeEtc
+; step 13 of GameMode8_Update: calls GameMode8_Update_WriteLinkSceneAndGameModeEtc (E-0347)
 GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc::
     call GameMode8_Update_WriteLinkSceneAndGameModeEtc
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
-; wDataBank) to wNameGlyphBuf; wDataBank is restored
+; wDataBank) to wNameGlyphBuf; wDataBank is restored (E-0026)
 CopyMonsterNameToBuffer_BF2::
     push hl
     ld a, [wDataBank]
@@ -314,7 +316,7 @@ RunTextUntilTextWindowStateDone_BankF2::
     ret
 
 ; called from GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc: sets wLinkScene to
-; 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1
+; 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1 (E-0347)
 GameMode8_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
@@ -338,7 +340,9 @@ GameMode8_Update_WriteLinkSceneAndGameModeEtc::
 
 ; called from GameMode8_Update_WriteScreenSubStep: checks EVENT_NEVER_SET; calls
 ; CopyBytesDEFromHL_BankF2; branches on wLinkHatchData; calls CopyBytesDEFromHL_BankF2; checks
-; EVENT_NEVER_SET; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; ...
+; EVENT_NEVER_SET; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; branches on
+; wLinkHatchData; calls CopyBytesDEFromHL_BankF2; calls DecompressGraphicsTemp0ToTemp4; sets hTemp0
+; to $0d; calls RunFieldCommandTemp0; then 6 more steps (see the code) (E-0347)
 GameMode8_Update_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -414,7 +418,7 @@ GameMode8_Update_TestFlagBit::
 .return:
     ret
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
 CopyBytesDEFromHL_BankF2::
     ld a, [hli]
     ld [de], a
@@ -423,7 +427,7 @@ CopyBytesDEFromHL_BankF2::
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-; data read by GameMode8_Update_TestFlagBit (6 bytes)
+; data read by GameMode8_Update_TestFlagBit (6 bytes) (E-0347)
 GameMode8_Update_TestFlagBit_Data1::
     db $00, $00, $01, $04, $00, $80
 
@@ -454,7 +458,7 @@ Object1Init_3::
     db $00, $00, $00, $00, $48, $40, $02, $00, $20, $00, $00, $48, $40, $04, $00, $00
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
 BGMapAddressAtScroll_BankF2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -473,7 +477,7 @@ BGMapAddressAtScroll_BankF2::
     add_a_to_hl
     ret
 
-; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (DrawScreenBufferRectToBGMap_1B)
+; the same 84 bytes as DrawScreenBufferRectToBGMap_1B (DrawScreenBufferRectToBGMap_1B) (E-0127)
 DrawScreenBufferRectToBGMap_1B_BankF2::
     push de
     push bc
@@ -532,13 +536,13 @@ DrawScreenBufferRectToBGMap_1B_BankF2::
     ldh [c], a
     ret
 
-; called from GameMode8_Update: calls UpdateAndDrawSpriteSlots; calls DrawFieldSprites
+; called from GameMode8_Update: calls UpdateAndDrawSpriteSlots; calls DrawFieldSprites (E-0347)
 GameMode8_Update_UpdateAndDrawSpriteSlots::
     farcall UpdateAndDrawSpriteSlots
     farcall DrawFieldSprites
     ret
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_BankF2::
     ld de, BeginStringDisplay_BankF2_StringCategories
     call BeginStringDisplay
@@ -546,6 +550,7 @@ BeginStringDisplay_BankF2::
     db $11, $e5, $43, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_BankF2 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0351)
 ShowString_BankF2::
     call BeginStringDisplay_BankF2
     call RunStringDisplayToEnd
@@ -1102,7 +1107,9 @@ RunF2::
 
 ; called from RunF2: branches on wRecordBufB + MON_FAMILY & $10; calls LoadTemp0WordFromRecordBufB;
 ; branches on hTemp1; sets wNameGlyphBuf to $98; calls CopyGlyphTilesToVRAM; calls
-; CopyShortStringToNameGlyphBuf_BankF2; calls CopyGlyphTilesToVRAM; ...
+; CopyShortStringToNameGlyphBuf_BankF2; calls CopyGlyphTilesToVRAM; sets wArg1 to $92; sets wArg2 to
+; $50; copies the byte at vTiles2 + $200 to wArg3; calls ShowRecordBufBEntryStringAtArg1; calls
+; CopyShortStringToNameGlyphBuf_BankF2; then 13 more steps (see the code) (E-0347)
 RunF2_LoadTemp0WordFromRecordBufB::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
@@ -1261,7 +1268,7 @@ ShowRecordBufBEntryStringAtArg1::
     farcall ShowString_Bank08
     ret
 
-; data read by RunF2_LoadTemp0WordFromRecordBufB (8 bytes)
+; data read by RunF2_LoadTemp0WordFromRecordBufB (8 bytes) (E-0347)
 RunF2_LoadTemp0WordFromRecordBufB_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
@@ -1270,7 +1277,9 @@ RunF2_LoadTemp0WordFromRecordBufB_Data2::
 
 ; called from RunF2: branches on wRecordBufB + MON_FAMILY & $10; calls LoadTemp0WordFromRecordBufB;
 ; branches on hTemp1; calls CopyTileBytesToVRAMCounted_BankF2; copies the byte at vTiles2 + $6c0 to
-; wArg1; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; ...
+; wArg1; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; sets wArg3 to $6a; sets wArg4
+; to $6c; calls DrawSpeciesIconForRecordBufBEntry; calls PickNameBufferForFirstByte_BankF2; calls
+; BGMapAddressAtScroll_BankF2_2; then 13 more steps (see the code) (E-0347)
 RunF2_LoadTemp0WordFromRecordBufB_2::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10
@@ -1398,7 +1407,7 @@ PickNameBufferForFirstByte_BankF2::
 .return:
     ret
 
-; data read by RunF2_LoadTemp0WordFromRecordBufB_2 (6 bytes)
+; data read by RunF2_LoadTemp0WordFromRecordBufB_2 (6 bytes) (E-0347)
 RunF2_LoadTemp0WordFromRecordBufB_Data1_2::
     db $1a, $98, $1a, $1c, $a3, $1c
 
@@ -1422,7 +1431,7 @@ LoadTemp0WordFromRecordBufB::
     ret
 
 ; Copies up to 10 bytes from [HL] to wNameGlyphBuf, stopping at a $F0 byte, then stores a $F0
-; terminator (the same 19 bytes appear in 2 banks)
+; terminator (the same 19 bytes appear in 2 banks) (E-0351)
 CopyShortStringToNameGlyphBuf_BankF2::
     ld de, wNameGlyphBuf
     ld c, $0a
@@ -1531,7 +1540,7 @@ DecompressRecordBufBSpeciesGraphics::
     jr c, .loop
     ret
 
-; data read by DecompressRecordBufBSpeciesGraphics (9 bytes)
+; data read by DecompressRecordBufBSpeciesGraphics (9 bytes) (E-0347)
 DecompressRecordBufBSpeciesGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -1603,7 +1612,7 @@ DrawRecordBufBSpeciesSprites::
     jr c, .loop
     ret
 
-; data read by DrawRecordBufBSpeciesSprites (12 bytes)
+; data read by DrawRecordBufBSpeciesSprites (12 bytes) (E-0347)
 DrawRecordBufBSpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
@@ -1799,7 +1808,7 @@ DrawFourRecordBufBStatsDigits::
     jr c, .loop
     ret
 
-; data read by DrawFourRecordBufBStatsDigits (4 bytes)
+; data read by DrawFourRecordBufBStatsDigits (4 bytes) (E-0347)
 DrawFourRecordBufBStatsDigits_Data1::
     db $5b, $5d, $5f, $61
 
@@ -1849,7 +1858,7 @@ DrawFiveRecordBufBStatsColumn::
     jr c, .loop
     ret
 
-; data read by DrawFiveRecordBufBStatsColumn (5 bytes)
+; data read by DrawFiveRecordBufBStatsColumn (5 bytes) (E-0347)
 DrawFiveRecordBufBStatsColumn_Data::
     db $63, $65, $67, $69, $6b
 
@@ -1904,7 +1913,7 @@ DrawFamilyIconAndCountForRecordBufBFamily::
     pop bc
 
 ; Branches on the byte at wRecordBufB; calls BGMapAddressAtScroll_BankF2_2; calls
-; StepBGMapAddressBackOnScrollWrap; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F
+; StepBGMapAddressBackOnScrollWrap; calls HLToDecimalDigits; calls BlankLeadingZeroDigits_F (E-0347)
 DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     ld a, [wArg1]
     ld hl, wRecordBufB
@@ -1955,7 +1964,7 @@ DrawFamilyIconAndCountForRecordBufBFamily_ReadArg1::
     ret
 
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0351)
 BGMapAddressAtScroll_BankF2_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -3624,7 +3633,7 @@ ReturnStub_3::
 
 ; called from KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor: calls
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf; calls CopyWorkBuf1ToKeyList; sets
-; wScreenStep to 0
+; wScreenStep to 0 (E-0347)
 KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList::
     call KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf
     call CopyWorkBuf1ToKeyList
@@ -3649,7 +3658,8 @@ CopyWorkBuf1ToKeyList::
 
 ; Sets wKeyGenCount to 0; branches on wWorkBuf; sets wWorkBuf to 1; calls
 ; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2; calls KeyAppraisalMenu_ChooseKey_WriteKeyGenCount;
-; sets wWorkBuf to 0; calls KeyAppraisalMenu_ChooseKey_WriteKeyGenCount; ...
+; sets wWorkBuf to 0; calls KeyAppraisalMenu_ChooseKey_WriteKeyGenCount; calls
+; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2 (E-0347)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     ld hl, wWorkBuf + $1
     ld c, $c0
@@ -3683,12 +3693,12 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCountAndWorkBuf::
     call KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2
     ret
 
-; Changes BC
+; Changes BC (E-0347)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount::
     ld b, $00
     ld c, $20
 
-; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount
+; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
     ld a, [hl]
     cp $ff
@@ -3751,7 +3761,7 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop::
     pop hl
 
 ; Takes HL and BC; changes HL, BC and A; may continue in
-; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop
+; KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop (E-0347)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     ld a, $04
     add_a_to_hl
@@ -3760,7 +3770,7 @@ KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip::
     jr nz, KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Loop
     ret
 
-; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount
+; May continue in KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_Skip; increments wKeyGenCount (E-0347)
 KeyAppraisalMenu_ChooseKey_WriteKeyGenCount_2::
     ld b, $00
     ld c, $20
@@ -3840,7 +3850,7 @@ RunUnlessScreenStateIs3::
     ret
 
 ; called from VaultMenu_Store_ReadScreenState: branches on wCounterPtr0Lo; calls
-; VaultMenu_Store_MapItemsToInventory
+; VaultMenu_Store_MapItemsToInventory (E-0347)
 VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     ld hl, wWorkBuf
     ld b, $18
@@ -3863,7 +3873,7 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     call VaultMenu_Store_MapItemsToInventory
     ret
 
-; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0
+; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0 (E-0347)
 VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip::
     ld hl, wWorkBuf
     ld b, $18
@@ -3887,7 +3897,7 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory_Skip::
 .set_counter_ptr0_lo:
     ld [wCounterPtr0Lo], a
 
-; for each item in the list at DE finds its inventory slot and records it in wWorkBuf
+; for each item in the list at DE finds its inventory slot and records it in wWorkBuf (E-0305)
 VaultMenu_Store_MapItemsToInventory::
     ld b, $00
 
@@ -3941,7 +3951,7 @@ VaultMenu_Store_MapItemsToInventory::
     ret
 
 ; called from RunUnlessScreenStateIs3: branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0;
-; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage
+; branches on the byte at ItemOrderListB; branches on the byte at wItemStorage (E-0347)
 RunUnlessScreenStateIs3_WriteCounterPtr0Lo::
     ld hl, wWorkBuf
     ld b, $c8
@@ -4149,7 +4159,7 @@ ClampPartyHPAndMPToMax::
     jp nz, .loop
     ret
 
-; the same 21 bytes as CompareHLWithDE (CompareHLWithDE)
+; the same 21 bytes as CompareHLWithDE (CompareHLWithDE) (E-0061)
 CompareHLWithDE_BankF2::
     ld a, h
     cp d
@@ -4172,7 +4182,7 @@ CompareHLWithDE_BankF2::
     ld c, $01
     ret
 
-; clears $20F bytes from wArenaEntry
+; clears $20F bytes from wArenaEntry (E-0305)
 GreatLogTalkEvents_ClearArenaData::
     ld hl, wArenaEntry
     ld bc, $020f

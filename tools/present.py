@@ -103,6 +103,32 @@ class Names:
                     for w in re.findall(r"\b[A-Za-z_]\w*\b", split_code(ln)[0]):
                         if w != cur and w in self.labels:
                             self.referrer.setdefault(w, cur)
+        self.hram: dict[int, str] = {}  # high-RAM symbols of src/ram.asm, for calls into HRAM
+        ram = ROOT / "src/ram.asm"
+        if ram.exists():
+            for name, val in re.findall(r"^DEF (h\w+) EQU \$([0-9A-F]{4})", ram.read_text(encoding="utf-8"), re.M):
+                self.hram.setdefault(int(val, 16), name)
+        # E-0350: the evidence ids config records for each label (names.json by address, name_families.json for
+        # library copies), cited when a written note leaves them out
+        self.evidence: dict[str, str] = {}
+        cfg_names = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
+        for k, v in cfg_names.items():
+            if k.startswith("_") or not isinstance(v, dict):
+                continue
+            ids = re.findall(r"[ED]-\d{3,4}", str(v.get("evidence", "")))
+            lab = self.at.get(k.upper())
+            if lab and not ids and str(v.get("evidence", "")).startswith("reading"):
+                ids = ["E-0351"]  # a reading recorded before names cited evidence entries
+            if ids and lab:
+                self.evidence.setdefault(lab, ", ".join(dict.fromkeys(ids)))
+        fams = json.loads((ROOT / "config/name_families.json").read_text(encoding="utf-8"))
+        fam_ids = {f["name"]: ", ".join(dict.fromkeys(re.findall(r"[ED]-\d{3,4}", f.get("evidence", "") + " " +
+                                                                    f.get("note", ""))) or ["E-0351"])
+                   for f in fams.get("families", [])}
+        for lab in self.labels:
+            base = re.sub(r"_Bank[0-9A-F]{2}(?:_\d+)?$", "", lab)
+            if lab not in self.evidence and fam_ids.get(base):
+                self.evidence[lab] = fam_ids[base]
         self.history: dict[str, str] = {}
         cfg = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
         for k, v in cfg.items():
@@ -273,7 +299,7 @@ def present(text: str, names: Names, bank: int | None = None) -> str:
         if ln == "" and out and out[-1] == "":
             continue  # a dropped block can leave two blank lines
         out.append(ln)
-    return "\n".join(document(rect_sizes(out), dropped_at, names))
+    return "\n".join(document(operand_forms(out, names, bank), dropped_at, names))
 
 
 def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names") -> list[str]:
@@ -291,55 +317,118 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
             op = first.split(None, 1)[0] if first.strip() else ""
             label = ln.split("::")[0]
             is_data = op in DATA_OPS or op.startswith(("script_", "objsel_"))
+            if documented and label in names.evidence:  # cite the recorded evidence a written note leaves out
+                k = len(out)
+                while k > 0 and out[k - 1].startswith(";"):
+                    k -= 1
+                if not re.search(r"[ED]-\d{3,4}", " ".join(out[k:])):
+                    last = out.pop()
+                    out.extend(wrap("", last + f" ({names.evidence[label]})"))
             if not first.startswith("    "):
                 pass
             elif not is_data:
                 header = False
                 if not documented:
-                    out.extend(wrap("", "; " + describe.summarize(label, body, dropped_at.get(label, []), labels)))
+                    out.extend(wrap("", "; " + describe.summarize(label, body, dropped_at.get(label, []), labels)
+                                    + " (E-0347)"))
                 else:  # a note that says the body was not read gets the restatement too
                     k = len(out)
                     while k > 0 and out[k - 1].startswith(";"):
                         k -= 1
                     if GAP_NOTE.search(" ".join(out[k:])):
                         text = describe.summarize(label, body, [], labels)
-                        out.extend(wrap("", "; code: " + text[:1].lower() + text[1:]))
+                        out.extend(wrap("", "; code: " + text[:1].lower() + text[1:] + " (E-0347)"))
             elif documented or re.match(r'^\s+db "', first):
                 header = header or documented
             elif not header:
-                out.extend(wrap("", "; " + describe.data_note(label, body, labels, names.referrer.get(label))))
+                out.extend(wrap("", "; " + describe.data_note(label, body, labels, names.referrer.get(label))
+                                + " (E-0347)"))
                 header = True
         out.append(ln)
     return out
 
 
-LD_BC = re.compile(r"^(\s+)ld (bc|de), \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
+LD_BC = re.compile(r"^(\s+)ld (bc|de|hl), \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
 # routines that take two separate bytes in a register pair: rectangles (B = width, C = rows), resolve messages
-# (B = argument, C = flags, E-0073), and sprite steps toward a point (D = X, E = Y, E-0127)
-PAIR_CALLEE = {"bc": re.compile(r"Rect|ResolveMsg"), "de": re.compile(r"Toward")}
-CALL_TO = re.compile(r"^\s+(?:call|farcall|farcall_b|jp)(?: \w+,)? (\w+)")
+# (B = argument, C = flags, H = target, L = actor; E-0073), and sprite steps toward a point (D = X, E = Y, E-0127)
+PAIR_CALLEE = {"bc": re.compile(r"Rect|ResolveMsg"), "de": re.compile(r"Toward"), "hl": re.compile(r"ResolveMsg")}
+CALL_TO = re.compile(r"^\s+(?:call|farcall|farcall_b|jp|jr)(?: \w+,)? ([A-Za-z_]\w*)$")
+LD_RAW = re.compile(r"^(\s+)ld (bc|de|hl), \$([0-9a-f]{4})(\s*;.*)?$")
+# a jump table or table index right after the load: the register is a pointer into this bank
+POINTER_USE = re.compile(r"^\s+(?:add hl, (?:bc|de)|add_a_to_hl|ld (?:a|e|d), \[hli?\]|call (?:JumpToWordAtHL|"
+                         r"ReadWordTableEntry\w*|ReadWordFromDataBank))")
+
+
+def _code_after(lines: list[str], i: int, n: int) -> list[str]:
+    return [split_code(nx)[0].rstrip() for nx in lines[i + 1:i + 1 + 4 * n]
+            if nx.strip() and not nx.lstrip().startswith(";")][:n]
 
 
 def rect_sizes(lines: list[str]) -> list[str]:
-    """`ld bc, $WWRR` before a call to a routine that takes B and C as two bytes (a rectangle: B = width, C = rows;
-    a resolve message: B = argument, C = flags) is written `lb bc, $WW, $RR`, and `ld de, $XXYY` before a sprite
-    step toward a point (D = X, E = Y) `lb de, $XX, $YY`, when no label or other use of the pair comes between."""
+    """The operand rewrites that need no names (see operand_forms)."""
+    return operand_forms(lines)
+
+
+def operand_forms(lines: list[str], names: "Names | None" = None, bank: int | None = None) -> list[str]:
+    """Write a 16-bit operand as what it is, never changing its value (E-0348, E-0350):
+
+    - a register pair holding two separate bytes for its callee is `lb rr, $HI, $LO`: before a rectangle routine
+      (B = width, C = rows), a resolve-message routine (B = argument, C = flags, H = target, L = actor, reached by
+      call, jump or falling into it) and a sprite step toward a point (D = X, E = Y);
+    - a negative constant is written signed: a value from $FF00 used without reading through the register (step
+      deltas, -1 counters), or from $F000 when the next instruction adds it to HL (`ld hl, -999`);
+    - `call $FFxx` into high RAM uses the HRAM symbol there (`call hOAMDMARoutine`);
+    - a message word with flag bits, given to a message routine, is `MSG_KEEP_OPEN | $0487` (constants.inc);
+    - with the listing's names: a same-bank load that the next instructions index or dispatch through is the label
+      the listing has at that address (`ld hl, ActionEffectTable`).
+    """
     out = list(lines)
     for i, ln in enumerate(lines):
         m = LD_BC.match(ln)
-        if not m:
-            continue
-        pair = m.group(2)
-        code = [nx for nx in lines[i + 1:i + 12] if nx.strip() and not nx.lstrip().startswith(";")][:3]
-        for nx in code:
-            c = CALL_TO.match(nx)
-            if c:
-                if PAIR_CALLEE[pair].search(c.group(1)):
-                    out[i] = f"{m.group(1)}lb {pair}, ${m.group(3)}, ${m.group(4)}{m.group(5) or ''}"
-                break
-            if not nx.startswith("    ") or pair in nx or pair[0] in re.findall(r"\b[a-z]\b", nx) or \
-                    pair[1] in re.findall(r"\b[a-z]\b", nx) or nx.lstrip().startswith(("ret", "jr", "jp")):
-                break
+        if m:
+            pair = m.group(2)
+            for nx in lines[i + 1:i + 14]:
+                if not nx.strip() or nx.lstrip().startswith(";") or re.match(r"^\.\w+:", nx):
+                    continue  # comments, and local labels other paths join at, do not end the search
+                c = CALL_TO.match(split_code(nx)[0].rstrip())
+                g = re.match(r"^([A-Za-z_]\w*)::", nx)  # falling into the routine
+                callee = c.group(1) if c else (g.group(1) if g else None)
+                if callee:
+                    if PAIR_CALLEE[pair].search(callee):
+                        out[i] = f"{m.group(1)}lb {pair}, ${m.group(3)}, ${m.group(4)}{m.group(5) or ''}"
+                    break
+                code = split_code(nx)[0]
+                regs = re.findall(r"\b[a-z]{1,2}\b", code)
+                if not nx.startswith("    ") or pair in regs or pair[0] in regs or pair[1] in regs or \
+                        code.lstrip().startswith(("ret", "jr", "jp")):
+                    break
+            if out[i] != ln:
+                continue
+        m = LD_RAW.match(out[i])
+        if m:
+            v = int(m.group(3), 16)
+            nxt = _code_after(out, i, 4)
+            if v & 0xC000 and m.group(4) and "'" in m.group(4) and nxt and \
+                    re.match(r"^\s+(?:call|farcall|jp) \w*Message", nxt[0]):  # a message word (E-0350)
+                flags = " | ".join(f for f, bit in (("MSG_KEEP_OPEN", 0x4000), ("MSG_ALREADY_OPEN", 0x8000)) if v & bit)
+                out[i] = f"{m.group(1)}ld {m.group(2)}, {flags} | ${v & 0x3FFF:04x}{m.group(4)}"
+                continue
+            deref = any(re.search(rf"\[{m.group(2)}|\[hl[id+-]?\]", x) for x in nxt[:2]) and m.group(2) in ("hl", "de", "bc")
+            add_next = bool(nxt) and re.match(r"^\s+add hl, (?:bc|de|hl)$" if m.group(2) == "hl" else rf"^\s+add hl, {m.group(2)}$", nxt[0]) is not None
+            if (v >= 0xFF00 and not deref) or (v >= 0xF000 and add_next):
+                out[i] = f"{m.group(1)}ld {m.group(2)}, {v - 0x10000}{m.group(4) or ''}"
+                continue
+            if names is not None and bank is not None and 0x4000 <= v < 0x8000 and bank != 0 and nxt and \
+                    POINTER_USE.match(nxt[0] if not nxt[0].strip().startswith("ld a, l") else ""):
+                lab = names.at.get(f"{bank:02X}:{v:04X}")
+                if lab and not ADDR_NAME.match(lab):
+                    out[i] = f"{m.group(1)}ld {m.group(2)}, {names.alias.get(lab, lab)}{m.group(4) or ''}"
+                    continue
+        m = re.match(r"^(\s+call )\$(ff[89a-f][0-9a-f])(\s*;.*)?$", out[i])
+        if m and names is not None:
+            sym = names.hram.get(int(m.group(2), 16))
+            if sym:
+                out[i] = f"{m.group(1)}{sym}{m.group(3) or ''}"
     return out
 
 

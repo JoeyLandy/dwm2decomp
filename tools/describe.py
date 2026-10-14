@@ -8,8 +8,8 @@ rest, tools/present.py asks this module for a one-paragraph restatement of what 
 
 It reads the presented instructions (pret spelling) and the bookkeeping the listing had above the label
 (`entry N of the rst $00 table in P`, `only called from X`). It restates instructions, it does not interpret
-them: a comment from here says what the code does, not why, and carries no evidence id. Branches inside the
-routine are summarised as "depending on X"; only the first clauses are kept.
+them: a comment from here says what the code does, not why, and cites E-0347 (the rule that made it). Branches
+inside the routine are summarised as "branches on X"; the first 12 clauses are kept and the rest counted.
 """
 import re
 
@@ -20,7 +20,7 @@ MESSAGE_CALL = re.compile(r"(?:Message|ShowString|BeginString|PrintText)")
 SCRIPT_CALL = re.compile(r"StartScript")
 SOUND_CALL = re.compile(r"(?:QueueSoundEffect|PlaySound|PlayMusic|QueueMusic)")
 FLAG_CALL = re.compile(r"^(Set|Clear|Test)FlagBit")
-MAX_CLAUSES = 7
+MAX_CLAUSES = 12
 
 
 def _code(line: str) -> str:
@@ -311,8 +311,8 @@ def summarize(label: str, body: list[str], dropped: list[str], labels: set[str] 
             if outs:
                 regs.append(f"changes {_join_regs(outs)}")
             clauses = (regs or ([] if clauses else ["works on registers only"])) + clauses
-    more = len(clauses) > MAX_CLAUSES
-    text = "; ".join(clauses[:MAX_CLAUSES]) + ("; ..." if more else "")
+    more = len(clauses) - MAX_CLAUSES
+    text = "; ".join(clauses[:MAX_CLAUSES]) + (f"; then {more} more step{'s' * (more != 1)} (see the code)" if more > 0 else "")
     return f"{role}: {text}" if role else text[:1].upper() + text[1:]
 
 

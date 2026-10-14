@@ -6,7 +6,8 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
 
 ; Sets wKeyWorldGenRoom to 0; copies the byte at KeyWorldAreaLayoutTable to hTemp8; copies the byte
 ; at KeyWorldAreaLayoutTable to hTemp9; sets hTemp8; sets hTemp9; returns if the byte at
-; wKeyWorldFloorInfo + $3 is $ff; copies the byte at wKeyWorldFloorInfo + $3 to hTemp0; ...
+; wKeyWorldFloorInfo + $3 is $ff; copies the byte at wKeyWorldFloorInfo + $3 to hTemp0; calls
+; RunDebugAutomapCaseTemp0; copies L to hTemp8; copies H to hTemp9 (E-0347)
 DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc::
     xor a
     ld [wKeyWorldGenRoom], a
@@ -73,17 +74,17 @@ RunDebugAutomapCaseTemp0::
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
-; step 0 of RunDebugAutomapCaseTemp0: returns at once
+; step 0 of RunDebugAutomapCaseTemp0: returns at once (E-0347)
 RunDebugAutomapCaseTemp0_Return::
     ret
 
-; step 6 of RunDebugAutomapCaseTemp0: takes DE; changes A
+; step 6 of RunDebugAutomapCaseTemp0: takes DE; changes A (E-0347)
 RunDebugAutomapCaseTemp0_ReturnAfterSetup::
     ld a, $54
     ld [de], a
     ret
 
-; step 1 of RunDebugAutomapCaseTemp0: takes DE; changes HL, DE, A and B
+; step 1 of RunDebugAutomapCaseTemp0: takes DE; changes HL, DE, A and B (E-0347)
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
     ld hl, RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data
     ld a, [wKeyWorldGoalKind]
@@ -107,7 +108,7 @@ RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
     jr nz, .loop
     ret
 
-; step 2 of RunDebugAutomapCaseTemp0: calls NextRandomSeed
+; step 2 of RunDebugAutomapCaseTemp0: calls NextRandomSeed (E-0347)
 RunDebugAutomapCaseTemp0_NextRandomSeed::
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
@@ -142,7 +143,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed::
     jr nz, .loop
     ret
 
-; step 3 of RunDebugAutomapCaseTemp0: calls NextRandomSeed
+; step 3 of RunDebugAutomapCaseTemp0: calls NextRandomSeed (E-0347)
 RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
@@ -178,7 +179,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     ret
 
 ; step 4 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
-; RunDebugAutomapCaseTemp0_RandomBelowC
+; RunDebugAutomapCaseTemp0_RandomBelowC (E-0347)
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ldh a, [hTemp8]
     ld l, a
@@ -244,7 +245,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ret
 
 ; step 5 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
-; RunDebugAutomapCaseTemp0_RandomBelowC
+; RunDebugAutomapCaseTemp0_RandomBelowC (E-0347)
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     ldh a, [hTemp8]
     ld l, a
@@ -305,7 +306,7 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-; data read by RunDebugAutomapCaseTemp0 (10 bytes)
+; data read by RunDebugAutomapCaseTemp0 (10 bytes) (E-0347)
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
@@ -321,7 +322,9 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Data_3::
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
 ; Sets hTemp2 to $a0; calls NextRandomSeed; sets hTemp2; calls RandomBelowC; sets hTemp2; calls
-; RunDebugAutomapCaseTemp0_ReadByteInBank_2; sets hTemp3 to $0f; ...
+; RunDebugAutomapCaseTemp0_ReadByteInBank_2; sets hTemp3 to $0f; increments wKeyWorldGenRoom; sets
+; hTemp2 to 0; calls RandomBelowC; sets hTemp2; calls RandomBelowC; then 7 more steps (see the code)
+; (E-0347)
 RunDebugAutomapCaseTemp0_RandomBelowC::
     push af
     ld a, [wKeyWorldGenRoom]
@@ -467,7 +470,7 @@ KeyWorldMonsterBaseRows::
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
 ; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; branches on hTemp3; copies C to
-; hTemp4
+; hTemp4 (E-0347)
 RunDebugAutomapCaseTemp0_ReadByteInBank::
     push hl
     ld a, e
@@ -506,7 +509,7 @@ RunDebugAutomapCaseTemp0_ReadByteInBank::
     ret
 
 ; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; copies C to hTemp3; calls
-; NextRandomSeed; calls ReadByteInBank; branches on hTemp3; ...
+; NextRandomSeed; calls ReadByteInBank; branches on hTemp3; copies C to hTemp4 (E-0347)
 RunDebugAutomapCaseTemp0_ReadByteInBank_2::
     push hl
     ld a, e
@@ -619,7 +622,7 @@ ApplyMapScreenFlagEvents::
     jr .skip
 
 ; called from ApplyMapScreenFlagEvents: branches on hTemp0; returns if wIsCGB is 0; sets rSVBK to 2;
-; branches on wIsCGB; sets rSVBK to 0
+; branches on wIsCGB; sets rSVBK to 0 (E-0347)
 ApplyMapScreenFlagEvents_WriteSVBK::
     ldh a, [hTemp0]
     cp $ff
@@ -1041,7 +1044,9 @@ MapScreenFlagTiles::
 ; may continue in ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80; returns if hMapId is
 ; below $20; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; branches on the byte at
 ; LogTwigSpotList; branches on the byte at ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data;
-; ...
+; copies wKeyWorldActive to wSpriteSnapshot; branches on wKeyWorldActive; copies wKeyWorldGoal to
+; wLogTwigKeyWorldGoal; copies wKeyWorldGoalCell to wLogTwigKeyWorldGoalCell; copies wKeyWorldKey to
+; wLogTwigKeyWorldKey; then 9 more steps (see the code) (E-0347)
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     xor a
     ldh [hTempA], a
@@ -1178,7 +1183,7 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     ldh [hTempA], a
     ret
 
-; data read by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc (34 bytes)
+; data read by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc (34 bytes) (E-0347)
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
@@ -1186,7 +1191,9 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
 
 ; May return early; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; may return early;
 ; branches on hPlayerX; branches on hPlayerY; branches on the byte at wKeyWorldObjects; branches on
-; hPlayerY; ...
+; hPlayerY; branches on the byte at wKeyWorldFloorInfo + $3; branches on hPlayerX; branches on the
+; byte at wKeyWorldFloorInfo + $3; branches on hPlayerX; copies wKeyWorldActive to wSpriteSnapshot;
+; then 16 more steps (see the code) (E-0347)
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     cp $80
     ret nz
@@ -1408,7 +1415,7 @@ LogTwigSpotList::
     db $da, $10, $44, $ff ; id 49
     db $ff ; end
 
-; Changes A and C; branches on wTriggerKind; branches on wTriggerCell
+; Changes A and C; branches on wTriggerKind; branches on wTriggerCell (E-0347)
 ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     ld a, [wTriggerKind]
     cp $ff
@@ -1435,7 +1442,12 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX; branches on the byte
 ; at RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; copies B to hTemp0; branches on
 ; wSpriteSnapshot; branches on wLogTwigKeyWorldKey; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; ...
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
+; RunFieldReturnPhase_WriteSVBK; continues in
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; may continue in
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
+; RunFieldReturnPhase_WriteSVBK; continues in
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal (E-0347)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     xor a
     ldh [hSpriteWindowClipMode], a
@@ -1493,7 +1505,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     call RunFieldReturnPhase_WriteSVBK
     jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
-; data read by RunFieldReturnPhase (34 bytes)
+; data read by RunFieldReturnPhase (34 bytes) (E-0347)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
@@ -1503,7 +1515,9 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
 ; continue in RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
 ; RunFieldReturnPhase_WriteSVBK; continues in
 ; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; may continue in
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; ...
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal; calls
+; RunFieldReturnPhase_WriteSVBK; continues in
+; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal (E-0347)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
@@ -1546,7 +1560,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_ReadMapScreenX::
     jr RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal
 
 ; Branches on wIsCGB; branches on wMapType; branches on hTemp0; sets rSVBK to 2; sets rSVBK to 0;
-; branches on hTemp0; calls DrawFullScreenBufferToBGMap
+; branches on hTemp0; calls DrawFullScreenBufferToBGMap (E-0347)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
@@ -1661,7 +1675,7 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data_CheckKeyWorldGoal:
     call DrawFullScreenBufferToBGMap
     ret
 
-; Returns if wIsCGB is 0; branches on wMapType; sets rSVBK to 2; sets rSVBK to 0
+; Returns if wIsCGB is 0; branches on wMapType; sets rSVBK to 2; sets rSVBK to 0 (E-0347)
 RunFieldReturnPhase_WriteSVBK::
     ld a, c
     and $0f
@@ -1740,7 +1754,7 @@ RunFieldReturnPhase_WriteSVBK::
     ldh [rSVBK], a
     ret
 
-; data read by RunFieldReturnPhase (5 bytes)
+; data read by RunFieldReturnPhase (5 bytes) (E-0347)
 RunFieldReturnPhase_WriteSVBK_Data::
     db $01, $01, $03, $02, $02
 

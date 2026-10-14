@@ -70,3 +70,5 @@ DEF vTiles2 EQU $9000 ; VRAM tiles $00-$7F of the $8800 (signed) BG area
 DEF vBGMap0 EQU $9800 ; the first 32 x 32 background tile map
 DEF vBGMap1 EQU $9C00 ; the second 32 x 32 background tile map
 
+DEF PAL_WHITE EQU $7FFF ; a CGB colour: 5 bits each of red, green and blue, all 31 (white)
+

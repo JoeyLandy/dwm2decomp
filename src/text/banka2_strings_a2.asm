@@ -38,7 +38,7 @@ CopyMonsterTableBytes::
     call CopyBytesDEFromHL_BankA2
     ret
 
-; called from LoadMonsterRecordTo: takes DE; changes HL, DE, BC and A
+; called from LoadMonsterRecordTo: takes DE; changes HL, DE, BC and A (E-0347)
 LoadMonsterRecordTo_Multiply8By16::
     push de
     ld a, [wMonsterId]
@@ -63,7 +63,7 @@ LoadMonsterRecordTo_Multiply8By16::
     pop de
     ld b, $1a
 
-; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL)
+; the same 7 bytes as CopyBytesDEFromHL (CopyBytesDEFromHL) (E-0105)
 CopyBytesDEFromHL_BankA2::
     ld a, [hli]
     ld [de], a
@@ -1762,7 +1762,7 @@ MonsterTableA2::
     db $01 ; byte 24 ($71)
     db $01 ; personality axis $72
 
-; called from BeginStringDisplay_BankE0: sets wStringCategory; calls BeginStringDisplay
+; called from BeginStringDisplay_BankE0: sets wStringCategory; calls BeginStringDisplay (E-0347)
 BeginStringDisplay_BankE0_BeginStringDisplay::
     ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

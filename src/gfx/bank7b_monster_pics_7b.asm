@@ -399,262 +399,262 @@ MonsterPaletteTable::
     dw $09f2, $7fff, $331f, $0000, $0137, $7fff, $021f, $0000 ; id 382 Kagebou
 
 ; 6 x 6 CGB attribute map of the picture of monster id $003 (WingSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WingSlime::
     ds $13, $00
     db $01, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $004 (TreeSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_TreeSlime::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $005 (Snaily) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Snaily::
     ds $14, $00
     db $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $006 (SlimeNite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SlimeNite::
     ds $15, $00
     db $01, $01, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $009 (PearlGel) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_PearlGel::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $00C (FangSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FangSlime::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $00E (SlimeBorg) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SlimeBorg::
     ds $15, $00
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $010 (KingSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_KingSlime::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $013 (SpotKing) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SpotKing::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $014 (TropicGel) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_TropicGel::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $015 (MimeSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MimeSlime::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01
     db $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $016 (HaloSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_HaloSlime::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $017 (MetalKing) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MetalKing::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $018 (GoldSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GoldSlime::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $019 (GranSlime) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GranSlime::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $01A (WonderEgg) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WonderEgg::
     ds $1b, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $024 (DragonKid) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DragonKid::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
     db $01, $01, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $025 (Tortragon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Tortragon::
     ds $14, $00
     db $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $026 (Pteranod) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Pteranod::
     ds $13, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $028 (FairyDrak) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FairyDrak::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $029 (LizardMan) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_LizardMan::
     db $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $02A (Poisongon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Poisongon::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $02B (Swordgon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Swordgon::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $02D (Dragon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Dragon::
     ds $13, $00
     db $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $00, $00, $01, $01
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $02E (MiniDrak) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MiniDrak::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $01
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $02F (MadDragon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadDragon::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01
     ds $13, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $030 (Rayburn) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Rayburn::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     ds $15, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $033 (Andreal) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Andreal::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01
     ds $1b, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $035 (Vampirus) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Vampirus::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $036 (SnakeBat) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SnakeBat::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $037 (Spikerous) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Spikerous::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $039 (Crestpent) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Crestpent::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $01
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $03A (WingSnake) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WingSnake::
     db $01, $01, $00, $00, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01
     db $01, $01, $00, $01, $01, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $03B (Coatol) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Coatol::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $03C (Orochi) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Orochi::
     db $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $01, $01, $00, $00
     db $01, $01, $01, $00, $01, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $03D (BattleRex) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BattleRex::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $01, $01, $01, $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $03F (Serpentia) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Serpentia::
     db $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00
     ds $12, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $040 (Divinegon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Divinegon::
     ds $18, $00
     db $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $041 (Orligon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Orligon::
     ds $12, $00
     db $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $00, $01, $00, $00, $00, $00
     db $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $042 (GigaDraco) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GigaDraco::
     ds $14, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $047 (Tonguella) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Tonguella::
     ds $14, $00
     db $01, $00, $00, $00, $00, $00, $01
@@ -663,1291 +663,1291 @@ MonsterPicAttr_Tonguella::
     db $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $04A (PillowRat) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_PillowRat::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01
     db $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $04B (Saccer) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Saccer::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01
     ds $13, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $04C (GulpBeast) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GulpBeast::
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $04D (Skullroo) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Skullroo::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $04F (Beavern) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Beavern::
     db $00, $01, $01, $01, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $050 (Antbear) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Antbear::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
     db $01, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $01
     db $01, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $051 (SuperTen) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SuperTen::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $052 (IronTurt) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_IronTurt::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $00, $01, $01, $01, $01
     db $01, $00, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $054 (HammerMan) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_HammerMan::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $01, $01, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $056 (Yeti) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Yeti::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $057 (ArrowDog) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ArrowDog::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $00, $01, $01, $00, $00
     db $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $058 (NoctoKing) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_NoctoKing::
     db $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $059 (BeastNite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BeastNite::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00
     db $00, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $05B (FairyRat) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FairyRat::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $05C (Unicorn) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Unicorn::
     db $01, $00, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01, $00, $00
     db $00, $01, $00, $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $05D (Goategon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Goategon::
     ds $1f, $00
     db $01, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $061 (DarkHorn) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DarkHorn::
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $00, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $062 (MadCat) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadCat::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $00, $01, $01
     db $01, $00, $01, $01, $01, $01, $01, $00, $01, $00, $01, $01, $00, $00, $01, $01
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $063 (BigEye) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BigEye::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $064 (Gorago) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Gorago::
     ds $1f, $00
     db $01, $01, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $065 (CatMage) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CatMage::
     ds $15, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $066 (Dumbira) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Dumbira::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06A (Picky) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Picky::
     db $00, $00, $01, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06B (Wyvern) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Wyvern::
     db $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01
     db $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06C (BullBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BullBird::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00
     db $00, $00, $01
     ds $11, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06D (Florajay) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Florajay::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00
     db $01, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06E (DuckKite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DuckKite::
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $06F (MadPecker) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadPecker::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $01
     db $00, $00, $00, $01, $01, $00, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $070 (MadRaven) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadRaven::
     ds $1a, $00
     db $01, $01, $01, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $072 (AquaHawk) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_AquaHawk::
     db $00, $00, $01, $01, $01, $01, $00, $01, $01, $00, $01, $00, $01, $01, $00, $00
     db $01, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $074 (KiteHawk) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_KiteHawk::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $075 (BigRoost) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BigRoost::
     db $01, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $00, $01, $01, $00, $00
     db $00, $00, $00, $01, $00, $00, $01, $00, $01, $01, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $076 (StubBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_StubBird::
     ds $1c, $00
     db $01, $00, $00, $00, $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $078 (MadGoose) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadGoose::
     db $00, $00, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01, $00
     db $01, $01, $00, $01, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $079 (MadCondor) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadCondor::
     ds $12, $00
     db $01, $00, $00, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00
     db $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $07A (Emyu) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Emyu::
     ds $13, $00
     db $01, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $01, $01
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $07B (Blizzardy) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Blizzardy::
     db $00, $00, $00, $00, $00, $00, $00, $01
     ds $1c, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $07D (ZapBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ZapBird::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $01, $01, $00
     db $00, $00, $01, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $07E (Garudian) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Garudian::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $07F (WhipBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WhipBird::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00
     db $00, $00, $00, $01, $00, $00, $00, $01, $00, $01, $00, $00, $01, $01, $00, $01
     db $00, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $080 (FunkyBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FunkyBird::
     ds $1f, $00
     db $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $081 (RainHawk) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_RainHawk::
     db $01, $00, $01, $00, $01, $00, $00, $01, $01, $01, $00, $01
     ds $13, $00
     db $01, $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $082 (Azurile) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Azurile::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $01, $00, $00, $01, $00
     db $00, $01, $00, $01, $01, $00, $00, $00, $01, $01, $00, $01, $01, $00, $00, $01
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $083 (Shantak) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Shantak::
     ds $13, $00
     db $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $084 (CragDevil) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CragDevil::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00
     db $00, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $08D (MadPlant) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadPlant::
     ds $10, $00
     db $01, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $08E (FireWeed) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FireWeed::
     ds $10, $00
     db $01, $01, $00, $00, $00, $01, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $08F (FloraMan) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FloraMan::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $090 (WingTree) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WingTree::
     db $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00
     db $01, $01
     ds $12, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $091 (CactiBall) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CactiBall::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $1a, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $092 (Gulpple) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Gulpple::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $093 (Toadstool) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Toadstool::
     ds $14, $00
     db $01, $01, $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $094 (AmberWeed) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_AmberWeed::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
     db $01, $01, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $095 (Slurperon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Slurperon::
     db $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00
     db $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $096 (Stubsuck) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Stubsuck::
     ds $12, $00
     db $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $097 (Oniono) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Oniono::
     ds $14, $00
     db $01, $01, $00, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $098 (DanceVegi) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DanceVegi::
     db $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $01
     ds $16, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $099 (TreeBoy) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_TreeBoy::
     db $00, $00, $00, $00, $01, $01
     ds $14, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09A (Devipine) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Devipine::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $01
     db $00, $00, $00, $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09B (FaceTree) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FaceTree::
     db $01, $01, $01, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00, $01, $00, $00
     db $01
     ds $13, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09C (HerbMan) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_HerbMan::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $00, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09D (BeanMan) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BeanMan::
     ds $14, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09E (EvilSeed) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_EvilSeed::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $00, $01, $01, $00, $00, $01, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $09F (ManEater) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ManEater::
     db $00, $00, $01, $00, $00, $00, $01, $00, $01, $00, $01, $01, $01, $01, $00, $00
     db $00, $01, $00, $00, $00, $00, $01, $01, $00, $01, $01, $01, $01, $00, $00, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A0 (Snapper) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Snapper::
     ds $18, $00
     db $01, $01, $01, $01, $01, $00, $01, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A1 (GhosTree) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GhosTree::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A2 (Rosevine) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Rosevine::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A3 (Egdracil) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Egdracil::
     db $00, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00
     db $00, $01, $01, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A4 (Warubou) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Warubou::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0A7 (FooHero) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FooHero::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B0 (GiantSlug) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GiantSlug::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $00, $01, $01, $01, $00, $01, $00, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B1 (Catapila) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Catapila::
     ds $17, $00
     db $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B3 (Butterfly) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Butterfly::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $00, $00, $01, $01, $00, $01, $01, $01, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B4 (WeedBug) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WeedBug::
     db $00, $00, $01, $01
     ds $1b, $00
     db $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B6 (Lipsy) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Lipsy::
     ds $13, $00
     db $01, $01, $00, $01, $00, $00, $01, $01, $00, $00, $00, $00, $00, $01, $01, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B7 (StagBug) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_StagBug::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0B8 (Pyuro) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Pyuro::
     ds $14, $00
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BA (GoHopper) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GoHopper::
     ds $14, $00
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BB (TailEater) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_TailEater::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BC (ArmorPede) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ArmorPede::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BD (Eyeder) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Eyeder::
     ds $13, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BE (GiantMoth) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GiantMoth::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0BF (Droll) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Droll::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C2 (Belzebub) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Belzebub::
     ds $12, $00
     db $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C3 (WarMantis) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WarMantis::
     db $00, $01, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00, $01, $01, $01, $01
     db $01, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $01
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C4 (HornBeet) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_HornBeet::
     db $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01, $00, $01, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C5 (Sickler) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Sickler::
     db $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C7 (Digster) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Digster::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C8 (Skularach) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Skularach::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $01, $01, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0C9 (MultiEyes) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MultiEyes::
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01
     ds $19, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0D3 (Pixy) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Pixy::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0D6 (Demonite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Demonite::
     ds $13, $00
     db $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0D9 (SkulRider) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_SkulRider::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0DB (Bubblemon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Bubblemon::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01
     db $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0DC (1EyeClown) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_1EyeClown::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01
     ds $13, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0DE (ArcDemon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ArcDemon::
     db $00, $01, $00, $00, $00, $00, $01, $01, $01, $01, $01, $00, $01, $01, $01, $01
     db $01, $01, $01, $00, $00, $00, $00, $01, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0DF (Lionex) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Lionex::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E0 (GoatHorn) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GoatHorn::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E1 (Orc) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Orc::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E2 (Ogre) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Ogre::
     ds $10, $00
     db $01, $01, $00, $00, $00, $00, $00, $01, $00, $00, $01, $01, $00, $00, $00, $00
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E3 (GateGuard) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GateGuard::
     db $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00
     db $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E4 (ChopClown) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ChopClown::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00
     db $01, $00, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E5 (BossTroll) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BossTroll::
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01
     ds $17, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E6 (Grendal) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Grendal::
     db $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $01, $00, $00
     db $00, $01, $01, $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E7 (Akubar) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Akubar::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00
     db $00, $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E8 (MadKnight) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadKnight::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0E9 (EvilWell) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_EvilWell::
     ds $19, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0EA (Gigantes) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Gigantes::
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00
     db $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0EB (Centasaur) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Centasaur::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0EC (EvilArmor) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_EvilArmor::
     db $00, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00
     db $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $01, $01, $00, $00
     db $00, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0ED (Jamirus) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Jamirus::
     db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $01, $00
     db $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0EE (Durran) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Durran::
     db $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $01, $00, $00, $00, $01, $00, $01, $01, $00, $00, $00, $00, $01
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0EF (Titanis) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Titanis::
     ds $14, $00
     db $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0F0 (LampGenie) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_LampGenie::
     ds $12, $00
     ds $12, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0F6 (Spooky) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Spooky::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0F7 (Skullgon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Skullgon::
     db $00, $00, $01, $01
     ds $20, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0F9 (RotRaven) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_RotRaven::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0FA (Mummy) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Mummy::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0FB (DarkCrab) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DarkCrab::
     ds $14, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0FC (DeadNite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DeadNite::
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $01, $01, $01, $01
     db $01, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $0FF (Hork) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Hork::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $104 (Inverzon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Inverzon::
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01
     db $01
     ds $13, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $106 (CaptDead) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CaptDead::
     ds $13, $00
     db $01, $01, $01, $00, $00, $00, $01, $01, $01, $01, $01, $00, $01, $01, $01, $01
     db $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $107 (DeadNoble) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DeadNoble::
     ds $13, $00
     db $01, $01, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00, $00, $01, $01, $01
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $108 (WhiteKing) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WhiteKing::
     ds $10, $00
     db $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $109 (BoneSlave) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_BoneSlave::
     db $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $01, $00, $00, $01, $00, $01, $01, $01, $01, $01, $00, $01, $01
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $10A (Skeletor) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Skeletor::
     ds $14, $00
     db $01, $01, $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $10B (Servant) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Servant::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $10C (Lazamanus) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Lazamanus::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $01, $01, $01, $01
     db $00, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $10F (PomPomBom) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_PomBom::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $119 (JewelBag) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_JewelBag::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $01, $00
     db $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $11B (MadCandle) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MadCandle::
     ds $13, $00
     db $01, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $11C (CoilBird) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CoilBird::
     db $00, $00, $01, $01, $01, $00, $00, $00, $01, $00, $01, $00, $00, $00, $00, $00
     db $00, $01, $00, $00, $00, $00, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00
     db $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $11D (Facer) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Facer::
     ds $13, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $120 (RogueNite) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_RogueNite::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00
     db $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00
     db $00, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $121 (Puppetor) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Puppetor::
     ds $19, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $124 (MetalDrak) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MetalDrak::
     ds $16, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $125 (Balzak) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Balzak::
     ds $24, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $127 (CurseLamp) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CurseLamp::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00
     db $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $128 (Brushead) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Brushead::
     db $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $00, $01, $01, $00, $00
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $01, $01, $01, $00, $00, $00
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $129 (Roboster) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Roboster::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $12A (Roboster2) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Roboster2::
     db $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00
     db $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $12F (Mimic) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Mimic::
     ds $15, $00
     db $01, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $130 (Exaucers) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Exaucers::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $135 (GoldGolem) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_GoldGolem::
     db $00, $01, $01, $01, $00, $00, $01, $01, $01
     ds $1b, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $136 (DarkMate) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DarkMate::
     db $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $00, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $137 (ProtoMech) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_ProtoMech::
     db $01, $01, $01, $00, $00, $00, $01, $01, $01, $01, $00, $01, $01, $01, $00, $00
     db $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $138 (CloudKing) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_CloudKing::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $13C (Petiteel) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Petiteel::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $01
     db $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $13D (Moray) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Moray::
     ds $19, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $140 (Anemon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Anemon::
     db $00, $01, $01, $00, $00, $00, $01, $01, $01, $01, $01, $00, $01, $01, $01, $01
     db $01, $01, $01, $01, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $141 (Aquarella) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Aquarella::
     ds $1b, $00
     db $01, $01, $00, $01, $00, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $143 (Octokid) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Octokid::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $00, $00, $00
     db $01, $00, $01, $01, $01, $01, $01, $00, $01, $01, $01, $01, $00, $00, $00, $00
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $144 (PutreFish) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_PutreFish::
     ds $1a, $00
     db $01, $00, $00, $00, $00, $00, $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $146 (Angleron) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Angleron::
     ds $10, $00
     db $01, $01, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $147 (FishRider) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_FishRider::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $01, $00
     db $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00
     db $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $148 (RushFish) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_RushFish::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $01, $00, $00
     db $00, $00, $01, $01, $01, $00, $01, $01, $00, $01, $01, $01, $01, $00, $00, $00
     db $01, $01, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $149 (Gamanian) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Gamanian::
     db $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00
     db $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $01, $00, $01, $01, $00, $00
     db $00, $00, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $14A (Clawster) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Clawster::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     ds $15, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $14C (RogueWave) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_RogueWave::
     ds $1a, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $14D (Scallopa) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Scallopa::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $14F (HoodSquid) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_HoodSquid::
     db $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $01, $01, $01, $01, $00, $00
     db $01, $01, $01
     ds $11, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $150 (MerTiger) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_MerTiger::
     ds $12, $00
     db $01, $01, $01, $01, $00, $00, $00, $01, $01, $01, $01, $01, $00, $00, $01, $01
     db $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $151 (AxeShark) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_AxeShark::
     ds $18, $00
     db $01, $01, $01, $00, $00, $00, $00, $01, $01, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $153 (KingSquid) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_KingSquid::
     db $00, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $01, $01
     ds $14, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $154 (Digong) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Digong::
     ds $12, $00
     db $01, $01, $01, $00, $00, $00, $01, $01, $01, $01, $01, $01, $00, $00, $00, $00
     db $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $155 (WhaleMage) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_WhaleMage::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00
     db $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $156 (Aquadon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Aquadon::
     db $00, $00, $01, $01, $01, $01, $00, $00, $00, $00, $01, $01
     ds $18, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $157 (Octoraid) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Octoraid::
     db $01, $01, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $00, $01, $01, $01
     db $01, $01, $00, $01, $01, $01, $01, $01, $00, $01, $00, $00, $01, $00, $01, $00
     db $00, $00, $00, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $158 (Grakos) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Grakos::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $01
     db $00, $00, $00, $01, $01, $01, $00, $00, $01, $00, $00, $01, $01, $00, $01, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $159 (Poseidon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Poseidon::
     db $00, $01, $00, $00, $01, $00, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $15A (Pumpoise) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Pumpoise::
     ds $13, $00
     db $01
     ds $10, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $15F (DracoLord) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DracoLord::
     db $00, $00, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00, $00, $00, $01
     db $00, $00, $01, $00, $01, $01, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $160 (DracoLord) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DracoLord_160::
     db $01, $01, $00, $00, $01, $00, $00, $01, $01
     ds $1b, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $161 (LordDraco) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_LordDraco::
     ds $14, $00
     db $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $162 (Hargon) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Hargon::
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $164 (Genosidoh) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Genosidoh::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
     db $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $00, $00, $00
     db $00, $01, $01, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $165 (Baramos) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Baramos::
     db $00, $00, $00, $00, $00, $00, $00, $01, $00, $01, $01, $00, $00, $01, $00, $01
     db $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $166 (Zoma) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Zoma::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $167 (AsuraZoma) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_AsuraZoma::
     ds $13, $00
     db $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $00, $00, $01, $01, $01
     db $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $169 (PsychoPiz) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_PsychoPiz::
     db $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00
     db $00, $00, $01, $01, $00, $01, $00, $00, $01, $01, $00, $01, $01, $00, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $16A (Esterk) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Esterk::
     db $00, $01, $01, $01, $01
     ds $1f, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $16B (Mirudraas) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Mirudraas::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $00, $00, $01, $00, $00
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $01, $01
     db $00, $00, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $16D (Mudou) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Mudou::
     db $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $01, $00, $01, $00, $00, $00
     db $00, $01, $01, $00, $00, $00, $00, $01, $01, $00, $01, $01, $00, $01, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $16E (DeathMore) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DeathMore::
     db $00, $01, $01, $00, $00, $00, $01, $01, $01, $00, $01, $00, $01, $01, $01, $00
     db $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $170 (DeathMore) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_DeathMore_170::
     db $01, $01, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $171 (Darkdrium) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Darkdrium::
     db $00, $01, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $01, $00, $00, $00, $00, $00, $01, $01, $00, $00, $00, $00, $01
     db $01, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $172 (Orgodemir) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Orgodemir::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
     db $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $00, $00, $00, $00
 
 ; 6 x 6 CGB attribute map of the picture of monster id $173 (Orgodemir) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Orgodemir_173::
     db $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00, $01, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $01, $00, $00, $00, $01, $01, $01, $00, $00
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $174 (Darck) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Darck::
     db $00, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $00, $00, $00, $01, $01, $00, $00, $01, $00, $00, $00, $00, $01, $01, $00, $00
     db $00, $00, $00, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $17C (Lamia) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Lamia::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $01, $01, $01, $00, $00, $01, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $17D (Dimensaur) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Dimensaur::
     db $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00, $00, $01, $01, $01
     db $00, $01, $01, $00, $01, $01, $01, $01, $00, $01, $01, $01, $01, $01, $00, $00
     db $01, $01, $01, $01
 
 ; 6 x 6 CGB attribute map of the picture of monster id $17E (Kagebou) (MonsterPictureTable /
-; MonsterAttributeMapTable)
+; MonsterAttributeMapTable) (E-0138)
 MonsterPicAttr_Kagebou::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01
     db $01, $00, $00, $01, $01, $01, $01

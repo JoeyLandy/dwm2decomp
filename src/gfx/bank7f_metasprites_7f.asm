@@ -6468,7 +6468,7 @@ MetaSprites7FSet61Frame5::
     db $f8, $00, $02, $20 ; entry 3
     db $80 ; end
 
-; DE = MetaSprites7FTable_2 (the table of meta-sprite sets), then DrawMetaSpriteAt
+; DE = MetaSprites7FTable_2 (the table of meta-sprite sets), then DrawMetaSpriteAt (E-0030)
 DrawMetaSprite::
     ld de, MetaSprites7FTable_2
     call DrawMetaSpriteAt
@@ -6526,7 +6526,7 @@ MetaSprites7FTable_2::
 ; the 16-bit position (hSpriteOriginX with hSpriteOriginXHi, hSpriteOriginY with hSpriteOriginYHi)
 ; to screen coordinates by adding the scroll-offset words hSpriteScrollXLo/Hi and
 ; hSpriteScrollYLo/Hi, and writes OAM entries for the sprite chosen by hSpriteSetIndex and
-; hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor)
+; hSpriteSubIndex (tile += hSpriteTileOffset, attribute ^= hSpriteAttrXor) (E-0030)
 DrawMetaSpriteAt::
     ldh a, [hOamNextEntry]
     cp $27

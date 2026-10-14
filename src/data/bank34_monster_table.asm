@@ -5,7 +5,7 @@ SECTION "Bank 34", ROMX[$4000], BANK[$34]
     db $34
 
 ; wMonsterId/wMonsterId + $1 = monster id: copies its 26-byte MonsterTable record to wRecordBuffer
-; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_Multiply8By16)
+; (ids at or above $250 come from bank $A2 through LoadMonsterRecordTo_Multiply8By16) (E-0033)
 LoadMonsterRecord::
     ld de, wRecordBuffer
     call LoadMonsterRecordTo
@@ -47,7 +47,7 @@ CopyMonsterTableBytesFromMonsterTable::
     call CopyBytesDEFromHL
     ret
 
-; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE]
+; DE = destination: like LoadMonsterRecord but copies the 26-byte record to [DE] (E-0351)
 LoadMonsterRecordTo::
     ld a, [wMonsterId + $1]
     cp $02
@@ -75,7 +75,7 @@ LoadMonsterRecordTo::
     pop de
     ld b, $1a
 
-; B bytes from [HL] to [DE]; HL and DE advance
+; B bytes from [HL] to [DE]; HL and DE advance (E-0351)
 CopyBytesDEFromHL::
     ld a, [hli]
     ld [de], a

@@ -4,7 +4,7 @@
 SECTION "Bank 97", ROMX[$4000], BANK[$97]
     db $97
 
-; called from BeginStringDisplay_Bank28: sets wStringIndex; calls BeginStringDisplay
+; called from BeginStringDisplay_Bank28: sets wStringIndex; calls BeginStringDisplay (E-0347)
 BeginStringDisplay_Bank28_BeginStringDisplay::
     ld de, MessageStrings_Bank28_Overflow
     ld a, [wStringIndex]
@@ -91,7 +91,7 @@ CopyStringToBuffer_Bank83_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_97::
-; data read by BeginStringDisplay_Bank28_BeginStringDisplay (1 word)
+; data read by BeginStringDisplay_Bank28_BeginStringDisplay (1 word) (E-0347)
 MessageStrings_Bank28_Overflow::
     dw StringList_Bank28_Overflow_0 ; id 0
 

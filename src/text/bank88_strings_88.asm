@@ -4,7 +4,7 @@
 SECTION "Bank 88", ROMX[$4000], BANK[$88]
     db $88
 
-; ld de, this bank's string table / BeginStringDisplay
+; ld de, this bank's string table / BeginStringDisplay (E-0351)
 BeginStringDisplay_Bank88::
     ld de, BeginStringDisplay_Bank88_StringCategories
     call BeginStringDisplay
@@ -12,6 +12,7 @@ BeginStringDisplay_Bank88::
     db $11, $16, $40, $cd, $fe, $25, $c9
 
 ; BeginStringDisplay_Bank88 (this bank's BeginStringDisplay entry), then RunStringDisplayToEnd
+; (E-0351)
 ShowString_Bank88::
     call BeginStringDisplay_Bank88
     call RunStringDisplayToEnd

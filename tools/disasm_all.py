@@ -2033,6 +2033,27 @@ class Rom:
         return {a for (b, a), info in self.names.items()
                 if b == 0 and info["name"].startswith(("DecompressTo", "SGBTransferCompressed"))}
 
+    def _resolve_configured_pointer(self, bank: int, a: int, tb: int, imm: int) -> None:
+        """E-0350: a pointer whose bank was read by hand names the label at its target, made there when none exists
+        (the target is where the code reads, so a label belongs there); a target inside a decoded instruction is
+        reported, not named."""
+        lab = self.labels[tb].get(imm) if imm in self.insn[tb] else None
+        if lab or imm in self.dlabels[tb]:
+            self.dref[(bank, a)] = (tb, imm)
+            log(f"operands.json: {bank:02X}:{a:04X} -> existing label {lab or self.dlabels[tb][imm]}")
+            return
+        table_word = imm in self.insn[tb] and self.insn[tb][imm][0] == "dw"  # a jump table's first word
+        if (imm in self.insn[tb] and not table_word) or (imm in self.covered[tb] and not table_word):
+            log(f"operands.json: {bank:02X}:{a:04X} points inside decoded code at {tb:02X}:{imm:04X}; left as a number")
+            return
+        name = getattr(self, "operand_labels", {}).get((bank, a), f"Data_{tb:03X}_{imm:04X}")
+        if table_word:  # a `dw` table the tracer decoded: its words are emitted with the code labels
+            self.labels[tb].setdefault(imm, name)
+        else:
+            self.dlabels[tb].setdefault(imm, name)
+            self.dreason.setdefault((tb, imm), "pointer whose bank was read by hand (config/operands.json, E-0350)")
+        self.dref[(bank, a)] = (tb, imm)
+
     def _passed_to_same_bank_reader(self, bank: int, a: int, helpers: set) -> bool:
         """E-0348: the load at bank:a is followed, before any other control transfer, by a call to a routine in this
         bank or bank 0 whose first 40 instructions never switch the ROM bank (no write to $2100, no rst $10, no call
@@ -2249,6 +2270,10 @@ class Rom:
                 if not m:
                     continue
                 imm = int(m.group(2), 16)
+                tbx = getattr(self, "operand_banks", {}).get((bank, a))
+                if tbx is not None:  # E-0350: config/operands.json names the bank, read by hand
+                    self._resolve_configured_pointer(bank, a, tbx, imm)
+                    continue
                 n1 = ins.get(a + ins[a][0], ("", ""))
                 n2 = ins.get(a + ins[a][0] + n1[0], ("", "")) if isinstance(n1[0], int) else ("", "")
                 if n1[1] == "ld a, l" and n2[1] == "ld [$C52F], a":
@@ -3172,7 +3197,7 @@ class Rom:
             if (bank, pc) in refs:
                 label = refs[(bank, pc)]
                 quote = self.script_first_quote(label)
-                return [f"; starts {label}" + (f": {quote}" if quote else "")]
+                return [f"; starts {label}" + (f": {quote}" if quote else "") + " (E-0248)"]
             pc += ins[pc][0]
         return []
 
@@ -3329,7 +3354,9 @@ class Rom:
                             name = _numbered(name, used)  # E-0344: _2, not the address
                         used.add(name)
                         self.names[(cb, ca)] = {"name": name, "evidence": info.get("evidence", "reading"),
-                                                "note": f"the same {size} bytes as {info['name']} ({bank:02X}:{addr:04X})"}
+                                                "note": f"the same {size} bytes as {info['name']} ({bank:02X}:{addr:04X})"
+                                                        + "".join(f" ({e})" for e in (re.findall(r"E-\d{4}", info.get(
+                                                            "evidence", "") + " " + info.get("note", ""))[:1] or ["E-0105"]))}
                         added += 1
         log(f"copies of hand-named routines named: {added}")
 
@@ -4797,6 +4824,13 @@ class Rom:
             for a in list(dl):
                 if addr < a < end and a not in bounds:
                     why = self.dreason.get((bank, a), "")
+                    if "config/operands.json" in why:  # E-0350: a hand-read pointer into a field: Table + offset
+                        dl.pop(a)
+                        for key, (tb_, t_) in list(self.dref.items()):
+                            if tb_ == bank and t_ == a:
+                                self.dref.pop(key)
+                                self.dref_plus[key] = (bank, addr, a - addr)
+                        continue
                     if not why or any(k in why for k in ("pointer load", "stream", "monotone pointer table",
                                                           "bank from RAM variable")):
                         del dl[a]  # a guess (C0) inside a table the configuration proves
@@ -4824,7 +4858,8 @@ class Rom:
                         self.names[(tb, tgt)] = {
                             "name": f"{f['name_targets']}{i + f.get('name_base', 0):02X}",
                             "note": f"{f.get('name_note', 'handler')} {i + f.get('name_base', 0):02X} "
-                                    f"(entry {i} of {t['label']})",
+                                    f"(entry {i} of {t['label']})"
+                                    + "".join(f" ({e})" for e in re.findall(r"E-\d{4}", t.get("note", ""))[:1]),
                             "evidence": "structure of the table"}
                     if tb in range(self.nbanks) and tb not in self.zero and \
                             self.base(tb) <= tgt < self.base(tb) + BANK and tgt not in self.covered[tb] \
@@ -6203,6 +6238,13 @@ class Rom:
                 pc += 2
                 continue
             n, text, kind, tgt = it
+            val = getattr(self, "operand_values", {}).get((bank, pc))
+            mv = re.match(r"ld (hl|de|bc), \$([0-9A-F]{2})([0-9A-F]{2})$", text) if val else None
+            if mv:  # E-0350: a value read by hand (config/operands.json)
+                if val.get("lb"):
+                    text = f"lb {mv.group(1)}, ${mv.group(2)}, ${mv.group(3)}"
+                elif val.get("expr"):
+                    text = f"ld {mv.group(1)}, {val['expr']}"
             ref = self.dref.get((bank, pc))
             plus = self.dref_plus.get((bank, pc))
             if plus and plus[1] in self.dlabels[plus[0]]:  # E-0348: a pointer inside a labelled table
@@ -6488,6 +6530,10 @@ def main() -> int:
     arg_banks_path = ROOT / "config/arg_banks.json"
     if arg_banks_path.exists():
         rom.arg_banks = json.loads(arg_banks_path.read_text(encoding="utf-8"))["routines"]
+    ops = json.loads((ROOT / "config/operands.json").read_text(encoding="utf-8"))  # E-0350
+    rom.operand_banks = {(int(k[:2], 16), int(k[3:], 16)): int(v["bank"], 16) for k, v in ops["pointers"].items()}
+    rom.operand_labels = {(int(k[:2], 16), int(k[3:], 16)): v["label"] for k, v in ops["pointers"].items() if "label" in v}
+    rom.operand_values = {(int(k[:2], 16), int(k[3:], 16)): v for k, v in ops["values"].items()}
     symbols_path = ROOT / "config/symbols.json"
     if symbols_path.exists():
         for key, info in json.loads(symbols_path.read_text(encoding="utf-8")).items():

@@ -251,7 +251,7 @@ FieldSpriteGfx28::
     INCBIN "gfx/field_sprites/28.lz"
 
 ; compressed sprite graphics number $29 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
-; with hTemp2 non-zero)
+; with hTemp2 non-zero) (E-0143)
 FieldSpriteGfx29::
     INCBIN "gfx/field_sprites/29.lz"
 
@@ -334,7 +334,7 @@ FieldSpriteGfx36::
     INCBIN "gfx/field_sprites/36.lz"
 
 ; compressed sprite graphics number $37 of FieldSpriteGraphicsTable (DecompressGraphicsTemp0ToTemp4
-; with hTemp2 non-zero)
+; with hTemp2 non-zero) (E-0143)
 FieldSpriteGfx37::
     INCBIN "gfx/field_sprites/37.lz"
 

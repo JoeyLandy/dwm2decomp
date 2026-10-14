@@ -7,7 +7,10 @@ SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
 ; called from DrawEffectSpriteForEffectTileOffsetRange: may continue in
 ; DrawEffectSpriteAtEffectSpriteX_Bank3D; copies wBattleFoeCount to wLoadSlot; copies wBattleTarget
 ; & $04 to wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls SetEffectSpriteXForTargets;
-; calls DrawEffectSpriteAtEffectSpriteX_Bank3D; decrements wLoadSlot; ...
+; calls DrawEffectSpriteAtEffectSpriteX_Bank3D; decrements wLoadSlot; returns if the byte at
+; wLoadSlot is 0; increments wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; SetEffectSpriteXForTargets; calls DrawEffectSpriteAtEffectSpriteX_Bank3D; then 6 more steps (see
+; the code) (E-0347)
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wEffectTileOffset]
     cp $2c
@@ -126,7 +129,7 @@ MetaSprites3DTable::
 ; DE = two-level table; entries are chosen by hSpriteSetIndex and hSpriteSubIndex; writes 4-byte OAM
 ; entries at $C000 + 4 * hOamNextEntry (Y = hSpriteOriginY + b + $10, X = hSpriteOriginX + b + 8,
 ; tile += hSpriteTileOffset, flags ^= hSpriteAttrXor) until a $80 byte or hOamNextEntry reaches $28
-; (40 entries) (the same 81 bytes appear in 5 banks)
+; (40 entries) (the same 81 bytes appear in 5 banks) (E-0351)
 BuildOamFromSpriteTable_Bank3D::
     ldh a, [hOamNextEntry]
     cp $28

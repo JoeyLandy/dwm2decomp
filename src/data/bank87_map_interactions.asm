@@ -6,7 +6,9 @@ SECTION "Bank 87", ROMX[$4000], BANK[$87]
 
 ; called from FieldState_WalkATalks: may return early; returns if bit 7 of wFieldActionRequest is
 ; set; returns if bit 0 of hPlayerStateFlags is set; returns unless wStepTriggerFlag is 0;
-; increments wStepTriggerFlag; returns if wStepTriggerFlag is 0; may return early; ...
+; increments wStepTriggerFlag; returns if wStepTriggerFlag is 0; may return early; branches on
+; hMapId; branches on hMapScreenX; branches on hMapScreenY; branches on hPlayerX; branches on
+; hPlayerY; then 7 more steps (see the code) (E-0347)
 FieldState_WalkATalks_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03

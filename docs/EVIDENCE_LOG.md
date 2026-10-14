@@ -2431,6 +2431,64 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0351 — Names read before per-name evidence ids
+
+- Kind: OBSERVATION about the record, not a new reading.
+- 138 entries of config/names.json and 32 library families in config/name_families.json give their evidence as "reading" with no entry number. Seven of them add "+ execution (tests/test_routine_behaviour.py)", and five add a hardware reference: the SGB packet protocol, or the Pan Docs layout of rP1.
+- They were written in the early naming sessions (E-0040 to E-0130, 2026-10-10 to 2026-10-11), when a note cited an entry only for findings that needed one. Each note restates what its routine's instructions do, and its confidence is C1.
+- Their comments in src/ now cite this entry, so a reader can see the claim is a plain reading. Promoting one needs its own entry, with a contrast case or an emulator observation.
+
+### E-0350 — No bare address operands; every routine comment cites evidence
+
+- Kind: READING (C1) per operand, and presentation rules. The assembled bytes do not change: each form evaluates to the same 16-bit value, and the build checks every byte.
+- **Before.** tools/readability.py counted 167 bare operands (`ld rr, $XXXX`, `call/jp $XXXX` with an address-like number):
+  - 94 into ROM without a quote;
+  - 31 message words;
+  - 30 above $C000;
+  - 7 in SRAM's range;
+  - 5 in VRAM's range.
+- **Rules in tools/present.py (operand_forms).**
+  - `lb rr, $HI, $LO` for a pair holding two bytes:
+    - HL and BC before the resolve-message routines (H = target, L = actor, B = argument, C = flags), also through `jr`, local labels, or falling into the routine;
+    - DE before the sprite steps toward a point.
+  - Signed numbers for negative constants (`ld hl, -999` before `add hl, de`, `ld hl, -128` as a step delta).
+  - `call hOAMDMARoutine` for `call $ff80`.
+  - The listing's label for a same-bank pointer that is indexed or dispatched at once (`ld hl, ActionEffectTable`).
+  - `MSG_KEEP_OPEN | $0487` for a quoted message word given to a message routine.
+- **Message word flags** (constants.inc). RunMessageBox (bank $5F) reads H bits 6 and 7 of a message word:
+  - Bit 7 (MSG_ALREADY_OPEN, $8000) skips the opening: the tile fill of vTiles1, sound $69 and window state 1.
+  - Bit 6 (MSG_KEEP_OPEN, $4000) skips the closing: sound $69 and window state 2, and lets the next step run without waiting for the window.
+- **config/operands.json**: 82 pointers and 17 values read one by one, each keyed by its instruction's address and given the reason.
+  - Pointer banks come from the code beside each load:
+    - `ld b, $56` / `$7E` before a decompressor;
+    - `rROMB0 = $38` / `$09` / `$04`;
+    - `ld a, $5E` before CopyRectFromBankToVRAM;
+    - the glyph font GlyphFont at $1F:$4010 for `$4010 + 16 * glyph`;
+    - MapTable in bank $11;
+    - the bank of the routine that reads the argument: TestBitInFieldAtArg3 in $15, LoadTileListSixPerCall in $1D;
+    - same-bank readers and tables.
+  - disasm_all.py labels the exact target, or writes `Table + $offset` when the target lies inside a field of a declared table (NameEntryTileSrcListB + $..).
+  - One target was a 16-word handler table that the tracer had decoded as `dw` words: entries 0-7 are RollPersonality*/RollSlotTrait*, 8-15 all $4FC6. It is now FlagBitHandlerTable, and CallFlagBitHandlerE loads it by name.
+  - Values:
+    - gold amounts for AddGoldCapped (20000, 30000);
+    - a busy-wait count (24576);
+    - the CGB colour white (PAL_WHITE in hardware.inc);
+    - two-byte pairs: text window rows/width, the title state and link byte, scroll bytes, script parameters, resolve-message flags;
+    - message words with their flags.
+- **Evidence ids on every comment.**
+  - Generated restatements and data notes end with (E-0347).
+  - Names from a table's entries cite that table's entry (E-0038, E-0039, ...).
+  - Copies of a named routine cite the source's entry (else E-0105).
+  - "starts Script_X" lines cite E-0248.
+  - A written note without an id gets the id config records for its name, or E-0351 for readings recorded without one.
+  - Restatements keep 12 clauses instead of 7 and count the rest ("then 9 more steps (see the code)").
+- **After.**
+  - raw_pointer_operands: 0.
+  - Address-named labels: 0.
+  - Every one of the 9,822 routine comments and 649 table headers cites an evidence or decision id.
+  - tests/test_doc_coverage.py checks both.
+- Binary verification: build/run543 PASS, 0 differing bytes.
+
 ### E-0349 — Bank files in pokered-style directories (D-010); register flow in summaries
 
 - Kind: DECISION (D-010) and presentation. The assembled bytes do not change.

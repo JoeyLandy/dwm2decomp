@@ -37,7 +37,7 @@ CopyStringToBuffer_Bank29::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_29::
-; data read by BeginStringDisplay_Bank29 (1 word)
+; data read by BeginStringDisplay_Bank29 (1 word) (E-0347)
 MessageStrings_Bank29::
     dw StringList_Bank29_0 ; id 0
 
