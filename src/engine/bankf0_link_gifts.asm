@@ -7288,12 +7288,6 @@ OrDIntoTestBitDEOfBitArrayHLByte::
 ; then writes a record: first byte 1, a blank name, species $001A, a random sex, the player as
 ; master (name and id), unknown parents ('???'), $21 bytes of $FF, the bytes 0, 1, $28, 0, 0, 0,
 ; then random values and the rest. (C1, E-0357)
-; code: calls RandomModulo29_BankF0; branches on the byte at wPlayerName; calls
-; KeyWorldDoorItem_WriteUnknownName; calls KeyWorldDoorItem_FillCBytesWithB; calls
-; KeyWorldDoorItem_WriteUnknownName; calls KeyWorldDoorItem_FillCBytesWithB; calls
-; RandomModulo29_BankF0; calls KeyWorldDoorItem_ModuloBPlusOne; calls RandomModulo29_BankF0; calls
-; KeyWorldDoorItem_ModuloBPlusOne; calls RandomModulo29_BankF0; calls
-; KeyWorldDoorItem_ModuloBPlusOne; then 15 more steps (see the code) (E-0347)
 KeyWorldDoorItem_RandomModulo29_BankF0::
     ld hl, wGM2TimerFrames
     ld bc, $00d8

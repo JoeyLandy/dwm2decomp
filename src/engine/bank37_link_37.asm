@@ -4634,31 +4634,31 @@ LinkSkillMapTable_B::
     db SKILL_HUSTLE ; id 148
     db SKILL_LIFESONG ; id 149
     db SKILL_LIFEDANCE ; id 150
-    db SKILL_HIGHJUMP_C8 ; id 151
+    db ACTION_C8 ; id 151
     db SKILL_ZONEOUT ; id 152
-    db SKILL_HIGHJUMP_C0 ; id 153
-    db SKILL_HIGHJUMP_C1 ; id 154
-    db SKILL_HIGHJUMP_C2 ; id 155
-    db SKILL_HIGHJUMP_C3 ; id 156
-    db SKILL_HIGHJUMP_C4 ; id 157
-    db SKILL_HIGHJUMP_C5 ; id 158
-    db SKILL_HIGHJUMP_C6 ; id 159
-    db SKILL_HIGHJUMP_C7 ; id 160
-    db SKILL_HIGHJUMP_C8 ; id 161
-    db SKILL_HIGHJUMP_B0 ; id 162
-    db SKILL_HIGHJUMP_B1 ; id 163
-    db SKILL_HIGHJUMP_B2 ; id 164
-    db SKILL_HIGHJUMP_B3 ; id 165
-    db SKILL_HIGHJUMP_B4 ; id 166
-    db SKILL_HIGHJUMP_B5 ; id 167
-    db SKILL_HIGHJUMP_B6 ; id 168
-    db SKILL_HIGHJUMP_B7 ; id 169
-    db SKILL_HIGHJUMP_B8 ; id 170
-    db SKILL_HIGHJUMP_B9 ; id 171
-    db SKILL_HIGHJUMP_BA ; id 172
-    db SKILL_HIGHJUMP_BB ; id 173
-    db SKILL_HIGHJUMP_BC ; id 174
-    db SKILL_HIGHJUMP_BD ; id 175
+    db ACTION_C0 ; id 153
+    db ACTION_C1 ; id 154
+    db ACTION_C2 ; id 155
+    db ACTION_C3 ; id 156
+    db ACTION_C4 ; id 157
+    db ACTION_C5 ; id 158
+    db ACTION_C6 ; id 159
+    db ACTION_C7 ; id 160
+    db ACTION_C8 ; id 161
+    db ACTION_B0 ; id 162
+    db ACTION_B1 ; id 163
+    db ACTION_B2 ; id 164
+    db ACTION_B3 ; id 165
+    db ACTION_B4 ; id 166
+    db ACTION_B5 ; id 167
+    db ACTION_B6 ; id 168
+    db ACTION_B7 ; id 169
+    db ACTION_B8 ; id 170
+    db ACTION_B9 ; id 171
+    db ACTION_BA ; id 172
+    db ACTION_BB ; id 173
+    db ACTION_BC ; id 174
+    db ACTION_BD ; id 175
     db $ff ; id 176
     db $ff ; id 177
     db $ff ; id 178
@@ -4702,7 +4702,7 @@ LinkSkillMapTable_B::
     db SKILL_SHEARS ; id 216
     db SKILL_GIGASLASH ; id 217
     db SKILL_PANICALL ; id 218
-    db SKILL_HIGHJUMP_C8 ; id 219
+    db ACTION_C8 ; id 219
     db SKILL_IRONIZE ; id 220
     db SKILL_AHHH ; id 221
 

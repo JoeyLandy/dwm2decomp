@@ -3,7 +3,8 @@
 - MONSTER_*: monster ids, named from StringTable_MonsterNames (ids $00-$FF) and StringTable_MonsterNames2
   (ids $100-$17F) in bank $08 (E-0026, E-0138).
 - SKILL_*: skill ids, which are also battle action ids (E-0333), named from StringTable_SkillNames; action 0, which
-  no skill name precedes, is ACTION_FIGHT (E-0333); action ids without a name are ACTION_<hex>.
+  no skill name precedes, is ACTION_FIGHT (E-0333); action ids without a name, and those from 175 on whose string
+  only repeats a skill's name (E-0365), are ACTION_<hex>.
 - ITEM_*: item ids, named from StringTable_ItemNames.
 
 A name is the string upper-cased with everything but letters and digits removed. A blank or "?" name gives
@@ -44,7 +45,8 @@ def build(rom: bytes) -> dict[str, dict[int, tuple[str, str]]]:
                 stem = re.sub(r"[^A-Za-z0-9]", "", text).upper()
                 if prefix == "SKILL" and v == 0:
                     name = "ACTION_FIGHT"
-                elif not stem:
+                elif not stem or (prefix == "SKILL" and v >= 0xAF and f"SKILL_{stem}" in used):
+                    # E-0365: ids from 175 on are battle actions, not skills; their strings only repeat a skill's name
                     name = f"{'ACTION' if prefix == 'SKILL' else prefix}_{v:02X}"
                 elif f"{prefix}_{stem}" in used:
                     name = f"{prefix}_{stem}_{v:02X}"
@@ -67,7 +69,7 @@ def write_constants_inc(path, consts: dict, events: dict | None = None, status: 
     for prefix, table in consts.items():
         lines.append(f"; {head[prefix]}")
         for v, (name, text) in sorted(table.items()):
-            note = text if text and not name.endswith(text.upper()) else (id_notes or {}).get(name, "")
+            note = (id_notes or {}).get(name) or (text if text and not name.endswith(text.upper()) else "")
             lines.append(f"DEF {name} EQU ${v:02X}" + (f" ; {note}" if note else ""))
         lines.append("")
     lines += ["; Message words (HL or DE for StartMessage*, ShowMessageHL, wMessageIndex/wMessageGroup): the low byte is the",

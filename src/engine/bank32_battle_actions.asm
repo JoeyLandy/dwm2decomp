@@ -2999,21 +2999,21 @@ CheckActorStatusBit6::
 ; A = 0 for action $BF or $C9-$CF, otherwise carry (E-0124)
 ActionIsSpecialBFOrC9ToCF::
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_BF
+    cp ACTION_BF
     jr z, .return_0
-    cp SKILL_HIGHJUMP_C9
+    cp ACTION_C9
     jr z, .return_0
-    cp SKILL_HIGHJUMP_CA
+    cp ACTION_CA
     jr z, .return_0
-    cp SKILL_HIGHJUMP_CB
+    cp ACTION_CB
     jr z, .return_0
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr z, .return_0
-    cp SKILL_LOVERAIN_CD
+    cp ACTION_CD
     jr z, .return_0
-    cp SKILL_LOVERAIN_CE
+    cp ACTION_CE
     jr z, .return_0
-    cp SKILL_LOVERAIN_CF
+    cp ACTION_CF
     jr z, .return_0
     scf
     ret
@@ -3285,7 +3285,7 @@ RunBattleActions_StatusChecks_CompareActionIdWithCD::
 ; compares wBattleActionId with $CD: carry when below, Z when equal (E-0115)
 CompareActionIdWithCD::
     ld a, [wBattleActionId]
-    cp SKILL_LOVERAIN_CD
+    cp ACTION_CD
     ret
 
 ; by its step: 'G was shattered!' and 'SealPray was broken!', then CheckActionD0ToE3OrSpecial
@@ -4657,7 +4657,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     jr z, .set_battle_sub_step_to_04
     cp SKILL_LIFEDANCE
     jr z, .check_battle_screen_flags
-    cp SKILL_HIGHJUMP_B8
+    cp ACTION_B8
     jr z, .call_resolve_step0_e_effect_advance_random
     cp ACTION_D6
     jr z, .read_battle_actor

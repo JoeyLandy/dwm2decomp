@@ -4,10 +4,9 @@
 SECTION "Bank 06", ROMX[$4000], BANK[$06]
     db $06
 
-; ReadBank6TableWord reads the word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex;
-; AccumulateBank6WordToDA6E / DA70 add it to the AI score (a low byte of $FF counts as 5000, a
-; negative word is subtracted); the 527 call sites pass rows $00-$D3, and the bank is zero after row
-; $D3 (E-0149, C1)
+; ReadBank6TableWord reads the word at 06:$4001 + $36 * BC + 2 * wPersonalityIndex; AddAIWeight /
+; DA70 add it to the AI score (a low byte of $FF counts as 5000, a negative word is subtracted); the
+; 527 call sites pass rows $00-$D3, and the bank is zero after row $D3 (E-0149, C1)
 ; record: 27 signed weights, one per personality index (wPersonalityIndex 0-26)
 AIPersonalityWeightTable::
     dw $001e, $001e, $001e, $001e, $001e, $001e, $001e, $001e, $001e ; id 0

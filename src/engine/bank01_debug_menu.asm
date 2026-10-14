@@ -2444,10 +2444,6 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
 ; draws its name, or the unknown-name placeholder when that bit is clear; then draws the child's
 ; species number, sex mark, plus value, level, maximum level and its 27 resistance digits. With no
 ; valid child it shows the placeholder and number 0. (C1, E-0357)
-; code: branches on wArg1; sets wArg1 to 0; calls ComputeBreedingChild; returns unless wArg5 is $ff;
-; branches on wArg7; branches on wArg6; copies wArg6 to wArg1; copies wArg7 to wArg2; copies E to
-; wArg3; copies D to wArg4; calls TestBitInFieldAtArg3; branches on wArg5; then 40 more steps (see
-; the code) (E-0347)
 DebugResultsDisplay_Update_CheckArg1::
     ld a, [wArg1]
     and a

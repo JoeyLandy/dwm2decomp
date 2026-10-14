@@ -1275,11 +1275,6 @@ RunF2_LoadTemp0WordFromRecordBufB_Data2::
 ; Draws the species icons of record B's parents (the layout by family bit 4): an unknown parent
 ; ($FFFF) gets a copy of tile $8430, otherwise its icon (DrawSpeciesIconForRecordBufBEntry) and a
 ; mark tile beside it. (C1, E-0357)
-; code: branches on wRecordBufB + MON_FAMILY & $10; calls LoadTemp0WordFromRecordBufB; branches on
-; hTemp1; calls CopyTileBytesToVRAMCounted_BankF2; copies the byte at vTiles2 + $6c0 to wArg1;
-; copies the byte at vTiles2 + $6c0 to wArg5; sets wArg2 to 0; sets wArg3 to $6a; sets wArg4 to $6c;
-; calls DrawSpeciesIconForRecordBufBEntry; calls PickNameBufferForFirstByte_BankF2; calls
-; BGMapAddressAtScroll_BankF2_2; then 14 more steps (see the code) (E-0347)
 RunF2_LoadTemp0WordFromRecordBufB_2::
     ld a, [wRecordBufB + MON_FAMILY]
     and $10

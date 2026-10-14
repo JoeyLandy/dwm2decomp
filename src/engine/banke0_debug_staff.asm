@@ -554,15 +554,10 @@ RunDebugState_E0_DrawSlotHPMPStats_BankE0::
     inc [hl]
     ret
 
-; C = slot: unless its wBattleSlotOut entry is $FF, draws its HP, max HP, MP and max MP words
-; (DrawSlotHPMPStats_BankE0_IndexWordC for each) at the position from the table at $4652 (C & 3);
-; the rest is not read (E-0112)
-; code: branches on the byte at wBattleSlotOut; calls DrawSlotHPMPStats_BankE0_IndexWordC; calls
-; DrawSlotHPMPStats_BankE0_Number24ToPackedBCD; calls DrawSlotHPMPStats_BankE0_WordAtDEToPackedBCD;
-; calls DrawSlotHPMPStats_BankE0_Number24ToPackedBCD; calls DrawSlotHPMPStats_BankE0_IndexWordC;
-; calls DrawSlotHPMPStats_BankE0_DrawAIModeGlyph; calls DrawSlotHPMPStats_BankE0_WriteVRAMByte; sets
-; hTemp0 to 0; sets hTemp1 to 0; calls DrawSlotHPMPStats_BankE0_WriteVRAMByte_3; calls
-; DrawSlotHPMPStats_BankE0_WriteVRAMByte_2; then 2 more steps (see the code) (E-0347)
+; Debug stats display for slot C (unless out): HP, max HP, MP and max MP, then level, ATK, DEF, AGL,
+; INT, the three personality bytes, the trait and the extra stat in decimal, then the AI mode glyph,
+; at the slot's place from DrawSlotHPMPStats_BankE0_Data; an out slot is cleared instead. (C1,
+; E-0357)
 DrawSlotHPMPStats_BankE0::
     ld a, c
     and $03
@@ -985,14 +980,9 @@ RunDebugState_E0_DrawPacked2BitFieldsInRows::
     inc [hl]
     ret
 
-; writes a run of 2-bit fields from [DE] onward as digit tiles with DrawBits76OfNextDEAsDigit,
-; DrawBits54OfDEAsDigit, DrawBits32OfDEAsDigit and DrawBits10OfDEAsDigit, five per row, moving HL to
-; the next BG map row (+$1B) after each five; the end is not read (E-0112)
-; code: calls DrawBits54OfDEAsDigit; calls DrawBits32OfDEAsDigit; calls DrawBits10OfDEAsDigit; calls
-; DrawBits76OfNextDEAsDigit; calls DrawBits54OfDEAsDigit; calls DrawBits32OfDEAsDigit; calls
-; DrawBits10OfDEAsDigit; calls DrawBits76OfNextDEAsDigit; calls DrawBits54OfDEAsDigit; calls
-; DrawBits32OfDEAsDigit; calls DrawBits10OfDEAsDigit; calls DrawBits76OfNextDEAsDigit; then 15 more
-; steps (see the code) (E-0347)
+; Draws the 2-bit fields of the bytes at DE (a resistance record) as digits, six rows of five with
+; each row $1B tiles further on, the last digit through DrawBits10OfDEAsDigit_CallWriteVRAMByteInc.
+; (C1, E-0357)
 DrawPacked2BitFieldsInRows::
     ld a, [de]
     ld c, a
@@ -1390,10 +1380,8 @@ RunDebugState_E0_DecompressGraphicsAToTiles0_2::
     ld a, $3b
     ld [hl], a
 
-; writes A as two hex-digit tiles (0-9 as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A,
-; then the high digit (the second write is not read to its end) (E-0112)
-; code: calls WriteVRAMByte; calls DrawSkillDebugDigitsAndRecord; also changes HL and A by register
-; arithmetic (E-0347)
+; Draws A as two hex digits at BG map 0 + $89/$8A (digit tiles from $E0, letters 2 below the letter
+; tiles), then the skill debug digits (DrawSkillDebugDigitsAndRecord). (C1, E-0357)
 DrawHexByteAtBGMap8A::
     push af
     and $0f

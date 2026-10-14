@@ -406,7 +406,6 @@ RunGameModeInit_ToGameMode6_Init::
 
 ; Game mode 7's start-up (shows two monster panels when forced; its use is unknown): far-calls
 ; GameMode7_Init in bank $A0. (C1, E-0357)
-; code: calls GameMode7_Init (E-0347)
 RunGameModeInit_ToGameMode7_Init::
     farcall GameMode7_Init
     ret

@@ -61,17 +61,12 @@ StartScriptAtHL_B13::
     ld [wModeState], a
     ret
 
-; unless wMapType says otherwise (several special values), starts an event: when wTalkEventGroup is
-; not $FD it runs script command $09 with a parameter from wKeyWorldFloorState + $2; otherwise (and
-; for the other paths) it jumps through an 11-entry table by wTalkEventIndex (the handler group:
-; cases far-call bank-$04 dispatchers or, for group 4, dispatch on wTalkEventGroup through a
-; 257-entry table of talk handlers such as TalkMsg0DD7_OurHeartsAreLike). Group/entry meaning beyond
-; talk handlers is not read (E-0097)
-; code: branches on wMapType; branches on wTalkEventIndex; branches on wMapType; branches on the
-; byte at wKeyWorldFloorInfo + $1; sets wScriptStartRequest to $80; sets wModeState to 1; branches
-; on wTalkEventGroup; sets wTalkEventIndex to 9; sets wTalkEventGroup to 1; copies the byte at
-; wKeyWorldFloorState + $2 to wScriptParam0; sets wScriptParam1 to 0; sets wScriptCommandType to 9;
-; then 5 more steps (see the code) (E-0347)
+; Starts the talk event: in a special map type (bit 7 set; not types $80, $82, $84-$86, nor $83 on a
+; key-world floor of kind 6, nor talk event 9) it requests script start $80 and mode state 1; there
+; talk group $FD becomes event 9 group 1, and any other group runs script command 9 with the floor's
+; state byte for that group as parameter. Otherwise jumps by wTalkEventIndex to the talk-event table
+; of the area (field, GreatLog, Kalka, Yold, Norden, Fhunt, Darck, the elf village, the traveler
+; events, key worlds, readable things). (C1, E-0357)
 DispatchTalkEvent::
     ld a, [wMapType]
     bit 7, a
@@ -4206,15 +4201,15 @@ TalkMsg0DD7_OurHeartsAreLike::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: after the shield guardian scenes 'You have restored peace...' ($0AFA) or 'Queen Helen is
+; safe...' ($0AF9); once the medicine is given 'Quick, give the medicine to...' ($0AF8); after the
+; hero checked the blue flower, with the princess-medicine scene set, the medicine script
+; (Script_PardonMeYouHave) when a SleepHerb (item $34) is in the bag, else 'You can't come in here.'
+; ($0AE4); before that 'Queen Helen is wracked by...' ($0DD8), or 'You can't come in here.' once the
+; medicine scene is set. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $0DD8, whose
-; string begins 'Queen Helen is wracked by awful'; the branching is not interpreted (E-0097)
-; code: checks EVENT_SCENE_SHIELD_GUARDIAN_1E2; checks EVENT_SCENE_SHIELD_GUARDIAN; checks
-; EVENT_SCENE_MEDICINE_GIVEN; checks EVENT_HERO_CHECKED_THE_BLUE_FLOWER; checks
-; EVENT_SCENE_PRINCESS_MEDICINE_09D; shows 'Queen Helen is wracked by'; shows 'You can't come in
-; here.'; checks EVENT_SCENE_PRINCESS_MEDICINE_09D; sets hTemp0 to $34; calls
-; FindTemp0InInventoryList; branches on hTemp0; starts Script_PardonMeYouHave; then 3 more steps
-; (see the code) (E-0347)
+; string begins 'Queen Helen is wracked by awful' (E-0097)
 Talk0DD8_QueenHelenIsWracked::
     ld de, EVENT_SCENE_SHIELD_GUARDIAN_1E2
     call TestFlagBit
@@ -4271,11 +4266,11 @@ Talk0DD8_QueenHelenIsWracked::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: 'The reception hall is past...' ($0AE5) between the princess-medicine scene and the second
+; shield scene; otherwise 'The reception hall is beyond...' ($0DD9). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0DD9, whose
-; string begins 'The reception hall is beyond here.'; the branching is not interpreted (E-0097)
-; code: checks EVENT_SCENE_SHIELD2_1E5; checks EVENT_SCENE_PRINCESS_MEDICINE_09D; shows 'The
-; reception hall is beyond'; shows 'The reception hall is past' (E-0347)
+; string begins 'The reception hall is beyond here.' (E-0097)
 Talk0DD9_TheReceptionHallIs::
     ld de, EVENT_SCENE_SHIELD2_1E5
     call TestFlagBit
@@ -8810,11 +8805,12 @@ TalkMsg0A3F_TheKingAndPrinces::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: 'You're today's guest of honor!' ($0545) after Darck's defeat until
+; EVENT_THANKS_FOR_COMING_BY_025 is set; otherwise 'This is GreatLog Castle...' ($0A41). (C1,
+; E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0A41, whose
-; string begins 'This is GreatLog Castle. The reception'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_DARCK_DEFEATED; shows 'This is
-; GreatLog Castle. The'; shows 'You're today's guest of honor!' (E-0347)
+; string begins 'This is GreatLog Castle. The reception' (E-0097)
 Talk0A41_ThisIsGreatLogCastle::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -8874,15 +8870,14 @@ TalkMsg0A45_IfYouWantToMakeA::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk (traveling merchant / scientist): before the three-items scene, the merchant's script
+; (Script_I_10, screen table 1) until EVENT_BREEDING_COULD_RESULT_IN, then 'Breeding could result in
+; monsters...' ($0A49); after it, the scientist's script (Script_I_11, screen table 3) until
+; EVENT_BREEDING_COULD_RESULT_IN_125, then 'Hm... So that combination of...' ($0516). Saves the
+; screen and the player's place first; the scripts set wDataBank $0E. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0A49, whose
-; string begins 'Breeding could result in monsters with'; the branching is not interpreted (E-0097)
-; code: calls SaveScreenBufferToBGMap1; calls SavePlayerPositionState; checks
-; EVENT_SCENE_THREE_ITEMS; checks EVENT_BREEDING_COULD_RESULT_IN; sets wScreenTableIndex to 1;
-; starts Script_I_10; sets wDataBank to $0e; shows 'Breeding could result in monsters'; calls
-; SaveScreenBufferToBGMap1; calls SavePlayerPositionState; checks
-; EVENT_BREEDING_COULD_RESULT_IN_125; sets wScreenTableIndex to 3; then 3 more steps (see the code)
-; (E-0347)
+; string begins 'Breeding could result in monsters with' (E-0097)
 Talk0A49_BreedingCouldResultIn::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -9015,12 +9010,11 @@ TalkMsg0A4D_TheIslandUsedTo::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: the 'Hm? Little one, are you...' script (screen table 2) until EVENT_IF_YOU_GET_AN, then 'If
+; you get an EvilArmor,...' ($04BA); saves the screen and the player's place first. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $04BA, whose
-; string begins 'If you get an EvilArmor, I'; the branching is not interpreted (E-0097)
-; code: calls SaveScreenBufferToBGMap1; calls SavePlayerPositionState; checks EVENT_IF_YOU_GET_AN;
-; starts Script_HmLittleOneAre; sets wScreenTableIndex to 2; sets wDataBank to $0e; shows 'If you
-; get an EvilArmor,' (E-0347)
+; string begins 'If you get an EvilArmor, I' (E-0097)
 Talk04BA_IfYouGetAn::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -9040,14 +9034,16 @@ Talk04BA_IfYouGetAn::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk (the old key keeper): before EVENT_THANKS_FOR_COMING_BY_025, the 'I was once a great...'
+; script until EVENT_YOU_11D, then 'That key, I used on...' ($04CB). After it: with
+; EVENT_DESK_KEY_0C8 'There are still many things...'; with EVENT_DESK_KEY, the 'How good of you
+; to...' script (setting EVENT_THAT_KEY_IUSED_03E) once both chest battles 206 and 207 are done,
+; else 'Obtain the other key that...'; otherwise the first time 'I heard that you went...' (setting
+; EVENT_THAT_KEY_IUSED), later the 'Oh! Goodness!' script when an SRAM record byte is set
+; (Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte), else 'Those monsters don't surprise me.'. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $04CB, whose
-; string begins 'That key, I used on my'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_YOU_11D; starts Script_IWasOnceA; shows
-; 'That key, I used on'; checks EVENT_DESK_KEY_0C8; checks EVENT_DESK_KEY; checks
-; EVENT_THAT_KEY_IUSED; shows 'I heard that you went'; sets EVENT_THAT_KEY_IUSED; calls
-; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte; branches on hTemp0; shows 'Those monsters don't surprise
-; me.'; then 7 more steps (see the code) (E-0347)
+; string begins 'That key, I used on my' (E-0097)
 Talk04CB_ThatKeyIUsed::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -9119,12 +9115,12 @@ Talk04CB_ThatKeyIUsed::
     call StartMessageCommand09HL_B13
     ret
 
+; Checking the shelf: after EVENT_HERO_CHECKED_THE_SHELF 'Souvenirs from...' ($04CC); otherwise
+; tries a new key (GenerateNewKeyEntry): got one, '0 obtained...' ($04CD) and the flag is set; else
+; '0 found...' ($04CE). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $04CE, whose
-; string begins '0 checked the shelf. 0 found'; the branching is not interpreted (E-0097)
-; code: checks EVENT_HERO_CHECKED_THE_SHELF; calls GenerateNewKeyEntry; branches on hTemp0; shows '0
-; checked the shelf. 0 found'; shows '0 checked the shelf. 0 obtained'; sets
-; EVENT_HERO_CHECKED_THE_SHELF; shows '0 checked the shelf. Souvenirs from' (E-0347)
+; string begins '0 checked the shelf. 0 found' (E-0097)
 Talk04CE_HeroCheckedTheShelf::
     ld de, EVENT_HERO_CHECKED_THE_SHELF
     call TestFlagBit
@@ -9415,12 +9411,12 @@ ChestItem_Quest::
     call StartTreasureFlagDE_B13
     ret
 
+; Talk: the 'Yo! Up close, you look...' script (screen table 4) until EVENT_ALL_RIGHTY_WELL_DO, then
+; 'All righty! We'll do this...' ($04C0); saves the screen and the player's place first. (C1,
+; E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $04C0, whose
-; string begins 'All righty! We'll do this again'; the branching is not interpreted (E-0097)
-; code: calls SaveScreenBufferToBGMap1; calls SavePlayerPositionState; checks
-; EVENT_ALL_RIGHTY_WELL_DO; starts Script_YoUpCloseYou; sets wScreenTableIndex to 4; sets wDataBank
-; to $0e; shows 'All righty! We'll do this' (E-0347)
+; string begins 'All righty! We'll do this again' (E-0097)
 Talk04C0_AllRightyWellDo::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -9440,11 +9436,11 @@ Talk04C0_AllRightyWellDo::
     call StartMessageCommand09HL_B13
     ret
 
+; Arena desk: 'If you want to enter,...' ($0276) at arena rank 0; the 'Welcome to the Arena!' script
+; at ranks 1-4 (Script_WelcomeToTheArena_3) and at rank 5 (Script_WelcomeToTheArena_4). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0276, whose
-; string begins 'If you want to enter, please'; the branching is not interpreted (E-0097)
-; code: branches on wArenaRank; shows 'If you want to enter,'; starts Script_WelcomeToTheArena_3;
-; starts Script_WelcomeToTheArena_4; also changes HL and A by register arithmetic (E-0347)
+; string begins 'If you want to enter, please' (E-0097)
 Talk0276_IfYouWantTo::
     ld a, [wArenaRank]
     cp $05
@@ -9577,11 +9573,11 @@ TalkMsg0D4E_ImDiggingHereBecauseIThink::
     call StartMessageCommand09HL_B13
     ret
 
+; The odd object: '0 checked the odd object...' ($0043) before the Warubou food scene and after
+; EVENT_THANKS_FOR_COMING_BY_025; nothing in between. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0043, whose
-; string begins '0 checked the odd object. It'; the branching is not interpreted (E-0097)
-; code: checks EVENT_SCENE_WARUBOU_FOOD2; checks EVENT_THANKS_FOR_COMING_BY_025; may return early;
-; shows '0 checked the odd object. It' (E-0347)
+; string begins '0 checked the odd object. It' (E-0097)
 Talk0043_HeroCheckedTheOdd::
     ld de, EVENT_SCENE_WARUBOU_FOOD2
     call TestFlagBit
@@ -9595,13 +9591,13 @@ Talk0043_HeroCheckedTheOdd::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: 'There were many wild monsters...' ($0036) at first and after
+; EVENT_THANKS_FOR_COMING_BY_025; after the Warubou food scene 'The island is sinking? Hahah,...'
+; ($0076), after the long-faces scene 'They say you use Magic...' ($0D00), after the three-items
+; scene 'When things are tough, you...' ($050A). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
 ; constant message(s) depending on story flags and state; the first one in the code is $0036, whose
-; string begins 'There were many wild monsters in'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_THREE_ITEMS; checks
-; EVENT_SCENE_LONG_FACES_002; checks EVENT_SCENE_WARUBOU_FOOD2_00C; shows 'There were many wild
-; monsters'; shows 'The island is sinking? Hahah,'; shows 'They say you use Magic'; shows 'When
-; things are tough, you' (E-0347)
+; string begins 'There were many wild monsters in' (E-0097)
 Talk0036_ThereWereManyWild::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -9636,10 +9632,11 @@ Talk0036_ThereWereManyWild::
     call StartMessageCommand09HL_B13
     ret
 
+; The chest: '0 tried to open the chest.' ($0037) when the tile at screen buffer $D2 is $1A. (C1,
+; E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0037, whose
-; string begins '0 tried to open the chest.'; the branching is not interpreted (E-0097)
-; code: may return early; shows '0 tried to open the chest.' (E-0347)
+; string begins '0 tried to open the chest.' (E-0097)
 Talk0037_HeroTriedToOpen::
     ld a, [wScreenTileBuffer + $d2]
     cp $1a
@@ -9800,12 +9797,13 @@ Talk_DoYouWantToKnowHow::
     call StartScriptAtHL_B13
     ret
 
+; Talk (the farm helper): 'The Evaluator said I had...' ($08D1) until EVENT_THANKS_FOR_COMING_BY_025
+; and once EVENT_GIVE_MONSTER is set; in between the 'Hello, hero! Let me help' script, the second
+; version when the farm is not at its limit (wArg5 not $FF after
+; ClearArg5IfAtOrAboveLimitForFarmLevel). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $08D1, whose
-; string begins 'The Evaluator said I had an'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; shows 'The Evaluator said I had'; checks
-; EVENT_GIVE_MONSTER; calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; starts
-; Script_HelloHeroLetMe; starts Script_HelloHeroLetMe_2 (E-0347)
+; string begins 'The Evaluator said I had an' (E-0097)
 Talk08D1_TheEvaluatorSaidI::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -9833,12 +9831,12 @@ Talk08D1_TheEvaluatorSaidI::
     call StartScriptAtHL_B13
     ret
 
+; Talk: 'Up ahead is the Starry...' ($04D2 at arena rank 0, $0D0C later); after the mermaid kingdom
+; scene 'Go down these stairs to...' ($08D2); after EVENT_THANKS_FOR_COMING_BY_025 'The Evaluator's
+; singing is magic.' ($0B25). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
 ; constant message(s) depending on story flags and state; the first one in the code is $04D2, whose
-; string begins 'Up ahead is the Starry Shrine'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_MERMAID_KINGDOM_022; branches on
-; wArenaRank; shows 'Up ahead is the Starry'; shows 'Go down these stairs to'; shows 'The
-; Evaluator's singing is magic.'; also changes HL, DE and A by register arithmetic (E-0347)
+; string begins 'Up ahead is the Starry Shrine' (E-0097)
 Talk04D2_UpAheadIsThe::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10149,10 +10147,11 @@ TalkMsg0245_HeroPeeredIntoTheVaseIt_13::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: adds 100 to the party's INT (capped at 999; AddHundredToPartyINTCapped999) and says 'You
+; have to eat your...' ($00FC). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $00FC, whose
-; string begins 'You have to eat your vegetables!'; the branching is not interpreted (E-0097)
-; code: calls AddHundredToPartyINTCapped999; shows 'You have to eat your' (E-0347)
+; string begins 'You have to eat your vegetables!' (E-0097)
 Talk00FC_YouHaveToEat::
     farcall AddHundredToPartyINTCapped999
     ld hl, $00fc ; '*: You have to eat your'
@@ -10281,11 +10280,11 @@ TalkMsg0A6B_MonstersLookSoFrightening::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: 'You're today's guest of honor!' ($0545) after Darck's defeat until
+; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'Please enter. The King awaits...' ($0A40). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0A40, whose
-; string begins 'Please enter. The King awaits you'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_DARCK_DEFEATED; shows 'Please
-; enter. The King awaits'; shows 'You're today's guest of honor!' (E-0347)
+; string begins 'Please enter. The King awaits you' (E-0097)
 Talk0A40_PleaseEnterTheKing::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10657,11 +10656,11 @@ TalkMsg029B_IFoundAKey::
     call StartMessageCommand09HL_B13
     ret
 
+; Talk: 'Huh? Has the sea risen?' ($0DE4) after the mermaid kingdom scene until
+; EVENT_THANKS_FOR_COMING_BY_025; otherwise 'The sea is huge and...' ($0DE3). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0DE3, whose
-; string begins 'The sea is huge and mysterious.'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_MERMAID_KINGDOM_022; shows 'The
-; sea is huge and'; shows 'Huh? Has the sea risen?' (E-0347)
+; string begins 'The sea is huge and mysterious.' (E-0097)
 Talk0DE3_TheSeaIsHuge::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -10731,14 +10730,16 @@ GreatLogTalkEvents_Msg055F_HeroCheckedTheBookshelf::
     ret
     db $c9
 
+; Breeding masters (by sprite slot 2's kind): kind $13 asks for 100 species
+; (TotalSpeciesFlaggedOrListed) before its 'Ah, you must be the...' script (screen table 6), else 'I
+; heard of a little...' ($0D8E), then 'Generations of breeding passes on...' ($0B5A); kind $17 asks
+; for 150 before 'I didn't think GreatLog's hero...' (screen table 7), else 'What a scruffy lot
+; of...' ($0D8F), then 'Put accessories on your monsters.' ($0B5E); others the 'Didn't you save
+; GreatLog?' script (screen table 5), then 'When you breed monsters with...' ($0B56). Saves the
+; screen and the player's place; wDataBank $0E. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 5
 ; constant message(s) depending on story flags and state; the first one in the code is $0B56, whose
-; string begins 'When you breed monsters with another'; the branching is not interpreted (E-0097)
-; code: calls SaveScreenBufferToBGMap1; calls SavePlayerPositionState; sets wDataBank to $0e; checks
-; EVENT_WHEN_YOU_BREED_MONSTERS; sets wScreenTableIndex to 5; starts Script_Didn; shows 'When you
-; breed monsters with'; checks EVENT_WHEN_YOU_BREED_MONSTERS_033; calls TotalSpeciesFlaggedOrListed;
-; branches on hTemp1; branches on hTemp0; shows 'I heard of a little'; then 11 more steps (see the
-; code) (E-0347)
+; string begins 'When you breed monsters with another' (E-0097)
 Talk0B56_WhenYouBreedMonsters::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -10817,14 +10818,13 @@ Talk0B56_WhenYouBreedMonsters::
     call StartMessageCommand09HL_B13
     ret
 
+; Breeding master: sprite kind $14 asks for 100 species before the 'Hey! You're still at it,...'
+; script (screen table 9), else 'A master who can satisfy...' ($0D85), then 'Through breeding the
+; number beside...' ($0B73); others the 'Are you perhaps GreatLog's savior?' script (screen table
+; 8), then 'Breeding fire and ice together...' ($0B6D). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $0B6D, whose
-; string begins 'Breeding fire and ice together makes'; the branching is not interpreted (E-0097)
-; code: calls SaveScreenBufferToBGMap1; calls SavePlayerPositionState; sets wDataBank to $0e; checks
-; EVENT_BREEDING_FIRE_AND_ICE; sets wScreenTableIndex to 8; starts Script_AreYouPerhapsGreatLog;
-; shows 'Breeding fire and ice together'; checks EVENT_BREEDING_FIRE_AND_ICE_036; calls
-; TotalSpeciesFlaggedOrListed; branches on hTemp1; branches on hTemp0; shows 'A master who can
-; satisfy'; then 3 more steps (see the code) (E-0347)
+; string begins 'Breeding fire and ice together makes' (E-0097)
 Talk0B6D_BreedingFireAndIce::
     farcall SaveScreenBufferToBGMap1
     call SavePlayerPositionState
@@ -10874,12 +10874,12 @@ Talk0B6D_BreedingFireAndIce::
     call StartMessageCommand09HL_B13
     ret
 
+; Terry: after the Terry battle scene 'Terry: I hope you'll stay a...' ($0BB3); otherwise his battle
+; script (Script_HumphI) with 150 species or more, else 'Humph... I'm Terry...' ($0D90). (C1,
+; E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0D90, whose
-; string begins 'Humph I'm Terry. Terry I'm a'; the branching is not interpreted (E-0097)
-; code: checks EVENT_SCENE_TERRY_BATTLE_038; calls TotalSpeciesFlaggedOrListed; branches on hTemp1;
-; branches on hTemp0; shows 'Humph… I'm Terry. Terry: I'm'; starts Script_HumphI; shows 'Terry: I
-; hope you'll stay a' (E-0347)
+; string begins 'Humph I'm Terry. Terry I'm a' (E-0097)
 Talk0D90_HumphImTerry::
     ld de, EVENT_SCENE_TERRY_BATTLE_038
     call TestFlagBit

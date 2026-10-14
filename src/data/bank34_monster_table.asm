@@ -1690,7 +1690,7 @@ MonsterTable::
     db $64 ; personality axis $72
     dw MONSTER_METALY ; id 88 Metaly: picture: monster id
     db SKILL_BLAZE ; skill 1
-    db SKILL_HIGHJUMP_C8 ; skill 2
+    db ACTION_C8 ; skill 2
     db $ff ; skill 3
     db $ff ; skill 4
     dw 7899 ; EXP

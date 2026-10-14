@@ -27,15 +27,10 @@ RunBattleResolveStep::
     dw ResolveStep0ECallEffect
     dw ResolveStepAdvanceSubPhase
 
-; resolve step $00: advances wBattleResolveStep and clears wBattleSubStep. When wFollowUpAction is
-; zero, wRecordBufferData + $5 bit 7 is set, the target is present and bit 5 of the target's
-; wPersonalityActs byte is set, it farcalls PickDuckBehindAlly (not read), stores the result in
-; wDuckBehindSlot when it is not $FF, shows message $33 and returns; otherwise it clears that bit
-; and continues into ResolveStepTargetAndSubEffects (E-0053)
-; code: advances wBattleResolveStep; sets wBattleSubStep to 0; branches on wFollowUpAction; calls
-; CheckSlotStatusBlockWide_Bank36; branches on wPersonalityActs; calls PickDuckBehindAlly; branches
-; on C; copies C to wDuckBehindSlot; calls ShowBattleTextCategory0; clears bit 5 of
-; wPersonalityActs; also changes HL, A and D by register arithmetic (E-0347)
+; Resolve step 0: next step, sub-step 0. For a first action (no follow-up) with record flag bit 7,
+; on a target that no status blocks and whose personality has act bit 5, picks an ally to duck
+; behind (PickDuckBehindAlly); with one, keeps it in wDuckBehindSlot and shows battle text $33
+; (category 0); otherwise clears the target's act bit 5. (C1, E-0357)
 ResolveStepBegin::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -72,11 +67,8 @@ ResolveStepBegin::
     add_a_to_hl
     res 5, [hl]
 
-; resolve step $01: dispatches on wBattleSubStep to two cases. Case 0 (ResolveTargetReaction) may
-; redirect wBattleTarget and shows message $CB, then selects one of four sub-effects by
-; wRecordBufferData + $5 bits 7, 4 and 6 (TryShuntOrGuard-Sub04, not read); case 1
-; (ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36) follows (E-0053)
-; code: dispatches on wBattleSubStep (E-0347)
+; Resolve step 1: by the sub-step, the target's reaction (ResolveTargetReaction) or the local-side
+; follow-up (ResolveStepTargetAndSubEffects_TargetOnLocalSide_Bank36). (C1, E-0357)
 ResolveStepTargetAndSubEffects::
     ld a, [wBattleSubStep]
     jumptable
@@ -280,7 +272,7 @@ TryShuntOrGuard::
     jr c, .call_show_battle_text
     push af
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr nz, .restore
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -559,7 +551,7 @@ ResolveStepEffectChecks::
     bit 1, a
     jr z, .check_record_buffer_data
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr nz, .read_battle_target
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -592,7 +584,7 @@ ResolveStepEffectChecks::
     cp $0c
     jr nz, .loop
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr nz, .loop
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -618,7 +610,7 @@ ResolveStepEffectChecks::
     cp $c0
     jr nz, .loop
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr z, .check_record_buffer_data2
     jr .loop
 
@@ -811,9 +803,9 @@ ResolveStepEffectChecks_WaitBattleActionId::
     ret z
     cp SKILL_SUCKALL
     ret z
-    cp SKILL_HIGHJUMP_BB
+    cp ACTION_BB
     ret z
-    cp SKILL_LOVERAIN_CE
+    cp ACTION_CE
     ret
 
 ; Z for HighJump, LifeSong and LoveRain. (C1, E-0357)
@@ -949,7 +941,7 @@ ResolveStepComputeDamage::
     bit BSTAT2_CRITICAL_ROLLED, [hl]
     jr z, .check_record_buffer_data3
     res BSTAT2_CRITICAL_ROLLED, [hl]
-    call UnreferencedStoreResolveMessage35D0_Bank36
+    call StoreHitMessage_Bank36
     ld a, [wBattleActor]
     call GetBattleATK
     call RandomWithin5PercentOfHL
@@ -1109,7 +1101,7 @@ ResolveStepComputeDamage::
 ; SelectEffectByEffectFlags and SelectEffectByEffectFlags2Flags (E-0053)
 ResolveStepSoundWaitAndMessage::
     ld a, [wBattleActionId]
-    cp SKILL_LOVERAIN_CD
+    cp ACTION_CD
     jr nz, .skip
     ld a, [wSoundChannelSlots]
     ld hl, wSoundChannel1
@@ -1147,7 +1139,7 @@ ResolveStepSoundWaitAndMessage::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp SKILL_LOVERAIN_CF
+    cp ACTION_CF
     jr nz, .check_resolve_msg_flags
     ld a, [wResolveMsgFlags]
     bit 4, a
@@ -1243,7 +1235,7 @@ ResolveStepDamageMessage::
     jr z, .read_battle_target
     cp SKILL_BEDRAGON
     jr z, .skip
-    cp SKILL_HIGHJUMP_B8
+    cp ACTION_B8
     jr z, .skip
     cp SKILL_ROBMAGIC
     jr z, .read_battle_actor2
@@ -1329,7 +1321,7 @@ ResolveStepBranchOnAction::
     jp z, ResolveStepDamageMessage_ReadBattleSubStep
     cp SKILL_THICKFOG
     jp z, ResolveStepDamageMessage_ReadBattleSubStep
-    cp SKILL_HIGHJUMP_B3
+    cp ACTION_B3
     jp z, ResolveStepDamageMessage_ReadBattleSubStep
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1359,10 +1351,8 @@ ResolveStepAdvanceSubPhase::
     ld [wBattleResolveStep], a
     ret
 
-; farcalls RollRandomLoBelowChance_WriteTemp0 (not read) and returns the comparison of wRandomLo
-; with hTemp0 (taken as 4 when hTemp0 is 3): carry set when wRandomLo is below that value (E-0052)
-; code: calls RollRandomLoBelowChance_WriteTemp0; branches on hTemp0; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; Carry when wRandomLo is below the actor's resolve chance (RollRandomLoBelowChance_WriteTemp0), a
+; chance of 3 taken as 4. (C1, E-0357)
 RollRandomLoBelowChance::
     push bc
     push hl
@@ -1494,19 +1484,19 @@ ResolveStepDamageMessage_TargetOnLocalSide_Bank36::
     jr z, .set_temp0_to_56
     cp SKILL_DANCESHUT
     jr z, .set_temp0_to_63
-    cp SKILL_HIGHJUMP_B5
+    cp ACTION_B5
     jr z, .check_resolve_msg_actor
-    cp SKILL_HIGHJUMP_BA
+    cp ACTION_BA
     jr z, .set_temp0_to_78
-    cp SKILL_HIGHJUMP_BF
+    cp ACTION_BF
     jr z, .done
-    cp SKILL_HIGHJUMP_C0
+    cp ACTION_C0
     jr z, .done
-    cp SKILL_HIGHJUMP_C9
+    cp ACTION_C9
     jr z, .done
-    cp SKILL_HIGHJUMP_CA
+    cp ACTION_CA
     jr z, .done
-    cp SKILL_HIGHJUMP_CB
+    cp ACTION_CB
     jr z, .done
 
 .loop2:
@@ -1590,7 +1580,7 @@ ResolveStepDamageMessage_ActorOnLocalSide_Bank36::
     jr z, .set_temp0_to_71
     cp SKILL_AHHH_AA
     jr z, .set_temp0_to_71
-    cp SKILL_HIGHJUMP_C0
+    cp ACTION_C0
     jr z, .done
     ld hl, wTemp0
     inc [hl]
@@ -2367,7 +2357,7 @@ ResolveStepEffectChecks_ShowMissHeroAvoidedDamage::
 ; wBattleSubPhase to 2 and clears wBattleResolveStep (E-0055)
 SetSubPhase2AndRestartResolve::
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_CC
+    cp ACTION_CC
     jr z, .read_battle_actor
     ld a, [wBattleActionId]
     cp ACTION_D0
@@ -2754,11 +2744,11 @@ HealTargetHP::
     jp z, .check_link_mode
     cp SKILL_FAREWELL
     jr z, .loop
-    cp SKILL_HIGHJUMP_B1
+    cp ACTION_B1
     jr z, .loop
     cp SKILL_LIFEDANCE
     jr z, .loop
-    cp SKILL_LOVERAIN_CF
+    cp ACTION_CF
     jr z, .read_battle_target
     cp ACTION_DA
     jr z, .loop
@@ -6626,100 +6616,91 @@ ActionEffectTable::
     dw ActionEffect_ActionAF ; entry 238
     dw ActionEffect_ActionAF ; entry 239
 
+; Action $D0: Bolt-scaled skill damage (RollSkillDamageScaledByBoltResistance); marks the actor's
+; formation partner (wSlotMarks 3) and stores the damage message ('took G damage!' / 'But ... was
+; unaffected!'). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D0; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RollSkillDamageScaledByBoltResistance; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in ActionEffect_ActionCF_Skip (E-0347)
+; wBattleActionId) for action(s) $D0; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD0::
     call RollSkillDamageScaledByBoltResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
+; Action $D1: skill damage scaled by resistance level 0; marks the formation partner; the damage
+; message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D1; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActionEffect_ActionD1_RollSkillDamageFromRecord; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in ActionEffect_ActionCF_Skip (E-0347)
+; wBattleActionId) for action(s) $D1; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD1::
     call ActionEffect_ActionD1_RollSkillDamageFromRecord
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_ActionCF_Skip
 
+; Action $D2: skill damage scaled by GigaSlash resistance; marks the formation partner; the hit
+; message ('took G damage!' / 'Miss! ... was unharmed!'). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D2; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActionEffect_ActionD2_ScaleByGigaSlashResistance; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; wBattleActionId) for action(s) $D2; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD2::
     call ActionEffect_ActionD2_ScaleByGigaSlashResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $D3: as $D2 (GigaSlash-scaled skill damage, partner marked, hit message). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D3; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActionEffect_ActionD3_ScaleByGigaSlashResistance; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; wBattleActionId) for action(s) $D3; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD3::
     call ActionEffect_ActionD3_ScaleByGigaSlashResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $D4: as $D2 (GigaSlash-scaled skill damage, partner marked, hit message). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D4; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActionEffect_ActionD4_ScaleByGigaSlashResistance; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; wBattleActionId) for action(s) $D4; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD4::
     call ActionEffect_ActionD4_ScaleByGigaSlashResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $D5: as $D2 (GigaSlash-scaled skill damage, partner marked, hit message). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D5; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls SkillDamageScaledByGigaSlashResistance; calls
-; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; wBattleActionId) for action(s) $D5; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD5::
     call SkillDamageScaledByGigaSlashResistance
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $D6: marks the formation partner, then Sacrifice's effect. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D6; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in ActionEffect_Sacrifice
-; (E-0347)
+; wBattleActionId) for action(s) $D6; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD6::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_Sacrifice
 
+; Action $D7: marks the formation partner; the damage is the actor's basic damage plus its
+; partner's; hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D7; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; ActionEffect_ActionD7_AdvanceRandom; continues in UnreferencedStoreResolveMessage35D0_Bank36
-; (E-0347)
+; wBattleActionId) for action(s) $D7; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD7::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ActionEffect_ActionD7_AdvanceRandom
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $D8: marks the formation partner; the damage is the actor's attack damage plus its
+; partner's; hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; ActionEffect_ActionD8_ComputeAttackDamage; continues in UnreferencedStoreResolveMessage35D0_Bank36
-; (E-0347)
+; wBattleActionId) for action(s) $D8; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionD8::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ActionEffect_ActionD8_ComputeAttackDamage
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 217; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -6727,16 +6708,14 @@ ActionEffect_ActionD8::
 ActionEffect_ActionD9::
     call ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $DA: marks the formation partner; cures every status in the target's status byte 0,
+; restores its HP fully when below max (HealTargetHP) and fills its MP; with any change '<name>'s
+; wound was healed!' ($37), otherwise 'But nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; sets hTemp0 to 0; calls
-; ClearDamageAndReadTargetStatus0_Bank36; sets hTemp0 to 1; calls HealTargetHP; sets hTemp0 to 1;
-; branches on hTemp0; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_Skip; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
+; wBattleActionId) for action(s) $DA; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDA::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     xor a
@@ -6800,15 +6779,14 @@ ActionEffect_ActionDA::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
+; Action $DB: marks the formation partner and, by wRandomLo bits 2-3, gives the target one of four
+; statuses with no resistance roll: badly poisoned ('terribly poisoned!'), cursed, paralyzed or
+; confused (ActionEffect_ActionDB_Data: status bit, effect action $2F or $34, message), playing that
+; action's effect (SelectEffectByEffectFlags with flags $41/$30, the flags put back after). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls
-; ClearDamageAndReadTargetStatus0_Bank36; calls AdvanceRandom; branches on the byte at
-; ActionEffect_ActionDB_Data; copies the byte at ActionEffect_ActionDB_Data to wBattleActionId;
-; copies wEffectFlags2 to hTemp0; copies wEffectFlags to hTemp1; sets wEffectFlags to $41; sets
-; wEffectFlags2 to $30; calls SelectEffectByEffectFlags; calls SelectEffectByEffectFlags2Flags;
-; copies hTemp0 to wEffectFlags2; then 3 more steps (see the code) (E-0347)
+; wBattleActionId) for action(s) $DB; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDB::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     call ClearDamageAndReadTargetStatus0_Bank36
@@ -6868,11 +6846,10 @@ ActionEffect_ActionDB::
 ActionEffect_ActionDB_Data::
     db $02, $2f, $77, $00, $20, $34, $d9, $00, $40, $2f, $76, $00, $10, $34, $42, $00
 
+; Action $DC: BeDragon for the formation partner (as actor), then for the actor. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DC; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; calls ActionEffect_BeDragon;
-; sets wBattleActor; continues in ActionEffect_BeDragon (E-0347)
+; wBattleActionId) for action(s) $DC; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDC::
     ld a, [wBattleActor]
     push af
@@ -6884,13 +6861,12 @@ ActionEffect_ActionDC::
     ld [wBattleActor], a
     jp ActionEffect_BeDragon
 
+; Action $DD: marks the formation partner; the target's ATK is doubled, its SideStep field set to 1
+; or 2 at random, and its DEF and AGL raised (each marking BSTAT6_STATS_RAISED when it rose);
+; '<name> became flush with power!' ($93). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DD; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; sets BSTAT1_ATK_DOUBLED of
-; wBattleStatus1; calls AdvanceRandom; calls RaiseTargetDEF; calls SetSlotStatus6Bit6; calls
-; RaiseTargetAGL; calls SetSlotStatus6Bit6; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; also changes HL, BC and A by register arithmetic (E-0347)
+; wBattleActionId) for action(s) $DD; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDD::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleTarget]
@@ -6926,12 +6902,11 @@ ActionEffect_ActionDD::
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; Action $DE: marks the formation partner; seals the target's spells, dances and breaths ($9E). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DE; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; sets BSTAT1_SPELLS_SEALED of
-; wBattleStatus1; sets BSTAT1_DANCE_SEALED of wBattleStatus1; sets BSTAT1_BREATH_SEALED of
-; wBattleStatus1; continues in ClearDamageAndStoreResolveMsgFlags_Bank36 (E-0347)
+; wBattleActionId) for action(s) $DE; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDE::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleTarget]
@@ -6944,21 +6919,19 @@ ActionEffect_ActionDE::
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; Action $DF: marks the formation partner, then RobMagic's effect. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $DF; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in ActionEffect_RobMagic
-; (E-0347)
+; wBattleActionId) for action(s) $DF; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionDF::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_RobMagic
 
+; Action $E0: marks the formation partner; StrongD for the partner (as actor), then for the actor.
+; (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $E0; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; calls ActorFormationSlotToTemp0;
-; copies hTemp0 to wBattleActor; calls ActionEffect_StrongD; sets wBattleActor; continues in
-; ActionEffect_StrongD (E-0347)
+; wBattleActionId) for action(s) $E0; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionE0::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -6971,21 +6944,20 @@ ActionEffect_ActionE0::
     ld [wBattleActor], a
     jp ActionEffect_StrongD
 
+; Action $E1: marks the formation partner, then PanicAll's effect. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $E1; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; continues in ActionEffect_PanicAll
-; (E-0347)
+; wBattleActionId) for action(s) $E1; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionE1::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp ActionEffect_PanicAll
 
+; Action $E2: marks the formation partner; sets BSTAT7_DAMAGE_X10 on every present slot of the
+; actor's side (four from its first), then ends the sub-phase
+; (SetSubPhase2AndResetResolveStep_CheckOriginalTarget). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; copies wBattleActor & $04 to hTemp0;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT7_DAMAGE_X10 of wBattleStatus7; increments
-; hTemp0; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; wBattleActionId) for action(s) $E2; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionE2::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -7010,13 +6982,12 @@ ActionEffect_ActionE2::
     jr nz, .loop
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $E3: marks the formation partner; every present ally gets a forced critical
+; (BSTAT1_CRITICAL) and status 4's Focus field set to 2 (bit 7 set, bit 6 cleared); then ends the
+; sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3; copies wBattleActor & $04 to hTemp0;
-; calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT1_CRITICAL of wBattleStatus1; clears bit 6 of
-; wBattleStatus1; sets bit 7 of wBattleStatus1; increments hTemp0; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; wBattleActionId) for action(s) $E3; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionE3::
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     ld a, [wBattleActor]
@@ -7046,85 +7017,79 @@ ActionEffect_ActionE3::
     jr nz, .loop
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $AF (and 190, 228-231): does nothing. (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 175, 190, 228, 229, 230, 231 ...; the misaligned decoding before E-0126 hid this
-; entry; the body is not interpreted (E-0126)
-; code: returns at once (E-0347)
+; entry (E-0126)
 ActionEffect_ActionAF::
     ret
 
+; Fight: the attack damage (ComputeAttackDamage) and the hit message ('took G damage!' / 'Miss! ...
+; was unharmed!'). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 0 (no name); ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084) (E-0333: action 0 is Fight, the plain
-; attack: it is dispatched on turns whose battle text names no skill, while every other action
-; follows the skill-name lookup of its own id; skill 0 is AIScore_Fight; C2) (was
-; ActionEffect_Fight)
-; code: calls ComputeAttackDamage; continues in UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084) (E-0333: action 0 is Fight, the plain attack: it is dispatched on
+; turns whose battle text names no skill, while every other action follows the skill-name lookup of
+; its own id; skill 0 is AIScore_Fight; C2) (was ActionEffect_Fight)
 ActionEffect_Fight::
     call ComputeAttackDamage
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Blaze (Blazemore, Blazemost): skill damage scaled by Blaze resistance; the damage message. (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 1 Blaze, 2 Blazemore, 3 Blazemost; ids below 175 are skills named
-; from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Blaze_RollSkillDamageFromRecord; continues in ActionEffect_ActionCF_Skip
-; (E-0347)
+; from StringTable_SkillNames (E-0084)
 ActionEffect_Blaze::
     call ActionEffect_Blaze_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Firebal: skill damage scaled by Firebal resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 4 Firebal, 5 Firebane, 6 Firebolt; ids below 175 are skills named
-; from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Firebal_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; from StringTable_SkillNames (E-0084)
 ActionEffect_Firebal::
     call ActionEffect_Firebal_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Bang: skill damage scaled by Bang resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 7 Bang, 8 Boom, 9 Explodet; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Bang_RollSkillDamageFromRecord; continues in ActionEffect_ActionCF_Skip
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Bang::
     call ActionEffect_Bang_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Infernos: skill damage with its resistance scaling; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 10 Infernos, 11 Infermore, 12 Infermost; ids below 175 are skills
-; named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Infernos_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; named from StringTable_SkillNames (E-0084)
 ActionEffect_Infernos::
     call ActionEffect_Infernos_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Bolt: skill damage scaled by Bolt resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 13 Bolt, 14 Zap, 15 Thordain, 63 Hellblast; ids below 175 are
-; skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollSkillDamageScaledByBoltResistance; continues in ActionEffect_ActionCF_Skip
-; (E-0347)
+; skills named from StringTable_SkillNames (E-0084)
 ActionEffect_Bolt::
     call RollSkillDamageScaledByBoltResistance
     jp ActionEffect_ActionCF_Skip
 
+; IceBolt: skill damage scaled by IceBolt resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 16 IceBolt, 17 SnowStorm, 18 Blizzard; ids below 175 are skills
-; named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_IceBolt_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; named from StringTable_SkillNames (E-0084)
 ActionEffect_IceBolt::
     call ActionEffect_IceBolt_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Beat: when the roll gets through Beat resistance (RollVsBeatResistance), the target's HP becomes 0
+; with 1000 as the damage and '<name> was instantly slain!' ($8E); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 19 Beat, 20 Defeat, 121 K.O.Dance; ids below 175 are skills named
-; from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsBeatResistance; copies L to wBattleDamageLo; copies H to wBattleDamageHi;
-; continues in UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; from StringTable_SkillNames (E-0084)
 ActionEffect_Beat::
     call RollVsBeatResistance
     jr nc, .skip
@@ -7141,20 +7106,18 @@ ActionEffect_Beat::
     ld [wBattleDamageHi], a
     lb hl, $b5, $8e
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
+; Sacrifice: no effect for an ally in battle kind 2 or 3 or when the Sacrifice resistance roll fails
+; ('But ... was unaffected!'); otherwise on a coin flip the target loses all but a hundredth of its
+; HP (damage HP - HP/100, at least 1), or its HP becomes 0 with 1000 as the damage and 'The <name>
+; shattered!' ($8F). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 21 Sacrifice; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3; calls AdvanceRandom; calls
-; GetBattleHP; copies C to wBattleDamageLo; copies B to wBattleDamageHi; continues in
-; ActionEffect_ActionCF_Skip; copies L to wBattleDamageLo; copies H to wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Sacrifice::
     call ActionEffect_Sacrifice_ZIfAllyActorInBattleKindMode2Or3
     jr nc, .skip
@@ -7205,7 +7168,7 @@ ActionEffect_Sacrifice::
     ld [wBattleDamageHi], a
     lb hl, $b5, $8f
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
@@ -7245,14 +7208,12 @@ ActionEffect_Heal::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; MPass (MPassMore, MPassMost): an absent target ends the sub-phase or has no effect; at full MP
+; 'But nothing happened!'; otherwise restores MP (ActionEffect_MPass_AddDoubleAToHL_Bank36) with
+; '<name>'s MP was restored!' ($C3). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; ids below 175 are skills
-; named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; calls ActionEffect_MPass_AddDoubleAToHL_Bank36;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; named from StringTable_SkillNames (E-0084)
 ActionEffect_MPass::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -7285,12 +7246,13 @@ ActionEffect_MPass::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Vivify: a present target gets 'But nothing happened!' and an empty slot ends the sub-phase; a
+; fallen one comes back on a coin flip with half its max HP
+; (ActionEffect_Vivify_CallAddDoubleAToHL_Bank36: HP set, picture reloaded on the far side, back in
+; with its status cleared, message $50), otherwise message $67. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 30 Vivify; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; may continue in ApplyTargetMaxHPAmount_Skip; may
-; continue in ApplyTargetMaxHPAmount_Skip2; calls AdvanceRandom; may continue in
-; ActionEffect_Vivify_Skip; also changes HL, DE, A and B by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Vivify::
     ld a, [wBattleTarget]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -7346,11 +7308,12 @@ ActionEffect_Vivify_Skip::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Revive: no effect on a side's fourth slot, 'But nothing happened!' on a present target, nothing
+; for an empty slot; a fallen target comes back with its full max HP (ApplyTargetMaxHPAmount). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 31 Revive, $BB; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ApplyTargetMaxHPAmount_Skip2; calls CarryUnlessBattleSlotOutSlotEmpty; may
-; continue in ApplyTargetMaxHPAmount_Skip; may continue in ApplyTargetMaxHPAmount_Skip2 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Revive::
     ld a, [wBattleTarget]
     and $03
@@ -7381,12 +7344,12 @@ ApplyTargetMaxHPAmount_Skip::
 ApplyTargetMaxHPAmount_Skip2::
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Farewell: never the actor itself or a side's fourth slot; a present target is healed as by Heal
+; (message flag 6 cleared); a fallen one comes back with full max HP (flag 6 set); an empty slot
+; ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 32 Farewell; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ApplyTargetMaxHPAmount_Skip2; calls CarryUnlessBattleSlotOutSlotEmpty; may
-; continue in ApplyTargetMaxHPAmount_Skip2; calls ApplyTargetMaxHPAmount; sets bit 6 of
-; wResolveMsgFlags; calls ActionEffect_Heal; clears bit 6 of wResolveMsgFlags (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Farewell::
     ld a, [wBattleTarget]
     ld hl, wBattleActor
@@ -7411,12 +7374,11 @@ ActionEffect_Farewell::
     res 6, [hl]
     ret
 
+; Antidote: cures poison and bad poison (status 0 bits 0-1) with '<name> was cured of poison.'
+; ($4E); otherwise 'But nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 33 Antidote; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ClearDamageAndReadTargetStatus0_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Antidote::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $03
@@ -7431,13 +7393,11 @@ ActionEffect_Antidote::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
+; DeChaos: cures confusion (BSTAT0_CONFUSED), marks the target (wSlotMarks 3) and says '<name>
+; snapped out of confusion!' ($83); otherwise 'But nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 34 DeChaos; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ClearDamageAndReadTargetStatus0_Bank36; sets wSlotMarks to 3; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_DeChaos::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $10
@@ -7456,13 +7416,12 @@ ActionEffect_DeChaos::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
+; NumbOff: when the target is asleep or paralyzed (status 0 & $CC) says '<name> is no longer
+; paralyzed.' ($4F) for paralysis, else '<name> woke up!' ($82), clears both with the sleep counter
+; and marks the target; otherwise 'But nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 35 NumbOff; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ClearDamageAndReadTargetStatus0_Bank36; calls
-; ClearDamageAndStoreResolveMsgFlags_Bank36; sets wSlotMarks to 3; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_NumbOff::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $cc
@@ -7492,12 +7451,11 @@ ActionEffect_NumbOff::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
+; CurseOff: lifts the curse (BSTAT0_CURSED) with '<name> was uncursed!' ($51); otherwise 'But
+; nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 36 CurseOff; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ClearDamageAndReadTargetStatus0_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_CurseOff::
     call ClearDamageAndReadTargetStatus0_Bank36
     and $20
@@ -7512,13 +7470,12 @@ ActionEffect_CurseOff::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip
 
+; Upper (and action $25): raises the target's DEF (RaiseTargetDEF), marking BSTAT6_STATS_RAISED when
+; it rose; '<name>'s DEF rose by G!' ($45) when the amount is not zero, otherwise 'But nothing
+; happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 37 Upper, 38 Increase; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RaiseTargetDEF; calls SetSlotStatus6Bit6; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Upper::
     call RaiseTargetDEF
     jr nc, .skip
@@ -7540,11 +7497,12 @@ ActionEffect_Upper::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Sap: when the roll gets through Sap resistance (RollVsSapResistance), lowers the target's DEF
+; (ActionEffect_UltraDown_SetSlotStatus6Bit7: '<name>'s DEF fell by G!', marking
+; BSTAT6_STATS_LOWERED); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 39 Sap, 40 Defense; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsSapResistance; may continue in ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Sap::
     call RollVsSapResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
@@ -7565,13 +7523,12 @@ ActionEffect_UltraDown_SetSlotStatus6Bit7::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Speed (SpeedUp): raises the target's AGL (RaiseTargetAGL), marking BSTAT6_STATS_RAISED when it
+; rose; '<name>'s AGL rose by G!' ($49) when the amount is not zero, otherwise 'But nothing
+; happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 41 Speed, 42 SpeedUp; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RaiseTargetAGL; calls SetSlotStatus6Bit6; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Speed::
     call RaiseTargetAGL
     jr nc, .skip
@@ -7593,11 +7550,11 @@ ActionEffect_Speed::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Slow: when the roll gets through Slow resistance, cuts the target's AGL
+; (ResolveStepDamageMessage_SetSlotStatus6Bit7: '<name>'s AGL was cut by G!', marking
+; BSTAT6_STATS_LOWERED); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
-; for action(s) 43 Slow, 44 SlowAll; the misaligned decoding before E-0126 hid this entry; the body
-; is not interpreted (E-0126)
-; code: calls RollVsSlowResistance; may continue in ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
-; (E-0347)
+; for action(s) 43 Slow, 44 SlowAll; the misaligned decoding before E-0126 hid this entry (E-0126)
 ActionEffect_Slow::
     call RollVsSlowResistance
     jp nc, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
@@ -7618,12 +7575,11 @@ ResolveStepDamageMessage_SetSlotStatus6Bit7::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; TwinHits: doubles the target's ATK once (BSTAT1_ATK_DOUBLED) with '<name>'s ATK doubled!' ($43);
+; already doubled, it ends the sub-phase without a message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 45 TwinHits; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus1; sets BSTAT1_ATK_DOUBLED of wBattleStatus1; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_TwinHits::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -7664,13 +7620,13 @@ ResolveStepDamageMessage_RollVsRadiantResistance::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
+; Sleep (SleepAir ...): an already sleeping target gets '<name> is already asleep!' ($D4); when the
+; roll gets through Sleep resistance, sets asleep with the sleep counter at 3 (or $8C) and '<name>
+; was put to sleep!' ($73); otherwise 'But ... was unaffected!' for SleepAir, '<name> didn't fall
+; asleep!' ($CE) for the rest. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 47 Sleep, 48 SleepAll, 113 SleepAir; ids below 175 are skills named
-; from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsSleepResistance; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; branches on wBattleActionId; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; from StringTable_SkillNames (E-0084)
 ActionEffect_Sleep::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -7705,12 +7661,11 @@ ActionEffect_Sleep::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; TakeMagic: sets BSTAT2_TAKE_MAGIC on the actor once with '<name> started glowing!' ($3F); already
+; set, it ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 49 TakeMagic; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus2; sets BSTAT2_TAKE_MAGIC of wBattleStatus2; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_TakeMagic::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -7725,14 +7680,14 @@ ActionEffect_TakeMagic::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; RobMagic (and action $DF): needs MP on the target and, except for $DF, the actor below its max MP;
+; when the roll gets through RobMagic resistance, the actor takes MP from the target
+; (ActionEffect_RobMagic_DrainTargetMPAmount); for $DF the formation partner drains too, the
+; target's MP becomes 0 and the shown amount is twice half of what it had; '<name> was stripped of
+; GMP!' ($3D); otherwise it ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 50 RobMagic, 119 RobDance; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleActionId; calls GetBattleMP; calls RollVsRobMagicResistance; copies C to
-; wSavedActorSlot; copies B to wSavedActorByte; calls ActionEffect_RobMagic_DrainTargetMPAmount;
-; branches on wBattleActionId; calls ActorFormationSlotToTemp0; copies hTemp0 to wBattleActor; calls
-; ActionEffect_RobMagic_DrainTargetMPAmount; sets wBattleActor; copies C to wBattleDamageLo; then 4
-; more steps (see the code) (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_RobMagic::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -7815,15 +7770,13 @@ ActionEffect_RobMagic::
 .skip3:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; StopSpell: an already sealed target ends the sub-phase; when the StopSpell roll succeeds
+; (ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36) seals its spells
+; (BSTAT1_SPELLS_SEALED) with '<name> can't use spells now!' ($3B); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 51 StopSpell; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus1; calls
-; ActionEffect_StopSpell_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets BSTAT1_SPELLS_SEALED of
-; wBattleStatus1; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_StopSpell::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -7846,15 +7799,12 @@ ActionEffect_StopSpell::
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
+; PanicAll (and action $E1): an already confused target gets '<name> became more confused!' ($CF);
+; when the PanicAll roll succeeds, confuses it (BSTAT0_CONFUSED) with '<name> became confused!'
+; ($42); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 52 PanicAll, 120 PaniDance, 173 PanicAll; ids below 175 are skills
-; named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus; calls
-; ActionEffect_PanicAll_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets BSTAT0_CONFUSED of
-; wBattleStatus; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; named from StringTable_SkillNames (E-0084)
 ActionEffect_PanicAll::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -7879,13 +7829,12 @@ ActionEffect_PanicAll::
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
+; Ironize: turns to iron (status 5 | $C0, the Ironize field at 3) only the target when it is a foe
+; outside link mode 1, otherwise every present slot of the target's side; message $46 or $47 by
+; ActionEffect_Ironize_ReadLinkModeAndBattleTarget. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 53 Ironize, 174 Ironize; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wLinkMode; branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; calls ActionEffect_Ironize_ReadLinkModeAndBattleTarget; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Ironize::
     ld a, [wLinkMode]
     cp $01
@@ -7927,13 +7876,12 @@ ActionEffect_Ironize::
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; MagicBack and Bounce, on the actor: Bounce sets the lasting bounce (BSTAT2_BOUNCE) and MagicBack
+; the one-time one (BSTAT2_MAGIC_BACK), each clearing the other, with 'A veil of light formed before
+; <name>!' ($4C / $4B); when the bit is already set, 'But nothing happened!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 54 MagicBack, 55 Bounce; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes HL, BC and A; branches on wBattleActionId; branches on wBattleStatus2; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; branches on wBattleStatus2; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_MagicBack::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -7967,14 +7915,12 @@ ActionEffect_MagicBack::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Barrier: every present slot of the target's side without BSTAT2_DAMAGE_HALVED gets it (absent ones
+; lose it); when any gained it, 'A barrier of light appeared.' ($4D), otherwise it ends the
+; sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 56 Barrier; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus2; sets bit 2 of
-; wBattleStatus2; clears bit 2 of wBattleStatus2; branches on wBattleStatus2; branches on D;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC, A and D by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Barrier::
     ld a, [wBattleTarget]
     and $04
@@ -8012,12 +7958,11 @@ ActionEffect_Barrier::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; MagicWall: sets BSTAT8_MAGIC_WALL on every present slot of the actor's side and ends the
+; sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 57 MagicWall; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT8_MAGIC_WALL of wBattleStatus8; continues
-; in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_MagicWall::
     ld a, [wBattleActor]
     and $04
@@ -8039,12 +7984,12 @@ ActionEffect_MagicWall::
     jr nz, .loop
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Transform: stores '<name> assumed G's form!' ($52), takes the target's stats, resistances and the
+; rest (ActionEffect_Transform_SlotSpeciesNibblesD00AD00B), clears the low three bits of the actor's
+; side control, and sets BSTAT1_TRANSFORMED (clearing the dragon form). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 58 Transform; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ClearDamageAndStoreResolveMsgFlags_Bank36; calls
-; ActionEffect_Transform_SlotSpeciesNibblesD00AD00B; sets BSTAT1_TRANSFORMED of wBattleStatus1;
-; clears BSTAT1_DRAGON_FORM of wBattleStatus1 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Transform::
     ld l, $52
     lb bc, $40, $90
@@ -8079,13 +8024,14 @@ ResolveStepDamageMessage_WaitLinkMode::
     ld [hl], a
     ret
 
+; BeDragon (and action $DC): the actor becomes monster $0082 ($0262 for $DC) with its stats,
+; resistances and skills (ActionEffect_BeDragon_LoadMonsterRecord), clears the low three bits of its
+; side control, sets BSTAT1_DRAGON_FORM (clearing transformed) and shows its species name again;
+; '<name> turned into a dragon!' ($44), or for $DC '<name> and G turned into a huge dragon!' ($F7).
+; (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 59 BeDragon, $B8; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_BeDragon_LoadMonsterRecord; sets BSTAT1_DRAGON_FORM of wBattleStatus1;
-; clears BSTAT1_TRANSFORMED of wBattleStatus1; calls ActionEffect_BeDragon_ReadLinkMode; branches on
-; wBattleActionId; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; also changes HL, BC and A
-; by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_BeDragon::
     call ActionEffect_BeDragon_LoadMonsterRecord
     ld a, [wBattleActor]
@@ -8114,12 +8060,12 @@ ActionEffect_BeDragon::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; Chance: picks one of its effects at random (ActionEffect_Chance_AdvanceRandom), makes it the
+; actor's action choice and wBattleActionId, loads its skill record, chooses a new target
+; (ChooseTargetForActor) and restarts the resolution at step 3 of sub-phase 0. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 60 Chance; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Chance_AdvanceRandom; copies C to wBattleActionId; copies C to
-; wRecordBuffer; calls LoadSkillRecord; sets wBattleTargetChoice to $ff; calls ChooseTargetForActor;
-; copies D to wBattleTarget; sets wBattleSubPhase to 0; sets wBattleResolveStep to 3 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Chance::
     farcall ActionEffect_Chance_AdvanceRandom
     ld a, [wBattleActor]
@@ -8161,86 +8107,85 @@ ActionEffect_MegaMagic::
     call ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi
     jp ActionEffect_ActionCF_Skip
 
+; BigBang: skill damage scaled by Blaze resistance with the alternative table; the damage message.
+; (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 62 BigBang; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_BigBang_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_BigBang::
     call ActionEffect_BigBang_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; FireAir: skill damage scaled by FireAir resistance, halved under a barrier (BSTAT2_DAMAGE_HALVED);
+; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 64 FireAir, 65 BlazeAir, 66 Scorching, 67 WhiteFire; ids below 175
-; are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_FireAir_RollSkillDamageFromRecord; calls HalveDamageIfTargetStatus2Bit2;
-; continues in ActionEffect_ActionCF_Skip (E-0347)
+; are skills named from StringTable_SkillNames (E-0084)
 ActionEffect_FireAir::
     call ActionEffect_FireAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
     jp ActionEffect_ActionCF_Skip
 
+; FrigidAir: skill damage scaled by FrigidAir resistance, halved under a barrier; the damage
+; message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 68 FrigidAir, 69 IceAir, 70 IceStorm, 71 WhiteAir; ids below 175
-; are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_FrigidAir_RollSkillDamageFromRecord; calls
-; HalveDamageIfTargetStatus2Bit2; continues in ActionEffect_ActionCF_Skip (E-0347)
+; are skills named from StringTable_SkillNames (E-0084)
 ActionEffect_FrigidAir::
     call ActionEffect_FrigidAir_RollSkillDamageFromRecord
     call HalveDamageIfTargetStatus2Bit2
     jp ActionEffect_ActionCF_Skip
 
+; WindBeast: damage from the actor's level (ActionEffect_WindBeast_ShiftBCRight1: 3 x level + 10, at
+; most 180, +-15%, Vacuum-scaled); the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 72 WindBeast; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_WindBeast_ShiftBCRight1; continues in ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_WindBeast::
     call ActionEffect_WindBeast_ShiftBCRight1
     jp ActionEffect_ActionCF_Skip
 
+; Vacuum: damage from the actor's level (2 x level + 30, at most 150, +-10%, Vacuum-scaled); the
+; damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 73 Vacuum; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Vacuum_ShiftBCRight1; continues in ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Vacuum::
     call ActionEffect_Vacuum_ShiftBCRight1
     jp ActionEffect_ActionCF_Skip
 
+; Lightning: damage from the actor's level (2 x level + 20, at most 180, +-10%, Bolt-scaled); the
+; damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 74 Lightning; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Lightning_ShiftBCRight1; continues in ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Lightning::
     call ActionEffect_Lightning_ShiftBCRight1
     jp ActionEffect_ActionCF_Skip
 
+; RockThrow: skill damage scaled by RockThrow resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 75 RockThrow; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_RockThrow_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_RockThrow::
     call ActionEffect_RockThrow_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; Watershot: skill damage scaled by Watershot resistance; the damage message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 76 Watershot, 77 Tidalwave; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Watershot_RollSkillDamageFromRecord; continues in
-; ActionEffect_ActionCF_Skip (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Watershot::
     call ActionEffect_Watershot_RollSkillDamageFromRecord
     jp ActionEffect_ActionCF_Skip
 
+; CallHelp: the first time, on a roll of $80 or more sets BSTAT6_CALLED_HELP and shows 'Help arrived
+; from seemingly nowhere!' at once (sub-phase 3, step 0), otherwise 'But the call went unheard!'
+; ($69); once help has come, deals the helpers' damage
+; (ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi) with the hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 78 CallHelp, 79 YellHelp; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus6; calls AdvanceRandom; branches on wRandomLo; sets bit 0 of
-; wBattleStatus6; shows battle text 'Help arrived from seemingly nowhere!'; sets wBattleSubPhase to
-; 3; sets wBattleResolveStep to 0; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; calls
-; ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_CallHelp::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -8269,117 +8214,117 @@ ActionEffect_CallHelp::
 
 .call_action_effect_call_help_write_battle:
     call ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 80 FireSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_FireSlash::
     call AttackDamageScaledByBlazeResistance
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 81 VacuSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_VacuSlash::
     call AttackDamageScaledByVacuumResistance
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 82 BoltSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_BoltSlash::
     call AttackDamageScaledByBoltResistance
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 83 IceSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_IceSlash::
     call AttackDamageScaledByIceBoltResistance
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 84 SlimeBlow; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_SlimeBlow::
     call AttackDamageHalvedDEFVsSlime
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 85 DrakSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_DrakSlash::
     call AttackDamageHalvedDEFVsDragon
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 86 BeastCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_BeastCut::
     call AttackDamageHalvedDEFVsBeast
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 87 BirdBlow; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_BirdBlow::
     call AttackDamageHalvedDEFVsBird
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 88 BugBlow; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_BugBlow::
     call AttackDamageHalvedDEFVsBug
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 89 Shears; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_Shears::
     call AttackDamageHalvedDEFVsPlant
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 90 DevilCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_DevilCut::
     call AttackDamageHalvedDEFVsDemon
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 91 ZombieCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_ZombieCut::
     call AttackDamageHalvedDEFVsZombie
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 92 CleanCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_CleanCut::
     call AttackDamageHalvedDEFVsMaterial
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 93 AquaCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_AquaCut::
     call AttackDamageHalvedDEFVsWater
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 94 MetalCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_MetalCut::
     call AttackDamageTimes1_5IfSlotDamageFlagsBit0
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; PoisonHit: Fight's effect (attack damage and hit message). (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 95 PoisonHit, 96 Paralyze, 97 NapAttack; the misaligned decoding before E-0126 hid
-; this entry; the body is not interpreted (E-0126)
-; code: calls ActionEffect_Fight (E-0347)
+; this entry (E-0126)
 ActionEffect_PoisonHit::
     call ActionEffect_Fight
     ret
@@ -8398,16 +8343,16 @@ ActionEffect_SquallHit::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; BiAttack (QuadHits): the reduced-ATK damage of ActionEffect_BiAttack_ShiftHLRight1 (ATK cut to 75%
+; or 62.5% against half the DEF); the hit message. (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
-; for action(s) 99 BiAttack, 100 QuadHits; the misaligned decoding before E-0126 hid this entry; the
-; body is not interpreted (E-0126)
-; code: calls ActionEffect_BiAttack_ShiftHLRight1; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; for action(s) 99 BiAttack, 100 QuadHits; the misaligned decoding before E-0126 hid this entry
+; (E-0126)
 ActionEffect_BiAttack::
     call ActionEffect_BiAttack_ShiftHLRight1
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 101 RainSlash; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -8438,21 +8383,21 @@ ActionEffect_RainSlash::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 102 MultiCut; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_MultiCut::
     call ActionEffect_MultiCut_LoadSkillRecord
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 103 GigaSlash; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_GigaSlash::
     call SkillDamageScaledByGigaSlashResistance
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 104 ChargeUp; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -8466,11 +8411,10 @@ ActionEffect_ChargeUp::
     ld [hl], a
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; PsycheUp: the attack damage times 1.5 (ScaleHLBy3Over2); the hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 105 PsycheUp; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ComputeAttackDamage; calls ScaleHLBy3Over2; copies L to wBattleDamageLo; copies H to
-; wBattleDamageHi; continues in UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_PsycheUp::
     call ComputeAttackDamage
     ld a, [wBattleDamageLo]
@@ -8482,13 +8426,14 @@ ActionEffect_PsycheUp::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; HighJump: on the first turn sets the actor's HighJump field (status 4 | $0C) and ends the
+; sub-phase (it is up in the air); with the field set, clears it and lands with PsycheUp's damage
+; (ActionEffect_HighJump_Skip). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 106 HighJump; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes HL and A; may continue in ActionEffect_HighJump_Skip; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_HighJump::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -8508,14 +8453,12 @@ ActionEffect_HighJump_Skip::
     ld [hl], a
     jr ActionEffect_PsycheUp
 
+; EvilSlash: against a target some status blocks, or on a roll of $A0 or more, clears the actor's
+; critical roll and deals its ATK within 5% as damage; otherwise '<name> leapt out of the way!'
+; ($D2). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 107 EvilSlash; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls CheckSlotStatusBlock; calls AdvanceRandom; branches on wRandomLo; clears
-; BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls GetBattleATK; calls RandomWithin5PercentOfHL;
-; copies E to wBattleDamageLo; copies D to wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_EvilSlash::
     ld a, [wBattleTarget]
     call CheckSlotStatusBlock
@@ -8539,19 +8482,18 @@ ActionEffect_EvilSlash::
     ld [wBattleDamageHi], a
     lb hl, $d2, $35
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $d2
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Massacre: clears the actor's critical roll and deals its ATK within 5% as damage ('took G damage!'
+; / 'But ... was unaffected!'). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 108 Massacre; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: clears BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls GetBattleATK; calls
-; RandomWithin5PercentOfHL; copies E to wBattleDamageLo; copies D to wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Massacre::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -8566,12 +8508,13 @@ ActionEffect_Massacre::
     ld [wBattleDamageHi], a
     lb hl, $b5, $35
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
+; TwinSlash: clears the actor's critical roll, then PsycheUp's damage (attack damage x 1.5). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 109 TwinSlash; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: clears BSTAT2_CRITICAL_ROLLED of wBattleStatus2; calls ActionEffect_PsycheUp (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_TwinSlash::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -8580,12 +8523,11 @@ ActionEffect_TwinSlash::
     call ActionEffect_PsycheUp
     ret
 
+; Berserker: sets BSTAT6_BERSERK on the actor, clears its critical roll and deals twice the attack
+; damage; the hit message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 110 Berserker; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT6_BERSERK of wBattleStatus6; clears BSTAT2_CRITICAL_ROLLED of wBattleStatus2;
-; calls ComputeAttackDamage; copies L to wBattleDamageLo; copies H to wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Berserker::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -8606,14 +8548,14 @@ ActionEffect_Berserker::
     ld [wBattleDamageLo], a
     ld a, h
     ld [wBattleDamageHi], a
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 111 Ramming; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_Ramming::
     call DamageEightyPercentOfTargetHPScaled
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 112 Kamikaze; the misaligned decoding before E-0126 hid this entry; the body is not
@@ -8622,14 +8564,12 @@ ActionEffect_Kamikaze::
     call ActionEffect_Kamikaze_HLToBattleStatus8EntryOfBattleTarget_Bank36
     jp ActionEffect_ActionCF_Skip
 
+; PalsyAir: an already paralyzed target ends the sub-phase; when the roll gets through PalsyAir
+; resistance, paralyzes it with '<name> became paralyzed!' ($76); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 114 PalsyAir; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus; calls RollVsPalsyAirResistance; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; sets bit 6 of wBattleStatus;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_PalsyAir::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8653,16 +8593,13 @@ ActionEffect_PalsyAir::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; PoisonGas and PoisonAir: PoisonAir badly poisons ('<name> was terribly poisoned!', $77; skipped
+; when already badly poisoned), the others poison ('<name> was poisoned!', $75; skipped when
+; poisoned either way), each replacing the other kind, when the roll gets through PoisonGas
+; resistance; otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 115 PoisonGas, 116 PoisonAir; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleActionId; branches on wBattleStatus; calls RollVsPoisonGasResistance;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; branches on
-; wBattleActionId; sets bit 0 of wBattleStatus; clears bit 1 of wBattleStatus; sets bit 1 of
-; wBattleStatus; clears bit 0 of wBattleStatus; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_PoisonGas::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8709,15 +8646,12 @@ ActionEffect_PoisonGas::
 .skip4:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Curse: an already cursed target ends the sub-phase; when the Curse roll succeeds
+; (ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36) curses it with '<name> was
+; cursed!' ($D9); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 117 Curse; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus; calls
-; ActionEffect_Curse_HLToBattleStatus8EntryOfBattleTarget_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; sets bit 5 of wBattleStatus;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Curse::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -8741,14 +8675,12 @@ ActionEffect_Curse::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; OddDance: a target without MP ends the sub-phase; when the roll gets through RobMagic resistance,
+; drains its MP (DrainTargetMPAmount) with '<name> lost GMP!' ($57); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 118 OddDance; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsRobMagicResistance; may continue in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; calls DrainTargetMPAmount; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_OddDance::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -8766,13 +8698,12 @@ ActionEffect_OddDance::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; LureDance: an already dancing target ends the sub-phase; when the roll gets through LegSweep
+; resistance, sets BSTAT3_DANCING, clears its SideStep and status 7 bits 0-2, and says '<name>
+; joined the dancing!' ($58); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 122 LureDance; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; calls RollVsLegSweepResistance; calls TargetStatus3Address;
-; calls ClearTargetStatus5Bits23And7Bits012; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_LureDance::
     call TargetStatus3Address
     bit BSTAT3_DANCING, [hl]
@@ -8792,12 +8723,12 @@ ActionEffect_LureDance::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; LifeDance: on a repeated hit, or on a coin flip, Farewell's effect; otherwise shows 'But nothing
+; happened!' at once and jumps to resolve step $0E of sub-phase 1 (screen flag bit 0 set). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 123 LifeDance; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wMultiHitCount; calls AdvanceRandom; shows battle text 'But nothing happened!';
-; sets wBattleSubPhase to 1; sets wBattleResolveStep to $0e; sets wBattleSubStep to 0; sets bit 0 of
-; wBattleScreenFlags; calls ActionEffect_Farewell (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_LifeDance::
     ld a, [wMultiHitCount]
     or a
@@ -8822,11 +8753,11 @@ ActionEffect_LifeDance::
     call ActionEffect_Farewell
     ret
 
+; SideStep: unless the actor's SideStep field is set, sets it to 1 or 2 at random; then ends the
+; sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 125 SideStep; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls AdvanceRandom; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also
-; changes HL, A and B by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_SideStep::
     call AdvanceRandom
     ld a, [wBattleActor]
@@ -8847,18 +8778,21 @@ ActionEffect_SideStep::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; SandStorm: the blinding with D = 2 (BSTAT5_SANDSTORM_BLIND;
+; ActionEffect_Radiant_ReadBattleTarget): '<name> was blinded by sand!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 126 SandStorm; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes D; continues in ActionEffect_Radiant_ReadBattleTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_SandStorm::
     ld d, $02
     jr ActionEffect_Radiant_ReadBattleTarget
 
+; Radiant: the blinding with D = 1 (BSTAT5_RADIANT_BLIND): a target with bit D or BSTAT1_BLINDED
+; ends the sub-phase; when the roll gets through Radiant resistance sets bit D with message action -
+; $2A ('<name>'s vision was harmed!'); otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 127 Radiant; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes D (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Radiant::
     ld d, $01
 
@@ -8901,14 +8835,12 @@ ActionEffect_Radiant_ReadBattleTarget::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; EerieLite: when the target already has BSTAT8_EERIE_LITE, 'But nothing happened!'; when the
+; EerieLite roll succeeds sets it with '<name> is now weak to spells!' ($D5); otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 128 EerieLite; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus8; calls
-; ActionEffect_EerieLite_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets BSTAT8_EERIE_LITE of
-; wBattleStatus8; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_EerieLite::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus8
@@ -8935,23 +8867,24 @@ ActionEffect_EerieLite::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Surge: cures the target (ActionEffect_Surge_SetTargetSlotMarksTo3: status 0, the seals and
+; blindings, and stats lowered back to base) with '<name> was fully cured!' ($60). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 129 Surge; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Surge_SetTargetSlotMarksTo3; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Surge::
     farcall ActionEffect_Surge_SetTargetSlotMarksTo3
     ld l, $60
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; UltraDown: when the roll gets through Beat resistance and the target can still be lowered
+; (ActionEffect_UltraDown_ReadBattleTarget), lowers its DEF
+; (ActionEffect_UltraDown_SetSlotStatus6Bit7) and clears the sub-step; otherwise 'But ... was
+; unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 130 UltraDown; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls RollVsBeatResistance; calls ActionEffect_UltraDown_ReadBattleTarget; calls
-; ActionEffect_UltraDown_SetSlotStatus6Bit7; sets wBattleSubStep to 0; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_UltraDown::
     call RollVsBeatResistance
     jr nc, .skip
@@ -8967,11 +8900,12 @@ ActionEffect_UltraDown::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; DeMagic: clears most of the target's applied statuses
+; (ActionEffect_DeMagic_SetTargetSlotMarksTo3), clears the sub-step and says '<name> lost all
+; applied magic!' ($5E). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 131 DeMagic, 132 ThickFog, $B3; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls ActionEffect_DeMagic_SetTargetSlotMarksTo3; sets wBattleSubStep to 0; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36 (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_DeMagic::
     farcall ActionEffect_DeMagic_SetTargetSlotMarksTo3
     xor a
@@ -8980,14 +8914,14 @@ ActionEffect_DeMagic::
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
 
+; TatsuCall (DiagoCall, SamsiCall, BazooCall): once per side (side flag bit 2; later calls 'But
+; nothing happened!'); always with personality act bit 2, otherwise on a roll below $C0; monster
+; action - 7 joins in the side's fourth slot (wSpecialSlotMonsters,
+; ActionEffect_TatsuCall_AddAx9ToHL), becomes the target, and '<name> joined the battle!' ($61); a
+; failed roll gives 'But the prayer went unanswered!' ($72). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall; ids
-; below 175 are skills named from StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wSideFlags0; calls AdvanceRandom; branches on wRandomLo; sets bit 2 of
-; wPersonalityActs; sets wLoadSlot; calls ActionEffect_TatsuCall_AddAx9ToHL; copies wLoadSlot to
-; wBattleTarget; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; below 175 are skills named from StringTable_SkillNames (E-0084)
 ActionEffect_TatsuCall::
     ld a, [wBattleActor]
     rrca
@@ -9050,10 +8984,10 @@ ActionEffect_TatsuCall::
     lb bc, $00, $84
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; SuckAir: sets the actor's SuckAir field (status 4 | $30) and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 137 SuckAir; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes HL and A; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_SuckAir::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -9063,11 +8997,10 @@ ActionEffect_SuckAir::
     ld [hl], a
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Focus: sets BSTAT4_FOCUS on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 138 Focus; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT4_FOCUS of wBattleStatus4; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Focus::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
@@ -9075,15 +9008,14 @@ ActionEffect_Focus::
     set BSTAT4_FOCUS, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; LushLicks and SickLick: a shivering target ends the sub-phase; when the roll gets through LegSweep
+; resistance (Sap resistance for SickLick), sets BSTAT3_SHIVERING and clears its SideStep and status
+; 7 bits 0-2; SickLick also drops its DEF to 1 (marking BSTAT6_STATS_LOWERED); message action - $31
+; ('<name> got goose bumps!', $5A; SickLick adds that its DEF dropped to 1, $5B); a failed roll
+; gives '<name> was unharmed!' ($71). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 139 LushLicks, 140 SickLick; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; branches on wBattleActionId; calls RollVsLegSweepResistance;
-; calls RollVsSapResistance; calls TargetStatus3Address; calls ClearTargetStatus5Bits23And7Bits012;
-; branches on wBattleActionId; sets wBattleDEF to 0; calls SetSlotStatus6Bit7; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; then 1 more step (see the code) (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_LushLicks::
     call TargetStatus3Address
     bit BSTAT3_SHIVERING, [hl]
@@ -9129,16 +9061,13 @@ ActionEffect_LushLicks::
 .skip3:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; LegSweep: a tripped target ends the sub-phase; when the roll gets through LegSweep resistance,
+; sets BSTAT3_TRIPPED, clears its SideStep and status 7 bits 0-2, and says '<name> wiped out!'
+; ($5D); otherwise '<name> slid out of the way!' ($70), or 'But it failed to reach <name>!' ($68)
+; for a target with body flag bit 4. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 141 LegSweep, 142 BigTrip; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; may continue in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; calls
-; ActionEffect_LegSweep_RollVsLegSweepResistance; calls TargetStatus3Address; calls
-; ClearTargetStatus5Bits23And7Bits012; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; branches on wSlotBodyFlags; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_LegSweep::
     call TargetStatus3Address
     bit BSTAT3_TRIPPED, [hl]
@@ -9165,13 +9094,12 @@ ActionEffect_LegSweep::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Ahhh: a vacant target ends the sub-phase; when the roll gets through LegSweep resistance, sets
+; BSTAT3_VACANT, clears its SideStep and status 7 bits 0-2, and says '<name> looks content!' ($59);
+; otherwise 'But ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 143 Ahhh; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; calls RollVsLegSweepResistance; calls TargetStatus3Address;
-; calls ClearTargetStatus5Bits23And7Bits012; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Ahhh::
     call TargetStatus3Address
     bit BSTAT3_VACANT, [hl]
@@ -9193,13 +9121,12 @@ ActionEffect_Ahhh::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; WarCry: a cowering target ends the sub-phase; when the roll gets through LegSweep resistance, sets
+; BSTAT3_COWERING, clears its SideStep and status 7 bits 0-2, and says '<name> was shocked!' ($5C);
+; otherwise '<name> quickly covered its ears!' ($6B). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 144 WarCry; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; calls RollVsLegSweepResistance; calls TargetStatus3Address;
-; calls ClearTargetStatus5Bits23And7Bits012; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_WarCry::
     call TargetStatus3Address
     bit BSTAT3_COWERING, [hl]
@@ -9221,14 +9148,13 @@ ActionEffect_WarCry::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Geyser: when the actor's own airborne field is 1 it backfires (ActionEffect_Geyser_Skip); when the
+; roll gets through Watershot resistance the target's status 3 becomes $40 (airborne, its other byte
+; 3 bits cleared), its personality acts are cleared, '<name> was blown sky-high!' is shown at once
+; and the resolve step restarts; otherwise '<name> quickly dodged the attack!' ($6E). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 145 Geyser; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ActionEffect_Geyser_Skip; calls
-; ActionEffect_Geyser_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets wPersonalityActs to 0; shows
-; battle text '0 was blown sky-high!'; continues in SetSubPhase2AndResetResolveStep; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC, A and D by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Geyser::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
@@ -9303,21 +9229,19 @@ ActionEffect_Geyser_Skip::
     ld [wBattleDamageHi], a
     lb hl, $d0, $ad
     lb bc, $88, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $af
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; DanceShut: an already dance-sealed target ends the sub-phase; when the DanceShut roll succeeds
+; seals its dances (BSTAT1_DANCE_SEALED) with '<name> can't dance anymore!' ($DE); otherwise 'But
+; ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 146 DanceShut; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; calls
-; ActionEffect_DanceShut_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets BSTAT1_DANCE_SEALED of
-; wBattleStatus1; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; also changes HL, BC and A by register arithmetic
-; (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_DanceShut::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -9337,15 +9261,12 @@ ActionEffect_DanceShut::
 .skip:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
 
+; MouthShut: an already breath-sealed target ends the sub-phase; when the MouthShut roll succeeds
+; seals its breaths (BSTAT1_BREATH_SEALED) with '<name>'s mouth was sealed!' ($64); otherwise 'But
+; ... was unaffected!'. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 147 MouthShut; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleStatus1; calls
-; ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36; sets BSTAT1_BREATH_SEALED of
-; wBattleStatus1; continues in ClearDamageAndStoreResolveMsgFlags_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_MouthShut::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus1
@@ -9368,11 +9289,12 @@ ActionEffect_MouthShut::
 .skip2:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; StrongD (BladeD, action $E0): sets the low nibble of the actor's status 7 to 2
+; (BSTAT7_DAMAGE_X10), 4 for BladeD (BSTAT7_COUNTER) or $0C for $E0 (doubled and counter), then ends
+; the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 148 StrongD, 150 BladeD; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: changes HL and A; branches on wBattleActionId; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_StrongD::
     ld a, [wBattleActor]
     ld hl, wBattleStatus7
@@ -9404,11 +9326,10 @@ ActionEffect_StrongD::
 .skip3:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Dodge: sets BSTAT6_DODGE on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 149 Dodge; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT6_DODGE of wBattleStatus6; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Dodge::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -9416,14 +9337,13 @@ ActionEffect_Dodge::
     set BSTAT6_DODGE, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Cover and Guardian: once Guardian has been used on a side (side flag bit 4) nothing more; Cover
+; guards only the target, Guardian (setting the flag) every present slot of the target's side; each
+; slot other than the actor not yet guarded gets BSTAT6_GUARDED with the actor's slot in its status
+; 7 high nibble; then ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 151 Cover, 152 Guardian; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; branches on
-; wBattleActionId; sets bit 4 of wSideFlags0; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; C; branches on wBattleStatus6; sets BSTAT6_GUARDED of wBattleStatus6; branches on wBattleStatus6;
-; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Cover::
     ld a, [wBattleTarget]
     rrca
@@ -9474,13 +9394,12 @@ ActionEffect_Cover::
     jr nz, .loop
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; TailWind and StormWind: TailWind gives the target BSTAT2_WIND_GUARD; StormWind gives it to every
+; present slot of the target's side and sets that side's flag bit 5; then ends the sub-phase. (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 153 TailWind, 154 StormWind; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: branches on wBattleActionId; sets BSTAT2_WIND_GUARD of wBattleStatus2; calls
-; CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT2_WIND_GUARD of wBattleStatus2; sets bit 5 of
-; wSideFlags0; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC
-; and A by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_TailWind::
     ld a, [wBattleActionId]
     cp SKILL_STORMWIND
@@ -9521,11 +9440,10 @@ ActionEffect_TailWind::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; AquaWall: sets BSTAT2_AQUA_WALL on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 155 AquaWall; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT2_AQUA_WALL of wBattleStatus2; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_AquaWall::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -9533,11 +9451,10 @@ ActionEffect_AquaWall::
     set BSTAT2_AQUA_WALL, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; SealPray: sets BSTAT8_SEAL_PRAY on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 156 SealPray; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT8_SEAL_PRAY of wBattleStatus8; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_SealPray::
     ld a, [wBattleActor]
     ld hl, wBattleStatus8
@@ -9545,13 +9462,11 @@ ActionEffect_SealPray::
     set BSTAT8_SEAL_PRAY, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; SuckAll: once per side (side flag bit 6): records the actor's slot (x 4) in the side's
+; wSlotPairBytes entry and sets BSTAT6_SUCK_ALL on it; then ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 157 SuckAll; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; sets bit 6 of
-; wSideFlags0; sets BSTAT6_SUCK_ALL of wBattleStatus6; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, A and B by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_SuckAll::
     ld a, [wBattleActor]
     rrca
@@ -9578,11 +9493,10 @@ ActionEffect_SuckAll::
     set BSTAT6_SUCK_ALL, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Imitate: sets BSTAT6_IMITATE on the actor and ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 158 Imitate; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT6_IMITATE of wBattleStatus6; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_Imitate::
     ld a, [wBattleActor]
     ld hl, wBattleStatus6
@@ -9649,12 +9563,13 @@ ActionEffect_LifeSong_CheckMultiHitCount::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; LoveRain: the first time, stores a random heal kind (0, 1 or 2 by wRandomLo's low nibble, from
+; ActionEffect_LoveRain_Data) in the actor's wHealFlags entry, sets BSTAT8_LOVE_RAIN and ends with
+; sub-phase 7; with BSTAT8_LOVE_RAIN_FORCED set, heals when wLoveRainFlag is set
+; (ActionEffect_LoveRain_CheckLoveRainFlag). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 161 LoveRain; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ActionEffect_LoveRain_CheckLoveRainFlag; calls AdvanceRandom; sets bit 1 of
-; wHealFlags; continues in SetSubPhase7AndResetResolveStep; also changes HL and A by register
-; arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_LoveRain::
     ld a, [wBattleActor]
     ld hl, wBattleStatus8
@@ -9695,10 +9610,11 @@ ActionEffect_LoveRain_CheckLoveRainFlag::
 ActionEffect_LoveRain_Data::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
 
+; Whistle, Pheromone, StepGuard, Outside, Informer, Errand ... (field skills): no battle effect.
+; (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
 ; for action(s) 162 Whistle, 163 Pheromone, 164 StepGuard, 165 Outside, 166 Informer, 167 Errand
-; ...; the misaligned decoding before E-0126 hid this entry; the body is not interpreted (E-0126)
-; code: returns at once (E-0347)
+; ...; the misaligned decoding before E-0126 hid this entry (E-0126)
 ActionEffect_Whistle::
     ret
 
@@ -9732,15 +9648,13 @@ ActionEffect_Guard::
     ld [hl], a
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $B0 (a Chance effect): only for a player-side actor outside link play; a foe target is
+; removed (HP 0, out $FF, slot bytes cleared, picture blanked) with '<name> fled!' ($D8) and sound
+; $82, or for action $B2 'The <name> shattered!'; a player-side target only gets '<name> was
+; shocked!' ($5C, $8F for $B2); shown at once, then the sub-phase ends. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $B0, $B2; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; branches on
-; wBattleTarget; sets wBattleSlotOut to $ff; calls BlankTargetMonsterPicture; branches on
-; wBattleActionId; shows battle text '0 fled!'; plays sound $82; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; branches on wBattleActionId; shows battle
-; text '0 was shocked!'; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also
-; changes HL, A, B and D by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_ActionB0::
     ld a, [wLinkMode]
     or a
@@ -9774,7 +9688,7 @@ ActionEffect_ActionB0::
     ld [hl], a
     farcall BlankTargetMonsterPicture
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_B2
+    cp ACTION_B2
     ld d, $8f
     jr z, .call_show_battle_text
     ld d, $d8 ; battle text '0 fled!'
@@ -9785,7 +9699,7 @@ ActionEffect_ActionB0::
 
 .check_battle_action_id:
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_B2
+    cp ACTION_B2
     ld d, $8f
     jr z, .call_show_battle_text
     ld d, $5c ; battle text '0 was shocked!'
@@ -9794,12 +9708,11 @@ ActionEffect_ActionB0::
     farcall ShowBattleText
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $B4: every present slot of the actor's side gets a forced critical (BSTAT1_CRITICAL); then
+; the sub-phase ends. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $B4; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls CarryUnlessBattleSlotOutSlotEmpty; sets BSTAT1_CRITICAL of wBattleStatus1; continues
-; in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; wBattleActionId) for action(s) $B4; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionB4::
     ld a, [wBattleActor]
     and $04
@@ -9821,12 +9734,12 @@ ActionEffect_ActionB4::
     jr nz, .loop
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $B5: puts the target to sleep (status 0 | $8C) unless it already sleeps ('<name> is already
+; asleep!'), with '<name> was put to sleep!' ($73), or '<name> fell asleep!' ($74) on the local
+; side. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $B5; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls TargetOnLocalSide_Bank36; continues in ClearDamageAndStoreResolveMsgFlags_Bank36;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget; also changes HL, BC
-; and A by register arithmetic (E-0347)
+; wBattleActionId) for action(s) $B5; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionB5::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus
@@ -9851,11 +9764,11 @@ ActionEffect_ActionB5::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Action $B6: empties the target's MP with '<name> lost its MP!' ($DF); a target without MP ends the
+; sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $B6; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: changes HL, BC and A; may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor (E-0347)
+; wBattleActionId) for action(s) $B6; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionB6::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -9875,14 +9788,13 @@ ActionEffect_ActionB6::
 ; interpreted (E-0126)
 ActionEffect_ActionB9::
     call AttackDamageWithATK200
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
+; Action $BA: freezes the target (BSTAT3_FROZEN), clearing its SideStep and status 7 bits 0-2, with
+; '<name> froze solid!' ($78); already frozen, the sub-phase ends. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $BA; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls TargetStatus3Address; may continue in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget; calls ClearTargetStatus5Bits23And7Bits012;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor (E-0347)
+; wBattleActionId) for action(s) $BA; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionBA::
     call TargetStatus3Address
     bit BSTAT3_FROZEN, [hl]
@@ -9893,11 +9805,11 @@ ActionEffect_ActionBA::
     lb bc, $00, $98
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
+; Action $BC: fills the target's MP to its max with '<name>'s MP was restored!' ($C3); at full MP
+; the sub-phase ends. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $BC; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: changes HL, BC and A; may continue in SetSubPhase2AndResetResolveStep_CheckOriginalTarget;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor (E-0347)
+; wBattleActionId) for action(s) $BC; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionBC::
     ld a, [wBattleTarget]
     ld hl, wBattleMP
@@ -9922,12 +9834,11 @@ ActionEffect_ActionBC::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
+; Action $BD: a target at 1 HP takes 1 damage ('took G damage!'); any other target's HP becomes 1
+; with '<name> was brutalized!' ($38). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $BD; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: branches on the byte at wBattleHP; copies L to wBattleDamageLo; copies H to wBattleDamageHi;
-; continues in ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor; also changes HL, BC and
-; A by register arithmetic (E-0347)
+; wBattleActionId) for action(s) $BD; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionBD::
     ld a, [wBattleTarget]
     ld hl, wBattleHP
@@ -9961,12 +9872,11 @@ ActionEffect_ActionBD::
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
+; Action $C0: on a roll of $40 or more the attack damage ('took G damage!', $36); otherwise 'Miss!
+; <name> avoided damage!' ($D1). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $C0; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls AdvanceRandom; branches on wRandomLo; calls ComputeAttackDamage; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget (E-0347)
+; wBattleActionId) for action(s) $C0; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionC0::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -9975,52 +9885,50 @@ ActionEffect_ActionC0::
     call ComputeAttackDamage
     lb hl, $d1, $36
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
 .skip:
     ld h, $d1
     lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Action $C1: on a roll of $C0 or more the attack damage with the hit message; otherwise 'Miss!
+; <name> was unharmed!' ($D0). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $C1; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls AdvanceRandom; branches on wRandomLo; calls ComputeAttackDamage; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget (E-0347)
+; wBattleActionId) for action(s) $C1; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionC1::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $c0
     jr c, .skip
     call ComputeAttackDamage
-    jp UnreferencedStoreResolveMessage35D0_Bank36
+    jp StoreHitMessage_Bank36
 
 .skip:
     ld h, $d0
     lb bc, $08, $88
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
+; Action $C2: Fight's effect. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $C2; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: calls ActionEffect_Fight (E-0347)
+; wBattleActionId) for action(s) $C2; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionC2::
     call ActionEffect_Fight
     ret
 
+; ZoneOut: no effect; ends the sub-phase. (C1, E-0357)
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
-; for action(s) 171 ZoneOut, 183, 195, 196; the misaligned decoding before E-0126 hid this entry;
-; the body is not interpreted (E-0126)
-; code: continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; for action(s) 171 ZoneOut, 183, 195, 196; the misaligned decoding before E-0126 hid this entry
+; (E-0126)
 ActionEffect_ZoneOut::
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $C5: the actor trips itself (BSTAT3_TRIPPED); ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $C5; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: sets BSTAT3_TRIPPED of wBattleStatus3; continues in
-; SetSubPhase2AndResetResolveStep_CheckOriginalTarget (E-0347)
+; wBattleActionId) for action(s) $C5; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionC5::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
@@ -10028,11 +9936,11 @@ ActionEffect_ActionC5::
     set BSTAT3_TRIPPED, [hl]
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $C6: the actor becomes paralyzed (BSTAT0_PARALYZED) with '<name> became paralyzed!' ($76).
+; (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $C6, $C7; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: sets BSTAT0_PARALYZED of wBattleStatus; continues in
-; ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_ActionC6::
     ld a, [wBattleActor]
     ld hl, wBattleStatus
@@ -10042,12 +9950,11 @@ ActionEffect_ActionC6::
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgActor
 
+; Action $C8: takes the target out of the battle (wBattleSlotOut $FF), clearing its slot bytes and
+; blanking its picture on the far side; ends the sub-phase. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $C8; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: sets wBattleSlotOut to $ff; calls TargetOnLocalSide_Bank36; calls BlankTargetMonsterPicture;
-; continues in SetSubPhase2AndResetResolveStep_CheckOriginalTarget; also changes HL, A and B by
-; register arithmetic (E-0347)
+; wBattleActionId) for action(s) $C8; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionC8::
     ld a, [wBattleTarget]
     ld hl, wBattleSlotOut
@@ -10071,12 +9978,11 @@ ActionEffect_ActionC8::
 .skip:
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
+; Action $C9: the actor comes down: clears its airborne and HighJump fields and takes a tenth of its
+; HP (at least 1) as damage ('took G damage!', target message 'landed safely!'). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $C9, $CA; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: calls GetBattleHP; copies L to wBattleDamageLo; copies H to wBattleDamageHi; continues in
-; UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; also changes HL, BC and A by
-; register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_ActionC9::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
@@ -10103,14 +10009,13 @@ ActionEffect_ActionC9::
     ld [wBattleDamageHi], a
     lb hl, $af, $36
     lb bc, $80, $a8
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
+; Action $BF: clears the actor's airborne and HighJump fields; with its sleep counter set it falls
+; as in action $C9; otherwise '<name> landed safely!' ($AF) with no damage. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) $BF, $CB; ids below 175 are skills named from
-; StringTable_SkillNames; the body is not interpreted (E-0084)
-; code: may continue in ActionEffect_ActionC9; copies L to wBattleDamageLo; copies H to
-; wBattleDamageHi; continues in UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor; also
-; changes HL, BC and A by register arithmetic (E-0347)
+; StringTable_SkillNames (E-0084)
 ActionEffect_ActionBF::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
@@ -10134,39 +10039,43 @@ ActionEffect_ActionBF::
     ld [wBattleDamageHi], a
     lb hl, $af, $af
     lb bc, $00, $80
-    jp UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jp StoreHitMessage_Bank36_SetResolveMsgActor
 
+; Action $CC (the forced HighJump landing): ActionEffect_HighJump_Skip on the actor's status 4
+; (clears the field, then PsycheUp's damage). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $CC; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: changes HL and A; continues in ActionEffect_HighJump_Skip (E-0347)
+; wBattleActionId) for action(s) $CC; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionCC::
     ld a, [wBattleActor]
     ld hl, wBattleStatus4
     call AddAx9ToHL
     jp ActionEffect_HighJump_Skip
 
+; Action $CD: Geyser's backlash on the actor (ActionEffect_Geyser_Skip with its status 3). (C1,
+; E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $CD; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: changes HL and A; continues in ActionEffect_Geyser_Skip (E-0347)
+; wBattleActionId) for action(s) $CD; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionCD::
     ld a, [wBattleActor]
     ld hl, wBattleStatus3
     call AddAx9ToHL
     jp ActionEffect_Geyser_Skip
 
+; Action $CE (the forced LifeSong turn): LifeSong's second path
+; (ActionEffect_LifeSong_CheckMultiHitCount). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $CE; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: continues in ActionEffect_LifeSong_CheckMultiHitCount (E-0347)
+; wBattleActionId) for action(s) $CE; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionCE::
     jp ActionEffect_LifeSong_CheckMultiHitCount
 
+; Action $CF (the forced LoveRain turn): heals when wLoveRainFlag is set
+; (ActionEffect_LoveRain_CheckLoveRainFlag). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
-; wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames;
-; the body is not interpreted (E-0084)
-; code: continues in ActionEffect_LoveRain_CheckLoveRainFlag (E-0347)
+; wBattleActionId) for action(s) $CF; ids below 175 are skills named from StringTable_SkillNames
+; (E-0084)
 ActionEffect_ActionCF::
     jp ActionEffect_LoveRain_CheckLoveRainFlag
 
@@ -10174,16 +10083,18 @@ ActionEffect_ActionCF::
 ActionEffect_ActionCF_Skip::
     lb hl, $b5, $35
     lb bc, $80, $a8
-    jr UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor
+    jr StoreHitMessage_Bank36_SetResolveMsgActor
 
-; the same 23 bytes as UnreferencedStoreResolveMessage35D0 (UnreferencedStoreResolveMessage35D0)
-; (E-0236)
-UnreferencedStoreResolveMessage35D0_Bank36::
+; the resolve message of a hit: actor message $35 'took G damage!', target message $D0 'Miss! ...
+; was unharmed!', flags $A8, argument $88; the same bytes as UnreferencedStoreResolveMessage35D0 in
+; bank $3B, but here the effect routines jump to it (renamed from
+; UnreferencedStoreResolveMessage35D0_Bank36, E-0365)
+StoreHitMessage_Bank36::
     lb hl, $d0, $35
     lb bc, $88, $a8
 
 ; Stores the resolve message: actor L, target H, flags C, argument B. (C1, E-0357)
-UnreferencedStoreResolveMessage35D0_Bank36_SetResolveMsgActor::
+StoreHitMessage_Bank36_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
     ld a, h

@@ -43,6 +43,14 @@ class ConstantsTest(unittest.TestCase):
         self.assertIn("cp SKILL_DEMAGIC", text)  # ResolveStepBranchOnAction: $83 DeMagic
         self.assertIn("db SKILL_BEDRAGON, SKILL_FIREAIR, SKILL_SUCKAIR ; natural skills", text)
 
+    def test_action_ids_whose_string_repeats_a_skill(self):
+        """E-0365: ids from 175 on whose string only repeats an earlier skill's name are actions, not skills."""
+        self.assertEqual(self.c["SKILL"][0xB2], ("ACTION_B2", "HighJump"))
+        self.assertEqual(self.c["SKILL"][0xAA][0], "SKILL_AHHH_AA")  # below 175: a skill table entry
+        inc = (ROOT / "src" / "constants.inc").read_text(encoding="utf-8")
+        self.assertNotIn("SKILL_HIGHJUMP_", inc)
+        self.assertIn("DEF ACTION_CF EQU $CF ; a battle action whose StringTable_SkillNames entry only repeats 'LoveRain'", inc)
+
     def test_indexed_cases_sit_at_their_id(self):
         """E-0342: ApplyEquipmentEffect_<Item> is entry (item id - $40) of ApplyEquipmentEffectKeepA_ByItem."""
         text = next(ROOT.glob("src/*/bank*_items_battle_end.asm")).read_text(encoding="utf-8")

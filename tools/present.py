@@ -42,6 +42,8 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
                        r"|^as \w+$|^implements script command type \w+(?: \(also \w+\))?$|^wBattlePhase \d|"
                        r"^handler \w+ \(entry|^step \d+ of |^by \w+(?: & \$\w+)?$")
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
+# E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself
+HAND_NOTE = re.compile(r"\(C\d,(?: ;)? E-03(?:5[7-9]|6[0-2])\)")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
 ADDR_NAME = re.compile(r"^(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})$")
 LABEL_TAG = re.compile(r"^([A-Za-z_][\w.]*::?) ; (?:heuristic: .*|code pointer of the table .*)$")
@@ -484,7 +486,8 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
                     k = len(out)
                     while k > 0 and out[k - 1].startswith(";"):
                         k -= 1
-                    if GAP_NOTE.search(" ".join(out[k:])):
+                    block = " ".join(out[k:])
+                    if GAP_NOTE.search(block) and not HAND_NOTE.search(block):
                         text = describe.summarize(label, body, [], labels)
                         out.extend(wrap("", "; code: " + text[:1].lower() + text[1:] + " (E-0347)"))
             elif documented or re.match(r'^\s+db "', first):

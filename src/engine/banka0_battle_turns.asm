@@ -3602,12 +3602,6 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitTextFlags::
 ; makes record B a newborn copy of record A: unknown parents ('???' masters, species $FF), skills
 ; mapped (AppendMappedSkillsToRecordBufBSkillList), status 0, level 1, no experience, and HP, MP and
 ; stats quartered (at least 1). (C1, E-0357)
-; code: returns unless wLinkMessage is $01; sets wBattleScene to 8; calls CopyBytes; sets
-; wRecordBufB to 1; sets wRecordBufB + MON_PARENT1_SPECIES to $ff; sets wRecordBufB +
-; MON_PARENT2_SPECIES to $ff; calls WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_28 to
-; $ff; calls WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_33 to $ff; calls
-; AppendMappedSkillsToRecordBufBSkillList; sets wRecordBufB + MON_STATUS to 0; then 40 more steps
-; (see the code) (E-0347)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -6439,17 +6433,10 @@ RunBattleSetup_BankA0_ReadSTAT::
     jr nz, .loop
     ret
 
-; C = slot 0-2: when the slot is present and its status byte 0 is non-zero, calls one marker routine
-; for each of bits 0, 1, 4, 5, 6 and 7 that is set (the zero-status path is not read) (E-0111)
-; code: branches on C; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at
-; wBattleStatus; calls DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_3; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_4; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_6; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_2; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_7; calls
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_5; calls DrawSlotLevel_BankA0; calls
-; DerefHL_BankA0; then 4 more steps (see the code) (E-0347)
+; Draws the status mark of slot C (0-2) on the battle screen: tile $C2 with the level for an absent
+; slot, $C3 with the level when status 0 is clear; otherwise the marker for each set status:
+; poisoned, badly poisoned, confused, cursed, paralyzed, asleep (bits 0, 1, 4, 5, 6, 7). (C1,
+; E-0357)
 DrawSlotStatusMarks_BankA0::
     push bc
     ld a, c
@@ -6701,12 +6688,8 @@ DrawSlotMPDigits_BankA0::
     pop bc
     ret
 
-; C = slot 0-2: writes tiles $EA, $AF (not in the charmap; probably a level mark) into
-; wScreenTileBuffer at the position from DrawSlotLevel_BankA0_Data, then the value
-; wBattleLevel[slot] as digits (probably the level; the digit part is not read to its end) (E-0111)
-; code: branches on C; branches on C & $03; sets DrawSlotLevel_BankA0_Data to $ea; sets
-; DrawSlotLevel_BankA0_Data to $af; calls HLToDecimalDigits; calls WriteTwoDigitTilesFromDigits1;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; Draws 'Lv' (tiles $EA, $AF) and the two-digit level of slot C (0-2) into wScreenTileBuffer at the
+; slot's place (DrawSlotLevel_BankA0_Data). (C1, E-0357)
 DrawSlotLevel_BankA0::
     push bc
     ld a, c

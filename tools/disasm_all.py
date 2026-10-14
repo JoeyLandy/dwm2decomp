@@ -6761,11 +6761,12 @@ def main() -> int:
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
     final_labels = {m for x in texts for m in re.findall(r"^([A-Za-z_]\w*)::", x, re.M)}
     id_notes = {}  # E-0347: an action id with no name is described by the routines that handle it
-    for v, (name, _text) in rom.consts.get("SKILL", {}).items():
+    for v, (name, text) in rom.consts.get("SKILL", {}).items():
         if name.startswith("ACTION_") and name != "ACTION_FIGHT":
             handlers = [f for f in (f"ActionEffect_Action{v:02X}", f"ChooseTarget_Action{v:02X}") if f in final_labels]
-            id_notes[name] = ("a battle action with no name in StringTable_SkillNames; handled by " + " and ".join(handlers)
-                              if handlers else "a battle action with no name in StringTable_SkillNames")
+            what = (f"a battle action whose StringTable_SkillNames entry only repeats '{text}' (E-0365)" if text
+                    else "a battle action with no name in StringTable_SkillNames")
+            id_notes[name] = what + ("; handled by " + " and ".join(handlers) if handlers else "")
     gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts, events, bstat_cfg, id_notes)
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "

@@ -4,19 +4,13 @@
 SECTION "Bank 3A", ROMX[$4000], BANK[$3A]
     db $3a
 
-; reads the effect flags in wEffectFlags. First, when the low two bits of wBattleTarget are 3 and
-; wBattleActionId is $85-$88, it returns unless wEffectFlags bit 0 or bit 6 is set. Then it tests
-; bits 7, 6, 5, 4, 3, 2 in that order and selects one of six tables (ActionEffectTable_Flag7,
-; ActionEffectTable_Flag6, ActionEffectTable_Flag5, ActionEffectTable_Flag2,
-; ActionEffectTable_Flag3; bit 4 has its own branch) indexed by wBattleActionId. An entry of $FF
-; returns; other entries go on to ActionEffectTable_Flag3_ClearEffectAnimFlags or the effect code,
-; which is not read (E-0057)
-; code: branches on wBattleTarget & $03; returns if wBattleActionId is below SKILL_TATSUCALL;
-; returns if wBattleActionId is at least SKILL_SUCKAIR; returns if wBattleActionId is SKILL_SUCKAIR;
-; returns if wEffectFlags is 0; branches on wEffectFlags; copies wBattleTarget to wBattleActor;
-; returns unless bit 0 of wBattleTarget is set; branches on wBattleTarget & $07; continues in
-; ActionEffectTable_Flag3_ClearEffectAnimFlags; calls TargetOnLocalSide_Bank3A; returns unless bit 0
-; of $03 is set; then 10 more steps (see the code) (E-0347)
+; Picks the action's battle animation from wEffectFlags: a call skill (TatsuCall-BazooCall) aimed at
+; a side's fourth slot needs flag bit 0 or 6; then the first set bit of 7, 6 (with bit 0), 5, 4
+; (with bit 0: effect 2 or 3 by the target's side, or $14), 3 or 2 picks
+; ActionEffectTable_Flag7/6/5/3/2 (bits 3 and 2 first make the target the actor); the entry for
+; wBattleActionId is chosen by the actor's side (the target's for action $6C, a redirect or record
+; byte 4 = $80); $FF does nothing, bit 7 starts effect routine (value & $7F) with the effect state
+; cleared, other values go to ActionEffectTable_Flag3_ClearEffectAnimFlags. (C1, E-0357)
 SelectEffectByEffectFlags::
     ld a, [wBattleTarget]
     and $03
@@ -1839,10 +1833,8 @@ EffectPositionIndexForTarget::
 .return:
     ret
 
-; copies rows of wEffectStep bytes from VRAM at HL (WaitForVRAMAccess, interrupts off per byte) to
-; DE, C rows, the destination rows 32 bytes apart (the source-row step is not read) (E-0113)
-; code: takes DE; changes HL, DE, BC and A; may return early; continues in CopyVRAMRectToBuffer
-; (E-0347)
+; Copies a rectangle from VRAM at HL to DE: C rows of wEffectStep bytes, each byte read with
+; interrupts off after WaitForVRAMAccess, the destination rows 32 bytes apart. (C1, E-0357)
 CopyVRAMRectToBuffer::
     push de
     ld a, [wEffectStep]
@@ -3542,14 +3534,11 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return::
 UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data::
     db $02, $04, $00, $06
 
-; reads the effect flags in wEffectFlags2 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and
-; 2 set wBattleActor to wBattleTarget and select a table (ActionSoundTable_Flag0 or
-; ActionSoundTable_Flag2) for the display; bits 7, 6, 5 and 3 go to routines not read (E-0057)
-; code: returns if wEffectFlags2 is 0; branches on wEffectFlags2; copies wBattleTarget to
-; wBattleActor; calls SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags; may
-; return early; branches on b; calls ActorOnLocalSide_Bank3A; returns if the byte at
-; ActionSoundTable_Flag3 is $ff; calls QueueSoundEffect; also changes HL, BC and A by register
-; arithmetic (E-0347)
+; Plays the action's sound from wEffectFlags2: the first set bit of 7, 6, 5, 3, 2 or 0 picks
+; ActionSoundTable_Flag7/6/5A-5B/3/2/0 (bits 2 and 0 make the target the actor; bit 5 only when
+; SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags gives Z, 5A with bit 4); the
+; entry for wBattleActionId by the actor's side; $FF plays nothing, otherwise QueueSoundEffect. (C1,
+; E-0357)
 SelectEffectByEffectFlags2Flags::
     ld a, [wEffectFlags2]
     or a
@@ -5001,7 +4990,7 @@ RunActionSpecificPostStep::
     jr z, .check_multi_hit_count
     cp SKILL_YELLHELP
     jr z, .check_multi_hit_count
-    cp SKILL_HIGHJUMP_B9
+    cp ACTION_B9
     jr z, .read_battle_actor
     cp SKILL_SACRIFICE
     jr z, .set_battle_sub_phase_to_01
@@ -5225,7 +5214,7 @@ RunBattleActions_CheckActionBDOrRun::
 ; dropped or read as the label there; was CheckActionBDOrRun)
 CheckActionBDOrRun::
     ld a, [wBattleActionId]
-    cp SKILL_HIGHJUMP_BD
+    cp ACTION_BD
     jr nz, .call_check_action_bd_or_run_slot_present_with
     ld a, [wMultiHitCount]
     and $7f
@@ -5903,9 +5892,9 @@ RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty::
     jr z, .skip
     cp SKILL_LIFEDANCE
     jr z, .skip
-    cp SKILL_LOVERAIN_CE
+    cp ACTION_CE
     jr z, .skip
-    cp SKILL_HIGHJUMP_BB
+    cp ACTION_BB
     jr z, .skip
     jr .check_record_buffer_data
 
@@ -5968,9 +5957,9 @@ RunBattleStep4_BackMultiHitCount::
     ret z
     cp SKILL_LIFEDANCE
     ret z
-    cp SKILL_LOVERAIN_CE
+    cp ACTION_CE
     ret z
-    cp SKILL_HIGHJUMP_BB
+    cp ACTION_BB
     ret z
 
 .next:
@@ -6852,7 +6841,7 @@ ShowActionBattleTextFromActionBattleTextTable::
     ret z
     ld d, a
     ld a, [wBattleActionId]
-    cp SKILL_LOVERAIN_CF
+    cp ACTION_CF
     call z, ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom
     jp ShowBattleText
 
@@ -7618,12 +7607,8 @@ BattleText0HookTargetAndDefeatSlot::
     call CopySlotNameToHL
     ret
 
-; D = message index. If the 16-bit entry at BattleTextPrepTable + 2 * D is non-zero it is called
-; first through JumpToWordAtHL (a per-message routine, not read). Then it stores D in wStringIndex,
-; 1 in wStringCategory and farcalls BeginStringDisplay_Bank2F: the battle text of bank $2F, category
-; 1 (E-0056)
-; code: calls JumpToWordAtHL; sets wStringIndex; sets wStringCategory to 1; calls
-; BeginStringDisplay_Bank2F; also changes HL, BC and A by register arithmetic (E-0347)
+; D = battle text index: calls the text's prep routine from BattleTextPrepTable when its entry is
+; not zero, then shows string D of category 1 (bank $2F, BeginStringDisplay_Bank2F). (C1, E-0357)
 ShowBattleText::
     push de
     ld hl, BattleTextPrepTable

@@ -3450,14 +3450,14 @@ IfFlag000AStartScript::
     call StartScriptAtHL_B04
     ret
 
+; Talk (the Vault keeper): the first time runs field command 1 and the 'You must be the farm...'
+; script (setting EVENT_THANKS_FOR_COMING_BY), then 'Thanks for coming by...' ($0046); after the
+; Warubou food scene 'You say the island will...' ($0079); after the long-faces scene the 'Oh, hi!
+; Good to see' script, and after EVENT_THANKS_FOR_COMING_BY_025 the 'Hello, GreatLog's hero!'
+; script, each once before the 'How may the Vault serve' script (wDataBank $10). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $0046, whose
-; string begins 'Thanks for coming by. I'll always'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANKS_FOR_COMING_BY_025; checks EVENT_SCENE_LONG_FACES_002; checks
-; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_THANKS_FOR_COMING_BY; sets hTemp0 to 1; calls
-; RunFieldCommandTemp0; starts Script_YouMustBeThe; sets EVENT_THANKS_FOR_COMING_BY; shows 'Thanks
-; for coming by. I'll'; shows 'You say the island will'; sets wDataBank to $10; checks
-; EVENT_OH_HI_GOOD_TO; then 5 more steps (see the code) (E-0347)
+; string begins 'Thanks for coming by. I'll always' (E-0097)
 Talk0046_ThanksForComingBy::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -7966,15 +7966,17 @@ TalkMsg0757_HeroCheckedTheOvenASharp::
     call StartMessageCommand09HL_B04
     ret
 
+; Kiral: before anything 'Hoh? Ah, excuse my incivility.'; then by progress 'I need help with
+; my...', 'Fetch me my treasure from...' ($075F), the 'Ah! Back! The treasure? What?' script,
+; 'Please... Go stop him...' ($0778); after the barrel scene, with the WizStone in the bag, swaps it
+; for a SmartBook ($17, asking for a bag sort), runs 'Ah! Back! Is... Rob-N...' and marks key kind 8
+; used, else the same text as a message ($077D); after the WizStone scene 'You've been a great
+; help.' once (EVENT_KIRAL_FETCH_ME_MY_166), then 'Visit me when you're free.'; after
+; EVENT_KIRAL_FETCH_ME_MY_167 'Hohoh! I've got good news!' once (_168), then 'Roboster2's skills are
+; simply exceptional...'. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 7
 ; constant message(s) depending on story flags and state; the first one in the code is $075F, whose
-; string begins 'Kiral Fetch me my treasure from'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_WIZSTONE; checks EVENT_SCENE_BARREL;
-; checks EVENT_KIRAL_PLEASE_GO_STOP_HIM; checks EVENT_KIRAL_FETCH_ME_MY; checks
-; EVENT_KIRAL_OH_FOOLISH_OF_ME; checks EVENT_KIRAL_NO_HOW_DISAPPOINTING_YOUR; starts
-; Script_HohAhExcuseMy; starts Script_KiralINeedHelp; shows 'Kiral: Fetch me my treasure from';
-; starts Script_KiralAhBackThe; shows 'Kiral: Please… Go stop him. You'; then 18 more steps (see the
-; code) (E-0347)
+; string begins 'Kiral Fetch me my treasure from' (E-0097)
 Talk075F_KiralFetchMeMy::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8076,12 +8078,12 @@ Talk075F_KiralFetchMeMy::
     call StartMessageCommand09HL_B04
     ret
 
+; The robot: 'Pii... Ggzz... Piiiiii...' ($075A, clearing object 1's state) at first; after the
+; WizStone scene 'I AM THE LATEST ROBOSTER.' ($0788); after EVENT_KIRAL_FETCH_ME_MY_167 'MY NAME IS
+; LEO...' ($078B). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $075A, whose
-; string begins 'Pii Ggzz Piiiiii'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_WIZSTONE; sets wObject1 + OBJ_STATE
-; to 0; shows 'Pii… Ggzz… Piiiiii…'; shows 'I AM THE LATEST ROBOSTER.'; shows 'MY NAME IS LEO. THE'
-; (E-0347)
+; string begins 'Pii Ggzz Piiiiii' (E-0097)
 Talk075A_PiiGgzzPiiiiii::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8187,12 +8189,12 @@ TalkMsg0766_HeroPeeredIntoTheBarrelA::
     call StartMessageCommand09HL_B04
     ret
 
+; A barrel: its 'peered into the barrel. A...' script until EVENT_HERO_PEERED_INTO_THE_BARREL, then
+; '0 peered into the barrel. There...' ($0768). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0768, whose
-; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
+; string begins '0 peered into the barrel. There' (E-0097)
 ; starts Script_HeroPeeredIntoThe_2: '0 peered into the barrel. A' (E-0248)
-; code: checks EVENT_HERO_PEERED_INTO_THE_BARREL; starts Script_HeroPeeredIntoThe_2; shows '0 peered
-; into the barrel. There' (E-0347)
 Talk0768_HeroPeeredIntoThe::
     ld de, EVENT_HERO_PEERED_INTO_THE_BARREL
     call TestFlagBit
@@ -8206,14 +8208,13 @@ Talk0768_HeroPeeredIntoThe::
     call StartMessageCommand09HL_B04
     ret
 
+; Another barrel: as Talk0768_HeroPeeredIntoThe with EVENT_HERO_PEERED_INTO_THE_BARREL_15E and
+; Script_HeroPeeredIntoThe_3. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0768, whose
-; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; (E-0344: the address in its name dropped or read as the label there; was
-; Talk0768_HeroPeeredIntoThe_2)
+; string begins '0 peered into the barrel. There' (E-0097) (E-0344: the address in its name dropped
+; or read as the label there; was Talk0768_HeroPeeredIntoThe_2)
 ; starts Script_HeroPeeredIntoThe_3: '0 peered into the barrel. A' (E-0248)
-; code: checks EVENT_HERO_PEERED_INTO_THE_BARREL_15E; starts Script_HeroPeeredIntoThe_3; shows '0
-; peered into the barrel. There' (E-0347)
 Talk0768_HeroPeeredIntoThe_2::
     ld de, EVENT_HERO_PEERED_INTO_THE_BARREL_15E
     call TestFlagBit
@@ -8227,14 +8228,13 @@ Talk0768_HeroPeeredIntoThe_2::
     call StartMessageCommand09HL_B04
     ret
 
+; Rob-N the guard robot: by progress 'PROFESSOR... SAY GUARD... TREASURE... NEVER...', 'PRO...
+; SOR... AY... GGGGUARD...' (after EVENT_KIRAL_FETCH_ME_MY), 'PIPIPI... GGGGGGAGAGAGA...' and 'PI...
+; PI...' scripts; after the barrel scene 'Roboster stopped moving entirely...' ($078E); after
+; EVENT_KIRAL_FETCH_ME_MY_167 'WELCOME. I AM ROB-N...' ($078C). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 2
 ; constant message(s) depending on story flags and state; the first one in the code is $078E, whose
-; string begins 'Roboster stopped moving entirely'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KIRAL_FETCH_ME_MY_167; checks EVENT_SCENE_BARREL; checks
-; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161; checks EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY; checks
-; EVENT_KIRAL_FETCH_ME_MY; starts Script_PROFESSORSAYGUARDTREASURE; starts Script_PROSORAYGGGGUARD;
-; starts Script_PIPIPIGGGGGGAGAGAGA; starts Script_PIPI; shows 'Roboster stopped moving entirely…';
-; shows 'WELCOME. I AM ROB-N. I' (E-0347)
+; string begins 'Roboster stopped moving entirely' (E-0097)
 Talk078E_RobosterStoppedMovingEntirely::
     ld de, EVENT_KIRAL_FETCH_ME_MY_167
     call TestFlagBit
@@ -8280,13 +8280,12 @@ Talk078E_RobosterStoppedMovingEntirely::
     call StartMessageCommand09HL_B04
     ret
 
+; The WizStone barrel: before the barrel scene its script; after it, with room in the bag, adds the
+; WizStone ($3C, asking for a bag sort) with '...There...' ($077A) and sets
+; EVENT_HERO_PEERED_INTO_THE, else $077B; once taken, $077C. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $077B, whose
-; string begins '0 peered into the barrel. There'; the branching is not interpreted (E-0097)
-; code: checks EVENT_HERO_PEERED_INTO_THE; checks EVENT_SCENE_BARREL; starts
-; Script_HeroPeeredIntoThe_4; calls InventoryHasFreeSlotCheck; shows '0 peered into the barrel.
-; There'; sets wInventorySortFlags; shows '0 peered into the barrel. There'; sets
-; EVENT_HERO_PEERED_INTO_THE; shows '0 peered into the barrel. There' (E-0347)
+; string begins '0 peered into the barrel. There' (E-0097)
 Talk077B_HeroPeeredIntoThe::
     ld de, EVENT_HERO_PEERED_INTO_THE
     call TestFlagBit
@@ -8449,14 +8448,15 @@ TalkMsg0794_YouAppearToHave::
     call StartMessageCommand09HL_B04
     ret
 
+; The old man: after the second key boss 'I thank you in all...' ($0CE8); after
+; EVENT_THANK_YOU_FOR_GETTING_THE 'Things haven't been good for...' ($07CE); after the treasure
+; chest was opened, takes the Pretty ring from the bag for the '0 showed the Pretty Ring.' script
+; (without it, 'My daughter wedded a man...'); after EVENT_THANK_YOU_I_KNEW_YOU 'Could you humor
+; this old...' once (EVENT_COULD_YOU_HUMOR_THIS), then 'My daughter wedded a man...' ($07A5); at
+; first the 'Sigh...' script. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 4
 ; constant message(s) depending on story flags and state; the first one in the code is $07A4, whose
-; string begins 'Could you humor this old man'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks
-; EVENT_HERO_OPENED_THE_TREASURE_CHEST; checks EVENT_THANK_YOU_I_KNEW_YOU; starts Script_Sigh;
-; checks EVENT_COULD_YOU_HUMOR_THIS; shows 'Could you humor this old'; sets
-; EVENT_COULD_YOU_HUMOR_THIS; shows 'My daughter wedded a man'; sets hTemp0 to $3d; calls
-; FindTemp0InInventoryList; branches on hTemp0; then 4 more steps (see the code) (E-0347)
+; string begins 'Could you humor this old man' (E-0097)
 Talk07A4_CouldYouHumorThis::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8511,15 +8511,15 @@ Talk07A4_CouldYouHumorThis::
     call StartMessageCommand09HL_B04
     ret
 
+; The old woman: after the second key boss 'The atmosphere has cheered up,...' ($0CE9); after
+; EVENT_HERO_RECEIVED_A_SAGE_ROCK 'We are grateful that you...' ($07D3); after
+; EVENT_THANK_YOU_FOR_GETTING_THE the 'Thank you for recovering our...' script, the version that
+; adds item $0B to the bag (asking for a bag sort) when there is room; after
+; EVENT_THANK_YOU_I_KNEW_YOU 'Our daughter's only memento was...' ($07A6); at first the 'Sigh...'
+; script. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $07A6, whose
-; string begins 'Our daughter's only memento was taken'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_HERO_RECEIVED_A_SAGE_ROCK; checks
-; EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_THANK_YOU_I_KNEW_YOU; starts Script_Sigh_2; shows
-; 'Our daughter's only memento was'; calls InventoryHasFreeSlotCheck; starts
-; Script_ThankYouForRecovering; sets Script_ThankYouForRecovering to $0b; sets wInventorySortFlags;
-; starts Script_ThankYouForRecovering_2; shows 'We are grateful that you'; then 1 more step (see the
-; code) (E-0347)
+; string begins 'Our daughter's only memento was taken' (E-0097)
 Talk07A6_OurDaughtersOnlyMemento::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8747,15 +8747,14 @@ TalkMsg079F_IfYouTravelWest::
     call StartMessageCommand09HL_B04
     ret
 
+; Milayou: by progress the 'Excuse me, are you a...' script, 'Have you changed your mind?'
+; (EVENT_I_CAN), 'I've been checking around, and...' ($07D7), the forest script (pendant-seller
+; scene), 'Please defeat the dark master...' ($07DD, forest scene), 'I asked for your support...'
+; (second key boss), 'You've inspired me to try...' ($0CF1); after EVENT_MILAYOU_IEBEEN the 'I knew
+; you come back!' script once, then 'Want to spar with me?'. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $07D7, whose
-; string begins 'Milayou I've been checking around,'; the branching is not interpreted (E-0097)
-; code: checks EVENT_MILAYOU_IEBEEN; checks EVENT_MILAYOU_HOW_DO_I_KNOW; checks
-; EVENT_KEY_BOSS_BEATEN_2; checks EVENT_SCENE_MILAYOU_FOREST; checks EVENT_SCENE_PENDANT_SELLER_1C0;
-; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_I_CAN; starts Script_ExcuseMeAreYou; starts
-; Script_HaveYouChangedYour; shows 'Milayou: I've been checking around, and'; starts
-; Script_MilayouIThoughtThis; shows 'Milayou: Please defeat the dark master'; then 5 more steps (see
-; the code) (E-0347)
+; string begins 'Milayou I've been checking around,' (E-0097)
 Talk07D7_MilayouIEBeen::
     ld de, EVENT_MILAYOU_IEBEEN
     call TestFlagBit
@@ -8868,12 +8867,12 @@ TalkMsg07AA_ThatDealerHowExpensive::
     call StartMessageCommand09HL_B04
     ret
 
+; Talk: at first the 'Lately, the town of Miagen...' script; after the mercy scene 'What? Monsters
+; attacked you in...' ($07C1); after EVENT_THANK_YOU_FOR_GETTING_THE 'The thieving monsters had
+; a...' ($07D9); after the second key boss 'People say you can't judge...' ($0CF3). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 3
 ; constant message(s) depending on story flags and state; the first one in the code is $07C1, whose
-; string begins 'What? Monsters attacked you in the'; the branching is not interpreted (E-0097)
-; code: checks EVENT_KEY_BOSS_BEATEN_2; checks EVENT_THANK_YOU_FOR_GETTING_THE; checks
-; EVENT_SCENE_MERCY; starts Script_LatelyTheTownOf; shows 'What? Monsters attacked you in'; shows
-; 'The thieving monsters had a'; shows 'People say you can't judge' (E-0347)
+; string begins 'What? Monsters attacked you in the' (E-0097)
 Talk07C1_WhatMonstersAttackedYou::
     ld de, EVENT_KEY_BOSS_BEATEN_2
     call TestFlagBit
@@ -8938,15 +8937,15 @@ TalkMsg07AE_ThatDealersWaresCould::
     call StartMessageCommand09HL_B04
     ret
 
+; The pendant seller: shows ornament, jewelry and vase in turn ($07AF-$07B1, then 'I've no use for
+; the...'), the second round $07B3-$07B5 after EVENT_THANK_YOU_I_KNEW_YOU, each setting its flag,
+; then the 'This pendant is yours for...' script until the pendant-seller scene; after the mercy
+; scene the 'For 47,000G this earring...' script; after EVENT_YOU_DEFEATED_THE_MONSTERS_YOU 'You
+; defeated the monsters...' ($07C5); after EVENT_THANK_YOU_FOR_GETTING_THE the 'What? Where I get
+; my...' script, setting story flag byte $68 bit 0. (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 8
 ; constant message(s) depending on story flags and state; the first one in the code is $07AF, whose
-; string begins 'How does this ornament look? Take'; the branching is not interpreted (E-0097)
-; code: checks EVENT_THANK_YOU_FOR_GETTING_THE; checks EVENT_YOU_DEFEATED_THE_MONSTERS_YOU; checks
-; EVENT_SCENE_MERCY; checks EVENT_THANK_YOU_I_KNEW_YOU; checks EVENT_HOW_DOES_THIS_ORNAMENT; shows
-; 'How does this ornament look?'; sets EVENT_HOW_DOES_THIS_ORNAMENT; checks
-; EVENT_HOW_DOES_THIS_ORNAMENT_1B4; shows 'How does this jewelry look?'; sets
-; EVENT_HOW_DOES_THIS_ORNAMENT_1B4; checks EVENT_HOW_DOES_THIS_ORNAMENT_1B5; shows 'How does this
-; grand vase'; then 16 more steps (see the code) (E-0347)
+; string begins 'How does this ornament look? Take' (E-0097)
 Talk07AF_HowDoesThisOrnament::
     ld de, EVENT_THANK_YOU_FOR_GETTING_THE
     call TestFlagBit
@@ -9083,11 +9082,12 @@ StartScriptOrByFlag1BA::
     call StartScriptAtHL_B04
     ret
 
+; The treasure chest: with room in the bag adds the Pretty ring ($3D, asking for a bag sort) and
+; runs '0 opened the treasure chest...'; otherwise '0 found the Pretty Ring. But...' ($07BF). (C1,
+; E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $07BF, whose
-; string begins '0 found the Pretty Ring. But'; the branching is not interpreted (E-0097)
-; code: calls InventoryHasFreeSlotCheck; shows '0 found the Pretty Ring. But'; sets
-; wInventorySortFlags; starts Script_HeroOpenedTheTreasure (E-0347)
+; string begins '0 found the Pretty Ring. But' (E-0097)
 Talk07BF_HeroFoundThePretty::
     call InventoryHasFreeSlotCheck
     jr c, .read_inventory_sort_flags
@@ -9311,12 +9311,12 @@ Talk_SceneChestBattle::
     call StartScriptAtHL_B04
     ret
 
+; Power Tower's top: the chest battle script (Script_SceneChestBattle) until map $CE's object is
+; removed, then 'You've conquered the Power Tower.' ($0C17). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C17, an
-; empty string on the normal path; the branching is not interpreted (E-0097)
+; empty string on the normal path (E-0097)
 ; starts Script_SceneChestBattle (E-0248)
-; code: checks EVENT_MAP_CE_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Power Tower.' (E-0347)
 Talk0C17::
     ld de, EVENT_MAP_CE_OBJECT_REMOVED
     call TestFlagBit
@@ -9589,12 +9589,12 @@ Talk_SceneChestBattle_2::
     call StartScriptAtHL_B04
     ret
 
+; Baffle Tower's top: the chest battle script until map $D7's object is removed, then 'You've
+; conquered the Baffle Tower.' ($0C2F). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C2F, an
-; empty string on the normal path; the branching is not interpreted (E-0097)
+; empty string on the normal path (E-0097)
 ; starts Script_SceneChestBattle (E-0248)
-; code: checks EVENT_MAP_D7_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Baffle Tower.' (E-0347)
 Talk0C2F::
     ld de, EVENT_MAP_D7_OBJECT_REMOVED
     call TestFlagBit
@@ -9857,12 +9857,12 @@ Talk_0C::
     call StartScriptAtHL_B04
     ret
 
+; Soul Tower's top: the chest battle script until map $E0's object is removed, then 'You've
+; conquered the Soul Tower.' ($0C47). (C1, E-0357)
 ; talk handler (bank-$04/$13 event code, reached from the DispatchTalkEvent groups): starts 1
 ; constant message(s) depending on story flags and state; the first one in the code is $0C47, an
-; empty string on the normal path; the branching is not interpreted (E-0097)
+; empty string on the normal path (E-0097)
 ; starts Script_SceneChestBattle (E-0248)
-; code: checks EVENT_MAP_E0_OBJECT_REMOVED; starts Script_SceneChestBattle; shows 'You've conquered
-; the Soul Tower.' (E-0347)
 Talk0C47::
     ld de, EVENT_MAP_E0_OBJECT_REMOVED
     call TestFlagBit

@@ -2985,10 +2985,6 @@ RunGameMode5Case01SubStates::
 ; Title menu, step 0: sends the 'not ready' byte $F4 to a partner, draws the menu (the normal one
 ; or, with the link setting on, the version with the link entry), sets the cursor range (7 or 8
 ; entries) and clears the link state. (C1, E-0357)
-; code: sets wScreenStep to 0; sets wScreenSubStep to $f4; calls SerialSendByte; sets wScreenStep to
-; 1; calls FillBytes; branches on wLinkSetting; calls CopyRecordRectToScreenBuffer_Bank07; calls
-; DrawScreenBufferToBGMap0_Bank07; sets wSubMenuCursor to 8; sets wSubMenuCursor2 to 0; copies
-; wMenuState to wMenuOption; sets wLinkScreenStep to 0; then 2 more steps (see the code) (E-0347)
 RunGameMode5Case01SubStates_SerialSendByte::
     xor a
     ld [wScreenStep], a

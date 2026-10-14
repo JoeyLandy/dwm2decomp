@@ -139,10 +139,9 @@ CheckItemUsable::
     dw ItemUsable_VITbelt
     dw ItemUsable_VITbelt
 
+; Item 0: no check (always usable). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 0 (no name); item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: returns at once (E-0347)
+; $FF) for item(s) 0 (no name); item names from StringTable_ItemNames (E-0085)
 ItemUsable_Item00::
     ret
 
@@ -352,11 +351,10 @@ ItemUsable_Potion::
     ld [wItemId], a
     ret
 
+; Antidote: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 2;
+; usable otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Antidote::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -369,11 +367,10 @@ ItemUsable_Antidote::
     ld [wItemId], a
     ret
 
+; MoonHerb: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 3;
+; usable otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MoonHerb::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -386,11 +383,10 @@ ItemUsable_MoonHerb::
     ld [wItemId], a
     ret
 
+; Laurel: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 0;
+; usable otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Laurel::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -499,11 +495,10 @@ CopyEligibleRecordNameToTextBuf3Row::
     inc d
     ret
 
+; AwakeSand: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit
+; 1; usable otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames (E-0085)
 ItemUsable_AwakeSand::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -516,11 +511,10 @@ ItemUsable_AwakeSand::
     ld [wItemId], a
     ret
 
+; SkyBell: refused (wItemId = $FF) for a fallen monster (status bit 7) or one without status bit 4;
+; usable otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames (E-0085)
 ItemUsable_SkyBell::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -533,10 +527,9 @@ ItemUsable_SkyBell::
     ld [wItemId], a
     ret
 
+; WorldLeaf: usable only on a fallen monster (status bit 7); refused otherwise. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls SRAMRecordAddressMapped; may return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames (E-0085)
 ItemUsable_WorldLeaf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -547,11 +540,10 @@ ItemUsable_WorldLeaf::
     ld [wItemId], a
     ret
 
+; ATKseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its ATK (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_ATKseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -565,11 +557,10 @@ ItemUsable_ATKseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+; DEFseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its DEF (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_DEFseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -583,11 +574,10 @@ ItemUsable_DEFseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+; AGLseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its AGL (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_AGLseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -601,11 +591,10 @@ ItemUsable_AGLseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+; INTseed: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its INT (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames (E-0085)
 ItemUsable_INTseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -619,11 +608,10 @@ ItemUsable_INTseed::
     call ShowRaiseAmountOrRefuse
     ret
 
+; LifeAcorn: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its max HP (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames (E-0085)
 ItemUsable_LifeAcorn::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -637,11 +625,10 @@ ItemUsable_LifeAcorn::
     call ShowRaiseAmountOrRefuse
     ret
 
+; MysticNut: refused for a fallen monster; otherwise shows the raise or refuses at the limit of 999
+; for its max MP (ShowRaiseAmountOrRefuse). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; ShowRaiseAmountOrRefuse (E-0347)
+; $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MysticNut::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -655,11 +642,10 @@ ItemUsable_MysticNut::
     call ShowRaiseAmountOrRefuse
     ret
 
+; Quest: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already $FF.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Quest::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -673,11 +659,10 @@ ItemUsable_Quest::
     ld [wItemId], a
     ret
 
+; Horror: refused for a fallen monster or when personality byte 0 (MON_PERSONALITY) is already 0.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Horror::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -691,11 +676,10 @@ ItemUsable_Horror::
     ld [wItemId], a
     ret
 
+; BeNice: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already $FF.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_BeNice::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -709,11 +693,10 @@ ItemUsable_BeNice::
     ld [wItemId], a
     ret
 
+; Cheater: refused for a fallen monster or when personality byte 1 (MON_PERSONALITY) is already 0.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Cheater::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -727,11 +710,10 @@ ItemUsable_Cheater::
     ld [wItemId], a
     ret
 
+; Smart: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already $FF.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Smart::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -745,11 +727,10 @@ ItemUsable_Smart::
     ld [wItemId], a
     ret
 
+; Comedy: refused for a fallen monster or when personality byte 3 (MON_PERSONALITY) is already 0.
+; (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
-; return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Comedy::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -763,26 +744,24 @@ ItemUsable_Comedy::
     ld [wItemId], a
     ret
 
+; BeefJerky: refused only for a fallen monster. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names
-; from StringTable_ItemNames; the body is not interpreted (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7; may return early (E-0347)
+; from StringTable_ItemNames (E-0085)
 ItemUsable_BeefJerky::
     call CheckTargetRecordFlag55Bit7
     ret nz
     ret
 
+; BeastTail: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: returns at once (E-0347)
+; $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames (E-0085)
 ItemUsable_BeastTail::
     ret
 
+; Repellent: refused where there are no encounters (wEncounterRate & $7F = 0). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is
-; not interpreted (E-0085)
-; code: may return early; sets wItemId to $ff (E-0347)
+; $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Repellent::
     ld a, [wEncounterRate]
     and $7f
@@ -791,27 +770,25 @@ ItemUsable_Repellent::
     ld [wItemId], a
     ret
 
+; Mist: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item
-; names from StringTable_ItemNames; the body is not interpreted (E-0085)
-; code: returns at once (E-0347)
+; names from StringTable_ItemNames (E-0085)
 ItemUsable_Mist::
     ret
 
+; Warp: the WarpWing's check (ItemUsable_WarpWing). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: calls ItemUsable_WarpWing (E-0347)
+; $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Warp::
     call ItemUsable_WarpWing
     ret
 
+; LogTwig: in a key world only in map type $80, otherwise only on the region maps $20, $30, $48,
+; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA; then ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
+; decides, and when it finds nothing (hTempA = 0) wItemId becomes $FE (no effect here). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; sets wItemId to $ff; branches on hMapId; sets wItemId to $ff; calls
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; returns unless hTempA is 0; sets wItemId to
-; $fe; also changes A by register arithmetic (E-0347)
+; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames (E-0085)
 ItemUsable_LogTwig::
     ld a, [wMapType]
     bit 7, a
@@ -882,12 +859,10 @@ ItemUsable_WarpWing::
     ld [wItemId], a
     ret
 
+; ExitBell: in a key world only in map types $81, $85 and $86; elsewhere only where the map's
+; MapItemUseFlags byte has bit 5. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; returns if wMapType is $81; returns if wMapType is $85; returns if
-; wMapType is $86; sets wItemId to $ff; returns if bit 5 of MapItemUseFlags is set; sets wItemId to
-; $ff (E-0347)
+; $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames (E-0085)
 ItemUsable_ExitBell::
     ld a, [wMapType]
     bit 7, a
@@ -918,20 +893,16 @@ ItemUsable_ExitBell::
 ItemUsable_TinyMedal::
     ret
 
+; Item $2F: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 47 (no name); item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: returns at once (E-0347)
+; $FF) for item(s) 47 (no name); item names from StringTable_ItemNames (E-0085)
 ItemUsable_Item2F::
     ret
 
+; WaterCall: only outside key worlds on map $2F, screen (0, 1), standing at ($40, $30) facing right
+; or at ($50, $40) facing up, and before EVENT_SCENE_MONSTERS_IN_TOW. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; branches on hMapId; branches on hMapScreenX; branches on hMapScreenY;
-; branches on hPlayerX; branches on hPlayerY; branches on hPlayerFacing; branches on hPlayerY;
-; branches on hPlayerFacing; checks EVENT_SCENE_MONSTERS_IN_TOW; sets wItemId to $ff; also changes
-; DE and A by register arithmetic (E-0347)
+; $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames (E-0085)
 ItemUsable_WaterCall::
     ld a, [wMapType]
     bit 7, a
@@ -979,12 +950,10 @@ ItemUsable_WaterCall::
 .return:
     ret
 
+; MoonRock: only on map $40, screen (0, 0), at Y $40 with X $40-$50 facing up, and before
+; EVENT_THE_PIRATES_WERE_SWALLOWED_BY. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; branches on hMapId; branches on hPlayerY; branches on hPlayerFacing;
-; branches on hPlayerX; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff; also
-; changes DE, A and B by register arithmetic (E-0347)
+; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames (E-0085)
 ItemUsable_MoonRock::
     ld a, [wMapType]
     bit 7, a
@@ -1020,12 +989,10 @@ ItemUsable_MoonRock::
 .return:
     ret
 
+; Crest: only on map $49, screen (0, 0), at ($40, $40) facing up, after EVENT_SCENE_SHIELD_1E4 and
+; before EVENT_SCENE_SHIELD2_1E5. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
-; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_1E4; checks EVENT_SCENE_SHIELD2_1E5; sets
-; wItemId to $ff; also changes DE, A and B by register arithmetic (E-0347)
+; $FF) for item(s) 50 Crest; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Crest::
     ld a, [wMapType]
     bit 7, a
@@ -1062,19 +1029,16 @@ ItemUsable_Crest::
 .return:
     ret
 
+; YunaSoul: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: returns at once (E-0347)
+; $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames (E-0085)
 ItemUsable_YunaSoul::
     ret
 
+; SleepHerb: only on map $61, screen (0, 0), at ($40, $40) facing up, before
+; EVENT_SCENE_SHIELD_GUARDIAN. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; branches on hMapId; branches on hPlayerX; branches on hPlayerY;
-; branches on hPlayerFacing; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff; also changes
-; DE, A and B by register arithmetic (E-0347)
+; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames (E-0085)
 ItemUsable_SleepHerb::
     ld a, [wMapType]
     bit 7, a
@@ -1108,11 +1072,10 @@ ItemUsable_SleepHerb::
 .return:
     ret
 
+; Change: only outside key worlds on maps $70-$9F except $76, $9A, $9B and map $7A's screen row 1,
+; and only while wScreenSavedFlag is set. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted
-; (E-0085)
-; code: branches on wMapType; branches on hMapId; branches on hMapScreenY; returns unless
-; wScreenSavedFlag is 0; sets wItemId to $ff; also changes A by register arithmetic (E-0347)
+; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Change::
     ld a, [wMapType]
     bit 7, a
@@ -1150,25 +1113,24 @@ ItemUsable_Change::
 ItemUsable_HarMirror::
     ret
 
+; Heaven: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from
-; StringTable_ItemNames; the body is not interpreted (E-0085)
-; code: returns at once (E-0347)
+; StringTable_ItemNames (E-0085)
 ItemUsable_Heaven::
     ret
 
+; Accessory: no check. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
-; $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames; the body is
-; not interpreted (E-0085)
-; code: returns at once (E-0347)
+; $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames (E-0085)
 ItemUsable_Accessory::
     ret
 
+; VITbelt: refused only for a fallen monster. (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 64 VITbelt, 65 DracoBelt, 66 MagicBelt, 67 OddBelt, 68 StoneFang, 69 SteelFang,
-; 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames; the
-; body is not interpreted (E-0085)
-; code: calls CheckTargetRecordFlag55Bit7 (E-0347)
+; 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames
+; (E-0085)
 ItemUsable_VITbelt::
     call CheckTargetRecordFlag55Bit7
     ret
@@ -1363,17 +1325,15 @@ ApplyItemEffect::
     dw ItemApply_Life
     dw ItemApply_Item62
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 0 (no name); the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; Item 0: no effect. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 0 (no name) (E-0089)
 ItemApply_Item00::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater;
-; the body is not interpreted beyond the Herb case (E-0089) (C2 from E-0326: a Herb on a record at
-; 50 of 138 HP leaves 89; at 5 of 21, 21)
-; code: calls NextTableByte; calls AddHLToRecordHPCapped; calls ConsumeSelectedItemByChance; also
-; changes HL, A and B by register arithmetic (E-0347)
+; Herb: adds the item's amount (wItemEffectAmount) plus a random 0-10 to the target's HP, capped at
+; its max, and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater
+; (E-0089) (C2 from E-0326: a Herb on a record at 50 of 138 HP leaves 89; at 5 of 21, 21)
 ItemApply_Herb::
     call NextTableByte
     ld a, [wRandomLo]
@@ -1390,10 +1350,9 @@ ItemApply_Herb::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_WorldDew_CheckTargetRecordFlag55Bit7; calls ConsumeSelectedItemByChance
-; (E-0347)
+; WorldDew: heals each of the three party places in turn (the helper skips fallen monsters) and uses
+; the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew (E-0089)
 ItemApply_WorldDew::
     ld a, $00
     call ItemApply_WorldDew_CheckTargetRecordFlag55Bit7
@@ -1422,10 +1381,9 @@ ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
     call StoreHLToRecordField
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: calls NextTableByte; calls AddHLToRecordMPCapped; calls ConsumeSelectedItemByChance; also
-; changes HL, A and B by register arithmetic (E-0347)
+; Potion: adds the item's amount plus a random 0-10 to the target's MP, capped at its max, and uses
+; the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion (E-0089)
 ItemApply_Potion::
     call NextTableByte
     ld a, [wRandomLo]
@@ -1442,10 +1400,8 @@ ItemApply_Potion::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls StoreHLToRecordField; calls ConsumeSelectedItemByChance
-; (E-0347)
+; ElfWater: refills the target's MP to its max and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater (E-0089)
 ItemApply_ElfWater::
     ld a, [wTargetRecord]
     ld c, MON_MAX_MP
@@ -1457,9 +1413,8 @@ ItemApply_ElfWater::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance (E-0347)
+; Antidote: clears the target's status bit 2 and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote (E-0089)
 ItemApply_Antidote::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1468,9 +1423,8 @@ ItemApply_Antidote::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance (E-0347)
+; MoonHerb: clears the target's status bit 3 and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb (E-0089)
 ItemApply_MoonHerb::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1479,9 +1433,8 @@ ItemApply_MoonHerb::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance (E-0347)
+; Laurel: clears the target's status bit 0 and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel (E-0089)
 ItemApply_Laurel::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1490,9 +1443,8 @@ ItemApply_Laurel::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance (E-0347)
+; AwakeSand: clears the target's status bit 1 and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand (E-0089)
 ItemApply_AwakeSand::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1501,9 +1453,8 @@ ItemApply_AwakeSand::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance (E-0347)
+; SkyBell: clears the target's status bit 4 and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell (E-0089)
 ItemApply_SkyBell::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1512,16 +1463,14 @@ ItemApply_SkyBell::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; SageRock: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock (E-0089)
 ItemApply_SageRock::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls SRAMRecordAddressMapped; calls StoreHLToRecordField; sets wLevelUpGains to 1; calls
-; ConsumeSelectedItemByChance (E-0347)
+; WorldLeaf: revives the target (status cleared, HP to max), sets wLevelUpGains to 1 and uses the
+; item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf (E-0089)
 ItemApply_WorldLeaf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1539,10 +1488,9 @@ ItemApply_WorldLeaf::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_ATKseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; ATKseed: applies the item's amount (wItemEffectAmount) to the target's ATK through its helper,
+; then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed (E-0089)
 ItemApply_ATKseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1552,10 +1500,9 @@ ItemApply_ATKseed::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_DEFseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; DEFseed: applies the item's amount (wItemEffectAmount) to the target's DEF through its helper,
+; then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed (E-0089)
 ItemApply_DEFseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1565,10 +1512,9 @@ ItemApply_DEFseed::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_AGLseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; AGLseed: applies the item's amount (wItemEffectAmount) to the target's AGL through its helper,
+; then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed (E-0089)
 ItemApply_AGLseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1578,10 +1524,9 @@ ItemApply_AGLseed::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_INTseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; INTseed: applies the item's amount (wItemEffectAmount) to the target's INT through its helper,
+; then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed (E-0089)
 ItemApply_INTseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1591,10 +1536,9 @@ ItemApply_INTseed::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; LifeAcorn: applies the item's amount (wItemEffectAmount) to the target's max HP through its
+; helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn (E-0089)
 ItemApply_LifeAcorn::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1604,10 +1548,9 @@ ItemApply_LifeAcorn::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_MysticNut_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; MysticNut: applies the item's amount (wItemEffectAmount) to the target's max MP through its
+; helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut (E-0089)
 ItemApply_MysticNut::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1617,9 +1560,9 @@ ItemApply_MysticNut::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_Quest_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance (E-0347)
+; Quest: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest? (E-0089)
 ItemApply_Quest::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1629,10 +1572,9 @@ ItemApply_Quest::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_Horror_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; Horror: applies the item's amount (wItemEffectAmount) to the target's personality byte 0 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror? (E-0089)
 ItemApply_Horror::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1642,10 +1584,9 @@ ItemApply_Horror::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_BeNice_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; BeNice: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice? (E-0089)
 ItemApply_BeNice::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1655,10 +1596,9 @@ ItemApply_BeNice::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_Cheater_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; Cheater: applies the item's amount (wItemEffectAmount) to the target's personality byte 1 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater? (E-0089)
 ItemApply_Cheater::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1668,9 +1608,9 @@ ItemApply_Cheater::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_Smart_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance (E-0347)
+; Smart: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart? (E-0089)
 ItemApply_Smart::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1680,10 +1620,9 @@ ItemApply_Smart::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ItemApply_Comedy_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
-; (E-0347)
+; Comedy: applies the item's amount (wItemEffectAmount) to the target's personality byte 3 through
+; its helper, then uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy? (E-0089)
 ItemApply_Comedy::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1693,9 +1632,10 @@ ItemApply_Comedy::
     call ConsumeSelectedItemByChance
     ret
 
+; BeefJerky: lowers the target's record field $6B by the item's amount, not below 0
+; (ApplyMeatToRecordField6B), and uses the item up by its chance. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26
-; PorkChop, 27 Rib, 28 Sirloin; the body is not interpreted beyond the Herb case (E-0089)
-; code: calls ApplyMeatToRecordField6B; calls ConsumeSelectedItemByChance (E-0347)
+; PorkChop, 27 Rib, 28 Sirloin (E-0089)
 ItemApply_BeefJerky::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1705,10 +1645,9 @@ ItemApply_BeefJerky::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ApplyMeatToRecordField6B; calls SRAMRecordAddressMapped; calls
-; ConsumeSelectedItemByChance (E-0347)
+; BadMeat: lowers field $6B as the other meats do, poisons the target (status bit 2) and uses the
+; item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat (E-0089)
 ItemApply_BadMeat::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1722,146 +1661,135 @@ ItemApply_BadMeat::
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; MeteOrb: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb (E-0089)
 ItemApply_MeteOrb::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; BeastTail: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail (E-0089)
 ItemApply_BeastTail::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: sets wEncounterDelay to $c8; calls ConsumeSelectedItemByChance (E-0347)
+; Repellent: no encounters for 200 steps (wEncounterDelay = $C8); the item is used up by its chance.
+; (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent (E-0089)
 ItemApply_Repellent::
     ld a, $c8
     ld [wEncounterDelay], a
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 1; calls ConsumeSelectedItemByChance (E-0347)
+; ShinyHarp: sets the field's return action to 1 (wDataBankSave), which the field runs on return,
+; and uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp (E-0089)
 ItemApply_ShinyHarp::
     ld a, $01
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
+; Mist: no effect here. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?,
-; 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?; the body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire? (E-0089)
 ItemApply_Mist::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 40 Warp?; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 2; calls ConsumeSelectedItemByChance (E-0347)
+; Warp: sets the field's return action to 2 (wDataBankSave), which the field runs on return, and
+; uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 40 Warp? (E-0089)
 ItemApply_Warp::
     ld a, $02
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 3; calls ConsumeSelectedItemByChance (E-0347)
+; WarpWing: sets the field's return action to 3 (wDataBankSave), which the field runs on return, and
+; uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing (E-0089)
 ItemApply_WarpWing::
     ld a, $03
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 42 ExitBell; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 4; calls ConsumeSelectedItemByChance (E-0347)
+; ExitBell: sets the field's return action to 4 (wDataBankSave), which the field runs on return, and
+; uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 42 ExitBell (E-0089)
 ItemApply_ExitBell::
     ld a, $04
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls ConsumeSelectedItemByChance (E-0347)
+; Bookmark: only uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark (E-0089)
 ItemApply_Bookmark::
     call ConsumeSelectedItemByChance
     ret
 
+; TinyMedal: no effect here. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45
-; GoldPass; the body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; GoldPass (E-0089)
 ItemApply_TinyMedal::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 46 LogTwig; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 9; calls ConsumeSelectedItemByChance (E-0347)
+; LogTwig: sets the field's return action to 9 (wDataBankSave), which the field runs on return, and
+; uses the item up by its chance. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 46 LogTwig (E-0089)
 ItemApply_LogTwig::
     ld a, $09
     ld [wDataBankSave], a
     call ConsumeSelectedItemByChance
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name); the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; Item $2F: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name) (E-0089)
 ItemApply_Item2F::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 48 WaterCall; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 5 (E-0347)
+; WaterCall: sets the field's return action to 5 (wDataBankSave); the item is kept. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 48 WaterCall (E-0089)
 ItemApply_WaterCall::
     ld a, $05
     ld [wDataBankSave], a
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 6 (E-0347)
+; MoonRock: sets the field's return action to 6 (wDataBankSave); the item is kept. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock (E-0089)
 ItemApply_MoonRock::
     ld a, $06
     ld [wDataBankSave], a
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 50 Crest; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 7 (E-0347)
+; Crest: sets the field's return action to 7 (wDataBankSave); the item is kept. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 50 Crest (E-0089)
 ItemApply_Crest::
     ld a, $07
     ld [wDataBankSave], a
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; YunaSoul: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul (E-0089)
 ItemApply_YunaSoul::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 52 SleepHerb; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to 8 (E-0347)
+; SleepHerb: sets the field's return action to 8 (wDataBankSave); the item is kept. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 52 SleepHerb (E-0089)
 ItemApply_SleepHerb::
     ld a, $08
     ld [wDataBankSave], a
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: sets wDataBankSave to $0a (E-0347)
+; Change: sets the field's return action to $0A (wDataBankSave); the item is kept. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change? (E-0089)
 ItemApply_Change::
     ld a, $0a
     ld [wDataBankSave], a
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: branches on $ff; sets wTownEventTimer to $f0 (E-0347)
+; TidalBell: adds 50 to wTownEventTimer, at most $F0. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell (E-0089)
 ItemApply_TidalBell::
     ld a, [wTownEventTimer]
     add $32
@@ -1877,22 +1805,22 @@ ItemApply_TidalBell::
     ld [wTownEventTimer], a
     ret
 
+; HarMirror: no effect here. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56
-; Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; the body is not interpreted
-; beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty? (E-0089)
 ItemApply_HarMirror::
     ret
 
+; Accessory: no effect here. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63
-; Accessory; the body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; Accessory (E-0089)
 ItemApply_Accessory::
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 64 VITbelt; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; VITbelt: equips it: raises the target's max HP (and the current value with it) by 30
+; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
+; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 64 VITbelt (E-0089)
 ItemApply_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
@@ -1900,9 +1828,10 @@ ItemApply_VITbelt::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; DracoBelt: equips it: raises the target's max HP (and the current value with it) by 80
+; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
+; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt (E-0089)
 ItemApply_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
@@ -1910,9 +1839,10 @@ ItemApply_DracoBelt::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; MagicBelt: equips it: raises the target's max MP (and the current value with it) by 30
+; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
+; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt (E-0089)
 ItemApply_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
@@ -1920,9 +1850,10 @@ ItemApply_MagicBelt::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; OddBelt: equips it: raises the target's max MP (and the current value with it) by 80
+; (AddAToRecordWordPairCapped) and stores the equipment in field $A4
+; (EquipItemOnRecordTargetRecord). (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt (E-0089)
 ItemApply_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
@@ -1930,9 +1861,9 @@ ItemApply_OddBelt::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; StoneFang: equips it: raises the target's ATK by 10, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang (E-0089)
 ItemApply_StoneFang::
     ld a, $0a
     ld c, MON_ATK
@@ -1940,9 +1871,9 @@ ItemApply_StoneFang::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; SteelFang: equips it: raises the target's ATK by 50, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang (E-0089)
 ItemApply_SteelFang::
     ld a, $32
     ld c, MON_ATK
@@ -1950,9 +1881,9 @@ ItemApply_SteelFang::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; MermScale: equips it: raises the target's DEF by 10, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale (E-0089)
 ItemApply_MermScale::
     ld a, $0a
     ld c, MON_DEF
@@ -1960,9 +1891,9 @@ ItemApply_MermScale::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale; the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; DrakScale: equips it: raises the target's DEF by 50, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale (E-0089)
 ItemApply_DrakScale::
     ld a, $32
     ld c, MON_DEF
@@ -1970,9 +1901,9 @@ ItemApply_DrakScale::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL?; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; ITEM_AGL ($48): equips it: raises the target's AGL by 10, capped at 999 (AddAToRecordWordCapped),
+; and stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL? (E-0089)
 ItemApply_AGL::
     ld a, $0a
     ld c, MON_AGL
@@ -1980,9 +1911,9 @@ ItemApply_AGL::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry?; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; Starry: equips it: raises the target's AGL by 50, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry? (E-0089)
 ItemApply_Starry::
     ld a, $32
     ld c, MON_AGL
@@ -1990,10 +1921,10 @@ ItemApply_Starry::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart?; the body
-; is not interpreted beyond the Herb case (E-0089) (E-0344: the address in its name dropped or read
-; as the label there; was ItemApply_Smart_2)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; Item $4A (Smart): equips it: raises the target's INT by 50, capped at 999
+; (AddAToRecordWordCapped), and stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart? (E-0089)
+; (E-0344: the address in its name dropped or read as the label there; was ItemApply_Smart_2)
 ItemApply_Smart_2::
     ld a, $32
     ld c, MON_INT
@@ -2001,9 +1932,9 @@ ItemApply_Smart_2::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise?; the body is
-; not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; Wise: equips it: raises the target's INT by 100, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise? (E-0089)
 ItemApply_Wise::
     ld a, $64
     ld c, MON_INT
@@ -2018,9 +1949,9 @@ ItemApply_MagicCape::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale; the body
-; is not interpreted beyond the Herb case (E-0089)
-; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord (E-0347)
+; DScale: equips it: raises the target's DEF by 5, capped at 999 (AddAToRecordWordCapped), and
+; stores the equipment in field $A4. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale (E-0089)
 ItemApply_DScale::
     ld a, $05
     ld c, MON_DEF
@@ -2028,23 +1959,21 @@ ItemApply_DScale::
     call EquipItemOnRecordTargetRecord
     ret
 
+; None (ITEM_NONE): no effect here. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86
-; None, 87 None, 88 None, 89 None; the body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; None, 87 None, 88 None, 89 None (E-0089)
 ItemApply_None::
     ret
 
+; Life: equips it (field $A4) with no stat change. (C1, E-0357)
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 90 Life?, 91 Divine?,
-; 92 War?, 93 Mage?, 94 Fight?, 95 Sailor?, 96 Thief?, 97 Cleric?; the body is not interpreted
-; beyond the Herb case (E-0089)
-; code: calls EquipItemOnRecordTargetRecord (E-0347)
+; 92 War?, 93 Mage?, 94 Fight?, 95 Sailor?, 96 Thief?, 97 Cleric? (E-0089)
 ItemApply_Life::
     call EquipItemOnRecordTargetRecord
     ret
 
-; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name); the
-; body is not interpreted beyond the Herb case (E-0089)
-; code: returns at once (E-0347)
+; Item $62: no effect here. (C1, E-0357)
+; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name) (E-0089)
 ItemApply_Item62::
     ret
 
@@ -2352,11 +2281,8 @@ SubtractAFromRecordWordFloor1::
     ld [hl], a
     ret
 
-; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: as
-; SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before
-; it (the second half is not read to its end) (E-0103)
-; code: sets hTemp0; calls SRAMRecordAddressMapped; branches on E; returns if D is $03; also changes
-; HL, DE and A by register arithmetic (E-0347)
+; Takes an equipment bonus back: unless the word at field C of record wTargetRecord is 999,
+; subtracts A from it and from the word before it, keeping each at least 1. (C1, E-0357)
 SubtractAFromRecordWordPairFloor1::
     ldh [hTemp0], a
     ld a, [wTargetRecord]
@@ -9441,12 +9367,8 @@ LoadTilesForPartyRecords::
     ld [rRAMG], a
     ret
 
-; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from
-; FamilyIconTiles by the low nibble of record byte $0D and copies them on through the shared copy
-; loop at WriteBytesToVRAMTileWorkBuf1_Skip (not read to its end) (E-0103) (E-0345: record byte $0D
-; is MON_FAMILY; was LoadTileForRecordFamily)
-; code: calls SRAMRecordAddressMapped; continues in WriteBytesToVRAMTileWorkBuf1_Skip; also changes
-; DE, BC and A by register arithmetic (E-0347)
+; Writes the 16-byte family icon of record A's family (FamilyIconTiles, family & $0F) to the tile at
+; HL. (C1, E-0357)
 LoadTileForRecordFamily::
     push hl
     ld c, MON_FAMILY

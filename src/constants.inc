@@ -563,39 +563,39 @@ DEF SKILL_ZONEOUT EQU $AB
 DEF SKILL_GUARD EQU $AC
 DEF SKILL_PANICALL_AD EQU $AD ; PanicAll
 DEF SKILL_IRONIZE_AE EQU $AE ; Ironize
-DEF SKILL_HIGHJUMP_AF EQU $AF ; HighJump
-DEF SKILL_HIGHJUMP_B0 EQU $B0 ; HighJump
-DEF SKILL_HIGHJUMP_B1 EQU $B1 ; HighJump
-DEF SKILL_HIGHJUMP_B2 EQU $B2 ; HighJump
-DEF SKILL_HIGHJUMP_B3 EQU $B3 ; HighJump
-DEF SKILL_HIGHJUMP_B4 EQU $B4 ; HighJump
-DEF SKILL_HIGHJUMP_B5 EQU $B5 ; HighJump
-DEF SKILL_HIGHJUMP_B6 EQU $B6 ; HighJump
-DEF SKILL_HIGHJUMP_B7 EQU $B7 ; HighJump
-DEF SKILL_HIGHJUMP_B8 EQU $B8 ; HighJump
-DEF SKILL_HIGHJUMP_B9 EQU $B9 ; HighJump
-DEF SKILL_HIGHJUMP_BA EQU $BA ; HighJump
-DEF SKILL_HIGHJUMP_BB EQU $BB ; HighJump
-DEF SKILL_HIGHJUMP_BC EQU $BC ; HighJump
-DEF SKILL_HIGHJUMP_BD EQU $BD ; HighJump
-DEF SKILL_HIGHJUMP_BE EQU $BE ; HighJump
-DEF SKILL_HIGHJUMP_BF EQU $BF ; HighJump
-DEF SKILL_HIGHJUMP_C0 EQU $C0 ; HighJump
-DEF SKILL_HIGHJUMP_C1 EQU $C1 ; HighJump
-DEF SKILL_HIGHJUMP_C2 EQU $C2 ; HighJump
-DEF SKILL_HIGHJUMP_C3 EQU $C3 ; HighJump
-DEF SKILL_HIGHJUMP_C4 EQU $C4 ; HighJump
-DEF SKILL_HIGHJUMP_C5 EQU $C5 ; HighJump
-DEF SKILL_HIGHJUMP_C6 EQU $C6 ; HighJump
-DEF SKILL_HIGHJUMP_C7 EQU $C7 ; HighJump
-DEF SKILL_HIGHJUMP_C8 EQU $C8 ; HighJump
-DEF SKILL_HIGHJUMP_C9 EQU $C9 ; HighJump
-DEF SKILL_HIGHJUMP_CA EQU $CA ; HighJump
-DEF SKILL_HIGHJUMP_CB EQU $CB ; HighJump
-DEF SKILL_HIGHJUMP_CC EQU $CC ; HighJump
-DEF SKILL_LOVERAIN_CD EQU $CD ; LoveRain
-DEF SKILL_LOVERAIN_CE EQU $CE ; LoveRain
-DEF SKILL_LOVERAIN_CF EQU $CF ; LoveRain
+DEF ACTION_AF EQU $AF ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionAF
+DEF ACTION_B0 EQU $B0 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionB0
+DEF ACTION_B1 EQU $B1 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_B2 EQU $B2 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_B3 EQU $B3 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_B4 EQU $B4 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionB4
+DEF ACTION_B5 EQU $B5 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionB5
+DEF ACTION_B6 EQU $B6 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionB6
+DEF ACTION_B7 EQU $B7 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_B8 EQU $B8 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_B9 EQU $B9 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionB9
+DEF ACTION_BA EQU $BA ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionBA
+DEF ACTION_BB EQU $BB ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_BC EQU $BC ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionBC
+DEF ACTION_BD EQU $BD ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionBD
+DEF ACTION_BE EQU $BE ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_BF EQU $BF ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionBF
+DEF ACTION_C0 EQU $C0 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC0
+DEF ACTION_C1 EQU $C1 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC1
+DEF ACTION_C2 EQU $C2 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC2
+DEF ACTION_C3 EQU $C3 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_C4 EQU $C4 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_C5 EQU $C5 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC5
+DEF ACTION_C6 EQU $C6 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC6
+DEF ACTION_C7 EQU $C7 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_C8 EQU $C8 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC8
+DEF ACTION_C9 EQU $C9 ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionC9
+DEF ACTION_CA EQU $CA ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_CB EQU $CB ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365)
+DEF ACTION_CC EQU $CC ; a battle action whose StringTable_SkillNames entry only repeats 'HighJump' (E-0365); handled by ActionEffect_ActionCC
+DEF ACTION_CD EQU $CD ; a battle action whose StringTable_SkillNames entry only repeats 'LoveRain' (E-0365); handled by ActionEffect_ActionCD
+DEF ACTION_CE EQU $CE ; a battle action whose StringTable_SkillNames entry only repeats 'LoveRain' (E-0365); handled by ActionEffect_ActionCE
+DEF ACTION_CF EQU $CF ; a battle action whose StringTable_SkillNames entry only repeats 'LoveRain' (E-0365); handled by ActionEffect_ActionCF
 DEF ACTION_D0 EQU $D0 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD0
 DEF ACTION_D1 EQU $D1 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD1
 DEF ACTION_D2 EQU $D2 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD2

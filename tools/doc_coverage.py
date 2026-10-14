@@ -65,7 +65,8 @@ def main() -> None:
             covered = bool(comment) or (kind == "data" and (text_body or header))
             if covered:
                 tot[kind][1] += 1
-                if kind == "code" and GAP.search(comment.split("; why: ")[0]) and "; code:" not in comment:  # E-0347: restated below the note
+                if (kind == "code" and GAP.search(comment.split("; why: ")[0]) and "; code:" not in comment  # E-0347: restated
+                        and not HAND_NOTE.search(comment)):  # E-0365: or read by hand
                     gaps += 1
                     if args.list == "gaps":
                         print(f"{f.name}:{line} {name}: {comment[:140]}")

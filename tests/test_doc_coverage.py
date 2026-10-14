@@ -32,7 +32,8 @@ class Coverage(unittest.TestCase):
 
     def test_notes_that_admit_a_gap_restate_the_code(self):
         gaps = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)
-                if kind == "code" and doc_coverage.GAP.search(comment.split("; why: ")[0]) and "; code:" not in comment]
+                if kind == "code" and doc_coverage.GAP.search(comment.split("; why: ")[0]) and "; code:" not in comment
+                and not doc_coverage.HAND_NOTE.search(comment)]  # E-0365: a hand note answers the gap itself
         self.assertEqual(gaps[:10], [])
 
     def test_comments_name_only_labels_symbols_and_constants(self):
@@ -67,14 +68,20 @@ class Coverage(unittest.TestCase):
         """E-0357 through E-0361: a routine read by hand carries its note from config/annotations.json instead of
         the generated restatement, and the number of routines described only by a restatement never grows. Lower
         RESTATED_AT_MOST as notes are added."""
-        RESTATED_AT_MOST = 569
+        RESTATED_AT_MOST = 105
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 4588)
+        self.assertGreaterEqual(hand, 5141)
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]
         self.assertEqual(len(hand_keys), hand, "every hand-written note sits above exactly one code label")
+
+    def test_hand_notes_answer_gap_notes(self):
+        """E-0365: a routine read by hand gets no generated '; code:' restatement under an older gap note."""
+        both = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)
+                if kind == "code" and "; code:" in comment and doc_coverage.HAND_NOTE.search(comment)]
+        self.assertEqual(both[:10], [], f"{len(both)} hand-read routines still carry a restatement")
 
     def test_purpose_lines_quote_notes_that_say_what_a_routine_is_for(self):
         """E-0354: no purpose line quotes a note that only names its routine's dispatch ("runs the routine for X")."""
