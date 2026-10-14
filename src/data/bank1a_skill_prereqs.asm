@@ -84,12 +84,9 @@ LoadSkillRecordPart::
     db $cd, $aa, $16, $7d, $c6, $d4, $6f, $7c, $ce, $40, $67, $c1, $06, $00, $09, $4e
     db $c9, $c1, $0e, $00, $c9
 
-; called from ComputeDamageEstimateForAction: branches on wLinkMode; branches on wBattleActor;
-; branches on the byte at wSlotAIMode; copies the byte at wSlotAIMode to wBattleDamageLo; copies the
-; byte at wSlotAIMode to wBattleDamageHi; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of ComputeDamageEstimateForAction; ComputeDamageEstimateForAction: fills the damage
-; for wBattleActionId: the effect handler for 0 or ids from $48 (except $66),
-; ComputeDamageEstimateForAction_Multiply8By16 ... (E-0352, E-0124)
+; The damage estimate for wBattleActionId from its 17-byte record (the table at $40D4): the word at
+; offset 9 for the player's side (and in link mode 1), 13 for foes, two bytes further when the
+; actor's AI mode is 4. (C1, E-0357)
 ComputeDamageEstimateForAction_Multiply8By16::
     ld a, [wBattleActionId]
     ld c, a
@@ -2012,17 +2009,12 @@ FindNewlyLearnableSkills::
     ld a, $ff
     ldh [hTemp4], a
 
-; Returns at once (E-0347)
-; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
-; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
-; (E-0352, E-0131)
+; Returns. (C1, E-0357)
 FindNewlyLearnableSkills_Return::
     ret
 
-; Copies C to hTemp3; sets hTemp4 to 0; continues in FindNewlyLearnableSkills_Return (E-0347)
-; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
-; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
-; (E-0352, E-0131)
+; Ends the found list with $FF; hTemp3 = skill C, result hTemp4 = 0 (a new skill: 'At Lv<n>, <name>
+; learned <skill>!' in bank $2F's category 5). (C1, E-0357)
 FindNewlyLearnableSkills_Skip::
     ld a, $ff
     ld [de], a
@@ -2036,11 +2028,8 @@ FindNewlyLearnableSkills_Skip::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; Copies hTemp6 to hTemp5; copies C to hTemp3; sets hTemp4 to 1; continues in
-; FindNewlyLearnableSkills_Return (E-0347)
-; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
-; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
-; (E-0352, E-0131)
+; hTemp5 = the skill it replaces (hTemp6); hTemp3 = skill C, result hTemp4 = 1 ('<name>'s <old
+; skill> became <skill>!'). (C1, E-0357)
 FindNewlyLearnableSkills_ReadTemp6::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2053,10 +2042,8 @@ FindNewlyLearnableSkills_ReadTemp6::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; Copies C to hTemp3; sets hTemp4 to 2; continues in FindNewlyLearnableSkills_Return (E-0347)
-; why: part of FindNewlyLearnableSkills; FindNewlyLearnableSkills: for record wBattleArg0 finds the
-; skills of SkillRequirementTable not yet known whose level and stat requirements its stats now meet
-; (E-0352, E-0131)
+; hTemp3 = skill C, result hTemp4 = 2 ('<name> devised <skill> from the skills it knows!'). (C1,
+; E-0357)
 FindNewlyLearnableSkills_Restore::
     pop bc
     pop hl
@@ -2107,13 +2094,10 @@ FindCInWorkBuf38::
     inc b
     ret
 
-; called from BattleEnd_Step3: calls FillBytes; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi;
-; calls LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
-; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf; also changes HL, DE, BC and A
-; by register arithmetic (E-0347)
-; why: a helper of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; After a battle, rebuilds record A's skill list: each of its species' three skills goes in when
+; BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill lets it through as it is, otherwise the skill
+; BattleEnd_Step3_FindSkillInTable finds for it; the 25-entry MON_SKILL_LIST is cleared and the
+; entries that are not $FF are packed into it. (C1, E-0357)
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2167,11 +2151,9 @@ BattleEnd_Step3_LoadSpeciesRecord::
     jr nz, .loop3
     ret
 
-; Calls BattleEnd_Step3_RecordKnowsSkill; branches on the byte at SkillPrerequisitePointers; calls
-; BattleEnd_Step3_RecordKnowsSkill; also changes HL, BC and A by register arithmetic (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; For species skill A: $C8 gives $FF (and one more pass of the caller's loop); a skill record A
+; already knows, or one with a known skill in its prerequisite list (SkillPrerequisitePointers, $FF
+; ends), returns NZ; otherwise Z with A = the skill. (C1, E-0357)
 BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
@@ -2587,12 +2569,10 @@ ComputeLevelUpStatGainsForBattleArg1::
 .return:
     ret
 
-; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
-; $ff; sets wGrowthTemp0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches on e;
-; sets wGrowthTemp1; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of ComputeLevelUpStatGainsForBattleArg1; ComputeLevelUpStatGainsForBattleArg1: for
-; record wBattleArg1 below its level cap: computes the stat gains from its species growth rows
-; (table $6616) into ... (E-0352, E-0127)
+; A level-up stat bonus: when the record's MON_ITEM byte is $1D-$22, wGrowthTemp0 = that byte - $1D
+; (the stat), and wGrowthTemp1 = that stat's wLevelUpGains entry + half the number of eight record
+; bytes and the name's letter count (marks $8D/$8E not counted) whose bit 0 matches bit 0 of a ninth
+; record byte; otherwise wGrowthTemp0 = $FF and wGrowthTemp1 = 0. (C1, E-0357)
 ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
     push de
     ld a, [wBattleArg1]

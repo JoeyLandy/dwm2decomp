@@ -9,45 +9,33 @@ GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
-; why: part of GetBattleDEF; GetBattleDEF: A = battle slot: HL = the word for that slot in the array
-; at wBattleDEF (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleDEF, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
-; why: part of GetBattleMaxHP; GetBattleMaxHP: A = battle slot: HL = the word for that slot in the
-; array at wBattleMaxHP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMaxHP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
-; why: part of GetBattleMaxMP; GetBattleMaxMP: A = battle slot: HL = the word for that slot in the
-; array at wBattleMaxMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMaxMP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
-; why: part of GetBattleHP; GetBattleHP: A = battle slot: HL = the word for that slot in the array
-; at wBattleHP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleHP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleMP_BankA3_Skip
 
-; Changes HL; continues in GetBattleMP_BankA3_Skip (E-0347)
-; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
-; at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMP, then the slot's word (GetBattleMP_BankA3_Skip). (C1, E-0357)
 GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleMP_BankA3_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of GetBattleMP_BankA3, in part of GetBattleMP; GetBattleMP: A = battle slot: HL = the
-; word for that slot in the array at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
 GetBattleMP_BankA3_Skip::
     add a
     add_a_to_hl
@@ -831,10 +819,9 @@ PersonalityCompatibility::
     db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
-; called from SaveActionChoicesAndPickFormations: takes DE and BC; changes DE, BC and A (E-0347)
-; why: a helper of SaveActionChoicesAndPickFormations; SaveActionChoicesAndPickFormations: copies 16
-; bytes of wBattleActionChoice to wSavedActionChoices, clears wFormationSlot0/4, and outside link
-; battles sets the formation for ... (E-0352, E-0125)
+; Places hTemp0 into the formation bytes at DE by B mod 3: 0 in bytes 0 and 2 (bytes 1 and 3 = $FF),
+; 1 in bytes 0 and 4 (1 and 5 = $FF), 2 in bytes 2 and 4 (3 and 5 = $FF); returns A = the case. (C1,
+; E-0357)
 SaveActionChoicesAndPickFormations_DivideBByA::
     push bc
     push de
@@ -980,11 +967,8 @@ PersonalityIndexOfSlot_BankA3_2::
     pop hl
     ret
 
-; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor; copies the
-; byte at wBattleMonsterId to hTemp0; also changes HL, DE and A by register arithmetic (E-0347)
-; why: a helper of RollRandomLoBelowChance; RollRandomLoBelowChance: farcalls
-; RollRandomLoBelowChance_WriteTemp0 (not read) and returns the comparison of wRandomLo with hTemp0
-; (taken as 4 when hTemp0 is 3): ... (E-0352, E-0052)
+; hTemp0 = the actor's resolve chance by its monster id: from MonsterResolveChanceTable_Foes for a
+; foe-side actor outside link mode 1, otherwise from MonsterResolveChanceTable. (C1, E-0357)
 RollRandomLoBelowChance_WriteTemp0::
     ld a, [wLinkMode]
     or a
@@ -1133,12 +1117,9 @@ PickDuckBehindAlly::
     ld c, a
     ret
 
-; called from ActionEffect_Chance: calls AdvanceRandom; branches on wLinkMode; branches on
-; wBattleKind; returns unless bit 2 of wBattleActor is set; may continue in
-; ActionEffect_Chance_AdvanceRandom; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of ActionEffect_Chance; ActionEffect_Chance: effect routine reached through
-; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 60 Chance
-; (E-0352, E-0084)
+; Chance picks one of 14 effects (random mod 14, from its table): outside link battles of kind 2, 3
+; or 5 it rolls again on $B3, $B4, $B6 and $BD; a player-side actor in other battles keeps any; foe
+; actors, link battles and those kinds also roll again on $B0 and $B2. (C1, E-0357)
 ActionEffect_Chance_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]

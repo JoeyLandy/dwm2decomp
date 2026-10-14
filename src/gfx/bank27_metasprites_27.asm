@@ -292,14 +292,11 @@ MetaSprites27Attrs::
     db $01 ; id 126
     db $00
 
-; called from DrawMetaSpriteSet_Bank27: returns if hOamNextEntry is at least $27; sets
-; hMetaSpriteYLo; sets hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at
-; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; increments
-; hOamNextEntry; branches on hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches
-; on the byte at hMetaSpriteXLo; branches on B; then 19 more steps (see the code) (E-0347)
-; why: a helper of DrawMetaSpriteSet_Bank27; DrawMetaSpriteSet_Bank27: ORs the attribute bits from
-; MetaSprites27Attrs[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the
-; sprite from ... (E-0352, E-0124)
+; Builds the meta-sprite into OAM (unless 39 entries are used): origin plus sprite scroll, the frame
+; from the set and sub-index tables; writes each entry (Y, X, tile + hSpriteTileOffset, attributes
+; XOR hSpriteAttrXor; $80 ends) and skips those off screen; attribute bit 5 mirrors X; with
+; hSpriteWindowClipMode it also hides entries behind the text window (mode 1 above Y $34, mode 2
+; from Y $71) and over sprite-hide tiles; stops at 40 entries. (C1, E-0357)
 DrawMetaSpriteSet_Bank27_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

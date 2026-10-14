@@ -4,16 +4,9 @@
 SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
     db $3f
 
-; called from DrawEffectSpriteForEffectTileOffsetRange: may continue in
-; DrawEffectSpriteAtEffectSpriteX_Bank3F; copies wBattlePartyCount to wLoadSlot; copies
-; wBattleTarget & $04 to wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; SetEffectSpriteXForTargets; calls DrawEffectSpriteAtEffectSpriteX_Bank3F; decrements wLoadSlot;
-; returns if the byte at wLoadSlot is 0; increments wBattleArg0; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls SetEffectSpriteXForTargets; calls
-; DrawEffectSpriteAtEffectSpriteX_Bank3F; then 6 more steps (see the code) (E-0347)
-; why: a helper of DrawEffectSpriteForEffectTileOffsetRange;
-; DrawEffectSpriteForEffectTileOffsetRange: draws the effect sprite from bank $3E, $3F, $3D, $3B or
-; $92 by wEffectTileOffset (< $0E, $20, $2D, $33, or more) (E-0352, E-0124)
+; Effect tile $15 with wEffectFlags bit 3 draws the effect sprite over each present slot of the
+; target's side, as many as wBattlePartyCount (SetEffectSpriteXForTargets); other effects draw once
+; at wEffectSpriteX. (C1, E-0357)
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot::
     ld a, [wEffectTileOffset]
     cp $15

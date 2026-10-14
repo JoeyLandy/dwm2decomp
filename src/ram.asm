@@ -751,7 +751,7 @@ DEF wSpeciesGroups EQU $D88B ; targets grouped by shared species (GroupTargetsBy
 DEF wBattlePartyCount EQU $D88F ; number of party monsters in the battle (RemovePartyMemberMarkedFF; CopyRectRecordForWD88F) (E-0137)
 DEF wBattleFoeCount EQU $D890 ; number of foe monsters, 1-3 (LayoutTileBlocksForBattleFoeCount, SetEffectSpriteXForTargets) (E-0137)
 DEF wBattleTurn EQU $D891 ; battle turn counter (BattlePhase0_Step3; LinkRuleCheckLinkRuleTurnLimitTurnLimit) (E-0137)
-DEF wBattleItemTarget EQU $D892 ; target of the item chosen in battle: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2 (RunBattleSetup_ItemCommand_*, RunBattleActions_UseItem) (E-0340; was wBattleFlag92) (E-0137; E-0340)
+DEF wBattleItemTarget EQU $D892 ; target of the item chosen in battle: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2 (RunBattleSetup_ItemMenu_*, RunBattleActions_UseItem) (E-0340; was wBattleFlag92) (E-0137; E-0340)
 DEF wBattleItemId EQU $D893 ; the item chosen in battle (from wItemId); RunBattleActions_UseItem makes it the action id (E-0340; was wBattleFlag93) (E-0137; E-0340)
 DEF wBattleEndFlag EQU $D894 ; set with message $98 (SetBattleEndFlagAndMessage98); read at the battle end (E-0137)
 DEF wActionQueue EQU $D895 ; 8-byte queue of slots waiting to act ($FF = empty; RemoveCFromActionQueue) (E-0137)

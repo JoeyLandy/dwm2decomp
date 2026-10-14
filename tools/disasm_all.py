@@ -520,6 +520,9 @@ def localize_jump_labels(texts: list[str]) -> tuple[list[str], int]:
 
 ID_LOAD = re.compile(r"^\s+ld a, \[(\w+)\]$")
 ID_VARS = {"wBattleActionId": "SKILL", "wItemId": "ITEM", "wBattleItemId": "ITEM"}  # D-007: RAM bytes that hold an id of that kind
+# E-0364: bank $3B runs item actions (RunBattleActions_UseItem and the item effect table), where wBattleActionId
+# holds an item number (copied from wBattleItemId), so its compares there name items
+ID_VARS_BY_BANK = {0x3B: {"wBattleActionId": "ITEM"}}
 ACTION_CP = re.compile(r"^(\s+cp a, )\$([0-9A-F]{2})(\s*;.*)?$")
 ACTION_KEEPS_A = re.compile(r"^\s+(?:cp a, |jr (?:z|nz|c|nc), |jp (?:z|nz|c|nc), |ret (?:z|nz|c|nc)$)")
 
@@ -1193,13 +1196,14 @@ def name_id_compares(texts: list[str], consts: dict) -> tuple[list[str], int]:
     that follows name the id (SKILL_*/ACTION_*, ITEM_*). The chain ends at a label or any instruction other than cp
     and a conditional jr/jp/ret, since A may then hold something else."""
     out, n = [], 0
-    for text in texts:
+    for bank, text in enumerate(texts):
         ls = text.split("\n")
         table = None
+        id_vars = {**ID_VARS, **ID_VARS_BY_BANK.get(bank, {})}
         for i, ln in enumerate(ls):
             m = ID_LOAD.match(ln)
             if m:
-                table = consts[ID_VARS[m.group(1)]] if m.group(1) in ID_VARS else None
+                table = consts[id_vars[m.group(1)]] if m.group(1) in id_vars else None
                 continue
             if table is None:
                 continue
@@ -2756,7 +2760,7 @@ class Rom:
                                 self._to_targets[(b, a)] = (target, tname, parent, step is not None)
                             hlw = next((int(t[8:], 16) for t in loads if re.match(r"ld hl, \$[0-9A-F]{4}$", t)), None)
                             if tname and hlw is not None and self.MESSAGE_HL_CALLEE.search(tname):
-                                text = self.message_preview(hlw)  # E-0273: a step that shows one message
+                                text = self.message_text(hlw, b, a)  # E-0273: a step that shows one message
                                 if text:
                                     tag = "".join(w[:1].upper() + w[1:] for w in re.sub(
                                         r"[^A-Za-z0-9 ]", "", text.replace("0", "Hero ")).split()[:4])
@@ -6562,8 +6566,25 @@ class Rom:
         m = re.match(r"ld hl, \$([0-9A-F]{4})$", text)
         if not m or not self.message_call_at(bank, nxt):
             return ""
-        quote = self.message_preview(int(m.group(1), 16))
+        quote = self.message_text(int(m.group(1), 16), bank, nxt)
         return f" ; '{quote}'" if quote else ""
+
+    def message_text(self, word: int, bank: int | None = None, addr: int | None = None) -> str | None:
+        """message_preview, except in EVENT_MESSAGE_RANGES (E-0364): those scenes wait with RunMessageBox_Bank73,
+        which shows the low byte as a string of category 5 of bank $09's table (BeginStringDisplay_Bank09:
+        ld de, table), not as ShowMessageHL's message."""
+        if bank is not None and addr is not None and any(
+                b == bank and lo <= addr < hi for b, lo, hi in self.EVENT_MESSAGE_RANGES):
+            r = 0x09 * BANK - self.base(0x09) + 0x4001
+            if self.data[r] != 0x11:
+                return None
+            text = self.category_string(0x09, self.data[r + 1] | self.data[r + 2] << 8, 5, word & 0xFF)
+            return text or "(an empty string)"  # string $27 is only its $F0 end: shown as nothing
+        return self.message_preview(word)
+
+    # E-0364: code ranges whose message words go to RunMessageBox_Bank73 (bank $09, category 5): the traveler
+    # events dispatched by wPendingFieldEvent, from their dispatcher up to the chest-battle scene
+    EVENT_MESSAGE_RANGES = ((0x73, 0x4001, 0x51D7),)
 
 
 def main() -> int:

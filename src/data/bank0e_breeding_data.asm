@@ -4,12 +4,8 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0e
 
-; called from DebugMessageTest_Update_CallUpdate_BeginStringDisplay: branches on wStringIndex; calls
-; DebugMessageTest_Update_BeginStringDisplay_2; calls BeginStringDisplay (E-0347)
-; why: a helper of DebugMessageTest_Update_CallUpdate_BeginStringDisplay;
-; DebugMessageTest_Update_CallUpdate_BeginStringDisplay: Message test, library 28: shows the chosen
-; message with DebugMessageTest_Update_BeginStringDisplay, this bank's own message routine (not ...
-; (E-0352, E-0357)
+; Message test, library $28: strings below $88 from bank $0E's table, the rest from the overflow
+; table in bank $96. (C1, E-0357)
 DebugMessageTest_Update_BeginStringDisplay::
     ld a, [wStringIndex]
     cp $88

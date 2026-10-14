@@ -4,12 +4,10 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
-; called from SendSGBPaletteSetPacket: returns if wSGBActive is 0; branches on wSGBPacketIndex;
-; returns if wSGBPacketIndex is $ff; branches on d; returns unless bit 0 of d is set; calls
-; SpinDelay; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of SendSGBPaletteSetPacket; SendSGBPaletteSetPacket: when the Super Game Boy is
-; active, builds a PAL_SET ($51) packet from SGBPaletteSets[wSGBPaletteSet] (also kept in
-; wSGBPaletteNum0Lo), ... (E-0352, E-0125)
+; When the Super Game Boy is active, sends the packet (wSGBPacketBuffer, or the table entry
+; wSGBPacketIndex): its low three bits give the number of 16-byte packets, each sent bit by bit
+; through the joypad register (a reset pulse, then $10 for 1 and $20 for 0, a stop bit), with a
+; delay between packets. (C1, E-0357)
 SendSGBPaletteSetPacket_WaitSGBActive::
     ld a, [wSGBActive]
     or a

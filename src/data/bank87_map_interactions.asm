@@ -4,13 +4,11 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
-; called from FieldState_WalkATalks: may return early; returns if bit 7 of wFieldActionRequest is
-; set; returns if bit 0 of hPlayerStateFlags is set; returns unless wStepTriggerFlag is 0;
-; increments wStepTriggerFlag; returns if wStepTriggerFlag is 0; may return early; branches on
-; hMapId; branches on hMapScreenX; branches on hMapScreenY; branches on hPlayerX; branches on
-; hPlayerY; then 8 more steps (see the code) (E-0347)
-; why: a helper of FieldState_WalkATalks; FieldState_WalkATalks: field state 0: walking on a map
-; (E-0352, E-0339)
+; Step events on maps: once per step (wStepTriggerFlag) when no window, field action or bit 0 freeze
+; is active, walks the map's list (the table at $40A0 by hMapId; $FF ends): a kind-0 entry for this
+; map and screen, at the given player position ($FF for anywhere) and with its flag clear ($FFFF for
+; none), starts talk event wTalkEventGroup / wTalkEventIndex (DispatchTalkEvent), clearing the held
+; and pressed buttons when the mode state is then 1. (C1, E-0357)
 FieldState_WalkATalks_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03

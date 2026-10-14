@@ -6231,14 +6231,14 @@
     {
       "bank": "84",
       "addr": "42C7",
-      "label": "KeyWorldMonsterBaseRows",
+      "label": "KeyWorldNextRoomRows",
       "count": 6,
       "id_base": 0,
       "fields": [
         {
           "type": "db",
           "size": 10,
-          "name": "ten base values (a random 0-9 picks one)"
+          "name": "ten base room records (a random 0-9 picks one)"
         },
         {
           "type": "db",
@@ -6246,8 +6246,8 @@
           "name": "not read (zero)"
         }
       ],
-      "record": "ten base values, then six zero bytes",
-      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine)."
+      "record": "ten base room records, then six zero bytes; one row per exit of the previous room",
+      "note": "E-0193 (C1: Jump_084_4282 reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine). E-0364: the sum is the next room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered from, so these are room bases, not monster bases."
     },
     {
       "bank": "84",
@@ -13386,7 +13386,7 @@
     {
       "bank": "73",
       "addr": "453A",
-      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable",
+      "label": "CasinoReel1Symbols",
       "count": 10,
       "id_base": 0,
       "fields": [
@@ -13401,7 +13401,7 @@
     {
       "bank": "73",
       "addr": "4544",
-      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2",
+      "label": "CasinoReel2Symbols",
       "count": 10,
       "id_base": 0,
       "fields": [
@@ -13416,7 +13416,7 @@
     {
       "bank": "73",
       "addr": "454E",
-      "label": "GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3",
+      "label": "CasinoReel3Symbols",
       "count": 10,
       "id_base": 0,
       "fields": [

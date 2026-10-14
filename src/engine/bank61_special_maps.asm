@@ -374,19 +374,15 @@ LoadMapHeaderByMapType::
     dw LoadMapHeaderByMapType_WriteTemp0
     dw LoadMapHeaderByMapType_LoadSpecialMapHeader
 
-; step 7 of LoadMapHeaderByMapType: sets hTemp0 to $66; calls LoadSpecialMapHeader (E-0347)
-; why: step 7 of LoadMapHeaderByMapType (when wMapType & $07 = 7); LoadMapHeaderByMapType: runs the
-; routine for wMapType & 7 (jump table (E-0352, E-0122)
+; Map type 7's header: special map record $66 (LoadSpecialMapHeader). (C1, E-0357)
 LoadMapHeaderByMapType_LoadSpecialMapHeader::
     ld a, $66
     ldh [hTemp0], a
     call LoadSpecialMapHeader
     ret
 
-; step 6 of LoadMapHeaderByMapType: copies the byte at wKeyWorldFloorInfo + $1 & $01 to hTemp0; sets
-; hTemp0; calls LoadSpecialMapHeader; also changes HL, A and C by register arithmetic (E-0347)
-; why: step 6 of LoadMapHeaderByMapType (when wMapType & $07 = 6); LoadMapHeaderByMapType: runs the
-; routine for wMapType & 7 (jump table (E-0352, E-0122)
+; Map type 6's header: special map record $50 or $51 by bit 0 of the floor's wKeyWorldFloorInfo byte
+; 1, with C = 2 x bit 0 of its wKeyWorldFloorState byte 3. (C1, E-0357)
 LoadMapHeaderByMapType_WriteTemp0::
     ld a, [wKeyWorldFloor]
     sla a
@@ -520,13 +516,10 @@ MapType5TilesetTable::
     dfar MapType5Tiles11 ; id 11: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar MapType5Palettes11 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
-; step 1 of LoadMapHeaderByMapType: calls DecompressToVRAM; branches on wIsCGB; calls CopyFromBank;
-; sets wBGPaletteUploadRequest to $7f; sets wMaxBlockingTile to $3f; sets wFieldEventKind to 0; sets
-; wMapSpriteKind to 0; sets wMapTallTileMin to 0; copies the byte at wKeyWorldObjects to
-; wMapWidthScreens; copies the byte at wKeyWorldObjects to wMapHeightScreens; sets wEncounterRate to
-; $a3; sets wMapMoveType to 0; then 1 more step (see the code) (E-0347)
-; why: step 1 of LoadMapHeaderByMapType (when wMapType & $07 = 1); LoadMapHeaderByMapType: runs the
-; routine for wMapType & 7 (jump table (E-0352, E-0122)
+; Map type 1's header: loads the tiles (MapType5Tiles5) and, on CGB, the palettes; blocking tiles
+; from $3F, no field events, map sprites or tall tiles; the map's size in screens from the table
+; entry for the floor's key-world object (its two nibbles); encounter rate $A3, normal movement.
+; (C1, E-0357)
 LoadMapHeaderByMapType_DecompressToVRAM::
     ld de, MapType5Tiles5
     ld b, $6e
@@ -595,10 +588,8 @@ LoadMapHeaderByMapType_DecompressToVRAM::
     ld [wMapMoveType], a
     ret
 
-; step 2 of LoadMapHeaderByMapType: sets hTemp0 to $61; branches on wKeyWorldFloor; increments
-; hTemp0; sets wKeyWorldSetting; calls LoadSpecialMapHeader (E-0347)
-; why: step 2 of LoadMapHeaderByMapType (when wMapType & $07 = 2); LoadMapHeaderByMapType: runs the
-; routine for wMapType & 7 (jump table (E-0352, E-0122)
+; Map type 2's header: special map record $61, or $62 for the floor's second half (wKeyWorldFloor
+; bit 7), which is also kept in wKeyWorldSetting (0 or 1). (C1, E-0357)
 LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
@@ -615,10 +606,8 @@ LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0::
     call LoadSpecialMapHeader
     ret
 
-; step 3 of LoadMapHeaderByMapType: copies the byte at wKeyWorldFloorState & $7f to hTemp0; calls
-; LoadSpecialMapHeader (E-0347)
-; why: step 3 of LoadMapHeaderByMapType (when wMapType & $07 = 3); LoadMapHeaderByMapType: runs the
-; routine for wMapType & 7 (jump table (E-0352, E-0122)
+; Map type 3's header: the special map record numbered by the floor's wKeyWorldFloorState byte 0
+; (without bit 7). (C1, E-0357)
 LoadMapHeaderByMapType_LoadSpecialMapHeader_SetTemp0_2::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -731,9 +720,7 @@ LoadKeyWorldTilesetAndHeader::
 LoadKeyWorldTilesetAndHeader_Data::
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
-; called from LoadMapScreen: dispatches on wMapType & $07 (E-0347)
-; why: a helper of LoadMapScreen; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of
-; map hMapId: finds the map record (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Loads a key-world screen by map type (wMapType & 7). (C1, E-0357)
 LoadMapScreen_ReadMapType::
     ld a, [wMapType]
     and $07
@@ -747,24 +734,15 @@ LoadMapScreen_ReadMapType::
     dw LoadMapScreen_WriteTemp0_2
     dw LoadMapScreen_LoadMapScreenFromChunk
 
-; step 7 of LoadMapScreen_ReadMapType: sets hTemp0 to $66; calls LoadMapScreenFromChunk (E-0347)
-; why: step 7 of LoadMapScreen_ReadMapType (when wMapType & $07 = 7), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 7's screen: from special map $66's chunks. (C1, E-0357)
 LoadMapScreen_LoadMapScreenFromChunk::
     ld a, $66
     ldh [hTemp0], a
     call LoadMapScreenFromChunk
     ret
 
-; step 6 of LoadMapScreen_ReadMapType: copies the byte at wKeyWorldFloorInfo + $1 & $01 to hTemp0;
-; branches on the byte at wKeyWorldFloorState + $3; sets hTemp0; calls LoadMapScreenFromChunk;
-; branches on the byte at wKeyWorldFloorState + $3; returns if the byte at wKeyWorldFloorState + $3
-; is $ff; calls DrawDoorTilesForKeyWorldFloor; also changes HL, A and C by register arithmetic
-; (E-0347)
-; why: step 6 of LoadMapScreen_ReadMapType (when wMapType & $07 = 6), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 6's screen: from special map $50 or $51 (bit 0 of floor info byte 1), the variant from
+; floor state byte 3 ($FF read as 0); then the door tiles when that byte is $FF or odd. (C1, E-0357)
 LoadMapScreen_WriteTemp0_2::
     ld a, [wKeyWorldFloor]
     sla a
@@ -871,13 +849,9 @@ DrawDoorTilesForKeyWorldFloor::
     ldh [rSVBK], a
     ret
 
-; step 5 of LoadMapScreen_ReadMapType: sets hTemp0; calls ReadByteInBank; calls DecompressToVRAM;
-; branches on wIsCGB; calls ReadByteInBank; sets rSVBK to 2; calls DecompressToVRAM; sets rSVBK to
-; 0; calls DrawKeyWorldExitTile; calls CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 5 of LoadMapScreen_ReadMapType (when wMapType & $07 = 5), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 5's screen: the room for the floor and area from wKeyWorldRoomTable picks a room record
+; in bank $72; decompresses the screen (hMapScreenX, hMapScreenY) into wScreenTileBuffer and, on
+; CGB, its attributes, then the exit tile. (C1, E-0357)
 LoadMapScreen_WriteTemp0AndSVBK::
     ld a, [wKeyWorldFloor]
     swap a
@@ -1598,19 +1572,12 @@ KeyWorldScreenSpotRecords::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 190
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 191
 
-; step 1 of LoadMapScreen_ReadMapType: returns at once (E-0347)
-; why: step 1 of LoadMapScreen_ReadMapType (when wMapType & $07 = 1), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 1's screen: nothing to load. (C1, E-0357)
 LoadMapScreen_Return::
     ret
     db $c9
 
-; step 2 of LoadMapScreen_ReadMapType: sets hTemp0 to $61; branches on wKeyWorldFloor; increments
-; hTemp0; calls LoadMapScreenFromChunk (E-0347)
-; why: step 2 of LoadMapScreen_ReadMapType (when wMapType & $07 = 2), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 2's screen: from special map $61, or $62 for the floor's second half. (C1, E-0357)
 LoadMapScreen_SetTemp0::
     ld a, $61
     ldh [hTemp0], a
@@ -1624,11 +1591,8 @@ LoadMapScreen_SetTemp0::
     call LoadMapScreenFromChunk
     ret
 
-; step 3 of LoadMapScreen_ReadMapType: copies the byte at wKeyWorldFloorState & $7f to hTemp0; calls
-; LoadMapScreenFromChunk (E-0347)
-; why: step 3 of LoadMapScreen_ReadMapType (when wMapType & $07 = 3), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map types 3 and 4's screen: from the special map numbered by floor state byte 0 (without bit 7).
+; (C1, E-0357)
 LoadMapScreen_LoadMapScreenFromChunk_SetTemp0::
     ld hl, wKeyWorldFloorState
     ld a, [wKeyWorldFloor]
@@ -1640,13 +1604,10 @@ LoadMapScreen_LoadMapScreenFromChunk_SetTemp0::
     call LoadMapScreenFromChunk
     ret
 
-; step 0 of LoadMapScreen_ReadMapType: calls ReadByteInBank; calls DecompressToVRAM; branches on
-; wIsCGB; calls ReadByteInBank; sets rSVBK to 2; calls DecompressToVRAM; sets rSVBK to 0; calls
-; DrawKeyWorldObjectsEntryTilesForScreen; calls DrawKeyWorldFloorInfo3ObjectTilesForScreen; calls
-; DrawKeyWorldGoalAtScreen; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 0 of LoadMapScreen_ReadMapType (when wMapType & $07 = 0), in a helper of LoadMapScreen;
-; LoadMapScreen: loads the screen at (hMapScreenX, hMapScreenY) of map hMapId: finds the map record
-; (MapRecordPointer), picks one of its variants by the ... (E-0352)
+; Map type 0's screen (the key world's overworld): finds the chunk for the screen in wKeyWorldChunks
+; (screens in blocks of 4 x 4), reads the screen's far pointer (3 bytes per screen, 12 per row) and
+; decompresses it into wScreenTileBuffer and, on CGB, its attributes; then draws the key-world
+; objects on it. (C1, E-0357)
 LoadMapScreen_WriteSVBK_2::
     ldh a, [hMapScreenY]
     and $fc
@@ -2214,9 +2175,7 @@ KeyWorldTilesetTable::
     dfar KeyWorldTiles9 ; id 9: compressed BG tiles decompressed to vTiles2 (128 tiles)
     dfar KeyWorldPalettes9 ; $40-byte CGB BG palette set copied to wBGPaletteBuffer
 
-; called from CheckWarpAtPlayer: dispatches on wMapType & $07 (E-0347)
-; why: a helper of CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit
-; 7 hands over to CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; The warp check for a key world, by map type (wMapType & 7). (C1, E-0357)
 CheckWarpAtPlayer_ReadMapType::
     ld a, [wMapType]
     and $07
@@ -2230,58 +2189,39 @@ CheckWarpAtPlayer_ReadMapType::
     dw CheckWarpAtPlayer_ReturnAfterSetup
     dw CheckWarpAtPlayer_ToCallFOnScreenY1
 
-; step 0 of CheckWarpAtPlayer_ReadMapType: changes C (E-0347)
-; why: step 0 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 0), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map types 0 and 6: no warp here (C = 0). (C1, E-0357)
 CheckWarpAtPlayer_ReturnAfterSetup::
     ld c, $00
     ret
 
-; step 1 of CheckWarpAtPlayer_ReadMapType: changes C (E-0347)
-; why: step 1 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 1), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 1: no warp here (C = 0). (C1, E-0357)
 CheckWarpAtPlayer_ReturnAfterSetup_2::
     ld c, $00
     ret
 
-; step 2 of CheckWarpAtPlayer_ReadMapType: calls WarpByKeyWorldAreaExitsEntryAtScreenRow1 (E-0347)
-; why: step 2 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 2), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 2: warps by the floor's area exit on screen row 1
+; (WarpByKeyWorldAreaExitsEntryAtScreenRow1). (C1, E-0357)
 CheckWarpAtPlayer_ToWarpByKeyWorldAreaExitsEntryAtScreenRow1::
     call WarpByKeyWorldAreaExitsEntryAtScreenRow1
     ret
 
-; step 3 of CheckWarpAtPlayer_ReadMapType: calls CheckKeyWorldWarpTable (E-0347)
-; why: step 3 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 3), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 3: the floor's warp list (CheckKeyWorldWarpTable). (C1, E-0357)
 CheckWarpAtPlayer_ToCheckKeyWorldWarpTable::
     call CheckKeyWorldWarpTable
     ret
 
-; step 4 of CheckWarpAtPlayer_ReadMapType: calls WarpToScreen01Event83 (E-0347)
-; why: step 4 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 4), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 4: on screen row 1 warps to screen (0, 1) (WarpToScreen01Event83). (C1, E-0357)
 CheckWarpAtPlayer_ToWarpToScreen01Event83::
     call WarpToScreen01Event83
     ret
 
-; step 5 of CheckWarpAtPlayer_ReadMapType: calls WarpByKeyWorldFloorInfo1EntryAtScreen14 (E-0347)
-; why: step 5 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 5), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 5: the exit from screen (1, 4) of area 0 (WarpByKeyWorldFloorInfo1EntryAtScreen14). (C1,
+; E-0357)
 CheckWarpAtPlayer_ToWarpByKeyWorldFloorInfo1EntryAtScreen14::
     call WarpByKeyWorldFloorInfo1EntryAtScreen14
     ret
 
-; step 7 of CheckWarpAtPlayer_ReadMapType: calls CallFOnScreenY1 (E-0347)
-; why: step 7 of CheckWarpAtPlayer_ReadMapType (when wMapType & $07 = 7), in a helper of
-; CheckWarpAtPlayer; CheckWarpAtPlayer: unless a special mode is set (wMapType bit 7 hands over to
-; CheckWarpAtPlayer_ReadMapType): walks the warp list MapWarpTable[hMapId] (E-0352)
+; Map type 7: on screen row 1 warps to the linked map (CallFOnScreenY1). (C1, E-0357)
 CheckWarpAtPlayer_ToCallFOnScreenY1::
     call CallFOnScreenY1
     ret
@@ -2587,10 +2527,7 @@ CheckWarpsByMapType::
     dw CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc
     dw CheckWarpsByMapType_Return
 
-; step 4 of CheckWarpsByMapType: returns at once (E-0347)
-; why: step 4 of CheckWarpsByMapType (when wMapType & $07 = 4); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 4: nothing. (C1, E-0357)
 CheckWarpsByMapType_Return::
     ret
 
@@ -2609,60 +2546,38 @@ CheckWarpsByMapType_RunThreeWarpChecks::
     ret nz
     ret
 
-; step 1 of CheckWarpsByMapType: calls ReturnStub_2 (E-0347)
-; why: step 1 of CheckWarpsByMapType (when wMapType & $07 = 1); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 1: nothing (ReturnStub_2). (C1, E-0357)
 CheckWarpsByMapType_ToReturnStub_2::
     call ReturnStub_2
     ret
 
-; step 2 of CheckWarpsByMapType: calls
-; CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2 (E-0347)
-; why: step 2 of CheckWarpsByMapType (when wMapType & $07 = 2); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 2: the floor toggle
+; (CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2). (C1, E-0357)
 CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc::
     call CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2
     ret
 
-; step 3 of CheckWarpsByMapType: calls
-; CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2 (E-0347)
-; why: step 3 of CheckWarpsByMapType (when wMapType & $07 = 3); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 3: the floor's warp list
+; (CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2). (C1, E-0357)
 CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc::
     call CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2
     ret
 
-; step 5 of CheckWarpsByMapType: calls CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2
-; (E-0347)
-; why: step 5 of CheckWarpsByMapType (when wMapType & $07 = 5); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 5: the room exits
+; (CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2). (C1, E-0357)
 CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc::
     call CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2
     ret
 
-; step 6 of CheckWarpsByMapType: calls CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2
-; (E-0347)
-; why: step 6 of CheckWarpsByMapType (when wMapType & $07 = 6); CheckWarpsByMapType: checks the
-; player's position for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and
-; key-world floors (2), warp ... (E-0352, E-0354, E-0122)
+; Key-world warps, map type 6: back to the rooms
+; (CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2). (C1, E-0357)
 CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc::
     call CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2
     ret
 
-; called from CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc: branches on hPlayerX; branches
-; on hPlayerY; decrements wKeyWorldArea; branches on hPlayerY; copies the byte at
-; CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data & $0f to hMapScreenX; copies the byte
-; at CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data & $0f to hMapScreenY; sets
-; wWarpDestX to $40; sets wWarpDestY to $40; sets wWarpDestFacing to 0; sets wMapType to $85; sets
-; wWarpPending to 1; plays sound $60; then 6 more steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc, in step 6 of
-; CheckWarpsByMapType (when wMapType & $07 = 6); CheckWarpsByMapType: checks the player's position
-; for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and key-world floors
-; (2), warp ... (E-0352, E-0354, E-0122)
+; Standing at ($40, $40): goes back one area (wKeyWorldArea - 1) to the room screen that the room
+; table entry's high nibble gives through the position table; warps to ($40, $40) facing down as map
+; type $85, with sound $60, a fade and the field transition (C = 1); otherwise C = 0. (C1, E-0357)
 CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
     ldh a, [hPlayerX]
     cp $40
@@ -2740,17 +2655,10 @@ CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
 CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data::
     db $00, $30, $11, $22, $03, $33
 
-; called from CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc: branches on hPlayerX; copies
-; hPlayerStateFlags & $7f to hPlayerStateFlags; branches on hPlayerY; copies the byte at
-; wKeyWorldFloorInfo + $1 to hTemp0; copies the byte at wKeyWorldFloorState to hTemp1; branches on
-; hPlayerY; branches on the byte at wKeyWorldRoomTable + $1 & $0f; branches on the byte at
-; CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data; copies hPlayerStateFlags & $7f to
-; hPlayerStateFlags; branches on wKeyWorldArea; branches on hTemp0; copies the byte at
-; wKeyWorldFloorInfo & $0f to hMapScreenX; then 41 more steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc, in step 5 of
-; CheckWarpsByMapType (when wMapType & $07 = 5); CheckWarpsByMapType: checks the player's position
-; for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and key-world floors
-; (2), warp ... (E-0352, E-0354, E-0122)
+; Standing at ($40, $40) on the room's screen: compares the screen with the room table entry's two
+; exits (low and high nibble, $F for none, through the position table) and warps through the
+; matching one (area 0 with floor info byte 1 = 4 leaves for the floor's own screen); otherwise
+; clears the warping bit (hPlayerStateFlags bit 7) and returns C = 0. (C1, E-0357)
 CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     ldh a, [hPlayerX]
     cp $40
@@ -2967,15 +2875,9 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
 CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data::
     db $00, $30, $11, $22, $03, $33
 
-; called from CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc: branches on hPlayerX;
-; branches on hPlayerY; branches on wMapToggleRequest; sets wMapToggleRequest to 0; sets
-; wKeyWorldFloor; sets wWarpDestX to $40; sets wWarpDestY to $30; sets wWarpDestFacing to $ff; sets
-; wMapToggleFlag to 0; sets wModeState to 6; sets wMenuState to 0; sets wMenuSubState to 0; then 2
-; more steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc, in step 2 of
-; CheckWarpsByMapType (when wMapType & $07 = 2); CheckWarpsByMapType: checks the player's position
-; for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and key-world floors
-; (2), warp ... (E-0352, E-0354, E-0122)
+; Standing at ($40, $30) with a floor toggle requested (wMapToggleRequest): switches to the floor's
+; other half (wKeyWorldFloor + $80) at ($40, $30), keeping the facing, and starts the field
+; transition (mode state 6). (C1, E-0357)
 CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2::
     ldh a, [hPlayerX]
     cp $40
@@ -3017,16 +2919,10 @@ CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2::
     ld [wFieldTransitionKind], a
     ret
 
-; called from CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc: branches on the byte at
-; KeyWorldWarpListTable; copies hPlayerStateFlags & $7f to hPlayerStateFlags; branches on
-; hPlayerStateFlags & $7f; copies the byte at KeyWorldWarpListTable to wWarpDestFacing; branches on
-; hMapScreenX; branches on hMapScreenY; branches on hPlayerX; branches on hPlayerY; branches on
-; hPlayerStateFlags; branches on the byte at KeyWorldWarpListTable; sets hMapScreenX to 0; sets
-; hMapScreenY to 0; then 10 more steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc, in step 3 of
-; CheckWarpsByMapType (when wMapType & $07 = 3); CheckWarpsByMapType: checks the player's position
-; for a warp, by wMapType & 7: the key-world goal and exits (0), map toggles and key-world floors
-; (2), warp ... (E-0352, E-0354, E-0122)
+; Walks the floor's warp list (KeyWorldWarpListTable by floor state byte 0; 9-byte entries, $80
+; ends): an entry whose screen and position match the player (and no warp is running, bit 7) warps;
+; a destination of $F2 goes to screen (0, 0) at ($40, $80); with no match clears bit 7 and returns C
+; = 0. (C1, E-0357)
 CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2::
     ld a, [wKeyWorldFloor]
     swap a
@@ -3163,15 +3059,10 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2::
 ReturnStub_2::
     ret
 
-; called from CheckWarpsByMapType_RunThreeWarpChecks: sets hTemp1 to 0; branches on the byte at
-; wKeyWorldFloorInfo + $3; copies hPlayerStateFlags & $5f to hPlayerStateFlags; copies the byte at
-; wKeyWorldFloorInfo + $3 to hTemp2; branches on the byte at wKeyWorldFloorInfo + $3; branches on
-; hPlayerX & $0f; branches on hPlayerY & $0f; branches on hPlayerX & $0f; branches on hPlayerY &
-; $0f; branches on hMapScreenX; branches on hMapScreenY; branches on hPlayerStateFlags; then 48 more
-; steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_RunThreeWarpChecks; CheckWarpsByMapType_RunThreeWarpChecks:
-; entry 0 of the rst $00 table in CheckWarpsByMapType: calls CheckWarpsByMapType_KeyWorldGoalWarp
-; and two further warp checks in turn and ... (E-0352, E-0344)
+; The floor entrances in wKeyWorldFloorInfo ($FF ends): when the player stands on an entrance's
+; screen at tile (4 or 5, 4), or (4, 4) for kinds 4 and 5, and no warp is running, kinds 4 and 5
+; have their own exits, and others enter that floor as map type $83 through its warp list; with none
+; clears bits 5 and 7 of hPlayerStateFlags. (C1, E-0357)
 CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     ld hl, wKeyWorldFloorInfo + $3
     xor a
@@ -3521,14 +3412,10 @@ CheckWarpsByMapType_KeyWorldGoalWarp::
     ld a, $01
     ret
 
-; called from CheckWarpsByMapType_RunThreeWarpChecks: branches on hPlayerY; branches on hPlayerY &
-; $0f; branches on the byte at wKeyWorldObjects; branches on hMapScreenX; branches on hMapScreenY;
-; branches on hPlayerStateFlags; sets wWarpDestX to $40; sets wWarpDestY to $40; sets
-; wWarpDestFacing to 0; plays sound $60; sets wFieldReturnPhase to 0; calls StartPaletteFade; then
-; 33 more steps (see the code) (E-0347)
-; why: a helper of CheckWarpsByMapType_RunThreeWarpChecks; CheckWarpsByMapType_RunThreeWarpChecks:
-; entry 0 of the rst $00 table in CheckWarpsByMapType: calls CheckWarpsByMapType_KeyWorldGoalWarp
-; and two further warp checks in turn and ... (E-0352, E-0344)
+; The key-world objects: when the player stands at the middle of an object's screen (tile (4, 4))
+; and no warp is running, warps to ($40, $40) with sound $60, a fade and the field transition; an
+; object whose byte is 0 enters its floor (numbered by its place in wKeyWorldObjects) as map type
+; $82 at screen (0, 0), ($40, $80). (C1, E-0357)
 CheckWarpsByMapType_RunThreeWarpChecks_WriteWarpDestXAndWarpDestYEtc::
     ldh a, [hPlayerX]
     ld c, a

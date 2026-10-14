@@ -4410,7 +4410,7 @@
   },
   "D892": {
     "name": "wBattleItemTarget",
-    "note": "target of the item chosen in battle: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2 (RunBattleSetup_ItemCommand_*, RunBattleActions_UseItem) (E-0340; was wBattleFlag92)",
+    "note": "target of the item chosen in battle: $FF none, $10 and $20 groups, otherwise a slot in bits 0-2 (RunBattleSetup_ItemMenu_*, RunBattleActions_UseItem) (E-0340; was wBattleFlag92)",
     "evidence": "E-0137; E-0340"
   },
   "D893": {

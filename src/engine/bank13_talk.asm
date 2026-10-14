@@ -147,7 +147,7 @@ DispatchTalkEvent::
     dw FhuntTalkEvents
     dw DispatchTalkEvent_ToDarckTalkEvents
     dw DispatchTalkEvent_ToElvenVillageTalkEvents
-    dw Talk_GreatlogFieldEvent
+    dw Talk_TravelerEvent
     dw DispatchTalkEvent_ToKeyWorldTalkEvents
     dw DispatchTalkEvent_ToReadableTalkEvents
 
@@ -4707,12 +4707,12 @@ Talk_SceneShieldGuardian::
     call StartScriptAtHL_B13
     ret
 
-; starts Script_GreatlogFieldEvent (StartScriptAtHL_B13) (E-0271; was Talk_GreatlogFieldEvent)
-; (E-0344: the address in its name dropped or read as the label there; was Talk_GreatlogFieldEvent;
-; named after the script it starts, Script_GreatlogFieldEvent)
-; starts Script_GreatlogFieldEvent (E-0248)
-Talk_GreatlogFieldEvent::
-    ld hl, Script_GreatlogFieldEvent
+; starts Script_TravelerEvent (StartScriptAtHL_B13) (E-0271; was Talk_TravelerEvent) (E-0344: the
+; address in its name dropped or read as the label there; was Talk_TravelerEvent; named after the
+; script it starts; E-0364: was Talk_TravelerEvent)
+; starts Script_TravelerEvent (E-0248)
+Talk_TravelerEvent::
+    ld hl, Script_TravelerEvent
     call StartScriptAtHL_B13
     ret
 

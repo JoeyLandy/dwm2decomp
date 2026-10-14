@@ -28,11 +28,9 @@ FetchScriptCommand::
     ld a, $01
     ld [wScriptRunning], a
 
-; Branches on wScriptInDataBank; calls ReadWordFromDataBank; sets wScriptRunning to 0; sets
-; wScriptCommandType to 0; sets wScriptInDataBank to 0; branches on wMapType; sets wModeState to 0;
-; sets wModeState to 5; dispatches on $05; also changes HL and A by register arithmetic (E-0347)
-; why: part of FetchScriptCommand; FetchScriptCommand: does nothing during a fade or unless
-; wScriptStartRequest bit 7 is set (then it clears that bit and sets wScriptRunning) (E-0352)
+; Reads the next script opcode (from the data bank when wScriptInDataBank is set): $FF ends the
+; script (clears the running, command and data-bank flags; mode state 0, or 5 in a key world); any
+; other opcode runs its fetch handler (ScriptOpcodeHandlers). (C1, E-0357)
 FetchScriptCommand_ReadScriptPointerLo::
     ld a, [wScriptPointerLo]
     ld l, a
@@ -441,10 +439,9 @@ ScriptFetch02::
     ld a, $03
     ld [wScriptCommandType], a
 
-; Sets wScriptParam0; sets wScriptParam1; sets wScriptStep to 0; copies L to wScriptPointerLo;
-; copies H to wScriptPointerHi (E-0347)
-; why: part of ScriptFetch02; ScriptFetch02: fetch handler for script opcode 02 (entry 2 of
-; ScriptOpcodeHandlers) (E-0352, E-0039)
+; Opcode 02's operands: wScriptParam0 = the first byte OR the second's low nibble moved up,
+; wScriptParam1 = the third byte; resets the step and moves the script pointer past them. (C1,
+; E-0357)
 ScriptFetch02_Restore::
     pop hl
     ld a, [hli]
@@ -1526,7 +1523,7 @@ ScriptCommand86::
 
 ; runs one frame of script command type 82 (entry 129 of ScriptCommandHandlers) (E-0038)
 ScriptCommand82::
-    farcall GreatLogFieldEvents
+    farcall TravelerEvents
     ret
 
 ; runs one frame of script command type 83 (entry 130 of ScriptCommandHandlers) (E-0038)
@@ -1597,10 +1594,8 @@ ScriptCommand09::
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
 
-; step 3 of ScriptCommand09: may return early; calls ClearBit1OfPlayerAndObjectFlags; sets
-; wScriptCommandType to 0; sets wScriptRunning to 0; sets wModeState to 0 (E-0347)
-; why: step 3 of ScriptCommand09 (when wScriptStep = 3); ScriptCommand09: runs one frame of script
-; command type 09 (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
+; Command 09, step 3: once the window has closed, unfreezes the player and objects and ends the
+; script (mode state 0). (C1, E-0357)
 ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wTextWindowState]
     and $03
@@ -1623,12 +1618,9 @@ ScriptCommand01::
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
 
-; step 0 of ScriptCommand09: branches on wScriptParam1; calls SetBit1OfPlayerAndObjectFlags; calls
-; FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1; sets
-; wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on hPlayerY; sets wTextWindowState
-; to $81; sets hSpriteWindowClipMode to 1; advances wScriptStep (E-0347)
-; why: step 0 of ScriptCommand09 (when wScriptStep = 0); ScriptCommand09: runs one frame of script
-; command type 09 (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
+; Command 09, step 0: unless wScriptParam1 bit 7 (the window is already open), freezes the player
+; and objects, clears the window tiles, plays sound $69 and opens the text window (at the top when
+; the player is low on the screen); next step. (C1, E-0357)
 ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1659,11 +1651,9 @@ ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-; step 1 of ScriptCommand09: branches on wScriptParam1; returns if bit 7 of wScriptParam1 is set;
-; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep; also changes HL and
-; A by register arithmetic (E-0347)
-; why: step 1 of ScriptCommand09 (when wScriptStep = 1); ScriptCommand09: runs one frame of script
-; command type 09 (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
+; Command 09, step 1: once the window has opened (or at once with bit 7), starts message
+; wScriptParam0 of group wScriptParam1 (ScriptCommand09_WriteStringIndexAndStringCategory); next
+; step. (C1, E-0357)
 ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1682,11 +1672,8 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     inc [hl]
     ret
 
-; step 2 of ScriptCommand09: returns if bit 0 of wTextFlags is set; branches on wScriptParam1; plays
-; sound $69; sets hSpriteWindowClipMode to 0; sets wTextWindowState to 2; sets wTextWindowStep to 0;
-; branches on hPlayerY; sets wTextWindowState to $82; advances wScriptStep (E-0347)
-; why: step 2 of ScriptCommand09 (when wScriptStep = 2); ScriptCommand09: runs one frame of script
-; command type 09 (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
+; Command 09, step 2: waits for the text; unless wScriptParam1 bit 6 (keep the window open), plays
+; sound $69 and starts closing it; next step. (C1, E-0357)
 ScriptCommand09_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -1713,11 +1700,9 @@ ScriptCommand09_QueueSoundEffect::
     inc [hl]
     ret
 
-; step 3 of ScriptCommand01: branches on wScriptParam1; returns if bit 6 of wScriptParam1 is set;
-; calls ClearBit1OfPlayerAndObjectFlags; sets wScriptCommandType to 0; sets wScriptStartRequest to
-; $80 (E-0347)
-; why: step 3 of ScriptCommand01 (when wScriptStep = 3); ScriptCommand01: runs one frame of script
-; command type 01 (entry 0 of ScriptCommandHandlers) (E-0352, E-0038)
+; Command 01, step 3: unless wScriptParam1 bit 6, waits for the window to close and unfreezes the
+; player and objects; then ends the command and asks for the next one (wScriptStartRequest $80).
+; (C1, E-0357)
 ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 6, a
@@ -1734,12 +1719,9 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ld [wScriptStartRequest], a
     ret
 
-; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
-; ScriptCommand09_CheckMapType; branches on wMessageMode; copies L to wStringIndex; sets
-; wStringCategory to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of
-; ScriptCommand09 (when wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09
-; (entry 8 of ScriptCommandHandlers) (E-0352, E-0038)
+; Starts message L of group H (bits 0-5): with a message mode set (wMessageMode) through that mode's
+; far routine from the table (rst $10), otherwise by group (ScriptCommand09_CheckMapType). (C1,
+; E-0357)
 ScriptCommand09_WriteStringIndexAndStringCategory::
     ld a, h
     and $3f
@@ -1784,14 +1766,9 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data::
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
-; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; copies L
-; to wStringIndex; sets wStringCategory to 0; dispatches on H; also changes HL and A by register
-; arithmetic (E-0347)
-; why: part of ScriptCommand09_WriteStringIndexAndStringCategory_Data, in part of
-; ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Starts message L by group H: groups 0-13 use banks $28, $29, $2A, $2B, $2C, $2D, $2E, $2E, $7C,
+; $80, $80, $82, $86 and $89; in a key world (wMapType bit 7, but not exactly $80)
+; ScriptCommand09_ToBeginStringDisplay_Bank89_Skip decides instead. (C1, E-0357)
 ScriptCommand09_CheckMapType::
     pop hl
     ld a, [wMapType]
@@ -1822,134 +1799,68 @@ ScriptCommand09_CheckMapType::
     dw ScriptCommand09_ToBeginStringDisplay_Bank86
     dw ScriptCommand09_ToBeginStringDisplay_Bank89
 
-; step 0 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank28
-; (E-0347)
-; why: step 0 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 0: bank $28's strings (BeginStringDisplay_Bank28). (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
-; step 1 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank29
-; (E-0347)
-; why: step 1 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 1: bank $29's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
-; step 2 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2A
-; (E-0347)
-; why: step 2 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 2: bank $2A's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
-; step 3 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2B
-; (E-0347)
-; why: step 3 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 3: bank $2B's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
-; step 4 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2C
-; (E-0347)
-; why: step 4 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 4: bank $2C's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
-; step 5 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2D
-; (E-0347)
-; why: step 5 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 5: bank $2D's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
-; step 6 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2E
-; (E-0347)
-; why: step 6 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Groups 6 and 7: bank $2E's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
-; step 8 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank7C
-; (E-0347)
-; why: step 8 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 8: bank $7C's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
-; step 9 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank80
-; (E-0347)
-; why: step 9 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Groups 9 and 10: bank $80's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
-; step 11 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank82
-; (E-0347)
-; why: step 11 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 11: bank $82's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
-; step 12 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank86
-; (E-0347)
-; why: step 12 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 12: bank $86's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
-; step 13 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank89
-; (E-0347)
-; why: step 13 of ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Group 13: bank $89's strings. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
-; Branches on H; branches on L; copies L to wStringIndex; sets wStringCategory to 0; calls
-; BeginStringDisplay_Bank83; copies L to wStringIndex; sets wStringCategory to 0; calls
-; BeginStringDisplay_Bank8A (E-0347)
-; why: part of ScriptCommand09_ToBeginStringDisplay_Bank89, in step 13 of
-; ScriptCommand09_WriteStringIndexAndStringCategory, in a helper of
-; ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc, in step 1 of ScriptCommand09 (when
-; wScriptStep = 1); ScriptCommand09: runs one frame of script command type 09 (entry 8 of
-; ScriptCommandHandlers) (E-0352, E-0038)
+; Key-world messages: group 0 with an index of $20 or more uses bank $83; other messages use bank
+; $8A. (C1, E-0357)
 ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
     ld a, h
     or a
@@ -2839,8 +2750,8 @@ Script_SailingIsSureExhilarating::
 Script_GoodThat::
     script_message $8008 ; '*: Good. That's good to hear!'
     script_end
-Script_GreatlogFieldEvent::
-    script_command SCRIPT_GREATLOG_FIELD_EVENT
+Script_TravelerEvent::
+    script_command SCRIPT_TRAVELER_EVENT
     script_end
 Script_FieldScene01::
     script_command SCRIPT_FIELD_SCENE_01

@@ -38,9 +38,8 @@ CopyMonsterTableBytes::
     call CopyBytesDEFromHL_BankA2
     ret
 
-; called from LoadMonsterRecordTo: takes DE; changes HL, DE, BC and A (E-0347)
-; why: a helper of LoadMonsterRecordTo; LoadMonsterRecordTo: DE = destination: like
-; LoadMonsterRecord but copies the 26-byte record to [DE] (E-0352)
+; Monster ids from $250 on, kept in this bank: copies the 26-byte record at $4056 + 26 x (id - $24F)
+; to DE (CopyBytesDEFromHL_BankA2). (C1, E-0357)
 LoadMonsterRecordTo_Multiply8By16::
     push de
     ld a, [wMonsterId]
@@ -1764,9 +1763,8 @@ MonsterTableA2::
     db $01 ; byte 24 ($71)
     db $01 ; personality axis $72
 
-; called from BeginStringDisplay_BankE0: sets wStringCategory; calls BeginStringDisplay (E-0347)
-; why: a helper of BeginStringDisplay_BankE0; BeginStringDisplay_BankE0: if wStringCategory < 1,
-; BeginStringDisplay with DE = $76FC (E-0352)
+; Starts string wStringIndex of category wStringCategory - 1 from this bank's category table
+; (BeginStringDisplay). (C1, E-0357)
 BeginStringDisplay_BankE0_BeginStringDisplay::
     ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

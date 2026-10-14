@@ -4,13 +4,12 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
-; called from GameMode4_Init: calls FillBytes; copies wDataBank to wDataBankSave; calls FillBytes;
-; sets wBattleKind; calls GameMode4_Init_FillBytes_2; branches on wLinkMode; calls FillBytes; sets
-; rRAMG to $0a; sets rRAMB to 0; calls GameMode4_Init_ReadBattlePartyCount; calls
-; GameMode4_Init_LoadMonsterAndSpeciesForListEntryC; copies wBattlerRecordSlot4 + BATTLER_JOIN_CLASS
-; to wFoeJoinClass1; then 8 more steps (see the code) (E-0347)
-; why: a helper of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts
-; music 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Battle start: keeps the battle kind, clears the effect and battle variables and saves the data
+; bank; resets the battle arrays (GameMode4_Init_FillBytes_2); outside link battles clears 512 work
+; bytes, copies the party's records into the battler records (GameMode4_Init_ReadBattlePartyCount),
+; loads the foes (GameMode4_Init_LoadMonsterAndSpeciesForListEntryC) and copies foe slots 4-6's join
+; classes; then the battle slots, the screen, the pictures, the music and the slot marks. (C1,
+; E-0357)
 GameMode4_Init_FillBytes::
     ld a, [wBattleKind]
     push af
@@ -62,13 +61,11 @@ GameMode4_Init_FillBytes::
     call GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-; Branches on wBattleKind; sets wCommandMenuState to 1; sets wEffectId to $ff; sets wQueuedActionId
-; to $ff; sets wSealPrayState to $ff; sets wBattleItemTarget to $ff; calls FillBytes; sets
-; wDebugValue3 to 0; sets wDebugState to 0; sets wDebugSubState to 0; calls FillBytes; sets
-; wDisplaySlot to $ff; then 28 more steps (see the code) (E-0347)
-; why: part of GameMode4_Init_FillBytes, in a helper of GameMode4_Init; GameMode4_Init: start-up for
-; wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle screen (E-0352,
-; E-0042)
+; Resets the battle arrays: command menu state 1 for battle kinds 4, 5 and 9 (else 0); no effect,
+; queued action, Seal/Pray state or item target; slot marks, monster ids, skills, slot out and name
+; bytes $FF; side control $80; battle meter 10; turn 0, scene 0. Outside link battles takes the
+; party count, the foe count (wEncounterKind + 1), the setup byte and the text speed; in link
+; battles text speed 3 and the counts from the battler records by link role. (C1, E-0357)
 GameMode4_Init_FillBytes_2::
     ld a, [wBattleKind]
     cp $04
@@ -206,12 +203,9 @@ GameMode4_Init_CountBattlerRecords::
     ld a, c
     ret
 
-; Calls GameMode4_Init_CopyGlyphTilesToVRAM; calls ClearAttributesAndScreenBuffer_Bank31; calls
-; CopyRectRecordForBattlePartyCount_Bank31; calls LayoutTileBlocksForBattleFoeCount; calls
-; DrawPartySlotStatusPanels; calls LoadBattleMonsterPictureAttributes; calls
-; CopyScreenTileBufferToVRAM_A0_Bank19; sets wBGPaletteUploadRequest to $7f (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Builds the battle screen: the glyph tiles, cleared attributes, the party's layout, the foes'
+; picture blocks, the status panels and the picture attributes, copied to the BG map with a palette
+; upload. (C1, E-0357)
 GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
     farcall GameMode4_Init_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
@@ -225,12 +219,8 @@ GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
     ld [wBGPaletteUploadRequest], a
     ret
 
-; Branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
-; branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
-; branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; also changes HL, DE, A and C by
-; register arithmetic (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Loads the foes' pictures (the link follower's foes are slots 0-2, otherwise 4-6) into vTiles2 +
+; $140, $380 and $5C0 with palettes 1, 3 and 5, as many as there are foes. (C1, E-0357)
 GameMode4_Init_LoadMonsterPicture::
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
@@ -272,10 +262,7 @@ GameMode4_Init_LoadMonsterPicture::
 .return:
     ret
 
-; Calls LoadMonsterPicture (E-0347)
-; why: part of GameMode4_Init_LoadMonsterPicture, in part of GameMode4_Init; GameMode4_Init:
-; start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle
-; screen (E-0352, E-0042)
+; Loads the picture of the monster id at DE (LoadMonsterPicture). (C1, E-0357)
 GameMode4_Init_LoadMonsterPicture_2::
     ld a, [de]
     push af
@@ -287,13 +274,10 @@ GameMode4_Init_LoadMonsterPicture_2::
     call LoadMonsterPicture
     ret
 
-; Branches on wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; branches on
-; wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; calls AdjustSkillsForBattleStart;
-; branches on the byte at wBattleSlotOut; copies the byte at wBattleMonsterId to wSpeciesIdLo;
-; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls LoadSpeciesRecord; also changes HL, DE,
-; BC and A by register arithmetic (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Loads the battle slots from the battler records (the player's side from slot 0 and the other from
+; slot 4, the counts swapped for the link follower), adjusts the skills, and sets each present
+; slot's body flags from its species (metal in the low nibble, untrippable in the high). (C1,
+; E-0357)
 GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -918,9 +902,7 @@ ScaleHLToEightTenths_Bank19::
     pop bc
     ret
 
-; Branches on wBattleKind; plays music $13 (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Battle music: $0F for battle kinds 0 and 1, otherwise $13. (C1, E-0357)
 GameMode4_Init_QueueMusic::
     ld a, [wBattleKind]
     or a
@@ -939,9 +921,8 @@ GameMode4_Init_QueueMusic::
     call QueueMusic
     ret
 
-; Calls GameMode4_Init_SRAMRecordAddressMapped (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Copies the fields of each party member's SRAM record into its battler record
+; (GameMode4_Init_SRAMRecordAddressMapped). (C1, E-0357)
 GameMode4_Init_ReadBattlePartyCount::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -957,10 +938,8 @@ GameMode4_Init_ReadBattlePartyCount::
     jr nz, .loop
     ret
 
-; Calls SRAMRecordAddressMapped; calls ApplyIncrementOffsetRows19ForA0DTo13; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Copies the battle fields of party member C's SRAM record (name, stats, skills and the rest) into
+; the battler record at DE. (C1, E-0357)
 GameMode4_Init_SRAMRecordAddressMapped::
     ld a, c
     ld c, MON_NAME
@@ -1159,11 +1138,8 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
-; Branches on wDisplaySlot & $03; calls LoadMonsterAndSpeciesForListEntryC; also changes DE, A and C
-; by register arithmetic (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; Battle end, step 3: reloads the monster record of foe slot 4 or 5 (by wDisplaySlot) into its
+; battler record, keeping its byte $0D. (C1, E-0357)
 BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1197,11 +1173,9 @@ BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld [de], a
     ret
 
-; Branches on wBattleKind; calls LoadMonsterAndSpeciesForListEntryC; calls
-; GameMode4_Init_WriteBattleArg2AndBattleArg3Etc; also changes DE, BC and A by register arithmetic
-; (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Loads the foes: in battle kind 5 or an even kind from their monster records
+; (LoadMonsterAndSpeciesForListEntryC); in odd kinds other than 5 builds each from its species
+; (GameMode4_Init_WriteBattleArg2AndBattleArg3Etc), $4E bytes apart. (C1, E-0357)
 GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1277,13 +1251,9 @@ LoadMonsterAndSpeciesForListEntryC::
     pop bc
     ret
 
-; Copies E to wBattleArg2; copies D to wBattleArg3; copies C to wBattleArg1; copies the byte at
-; wWildLevel to hTemp1; branches on the byte at wWildLevel; sets hTemp1 to 1; copies L to
-; wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord; copies wSpeciesRecord +
-; SPECIES_GROWTH to hTemp0; calls StatFromGrowthRow; sets wBattleArg0 to 1; then 28 more steps (see
-; the code) (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Builds foe C's battler record from its species (wEncounterMonsters): species, family, sex ratio
+; and three skills, level wWildLevel[C] (at least 1), experience, and the stats from the species'
+; growth rows scaled by the battle kind (ScaleStatAndCapByBattleKind). (C1, E-0357)
 GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
     push bc
     ld a, e
@@ -1553,10 +1523,7 @@ ScaleWordBy6Or12Capped10000::
     jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, $0c
 
-; Changes HL and A; may continue in ScaleWordBy6Or12Capped10000_SetTemp2; continues in
-; ScaleWordBy6Or12Capped10000_SetTemp2 (E-0347)
-; why: part of ScaleWordBy6Or12Capped10000; ScaleWordBy6Or12Capped10000: multiplies by 6 (or 12 when
-; wBattleArg1 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0352, E-0127)
+; After the multiply: a product above 65,535 becomes 10,000; then stores it. (C1, E-0357)
 ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     call Multiply24By8
     ld a, d
@@ -1565,18 +1532,13 @@ ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     ld hl, $2710
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
-; Changes HL and BC (E-0347)
-; why: part of ScaleWordBy6Or12Capped10000; ScaleWordBy6Or12Capped10000: multiplies by 6 (or 12 when
-; wBattleArg1 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0352, E-0127)
+; HL = the unscaled value (BC), then stores it. (C1, E-0357)
 ScaleWordBy6Or12Capped10000_Restore::
     pop bc
     ld l, c
     ld h, b
 
-; Copies L to hTemp2; copies H to hTemp3; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: part of ScaleWordBy6Or12Capped10000; ScaleWordBy6Or12Capped10000: multiplies by 6 (or 12 when
-; wBattleArg1 = 1) and caps the result at 10000, then stores the word at [HL+] (E-0352, E-0127)
+; Stores the word in HL at [HL+] (through hTemp2/hTemp3) and restores the registers. (C1, E-0357)
 ScaleWordBy6Or12Capped10000_SetTemp2::
     ld a, l
     ldh [hTemp2], a
@@ -1832,10 +1794,8 @@ Multiply24By8::
     ld d, a
     ret
 
-; called from LoadMonsterAndSpeciesForListEntryC: takes DE and BC; changes HL, DE, BC and A (E-0347)
-; why: a helper of LoadMonsterAndSpeciesForListEntryC; LoadMonsterAndSpeciesForListEntryC: loads
-; monster wEncounterMonsters[C] (LoadMonsterRecord), runs
-; LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData, loads ... (E-0352, E-0121)
+; Fills a battler record at DE from the loaded monster record: $FF for the name, the monster id, and
+; the record's fields in battler order. (C1, E-0357)
 LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     push bc
     ld b, $0a
@@ -1965,12 +1925,9 @@ LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     pop bc
     ret
 
-; called from LoadMonsterAndSpeciesForListEntryC: branches on wSpeciesRecord + SPECIES_SEX_RATIO;
-; calls NextTableByte; branches on wRandomLo; branches on wNewRecordFamily; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
-; why: a helper of LoadMonsterAndSpeciesForListEntryC; LoadMonsterAndSpeciesForListEntryC: loads
-; monster wEncounterMonsters[C] (LoadMonsterRecord), runs
-; LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData, loads ... (E-0352, E-0121)
+; The battler record's family and sex from the species: sex ratio 0 gives 0, otherwise 1 when a
+; random byte is below 2 (ratio 1), 128 (ratio 2) or 230 (others); a non-zero wNewRecordFamily is
+; stored there instead (bit 4 cleared); then the 27 resistance bytes. (C1, E-0357)
 LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     ld a, $0c
     add e
@@ -2048,11 +2005,8 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     pop bc
     ret
 
-; May continue in LoadBattleSlotFromBattlerRecord; branches on C; calls
-; LoadBattleSlotFromBattlerRecord; calls LoadBattleSlotFromBattlerRecord_2; calls
-; ClearSpeciesRecordBuffer_Bank19 (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Loads battle slot C from its battler record (foe slots outside link battles through
+; LoadBattleSlotFromBattlerRecord_2) and clears the species record buffer. (C1, E-0357)
 GameMode4_Init_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a
@@ -2499,12 +2453,9 @@ BattlerRecordAddress_Bank19::
     ld h, a
     ret
 
-; Branches on wLinkMode; calls CarryUnlessBattleSlotOutSlotEmpty; sets wSlotMarks + $4 to 1; sets
-; wSlotMarks + $4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; sets
-; wSlotMarks to 0; sets wSlotMarks to 1; sets wSlotMarks to $ff; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: part of GameMode4_Init; GameMode4_Init: start-up for wGameMode = 4, the battle: starts music
-; 2, clears the BG map and builds the battle screen (E-0352, E-0042)
+; Sets the slot marks: outside link battles foe slots 4-7 get $01 when present and $FF when empty,
+; then slots 0-3 (all eight in link battles) $FF when empty, $01 when a status blocks them,
+; otherwise $00. (C1, E-0357)
 GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a

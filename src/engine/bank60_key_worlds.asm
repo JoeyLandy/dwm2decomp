@@ -4,13 +4,9 @@
 SECTION "Bank 60", ROMX[$4000], BANK[$60]
     db $60
 
-; called from RunMenuStateMenuState_InitSoundHardware: calls FindSRAMSlotMarkerIndex; returns if
-; hTemp0 is $ff; copies hTemp0 to wKeyWorldSlot; copies the byte at wKeySeeds to wKeyRandomLo;
-; copies the byte at wKeySeeds to wKeyRandomHi; also changes HL and A by register arithmetic
-; (E-0347)
-; why: a helper of RunMenuStateMenuState_InitSoundHardware; RunMenuStateMenuState_InitSoundHardware:
-; Warp effect step 5, the warp itself: silences and restarts the map music, then moves the player. A
-; normal warp goes to wWarpDestX/Y on the ... (E-0352, E-0357)
+; Entering a key world: finds a free SRAM slot for it (FindSRAMSlotMarkerIndex; none returns), keeps
+; it in wKeyWorldSlot and in the key's list entry (byte 3, with bit 7), and loads the key's seed
+; into wKeyRandomLo/Hi. (C1, E-0357)
 RunMenuStateMenuState_FindSRAMSlotMarkerIndex::
     ld a, [wCurrentKeyIndex]
     ld l, a
@@ -41,17 +37,10 @@ RunMenuStateMenuState_FindSRAMSlotMarkerIndex::
     ld a, [hl]
     ld [wKeyRandomHi], a
 
-; Calls DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc; calls
-; DebugAutomap_Update_RunRandomPatternCase; calls DebugAutomap_Update_NextRandomSeed; calls
-; DebugAutomap_Update_MergeKeyWorldAreas; calls DebugAutomap_Update_WriteTemp0AndTemp1Etc; calls
-; DebugAutomap_Update_Return; calls DebugAutomap_Update_SetTemp0; may continue in
-; DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas; calls
-; DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc; calls DebugAutomap_Update_WriteTemp0AndTemp1;
-; calls DebugAutomap_Update_SetKeyWorldBandForA; calls
-; DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength; then 1 more step (see the code)
-; (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Generates the key world from the key's seed: the size and areas (repeated until
+; DebugAutomap_Update_SetTemp0 accepts the layout), the rooms, the floor menus, the objects, the
+; monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6 clear). (C1,
+; E-0357)
 DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas::
     call DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc
     call DebugAutomap_Update_RunRandomPatternCase
@@ -84,12 +73,8 @@ DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas::
     ld [hl], a
     ret
 
-; Calls LoadKeyWorldLevelBaseTripleForPartyStrength; calls LoadKeyWorldParamsForCurrentKeyIndex;
-; calls RollKeyWorldMonsterTableKeyWorldMonsters; calls FillKeyWorldMonsters1LevelsForPartyStrength;
-; calls RollKeyWorldMonsterTableKeyWorldBossMonsters; calls FillKeyWorldBossMonsters1LevelsSlope;
-; calls RollKeyWorldMonsterIds; calls RollKeyWorldEncounterTable (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; The key world's monsters: the level base for the party strength, the key's parameters, 32 normal
+; and 8 boss monsters with their levels, the monster ids and the encounter table. (C1, E-0357)
 DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength::
     call LoadKeyWorldLevelBaseTripleForPartyStrength
     call LoadKeyWorldParamsForCurrentKeyIndex
@@ -1181,13 +1166,10 @@ KeyWorldLevelTable::
     db $52, $5b, $60, $64, $64, $64, $00, $00 ; id 98
     db $56, $60, $63, $64, $64, $64, $00, $00 ; id 99
 
-; Sets wKeyWorldFlags to 0; calls ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot; calls
-; PickRandomNonzeroFromKeyWorldGoalKindRows; calls NextRandomSeed; branches on wKeyRandomHi & $0f;
-; sets wKeyWorldWidth to $0a; sets wMapWidthScreens to $0a; branches on wKeyRandomHi & $0f; sets
-; wKeyWorldHeight to $0a; sets wMapHeightScreens to $0a; copies wKeyWorldWidth to hTemp8; copies
-; wKeyWorldHeight to hTemp9; then 9 more steps (see the code) (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Starts the layout: clears the flags and visited screens, picks the goal kind, the size (a random
+; entry of the table row for the party strength rounded down to 10; a 0 nibble means 10 screens) and
+; the area count (the row for strength / 10: a base plus a random part), and clears the four chunk
+; slots and areas. (C1, E-0357)
 DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     xor a
     ld [wKeyWorldFlags], a
@@ -1482,12 +1464,8 @@ KeyWorldGoalKindRows::
     db $02, $02, $02, $02 ; id 54
     db $03, $03, $03, $03 ; id 55
 
-; Copies L to hTemp0; copies H to hTemp1; copies E to hTemp5; copies D to hTemp6; sets hTemp7 to 0;
-; branches on the byte at wKeyWorldChunks + $3; calls RunRandomPatternCase; increments hTemp7;
-; copies E to hTemp5; copies D to hTemp6; copies L to hTemp0; copies H to hTemp1; then 2 more steps
-; (see the code) (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Fills each of the four chunk slots that is still empty with a random chunk pattern
+; (RunRandomPatternCase, retried until one fits), counting the areas in hTemp7. (C1, E-0357)
 DebugAutomap_Update_RunRandomPatternCase::
     ld b, $00
     ld hl, wKeyWorldChunks + $3
@@ -1565,12 +1543,8 @@ DebugAutomap_Update_MergeKeyWorldAreas::
     jr nz, .loop
     ret
 
-; Branches on hTemp7; calls NextRandomSeed; branches on wKeyRandomHi & $03; copies wKeyRandomHi &
-; $03 to hTemp0; calls NextRandomSeed; branches on wKeyRandomHi & $03; branches on hTemp0; copies C
-; to hTemp1; branches on the byte at wKeyWorldAreas; branches on hTemp0; branches on hTemp1;
-; branches on the byte at wKeyWorldAreas; then 16 more steps (see the code) (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; With more than one area, swaps random pairs of area numbers (once per area), then walks the areas
+; by number to settle their cells' order. (C1, E-0357)
 DebugAutomap_Update_NextRandomSeed::
     ldh a, [hTemp7]
     cp $01
@@ -1843,12 +1817,9 @@ SwapDEByteWithMatchingKeyWorldAreas::
     jr nz, .loop
     ret
 
-; Sets hTemp0 to 0; branches on the byte at wKeyWorldAreas; branches on the byte at wKeyWorldAreas &
-; $0f; copies the byte at wKeyWorldAreas & $0f to hTemp0; copies B to hTemp1; branches on B; copies
-; B to hTemp2; branches on B; calls PlaceTwoRandomOpenCells; sets wKeyWorldAreaExits to $ff; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Clears the area exits and, for each area after the first, finds where it meets the next one and
+; places two random open cells between them (PlaceTwoRandomOpenCells); $FF ends the list. (C1,
+; E-0357)
 DebugAutomap_Update_WriteTemp0AndTemp1Etc::
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
@@ -2102,19 +2073,13 @@ ReadKeyWorldCellIsSolid::
     pop hl
     ret
 
-; Returns at once (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Does nothing. (C1, E-0357)
 DebugAutomap_Update_Return::
     ret
 
-; Copies L to hTemp0; copies H to hTemp1; returns if the byte at wKeyWorldFloorInfo + $3 is $ff;
-; branches on the byte at wKeyWorldFloorInfo + $3; calls NextRandomSeed; branches on wKeyRandomHi &
-; $7f; branches on $03; calls NextRandomSeed; sets DebugAutomap_Update_WriteTemp0AndTemp1_Data to
-; $80; sets DebugAutomap_Update_WriteTemp0AndTemp1_Data to $81; sets hTemp0; sets hTemp1; then 1
-; more step (see the code) (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Sets the menu flag of each floor entrance of kind 4 or 5 ($FF ends the list): floor state 1 gives
+; $80, state 2 nothing, otherwise a random 0-99 below 5 gives state 3 and $81, below 30 state 1 and
+; $80, else a flag from a random entry of a 64-byte table. (C1, E-0357)
 DebugAutomap_Update_WriteTemp0AndTemp1::
     ld hl, wKeyWorldMenuFlag
     ld a, l
@@ -2221,12 +2186,11 @@ DebugAutomap_Update_WriteTemp0AndTemp1_Data::
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53
     db $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43, $44, $45, $46, $47
 
-; Branches on hTemp7; sets hTemp0 to 0; sets hTemp1 to 0; branches on the byte at wKeyWorldAreas;
-; branches on the byte at wKeyWorldAreas & $0f; increments hTemp1; branches on the byte at
-; wKeyWorldAreas & $0f; sets hTemp0; branches on B; calls ReadByteInBank; copies C to hTemp5; copies
-; L to hTemp0; then 12 more steps (see the code) (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; With more than one area, numbers the areas' cells one after another; then places the floor
+; entrances (their number from the area count's entry in KeyWorldAreaLayoutTable_Bank60, bank $84)
+; spread evenly over the cells into wKeyWorldFloorInfo (PlaceObjectInAreaC); A = 0 when all fit,
+; otherwise non-zero, which makes DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
+; generate the layout again. (C1, E-0357)
 DebugAutomap_Update_SetTemp0::
     ldh a, [hTemp7]
     cp $01
@@ -2548,12 +2512,9 @@ PlaceObjectInAreaC::
     ld a, $01
     ret
 
-; Calls SetKeyWorldBandForA; sets wKeyWorldBand; copies the byte at
-; DebugAutomap_Update_SetKeyWorldBandForA_Data to wMapObjectCount; copies B to hTemp0; calls
-; RollKeyWorldObjectKind; calls PlaceKeyWorldObjectAtRandomCell; sets wMapObjectCount; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Places the key world's objects: the band from the party strength (SetKeyWorldBandForA) gives the
+; object count; each gets a kind (RollKeyWorldObjectKind) and a random free cell; when one cannot be
+; placed the count is cut to those placed. (C1, E-0357)
 DebugAutomap_Update_SetKeyWorldBandForA::
     ld a, [wPartyStrength]
     call SetKeyWorldBandForA
@@ -2953,14 +2914,9 @@ RollKeyWorldObjectKind_Data::
     db $00, $00, $59, $00, $5a, $5d, $00, $00, $5e, $5f, $61, $62, $63, $00, $64
     ds $11, $00
 
-; Calls NextRandomSeed; branches on wKeyRandomHi & $7f; branches on B; calls NextRandomSeed;
-; branches on wKeyRandomHi & $7f; branches on the byte at
-; FieldState_MapTransition_NextRandomSeed_Data; calls NextRandomSeed; branches on wKeyRandomHi &
-; $7f; copies L to hTemp0; copies H to hTemp1; calls NextRandomSeed; branches on wKeyRandomHi & $0f;
-; then 2 more steps (see the code) (E-0347)
-; why: part of FieldState_MapTransition; FieldState_MapTransition: field state 4: a map or screen
-; transition: warps, the key-world floor and the transition steps (wFieldTransitionStep) (E-0352,
-; E-0339)
+; Rolls a screen trigger's contents for the band: a random 0-99 against the band's cumulative chance
+; row (64 bytes per band) picks the kind, then further rolls (scaled by the band) its amount,
+; written at DE. (C1, E-0357)
 FieldState_MapTransition_NextRandomSeed::
     ld a, [wKeyWorldBand]
     and $0f
@@ -3158,13 +3114,9 @@ FieldState_MapTransition_NextRandomSeed_Data::
     db $06, $08, $0e, $34, $1e, $00, $f5, $cd, $80, $1f, $f0, $c6, $fe, $ff, $28, $07
     db $f1, $0c, $1c, $05, $20, $f0, $c9, $f1, $c9
 
-; Copies wKeyWorldFloorInfo to wKeyWorldGoalScreen; copies wKeyWorldFloorInfo & $0f to hTemp3;
-; copies wKeyWorldFloorInfo & $0f to hTemp4; calls ReadByteInBank; branches on C; copies the byte at
-; DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data to wKeyWorldGoalPos; copies the byte
-; at DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data to wKeyWorldGoalPos2; also changes
-; HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; The goal: wKeyWorldGoalScreen = the first floor entrance's screen; reads that screen's chunk and
+; takes the goal position from the table by its first byte (a byte of $FF hangs in an endless loop).
+; (C1, E-0357)
 DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
     ld a, [wKeyWorldFloorInfo]
     ld [wKeyWorldGoalScreen], a
@@ -3279,11 +3231,8 @@ RunRandomPatternCase::
     dw RunRandomPatternCase_WriteTempA_2
     db $c9, $c9
 
-; step 3 of RunRandomPatternCase: branches on B & $01; branches on B; calls NextRandomSeed; calls
-; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
-; to hTempA; calls ReadByteInBank; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 3 of RunRandomPatternCase (when wKeyRandomHi & $0F = 3); RunRandomPatternCase: runs one
-; of four routines chosen by random & $0F through a 16-entry table (E-0352, E-0124)
+; Chunk pattern 3, a 2 x 2 block: only in an even left column with the three other slots free; picks
+; one of 32 patterns, fills the four slots (0-3) and writes the area's cells. (C1, E-0357)
 RunRandomPatternCase_WriteTempA_2::
     ld a, b
     and $01
@@ -3396,11 +3345,8 @@ RunRandomPatternCase_WriteTempA_2::
     ld a, $01
     ret
 
-; step 2 of RunRandomPatternCase: branches on B & $01; calls NextRandomSeed; calls
-; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
-; to hTempA; calls ReadByteInBank; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 2 of RunRandomPatternCase (when wKeyRandomHi & $0F = 2); RunRandomPatternCase: runs one
-; of four routines chosen by random & $0F through a 16-entry table (E-0352, E-0124)
+; Chunk pattern 2, a block two wide: only in an even column with the slot to the right free; picks
+; one of 32, fills both slots and the area's cells. (C1, E-0357)
 RunRandomPatternCase_WriteTempA_3::
     ld a, b
     and $01
@@ -3474,11 +3420,8 @@ RunRandomPatternCase_WriteTempA_3::
     ld a, $01
     ret
 
-; step 1 of RunRandomPatternCase: branches on B; calls NextRandomSeed; calls
-; StoreThreeBytesBeforeTemp0Pointer; calls StoreTemp2To3BytesBeforeHLPlusTemp0; copies hTemp7 & $f0
-; to hTempA; calls ReadByteInBank; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 1 of RunRandomPatternCase (when wKeyRandomHi & $0F = 1); RunRandomPatternCase: runs one
-; of four routines chosen by random & $0F through a 16-entry table (E-0352, E-0124)
+; Chunk pattern 1, a block two tall: only in the top row with the slot below free; picks one of 32,
+; fills both slots and the area's cells. (C1, E-0357)
 RunRandomPatternCase_WriteTempA::
     ld a, b
     cp $02
@@ -3550,11 +3493,8 @@ RunRandomPatternCase_WriteTempA::
     ld a, $01
     ret
 
-; step 0 of RunRandomPatternCase: calls NextRandomSeed; calls StoreThreeBytesBeforeTemp0Pointer;
-; copies hTemp7 & $f0 to hTempA; calls ReadByteInBank; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: step 0 of RunRandomPatternCase (when wKeyRandomHi & $0F = 0); RunRandomPatternCase: runs one
-; of four routines chosen by random & $0F through a 16-entry table (E-0352, E-0124)
+; Chunk pattern 0, a single chunk: one of 32 from KeyWorldChunkLists into the slot, and the area's
+; cell. (C1, E-0357)
 RunRandomPatternCase_StoreThreeBytesBeforeTemp0Pointer::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
@@ -4119,13 +4059,9 @@ MarkMapObjectsEntryForKeyWorldGoalCell::
     jr nz, .loop
     ret
 
-; called from RemoveMapObjectsEntryMatching: sets hTempA to 0; calls NextRandomSeed; branches on
-; wKeyRandomHi & $0f; copies wKeyRandomHi & $0f to hTemp3; calls NextRandomSeed; branches on
-; wKeyRandomHi & $0f; copies wKeyRandomHi & $0f to hTemp4; sets hTemp5; branches on wKeyRandomHi &
-; $0f; branches on the byte at wMapObjects + $4; increments hTempA; branches on hTempA; then 5 more
-; steps (see the code) (E-0347)
-; why: a helper of RemoveMapObjectsEntryMatching; RemoveMapObjectsEntryMatching: clears bit 7 of
-; wKeyWorldRefresh (E-0352, E-0125)
+; Places a map object on a random screen that no other object uses (giving up with A = 0 after 100
+; tries), then at one of four random spots of that screen from the chunk data in bank $61, trying
+; again when the spot is $FE. (C1, E-0357)
 RemoveMapObjectsEntryMatching_NextRandomSeed::
     push de
     xor a
@@ -4253,15 +4189,10 @@ RemoveMapObjectsEntryMatching_NextRandomSeed::
     ld a, $01
     ret
 
-; called from FieldState_MapTransition: branches on wMapType; calls
-; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending; branches on hMapId; branches on
-; hMapScreenX; returns if hMapScreenY is $01; branches on hMapId; branches on hMapScreenX; returns
-; if hMapScreenY is $02; branches on the byte at FieldState_MapTransition_Data2; sets
-; wScreenTriggerCount to 0; branches on 0; branches on wWarpPending; then 10 more steps (see the
-; code) (E-0347)
-; why: a helper of FieldState_MapTransition; FieldState_MapTransition: field state 4: a map or
-; screen transition: warps, the key-world floor and the transition steps (wFieldTransitionStep)
-; (E-0352, E-0339)
+; After a warp onto a map listed in FieldState_MapTransition_Data2 (except map $39 at screen (1, 1)
+; and map $2B at (1, 2)): sets the band from the map's entry in FieldState_MapTransition_Data1 and
+; rolls three screen triggers; otherwise none. In key worlds
+; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending decides. (C1, E-0357)
 FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld a, [wMapType]
     bit 7, a
@@ -4435,14 +4366,9 @@ KeyContentsWordRows::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 27
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 28
 
-; Branches on wMapType & $07; sets wScreenTriggerCount to 0; branches on wKeyWorldArea; branches on
-; the byte at wKeyWorldFloorState + $4; branches on wWarpPending; sets wWarpPending to 0; calls
-; SetKeyWorldBandForA; sets wScreenTriggerCount to 2; calls FieldState_MapTransition_NextRandomSeed;
-; calls WriteRandomEntryFromTable; may return early; sets wScreenTriggerCount to 1; then 1 more step
-; (see the code) (E-0347)
-; why: part of FieldState_MapTransition; FieldState_MapTransition: field state 4: a map or screen
-; transition: warps, the key-world floor and the transition steps (wFieldTransitionStep) (E-0352,
-; E-0339)
+; In a key world's rooms (map type 5), after a warp into an area other than the floor's two special
+; ones: the band from the key's level byte, two screen triggers rolled; when both landed in the same
+; place only one is kept. (C1, E-0357)
 FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending::
     ld a, [wMapType]
     and $07

@@ -293,14 +293,8 @@ MetaSprites25Attrs::
     db $01 ; id 126
     db $00 ; id 127
 
-; called from DrawMetaSpriteSet_Bank25: returns if hOamNextEntry is at least $27; sets
-; hMetaSpriteYLo; sets hMetaSpriteYHi; branches on hSpriteWindowClipMode; returns if the byte at
-; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; branches on B; increments
-; hOamNextEntry; branches on hOamNextEntry; returns if the byte at hMetaSpriteXLo is $80; branches
-; on the byte at hMetaSpriteXLo; branches on B; then 19 more steps (see the code) (E-0347)
-; why: a helper of DrawMetaSpriteSet_Bank25; DrawMetaSpriteSet_Bank25: ORs the attribute bits from
-; MetaSprites25Attrs[hSpriteSetIndex] (when its bit 0 is set) into hSpriteAttrXor, then builds the
-; sprite from ... (E-0352, E-0124)
+; Builds the meta-sprite into OAM; the same code as DrawMetaSpriteSet_Bank27_WaitOamNextEntry with
+; this bank's frames. (C1, E-0357)
 DrawMetaSpriteSet_Bank25_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

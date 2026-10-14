@@ -4805,8 +4805,8 @@ RunBattleSetup_BankA0_EntrySelect_3::
     ld [wBattleResolveStep], a
     ret
 
-; by wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_CommandMenu (command windows, 'It has
-; no usable ...') (E-0288)
+; by wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_PlanMenu (command windows, 'It has no
+; usable ...') (E-0288)
 RunBattleSetup_BankA0_CommandMenu::
     ld a, [wBattleResolveStep]
     jumptable

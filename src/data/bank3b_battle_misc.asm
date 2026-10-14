@@ -494,14 +494,10 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
-; step 0 of RunBattleActions_UseItem: advances wBattleResolveStep; sets wMultiHitCount to 0; sets
-; wSlotsOccupiedFlag to 0; branches on wBattleItemTarget; copies wBattleItemTarget & $07 to
-; wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleItemId; branches on
-; wLinkRole; calls AllThreeSlotsFromCOccupied; copies C to wBattleTarget; copies wBattleItemId to
-; wBattleActionId; calls ShowActionBattleText; then 2 more steps (see the code) (E-0347)
-; why: step 0 of RunBattleActions_UseItem (when wBattleResolveStep = 0); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 0: clears the counters and picks the target: item target $10 is the user's own side
+; (slots 0-2, or 4-6 for the link follower), $20 the other side, otherwise a slot; an empty or
+; fallen slot shows the item's text and goes to step $0D ('But nothing happened!'), except for the
+; WorldLeaf; the action is the item. (C1, E-0357)
 RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -569,32 +565,25 @@ AllThreeSlotsFromCOccupied::
     jr nz, .loop
     ret
 
-; step 1 of RunBattleActions_UseItem: advances wBattleResolveStep; calls ShowActionBattleText
-; (E-0347)
-; why: step 1 of RunBattleActions_UseItem (when wBattleResolveStep = 1); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 1: shows the item's battle text (ShowActionBattleText). (C1, E-0357)
 RunBattleActions_UseItem_ShowActionBattleText::
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
     ret
 
-; step 2 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wBattleActionId;
-; calls TargetOnLocalSide_Bank3B; branches on wBattleKind; calls CarryUnlessBattleSlotOutSlotEmpty;
-; branches on the byte at wFoeJoinClass1; branches on the byte at wBattleStatus; calls
-; CheckSlotStatusBlock; sets wEffectFlags to 8; calls SelectEffectByEffectFlags; calls
-; CallWithBattleFoeCount; calls ShowBattleTextCategory0; then 13 more steps (see the code) (E-0347)
-; why: step 2 of RunBattleActions_UseItem (when wBattleResolveStep = 2); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 2: a meat (ITEM_BEEFJERKY to ITEM_BADMEAT) thrown at the other side checks each
+; present slot there: in battle kind 3 or with a foe of join class 7 text $7E, status 0 bit 6 text
+; $E6, status bits $8C text $7B, status 5 bits 6-7 text $7D, a status block (CheckSlotStatusBlock)
+; text $7C, each ending at step $0B; otherwise (and for every other item) selects the item's effect
+; (wEffectFlags 8). (C1, E-0357)
 RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleActionId]
-    cp SKILL_HEALUS
+    cp ITEM_BEEFJERKY
     jr c, .set_effect_flags_to_08
-    cp SKILL_VIVIFY
+    cp ITEM_METEORB
     jr nc, .set_effect_flags_to_08
     call TargetOnLocalSide_Bank3B
     jr c, .set_effect_flags_to_08
@@ -693,11 +682,8 @@ CallWithBattleFoeCount::
     farcall CallWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
-; step 3 of RunBattleActions_UseItem: advances wBattleResolveStep; may return early; shows battle
-; text '0 is a hunk of iron!'; calls SetResolveStep0A (E-0347)
-; why: step 3 of RunBattleActions_UseItem (when wBattleResolveStep = 3); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 3: when the target's status 5 has bit 6 or 7 set, shows text $66 and goes to the
+; damage message (step $0A). (C1, E-0357)
 RunBattleActions_UseItem_ShowHeroIsAHunk::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -712,26 +698,19 @@ RunBattleActions_UseItem_ShowHeroIsAHunk::
     call SetResolveStep0A
     ret
 
-; step 4 of RunBattleActions_UseItem: advances wBattleResolveStep; calls
-; DispatchActionEffectTable_Bank3B (E-0347)
-; why: step 4 of RunBattleActions_UseItem (when wBattleResolveStep = 4); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 4: runs the item's effect from the effect table (DispatchActionEffectTable_Bank3B).
+; (C1, E-0357)
 RunBattleActions_DispatchActionEffectTable_Bank3BAndStep::
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
     ret
 
-; step 5 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgFlags;
-; copies B to wResolveMsgFlags; returns unless bit 4 of wResolveMsgFlags is set; sets
-; wSlotsOccupiedFlag to 1; sets wEffectFlags to 4; calls SelectEffectByEffectFlags; sets
-; wEffectFlags2 to 1; calls SelectEffectByEffectFlags2Flags; returns if wBattleActionId is below
-; SKILL_BLAZE; branches on wBattleActionId; returns if wBattleActionId is below SKILL_CURSEOFF; then
-; 5 more steps (see the code) (E-0347)
-; why: step 5 of RunBattleActions_UseItem (when wBattleResolveStep = 5); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 5: with message flag bit 5, sets flag bit 4 when the amount is non-zero; when bit 4
+; is set marks the item used and plays the effect, then moves the battle meter: items $01-$05 and
+; $0B by half the amount (down for the near side, up, capped at 1,800, for the far side), items
+; $06-$0A and $0C by 5 down (near side) or 100 up (far side), and the Wind, Bolt, Snow and Fire
+; items ($24-$27) by half the amount down. (C1, E-0357)
 RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -769,18 +748,18 @@ RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld [wEffectFlags2], a
     farcall SelectEffectByEffectFlags2Flags
     ld a, [wBattleActionId]
-    cp SKILL_BLAZE
+    cp ITEM_HERB
     ret c
-    cp SKILL_FIREBOLT
+    cp ITEM_ANTIDOTE
     jr c, .check_battle_target
-    cp SKILL_INFERMORE
+    cp ITEM_SAGEROCK
     jr z, .check_battle_target
     jr c, .check_battle_target2
-    cp SKILL_INFERMOST
+    cp ITEM_WORLDLEAF
     jr z, .check_battle_target2
-    cp SKILL_CURSEOFF
+    cp ITEM_WIND
     ret c
-    cp SKILL_DEFENSE
+    cp ITEM_WARP
     jr c, .read_battle_damage_lo
     ret
 
@@ -820,12 +799,8 @@ RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     call AddHLToBattleMeterCappedAt1800
     ret
 
-; step 6 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgFlags;
-; copies wResolveMsgActor to wTemp0; copies wResolveMsgTarget to wTemp0; calls ShowBattleText; calls
-; SetResolveStep0AUnlessResolveMsgFlagsBit4 (E-0347)
-; why: step 6 of RunBattleActions_UseItem (when wBattleResolveStep = 6); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 6 (and skips 7): shows the actor's message number when message flag bit 4 is set,
+; otherwise the target's; without bit 4 goes to the damage message (step $0A). (C1, E-0357)
 RunBattleActions_UseItem_ShowBattleText::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -857,20 +832,13 @@ SetResolveStep0AUnlessResolveMsgFlagsBit4::
     call SetResolveStep0A
     ret
 
-; step 7 of RunBattleActions_UseItem: returns at once (E-0347)
-; why: step 7 of RunBattleActions_UseItem (when wBattleResolveStep = 7); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 7: nothing. (C1, E-0357)
 RunBattleActions_UseItem_Return::
     ret
 
-; step 8 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg & $c0;
-; decrements wBattleResolveStep; sets wBattleSubStep2 to 0; calls
-; SetBit0OfLevelUpGainsIndexed_Bank3B; calls SetBit1OfLevelUpGainsIndexed_Bank3B; calls
-; SetBit2OfLevelUpGainsIndexed_Bank3B; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 8 of RunBattleActions_UseItem (when wBattleResolveStep = 8); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 8 (and skips 9): by message argument bits 6-7: 0 nothing; $40 only marks the
+; target's level-up gain bits 0-2; otherwise takes the amount from the target's HP, at 0 going back
+; a step to the fall (sub-step 0), and marks the bits. (C1, E-0357)
 RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -927,23 +895,15 @@ RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
 .return:
     ret
 
-; step 9 of RunBattleActions_UseItem: calls RunBattleSubStep2_2 (E-0347)
-; why: step 9 of RunBattleActions_UseItem (when wBattleResolveStep = 9); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 9: the fall sub-steps (RunBattleSubStep2_2). (C1, E-0357)
 RunBattleActions_UseItem_ToRunBattleSubStep2_2::
     farcall RunBattleSubStep2_2
     ret
 
-; step 10 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wBattleItemId;
-; branches on wBattleItemTarget; returns unless wBattleItemTarget is $20; branches on wBattleItemId;
-; returns if wBattleTarget is below $04; calls GroupTargetsBySpeciesToSpeciesGroups; copies the byte
-; at wBattleMonsterId to wSpeciesIdLo; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls
-; TestSpeciesFlag; branches on C; calls ShowBattleTextCategory0; then 9 more steps (see the code)
-; (E-0347)
-; why: step 10 of RunBattleActions_UseItem (when wBattleResolveStep = 10); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 10: the BeastTail shows text $2B or $2A by the target's species flag for each
+; target of the same species in turn (back to step 4); BadMeat on the far side, items aimed at the
+; user's side ($10) and side items ($20, except the MeteOrb) move on to the side's next slot (back
+; to step 3); otherwise next step. (C1, E-0357)
 RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1038,12 +998,7 @@ RunOnceThenNext::
     and $7f
     ret
 
-; called from RunOnceThenNext: branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
-; increments wMultiHitCount; branches on B; also changes HL, BC and A by register arithmetic
-; (E-0347)
-; why: a helper of RunOnceThenNext; RunOnceThenNext: runs
-; RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount), then
-; ... (E-0352, E-0122, E-0344)
+; Counts into wMultiHitCount the target and every present slot on its side. (C1, E-0357)
 RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     ld b, $04
     ld a, [wBattleTarget]
@@ -1072,12 +1027,9 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; called from RunOnceThenNext: decrements wMultiHitCount; may return early; calls
-; CarryUnlessBattleSlotOutSlotEmpty; may return early; also changes HL, A and C by register
-; arithmetic (E-0347)
-; why: a helper of RunOnceThenNext; RunOnceThenNext: runs
-; RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount), then
-; ... (E-0352, E-0122, E-0344)
+; C = the next present slot after the target (the count down by one; 0 left returns); the search
+; runs on through the slot numbers, and with item record byte 4 = $80 a far-side target's search
+; goes on from slot 0. (C1, E-0357)
 RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
@@ -1110,14 +1062,9 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     inc c
     jr .check_record_buffer_data
 
-; step 11 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
-; returns if wSlotsOccupiedFlag is 0; copies wBattleItemId to wItemId; sets wInventorySlot; calls
-; LoadItemRecord; calls ConsumeSelectedItemByChance; returns unless wItemId is $ff; branches on
-; wBattleItemId; shows battle text 'The W shattered!'; also changes HL, A, B and D by register
-; arithmetic (E-0347)
-; why: step 11 of RunBattleActions_UseItem (when wBattleResolveStep = 11); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 11: once the item has been used (message argument bit 0 or the used mark), loads
+; the item record for its bag place (row x 4 + column) and consumes it by its chance; when it is
+; used up and its chance was below 100, or it is the MeteOrb, shows text $87. (C1, E-0357)
 RunBattleActions_UseItem_LoadItemRecord::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1158,11 +1105,7 @@ RunBattleActions_UseItem_LoadItemRecord::
     farcall ShowBattleText
     ret
 
-; step 12 of RunBattleActions_UseItem: sets wMultiHitCount to 0; sets wBattleSubPhase to 7; sets
-; wBattleResolveStep to 0 (E-0347)
-; why: step 12 of RunBattleActions_UseItem (when wBattleResolveStep = 12); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 12: ends the action (battle sub-phase 7, counters cleared). (C1, E-0357)
 RunBattleActions_UseItem_SetMultiHitCount::
     xor a
     ld [wMultiHitCount], a
@@ -1172,11 +1115,7 @@ RunBattleActions_UseItem_SetMultiHitCount::
     ld [wBattleResolveStep], a
     ret
 
-; step 13 of RunBattleActions_UseItem: shows battle text 'But nothing happened!'; sets
-; wBattleResolveStep to $0c (E-0347)
-; why: step 13 of RunBattleActions_UseItem (when wBattleResolveStep = 13); RunBattleActions_UseItem:
-; by wBattleResolveStep: an item action ('0 can't eat while paralyzed!', 'The W shattered!', 'But
-; nothing happened!', LoadItemRecord, ... (E-0352)
+; Item use, step 13: 'But nothing happened!' (text $CC), then step 12. (C1, E-0357)
 RunBattleActions_UseItem_ShowButNothingHappened::
     ld d, $cc ; battle text 'But nothing happened!'
     farcall ShowBattleText
@@ -1384,11 +1323,11 @@ GroupTargetsBySpeciesToSpeciesGroups::
 ; amount actually added when capped) (E-0236)
 RestoreTargetHPByActionAmount::
     ld a, [wBattleActionId]
-    cp SKILL_BLAZEMOST
+    cp ITEM_WORLDDEW
     jr z, .read_battle_target
-    cp SKILL_BLAZE
+    cp ITEM_HERB
     jr z, .call_set_damage_random_in_range
-    cp SKILL_BARRIER
+    cp ITEM_SKY
     jr z, .call_set_damage_random_in_range
     ld hl, $003c
     ld bc, $0046
@@ -1440,14 +1379,11 @@ RestoreTargetHPByActionAmount::
     ld [hl], b
     ret
 
-; called from RestoreTargetMPIfLow: branches on wBattleActionId; calls SetDamageRandomInRange;
-; copies E to wBattleDamageLo; copies D to wBattleDamageHi; calls GetBattleMaxMP_Bank3B; calls
-; SetDamageDEMinusBCPlusHL; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RestoreTargetMPIfLow; RestoreTargetMPIfLow: if the target's MP is below its max,
-; runs RestoreTargetMPIfLow_SetDamageRandomInRange and shows message $C3 (E-0352, E-0124)
+; The MP an item restores: the ElfWater ($05) the target's whole max MP, other items a random 20-30;
+; added to the target's MP and capped at its max (the amount becomes what was added). (C1, E-0357)
 RestoreTargetMPIfLow_SetDamageRandomInRange::
     ld a, [wBattleActionId]
-    cp SKILL_FIREBANE
+    cp ITEM_ELFWATER
     jr z, .read_battle_target
     ld hl, $0014
     ld bc, $001e
@@ -1635,7 +1571,7 @@ RollTableDamageScaledByResistance::
     ld b, a
     call SetDamageRandomInRange
     ld a, [wBattleActionId]
-    cp SKILL_CURSEOFF
+    cp ITEM_WIND
     jr nz, .cp_25
     call TargetSlotResistancesByte1_Bank3B
     rlca
@@ -1713,11 +1649,8 @@ RollTableDamageScaledByResistance::
 RollTableDamageScaledByResistance_Data::
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8c, $00, $b4, $00, $c8, $00
 
-; called from InflictTargetStatus0Bit0: calls HLToBattleStatus8EntryOfBattleTarget_Bank3B; calls
-; TargetSlotResistances2Byte; calls RollChanceByHLBits6And7_Bank3B (E-0347)
-; why: a helper of InflictTargetStatus0Bit0; InflictTargetStatus0Bit0: unless already set, rolls the
-; chance (InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B) and sets bit 0 of
-; the target's ... (E-0352, E-0124)
+; Rolls the chance from bits 0-1 of the target's resistance byte 2, the way bits 6-7 of its status
+; byte 8 choose (RollChanceByHLBits6And7_Bank3B). (C1, E-0357)
 InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
     call TargetSlotResistances2Byte
@@ -1759,19 +1692,14 @@ TargetSlotResistances2Byte::
     ld de, wSlotResistances + $2
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
-; Changes DE; continues in GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget (E-0347)
-; why: part of GetTargetSlotResistancesByte3; GetTargetSlotResistancesByte3: A = byte 3 of the
-; target's 7-byte resistance record (wSlotResistances + 3 + 7 * wBattleTarget) (E-0352, E-0095,
-; E-0338)
+; A = byte 3 of the target's 7-byte resistance record
+; (GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget). (C1, E-0357)
 GetTargetSlotResistancesByte3_Bank3B::
     ld de, wSlotResistances + $3
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
     db $11, $76, $da, $18, $08, $11, $77, $da, $18, $03, $11, $78, $da
 
-; Takes DE; changes DE, A and B (E-0347)
-; why: part of GetTargetSlotResistancesByte3_Bank3B, in part of GetTargetSlotResistancesByte3;
-; GetTargetSlotResistancesByte3: A = byte 3 of the target's 7-byte resistance record
-; (wSlotResistances + 3 + 7 * wBattleTarget) (E-0352, E-0095, E-0338)
+; A = the byte at DE + 7 x wBattleTarget. (C1, E-0357)
 GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
     ld a, [wBattleTarget]
     ld b, a
@@ -1847,11 +1775,9 @@ RollChanceByLevel_100_100_75_0_Bank3B::
     ccf
     ret
 
-; called from RollChanceByHLBits6And7_Bank3B: takes A; changes A; continues in
-; RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2; continues in
-; RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4 (E-0347)
-; why: a helper of RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
+; Rolls by band A: 0 always succeeds (carry), 1 succeeds 3 times in 4
+; (RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2), 2 two times in 5
+; (RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4), 3 never. (C1, E-0357)
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
     and a
     jr nz, .cp_01
@@ -1873,40 +1799,28 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
     ccf
     ret
 
-; Calls AdvanceRandom (E-0347)
-; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
-; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
+; Carry when the random byte is below $D8 (216 in 256). (C1, E-0357)
 RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
 
-; Calls AdvanceRandom (E-0347)
-; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
-; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
+; Carry when the random byte is below $BF (191 in 256). (C1, E-0357)
 RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
     ret
 
-; Calls AdvanceRandom (E-0347)
-; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
-; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
+; Carry when the random byte is below $7F (127 in 256). (C1, E-0357)
 RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom3::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
     ret
 
-; Calls AdvanceRandom (E-0347)
-; why: part of RollChanceByHLBits6And7_Bank3B_ReadRandomLo, in a helper of
-; RollChanceByHLBits6And7_Bank3B; RollChanceByHLBits6And7_Bank3B: bit 6 of [HL]:
-; RollChanceByHLBits6And7_Bank3B_ReadRandomLo (E-0352, E-0122)
+; Carry when the random byte is below $66 (102 in 256). (C1, E-0357)
 RollChanceByHLBits6And7_Bank3B_CallAdvanceRandom4::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -2452,10 +2366,8 @@ RaiseWord3FAndRestoreHP::
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
-; Changes HL and BC; continues in UnreferencedStoreResolveMessage35D0_SetResolveMsgActor (E-0347)
-; why: part of RaiseWord3FAndRestoreHP; RaiseWord3FAndRestoreHP: adds 30 to the target's
-; wBattleExtraStat word capped at 999, then if its HP is below max runs
-; RestoreTargetHPByActionAmount and shows ... (E-0352, E-0239, E-0236)
+; Resolve message actor $35, target $B5, flags $A8, argument $80
+; (UnreferencedStoreResolveMessage35D0_SetResolveMsgActor). (C1, E-0357)
 RaiseWord3FAndRestoreHP_Skip::
     lb hl, $b5, $35
     lb bc, $80, $a8
@@ -2467,10 +2379,7 @@ UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
     lb hl, $d0, $35
     lb bc, $88, $a8
 
-; Copies L to wResolveMsgActor; copies H to wResolveMsgTarget; copies C to wResolveMsgFlags; copies
-; B to wResolveMsgArg (E-0347)
-; why: part of UnreferencedStoreResolveMessage35D0; UnreferencedStoreResolveMessage35D0: HL = $D035,
-; BC = $88A8, then falls into the resolve-message store at $4EBE (E-0352, E-0236)
+; Stores the resolve message: actor L, target H, flags C, argument B. (C1, E-0357)
 UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2489,10 +2398,8 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B::
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
-; Copies L to wResolveMsgActor; copies C to wResolveMsgFlags; copies B to wResolveMsgArg (E-0347)
-; why: part of ClearDamageAndStoreResolveMsgFlags_Bank3B; ClearDamageAndStoreResolveMsgFlags_Bank3B:
-; clears wBattleDamageLo/wBattleDamageHi (the damage word), then wResolveMsgActor = L,
-; wResolveMsgFlags = C, wResolveMsgArg = B (the same ... (E-0352, E-0073)
+; Stores the resolve message actor L, flags C and argument B (the target is left alone). (C1,
+; E-0357)
 ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2502,21 +2409,15 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld [wResolveMsgArg], a
     ret
 
-; Changes BC and H; continues in SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
-; (E-0347)
-; why: part of ClearDamageAndStoreResolveMsgFlags_Bank3B; ClearDamageAndStoreResolveMsgFlags_Bank3B:
-; clears wBattleDamageLo/wBattleDamageHi (the damage word), then wResolveMsgActor = L,
-; wResolveMsgFlags = C, wResolveMsgArg = B (the same ... (E-0352, E-0073)
+; Target $CC, flags $80, argument 0
+; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget). (C1, E-0357)
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
     ld h, $cc
     lb bc, $00, $80
     jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
-; Changes BC and H; continues in SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
-; (E-0347)
-; why: part of ClearDamageAndStoreResolveMsgFlags_Bank3B; ClearDamageAndStoreResolveMsgFlags_Bank3B:
-; clears wBattleDamageLo/wBattleDamageHi (the damage word), then wResolveMsgActor = L,
-; wResolveMsgFlags = C, wResolveMsgArg = B (the same ... (E-0352, E-0073)
+; Target $B5, flags $80, argument 0
+; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget). (C1, E-0357)
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
     ld h, $b5
     lb bc, $00, $80
@@ -2528,18 +2429,13 @@ SetResolveMsgTargetB5AndResolveMsgFlagsTo0180::
     ld h, $b5
     lb bc, $01, $80
 
-; Copies H to wResolveMsgTarget (E-0347)
-; why: part of SetResolveMsgTargetB5AndResolveMsgFlagsTo0180;
-; SetResolveMsgTargetB5AndResolveMsgFlagsTo0180: wResolveMsgTarget = $B5 and the word
-; wResolveMsgFlags = $0180 (E-0352, E-0122, E-0340)
+; Stores the resolve message target H, then flags and argument
+; (SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags). (C1, E-0357)
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
     ld a, h
     ld [wResolveMsgTarget], a
 
-; Copies C to wResolveMsgFlags; copies B to wResolveMsgArg (E-0347)
-; why: part of SetResolveMsgTargetB5AndResolveMsgFlagsTo0180;
-; SetResolveMsgTargetB5AndResolveMsgFlagsTo0180: wResolveMsgTarget = $B5 and the word
-; wResolveMsgFlags = $0180 (E-0352, E-0122, E-0340)
+; Stores the resolve message flags C and argument B. (C1, E-0357)
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
     ld a, c
     ld [wResolveMsgFlags], a
@@ -2559,10 +2455,7 @@ ClearDamageAndReadTargetStatus0::
     ld a, [hl]
     ret
 
-; Sets wBattleResolveStep to $0a (E-0347)
-; why: part of ClearDamageAndReadTargetStatus0; ClearDamageAndReadTargetStatus0: clears
-; wBattleDamageLo/wBattleDamageHi, then A = status byte 0 of wBattleTarget (wBattleStatus + 9 *
-; target), HL pointing at it (E-0352, E-0078)
+; Goes to the damage message (wBattleResolveStep = $0A). (C1, E-0357)
 ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
     ld a, $0a
     ld [wBattleResolveStep], a
@@ -2579,24 +2472,18 @@ GetBattleMaxMP_Bank3B::
     ld hl, wBattleMaxMP
     jr GetBattleMP_Bank3B_Skip
 
-; Changes HL; continues in GetBattleMP_Bank3B_Skip (E-0347)
-; why: part of GetBattleHP; GetBattleHP: A = battle slot: HL = the word for that slot in the array
-; at wBattleHP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleHP, then the slot's word (GetBattleMP_Bank3B_Skip). (C1, E-0357)
 GetBattleHP_Bank3B::
     ld hl, wBattleHP
     jr GetBattleMP_Bank3B_Skip
 
-; Changes HL; continues in GetBattleMP_Bank3B_Skip (E-0347)
-; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
-; at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMP, then the slot's word (GetBattleMP_Bank3B_Skip). (C1, E-0357)
 GetBattleMP_Bank3B::
     ld hl, wBattleMP
     jr GetBattleMP_Bank3B_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of GetBattleMP_Bank3B, in part of GetBattleMP; GetBattleMP: A = battle slot: HL = the
-; word for that slot in the array at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
 GetBattleMP_Bank3B_Skip::
     add a
     add_a_to_hl
@@ -2650,9 +2537,8 @@ TargetOnLocalSide_Bank3B::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D (E-0347)
-; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
-; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
+; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank3B_Data); a copy of
+; the bank $05 routine. (C1, E-0357)
 ClearBattleStatusBitsWithMaskD_Bank3B::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3B_Data

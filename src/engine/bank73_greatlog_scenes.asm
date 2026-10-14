@@ -4,54 +4,54 @@
 SECTION "Bank 73", ROMX[$4000], BANK[$73]
     db $73
 
-; implements script command type 82 (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by
-; wPendingFieldEvent & $0F to 13 scripted scenes on the Great Log island (Cobi, Tara, Warubou and
-; Kameha dialogue); scene $0A gives gold or items, scene $0C takes a gold loss
-; (DeductGoldPenaltyAndFormatLoss); corrects the E-0286 reading 'GreatLogFieldEvents'; reached
-; through ScriptCommand82 in bank $10 (E-0038, E-0293)
-GreatLogFieldEvents::
+; implements script command type 82 (SCRIPT_TRAVELER_EVENT): talk category 8: jumps by
+; wPendingFieldEvent & $0F to 13 traveler encounters: a healer, two merchants, a paid healer, three
+; masters to battle, a card game, a map seller, a medicine master, the casino ship, a healer to
+; battle and a thief (four openings); their lines are category 5 of bank $09, shown by
+; RunMessageBox_Bank73 (E-0364; was TravelerEvents, named from the wrong message table, E-0293);
+; reached through ScriptCommand82 in bank $10 (E-0038)
+TravelerEvents::
     ld a, [wPendingFieldEvent]
     and $0f
     jumptable
-    dw GreatLogFieldEvents_PapaCalling
-    dw GreatLogFieldEvents_TaraThereYouAre
-    dw GreatLogFieldEvents_YouFolksRunA
-    dw GreatLogFieldEvents_GoodToHear
-    dw GreatLogFieldEvents_KingAskedUs
-    dw GreatLogFieldEvents_WarubouGiveMe
-    dw GreatLogFieldEvents_ThisIsATale
-    dw GreatLogFieldEvents_WarubouItsADead
-    dw GreatLogFieldEvents_TaraWellBeOK
-    dw GreatLogFieldEvents_WarubouWhatIsThis
-    dw GreatLogFieldEvents_GoHelpYourMotherScene
-    dw GreatLogFieldEvents_KamehaNoGoing
-    dw GreatLogFieldEvents_MajorFacilities
-    dw GreatLogFieldEvents_MajorFacilities
-    dw GreatLogFieldEvents_MajorFacilities
-    dw GreatLogFieldEvents_MajorFacilities
+    dw TravelerEvents_Healer
+    dw TravelerEvents_Merchant
+    dw TravelerEvents_PaidHealer
+    dw TravelerEvents_PriceyMerchant
+    dw TravelerEvents_WanderingMaster
+    dw TravelerEvents_TravelingMaster
+    dw TravelerEvents_CardGame
+    dw TravelerEvents_RewardBattle
+    dw TravelerEvents_MapSeller
+    dw TravelerEvents_MedicineMaster
+    dw TravelerEvents_CasinoShip
+    dw TravelerEvents_HealerBattle
+    dw TravelerEvents_Thief
+    dw TravelerEvents_Thief
+    dw TravelerEvents_Thief
+    dw TravelerEvents_Thief
 
-; scenes $0C-$0F: "GreatLog's major facilities are situated above ...", a barrel message and the
-; gold loss (E-0293)
-GreatLogFieldEvents_MajorFacilities::
+; events $0C-$0F: a thief ('Let me lighten your purse.' or a remark on the party): a battle; a win
+; sends him back to GreatLog, a loss costs gold (E-0364; was TravelerEvents_Thief, named from the
+; wrong message table, E-0293)
+TravelerEvents_Thief::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_StartMessageHL_B73AndStep
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_StartMessageHL_B73AndStep
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_Thief_ShowTheFugitiveMasterWas
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_ShowHeroLostG
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_MajorFacilities: calls StartMessageHL_B73; advances wScriptStep
-; (E-0347)
-; why: step 0 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 0);
-; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
-; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_StartMessageHL_B73AndStep::
+; Thief, step 0: the thief's opening line, message $3A + (event - $0C): 'Let me lighten your
+; purse.', or a remark on the party's injured, tired or weak monsters ($3B-$3D); next step. (C1,
+; E-0357)
+TravelerEvents_Thief_StartMessageHL_B73AndStep::
     ld a, [wPendingFieldEvent]
     and $0f
     sub $0c
@@ -63,23 +63,21 @@ GreatLogFieldEvents_StartMessageHL_B73AndStep::
     inc [hl]
     ret
 
-; step 3 of GreatLogFieldEvents_MajorFacilities: branches on wBattleScene; shows 'GreatLog's major
-; facilities are situated'; calls SetFlagBit; advances wScriptStep; calls StartMessageHL_B73; sets
-; wScriptStep to 6; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 3 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 3);
-; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
-; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre::
+; Thief, step 3: after the battle; when the player won, 'The fugitive master was captured and sent
+; back to GreatLog.' ($3E) and sets the event's flag from the table (next step); when the player
+; lost, message $3F + (event - $0C) ('I'll unburden you of your gold.' and the lines after it) and
+; step 6. (C1, E-0357)
+TravelerEvents_Thief_ShowTheFugitiveMasterWas::
     ld a, [wBattleScene]
     or a
     jr nz, .check_pending_field_event
-    ld hl, $003e ; '*: GreatLog's major facilities are situated'
+    ld hl, $003e ; 'The fugitive master was captured and'
     call StartMessageHL_B73
     ld a, [wPendingFieldEvent]
     and $0f
     sub $0c
     add a
-    ld hl, GreatLogFieldEvents_MajorFacilities_Data
+    ld hl, TravelerEvents_Thief_ShowTheFugitiveMasterWas_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -102,76 +100,68 @@ GreatLogFieldEvents_MajorFacilities_ShowGreatLogsMajorFacilitiesAre::
     ld [wScriptStep], a
     ret
 
-; data read by GreatLogFieldEvents (8 bytes) (E-0347)
-GreatLogFieldEvents_MajorFacilities_Data::
+; data read by TravelerEvents (8 bytes) (E-0347)
+TravelerEvents_Thief_ShowTheFugitiveMasterWas_Data::
     db $93, $01, $96, $01, $99, $01, $9c, $01
 
-; scene $0B: a chest message, 'Kameha Wahahah! No going ...', a vase message (E-0293)
-GreatLogFieldEvents_KamehaNoGoing::
+; event $0B: 'I will heal your injuries for you... If you can defeat me': a win heals the party
+; (E-0364; was TravelerEvents_HealerBattle, named from the wrong message table, E-0293)
+TravelerEvents_HealerBattle::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_KamehaNoGoing_Msg_HeroTriedToOpen
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_KamehaNoGoing_ShowKamehaWahahahNoGoing
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_KamehaNoGoing_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
-    dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
-    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_HealerBattle_Msg_IWillHealYour
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_HealerBattle_ShowITakeBeingA
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_HealerBattle_ShowFineFineISurrender
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
+    dw TravelerEvents_HealerBattle_ShowIWillPrayFor
+    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
     dw ScriptStepBlinkSpritesThenEnd
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_ShowHeroLostG
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_KamehaNoGoing: shows '0 tried to open the chest.'; advances
-; wScriptStep (E-0347)
-; why: step 0 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 0);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_Msg_HeroTriedToOpen::
-    ld hl, MSG_KEEP_OPEN | $0037 ; '0 tried to open the chest.'
+; Healer battle, step 0: 'I will heal your injuries for you... If you can defeat me, that is. Well?'
+; ($37, yes/no); next step. (C1, E-0357)
+TravelerEvents_HealerBattle_Msg_IWillHealYour::
+    ld hl, MSG_KEEP_OPEN | $0037 ; '*: I will heal your injuries'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 2 of GreatLogFieldEvents_KamehaNoGoing: branches on wTextYesNoResult; shows 'Kameha: Wahahah!
-; No going by me!'; advances wScriptStep; shows 'I'm Prince Kameha of GreatLog!'; sets wScriptStep
-; to $0d (E-0347)
-; why: step 2 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 2);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_ShowKamehaWahahahNoGoing::
+; Healer battle, step 2: yes gives 'I take being a master seriously. I won't hold back from
+; anything!' ($49) and the next step; no gives 'You've no courage to battle? Shame, it really is.'
+; ($48) and step $0D. (C1, E-0357)
+TravelerEvents_HealerBattle_ShowITakeBeingA::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $0049 ; 'Kameha: Wahahah! No going by me!'
+    ld hl, MSG_ALREADY_OPEN | $0049 ; '*: I take being a master'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0048 ; '*: I'm Prince Kameha of GreatLog!'
+    ld hl, MSG_ALREADY_OPEN | $0048 ; '*: You've no courage to battle?'
     call StartMessageHL_B73
     ld a, $0d
     ld [wScriptStep], a
     ret
 
-; step 5 of GreatLogFieldEvents_KamehaNoGoing: branches on wBattleScene; shows '0 peered into the
-; vase. A'; branches on wIsCGB; calls CopyBytes; advances wScriptStep; shows 'Hey! You brats! Scram!
-; Hands'; sets wScriptStep to $0b (E-0347)
-; why: step 5 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 5);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_ShowHeroPeeredIntoThe::
+; Healer battle, step 5: after the battle, a win gives 'Fine, fine, I surrender. I'll heal your
+; party as promised.' ($38) and saves the palettes for the flash (next step); a loss gives 'Your
+; lack of training is clear...' ($39) and step $0B. (C1, E-0357)
+TravelerEvents_HealerBattle_ShowFineFineISurrender::
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $0038 ; '0 peered into the vase. A'
+    ld hl, $0038 ; '*: Fine, fine, I surrender. I'll'
     call StartMessageHL_B73
     ld a, [wIsCGB]
     or a
@@ -187,56 +177,44 @@ GreatLogFieldEvents_KamehaNoGoing_ShowHeroPeeredIntoThe::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $0039 ; '*: Hey! You brats! Scram! Hands'
+    ld hl, $0039 ; '*: Your lack of training is'
     call StartMessageHL_B73
     ld a, $0b
     ld [wScriptStep], a
     ret
 
-; step 7 of GreatLogFieldEvents_MajorFacilities: shows '0 peered into the barrel. It'; calls
-; DeductGoldPenaltyAndFormatLoss; advances wScriptStep (E-0347)
-; why: step 7 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 7);
-; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
-; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_MajorFacilities_ShowHeroPeeredIntoThe::
-    ld hl, $000f ; '0 peered into the barrel. It'
+; Thief, step 7: '<player> lost <n>G.' ($0F) after the thief takes the gold penalty
+; (DeductGoldPenaltyAndFormatLoss); next step. (C1, E-0357)
+TravelerEvents_Thief_ShowHeroLostG::
+    ld hl, $000f ; '0 lost G.'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a
-; joypad wait and sprite blinking (E-0293)
-GreatLogFieldEvents_GoHelpYourMotherScene::
+; event $0A: the casino ship's slot machine: 100G a spin, three reels stopped with A, prizes by the
+; symbols (E-0364; was TravelerEvents_CasinoShip, named from the wrong message table, E-0293)
+TravelerEvents_CasinoShip::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_ShowGoHelpYourMother
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ShowIfSomeMonsterMasters
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_2
-    dw GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CasinoShip_ShowWelcomeAboardTheCasino
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CasinoShip_ShowStopTheReelsWith
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CasinoShip_SaveScreenBufferToBGMap1
+    dw TravelerEvents_CasinoShip_WriteScriptParam0
+    dw TravelerEvents_CasinoShip_ReadJoypadPressed
+    dw TravelerEvents_CasinoShip_TickCounter_WaitFrameCounterLo
+    dw TravelerEvents_CasinoShip_RestoreScreenBufferFromBGMap1
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 8 of GreatLogFieldEvents_GoHelpYourMotherScene: increments wScriptParam0; returns unless
-; wScriptParam0 is $3c; calls RestoreScreenBufferFromBGMap1; calls DrawFullScreenBufferAtScroll;
-; calls DecompressToVRAM; calls LoadRecordListNameTiles; sets wScriptParam0 to 0; advances
-; wScriptStep; branches on the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2; branches
-; on the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3; branches
-; on the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable; shows
-; 'Hello, there! You must be'; then 27 more steps (see the code) (E-0347)
-; why: step 8 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 8);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
+; Casino ship, step 8: after 60 frames restores the screen and tiles and pays out by the reels'
+; symbols: three alike pays by the symbol (0 a MeteOrb, 1 a TinyMedal, 2 1000G, 3 500G, others 200G;
+; messages $32, $30, $31, $44, $45); only the first two alike pays 100G for symbol 0 ($46) or 50G
+; for symbol 1 ($47); otherwise 'Too bad... Try again, OK?' ($35). (C1, E-0357)
+TravelerEvents_CasinoShip_RestoreScreenBufferFromBGMap1::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -256,7 +234,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [wMenuState]
     and $f0
     swap a
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable
+    ld de, CasinoReel1Symbols
     add e
     ld e, a
     jr nc, .check_menu_sub_state
@@ -268,7 +246,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [wMenuSubState]
     and $f0
     swap a
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2
+    ld de, CasinoReel2Symbols
     add e
     ld e, a
     jr nc, .skip
@@ -281,7 +259,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [wMenuSelectedMember]
     and $f0
     swap a
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3
+    ld de, CasinoReel3Symbols
     add e
     ld e, a
     jr nc, .skip2
@@ -294,7 +272,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [wMenuState]
     and $f0
     swap a
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable
+    ld de, CasinoReel1Symbols
     add e
     ld e, a
     jr nc, .skip3
@@ -304,7 +282,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [de]
     or a
     jr nz, .skip4
-    ld hl, $0032 ; '*: Hello, there! You must be'
+    ld hl, $0032 ; '*: Whoa! You've won a MeteOrb!'
     call StartMessageHL_B73
     ld a, $1e
     ld [wStepPtrLo], a
@@ -314,7 +292,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
 .skip4:
     dec a
     jr nz, .skip5
-    ld hl, $0030 ; '*: Heh, so these are the'
+    ld hl, $0030 ; '*: Lucky! You win a TinyMedal!'
     call StartMessageHL_B73
     ld a, $2c
     ld [wStepPtrLo], a
@@ -324,7 +302,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
 .skip5:
     dec a
     jr nz, .skip6
-    ld hl, $0031 ; '*: C'mon, Warubou!'
+    ld hl, $0031 ; '*: There it is! You win'
     call StartMessageHL_B73
     ld hl, $03e8
     ld a, l
@@ -337,7 +315,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
 .skip6:
     dec a
     jr nz, .call_start_message_hl_b73
-    ld hl, $0044 ; '0 checked the peculiar door. It'
+    ld hl, $0044 ; '*: Lucky, kid! You've won 500G!'
     call StartMessageHL_B73
     ld hl, $01f4
     ld a, l
@@ -348,7 +326,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $0045 ; '*: You must be the farm'
+    ld hl, $0045 ; '*: Lucky, kid! You've won 200G!'
     call StartMessageHL_B73
     ld hl, $00c8
     ld a, l
@@ -359,7 +337,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ret
 
 .loop:
-    ld hl, $0035 ; '*: The King is too lenient'
+    ld hl, $0035 ; '*: Too bad… Try again, OK?'
     call StartMessageHL_B73
     ret
 
@@ -367,7 +345,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [wMenuState]
     and $f0
     swap a
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable
+    ld de, CasinoReel1Symbols
     add e
     ld e, a
     jr nc, .skip7
@@ -377,7 +355,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     ld a, [de]
     or a
     jr nz, .skip8
-    ld hl, $0046 ; '*: Thanks for coming by. I'll'
+    ld hl, $0046 ; '*: Lucky, kid! You've won 100G!'
     call StartMessageHL_B73
     ld hl, $0064
     ld a, l
@@ -390,7 +368,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
 .skip8:
     dec a
     jr nz, .loop
-    ld hl, $0047 ; '0 read the notice. 'We guarantee'
+    ld hl, $0047 ; '*: Lucky, kid! You've won 50G!'
     call StartMessageHL_B73
     ld hl, $0032
     ld a, l
@@ -400,57 +378,50 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1::
     farcall AddGoldCapped
     ret
 
-; step 7 of GreatLogFieldEvents_GoHelpYourMotherScene: calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter; decrements wScriptStep; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter; decrements wScriptStep; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter; advances wScriptStep; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1 (E-0347)
-; why: step 7 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 7);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter_2::
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
+; Casino ship, step 7: the reels spin (every other frame); the reel chosen by wMenuCursor stops when
+; its symbol lines up; when all three have stopped goes on, otherwise back to step 6. (C1, E-0357)
+TravelerEvents_CasinoShip_TickCounter_WaitFrameCounterLo::
+    call TravelerEvents_CasinoShip_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
     and $01
-    jr z, .call_great_log_field_events_go_help_your2
+    jr z, .call_traveler_events_casino_ship_write_temp0
     ld a, [wMenuCursor]
     dec a
     jr nz, .skip
     ld hl, wMenuState
-    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
+    call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_great_log_field_events_go_help_your2
+    jr z, .call_traveler_events_casino_ship_write_temp0
     ld hl, wScriptStep
     dec [hl]
-    jr .call_great_log_field_events_go_help_your2
+    jr .call_traveler_events_casino_ship_write_temp0
 
 .skip:
     dec a
-    jr nz, .call_great_log_field_events_go_help_your
+    jr nz, .call_traveler_events_casino_ship_tick_counter
     ld hl, wMenuSubState
-    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
+    call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_great_log_field_events_go_help_your2
+    jr z, .call_traveler_events_casino_ship_write_temp0
     ld hl, wScriptStep
     dec [hl]
-    jr .call_great_log_field_events_go_help_your2
+    jr .call_traveler_events_casino_ship_write_temp0
 
-.call_great_log_field_events_go_help_your:
+.call_traveler_events_casino_ship_tick_counter:
     ld hl, wMenuSelectedMember
-    call GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter
+    call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_great_log_field_events_go_help_your2
+    jr z, .call_traveler_events_casino_ship_write_temp0
     ld hl, wScriptStep
     inc [hl]
 
-.call_great_log_field_events_go_help_your2:
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
+.call_traveler_events_casino_ship_write_temp0:
+    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
     ret
 
 ; returns 1 when the low nibble at HL is 0; otherwise counts the high nibble up and wraps it at 10,
 ; returning 0 (E-0305)
-GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter::
+TravelerEvents_CasinoShip_TickCounter::
     ld a, [hl]
     and $0f
     jr z, .return_01
@@ -472,37 +443,26 @@ GreatLogFieldEvents_GoHelpYourMotherScene_TickCounter::
     ld a, $01
     ret
 
-; step 6 of GreatLogFieldEvents_GoHelpYourMotherScene: branches on wJoypadPressed; increments
-; wMenuCursor; advances wScriptStep; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1 (E-0347)
-; why: step 6 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 6);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_ReadJoypadPressed::
+; Casino ship, step 6: A stops the next reel (wMenuCursor + 1); the reels keep spinning and are
+; redrawn. (C1, E-0357)
+TravelerEvents_CasinoShip_ReadJoypadPressed::
     ld a, [wJoypadPressed]
     bit 0, a
-    jr z, .call_great_log_field_events_go_help_your
+    jr z, .call_traveler_events_casino_ship_wait_frame
     ld hl, wMenuCursor
     inc [hl]
     ld hl, wScriptStep
     inc [hl]
 
-.call_great_log_field_events_go_help_your:
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
+.call_traveler_events_casino_ship_wait_frame:
+    call TravelerEvents_CasinoShip_WaitFrameCounterLo
+    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
     ret
 
-; step 5 of GreatLogFieldEvents_GoHelpYourMotherScene: calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo; calls
-; GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1; increments wScriptParam0; returns
-; unless wScriptParam0 is $1e; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 5);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0::
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
+; Casino ship, step 5: spins and redraws the reels for 30 frames; next step. (C1, E-0357)
+TravelerEvents_CasinoShip_WriteScriptParam0::
+    call TravelerEvents_CasinoShip_WaitFrameCounterLo
+    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -514,15 +474,9 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteScriptParam0::
     inc [hl]
     ret
 
-; step 4 of GreatLogFieldEvents_GoHelpYourMotherScene: calls SaveScreenBufferToBGMap1; calls
-; NextRandomSeed; copies wKeyRandomHi & $07 to wMenuState; calls NextRandomSeed; copies wKeyRandomHi
-; & $07 to wMenuSubState; calls NextRandomSeed; copies wKeyRandomHi & $07 to wMenuSelectedMember;
-; sets wMenuCursor to 0; calls GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1;
-; branches on wIsCGB; sets rSVBK to 2; sets rSVBK to 0; then 4 more steps (see the code) (E-0347)
-; why: step 4 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 4);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
+; Casino ship, step 4: saves the screen, sets the three reels to random symbols (0-7), draws the
+; slot frame (with CGB attributes); next step. (C1, E-0357)
+TravelerEvents_CasinoShip_SaveScreenBufferToBGMap1::
     farcall SaveScreenBufferToBGMap1
     call NextRandomSeed
     ld a, [wKeyRandomHi]
@@ -541,8 +495,8 @@ GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
     ld [wMenuSelectedMember], a
     xor a
     ld [wMenuCursor], a
-    call GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_Data
+    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
+    ld de, TravelerEvents_CasinoShip_SaveScreenBufferToBGMap1_Data
     ld hl, wScreenTileBuffer
     ld b, $03
 
@@ -602,21 +556,17 @@ GreatLogFieldEvents_GoHelpYourMotherScene_SaveScreenBufferToBGMap1::
     inc [hl]
     ret
 
-; data read by GreatLogFieldEvents (15 bytes) (E-0347)
-GreatLogFieldEvents_GoHelpYourMotherScene_Data::
+; data read by TravelerEvents (15 bytes) (E-0347)
+TravelerEvents_CasinoShip_SaveScreenBufferToBGMap1_Data::
     db $b0, $b1, $b1, $b1, $b2, $b6, $a4, $a5, $a6, $b7, $b3, $b4, $b4, $b4, $b5
 
-; step 2 of GreatLogFieldEvents_GoHelpYourMotherScene: branches on wTextYesNoResult; shows 'If some
-; monster masters keep'; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero;
-; advances wScriptStep; shows 'There were many wild monsters'; sets wScriptStep to 9 (E-0347)
-; why: step 2 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 2);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_ShowIfSomeMonsterMasters::
+; Casino ship, step 2: yes takes 100G and explains 'Stop the reels with the A Button...' ($2F), next
+; step; no gives 'That's too bad. See you again.' ($36) and step 9. (C1, E-0357)
+TravelerEvents_CasinoShip_ShowStopTheReelsWith::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $002f ; '*: If some monster masters keep'
+    ld hl, $002f ; '*: Stop the reels with the'
     call StartMessageHL_B73
     ld hl, $0064
     ld a, l
@@ -629,32 +579,24 @@ GreatLogFieldEvents_ShowIfSomeMonsterMasters::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $0036 ; '*: There were many wild monsters'
+    ld hl, $0036 ; '*: That's too bad. See you'
     call StartMessageHL_B73
     ld a, $09
     ld [wScriptStep], a
     ret
 
-; step 0 of GreatLogFieldEvents_GoHelpYourMotherScene: advances wScriptStep; shows 'Go help your
-; mother now.' (E-0347)
-; why: step 0 of GreatLogFieldEvents_GoHelpYourMotherScene (when wScriptStep = 0);
-; GreatLogFieldEvents_GoHelpYourMotherScene: by its step: messages 'Go help your mother' and 'If
-; some monster masters ...', a saved screen, a joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_ShowGoHelpYourMother::
+; Casino ship, step 0: 'Welcome aboard the casino ship! Have a spin on the slots for 100G!' ($2E,
+; yes/no); next step. (C1, E-0357)
+TravelerEvents_CasinoShip_ShowWelcomeAboardTheCasino::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $002e ; '*: Go help your mother now.'
+    ld hl, $002e ; '*: Welcome aboard the casino ship!'
     call StartMessageHL_B73
     ret
 
-; May return early; returns if wMenuCursor is $03; branches on wMenuCursor; sets wMenuState; copies
-; wMenuState & $0f to wMenuState; branches on wMenuCursor; sets wMenuSubState; copies wMenuSubState
-; & $0f to wMenuSubState; sets wMenuSelectedMember; copies wMenuSelectedMember & $0f to
-; wMenuSelectedMember; also changes A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents_GoHelpYourMotherScene; GreatLogFieldEvents_GoHelpYourMotherScene:
-; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a
-; joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo::
+; Spins the reels that are still turning (every other frame): the first by 2, the second by 1 and
+; the third by 4 eighths of a symbol, each wrapping after ten symbols. (C1, E-0357)
+TravelerEvents_CasinoShip_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $01
     ret z
@@ -704,29 +646,15 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WaitFrameCounterLo::
 .return:
     ret
 
-; Copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable to hTemp0;
-; copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable to hTemp1;
-; calls DrawSymbolTilesForTemp1; copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2 to
-; hTemp0; copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2 to
-; hTemp1; calls DrawSymbolTilesForTemp1; copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3 to
-; hTemp0; copies the byte at
-; GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3 to
-; hTemp1; calls DrawSymbolTilesForTemp1; also changes HL, DE and A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents_GoHelpYourMotherScene; GreatLogFieldEvents_GoHelpYourMotherScene:
-; by its step: messages 'Go help your mother' and 'If some monster masters ...', a saved screen, a
-; joypad wait and sprite blinking (E-0352)
-GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
+; Draws the three reels' current and next symbols (DrawSymbolTilesForTemp1) from their symbol rows.
+; (C1, E-0357)
+TravelerEvents_CasinoShip_WriteTemp0AndTemp1::
     ld hl, vTiles1 + $240
     ld a, [wMenuState]
     and $f0
     swap a
     push af
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable
+    ld de, CasinoReel1Symbols
     add e
     ld e, a
     jr nc, .set_temp0
@@ -742,7 +670,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
     ld a, $00
 
 .skip:
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable
+    ld de, CasinoReel1Symbols
     add e
     ld e, a
     jr nc, .set_temp1
@@ -757,7 +685,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
     and $f0
     swap a
     push af
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2
+    ld de, CasinoReel2Symbols
     add e
     ld e, a
     jr nc, .set_temp02
@@ -773,7 +701,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
     ld a, $00
 
 .skip2:
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2
+    ld de, CasinoReel2Symbols
     add e
     ld e, a
     jr nc, .set_temp12
@@ -788,7 +716,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
     and $f0
     swap a
     push af
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3
+    ld de, CasinoReel3Symbols
     add e
     ld e, a
     jr nc, .set_temp03
@@ -804,7 +732,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_WriteTemp0AndTemp1::
     ld a, $00
 
 .skip3:
-    ld de, GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3
+    ld de, CasinoReel3Symbols
     add e
     ld e, a
     jr nc, .set_temp13
@@ -890,7 +818,7 @@ DrawSymbolTilesForTemp1_SymbolTiles::
 ; with each other; values 0-4, one of the five tiles of DrawSymbolTilesForTemp1_SymbolTiles (E-0214,
 ; C1)
 ; record: symbol number 0-4
-GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable::
+CasinoReel1Symbols::
     db $01 ; id 0
     db $03 ; id 1
     db $00 ; id 2
@@ -905,7 +833,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRo
 ; bank-$73 code reads the byte at $4544 + (wMenuSubState >> 4) and compares the three tables' values
 ; with each other; values 0-4, one of the five tiles of DrawSymbolTilesForTemp1_SymbolTiles (E-0214,
 ; C1)
-GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_2::
+CasinoReel2Symbols::
     db $03 ; id 0
     db $00 ; id 1
     db $04 ; id 2
@@ -920,7 +848,7 @@ GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRo
 ; bank-$73 code reads the byte at $454E + (wMenuSelectedMember >> 4) and compares the three tables'
 ; values with each other; values 0-4, one of the five tiles of DrawSymbolTilesForTemp1_SymbolTiles
 ; (E-0214, C1)
-GreatLogFieldEvents_GoHelpYourMotherScene_RestoreScreenBufferFromBGMap1_SymbolRowTable_3::
+CasinoReel3Symbols::
     db $00 ; id 0
     db $02 ; id 1
     db $03 ; id 2
@@ -1012,43 +940,35 @@ AddRewardToCounterCappedAt999_RewardAmounts::
     db $67 ; id 4
     db $69 ; id 5
 
-; scene 8: "Tara We'll be OK", a bookshelf message, a negative flash, 'Oh my! The well ...' (E-0293)
-GreatLogFieldEvents_TaraWellBeOK::
+; event 8: 'Do you want a map? Just 200G.': on yes marks every screen visited (E-0364; was
+; TravelerEvents_MapSeller, named from the wrong message table, E-0293)
+TravelerEvents_MapSeller::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_TaraWellBeOK_ShowTaraWellBeOK
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf
-    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ToScriptStepFlashScreenNegative
-    dw GreatLogFieldEvents_TaraWellBeOK_Msg0052_OhMyTheWell
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MapSeller_ShowDoYouWantA
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MapSeller_ShowHeroHandedOver2Hero
+    dw TravelerEvents_MapSeller_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MapSeller_ToScriptStepFlashScreenNegative
+    dw TravelerEvents_MapSeller_Msg0052_NowYouCanSee
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_TaraWellBeOK: advances wScriptStep; shows 'Tara: We'll be OK! I'm
-; going' (E-0347)
-; why: step 0 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 0);
-; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
-; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_TaraWellBeOK_ShowTaraWellBeOK::
+; Map seller, step 0: 'Do you want a map? Just 200G.' ($21, yes/no); next step. (C1, E-0357)
+TravelerEvents_MapSeller_ShowDoYouWantA::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0021 ; 'Tara: We'll be OK! I'm going'
+    ld hl, MSG_KEEP_OPEN | $0021 ; 'Do you want a map? Just'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_TaraWellBeOK: branches on wTextYesNoResult; shows '0 checked the
-; bookshelf. 'Behavior of'; sets wVisitedScreens to $ff; copies L to hTemp0; copies H to hTemp1;
-; calls SubtractGoldFloorZero; advances wScriptStep; shows 'Go to the Vault and'; sets wScriptStep
-; to 6 (E-0347)
-; why: step 2 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 2);
-; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
-; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
+; Map seller, step 2: yes marks every screen visited, takes 200G and says '<player> handed over
+; 200G.' ($23), next step; no gives 'No? That's too bad.' ($22) and step 6. (C1, E-0357)
+TravelerEvents_MapSeller_ShowHeroHandedOver2Hero::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $0023 ; '0 checked the bookshelf. 'Behavior of'
+    ld hl, MSG_ALREADY_OPEN | $0023 ; '0 handed over 200G.'
     call StartMessageHL_B73
     ld a, $ff
     ld [wVisitedScreens], a
@@ -1070,65 +990,56 @@ GreatLogFieldEvents_TaraWellBeOK_ShowHeroCheckedTheBookshelf::
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0022 ; '*: Go to the Vault and'
+    ld hl, MSG_ALREADY_OPEN | $0022 ; '*: No? That's too bad.'
     call StartMessageHL_B73
     ld a, $06
     ld [wScriptStep], a
     ret
 
-; step 4 of GreatLogFieldEvents_TaraWellBeOK: calls ScriptStepFlashScreenNegative (E-0347)
-; why: step 4 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 4);
-; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
-; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_ToScriptStepFlashScreenNegative::
+; Map seller, step 4: the screen flash (ScriptStepFlashScreenNegative). (C1, E-0357)
+TravelerEvents_MapSeller_ToScriptStepFlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
-; step 5 of GreatLogFieldEvents_TaraWellBeOK: shows 'Oh my, the well isn't'; advances wScriptStep
-; (E-0347)
-; why: step 5 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 5);
-; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
-; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_TaraWellBeOK_Msg0052_OhMyTheWell::
-    ld hl, $0052 ; '*: Oh my, the well isn't'
+; Map seller, step 5: 'Now you can see the entire world!' ($52); next step. (C1, E-0357)
+TravelerEvents_MapSeller_Msg0052_NowYouCanSee::
+    ld hl, $0052 ; '*: Now you can see the'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; scene 6: an item name, 'This is a tale ...', 'Slash If you're in ...' (E-0293)
-GreatLogFieldEvents_ThisIsATale::
+; event 6: the high-low card game: guess whether a card from 1 to 13 is above the last one, for
+; prizes over up to five rounds (E-0364; was TravelerEvents_CardGame, named from the wrong message
+; table, E-0293)
+TravelerEvents_CardGame::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_ThisIsATale_CopyItemNameToDE
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ThisIsATale_ShowThisIsATale
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CardGame_CopyItemNameToDE
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CardGame_ShowIllPickACard
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CardGame_ShowIPickedOhSame
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
     dw $0000 ; unused index (E-0207)
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CardGame_ShowDoYouThinkThe
     dw $0000 ; unused index (E-0207)
     dw $0000 ; unused index (E-0207)
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_CardGame_ShowHeroObtainedTheY
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 13 of GreatLogFieldEvents_ThisIsATale: advances wScriptStep; shows 'This hay is pretty
-; good.'; calls CopyItemNameToDE; copies wMenuSelectedMember to wStepPtrLo; calls
-; AppendItemStepPtrLoToInventory (E-0347)
-; why: step 13 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 13);
-; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
-; ...' (E-0352)
-GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty::
+; Card game, step 13: '<player> obtained the <prize>.' ($1B) and the prize goes into the bag; next
+; step. (C1, E-0357)
+TravelerEvents_CardGame_ShowHeroObtainedTheY::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, $001b ; '*: This hay is pretty good.'
+    ld hl, $001b ; '0 obtained the Y.'
     call StartMessageHL_B73
     ld a, [wMenuSelectedMember]
     ld de, wTextBuf2 + $2
@@ -1138,46 +1049,40 @@ GreatLogFieldEvents_ThisIsATale_ShowThisHayIsPretty::
     farcall AppendItemStepPtrLoToInventory
     ret
 
-; step 9 of GreatLogFieldEvents_ThisIsATale: branches on wTextYesNoResult; copies wMenuSubState to
-; wMenuState; shows 'There aren't many friends here.'; sets wScriptStep to 3; shows 'I accidentally
-; went outside. People'; sets wScriptStep to $0c (E-0347)
-; why: step 9 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 9);
-; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
-; ...' (E-0352)
-GreatLogFieldEvents_ThisIsATale_ShowThereArentManyFriends::
+; Card game, step 9: yes plays on with the last card as the mark ('Do you think the next card I pick
+; will be above <n>?', $19) from step 3; no gives 'Awww, you won't play? Please come again and try
+; your luck!' ($1A) and step $0C, where the prize is handed over. (C1, E-0357)
+TravelerEvents_CardGame_ShowDoYouThinkThe::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
     ld a, [wMenuSubState]
     ld [wMenuState], a
-    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0019 ; '*: There aren't many friends here.'
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0019 ; '*: Do you think the next'
     call StartMessageHL_B73
     ld a, $03
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $001a ; '*: I accidentally went outside. People'
+    ld hl, MSG_ALREADY_OPEN | $001a ; '*: Awww, you won't play? Please'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
     ret
 
-; step 4 of GreatLogFieldEvents_ThisIsATale: calls NextRandomSeed; may continue in
-; GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn; copies wKeyRandomLo & $0f to wMenuSubState;
-; copies wKeyRandomLo & $0f to wDigits; calls Number24ToPackedBCD; calls
-; WritePackedBCDNoLeadingZeros; branches on wMenuSubState; shows 'Slash: If you're in need of';
-; branches on wTextYesNoResult; branches on wMenuSubState; increments wScriptParam1; copies
-; wScriptParam0 to wMenuSelectedMember; then 23 more steps (see the code) (E-0347)
-; why: step 4 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 4);
-; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
-; ...' (E-0352)
-GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
+; Card game, step 4: draws a card (1-13): the same number as the mark loses ('Oh, same number?
+; Sorry, I win in this case.', $18); guessing right (above with yes, below with no) wins: after the
+; fifth win the last prize ('That was the last prize!', $1C, step $0E), otherwise the next prize
+; (one of four from the table row for the win count) and the next stake ('Wow! You win! Next,
+; <prize> is the prize.', $16); guessing wrong loses ('Whoops, you lose. I'll take <n>G and any
+; prize.', $17). (C1, E-0357)
+TravelerEvents_CardGame_ShowIPickedOhSame::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $0f
     cp $0d
-    jr nc, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn
+    jr nc, TravelerEvents_CardGame_ShowIPickedOhSame
     ld [wMenuSubState], a
     inc a
     ld [wDigits], a
@@ -1193,7 +1098,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     ld a, [wMenuSubState]
     cp c
     jr nz, .check_text_yes_no_result
-    ld hl, MSG_ALREADY_OPEN | $0018 ; 'Slash: If you're in need of'
+    ld hl, MSG_ALREADY_OPEN | $0018 ; '*: I picked… ! Oh, same'
     call StartMessageHL_B73
     jp .read_script_param1
 
@@ -1225,7 +1130,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     ld a, [wScriptParam1]
     cp $05
     jr nz, .call_next_random_seed
-    ld hl, MSG_ALREADY_OPEN | $001c ; '0 checked the pump. It's rusted'
+    ld hl, MSG_ALREADY_OPEN | $001c ; '*: I picked… ! Wow! You'
     call StartMessageHL_B73
     ld a, [wMenuSelectedMember]
     ld de, wTextBuf2 + $2
@@ -1241,7 +1146,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $03
-    ld hl, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data1
+    ld hl, TravelerEvents_CardGame_ShowIPickedOhSame_Data1
     add_a_to_hl
     ld a, [wScriptParam1]
     add a
@@ -1253,7 +1158,7 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     call CopyItemNameToDE
     ld a, [wScriptParam1]
     sla a
-    ld hl, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data2
+    ld hl, TravelerEvents_CardGame_ShowIPickedOhSame_Data2
     add_a_to_hl
     ld a, [hli]
     ld [wDigits], a
@@ -1264,20 +1169,20 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     call Number24ToPackedBCD
     ld de, wTextNumber + $3
     call WritePackedBCDNoLeadingZeros
-    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0016 ; '*: It seems to me that'
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0016 ; '*: I picked… ! Wow! You'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0017 ; '*: Yo, did you enjoy the'
+    ld hl, MSG_ALREADY_OPEN | $0017 ; '*: I picked… ! Whoops, you'
     call StartMessageHL_B73
 
 .read_script_param1:
     ld a, [wScriptParam1]
     add a
-    ld hl, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data2
+    ld hl, TravelerEvents_CardGame_ShowIPickedOhSame_Data2
     add_a_to_hl
     ld a, [hli]
     ld [wDigits], a
@@ -1305,13 +1210,10 @@ GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn::
     inc [hl]
     ret
 
-; step 2 of GreatLogFieldEvents_ThisIsATale: advances wScriptStep; branches on wTextYesNoResult;
-; sets wMenuState to 6; shows 'This is a tale of children'; shows 'Listen you two! Quit your'; sets
-; wScriptStep to $10 (E-0347)
-; why: step 2 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 2);
-; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
-; ...' (E-0352)
-GreatLogFieldEvents_ThisIsATale_ShowThisIsATale::
+; Card game, step 2: yes sets the mark to 7 ('I'll pick a card between 1 and 13. Is the card I
+; picked above 7?', $14) and goes on; no gives 'I'll have nice prizes next time.' ($15) and step
+; $10. (C1, E-0357)
+TravelerEvents_CardGame_ShowIllPickACard::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
@@ -1319,131 +1221,114 @@ GreatLogFieldEvents_ThisIsATale_ShowThisIsATale::
     jr nz, .call_start_message_hl_b73
     ld a, $06
     ld [wMenuState], a
-    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0014 ; 'This is a tale of children'
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0014 ; '*: I'll pick a card between'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0015 ; '*: Listen you two! Quit your'
+    ld hl, MSG_ALREADY_OPEN | $0015 ; '*: I'll have nice prizes next'
     call StartMessageHL_B73
     ld a, $10
     ld [wScriptStep], a
     ret
 
-; step 0 of GreatLogFieldEvents_ThisIsATale: calls NextRandomSeed; copies the byte at
-; GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data1 to wScriptParam0; calls CopyItemNameToDE;
-; shows 'Tara: Big brother! GreatLog will be'; advances wScriptStep (E-0347)
-; why: step 0 of GreatLogFieldEvents_ThisIsATale (when wScriptStep = 0);
-; GreatLogFieldEvents_ThisIsATale: scene 6: an item name, 'This is a tale ...', 'Slash If you're in
-; ...' (E-0352)
-GreatLogFieldEvents_ThisIsATale_CopyItemNameToDE::
+; Card game, step 0: picks the first prize at random (one of four) and offers it ('Hi! Want to try
+; your luck? <prize> is the prize!', $13); next step. (C1, E-0357)
+TravelerEvents_CardGame_CopyItemNameToDE::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $03
-    ld hl, GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data1
+    ld hl, TravelerEvents_CardGame_ShowIPickedOhSame_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wScriptParam0], a
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
-    ld hl, MSG_KEEP_OPEN | $0013 ; 'Tara: Big brother! GreatLog will be'
+    ld hl, MSG_KEEP_OPEN | $0013 ; '*: Hi! Want to try your'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; data read by GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn (20 bytes) (E-0347)
-GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data1::
+; data read by TravelerEvents_CardGame_ShowIPickedOhSame (20 bytes) (E-0347)
+TravelerEvents_CardGame_ShowIPickedOhSame_Data1::
     db $03, $22, $28, $2a, $0b, $25, $05, $2b, $0c, $23, $27, $2c, $11, $12, $26, $1e
     db $0d, $0e, $0f, $10
 
-GreatLogFieldEvents_ThisIsATale_ShowSlashIfYoureIn_Data2::
+TravelerEvents_CardGame_ShowIPickedOhSame_Data2::
     db $64, $00, $2c, $01, $58, $02, $e8, $03, $dc, $05
 
-; scene 9: a dresser message, 'Warubou What is this ...' (E-0293)
-GreatLogFieldEvents_WarubouWhatIsThis::
+; event 9: a battle for 'special medicine': a win raises a stat of each party monster by up to 20
+; (E-0364; was TravelerEvents_MedicineMaster, named from the wrong message table, E-0293)
+TravelerEvents_MedicineMaster::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_WarubouWhatIsThis_HeroCheckedTheDresser
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouWhatIsThis_2
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MedicineMaster_ShowIllGiveYouSpecial
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MedicineMaster_ShowMyEyesDidntMislead
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_MedicineMaster_ShowYouveWonAsPromised
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MedicineMaster_ProcessRecordFields5DTo69ThenItemString
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MedicineMaster_2
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_MedicineMaster_ShowNsYRoseBy
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; shows '0 checked the
-; dresser. Children's clothes' (E-0347)
-; why: step 0 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 0);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheDresser::
+; Medicine master, step 0: 'I'll give you special medicine if you manage to defeat me.' ($24); next
+; step. (C1, E-0357)
+TravelerEvents_MedicineMaster_ShowIllGiveYouSpecial::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0024 ; '0 checked the dresser. Children's clothes'
+    ld hl, MSG_KEEP_OPEN | $0024 ; '*: I'll give you special medicine'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouWhatIsThis: branches on wTextYesNoResult; shows 'Warubou:
-; What is this? Food? Perfect!'; advances wScriptStep; shows 'Warubou: Wha…? I smell something! I';
-; sets wScriptStep to $0c (E-0347)
-; why: step 2 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 2);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ShowWarubouWhatIsThis::
+; Medicine master, step 2: no gives message $50 ('I thought you were dedicated...') and step $0C;
+; yes gives message $51 ('My eyes didn't mislead me. Ready?') and the next step. (C1, E-0357)
+TravelerEvents_MedicineMaster_ShowMyEyesDidntMislead::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $0051 ; 'Warubou: What is this? Food? Perfect!'
+    ld hl, MSG_ALREADY_OPEN | $0051 ; '*: My eyes didn't mislead me.'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0050 ; 'Warubou: Wha…? I smell something! I'
+    ld hl, MSG_ALREADY_OPEN | $0050 ; '*: I thought you were dedicated…'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
     ret
 
-; step 5 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; branches on wBattleScene;
-; shows '0 checked the dresser. It smelled'; shows 'Warubou: Wa-hey! I'm starving!' (E-0347)
-; why: step 5 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 5);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_HeroCheckedTheDresser::
+; Medicine master, step 5: after the battle, a win gives 'You've won. As promised, let me give you
+; some of my medicine.' ($25); a loss gives message $53 ('I hope you'll put up more of a fight next
+; time...'). (C1, E-0357)
+TravelerEvents_MedicineMaster_ShowYouveWonAsPromised::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $0025 ; '0 checked the dresser. It smelled'
+    ld hl, $0025 ; '*: You've won. As promised, let'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $0053 ; 'Warubou: Wa-hey! I'm starving!'
+    ld hl, $0053 ; '*: I hope you'll put up'
     call StartMessageHL_B73
     ret
 
-; step 7 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; branches on wBattleScene;
-; calls ProcessRecordFields5DTo69ThenItemString; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord; shows '0 checked the oven. It smelled';
-; sets wScriptStep to $0c; sets rRAMG to $0a; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on
-; hTemp0; shows '0 checked the oven. It smelled'; then 3 more steps (see the code) (E-0347)
-; why: step 7 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 7);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
+; Medicine master, step 7: on a win raises a stat of the first party monster (the record field from
+; the table by wScriptParam0) by 20, at most 999, and says '<name>'s <stat> rose by <n>.' ($26),
+; going on to the next member unless it is the only one or fallen (step $0C); on a loss '<player>
+; lost <n>G.' ($0F) after the gold penalty and step $0C. (C1, E-0357)
+TravelerEvents_MedicineMaster_ProcessRecordFields5DTo69ThenItemString::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -1452,15 +1337,15 @@ GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
     ld a, $00
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $00
-    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
+    call TravelerEvents_MedicineMaster_CopyRecordNameToNameGlyphBuf
     ld a, $00
-    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
+    call TravelerEvents_MedicineMaster_LoadSRAMRecordWord
     ld a, [wPartyCount]
     dec a
     jr nz, .read_party_list
 
 .loop:
-    ld hl, $0026 ; '0 checked the oven. It smelled'
+    ld hl, $0026 ; 'N's Y rose by .'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
@@ -1477,43 +1362,36 @@ GreatLogFieldEvents_WarubouWhatIsThis_ProcessRecordFields5DTo69ThenItemString::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, .loop
-    ld hl, MSG_KEEP_OPEN | $0026 ; '0 checked the oven. It smelled'
+    ld hl, MSG_KEEP_OPEN | $0026 ; 'N's Y rose by .'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $000f ; '0 peered into the barrel. It'
+    ld hl, $000f ; '0 lost G.'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ld a, $0c
     ld [wScriptStep], a
     ret
 
-; step 9 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; calls
-; ProcessRecordFields5DTo69ThenItemString; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord; shows '0 checked the oven. It smelled';
-; sets wScriptStep to $0c; sets rRAMG to $0a; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on
-; hTemp0; shows '0 checked the oven. It smelled' (E-0347)
-; why: step 9 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 9);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_2::
+; Medicine master, step 9: the same stat raise for the second party monster; on to the third unless
+; there is none or it has fallen. (C1, E-0357)
+TravelerEvents_MedicineMaster_2::
     ld hl, wScriptStep
     inc [hl]
     ld a, $01
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $01
-    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
+    call TravelerEvents_MedicineMaster_CopyRecordNameToNameGlyphBuf
     ld a, $01
-    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
+    call TravelerEvents_MedicineMaster_LoadSRAMRecordWord
     ld a, [wPartyCount]
     dec a
     dec a
     jr nz, .read_party_list
 
 .loop:
-    ld hl, MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
+    ld hl, MSG_ALREADY_OPEN | $0026 ; 'N's Y rose by .'
     call StartMessageHL_B73
     ld a, $0c
     ld [wScriptStep], a
@@ -1530,28 +1408,22 @@ GreatLogFieldEvents_WarubouWhatIsThis_2::
     ldh a, [hTemp0]
     bit 7, a
     jr nz, .loop
-    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0026 ; 'N's Y rose by .'
     call StartMessageHL_B73
     ret
 
-; step 11 of GreatLogFieldEvents_WarubouWhatIsThis: advances wScriptStep; shows '0 checked the oven.
-; It smelled'; calls ProcessRecordFields5DTo69ThenItemString; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf; calls
-; GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord (E-0347)
-; why: step 11 of GreatLogFieldEvents_WarubouWhatIsThis (when wScriptStep = 11);
-; GreatLogFieldEvents_WarubouWhatIsThis: scene 9: a dresser message, 'Warubou What is this ...'
-; (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_ShowHeroCheckedTheOven::
+; Medicine master, step 11: the same stat raise for the third party monster. (C1, E-0357)
+TravelerEvents_MedicineMaster_ShowNsYRoseBy::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_ALREADY_OPEN | $0026 ; '0 checked the oven. It smelled'
+    ld hl, MSG_ALREADY_OPEN | $0026 ; 'N's Y rose by .'
     call StartMessageHL_B73
     ld a, $02
     call ProcessRecordFields5DTo69ThenItemString
     ld a, $02
-    call GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf
+    call TravelerEvents_MedicineMaster_CopyRecordNameToNameGlyphBuf
     ld a, $02
-    call GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord
+    call TravelerEvents_MedicineMaster_LoadSRAMRecordWord
     ret
 
 ; for record wPartyList[A]: passes word field $5D and word fields $61, $63, $65, $67, $69 (B = 1-5)
@@ -1601,12 +1473,8 @@ ProcessRecordFields5DTo69ThenItemString::
     call CopyItemStringToTextBuf22
     ret
 
-; called from ProcessRecordFields5DTo69ThenItemString: branches on hTemp1; returns unless hTemp1 is
-; d; returns if hTemp0 is at least e; copies B to hTemp2; also changes DE and A by register
-; arithmetic (E-0347)
-; why: a helper of ProcessRecordFields5DTo69ThenItemString; ProcessRecordFields5DTo69ThenItemString:
-; for record wPartyList[A]: passes word field $5D and word fields $61, $63, $65, $67, $69 (B = 1-5)
-; to ... (E-0352, E-0121)
+; Keeps the lowest stat so far: when the word hTemp0/hTemp1 is below DE, hTemp2 = B (its index) and
+; DE = the word. (C1, E-0357)
 ProcessRecordFields5DTo69ThenItemString_WriteTemp2::
     ldh a, [hTemp1]
     cp d
@@ -1643,11 +1511,8 @@ CopyItemStringToTextBuf22::
     farcall CopyStringToBuffer_Bank09
     ret
 
-; Sets rRAMG to $0a; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents_WarubouWhatIsThis; GreatLogFieldEvents_WarubouWhatIsThis: scene
-; 9: a dresser message, 'Warubou What is this ...' (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf::
+; Copies party member A's name to wTextBuf1 + 7 for the message. (C1, E-0357)
+TravelerEvents_MedicineMaster_CopyRecordNameToNameGlyphBuf::
     ld hl, wPartyList
     add_a_to_hl
     ld a, $0a
@@ -1671,18 +1536,15 @@ GreatLogFieldEvents_WarubouWhatIsThis_CopyRecordNameToNameGlyphBuf::
     ld [de], a
     ret
 
-; Sets rRAMG to $0a; calls LoadSRAMRecordWord; sets hTemp2; sets hTemp3; branches on hTemp3;
-; branches on hTemp2; copies E to hTemp2; copies D to hTemp3; calls SRAMRecordAddress; sets rRAMG to
-; 0; sets wDigits; calls Number24ToPackedBCD; then 2 more steps (see the code) (E-0347)
-; why: part of GreatLogFieldEvents_WarubouWhatIsThis; GreatLogFieldEvents_WarubouWhatIsThis: scene
-; 9: a dresser message, 'Warubou What is this ...' (E-0352)
-GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
+; Raises party member A's stat (the record field from the table by wScriptParam0) by 20, at most
+; 999, and writes the gain as the message number. (C1, E-0357)
+TravelerEvents_MedicineMaster_LoadSRAMRecordWord::
     ld hl, wPartyList
     add_a_to_hl
     ld a, $0a
     ld [rRAMG], a
     ld a, [wScriptParam0]
-    ld de, GreatLogFieldEvents_WarubouWhatIsThis_Data
+    ld de, TravelerEvents_MedicineMaster_LoadSRAMRecordWord_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1737,90 +1599,77 @@ GreatLogFieldEvents_WarubouWhatIsThis_LoadSRAMRecordWord::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; data read by GreatLogFieldEvents (6 bytes) (E-0347)
-GreatLogFieldEvents_WarubouWhatIsThis_Data::
+; data read by TravelerEvents (6 bytes) (E-0347)
+TravelerEvents_MedicineMaster_LoadSRAMRecordWord_Data::
     db $5d, $61, $63, $65, $67, $69
 
-; scene 7: a vase message, "Warubou It's a dead ...", 'This hay is pretty ...' (E-0293)
-GreatLogFieldEvents_WarubouItsADead::
+; event 7: 'If you can beat me, I'll give you something good.': a win fills the bag with random meat
+; (E-0364; was TravelerEvents_RewardBattle, named from the wrong message table, E-0293)
+TravelerEvents_RewardBattle::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_WarubouItsADead_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_WarubouItsADead_ShowYouveComeAtThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_RewardBattle_ShowIfYouCanBeat
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_RewardBattle_ShowAhTheSparkleIn
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_RewardBattle_ShowVeryGoodHeresYour
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_RewardBattle_ShowHeroObtainedTheY
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouItsADead_ThisHayIsPretty
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_RewardBattle_HeroObtainedTheY
 
-; step 0 of GreatLogFieldEvents_WarubouItsADead: advances wScriptStep; shows '0 peered into the
-; barrel. It' (E-0347)
-; why: step 0 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 0);
-; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
-; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ShowHeroPeeredIntoThe::
+; Reward battle, step 0: 'If you can beat me, I'll give you something good. Want to battle?' ($1D,
+; yes/no); next step. (C1, E-0357)
+TravelerEvents_RewardBattle_ShowIfYouCanBeat::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $001d ; '0 peered into the barrel. It'
+    ld hl, MSG_KEEP_OPEN | $001d ; '*: If you can beat me,'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouItsADead: branches on wTextYesNoResult; shows 'Warubou: It's
-; a dead end, warooh!'; advances wScriptStep; shows 'I'm Warubou, GreatLog's spirit! Warooh,'; sets
-; wScriptStep to 8 (E-0347)
-; why: step 2 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 2);
-; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
-; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ShowWarubouItsADead::
+; Reward battle, step 2: yes gives 'Ah, the sparkle in your eyes... I'd best not disappoint you!'
+; ($4B) and the next step; no gives 'No? You're rather cowardly.' ($4A) and step 8. (C1, E-0357)
+TravelerEvents_RewardBattle_ShowAhTheSparkleIn::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $004b ; 'Warubou: It's a dead end, warooh!'
+    ld hl, MSG_ALREADY_OPEN | $004b ; '*: Ah, the sparkle in your'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $004a ; '*: I'm Warubou, GreatLog's spirit! Warooh,'
+    ld hl, MSG_ALREADY_OPEN | $004a ; '*: No? You're rather cowardly.'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
-; step 5 of GreatLogFieldEvents_WarubouItsADead: advances wScriptStep; branches on wBattleScene;
-; shows 'You've come at the right'; shows 'Cobi: Sure, Mama! We'll be fine.' (E-0347)
-; why: step 5 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 5);
-; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
-; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ShowYouveComeAtThe::
+; Reward battle, step 5: after the battle, a win gives 'Very good. Here's your reward.' ($1E); a
+; loss gives 'Well, that was unseemly. You shouldn't shirk from training.' ($1F). (C1, E-0357)
+TravelerEvents_RewardBattle_ShowVeryGoodHeresYour::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $001e ; '*: You've come at the right'
+    ld hl, $001e ; '*: Very good. Here's your reward.'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $001f ; 'Cobi: Sure, Mama! We'll be fine.'
+    ld hl, $001f ; '*: Well, that was unseemly. You'
     call StartMessageHL_B73
     ret
 
-; step 7 of GreatLogFieldEvents_WarubouItsADead: advances wScriptStep; branches on wBattleScene;
-; calls NextRandomSeed; sets wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls
-; CopyItemNameToDE; shows 'This hay is pretty good.'; sets wScriptStep to $0a; shows '0 peered into
-; the barrel. It'; calls DeductGoldPenaltyAndFormatLoss (E-0347)
-; why: step 7 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 7);
-; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
-; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty::
+; Reward battle, step 7: on a win gives a random meat (ITEM_BEEFJERKY to ITEM_SIRLOIN) with
+; '<player> obtained the <item>.' ($1B), and while the bag still has room keeps the window open for
+; more (step $0A); on a loss '<player> lost <n>G.' ($0F) after the gold penalty. (C1, E-0357)
+TravelerEvents_RewardBattle_ShowHeroObtainedTheY::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -1840,30 +1689,27 @@ GreatLogFieldEvents_WarubouItsADead_ShowThisHayIsPretty::
     jr z, .call_start_message_hl_b73
     cp $ff
     jr z, .call_start_message_hl_b73
-    ld hl, $001b ; '*: This hay is pretty good.'
+    ld hl, $001b ; '0 obtained the Y.'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_KEEP_OPEN | $001b ; '*: This hay is pretty good.'
+    ld hl, MSG_KEEP_OPEN | $001b ; '0 obtained the Y.'
     call StartMessageHL_B73
     ld a, $0a
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b732:
-    ld hl, $000f ; '0 peered into the barrel. It'
+    ld hl, $000f ; '0 lost G.'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; step 11 of GreatLogFieldEvents_WarubouItsADead: calls NextRandomSeed; sets wStepPtrLo; calls
-; AppendItemStepPtrLoToInventory; calls CopyItemNameToDE; shows 'This hay is pretty good.'; sets
-; wScriptStep to 8; shows 'This hay is pretty good.'; decrements wScriptStep (E-0347)
-; why: step 11 of GreatLogFieldEvents_WarubouItsADead (when wScriptStep = 11);
-; GreatLogFieldEvents_WarubouItsADead: scene 7: a vase message, "Warubou It's a dead ...", 'This hay
-; is pretty ...' (E-0352)
-GreatLogFieldEvents_WarubouItsADead_ThisHayIsPretty::
+; Reward battle, step 11: another random meat ($19-$1C) with message $1B: back a step for more while
+; the bag has room, otherwise the window closes (step 8); so the reward fills the bag with meat.
+; (C1, E-0357)
+TravelerEvents_RewardBattle_HeroObtainedTheY::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $03
@@ -1878,169 +1724,147 @@ GreatLogFieldEvents_WarubouItsADead_ThisHayIsPretty::
     jr z, .call_start_message_hl_b73
     cp $ff
     jr z, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $001b ; '*: This hay is pretty good.'
+    ld hl, MSG_ALREADY_OPEN | $001b ; '0 obtained the Y.'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $001b ; '*: This hay is pretty good.'
+    ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $001b ; '0 obtained the Y.'
     call StartMessageHL_B73
     ld hl, wScriptStep
     dec [hl]
     ret
 
-; scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi Hero, they said ...' (E-0293)
-GreatLogFieldEvents_WarubouGiveMe::
+; event 5: 'I'm a traveling master...': a battle on yes; a win gives a Magic Key (16 in 256) or a
+; WarpWing (E-0364; was TravelerEvents_TravelingMaster, named from the wrong message table, E-0293)
+TravelerEvents_TravelingMaster::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_WarubouGiveMe_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouGiveMe_ShowWarubouWaheyGiveMe
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_WarubouGiveMe_ShowCobiHeroTheySaid
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_TravelingMaster_ShowImATravelingMaster
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_TravelingMaster_ShowOhYoureReadyAre
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_TravelingMaster_ShowUhohILostI
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_TravelingMaster_StartMessageHL_B73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_WarubouGiveMe: advances wScriptStep; shows '0 peered into the vase.
-; Freshly' (E-0347)
-; why: step 0 of GreatLogFieldEvents_WarubouGiveMe (when wScriptStep = 0);
-; GreatLogFieldEvents_WarubouGiveMe: scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi
-; Hero, they said ...' (E-0352)
-GreatLogFieldEvents_WarubouGiveMe_ShowHeroPeeredIntoThe::
+; Traveling master, step 0: 'I'm a traveling master. I'm training my monsters.' ($10); next step.
+; (C1, E-0357)
+TravelerEvents_TravelingMaster_ShowImATravelingMaster::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0010 ; '0 peered into the vase. Freshly'
+    ld hl, MSG_KEEP_OPEN | $0010 ; '*: I'm a traveling master. I'm'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_WarubouGiveMe: branches on wTextYesNoResult; shows 'Warubou: Wa-hey!
-; Give me something! Then,'; advances wScriptStep; shows 'You need Magic Keys to'; sets wScriptStep
-; to 8 (E-0347)
-; why: step 2 of GreatLogFieldEvents_WarubouGiveMe (when wScriptStep = 2);
-; GreatLogFieldEvents_WarubouGiveMe: scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi
-; Hero, they said ...' (E-0352)
-GreatLogFieldEvents_WarubouGiveMe_ShowWarubouWaheyGiveMe::
+; Traveling master, step 2: no gives message $4E ('Oh, you poor monsters...') and step 8; yes gives
+; message $4F ('Oh, you're ready, are you?...') and the next step. (C1, E-0357)
+TravelerEvents_TravelingMaster_ShowOhYoureReadyAre::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $004f ; 'Warubou: Wa-hey! Give me something! Then,'
+    ld hl, MSG_ALREADY_OPEN | $004f ; '*: Oh, you're ready, are you?'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $004e ; '*: You need Magic Keys to'
+    ld hl, MSG_ALREADY_OPEN | $004e ; '*: Oh, you poor monsters. You'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
-; step 5 of GreatLogFieldEvents_WarubouGiveMe: advances wScriptStep; branches on wBattleScene; shows
-; 'Cobi: 0! They said GreatLog will'; shows 'Land ho! There's GreatLog!'; calls
-; DeductGoldPenaltyAndFormatLoss (E-0347)
-; why: step 5 of GreatLogFieldEvents_WarubouGiveMe (when wScriptStep = 5);
-; GreatLogFieldEvents_WarubouGiveMe: scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi
-; Hero, they said ...' (E-0352)
-GreatLogFieldEvents_WarubouGiveMe_ShowCobiHeroTheySaid::
+; Traveling master, step 5: after the battle, a win gives 'Uh-oh, I lost! I can do better!' ($11); a
+; loss gives 'I'm sorry, but you didn't put up much resistance...' ($12) and the gold penalty. (C1,
+; E-0357)
+TravelerEvents_TravelingMaster_ShowUhohILostI::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $0011 ; 'Cobi: 0! They said GreatLog will'
+    ld hl, $0011 ; '*: Uh-oh, I lost! I can'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $0012 ; '*: Land ho! There's GreatLog!'
+    ld hl, $0012 ; '*: I'm sorry, but you didn't'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
 
-; scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...' (E-0293)
-GreatLogFieldEvents_KingAskedUs::
+; event 4: 'I'm a wandering master...': a battle on yes (E-0364; was TravelerEvents_WanderingMaster,
+; named from the wrong message table, E-0293)
+TravelerEvents_WanderingMaster::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1
-    dw GreatLogFieldEvents_KingAskedUs_GreatLog
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_WanderingMaster_ShowImAWanderingMaster
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_WanderingMaster_ShowGoodAnswerLetsBattle
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Thief_SaveScreenBufferToBGMap1
+    dw TravelerEvents_WanderingMaster_ShowUrghTougherThanMe
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_TravelingMaster_StartMessageHL_B73
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_KingAskedUs: advances wScriptStep; shows 'GreatLog's King asked us
-; to' (E-0347)
-; why: step 0 of GreatLogFieldEvents_KingAskedUs (when wScriptStep = 0);
-; GreatLogFieldEvents_KingAskedUs: scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
-; (E-0352)
-GreatLogFieldEvents_KingAskedUs_ShowGreatLogsKingAskedUs::
+; Wandering master, step 0: 'I'm a wandering master. I've been on the road for training.' ($0B);
+; next step. (C1, E-0357)
+TravelerEvents_WanderingMaster_ShowImAWanderingMaster::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $000b ; '*: GreatLog's King asked us to'
+    ld hl, MSG_KEEP_OPEN | $000b ; '*: I'm a wandering master. I've'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_KingAskedUs: branches on wTextYesNoResult; shows 'Wow, you kids sure
-; learn'; advances wScriptStep; shows 'Have you heard about Magic'; sets wScriptStep to 8 (E-0347)
-; why: step 2 of GreatLogFieldEvents_KingAskedUs (when wScriptStep = 2);
-; GreatLogFieldEvents_KingAskedUs: scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
-; (E-0352)
-GreatLogFieldEvents_KingAskedUs_ShowWowYouKidsSure::
+; Wandering master, step 2: no gives message $4C ('What? Little chicken!...') and step 8; yes gives
+; message $4D ('Good answer! Let's battle!') and the next step. (C1, E-0357)
+TravelerEvents_WanderingMaster_ShowGoodAnswerLetsBattle::
     ld a, [wTextYesNoResult]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, MSG_ALREADY_OPEN | $004d ; '*: Wow, you kids sure learn'
+    ld hl, MSG_ALREADY_OPEN | $004d ; '*: Good answer! Let's battle!'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $004c ; '*: Have you heard about Magic'
+    ld hl, MSG_ALREADY_OPEN | $004c ; '*: What? Little chicken! Go home'
     call StartMessageHL_B73
     ld a, $08
     ld [wScriptStep], a
     ret
 
-; step 5 of GreatLogFieldEvents_KingAskedUs: advances wScriptStep; branches on wBattleScene; shows
-; 'GreatLog's King asked us to'; shows 'Worried about your monsters? Don't' (E-0347)
-; why: step 5 of GreatLogFieldEvents_KingAskedUs (when wScriptStep = 5);
-; GreatLogFieldEvents_KingAskedUs: scene 4: "GreatLog's king asked us ...", 'Wow, you kids sure ...'
-; (E-0352)
-GreatLogFieldEvents_KingAskedUs_GreatLog::
+; Wandering master, step 5: after the battle, a win gives 'Urgh. Tougher than me...' ($0C); a loss
+; gives 'Hahahah! I overestimated you!' ($0E). (C1, E-0357)
+TravelerEvents_WanderingMaster_ShowUrghTougherThanMe::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
     or a
     jr nz, .call_start_message_hl_b73
-    ld hl, $000c ; '*: GreatLog's King asked us to'
+    ld hl, $000c ; '*: Urgh. Tougher than me… I'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $000e ; '*: Worried about your monsters? Don't'
+    ld hl, $000e ; '*: Hahahah! I overestimated you!'
     call StartMessageHL_B73
     ret
 
-; step 7 of GreatLogFieldEvents_WarubouGiveMe: advances wScriptStep; branches on wBattleScene; calls
-; NextTableByte; branches on wRandomLo; shows 'When our farm gets established'; sets wStepPtrLo to
-; $29; calls AppendItemStepPtrLoToInventory; calls GenerateNewKeyEntry; branches on hTemp0; shows '0
-; checked the odd object. It'; shows '0 peered into the barrel. It'; calls
-; DeductGoldPenaltyAndFormatLoss (E-0347)
-; why: step 7 of GreatLogFieldEvents_WarubouGiveMe (when wScriptStep = 7);
-; GreatLogFieldEvents_WarubouGiveMe: scene 5: a vase message, 'Warubou Wahey! Give me ...', 'Cobi
-; Hero, they said ...' (E-0352)
-GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73::
+; Traveling master, step 7: on a win, with a chance of 16 in 256 a new Magic Key ('<player> received
+; a Magic Key.', $43; GenerateNewKeyEntry), otherwise or with no free key slot a WarpWing ($0D, item
+; $29); on a loss '<player> lost <n>G.' ($0F) after the gold penalty. (C1, E-0357)
+TravelerEvents_TravelingMaster_StartMessageHL_B73::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wBattleScene]
@@ -2052,7 +1876,7 @@ GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73::
     jr c, .call_generate_new_key_entry
 
 .loop:
-    ld hl, $000d ; '*: When our farm gets established'
+    ld hl, $000d ; '0 obtained a WarpWing.'
     call StartMessageHL_B73
     ld a, $29
     ld [wStepPtrLo], a
@@ -2064,12 +1888,12 @@ GreatLogFieldEvents_WarubouGiveMe_StartMessageHL_B73::
     ldh a, [hTemp0]
     or a
     jr z, .loop
-    ld hl, $0043 ; '0 checked the odd object. It'
+    ld hl, $0043 ; '0 received a Magic Key.'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, $000f ; '0 peered into the barrel. It'
+    ld hl, $000f ; '0 lost G.'
     call StartMessageHL_B73
     call DeductGoldPenaltyAndFormatLoss
     ret
@@ -2104,29 +1928,26 @@ DeductGoldPenaltyAndFormatLoss::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; scene 3: 'Good. That's good to hear! You ...', 'Is that so? ...' (E-0293)
-GreatLogFieldEvents_GoodToHear::
+; event 3: offers an item the party needs at five times its price ('<item>! Just <n>G! Well?')
+; (E-0364; was TravelerEvents_PriceyMerchant, named from the wrong message table, E-0293)
+TravelerEvents_PriceyMerchant::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_PriceyMerchant_ShowYJustGWell
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_PriceyMerchant_ShowHehehehThanksSeeYou
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_GoodToHear: advances wScriptStep; shows 'Good. That's good to
-; hear!'; calls GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7; calls CopyItemNameToDE;
-; calls ReadBank16TableWord; copies L to wDigits; calls Number24ToPackedBCD; calls
-; WritePackedBCDNoLeadingZeros (E-0347)
-; why: step 0 of GreatLogFieldEvents_GoodToHear (when wScriptStep = 0);
-; GreatLogFieldEvents_GoodToHear: scene 3: 'Good. That's good to hear! You ...', 'Is that so? ...'
-; (E-0352)
-GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo::
+; Pricey merchant, step 0: offers the item chosen for the party
+; (TravelerEvents_SetWStepArrivedIfPartyHasField55Bit7) at five times its price ('<item>! Just <n>G!
+; Well?', $08); next step. (C1, E-0357)
+TravelerEvents_PriceyMerchant_ShowYJustGWell::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0008 ; '*: Good. That's good to hear!'
+    ld hl, MSG_KEEP_OPEN | $0008 ; '*: Y! Just G! Well?'
     call StartMessageHL_B73
-    call GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7
+    call TravelerEvents_SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2148,14 +1969,9 @@ GreatLogFieldEvents_GoodToHear_ShowGoodThatsGoodTo::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; step 2 of GreatLogFieldEvents_GoodToHear: advances wScriptStep; branches on wTextYesNoResult;
-; copies wScriptParam0 to wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls
-; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; shows
-; 'Is that so? Too bad!'; shows 'We'll soon be reaching GreatLog.' (E-0347)
-; why: step 2 of GreatLogFieldEvents_GoodToHear (when wScriptStep = 2);
-; GreatLogFieldEvents_GoodToHear: scene 3: 'Good. That's good to hear! You ...', 'Is that so? ...'
-; (E-0352)
-GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo::
+; Pricey merchant, step 2: yes gives the item and takes the price ('Heheheh, thanks! See you
+; again!', $09); no gives 'Tch, tightwad... You'll regret this.' ($0A). (C1, E-0357)
+TravelerEvents_PriceyMerchant_ShowHehehehThanksSeeYou::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
@@ -2176,54 +1992,47 @@ GreatLogFieldEvents_GoodToHear_ShowIsThatSoToo::
     ld a, h
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
-    ld hl, MSG_ALREADY_OPEN | $0009 ; '*: Is that so? Too bad!'
+    ld hl, MSG_ALREADY_OPEN | $0009 ; '*: Heheheh, thanks! See you again!'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $000a ; '*: We'll soon be reaching GreatLog.'
+    ld hl, MSG_ALREADY_OPEN | $000a ; '*: Tch, tightwad… You'll regret this.'
     call StartMessageHL_B73
     ret
 
-; scene 2: 'You folks run a ...', a vase message, 'There's a spirit in ...' (E-0293)
-GreatLogFieldEvents_YouFolksRunA::
+; event 2: 'I'll heal you for 1000G. Well?': on yes takes 1000G and heals the party (E-0364; was
+; TravelerEvents_PaidHealer, named from the wrong message table, E-0293)
+TravelerEvents_PaidHealer::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe
-    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
-    dw GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn
-    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_PaidHealer_ShowIllHealYouFor
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_PaidHealer_ShowAnEmptyString
+    dw TravelerEvents_MapSeller_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
+    dw TravelerEvents_PaidHealer_ShowHeheheMoneyIsMy
+    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; shows 'You folks run a monster'
-; (E-0347)
-; why: step 0 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 0);
-; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
-; spirit in ...' (E-0352)
-GreatLogFieldEvents_YouFolksRunA_ShowYouFolksRunA::
+; Paid healer, step 0: 'I'll heal you for 1000G. Well?' ($05, yes/no); next step. (C1, E-0357)
+TravelerEvents_PaidHealer_ShowIllHealYouFor::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0005 ; '*: You folks run a monster'
+    ld hl, MSG_KEEP_OPEN | $0005 ; '*: I'll heal you for 1000G.'
     call StartMessageHL_B73
     ret
 
-; step 2 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; branches on wTextYesNoResult;
-; shows '0 peered into the vase. It'; advances wScriptStep; also changes HL and A by register
-; arithmetic (E-0347)
-; why: step 2 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 2);
-; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
-; spirit in ...' (E-0352)
-GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe::
+; Paid healer, step 2: yes shows message $27 (an empty string, used as the yes mark) and goes on; no
+; skips two steps. (C1, E-0357)
+TravelerEvents_PaidHealer_ShowAnEmptyString::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
     or a
     jr nz, .skip
-    ld hl, MSG_ALREADY_OPEN | $0027 ; '0 peered into the vase. It'
+    ld hl, MSG_ALREADY_OPEN | $0027 ; '(an empty string)'
     call StartMessageHL_B73
     ret
 
@@ -2234,14 +2043,10 @@ GreatLogFieldEvents_YouFolksRunA_ShowHeroPeeredIntoThe::
     inc [hl]
     ret
 
-; step 5 of GreatLogFieldEvents_YouFolksRunA: advances wScriptStep; branches on wMessageIndex;
-; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; calls FullyHealParty; shows
-; 'There's a spirit in GreatLog'; shows 'Sailing is sure exhilarating. Right?'; advances wScriptStep
-; (E-0347)
-; why: step 5 of GreatLogFieldEvents_YouFolksRunA (when wScriptStep = 5);
-; GreatLogFieldEvents_YouFolksRunA: scene 2: 'You folks run a ...', a vase message, 'There's a
-; spirit in ...' (E-0352)
-GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn::
+; Paid healer, step 5: after a yes (wMessageIndex = $27) takes 1000G, fully heals the party and says
+; 'Hehehe, money is my motivation...' ($06); otherwise 'Heh, I hope your luck holds, kid!...' ($07).
+; (C1, E-0357)
+TravelerEvents_PaidHealer_ShowHeheheMoneyIsMy::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wMessageIndex]
@@ -2254,40 +2059,37 @@ GreatLogFieldEvents_YouFolksRunA_ShowTheresASpiritIn::
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
     farcall FullyHealParty
-    ld hl, $0006 ; '*: There's a spirit in GreatLog'
+    ld hl, $0006 ; '*: Hehehe, money is my motivation.'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0007 ; '*: Sailing is sure exhilarating. Right?'
+    ld hl, MSG_ALREADY_OPEN | $0007 ; '*: Heh, I hope your luck'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; scene 1: 'Tara There you are, big brother!', 'Cobi What's wrong, Hero?' (E-0293)
-GreatLogFieldEvents_TaraThereYouAre::
+; event 1: offers an item the party needs at its price ('<item>! Only <n>G! Well?'), sold on yes
+; (E-0364; was TravelerEvents_Merchant, named from the wrong message table, E-0293)
+TravelerEvents_Merchant::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Merchant_ShowYOnlyGWell
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Merchant_ShowThanksHopeISee
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_TaraThereYouAre: advances wScriptStep; shows 'Tara: There you are,
-; big brother!'; calls GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7; calls
-; CopyItemNameToDE; calls ReadBank16TableWord; copies L to wDigits; calls Number24ToPackedBCD; calls
-; WritePackedBCDNoLeadingZeros (E-0347)
-; why: step 0 of GreatLogFieldEvents_TaraThereYouAre (when wScriptStep = 0);
-; GreatLogFieldEvents_TaraThereYouAre: scene 1: 'Tara There you are, big brother!', 'Cobi What's
-; wrong, Hero?' (E-0352)
-GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre::
+; Merchant, step 0: offers the item chosen for the party
+; (TravelerEvents_SetWStepArrivedIfPartyHasField55Bit7) at its price ('<item>! Only <n>G! Well?',
+; $02); next step. (C1, E-0357)
+TravelerEvents_Merchant_ShowYOnlyGWell::
     ld hl, wScriptStep
     inc [hl]
-    ld hl, MSG_KEEP_OPEN | $0002 ; 'Tara: There you are, big brother!'
+    ld hl, MSG_KEEP_OPEN | $0002 ; '*: Y! Only G! Well?'
     call StartMessageHL_B73
-    call GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7
+    call TravelerEvents_SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wScriptParam0]
     ld de, wTextBuf2 + $2
     call CopyItemNameToDE
@@ -2304,14 +2106,9 @@ GreatLogFieldEvents_TaraThereYouAre_ShowTaraThereYouAre::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; step 2 of GreatLogFieldEvents_TaraThereYouAre: advances wScriptStep; branches on wTextYesNoResult;
-; copies wScriptParam0 to wStepPtrLo; calls AppendItemStepPtrLoToInventory; calls
-; ReadBank16TableWord; copies L to hTemp0; copies H to hTemp1; calls SubtractGoldFloorZero; shows
-; 'Cobi: What's wrong, 0? Papa's calling'; shows 'Tara: Hurry! Papa will be angry!' (E-0347)
-; why: step 2 of GreatLogFieldEvents_TaraThereYouAre (when wScriptStep = 2);
-; GreatLogFieldEvents_TaraThereYouAre: scene 1: 'Tara There you are, big brother!', 'Cobi What's
-; wrong, Hero?' (E-0352)
-GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero::
+; Merchant, step 2: yes gives the item and takes the price ('Thanks! Hope I see you again!', $03);
+; no gives 'Hah? Not buying? Bah, another time.' ($04). (C1, E-0357)
+TravelerEvents_Merchant_ShowThanksHopeISee::
     ld hl, wScriptStep
     inc [hl]
     ld a, [wTextYesNoResult]
@@ -2327,45 +2124,39 @@ GreatLogFieldEvents_TaraThereYouAre_ShowCobiWhatsWrongHero::
     ld a, h
     ldh [hTemp1], a
     farcall SubtractGoldFloorZero
-    ld hl, MSG_ALREADY_OPEN | $0003 ; 'Cobi: What's wrong, 0? Papa's calling'
+    ld hl, MSG_ALREADY_OPEN | $0003 ; '*: Thanks! Hope I see you'
     call StartMessageHL_B73
     ret
 
 .call_start_message_hl_b73:
-    ld hl, MSG_ALREADY_OPEN | $0004 ; 'Tara: Hurry! Papa will be angry!'
+    ld hl, MSG_ALREADY_OPEN | $0004 ; '*: Hah? Not buying? Bah, another'
     call StartMessageHL_B73
     ret
 
-; scene 0: 'In the middle of ...', a negative flash, 'Cobi Hero, Papa's calling' (E-0293)
-GreatLogFieldEvents_PapaCalling::
+; event 0: 'Allow me to heal your injuries.', a flash, the party healed, 'I will pray for you.
+; Farewell.' (E-0364; was TravelerEvents_Healer, named from the wrong message table, E-0293)
+TravelerEvents_Healer::
     ld a, [wScriptStep]
     jumptable
-    dw GreatLogFieldEvents_PapaCalling_Msg0000_InTheMiddleOf
-    dw GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73
-    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
-    dw GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling
-    dw GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc
-    dw GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_Healer_Msg0000_AllowMeToHeal
+    dw TravelerEvents_MapSeller_RunMessageBoxCarryWhenIdle_Bank73
+    dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
+    dw TravelerEvents_HealerBattle_ShowIWillPrayFor
+    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73
     dw ScriptStepBlinkSpritesThenEnd
 
-; step 0 of GreatLogFieldEvents_PapaCalling: shows 'In the middle of the sea'; advances wScriptStep
-; (E-0347)
-; why: step 0 of GreatLogFieldEvents_PapaCalling (when wScriptStep = 0);
-; GreatLogFieldEvents_PapaCalling: scene 0: 'In the middle of ...', a negative flash, 'Cobi Hero,
-; Papa's calling' (E-0352)
-GreatLogFieldEvents_PapaCalling_Msg0000_InTheMiddleOf::
-    ld hl, $0000 ; 'In the middle of the sea'
+; Healer, step 0: 'Allow me to heal your injuries.' ($00); next step. (C1, E-0357)
+TravelerEvents_Healer_Msg0000_AllowMeToHeal::
+    ld hl, $0000 ; '*: Allow me to heal your'
     call StartMessageHL_B73
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 3 of GreatLogFieldEvents_TaraWellBeOK: calls RunMessageBoxCarryWhenIdle_Bank73; may return
-; early; branches on wIsCGB; calls CopyBytes; plays sound $7a; advances wScriptStep (E-0347)
-; why: step 3 of GreatLogFieldEvents_TaraWellBeOK (when wScriptStep = 3);
-; GreatLogFieldEvents_TaraWellBeOK: scene 8: "Tara We'll be OK", a bookshelf message, a negative
-; flash, 'Oh my! The well ...' (E-0352)
-GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73::
+; After the message, saves the palettes for the flash (CGB) and plays sound $7A; next step. (C1,
+; E-0357)
+TravelerEvents_MapSeller_RunMessageBoxCarryWhenIdle_Bank73::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank73
     ret nc
@@ -2384,22 +2175,16 @@ GreatLogFieldEvents_TaraWellBeOK_RunMessageBoxCarryWhenIdle_Bank73::
     inc [hl]
     ret
 
-; step 7 of GreatLogFieldEvents_KamehaNoGoing: calls ScriptStepFlashScreenNegative (E-0347)
-; why: step 7 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 7);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative::
+; Healer battle, step 7: the screen flash (ScriptStepFlashScreenNegative). (C1, E-0357)
+TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative::
     farcall ScriptStepFlashScreenNegative
     ret
 
-; step 8 of GreatLogFieldEvents_KamehaNoGoing: calls FullyHealParty; shows 'Cobi: 0! Papa's calling.
-; He's at'; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 8 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 8);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling::
+; Healer battle, step 8: fully heals the party and says 'I will pray for you. Farewell.' ($01); next
+; step. (C1, E-0357)
+TravelerEvents_HealerBattle_ShowIWillPrayFor::
     farcall FullyHealParty
-    ld hl, $0001 ; 'Cobi: 0! Papa's calling. He's at'
+    ld hl, $0001 ; '*: I will pray for you.'
     call StartMessageHL_B73
     xor a
     ld [wScriptParam0], a
@@ -2407,12 +2192,8 @@ GreatLogFieldEvents_KamehaNoGoing_ShowCobiHeroPapasCalling::
     inc [hl]
     ret
 
-; step 1 of GreatLogFieldEvents_MajorFacilities: calls RunMessageBoxCarryWhenIdle_Bank73; may return
-; early; advances wScriptStep (E-0347)
-; why: step 1 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 1);
-; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
-; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73::
+; Waits for the event's message (RunMessageBoxCarryWhenIdle_Bank73); next step. (C1, E-0357)
+TravelerEvents_Thief_RunMessageBoxCarryWhenIdle_Bank73::
     xor a
     call RunMessageBoxCarryWhenIdle_Bank73
     ret nc
@@ -2420,14 +2201,10 @@ GreatLogFieldEvents_MajorFacilities_RunMessageBoxCarryWhenIdle_Bank73::
     inc [hl]
     ret
 
-; step 9 of GreatLogFieldEvents_KamehaNoGoing: branches on wScriptParam0; increments wScriptParam0;
-; sets hFieldDrawFlags to $0e; calls MoveIncapacitatedPartyMembersBack; calls
-; LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest
-; to $7f; sets hFieldDrawFlags to 0; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 9 of GreatLogFieldEvents_KamehaNoGoing (when wScriptStep = 9);
-; GreatLogFieldEvents_KamehaNoGoing: scene $0B: a chest message, 'Kameha Wahahah! No going ...', a
-; vase message (E-0352)
-GreatLogFieldEvents_WriteScriptParam0AndFieldDrawFlagsEtc::
+; After healing: first frame redraws the field; second puts fallen monsters behind the others
+; (twice), reloads the name tiles, the player and follower sprites and the object palettes; next
+; step. (C1, E-0357)
+TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc::
     ld a, [wScriptParam0]
     or a
     jr nz, .call_move_incapacitated_party_members_back
@@ -2522,13 +2299,9 @@ RunMessageBox_Bank73::
     dw RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc
     dw RunMessageBox_Bank73_WriteMessageState
 
-; step 0 of RunMessageBox_Bank73: calls SetBit1OfPlayerAndObjectFlags; branches on wMessageGroup;
-; calls FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1;
-; sets wTextWindowStep to 0; sets hSpriteWindowClipMode to 2; branches on hPlayerY; sets
-; wTextWindowState to $81; sets hSpriteWindowClipMode to 1; advances wMessageState (E-0347)
-; why: step 0 of RunMessageBox_Bank73; RunMessageBox_Bank73: the bank-$73 message runner: returns at
-; once when wMessageState is $FF (idle), otherwise steps the message (the same opening as ...
-; (E-0352, E-0116)
+; Event message, step 0: unless a step pointer is set, freezes the player and objects; unless
+; wMessageGroup bit 7, clears the window tiles, plays sound $69 and opens the text window (at the
+; top when the player is low); next step. (C1, E-0357)
 RunMessageBox_Bank73_SetBit1OfPlayerAndObjectFlags::
     pop af
     or a
@@ -2564,11 +2337,8 @@ RunMessageBox_Bank73_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
-; step 1 of RunMessageBox_Bank73: may return early; copies wMessageIndex to wStringIndex; sets
-; wStringCategory to 5; calls BeginStringDisplay_Bank09; advances wMessageState (E-0347)
-; why: step 1 of RunMessageBox_Bank73; RunMessageBox_Bank73: the bank-$73 message runner: returns at
-; once when wMessageState is $FF (idle), otherwise steps the message (the same opening as ...
-; (E-0352, E-0116)
+; Event message, step 1: once the window is open, starts string wMessageIndex of bank $09's category
+; 5 (the event lines); next step. (C1, E-0357)
 RunMessageBox_Bank73_BeginStringDisplay_Bank09::
     pop af
     ld a, [wTextWindowState]
@@ -2583,13 +2353,8 @@ RunMessageBox_Bank73_BeginStringDisplay_Bank09::
     inc [hl]
     ret
 
-; step 2 of RunMessageBox_Bank73: returns if bit 0 of wTextFlags is set; branches on wMessageGroup;
-; sets wMessageState to $ff; plays sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0;
-; sets hSpriteWindowClipMode to 0; branches on hPlayerY; sets wTextWindowState to $82; advances
-; wMessageState (E-0347)
-; why: step 2 of RunMessageBox_Bank73; RunMessageBox_Bank73: the bank-$73 message runner: returns at
-; once when wMessageState is $FF (idle), otherwise steps the message (the same opening as ...
-; (E-0352, E-0116)
+; Event message, step 2: after the text, with wMessageGroup bit 6 (keep open) ends at once ($FF);
+; otherwise plays sound $69 and starts closing the window; next step. (C1, E-0357)
 RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc::
     pop af
     ld a, [wTextFlags]
@@ -2622,11 +2387,8 @@ RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc::
     inc [hl]
     ret
 
-; step 3 of RunMessageBox_Bank73: calls ClearBit1OfPlayerAndObjectFlags; sets wMessageState to $ff;
-; also changes A by register arithmetic (E-0347)
-; why: step 3 of RunMessageBox_Bank73; RunMessageBox_Bank73: the bank-$73 message runner: returns at
-; once when wMessageState is $FF (idle), otherwise steps the message (the same opening as ...
-; (E-0352, E-0116)
+; Event message, step 3: once the window has closed, unfreezes the player and objects unless a step
+; pointer is set, and marks the message idle ($FF). (C1, E-0357)
 RunMessageBox_Bank73_WriteMessageState::
     ld a, [wTextWindowState]
     and $03
@@ -2680,59 +2442,55 @@ ReadBank16TableWord::
     ld h, c
     ret
 
-; Calls SetWStepArrivedIfPartyHasField55Bit7; branches on wStepArrived; sets wScriptParam0 to $0c;
-; calls GreatLogFieldEvents_ReadBank16TableWord; may return early; calls
-; GreatLogFieldEvents_LoadSRAMRecordByte_2; branches on wStepArrived; sets wScriptParam0 to 8; calls
-; GreatLogFieldEvents_ReadBank16TableWord; may return early; calls
-; GreatLogFieldEvents_LoadSRAMRecordByte; branches on wStepArrived; then 41 more steps (see the
-; code) (E-0347)
-; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
-; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
-; scenes ... (E-0352, E-0286, E-0038)
-GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
+; Chooses the merchants' item by what the party needs, taking the first whose price the gold covers
+; (TravelerEvents_ReadBank16TableWord): ITEM_WORLDLEAF for a fallen monster, ITEM_LAUREL for status
+; bit 0, ITEM_ANTIDOTE for poison, meats when the party is not full (ITEM_BEEFJERKY, ITEM_PORKCHOP
+; or ITEM_RIB by records in use: under 3, under 6, under 11), ITEM_ELFWATER when more than 100 MP is
+; missing, ITEM_POTION for some missing MP, and further choices by missing HP. (C1, E-0357)
+TravelerEvents_SetWStepArrivedIfPartyHasField55Bit7::
     farcall SetWStepArrivedIfPartyHasField55Bit7
     ld a, [wStepArrived]
     or a
-    jr z, .call_great_log_field_events_load_sram_record
+    jr z, .call_traveler_events_load_sram_record_byte_2
     ld a, $0c
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
-.call_great_log_field_events_load_sram_record:
-    farcall GreatLogFieldEvents_LoadSRAMRecordByte_2
+.call_traveler_events_load_sram_record_byte_2:
+    farcall TravelerEvents_LoadSRAMRecordByte_2
     ld a, [wStepArrived]
     or a
-    jr z, .call_great_log_field_events_load_sram_record2
+    jr z, .call_traveler_events_load_sram_record_byte
     ld a, $08
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
-.call_great_log_field_events_load_sram_record2:
-    farcall GreatLogFieldEvents_LoadSRAMRecordByte
+.call_traveler_events_load_sram_record_byte:
+    farcall TravelerEvents_LoadSRAMRecordByte
     ld a, [wStepArrived]
     or a
     jr z, .check_party_count
     ld a, $06
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
 .check_party_count:
     ld a, [wPartyCount]
     cp $03
-    jr z, .call_great_log_field_events_load_sram_record3
+    jr z, .call_traveler_events_load_sram_record_word
     farcall CountRecordsInUse
     ld a, [wRecordsInUse]
     cp $03
     jr nc, .check_records_in_use
     ld a, $19
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
@@ -2744,24 +2502,24 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
     jr nc, .check_records_in_use2
     ld a, $1a
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
 .check_records_in_use2:
     ld a, [wRecordsInUse]
     cp $06
-    jr c, .call_great_log_field_events_load_sram_record3
+    jr c, .call_traveler_events_load_sram_record_word
     cp $0b
-    jr nc, .call_great_log_field_events_load_sram_record3
+    jr nc, .call_traveler_events_load_sram_record_word
     ld a, $1b
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
-.call_great_log_field_events_load_sram_record3:
-    call GreatLogFieldEvents_LoadSRAMRecordWord
+.call_traveler_events_load_sram_record_word:
+    call TravelerEvents_LoadSRAMRecordWord
     ldh a, [hTemp3]
     or a
     jr nz, .set_script_param0_to_05
@@ -2772,27 +2530,27 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
 .set_script_param0_to_05:
     ld a, $05
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
 .check_temp3:
     ldh a, [hTemp3]
     or a
-    jr nz, .call_great_log_field_events_set_temp2
+    jr nz, .call_traveler_events_set_temp2
     ldh a, [hTemp2]
     cp $65
-    jr nc, .call_great_log_field_events_set_temp2
+    jr nc, .call_traveler_events_set_temp2
     or a
-    jr z, .call_great_log_field_events_set_temp2
+    jr z, .call_traveler_events_set_temp2
     ld a, $04
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
-.call_great_log_field_events_set_temp2:
-    call GreatLogFieldEvents_SetTemp2
+.call_traveler_events_set_temp2:
+    call TravelerEvents_SetTemp2
     ldh a, [hTemp3]
     or a
     jr nz, .set_script_param0_to_03
@@ -2803,7 +2561,7 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
 .set_script_param0_to_03:
     ld a, $03
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
@@ -2818,7 +2576,7 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
     jr nc, .set_script_param0_to_01
     ld a, $02
     ld [wScriptParam0], a
-    call GreatLogFieldEvents_ReadBank16TableWord
+    call TravelerEvents_ReadBank16TableWord
     or a
     ret nz
 
@@ -2827,13 +2585,8 @@ GreatLogFieldEvents_SetWStepArrivedIfPartyHasField55Bit7::
     ld [wScriptParam0], a
     ret
 
-; Copies L to hTemp2; copies H to hTemp3; sets rRAMG to $0a; branches on wPartyCount; calls
-; LoadSRAMRecordWord; copies L to hTemp2; copies H to hTemp3; calls LoadSRAMRecordWord; sets hTemp2;
-; sets hTemp3; sets rRAMG to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
-; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
-; scenes ... (E-0352, E-0286, E-0038)
-GreatLogFieldEvents_SetTemp2::
+; hTemp2/hTemp3 = the HP the party is missing (max HP minus HP, summed). (C1, E-0357)
+TravelerEvents_SetTemp2::
     ld hl, $0000
     ld a, l
     ldh [hTemp2], a
@@ -2890,13 +2643,8 @@ GreatLogFieldEvents_SetTemp2::
     ld [rRAMG], a
     ret
 
-; Copies L to hTemp2; copies H to hTemp3; sets rRAMG to $0a; branches on wPartyCount; calls
-; LoadSRAMRecordWord; copies L to hTemp2; copies H to hTemp3; calls LoadSRAMRecordWord; sets hTemp2;
-; sets hTemp3; sets rRAMG to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
-; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
-; scenes ... (E-0352, E-0286, E-0038)
-GreatLogFieldEvents_LoadSRAMRecordWord::
+; hTemp2/hTemp3 = the MP the party is missing (max MP minus MP, summed). (C1, E-0357)
+TravelerEvents_LoadSRAMRecordWord::
     ld hl, $0000
     ld a, l
     ldh [hTemp2], a
@@ -2953,12 +2701,9 @@ GreatLogFieldEvents_LoadSRAMRecordWord::
     ld [rRAMG], a
     ret
 
-; Calls ReadBank16TableWord; branches on wGoldHi; branches on wGoldMid; branches on wGoldLo; also
-; changes HL, DE and A by register arithmetic (E-0347)
-; why: part of GreatLogFieldEvents; GreatLogFieldEvents: implements script command type 82
-; (SCRIPT_GREATLOG_FIELD_EVENT): talk category 8: jumps by wPendingFieldEvent & $0F to 13 scripted
-; scenes ... (E-0352, E-0286, E-0038)
-GreatLogFieldEvents_ReadBank16TableWord::
+; A = 1 when the gold covers item wScriptParam0's price (from the bank-$16 item table; five times it
+; except for event 1), otherwise 0. (C1, E-0357)
+TravelerEvents_ReadBank16TableWord::
     call ReadBank16TableWord
     ld a, [wPendingFieldEvent]
     and $0f
@@ -2992,14 +2737,9 @@ GreatLogFieldEvents_ReadBank16TableWord::
     xor a
     ret
 
-; step 2 of GreatLogFieldEvents_MajorFacilities: advances wScriptStep; sets wBattleIntroKind to 6;
-; sets wBattleTransitionSubStep to 1; sets wModeState to 3; sets wBattleTransitionStep to 0; sets
-; wFieldReturnPhase to 2; calls SaveScreenBufferToBGMap1; calls
-; PickRandomEncounterCountdownFromTable (E-0347)
-; why: step 2 of GreatLogFieldEvents_MajorFacilities (when wScriptStep = 2);
-; GreatLogFieldEvents_MajorFacilities: scenes $0C-$0F: "GreatLog's major facilities are situated
-; above ...", a barrel message and the gold loss (E-0352)
-GreatLogFieldEvents_MajorFacilities_SaveScreenBufferToBGMap1::
+; Thief, step 2: starts the battle (battle intro 6) after saving the screen and setting the
+; encounter countdown; next step. (C1, E-0357)
+TravelerEvents_Thief_SaveScreenBufferToBGMap1::
     ld hl, wScriptStep
     inc [hl]
     ld a, $06
@@ -3034,12 +2774,8 @@ SceneChestBattle::
     dw SceneChestBattle_ClearBit2AtHL_Bank73
     dw SceneChestBattle_SetFlagBit
 
-; step 9 of SceneChestBattle: increments wScriptParam0; returns unless wScriptParam0 is $10; calls
-; ClearBit2AtHL_Bank73; advances wScriptStep; also changes HL, A and C by register arithmetic
-; (E-0347)
-; why: step 9 of SceneChestBattle (when wScriptStep = 9); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 9: moves sprite 0 by wScriptParam1 a frame for 16 frames, then stops it (bit 2
+; clear); next step. (C1, E-0357)
 SceneChestBattle_ClearBit2AtHL_Bank73::
     ld a, [wScriptParam1]
     ld c, a
@@ -3059,11 +2795,8 @@ SceneChestBattle_ClearBit2AtHL_Bank73::
     inc [hl]
     ret
 
-; step 7 of SceneChestBattle: calls SetFlagBit; sets wScriptStartRequest to $80; also changes HL, DE
-; and A by register arithmetic (E-0347)
-; why: step 7 of SceneChestBattle (when wScriptStep = 7); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 7: sets the map's chest flag (the table by hMapId - $C8) and asks for the next
+; script command. (C1, E-0357)
 SceneChestBattle_SetFlagBit::
     ldh a, [hMapId]
     sub $c8
@@ -3086,12 +2819,8 @@ SceneChestBattle_SetFlagBit_Data::
     db $00, $00, $00, $00, $00, $00, $00, $00, $df, $00, $f8, $00, $fc, $00, $f2, $01
     db $f6, $01, $00, $00, $00, $00
 
-; step 6 of SceneChestBattle: sets hTemp0 to 0; sets hTemp1 to $30; calls
-; ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; advances
-; wScriptStep (E-0347)
-; why: step 6 of SceneChestBattle (when wScriptStep = 6); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 6: blinks object 0 at Y $30 until done, then hides the sprites; next step. (C1,
+; E-0357)
 SceneChestBattle_ScriptStepBlinkObjectTemp0::
     xor a
     ldh [hTemp0], a
@@ -3107,13 +2836,8 @@ SceneChestBattle_ScriptStepBlinkObjectTemp0::
     inc [hl]
     ret
 
-; step 5 of SceneChestBattle: branches on hMapId; advances wScriptStep; sets hTemp0 to $0a; calls
-; MarkKeyEntryKindTemp0Bit6; sets EVENT_SCENE_CHEST_BATTLE; sets hTemp0 to $0b; calls
-; MarkKeyEntryKindTemp0Bit6; sets EVENT_SCENE_CHEST_BATTLE_207; sets hTemp0 to $0c; calls
-; MarkKeyEntryKindTemp0Bit6; sets EVENT_SCENE_CHEST_BATTLE_208; sets wScriptStep to 8 (E-0347)
-; why: step 5 of SceneChestBattle (when wScriptStep = 5); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 5: on maps $CE, $D7 and $E0 marks the key of kind $0A, $0B or $0C as used (bit
+; 6) and sets EVENT_SCENE_CHEST_BATTLE, _207 or _208, then step 8; other maps go on. (C1, E-0357)
 SceneChestBattle_WriteTemp0AndScriptStep::
     ldh a, [hMapId]
     cp $ce
@@ -3154,21 +2878,15 @@ SceneChestBattle_WriteTemp0AndScriptStep::
     ld [wScriptStep], a
     ret
 
-; step 3 of SceneChestBattle: calls SceneChestBattle_StartMessageHL_B73b (E-0347)
-; why: step 3 of SceneChestBattle (when wScriptStep = 3); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 3: starts the map's after-battle message from its table
+; (SceneChestBattle_StartMessageHL_B73b). (C1, E-0357)
 SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_2::
     ld de, SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_Data
     call SceneChestBattle_StartMessageHL_B73b
     ret
 
-; step 2 of SceneChestBattle: copies the byte at SceneChestBattle_StartScriptedEncounterTemp0_Data
-; to hTemp0; calls StartScriptedEncounterTemp0; advances wScriptStep; also changes HL, DE and A by
-; register arithmetic (E-0347)
-; why: step 2 of SceneChestBattle (when wScriptStep = 2); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 2: starts the map's scripted encounter (the table by hMapId - $C8); next step.
+; (C1, E-0357)
 SceneChestBattle_StartScriptedEncounterTemp0::
     ldh a, [hMapId]
     sub $c8
@@ -3191,20 +2909,15 @@ SceneChestBattle_StartScriptedEncounterTemp0_Data::
     db $00, $00, $20, $21, $22, $23, $24, $00, $00, $00, $00, $25, $26, $27, $28, $29
     db $00, $00, $00, $00, $2a, $2b, $2c, $2d, $2e, $00, $00
 
-; step 0 of SceneChestBattle: calls SceneChestBattle_StartMessageHL_B73b (E-0347)
-; why: step 0 of SceneChestBattle (when wScriptStep = 0); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 0: starts the map's message from
+; SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable
+; (SceneChestBattle_StartMessageHL_B73b). (C1, E-0357)
 SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b::
     ld de, SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_MapMessageTable
     call SceneChestBattle_StartMessageHL_B73b
     ret
 
-; Calls StartMessageHL_B73b; advances wScriptStep; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: part of SceneChestBattle; SceneChestBattle: implements script command type CB
-; (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script shows: '0
-; checked the ... (E-0352, E-0038, E-0245)
+; Starts the message word at DE + 2 x (hMapId - $C8) (StartMessageHL_B73b); next step. (C1, E-0357)
 SceneChestBattle_StartMessageHL_B73b::
     ldh a, [hMapId]
     sub $c8
@@ -3322,12 +3035,8 @@ SceneMilayouForest::
     dw SceneChestBattle_SetBit2AtHL_B73
     dw SceneMilayouForest_ClearBit2AtHL_Bank73
 
-; step 1 of SceneMilayouForest: increments wScriptParam0; returns unless wScriptParam0 is $10; calls
-; ClearBit2AtHL_Bank73; sets wScriptStartRequest to $80; also changes HL, A and C by register
-; arithmetic (E-0347)
-; why: step 1 of SceneMilayouForest (when wScriptStep = 1); SceneMilayouForest: implements script
-; command type C9 (SCRIPT_SCENE_MILAYOU_FOREST): a cutscene step named after the scene its only
-; script shows: 'Milayou I ... (E-0352, E-0038, E-0245)
+; Milayou forest, step 1: moves sprite 0 by wScriptParam1 a frame for 16 frames, then stops it and
+; asks for the next script command. (C1, E-0357)
 SceneMilayouForest_ClearBit2AtHL_Bank73::
     ld a, [wScriptParam1]
     ld c, a
@@ -3347,12 +3056,9 @@ SceneMilayouForest_ClearBit2AtHL_Bank73::
     ld [wScriptStartRequest], a
     ret
 
-; step 8 of SceneChestBattle: calls SetBit2AtHL_B73; advances wScriptStep; branches on hPlayerX;
-; branches on hPlayerY; branches on the byte at wFollowerRecords + $1; sets wScriptParam1 to $ff;
-; sets wScriptParam1 to 1; also changes HL, A and B by register arithmetic (E-0347)
-; why: step 8 of SceneChestBattle (when wScriptStep = 8); SceneChestBattle: implements script
-; command type CB (SCRIPT_SCENE_CHEST_BATTLE): a cutscene step named after the scene its only script
-; shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest battle, step 8: sprite 0 starts moving (bit 2): right (wScriptParam1 = 1, facing right) when
+; the player or a follower stands at ($30, $20), otherwise left ($FF, facing left); next step. (C1,
+; E-0357)
 SceneChestBattle_SetBit2AtHL_B73::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B73
@@ -3442,10 +3148,7 @@ SceneWizstone::
     dw SceneWizstone_Msg0782_HeroReceivedTheSmartBook
     dw SceneWizstone_RunMessageBoxFar_Bank73
 
-; step 8 of SceneWizstone: shows '0 received the SmartBook.'; advances wScriptStep (E-0347)
-; why: step 8 of SceneWizstone (when wScriptStep = 8); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 8: '<player> received the SmartBook.' ($0782); next step. (C1, E-0357)
 SceneWizstone_Msg0782_HeroReceivedTheSmartBook::
     ld hl, $0782 ; '0 received the SmartBook.'
     call StartMessageHL_B73b
@@ -3453,12 +3156,8 @@ SceneWizstone_Msg0782_HeroReceivedTheSmartBook::
     inc [hl]
     ret
 
-; step 7 of SceneWizstone: sets wStepPtrHi to 0; sets wStepTarget to 0; sets wStepPtrLo to $40;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 0; sets wStepTarget to 3; sets wStepPtrLo to $10;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep (E-0347)
-; why: step 7 of SceneWizstone (when wScriptStep = 7); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 7: walks Kiral (object 0) down to Y $40 and then left to X $10; once there turns it
+; to face the player; next step. (C1, E-0357)
 SceneWizstone_StepObjectTowardCoord_SetStepPtrHi::
     ld a, [wSpriteSlots + $c]
     cp $40
@@ -3492,10 +3191,7 @@ SceneWizstone_StepObjectTowardCoord_SetStepPtrHi::
     inc [hl]
     ret
 
-; step 5 of SceneWizstone: shows 'Kiral: Yes! Yes! Success! I owe'; advances wScriptStep (E-0347)
-; why: step 5 of SceneWizstone (when wScriptStep = 5); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 5: 'Kiral: Yes! Yes! Success! I owe...' ($0781); next step. (C1, E-0357)
 SceneWizstone_Msg0781_KiralYesYesSuccess::
     ld hl, $0781 ; 'Kiral: Yes! Yes! Success! I owe'
     call StartMessageHL_B73b
@@ -3503,20 +3199,13 @@ SceneWizstone_Msg0781_KiralYesYesSuccess::
     inc [hl]
     ret
 
-; step 4 of SceneWizstone: advances wScriptStep (E-0347)
-; why: step 4 of SceneWizstone (when wScriptStep = 4); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 4: next step. (C1, E-0357)
 SceneWizstone_AdvanceScriptStep::
     ld hl, wScriptStep
     inc [hl]
     ret
 
-; step 2 of SceneWizstone: shows 'Professor Kiral used the WizStone on'; advances wScriptStep
-; (E-0347)
-; why: step 2 of SceneWizstone (when wScriptStep = 2); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 2: 'Professor Kiral used the WizStone on...' ($0780); next step. (C1, E-0357)
 SceneWizstone_Msg0780_ProfessorKiralUsedThe::
     ld hl, $0780 ; 'Professor Kiral used the WizStone on'
     call StartMessageHL_B73b
@@ -3524,12 +3213,8 @@ SceneWizstone_Msg0780_ProfessorKiralUsedThe::
     inc [hl]
     ret
 
-; step 1 of SceneWizstone: sets wStepPtrHi to 0; sets wStepTarget to 1; sets wStepPtrLo to $50;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 0; sets wStepTarget to 2; sets wStepPtrLo to $30;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep (E-0347)
-; why: step 1 of SceneWizstone (when wScriptStep = 1); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 1: walks Kiral right to X $50 and then up to Y $30; once there it faces left; next
+; step. (C1, E-0357)
 SceneWizstone_StepObjectTowardCoord::
     ld a, [wSpriteSlots + $b]
     cp $50
@@ -3560,12 +3245,8 @@ SceneWizstone_StepObjectTowardCoord::
     inc [hl]
     ret
 
-; step 0 of SceneWizstone: branches on hPlayerX; branches on hPlayerY; branches on wPartyCount;
-; branches on the byte at wFollowerRecords + $1; sets wScriptStep to 2; advances wScriptStep; also
-; changes HL, A and B by register arithmetic (E-0347)
-; why: step 0 of SceneWizstone (when wScriptStep = 0); SceneWizstone: implements script command type
-; C5 (SCRIPT_SCENE_WIZSTONE): a cutscene step named after the scene its only script shows: 'Kiral
-; This stone, ... (E-0352, E-0038, E-0245)
+; Wizstone, step 0: when the player or a follower already stands at ($40, $40) goes on to step 1;
+; otherwise Kiral faces up and the scene jumps to step 2. (C1, E-0357)
 SceneWizstone_WriteSpriteSlotsAndScriptStep::
     ldh a, [hPlayerX]
     cp $40
@@ -3621,11 +3302,8 @@ SceneCyalShine::
     dw SceneCyalShine_RunFieldCommandTemp0AndStep
     dw SceneCyalShine_StepScriptParam0Counter_Bank73
 
-; step 1 of SceneCyalShine: calls StepScriptParam0Counter_Bank73; may return early; sets wObject5 to
-; 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 1 of SceneCyalShine (when wScriptStep = 1); SceneCyalShine: implements script command
-; type CC (SCRIPT_SCENE_CYAL_SHINE): a cutscene step named after the scene its only script shows:
-; ... 'So Cyal took ... (E-0352, E-0038, E-0245)
+; Cyal shine, step 1: after 60 frames hides object 5 and asks for the next script command. (C1,
+; E-0357)
 SceneCyalShine_StepScriptParam0Counter_Bank73::
     ld b, $3c
     call StepScriptParam0Counter_Bank73
@@ -3636,11 +3314,8 @@ SceneCyalShine_StepScriptParam0Counter_Bank73::
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of SceneCyalShine: sets hTemp0 to 5; calls RunFieldCommandTemp0; sets wObject5 +
-; SCRIPTOBJ_X to $40; sets wObject5 + SCRIPTOBJ_Y to $20; advances wScriptStep (E-0347)
-; why: step 0 of SceneCyalShine (when wScriptStep = 0); SceneCyalShine: implements script command
-; type CC (SCRIPT_SCENE_CYAL_SHINE): a cutscene step named after the scene its only script shows:
-; ... 'So Cyal took ... (E-0352, E-0038, E-0245)
+; Cyal shine, step 0: runs field command 5 and places object 5 at ($40, $20); next step. (C1,
+; E-0357)
 SceneCyalShine_RunFieldCommandTemp0AndStep::
     ld a, $05
     ldh [hTemp0], a
@@ -3710,13 +3385,9 @@ SceneTooStrong::
     dw SceneTooStrong_SetBit2AtHL_B73
     dw SceneTooStrong_WriteMessageIndexAndMessageGroupEtc
 
-; step 3 of SceneTooStrong: copies L to wMessageIndex; copies H to wMessageGroup; sets wObject1 +
-; OBJ_Y; sets wStepPtrHi to 0; sets wStepTarget to 1; sets wStepPtrLo to $c0; calls
-; StepObjectTowardCoord; sets wStepPtrHi to 1; sets wStepTarget to 1; sets wStepPtrLo to $c0; calls
-; StepObjectTowardCoord; returns if wStepArrived is 0; then 1 more step (see the code) (E-0347)
-; why: step 3 of SceneTooStrong (when wScriptStep = 3); SceneTooStrong: implements script command
-; type C1 (SCRIPT_SCENE_TOO_STRONG): a cutscene step named after the scene its only script shows:
-; 'Too strong ... (E-0352, E-0038, E-0245)
+; Too strong, step 3: walks sprite 0 and object 1 right to X $C0 together while moving their Y by
+; the high byte of a counter (wMessageIndex/Group reused) that starts at $0300 and drops by 8 a
+; frame, a jump arc; once there asks for the next script command. (C1, E-0357)
 SceneTooStrong_WriteMessageIndexAndMessageGroupEtc::
     ld a, [wMessageIndex]
     ld l, a
@@ -3759,12 +3430,8 @@ SceneTooStrong_WriteMessageIndexAndMessageGroupEtc::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of SceneTooStrong: calls SetBit2AtHL_B73; sets wObject1 + OBJ_STATE to 1; branches on
-; wObject1 + OBJ_X; increments wObject1 + OBJ_X; calls ClearBit2AtHL_Bank73; copies L to
-; wMessageIndex; copies H to wMessageGroup; advances wScriptStep (E-0347)
-; why: step 2 of SceneTooStrong (when wScriptStep = 2); SceneTooStrong: implements script command
-; type C1 (SCRIPT_SCENE_TOO_STRONG): a cutscene step named after the scene its only script shows:
-; 'Too strong ... (E-0352, E-0038, E-0245)
+; Too strong, step 2: object 1 walks right to X $60, then stops; sets the speed counter to $0300;
+; next step. (C1, E-0357)
 SceneTooStrong_SetBit2AtHL_B73::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
@@ -3789,13 +3456,8 @@ SceneTooStrong_SetBit2AtHL_B73::
     inc [hl]
     ret
 
-; step 0 of SceneTooStrong: sets hTemp0 to 2; sets hTemp1 to $40; calls ScriptStepBlinkObjectTemp0;
-; branches on wObject2 + OBJ_Y; sets wObject3 + OBJ_Y to $30; returns if hTemp0 is 0; decrements
-; wSpriteSlotCount; sets wObject1 + OBJ_STATE to 0; shows 'Tch, I can't enjoy my'; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneTooStrong (when wScriptStep = 0); SceneTooStrong: implements script command
-; type C1 (SCRIPT_SCENE_TOO_STRONG): a cutscene step named after the scene its only script shows:
-; 'Too strong ... (E-0352, E-0038, E-0245)
+; Too strong, step 0: blinks object 2 at Y $40 (object 3 follows it); afterwards drops two sprite
+; slots, stops object 1 and says 'Tch, I can't enjoy my...' ($0725); next step. (C1, E-0357)
 SceneTooStrong_ScriptStepBlinkObjectTemp0::
     ld a, $02
     ldh [hTemp0], a
@@ -3835,11 +3497,8 @@ SceneRoltElder::
     dw SceneRoltElder_WriteObject2AndObject1
     dw SceneRoltElder_ClearBit2AtHL_Bank73
 
-; step 3 of SceneRoltElder: decrements wObject2 + OBJ_Y; decrements wObject1 + OBJ_Y; returns unless
-; wObject1 + OBJ_Y is $50; calls ClearBit2AtHL_Bank73; sets wScriptStartRequest to $80 (E-0347)
-; why: step 3 of SceneRoltElder (when wScriptStep = 3); SceneRoltElder: implements script command
-; type C0 (SCRIPT_SCENE_ROLT_ELDER): a cutscene step named after the scene its only script shows:
-; 'I'm the ... (E-0352, E-0038, E-0245)
+; Rolt elder, step 3: objects 1 and 2 walk up together until object 1 reaches Y $50; then they stop
+; and the next script command is asked for. (C1, E-0357)
 SceneRoltElder_ClearBit2AtHL_Bank73::
     ld a, [wObject2 + OBJ_Y]
     dec a
@@ -3857,12 +3516,8 @@ SceneRoltElder_ClearBit2AtHL_Bank73::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of SceneRoltElder: increments wObject2 + OBJ_X; increments wObject1 + OBJ_X; returns unless
-; wObject1 + OBJ_X is $60; sets wObject1 + OBJ_STATE to 2; sets wObject2 + OBJ_STATE to 2; advances
-; wScriptStep (E-0347)
-; why: step 2 of SceneRoltElder (when wScriptStep = 2); SceneRoltElder: implements script command
-; type C0 (SCRIPT_SCENE_ROLT_ELDER): a cutscene step named after the scene its only script shows:
-; 'I'm the ... (E-0352, E-0038, E-0245)
+; Rolt elder, step 2: objects 1 and 2 walk right together until object 1 reaches X $60; then both
+; face up; next step. (C1, E-0357)
 SceneRoltElder_WriteObject2AndObject1::
     ld a, [wObject2 + OBJ_X]
     inc a
@@ -3879,11 +3534,8 @@ SceneRoltElder_WriteObject2AndObject1::
     inc [hl]
     ret
 
-; step 1 of SceneRoltElder: increments wObject1 + OBJ_X; decrements wObject2 + OBJ_Y; returns unless
-; wObject2 + OBJ_Y is $60; sets wObject2 + OBJ_STATE to 1; advances wScriptStep (E-0347)
-; why: step 1 of SceneRoltElder (when wScriptStep = 1); SceneRoltElder: implements script command
-; type C0 (SCRIPT_SCENE_ROLT_ELDER): a cutscene step named after the scene its only script shows:
-; 'I'm the ... (E-0352, E-0038, E-0245)
+; Rolt elder, step 1: object 1 walks right and object 2 up until object 2 reaches Y $60; it then
+; faces right; next step. (C1, E-0357)
 SceneRoltElder_WriteObject1AndObject2::
     ld a, [wObject1 + OBJ_X]
     inc a
@@ -3899,12 +3551,8 @@ SceneRoltElder_WriteObject1AndObject2::
     inc [hl]
     ret
 
-; step 0 of SceneRoltElder: calls SetBit2AtHL_B73; decrements wObject2 + OBJ_Y; decrements wObject1
-; + OBJ_Y; returns unless wObject1 + OBJ_Y is $60; sets wObject1 + OBJ_STATE to 1; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneRoltElder (when wScriptStep = 0); SceneRoltElder: implements script command
-; type C0 (SCRIPT_SCENE_ROLT_ELDER): a cutscene step named after the scene its only script shows:
-; 'I'm the ... (E-0352, E-0038, E-0245)
+; Rolt elder, step 0: objects 1 and 2 start moving and walk up until object 1 reaches Y $60, which
+; then faces right; next step. (C1, E-0357)
 SceneRoltElder_SetBit2AtHL_B73::
     ld hl, wObject1 + OBJ_FLAGS
     call SetBit2AtHL_B73
@@ -3934,10 +3582,7 @@ GatherFollowers::
     dw GatherFollowers_ScriptStepMoveFollowersToLeader
     dw GatherFollowers_SetScriptStartRequestTo80
 
-; step 3 of GatherFollowers: sets wScriptStartRequest to $80 (E-0347)
-; why: step 3 of GatherFollowers (when wScriptStep = 3); GatherFollowers: implements script command
-; type 64 (SCRIPT_GATHER_FOLLOWERS): moves the followers onto the leader
-; (ScriptStepMoveFollowersToLeader) (E-0352, E-0038, E-0245)
+; Gather followers, step 3: asks for the next script command. (C1, E-0357)
 GatherFollowers_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
@@ -3986,15 +3631,9 @@ SceneKamehaStole::
     dw SceneKamehaStole_WriteFollowerRecords
     dw SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc
 
-; step 6 of SceneKamehaStole: sets wScreenTileBuffer + $a8 to $2b; sets wScreenTileBuffer + $a8 to
-; $2c; sets wScreenTileBuffer + $bc to $2d; sets wScreenTileBuffer + $bc to $2e; sets
-; wScreenTileBuffer + $ce to $2b; sets wScreenTileBuffer + $ce to $2c; sets wScreenTileBuffer + $e2
-; to $2d; sets wScreenTileBuffer + $e2 to $2e; sets wScreenTileBuffer + $f8 to $2b; sets
-; wScreenTileBuffer + $f8 to $2c; sets wScreenTileBuffer + $10c to $2d; sets wScreenTileBuffer +
-; $10c to $2e; then 4 more steps (see the code) (E-0347)
-; why: step 6 of SceneKamehaStole (when wScriptStep = 6); SceneKamehaStole: implements script
-; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
-; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
+; Kameha stole, step 6: draws a 2 x 2 block of tiles $2B-$2E behind each follower's place (as many
+; as the party has), redraws the screen, sets the follower delay to 1, clears the map sprite kind
+; and asks for the next script command. (C1, E-0357)
 SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc::
     ld hl, wScreenTileBuffer + $a8
     ld [hl], $2b
@@ -4038,11 +3677,8 @@ SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc::
     ld [wScriptStartRequest], a
     ret
 
-; step 5 of SceneKamehaStole: increments wFollowerRecords + $c; may return early; advances
-; wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 5 of SceneKamehaStole (when wScriptStep = 5); SceneKamehaStole: implements script
-; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
-; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
+; Kameha stole, step 5: the third follower walks down to Y $60 and then right to X $40, facing up
+; when it arrives; next step. (C1, E-0357)
 SceneKamehaStole_WriteFollowerRecords::
     ld a, [wFollowerRecords + $c]
     cp $60
@@ -4065,11 +3701,8 @@ SceneKamehaStole_WriteFollowerRecords::
     inc [hl]
     ret
 
-; step 4 of SceneKamehaStole: may return early; advances wScriptStep; may return early; sets
-; wScriptStep to 6; also changes HL and A by register arithmetic (E-0347)
-; why: step 4 of SceneKamehaStole (when wScriptStep = 4); SceneKamehaStole: implements script
-; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
-; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
+; Kameha stole, step 4: the second follower walks left to X $30 and then down to Y $50; with two in
+; the party the scene skips to step 6, otherwise next step. (C1, E-0357)
 SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2::
     ld a, [wFollowerRecords + $6]
     cp $30
@@ -4102,12 +3735,8 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2::
     ld [wScriptStep], a
     ret
 
-; step 3 of SceneKamehaStole: sets wFollowerRecords to 2; sets wFollowerRecords to 3; may return
-; early; sets wFollowerRecords to 0; advances wScriptStep; may return early; sets wScriptStep to 6;
-; also changes HL and A by register arithmetic (E-0347)
-; why: step 3 of SceneKamehaStole (when wScriptStep = 3); SceneKamehaStole: implements script
-; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
-; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
+; Kameha stole, step 3: all three followers walk up to Y $40 and then left to X $40; with one in the
+; party the scene skips to step 6, otherwise next step. (C1, E-0357)
 SceneKamehaStole_WriteFollowerRecordsAndScriptStep::
     ld a, [wFollowerRecords + $2]
     cp $40
@@ -4146,10 +3775,8 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep::
     ld [wScriptStep], a
     ret
 
-; step 0 of SceneKamehaStole: calls ScriptStepMoveFollowersToLeader (E-0347)
-; why: step 0 of SceneKamehaStole (when wScriptStep = 0); SceneKamehaStole: implements script
-; command type 61 (SCRIPT_SCENE_KAMEHA_STOLE): a cutscene step named after the scene its only script
-; shows: 'King Kameha ... (E-0352, E-0038, E-0245)
+; Kameha stole, step 0: gathers the followers on the leader (ScriptStepMoveFollowersToLeader). (C1,
+; E-0357)
 SceneKamehaStole_ToScriptStepMoveFollowersToLeader::
     farcall ScriptStepMoveFollowersToLeader
     ret
@@ -4164,13 +3791,8 @@ ScriptCommand60_Run::
     dw ScriptCommand60_Run_StepScriptParam0Counter_Bank73
     dw ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_FindTemp0InInventoryList
 
-; step 4 of ScriptCommand60_Run: increments wObject5 + SCRIPTOBJ_X; increments wObject5 +
-; SCRIPTOBJ_Y; calls ScriptApplyStepDeltaAtDE_Bank73; may return early; sets wObject5 to 0; sets
-; hTemp0 to $2c; calls FindTemp0InInventoryList; calls RemoveInventorySlotShiftDown; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 4 of ScriptCommand60_Run (when wScriptStep = 4), in part of ScriptCommand60;
-; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
-; (E-0352, E-0038)
+; Command 60, step 4: object 5 sinks away along the hop curve; then it is hidden, a TinyMedal ($2C)
+; is taken from the bag and the next script command is asked for. (C1, E-0357)
 ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_FindTemp0InInventoryList::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
@@ -4189,11 +3811,7 @@ ScriptCommand60_Run_ScriptApplyStepDeltaAtDE_Bank73_FindTemp0InInventoryList::
     ld [wScriptStartRequest], a
     ret
 
-; step 3 of ScriptCommand60_Run: calls StepScriptParam0Counter_Bank73; may return early; advances
-; wScriptStep (E-0347)
-; why: step 3 of ScriptCommand60_Run (when wScriptStep = 3), in part of ScriptCommand60;
-; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
-; (E-0352, E-0038)
+; Command 60, step 3: waits 90 frames; next step. (C1, E-0357)
 ScriptCommand60_Run_StepScriptParam0Counter_Bank73::
     ld b, $5a
     call StepScriptParam0Counter_Bank73
@@ -4202,12 +3820,7 @@ ScriptCommand60_Run_StepScriptParam0Counter_Bank73::
     inc [hl]
     ret
 
-; step 2 of ScriptCommand60_Run: copies E to wStepPtrLo; copies D to wStepPtrHi; calls
-; AddStepDeltaToPointedByte; increments wScriptParam0; returns unless wScriptParam0 is $20; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 2 of ScriptCommand60_Run (when wScriptStep = 2), in part of ScriptCommand60;
-; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
-; (E-0352, E-0038)
+; Command 60, step 2: sprite 0 hops by the table for 32 frames; next step. (C1, E-0357)
 ScriptCommand60_Run_AddStepDeltaToPointedByte::
     ld de, wSpriteSlots + $c
     ld a, e
@@ -4226,12 +3839,8 @@ ScriptCommand60_Run_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 0 of ScriptCommand60_Run: sets hTemp0 to $10; calls RunFieldCommandTemp0; sets wObject5 +
-; SCRIPTOBJ_X to $50; sets wObject5 + SCRIPTOBJ_Y to $30; sets wObject5 to $80; advances wScriptStep
-; (E-0347)
-; why: step 0 of ScriptCommand60_Run (when wScriptStep = 0), in part of ScriptCommand60;
-; ScriptCommand60: runs one frame of script command type 60 (entry 95 of ScriptCommandHandlers)
-; (E-0352, E-0038)
+; Command 60, step 0: runs field command $10 and shows object 5 at ($50, $30); next step. (C1,
+; E-0357)
 ScriptCommand60_Run_RunFieldCommandTemp0::
     ld a, $10
     ldh [hTemp0], a
@@ -4328,10 +3937,8 @@ SceneSawKameha::
     dw SceneSawKameha_ClearBit2AtHL_Bank73
     dw SceneSawKameha_CountKeysOrFull
 
-; step 2 of SceneSawKameha: calls CountKeysOrFull; sets hTemp1 to 5; calls WriteKeyEntryTemp0; sets
-; wInventorySortFlags; sets wScriptStartRequest to $80 (E-0347)
-; why: step 2 of SceneSawKameha (when wScriptStep = 2); SceneSawKameha: implements script command
-; type 59 (also 5A) (E-0352, E-0038)
+; Saw Kameha, step 2: adds a key of kind 5 to the key list (in the first free entry) and asks for
+; the bag sort and the next script command. (C1, E-0357)
 SceneSawKameha_CountKeysOrFull::
     farcall CountKeysOrFull
     ld a, $05
@@ -4344,13 +3951,8 @@ SceneSawKameha_CountKeysOrFull::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of SceneSawKameha: decrements wFollowerRecords + $2; decrements wFollowerRecords + $7;
-; decrements wFollowerRecords + $c; decrements hPlayerY; returns unless hPlayerY is $c0; calls
-; ClearBit2AtHL_Bank73; sets hMapId to $19; sets hMapScreenX to 0; sets hMapScreenY to 0; sets
-; wWarpDestX to $40; sets wWarpDestY to $40; sets wFieldTransitionKind to 3; then 1 more step (see
-; the code) (E-0347)
-; why: step 1 of SceneSawKameha (when wScriptStep = 1); SceneSawKameha: implements script command
-; type 59 (also 5A) (E-0352, E-0038)
+; Saw Kameha, step 1: the player and the followers walk up off the screen (Y $C0); then warps to map
+; $19, screen (0, 0) at ($40, $40) with transition kind 3 and a fade. (C1, E-0357)
 SceneSawKameha_ClearBit2AtHL_Bank73::
     ld hl, wFollowerRecords + $2
     dec [hl]
@@ -4378,11 +3980,8 @@ SceneSawKameha_ClearBit2AtHL_Bank73::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 0 of SceneSawKameha: sets wStepPtrHi to 0; sets wStepTarget to 2; sets wStepPtrLo to $b0;
-; calls StepObjectTowardCoord; sets wStepPtrLo to 0; calls StepPlayerUpTowardStepPtrLo; returns if
-; wStepArrived is 0; calls SetBit2AtHL_B73; advances wScriptStep (E-0347)
-; why: step 0 of SceneSawKameha (when wScriptStep = 0); SceneSawKameha: implements script command
-; type 59 (also 5A) (E-0352, E-0038)
+; Saw Kameha, step 0: object 0 walks up to Y $B0 while the player walks up to Y 0; once there the
+; player keeps moving (bit 2); next step. (C1, E-0357)
 SceneSawKameha_StepObjectTowardCoord::
     ld a, $00
     ld [wStepPtrHi], a
@@ -4414,12 +4013,8 @@ SceneThreeItemsBattle::
     dw SceneChestBattle_RunMessageBoxFar_Bank73
     dw SceneThreeItemsBattle_ScriptStepBlinkObjectTemp0
 
-; step 3 of SceneThreeItemsBattle: sets hTemp0 to 0; sets hTemp1 to $20; calls
-; ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 3 of SceneThreeItemsBattle (when wScriptStep = 3); SceneThreeItemsBattle: implements
-; script command type 57 (SCRIPT_SCENE_THREE_ITEMS_BATTLE): a cutscene step named after the scene
-; its only script shows: 'Good. ... (E-0352, E-0038, E-0245)
+; Three items battle, step 3: blinks object 0 at Y $20, then hides the sprites and asks for the next
+; script command. (C1, E-0357)
 SceneThreeItemsBattle_ScriptStepBlinkObjectTemp0::
     xor a
     ldh [hTemp0], a
@@ -4435,11 +4030,7 @@ SceneThreeItemsBattle_ScriptStepBlinkObjectTemp0::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of SceneThreeItemsBattle: shows 'Gwaah! You've beaten me fairly!'; advances wScriptStep
-; (E-0347)
-; why: step 1 of SceneThreeItemsBattle (when wScriptStep = 1); SceneThreeItemsBattle: implements
-; script command type 57 (SCRIPT_SCENE_THREE_ITEMS_BATTLE): a cutscene step named after the scene
-; its only script shows: 'Good. ... (E-0352, E-0038, E-0245)
+; Three items battle, step 1: 'Gwaah! You've beaten me fairly!' ($0480); next step. (C1, E-0357)
 SceneThreeItemsBattle_Msg0480_GwaahYouveBeatenMe::
     ld hl, $0480 ; '*: Gwaah! You've beaten me fairly!'
     call StartMessageHL_B73b
@@ -4447,11 +4038,7 @@ SceneThreeItemsBattle_Msg0480_GwaahYouveBeatenMe::
     inc [hl]
     ret
 
-; step 0 of SceneThreeItemsBattle: sets hTemp0 to $1c; calls StartScriptedEncounterTemp0; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneThreeItemsBattle (when wScriptStep = 0); SceneThreeItemsBattle: implements
-; script command type 57 (SCRIPT_SCENE_THREE_ITEMS_BATTLE): a cutscene step named after the scene
-; its only script shows: 'Good. ... (E-0352, E-0038, E-0245)
+; Three items battle, step 0: starts scripted encounter $1C; next step. (C1, E-0357)
 SceneThreeItemsBattle_StartScriptedEncounterTemp0AndStep::
     ld a, $1c
     ldh [hTemp0], a
@@ -4567,14 +4154,9 @@ SceneGravestone::
     dw SceneGravestone_StepObjectTowardCoord
     dw SceneGravestone_ScriptStepBlinkObjectTemp0
 
-; step 4 of SceneGravestone: sets hTemp0 to 0; sets hTemp1 to $20; calls ScriptStepBlinkObjectTemp0;
-; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; plays sound $66; sets wScreenTileBuffer + $2
-; to $56; sets wScreenTileBuffer + $2 to $57; sets wScreenTileBuffer + $2 to $58; sets
-; wScreenTileBuffer + $2 to $59; sets wScreenTileBuffer + $2 to $5a; sets wScreenTileBuffer + $2 to
-; $5b; then 3 more steps (see the code) (E-0347)
-; why: step 4 of SceneGravestone (when wScriptStep = 4); SceneGravestone: implements script command
-; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
-; before '0 checked ... (E-0352, E-0038, E-0245)
+; Gravestone, step 4: blinks object 0 at Y $20; afterwards hides the sprites, sets story flag byte
+; $64 bit 1, plays sound $66, draws the opened tiles ($56-$5B), redraws the screen, sets
+; EVENT_SCENE_GRAVESTONE and asks for the next script command. (C1, E-0357)
 SceneGravestone_ScriptStepBlinkObjectTemp0::
     xor a
     ldh [hTemp0], a
@@ -4616,11 +4198,7 @@ SceneGravestone_ScriptStepBlinkObjectTemp0::
     ld [wScriptStartRequest], a
     ret
 
-; step 3 of SceneGravestone: sets wStepPtrHi to 0; sets wStepTarget to 2; sets wStepPtrLo to $20;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep (E-0347)
-; why: step 3 of SceneGravestone (when wScriptStep = 3); SceneGravestone: implements script command
-; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
-; before '0 checked ... (E-0352, E-0038, E-0245)
+; Gravestone, step 3: walks object 0 up to Y $20; next step. (C1, E-0357)
 SceneGravestone_StepObjectTowardCoord::
     ld a, $00
     ld [wStepPtrHi], a
@@ -4687,12 +4265,9 @@ ScriptStepMoveObjectCB8AByDirection::
     dec [hl]
     ret
 
-; step 1 of SceneGravestone: branches on wMaxBlockingTile; calls
-; ScriptStepMoveObjectCB8AByDirection; advances wScriptStep; calls ClearBit2AtHL_Bank73; sets
-; wScriptStartRequest to $80; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 1 of SceneGravestone (when wScriptStep = 1); SceneGravestone: implements script command
-; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
-; before '0 checked ... (E-0352, E-0038, E-0245)
+; Gravestone, step 1: checks the four tiles under the stone's next place (its position plus the step
+; in wMessageIndex/Group): a blocking tile stops it (moving bit clear, next script command);
+; otherwise it moves a step (ScriptStepMoveObjectCB8AByDirection); next step. (C1, E-0357)
 SceneGravestone_WriteScriptStartRequest::
     ld a, [wMessageIndex]
     ld d, a
@@ -4765,13 +4340,8 @@ SceneGravestone_WriteScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of SceneGravestone: copies the byte at SceneGravestone_SetBit2AtHL_B73_Data to
-; wScriptParam1; copies the byte at SceneGravestone_SetBit2AtHL_B73_Data to wMessageIndex; copies
-; the byte at SceneGravestone_SetBit2AtHL_B73_Data to wMessageGroup; calls SetBit2AtHL_B73; advances
-; wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 0 of SceneGravestone (when wScriptStep = 0); SceneGravestone: implements script command
-; type 54 (SCRIPT_SCENE_GRAVESTONE): a cutscene step named after the scene its only script shows:
-; before '0 checked ... (E-0352, E-0038, E-0245)
+; Gravestone, step 0: by the player's column picks the push direction (the table entry: facing and
+; the X/Y step kept in wMessageIndex/Group) and starts object 0 moving; next step. (C1, E-0357)
 SceneGravestone_SetBit2AtHL_B73::
     ldh a, [hPlayerX]
     swap a
@@ -4885,12 +4455,8 @@ SceneJustice::
     ld [wScriptStartRequest], a
     ret
 
-; called from SceneJustice: calls SceneJustice_StepWrapPosition; returns if wIsCGB is 0; sets rSVBK
-; to 2; calls SceneJustice_SetPosition; sets rSVBK to 0; also changes HL, A and C by register
-; arithmetic (E-0347)
-; why: a helper of SceneJustice; SceneJustice: implements script command type 53
-; (SCRIPT_SCENE_JUSTICE): a cutscene step named after the scene its only script shows: 'Let the
-; power of ... (E-0352, E-0038, E-0245)
+; Moves four position bytes on by 8 (wrapping below $28) and, on CGB, sets their attribute palette
+; (4, or 5 from $18 on) in WRAM bank 2. (C1, E-0357)
 SceneJustice_StepWrapPosition_2::
     push hl
     call SceneJustice_StepWrapPosition
@@ -5040,10 +4606,7 @@ SceneMadcondorCry::
     dw SceneMadcondorCry_Msg0433_Kweeeeeh
     dw SceneWizstone_RunMessageBoxFar_Bank73
 
-; step 4 of SceneMadcondorCry: shows 'Kweeeeeh!'; advances wScriptStep (E-0347)
-; why: step 4 of SceneMadcondorCry (when wScriptStep = 4); SceneMadcondorCry: implements script
-; command type 51 (SCRIPT_SCENE_MADCONDOR_CRY): a cutscene step named after the scene its only
-; script shows: 'Kweeeeeh!' (E-0352, E-0038, E-0245)
+; Madcondor cry, step 4: 'Kweeeeeh!' ($0433); next step. (C1, E-0357)
 SceneMadcondorCry_Msg0433_Kweeeeeh::
     ld hl, $0433 ; '*: Kweeeeeh!'
     call StartMessageHL_B73b
@@ -5051,11 +4614,8 @@ SceneMadcondorCry_Msg0433_Kweeeeeh::
     inc [hl]
     ret
 
-; step 3 of SceneMadcondorCry: sets hMapScreenY to 0; sets wWarpDestX to $40; sets wWarpDestY to
-; $30; sets wFieldTransitionKind to 3; calls ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 3 of SceneMadcondorCry (when wScriptStep = 3); SceneMadcondorCry: implements script
-; command type 51 (SCRIPT_SCENE_MADCONDOR_CRY): a cutscene step named after the scene its only
-; script shows: 'Kweeeeeh!' (E-0352, E-0038, E-0245)
+; Madcondor cry, step 3: warps to screen row 0 at ($40, $30) with transition kind 3 and a fade. (C1,
+; E-0357)
 SceneMadcondorCry_ScriptStartFadeAndAdvanceStep::
     xor a
     ldh [hMapScreenY], a
@@ -8004,7 +7564,7 @@ SceneMonstersInTow::
     ld a, [wScriptStep]
     jumptable
     dw SceneMonstersInTow_CopyBytes
-    dw GreatLogFieldEvents_KamehaNoGoing_ToScriptStepFlashScreenNegative
+    dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
     dw SceneMonstersInTow_ScriptStartFadeAndAdvanceStep
     dw SceneMonstersInTow_SetScriptStartRequestTo80
 

@@ -94,7 +94,7 @@ class FarmChain(unittest.TestCase):
         self.assertEqual(natural, bytes([0x21, 0x2F, 0x32]))
 
     def test_plan_command_and_the_skill_page_in_battle(self):
-        self.assertEqual(self.ran["k14!"].get("RunBattleSetup_CommandMenu"), {4})
+        self.assertEqual(self.ran["k14!"].get("RunBattleSetup_PlanMenu"), {4})
         self.assertEqual(self.ran["k15!"].get("SetSlotTacticAndSlotLastTacticForCommandMonster"), {4})
         self.assertEqual(self.ran["k16!"].get("ShowSkillPageNames"), {4})
 

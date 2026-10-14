@@ -255,10 +255,9 @@ TargetRandomOtherSlot::
     ld [hl], a
     ret
 
-; Calls CarryUnlessBattleSlotOutSlotEmpty; branches on D; calls AdvanceRandom; branches on
-; wRandomLo; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: part of TargetRandomOtherSlot; TargetRandomOtherSlot: target = a random slot (wRandomLo & 7
-; after AdvanceRandom) that is not the actor, is present and is not slot 3 or 7 (E-0352, E-0061)
+; Picks a target among the three slots from A: the first present one, then each later present one
+; takes its place on a coin flip (random bit 7); stores it as the actor's target choice ($FF when
+; none is present). (C1, E-0357)
 TargetRandomOtherSlot_Skip::
     ld c, a
     ld b, $03
@@ -2901,13 +2900,9 @@ ChooseTarget_Heal::
     ld e, a
     ld d, $03
 
-; Copies E to wBattleArg3; copies D to wNameSlot; calls CarryUnlessBattleSlotOutSlotEmpty; calls
-; GetBattleMaxHP_Bank39; may continue in ChooseTarget_Heal_Loop; calls
-; ChooseTarget_Heal_WriteTemp0AndTemp1Etc; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: part of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of ChooseActionTarget
-; (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by action id) for ...
-; (E-0352, E-0086)
+; For each of D ally slots from E: how hurt it is, as max HP / HP (quotient in wTargetEstimates,
+; remainder in wBattleTempBuf); full HP counts as 0 remainder 1 and an absent slot as 0; then picks
+; the most hurt (ChooseTarget_Heal_WriteTemp0AndTemp1Etc). (C1, E-0357)
 ChooseTarget_Heal_Loop::
     ld a, e
     ld [wBattleArg3], a
@@ -7057,11 +7052,9 @@ TargetAllyWithStatusBit20::
     ld d, $20
     jp TargetAllyWithStatusBit20_CallAddAx9ToHL
 
-; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; increments hTemp0; may continue in PickWeightedTargetCandidate;
-; also changes HL, BC and A by register arithmetic (E-0347)
-; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
-; with mask $20 (E-0352, E-0219)
+; Lists the present slots of the side from A whose status byte (HL, 9 bytes per slot) has a bit of
+; mask D, and picks one (PickWeightedTargetCandidate); with none the actor targets itself. (C1,
+; E-0357)
 TargetAllyWithStatusBit20_CallAddAx9ToHL::
     ld c, a
     ld b, $03
@@ -7106,12 +7099,8 @@ TargetAllyWithStatusBit20_CallAddAx9ToHL::
     ld [hl], a
     ret
 
-; Sets hTemp0 to 0; sets hTemp1 to $ff; sets hTemp2 to $ff; sets hTemp3 to $ff; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls JumpToHL; branches on H; branches on L; increments
-; hTemp0; branches on L; may continue in TargetFoeWeightedBySlotOrder; calls
-; PickWeightedTargetCandidate; then 1 more step (see the code) (E-0347)
-; why: part of TargetAllyWithStatusBit20; TargetAllyWithStatusBit20: as TargetAllyWithStatusBit10
-; with mask $20 (E-0352, E-0219)
+; Lists the present opposite slots for which the check at DE returns 2 or more, and picks one
+; (PickWeightedTargetCandidate); with none falls back on TargetFoeWeightedBySlotOrder. (C1, E-0357)
 TargetAllyWithStatusBit20_CheckBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -7577,12 +7566,9 @@ EstimateThreeTargets::
     call PickWeakestEstimatedTarget
     ret
 
-; called from ChooseTarget_Heal: sets hTemp0 to 0; sets hTemp1 to 1; sets hTemp2 to 2; copies hTemp1
-; to hTemp0; increments hTemp1; decrements hTemp2; sets wBattleTarget; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: a helper of ChooseTarget_Heal; ChooseTarget_Heal: per-action target routine of
-; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
-; action id) for ... (E-0352, E-0086)
+; Heal target: the ally with the highest max HP / HP (a larger remainder breaks a tie, the earlier
+; slot otherwise), on the actor's side; stores it as wBattleTarget and the actor's target choice.
+; (C1, E-0357)
 ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
     ld a, $00
     ldh [hTemp0], a
@@ -7811,11 +7797,8 @@ SetActorTargetFromHRAMChoice4::
     ld [hl], a
     ret
 
-; called from ChooseTarget_Cover: changes HL, A and E; branches on hTemp0; branches on hTemp5;
-; branches on hTemp4 (E-0347)
-; why: a helper of ChooseTarget_Cover; ChooseTarget_Cover: per-action target routine of
-; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
-; action id) for ... (E-0352, E-0086)
+; Cover's target choice: wBattleTargetChoice[actor] = hTempA OR the first of hTemp0, hTemp5 and
+; hTemp4 that is not $FF, else hTemp3. (C1, E-0357)
 ChooseTarget_Cover_ReadBattleActorAndTemp0Etc::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
@@ -8011,10 +7994,8 @@ TargetRandomFoeOfFamilyD::
     call SetActorTargetFromTemp0OrTemp3
     ret
 
-; called from ChooseTarget_Blaze: takes A; changes HL and A (E-0347)
-; why: a helper of ChooseTarget_Blaze; ChooseTarget_Blaze: per-action target routine of
-; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
-; action id) for ... (E-0352, E-0086)
+; Scales the damage estimate hTemp8:hTemp9 by resistance level A: 0 keeps it, 1 takes 85%, 2 half, 3
+; gives 0. (C1, E-0357)
 ChooseTarget_Blaze_Multiply8By16::
     push af
     ldh a, [hTemp8]
@@ -8048,11 +8029,8 @@ ChooseTarget_Blaze_Multiply8By16::
 .return:
     ret
 
-; called from ChooseTarget_MegaMagic: calls GetBattleMP_Bank39; also changes HL and A by register
-; arithmetic (E-0347)
-; why: a helper of ChooseTarget_MegaMagic; ChooseTarget_MegaMagic: per-action target routine of
-; ChooseActionTarget (the five mode tables of ActionTargetModeTable, 228 entries each, indexed by
-; action id) for ... (E-0352, E-0086)
+; MegaMagic's damage estimate: (the actor's MP + 2 x its level) x 90%, then scaled by resistance
+; level A as ChooseTarget_Blaze_Multiply8By16. (C1, E-0357)
 ChooseTarget_MegaMagic_GetBattleMP_Bank39::
     push af
     ld a, [wBattleActor]
@@ -8165,9 +8143,7 @@ ReadSlotAIModeIndexed_Bank39::
     ld a, [hl]
     ret
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of ReadSlotAIModeIndexed_Bank39; ReadSlotAIModeIndexed_Bank39: A = the byte at
-; wSlotAIMode + A (E-0352)
+; HL = the word at HL + 2 x A. (C1, E-0357)
 ReadSlotAIModeIndexed_Bank39_Skip::
     add a
     add_a_to_hl
@@ -8221,9 +8197,8 @@ TargetOnLocalSide_Bank39::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D (E-0347)
-; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
-; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
+; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank39_Data); a copy of
+; the bank $05 routine. (C1, E-0357)
 ClearBattleStatusBitsWithMaskD_Bank39::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank39_Data

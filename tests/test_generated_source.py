@@ -546,6 +546,15 @@ class BufferOffsetAliases(unittest.TestCase):
                     pairs += "[wRecordBufferData + $12]" in line
         self.assertGreaterEqual(pairs, 7)
 
+    def test_traveler_event_lines_come_from_bank09_category5(self):
+        """E-0364: the traveler events wait with RunMessageBox_Bank73, which shows string L of bank $09's category 5,
+        so their message words quote those lines, not ShowMessageHL's bank $28 messages."""
+        text = (BANKS / "bank73.asm").read_text(encoding="utf-8")
+        self.assertIn("ld hl, $0044 ; '*: Lucky, kid! You've won 500G!'", text)
+        self.assertIn("Welcome aboard the casino ship!", text)
+        self.assertNotIn("Go help your mother", text)
+        self.assertIn("TravelerEvents_CasinoShip::", text)
+
     def test_bank2_attribute_addresses_use_the_attribute_buffer(self):
         symbols = json.loads((BANKS.parents[1] / "config/symbols.json").read_text(encoding="utf-8"))
         aliases = {k: v for k, v in symbols.items() if isinstance(v, dict) and "of" in v}

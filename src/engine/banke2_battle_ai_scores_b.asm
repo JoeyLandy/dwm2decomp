@@ -463,14 +463,11 @@ AIScore_Heal::
     ld bc, $0069
     call AccumulateBank6WordToDA70
 
-; called from AIScore_HealUs: calls AnyFoeLacksStatus0MaskCC; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AnyFoeHasClearStatus3; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AnyAllyHPAtMostThreeQuarters; branches on C; calls
-; AccumulateBank6WordToDA70; calls AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty; calls
-; ActorHPIsNotOne; branches on C; then 5 more steps (see the code) (E-0347)
-; why: a helper of AIScore_HealUs; AIScore_HealUs: AI scoring routine for 2 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 25
-; ... (E-0352, E-0083)
+; HealUs scoring, the rest: adds weight $1A to wAISkillScore when every present foe has one of
+; status 0 bits $CC (AnyFoeLacksStatus0MaskCC gives 0), $1A again when every present foe has some
+; status 3 bit, $1B to wAISkillScore2 when no ally is at three quarters of its HP or less; adds by
+; each ally's HP band (AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty); $23 when the actor's HP is
+; 1; always $24 and $C8 (the SetCToZero test cannot pass); then link rule bit 4. (C1, E-0357)
 AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
@@ -1830,14 +1827,10 @@ AIScore_WindBeast::
     ld bc, $0010
     call AccumulateBank6WordToDA70
 
-; called from AIScore_Vacuum: calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls
-; AccumulateBank6WordToDA70; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls
-; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls
-; AccumulateBank6WordToDA6E; calls InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate;
-; branches on C; calls AccumulateBank6WordToDA6E; then 4 more steps (see the code) (E-0347)
-; why: a helper of AIScore_Vacuum; AIScore_Vacuum: AI scoring routine for 2 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 73
-; ... (E-0352, E-0083)
+; Vacuum scoring, the rest: $07 against when the lone foe's HP is not below the damage estimate, $0A
+; against when a foe's estimate reaches the limit, $09 for when the foes resist on average, $0D for
+; when no estimate reaches the limit; link rule bit 1; $4F for when a foe has 1.5 times the actor's
+; HP or more (AI mode 3 and up). (C1, E-0357)
 AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -2359,14 +2352,11 @@ AIScore_SlimeBlow::
     ld bc, $0052
     call AccumulateBank6WordToDA6E
 
-; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
-; calls CheckFoeStatus7Bit2; branches on C; calls AccumulateBank6WordToDA70; calls
-; ActorLacksStatus1Bits23And4Bits01; branches on C; calls AccumulateBank6WordToDA6E; calls
-; WeighLinkRules1RuleBit1; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C; then 10 more
-; steps (see the code) (E-0347)
-; why: part of AIScore_SlimeBlow; AIScore_SlimeBlow: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 84
-; ... (E-0352, E-0083)
+; SlimeBlow scoring, the rest: $07 against for the lone foe, $03 against when a foe has status 7 bit
+; 2 (AI mode 3 and up), $53 for when the actor has status 1 bits 2-3 or status 4 bits 0-1; link rule
+; bit 1; $66 for outside link battles of kind 0-1; $67 for from the foe-HP check that reads the
+; wrong slot, and then $05 for from the status-4 check that reads an address, and $33 against when
+; the actor has status 2 bit 1 or status 4 bits 0-1. (C1, E-0357)
 AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -2569,14 +2559,11 @@ AIScore_PoisonHit::
     ld bc, $0054
     call AccumulateBank6WordToDA6E
 
-; Calls ActorLacksStatus1Bits23And4Bits01; branches on C; calls AccumulateBank6WordToDA6E; calls
-; WeighLinkRules1RuleBit1; calls CheckBattleKindAtLeast2OrLinkModeSet; branches on C; calls
-; AccumulateBank6WordToDA6E; calls FoeHPCheckReadsWrongSlot; branches on C; calls
-; AccumulateBank6WordToDA6E; calls CheckActorSlot0To3OrLinkModeSet; branches on C; then 13 more
-; steps (see the code) (E-0347)
-; why: part of AIScore_PoisonHit; AIScore_PoisonHit: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 95
-; ... (E-0352, E-0083)
+; PoisonHit scoring, the rest: $55 for when the actor has status 1 bits 2-3 or status 4 bits 0-1;
+; link rule bit 1; $66 for outside link battles of kind 0-1; $67 for from the foe-HP check; $39
+; against for a foe-side actor outside link battles; $05 for from the status-4 check; $33 against
+; for status 2 bit 1 or status 4 bits 0-1; $09 for from each of the two resistance gates. (C1,
+; E-0357)
 AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
@@ -2932,14 +2919,9 @@ AIScore_MultiCut::
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
-; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
-; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls AccumulateBank6WordToDA70;
-; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls AccumulateBank6WordToDA6E; calls
-; InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; branches on C; calls
-; AccumulateBank6WordToDA6E; then 7 more steps (see the code) (E-0347)
-; why: part of AIScore_MultiCut; AIScore_MultiCut: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 102
-; ... (E-0352, E-0083)
+; MultiCut scoring, the rest: the lone-foe, estimate and resistance weights ($07, $0A against; $09,
+; $0D for); link rule bit 1; $57 for with two or more foes; $4A against when a foe has status 6 bit
+; 3 (AI mode 3 and up). (C1, E-0357)
 AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3531,14 +3513,11 @@ AIScore_Ramming::
     ld bc, $0064
     call AccumulateBank6WordToDA6E
 
-; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
-; calls PassIfFoesAverageResistanceAtLeast2; branches on C; calls AccumulateBank6WordToDA6E; calls
-; AIScore_Ramming_HPBandOfSlotTemp0; calls ActorLacksStatus1Bits23And4Bits01; branches on C; calls
-; AccumulateBank6WordToDA70; calls SetCToZero; branches on C; then 9 more steps (see the code)
-; (E-0347)
-; why: part of AIScore_Ramming; AIScore_Ramming: AI scoring routine for 1 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 111 ...
-; (E-0352, E-0083)
+; Ramming scoring, the rest: $07 against for the lone foe, $09 for from the resistance average; by
+; the actor's HP band (AIScore_Ramming_HPBandOfSlotTemp0); $5C against for status 1 bits 2-3 or
+; status 4 bits 0-1; always $C7 for and $D0 against (SetCToZero); link rule bit 1; $5F against when
+; the side flag is set or no other ally is present; $33 against for status 2 bit 1 or status 4 bits
+; 0-1. (C1, E-0357)
 AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3632,20 +3611,13 @@ AIScore_SleepAir::
     ld bc, $00bc
     call AccumulateBank6WordToDA70
 
-; Calls WeighLinkRules1RuleBit3 (E-0347)
-; why: part of AIScore_SleepAir; AIScore_SleepAir: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 113
-; ... (E-0352, E-0083)
+; SleepAir scoring: link rule bit 3, then the rest (AIScore_SleepAir_CallFewerThanTwoFoesPresent).
+; (C1, E-0357)
 AIScore_SleepAir_CallWeighLinkRules1RuleBit3::
     call WeighLinkRules1RuleBit3
 
-; Calls FewerThanTwoFoesPresent; branches on C; calls AccumulateBank6WordToDA6E; calls
-; FailIfAnyFoeFullyResistant; branches on C; calls AccumulateBank6WordToDA70; calls
-; ResistanceAverageGateForAISide; branches on C; calls AccumulateBank6WordToDA6E; calls
-; ResistanceAverageGateForFoeAIMode3; branches on C; calls AccumulateBank6WordToDA6E (E-0347)
-; why: part of AIScore_SleepAir; AIScore_SleepAir: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 113
-; ... (E-0352, E-0083)
+; SleepAir scoring, the rest: $15 for with two or more foes, $12 against when a foe fully resists
+; (AI mode 2 and up), $09 for from each resistance gate. (C1, E-0357)
 AIScore_SleepAir_CallFewerThanTwoFoesPresent::
     farcall FewerThanTwoFoesPresent
     ld a, c
@@ -4176,13 +4148,10 @@ AIScore_SandStorm::
     and a
     ret z
 
-; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; branches on C; calls AccumulateBank6WordToDA70;
-; calls PassIfFoeAverageATKAtMostTwiceAllyDEF; branches on C; calls AccumulateBank6WordToDA6E; calls
-; SetCToZero; branches on C; calls AccumulateBank6WordToDA70; calls WeighLinkRules1RuleBit5; calls
-; FewerThanTwoFoesPresent; branches on C; then 13 more steps (see the code) (E-0347)
-; why: part of AIScore_SandStorm; AIScore_SandStorm: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 126
-; ... (E-0352, E-0083)
+; SandStorm scoring, the rest: $07 against for the lone foe, $6D for when the foes' average ATK is
+; more than twice the allies' DEF (AI mode 2 and up), always $BA against (SetCToZero); link rule bit
+; 5; $15 for with two or more foes, $32 for from the ATK/DEF comparison, $12 against for a fully
+; resistant foe, $09 for from each resistance gate. (C1, E-0357)
 AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -5006,11 +4975,8 @@ AIScore_TailWind::
     call AIScore_TailWind_AccumulateBank6WordToDA70
     ret z
 
-; Calls FailIfFoeKnowsSkills42To47; branches on C; calls AccumulateBank6WordToDA6E; calls
-; SetCToZero; branches on C; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5 (E-0347)
-; why: part of AIScore_TailWind; AIScore_TailWind: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 153
-; ... (E-0352, E-0083)
+; TailWind scoring, the rest: $3A for and then $8C for when a foe knows skills $42-$47 (AI mode 2
+; and up; mode below 2 still adds $8C); link rule bit 5. (C1, E-0357)
 AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
@@ -5620,12 +5586,8 @@ ReadBank6TableWord::
     ld c, a
     ret
 
-; called from AIScore_StrongD: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; also
-; changes BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_StrongD; AIScore_StrongD: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 148
-; ... (E-0352, E-0083)
+; StrongD scoring by HP band of slot A: bands 0-3 (HP at least a quarter) $83 against; band 4 $84
+; for; lower $85 for. (C1, E-0357)
 AIScore_StrongD_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5671,12 +5633,8 @@ AIScore_StrongD_HPBandOfSlotTemp0::
 .return:
     ret
 
-; called from AIScore_AquaWall: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; also
-; changes BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_AquaWall; AIScore_AquaWall: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 155
-; ... (E-0352, E-0083)
+; AquaWall scoring by HP band of slot A: band 0 $81 for, band 1 $82 for, band 2 $83 against, band 3
+; $84 against, band 4 $85 against, lower $86 against. (C1, E-0357)
 AIScore_AquaWall_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5722,11 +5680,8 @@ AIScore_AquaWall_HPBandOfSlotTemp0::
 .return:
     ret
 
-; called from AIScore_SuckAll: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_SuckAll_HPBandOfSlotTemp0; also changes BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_SuckAll; AIScore_SuckAll: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 157
-; ... (E-0352, E-0083)
+; For each present slot on side A, scores its HP band for SuckAll
+; (AIScore_SuckAll_HPBandOfSlotTemp0). (C1, E-0357)
 AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5747,11 +5702,7 @@ AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on C; calls AccumulateBank6WordToDA6E; calls
-; AccumulateBank6WordToDA70 (E-0347)
-; why: part of AIScore_SuckAll; AIScore_SuckAll: AI scoring routine for 1 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 157 ...
-; (E-0352, E-0083)
+; SuckAll by HP band: at least half HP (bands 0-1) $93 for, lower $94 against. (C1, E-0357)
 AIScore_SuckAll_HPBandOfSlotTemp0::
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5768,12 +5719,8 @@ AIScore_SuckAll_HPBandOfSlotTemp0::
 .return:
     ret
 
-; called from AIScore_Meditate: sets hTemp0; calls HPBandOfSlotTemp0; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; also
-; changes BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Meditate; AIScore_Meditate: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 159
-; ... (E-0352, E-0083)
+; Meditate scoring by HP band of slot A: bands 0-2 $9B, $9C, $9D against; band 3 $9E for, band 4 $9F
+; for, lower $A0 for. (C1, E-0357)
 AIScore_Meditate_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5819,11 +5766,8 @@ AIScore_Meditate_HPBandOfSlotTemp0::
 .return:
     ret
 
-; Calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls AIScore_HealUs_HPBandOfSlotTemp0; also
-; changes BC and A by register arithmetic (E-0347)
-; why: part of AIScore_HealUs; AIScore_HealUs: AI scoring routine for 2 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 25 ...
-; (E-0352, E-0083)
+; For each present slot on side A, scores its HP band for HealUs (AIScore_HealUs_HPBandOfSlotTemp0).
+; (C1, E-0357)
 AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5844,11 +5788,8 @@ AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E; also changes
-; HL, BC and A by register arithmetic (E-0347)
-; why: part of AIScore_HealUs; AIScore_HealUs: AI scoring routine for 2 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 25 ...
-; (E-0352, E-0083)
+; Adds the weight for the slot's HP band from HealUs's first table when C equals the actor,
+; otherwise from its second table, to wAISkillScore. (C1, E-0357)
 AIScore_HealUs_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5899,11 +5840,8 @@ ForEachPresentSlotOfSideRun::
     jr nz, .loop
     ret
 
-; called from ForEachPresentSlotOfSideRun: calls HPBandOfSlotTemp0; branches on wBattleActor; calls
-; AccumulateBank6WordToDA6E; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of ForEachPresentSlotOfSideRun; ForEachPresentSlotOfSideRun: for the three slots of
-; the side in A (bit 2), runs ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0 with hTemp0 = slot for
-; each occupied one (E-0352, E-0122, E-0344)
+; Adds the weight for the slot's HP band from the first table when C equals the actor, otherwise
+; from the second, to wAISkillScore. (C1, E-0357)
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5931,11 +5869,7 @@ ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1::
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
-; called from AIScore_Ramming: sets hTemp0; calls HPBandOfSlotTemp0; calls
-; AccumulateBank6WordToDA6E; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Ramming; AIScore_Ramming: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 111
-; ... (E-0352, E-0083)
+; Adds the weight for slot A's HP band from Ramming's table to wAISkillScore. (C1, E-0357)
 AIScore_Ramming_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     push bc
@@ -5955,11 +5889,8 @@ AIScore_Ramming_HPBandOfSlotTemp0::
 AIScore_Ramming_HPBandOfSlotTemp0_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
-; called from AIScore_Cover: calls CarryUnlessBattleSlotOutSlotEmpty; sets hTemp0; calls
-; AIScore_Cover_HPBandOfSlotTemp0; also changes BC and A by register arithmetic (E-0347)
-; why: a helper of AIScore_Cover; AIScore_Cover: AI scoring routine for 2 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 151 ...
-; (E-0352, E-0083)
+; For each present slot on side A, scores its HP band for Cover (AIScore_Cover_HPBandOfSlotTemp0).
+; (C1, E-0357)
 AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5980,11 +5911,8 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E; also changes
-; HL, BC and A by register arithmetic (E-0347)
-; why: part of AIScore_Cover; AIScore_Cover: AI scoring routine for 2 skill(s) of the per-skill far
-; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 151 ... (E-0352,
-; E-0083)
+; Adds the weight for the slot's HP band from Cover's first table when C equals the actor, otherwise
+; from its second, to wAISkillScore. (C1, E-0357)
 AIScore_Cover_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -6012,11 +5940,8 @@ AIScore_Cover_HPBandOfSlotTemp0_Data1::
 AIScore_Cover_HPBandOfSlotTemp0_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
-; called from AIScore_Upper: calls CompareFoeAverageATKWithAllyDEF; branches on C; calls
-; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70 (E-0347)
-; why: a helper of AIScore_Upper; AIScore_Upper: AI scoring routine for 2 skill(s) of the per-skill
-; far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 37 ...
-; (E-0352, E-0083)
+; Upper: $2B for when the foes' average ATK is more than twice the allies' DEF (C = 0), otherwise
+; $13 against. (C1, E-0357)
 AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -6033,11 +5958,7 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
 .return:
     ret
 
-; called from AIScore_Sap: calls AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty; branches on C; calls
-; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E (E-0347)
-; why: a helper of AIScore_Sap; AIScore_Sap: AI scoring routine for 2 skill(s) of the per-skill far
-; table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 39 ... (E-0352,
-; E-0083)
+; Sap: $13 against when the allies' ATK check fails (C = 0), otherwise $2B for. (C1, E-0357)
 AIScore_Sap_AccumulateBank6WordToDA70::
     farcall AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
@@ -6072,11 +5993,8 @@ MaxNegativeScoreWhenAIFlagBit0::
     ld c, a
     ret
 
-; called from AIScore_TailWind: returns unless wBattleTurn is 0; calls AccumulateBank6WordToDA70
-; (E-0347)
-; why: a helper of AIScore_TailWind; AIScore_TailWind: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 153
-; ... (E-0352, E-0083)
+; TailWind on the first turn (wBattleTurn 0): $B6 against and C = $FF; later turns return C = the
+; turn. (C1, E-0357)
 AIScore_TailWind_AccumulateBank6WordToDA70::
     ld a, [wBattleTurn]
     ld c, a
@@ -6168,11 +6086,7 @@ AIAddScoresForLinkRuleCheckLinkRules1Bit6::
 .return:
     ret
 
-; called from AIScore_Sacrifice: calls LinkRuleCheckLinkRules1Bit6; branches on C; calls
-; AccumulateBank6WordToDA70 (E-0347)
-; why: a helper of AIScore_Sacrifice; AIScore_Sacrifice: AI scoring routine for 1 skill(s) of the
-; per-skill far table (AIScoreRoutineTableA and AIScoreRoutineTableB, indexed by skill number): 21
-; ... (E-0352, E-0083)
+; Sacrifice: $0E against when link rule bit 6 forbids it (C = 0). (C1, E-0357)
 AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
@@ -6259,45 +6173,33 @@ GetBattleATK_BankE2::
     ld hl, wBattleATK
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
-; why: part of GetBattleDEF; GetBattleDEF: A = battle slot: HL = the word for that slot in the array
-; at wBattleDEF (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleDEF, then the slot's word (GetBattleMP_BankE2_Skip). (C1, E-0357)
 GetBattleDEF_BankE2::
     ld hl, wBattleDEF
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
-; why: part of GetBattleMaxHP; GetBattleMaxHP: A = battle slot: HL = the word for that slot in the
-; array at wBattleMaxHP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMaxHP, then the slot's word (GetBattleMP_BankE2_Skip). (C1, E-0357)
 GetBattleMaxHP_BankE2::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
-; why: part of GetBattleMaxMP; GetBattleMaxMP: A = battle slot: HL = the word for that slot in the
-; array at wBattleMaxMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMaxMP, then the slot's word (GetBattleMP_BankE2_Skip). (C1, E-0357)
 GetBattleMaxMP_BankE2::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
-; why: part of GetBattleHP; GetBattleHP: A = battle slot: HL = the word for that slot in the array
-; at wBattleHP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleHP, then the slot's word (GetBattleMP_BankE2_Skip). (C1, E-0357)
 GetBattleHP_BankE2::
     ld hl, wBattleHP
     jr GetBattleMP_BankE2_Skip
 
-; Changes HL; continues in GetBattleMP_BankE2_Skip (E-0347)
-; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
-; at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMP, then the slot's word (GetBattleMP_BankE2_Skip). (C1, E-0357)
 GetBattleMP_BankE2::
     ld hl, wBattleMP
     jr GetBattleMP_BankE2_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of GetBattleMP_BankE2, in part of GetBattleMP; GetBattleMP: A = battle slot: HL = the
-; word for that slot in the array at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = the word at HL + 2 x slot A (the value, not a pointer). (C1, E-0357)
 GetBattleMP_BankE2_Skip::
     add a
     add_a_to_hl
@@ -6351,9 +6253,8 @@ TargetOnLocalSide_BankE2::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D (E-0347)
-; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
-; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
+; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_BankE2_Data); a copy of
+; the bank $05 routine. (C1, E-0357)
 ClearBattleStatusBitsWithMaskD_BankE2::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data

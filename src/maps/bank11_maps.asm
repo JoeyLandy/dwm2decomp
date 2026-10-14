@@ -468,15 +468,9 @@ WarpToLinkedMapForCurrentMap_Data2::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00
 
-; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; copies
-; wKeyWorldGoal & $f0 to wWarpDestX; copies wKeyWorldGoal & $0f to wWarpDestY; copies
-; wKeyWorldGoalCell & $f0 to hMapScreenX; copies wKeyWorldGoalCell & $0f to hMapScreenY; calls
-; StartWarpTransition; copies wKeyWorldGoalPos to wWarpDestX; copies wKeyWorldGoalPos2 to
-; wWarpDestY; copies wKeyWorldGoalScreen & $f0 to hMapScreenX; copies wKeyWorldGoalScreen & $0f to
-; hMapScreenY; then 2 more steps (see the code) (E-0347)
-; why: part of WarpToLinkedMapForCurrentMap_Data2, in part of WarpToLinkedMapForCurrentMap;
-; WarpToLinkedMapForCurrentMap: unless bit 7 of wMapType is set, looks hMapId up in
-; WarpToLinkedMapForCurrentMap_Data1 (E-0352, E-0125)
+; Map $87's linked warp goes to the key world's goal: the goal cell and position when the active
+; key's slot matches, otherwise wKeyWorldGoalScreen at wKeyWorldGoalPos; starts the warp (C = 1).
+; Other maps: no warp (C = 0). (C1, E-0357)
 WarpToLinkedMapForCurrentMap_Data2_Cp87::
     cp $87
     jr z, .check_key_world_active
@@ -649,14 +643,10 @@ CheckMapExitTable::
     call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
     ret
 
-; called from CheckMapExitTable: branches on hPlayerStateFlags; copies hPlayerStateFlags & $df to
-; hPlayerStateFlags; sets wWarpPending to 1; plays sound $60; copies the byte at
-; CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data to hMapId; sets hMapScreenX to 0; sets
-; hMapScreenY to 0; sets wWarpDestX to $40; sets wWarpDestY to $80; sets wLastWarpIndex to 0; sets
-; wFieldTransitionKind to 3; calls StartPaletteFade; then 7 more steps (see the code) (E-0347)
-; why: a helper of CheckMapExitTable; CheckMapExitTable: for maps from $20 looks hMapId up in the
-; 4-byte table CheckMapExitTable_Data and runs CheckMapExitTable_WriteWarpPendingAndMapIdEtc with
-; ... (E-0352, E-0125, E-0344)
+; The exit-table entry at DE: when the player stands on its position and screen and is not already
+; leaving (hPlayerStateFlags bit 5), warps (sound $60) to the entry's map from the table, screen (0,
+; 0) at ($40, $80), with a fade and field transition kind 3, and sets bit 5 (C = 1); elsewhere
+; clears bit 5 (C = 0). (C1, E-0357)
 CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ldh a, [hPlayerX]
     and $f0

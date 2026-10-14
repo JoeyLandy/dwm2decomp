@@ -913,7 +913,7 @@ SetWStepArrivedIfPartyHasField55Bit7::
 
 ; wStepArrived = 1 when any party monster has status bit 2 (poison) set, otherwise 0 (SRAM enabled
 ; around the reads). (C1, E-0357)
-GreatLogFieldEvents_LoadSRAMRecordByte::
+TravelerEvents_LoadSRAMRecordByte::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -949,7 +949,7 @@ GreatLogFieldEvents_LoadSRAMRecordByte::
 
 ; wStepArrived = 1 when any party monster has status bit 0 set, otherwise 0 (SRAM enabled around the
 ; reads). (C1, E-0357)
-GreatLogFieldEvents_LoadSRAMRecordByte_2::
+TravelerEvents_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]

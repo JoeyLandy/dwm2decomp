@@ -4,13 +4,9 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
-; called from CallInBank81KeepRegs: copies L to wAIWeights; copies L to wSpeciesIdLo; copies H to
-; wSpeciesIdHi; calls LoadSpeciesFamily; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls
-; LoadSpeciesFamily; copies E to hTemp0; copies D to hTemp1; copies E to hTemp2; copies D to hTemp3;
-; sets hTemp4; then 15 more steps (see the code) (E-0347)
-; why: a helper of CallInBank81KeepRegs; CallInBank81KeepRegs: far-calls
-; CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc, preserving all registers (E-0352, E-0122,
-; E-0344)
+; Checks record B's parents against the breeding recipes for its species (the list at $4167 by
+; species id): first in their order, then swapped; when only the swapped order matches, sets record
+; B's family bit 4 (which the parents screen reads to swap their places). (C1, E-0357)
 CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -127,11 +123,10 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld [wSpeciesIdHi], a
     ret
 
-; Takes HL; changes HL, BC, A and D; continues in CallInBank81KeepRegs_CompareHLToBC; branches on b;
-; branches on hTemp5; continues in CallInBank81KeepRegs_CompareHLToBC (E-0347)
-; why: part of CallInBank81KeepRegs; CallInBank81KeepRegs: far-calls
-; CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc, preserving all registers (E-0352, E-0122,
-; E-0344)
+; Walks a recipe list (C = 0 on a match, $FF at the end without one): an $FF rule matches when the
+; first parent is the record's own species and the second parent's family is the record's; a kind-0
+; rule names a family, a kind-1 rule a first-parent species, each followed by partners (a species
+; when bit 15 is set, otherwise a family) checked against the second parent. (C1, E-0357)
 CallInBank81KeepRegs_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]

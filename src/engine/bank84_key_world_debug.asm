@@ -4,13 +4,9 @@
 SECTION "Bank 84", ROMX[$4000], BANK[$84]
     db $84
 
-; Sets wKeyWorldGenRoom to 0; copies the byte at KeyWorldAreaLayoutTable to hTemp8; copies the byte
-; at KeyWorldAreaLayoutTable to hTemp9; sets hTemp8; sets hTemp9; returns if the byte at
-; wKeyWorldFloorInfo + $3 is $ff; copies the byte at wKeyWorldFloorInfo + $3 to hTemp0; calls
-; RunDebugAutomapCaseTemp0; copies L to hTemp8; copies H to hTemp9; also changes HL, DE and A by
-; register arithmetic (E-0347)
-; why: part of DebugAutomap_Update; DebugAutomap_Update: update for debug-mode state 3: the screen
-; shows '? AUTOMAP ?' (key, level, position) (E-0352, E-0041)
+; Fills each floor entrance's 16-byte wKeyWorldFloorState entry ($FF ends the entrance list) by the
+; entrance's kind (RunDebugAutomapCaseTemp0), reading 16 bytes per entrance from the area count's
+; KeyWorldAreaLayoutTable entry; the room counter starts at 0. (C1, E-0357)
 DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc::
     xor a
     ld [wKeyWorldGenRoom], a
@@ -77,23 +73,18 @@ RunDebugAutomapCaseTemp0::
     dw RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2
     dw RunDebugAutomapCaseTemp0_ReturnAfterSetup
 
-; step 0 of RunDebugAutomapCaseTemp0: returns at once (E-0347)
-; why: step 0 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 0: nothing. (C1, E-0357)
 RunDebugAutomapCaseTemp0_Return::
     ret
 
-; step 6 of RunDebugAutomapCaseTemp0: takes DE; changes A (E-0347)
-; why: step 6 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 6: floor state byte 0 = $54. (C1, E-0357)
 RunDebugAutomapCaseTemp0_ReturnAfterSetup::
     ld a, $54
     ld [de], a
     ret
 
-; step 1 of RunDebugAutomapCaseTemp0: takes DE; changes HL, DE, A and B (E-0347)
-; why: step 1 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 1: byte 0 from the goal kind's entry of the table; bytes 2-15 from the layout data.
+; (C1, E-0357)
 RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
     ld hl, RunDebugAutomapCaseTemp0_Data
     ld a, [wKeyWorldGoalKind]
@@ -117,10 +108,8 @@ RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
     jr nz, .loop
     ret
 
-; step 2 of RunDebugAutomapCaseTemp0: calls NextRandomSeed; also changes HL, DE, A and B by register
-; arithmetic (E-0347)
-; why: step 2 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 2: byte 0 = the goal kind's entry + $20, with bit 7 set at random half the time;
+; bytes 2-15 from the layout data. (C1, E-0357)
 RunDebugAutomapCaseTemp0_NextRandomSeed::
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
@@ -155,10 +144,8 @@ RunDebugAutomapCaseTemp0_NextRandomSeed::
     jr nz, .loop
     ret
 
-; step 3 of RunDebugAutomapCaseTemp0: calls NextRandomSeed; also changes HL, DE, A and B by register
-; arithmetic (E-0347)
-; why: step 3 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 3: byte 0 = the goal kind's entry + $40, with bit 7 set half the time; bytes 2-15
+; from the layout data. (C1, E-0357)
 RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     ld hl, RunDebugAutomapCaseTemp0_NextRandomSeed_Data
     ld a, [wKeyWorldGoalKind]
@@ -193,11 +180,10 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_2::
     jr nz, .loop
     ret
 
-; step 4 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
-; RunDebugAutomapCaseTemp0_RandomBelowC; also changes HL, DE, A and B by register arithmetic
-; (E-0347)
-; why: step 4 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 4 (rooms): byte 0 = the room count from the layout, byte 1 = the first room's
+; number, byte 2 = one of four from the goal kind's row, bytes 3-15 from the layout with a random
+; 0-7 in bytes 5 and 7 when they are used; then the rooms (RunDebugAutomapCaseTemp0_RandomBelowC,
+; kind 4). (C1, E-0357)
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     ldh a, [hTemp8]
     ld l, a
@@ -262,11 +248,8 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0::
     call RunDebugAutomapCaseTemp0_RandomBelowC
     ret
 
-; step 5 of RunDebugAutomapCaseTemp0: sets hTemp0; calls NextRandomSeed; calls
-; RunDebugAutomapCaseTemp0_RandomBelowC; also changes HL, DE, A and B by register arithmetic
-; (E-0347)
-; why: step 5 of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Entrance kind 5 (rooms): as kind 4, but byte 2 is one of eight from its own table; then the rooms
+; (RunDebugAutomapCaseTemp0_RandomBelowC, kind 5). (C1, E-0357)
 RunDebugAutomapCaseTemp0_NextRandomSeed_SetTemp0_2::
     ldh a, [hTemp8]
     ld l, a
@@ -342,12 +325,12 @@ RunDebugAutomapCaseTemp0_NextRandomSeed_Data_3::
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
     db $01, $03, $0b, $01, $00, $0b, $00, $0b
 
-; Sets hTemp2 to $a0; calls NextRandomSeed; sets hTemp2; calls RandomBelowC; sets hTemp2; calls
-; RunDebugAutomapCaseTemp0_ReadByteInBank_2; sets hTemp3 to $0f; increments wKeyWorldGenRoom; sets
-; hTemp2 to 0; calls RandomBelowC; sets hTemp2; calls RandomBelowC; then 8 more steps (see the code)
-; (E-0347)
-; why: part of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; Fills wKeyWorldRoomTable for the entrance's rooms, two bytes each (the room record, then its two
+; exits in the nibbles): the first room is a random record ($00-$47 for kind 4; $A0 + 8 x 0-3 + 0-4
+; for kind 5) with two different random exits (RunDebugAutomapCaseTemp0_ReadByteInBank_2); each
+; further room (room count - 2 of them) is a byte from the 16-byte row of KeyWorldNextRoomRows for
+; the previous room's exit (one of its first ten) plus 0-7, entered by that exit and left by another
+; (RunDebugAutomapCaseTemp0_ReadByteInBank); wKeyWorldGenRoom counts them. (C1, E-0357)
 RunDebugAutomapCaseTemp0_RandomBelowC::
     push af
     ld a, [wKeyWorldGenRoom]
@@ -438,7 +421,7 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     ldh a, [hTemp4]
     and $0f
     swap a
-    ld de, KeyWorldMonsterBaseRows
+    ld de, KeyWorldNextRoomRows
     add e
     ld e, a
     jr nc, .call_random_below_c
@@ -480,11 +463,13 @@ RunDebugAutomapCaseTemp0_RandomBelowC::
     jr nz, .loop
     ret
 
-; RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 & $0F) + a
-; random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
-; RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine (E-0193, C1)
-; record: ten base values, then six zero bytes
-KeyWorldMonsterBaseRows::
+; E-0193 (C1: RunDebugAutomapCaseTemp0_RandomBelowC.loop reads the byte at $42C7 + 16 * (hTemp4 &
+; $0F) + a random 0-9, adds a random 0-7, stores the sum and uses it doubled as an index for
+; RunDebugAutomapCaseTemp0_ReadByteInBank; 6 rows end at that routine). E-0364: the sum is the next
+; room's record in wKeyWorldRoomTable (bank $72's room table), chosen by the exit it is entered
+; from, so these are room bases, not monster bases.
+; record: ten base room records, then six zero bytes; one row per exit of the previous room
+KeyWorldNextRoomRows::
     db $00, $08, $10, $18, $20, $28, $30, $38, $40, $48, $00, $00, $00, $00, $00, $00 ; id 0
     db $00, $08, $10, $18, $50, $58, $60, $68, $70, $78, $00, $00, $00, $00, $00, $00 ; id 1
     db $00, $20, $28, $30, $50, $58, $60, $80, $88, $90, $00, $00, $00, $00, $00, $00 ; id 2
@@ -492,10 +477,8 @@ KeyWorldMonsterBaseRows::
     db $10, $28, $38, $48, $58, $68, $78, $80, $90, $98, $00, $00, $00, $00, $00, $00 ; id 4
     db $18, $30, $40, $48, $60, $70, $78, $88, $90, $98, $00, $00, $00, $00, $00, $00 ; id 5
 
-; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; branches on hTemp3; copies C to
-; hTemp4; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: part of RunDebugAutomapCaseTemp0; RunDebugAutomapCaseTemp0: debug automap: runs the routine
-; for hTemp0 (jump table of seven) (E-0352, E-0122)
+; hTemp4 = a random one of the three exits of room record DE (bank $72, the table at $4001) other
+; than hTemp3. (C1, E-0357)
 RunDebugAutomapCaseTemp0_ReadByteInBank::
     push hl
     ld a, e
@@ -533,12 +516,8 @@ RunDebugAutomapCaseTemp0_ReadByteInBank::
     pop hl
     ret
 
-; Calls ReadByteInBank; calls NextRandomSeed; calls ReadByteInBank; copies C to hTemp3; calls
-; NextRandomSeed; calls ReadByteInBank; branches on hTemp3; copies C to hTemp4; also changes HL, DE,
-; A and B by register arithmetic (E-0347)
-; why: part of RunDebugAutomapCaseTemp0_ReadByteInBank, in part of RunDebugAutomapCaseTemp0;
-; RunDebugAutomapCaseTemp0: debug automap: runs the routine for hTemp0 (jump table of seven)
-; (E-0352, E-0122)
+; hTemp3 = a random one of the three exits of room record DE (bank $72), and hTemp4 another one
+; different from it. (C1, E-0357)
 RunDebugAutomapCaseTemp0_ReadByteInBank_2::
     push hl
     ld a, e
@@ -650,11 +629,8 @@ ApplyMapScreenFlagEvents::
     add_a_to_hl
     jr .skip
 
-; called from ApplyMapScreenFlagEvents: branches on hTemp0; returns if wIsCGB is 0; sets rSVBK to 2;
-; branches on wIsCGB; sets rSVBK to 0; also changes HL, DE and A by register arithmetic (E-0347)
-; why: a helper of ApplyMapScreenFlagEvents; ApplyMapScreenFlagEvents: for each 8-byte entry of
-; MapScreenFlagTiles matching hMapId and the screen position, with its story flag set, runs ...
-; (E-0352, E-0125)
+; Writes a map flag event's tiles into wScreenTileBuffer at the entry's offset: tiles hTemp0 and
+; hTemp0 + 1, or for $FF the 2 x 2 block $40/$41 over $50/$51 with CGB palette 5. (C1, E-0357)
 ApplyMapScreenFlagEvents_WriteSVBK::
     ldh a, [hTemp0]
     cp $ff
@@ -1072,15 +1048,11 @@ MapScreenFlagTiles::
     dw $00ae
     db $ff ; end
 
-; called from ItemUsable_LogTwig: sets hTempA to 0; returns if bit 3 of hPlayerStateFlags is set;
-; may continue in ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80; returns if hMapId is
-; below $20; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; branches on the byte at
-; LogTwigSpotList; branches on the byte at ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data;
-; copies wKeyWorldActive to wSpriteSnapshot; branches on wKeyWorldActive; copies wKeyWorldGoal to
-; wLogTwigKeyWorldGoal; copies wKeyWorldGoalCell to wLogTwigKeyWorldGoalCell; copies wKeyWorldKey to
-; wLogTwigKeyWorldKey; then 10 more steps (see the code) (E-0347)
-; why: a helper of ItemUsable_LogTwig; ItemUsable_LogTwig: usability check reached through
-; CheckItemUsable (indexed by wItemId (E-0352, E-0085)
+; Whether the LogTwig can be used: not while hPlayerStateFlags bit 3 is set, not on maps below $20,
+; not on a trigger cell, not on a spot listed in LogTwigSpotList (map, screen, two positions); key
+; worlds are checked by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80. Otherwise it
+; records the active key world's goal (wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell,
+; wLogTwigKeyWorldKey) for the map's region. (C1, E-0357)
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     xor a
     ldh [hTempA], a
@@ -1223,15 +1195,9 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-; May return early; calls ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc; may return early;
-; branches on hPlayerX; branches on hPlayerY; branches on the byte at wKeyWorldObjects; branches on
-; hPlayerY; branches on the byte at wKeyWorldFloorInfo + $3; branches on hPlayerX; branches on the
-; byte at wKeyWorldFloorInfo + $3; branches on hPlayerX; copies wKeyWorldActive to wSpriteSnapshot;
-; then 17 more steps (see the code) (E-0347)
-; why: part of ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data, in part of
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc, in a helper of ItemUsable_LogTwig;
-; ItemUsable_LogTwig: usability check reached through CheckItemUsable (indexed by wItemId (E-0352,
-; E-0085)
+; The LogTwig in a key world (map type $80): not on a trigger cell, nor at ($40, $40) on a key-world
+; object's screen, nor on a floor entrance ($40 across, or $50 except kinds 4 and 5); otherwise
+; records the goal as ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc. (C1, E-0357)
 ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     cp $80
     ret nz
@@ -1453,9 +1419,8 @@ LogTwigSpotList::
     db $da, $10, $44, $ff ; id 49
     db $ff ; end
 
-; Changes A and C; branches on wTriggerKind; branches on wTriggerCell (E-0347)
-; why: part of ItemUsable_LogTwig; ItemUsable_LogTwig: usability check reached through
-; CheckItemUsable (indexed by wItemId (E-0352, E-0085)
+; A = 1 when the player stands on the trigger cell (wTriggerCell, with wTriggerKind not $FF),
+; otherwise 0. (C1, E-0357)
 ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     ld a, [wTriggerKind]
     cp $ff
@@ -1478,17 +1443,10 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
     xor a
     ret
 
-; called from RunFieldReturnPhase_OpenFieldMenuOnA: sets hSpriteWindowClipMode to 0; may continue in
-; RunFieldReturnPhase_ReadMapScreenX; branches on the byte at
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data; copies B to hTemp0; branches on
-; wSpriteSnapshot; branches on wLogTwigKeyWorldKey; may continue in
-; RunFieldReturnPhase_CheckKeyWorldGoal; calls RunFieldReturnPhase_WriteSVBK; continues in
-; RunFieldReturnPhase_CheckKeyWorldGoal; may continue in RunFieldReturnPhase_CheckKeyWorldGoal;
-; calls RunFieldReturnPhase_WriteSVBK; continues in RunFieldReturnPhase_CheckKeyWorldGoal; then 1
-; more step (see the code) (E-0347)
-; why: a helper of RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field
-; entry phase 1: runs the return action stored in wDataBankSave. 0 opens the field menu (as if A
-; were pressed) (E-0352, E-0357)
+; Back in the field after the LogTwig, on a region map: finds the map's region; with a recorded key
+; world for this region whose goal cell is this screen, marks the goal there
+; (RunFieldReturnPhase_WriteSVBK), otherwise marks the table's spot when the screen matches; then
+; the key-world goal (RunFieldReturnPhase_CheckKeyWorldGoal). (C1, E-0357)
 RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc::
     xor a
     ldh [hSpriteWindowClipMode], a
@@ -1552,16 +1510,8 @@ RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
-; Branches on wSpriteSnapshot; branches on wLogTwigKeyWorldKey; branches on wKeyWorldSlot; may
-; continue in RunFieldReturnPhase_CheckKeyWorldGoal; calls RunFieldReturnPhase_WriteSVBK; continues
-; in RunFieldReturnPhase_CheckKeyWorldGoal; may continue in RunFieldReturnPhase_CheckKeyWorldGoal;
-; calls RunFieldReturnPhase_WriteSVBK; continues in RunFieldReturnPhase_CheckKeyWorldGoal; also
-; changes BC and A by register arithmetic (E-0347)
-; why: part of RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data, in part of
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc, in a helper of
-; RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field entry phase 1:
-; runs the return action stored in wDataBankSave. 0 opens the field menu (as if A were pressed)
-; (E-0352, E-0357)
+; The same in a key world: the recorded goal when the key's slot matches and the screen is its cell,
+; otherwise wKeyWorldGoalPos on wKeyWorldGoalScreen. (C1, E-0357)
 RunFieldReturnPhase_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
@@ -1603,14 +1553,9 @@ RunFieldReturnPhase_ReadMapScreenX::
     call RunFieldReturnPhase_WriteSVBK
     jr RunFieldReturnPhase_CheckKeyWorldGoal
 
-; Branches on wIsCGB; branches on wMapType; branches on hTemp0; sets rSVBK to 2; sets rSVBK to 0;
-; branches on hTemp0; calls DrawFullScreenBufferToBGMap; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: part of RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc_Data, in part of
-; RunFieldReturnPhase_WriteSpriteWindowClipModeAndTemp0Etc, in a helper of
-; RunFieldReturnPhase_OpenFieldMenuOnA; RunFieldReturnPhase_OpenFieldMenuOnA: Field entry phase 1:
-; runs the return action stored in wDataBankSave. 0 opens the field menu (as if A were pressed)
-; (E-0352, E-0357)
+; Draws the key-world goal tiles ($46/$47 over $56/$57) at wKeyWorldGoal in wScreenTileBuffer with
+; the CGB palette (5 in key worlds, 3 for regions 4 and $0A, 5 for 5-7, otherwise 1), then copies
+; them to the BG map at the scroll. (C1, E-0357)
 RunFieldReturnPhase_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
@@ -1725,11 +1670,8 @@ RunFieldReturnPhase_CheckKeyWorldGoal::
     call DrawFullScreenBufferToBGMap
     ret
 
-; Returns if wIsCGB is 0; branches on wMapType; sets rSVBK to 2; sets rSVBK to 0; also changes HL,
-; DE, A and C by register arithmetic (E-0347)
-; why: part of RunFieldReturnPhase; RunFieldReturnPhase: what the field does as it is entered
-; (InitFieldScreen), by wFieldReturnPhase & 3: phases 0 and 3 set the field and menu state, 1 opens
-; the ... (E-0352, E-0354, E-0122)
+; Draws the 2 x 2 marker ($40/$41 over $50/$51) at position C (x high nibble, y low) in
+; wScreenTileBuffer, with the region's CGB palette from the table (1 in key worlds). (C1, E-0357)
 RunFieldReturnPhase_WriteSVBK::
     ld a, c
     and $0f
