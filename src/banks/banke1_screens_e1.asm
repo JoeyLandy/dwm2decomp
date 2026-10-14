@@ -112,16 +112,21 @@ GameMode5_Update_LoadScreens_ScreenWithMusic_DecompressToVRAM_OBJPaletteBufferDa
     db $20, $7c, $ff, $7f, $a8, $14, $00, $00, $20, $7c, $ff, $7f, $35, $04, $00, $00
 
 ; runs RunBankE1Routine_WaitOamNextEntry with DE = RunBankE1Routine_Data (E-0122) (E-0344: the
-; address in its name dropped or read as the label there; was RunE15AC0For5ABE; a trailing
+; address in its name dropped or read as the label there; was RunBankE1Routine; a trailing
 ; preposition left by the dropped address removed)
 RunBankE1Routine::
     ld de, RunBankE1Routine_Data
     call RunBankE1Routine_WaitOamNextEntry
     ret
 
+; data read by RunBankE1Routine (2 bytes)
 RunBankE1Routine_Data::
     db $3c, $5d
 
+; called from RunBankE1Routine: may return early; branches on the byte at hMetaSpriteXLo; returns if
+; the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
+; hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
+; hMetaSpriteXLo is $80; ...
 RunBankE1Routine_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

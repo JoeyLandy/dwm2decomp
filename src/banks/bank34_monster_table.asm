@@ -12,7 +12,7 @@ LoadMonsterRecord::
     ret
 
 ; copies hTemp0 bytes of the 26-byte entry of monster wMonsterId/wMonsterId + $1 plus C from $4075
-; to DE; ids from $250 use CopyMonsterTableBytesFrom4056 in bank $A2 (E-0125)
+; to DE; ids from $250 use CopyMonsterTableBytes in bank $A2 (E-0125)
 CopyMonsterTableBytesFromMonsterTable::
     ld a, [wMonsterId + $1]
     cp $02

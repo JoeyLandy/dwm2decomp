@@ -71,6 +71,7 @@ CopyStringToBuffer_Bank89_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_98::
+; data read by BeginStringDisplay_Bank2B_Overflow (1 word)
 MessageStrings_Bank2B_Overflow::
     dw StringList_Bank2B_Overflow_0 ; id 0
 

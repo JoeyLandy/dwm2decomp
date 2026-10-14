@@ -9,27 +9,33 @@ GetBattleATK_BankA3::
     ld hl, wBattleATK
     jr GetBattleMP_BankA3_Skip
 
+; Continues in GetBattleMP_BankA3_Skip
 GetBattleDEF_BankA3::
     ld hl, wBattleDEF
     jr GetBattleMP_BankA3_Skip
 
+; Continues in GetBattleMP_BankA3_Skip
 GetBattleMaxHP_BankA3::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankA3_Skip
 
+; Continues in GetBattleMP_BankA3_Skip
 GetBattleMaxMP_BankA3::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankA3_Skip
 
+; Continues in GetBattleMP_BankA3_Skip
 GetBattleHP_BankA3::
     ld hl, wBattleHP
     jr GetBattleMP_BankA3_Skip
 
+; Continues in GetBattleMP_BankA3_Skip
 GetBattleMP_BankA3::
     ld hl, wBattleMP
     jr GetBattleMP_BankA3_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
+; Works on registers only
 GetBattleMP_BankA3_Skip::
     add a
     add_a_to_hl
@@ -247,8 +253,9 @@ SlotHasStatus3Or4Bits_BankA3:: ; configured code entry (E-0205); C0
     ret
 
 ; runs ActorFormationSlotToTemp0, then wSlotMarks[hTemp0] = 3 (E-0122) (E-0340: the address in its
-; name read as its RAM name; was RunA3414FAndMarkWDA5B3) (E-0344: the address in its name dropped or
-; read as the label there; was RunA3414FAndMarkSlotMarks3)
+; name read as its RAM name; was RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3) (E-0344: the
+; address in its name dropped or read as the label there; was
+; RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3)
 RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3::
     call ActorFormationSlotToTemp0
     ldh a, [hTemp0]
@@ -290,6 +297,7 @@ ActorFormationSlotToTemp0::
     pop bc
     ret
 
+; data read by ActorFormationSlotToTemp0 (6 bytes)
 ActorFormationSlotToTemp0_Data::
     db $00, $01, $00, $02, $01, $02
 
@@ -480,7 +488,7 @@ SlotHasStatus3Or4Bits_BankA3_2::
     pop hl
     ret
 
-; SaveActionChoicesAndPickFormations_Sub01 walks these 5-byte records until a 0 byte; a record
+; SaveActionChoicesAndPickFormations_DivideBByA walks these 5-byte records until a 0 byte; a record
 ; applies when each slot of the side chose the given action and can act (CheckSlotStatusBlock,
 ; SlotHasStatus3Or4Bits_BankA3); it then returns the combined action, after the compatibility roll
 ; when byte 3 is 1 or in link mode 2 (E-0172, C1)
@@ -779,8 +787,8 @@ FormationChanceFactors::
     db $64 ; id 226
     db $0a ; id 227
 
-; the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot) + (first slot's index) for the
-; two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917 (E-0172, C1)
+; the roll reads $45B7 + 32 * (second slot's PersonalityIndexOfSlot_BankA3) + (first slot's index)
+; for the two slots of the pair chosen by B / 3; 27 rows fill the slice up to $4917 (E-0172, C1)
 ; record: value for the first slot's personality index 0-31 (27 used)
 PersonalityCompatibility::
     db $08, $09, $02, $07, $06, $05, $02, $06, $07, $08, $07, $04, $06, $07, $07, $06, $06, $04, $07, $06, $09, $07, $08, $02, $08, $03, $04, $00, $00, $00, $00, $00 ; id 0
@@ -811,6 +819,7 @@ PersonalityCompatibility::
     db $03, $05, $08, $02, $02, $08, $08, $02, $07, $08, $08, $07, $08, $08, $07, $02, $07, $07, $09, $08, $02, $02, $08, $07, $08, $08, $09, $00, $00, $00, $00, $00 ; id 25
     db $04, $09, $03, $03, $05, $04, $05, $05, $04, $05, $05, $04, $05, $09, $05, $04, $05, $05, $05, $06, $05, $04, $09, $04, $09, $09, $05, $00, $00, $00, $00, $00 ; id 26
 
+; called from SaveActionChoicesAndPickFormations: works on registers only
 SaveActionChoicesAndPickFormations_DivideBByA::
     push bc
     push de
@@ -956,6 +965,7 @@ PersonalityIndexOfSlot_BankA3_2::
     pop hl
     ret
 
+; called from RollRandomLoBelowChance: branches on wLinkMode; branches on wBattleActor
 RollRandomLoBelowChance_WriteTemp0::
     ld a, [wLinkMode]
     or a
@@ -1054,7 +1064,7 @@ RemoveCFromActionQueue_A3::
     pop de
     ret
 
-; C = an ally the target can duck behind, or $FF (E-0337; was ResolveStepBegin_AdvanceRandom)
+; C = an ally the target can duck behind, or $FF (E-0337; was PickDuckBehindAlly)
 PickDuckBehindAlly::
     call AdvanceRandom
     ld a, $ff
@@ -1104,6 +1114,9 @@ PickDuckBehindAlly::
     ld c, a
     ret
 
+; called from ActionEffect_Chance: calls AdvanceRandom; branches on wLinkMode; branches on
+; wBattleKind; returns unless bit 2 of wBattleActor is set; may continue in
+; ActionEffect_Chance_AdvanceRandom
 ActionEffect_Chance_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -1148,6 +1161,7 @@ ActionEffect_Chance_AdvanceRandom::
     jr z, ActionEffect_Chance_AdvanceRandom
     ret
 
+; data read by ActionEffect_Chance_AdvanceRandom (14 bytes)
 ActionEffect_Chance_AdvanceRandom_Data::
     db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 
@@ -1206,7 +1220,7 @@ StoreBattleStateToPartyRecords_BankA3::
     ld [rRAMG], a
     ret
 
-; RollRandomLoBelowChance_Sub01 reads the byte at $4B57 + the actor's wBattleMonsterId for the
+; RollRandomLoBelowChance_WriteTemp0 reads the byte at $4B57 + the actor's wBattleMonsterId for the
 ; party's monsters, and every battler in link modes other than 0 and 2; RollRandomLoBelowChance
 ; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
@@ -1597,8 +1611,8 @@ MonsterResolveChanceTable::
     db $03 ; id 382 Kagebou
     db $00 ; id 383 ?
 
-; RollRandomLoBelowChance_Sub01 reads the byte at $4CD7 + the actor's wBattleMonsterId for battlers
-; 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance
+; RollRandomLoBelowChance_WriteTemp0 reads the byte at $4CD7 + the actor's wBattleMonsterId for
+; battlers 4 and up (the foes) outside link play (wLinkMode 0 or 2); RollRandomLoBelowChance
 ; (ResolveStepChanceRoll) treats 3 as 4 and returns carry when wRandomLo is below it, a chance of
 ; 0-4 in 256; 384 bytes, one per monster id (E-0204, C1)
 MonsterResolveChanceTable_Foes::

@@ -4,6 +4,7 @@
 SECTION "Bank 62", ROMX[$4000], BANK[$62]
     db $62
 
+; data read by KeyWorldChunkGroup01 (8 bytes)
 KeyWorld01_0_Y2X1_Header::
     db $03, $02, $04, $0b, $0d, $33, $01, $00
 
@@ -224,12 +225,12 @@ KeyWorldScreen62_2::
     db $0f, $3b
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 4: entry 4 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1366 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles4::
     INCBIN "maps/key_worlds/tiles4.lz"
 
-; entry 4 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 4 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes4::
@@ -370,12 +371,12 @@ KeyWorld16_0_Y3X1_Attrs::
     INCBIN "maps/key_worlds/16_0_y3_x1_attrs.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 8: entry 8 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1243 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles8::
     INCBIN "maps/key_worlds/tiles8.lz"
 
-; entry 8 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 8 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes8::

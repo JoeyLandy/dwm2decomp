@@ -9,7 +9,7 @@ SECTION "Bank E2", ROMX[$4000], BANK[$E2]
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083) (E-0332: skill 0 is Fight, the plain attack: with Guard (skill $AC) it is
 ; scored on every monster's turn whether or not any record holds it, as the Command menu offers
-; Fight / Skill / Guard; C2) (was AIScore_Skill00)
+; Fight / Skill / Guard; C2) (was AIScore_Fight)
 AIScore_Fight::
     farcall AIScore_Fight_Conditions
     ld a, c
@@ -111,6 +111,9 @@ AIScore_Fight::
 ; AIScoreRoutineTableB, indexed by skill number): 1 Blaze, 2 Blazemore, 3 Blazemost. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the
 ; individual checks are not interpreted (E-0083)
+; code: calls AIFireSkillUsable; may return early; calls FailIfFoeAIDamageEstimatesAtLeastEstimate;
+; calls AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; calls
+; AccumulateBank6WordToDA6E; calls SetCToZero; ...
 AIScore_Blaze::
     farcall AIFireSkillUsable
     ld a, c
@@ -164,6 +167,9 @@ AIScore_Blaze::
 ; 9 Explodet, 10 Infernos, 11 Infermore, 12 Infermost, 13 Bolt .... It runs checks and adds weights
 ; to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are
 ; not interpreted (E-0083)
+; code: calls AIFireSkillUsable; may return early; calls AIGateFoeStatus1Mask22; calls
+; AccumulateBank6WordToDA70; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; calls
+; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; ...
 AIScore_Firebal::
     farcall AIFireSkillUsable
     ld a, c
@@ -272,6 +278,9 @@ AIScoreB_Beat::
 ; AIScoreRoutineTableB, indexed by skill number): 19 Beat, 20 Defeat. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Beat_Conditions; may return early; calls AIGateFoeStatus1Mask22; calls
+; AccumulateBank6WordToDA70; calls SetCToZero; calls AccumulateBank6WordToDA6E; calls
+; AccumulateBank6WordToDA70; ...
 AIScore_Beat::
     farcall AIScore_Beat_Conditions
     ld a, c
@@ -433,6 +442,8 @@ AIScore_Sacrifice::
 ; AIScoreRoutineTableB, indexed by skill number): 22 Heal, 23 HealMore, 24 HealAll. It runs checks
 ; and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the
 ; individual checks are not interpreted (E-0083)
+; code: calls AIHealUsable; may return early; calls FailIfTwoAlliesBelowHalfHP; may continue in
+; AIScore_HealUs_AnyFoeLacksStatus0MaskCC; calls AccumulateBank6WordToDA70
 AIScore_Heal::
     farcall AIHealUsable
     ld a, c
@@ -447,6 +458,9 @@ AIScore_Heal::
     ld bc, $0069
     call AccumulateBank6WordToDA70
 
+; called from AIScore_HealUs: calls AnyFoeLacksStatus0MaskCC; calls AccumulateBank6WordToDA6E; calls
+; AnyFoeHasClearStatus3; calls AccumulateBank6WordToDA6E; calls AnyAllyHPAtMostThreeQuarters; calls
+; AccumulateBank6WordToDA70; calls AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty; ...
 AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
     farcall AnyFoeLacksStatus0MaskCC
     ld a, c
@@ -499,6 +513,9 @@ AIScore_HealUs_AnyFoeLacksStatus0MaskCC::
 ; AIScoreRoutineTableB, indexed by skill number): 25 HealUs, 26 HealUsAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIHealUsable; may return early; calls AIScore_HealUs_AnyFoeLacksStatus0MaskCC; calls
+; FewerThanTwoAlliesAtHP1; calls AccumulateBank6WordToDA6E; calls FailIfTwoAlliesBelowHalfHP; calls
+; AccumulateBank6WordToDA6E
 AIScore_HealUs::
     farcall AIHealUsable
     ld a, c
@@ -529,6 +546,7 @@ AIScore_HealUs::
 ; AIScoreRoutineTableB, indexed by skill number): 27 MPass, 28 MPassmore, 29 MPassmost. It runs
 ; checks and adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the
 ; individual checks are not interpreted (E-0083)
+; code: calls AIScore_MPass_ActorLacksStatus4Bits67; may return early
 AIScore_MPass::
     farcall AIScore_MPass_ActorLacksStatus4Bits67
     ld a, c
@@ -540,6 +558,9 @@ AIScore_MPass::
 ; AIScoreRoutineTableB, indexed by skill number): 30 Vivify, 31 Revive. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Vivify_Conditions; may return early; calls
+; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes; calls AIGateCompareAllyStatAverages; calls
+; AccumulateBank6WordToDA70
 AIScore_Vivify::
     farcall AIScore_Vivify_Conditions
     ld a, c
@@ -650,6 +671,10 @@ AIScore_CurseOff::
 ; AIScoreRoutineTableB, indexed by skill number): 37 Upper, 38 Increase. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Upper_Conditions; may return early; calls
+; CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; WeighLinkRules1RuleBit5; calls AIScore_Upper_CompareFoeAverageATKWithAllyDEF; calls SetCToZero;
+; ...
 AIScore_Upper::
     farcall AIScore_Upper_Conditions
     ld a, c
@@ -679,6 +704,10 @@ AIScore_Upper::
 ; AIScoreRoutineTableB, indexed by skill number): 39 Sap, 40 Defense. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Sap_Conditions; may return early; calls
+; CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; PassIfFoeAverageDEFAtMostTwiceAllyATK; calls AccumulateBank6WordToDA6E; calls
+; PassIfTwiceATKAboveLowestFoeDEF; ...
 AIScore_Sap::
     farcall AIScore_Sap_Conditions
     ld a, c
@@ -760,6 +789,9 @@ AIScore_Sap::
 ; AIScoreRoutineTableB, indexed by skill number): 41 Speed, 42 SpeedUp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Speed_Conditions; may return early; calls FastestFoeAGLAbove31PercentOfActor;
+; calls AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; calls AccumulateBank6WordToDA6E;
+; calls WeighLinkRules1RuleBit5
 AIScore_Speed::
     farcall AIScore_Speed_Conditions
     ld a, c
@@ -790,6 +822,9 @@ AIScore_Speed::
 ; AIScoreRoutineTableB, indexed by skill number): 43 Slow, 44 SlowAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Slow_Conditions; may return early; calls AIGateFoeStatus1Mask22; calls
+; AccumulateBank6WordToDA70; calls FastestFoeAGLAbove31PercentOfActor; calls
+; AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; ...
 AIScore_Slow::
     farcall AIScore_Slow_Conditions
     ld a, c
@@ -1030,6 +1065,9 @@ AIScore_Surround::
 ; AIScoreRoutineTableB, indexed by skill number): 47 Sleep, 48 SleepAll. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Sleep_Conditions; may return early; calls AIGateFoeStatus1Mask22; calls
+; AccumulateBank6WordToDA70; calls AllyAverageAGLAtLeastFoes; calls AccumulateBank6WordToDA6E; calls
+; SetCToZero; ...
 AIScore_Sleep::
     farcall AIScore_Sleep_Conditions
     ld a, c
@@ -1276,6 +1314,8 @@ AIScore_Ironize::
 ; AIScoreRoutineTableB, indexed by skill number): 54 MagicBack, 55 Bounce. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_MagicBack_Conditions; may return early; calls SetCToZero; calls
+; AccumulateBank6WordToDA70; calls AIModeAtLeast2AndFoeLacks; calls AccumulateBank6WordToDA6E
 AIScore_MagicBack::
     farcall AIScore_MagicBack_Conditions
     ld a, c
@@ -1558,6 +1598,9 @@ AIScore_MegaMagic::
 ; AIScoreRoutineTableB, indexed by skill number): 62 BigBang, 63 Hellblast. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIAttackSkillUsable; may return early; calls ActorLacksStatus4Bits67; calls
+; AccumulateBank6WordToDA6E; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; calls
+; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; ...
 AIScore_BigBang::
     farcall AIAttackSkillUsable
     ld a, c
@@ -1771,6 +1814,10 @@ AIScore_WindBeast::
     ld bc, $0010
     call AccumulateBank6WordToDA70
 
+; called from AIScore_Vacuum: calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls
+; AccumulateBank6WordToDA70; calls FailIfFoeAIDamageEstimatesAtLeastEstimate; calls
+; AccumulateBank6WordToDA70; calls PassIfFoesAverageResistanceAtLeast2; calls
+; AccumulateBank6WordToDA6E; calls InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; ...
 AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -1821,6 +1868,9 @@ AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates::
 ; AIScoreRoutineTableB, indexed by skill number): 73 Vacuum, 74 Lightning. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIAttackSkillUsable; may return early; calls
+; AIScore_Vacuum_CheckLoneFoeHPNotBelowAIDamageEstimates; calls FewerThanTwoFoesPresent; calls
+; AccumulateBank6WordToDA6E; calls CheckFoeStatus6Bit3; calls AccumulateBank6WordToDA70; ...
 AIScore_Vacuum::
     farcall AIAttackSkillUsable
     ld a, c
@@ -2075,6 +2125,10 @@ AIScore_Tidalwave::
 ; AIScoreRoutineTableB, indexed by skill number): 78 CallHelp, 79 YellHelp. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIAndFoeLacksStatus3And4; may return early; calls
+; CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; FailIfFoeAIDamageEstimatesAtLeastEstimate; calls AccumulateBank6WordToDA70; calls
+; PassIfFoesAverageResistanceAtLeast2; ...
 AIScore_CallHelp::
     farcall AIAndFoeLacksStatus3And4
     ld a, c
@@ -2175,6 +2229,10 @@ AIScore_CallHelp::
 ; AIScoreRoutineTableB, indexed by skill number): 80 FireSlash, 81 VacuSlash, 82 BoltSlash, 83
 ; IceSlash. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1
 ; (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; code: calls AIAndFoeLacksStatus3And4; may return early; calls
+; CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; CheckFoeStatus7Bit2; calls AccumulateBank6WordToDA70; calls
+; FailIfFoeAIDamageEstimatesAtLeastEstimate; ...
 AIScore_FireSlash::
     farcall AIAndFoeLacksStatus3And4
     ld a, c
@@ -2277,6 +2335,9 @@ AIScore_SlimeBlow::
     ld bc, $0052
     call AccumulateBank6WordToDA6E
 
+; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; CheckFoeStatus7Bit2; calls AccumulateBank6WordToDA70; calls ActorLacksStatus1Bits23And4Bits01;
+; calls AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit1; ...
 AIScore_SlimeBlow_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -2479,6 +2540,9 @@ AIScore_PoisonHit::
     ld bc, $0054
     call AccumulateBank6WordToDA6E
 
+; Calls ActorLacksStatus1Bits23And4Bits01; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit1; calls CheckBattleKindAtLeast2OrLinkModeSet; calls
+; AccumulateBank6WordToDA6E; calls FoeHPCheckReadsWrongSlot; calls AccumulateBank6WordToDA6E; ...
 AIScore_PoisonHit_CallActorLacksStatus1Bits23And4Bits01::
     farcall ActorLacksStatus1Bits23And4Bits01
     ld a, c
@@ -2665,6 +2729,9 @@ AIScore_SquallHit::
 ; AIScoreRoutineTableB, indexed by skill number): 99 BiAttack, 100 QuadHits. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore; may return early; calls
+; CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; ActorLacksStatus1Bits23And4Bits01; calls AccumulateBank6WordToDA6E; calls SetCToZero; ...
 AIScore_BiAttack::
     farcall AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -2829,6 +2896,10 @@ AIScore_MultiCut::
     ld bc, $0012
     call AccumulateBank6WordToDA70
 
+; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; FailIfFoeAIDamageEstimatesAtLeastEstimate; calls AccumulateBank6WordToDA70; calls
+; PassIfFoesAverageResistanceAtLeast2; calls AccumulateBank6WordToDA6E; calls
+; InvertedResultOfFailIfFoeAIDamageEstimatesAtLeastEstimate; ...
 AIScore_MultiCut_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3420,6 +3491,10 @@ AIScore_Ramming::
     ld bc, $0064
     call AccumulateBank6WordToDA6E
 
+; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; PassIfFoesAverageResistanceAtLeast2; calls AccumulateBank6WordToDA6E; calls
+; AIScore_Ramming_HPBandOfSlotTemp0; calls ActorLacksStatus1Bits23And4Bits01; calls
+; AccumulateBank6WordToDA70; ...
 AIScore_Ramming_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -3513,9 +3588,13 @@ AIScore_SleepAir::
     ld bc, $00bc
     call AccumulateBank6WordToDA70
 
+; Calls WeighLinkRules1RuleBit3
 AIScore_SleepAir_CallWeighLinkRules1RuleBit3::
     call WeighLinkRules1RuleBit3
 
+; Calls FewerThanTwoFoesPresent; calls AccumulateBank6WordToDA6E; calls FailIfAnyFoeFullyResistant;
+; calls AccumulateBank6WordToDA70; calls ResistanceAverageGateForAISide; calls
+; AccumulateBank6WordToDA6E; calls ResistanceAverageGateForFoeAIMode3; ...
 AIScore_SleepAir_CallFewerThanTwoFoesPresent::
     farcall FewerThanTwoFoesPresent
     ld a, c
@@ -3614,6 +3693,9 @@ AIScore_Curse::
 ; AIScoreRoutineTableB, indexed by skill number): 118 OddDance, 119 RobDance. It runs checks and
 ; adds weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_OddDance_Conditions; may return early; calls AccumulateBank6WordToDA6E; calls
+; SetCToZero; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit2; ...
 AIScore_OddDance::
     farcall AIScore_OddDance_Conditions
     ld a, c
@@ -4041,6 +4123,9 @@ AIScore_SandStorm::
     and a
     ret z
 
+; Calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls AccumulateBank6WordToDA70; calls
+; PassIfFoeAverageATKAtMostTwiceAllyDEF; calls AccumulateBank6WordToDA6E; calls SetCToZero; calls
+; AccumulateBank6WordToDA70; calls WeighLinkRules1RuleBit5; ...
 AIScore_SandStorm_CallCheckLoneFoeHPNotBelowAIDamageEstimates::
     farcall CheckLoneFoeHPNotBelowAIDamageEstimates
     ld a, c
@@ -4298,6 +4383,9 @@ AIScore_ThickFog::
 ; AIScoreRoutineTableB, indexed by skill number): 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136
 ; BazooCall. It runs checks and adds weights to wAISkillScore-wAISkillScore2 + $1
 ; (AccumulateBank6WordToDA6E/DA70); the individual checks are not interpreted (E-0083)
+; code: calls AIScore_TatsuCall_Conditions; may return early; calls AllOtherAlliesHaveStatus0Bit6;
+; calls AccumulateBank6WordToDA6E; calls CheckLoneFoeHPNotBelowAIDamageEstimates; calls
+; AccumulateBank6WordToDA70; calls SetCToZero; ...
 AIScore_TatsuCall::
     farcall AIScore_TatsuCall_Conditions
     ld a, c
@@ -4541,6 +4629,9 @@ AIScoreB_LegSweep::
 ; AIScoreRoutineTableB, indexed by skill number): 141 LegSweep, 142 BigTrip. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_LegSweep_Conditions; may return early; calls SetCToZero; calls
+; AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5; calls ResistanceAverageGateForAISide;
+; calls AccumulateBank6WordToDA6E; ...
 AIScore_LegSweep::
     farcall AIScore_LegSweep_Conditions
     ld a, c
@@ -4592,6 +4683,9 @@ AIScoreB_Ahhh::
 ; AIScoreRoutineTableB, indexed by skill number): 143 Ahhh, 144 WarCry. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AILickSkillUsable; may return early; calls SetCToZero; calls
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E; calls
+; WeighLinkRules1RuleBit5; ...
 AIScore_Ahhh::
     farcall AILickSkillUsable
     ld a, c
@@ -4812,6 +4906,9 @@ AIScore_BladeD::
 ; AIScoreRoutineTableB, indexed by skill number): 151 Cover, 152 Guardian. It runs checks and adds
 ; weights to wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual
 ; checks are not interpreted (E-0083)
+; code: calls AIScore_Cover_Conditions; may return early; calls AIScoreGuardSkill; may return early;
+; calls AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty; calls SetCToZero; calls
+; AccumulateBank6WordToDA70; ...
 AIScore_Cover::
     farcall AIScore_Cover_Conditions
     ld a, c
@@ -4846,6 +4943,8 @@ AIScore_TailWind::
     call AIScore_TailWind_AccumulateBank6WordToDA70
     ret z
 
+; Calls FailIfFoeKnowsSkills42To47; calls AccumulateBank6WordToDA6E; calls SetCToZero; calls
+; AccumulateBank6WordToDA6E; calls WeighLinkRules1RuleBit5
 AIScore_TailWind_CallFailIfFoeKnowsSkills42To47::
     farcall FailIfFoeKnowsSkills42To47
     ld a, c
@@ -5200,7 +5299,7 @@ AIScore_Whistle::
 ; AIScoreRoutineTableB, indexed by skill number): 170 Ahhh. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
-; AIScore_Ahhh_6401)
+; AIScore_Ahhh_2)
 AIScore_Ahhh_2::
     farcall AIStatusLickUsable
     ld a, c
@@ -5274,7 +5373,7 @@ AIScore_Guard::
 ; AIScoreRoutineTableB, indexed by skill number): 173 PanicAll. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
-; AIScore_PanicAll_6473)
+; AIScore_PanicAll_2)
 AIScore_PanicAll_2::
     farcall AIPanicAllUsable
     ld a, c
@@ -5294,7 +5393,7 @@ AIScore_PanicAll_2::
 ; AIScoreRoutineTableB, indexed by skill number): 174 Ironize. It runs checks and adds weights to
 ; wAISkillScore-wAISkillScore2 + $1 (AccumulateBank6WordToDA6E/DA70); the individual checks are not
 ; interpreted (E-0083) (E-0344: the address in its name dropped or read as the label there; was
-; AIScore_Ironize_648D)
+; AIScore_Ironize_2)
 AIScore_Ironize_2::
     farcall AIIronizeUsable
     ld a, c
@@ -5455,6 +5554,8 @@ ReadBank6TableWord::
     ld c, a
     ret
 
+; called from AIScore_StrongD: calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E; calls
+; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
 AIScore_StrongD_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5500,6 +5601,8 @@ AIScore_StrongD_HPBandOfSlotTemp0::
 .return:
     ret
 
+; called from AIScore_AquaWall: calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA70; calls
+; AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70
 AIScore_AquaWall_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5545,6 +5648,8 @@ AIScore_AquaWall_HPBandOfSlotTemp0::
 .return:
     ret
 
+; called from AIScore_SuckAll: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; AIScore_SuckAll_HPBandOfSlotTemp0
 AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5565,6 +5670,7 @@ AIScore_SuckAll_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
+; Calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E; calls AccumulateBank6WordToDA70
 AIScore_SuckAll_HPBandOfSlotTemp0::
     farcall HPBandOfSlotTemp0
     ld a, c
@@ -5581,6 +5687,8 @@ AIScore_SuckAll_HPBandOfSlotTemp0::
 .return:
     ret
 
+; called from AIScore_Meditate: calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E; calls
+; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
 AIScore_Meditate_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     farcall HPBandOfSlotTemp0
@@ -5626,6 +5734,7 @@ AIScore_Meditate_HPBandOfSlotTemp0::
 .return:
     ret
 
+; Calls CarryUnlessBattleSlotOutSlotEmpty; calls AIScore_HealUs_HPBandOfSlotTemp0
 AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5646,6 +5755,7 @@ AIScore_HealUs_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E
 AIScore_HealUs_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5666,6 +5776,7 @@ AIScore_HealUs_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
+; data read by AIScore_HealUs_HPBandOfSlotTemp0 (6 bytes)
 AIScore_HealUs_HPBandOfSlotTemp0_Data1::
     db $1e, $1f, $20, $21, $22, $22
 
@@ -5674,7 +5785,7 @@ AIScore_HealUs_HPBandOfSlotTemp0_Data2::
 
 ; for the three slots of the side in A (bit 2), runs ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0
 ; with hTemp0 = slot for each occupied one (E-0122) (E-0344: the address in its name dropped or read
-; as the label there; was ForEachPresentSlotOfSideRun66DC)
+; as the label there; was ForEachPresentSlotOfSideRun)
 ForEachPresentSlotOfSideRun::
     and $04
     ld c, a
@@ -5695,6 +5806,8 @@ ForEachPresentSlotOfSideRun::
     jr nz, .loop
     ret
 
+; called from ForEachPresentSlotOfSideRun: calls HPBandOfSlotTemp0; branches on wBattleActor; calls
+; AccumulateBank6WordToDA6E
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5715,12 +5828,14 @@ ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
+; data read by ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0 (6 bytes)
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data1::
     db $1d, $1e, $1f, $20, $21, $22
 
 ForEachPresentSlotOfSideRun_HPBandOfSlotTemp0_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
+; called from AIScore_Ramming: calls HPBandOfSlotTemp0; calls AccumulateBank6WordToDA6E
 AIScore_Ramming_HPBandOfSlotTemp0::
     ldh [hTemp0], a
     push bc
@@ -5736,9 +5851,12 @@ AIScore_Ramming_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
+; data read by AIScore_Ramming_HPBandOfSlotTemp0 (6 bytes)
 AIScore_Ramming_HPBandOfSlotTemp0_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
+; called from AIScore_Cover: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; AIScore_Cover_HPBandOfSlotTemp0
 AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     and $04
     ld c, a
@@ -5759,6 +5877,7 @@ AIScore_Cover_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
+; Calls HPBandOfSlotTemp0; branches on wBattleActor; calls AccumulateBank6WordToDA6E
 AIScore_Cover_HPBandOfSlotTemp0::
     push bc
     farcall HPBandOfSlotTemp0
@@ -5779,12 +5898,15 @@ AIScore_Cover_HPBandOfSlotTemp0::
     call AccumulateBank6WordToDA6E
     ret
 
+; data read by AIScore_Cover_HPBandOfSlotTemp0 (6 bytes)
 AIScore_Cover_HPBandOfSlotTemp0_Data1::
     db $21, $20, $1f, $1e, $1d, $1d
 
 AIScore_Cover_HPBandOfSlotTemp0_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
+; called from AIScore_Upper: calls CompareFoeAverageATKWithAllyDEF; calls AccumulateBank6WordToDA6E;
+; calls AccumulateBank6WordToDA70
 AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
     farcall CompareFoeAverageATKWithAllyDEF
     ld a, c
@@ -5801,6 +5923,8 @@ AIScore_Upper_CompareFoeAverageATKWithAllyDEF::
 .return:
     ret
 
+; called from AIScore_Sap: calls AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty; calls
+; AccumulateBank6WordToDA70; calls AccumulateBank6WordToDA6E
 AIScore_Sap_AccumulateBank6WordToDA70::
     farcall AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty
     ld a, c
@@ -5835,6 +5959,7 @@ MaxNegativeScoreWhenAIFlagBit0::
     ld c, a
     ret
 
+; called from AIScore_TailWind: returns unless wBattleTurn is 0; calls AccumulateBank6WordToDA70
 AIScore_TailWind_AccumulateBank6WordToDA70::
     ld a, [wBattleTurn]
     ld c, a
@@ -5847,16 +5972,16 @@ AIScore_TailWind_AccumulateBank6WordToDA70::
 
 ; returns when MaxNegativeScoreWhenAIFlagBit0 applies; otherwise continues with
 ; AIScore_TailWind_Sub02 (E-0122) (E-0344: the address in its name dropped or read as the label
-; there; was AIScoreGuardSkill_67CF)
+; there; was AIScoreGuardSkill)
 AIScoreGuardSkill::
     call MaxNegativeScoreWhenAIFlagBit0
     ret z
     jr AIScore_TailWind_AccumulateBank6WordToDA70
 
-; WeighWD044RuleBit4, then adds score word $29 to wAISkillScore when
+; WeighLinkRules1RuleBit4, then adds score word $29 to wAISkillScore when
 ; AllySlotsCheckThenFewerThanTwoFoes fails and again when PassIfSide0FlagOrAllySlotEmpty fails
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; AIAddPenaltyFor5758And5CF1)
+; AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes)
 AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes::
     call WeighLinkRules1RuleBit4
     farcall AllySlotsCheckThenFewerThanTwoFoes
@@ -5880,7 +6005,7 @@ AIAddPenaltyForAllySlotsCheckThenFewerThanTwoFoes::
 ; adds score word $B1 when AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05 fails and $B2 when
 ; AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2 fails (results of 1 count as passing)
 ; (E-0124) (E-0344: the address in its name dropped or read as the label there; was
-; AIAddScoresFor5ECEAnd5FC7; a trailing preposition left by the dropped address removed)
+; AIAddScoresForTwoLists; a trailing preposition left by the dropped address removed)
 AIAddScoresForTwoLists::
     farcall AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05
     ld a, c
@@ -5906,7 +6031,7 @@ AIAddScoresForTwoLists::
 
 ; adds score word $0E to wAISkillScore2 when LinkRuleCheckLinkRules1Bit6 fails and $0F to
 ; wAISkillScore when LinkRuleCheckLinkRuleTurnLimitTurnLimit fails (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was AIAddScoresFor55BEAnd5731)
+; its name dropped or read as the label there; was AIAddScoresForLinkRuleCheckLinkRules1Bit6)
 AIAddScoresForLinkRuleCheckLinkRules1Bit6::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
@@ -5926,6 +6051,7 @@ AIAddScoresForLinkRuleCheckLinkRules1Bit6::
 .return:
     ret
 
+; called from AIScore_Sacrifice: calls LinkRuleCheckLinkRules1Bit6; calls AccumulateBank6WordToDA70
 AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6::
     farcall LinkRuleCheckLinkRules1Bit6
     ld a, c
@@ -5937,9 +6063,9 @@ AIScore_Sacrifice_LinkRuleCheckLinkRules1Bit6::
 .return:
     ret
 
-; far-calls CheckWD044RuleBit5; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
-; name read as its RAM name; was WeighWD044RuleBit5)
+; far-calls CheckLinkRules1RuleBit5; when it fails (C = 0) adds weight-table entry $0E to
+; wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the
+; address in its name read as its RAM name; was WeighLinkRules1RuleBit5)
 WeighLinkRules1RuleBit5::
     farcall CheckLinkRules1RuleBit5
     ld a, c
@@ -5951,9 +6077,9 @@ WeighLinkRules1RuleBit5::
 .return:
     ret
 
-; far-calls CheckWD044RuleBit4; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
-; name read as its RAM name; was WeighWD044RuleBit4)
+; far-calls CheckLinkRules1RuleBit4; when it fails (C = 0) adds weight-table entry $0E to
+; wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the
+; address in its name read as its RAM name; was WeighLinkRules1RuleBit4)
 WeighLinkRules1RuleBit4::
     farcall CheckLinkRules1RuleBit4
     ld a, c
@@ -5965,9 +6091,9 @@ WeighLinkRules1RuleBit4::
 .return:
     ret
 
-; far-calls CheckWD044RuleBit3; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
-; name read as its RAM name; was WeighWD044RuleBit3)
+; far-calls CheckLinkRules1RuleBit3; when it fails (C = 0) adds weight-table entry $0E to
+; wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the
+; address in its name read as its RAM name; was WeighLinkRules1RuleBit3)
 WeighLinkRules1RuleBit3::
     farcall CheckLinkRules1RuleBit3
     ld a, c
@@ -5979,9 +6105,9 @@ WeighLinkRules1RuleBit3::
 .return:
     ret
 
-; far-calls CheckWD044RuleBit2; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
-; name read as its RAM name; was WeighWD044RuleBit2)
+; far-calls CheckLinkRules1RuleBit2; when it fails (C = 0) adds weight-table entry $0E to
+; wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the
+; address in its name read as its RAM name; was WeighLinkRules1RuleBit2)
 WeighLinkRules1RuleBit2::
     farcall CheckLinkRules1RuleBit2
     ld a, c
@@ -5993,9 +6119,9 @@ WeighLinkRules1RuleBit2::
 .return:
     ret
 
-; far-calls CheckWD044RuleBit1; when it fails (C = 0) adds weight-table entry $0E to wAISkillScore2
-; (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the address in its
-; name read as its RAM name; was WeighWD044RuleBit1)
+; far-calls CheckLinkRules1RuleBit1; when it fails (C = 0) adds weight-table entry $0E to
+; wAISkillScore2 (AccumulateBank6WordToDA70); used by the AI scoring routines (E-0091) (E-0340: the
+; address in its name read as its RAM name; was WeighLinkRules1RuleBit1)
 WeighLinkRules1RuleBit1::
     farcall CheckLinkRules1RuleBit1
     ld a, c
@@ -6012,27 +6138,33 @@ GetBattleATK_BankE2::
     ld hl, wBattleATK
     jr GetBattleMP_BankE2_Skip
 
+; Continues in GetBattleMP_BankE2_Skip
 GetBattleDEF_BankE2::
     ld hl, wBattleDEF
     jr GetBattleMP_BankE2_Skip
 
+; Continues in GetBattleMP_BankE2_Skip
 GetBattleMaxHP_BankE2::
     ld hl, wBattleMaxHP
     jr GetBattleMP_BankE2_Skip
 
+; Continues in GetBattleMP_BankE2_Skip
 GetBattleMaxMP_BankE2::
     ld hl, wBattleMaxMP
     jr GetBattleMP_BankE2_Skip
 
+; Continues in GetBattleMP_BankE2_Skip
 GetBattleHP_BankE2::
     ld hl, wBattleHP
     jr GetBattleMP_BankE2_Skip
 
+; Continues in GetBattleMP_BankE2_Skip
 GetBattleMP_BankE2::
     ld hl, wBattleMP
     jr GetBattleMP_BankE2_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
+; Works on registers only
 GetBattleMP_BankE2_Skip::
     add a
     add_a_to_hl
@@ -6086,6 +6218,7 @@ TargetOnLocalSide_BankE2::
     cp $04
     ret
 
+; Works on registers only
 ClearBattleStatusBitsWithMaskD_BankE2::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_BankE2_Data
@@ -6099,6 +6232,7 @@ ClearBattleStatusBitsWithMaskD_BankE2::
     ld [hl], a
     ret
 
+; data read by ClearBattleStatusBitsWithMaskD_BankE2 (7 bytes)
 ClearBattleStatusBitsWithMaskD_BankE2_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

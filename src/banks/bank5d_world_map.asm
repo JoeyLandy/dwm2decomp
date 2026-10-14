@@ -8,9 +8,9 @@ SECTION "Bank 5D", ROMX[$4000], BANK[$5D]
 Tiles2Gfx_2::
     INCBIN "gfx/misc/tiles2_gfx_2.lz"
 
-; RunGameMode2State_Case01 copies only palette 0 (8 bytes) to wBGPaletteBuffer with CopyFromBank;
-; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and every other
-; palette is $7C00 fill, read by nothing found (E-0185, C1)
+; RunWorldMapState_CopyScrollToHardware copies only palette 0 (8 bytes) to wBGPaletteBuffer with
+; CopyFromBank; the block is 128 bytes, palette 8 repeats palette 0 with two colours swapped, and
+; every other palette is $7C00 fill, read by nothing found (E-0185, C1)
 ; record: one CGB palette: 4 BGR555 colours
 RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData::
 RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData_2::

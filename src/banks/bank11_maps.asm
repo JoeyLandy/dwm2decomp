@@ -459,6 +459,7 @@ WarpToLinkedMapForCurrentMap::
     ld c, $01
     ret
 
+; data read by WarpToLinkedMapForCurrentMap (12 bytes)
 WarpToLinkedMapForCurrentMap_Data1::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2, $ff
 
@@ -467,6 +468,9 @@ WarpToLinkedMapForCurrentMap_Data2::
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00
 
+; Branches on wKeyWorldActive; branches on wKeyWorldKey; branches on wKeyWorldSlot; copies
+; wKeyWorldGoal to wWarpDestX; copies wKeyWorldGoal to wWarpDestY; calls StartWarpTransition; copies
+; wKeyWorldGoalPos to wWarpDestX; ...
 WarpToLinkedMapForCurrentMap_Data2_Cp87::
     cp $87
     jr z, .check_key_world_active
@@ -589,7 +593,7 @@ StartWarpTransition::
 ; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable_Data and runs
 ; CheckMapExitTable_WriteWarpPendingAndMapIdEtc with its entry (or wKeyWorldGoal); unlisted maps
 ; clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125) (E-0344: the address in its name
-; dropped or read as the label there; was CheckMapExitTable4480)
+; dropped or read as the label there; was CheckMapExitTable)
 CheckMapExitTable::
     ldh a, [hMapId]
     cp $20
@@ -639,6 +643,9 @@ CheckMapExitTable::
     call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
     ret
 
+; called from CheckMapExitTable: sets wWarpPending to 1; plays sound $60; sets wWarpDestX to $40;
+; sets wWarpDestY to $80; sets wLastWarpIndex to 0; sets wFieldTransitionKind to 3; calls
+; StartPaletteFade; ...
 CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ldh a, [hPlayerX]
     and $f0
@@ -714,6 +721,7 @@ CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     ld c, $01
     ret
 
+; data read by CheckMapExitTable (45 bytes)
 CheckMapExitTable_Data::
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $b4, $03, $70, $44, $b4, $04
     db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08

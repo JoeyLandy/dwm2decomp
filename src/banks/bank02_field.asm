@@ -4,6 +4,9 @@
 SECTION "Bank 02", ROMX[$4000], BANK[$02]
     db $02
 
+; called from StartPaletteFade: branches on b; sets wFadeLevel to 0; copies wFadeState to
+; wFadeDelay; copies wFadeState to wFadeDelayCounter; sets wFadeLevel to $20; branches on wFadeMode;
+; copies wFadeState to wFadeDelay; ...
 StartPaletteFade_WriteFadeLevelAndFadeDelayEtc::
     ld a, [wFadeState]
     ld b, a
@@ -503,7 +506,7 @@ CopyOBJPalettesToBuffer::
 ; on CGB copies the 8-byte palette LoadPalette0FromData_2_Data into wBGPaletteBuffer and
 ; wOBJPaletteBuffer and sets the upload requests wBGPaletteUploadRequest and
 ; wOBJPaletteUploadRequest = $7F (E-0117) (E-0344: the address in its name dropped or read as the
-; label there; was LoadPalette0FromData4322)
+; label there; was LoadPalette0FromData_2)
 LoadPalette0FromData_2::
     ld a, [wIsCGB]
     or a
@@ -522,9 +525,15 @@ LoadPalette0FromData_2::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; data read by LoadPalette0FromData (8 bytes)
 LoadPalette0FromData_2_Data::
     db $00, $7c, $ff, $7f, $e0, $01, $00, $00
 
+; called from RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc: returns if wIsCGB is 0;
+; calls RunScreenStateStepEveryOtherFrame; may continue in
+; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0; copies
+; wDMGPaletteBGP to wDMGPaletteBytes; continues in
+; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0
 RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame::
     ld a, [wIsCGB]
     or a
@@ -558,6 +567,7 @@ RunScreenStateStepEveryOtherFrame::
     dw RunScreenStateStepEveryOtherFrame_WriteScreenState_4
     dw RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc
 
+; step 0 of RunScreenStateStepEveryOtherFrame: works on registers only
 RunScreenStateStepEveryOtherFrame_WriteScreenState::
     ld hl, wWorkBuf
     ld a, [wScreenCounter]
@@ -578,6 +588,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState::
     ld [de], a
     inc de
 
+; called from RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc: increments
+; wScreenState
 RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     di
 
@@ -658,6 +670,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_2::
     ld [wScreenState], a
     ret
 
+; step 1 of RunScreenStateStepEveryOtherFrame: continues in
+; RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     ld hl, wWorkBuf + $10
     ld a, [wScreenCounter]
@@ -679,6 +693,8 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_3::
     inc de
     jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
+; step 2 of RunScreenStateStepEveryOtherFrame: continues in
+; RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 RunScreenStateStepEveryOtherFrame_WriteScreenState_4::
     ld hl, wWorkBuf + $20
     ld a, [wScreenCounter]
@@ -700,6 +716,10 @@ RunScreenStateStepEveryOtherFrame_WriteScreenState_4::
     inc de
     jp RunScreenStateStepEveryOtherFrame_WriteScreenState_2
 
+; step 3 of RunScreenStateStepEveryOtherFrame: calls
+; RunScreenStateStepEveryOtherFrame_WriteScreenState_2; increments wScreenCounter; branches on
+; wScreenCounter; sets wScreenSubStep to 0; sets wScreenCounter to 0; sets wScreenState to $ff; sets
+; wScreenSubStep to 0; ...
 RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld hl, wWorkBuf + $30
     ld a, [wScreenCounter]
@@ -738,6 +758,9 @@ RunScreenStateStepEveryOtherFrame_WriteScreenCounterAndScreenSubStepEtc::
     ld [wScreenState], a
     ret
 
+; called from RunMenuStateMenuState_QueueSoundEffect: calls
+; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc; increments wScreenCounter; branches on
+; wScreenCounter; sets wScreenCounter to 0
 RunMenuStateMenuState_WriteScreenCounter::
     ld hl, wBGPaletteBuffer
     ld de, wWorkBuf
@@ -773,6 +796,9 @@ RunMenuStateMenuState_WriteScreenCounter::
     ld [wScreenCounter], a
     ret
 
+; Sets wTextCounter2; sets wTextCounter3; sets wTextCounter4; branches on the byte at wTextCounter2;
+; increments wScreenSubStep; may continue in
+; RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc; sets wScreenSubStep to 0
 RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     ld c, [hl]
     inc hl
@@ -845,9 +871,12 @@ RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc::
     ld [wScreenSubStep], a
     ret
 
+; data read by RunMenuStateMenuState (9 bytes)
 RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
+; May continue in WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return; continues in
+; WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return
 RunMenuStateMenuState_WriteTextCounter2AndTextCounter3Etc_Data_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
@@ -954,9 +983,11 @@ WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0::
     ld h, a
     ret
 
+; Returns at once
 WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Return::
     ret
 
+; data read by WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0 (4 bytes)
 WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data::
     db $02, $04, $00, $06
 
@@ -1148,6 +1179,9 @@ RunFieldReturnPhase::
     dw RunFieldReturnPhase_ResetLeadRecordFields55And5B
     dw RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
+; step 0 of RunFieldReturnPhase: sets wFieldReturnPhase to 0; branches on wModeState; sets
+; wMenuState to 5; sets wMenuSubState to 0; sets wModeState to 0; branches on wScriptRunning; sets
+; wModeState to 1; ...
 RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
     xor a
     ld [wFieldReturnPhase], a
@@ -1190,6 +1224,11 @@ RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc::
     call StartPaletteFade
     ret
 
+; step 2 of RunFieldReturnPhase: branches on wBattleKind; may continue in
+; RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; branches on wBattleScene; may continue
+; in RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; branches on wBattleKind; calls
+; ResetLeadRecordFields55And5B; continues in
+; RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc; ...
 RunFieldReturnPhase_ResetLeadRecordFields55And5B::
     ld a, [wBattleKind]
     cp $05
@@ -1323,6 +1362,9 @@ RunFieldReturnPhase_ResetLeadRecordFields55And5B::
     farcall LoadPlayerAndFollowerSpriteGraphics
     jp RunFieldReturnPhase_WriteFieldReturnPhaseAndMenuStateEtc
 
+; step 1 of RunFieldReturnPhase: sets wFieldReturnPhase to 0; calls RunFieldReturnPhase_WaitMapType;
+; branches on wDataBankSave; sets wFieldInitStage to 0; branches on 0; sets wJoypadPressed; calls
+; OpenFieldMenuOnA; ...
 RunFieldReturnPhase_OpenFieldMenuOnA::
     xor a
     ld [wFieldReturnPhase], a
@@ -1554,6 +1596,9 @@ ResetLeadRecordFields55And5B::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ret
 
+; called from RunFieldReturnPhase_OpenFieldMenuOnA: returns if bit 7 of wMapType is set; returns
+; unless wMapType is $00; returns unless wMapType is 0; returns unless wMapType is $03; returns
+; unless wGiftRecord is $01; branches on wCounterPtr0Lo; sets wObject5 to $80; ...
 RunFieldReturnPhase_WaitMapType::
     ld a, [wMapType]
     bit 7, a
@@ -1587,6 +1632,7 @@ RunFieldReturnPhase_WaitMapType::
     ld [wObject5], a
     ret
 
+; called from GameMode1_Init: branches on wMapType; branches on $02
 GameMode1_Init_ReadMapTypeAndMapIdEtc::
     ld a, [wMapType]
     bit 7, a
@@ -1613,6 +1659,7 @@ GameMode1_Init_ReadMapTypeAndMapIdEtc::
     ld a, $04
     ret
 
+; data read by GameMode1_Init (1 byte)
 GameMode1_Init_Data1::
     db $00
 
@@ -1785,6 +1832,9 @@ FieldState_MapTransition::
     call InitFieldScreen
     ret
 
+; called from FieldState_MapTransition: branches on wFieldTransitionKind; branches on
+; wReturnWarpFlag; sets wReturnWarpFlag to 0; checks EVENT_THANKS_FOR_COMING_BY_025; sets wMapType
+; to 0; branches on wSavedPositionValid; copies wWarpDestY to wFollowerRecords; ...
 FieldState_MapTransition_TestFlagBit::
     ld a, [wFieldTransitionKind]
     or a
@@ -1964,7 +2014,7 @@ FieldState_WorldMap::
 
 ; when wGM2TimerMinutes = $3B and wGM2TimerSeconds = wGM2TimerFrames = 0, far-calls
 ; ClearRollCounterWhenGM2TimerMinutesIs59 (E-0122) (E-0344: the address in its name dropped or read
-; as the label there; was CallF072B4WhenGM2TimerMinutesIs59; shortened from
+; as the label there; was FarClearRollCounterWhenGM2TimerMinutesIs59; shortened from
 ; CallF0ClearRollCounterWhenGM2TimerMinutesIs59WhenGM2TimerMinutesIs59)
 FarClearRollCounterWhenGM2TimerMinutesIs59::
     ld a, [wGM2TimerMinutes]
@@ -1982,8 +2032,7 @@ FarClearRollCounterWhenGM2TimerMinutesIs59::
 ; A in field states 0 and 5, when the map has special tiles (wMapSpriteKind) and nothing blocks
 ; input: finds the tile in front of the player (TileBlockedAtPixel); a kind in the high nibble,
 ; allowed once story flag $1F is set, may run TryHeaderTileTalkEvent; a kind in the low nibble needs
-; MapSpriteKindUnlocked, then CheckTallTileInFront (E-0339; was
-; FieldModeStateDispatch_WaitMapSpriteKind)
+; MapSpriteKindUnlocked, then CheckTallTileInFront (E-0339; was CheckTileInFrontOnA)
 CheckTileInFrontOnA::
     ld a, [wMapSpriteKind]
     or a
@@ -2088,7 +2137,7 @@ TestFlag1FAsBool::
 
 ; A = 1 when the story flag for wMapSpriteKind's low nibble is set: kind 1 needs
 ; EVENT_SCENE_RIVAL_DEFEATED ($1E?), other kinds EVENT_SCENE_SHIELD2 (E-0339; was
-; FieldModeStateDispatch_Shared01_TestFlagBit)
+; MapSpriteKindUnlocked)
 MapSpriteKindUnlocked::
     ld a, [wMapSpriteKind]
     and $0f
@@ -2114,7 +2163,7 @@ MapSpriteKindUnlocked::
 
 ; unless player state bit 3 is set: when the tile under the point equals wMapEventTile, runs talk
 ; event group 2, index 0 (DispatchTalkEvent) and clears the joypad (E-0339; was
-; FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc)
+; TryHeaderTileTalkEvent)
 TryHeaderTileTalkEvent::
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2148,8 +2197,7 @@ TryHeaderTileTalkEvent::
     ret
 
 ; compares the four tiles under the point (wTilesUnderPoint) with wMapTallTileMin, unless player
-; state bit 3 is set (E-0339; was
-; FieldModeStateDispatch_Shared01_WriteTalkEventGroupAndTalkEventIndexEtc_Sub03)
+; state bit 3 is set (E-0339; was CheckTallTileInFront)
 CheckTallTileInFront::
     ldh a, [hPlayerStateFlags]
     bit 3, a
@@ -2222,6 +2270,9 @@ CheckTallTileInFront::
     farcall RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
+; called from FieldState_WalkAMenu: returns unless wFadeState is 0; returns if bit 7 of
+; wFieldActionRequest is set; returns if bit 0 of wFieldActionRequest is set; returns unless bit 0
+; of wJoypadPressed is set; dispatches on wMapType
 FieldState_WalkAMenu_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -2250,9 +2301,16 @@ FieldState_WalkAMenu_WaitFadeState::
     dw FieldState_WalkAMenu_Return
     dw FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
 
+; step 0 of FieldState_WalkAMenu_WaitFadeState: returns at once
 FieldState_WalkAMenu_Return::
     ret
 
+; step 3 of FieldState_WalkAMenu_WaitFadeState: branches on the byte at wKeyWorldFloorInfo + $1;
+; returns unless the byte at wKeyWorldFloorInfo + $1 is $01; returns unless the byte at
+; wKeyWorldFloorInfo + $1 is $02; returns unless the byte at wKeyWorldFloorInfo + $1 is $01; returns
+; unless the byte at wKeyWorldFloorInfo + $1 is $80; returns unless the byte at wKeyWorldFloorInfo +
+; $1 is $10; continues in
+; FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
     ld a, [wKeyWorldFloor]
     add a
@@ -2281,6 +2339,8 @@ FieldState_WalkAMenu_WriteFieldReturnPhaseAndGameModeEtc::
 .return:
     ret
 
+; step 7 of FieldState_WalkAMenu_WaitFadeState: may return early; continues in
+; FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ldh a, [hPlayerFacing]
     cp $02
@@ -2293,6 +2353,9 @@ FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot::
     ret nz
     jr FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl
 
+; Calls SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot; calls
+; RedrawScreenBufferIfPartyWindowFlagsBit7; calls SaveScreenBufferToBGMap1; sets wFieldReturnPhase
+; to 1; plays sound $69; sets wGameMode to 2; sets wModeState to $0b; ...
 FieldState_WalkAMenu_SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot_CallSaveKeyWorldFlagsRecordToSRAMSlotKeyWorl::
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     call RedrawScreenBufferIfPartyWindowFlagsBit7
@@ -2437,14 +2500,18 @@ RunFieldEventFieldEventKind::
     dw RunFieldEventFieldEventKind_WriteVRAMByteInc_2
     dw RunFieldEventFieldEventKind_WaitMapScreenX
 
+; step 12 of RunFieldEventFieldEventKind: calls
+; RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2
 RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX::
     call RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2
     ret
 
+; step 8 of RunFieldEventFieldEventKind: calls RunFieldEventFieldEventKind_CopyBytes
 RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes::
     call RunFieldEventFieldEventKind_CopyBytes
     ret
 
+; step 0 of RunFieldEventFieldEventKind: returns at once
 RunFieldEventFieldEventKind_Return::
     ret
 
@@ -2482,6 +2549,7 @@ AnimateTilesByRotatingVTiles2::
     jr nz, .loop
     ret
 
+; step 13 of RunFieldEventFieldEventKind: may return early; calls WriteVRAMByteInc
 RunFieldEventFieldEventKind_WriteVRAMByteInc::
     ld a, [wFrameCounterLo]
     and $07
@@ -2500,6 +2568,7 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc::
     jr nz, .loop
     ret
 
+; step 14 of RunFieldEventFieldEventKind: may return early; calls WriteVRAMByteInc
 RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
     ld a, [wFrameCounterLo]
     and $07
@@ -2530,6 +2599,8 @@ RunFieldEventFieldEventKind_WriteVRAMByteInc_2::
     jr nz, .loop2
     ret
 
+; step 3 of RunFieldEventFieldEventKind: may return early; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo
 RunFieldEventFieldEventKind_WaitFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $0f
@@ -2538,6 +2609,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo::
     ld hl, vTiles2 + $320
     jp RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo
 
+; step 4 of RunFieldEventFieldEventKind: may return early; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
     ld a, [wFrameCounterLo]
     and $03
@@ -2546,6 +2619,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_2::
     ld hl, vTiles2 + $2c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
+; step 5 of RunFieldEventFieldEventKind: calls AnimateTilesByRotatingVTiles2; may return early;
+; continues in RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
     call AnimateTilesByRotatingVTiles2
     ld a, [wFrameCounterLo]
@@ -2555,6 +2630,8 @@ RunFieldEventFieldEventKind_AnimateTilesByRotatingVTiles2::
     ld hl, vTiles2 + $180
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
+; step 9 of RunFieldEventFieldEventKind: may return early; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
     ld a, [wFrameCounterLo]
     and $03
@@ -2563,6 +2640,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_3::
     ld hl, vTiles2 + $2c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
+; step 10 of RunFieldEventFieldEventKind: may return early; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
     ld a, [wFrameCounterLo]
     and $03
@@ -2571,6 +2650,8 @@ RunFieldEventFieldEventKind_WaitFrameCounterLo_4::
     ld hl, vTiles2 + $4c0
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
+; step 15 of RunFieldEventFieldEventKind: may return early; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 RunFieldEventFieldEventKind_WaitMapScreenX::
     ldh a, [hMapScreenX]
     cp $01
@@ -2582,6 +2663,7 @@ RunFieldEventFieldEventKind_WaitMapScreenX::
     ld hl, vTiles2 + $40
     jr RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo
 
+; Calls WriteVRAMByteInc
 RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
     ld a, [wFrameCounterLo]
     srl a
@@ -2622,6 +2704,7 @@ RunFieldEventFieldEventKind_WaitMapScreenX_ReadFrameCounterLo::
     jr nz, .loop
     ret
 
+; Calls WriteVRAMByteInc
 RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $10
@@ -2659,6 +2742,9 @@ RunFieldEventFieldEventKind_WaitMapScreenX_CheckFrameCounterLo::
     jr nz, .loop
     ret
 
+; step 6 of RunFieldEventFieldEventKind: checks EVENT_SCENE_MONSTER_INSPECTION; may return early;
+; returns if wFrameCounterLo is at least $0c; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 RunFieldEventFieldEventKind_TestFlagBit::
     ld de, EVENT_SCENE_MONSTER_INSPECTION
     call TestFlagBit
@@ -2682,11 +2768,14 @@ RunFieldEventFieldEventKind_TestFlagBit::
     ld l, c
     jp RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 
+; data read by RunFieldEventFieldEventKind (48 bytes)
 RunFieldEventFieldEventKind_TestFlagBit_Data::
     db $c0, $91, $e0, $91, $d0, $91, $f0, $91, $20, $92, $60, $92, $30, $92, $70, $92
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $a0, $93, $90, $93, $b0, $93
     db $20, $94, $40, $94, $30, $94, $50, $94, $80, $94, $a0, $94, $90, $94, $b0, $94
 
+; step 7 of RunFieldEventFieldEventKind: returns if wFrameCounterLo is at least $0c; continues in
+; RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 RunFieldEventFieldEventKind_ReadFrameCounterLo::
     ld a, [wFrameCounterLo]
     and $1f
@@ -2707,11 +2796,14 @@ RunFieldEventFieldEventKind_ReadFrameCounterLo::
     ld l, c
     jr RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 
+; data read by RunFieldEventFieldEventKind (48 bytes)
 RunFieldEventFieldEventKind_ReadFrameCounterLo_Data::
     db $30, $93, $50, $93, $40, $93, $60, $93, $20, $94, $40, $94, $30, $94, $50, $94
     db $c0, $94, $e0, $94, $d0, $94, $f0, $94, $60, $95, $80, $95, $70, $95, $90, $95
     db $20, $96, $60, $96, $30, $96, $70, $96, $a0, $96, $e0, $96, $b0, $96, $f0, $96
 
+; step 11 of RunFieldEventFieldEventKind: may return early; returns if wFrameCounterLo is at least
+; $04; continues in RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 RunFieldEventFieldEventKind_WaitMapScreenY::
     ldh a, [hMapScreenY]
     or a
@@ -2735,9 +2827,11 @@ RunFieldEventFieldEventKind_WaitMapScreenY::
     ld l, c
     jp RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess
 
+; data read by RunFieldEventFieldEventKind (16 bytes)
 RunFieldEventFieldEventKind_WaitMapScreenY_Data::
     db $e0, $94, $00, $95, $f0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
+; Calls WriteVRAMByteInc
 RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess::
     ld b, $10
 
@@ -2764,6 +2858,9 @@ RunFieldEventFieldEventKind_WaitMapScreenY_Data_CallWaitForVRAMAccess::
     jr nz, .loop
     ret
 
+; called from RunFieldEventFieldEventKind_ToRunFieldEventFieldEventKind_CopyBytes: returns if
+; wScriptCommandType is $ed; returns unless wSavedPositionValid is 0; branches on wMenuSubState;
+; sets wMenuSubState to $80; calls CopyBytes; increments wMenuState; may return early; ...
 RunFieldEventFieldEventKind_CopyBytes::
     ld a, [wScriptCommandType]
     cp $ed
@@ -2819,6 +2916,8 @@ RunFieldEventFieldEventKind_CopyBytes::
     ld [wBGPaletteUploadRequest], a
     ret
 
+; Sets wTextCounter2; sets wTextCounter3; sets wTextCounter4; branches on wMenuSubState; branches on
+; the byte at wTextCounter2
 RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc::
     ld a, [hl]
     ld c, a
@@ -2901,9 +3000,14 @@ RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc::
     inc de
     ret
 
+; data read by RunFieldEventFieldEventKind (16 bytes)
 RunFieldEventFieldEventKind_WriteTextCounter2AndTextCounter3Etc_Data::
     db $00, $fc, $f8, $f4, $f0, $ec, $e8, $e4, $e4, $e8, $ec, $f0, $f4, $f8, $fc, $00
 
+; called from RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX: branches on
+; wFieldEventTimer; branches on wKeyRandomLo; sets wFieldEventTimer to $80; branches on
+; wFieldEventArg; branches on wFrameCounterLo; increments wFieldEventTimer; returns unless
+; wFieldEventTimer is $bc; ...
 RunFieldEventFieldEventKind_WriteFieldEventTimerAndScrollX_2::
     ld a, [wFieldEventTimer]
     bit 7, a
@@ -3349,6 +3453,9 @@ UpdatePlayerMovement::
     call UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7
     ret
 
+; called from UpdatePlayerMovement: calls RedrawScreenBufferIfPartyWindowFlagsBit7; sets
+; wStepTriggerFlag to 0; branches on h; sets wStepTriggerFlag to 0; branches on wFieldActionRequest;
+; calls StepFollowersTowardTargets; decrements hPlayerX; ...
 UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     call RedrawScreenBufferIfPartyWindowFlagsBit7
     ldh a, [hPlayerStepDXLo]
@@ -3633,6 +3740,7 @@ UpdatePlayerMovement_RedrawScreenBufferIfPartyWindowFlagsBit7::
     farcall CountDownTalkCountdownThenDispatchTalkEvent
     ret
 
+; Returns if wFollowerDelay is 0; copies wFollowerDelay to wFollowerRecords
 UpdatePlayerMovement_WaitFollowerDelay::
     ld a, [wFollowerDelay]
     or a
@@ -3673,6 +3781,9 @@ SetFollowerTargetsFromLeader::
 ; target (four pixels when wFieldActionRequest bit 7 is set), X first and then Y, storing the
 ; direction moved in byte 0 (1 = X increasing, 3 = X decreasing; Y directions not read to the end)
 ; (E-0093)
+; code: returns unless wFollowerDelay is 0; branches on the byte at wFollowerRecords + $3; branches
+; on c; branches on the byte at wFollowerRecords + $3; branches on c; sets wFollowerRecords to 2;
+; branches on c; ...
 StepFollowersTowardTargets::
     ld a, [wFollowerDelay]
     or a
@@ -3961,6 +4072,9 @@ FindSpriteSlotAtTile::
     pop bc
     ret
 
+; called from UpdatePlayerMovement: branches on wTriggerKind; branches on wMapType; branches on
+; wTriggerCell; branches on $01; branches on the byte at
+; UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data
 UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc::
     push bc
     ld a, [wTriggerKind]
@@ -4018,10 +4132,15 @@ UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc::
     pop bc
     ret
 
+; data read by UpdatePlayerMovement (32 bytes)
 UpdatePlayerMovement_ReadTriggerKindAndMapTypeEtc_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
 
+; called from FieldState_WalkATalks: returns unless wFadeState is 0; returns if bit 0 of wFadeState
+; is set; returns unless bit 7 of wJoypadHeld is set; branches on the byte at
+; FieldState_WalkATalks_WaitFadeState_Data; sets wTalkEventGroup; sets wTalkEventIndex to 0; calls
+; DispatchTalkEvent; ...
 FieldState_WalkATalks_WaitFadeState::
     ld a, [wFadeState]
     or a
@@ -4088,6 +4207,7 @@ FieldState_WalkATalks_WaitFadeState::
     inc b
     jr .skip
 
+; data read by FieldState_WalkATalks_WaitFadeState (21 bytes)
 FieldState_WalkATalks_WaitFadeState_Data::
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1a, $10, $70, $70
     db $85, $10, $50, $60, $ff
@@ -4137,6 +4257,8 @@ RunFieldActionRequestActionIfBit7::
     dw RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen
     dw RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords
 
+; step 0 of RunFieldActionRequestActionIfBit7: calls LoadMapScreen; sets wFieldActionStep to 0;
+; increments wFieldActionRequest
 RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
     call LoadMapScreen
     xor a
@@ -4145,6 +4267,10 @@ RunFieldActionRequestActionIfBit7_LoadMapScreenAndStep::
     inc [hl]
     ret
 
+; step 3 of RunFieldActionRequestActionIfBit7: sets wStepTriggerFlag to 0; calls
+; AdvanceStepCounterAndUpdateStoredRecords; calls RunPeriodicFieldEventChecks; calls
+; TickRandomEncounterCounter; calls CheckWarpsAtPlayerPosition; calls RunPlayerMoveTypeMapMoveType;
+; calls EnterStatusEffectFieldState; ...
 RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
     xor a
     ld [wStepTriggerFlag], a
@@ -4159,6 +4285,10 @@ RunFieldActionRequestActionIfBit7_AdvanceStepCounterAndUpdateStoredRecords::
     ld [wFieldActionRequest], a
     ret
 
+; step 2 of RunFieldActionRequestActionIfBit7: increments wFieldActionRequest; calls
+; FindTriggerEntryForCurrentScreen; calls FindTriggerEntryForCurrentScreen_ScreenTriggers; calls
+; LoadMapObjectsForScreen; branches on wPendingFieldEvent; sets wPendingFieldEvent to 0; calls
+; ClearPendingFieldEventWhenFieldIdle; ...
 RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen::
     ld hl, wFieldActionRequest
     inc [hl]
@@ -4183,6 +4313,10 @@ RunFieldActionRequestActionIfBit7_FindTriggerEntryForCurrentScreen::
     farcall PlaceSpecialMapObjectsOnEntry
     ret
 
+; step 1 of RunFieldActionRequestActionIfBit7: branches on wScreenScrollDir; calls
+; RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc; advances
+; wFieldActionStep; branches on wFieldActionStep; calls ComputeSpriteScrollOffsets; calls
+; MarkVisitedMapScreenInVisitedScreens; increments wFieldActionRequest; ...
 RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
     ldh a, [hScrollY]
     and $f8
@@ -4392,6 +4526,9 @@ RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY::
 .return:
     ret
 
+; called from RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY: sets wBGWriteDestLo; sets
+; wBGWriteDestHi; sets wBGWriteVertical to 1; sets wBGWriteCount to $12; returns if wIsCGB is 0;
+; sets wAttrWriteDestLo; sets wAttrWriteDestHi; ...
 RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4449,6 +4586,9 @@ RunFieldActionRequestActionIfBit7_WriteBGWriteDestLoAndBGWriteDestHiEtc::
     jr nz, .loop2
     ret
 
+; called from RunFieldActionRequestActionIfBit7_WriteScrollXAndScrollY: sets wBGWriteDestLo; sets
+; wBGWriteDestHi; sets wBGWriteVertical to 0; sets wBGWriteCount to $14; returns if wIsCGB is 0;
+; sets wAttrWriteDestLo; sets wAttrWriteDestHi; ...
 RunFieldActionRequestActionIfBit7_SetBGWriteDestLo::
     ld a, e
     ld [wBGWriteDestLo], a
@@ -4736,6 +4876,9 @@ SendSGBFieldPaletteSet::
     ld [wFieldInitStage], a
     ret
 
+; Sets wJoypadHeld to 0; sets wJoypadHeldPrev to 0; sets wJoypadPressed to 0; sets
+; wJoypadPressedRepeat to 0; sets wJoypadRepeatTimer to 0; sets wFieldFrameFlag to 0; calls
+; FieldModeStateDispatch; ...
 SendSGBFieldPaletteSet_ClearJoypadHeld::
     xor a
     ld [wJoypadHeld], a
@@ -4822,6 +4965,7 @@ PlayMapMusic::
     jr nz, PlayMapMusic_CheckCurrentMusic
     ld c, $35
 
+; Returns if wCurrentMusic is c; calls QueueMusic
 PlayMapMusic_CheckCurrentMusic::
     ld a, [wCurrentMusic]
     cp c
@@ -4830,6 +4974,7 @@ PlayMapMusic_CheckCurrentMusic::
     call QueueMusic
     ret
 
+; Returns if wSoundEffectRequest is c; calls QueueSoundEffect
 PlayMapMusic_CheckSoundEffectRequest::
     ld a, [wSoundEffectRequest]
     cp c
@@ -4838,6 +4983,7 @@ PlayMapMusic_CheckSoundEffectRequest::
     call QueueSoundEffect
     ret
 
+; Dispatches through the table that follows
 PlayMapMusic_ReadMapId::
     ldh a, [hMapId]
     jumptable
@@ -5070,10 +5216,15 @@ PlayMapMusic_ReadMapId::
     dw PlayMapMusic_ReadCurrentMusic_4
     db $00, $00
 
+; step 0 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic::
     ld c, $16
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 1 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic; checks
+; EVENT_THANKS_FOR_COMING_BY; may continue in PlayMapMusic_ReadCurrentMusic; checks
+; EVENT_SCENE_WARUBOU_SMELLS; may continue in PlayMapMusic_ReadCurrentMusic; continues in
+; PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_TestFlagBit::
     ldh a, [hMapScreenY]
     cp $02
@@ -5094,6 +5245,10 @@ PlayMapMusic_TestFlagBit::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 5 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic; checks
+; EVENT_SCENE_WARUBOU_SMELLS; may continue in PlayMapMusic_ReadCurrentMusic; checks
+; EVENT_SCENE_WARUBOU_FOOD2_00C; checks EVENT_SCENE_THREE_ITEMS_0C2; may continue in
+; PlayMapMusic_ReadCurrentMusic; checks EVENT_SCENE_THREE_ITEMS_0C3; ...
 PlayMapMusic_TestFlagBit_2::
     ldh a, [hMapScreenX]
     or a
@@ -5115,10 +5270,14 @@ PlayMapMusic_TestFlagBit_2::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 13 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_2::
     ld c, $0c
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 4 of PlayMapMusic: checks EVENT_MAP_04_OBJECT_REMOVED_0CC; may continue in
+; PlayMapMusic_ReadCurrentMusic; checks EVENT_SCENE_TERRY_BATTLE_038; may continue in
+; PlayMapMusic_ReadCurrentMusic; continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_TestFlagBit_3::
     ld de, EVENT_MAP_04_OBJECT_REMOVED_0CC
     call TestFlagBit
@@ -5129,13 +5288,16 @@ PlayMapMusic_TestFlagBit_3::
     ld c, $cf
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 29 of PlayMapMusic: continues in PlayMapMusic_CheckSoundEffectRequest
 PlayMapMusic_ReadSoundEffectRequest::
     ld c, $76
     jp PlayMapMusic_CheckSoundEffectRequest
 
+; step 28 of PlayMapMusic: returns at once
 PlayMapMusic_Return::
     ret
 
+; step 33 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_3::
     ld c, $19
     jp PlayMapMusic_CheckCurrentMusic
@@ -5163,6 +5325,7 @@ MapMusicByScreenAndFlags87And8A::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 32 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_4::
     ld c, $1c
     jp PlayMapMusic_CheckCurrentMusic
@@ -5177,7 +5340,7 @@ MapMusicByPlayerStateFlagsBit3::
     jp PlayMapMusic_CheckCurrentMusic
 
 ; map music case: if story flag $23 is set uses music $1C, else $2E (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was MapMusicByFlag23_631A)
+; its name dropped or read as the label there; was MapMusicByFlag23_2)
 MapMusicByFlag23_2::
     ld de, EVENT_SCENE_SHIELD2_023
     call TestFlagBit
@@ -5193,14 +5356,17 @@ MapMusicByFlag25::
     ld c, $1f
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 161 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_5::
     ld c, $cc
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 43 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_6::
     ld c, $25
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 56 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_6; calls InitSoundHardware
 PlayMapMusic_InitSoundHardware::
     ldh a, [hMapScreenX]
     or a
@@ -5211,6 +5377,9 @@ PlayMapMusic_InitSoundHardware::
     call InitSoundHardware
     ret
 
+; step 57 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_6; checks
+; EVENT_SCENE_CREW_FOLLOWS; may continue in PlayMapMusic_ReadCurrentMusic_6; continues in
+; PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_TestFlagBit_4::
     ldh a, [hMapScreenX]
     cp $01
@@ -5224,6 +5393,8 @@ PlayMapMusic_TestFlagBit_4::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 59 of PlayMapMusic: checks EVENT_SCENE_MERMAID_KINGDOM_022; may continue in
+; PlayMapMusic_ReadCurrentMusic_6; continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_TestFlagBit_5::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_022
     call TestFlagBit
@@ -5231,10 +5402,15 @@ PlayMapMusic_TestFlagBit_5::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 55 of PlayMapMusic: continues in PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_ReadCurrentMusic_7::
     ld c, $22
     jp PlayMapMusic_CheckCurrentMusic
 
+; step 155 of PlayMapMusic: may continue in PlayMapMusic_ReadCurrentMusic_7; checks
+; EVENT_SCENE_THREE_ITEMS_0C2; may continue in PlayMapMusic_ReadCurrentMusic_7; checks
+; EVENT_SCENE_THREE_ITEMS_0C3; may continue in PlayMapMusic_ReadCurrentMusic_7; continues in
+; PlayMapMusic_CheckCurrentMusic
 PlayMapMusic_TestFlagBit_6::
     ldh a, [hMapScreenY]
     or a
@@ -5248,6 +5424,10 @@ PlayMapMusic_TestFlagBit_6::
     ld c, $28
     jp PlayMapMusic_CheckCurrentMusic
 
+; called from FieldState_Still: calls FieldState_Still_WriteMenuSubState; branches on
+; wJoypadPressed; sets wFieldReturnPhase to 0; calls ClearBit1OfPlayerAndObjectFlags; calls
+; FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer; branches on wMapType; sets wModeState
+; to 0; ...
 FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
     call FieldState_Still_WriteMenuSubState
     ld a, [wJoypadPressed]
@@ -5326,6 +5506,8 @@ FieldState_Still_ClearBit1OfPlayerAndObjectFlags::
 .return:
     ret
 
+; Branches on the byte at FieldState_Still_WriteMenuSubState_Data; branches on wMenuState;
+; increments wMenuSubState; branches on wMenuSubState+1; calls WriteVRAMByte
 FieldState_Still_WriteMenuSubState::
     ldh a, [hScrollY]
     and $f8
@@ -5424,9 +5606,11 @@ FieldState_Still_WriteMenuSubState::
     jr nz, .loop
     ret
 
+; data read by FieldState_Still_WriteMenuSubState (8 bytes)
 FieldState_Still_WriteMenuSubState_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
+; Calls DrawFullScreenBufferToBGMap; sets wPartyWindowFlags to 0; sets wPartyWindowTimer to 0
 FieldState_Still_WritePartyWindowFlagsAndPartyWindowTimer::
     ldh a, [hScrollY]
     and $f8
@@ -5587,7 +5771,7 @@ OpenFieldMenuOnA::
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows
 ; in WRAM bank 2 (E-0127) (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectToScreenBufferAndClearAttributes_65C3)
+; CopyRectToScreenBufferAndClearAttributes)
 CopyRectToScreenBufferAndClearAttributes::
     push hl
     push bc
@@ -5981,12 +6165,13 @@ BuildPartyStatusWindowRows::
     ld [rRAMG], a
     ret
 
+; data read by BuildPartyStatusWindowRows (12 bytes)
 BuildPartyStatusWindowRows_Data::
     db $54, $2b, $3f, $51, $5a, $31, $45, $57, $60, $37, $4b, $5d
 
 ; draws the 20 x 6 window wWindowTileBuffer + $64 at the scroll position + $180 (and its CGB
 ; attributes from wWindowAttrBuffer + $64) (E-0127) (E-0340: the address in its name read as its RAM
-; name; was DrawBottomWindowWC364AtScroll)
+; name; was DrawBottomWindowWindowTileBufferRow5AtScroll)
 DrawBottomWindowWindowTileBufferRow5AtScroll::
     ldh a, [hScrollY]
     and $f8
@@ -6051,7 +6236,7 @@ DrawBottomWindowWindowTileBufferRow5AtScroll::
 
 ; copies a B x C rectangle from DE to HL (20-byte rows); on CGB clears the matching attribute rows
 ; in WRAM bank 2 (E-0127) (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectToScreenBufferAndClearAttributes_68A3)
+; CopyRectToScreenBufferAndClearAttributes_2)
 CopyRectToScreenBufferAndClearAttributes_2::
     push hl
     push bc
@@ -6259,6 +6444,9 @@ StepTextWindowOpenClose::
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
     dw StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState
 
+; step 0 of StepTextWindowOpenClose: branches on wTextWindowState; calls
+; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; calls
+; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6288,6 +6476,9 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
+; step 1 of StepTextWindowOpenClose: branches on wTextWindowState; calls
+; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; calls
+; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_2::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6317,6 +6508,10 @@ StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_2::
     call CopyScreenRectToBGMapSetTextCursorLo
     ret
 
+; step 2 of StepTextWindowOpenClose: branches on wTextWindowState; calls
+; CopyRowsToScreenBufferAndClearAttributes; calls CopyScreenRectToBGMapSetTextCursorLo; sets
+; wTextWindowState; sets wTextWindowStep to 0; calls CopyScreenRectToBGMapSetTextCursorLo; sets
+; wTextWindowState; ...
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_SetTextWindowState::
     ld a, [wTextWindowState]
     bit 0, a
@@ -6439,6 +6634,7 @@ CopyRowsToScreenBufferAndClearAttributes::
     ldh [rSVBK], a
     ret
 
+; data read by StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes (2 bytes)
 StepTextWindowOpenClose_CopyRowsToScreenBufferAndClearAttributes_Data1::
     db $b6
     ds $12, $c3
@@ -6484,9 +6680,12 @@ RunMenuStateMenuState::
     dw RunMenuStateMenuState_Return
     dw RunMenuStateMenuState_Return
 
+; step 6 of RunMenuStateMenuState: returns at once
 RunMenuStateMenuState_Return::
     ret
 
+; step 0 of RunMenuStateMenuState: plays music $02; calls InitSoundHardware; advances wMenuState;
+; branches on wMapToggleFlag; sets wMenuSubState to 0; sets wMenuCursor to 0; plays sound $78; ...
 RunMenuStateMenuState_QueueMusic::
     ld a, $02
     call QueueMusic
@@ -6510,6 +6709,9 @@ RunMenuStateMenuState_QueueMusic::
     ld [wMenuCursor], a
     ret
 
+; step 1 of RunMenuStateMenuState: increments wMenuCursor; returns if wMenuCursor is below $3c;
+; plays sound $61; calls RunMenuStateMenuState_ReadScrollYAndScrollX; sets wMenuSubState to 0; sets
+; wMenuSelectedMember to 0; sets wMenuCursor to 0; ...
 RunMenuStateMenuState_QueueSoundEffect::
     ld a, [wMenuCursor]
     inc a
@@ -6547,6 +6749,7 @@ RunMenuStateMenuState_QueueSoundEffect::
     ld [wScreenState], a
     ret
 
+; called from RunMenuStateMenuState_QueueSoundEffect: calls WriteVRAMByte
 RunMenuStateMenuState_ReadScrollYAndScrollX::
     ldh a, [hScrollY]
     and $f8
@@ -6602,6 +6805,9 @@ RunMenuStateMenuState_ReadScrollYAndScrollX::
     jr nz, .loop
     ret
 
+; step 2 of RunMenuStateMenuState: copies wMenuSelectedMember to wMenuSubState; decrements
+; wMenuSelectedMember; may return early; advances wMenuState; sets wMenuCursor to 1; sets
+; wSTATSplitEnable to 2
 RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
     ld a, [wMenuSelectedMember]
     and $01
@@ -6622,6 +6828,10 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuSelectedMemberEtc::
     ei
     ret
 
+; step 3 of RunMenuStateMenuState: sets wMenuSubState to 1; may continue in
+; RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor; sets wMenuCursor; may
+; continue in RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor; advances
+; wMenuState; sets wSubMenuCursor to 0
 RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
     ld a, $01
     ld [wMenuSubState], a
@@ -6643,6 +6853,7 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc::
     xor a
     ld [wSubMenuCursor], a
 
+; Branches on wFrameCounterLo; branches on $24; branches on $48; branches on e
 RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor::
     ld a, [wMenuCursor]
     ldh [hTemp0], a
@@ -6714,9 +6925,15 @@ RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor::
     jr nz, .loop
     ret
 
+; data read by RunMenuStateMenuState (16 bytes)
 RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_Data::
     db $00, $60, $b6, $ec, $ff, $ec, $b6, $60, $00, $60, $b6, $ec, $ff, $ec, $b6, $60
 
+; step 4 of RunMenuStateMenuState: increments wSubMenuCursor; branches on wSubMenuCursor; calls
+; RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame; advances wMenuState; sets
+; wSTATSplitEnable to 0; copies the byte at
+; RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc_Data to wDMGPaletteBGP; calls
+; RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame; ...
 RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     ld a, [wFrameCounterLo]
     and $0f
@@ -6741,9 +6958,13 @@ RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc::
     call RunMenuStateMenuState_RunScreenStateStepEveryOtherFrame
     jp RunMenuStateMenuState_WriteMenuSubStateAndMenuCursorEtc_ReadMenuCursor
 
+; data read by RunMenuStateMenuState (5 bytes)
 RunMenuStateMenuState_WriteSubMenuCursorAndSTATSplitEnableEtc_Data::
     db $d2, $81, $40, $00, $00
 
+; step 5 of RunMenuStateMenuState: calls InitSoundHardware; calls RestartMapMusic; sets wScreenState
+; to 0; sets wScreenCounter to 0; sets wScreenStep to 0; branches on wMapToggleFlag; branches on
+; wWarpDestFacing; ...
 RunMenuStateMenuState_InitSoundHardware::
     call InitSoundHardware
     farcall RestartMapMusic
@@ -7401,6 +7622,8 @@ RestoreRecordsFromSRAMBank1Backup::
     jr nz, .loop3
     ret
 
+; called from RunSaveSteps: sets rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; sets rRAMB to 2; sets
+; rRAMB to 3; sets rRAMB to 2; sets rRAMB to 3; ...
 RunSaveSteps_WriteRAMB::
     ld hl, sRecords
     ld bc, $0333
@@ -7477,6 +7700,7 @@ RunSaveSteps_WriteRAMB::
 ; with SRAM bank 1 selected, walks the list at CopySaveBlocksToSRAM_Data (word address, word length;
 ; a zero address ends it) and copies each WRAM block to SRAM from sSaveData onward (the copy loop is
 ; not read to its end) (E-0109)
+; code: sets rRAMB to 1; sets wSaveStateFlag to $80
 CopySaveBlocksToSRAM::
     ld a, $01
     ld [rRAMB], a
@@ -7518,6 +7742,7 @@ CopySaveBlocksToSRAM::
     add_a_to_hl
     jr .set_temp0
 
+; called from RunSaveSteps: sets rRAMB to 1; branches on sSavedGM2Mode
 RunSaveSteps_WriteSVBKAndRAMB::
     xor a
     ldh [rSVBK], a
@@ -7587,7 +7812,7 @@ RunSaveGameSteps::
 
 ; with SRAM enabled runs one save stage per call (sprites snapshot and blocks, then records, then
 ; the final stage marked by bit 7 of wSaveStep) (E-0124) (E-0344: the address in its name dropped or
-; read as the label there; was RunSaveGameSteps_7347)
+; read as the label there; was RunSaveGameSteps_2)
 RunSaveGameSteps_2::
     ld a, $0a
     ld [rRAMG], a
@@ -7598,12 +7823,16 @@ RunSaveGameSteps_2::
     ld [wSaveStep], a
     call SnapshotSpritesForSave
 
+; Calls RunSaveGameSteps_2_ClearSRAMBanks2And3; calls BackupRecordsToSRAMBank1; calls
+; SaveGM2TimerFramesBlockToSRAMBank1; continues in RunSaveGameSteps_2_Skip2
 RunSaveGameSteps_2_CallRunSaveGameSteps_2_ClearSRAMBanks2And3::
     call RunSaveGameSteps_2_ClearSRAMBanks2And3
     call BackupRecordsToSRAMBank1
     call SaveGM2TimerFramesBlockToSRAMBank1
     jr RunSaveGameSteps_2_Skip2
 
+; Calls SaveStepCopyBank1RecordSaveRecordIndex; continues in RunSaveGameSteps_2_Skip2; calls
+; ComputeSRAMBank1RecordChecksum; sets wSaveStep
 RunSaveGameSteps_2_Skip::
     dec a
     jr nz, .call_compute_sram_bank1_record_checksum
@@ -7616,6 +7845,7 @@ RunSaveGameSteps_2_Skip::
     or $80
     ld [wSaveStep], a
 
+; Sets rRAMG to 0; sets rRAMB to 0
 RunSaveGameSteps_2_Skip2::
     xor a
     ld [rRAMG], a
@@ -7839,6 +8069,9 @@ ClearSRAMBanks2And3::
     call FillBytes
     ret
 
+; called from RunSaveGameSteps_2: branches on wSaveClearFlag; calls ClearSRAMBanks2And3; branches on
+; wMapType; calls SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot; sets rRAMG to $0a; sets rRAMB to 2;
+; sets rRAMB to 3; ...
 RunSaveGameSteps_2_ClearSRAMBanks2And3::
     ld a, [wSaveClearFlag]
     or a
@@ -8031,6 +8264,7 @@ SnapshotSpritesForSave::
 
 ; the same walk of CopySaveBlocksToSRAM_Data into SRAM from sSaveData, also clearing the running sum
 ; in hTemp2/hTemp3 (accumulation not read to its end) (E-0109)
+; code: sets rRAMB to 1; sets sSaveSignature to $55; sets sSaveChecksumLo; sets sSaveChecksumHi
 CopySaveBlocksToSRAMWithSum::
     ld a, $01
     ld [rRAMB], a
@@ -8095,6 +8329,7 @@ CopySaveBlocksToSRAMWithSum::
     add_a_to_hl
     jr .set_temp0
 
+; data read by CopySaveBlocksToSRAM (20 bytes)
 CopySaveBlocksToSRAM_Data::
     db $8a, $ff, $0e, $00, $0c, $c6, $91, $02, $d7, $cb, $6b, $00, $42, $cc, $b5, $00
     db $00, $00, $00, $00
@@ -8292,5 +8527,6 @@ RunBackupAndSaveSteps::
     ret
     ds $8b9, $00
 
+; data read by StartPaletteFade (1 byte)
 StartPaletteFade_WriteFadeLevelAndFadeDelayEtc_Data::
     db $00

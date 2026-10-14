@@ -1,5 +1,5 @@
 {
-  "_comment": "Script command types (wScriptCommandType) with names: the constant script lines use, the name of the implementation routine (the ScriptCommandXX_Run it replaces), and the evidence. Meanings are C1 readings of the messages the scripts show around the command and of the code (see the evidence entry).",
+  "_comment": "Script command types (wScriptCommandType) with names: the constant script lines use, the name of the implementation routine (the routine it replaces, named ScriptCommandNN_Run before), and the evidence. Meanings are C1 readings of the messages the scripts show around the command and of the code (see the evidence entry).",
   "commands": {
     "11": {
       "const": "SCRIPT_SCENE_FARM_KIDS",
@@ -730,7 +730,7 @@
     "8F": {
       "const": "SCRIPT_NPC_BREED_WARP",
       "routine": "NpcBreedWarp",
-      "note": "a key-world/field talk event (group $20, dispatched by NpcBreedMenu_Case04_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $20, dispatched by NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent: fades, sets the warp destination and wSavedPositionValid, and queues the next script and talk event); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "90": {

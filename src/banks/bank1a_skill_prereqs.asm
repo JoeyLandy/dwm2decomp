@@ -84,6 +84,9 @@ LoadSkillRecordPart::
     db $cd, $aa, $16, $7d, $c6, $d4, $6f, $7c, $ce, $40, $67, $c1, $06, $00, $09, $4e
     db $c9, $c1, $0e, $00, $c9
 
+; called from ComputeDamageEstimateForAction: branches on wLinkMode; branches on wBattleActor;
+; branches on the byte at wSlotAIMode; copies the byte at wSlotAIMode to wBattleDamageLo; copies the
+; byte at wSlotAIMode to wBattleDamageHi
 ComputeDamageEstimateForAction_Multiply8By16::
     ld a, [wBattleActionId]
     ld c, a
@@ -373,7 +376,7 @@ SkillTable::
 
 ; CheckSkillsLearnableAtLevel walks these 18-byte records from $4FF8 and rejects a skill when the
 ; battler's byte at +$17 or one of its words at +$1D, +$21, +$23, +$25, +$27, +$29 is below the
-; record's; BattleEnd_Step3_Sub02_Sub02 scans the five bytes at +13 of all 170 records ($5005,
+; record's; BattleEnd_Step3_FindSkillInTable scans the five bytes at +13 of all 170 records ($5005,
 ; stride 18) for a skill and offers the record's skill when the monster lacks it; 170 * 18 bytes end
 ; exactly at the prerequisite pointer table $5BEC (E-0156, C1)
 ; record: required level; six required stat words (battler record +$1D, +$21, +$23, +$25, +$27,
@@ -2006,9 +2009,11 @@ FindNewlyLearnableSkills::
     ld a, $ff
     ldh [hTemp4], a
 
+; Returns at once
 FindNewlyLearnableSkills_Return::
     ret
 
+; Continues in FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_Skip::
     ld a, $ff
     ld [de], a
@@ -2022,6 +2027,7 @@ FindNewlyLearnableSkills_Skip::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
+; Continues in FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_ReadTemp6::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2034,6 +2040,7 @@ FindNewlyLearnableSkills_ReadTemp6::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
+; Continues in FindNewlyLearnableSkills_Return
 FindNewlyLearnableSkills_Restore::
     pop bc
     pop hl
@@ -2044,9 +2051,9 @@ FindNewlyLearnableSkills_Restore::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Return
 
-; runs FindByteAtHLInEightAtDE_Bank1A_6232 (DE preserved) and continues at
+; runs FindByteAtHLInEightAtDE_Bank1A_2 (DE preserved) and continues at
 ; FindNewlyLearnableSkills_Return (E-0126) (E-0344: the address in its name dropped or read as the
-; label there; was FindByteThenContinue61FE)
+; label there; was FindByteThenContinue)
 FindByteThenContinue::
     push de
     call FindByteAtHLInEightAtDE_Bank1A_2
@@ -2069,7 +2076,7 @@ FindByteAtHLInEightAtDE_Bank1A_2::
     ret
 
 ; searches the $38 bytes at wWorkBuf for C: Z when found, else B = 1 and NZ (E-0122) (E-0340: the
-; address in its name read as its RAM name; was FindCInWD09D38)
+; address in its name read as its RAM name; was FindCInWorkBuf38)
 FindCInWorkBuf38::
     ld de, wWorkBuf
     ld b, $38
@@ -2084,6 +2091,9 @@ FindCInWorkBuf38::
     inc b
     ret
 
+; called from BattleEnd_Step3: calls FillBytes; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
+; LoadSpeciesRecord; calls BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill; calls
+; BattleEnd_Step3_FindSkillInTable; branches on the byte at wWorkBuf
 BattleEnd_Step3_LoadSpeciesRecord::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2137,6 +2147,8 @@ BattleEnd_Step3_LoadSpeciesRecord::
     jr nz, .loop3
     ret
 
+; Calls BattleEnd_Step3_RecordKnowsSkill; branches on the byte at SkillPrerequisitePointers; calls
+; BattleEnd_Step3_RecordKnowsSkill
 BattleEnd_Step3_BattleEnd_Step3_RecordKnowsSkill::
     push hl
     push bc
@@ -2294,7 +2306,7 @@ TryAddSkillIfPrerequisitesKnown::
     ret
 
 ; A = 0 and NC if A equals C or one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340:
-; the address in its name read as its RAM name; was AIsCOrInWD09D8)
+; the address in its name read as its RAM name; was AIsCOrInWorkBuf8)
 AIsCOrInWorkBuf8::
     cp c
     jr z, .return_0
@@ -2315,7 +2327,7 @@ AIsCOrInWorkBuf8::
     ret
 
 ; A = 0 and NC if C is one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340: the address
-; in its name read as its RAM name; was FindCInWD09D8)
+; in its name read as its RAM name; was FindCInWorkBuf8)
 FindCInWorkBuf8::
     ld a, c
     ld b, $08
@@ -2552,6 +2564,9 @@ ComputeLevelUpStatGainsForBattleArg1::
 .return:
     ret
 
+; called from ComputeLevelUpStatGainsForBattleArg1: calls SRAMRecordAddress; sets wGrowthTemp0 to
+; $ff; sets wGrowthTemp0 to 0; calls CountBit0MatchOfEAndHL; branches on e; branches on d; branches
+; on e; ...
 ComputeLevelUpStatGainsForBattleArg1_SRAMRecordAddress::
     push de
     ld a, [wBattleArg1]
@@ -3116,7 +3131,7 @@ StatGrowthTable::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_TileRect (E-0079)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord7345ToScreenBuffer)
+; CopyRectRecordToScreenBuffer)
 CopyRectRecordToScreenBuffer::
     ld hl, CopyRectRecordToScreenBuffer_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3124,7 +3139,7 @@ CopyRectRecordToScreenBuffer::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_2_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord73ADToScreenBuffer)
+; CopyRectRecordToScreenBuffer_2)
 CopyRectRecordToScreenBuffer_2::
     ld hl, CopyRectRecordToScreenBuffer_2_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3132,7 +3147,7 @@ CopyRectRecordToScreenBuffer_2::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_3_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord73F7ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_3)
 CopyRectRecordToScreenBuffer_3::
     ld hl, CopyRectRecordToScreenBuffer_3_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3140,7 +3155,7 @@ CopyRectRecordToScreenBuffer_3::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_4_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord747FToScreenBuffer)
+; CopyRectRecordToScreenBuffer_4)
 CopyRectRecordToScreenBuffer_4::
     ld hl, CopyRectRecordToScreenBuffer_4_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3148,7 +3163,7 @@ CopyRectRecordToScreenBuffer_4::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_5_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord755FToScreenBuffer)
+; CopyRectRecordToScreenBuffer_5)
 CopyRectRecordToScreenBuffer_5::
     ld hl, CopyRectRecordToScreenBuffer_5_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3156,7 +3171,7 @@ CopyRectRecordToScreenBuffer_5::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_6_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord75ABToScreenBuffer)
+; CopyRectRecordToScreenBuffer_6)
 CopyRectRecordToScreenBuffer_6::
     ld hl, CopyRectRecordToScreenBuffer_6_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3164,7 +3179,7 @@ CopyRectRecordToScreenBuffer_6::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_7_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord7600ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_7)
 CopyRectRecordToScreenBuffer_7::
     ld hl, CopyRectRecordToScreenBuffer_7_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3172,7 +3187,7 @@ CopyRectRecordToScreenBuffer_7::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_8_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord76ACToScreenBuffer)
+; CopyRectRecordToScreenBuffer_8)
 CopyRectRecordToScreenBuffer_8::
     ld hl, CopyRectRecordToScreenBuffer_8_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3180,7 +3195,7 @@ CopyRectRecordToScreenBuffer_8::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_9_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord76F8ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_9)
 CopyRectRecordToScreenBuffer_9::
     ld hl, CopyRectRecordToScreenBuffer_9_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3188,7 +3203,7 @@ CopyRectRecordToScreenBuffer_9::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordToScreenBuffer_7_TileRect, then with
 ; CopyRectRecordsAndToScreenBuffer_TileRect (E-0114) (E-0344: the address in its name dropped or
-; read as the label there; was CopyRectRecords7600And7734ToScreenBuffer)
+; read as the label there; was CopyRectRecordsAndToScreenBuffer)
 CopyRectRecordsAndToScreenBuffer::
     ld hl, CopyRectRecordToScreenBuffer_7_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3198,7 +3213,7 @@ CopyRectRecordsAndToScreenBuffer::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_10_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord7750ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_10)
 CopyRectRecordToScreenBuffer_10::
     ld hl, CopyRectRecordToScreenBuffer_10_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3206,7 +3221,7 @@ CopyRectRecordToScreenBuffer_10::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordsAndPlaySound6C_TileRect and
 ; CopyRectRecordsAndPlaySound6C_TileRect_2, then QueueSoundEffect $6C (E-0115) (E-0344: the address
-; in its name dropped or read as the label there; was CopyRectRecords77B6And79CBAndPlaySound6C)
+; in its name dropped or read as the label there; was CopyRectRecordsAndPlaySound6C)
 CopyRectRecordsAndPlaySound6C::
     ld hl, CopyRectRecordsAndPlaySound6C_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3218,7 +3233,7 @@ CopyRectRecordsAndPlaySound6C::
 
 ; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle LoadCursorTileAndRect_TileRect to
 ; the screen buffer and plays sound $6C (E-0122) (E-0344: the address in its name dropped or read as
-; the label there; was LoadCursorTileAndRect7826)
+; the label there; was LoadCursorTileAndRect)
 LoadCursorTileAndRect::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles1 + $6d0
@@ -3233,7 +3248,7 @@ LoadCursorTileAndRect::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_11_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord7848ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_11)
 CopyRectRecordToScreenBuffer_11::
     ld hl, CopyRectRecordToScreenBuffer_11_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3241,7 +3256,7 @@ CopyRectRecordToScreenBuffer_11::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordAndPlaySound6C_TileRect, then
 ; QueueSoundEffect $6C (E-0079) (E-0344: the address in its name dropped or read as the label there;
-; was CopyRectRecord787EAndPlaySound6C)
+; was CopyRectRecordAndPlaySound6C)
 CopyRectRecordAndPlaySound6C::
     ld hl, CopyRectRecordAndPlaySound6C_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3251,7 +3266,7 @@ CopyRectRecordAndPlaySound6C::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_12_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord78AAToScreenBuffer)
+; CopyRectRecordToScreenBuffer_12)
 CopyRectRecordToScreenBuffer_12::
     ld hl, CopyRectRecordToScreenBuffer_12_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3259,7 +3274,7 @@ CopyRectRecordToScreenBuffer_12::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_13_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; CopyRectRecord7923ToScreenBuffer)
+; CopyRectRecordToScreenBuffer_13)
 CopyRectRecordToScreenBuffer_13::
     ld hl, CopyRectRecordToScreenBuffer_13_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3267,7 +3282,7 @@ CopyRectRecordToScreenBuffer_13::
 
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBufferAndPlaySound6C_TileRect,
 ; then QueueSoundEffect $6C (E-0115) (E-0344: the address in its name dropped or read as the label
-; there; was CopyRectRecord796FToScreenBufferAndPlaySound6C)
+; there; was CopyRectRecordToScreenBufferAndPlaySound6C)
 CopyRectRecordToScreenBufferAndPlaySound6C::
     ld hl, CopyRectRecordToScreenBufferAndPlaySound6C_TileRect
     call CopyRecordRectToScreenBuffer_Bank1A
@@ -3277,7 +3292,7 @@ CopyRectRecordToScreenBufferAndPlaySound6C::
 
 ; HL = header (word offset, width, rows) followed by tile bytes: copies the rectangle to
 ; wScreenTileBuffer ($C198) + offset with rows 32 bytes apart (the same effect as
-; CopyRecordRectToScreenBuffer) (E-0079)
+; CopyRecordRectToScreenBuffer_Bank1A) (E-0079)
 CopyRecordRectToScreenBuffer_Bank1A::
     ld a, $98
     add [hl]
@@ -3314,7 +3329,7 @@ CopyRecordRectToScreenBuffer_Bank1A::
     jr nz, .loop
     ret
 
-; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
+; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $01A0 (row 13, column 0); 20 x 5 tiles
 CopyRectRecordToScreenBuffer_TileRect::
     dw $01a0 ; entry 0: offset into wScreenTileBuffer
@@ -3367,7 +3382,7 @@ CopyRectRecordToScreenBuffer_4_TileRect::
     db $b6, $c3, $c3, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13, $c3, $b7 ; row 9
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 10
 
-; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
+; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $0120 (row 9, column 0); 8 x 9 tiles
 CopyRectRecordToScreenBuffer_5_TileRect::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
@@ -3439,7 +3454,7 @@ CopyRectRecordToScreenBuffer_9_TileRect::
     db $b6, $c3, $f4, $f5, $f6, $f7, $f3, $b7 ; row 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
-; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
+; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $01CC (row 14, column 12); 8 x 3 tiles
 CopyRectRecordsAndToScreenBuffer_TileRect::
     dw $01cc ; entry 0: offset into wScreenTileBuffer
@@ -3484,7 +3499,7 @@ LoadCursorTileAndRect_TileRect::
     db $b6, $c3, $a5, $ed, $c3, $b7 ; row 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; row 4
 
-; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
+; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $010A (row 8, column 10); 10 x 5 tiles
 CopyRectRecordToScreenBuffer_11_TileRect::
     dw $010a ; entry 0: offset into wScreenTileBuffer
@@ -3533,7 +3548,7 @@ CopyRectRecordToScreenBuffer_13_TileRect::
     db $b6, $c3, $6b, $6c, $6d, $6e, $6f, $b7 ; row 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 8
 
-; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
+; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
 CopyRectRecordToScreenBufferAndPlaySound6C_TileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer

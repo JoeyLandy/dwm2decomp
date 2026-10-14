@@ -46,6 +46,7 @@ ReadSlotAIModeIndexed_Bank05_2::
     ld a, [hl]
     ret
 
+; Works on registers only
 ReadSlotAIModeIndexed_Bank05_2_Skip::
     add a
     add_a_to_hl
@@ -317,7 +318,7 @@ SkillPassesStatus1Bit0Check::
 
 ; C = $00 when bit 4 of wRecordBufferData + $5 and bit 7 of the actor's status byte 0 are both set,
 ; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
-; PassUnlessWCFF3Bit4AndActorStatusBit7)
+; PassUnlessRecordBufferData5Bit4AndActorStatusBit7)
 PassUnlessRecordBufferData5Bit4AndActorStatusBit7::
     ld a, [wRecordBufferData + $5]
     bit 4, a
@@ -336,7 +337,7 @@ PassUnlessRecordBufferData5Bit4AndActorStatusBit7::
 
 ; C = $00 when bit 5 of wRecordBufferData + $5 and bit 6 of the actor's status byte 0 are both set,
 ; else $FF (E-0122) (E-0340: the address in its name read as its RAM name; was
-; PassUnlessWCFF3Bit5AndActorStatusBit6)
+; PassUnlessRecordBufferData5Bit5AndActorStatusBit6)
 PassUnlessRecordBufferData5Bit5AndActorStatusBit6::
     ld a, [wRecordBufferData + $5]
     bit 5, a
@@ -511,6 +512,10 @@ AnyFoeHasMPReadsWrongOffset::
     ld c, $ff
     ret
 
+; called from AIScore_TakeMagic_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleSkillsPrefix; copies the byte at
+; wBattleSkillsPrefix to wRecordBuffer; sets wBattleArg0 to 7; sets wBattleArg1 to 1; sets
+; wBattleArg2; ...
 AIScore_TakeMagic_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -708,6 +713,9 @@ AnyFoeHasSkillFlag10::
     ld c, $01
     ret
 
+; called from AIScore_DanceShut_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus1; calls SlotHasSkillWithFlagD; sets
+; wRecordBuffer
 AIScore_DanceShut_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -839,6 +847,8 @@ AnyFoeHasDEFAtLeast2::
     ld c, $ff
     ret
 
+; called from AIScore_SquallHit_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; GetBattleAGL_Bank05
 AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -869,6 +879,7 @@ AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; Calls AnySlotLacksStatusMask
 AIScore_FireAir_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -891,6 +902,7 @@ AnyFoeLacksStatus0Bit4::
     call AnySlotLacksStatusMask
     ret
 
+; called from AIScore_PoisonAir_Conditions: calls AnySlotLacksStatusMask
 AIScore_PoisonAir_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -925,6 +937,8 @@ AnyFoeLacksStatus0MaskCC::
     call AnySlotLacksStatusMask
     ret
 
+; called from AIScore_AquaWall_Conditions: calls ReadSlotAIModeIndexed_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls SlotHasSkillWithFlagD; sets wRecordBuffer
 AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1118,6 +1132,7 @@ AnyFoeLacksStatus1Bit7::
     call AnySlotLacksStatusMask
     ret
 
+; called from AIScore_DanceShut_Conditions: calls AnySlotLacksStatusMask
 AIScore_DanceShut_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1151,6 +1166,8 @@ AnyFoeNotBlocked::
     ld c, $ff
     ret
 
+; called from AIScore_LegSweep_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
+; wSlotBodyFlags; branches on the byte at wBattleStatus3
 AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1258,6 +1275,8 @@ AIGateFoeStatus1Mask22::
     ld c, $01
     ret
 
+; called from AIScore_FireAir: calls ReadSlotAIModeIndexed_Bank05; calls TestRecordBufferData1;
+; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wBattleStatus2
 AIScore_FireAir_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -1363,6 +1382,7 @@ ActorLacksStatus1Bit3::
     ld c, $ff
     ret
 
+; called from AIScore_TakeMagic_Conditions: branches on wBattleStatus2
 AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1376,6 +1396,7 @@ AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ld c, $ff
     ret
 
+; called from AIScore_TailWind_Conditions: branches on wBattleStatus2
 AIScore_TailWind_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -1438,6 +1459,7 @@ AllOtherAlliesHaveStatus0Bit6::
     ld c, $ff
     ret
 
+; called from AIScore_Antidote_Conditions: calls AnySlotHasStatusMask
 AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1447,6 +1469,7 @@ AIScore_Antidote_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
+; called from AIScore_NumbOff_Conditions: calls AnySlotHasStatusMask
 AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1456,6 +1479,7 @@ AIScore_NumbOff_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
+; called from AIScore_DeChaos_Conditions: calls AnySlotHasStatusMask
 AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1465,6 +1489,7 @@ AIScore_DeChaos_Conditions_AnySlotHasStatusMask::
     call AnySlotHasStatusMask
     ret
 
+; called from AIScore_CurseOff_Conditions: calls AnySlotHasStatusMask
 AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -1476,11 +1501,13 @@ AIScore_CurseOff_Conditions_AnySlotHasStatusMask::
 
 ; walks the actor's own three slots through their 7-byte wSlotResistances + $4 entries: C = $FF when
 ; a present slot's entry & $3C is not $3C, else 0 (E-0094) (E-0340: the address in its name read as
-; its RAM name; was AnyAllyWDA76Bits2To5NotAllSet)
+; its RAM name; was AnyAllySlotResistances4Bits2To5NotAllSet)
 AnyAllySlotResistances4Bits2To5NotAllSet::
     ld a, [wBattleActor]
     and $04
 
+; Calls ReadByteAtHLPlus4APlus3C_Bank05; calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
+; byte at wSlotResistances + $4
 AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, a
     ld b, $03
@@ -1513,62 +1540,75 @@ AnyAllySlotResistances4Bits2To5NotAllSet_Skip::
     ld c, $ff
     ret
 
+; called from AIScore_SuckAir_Conditions: continues in AnyAllySlotResistances4Bits2To5NotAllSet_Skip
 AIScore_SuckAir_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
     xor $04
     jp AnyAllySlotResistances4Bits2To5NotAllSet_Skip
 
+; called from AIScore_SlimeBlow_Conditions: calls FoeOfFamilyEPresent
 AIScore_SlimeBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $00
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_DrakSlash_Conditions: calls FoeOfFamilyEPresent
 AIScore_DrakSlash_Conditions_ToFoeOfFamilyEPresent::
     ld e, $01
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_BeastCut_Conditions: calls FoeOfFamilyEPresent
 AIScore_BeastCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $02
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_BirdBlow_Conditions: calls FoeOfFamilyEPresent
 AIScore_BirdBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $03
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_BugBlow_Conditions: calls FoeOfFamilyEPresent
 AIScore_BugBlow_Conditions_ToFoeOfFamilyEPresent::
     ld e, $05
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_Shears_Conditions: calls FoeOfFamilyEPresent
 AIScore_Shears_Conditions_ToFoeOfFamilyEPresent::
     ld e, $04
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_DevilCut_Conditions: calls FoeOfFamilyEPresent
 AIScore_DevilCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $06
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_ZombieCut_Conditions: calls FoeOfFamilyEPresent
 AIScore_ZombieCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $07
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_CleanCut_Conditions: calls FoeOfFamilyEPresent
 AIScore_CleanCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $08
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_AquaCut_Conditions: calls FoeOfFamilyEPresent
 AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
     ld e, $09
     call FoeOfFamilyEPresent
     ret
 
+; called from AIScore_MetalCut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
+; wSlotBodyFlags
 AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1599,6 +1639,9 @@ AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_UltraDown_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; ReadByteAtHLPlus4APlus3C_Bank05; calls GetBattleDEF_Bank05; calls GetBattleAGL_Bank05; branches on
+; wBattleStatus1
 AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1648,7 +1691,8 @@ AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 1 bit 1 clear,
 ; status byte 5 & $03 clear and the low 2 bits of its wSlotResistances + $1 entry not 3, else 0
-; (E-0099) (E-0340: the address in its name read as its RAM name; was AnyFoeOpenToWDA73Field0)
+; (E-0099) (E-0340: the address in its name read as its RAM name; was
+; AnyFoeOpenToSlotResistances1Field0)
 AnyFoeOpenToSlotResistances1Field0::
     ld a, [wBattleActor]
     and $04
@@ -1690,6 +1734,9 @@ AnyFoeOpenToSlotResistances1Field0::
     ld c, $ff
     ret
 
+; called from AIScore_StopSpell_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
+; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
+; wRecordBuffer
 AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -1735,7 +1782,8 @@ AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when one of the actor's three opposite slots is present with non-zero MP
 ; (GetBattleMP_Bank05) and bits 3-2 of its wSlotResistances + $2 entry not both set, else 0 (E-0100)
-; (E-0340: the address in its name read as its RAM name; was AnyFoeWithMPOpenToWDA74Field1)
+; (E-0340: the address in its name read as its RAM name; was
+; AnyFoeWithMPOpenToSlotResistances2Field1)
 AnyFoeWithMPOpenToSlotResistances2Field1::
     ld a, [wBattleActor]
     and $04
@@ -1769,6 +1817,8 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
     ld c, $ff
     ret
 
+; called from AIScore_Sap_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; GetBattleDEF_Bank05; calls ReadByteAtHLPlus4APlus3C_Bank05
 AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1807,6 +1857,8 @@ AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_Slow_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; GetBattleAGL_Bank05; calls ReadByteAtHLPlus4APlus3C_Bank05
 AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1847,7 +1899,7 @@ AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 & $03 clear and
 ; the low 2 bits of its wSlotResistances + $4 entry not 3, else 0 (E-0099) (E-0340: the address in
-; its name read as its RAM name; was AnyFoeOpenToWDA76Field0)
+; its name read as its RAM name; was AnyFoeOpenToSlotResistances4Field0)
 AnyFoeOpenToSlotResistances4Field0::
     ld a, [wBattleActor]
     and $04
@@ -1885,7 +1937,7 @@ AnyFoeOpenToSlotResistances4Field0::
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 6 clear and
 ; bits 7-6 of its wSlotResistances + $5 entry not both set, else 0 (E-0099) (E-0340: the address in
-; its name read as its RAM name; was AnyFoeOpenToWDA77Field3)
+; its name read as its RAM name; was AnyFoeOpenToSlotResistances5Field3)
 AnyFoeOpenToSlotResistances5Field3::
     ld a, [wBattleActor]
     and $04
@@ -1921,6 +1973,8 @@ AnyFoeOpenToSlotResistances5Field3::
     ld c, $ff
     ret
 
+; called from AIScore_Curse_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; ReadByteAtHLPlus4APlus3C_Bank05
 AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -1956,6 +2010,9 @@ AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_DanceShut_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
+; wBattleStatus1; calls SlotHasSkillWithFlagD; calls ReadByteAtHLPlus4APlus3C_Bank05; sets
+; wRecordBuffer
 AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wRecordBuffer]
     push af
@@ -2001,7 +2058,7 @@ AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; C = $FF when an occupied foe without status bit 7 has a skill with flag $10 and bits 6-7 of its
 ; wSlotResistances + $6 field below 3, else $00 (wRecordBuffer preserved) (E-0125) (E-0340: the
-; address in its name read as its RAM name; was AnyFoeWithSkillFlag10VulnerableWDA78)
+; address in its name read as its RAM name; was AnyFoeWithSkillFlag10VulnerableSlotResistances6)
 AnyFoeWithSkillFlag10VulnerableSlotResistances6::
     ld a, [wRecordBuffer]
     push af
@@ -2123,6 +2180,7 @@ AtLeastTwoFoesPresent::
     ld c, $ff
     ret
 
+; called from AIScore_TatsuCall_Conditions: branches on the byte at wBattleSlotOut
 AIScore_TatsuCall_Conditions_ReadBattleActor::
     ld a, [wBattleActor]
     and $04
@@ -2272,6 +2330,8 @@ AnyAllyMPAtMostThreeQuarters::
     ld c, $ff
     ret
 
+; called from AIScore_Upper_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; AIScore_Upper_Conditions_GetBattleDEF_Bank05
 AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2296,6 +2356,8 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_Speed_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; AIScore_Speed_Conditions_GetBattleAGL_Bank05
 AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2494,6 +2556,7 @@ AnyAllyLacksStatus1Bits23And4Bits01::
     ld c, $ff
     ret
 
+; called from AIScore_MagicWall_Conditions: calls AnySlotLacksStatusMask
 AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -2503,6 +2566,7 @@ AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
+; called from AIScore_SideStep_Conditions: works on registers only
 AIScore_SideStep_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
@@ -2517,6 +2581,8 @@ AIScore_SideStep_Conditions_AddAx9ToHL::
     ld c, $ff
     ret
 
+; called from AIScore_Surge_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
+; byte at wBattleStatus
 AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2561,6 +2627,8 @@ AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_DeMagic_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on the
+; byte at wBattleSlotOut
 AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -2648,6 +2716,7 @@ CheckBattleKindNot4Or5::
     ld c, $ff
     ret
 
+; called from AIScore_SealPray: branches on wQueuedActionId
 AIScore_SealPray_ReadQueuedActionId::
     ld a, [wQueuedActionId]
     and a
@@ -2721,6 +2790,9 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
     ld c, $ff
     ret
 
+; called from FailIfFoeAIDamageEstimatesAtLeastEstimate: branches on wRecordBuffer; branches on
+; wLinkMode; branches on wBattleActor; branches on wLinkMode; branches on wBattleActor; branches on
+; wLinkMode; branches on wBattleActor; ...
 FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc::
     ld a, [wRecordBuffer]
     cp $48
@@ -3296,6 +3368,8 @@ PassIfTwiceATKAboveLowestFoeDEF::
     ld c, $01
     ret
 
+; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
+; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3336,6 +3410,9 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld c, $01
     ret
 
+; called from AIScore_TwinHits: calls ReadSlotAIModeIndexed_Bank05; calls
+; AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; GetBattleATK_Bank05
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3724,6 +3801,9 @@ FailIfFoeKnowsSkills42To47::
     ld c, $01
     ret
 
+; called from AIScore_Transform: calls ReadSlotAIModeIndexed_Bank05; calls GetBattleMaxHP_Bank05;
+; calls GetBattleMaxMP_Bank05; calls GetBattleATK_Bank05; calls GetBattleDEF_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMaxHP_Bank05; ...
 AIScore_Transform_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -3963,6 +4043,7 @@ ActorMPBelowThreeQuarters::
     ld c, $ff
     ret
 
+; called from AIScore_MagicBack_Conditions: works on registers only
 AIScore_MagicBack_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -3979,7 +4060,7 @@ AIScore_MagicBack_Conditions_AddAx9ToHL::
 
 ; link battles only: C = $00 when rule bits 7 and 6 of wLinkRules + $1 are set and the side's
 ; wLinkRuleFlags flag (or wLinkRules + $2 bit 6) allows it; otherwise $FF (E-0124) (E-0340: the
-; address in its name read as its RAM name; was LinkRuleCheckWD044Bit6)
+; address in its name read as its RAM name; was LinkRuleCheckLinkRules1Bit6)
 LinkRuleCheckLinkRules1Bit6::
     ld a, [wLinkMode]
     and a
@@ -4014,7 +4095,7 @@ LinkRuleCheckLinkRules1Bit6::
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 5 are set, and either
 ; wLinkRules + $2 bit 5 is clear or bit 5 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
-; CheckWD044RuleBit5)
+; CheckLinkRules1RuleBit5)
 CheckLinkRules1RuleBit5::
     ld a, [wLinkMode]
     and a
@@ -4049,7 +4130,7 @@ CheckLinkRules1RuleBit5::
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 4 are set, and either
 ; wLinkRules + $2 bit 4 is clear or bit 4 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
-; CheckWD044RuleBit4)
+; CheckLinkRules1RuleBit4)
 CheckLinkRules1RuleBit4::
     ld a, [wLinkMode]
     and a
@@ -4084,7 +4165,7 @@ CheckLinkRules1RuleBit4::
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 3 are set, and either
 ; wLinkRules + $2 bit 3 is clear or bit 3 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
-; CheckWD044RuleBit3)
+; CheckLinkRules1RuleBit3)
 CheckLinkRules1RuleBit3::
     ld a, [wLinkMode]
     and a
@@ -4119,7 +4200,7 @@ CheckLinkRules1RuleBit3::
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 2 are set, and either
 ; wLinkRules + $2 bit 2 is clear or bit 2 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
-; CheckWD044RuleBit2)
+; CheckLinkRules1RuleBit2)
 CheckLinkRules1RuleBit2::
     ld a, [wLinkMode]
     and a
@@ -4154,7 +4235,7 @@ CheckLinkRules1RuleBit2::
 ; C = 0 (fail) when wLinkMode is neither 0 nor 2, wLinkRules + $1 bits 7 and 1 are set, and either
 ; wLinkRules + $2 bit 1 is clear or bit 1 is set in the actor side's byte wLinkRuleFlags[actor / 4];
 ; otherwise C = $FF (E-0091) (E-0340: the address in its name read as its RAM name; was
-; CheckWD044RuleBit1)
+; CheckLinkRules1RuleBit1)
 CheckLinkRules1RuleBit1::
     ld a, [wLinkMode]
     and a
@@ -4186,6 +4267,8 @@ CheckLinkRules1RuleBit1::
     ld c, $ff
     ret
 
+; called from AIScore_MegaMagic: branches on wLinkMode; branches on wLinkRules + $1; branches on
+; wLinkRuleFlags
 AIScore_MegaMagic_ReadLinkModeAndBattleActor::
     ld a, [wLinkMode]
     and a
@@ -4313,7 +4396,7 @@ FewerThanTwoFoesPresent::
 
 ; C = 1 when the AI mode is below 2; otherwise $00 when some occupied foe has CountSkillsInList
 ; non-zero, else $FF (E-0124) (E-0344: the address in its name dropped or read as the label there;
-; was AIModeAtLeast2AndFoeLacks6D1A)
+; was AIModeAtLeast2AndFoeLacks)
 AIModeAtLeast2AndFoeLacks::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -4392,6 +4475,8 @@ CheckFoeStatus6Bit3::
     ld c, $01
     ret
 
+; called from AIScore_Sacrifice: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls ReadByteAtHLPlus4APlus3C_Bank05
 AIScore_Sacrifice_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -4789,9 +4874,9 @@ HealSkillMPCosts::
     db $24 ; id 26
 
 ; C = 1 when the actor's AI mode is below 3; otherwise C = $00 when another slot of the actor's side
-; can act, has status byte 1 bit 6 clear and knows a skill CountSkillsInList6D1A counts, else $FF
+; can act, has status byte 1 bit 6 clear and knows a skill CountSkillsInList counts, else $FF
 ; (E-0175) (E-0344: the address in its name dropped or read as the label there; was
-; FailIfAbleAllyKnowsSkillList6D1A)
+; FailIfAbleAllyKnowsSkillList)
 FailIfAbleAllyKnowsSkillList:: ; configured code entry (E-0175); C0
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -4839,7 +4924,7 @@ FailIfAbleAllyKnowsSkillList:: ; configured code entry (E-0175); C0
 ; side knows skill $4D, $3D, $3E, $3F, $66, $67 ... and has less MP than its cost in
 ; FailIfAllyLacksMPForSkillList_AllySkillMPCosts, else $FF (the pattern of
 ; FailIfAllyLacksMPForHealSkill) (E-0175) (E-0344: the address in its name dropped or read as the
-; label there; was FailIfAllyLacksMPForSkillList5AF8)
+; label there; was FailIfAllyLacksMPForSkillList)
 FailIfAllyLacksMPForSkillList::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -4939,9 +5024,9 @@ FailIfAllyLacksMPForSkillList::
     ld c, $01
     ret
 
-; FailIfAllyLacksMPForSkillList5AF8 compares an ally's MP (GetBattleMP_Bank05) with the byte at
-; $5AF8 + E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6
-; bytes, then code (E-0228, C1)
+; FailIfAllyLacksMPForSkillList compares an ally's MP (GetBattleMP_Bank05) with the byte at $5AF8 +
+; E for the skill it found (E = position in its skill list $4D, $3D, $3E, $3F, $66, $67); 6 bytes,
+; then code (E-0228, C1)
 ; record: MP cost
 FailIfAllyLacksMPForSkillList_AllySkillMPCosts::
     db $0f ; id 0
@@ -5087,6 +5172,8 @@ FailIfAbleAllyWithStatus6KnowsSkill78To92::
     ld c, $01
     ret
 
+; called from AIScore_BeDragon: calls GetBattleMaxHP_Bank05; calls GetBattleMaxMP_Bank05; calls
+; GetBattleATK_Bank05; calls GetBattleDEF_Bank05; calls GetBattleAGL_Bank05
 AIScore_BeDragon_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -5292,6 +5379,7 @@ CheckBattleKindNot2Or3::
     ld c, $ff
     ret
 
+; called from AIScore_MegaMagic: branches on wLinkMode
 AIScore_MegaMagic_ReadLinkMode::
     ld a, [wLinkMode]
     and a
@@ -5360,7 +5448,7 @@ AnyAllyLacksStatus2Bit2::
 ; actor included) is present with status byte 2 bit 2 clear. It computes the side with `and a, $04`
 ; twice where the opposite-side predicates use `and a, $04 / xor a, $04`, so it probably meant the
 ; foes (a possible slip; not executed) (E-0100) (E-0344: the address in its name dropped or read as
-; the label there; was AnyAllyLacksStatus2Bit2_5D31)
+; the label there; was AnyAllyLacksStatus2Bit2_2)
 AnyAllyLacksStatus2Bit2_2::
     ld a, [wBattleActor]
     and $04
@@ -5443,7 +5531,7 @@ FailIfLinkModeZeroAndPlayerStateFlagsBit3::
 
 ; C = $FF when one of the actor's three opposite slots is present with status byte 0 bit 7 clear and
 ; bits 7-6 of its wSlotResistances + $2 entry not both set, else 0 (E-0100) (E-0340: the address in
-; its name read as its RAM name; was AnyFoeOpenToWDA74Field3)
+; its name read as its RAM name; was AnyFoeOpenToSlotResistances2Field3)
 AnyFoeOpenToSlotResistances2Field3::
     ld a, [wBattleActor]
     and $04
@@ -5480,7 +5568,7 @@ AnyFoeOpenToSlotResistances2Field3::
 
 ; C = $FF when an occupied foe has a zero wBattleStatus3 byte and bits 2-3 of its wSlotResistances +
 ; $5 field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
-; AnyFoeVulnerableByWDA77Bits23)
+; AnyFoeVulnerableBySlotResistances5Bits23)
 AnyFoeVulnerableBySlotResistances5Bits23::
     ld a, [wBattleActor]
     and $04
@@ -5516,6 +5604,8 @@ AnyFoeVulnerableBySlotResistances5Bits23::
     ld c, $ff
     ret
 
+; called from AIScore_EerieLite_Conditions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on
+; wBattleStatus8; branches on the byte at wSlotResistances + $2
 AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5599,7 +5689,7 @@ AnyFoeLacksStatus4Bits23ThenStatus3Bits67::
 
 ; C = $FF when an occupied foe lacks status bit 4 and has bits 6-7 of its wSlotResistances + $3
 ; field below 3, else $00 (E-0124) (E-0340: the address in its name read as its RAM name; was
-; AnyFoeVulnerableByWDA75Bits67)
+; AnyFoeVulnerableBySlotResistances3Bits67)
 AnyFoeVulnerableBySlotResistances3Bits67::
     ld a, [wBattleActor]
     and $04
@@ -5634,6 +5724,7 @@ AnyFoeVulnerableBySlotResistances3Bits67::
     ld c, $ff
     ret
 
+; called from AIScore_EvilSlash: calls CarryUnlessBattleSlotOutSlotEmpty
 AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -5668,6 +5759,9 @@ AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $00
     ret
 
+; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag; calls
+; CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls SlotActionIs9C33Or92Or93; calls
+; SlotResistances5EntryHasBits2And3_Bank05_2
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -5855,6 +5949,9 @@ SlotCLacksSkill63Or64WithMP::
     jr c, .loop2
     ret
 
+; called from AIAddScoresForTwoLists: calls ReadSlotAIModeIndexed_Bank05; branches on wAIFlag; calls
+; CheckSlotStatusBlock; branches on the byte at wSlotMarks; calls SlotCHasMP3AndSkill6B; calls
+; SlotResistances5EntryHasBits2And3_Bank05
 AIAddScoresForTwoLists_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6133,12 +6230,13 @@ TestSlotStatus1Bit6::
     bit BSTAT1_DANCE_SEALED, [hl]
     ret
 
+; data read by SlotCHasCastableHealSkill (8 bytes)
 SlotCHasCastableHealSkill_Data::
     db $02, $05, $07, $12, $24, $01, $0c, $1c
 
 ; C = 1 when the AI mode is below 4; otherwise $00 when an occupied foe without status 1 mask $2A
 ; has bits 4-5 of its wSlotResistances + $2 byte clear, else $FF (E-0125) (E-0340: the address in
-; its name read as its RAM name; was AIGateFoeWDA74Bits45)
+; its name read as its RAM name; was AIGateFoeSlotResistances2Bits45)
 AIGateFoeSlotResistances2Bits45::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6207,6 +6305,7 @@ CheckAIFlagSetModeGated::
     ld c, $01
     ret
 
+; called from AIScore_AquaWall_Conditions: branches on wBattleStatus2
 AIScore_AquaWall_Conditions_AddAx9ToHL::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
@@ -6288,16 +6387,17 @@ UnreferencedEstimateStrongestFoeHit:: ; configured code entry (E-0237); C0
     ret
 
 ; ld c, $00 / ret after UnreferencedEstimateStrongestFoeHit's ret; nothing reaches it (E-0237)
-; (E-0344: the address in its name dropped or read as the label there; was
-; UnreferencedReturnC0_05_6223)
+; (E-0344: the address in its name dropped or read as the label there; was UnreferencedReturnC0)
 UnreferencedReturnC0:: ; configured code entry (E-0237); C0
     ld c, $00
     ret
 
+; Works on registers only
 UnreferencedReturnC0_Done::
     ld c, $01
     ret
 
+; called from AIScore_Curse_Conditions: calls AnySlotLacksStatusMask
 AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     ld a, [wBattleActor]
     and $04
@@ -6308,6 +6408,8 @@ AIScore_Curse_Conditions_AnySlotLacksStatusMask::
     call AnySlotLacksStatusMask
     ret
 
+; called from AIScore_SuckAir_Conditions: copies the byte at wBattleSkillsPrefix to wRecordBuffer;
+; calls SlotHasSkillWithFlagD; sets wRecordBuffer
 AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
     ld a, [wBattleActor]
     swap a
@@ -6338,8 +6440,7 @@ AIScore_SuckAir_Conditions_SlotHasSkillWithFlagD::
     ret
 
 ; C = $FF when an occupied ally's HP is below AnyAllyHPBelow_GetBattleMaxHP_Bank05 for it, else $00
-; (E-0125) (E-0344: the address in its name dropped or read as the label there; was
-; AnyAllyHPBelow6298)
+; (E-0125) (E-0344: the address in its name dropped or read as the label there; was AnyAllyHPBelow)
 AnyAllyHPBelow::
     ld a, [wBattleActor]
     and $04
@@ -6378,6 +6479,7 @@ AnyAllyHPBelow::
     ld c, $ff
     ret
 
+; called from AnyAllyHPBelow: calls GetBattleMaxHP_Bank05; branches on wRecordBuffer
 AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     push bc
     call GetBattleMaxHP_Bank05
@@ -6431,6 +6533,7 @@ AnyAllyHPBelow_GetBattleMaxHP_Bank05::
     pop bc
     ret
 
+; Calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleMP_Bank05; calls GetBattleMaxMP_Bank05
 AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     ld e, a
@@ -6474,7 +6577,7 @@ AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; the same instruction sequence as HPBandOfSlotTemp0 (bank $05) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; (E-0344: the address in its name dropped or read as the label there; was HPBandOfSlotTemp0_6312)
+; (E-0344: the address in its name dropped or read as the label there; was HPBandOfSlotTemp0_2)
 HPBandOfSlotTemp0_2::
     ldh a, [hTemp0]
     call GetBattleMaxMP_Bank05
@@ -6562,6 +6665,8 @@ HPBandOfSlotTemp0_2::
     ld c, $05
     ret
 
+; called from AIScore_MegaMagic: calls ReadSlotAIModeIndexed_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05; calls GetBattleDEF_Bank05
 AIScore_MegaMagic_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
@@ -6812,6 +6917,7 @@ CheckActorSlot0To3OrLinkModeSet::
     ld c, $ff
     ret
 
+; called from AIScore_Meditate_Conditions: calls GetBattleMaxHP_Bank05; calls GetBattleHP_Bank05
 AIScore_Meditate_Conditions_GetBattleMaxHP_Bank05::
     ld a, [wBattleActor]
     call GetBattleMaxHP_Bank05
@@ -6967,6 +7073,9 @@ SkillListHas19Or1AOr7COrA1::
     or a
     ret
 
+; Calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleATK_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05
 AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7203,7 +7312,7 @@ AIGateCompareAllyStatAverages::
 
 ; walks B skill numbers at every other byte from HL + 1: Z as soon as one is $16-$1A, $7C, $9F or
 ; $A1; otherwise A = 1 and Z clear (E-0120) (E-0344: the address in its name dropped or read as the
-; label there; was SkillListHasAnyOf16To1A7C9FA1)
+; label there; was SkillListHasAnyOf16To1AA1)
 SkillListHasAnyOf16To1AA1::
     inc hl
     ld a, [hli]
@@ -7262,6 +7371,7 @@ AddSlotStatSumToTemp0::
     inc d
     ret
 
+; called from AIScore_BiAttack: calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleHP_Bank05
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -7310,6 +7420,8 @@ AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $ff
     ret
 
+; called from AIScore_Berserker: calls ReadSlotAIModeIndexed_Bank05_2; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleAGL_Bank05; calls GetBattleHP_Bank05
 AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7380,6 +7492,8 @@ AIScore_Berserker_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
+; called from AIScore_Ramming: calls ReadSlotAIModeIndexed_Bank05_2; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls Get2BitFieldEOfHL; calls GetBattleHP_Bank05
 AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7457,6 +7571,9 @@ AIScore_Ramming_ReadSlotAIModeIndexed_Bank05_2::
     ld c, $01
     ret
 
+; called from AIScore_Kamikaze: calls ReadSlotAIModeIndexed_Bank05_2; branches on wLinkMode;
+; branches on wBattleKind; branches on wAIFlag; calls CarryUnlessBattleSlotOutSlotEmpty; calls
+; ReadSlotAIModeIndexed_Bank05_2; calls AIScore_Kamikaze_CheckSkills; ...
 AIScore_Kamikaze_ReadSlotAIModeIndexed_Bank05_2::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05_2
@@ -7606,6 +7723,8 @@ ActorStatus4CheckReadsAddress::
     ld c, $ff
     ret
 
+; Calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; increments hTemp3; calls
+; GetBattleATK_Bank05
 AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, [wBattleActor]
     and $04
@@ -7886,6 +8005,7 @@ ReadSlotAIModeIndexed_Bank05::
     ld a, [hl]
     ret
 
+; Calls GetBattleDEF_Bank05; calls GetBaseDEF; branches on wLinkMode
 AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     call GetBattleDEF_Bank05
     ld a, l
@@ -7935,6 +8055,7 @@ AIScore_Upper_Conditions_GetBattleDEF_Bank05::
     scf
     ret
 
+; Calls GetBattleAGL_Bank05; calls GetBaseAGL; branches on wLinkMode
 AIScore_Speed_Conditions_GetBattleAGL_Bank05::
     call GetBattleAGL_Bank05
     ld a, l
@@ -8211,6 +8332,8 @@ GetSlotSpeciesFamily::
     ld a, [wSpeciesRecord]
     ret
 
+; Calls CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05; calls
+; CarryUnlessBattleSlotOutSlotEmpty; calls GetBattleDEF_Bank05
 AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     and $04
@@ -8284,7 +8407,7 @@ SlotStatus0Bit1OrStatus4Bits01::
 
 ; A = how many of slot A's eight skills are $03, $06, $09, $0C, $0F, $12, $13 or $14 (Z set when
 ; none); BC kept (E-0175) (E-0344: the address in its name dropped or read as the label there; was
-; CountSkillsInList6D1A)
+; CountSkillsInList)
 CountSkillsInList::
     ld hl, wBattleSkills
     swap a
@@ -8325,7 +8448,7 @@ CountSkillsInList::
     ret
 
 ; A = how many of slot A's skills are $03, $06, $09, $0C, $0F, $12-$15 or $3D-$3F (E-0125) (E-0344:
-; the address in its name dropped or read as the label there; was CountSkillsInList6D54)
+; the address in its name dropped or read as the label there; was CountSkillsInList_2)
 CountSkillsInList_2::
     ld hl, wBattleSkills
     swap a
@@ -8374,7 +8497,7 @@ CountSkillsInList_2::
     ret
 
 ; A = how many of slot A's skills are $16-$24, $7B-$7C, $81 or $9F-$A0 (E-0125) (E-0344: the address
-; in its name dropped or read as the label there; was CountSkillsInRanges6D9E)
+; in its name dropped or read as the label there; was CountSkillsInRanges)
 CountSkillsInRanges::
     ld hl, wBattleSkills
     swap a
@@ -8635,7 +8758,7 @@ CountSlotSkills40To47::
     ret
 
 ; A = how many of slot A's skills are $01-$15, $40-$67, $6A-$70, $8B-$93 or $AA (E-0125) (E-0344:
-; the address in its name dropped or read as the label there; was CountSkillsInRanges6F21)
+; the address in its name dropped or read as the label there; was CountSkillsInRanges_2)
 CountSkillsInRanges_2::
     push bc
     ld hl, wBattleSkills
@@ -8689,6 +8812,7 @@ ReadByteAtHLPlus4APlus3C_Bank05::
     ld a, [hl]
     ret
 
+; data read by AnyFoeNotFullyResistant (54 bytes)
 AnyFoeNotFullyResistant_Data::
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03
@@ -8826,7 +8950,7 @@ ScaleHLToFourFifths::
     ret
 
 ; A = wRecordBufferData + $1, Z set when it is zero (E-0114) (E-0340: the address in its name read
-; as its RAM name; was TestWCFEF)
+; as its RAM name; was TestRecordBufferData1)
 TestRecordBufferData1::
     ld a, [wRecordBufferData + $1]
     or a
@@ -8990,6 +9114,9 @@ AIScore_Beat_Conditions::
     call ResetAISkillScore
     ret
 
+; called from AIScore_Sacrifice: calls ActorCanPayMPCost_Bank05; calls SkillPassesStatus1Bit0Check;
+; calls SkillPassesSideFlagBit3Check; calls SkillPassesRepeatCheck; calls AnyFoeLacksStatus2Mask22;
+; calls AnyFoeLacksStatus5Bits67; calls AnyFoeLacksStatus0Bit6; ...
 AIScore_Sacrifice_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9074,6 +9201,8 @@ AIHealUsable::
     call ResetAISkillScore
     ret
 
+; called from AIScore_MPass: calls ActorLacksStatus4Bits67; calls AllOtherAlliesHaveStatus0Bit6;
+; calls SetCToZero; calls AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty; calls ResetAISkillScore
 AIScore_MPass_ActorLacksStatus4Bits67::
     ld a, c
     and a
@@ -9329,6 +9458,8 @@ AIScore_Slow_Conditions::
     call ResetAISkillScore
     ret
 
+; called from AIScore_TwinHits: calls CheckSkillUsableStatusElseResetAISkillScore; may return early;
+; calls AnyAllyLacksStatus1Bits23And4Bits01; calls ResetAISkillScore
 AIScore_TwinHits_CheckSkillUsableStatusElseResetAISkillScore::
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
@@ -9371,8 +9502,8 @@ AIScore_Surround_Conditions::
     ret
 
 ; the conditions of AIScore_Sleep: calls AIUsableAndFoeLacksStatus2And5, AnyFoeLacksStatus0MaskCC,
-; AnyFoeOpenToWDA74Field3 in turn and tests C after each (zero: stop; the failing branch resets the
-; score with ResetAISkillScore) (E-0279)
+; AnyFoeOpenToSlotResistances2Field3 in turn and tests C after each (zero: stop; the failing branch
+; resets the score with ResetAISkillScore) (E-0279)
 AIScore_Sleep_Conditions::
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
@@ -9427,8 +9558,8 @@ AIScore_TakeMagic_Conditions::
     ret
 
 ; the conditions of AIScore_RobMagic: calls CheckSkillUsableStatusElseResetAISkillScore,
-; AnyFoeHasMPReadsWrongOffset, AnyFoeWithMPOpenToWDA74Field1 in turn and tests C after each (zero:
-; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; AnyFoeHasMPReadsWrongOffset, AnyFoeWithMPOpenToSlotResistances2Field1 in turn and tests C after
+; each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_RobMagic_Conditions::
     call CheckSkillUsableStatusElseResetAISkillScore
     ld a, c
@@ -9487,8 +9618,8 @@ AIScore_StopSpell_Conditions::
     ret
 
 ; usable when AIUsableAndFoeLacksStatus2And5, a foe lacks status 0 bit 6, AnyFoeNotFullyResistant, a
-; foe lacks status 0 bit 4 and AnyFoeVulnerableByWDA75Bits67 pass; otherwise resets wAISkillScore
-; (E-0124)
+; foe lacks status 0 bit 4 and AnyFoeVulnerableBySlotResistances3Bits67 pass; otherwise resets
+; wAISkillScore (E-0124)
 AIPanicAllUsable::
     call AIUsableAndFoeLacksStatus2And5
     ld a, c
@@ -9730,6 +9861,8 @@ CheckSkillUsableStatusElseResetAISkillScore::
     call ResetAISkillScore
     ret
 
+; called from AIScore_MegaMagic: calls AIAttackSkillUsable; may return early; calls
+; ActorLacksStatus4Bits67; calls CheckBattleKindAtLeast2OrLinkModeSet; calls ResetAISkillScore
 AIScore_MegaMagic_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -9751,7 +9884,7 @@ AIScore_MegaMagic_AIAttackSkillUsable::
 
 ; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7
 ; and status 2 bit 3, and AnyFoeNotFullyResistant passes; otherwise resets wAISkillScore (E-0124)
-; (E-0344: the address in its name dropped or read as the label there; was AIAttackSkillUsable_74D1)
+; (E-0344: the address in its name dropped or read as the label there; was AIAttackSkillUsable)
 AIAttackSkillUsable::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -9779,6 +9912,9 @@ AIAttackSkillUsable::
     call ResetAISkillScore
     ret
 
+; called from AIScore_FireAir: calls AIAttackSkillUsable; may return early; calls
+; PassUnlessRecordBufferData5Bit4AndActorStatusBit7; calls AIScore_FireAir_AnySlotLacksStatusMask;
+; calls ResetAISkillScore
 AIScore_FireAir_AIAttackSkillUsable::
     call AIAttackSkillUsable
     ld a, c
@@ -9800,7 +9936,7 @@ AIScore_FireAir_AIAttackSkillUsable::
 
 ; usable only when AIAttackSkillUsable passes and a foe lacks the status 3 and 4 bits; otherwise
 ; resets wAISkillScore (E-0122) (E-0344: the address in its name dropped or read as the label there;
-; was AIFunc74D1AndFoeLacksStatus3And4)
+; was AIAndFoeLacksStatus3And4)
 AIAndFoeLacksStatus3And4::
     call AIAttackSkillUsable
     ld a, c
@@ -10067,8 +10203,8 @@ CheckSkillUsableElseResetAISkillScore::
     ret
 
 ; the conditions of AIScore_PoisonHit: calls CheckSkillUsableElseResetAISkillScore,
-; AnyFoeLacksStatus0Bits01, AnyFoeOpenToWDA76Field0 in turn and tests C after each (zero: stop; the
-; failing branch resets the score with ResetAISkillScore) (E-0279)
+; AnyFoeLacksStatus0Bits01, AnyFoeOpenToSlotResistances4Field0 in turn and tests C after each (zero:
+; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PoisonHit_Conditions::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -10090,9 +10226,9 @@ AIScore_PoisonHit_Conditions::
     ld c, $00
     ret
 
-; the conditions of AIScore_Paralyze: calls AIParalyzeUsable, AnyFoeOpenToWDA77Field3 in turn and
-; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
-; (E-0279)
+; the conditions of AIScore_Paralyze: calls AIParalyzeUsable, AnyFoeOpenToSlotResistances5Field3 in
+; turn and tests C after each (zero: stop; the failing branch resets the score with
+; ResetAISkillScore) (E-0279)
 AIScore_Paralyze_Conditions::
     call AIParalyzeUsable
     ld a, c
@@ -10110,9 +10246,9 @@ AIScore_Paralyze_Conditions::
     ld c, $00
     ret
 
-; the conditions of AIScore_NapAttack: calls AIParalyzeUsable, AnyFoeOpenToWDA74Field3 in turn and
-; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
-; (E-0279)
+; the conditions of AIScore_NapAttack: calls AIParalyzeUsable, AnyFoeOpenToSlotResistances2Field3 in
+; turn and tests C after each (zero: stop; the failing branch resets the score with
+; ResetAISkillScore) (E-0279)
 AIScore_NapAttack_Conditions::
     call AIParalyzeUsable
     ld a, c
@@ -10186,6 +10322,8 @@ AIScore_SquallHit_Conditions::
     call ResetAISkillScore
     ret
 
+; called from AIScore_BiAttack: calls CheckSkillUsableElseResetAISkillScore; may return early; calls
+; AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2; calls ResetAISkillScore
 AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
@@ -10222,9 +10360,9 @@ AIScore_RainSlash_Conditions::
     ld c, $00
     ret
 
-; the conditions of AIScore_MultiCut: calls AIAttackSkillUsable_770A, AnyFoeNotFullyResistant in
-; turn and tests C after each (zero: stop; the failing branch resets the score with
-; ResetAISkillScore) (E-0279)
+; the conditions of AIScore_MultiCut: calls AIAttackSkillUsable_2, AnyFoeNotFullyResistant in turn
+; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
+; (E-0279)
 AIScore_MultiCut_Conditions::
     call AIAttackSkillUsable_2
     ld a, c
@@ -10242,7 +10380,7 @@ AIScore_MultiCut_Conditions::
 
 ; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits
 ; 6-7 and status 2 bit 3; otherwise resets wAISkillScore (E-0124) (E-0344: the address in its name
-; dropped or read as the label there; was AIAttackSkillUsable_770A)
+; dropped or read as the label there; was AIAttackSkillUsable_2)
 AIAttackSkillUsable_2::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10322,7 +10460,7 @@ AIScore_PsycheUp_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_HighJump: calls AIAttackSkillUsable_770A, ActorLacksStatus4Bits67,
+; the conditions of AIScore_HighJump: calls AIAttackSkillUsable_2, ActorLacksStatus4Bits67,
 ; ResetAISkillScore in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
 AIScore_HighJump_Conditions::
@@ -10337,7 +10475,7 @@ AIScore_HighJump_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_TwinSlash: calls AIAttackSkillUsable_779F, AnyFoeHasDEFAtLeast2,
+; the conditions of AIScore_TwinSlash: calls AIAttackSkillUsable_3, AnyFoeHasDEFAtLeast2,
 ; AllOtherAlliesHaveStatus0Bit6 in turn and tests C after each (zero: stop; the failing branch
 ; resets the score with ResetAISkillScore) (E-0279)
 AIScore_TwinSlash_Conditions::
@@ -10362,7 +10500,7 @@ AIScore_TwinSlash_Conditions::
 ; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7
 ; and the status 3/4 bits, and the actor lacks status 4 bits 6-7; otherwise resets wAISkillScore
 ; (E-0124) (E-0344: the address in its name dropped or read as the label there; was
-; AIAttackSkillUsable_779F)
+; AIAttackSkillUsable_3)
 AIAttackSkillUsable_3::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10392,7 +10530,7 @@ AIAttackSkillUsable_3::
 
 ; usable only when AIAttackSkillUsable_3 and AnyFoeNotFullyResistant pass and the actor's HP is not
 ; 1; otherwise resets wAISkillScore (E-0122) (E-0344: the address in its name dropped or read as the
-; label there; was AIFunc779FAnd43F2AndActorHPNotOne)
+; label there; was AIAndAnyFoeNotFullyResistantAndActorHPNotOne)
 AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call AIAttackSkillUsable_3
     ld a, c
@@ -10412,6 +10550,8 @@ AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call ResetAISkillScore
     ret
 
+; called from AIScore_Kamikaze: calls AIAndAnyFoeNotFullyResistantAndActorHPNotOne; may return
+; early; calls AnyFoeNotBlocked; calls AllOtherAlliesHaveStatus0Bit6; calls ResetAISkillScore
 AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call AIAndAnyFoeNotFullyResistantAndActorHPNotOne
     ld a, c
@@ -10431,9 +10571,9 @@ AIScore_Kamikaze_AIAndAnyFoeNotFullyResistantAndActorHPNotOne::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_SleepAir: calls AIFunc770AAndPassUnlessWCFF3Bit4,
-; AnyFoeLacksStatus0MaskCC, AnyFoeOpenToWDA74Field3 in turn and tests C after each (zero: stop; the
-; failing branch resets the score with ResetAISkillScore) (E-0279)
+; the conditions of AIScore_SleepAir: calls AIAndPassUnlessRecordBufferData5Bit4,
+; AnyFoeLacksStatus0MaskCC, AnyFoeOpenToSlotResistances2Field3 in turn and tests C after each (zero:
+; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_SleepAir_Conditions::
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
@@ -10453,10 +10593,10 @@ AIScore_SleepAir_Conditions::
     call ResetAISkillScore
     ret
 
-; usable only when AIAttackSkillUsable_2 and PassUnlessWCFF3Bit4AndActorStatusBit7 pass; otherwise
-; resets wAISkillScore (E-0122) (E-0340: the address in its name read as its RAM name; was
-; AIFunc770AAndPassUnlessWCFF3Bit4) (E-0344: the address in its name dropped or read as the label
-; there; was AIFunc770AAndPassUnlessRecordBufferData5Bit4)
+; usable only when AIAttackSkillUsable_2 and PassUnlessRecordBufferData5Bit4AndActorStatusBit7 pass;
+; otherwise resets wAISkillScore (E-0122) (E-0340: the address in its name read as its RAM name; was
+; AIAndPassUnlessRecordBufferData5Bit4) (E-0344: the address in its name dropped or read as the
+; label there; was AIAndPassUnlessRecordBufferData5Bit4)
 AIAndPassUnlessRecordBufferData5Bit4::
     call AIAttackSkillUsable_2
     ld a, c
@@ -10472,9 +10612,9 @@ AIAndPassUnlessRecordBufferData5Bit4::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_PalsyAir: calls AIFunc770AAndPassUnlessWCFF3Bit4,
-; AnyFoeLacksStatus0Bit6, AnyFoeOpenToWDA77Field3 in turn and tests C after each (zero: stop; the
-; failing branch resets the score with ResetAISkillScore) (E-0279)
+; the conditions of AIScore_PalsyAir: calls AIAndPassUnlessRecordBufferData5Bit4,
+; AnyFoeLacksStatus0Bit6, AnyFoeOpenToSlotResistances5Field3 in turn and tests C after each (zero:
+; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PalsyAir_Conditions::
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
@@ -10498,9 +10638,9 @@ AIScore_PalsyAir_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_PoisonGas: calls AIFunc770AAndPassUnlessWCFF3Bit4,
-; AnyFoeLacksStatus0Bits01, AnyFoeOpenToWDA76Field0 in turn and tests C after each (zero: stop; the
-; failing branch resets the score with ResetAISkillScore) (E-0279)
+; the conditions of AIScore_PoisonGas: calls AIAndPassUnlessRecordBufferData5Bit4,
+; AnyFoeLacksStatus0Bits01, AnyFoeOpenToSlotResistances4Field0 in turn and tests C after each (zero:
+; stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_PoisonGas_Conditions::
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
@@ -10520,9 +10660,10 @@ AIScore_PoisonGas_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_PoisonAir: calls AIFunc770AAndPassUnlessWCFF3Bit4,
-; AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask, AnyFoeOpenToWDA76Field0 in turn and tests C after
-; each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; the conditions of AIScore_PoisonAir: calls AIAndPassUnlessRecordBufferData5Bit4,
+; AIScore_PoisonAir_Sub01_AnySlotLacksStatusMask, AnyFoeOpenToSlotResistances4Field0 in turn and
+; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
+; (E-0279)
 AIScore_PoisonAir_Conditions::
     call AIAndPassUnlessRecordBufferData5Bit4
     ld a, c
@@ -10543,8 +10684,8 @@ AIScore_PoisonAir_Conditions::
     ret
 
 ; the conditions of AIScore_Curse: calls ActorCanPayMPCost_Bank05,
-; PassUnlessWCFF3Bit4AndActorStatusBit7, SkillPassesRepeatCheck in turn and tests C after each
-; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; PassUnlessRecordBufferData5Bit4AndActorStatusBit7, SkillPassesRepeatCheck in turn and tests C
+; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_Curse_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10577,8 +10718,8 @@ AIScore_Curse_Conditions::
     ret
 
 ; the conditions of AIScore_OddDance: calls AIDanceUsable, AnyFoeHasMPReadsWrongOffset,
-; AnyFoeWithMPOpenToWDA74Field1 in turn and tests C after each (zero: stop; the failing branch
-; resets the score with ResetAISkillScore) (E-0279)
+; AnyFoeWithMPOpenToSlotResistances2Field1 in turn and tests C after each (zero: stop; the failing
+; branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_OddDance_Conditions::
     call AIDanceUsable
     ld a, c
@@ -10630,8 +10771,8 @@ AIScore_PaniDance_Conditions::
     call ResetAISkillScore
     ret
 
-; usable when the actor can pay the MP cost, PassUnlessWCFF3Bit5AndActorStatusBit6 and the repeat
-; check pass and a foe lacks status 5 bits 6-7; otherwise resets wAISkillScore (E-0124)
+; usable when the actor can pay the MP cost, PassUnlessRecordBufferData5Bit5AndActorStatusBit6 and
+; the repeat check pass and a foe lacks status 5 bits 6-7; otherwise resets wAISkillScore (E-0124)
 AIDanceUsable::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10703,8 +10844,8 @@ AIScore_LureDance_Conditions::
     ret
 
 ; the conditions of AIScore_LifeDance: calls ActorCanPayMPCost_Bank05,
-; PassUnlessWCFF3Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C after each
-; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C
+; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_LifeDance_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10737,8 +10878,8 @@ AIScore_LifeDance_Conditions::
     ret
 
 ; the conditions of AIScore_Hustle: calls ActorCanPayMPCost_Bank05,
-; PassUnlessWCFF3Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C after each
-; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C
+; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_Hustle_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10763,8 +10904,8 @@ AIScore_Hustle_Conditions::
     ret
 
 ; the conditions of AIScore_SideStep: calls ActorCanPayMPCost_Bank05,
-; PassUnlessWCFF3Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C after each
-; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, SkillPassesRepeatCheck in turn and tests C
+; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_SideStep_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -10982,7 +11123,7 @@ AIScore_TatsuCall_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_SuckAir: calls PassUnlessWCFF3Bit4AndActorStatusBit7,
+; the conditions of AIScore_SuckAir: calls PassUnlessRecordBufferData5Bit4AndActorStatusBit7,
 ; ActorLacksStatus4Bits67, AIScore_SuckAir_Sub01_Sub01 in turn and tests C after each (zero: stop;
 ; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_SuckAir_Conditions::
@@ -11029,7 +11170,7 @@ AIScore_Focus_Conditions::
 ; usable when the MP and repeat checks pass, a foe lacks status 5 bits 6-7 and the 3/4 bits, has
 ; clear status 3, is vulnerable by wSlotResistances + $5 bits 2-3, and
 ; AllyCheckSide0FlagAndOtherSlots passes; otherwise resets wAISkillScore (E-0125) (E-0344: the
-; address in its name dropped or read as the label there; was AILickSkillUsable_7AD8)
+; address in its name dropped or read as the label there; was AILickSkillUsable)
 AILickSkillUsable::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11066,8 +11207,8 @@ AILickSkillUsable::
     ret
 
 ; usable when the actor can pay the MP cost, the repeat check passes, a foe lacks status 5 bits 6-7
-; and the status 3/4 bits, a foe has clear status 3, and AnyFoeVulnerableByWDA77Bits23 passes;
-; otherwise resets wAISkillScore (E-0124)
+; and the status 3/4 bits, a foe has clear status 3, and AnyFoeVulnerableBySlotResistances5Bits23
+; passes; otherwise resets wAISkillScore (E-0124)
 AIStatusLickUsable::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11099,9 +11240,9 @@ AIStatusLickUsable::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_LegSweep: calls AILickSkillUsable_7AD8, AIScore_LegSweep_Sub01_Sub01 in
-; turn and tests C after each (zero: stop; the failing branch resets the score with
-; ResetAISkillScore) (E-0279)
+; the conditions of AIScore_LegSweep: calls AILickSkillUsable, AIScore_LegSweep_Sub01_Sub01 in turn
+; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
+; (E-0279)
 AIScore_LegSweep_Conditions::
     call AILickSkillUsable
     ld a, c
@@ -11152,8 +11293,8 @@ AIScore_Geyser_Conditions::
     ret
 
 ; the conditions of AIScore_DanceShut: calls ActorCanPayMPCost_Bank05,
-; PassUnlessWCFF3Bit5AndActorStatusBit6, AnyFoeLacksStatus5Bits67 in turn and tests C after each
-; (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
+; PassUnlessRecordBufferData5Bit5AndActorStatusBit6, AnyFoeLacksStatus5Bits67 in turn and tests C
+; after each (zero: stop; the failing branch resets the score with ResetAISkillScore) (E-0279)
 AIScore_DanceShut_Conditions::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11223,8 +11364,8 @@ AIScore_MouthShut_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_StrongD: calls AllyCheckSide0FlagAndOtherSlots, AIBuffSkillUsable_7C24
-; in turn and tests C after each (zero: stop; the failing branch resets the score with
+; the conditions of AIScore_StrongD: calls AllyCheckSide0FlagAndOtherSlots, AIBuffSkillUsable in
+; turn and tests C after each (zero: stop; the failing branch resets the score with
 ; ResetAISkillScore) (E-0279)
 AIScore_StrongD_Conditions::
     call AllyCheckSide0FlagAndOtherSlots
@@ -11232,9 +11373,9 @@ AIScore_StrongD_Conditions::
     and a
     jp z, ResetAISkillScore
 
-; (E-0345: was AIScore_Dodge_Sub01_Conditions) the conditions of AIScore_Dodge_Sub01: calls
-; AIBuffSkillUsable_7C24, CheckLoneFoeHPNotBelowAIDamageEstimates, CheckAIFlagSetModeGated in turn
-; and tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
+; (E-0345: was AIScore_DodgeAlternative_Conditions) the conditions of AIScore_Dodge_Sub01: calls
+; AIBuffSkillUsable, CheckLoneFoeHPNotBelowAIDamageEstimates, CheckAIFlagSetModeGated in turn and
+; tests C after each (zero: stop; the failing branch resets the score with ResetAISkillScore)
 ; (E-0279)
 AIScore_DodgeAlternative_Conditions::
     call AIBuffSkillUsable
@@ -11283,7 +11424,7 @@ AIScore_Dodge_Conditions::
 
 ; usable when the actor can pay the MP cost, the repeat check passes and a foe lacks status 5 bits
 ; 6-7 and status 0 bit 6; otherwise resets wAISkillScore (E-0124) (E-0344: the address in its name
-; dropped or read as the label there; was AIBuffSkillUsable_7C24)
+; dropped or read as the label there; was AIBuffSkillUsable)
 AIBuffSkillUsable::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11307,9 +11448,9 @@ AIBuffSkillUsable::
     call ResetAISkillScore
     ret
 
-; AIBuffSkillUsable_7C24, a foe not blocked, the gated wAIFlag check and PassIfBattleTurnNonZero;
+; AIBuffSkillUsable, a foe not blocked, the gated wAIFlag check and PassIfBattleTurnNonZero;
 ; otherwise resets wAISkillScore (E-0124) (E-0344: the address in its name dropped or read as the
-; label there; was AIGuardSkillUsable_7C45)
+; label there; was AIGuardSkillUsable)
 AIGuardSkillUsable::
     call AIBuffSkillUsable
     ld a, c
@@ -11337,7 +11478,7 @@ AIGuardSkillUsable::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_Cover: calls AIGuardSkillUsable_7C45, AllyCheckSide0FlagAndOtherSlots,
+; the conditions of AIScore_Cover: calls AIGuardSkillUsable, AllyCheckSide0FlagAndOtherSlots,
 ; ActorHPIsNotOne in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
 AIScore_Cover_Conditions::
@@ -11359,7 +11500,7 @@ AIScore_Cover_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_TailWind: calls AIBuffSkillUsable_7C24, AnyFoeNotBlocked,
+; the conditions of AIScore_TailWind: calls AIBuffSkillUsable, AnyFoeNotBlocked,
 ; AIScore_TailWind_Sub01_Sub01 in turn and tests C after each (zero: stop; the failing branch resets
 ; the score with ResetAISkillScore) (E-0279)
 AIScore_TailWind_Conditions::
@@ -11385,7 +11526,7 @@ AIScore_TailWind_Conditions::
     call ResetAISkillScore
     ret
 
-; the conditions of AIScore_StormWind: calls AIBuffSkillUsable_7C24, AnyFoeNotBlocked,
+; the conditions of AIScore_StormWind: calls AIBuffSkillUsable, AnyFoeNotBlocked,
 ; AnyAllyLacksStatus2Bit6 in turn and tests C after each (zero: stop; the failing branch resets the
 ; score with ResetAISkillScore) (E-0279)
 AIScore_StormWind_Conditions::
@@ -11441,6 +11582,7 @@ AIScore_AquaWall_Conditions::
     call ResetAISkillScore
     ret
 
+; called from AIScore_SealPray: calls ActorCanPayMPCost_Bank05; calls ResetAISkillScore
 AIScore_SealPray_ActorCanPayMPCost_Bank05::
     call ActorCanPayMPCost_Bank05
     ld a, c
@@ -11605,7 +11747,7 @@ AIScore_LifeSong_Conditions::
     ret
 
 ; the conditions of AIScore_LoveRain: calls ActorCanPayMPCost_Bank05, SkillPassesRepeatCheck,
-; AnyAllyHPBelow6298 in turn and tests C after each (zero: stop; the failing branch resets the score
+; AnyAllyHPBelow in turn and tests C after each (zero: stop; the failing branch resets the score
 ; with ResetAISkillScore) (E-0279)
 AIScore_LoveRain_Conditions::
     call ActorCanPayMPCost_Bank05

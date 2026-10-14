@@ -14,6 +14,9 @@ CloseHibernateMenu::
     dw CloseHibernateMenu_FillTilesBxC
     dw CloseHibernateMenu_DrawRecordListNameTiles_Bank1D
 
+; step 0 of CloseHibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank14; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; increments wScreenList
 CloseHibernateMenu_CopyBytesDEToHL_Bank14::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -37,6 +40,8 @@ CloseHibernateMenu_CopyBytesDEToHL_Bank14::
     ld [wScreenList], a
     ret
 
+; step 1 of CloseHibernateMenu: sets wArg1 to $9c; sets wArg2 to 0; sets wArg3; sets wArg4; calls
+; LoadTileListSixPerCall; returns unless wArg5 is $ff; sets wGlyphListPos to 0; ...
 CloseHibernateMenu_LoadTileListSixPerCall::
     ld a, $9c
     ld [wArg1], a
@@ -66,6 +71,8 @@ CloseHibernateMenu_LoadTileListSixPerCall::
     ld [wScriptStartRequest], a
     ret
 
+; step 2 of CloseHibernateMenu: calls FillTilesBxC; sets wTextWindowTileLo to $12; increments
+; wScreenList
 CloseHibernateMenu_FillTilesBxC::
     ld hl, vTiles1 + $500
     ld bc, $0f01
@@ -83,6 +90,9 @@ CloseHibernateMenu_FillTilesBxC::
     ld [wScreenList], a
     ret
 
+; step 3 of CloseHibernateMenu: calls DrawRecordListNameTiles_Bank1D; sets wMessageMode to 0; sets
+; wScreenList to 0; calls WritePlayerNameWithFlag0SuffixToTextBuf0; sets wScriptCommandType to 0;
+; sets wScriptStartRequest to $80
 CloseHibernateMenu_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     xor a
@@ -126,6 +136,9 @@ HibernateMenu::
     dw HibernateMenu_SwapMonstersMenu
     dw HibernateMenu_SwapMonstersMenu
 
+; step 0 of HibernateMenu: calls CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank14; sets wMessageMode to 4; advances wScreenState; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 HibernateMenu_CopyBytesDEToHL_Bank14::
     ld hl, wScreenState
     ld bc, $006f
@@ -172,10 +185,13 @@ HibernateMenu_SetupPartyList::
     dw HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep
     dw HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14
 
+; step 0 of HibernateMenu_SetupPartyList: calls SetupTileMapAtBGMap1
 HibernateMenu_SetupPartyList_ToSetupTileMapAtBGMap1::
     farcall SetupTileMapAtBGMap1
     ret
 
+; step 1 of HibernateMenu_SetupPartyList: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
+; may return early; advances wScreenStep
 HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     ld hl, NamingScreenTileDestListA
     ld de, HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopySrcList
@@ -186,6 +202,8 @@ HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     inc [hl]
     ret
 
+; step 2 of HibernateMenu_SetupPartyList: calls ListPartyRecordsWithState2ToListEntries; increments
+; wScreenStep
 HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
     farcall ListPartyRecordsWithState2ToListEntries
     ld a, [wScreenStep]
@@ -193,6 +211,10 @@ HibernateMenu_SetupPartyList_ToListPartyRecordsWithState2ToListEntriesAndStep::
     ld [wScreenStep], a
     ret
 
+; step 3 of HibernateMenu_SetupPartyList: calls CopyRectTo20ByteRows_Bank14; calls
+; CopyScreenBufferRectAt0280_Bank14; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets wScreenStep to 0; increments
+; wScreenState
 HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -211,6 +233,9 @@ HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14::
     ld [wScreenState], a
     ret
 
+; step 2 of HibernateMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
+; HibernateMenu_WriteGridCursorY; calls HibernateMenu_ReadGridCursorX_2; branches on wGridCursorX;
+; sets wGridCursorX to 3; calls HibernateMenu_WriteGridCursorY; ...
 HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -312,6 +337,10 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
+; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: may continue in
+; HibernateMenu_ReadGridCursorX; increments wGridCursorY; may continue in
+; HibernateMenu_ReadGridCursorX; may continue in HibernateMenu_ReadGridCursorX_2; sets wGridCursorY
+; to 0
 HibernateMenu_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -326,17 +355,23 @@ HibernateMenu_WriteGridCursorY::
     xor a
     ld [wGridCursorY], a
 
+; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: continues in
+; HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 HibernateMenu_ReadGridCursorX::
     ld b, $bb
     jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
+; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: continues in
+; HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 HibernateMenu_ReadGridCursorX_2::
     ld b, $c3
     jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
+; called from HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: works on registers only
 HibernateMenu_BGMapAddressAtScroll_Bank14::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank14
 HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
@@ -356,9 +391,14 @@ HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
     ei
     ret
 
+; data read by HibernateMenu (10 bytes)
 HibernateMenu_BGMapAddressAtScroll_Bank14_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
+; step 3 of HibernateMenu: branches on wGridCursorX; may continue in
+; StartRecordListOrNoneMessage_CallCountFlaggedSRAMRecords; calls ListRecordsState1NotEggs;
+; increments wScreenState; branches on wListCount; calls CountFlaggedSRAMRecords; calls
+; LoadRecordCapacityFromFarmLevelTable; ...
 HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wGridCursorX]
     and a
@@ -550,6 +590,8 @@ StartRecordListOrNoneMessage::
     ld [wScriptStartRequest], a
     ret
 
+; Calls CountFlaggedSRAMRecords; branches on wArg5; sets wTwoChoiceCursor to 1; sets wScreenState to
+; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScriptCommandType to 0; ...
 StartRecordListOrNoneMessage_CallCountFlaggedSRAMRecords::
     farcall CountFlaggedSRAMRecords
     ld a, [wArg5]
@@ -658,6 +700,10 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14
 
+; step 50 of HibernateMenu_ChooseRecords: calls DrawBoxAndMenuAndStep; calls
+; ListRecordsState1NotEggs; sets wSelectedRecord; copies wListCursor to wItemGridX; copies
+; wListPageIndex to wItemGridY; calls HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf; sets
+; wListCursor to 0; ...
 HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep::
     call DrawBoxAndMenuAndStep
     farcall ListRecordsState1NotEggs
@@ -680,6 +726,9 @@ HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep::
     ld [wListPageIndex], a
     ret
 
+; step 60 of HibernateMenu_ChooseRecords: calls BGMapAddressAtScroll_Bank14; copies wItemGridX to
+; wListCursor; copies wItemGridY to wListPageIndex; calls ListRecordsState1NotEggs; calls
+; HibernateMenu_ClampRecordListPageCursor5; calls EraseFiveTableEntries; calls FillTilesBxC; ...
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetListCursor::
     call BGMapAddressAtScroll_Bank14
     push hl
@@ -734,9 +783,15 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetListCursor::
     ld [wScriptStartRequest], a
     ret
 
+; data read by HibernateMenu (10 bytes)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
+; step 62 of HibernateMenu_ChooseRecords: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; branches on wTwoChoiceCursor; calls
+; HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2; calls
+; HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4; continues in
+; HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK; ...
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -774,6 +829,8 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2::
     ld [wScriptStartRequest], a
     ret
 
+; step 63 of HibernateMenu_ChooseRecords: branches on wScreenSubStep; sets rRAMG2 to $0a; sets rRAMB
+; to 0; copies wSelectedRecord to wArg1; sets rRAMG2 to 0; sets wArg2 to 0; sets wArg3; ...
 HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
     ld a, [wScreenSubStep]
     and a
@@ -861,6 +918,9 @@ HibernateMenu_ChooseRecords_PackRecordFieldsToBank1Slot::
     ld [wScreenStep], a
     ret
 
+; step 64 of HibernateMenu_ChooseRecords: sets rRAMG2 to $0a; branches on wSelectedRecord; sets
+; rRAMB to 1; sets rRAMG2 to 0; sets wItemGridX to 0; sets wItemGridY to 0; sets wSelectedRecord to
+; 0; ...
 HibernateMenu_ChooseRecords_Multiply8::
     ld a, $0a
     ld [rRAMG2], a
@@ -905,6 +965,8 @@ HibernateMenu_ChooseRecords_Multiply8::
     ld [wCursorBlinkAE], a
     ret
 
+; step 5 of HibernateMenu_ChooseRecords: calls FillTilesBxC; sets wTextWindowTileLo to $12; advances
+; wScreenStep
 HibernateMenu_ChooseRecords_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -924,6 +986,9 @@ HibernateMenu_ChooseRecords_FillTilesBxC::
     inc [hl]
     ret
 
+; step 7 of HibernateMenu_ChooseRecords: calls StoreBAtWordTableEntry_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls
+; StoreBAtWordTableEntry_Bank14; increments wScreenStep
 HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
     ld a, [wListCursor]
     ld b, $bb
@@ -942,6 +1007,8 @@ HibernateMenu_ChooseRecords_StoreBAtWordTableEntry_Bank14::
     ld [wScreenStep], a
     ret
 
+; step 9 of HibernateMenu_ChooseRecords: sets wArg1 to 0; sets wArg2 to $0c; calls
+; CopyScreenBufferRectWithAttrs_Bank14; increments wScreenStep
 HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
     ld c, $0d
     ld hl, $01d4
@@ -956,6 +1023,8 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectWithAttrs_Bank14::
     ld [wScreenStep], a
     ret
 
+; step 10 of HibernateMenu_ChooseRecords: calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; increments wScreenStep
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -966,6 +1035,8 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14::
     ld [wScreenStep], a
     ret
 
+; step 11 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
+; may return early; advances wScreenStep
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopySrcList
@@ -976,6 +1047,8 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     inc [hl]
     ret
 
+; step 45 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
+; may return early; advances wScreenStep
 HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopySrcList
@@ -986,6 +1059,9 @@ HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_Adv
     inc [hl]
     ret
 
+; step 46 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; plays sound $6c; sets
+; wChoiceCursor to 0; sets wCursorBlinkAE to 0; increments wScreenStep
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor::
     ld de, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1015,6 +1091,9 @@ HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_SetChoiceCursor_TileRect
     db $b6, $c3, $74, $75, $c3, $c3, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; step 47 of HibernateMenu_ChooseRecords: branches on wJoypadPressedRepeat; branches on
+; wJoypadPressed; calls BlinkCursorBlinkAE_Bank14; calls DrawBlankTileC3_Bank14; branches on
+; wChoiceCursor; sets wChoiceCursor to 1; calls DrawCursorTileBB_Bank14; ...
 HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -1182,9 +1261,11 @@ DrawBlankTileC3_Bank14::
     ld b, $c3
     jr HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor
 
+; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: works on registers only
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank14
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
@@ -1204,14 +1285,14 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor::
     ei
     ret
 
+; data read by HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_2_ReadChoiceCursor (4 bytes)
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_Data_2::
     db $2d, $01, $6d, $01
 
 ; copies box DrawBoxAndMenuAndStep_TileRect to wWindowTileBuffer + $110, runs
 ; CopyScreenBufferRectWithAttrs_Bank14, blanks the cursor entry wListCursor of
 ; HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data and wScreenStep += 1 (E-0124)
-; (E-0344: the address in its name dropped or read as the label there; was
-; DrawBox4965AndMenuAndStep)
+; (E-0344: the address in its name dropped or read as the label there; was DrawBoxAndMenuAndStep)
 DrawBoxAndMenuAndStep::
     ld de, DrawBoxAndMenuAndStep_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1240,6 +1321,9 @@ DrawBoxAndMenuAndStep::
 DrawBoxAndMenuAndStep_TileRect::
     db $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 0
 
+; step 27 of HibernateMenu_ChooseRecords: calls CopyFromBankWaitVRAM; plays sound $6c; calls
+; CopyRectTo20ByteRows_Bank14; calls StoreBAtWordTableEntry_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; increments wScreenStep; ...
 HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_SetScreenStep::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
@@ -1277,6 +1361,10 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_SetScreenStep_TileRect::
     db $b6, $c3, $ef, $73, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; step 28 of HibernateMenu_ChooseRecords: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; calls
+; HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3; sets wTwoChoiceCursor to 1; sets
+; wScreenState to 1; sets wScreenStep to 3; ...
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -1320,6 +1408,10 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3::
     ld [wScriptStartRequest], a
     ret
 
+; called from HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_3: calls
+; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; branches on wIsCGB; calls
+; HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -1346,6 +1438,7 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_3::
     call DrawScreenBufferRect_Bank14
     ret
 
+; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14
 HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14::
     push hl
     push de
@@ -1370,6 +1463,9 @@ HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14::
     jr c, HibernateMenu_ChooseRecords_CopyBytesDEToHL_Bank14
     ret
 
+; step 0 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; sets wListPageIndex to 0; sets
+; wCursorBlinkAE to 0; increments wScreenStep
 HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14::
     ld de, HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1422,7 +1518,7 @@ HibernateMenu_ChooseRecords_CopyRectTo20ByteRows_Bank14_TileRect_2::
 ; clears four tile rows (vTiles1 + $240, $500, $700, $4E0), copies rectangle
 ; ClearTilesAndDrawRectAndStep_TileRect to wWindowTileBuffer + $64 and wScreenStep += 1 (E-0124)
 ; (E-0344: the address in its name dropped or read as the label there; was
-; ClearTilesAndDrawRect5B36AndStep)
+; ClearTilesAndDrawRectAndStep)
 ClearTilesAndDrawRectAndStep::
     ld hl, vTiles1 + $240
     ld bc, $0c01
@@ -1445,11 +1541,16 @@ ClearTilesAndDrawRectAndStep::
     ld [wScreenStep], a
     ret
 
+; step 31 of HibernateMenu_ChooseRecords: calls ListRecordsState1NotEggs; continues in
+; HibernateMenu_ClampRecordListPageCursor5
 HibernateMenu_ChooseRecords_ListRecordsState1NotEggs::
     farcall ListRecordsState1NotEggs
     jr HibernateMenu_ClampRecordListPageCursor5
     db $21, $2d, $5f, $06, $1d, $d7
 
+; Calls ClampRecordListPageCursor5; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank14;
+; calls StoreC5BEC6AtHLStride2_Bank14; sets wArg1; sets wArg2; calls DrawPageOfPagesAtScrollOffset;
+; ...
 HibernateMenu_ClampRecordListPageCursor5::
     farcall ClampRecordListPageCursor5
     ld a, [wListPages]
@@ -1478,10 +1579,14 @@ HibernateMenu_ClampRecordListPageCursor5::
     ld [wScreenStep], a
     ret
 
+; step 32 of HibernateMenu_ChooseRecords: calls DrawRecordListPageNames
 HibernateMenu_ChooseRecords_ToDrawRecordListPageNames::
     farcall DrawRecordListPageNames
     ret
 
+; step 33 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; calls
+; LoadFamilyIconTileForRecordB_Bank14; calls CopyRectTo20ByteRows_Bank14; sets wArg1; calls
+; DrawRecordStatsBoxForArg1; increments wScreenStep
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_LoadFamilyIconTileForRecordB_Bank14::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1504,6 +1609,8 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_LoadFamilyIconTileForRecor
     ld [wScreenStep], a
     ret
 
+; step 35 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
+; DrawRecordNameAndSpeciesNameTiles; increments wScreenStep
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNameTiles::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1518,6 +1625,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_DrawRecordNameAndSpeciesNa
     ld [wScreenStep], a
     ret
 
+; step 37 of HibernateMenu_ChooseRecords: sets wMenuInputResult to 0; calls UpdatePagedListCursor;
+; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
+; wScreenStep; sets wScreenStep; ...
 HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult::
     xor a
     ld [wMenuInputResult], a
@@ -1579,6 +1689,8 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult::
     ld [wScreenStep], a
     ret
 
+; step 13 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
+; may return early; increments wScreenStep
 HibernateMenu_ChooseRecords_WriteScreenStep::
     ld hl, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopySrcList
@@ -1590,6 +1702,8 @@ HibernateMenu_ChooseRecords_WriteScreenStep::
     ld [wScreenStep], a
     ret
 
+; step 14 of HibernateMenu_ChooseRecords: calls DrawRecordListNameTiles_Bank1D; calls
+; ListPartyRecordsWithState2ToListEntries; increments wScreenStep
 HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
     farcall DrawRecordListNameTiles_Bank1D
     farcall ListPartyRecordsWithState2ToListEntries
@@ -1598,6 +1712,10 @@ HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D::
     ld [wScreenStep], a
     ret
 
+; step 44 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
+; CopyScreenBufferRectAt0280_Bank14; calls StoreBAtWordTableEntry_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets
+; wScreenStep to $1b; ...
 HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14_SetScreenStep::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1623,6 +1741,9 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14_SetScreenStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 49 of HibernateMenu_ChooseRecords: calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; sets wScreenStep to $25; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -1636,6 +1757,10 @@ HibernateMenu_ChooseRecords_BGMapAddressAtScroll_Bank14_SetScreenStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 15 of HibernateMenu_ChooseRecords: calls CopyRectTo20ByteRows_Bank14; calls
+; CopyScreenBufferRectAt0280_Bank14; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets wScreenStep to 0; sets wScreenState to
+; 2; ...
 HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1660,8 +1785,7 @@ HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14::
     ret
 
 ; screen state 4, reached from menu option 0: the list of farm records that are not eggs
-; (ListRecordsState1WithByte6EClear) after a capacity check; the script asks Which monster will
-; hibernate?
+; (ListRecordsState1NotEggs) after a capacity check; the script asks Which monster will hibernate?
 HibernateMenu_ChooseToHibernate::
     ld a, [wScreenStep]
     jumptable
@@ -1741,14 +1865,20 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14
 
+; step 2 of HibernateMenu_ChooseRecords: calls HibernateMenu_WriteListCountAndRAMG2Etc; continues in
+; HibernateMenu_ClampRecordListPageCursor5
 HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc::
     farcall HibernateMenu_WriteListCountAndRAMG2Etc
     jp HibernateMenu_ClampRecordListPageCursor5
 
+; step 3 of HibernateMenu_ChooseRecords: calls HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2
 HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc::
     farcall HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2
     ret
 
+; step 4 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
+; LoadFamilyIconTileForArg1Record; calls CopyRectTo20ByteRows_Bank14; sets wArg1; calls
+; HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D; increments wScreenStep
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1772,6 +1902,8 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; step 6 of HibernateMenu_ChooseRecords: calls SetArg5ToListEntriesCell5; sets wArg1; calls
+; HibernateMenu_ChooseRecords_RecordAddressWithBank1Slot1D_2; increments wScreenStep
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1786,6 +1918,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_2::
     ld [wScreenStep], a
     ret
 
+; step 49 of HibernateMenu_ChooseToHibernate: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; calls StoreBAtWordTableEntry_Bank14; calls
+; HibernateMenu_WriteSVBK; sets wTwoChoiceCursor to 1; sets wScreenStep to $28; ...
 HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -1820,6 +1955,8 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D::
     cp $01
     jr z, .loop
 
+; Calls HibernateMenu_WriteSVBK; increments wScreenStep; sets wScreenSubStep to 0; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK::
     call HibernateMenu_WriteSVBK
     ld a, [wScreenStep]
@@ -1833,6 +1970,9 @@ HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_W
     ld [wScriptStartRequest], a
     ret
 
+; Calls HibernateMenu_CopyBytesDEToHL_Bank14_2; branches on wIsCGB; calls
+; HibernateMenu_CopyBytesDEToHL_Bank14_2; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; calls CopyFromBankWaitVRAM
 HibernateMenu_WriteSVBK::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -1877,12 +2017,14 @@ HibernateMenu_WriteSVBK::
     call CopyFromBankWaitVRAM
     ret
 
+; data read by HibernateMenu_WriteSVBK (6 bytes)
 HibernateMenu_WriteSVBK_Data1::
     db $b4, $b4, $b4, $b4, $b4, $b5
 
 HibernateMenu_WriteSVBK_Data2::
     db $00, $00, $00, $00, $00, $00
 
+; Calls CopyBytesDEToHL_Bank14; may continue in HibernateMenu_CopyBytesDEToHL_Bank14_2
 HibernateMenu_CopyBytesDEToHL_Bank14_2::
     push hl
     push de
@@ -1907,6 +2049,9 @@ HibernateMenu_CopyBytesDEToHL_Bank14_2::
     jr c, HibernateMenu_CopyBytesDEToHL_Bank14_2
     ret
 
+; step 16 of HibernateMenu_ChooseRecords: calls CopyFromBankWaitVRAM; plays sound $6c; calls
+; CopyRectTo20ByteRows_Bank14; calls CopyFromBankWaitVRAM; calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; increments wScreenStep; ...
 HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM::
     ld de, Tiles1Plus6F0Tiles
     ld hl, vTiles2 + $730
@@ -1955,6 +2100,10 @@ HibernateMenu_ChooseRecords_CopyFromBankWaitVRAM_TileRect::
     db $b6, $c3, $76, $73, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
+; step 60 of HibernateMenu_ChooseToHibernate: copies wItemGridX to wListCursor; copies wItemGridY to
+; wListPageIndex; calls HibernateMenu_WriteListCountAndRAMG2Etc; calls
+; HibernateMenu_ClampRecordListPageCursor5; sets wTwoChoiceCursor to 1; sets wScreenStep to $20;
+; sets wTextWindowTileLo to $12; ...
 HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -1980,6 +2129,9 @@ HibernateMenu_ChooseToHibernate_WriteListCursorAndListPageIndexEtc::
     ld [wScriptStartRequest], a
     ret
 
+; step 18 of HibernateMenu_ChooseRecords: sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; SetArg5ToListEntriesCell5; sets wArg2 to 1; sets wArg3; sets wArg4; branches on the byte at
+; sRecords; ...
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_3::
     ld a, $0a
     ld [rRAMG2], a
@@ -2058,6 +2210,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_3::
     ld [wScreenStep], a
     ret
 
+; step 19 of HibernateMenu_ChooseRecords: copies wListEntries2 to wArg1; copies wMenuWordBuf to
+; wArg2; copies wMenuWordBuf1 to wArg3; copies wMenuWordBuf2 to wArg4; calls
+; UnpackRecordFromBank1Slot; returns unless wArg5 is $ff; sets rRAMG2 to $0a; ...
 HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
     ld a, [wListEntries2]
     ld [wArg1], a
@@ -2107,6 +2262,9 @@ HibernateMenu_ChooseRecords_UnpackRecordFromBank1Slot::
     ld [wScriptStartRequest], a
     ret
 
+; step 20 of HibernateMenu_ChooseToHibernate: calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; sets wScreenStep to 8; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2120,6 +2278,9 @@ HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14::
     ld [wScriptStartRequest], a
     ret
 
+; step 21 of HibernateMenu_ChooseToHibernate: sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; SetArg5ToListEntriesCell5; calls HibernateMenu_ChooseToHibernate_WriteRAMBAndArg6Etc; sets rRAMG2
+; to 0; increments wScreenStep; sets rRAMG2 to 0; ...
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5::
     ld a, $0a
     ld [rRAMG2], a
@@ -2159,6 +2320,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5::
     ld [wCursorBlinkAE], a
     ret
 
+; step 22 of HibernateMenu_ChooseToHibernate: copies wArg5 to wArg2; copies wArg6 to wArg3; copies
+; wArg7 to wArg4; copies the byte at wListEntries to wArg1; calls PackRecordFieldsToBank1Slot;
+; returns unless wArg5 is $ff; sets rRAMG2 to $0a; ...
 HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot::
     ld a, [wArg5]
     ld [wArg2], a
@@ -2207,6 +2371,9 @@ HibernateMenu_ChooseToHibernate_PackRecordFieldsToBank1Slot::
     ld [wCursorBlinkAE], a
     ret
 
+; step 8 of HibernateMenu_ChooseRecords: sets wMenuInputResult to 0; calls UpdatePagedListCursor;
+; returns if wMenuInputResult is 0; branches on wMenuInputResult; calls
+; ClearTilesAndDrawRectAndStep; sets wScreenStep; sets wTwoChoiceCursor to 1; ...
 HibernateMenu_ChooseRecords_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -2268,6 +2435,10 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 47 of HibernateMenu_ChooseToHibernate: calls CopyRectTo20ByteRows_Bank14; calls
+; CopyScreenBufferRectAt0280_Bank14; calls StoreBAtWordTableEntry_Bank14; calls
+; BGMapAddressAtScroll_Bank14; calls DrawScreenBufferRect_Bank14; calls CountRecordsInUse; sets
+; wScreenStep to $1e; ...
 HibernateMenu_ChooseToHibernate_CopyScreenBufferRectAt0280_Bank14::
     ld de, HibernateMenu_SetupPartyList_CopyScreenBufferRectAt0280_Bank14_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2293,6 +2464,9 @@ HibernateMenu_ChooseToHibernate_CopyScreenBufferRectAt0280_Bank14::
     ld [wScriptStartRequest], a
     ret
 
+; step 50 of HibernateMenu_ChooseToHibernate: calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; increments wScreenStep; copies wListCursor to wItemGridX; calls
+; SetArg5ToListEntriesCell5; sets wSelectedRecord; copies wListPageIndex to wItemGridY; ...
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2322,6 +2496,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetScreenStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 59 of HibernateMenu_ChooseRecords: sets wMenuInputResult to 0; calls UpdatePagedListCursor;
+; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
+; wScreenStep; branches on wScreenState; ...
 HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult_2::
     xor a
     ld [wMenuInputResult], a
@@ -2400,6 +2577,9 @@ HibernateMenu_ChooseRecords_UpdatePagedListCursor_SetMenuInputResult_2::
     ld [wScreenStep], a
     ret
 
+; step 65 of HibernateMenu_ChooseToHibernate: calls BGMapAddressAtScroll_Bank14; calls
+; DrawScreenBufferRect_Bank14; sets wScreenStep to $3b; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_SetScreenStep::
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -2413,6 +2593,8 @@ HibernateMenu_ChooseToHibernate_BGMapAddressAtScroll_Bank14_SetScreenStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 66 of HibernateMenu_ChooseToHibernate: branches on wScreenSubStep; sets rRAMG2 to $0a; sets
+; rRAMB to 0; calls SetArg5ToListEntriesCell5; sets wArg1; sets rRAMG2 to 0; sets wArg2 to 0; ...
 HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetArg1::
     ld a, [wScreenSubStep]
     and a
@@ -2498,6 +2680,9 @@ HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5_SetArg1::
     ld [wScreenStep], a
     ret
 
+; step 67 of HibernateMenu_ChooseToHibernate: sets rRAMG2 to $0a; branches on wSelectedRecord; sets
+; rRAMB to 1; sets rRAMG2 to 0; sets wItemGridX to 0; sets wItemGridY to 0; sets wSelectedRecord to
+; 0; ...
 HibernateMenu_ChooseToHibernate_Multiply8::
     ld a, $0a
     ld [rRAMG2], a
@@ -2565,6 +2750,10 @@ HibernateMenu_ChooseWithStats::
     dw HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14
     dw HibernateMenu_ChooseWithStats_SaveAndHideSpriteState_Bank1E
 
+; step 4 of HibernateMenu_ChooseWithStats: calls SetArg5ToListEntriesCell5; calls
+; LoadFamilyIconTileForRecordB_Bank14; calls CopyRectTo20ByteRows_Bank14; sets wArg1 to 0; calls
+; MarkPartyMembersInRecordListPage; calls SetArg5ToListEntriesCell5; copies the byte at
+; wWindowTileBuffer + $6c to wArg1; ...
 HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2594,6 +2783,9 @@ HibernateMenu_ChooseWithStats_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; step 8 of HibernateMenu_ChooseWithStats: sets wMenuInputResult to 0; calls UpdatePagedListCursor;
+; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
+; wScreenStep; sets wScreenStep; ...
 HibernateMenu_ChooseWithStats_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -2658,7 +2850,7 @@ HibernateMenu_ChooseWithStats_UpdatePagedListCursor::
 ; runs CopyScreenBufferRectWithAttrs_Bank14 (C = 9, HL = $01D4, DE = 8, wArg1/2 = 0/$0C), copies the
 ; 11 x 1 rectangle DrawBox1D4AndCopyRect_TileRect to wWindowTileBuffer + $10D and wScreenStep += 1
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; DrawBox1D4AndCopyRect5595)
+; DrawBox1D4AndCopyRect)
 DrawBox1D4AndCopyRect::
     ld c, $09
     ld hl, $01d4
@@ -2683,6 +2875,9 @@ DrawBox1D4AndCopyRect::
 DrawBox1D4AndCopyRect_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
 
+; step 16 of HibernateMenu_ChooseWithStats: calls HibernateMenu_WriteGlyphListPosAndGlyphListStart;
+; may return early; sets wReturnScreenState to 6; sets wReturnScreenStep to 8; sets wScreenStep to
+; 0; sets wScreenSubStep to 0; sets wScreenState to 9; ...
 HibernateMenu_ChooseWithStats_SaveAndHideSpriteState_Bank1E::
     ld hl, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_HibernateMenu_WriteGlyphListPosAndGlyphListStart_AdvanceScreenStep_TileCopySrcList
@@ -2733,6 +2928,11 @@ HibernateMenu_IndexListEntry::
     dw HibernateMenu_ChooseRecords_DrawRecordListNameTiles_Bank1D
     dw HibernateMenu_ChooseRecords_CopyScreenBufferRectAt0280_Bank14
 
+; step 17 of HibernateMenu_ChooseRecords: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; branches on wTwoChoiceCursor; calls
+; HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4; continues in
+; HibernateMenu_ChooseToHibernate_UpdateTwoChoiceCursor_Bank1D_CallHibernateMenu_WriteSVBK; calls
+; HibernateMenu_WriteSVBK; ...
 HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -2769,6 +2969,9 @@ HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; step 18 of HibernateMenu_IndexListEntry: sets rRAMG2 to $0a; calls SetArg5ToListEntriesCell5; sets
+; rRAMB to 1; sets rRAMG2 to 0; calls SetArg5ToListEntriesCell5; copies the byte at sRecords to
+; wArg1; sets wArg2 to 0; ...
 HibernateMenu_IndexListEntry_SetArg5ToListEntriesCell5::
     ld a, $0a
     ld [rRAMG2], a
@@ -2817,12 +3020,15 @@ HibernateMenu_IndexListEntry_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; step 8 of HibernateMenu: sets wAreaGraphicsIndex to 1; calls SwapMonstersMenu
 HibernateMenu_SwapMonstersMenu::
     ld a, $01
     ld [wAreaGraphicsIndex], a
     farcall SwapMonstersMenu
     ret
 
+; called from HibernateMenu_ChooseRecords_DrawBoxAndMenuAndStep: sets rRAMG2 to $0a; sets rRAMB to
+; 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
     push bc
     ld a, $0a
@@ -2866,6 +3072,8 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf::
     ld [de], a
     ret
 
+; Calls SetArg5ToListEntriesCell5; sets wArg2 to 1; sets wArg3; sets wArg4; sets wArg1 to 0; calls
+; LoadRecordNameEntry0; branches on the byte at wNameGlyphBuf; ...
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2923,6 +3131,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_4::
     ld [wTextBuf1], a
     ret
 
+; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: calls
+; SetArg5ToListEntriesCell5; sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
 HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2961,6 +3172,9 @@ HibernateMenu_ChooseRecords_SetArg5ToListEntriesCell5_5::
     ld [de], a
     ret
 
+; called from HibernateMenu_ChooseRecords_BlinkCursorBlinkAE_Bank14: branches on wSelectedRecord;
+; sets wArg2 to 1; sets wArg3; sets wArg4; sets wArg1 to 0; calls LoadRecordNameEntry0; branches on
+; the byte at wNameGlyphBuf; ...
 HibernateMenu_ChooseRecords_LoadRecordNameEntry0::
     ld a, [wSelectedRecord]
     cp $1d
@@ -3165,6 +3379,8 @@ DrawScreenBufferRect_Bank14::
     ldh [rVBK], a
     ret
 
+; Sets wGlyphListPos to 0; calls CopyFromBankWaitVRAM; increments wGlyphListStart; increments
+; wGlyphListPos; branches on wGlyphListPos; sets wGlyphListStart to 0; sets wGlyphListPos to 0
 HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     xor a
     ld [wGlyphListPos], a
@@ -3228,7 +3444,7 @@ HibernateMenu_WriteGlyphListPosAndGlyphListStart::
 
 ; stores tile $C3 at the addresses of entries 0-4 of the word table
 ; HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data (E-0122) (E-0344: the address in
-; its name dropped or read as the label there; was EraseFiveEntriesOf5B1E; a trailing preposition
+; its name dropped or read as the label there; was EraseFiveTableEntries; a trailing preposition
 ; left by the dropped address removed)
 EraseFiveTableEntries::
     ld c, $00
@@ -3262,7 +3478,7 @@ StoreBAtWordTableEntry_Bank14::
 
 ; runs CopyScreenBufferRectWithAttrs_Bank14 with C = 2, HL = $0280, DE = $00B4, wArg1/2 = 0/8
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; RunFunc5925At0280; shortened from RunCopyScreenBufferRectWithAttrs_Bank14At0280)
+; CopyScreenBufferRectAt0280_Bank14; shortened from RunCopyScreenBufferRectWithAttrs_Bank14At0280)
 CopyScreenBufferRectAt0280_Bank14::
     ld c, $02
     ld hl, $0280
@@ -3355,8 +3571,8 @@ LoadFamilyIconTileForRecordB_Bank14::
     ld [rRAMG2], a
     ret
 
-; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (WaitForVRAMAccess,
-; interrupts off) (E-0120)
+; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank14 + DE, two entries apart
+; (WaitForVRAMAccess, interrupts off) (E-0120)
 DrawC5BEC6AtScrollOffsetDE_Bank14::
     push de
     call BGMapAddressAtScroll_Bank14
@@ -3398,6 +3614,9 @@ StoreC5BEC6AtHLStride2_Bank14::
     ld [hl], a
     ret
 
+; called from HibernateMenu_ChooseToHibernate_SetArg5ToListEntriesCell5: branches on the byte at
+; sCompactRecords; sets rRAMB to 1; branches on the byte at sRecords; sets wArg6; sets wArg7; sets
+; wArg5 to 0; sets wArg6; ...
 HibernateMenu_ChooseToHibernate_WriteRAMBAndArg6Etc::
     ld hl, sCompactRecords
     ld c, $00
@@ -3452,9 +3671,11 @@ HibernateMenu_ChooseToHibernate_WriteRAMBAndArg6Etc::
     xor a
     ret
 
-; HibernateMenu_Case01_Case01 passes $5A28 with sources
+; HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart passes $5A28 with
+; sources
 ; HibernateMenu_SetupPartyList_HibernateMenu_WriteGlyphListPosAndGlyphListStart_TileCopySrcList to
-; HibernateMenu_Shared04, which copies one tile per destination until $FFFF (E-0224, C1)
+; HibernateMenu_WriteGlyphListPosAndGlyphListStart, which copies one tile per destination until
+; $FFFF (E-0224, C1)
 ; record: 27 VRAM destinations, then $FFFF
 NamingScreenTileDestListA::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0 ; entry 0
@@ -3580,6 +3801,8 @@ RunNameEntryStateWhenNotFading_Setup::
     dw RunNameEntryStateWhenNotFading_Setup_CopyArgs
     dw RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc
 
+; step 0 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; sets wArg5;
+; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
 RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_2::
     ld hl, wNameEntryState
     ld bc, $001d
@@ -3654,6 +3877,9 @@ RunNameEntryStateWhenNotFading_Setup_BGMapAddressAtScroll_Bank14_2::
     ld [wArg5], a
     ret
 
+; step 1 of RunNameEntryStateWhenNotFading_Setup: calls
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; increments
+; wNameEntrySubState; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
     ld hl, NameEntryTileDestList
     ld de, NameEntryTileSrcListA
@@ -3669,6 +3895,8 @@ RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
     ld [wArg5], a
     ret
 
+; step 2 of RunNameEntryStateWhenNotFading_Setup: calls BGMapAddressAtScroll_Bank14_2; sets wArg5;
+; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to $12; ...
 RunNameEntryStateWhenNotFading_Setup_DrawTileRectFromArg1Params::
     ld a, [wArg2]
     push af
@@ -3825,6 +4053,7 @@ CopyBytesDEFromHL_Bank14::
     jr nz, CopyBytesDEFromHL_Bank14
     ret
 
+; data read by RunNameEntryStateWhenNotFading_Setup_CopyArgs (6 bytes)
 RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data1::
     db $00, $00, $01, $04, $00, $80
 
@@ -3839,6 +4068,10 @@ RunNameEntryStateWhenNotFading_Setup_CopyArgs_Data3::
 RunNameEntryStateWhenNotFading_Setup_CopyArgs_SpriteSlotsInit::
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00 ; entry 0
 
+; step 4 of RunNameEntryStateWhenNotFading_Setup: calls
+; RunNameEntryStateWhenNotFading_ClearNameEntryText; branches on wArg1; sets rRAMG2 to $0a; sets
+; rRAMB to 0; calls SRAMRecordAddress; branches on the byte at wPartyList; calls
+; RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter; ...
 RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
     call RunNameEntryStateWhenNotFading_ClearNameEntryText
     ld a, [wArg1]
@@ -3928,6 +4161,8 @@ RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
     ld [wArg5], a
     ret
 
+; step 1 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntrySubState
 RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntrySubState]
@@ -3943,6 +4178,13 @@ RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
     dw RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5
     dw RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5
 
+; step 0 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
+; RunNameEntryStateWhenNotFading_WriteNameEntryFlag; calls
+; WriteTileBAtScrollOffset47PlusNameEntryLength; branches on wJoypadPressedRepeat; may continue in
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3; may continue in
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect; may continue in
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2; may continue in
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect3; ...
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag::
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
     ld b, $55
@@ -4070,9 +4312,14 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag::
     ld [wArg5], a
     ret
 
+; data read by RunNameEntryStateWhenNotFading (5 bytes)
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data::
     db $10, $10, $10, $0d, $0d
 
+; Calls DrawBlankTileC3; branches on wNameEntryCursorX; copies the byte at
+; RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data to wNameEntryCursorX; branches on
+; wNameEntryCursorY; branches on wNameEntryCursorX; sets wNameEntryCursorX to 5; decrements
+; wNameEntryCursorX; ...
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
     call DrawBlankTileC3
     ld a, [wNameEntryCursorX]
@@ -4109,6 +4356,8 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallDrawBlankTileC3::
     ld [wArg5], a
     ret
 
+; Plays sound $69; calls RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2; increments
+; wNameEntrySubState; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect::
     ld a, $69
     call QueueSoundEffect
@@ -4121,6 +4370,8 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect:
     ld [wArg5], a
     ret
 
+; Plays sound $69; calls RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte; increments
+; wNameEntrySubState; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2::
     ld a, $69
     call QueueSoundEffect
@@ -4132,6 +4383,8 @@ RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect2
     ld [wArg5], a
     ret
 
+; Plays sound $69; calls DrawBlankTileC3; sets wNameEntryCursorX to $0d; sets wNameEntryCursorY to
+; 4; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag_Data_CallQueueSoundEffect3::
     ld a, $69
     call QueueSoundEffect
@@ -4253,6 +4506,10 @@ ToggleVoicingMarkOnNameEntry::
     ld [wArg5], a
     ret
 
+; called from RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag: increments
+; wNameEntryCursorByte; branches on wNameEntryCursorByte; may continue in DrawBlankTileC3; sets
+; wNameEntryCursorByte to 0; continues in
+; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY
 RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte::
     ld a, [wNameEntryCursorByte]
     inc a
@@ -4270,14 +4527,17 @@ RunNameEntryStateWhenNotFading_WriteNameEntryCursorByte::
 
 ; B = $C3 (blank tile) and joins the tile draw at
 ; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was DrawBlankTileC3_6189)
+; (E-0344: the address in its name dropped or read as the label there; was DrawBlankTileC3)
 DrawBlankTileC3::
     ld b, $c3
     jr RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY
 
+; called from RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag: works on registers only
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2::
     ld b, $55
 
+; Branches on wNameEntryCursorY; calls BGMapAddressAtScroll_Bank14_2; returns unless
+; wNameEntryCursorX is $0d; branches on wNameEntryCursorY; returns unless wNameEntryCursorY is $03
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyPositions
@@ -4336,8 +4596,8 @@ RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_ReadNameEntryCursor
     ei
     ret
 
-; RunNameEntryStateWhenNotFading_Case01_Case00_Sub02 reads row $22 * wNameEntryCursorY from $61E2,
-; then the word for wNameEntryCursorX; 5 rows (E-0224, C1)
+; RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2 reads row $22 * wNameEntryCursorY
+; from $61E2, then the word for wNameEntryCursorX; 5 rows (E-0224, C1)
 ; record: 17 position words (one per key column) for a keyboard row
 NameEntryKeyPositions::
     dw $0101, $0102, $0103, $0104, $0105, $0106, $0107, $0108, $0109, $010a, $010b, $010c, $010d, $010f, $0110, $0111, $0112 ; id 0
@@ -4346,6 +4606,10 @@ NameEntryKeyPositions::
     dw $01c1, $01c2, $01c3, $01c4, $01c5, $01c6, $01c7, $01c8, $01c9, $01ca, $01cb, $01cc, $01cd, $01cf, $01d0, $01d1, $01d2 ; id 3
     dw $0201, $0202, $0203, $0204, $0205, $0206, $0207, $0208, $0209, $020a, $020b, $020c, $020d, $020f, $0210, $0211, $0212 ; id 4
 
+; step 1 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
+; WriteTileBAtScrollOffset47PlusNameEntryLength; branches on wNameEntryLength; calls
+; RunNameEntryStateWhenNotFading_ClearNameEntryText; decrements wNameEntrySubState; sets wArg5 to 0;
+; calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; ...
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
     ld b, $55
     call WriteTileBAtScrollOffset47PlusNameEntryLength
@@ -4429,6 +4693,8 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
     ld [wArg5], a
     ret
 
+; step 2 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: branches on wNameEntryCursorY; may
+; continue in RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter
 RunNameEntryStateWhenNotFading_ReadNameEntryCursorY::
     ld a, [wNameEntryCursorY]
     ld hl, NameEntryKeyboard
@@ -4684,6 +4950,9 @@ RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter::
     ld [wArg5], a
     ret
 
+; step 3 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
+; RunNameEntryStateWhenNotFading_CheckArg1; calls RunNameEntryStateWhenNotFading_WriteNameEntryFlag;
+; increments wNameEntryState; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
     call RunNameEntryStateWhenNotFading_CheckArg1
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
@@ -4694,6 +4963,9 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
     ld [wArg5], a
     ret
 
+; step 4 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; increments
+; wNameEntrySubState; calls OrFromBankWaitVRAM; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListB
@@ -4714,6 +4986,9 @@ RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM::
     ld [wArg5], a
     ret
 
+; step 9 of RunNameEntryStateWhenNotFading_ReadNameEntrySubState: calls
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; sets wNameEntrySubState to
+; 0; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListA
@@ -4728,6 +5003,8 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
     ld [wArg5], a
     ret
 
+; step 2 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep
 RunNameEntryStateWhenNotFading_ReadNameEntryStep::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -4737,6 +5014,9 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep::
     dw RunNameEntryStateWhenNotFading_SetArg5
     dw RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5
 
+; step 0 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: sets wTextWindowTileLo; sets
+; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest;
+; increments wNameEntryStep; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ld hl, vTiles2 + $5c0
     ld a, l
@@ -4756,6 +5036,8 @@ RunNameEntryStateWhenNotFading_FillTilesFromRequest_2::
     ld [wArg5], a
     ret
 
+; step 1 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
+; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 1; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01e0
@@ -4783,6 +5065,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_2::
     ld [wArg5], a
     ret
 
+; step 2 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
+; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 3; ...
 RunNameEntryStateWhenNotFading_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01c0
@@ -4810,6 +5094,8 @@ RunNameEntryStateWhenNotFading_SetArg5::
     ld [wArg5], a
     ret
 
+; step 3 of RunNameEntryStateWhenNotFading_ReadNameEntryStep: calls BGMapAddressAtScroll_Bank14_2;
+; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; sets wArg4 to 5; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
     call BGMapAddressAtScroll_Bank14_2
     ld de, $01a0
@@ -4839,6 +5125,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_SetArg5::
     ld [wArg5], a
     ret
 
+; step 3 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -4850,6 +5138,11 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
     dw RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCategory
     dw RunNameEntryStateWhenNotFading_SetStringCategory
 
+; step 5 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; sets wStringCategory to 0; sets wStringIndex to 3; calls
+; RunNameEntryStateWhenNotFading_FillTilesFromRequest; may return early; sets wNameEntryState; sets
+; wNameEntryMenuCursor to 0; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -4866,6 +5159,12 @@ RunNameEntryStateWhenNotFading_SetStringCategory::
     ld [wArg5], a
     ret
 
+; step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; branches on wArg1; calls RunNameEntryStateWhenNotFading_ReadArg1; calls
+; RunNameEntryStateWhenNotFading_ScanNameEntryText; calls
+; RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB; increments wNameEntryStep; sets wArg5 to 0;
+; calls RunNameEntryStateWhenNotFading_ReadArg1; ...
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
     ld a, [wArg1]
     and a
@@ -4923,6 +5222,10 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5::
     ld [wArg5], a
     ret
 
+; step 1 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; sets wStringCategory to 0; sets wStringIndex to 2; calls
+; RunNameEntryStateWhenNotFading_FillTilesFromRequest; increments wNameEntryStep; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
     xor a
     ld [wStringCategory], a
@@ -4941,6 +5244,9 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc::
     ld [wArg5], a
     ret
 
+; step 2 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; increments wNameEntryStep; continues in RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2
 RunNameEntryStateWhenNotFading_SetNameEntryStep::
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
@@ -4948,6 +5254,9 @@ RunNameEntryStateWhenNotFading_SetNameEntryStep::
     ld [wNameEntryStep], a
     jp RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2
 
+; step 3 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; branches on the byte at wNameEntryText; increments wNameEntryStep; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
     ld hl, wNameEntryText
     ld de, wTextBuf0
@@ -4973,6 +5282,11 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5_2::
     ld [wArg5], a
     ret
 
+; step 4 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc:
+; sets wStringCategory to 0; sets wStringIndex to 0; calls
+; RunNameEntryStateWhenNotFading_FillTilesFromRequest; may return early; sets wNameEntryStep to 0;
+; increments wNameEntryState; sets wArg5 to 0
 RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCategory::
     xor a
     ld [wStringCategory], a
@@ -4989,6 +5303,9 @@ RunNameEntryStateWhenNotFading_WriteStringCategoryAndStringIndexEtc_SetStringCat
     ld [wArg5], a
     ret
 
+; step 4 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; sets
+; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to 6; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5019,6 +5336,11 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params::
     ld [wArg5], a
     ret
 
+; step 5 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls
+; RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14; may return early; increments
+; wNameEntryState; sets wNameEntryMenuCursor to 0; sets wArg5 to 0; branches on
+; wNameEntryMenuCursor; ...
 RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14
@@ -5052,6 +5374,8 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
     ld [wArg5], a
     ret
 
+; step 6 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; dispatches on wNameEntryStep
 RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     ld a, [wNameEntryStep]
@@ -5059,6 +5383,10 @@ RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_
     dw RunNameEntryStateWhenNotFading_FillTileRectWithArg1Tile
     dw RunNameEntryStateWhenNotFading_FinishNameEntry
 
+; step 0 of
+; RunNameEntryStateWhenNotFading_ReadNameEntryStep_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc_2:
+; calls BGMapAddressAtScroll_Bank14_2; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to
+; $20; sets wArg4 to $20; ...
 RunNameEntryStateWhenNotFading_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_Bank14_2
     ld a, h
@@ -5131,6 +5459,9 @@ RunNameEntryStateWhenNotFading_FinishNameEntry::
     ld [wArg5], a
     ret
 
+; step 7 of RunNameEntryStateWhenNotFading: calls
+; RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc; calls BGMapAddressAtScroll_Bank14_2; sets
+; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $14; ...
 RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
     call BGMapAddressAtScroll_Bank14_2
@@ -5172,6 +5503,8 @@ RunNameEntryStateWhenNotFading_DrawTileRectFromArg1Params_RunNameEntryStateWhenN
     ld [wArg5], a
     ret
 
+; Branches on wArg1; calls UpdateAndDrawSpriteSlots; copies wArg4 to wArg1; copies wArg5 to wArg2;
+; sets wArg3 to 0; sets wArg4 to $10; sets wArg5 to $18; ...
 RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     ld hl, wArg1
     ld de, wCounterPtr0Lo
@@ -5251,7 +5584,7 @@ RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
     ret
 
 ; A = 0 when [HL] is in the $FF-terminated list IsHLByteInList_Data, else $FF (E-0124) (E-0344: the
-; address in its name dropped or read as the label there; was IsHLByteInList688A)
+; address in its name dropped or read as the label there; was IsHLByteInList)
 IsHLByteInList::
     ld de, IsHLByteInList_Data
 
@@ -5274,13 +5607,14 @@ IsHLByteInList::
     ld a, $ff
     ret
 
+; data read by IsHLByteInList (43 bytes)
 IsHLByteInList_Data::
     db $3e, $3f, $40, $41, $42, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
     db $67, $68, $69, $6a, $6b, $6c, $6e, $6f, $26, $5a, $ff
 
 ; A = 0 when [HL] is in the $FF-terminated list IsHLByteInList_2_Data, else $FF (E-0124) (E-0344:
-; the address in its name dropped or read as the label there; was IsHLByteInList68CA)
+; the address in its name dropped or read as the label there; was IsHLByteInList_2)
 IsHLByteInList_2::
     ld de, IsHLByteInList_2_Data
 
@@ -5303,9 +5637,14 @@ IsHLByteInList_2::
     ld a, $ff
     ret
 
+; data read by IsHLByteInList (11 bytes)
 IsHLByteInList_2_Data::
     db $3e, $3f, $40, $41, $42, $75, $76, $77, $78, $79, $ff
 
+; called from RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc: branches
+; on wJoypadPressedRepeat; branches on wJoypadPressed; calls BlinkCursorNameEntryBlink_Bank14; sets
+; wMenuInputResult to 0; calls DrawBlankTileC3_3; branches on wNameEntryMenuCursor; sets
+; wNameEntryMenuCursor to 1; ...
 RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5390,14 +5729,16 @@ BlinkCursorNameEntryBlink_Bank14::
     jr RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_695A)
+; or read as the label there; was DrawBlankTileC3_3)
 DrawBlankTileC3_3::
     ld b, $c3
     jr RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor
 
+; Works on registers only
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank14_2
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenuCursor::
     ld a, [wNameEntryMenuCursor]
     add a
@@ -5417,6 +5758,7 @@ RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2_ReadNameEntryMenu
     ei
     ret
 
+; data read by RunNameEntryStateWhenNotFading (4 bytes)
 RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_Data::
     db $2f, $01, $6f, $01
 
@@ -5440,6 +5782,8 @@ CopyTileBytesToVRAM_Bank14::
     jr nz, .loop
     ret
 
+; Returns if the byte at wNameEntryText is $f0; copies the byte at wNameEntryText to wNameEntryFlag;
+; calls CopyFromBankWaitVRAM
 RunNameEntryStateWhenNotFading_WriteNameEntryFlag::
     ld hl, wNameEntryText
     ld bc, $0000
@@ -5487,7 +5831,7 @@ RunNameEntryStateWhenNotFading_WriteNameEntryFlag::
     db $c5, $d1, $cd, $40, $2e, $7b, $ea, $33, $c5, $ea, $37, $c5, $7a, $ea, $34, $c5
     db $ea, $38, $c5, $3e, $01, $ea, $2b, $c5, $af, $ea, $2c, $c5, $ea, $4f, $c5, $c9
 
-; writes B at the BG map entry BGMapAddressAtScroll + $47 (row 2, column 7 of the view) +
+; writes B at the BG map entry BGMapAddressAtScroll_Bank14 + $47 (row 2, column 7 of the view) +
 ; wNameEntryLength, with interrupts off after rSTAT bit 1 clears; BC kept (E-0079)
 WriteTileBAtScrollOffset47PlusNameEntryLength::
     push bc
@@ -5531,6 +5875,9 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
     jr c, .loop2
     ret
 
+; called from RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5: sets rRAMG2 to $0a; sets
+; rRAMB to 0; branches on the byte at sRecords; branches on the byte at wNameEntryText; branches on
+; the byte at sRecords; branches on wArg1
 RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
     ld hl, sRecords
     ld a, $0a
@@ -5620,6 +5967,9 @@ RunNameEntryStateWhenNotFading_WriteRAMG2AndRAMB::
     ld a, $ff
     ret
 
+; called from RunNameEntryStateWhenNotFading_WriteNameEntryStepAndArg5: branches on the byte at
+; RejectedNameList; branches on the byte at wNameEntryText; branches on the byte at
+; RejectedNameList; branches on wArg1
 RunNameEntryStateWhenNotFading_ReadArg1::
     ld hl, RejectedNameList
     ld c, $00
@@ -5782,6 +6132,9 @@ RunNameEntryStateWhenNotFading_ScanNameEntryText::
     xor a
     ret
 
+; Branches on wNameEntryDrawStep; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; increments wNameEntryDrawStep;
+; ...
 RunNameEntryStateWhenNotFading_FillTilesFromRequest::
     ld a, [wNameEntryDrawStep]
     and a
@@ -5872,6 +6225,9 @@ BGMapAddressAtScroll_Bank14_2::
     ld h, a
     ret
 
+; Calls CopyFromBankWaitVRAM; increments wNameEntryTimer; continues in
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2; sets wNameEntryTimer to 0;
+; sets wNameEntryTimer2 to 0
 RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2::
     push hl
     push de
@@ -5939,12 +6295,15 @@ CopyTileForNameEntryLength::
     call CopyTileBytesToVRAM_Bank14
     ret
 
+; data read by CopyTileForNameEntryLength (10 bytes)
 CopyTileForNameEntryLength_Data1::
     db $00, $95, $10, $95, $20, $95, $30, $95, $40, $95
 
 CopyTileForNameEntryLength_Data2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
+; called from RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5: may continue in
+; CopyF0StringAndRedrawNameEntry_CheckArg2; calls CopyF0StringAndRedrawNameEntry
 RunNameEntryStateWhenNotFading_CheckArg1::
     ld a, [wArg1]
     or a
@@ -6040,6 +6399,9 @@ CopyF0StringAndRedrawNameEntry::
     inc hl
     jr CopyF0StringAndRedrawNameEntry
 
+; Calls WriteTileBAtScrollOffset47PlusNameEntryLength; branches on the byte at wNameEntryText; sets
+; wNameEntryMarkPending to 1; sets wNameEntryLength to 4; calls
+; WriteTileBAtScrollOffset47PlusNameEntryLength
 CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL::
     ld b, $c3
     call WriteTileBAtScrollOffset47PlusNameEntryLength
@@ -6078,6 +6440,8 @@ CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL::
     call WriteTileBAtScrollOffset47PlusNameEntryLength
     ret
 
+; Branches on wArg2; continues in
+; CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL
 CopyF0StringAndRedrawNameEntry_CheckArg2::
     ld a, [wArg2]
     or a
@@ -6109,9 +6473,10 @@ CopyF0StringAndRedrawNameEntry_CheckArg2::
 .skip2:
     jr CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL
 
-; RunNameEntryStateWhenNotFading_Shared05 copies 16 bytes from bank $1F for each destination word
-; (until a low byte of $FF) from the parallel source list in DE; CloseHibernateMenu_Case01 also
-; passes $6D84, entry 23 of this list, to LoadTileListSixPerCall (E-0224, C1)
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2 copies 16 bytes from bank $1F
+; for each destination word (until a low byte of $FF) from the parallel source list in DE;
+; CloseHibernateMenu_LoadTileListSixPerCall also passes $6D84, entry 23 of this list, to
+; LoadTileListSixPerCall (E-0224, C1)
 ; record: 79 VRAM destinations, then $FFFF
 NameEntryTileDestList::
     dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
@@ -6125,14 +6490,16 @@ NameEntryTileDestList::
     dw vTiles2 + $420, vTiles2 + $430, vTiles2 + $440, vTiles2 + $450, vTiles2 + $460, vTiles2 + $470, vTiles2 + $480, vTiles2 + $490
     dw vTiles2 + $4a0, vTiles2 + $4b0, vTiles2 + $500, vTiles2 + $510, vTiles2 + $520, vTiles2 + $530, vTiles2 + $540, rIE
 
-; RunNameEntryStateWhenNotFading_Case01_Case04 and _Case09 pass this list to
-; RunNameEntryStateWhenNotFading_Shared05, which therefore copies nothing (E-0224, C1)
+; RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM and _Case09 pass this list to
+; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2, which therefore copies
+; nothing (E-0224, C1)
 ; record: $FFFF: no destinations
 NameEntryTileDestListEmpty::
     dw $ffff ; entry 0
 
-; the source list paired with NameEntryTileDestList (Case00_Case01) and with the empty list
-; (Case01_Case09) (E-0224, C1)
+; the source list paired with NameEntryTileDestList
+; (RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5) and with the empty list
+; (RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5) (E-0224, C1)
 ; record: 80 bank-$1F tile sources (the last is $FFFF)
 NameEntryTileSrcListA::
     dw $40b0, $40c0, $40d0, $40e0, $40f0, $4100, $4110, $4120 ; entry 0
@@ -6146,8 +6513,8 @@ NameEntryTileSrcListA::
     dw $40c0, $40b0, $40d0, $4150, $4960, $4ac0, $4b60, $4950
     dw $4940, $4b00, $4a00, $4a00, $4a00, $4a00, $4a00, $ffff
 
-; passed with the empty destination list by Case01_Case04; 82 words and $FFFF, then 16 bytes of $FF
-; before NameEntryKeyboard (E-0224, C1)
+; passed with the empty destination list by RunNameEntryStateWhenNotFading_OrFromBankWaitVRAM; 82
+; words and $FFFF, then 16 bytes of $FF before NameEntryKeyboard (E-0224, C1)
 ; record: 82 bank-$1F tile sources, then $FFFF
 NameEntryTileSrcListB::
     dw $4570, $4590, $45b0, $45d0, $45f0, $4610, $4620, $4630 ; entry 0
@@ -6163,9 +6530,9 @@ NameEntryTileSrcListB::
     dw $4a00, $4a00, $ffff
     db $ff, $00, $ff, $ff, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; end
 
-; RunNameEntryStateWhenNotFading_Case01_Case02 reads the byte at $6F4E + 17 * wNameEntryCursorY +
-; wNameEntryCursorX as the chosen character; rows 0-3 are A-M 0-3, N-Z 4-7, a-m 8 9 ! ?, n-z; 10
-; rows, then 11 bytes not placed in a row (E-0216, C1)
+; RunNameEntryStateWhenNotFading_ReadNameEntryCursorY reads the byte at $6F4E + 17 *
+; wNameEntryCursorY + wNameEntryCursorX as the chosen character; rows 0-3 are A-M 0-3, N-Z 4-7, a-m
+; 8 9 ! ?, n-z; 10 rows, then 11 bytes not placed in a row (E-0216, C1)
 ; record: one row of 17 character codes (charmap.inc; codes without a charmap entry print as bytes)
 NameEntryKeyboard::
     db "ABCDEFGHIJKLM0123" ; id 0
@@ -6240,9 +6607,9 @@ Text_ThatNameCantBe::
     db "another name.<WAIT>"
     db "@"
 
-; RunNameEntryStateWhenNotFading_Case03_Case00_Sub02 walks 10-byte records from $70F0 until a first
-; byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records,
-; each in mixed case and capitals, then the $FF terminator (E-0191, C1)
+; RunNameEntryStateWhenNotFading_ReadArg1 walks 10-byte records from $70F0 until a first byte of
+; $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in
+; mixed case and capitals, then the $FF terminator (E-0191, C1)
 ; record: a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes
 RejectedNameList::
     db "Ass@", $00, $00, $00, $00, $00, $00 ; id 0
@@ -6334,9 +6701,9 @@ RejectedNameList::
 ; the code before RunNameEntryStateWhenNotFading_CheckArg1.skip3 indexes it with wArg3 & $0F (the
 ; family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6
 ; Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n;
-; CreateMonsterRecordOfKindTemp1_Sub01_Sub01_Sub01 indexes it with wWorkBuf and wWorkBuf + 1 and
-; copies the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14
-; names (E-0254, C1)
+; CreateMonsterRecordOfKindTemp1_ReadWorkBuf indexes it with wWorkBuf and wWorkBuf + 1 and copies
+; the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names
+; (E-0254, C1)
 ; record: 14 name pointers for this family
 DefaultMonsterNameTable::
     dw DefaultMonsterNames_Slime ; id 0
@@ -7319,6 +7686,8 @@ SuggestedName_8A::
 SuggestedName_8B::
     db "Soffi@" ; id 139
 
+; Branches on wArg1; sets rRAMG2 to $0a; sets rRAMB to 0; sets rRAMG2 to $0a; sets rRAMB to 1; sets
+; rRAMB to 0; branches on the byte at sCompactRecords; ...
 HibernateMenu_Multiply8::
     ld a, [wArg1]
     cp $1e
@@ -7710,6 +8079,7 @@ DeleteSRAMRecordAndCompact::
     ld [rRAMG2], a
     ret
 
+; Branches on the byte at DefaultMonsterNameTable
 CreateMonsterRecordOfKindTemp1_ReadWorkBuf::
     ld a, [wWorkBuf]
     ld c, a

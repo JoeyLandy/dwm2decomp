@@ -37,6 +37,7 @@ CopyStringToBuffer_Bank89::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_89::
+; data read by BeginStringDisplay_Bank89 (1 word)
 MessageStrings_Bank89::
     dw StringList_Bank89_0 ; id 0
 

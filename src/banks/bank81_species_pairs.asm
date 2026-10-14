@@ -4,6 +4,8 @@
 SECTION "Bank 81", ROMX[$4000], BANK[$81]
     db $81
 
+; called from CallInBank81KeepRegs: sets wAIWeights; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
+; LoadSpeciesFamily; sets wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesFamily; ...
 CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -120,6 +122,8 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ld [wSpeciesIdHi], a
     ret
 
+; Continues in CallInBank81KeepRegs_CompareHLToBC; branches on b; continues in
+; CallInBank81KeepRegs_CompareHLToBC
 CallInBank81KeepRegs_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]
@@ -224,10 +228,10 @@ CallInBank81KeepRegs_CompareHLToBC::
     jr .loop3
 
 ; the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and
-; runs CallFunc4001InBank81KeepRegs_Sub01_Sub01 over it twice, with the two parents swapped; a group
-; of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the
-; species, and then its words are matched against the other parent; when neither order matches, bit
-; 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453 (E-0223, C1)
+; runs CallInBank81KeepRegs_CompareHLToBC over it twice, with the two parents swapped; a group of
+; kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species,
+; and then its words are matched against the other parent; when neither order matches, bit 4 of
+; wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453 (E-0223, C1)
 ; record: pair-check list for this species
 SpeciesPairCheckTable::
     dw SpeciesPairChecks000 ; id 0
@@ -1919,8 +1923,8 @@ SpeciesPairChecks_Anemon::
 
 ; copies three bytes of table $555D entry ($5486[wWorkBuf + $9] * $129 + 3 * (wLinkMenuEntry - 1))
 ; to wLinkMenuEntryBytes (E-0121) (E-0340: the address in its name read as its RAM name; was
-; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes) (E-0344: the address in its name dropped or read
-; as the label there; was LoadTable555DEntryForWorkBuf9ToLinkMenuEntryBytes)
+; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes) (E-0344: the address in its name dropped or read as
+; the label there; was LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes)
 LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes::
     ld a, [wWorkBuf + $9]
     ld l, a
@@ -1958,8 +1962,8 @@ LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes::
     ld [de], a
     ret
 
-; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as
-; the row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31 (E-0151, C1)
+; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes reads the byte $5486 + wWorkBuf+9 and uses it as the
+; row of the $129-byte table at $555D; 215 bytes up to that table, values 0-31 (E-0151, C1)
 ; record: row of ExpTable81 (0-31)
 ExpCurveIndex81::
     db $0d ; id 0
@@ -2178,7 +2182,7 @@ ExpCurveIndex81::
     db $1f ; id 213
     db $1e ; id 214
 
-; LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 *
+; LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes copies the 3 bytes at $555D + $129 * row + 3 *
 ; (wLinkMenuEntry - 1) to wLinkMenuEntryBytes; the layout of ExpTable (E-0148) with different
 ; values; 31 of the 32 rows rise from 0 (E-0151, C1)
 ; record: 24-bit values for levels 1-99

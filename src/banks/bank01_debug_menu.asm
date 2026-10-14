@@ -811,7 +811,7 @@ FillRectWithTileSequence::
 
 ; on CGB copies the 8-byte palette LoadPalette0FromData_Data into wBGPaletteBuffer twice and sets
 ; wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117) (E-0344: the address in its
-; name dropped or read as the label there; was LoadPalette0FromData4ACC)
+; name dropped or read as the label there; was LoadPalette0FromData)
 LoadPalette0FromData::
     ld a, [wIsCGB]
     or a
@@ -830,6 +830,7 @@ LoadPalette0FromData::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; data read by LoadPalette0FromData (8 bytes)
 LoadPalette0FromData_Data::
     db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
@@ -909,142 +910,181 @@ DebugMessageTest_Update::
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank0B
     dw DebugMessageTest_Update_ToBeginStringDisplay_Bank1B
 
+; step 0 of DebugMessageTest_Update: calls BeginStringDisplay_Bank08
 DebugMessageTest_Update_ToBeginStringDisplay_Bank08::
     farcall BeginStringDisplay_Bank08
     ret
 
+; step 1 of DebugMessageTest_Update: calls BeginStringDisplay_Bank09
 DebugMessageTest_Update_ToBeginStringDisplay_Bank09::
     farcall BeginStringDisplay_Bank09
     ret
 
+; step 2 of DebugMessageTest_Update: calls BeginStringDisplay_Bank28
 DebugMessageTest_Update_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
+; step 3 of DebugMessageTest_Update: calls BeginStringDisplay_Bank29
 DebugMessageTest_Update_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
+; step 4 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2A
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
+; step 5 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2B
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
+; step 6 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2C
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
+; step 7 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2D
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
+; step 8 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2E
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
+; step 9 of DebugMessageTest_Update: calls BeginStringDisplay_Bank7C
 DebugMessageTest_Update_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
+; step 10 of DebugMessageTest_Update: calls BeginStringDisplay_Bank80
 DebugMessageTest_Update_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
+; step 11 of DebugMessageTest_Update: calls BeginStringDisplay_Bank82
 DebugMessageTest_Update_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
+; step 12 of DebugMessageTest_Update: calls BeginStringDisplay_Bank86
 DebugMessageTest_Update_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
+; step 13 of DebugMessageTest_Update: calls BeginStringDisplay_Bank89
 DebugMessageTest_Update_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
+; step 14 of DebugMessageTest_Update: calls BeginStringDisplay_Bank07
 DebugMessageTest_Update_ToBeginStringDisplay_Bank07::
     farcall BeginStringDisplay_Bank07
     ret
 
+; step 15 of DebugMessageTest_Update: calls BeginStringDisplay_Bank2F
 DebugMessageTest_Update_ToBeginStringDisplay_Bank2F::
     farcall BeginStringDisplay_Bank2F
     ret
 
+; step 16 of DebugMessageTest_Update: calls BeginStringDisplay_Bank37
 DebugMessageTest_Update_ToBeginStringDisplay_Bank37::
     farcall BeginStringDisplay_Bank37
     ret
 
+; step 17 of DebugMessageTest_Update: calls BeginStringDisplay_Bank88
 DebugMessageTest_Update_ToBeginStringDisplay_Bank88::
     farcall BeginStringDisplay_Bank88
     ret
 
+; step 18 of DebugMessageTest_Update: calls BeginStringDisplay_Bank83
 DebugMessageTest_Update_ToBeginStringDisplay_Bank83::
     farcall BeginStringDisplay_Bank83
     ret
 
+; step 19 of DebugMessageTest_Update: calls BeginStringDisplay_Bank1D
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1D::
     farcall BeginStringDisplay_Bank1D
     ret
 
+; step 20 of DebugMessageTest_Update: calls BeginStringDisplay_Bank8A
 DebugMessageTest_Update_ToBeginStringDisplay_Bank8A::
     farcall BeginStringDisplay_Bank8A
     ret
 
+; step 21 of DebugMessageTest_Update: calls BeginStringDisplay_BankF0
 DebugMessageTest_Update_ToBeginStringDisplay_BankF0::
     farcall BeginStringDisplay_BankF0
     ret
 
+; step 22 of DebugMessageTest_Update: calls BeginStringDisplay_Bank1B_2
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_2::
     farcall BeginStringDisplay_Bank1B_2
     ret
 
+; step 23 of DebugMessageTest_Update: calls BeginStringDisplay_Bank1F
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1F::
     farcall BeginStringDisplay_Bank1F
     ret
 
+; step 24 of DebugMessageTest_Update: calls BeginStringDisplay_BankF0_2
 DebugMessageTest_Update_ToBeginStringDisplay_BankF0_2::
     farcall BeginStringDisplay_BankF0_2
     ret
 
+; step 25 of DebugMessageTest_Update: calls BeginStringDisplay_Bank0D
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0D::
     farcall BeginStringDisplay_Bank0D
     ret
 
+; step 26 of DebugMessageTest_Update: calls BeginStringDisplay_Bank33
 DebugMessageTest_Update_ToBeginStringDisplay_Bank33::
     farcall BeginStringDisplay_Bank33
     ret
 
+; step 27 of DebugMessageTest_Update: calls BeginStringDisplay_Bank24
 DebugMessageTest_Update_ToBeginStringDisplay_Bank24::
     farcall BeginStringDisplay_Bank24
     ret
 
+; step 28 of DebugMessageTest_Update: calls DebugMessageTest_Update_BeginStringDisplay
 DebugMessageTest_Update_CallUpdate_BeginStringDisplay::
     farcall DebugMessageTest_Update_BeginStringDisplay
     ret
 
+; step 29 of DebugMessageTest_Update: calls BeginStringDisplay_Bank0E
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0E::
     farcall BeginStringDisplay_Bank0E
     ret
 
+; step 30 of DebugMessageTest_Update: calls BeginStringDisplay_BankF2
 DebugMessageTest_Update_ToBeginStringDisplay_BankF2::
     farcall BeginStringDisplay_BankF2
     ret
 
+; step 31 of DebugMessageTest_Update: calls BeginStringDisplay_Bank33_2
 DebugMessageTest_Update_ToBeginStringDisplay_Bank33_2::
     farcall BeginStringDisplay_Bank33_2
     ret
 
+; step 32 of DebugMessageTest_Update: calls BeginStringDisplay_Bank0B
 DebugMessageTest_Update_ToBeginStringDisplay_Bank0B::
     farcall BeginStringDisplay_Bank0B
     ret
 
+; step 33 of DebugMessageTest_Update: calls BeginStringDisplay_Bank1B
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B::
     farcall BeginStringDisplay_Bank1B
     ret
 
+; Calls DebugMessageTest_Update_WriteHexByteTilesAtDE; calls
+; DebugMessageTest_Update_WriteHexByteTilesAtDE_2; calls
+; DebugMessageTest_Update_WriteHexByteTilesAtDE_3; sets wMenuState to 2; plays sound $69; calls
+; DebugMessageTest_Update_WriteHexByteTilesAtDE; calls
+; DebugMessageTest_Update_WriteHexByteTilesAtDE_2; ...
 DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -1200,12 +1240,17 @@ DebugMessageTest_Update_ToBeginStringDisplay_Bank1B_CheckJoypadPressedRepeat::
     call WriteVRAMByte
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: calls WriteHexByteTilesAtDE;
+; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 DebugMessageTest_Update_WriteHexByteTilesAtDE::
     ld a, [wTemp0]
     ld de, vBGMap0 + $6d
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; May continue in DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo; may continue
+; in DebugMessageTest_Update_WriteHexByteTilesAtDE_2; calls WriteVRAMByteInc; calls WriteVRAMByte;
+; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState::
     ld a, [wMenuState]
     cp $01
@@ -1219,12 +1264,16 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_CheckMenuState::
     call WriteVRAMByte
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: calls WriteHexByteTilesAtDE;
+; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 DebugMessageTest_Update_WriteHexByteTilesAtDE_2::
     ld a, [wTemp1]
     ld de, vBGMap0 + $ad
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; May continue in DebugMessageTest_Update_WriteHexByteTilesAtDE_3; calls WriteVRAMByteInc; calls
+; WriteVRAMByte; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -1235,12 +1284,16 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_2_CheckFrameCounterLo::
     call WriteVRAMByte
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: calls WriteHexByteTilesAtDE;
+; continues in DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 DebugMessageTest_Update_WriteHexByteTilesAtDE_3::
     ld a, [wMenuRowCount]
     ld de, vBGMap0 + $ed
     call WriteHexByteTilesAtDE
     jr DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState
 
+; Branches on wMenuState; calls WriteHexByteTilesAtDE; branches on wMenuState; calls
+; WriteHexByteTilesAtDE; branches on wMenuState; calls WriteHexByteTilesAtDE
 DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
     ld a, [wMenuState]
     cp $00
@@ -1268,6 +1321,9 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
 .return:
     ret
 
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on the byte at wTemp0;
+; sets wTemp0 to 0; branches on the byte at wTemp0; branches on wMenuState; calls
+; WriteHexByteTilesAtDE
 DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
     push af
     ld a, [wMenuState]
@@ -1316,6 +1372,8 @@ DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
     pop af
     ret
 
+; called from DebugMessageTest_Update_ToBeginStringDisplay_Bank1B: branches on wMenuState; sets
+; wTemp1 to 0; sets wMenuRowCount to 0; branches on 0; sets wMenuRowCount to 0
 DebugMessageTest_Update_WriteTemp1AndMenuRowCount::
     ld a, [wMenuState]
     cp $00
@@ -1335,9 +1393,9 @@ DebugMessageTest_Update_WriteTemp1AndMenuRowCount::
 .return:
     ret
 
-; DebugMessageTest_Update_Case21 reads the word at $4E54 + 2 * wTemp0; a zero high byte takes the
-; value directly, otherwise the word points at a sub-list (the bytes from $4E98 on); 34 words up to
-; the first sub-list (E-0233, C1)
+; DebugMessageTest_Update_ToBeginStringDisplay_Bank1B reads the word at $4E54 + 2 * wTemp0; a zero
+; high byte takes the value directly, otherwise the word points at a sub-list (the bytes from $4E98
+; on); 34 words up to the first sub-list (E-0233, C1)
 ; record: value (high byte 0) or pointer to a sub-list
 DebugMessageTestTable::
     dw $4e98 ; id 0
@@ -1626,6 +1684,7 @@ DebugShowMonsterRecord::
     ld bc, $0100
     call WriteDecimalByteTiles_Bank01
 
+; Returns at once
 DebugShowMonsterRecord_Return::
     ret
 
@@ -1811,6 +1870,7 @@ DebugSkillViewer_Update::
     call DebugSkillViewer_Update_WriteVRAMByteInc
     ret
 
+; called from DebugSkillViewer_Update: sets wDigits; calls Number24ToPackedBCD; may return early
 DebugSkillViewer_Update_Number24ToPackedBCD::
     ld a, l
     ld [wDigits], a
@@ -1829,6 +1889,7 @@ DebugSkillViewer_Update_Number24ToPackedBCD::
     ldh [hTemp0], a
     ret
 
+; called from DebugSkillViewer_Update: calls WriteVRAMByteInc
 DebugSkillViewer_Update_WriteVRAMByteInc::
     ld e, $00
     ldh a, [hTemp1]
@@ -1921,6 +1982,7 @@ DebugSkillViewer_Update_IndexOfFlagValue::
     ld a, c
     ret
 
+; called from DebugSkillViewer_Update: calls WriteVRAMByte
 DebugSkillViewer_Update_WriteVRAMByte::
     ld d, a
     ld e, $00
@@ -1947,9 +2009,12 @@ DebugSkillViewer_Update_WriteVRAMByte::
     jr nz, .loop
     ret
 
+; data read by DebugSkillViewer_Update_WriteVRAMByte (8 bytes)
 DebugSkillViewer_Update_WriteVRAMByte_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
+; called from DebugShowMonsterRecord: sets wDigits; calls Number24ToPackedBCD; calls
+; WriteVRAMByteInc; calls WriteVRAMByte
 DebugShowMonsterRecord_Number24ToPackedBCD::
     push bc
     push hl
@@ -2115,6 +2180,7 @@ WriteHexByteTilesAtHL::
     inc hl
     pop af
 
+; called from DebugShowMonsterRecord: calls WriteTileDPlusBAtHL
 DebugShowMonsterRecord_WriteTileDPlusBAtHL::
     and $0f
     ld d, a
@@ -2233,6 +2299,10 @@ DebugResultsDisplay_Update::
     call DebugResultsDisplay_Update_WriteDebugCounter
     ret
 
+; called from DebugResultsDisplay_Update: increments wDebugCounter; may continue in
+; DebugResultsDisplay_Update_HLToDecimalDigits; may continue in
+; DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs; sets
+; wDebugCounter to 0
 DebugResultsDisplay_Update_WriteDebugCounter::
     ld a, [wDebugCounter]
     inc a
@@ -2244,6 +2314,8 @@ DebugResultsDisplay_Update_WriteDebugCounter::
     xor a
     ld [wDebugCounter], a
 
+; called from DebugResultsDisplay_Update: branches on wDebugCursor; calls HLToDecimalDigits; calls
+; DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
 DebugResultsDisplay_Update_HLToDecimalDigits::
     ld a, [wDebugCursor]
     cp $04
@@ -2272,6 +2344,7 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
     ei
     ret
 
+; Calls DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
 DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_ReadDebugCurs::
     call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
     di
@@ -2281,6 +2354,7 @@ DebugResultsDisplay_Update_HLToDecimalDigits_CallDebugResultsDisplay_Update_Read
     ei
     ret
 
+; Branches on wDebugCursor; branches on wSharedMenuWork
 DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     ld a, [wDebugCursor]
     cp $04
@@ -2310,12 +2384,15 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     add_a_to_hl
     ret
 
+; data read by DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork (4 bytes)
 DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data1::
     db $86, $99, $a6, $99
 
 DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
     db $e6, $99, $06, $9a
 
+; Branches on wArg1; sets wArg1 to 0; calls ComputeBreedingChild; returns unless wArg5 is $ff;
+; branches on wArg7; branches on wArg6; copies wArg6 to wArg1; ...
 DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1::
     ld a, [wArg1]
     and a
@@ -2496,6 +2573,7 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2_CheckArg1::
     ld [wNameEntryState], a
     ret
 
+; Works on registers only
 DebugResultsDisplay_Update_WaitForVRAMAccess::
     ld a, c
     and $f0
@@ -2519,6 +2597,12 @@ DebugResultsDisplay_Update_WaitForVRAMAccess::
     ei
     ret
 
+; May continue in DebugToggleArg1Marker_CheckScreenCounter; may continue in
+; DebugToggleArg1Marker_ClearDebugCursor; may continue in
+; DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor; may continue in
+; DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2; may continue in
+; DebugToggleArg1Marker_CheckDebugCursor2; may continue in DebugToggleArg1Marker_CheckDebugCursor3;
+; may continue in DebugToggleArg1Marker_CheckDebugCursor; ...
 DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
@@ -2629,10 +2713,10 @@ DebugResultsDisplay_Update_WaitForVRAMAccess_CheckJoypadPressedRepeat::
     jr c, .loop4
     ret
 
-; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadWD01AByteArg4) and stores it at DE
-; (E-0122) (E-0340: the address in its name read as its RAM name; was CopyWD01ABytesFromIndexCToDE)
-; (E-0345: copies from wSpeciesRecord + $12 (SPECIES_RESISTANCES); was
-; CopySpeciesExpCurveBBytesFromIndexCToDE)
+; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadSpeciesResistanceArg4) and stores it at
+; DE (E-0122) (E-0340: the address in its name read as its RAM name; was
+; CopySpeciesResistancesFromIndexCToDE) (E-0345: copies from wSpeciesRecord + $12
+; (SPECIES_RESISTANCES); was CopySpeciesResistancesFromIndexCToDE)
 CopySpeciesResistancesFromIndexCToDE::
     push bc
     push de
@@ -2673,6 +2757,8 @@ DebugToggleArg1Marker::
     ei
     ret
 
+; Branches on wDebugCursor; calls DebugToggleArg1Marker; calls StepDebugCursorDebugCounter; calls
+; DrawDebugFieldValueDebugCursor; increments wScreenState; sets wSharedMenuWork to 0
 DebugToggleArg1Marker_CheckDebugCursor::
     ld a, [wDebugCursor]
     cp $04
@@ -2693,6 +2779,8 @@ DebugToggleArg1Marker_CheckDebugCursor::
     ld [wSharedMenuWork], a
     ret
 
+; Calls DrawDebugFieldValueDebugCursor; returns if wDebugCursor is 0; decrements wDebugCursor; calls
+; StepDebugCursorDebugCounter
 DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
@@ -2703,6 +2791,8 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor::
     call StepDebugCursorDebugCounter
     ret
 
+; Calls DrawDebugFieldValueDebugCursor; returns if wDebugCursor is $09; increments wDebugCursor;
+; calls StepDebugCursorDebugCounter
 DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
     call DrawDebugFieldValueDebugCursor
     ld a, [wDebugCursor]
@@ -2713,6 +2803,9 @@ DebugToggleArg1Marker_CallDrawDebugFieldValueDebugCursor2::
     call StepDebugCursorDebugCounter
     ret
 
+; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp04; branches on the byte at
+; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue0; calls
+; StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; ...
 DebugToggleArg1Marker_CheckDebugCursor2::
     ld a, [wDebugCursor]
     and a
@@ -2784,10 +2877,13 @@ DebugToggleArg1Marker_CheckDebugCursor2::
     ld hl, vTiles2 + $300
     jr DebugToggleArg1Marker_Skip
 
+; Works on registers only
 DebugToggleArg1Marker_Loop::
     ld de, wDebugValue3
     ld hl, vTiles2 + $400
 
+; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
+; FillTilesFromRequest; calls DrawMonsterNameForWordAtDE_Bank01
 DebugToggleArg1Marker_Skip::
     push de
     push hl
@@ -2806,6 +2902,9 @@ DebugToggleArg1Marker_Skip::
     call DrawMonsterNameForWordAtDE_Bank01
     ret
 
+; Branches on wDebugCursor; continues in DebugToggleArg1Marker_Cp042; branches on the byte at
+; wDebugSubState; calls StepDebugCursorDebugCounter; branches on the byte at wDebugValue3; calls
+; StepDebugCursorDebugCounter; may continue in DebugToggleArg1Marker_Loop; ...
 DebugToggleArg1Marker_CheckDebugCursor3::
     ld a, [wDebugCursor]
     and a
@@ -2874,6 +2973,7 @@ DebugToggleArg1Marker_CheckDebugCursor3::
     ld hl, vTiles2 + $300
     jp DebugToggleArg1Marker_Skip
 
+; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter
 DebugToggleArg1Marker_Cp04::
     cp $04
     jr z, .skip
@@ -2930,6 +3030,7 @@ DebugToggleArg1Marker_Cp04::
     ld c, $1b
     jr .skip3
 
+; Branches on the byte at wScreenSubStep; calls StepDebugCursorDebugCounter
 DebugToggleArg1Marker_Cp042::
     cp $04
     jr z, .skip
@@ -2986,6 +3087,8 @@ DebugToggleArg1Marker_Cp042::
     ld c, $1c
     jr .skip3
 
+; Sets wDebugCursor to 0; sets wDebugValue0 to 0; sets wDebugValue1 to 0; sets wDebugValue2 to 0;
+; sets wDebugValue3 to 0; sets wDebugState to 0; sets wDebugSubState to 0; ...
 DebugToggleArg1Marker_ClearDebugCursor::
     xor a
     ld [wDebugCursor], a
@@ -3002,6 +3105,9 @@ DebugToggleArg1Marker_ClearDebugCursor::
     inc [hl]
     ret
 
+; Returns if wScreenCounter is below $0a; returns if wGlyphListPos is below $0a; branches on the
+; byte at wDebugSubState; copies wDebugValue0 to wArg6; copies wDebugValue1 to wArg7; calls
+; FamilyForSpeciesIdArg6; copies wDebugValue3 to wArg6; ...
 DebugToggleArg1Marker_CheckScreenCounter::
     ld a, [wScreenCounter]
     cp $0a
@@ -3209,6 +3315,7 @@ PackTwoDigitsOfCAsBCD::
     pop de
     ret
 
+; Works on registers only
 PackTwoDigitsOfCAsBCD_ReadDebugCursor::
     ld a, [wDebugCursor]
     sla a
@@ -3239,6 +3346,7 @@ PackTwoDigitsOfCAsBCD_ReadDebugCursor::
     ei
     ret
 
+; data read by DrawDebugFieldValueDebugCursor (20 bytes)
 DrawDebugFieldValueDebugCursor_Data1::
     db $f9, $c5, $fb, $c5, $fc, $c5, $fe, $c5, $81, $d7, $83, $d7, $85, $d7, $82, $d7
     db $84, $d7, $86, $d7
@@ -3566,9 +3674,13 @@ DebugAutomap_Update::
     jr nz, .loop
     ret
 
+; data read by DebugAutomap_Update (13 bytes)
 DebugAutomap_Update_Data::
     db $00, $05, $20, $30, $48, $70, $a0, $a8, $b0, $b8, $c8, $d1, $da
 
+; called from DebugAutomap_Update: calls RollKeyContentsForLevelTemp0; copies wDebugValue0 to
+; wCurrentKeyIndex; branches on wDebugState; calls FindSRAMSlotMarkerIndex; may return early; sets
+; wKeyWorldSlot; sets wPartyStrength; ...
 DebugAutomap_Update_RollKeyContentsForLevelTemp0::
     ld a, [wDebugValue1]
     ldh [hTemp0], a
@@ -3676,6 +3788,8 @@ LoadKeyEntryFieldsToDebugState::
     ld [wDebugValue1], a
     ret
 
+; called from DebugAutomap_Update: branches on wDebugState; branches on wDebugSubState; calls
+; WriteHexByteTilesAtDE; sets wDebugValue1 to 0; calls WriteHexByteTilesAtDE
 DebugAutomap_Update_WriteHexByteTilesAtDE::
     ld a, [wDebugState]
     cp $ff
@@ -3696,6 +3810,9 @@ DebugAutomap_Update_WriteHexByteTilesAtDE::
     call WriteHexByteTilesAtDE
     ret
 
+; called from DebugAutomap_Update: sets wNameGlyphBuf to $90; calls CopyGlyphTilesToVRAM; branches
+; on wDebugSubState; branches on wDebugState; sets wNameGlyphBuf to $29; calls CopyGlyphTilesToVRAM;
+; branches on wDebugSubState; ...
 DebugAutomap_Update_CopyGlyphTilesToVRAM::
     ld a, $90
     ld [wNameGlyphBuf], a
@@ -4610,12 +4727,16 @@ DebugSoundTest_Update::
     call WriteVRAMByte
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
+; called from DebugSoundTest_Update: calls WriteHexByteTilesAtDE; continues in
+; DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 DebugSoundTest_Update_WriteHexByteTilesAtDE::
     ld a, [wTemp0]
     ld de, vBGMap0 + $e9
     call WriteHexByteTilesAtDE
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
+; May continue in DebugSoundTest_Update_WriteHexByteTilesAtDE_2; calls WriteVRAMByteInc; calls
+; WriteVRAMByte; continues in DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -4626,14 +4747,18 @@ DebugSoundTest_Update_WriteHexByteTilesAtDE_CheckFrameCounterLo::
     call WriteVRAMByte
     jr DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return
 
+; called from DebugSoundTest_Update: calls WriteHexByteTilesAtDE
 DebugSoundTest_Update_WriteHexByteTilesAtDE_2::
     ld a, [wTemp1]
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
+; Returns at once
 DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return::
     ret
 
+; called from DebugSoundTest_Update: branches on the byte at wTemp0; sets wTemp0 to 0; branches on
+; the byte at wTemp0; branches on wMenuState; calls WriteHexByteTilesAtDE
 DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
     push af
     ld a, [wMenuState]
@@ -4673,7 +4798,7 @@ DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
     ret
 
 ; DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and
-; DebugSoundTest_Update_Sub03 draws it in hex; 32 entries (E-0238, C1)
+; DebugSoundTest_Update_ReadMenuStateAndTemp0Etc draws it in hex; 32 entries (E-0238, C1)
 ; record: music number
 DebugSoundTestMusic::
     db $02 ; id 0
@@ -4818,6 +4943,9 @@ DebugBattleSetup_Update::
     call DebugBattleSetupLoadWords
     call DebugBattleSetupLoadWords
 
+; Sets wMenuState to 0; sets wDebugCursor to 0; sets wDebugValue0 to 0; sets wDebugValue1 to 0;
+; calls DebugBattleSetup_Update_SRAMRecordAddressMapped; calls
+; DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc; sets wGameMode to 4; ...
 DebugBattleSetup_Update_ClearMenuState::
     xor a
     ld [wMenuState], a
@@ -4866,6 +4994,9 @@ DebugBattleSetupLoadWords::
     inc hl
     ret
 
+; Copies the byte at wWorkBuf + $c to wEncounterMonsters; copies the byte at wWorkBuf + $c to
+; wWildLevel; copies the byte at wWorkBuf + $c to wWildBand; copies the byte at wWorkBuf + $c to
+; wEncounterClass; continues in DebugBattleSetup_Update_ClearMenuState
 DebugBattleSetupLoadWords_SetEncounterMonsters::
     ld hl, wWorkBuf + $c
     ld a, [hli]
@@ -4890,6 +5021,8 @@ DebugBattleSetupLoadWords_SetEncounterMonsters::
     ld [wEncounterClass], a
     jr DebugBattleSetup_Update_ClearMenuState
 
+; Copies wWorkBuf to wEncounterKind; calls DebugBattleSetupLoadWords; sets wDebugCursor to 0; sets
+; wDebugValue0 to 0; sets wDebugValue1 to 0; sets wMenuState to 0; sets wModeState to 0; ...
 DebugBattleSetupLoadWords_CheckJoypadPressed::
     ld a, [wJoypadPressed]
     and $01
@@ -5160,6 +5293,9 @@ ClampDebugValueToTableLimit::
     ld [hl], d
     ret
 
+; called from DebugBattleSetup_Update: branches on wPartyCount; branches on wFarmLevel; branches on
+; the byte at wPartyList; calls DebugBattleSetup_Update_SRAMRecordAddressMapped_2; calls
+; CheckSaveData; calls RunSaveSteps; calls DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
 DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ld a, [wPartyCount]
     or a
@@ -5205,6 +5341,7 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped::
     call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
     ret
 
+; Calls SRAMRecordAddressMapped
 DebugBattleSetup_Update_SRAMRecordAddressMapped_2::
     ld c, MON_STATE
     call SRAMRecordAddressMapped
@@ -5212,6 +5349,7 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped_2::
     cp $02
     ret
 
+; data read by DebugBattleSetupLoadWords (24 bytes)
 DebugBattleSetupLoadWords_Data::
     db $87, $98, $a7, $98, $c7, $98, $e7, $98, $07, $99, $27, $99, $47, $99, $67, $99
     db $87, $99, $a7, $99, $c7, $99, $e7, $99
@@ -5401,6 +5539,7 @@ DebugBattleSetupShowFieldString::
     call WriteVRAMByte
     ret
 
+; data read by DebugBattleSetupShowFieldString (6 bytes)
 DebugBattleSetupShowFieldString_Data1::
     db $00, $92, $a0, $92, $30, $93
 
@@ -5460,6 +5599,8 @@ WriteThreeHexDigitsAtDE::
     ld [de], a
     ret
 
+; Sets wFollowerRecords to 0; sets wPlayerName to $24; sets wGoldLo to $9f; sets wGoldMid to $86;
+; sets wGoldHi to 1; sets wPartyCount to 3; sets wPartyList to 0; ...
 DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
     ld a, $00
     ldh [hMapId], a
@@ -5579,6 +5720,8 @@ DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
     call DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82
     ret
 
+; Sets wBattleArg0 to 0; sets rRAMG to $0a; sets rRAMB to 0; calls PickRandomMonsterSkipping7ETo82;
+; sets rRAMG to 0; increments wBattleArg0; sets rRAMG to $0a; ...
 DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82::
     ld b, $1e
     xor a
@@ -5645,6 +5788,9 @@ PickRandomMonsterSkipping7ETo82::
     call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
     ret
 
+; Sets wMonsterId; calls LoadMonsterRecord; calls SRAMRecordAddress; branches on wBattleArg1; calls
+; CopyBBytesDEToHL_Bank01; calls WriteUnknownNamePlaceholder_Bank01; sets wRecordBufA + MON_LEVEL;
+; ...
 CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
     ldh a, [hTemp3]
     push af
@@ -5980,6 +6126,7 @@ CreateMonsterRecordOfKindTemp1::
     ld [rRAMG], a
     ret
 
+; called from PickRandomMonsterSkipping7ETo82: sets wBattleArg1 to $ff; sets wBattleArg2 to $ff
 PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
     ld a, $ff
     ld [wBattleArg1], a
@@ -5988,6 +6135,8 @@ PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
     ldh [hTemp3], a
     ld a, [wBattleArg0]
 
+; called from CreateMonsterRecordOfKindTemp1: sets wBattleArg0; calls
+; CreateMonsterRecordOfKindTemp1_LoadMonsterRecord
 CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
     ld [wBattleArg0], a
     call CreateMonsterRecordOfKindTemp1_LoadMonsterRecord
@@ -5995,7 +6144,7 @@ CreateMonsterRecordOfKindTemp1_WriteBattleArg0::
 
 ; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this
 ; ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after
-; it) (was DebugBattleSetup_Update_FillKeyListFromTable)
+; it) (was DebugBattleSetup_ClearKeyList)
 DebugBattleSetup_ClearKeyList::
     ld de, DebugBattleSetup_ClearKeyList_Data
     ld hl, wKeyList
@@ -6018,6 +6167,7 @@ DebugBattleSetup_ClearKeyList::
     jr nz, .loop
     ret
 
+; data read by DebugBattleSetup_ClearKeyList
 DebugBattleSetup_ClearKeyList_Data::
     ds $80, $ff
 

@@ -282,9 +282,13 @@ EggServiceMenu::
     dw EggServiceMenu_Return_2
     dw EggServiceMenu_DrawListAndPrice
 
+; step 6 of EggServiceMenu: returns at once
 EggServiceMenu_Return_2::
     ret
 
+; step 0 of EggServiceMenu: calls CopyBytesDEToHL_Bank0D; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0D; sets wMessageMode to 6; advances wScreenState; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 EggServiceMenu_CopyBytesDEToHL_Bank0D::
     ld hl, wScreenState
     ld bc, $006f
@@ -330,7 +334,7 @@ EggServiceMenu_DrawPrice::
 
 ; runs CopyGlyphTileListFromBank1F for DrawPairAndStep_TileCopyDestList and
 ; DrawPairAndStep_TileCopySrcList, then wScreenStep += 1 (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was DrawPair4F81And4F9FAndStep)
+; dropped or read as the label there; was DrawPairAndStep)
 DrawPairAndStep::
     ld hl, DrawPairAndStep_TileCopyDestList
     ld de, DrawPairAndStep_TileCopySrcList
@@ -340,6 +344,8 @@ DrawPairAndStep::
     ld [wScreenStep], a
     ret
 
+; step 1 of EggServiceMenu_DrawPrice: calls CopyRectTo20ByteRows_Bank0D; copies wGoldLo to wDigits;
+; calls Number24ToPackedBCD; calls UnpackBCDToDigitsArg1; increments wScreenStep
 EggServiceMenu_DrawPrice_Number24ToPackedBCD::
     ld de, EggServiceMenu_DrawPrice_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $70
@@ -371,6 +377,9 @@ EggServiceMenu_DrawPrice_Number24ToPackedBCD::
     ld [wScreenStep], a
     ret
 
+; step 2 of EggServiceMenu_DrawPrice: calls CopyRectTo20ByteRows_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; sets wScreenStep to 0; increments
+; wScreenState
 EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D::
     ld de, EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -387,12 +396,16 @@ EggServiceMenu_DrawPrice_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenState], a
     ret
 
+; step 2 of EggServiceMenu: sets wThreeOptionResult to 1; calls HandleThreeOptionMenuInput_15
 EggServiceMenu_HandleThreeOptionMenuInput_15::
     ld a, $01
     ld [wThreeOptionResult], a
     farcall HandleThreeOptionMenuInput_15
     ret
 
+; step 3 of EggServiceMenu: branches on wGridCursorX; sets wSharedMenuWork to 0; sets
+; wSharedMenuWork to 1; calls ListRecordsInUseEggs; branches on wRecordsFlagged; sets
+; wTwoChoiceCursor to 0; increments wScreenState; ...
 EggServiceMenu_ListRecordsInUseEggs::
     ld a, [wGridCursorX]
     and a
@@ -438,6 +451,7 @@ EggServiceMenu_ListRecordsInUseEggs::
     ld [wScriptStartRequest], a
     ret
 
+; step 4 of EggServiceMenu: returns at once
 EggServiceMenu_Return::
     ret
 
@@ -465,10 +479,14 @@ EggServiceMenu_ChooseAndPay::
     dw EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks
     dw EggServiceMenu_ChooseAndPay_CheckAndPay
 
+; step 0 of EggServiceMenu_ChooseAndPay: calls BreedMenu
 EggServiceMenu_ChooseAndPay_ToBreedMenu::
     farcall BreedMenu
     ret
 
+; step 6 of EggServiceMenu_ChooseAndPay: sets wMenuInputResult to 2; calls UpdatePagedListCursor;
+; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
+; wScreenStep; sets wTwoChoiceCursor to 1; ...
 EggServiceMenu_ChooseAndPay_UpdatePagedListCursor::
     ld a, $02
     ld [wMenuInputResult], a
@@ -581,6 +599,9 @@ EggServiceMenu_ChooseAndPay_UpdatePagedListCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 12 of EggServiceMenu_ChooseAndPay: sets wArg5 to 0; calls HandleTwoChoiceCursorInput_0D;
+; returns if wArg5 is 0; branches on wArg5; sets wTwoChoiceCursor to 2; increments wScreenStep; sets
+; wScriptCommandType to 0; ...
 EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D::
     xor a
     ld [wArg5], a
@@ -639,6 +660,8 @@ EggServiceMenu_ChooseAndPay_HandleTwoChoiceCursorInput_0D::
     ld [wScriptStartRequest], a
     ret
 
+; step 15 of EggServiceMenu_ChooseAndPay: branches on wSharedMenuWork; sets wArg1 to $14; sets wArg2
+; to 0; sets wArg3 to 0; calls IsAmountInArg1AboveGold; branches on wArg1; sets wScreenStep; ...
 EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold::
     ld a, [wSharedMenuWork]
     and a
@@ -732,7 +755,7 @@ EggServiceMenu_ChooseAndPay_IsAmountInArg1AboveGold::
 ; copies box DrawBoxWithPageIndicator_TileRect to wWindowTileBuffer + $BB, runs
 ; ClampRecordListPageCursor4, draws the page-of-pages indicator when wListPages >= 2, and
 ; wScreenStep += 1 (E-0124) (E-0344: the address in its name dropped or read as the label there; was
-; DrawBox5022WithPageIndicator)
+; DrawBoxWithPageIndicator)
 DrawBoxWithPageIndicator::
     ld de, DrawBoxWithPageIndicator_TileRect
     ld hl, wWindowTileBuffer + $bb
@@ -757,6 +780,9 @@ DrawBoxWithPageIndicator::
     ld [wScreenStep], a
     ret
 
+; step 17 of EggServiceMenu_ChooseAndPay: calls CopyFromBankWaitVRAM; sets wArg1 to 1; sets wArg2 to
+; 1; calls DrawRecordListPageMarks; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; sets wScreenStep to 7; ...
 EggServiceMenu_ChooseAndPay_DrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
@@ -792,12 +818,17 @@ EggServiceMenu_ChooseAndPay_CheckAndPay::
     dw EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_5
     dw EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold
 
+; step 0 of EggServiceMenu_ChooseAndPay_CheckAndPay: sets wTwoChoiceCursor to 0; calls
+; EndScriptCommandAndIncScreenSubStep
 EggServiceMenu_ChooseAndPay_CheckAndPay_EndScriptCommandAndIncScreenSubStep::
     xor a
     ld [wTwoChoiceCursor], a
     call EndScriptCommandAndIncScreenSubStep
     ret
 
+; step 1 of EggServiceMenu_ChooseAndPay_CheckAndPay: calls GetListEntriesCell4AddressWithSRAM; calls
+; LoadSRAMRecordWord; continues in
+; EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
     call GetListEntriesCell4AddressWithSRAM
     ld c, $00
@@ -862,6 +893,7 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM::
 .skip4:
     ld a, $01
 
+; Sets wTwoChoiceCursor; sets rRAMG2 to 0; calls EndScriptCommandAndIncScreenSubStep
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     xor a
@@ -869,9 +901,13 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTw
     call EndScriptCommandAndIncScreenSubStep
     ret
 
+; data read by EggServiceMenu (6 bytes)
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_Data::
     db $5d, $61, $63, $65, $67, $69
 
+; step 2 of EggServiceMenu_ChooseAndPay_CheckAndPay: calls GetListEntriesCell4AddressWithSRAM; calls
+; SRAMRecordAddress; continues in
+; EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_2::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -915,6 +951,9 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_2::
     ld a, $02
     jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
+; step 3 of EggServiceMenu_ChooseAndPay_CheckAndPay: calls GetListEntriesCell4AddressWithSRAM; calls
+; LoadSRAMRecordByte; continues in
+; EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_3::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -942,6 +981,9 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_3::
     ld a, $02
     jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
+; step 4 of EggServiceMenu_ChooseAndPay_CheckAndPay: calls GetListEntriesCell4AddressWithSRAM; calls
+; LoadSRAMRecordByte; continues in
+; EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_4::
     call GetListEntriesCell4AddressWithSRAM
     ld b, $00
@@ -1011,6 +1053,9 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_4::
     ld a, b
     jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
+; step 5 of EggServiceMenu_ChooseAndPay_CheckAndPay: calls GetListEntriesCell4AddressWithSRAM; calls
+; LoadSRAMRecordByte; continues in
+; EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_5::
     call GetListEntriesCell4AddressWithSRAM
     ld a, [hl]
@@ -1020,6 +1065,9 @@ EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_5::
     and $01
     jp EggServiceMenu_ChooseAndPay_CheckAndPay_GetListEntriesCell4AddressWithSRAM_SetTwoChoiceCursor
 
+; step 6 of EggServiceMenu_ChooseAndPay_CheckAndPay: sets wArg1 to $14; sets wArg2 to 0; sets wArg3
+; to 0; calls SubtractArg1AmountFromGold; calls SetArg5ToListEntriesCell4; sets rRAMG2 to $0a; sets
+; rRAMB to 0; ...
 EggServiceMenu_ChooseAndPay_CheckAndPay_SubtractArg1AmountFromGold::
     ld a, $14
     ld [wArg1], a
@@ -1078,6 +1126,8 @@ EndScriptCommandAndIncScreenSubStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 13 of EggServiceMenu: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
+; wScreenStep to 0; sets wScreenSubStep to 0; increments wScreenState
 EggServiceMenu_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1107,6 +1157,8 @@ EggServiceMenu_DrawListAndPrice::
     dw EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD
     dw EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics
 
+; step 0 of EggServiceMenu_DrawListAndPrice: calls DecompressToVRAM; calls CopyFromBankWaitVRAM;
+; sets wBGPaletteUploadRequest to $7f; increments wScreenStep
 EggServiceMenu_DrawListAndPrice_DecompressToVRAM::
     ld hl, vTiles2
     ld de, Map0ATileset
@@ -1124,6 +1176,8 @@ EggServiceMenu_DrawListAndPrice_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
+; step 1 of EggServiceMenu_DrawListAndPrice: calls CopyGlyphTileListFromBank1F; calls
+; DrawPairAndStep
 EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F::
     ld hl, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F_TileCopyDestList
     ld de, EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F_TileCopySrcList
@@ -1131,6 +1185,8 @@ EggServiceMenu_DrawListAndPrice_CopyGlyphTileListFromBank1F::
     call DrawPairAndStep
     ret
 
+; step 2 of EggServiceMenu_DrawListAndPrice: calls FillTilesBxC; sets wTextWindowTileLo to $12;
+; increments wScreenStep
 EggServiceMenu_DrawListAndPrice_FillTilesBxC::
     ld hl, vTiles1 + $400
     ld bc, $0301
@@ -1157,9 +1213,12 @@ EggServiceMenu_DrawListAndPrice_FillTilesBxC::
     ld [wScreenStep], a
     ret
 
+; step 3 of EggServiceMenu_DrawListAndPrice: calls DrawBoxWithPageIndicator
 EggServiceMenu_DrawListAndPrice_DrawBoxWithPageIndicator::
     call DrawBoxWithPageIndicator
 
+; step 4 of EggServiceMenu_DrawListAndPrice: sets wArg5 to 1; calls DrawRecordListPageSpeciesNames;
+; increments wScreenStep
 EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames::
     ld a, $01
     ld [wArg5], a
@@ -1169,6 +1228,8 @@ EggServiceMenu_DrawListAndPrice_DrawRecordListPageSpeciesNames::
     ld [wScreenStep], a
     ret
 
+; step 5 of EggServiceMenu_DrawListAndPrice: calls CopyFromBankWaitVRAM; sets wArg1 to 1; sets wArg2
+; to 1; calls DrawRecordListPageMarks; increments wScreenStep
 EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
@@ -1184,6 +1245,8 @@ EggServiceMenu_DrawListAndPrice_DrawRecordListPageMarks::
     ld [wScreenStep], a
     ret
 
+; step 6 of EggServiceMenu_DrawListAndPrice: calls StoreBAtWordTableEntry_Bank0D; calls
+; CopyRectTo20ByteRows_Bank0D; increments wScreenStep
 EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D::
     ld a, [wListCursor]
     ld b, $bc
@@ -1198,6 +1261,9 @@ EggServiceMenu_DrawListAndPrice_StoreBAtWordTableEntry_Bank0D::
     ld [wScreenStep], a
     ret
 
+; step 7 of EggServiceMenu_DrawListAndPrice: branches on wSharedMenuWork; calls
+; EggServiceMenu_SetArg5ToListEntriesCell4; sets wDigits; calls Number24ToPackedBCD; calls
+; UnpackBCDToDigitsArg1; branches on the byte at wArg4; sets wStringIndex to 3; ...
 EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD::
     ld a, [wSharedMenuWork]
     and a
@@ -1264,6 +1330,10 @@ EggServiceMenu_DrawListAndPrice_Number24ToPackedBCD::
     ld [wScreenStep], a
     ret
 
+; step 8 of EggServiceMenu_DrawListAndPrice: calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D;
+; calls RestoreSpriteStateFromSavedFieldDrawFlags; ...
 EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -1301,6 +1371,8 @@ EggServiceMenu_DrawListAndPrice_LoadPlayerAndFollowerSpriteGraphics::
     ld [wScriptStartRequest], a
     ret
 
+; Calls SetArg5ToListEntriesCell4; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte;
+; sets rRAMG2 to 0
 EggServiceMenu_SetArg5ToListEntriesCell4::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -1417,6 +1489,7 @@ DrawBlankTileC3_Bank0D::
 DrawArrowTileBCAtChoiceCursorEntry::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank0D
 DrawArrowTileBCAtChoiceCursorEntry_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
@@ -1436,6 +1509,7 @@ DrawArrowTileBCAtChoiceCursorEntry_ReadChoiceCursor::
     ei
     ret
 
+; data read by DrawArrowTileBCAtChoiceCursorEntry (4 bytes)
 DrawArrowTileBCAtChoiceCursorEntry_Data::
     db $2d, $01, $6d, $01
 
@@ -1617,8 +1691,8 @@ StoreBAtWordTableEntry_Bank0D::
     ld [de], a
     ret
 
-; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll + DE, two entries apart (WaitForVRAMAccess,
-; interrupts off) (E-0120)
+; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank0D + DE, two entries apart
+; (WaitForVRAMAccess, interrupts off) (E-0120)
 DrawC5BEC6AtScrollOffsetDE_Bank0D::
     push de
     call BGMapAddressAtScroll_Bank0D
@@ -1868,10 +1942,14 @@ CloseRenameMenu::
     dw CloseRenameMenu_ToCloseBreedMenu
     dw CloseRenameMenu_ToCloseBreedMenu
 
+; step 0 of CloseRenameMenu: calls CloseBreedMenu
 CloseRenameMenu_ToCloseBreedMenu::
     farcall CloseBreedMenu
     ret
 
+; step 1 of CloseRenameMenu: calls LoadRecordListNameTiles; calls CopyFromBankWaitVRAM; sets
+; wGlyphListPos to 0; sets wGlyphListStart to 0; sets wScreenState to 0; sets wScreenStep to 0; sets
+; wMenuState to 0; ...
 CloseRenameMenu_LoadRecordListNameTiles::
     call LoadRecordListNameTiles
     ld de, Tiles2Plus710Tiles_3
@@ -1928,6 +2006,7 @@ RenameMenu::
     dw RenameMenu_LoadSRAMRecordByte
     dw RenameMenu_PickMonster
 
+; step 0 of RenameMenu: calls EggServiceMenu
 RenameMenu_ToEggServiceMenu::
     farcall EggServiceMenu
     ret
@@ -1966,6 +2045,9 @@ LoadFourFrameTilesAndStep::
     ld [wScreenStep], a
     ret
 
+; step 1 of RenameMenu_DrawFrame: calls CopyRectTo20ByteRows_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; plays sound $6c; sets
+; wTwoChoiceCursor to 0; sets wScreenStep to 0; increments wScreenState
 RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D::
     ld de, RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -1985,6 +2067,9 @@ RenameMenu_DrawFrame_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenState], a
     ret
 
+; step 2 of RenameMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; branches on wTwoChoiceCursor; ...
 RenameMenu_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -2028,6 +2113,9 @@ RenameMenu_DrawNameList::
     dw ClearStringWindowAt1500AndIncScreenStep
     dw RenameMenu_DrawNameList_LoadRecordListNameTiles
 
+; step 0 of RenameMenu_DrawNameList: calls CopyRectTo20ByteRows_Bank0D; sets wArg1 to 0; sets wArg2
+; to 6; calls CopyScreenBufferRectWithAttrs_0D; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; increments wScreenStep
 RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D::
     ld de, RenameMenu_DrawNameList_CopyScreenBufferRectWithAttrs_0D_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2069,6 +2157,9 @@ ClearStringWindowAt1500AndIncScreenStep::
     ld [wScreenStep], a
     ret
 
+; step 2 of RenameMenu_DrawNameList: calls LoadRecordListNameTiles; calls
+; CopyRectTo20ByteRows_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D;
+; sets wScreenStep to 0; increments wScreenState
 RenameMenu_DrawNameList_LoadRecordListNameTiles::
     call LoadRecordListNameTiles
     ld de, RenameMenu_DrawNameList_LoadRecordListNameTiles_TileRect
@@ -2086,10 +2177,13 @@ RenameMenu_DrawNameList_LoadRecordListNameTiles::
     ld [wScreenState], a
     ret
 
+; step 4 of RenameMenu: calls RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc
 RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     call RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc
     ret
 
+; step 5 of RenameMenu: sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; sets wArg2;
+; calls LoadSRAMRecordByte; sets wArg3; calls LoadSRAMRecordWord; ...
 RenameMenu_LoadSRAMRecordByte::
     ld a, [wGridCursorX]
     ld hl, wPartyList
@@ -2147,6 +2241,8 @@ RenameMenu_PickMonster::
     dw RenameMenu_PickMonster_ShowPickTheMonsterTo
     dw RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics
 
+; step 0 of RenameMenu_PickMonster: calls DecompressToVRAM; calls CopyFromBankWaitVRAM; sets
+; wBGPaletteUploadRequest to $7f; increments wScreenStep
 RenameMenu_PickMonster_DecompressToVRAM::
     ld hl, vTiles2
     ld de, Map13Tileset
@@ -2164,6 +2260,8 @@ RenameMenu_PickMonster_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
+; step 1 of RenameMenu_PickMonster: calls LoadFourFrameTilesAndStep; calls
+; ClearStringWindowAt1500AndIncScreenStep; sets wScreenStep to 2
 RenameMenu_PickMonster_LoadFourFrameTilesAndStep::
     call LoadFourFrameTilesAndStep
     call ClearStringWindowAt1500AndIncScreenStep
@@ -2171,6 +2269,9 @@ RenameMenu_PickMonster_LoadFourFrameTilesAndStep::
     ld [wScreenStep], a
     ret
 
+; step 2 of RenameMenu_PickMonster: sets rRAMG2 to $0a; sets rRAMB to 0; calls SRAMRecordAddress;
+; branches on the byte at wNameGlyphBuf; sets rRAMG2 to 0; calls LoadRecordListNameTiles; sets
+; wTextWindowTileLo; ...
 RenameMenu_PickMonster_SRAMRecordAddress::
     ld a, [wGridCursorX]
     ld hl, wPartyList
@@ -2220,6 +2321,8 @@ RenameMenu_PickMonster_SRAMRecordAddress::
     ld [wScreenStep], a
     ret
 
+; step 3 of RenameMenu_PickMonster: sets wStringCategory to 0; sets wStringIndex to $23; calls
+; ShowString_BankF2; increments wScreenStep
 RenameMenu_PickMonster_ShowPickTheMonsterTo::
     xor a
     ld [wStringCategory], a
@@ -2231,6 +2334,10 @@ RenameMenu_PickMonster_ShowPickTheMonsterTo::
     ld [wScreenStep], a
     ret
 
+; step 4 of RenameMenu_PickMonster: calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D;
+; sets wScreenSubStep to 0; ...
 RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -2268,6 +2375,10 @@ RenameMenu_PickMonster_LoadPlayerAndFollowerSpriteGraphics::
     ld [wScriptStartRequest], a
     ret
 
+; called from RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc: branches on
+; wJoypadPressedRepeat; branches on wJoypadPressed; calls RenameMenu_WriteGridCursorY; calls
+; RenameMenu_ReadGridCursorX_2; branches on wPartyCount; branches on wGridCursorX; copies
+; wPartyCount-1 to wGridCursorX; ...
 RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -2363,6 +2474,8 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
+; May continue in RenameMenu_ReadGridCursorX; increments wGridCursorY; may continue in
+; RenameMenu_ReadGridCursorX; may continue in RenameMenu_ReadGridCursorX_2; sets wGridCursorY to 0
 RenameMenu_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -2377,17 +2490,21 @@ RenameMenu_WriteGridCursorY::
     xor a
     ld [wGridCursorY], a
 
+; Continues in RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 RenameMenu_ReadGridCursorX::
     ld b, $bb
     jr RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 
+; Continues in RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 RenameMenu_ReadGridCursorX_2::
     ld b, $c3
     jr RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 
+; Works on registers only
 RenameMenu_BGMapAddressAtScroll_Bank0D::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank0D
 RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
@@ -2408,6 +2525,7 @@ RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX::
     ei
     ret
 
+; data read by RenameMenu (6 bytes)
 RenameMenu_BGMapAddressAtScroll_Bank0D_Data::
     db $61, $00, $a1, $00, $e1, $00
 
@@ -2458,6 +2576,9 @@ KeyAppraisalMenu::
     dw KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D
     dw KeyAppraisalMenu_ChooseKey
 
+; step 0 of KeyAppraisalMenu: calls CopyBytesDEToHL_Bank0D; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0D; sets wMessageMode to 7; calls CopyFromBankWaitVRAM; advances
+; wScreenState; sets wScriptCommandType to 0; ...
 KeyAppraisalMenu_CopyBytesDEToHL_Bank0D::
     ld hl, wScreenState
     ld bc, $006f
@@ -2549,6 +2670,9 @@ DrawGoldBoxAndStep::
     ld [wScreenStep], a
     ret
 
+; step 1 of KeyAppraisalMenu_DrawGoldBox: calls CopyRectTo20ByteRows_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; plays sound $6c; sets
+; wTwoChoiceCursor to 0; sets wScreenStep to 0; increments wScreenState
 KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D::
     ld de, KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -2568,6 +2692,9 @@ KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenState], a
     ret
 
+; step 2 of KeyAppraisalMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 2; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; branches on wTwoChoiceCursor; ...
 KeyAppraisalMenu_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -2672,6 +2799,9 @@ KeyAppraisalMenu_ChooseKey::
     dw KeyAppraisalMenu_ChooseKey_CountKeys_SetTwoChoiceCursor
     dw KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics
 
+; step 18 of KeyAppraisalMenu_ChooseKey: calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -2684,6 +2814,9 @@ KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics::
     ld [wScriptStartRequest], a
     ret
 
+; step 0 of KeyAppraisalMenu_ChooseKey: calls CopyRectTo20ByteRows_Bank0D; calls
+; BuildKeyListIndexListEntries; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; increments wScreenStep
 KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries::
     ld de, KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries_TileRect
     ld hl, wWindowTileBuffer + $b8
@@ -2699,6 +2832,9 @@ KeyAppraisalMenu_ChooseKey_BuildKeyListIndexListEntries::
     ld [wScreenStep], a
     ret
 
+; step 1 of KeyAppraisalMenu_ChooseKey: sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets wTextWindowTileLo; sets
+; wTextWindowTileHi; ...
 KeyAppraisalMenu_ChooseKey_FillTilesFromRequest::
     ld hl, vTiles2 + $700
     ld a, l
@@ -2749,6 +2885,9 @@ KeyAppraisalMenu_ChooseKey_FillTilesFromRequest::
     ld [wScreenStep], a
     ret
 
+; step 2 of KeyAppraisalMenu_ChooseKey: calls CopyRectTo20ByteRows_Bank0D; sets wArg5 to 0; calls
+; ClampKeyListPageCursor; branches on wListPages; calls DrawC5BEC6AtScrollOffsetDE_Bank0D; calls
+; StoreC5BEC6AtHLStride2_Bank0D; sets wArg1; ...
 KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor::
     ld de, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_TileRect
     ld hl, wWindowTileBuffer + $ce
@@ -2791,6 +2930,8 @@ KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor::
     ld [wScreenStep], a
     ret
 
+; step 3 of KeyAppraisalMenu_ChooseKey: sets wArg5 to 0; calls DrawKeyListPageNames; sets wArg5 to
+; 0; calls DrawKeyListPageMarks; increments wScreenStep
 KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames::
     xor a
     ld [wArg5], a
@@ -2803,6 +2944,8 @@ KeyAppraisalMenu_ChooseKey_DrawKeyListPageNames::
     ld [wScreenStep], a
     ret
 
+; step 4 of KeyAppraisalMenu_ChooseKey: calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; calls StoreBAtWordTableEntry_Bank0D; increments wScreenStep
 KeyAppraisalMenu_ChooseKey_BGMapAddressAtScroll_Bank0D::
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -2817,6 +2960,9 @@ KeyAppraisalMenu_ChooseKey_BGMapAddressAtScroll_Bank0D::
     ld [wScreenStep], a
     ret
 
+; step 5 of KeyAppraisalMenu_ChooseKey: branches on wJoypadPressedRepeat; sets wMenuInputResult to
+; 3; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult;
+; calls KeyAppraisalMenu_ChooseKey_CopyWorkBuf1ToKeyList; sets wScreenStep; ...
 KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -2923,6 +3069,10 @@ KeyAppraisalMenu_ChooseKey_UpdatePagedListCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 7 of KeyAppraisalMenu_ChooseKey: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; calls
+; KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D; sets wTwoChoiceCursor to 2; increments
+; wScreenStep; sets wTextWindowTileLo; ...
 KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3007,6 +3157,9 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; called from KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D: calls
+; CopyRectTo20ByteRows_Bank0D; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank0D; sets
+; wArg1; sets wArg2; calls DrawPageOfPagesAtArg1_Bank1E; calls BGMapAddressAtScroll_Bank0D; ...
 KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D::
     ld de, KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -3031,6 +3184,8 @@ KeyAppraisalMenu_ChooseKey_StoreC5BEC6AtHLStride2_Bank0D::
     call DrawScreenBufferRect_Bank0D
     ret
 
+; step 9 of KeyAppraisalMenu_ChooseKey: calls CopyRectToWindowTileBufferRow5AndDraw; increments
+; wScreenStep
 KeyAppraisalMenu_ChooseKey_ToCopyRectToWindowTileBufferRow5AndDrawAndStep::
     farcall CopyRectToWindowTileBufferRow5AndDraw
     ld a, [wScreenStep]
@@ -3038,6 +3193,8 @@ KeyAppraisalMenu_ChooseKey_ToCopyRectToWindowTileBufferRow5AndDrawAndStep::
     ld [wScreenStep], a
     ret
 
+; step 10 of KeyAppraisalMenu_ChooseKey: calls ShowSaveFileInfoWindow; sets wStringCategory to 0;
+; increments wScreenStep
 KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow::
     farcall ShowSaveFileInfoWindow
     xor a
@@ -3047,6 +3204,9 @@ KeyAppraisalMenu_ChooseKey_ShowSaveFileInfoWindow::
     ld [wScreenStep], a
     ret
 
+; step 11 of KeyAppraisalMenu_ChooseKey: calls KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB;
+; branches on wScreenSubStep; calls DrawBottomBoxForLinkAndSetScreenSubStep; sets wTextWindowTileLo;
+; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; ...
 KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
@@ -3091,6 +3251,9 @@ KeyAppraisalMenu_ChooseKey_DrawBottomBoxForLinkAndSetScreenSubStep::
     ld [wScriptStartRequest], a
     ret
 
+; step 6 of KeyAppraisalMenu_ChooseKey: calls KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB; calls
+; CopyRectTo20ByteRows_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D;
+; plays sound $6c; sets wTwoChoiceCursor to 0; sets wScreenSubStep to 0; ...
 KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
     ld de, KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D_TileRect
@@ -3111,6 +3274,9 @@ KeyAppraisalMenu_ChooseKey_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenStep], a
     ret
 
+; step 8 of KeyAppraisalMenu_ChooseKey: calls EraseCEntriesOfWordTable_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; sets wScreenStep to 5; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D::
     ld c, $04
     ld hl, KeyAppraisalMenu_ChooseKey_ClampKeyListPageCursor_Data
@@ -3127,6 +3293,10 @@ KeyAppraisalMenu_ChooseKey_EraseCEntriesOfWordTable_Bank0D::
     ld [wScriptStartRequest], a
     ret
 
+; step 13 of KeyAppraisalMenu_ChooseKey: calls UpdateTwoChoiceCursor_Bank1D; branches on
+; wMenuInputResult; calls KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB; calls
+; BlankTwoTilePairsAndDraw; sets wScreenStep; branches on wTwoChoiceCursor; calls
+; KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB; ...
 KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -3162,6 +3332,9 @@ KeyAppraisalMenu_ChooseKey_UpdateTwoChoiceCursor_Bank1D_KeyAppraisalMenu_ChooseK
     ld [wScriptStartRequest], a
     ret
 
+; step 14 of KeyAppraisalMenu_ChooseKey: calls KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB;
+; branches on wScreenSubStep; calls RunSaveGameSteps_2; returns unless bit 7 of wSaveStep is set;
+; sets wTwoChoiceCursor to 0; sets wScreenSubStep to 0; increments wScreenStep; ...
 KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_2::
     call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
     ld a, [wScreenSubStep]
@@ -3221,6 +3394,8 @@ KeyAppraisalMenu_ChooseKey_RunSaveGameSteps_2::
     ld [wScreenSubStep], a
     ret
 
+; step 15 of KeyAppraisalMenu_ChooseKey: calls BlankTwoTilePairsAndDraw; calls
+; SetArg5ToListEntriesCell4; calls WriteKeyNameToDE; increments wScreenStep
 KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw::
     call BlankTwoTilePairsAndDraw
     farcall SetArg5ToListEntriesCell4
@@ -3236,6 +3411,9 @@ KeyAppraisalMenu_ChooseKey_BlankTwoTilePairsAndDraw::
     ld [wScreenStep], a
     ret
 
+; step 16 of KeyAppraisalMenu_ChooseKey: calls LoadPlayerAndFollowerSpriteGraphics; sets
+; wOBJPaletteUploadRequest to $7f; sets wArg1 to 0; sets wArg2 to $14; calls
+; CopyScreenBufferRectWithAttrs_0D; calls DrawGoldBoxAndStep; calls BGMapAddressAtScroll_Bank0D; ...
 KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_CopyScreenBufferRectWithAttrs_0D::
     farcall LoadPlayerAndFollowerSpriteGraphics
     ld a, $7f
@@ -3259,6 +3437,9 @@ KeyAppraisalMenu_ChooseKey_LoadPlayerAndFollowerSpriteGraphics_CopyScreenBufferR
     ld [wScriptStartRequest], a
     ret
 
+; step 17 of KeyAppraisalMenu_ChooseKey: calls KeyAppraisalMenu_ChooseKey_CountKeys; sets
+; wTwoChoiceCursor to 0; sets wScreenState to 3; sets wScreenStep to 0; sets wScreenSubStep to 0;
+; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; ...
 KeyAppraisalMenu_ChooseKey_CountKeys_SetTwoChoiceCursor::
     call KeyAppraisalMenu_ChooseKey_CountKeys
     cp $ff
@@ -3434,6 +3615,7 @@ EraseCursorForArg5Layout::
     ei
     ret
 
+; data read by EraseCursorForArg5Layout (8 bytes)
 EraseCursorForArg5Layout_Data1::
     db $a6, $00, $c6, $00, $e6, $00, $06, $01
 
@@ -3577,6 +3759,7 @@ DrawKeyListPageMarks::
 .return:
     ret
 
+; data read by DrawKeyListPageMarks (8 bytes)
 DrawKeyListPageMarks_Data1::
     db $cd, $c3, $f5, $c3, $1d, $c4, $45, $c4
 
@@ -3789,6 +3972,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E::
     ld [wGlyphListPos], a
     ret
 
+; called from DrawNameGlyphBufGlyphsOverlaying8DAnd8E: branches on wArg5
 DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart::
     ld e, a
     ld d, $00
@@ -4006,6 +4190,7 @@ BuildKeyListIndexListEntries::
     ld [wListCount], a
     ret
 
+; Works on registers only
 KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor::
     ld hl, wListEntries
     ld a, [wListPageIndex]
@@ -4028,6 +4213,8 @@ KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor::
     call Multiply8
     ret
 
+; Calls KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor; sets wDigits; calls
+; Number24ToPackedBCD; calls UnpackBCDToDigitsArg1; branches on the byte at wArg1
 KeyAppraisalMenu_ChooseKey_WriteDigits::
     and a
     jr nz, .call_key_appraisal_menu_choose_key_read_list
@@ -4073,6 +4260,8 @@ KeyAppraisalMenu_ChooseKey_WriteDigits::
     ld [de], a
     ret
 
+; Sets rRAMG2 to $0a; sets rRAMB to 1; branches on the byte at sSavedPlayerName; sets rRAMB to 0;
+; sets rRAMG2 to 0; branches on wScreenStep; calls DrawSpritePart9000At88_28
 KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB::
     ld a, $0a
     ld [rRAMG2], a
@@ -4211,6 +4400,9 @@ MedalPrizeMenu::
     dw MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D
     dw MedalPrizeMenu_ChoosePrize
 
+; step 2 of MedalPrizeMenu: branches on wTinyMedalsHi; branches on wTinyMedalsLo; sets
+; wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; calls
+; HLToDecimalDigits; calls BlankLeadingZeroDigits_F_Bank15; ...
 MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld a, [wTinyMedalsHi]
     and a
@@ -4271,6 +4463,9 @@ MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
+; step 1 of MedalPrizeMenu: calls MedalPrizeMenu_CountItem2C; branches on wTinyMedalsHi; calls
+; MedalPrizeMenu_RemoveItem2C; sets wTinyMedalsHi to 3; sets wTinyMedalsLo to $e7; sets
+; wTinyMedalsLo; sets wTinyMedalsHi; ...
 MedalPrizeMenu_CountItem2C_2::
     call MedalPrizeMenu_CountItem2C
     push af
@@ -4410,6 +4605,9 @@ MedalPrizeMenu_RemoveItem2C::
     jr nz, .loop
     ret
 
+; step 0 of MedalPrizeMenu: calls CopyBytesDEToHL_Bank0D; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0D; sets wMessageMode to 7; calls MedalPrizeMenu_CountItem2C; sets
+; wTwoChoiceCursor to 0; advances wScreenState; ...
 MedalPrizeMenu_CopyBytesDEToHL_Bank0D::
     ld hl, wScreenState
     ld bc, $006f
@@ -4471,6 +4669,7 @@ MedalPrizeMenu_DrawCountBox::
     dw DrawTinyMedalCountBoxAndStep
     dw MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D
 
+; step 0 of MedalPrizeMenu_DrawCountBox: calls CopyFromBankWaitVRAM; increments wScreenStep
 MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM::
     ld de, Tiles2Plus240Tiles
     ld hl, vTiles1 + $2d0
@@ -4514,7 +4713,7 @@ MedalPrizeMenu_DrawCountBox_CopyFromBankWaitVRAM::
 
 ; copies box DrawTinyMedalCountBoxAndStep_TileRect to wWindowTileBuffer + $6D and writes the word
 ; wTinyMedalsLo as three digits (leading blanks) at wWindowTileBuffer + $88, then wScreenStep += 1
-; (E-0124) (C2 from E-0331: it draws 'Medal: 80') (was DrawArenaWinsLoCountBoxAndStep)
+; (E-0124) (C2 from E-0331: it draws 'Medal: 80') (was DrawTinyMedalCountBoxAndStep)
 DrawTinyMedalCountBoxAndStep::
     ld de, DrawTinyMedalCountBoxAndStep_TileRect
     ld hl, wWindowTileBuffer + $6d
@@ -4544,6 +4743,9 @@ DrawTinyMedalCountBoxAndStep::
     ld [wScreenStep], a
     ret
 
+; step 2 of MedalPrizeMenu_DrawCountBox: calls CopyRectTo20ByteRows_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; plays sound $6c; sets
+; wTwoChoiceCursor to 0; sets wScreenStep to 0; increments wScreenState
 MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D::
     ld de, KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -4563,6 +4765,9 @@ MedalPrizeMenu_DrawCountBox_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenState], a
     ret
 
+; step 4 of MedalPrizeMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; branches on wTwoChoiceCursor; ...
 MedalPrizeMenu_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -4633,6 +4838,9 @@ MedalPrizeMenu_ChoosePrize::
     dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2
     dw MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
 
+; step 0 of MedalPrizeMenu_ChoosePrize: calls CopyRectTo20ByteRows_Bank0D; calls
+; MedalPrizeMenu_ChoosePrize_WriteListCount; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; increments wScreenStep
 MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
     ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $b7
@@ -4648,6 +4856,9 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
     ld [wScreenStep], a
     ret
 
+; step 1 of MedalPrizeMenu_ChoosePrize: sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets wTextWindowTileLo; sets
+; wTextWindowTileHi; ...
 MedalPrizeMenu_ChoosePrize_FillTilesFromRequest::
     ld hl, vTiles1 + $240
     ld a, l
@@ -4687,6 +4898,9 @@ MedalPrizeMenu_ChoosePrize_FillTilesFromRequest::
     ld [wScreenStep], a
     ret
 
+; step 2 of MedalPrizeMenu_ChoosePrize: branches on wListPageIndex; branches on wGameCompleted;
+; calls CopyRectTo20ByteRows_Bank0D; sets wArg5 to 1; calls ClampKeyListPageCursor; branches on
+; wListPages; calls MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D; ...
 MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
     ld a, [wListPageIndex]
     and a
@@ -4730,6 +4944,9 @@ MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor::
     ld [wScreenStep], a
     ret
 
+; step 3 of MedalPrizeMenu_ChoosePrize: sets wArg5 to 1; calls
+; MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc; calls
+; MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc; increments wScreenStep
 MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep::
     ld a, $01
     ld [wArg5], a
@@ -4740,6 +4957,8 @@ MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep::
     ld [wScreenStep], a
     ret
 
+; step 4 of MedalPrizeMenu_ChoosePrize: calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; calls StoreBAtWordTableEntry_Bank0D; increments wScreenStep
 MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D::
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
@@ -4754,6 +4973,9 @@ MedalPrizeMenu_ChoosePrize_BGMapAddressAtScroll_Bank0D::
     ld [wScreenStep], a
     ret
 
+; step 5 of MedalPrizeMenu_ChoosePrize: calls WriteTileBAtCursorListCursor; calls
+; SetArg5ToListEntriesCell4; sets wTwoChoiceCursor to 1; branches on $01; sets wStringIndex to 1;
+; sets wStringCategory to 0; sets wTextWindowTileLo; ...
 MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor::
     ld b, $bb
     call WriteTileBAtCursorListCursor
@@ -4852,6 +5074,9 @@ MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 6 of MedalPrizeMenu_ChoosePrize: calls WriteTileBAtCursorListCursor; branches on
+; wJoypadPressedRepeat; returns if bit 0 of wTextFlags is set; calls ShowString_Bank0D; increments
+; wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; ...
 MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_2::
     ld b, $bb
     call WriteTileBAtCursorListCursor
@@ -4907,6 +5132,9 @@ MedalPrizeMenu_ChoosePrize_WriteTileBAtCursorListCursor_2::
     ld [wSharedMenuWork], a
     jr .check_screen_step
 
+; step 7 of MedalPrizeMenu_ChoosePrize: branches on wSharedMenuWork; sets wJoypadPressedRepeat to
+; $20; sets wJoypadPressedRepeat to $10; sets wJoypadPressedRepeat to $80; sets wJoypadPressedRepeat
+; to $40; sets wMenuInputResult to 4; calls UpdatePagedListCursor; ...
 MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld a, [wSharedMenuWork]
     and a
@@ -5050,6 +5278,9 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld [wScriptStartRequest], a
     ret
 
+; step 8 of MedalPrizeMenu_ChoosePrize: calls CopyRectTo20ByteRows_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; plays sound $6c; sets
+; wTwoChoiceCursor to 0; sets wScreenSubStep to 0; increments wScreenStep
 MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_SetTwoChoiceCursor::
     ld de, KeyAppraisalMenu_DrawGoldBox_CopyRectTo20ByteRows_Bank0D_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -5069,6 +5300,10 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_SetTwoChoiceCursor::
     ld [wScreenStep], a
     ret
 
+; step 9 of MedalPrizeMenu_ChoosePrize: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; calls
+; MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2; sets wTwoChoiceCursor to 1; increments
+; wScreenStep; sets wScriptCommandType to 0; ...
 MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -5144,6 +5379,10 @@ MedalPrizeMenu_ChoosePrize_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; Branches on wListPageIndex; branches on wGameCompleted; calls CopyRectTo20ByteRows_Bank0D; calls
+; MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc; calls
+; MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D; calls BGMapAddressAtScroll_Bank0D;
+; calls DrawScreenBufferRect_Bank0D
 MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2::
     ld a, [wListPageIndex]
     and a
@@ -5173,6 +5412,9 @@ MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2::
     call DrawScreenBufferRect_Bank0D
     ret
 
+; step 10 of MedalPrizeMenu_ChoosePrize: calls EraseCEntriesOfWordTable_Bank0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D; sets wScreenStep to 5; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D::
     ld c, $04
     ld hl, MedalPrizeMenu_ChoosePrize_ClampKeyListPageCursor_Data3
@@ -5189,6 +5431,9 @@ MedalPrizeMenu_ChoosePrize_EraseCEntriesOfWordTable_Bank0D::
     ld [wScriptStartRequest], a
     ret
 
+; step 11 of MedalPrizeMenu_ChoosePrize: calls
+; MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2; decrements wScreenStep; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 MedalPrizeMenu_ChoosePrize_WriteScreenStepAndScriptCommandTypeEtc::
     call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_2
     ld a, [wScreenStep]
@@ -5200,6 +5445,11 @@ MedalPrizeMenu_ChoosePrize_WriteScreenStepAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
+; step 12 of MedalPrizeMenu_ChoosePrize: calls SetArg5ToListEntriesCell4; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_InventoryHasF;
+; calls MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop; sets wTwoChoiceCursor to 3; decrements
+; wScreenStep; sets wScriptCommandType to 0; ...
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5223,6 +5473,8 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4::
     ld [wScriptStartRequest], a
     ret
 
+; Sets wTwoChoiceCursor to 0; increments wScreenStep; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop::
     xor a
     ld [wTwoChoiceCursor], a
@@ -5235,6 +5487,9 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop::
     ld [wScriptStartRequest], a
     ret
 
+; Calls MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop; sets wTwoChoiceCursor to 1; decrements
+; wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
     call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp $ff
@@ -5253,7 +5508,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_CallMedalPrizeMenu_ChoosePr
 ; if the key list is full (FindFreeKeySlotToTemp0 returns bit 7), wTwoChoiceCursor = 2, steps
 ; wScreenStep back and requests script $80; otherwise continues at
 ; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_Loop (E-0126) (E-0344: the address in its
-; name dropped or read as the label there; was ScriptStepCheckKeyListFull_6A80)
+; name dropped or read as the label there; was ScriptStepCheckKeyListFull)
 ScriptStepCheckKeyListFull::
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
@@ -5270,6 +5525,9 @@ ScriptStepCheckKeyListFull::
     ld [wScriptStartRequest], a
     ret
 
+; step 13 of MedalPrizeMenu_ChoosePrize: calls SetArg5ToListEntriesCell4; sets wTinyMedalsHi; sets
+; wTinyMedalsLo; calls DrawTinyMedalCountBoxAndStep; sets wTwoChoiceCursor to 1; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5318,6 +5576,14 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_2::
     ld [wScriptStartRequest], a
     ret
 
+; step 14 of MedalPrizeMenu_ChoosePrize: calls SetArg5ToListEntriesCell4; calls
+; MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB; calls
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3; calls
+; MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_CallMedalPrizeMenu_ChoosePrize_InventoryHasF;
+; calls MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop;
+; ...
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5349,9 +5615,12 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_
     ld a, $03
     jr MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
 
+; Works on registers only
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop::
     xor a
 
+; Sets wTwoChoiceCursor; sets wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to
+; $80
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5363,6 +5632,10 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_
     ld [wScriptStartRequest], a
     ret
 
+; Calls MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot; may continue in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop;
+; continues in
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_CallMedalPrizeMenu_ChoosePrize_InventoryHasF::
     call MedalPrizeMenu_ChoosePrize_InventoryHasFreeSlot
     cp $ff
@@ -5375,7 +5648,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_
 ; otherwise at
 ; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Loop
 ; (E-0126) (E-0344: the address in its name dropped or read as the label there; was
-; ScriptStepCheckKeyListFull_6B45)
+; ScriptStepCheckKeyListFull_2)
 ScriptStepCheckKeyListFull_2::
     farcall FindFreeKeySlotToTemp0
     ldh a, [hTemp0]
@@ -5384,6 +5657,10 @@ ScriptStepCheckKeyListFull_2::
     ld a, $02
     jr MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_SetTwoChoiceCursor
 
+; called from
+; MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB:
+; calls SetArg5ToListEntriesCell4; sets wMonsterId; calls LoadMonsterRecord; copies wRecordBuffer to
+; wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesRecord; calls SetSpeciesFlag; ...
 MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3::
     push hl
     ld hl, wRecordBufA
@@ -5607,6 +5884,7 @@ WriteUnknownNamePlaceholder_Bank0D::
     ld [hli], a
     ld b, $07
 
+; May continue in WriteUnknownNamePlaceholder_Bank0D_Loop
 WriteUnknownNamePlaceholder_Bank0D_Loop::
     ld a, $f0
     ld [hli], a
@@ -5614,6 +5892,7 @@ WriteUnknownNamePlaceholder_Bank0D_Loop::
     jr nz, WriteUnknownNamePlaceholder_Bank0D_Loop
     ret
 
+; Sets rRAMG2 to $0a; sets rRAMB to 0; branches on the byte at sRecords; sets rRAMG2 to 0
 MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
     ld a, $0a
     ld [rRAMG2], a
@@ -5655,6 +5934,7 @@ MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
     ld [rRAMG2], a
     ret
 
+; data read by MedalPrizeMenu (3 bytes)
 MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Data::
     db $0a, $14, $1e
 
@@ -5703,6 +5983,8 @@ KeyListHasFreeSlot::
     xor a
     ret
 
+; Branches on wListPageIndex; branches on wGameCompleted; calls HLToDecimalDigits; calls
+; BlankLeadingZeroDigits_F_Bank15
 MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
     ld a, [wListPageIndex]
     add a
@@ -5776,11 +6058,13 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
     jr c, .loop
     ret
 
+; data read by MedalPrizeMenu (8 bytes)
 MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc_Data::
     db $d7, $c3, $ff, $c3, $27, $c4, $4f, $c4
 
-; writes B at BGMapAddressAtScroll + the offset from WriteTileBAtCursorListCursor_Data[wListCursor]
-; (WaitForVRAMAccess, interrupts off); BC kept (E-0120)
+; writes B at BGMapAddressAtScroll_Bank0D + the offset from
+; WriteTileBAtCursorListCursor_Data[wListCursor] (WaitForVRAMAccess, interrupts off); BC kept
+; (E-0120)
 WriteTileBAtCursorListCursor::
     push bc
     ld a, [wListCursor]
@@ -5803,6 +6087,7 @@ WriteTileBAtCursorListCursor::
     ei
     ret
 
+; data read by WriteTileBAtCursorListCursor (8 bytes)
 WriteTileBAtCursorListCursor_Data::
     db $a4, $00, $e4, $00, $24, $01, $64, $01
 
@@ -5839,6 +6124,8 @@ MedalPrizeMenu_CountItem2C::
     ld a, $ff
     ret
 
+; called from MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D: branches on wGameCompleted;
+; sets wListCount
 MedalPrizeMenu_ChoosePrize_WriteListCount::
     ld a, [wGameCompleted]
     and a
@@ -5863,6 +6150,9 @@ MedalPrizeMenu_ChoosePrize_WriteListCount::
     ld [wListCount], a
     ret
 
+; called from MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep: branches on wListLastRow; branches
+; on wListPages; branches on wListPageIndex; calls DrawNameGlyphBufGlyphsOverlaying8DAnd8E; branches
+; on wListCount
 MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc::
     ld hl, wListEntries
     ld a, [wListPageIndex]
@@ -5947,6 +6237,8 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc::
 .return:
     ret
 
+; Calls DrawC5BEC6AtScrollOffsetDE_Bank0D; calls StoreC5BEC6AtHLStride2_Bank0D; sets wArg1; sets
+; wArg2; calls DrawPageOfPagesAtScrollOffset; sets wArg1; sets wArg2; ...
 MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D::
     ld de, $018e
     call DrawC5BEC6AtScrollOffsetDE_Bank0D
@@ -6066,6 +6358,7 @@ NpcBreedMenu::
     dw NpcBreedMenu_Return
     dw NpcBreedMenu_RedrawListScreen
 
+; step 0 of NpcBreedMenu: calls SwapMonstersMenu; sets wMessageMode to 8; sets wScreenState
 NpcBreedMenu_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, $08
@@ -6075,6 +6368,7 @@ NpcBreedMenu_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
+; step 1 of NpcBreedMenu: returns at once
 NpcBreedMenu_Return::
     ret
 
@@ -6112,10 +6406,12 @@ NpcBreedMenu_ChooseAndBreed::
     dw NpcBreedMenu_ChooseAndBreed_ToRestorePlayerPositionState_Bank0DAndStep
     dw NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D
 
+; step 0 of NpcBreedMenu_ChooseAndBreed: calls BreedMenu
 NpcBreedMenu_ChooseAndBreed_ToBreedMenu::
     farcall BreedMenu
     ret
 
+; step 12 of NpcBreedMenu_ChooseAndBreed: calls BreedMenu; calls CopyFromBankWaitVRAM
 NpcBreedMenu_ChooseAndBreed_BreedMenu::
     farcall BreedMenu
     ld de, Tiles1Plus6E0Tiles_2
@@ -6130,6 +6426,9 @@ NpcBreedMenu_ChooseAndBreed_BreedMenu::
     call CopyFromBankWaitVRAM
     ret
 
+; step 4 of NpcBreedMenu_ChooseAndBreed: calls SetArg5ToListEntriesCell5; sets wArg1 to $c7; calls
+; LoadFamilyIconTileForRecordB_Bank0D; calls CopyRectTo20ByteRows_Bank0D; sets wArg1; sets wArg2;
+; sets wArg3; ...
 NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -6159,6 +6458,8 @@ NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; step 9 of NpcBreedMenu_ChooseAndBreed: sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0;
+; sets wScriptStartRequest to $80
 NpcBreedMenu_ChooseAndBreed_SetTwoChoiceCursor::
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -6170,7 +6471,8 @@ NpcBreedMenu_ChooseAndBreed_SetTwoChoiceCursor::
 
 ; runs CopyScreenBufferRectWithAttrs_0D (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), then
 ; wScreenStep += 1 (E-0126) (E-0344: the address in its name dropped or read as the label there; was
-; RunFunc4ED5At0278AndStep_0D; shortened from RunCopyScreenBufferRectWithAttrs_0DAt0278AndStep_0D)
+; CopyScreenBufferRectAt0278AndStep_0D; shortened from
+; RunCopyScreenBufferRectWithAttrs_0DAt0278AndStep_0D)
 CopyScreenBufferRectAt0278AndStep_0D::
     ld c, $05
     ld hl, $0278
@@ -6185,6 +6487,9 @@ CopyScreenBufferRectAt0278AndStep_0D::
     ld [wScreenStep], a
     ret
 
+; step 17 of NpcBreedMenu_ChooseAndBreed: sets rRAMG2 to $0a; sets rRAMB to 0; calls
+; SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; sets wTwoChoiceCursor to 2; sets rRAMG2 to 0;
+; decrements wScreenStep; ...
 NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
     ld a, $0a
     ld [rRAMG2], a
@@ -6268,6 +6573,10 @@ NpcBreedMenu_ChooseAndBreed_SetArg5ToListEntriesCell5_SetTwoChoiceCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 18 of NpcBreedMenu_ChooseAndBreed: branches on wScreenSubStep; calls
+; NpcBreedMenu_ChooseAndBreed_Multiply8; calls PrepareCounterPtr0LoCountersAndRequestScript; sets
+; wScreenSubStep to 0; calls CopyScreenBufferRectAt0278AndStep_0D; calls
+; BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D
 NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript::
     ld a, [wScreenSubStep]
     and a
@@ -6286,6 +6595,8 @@ NpcBreedMenu_ChooseAndBreed_PrepareCounterPtr0LoCountersAndRequestScript::
     call DrawScreenBufferRect_Bank0D
     ret
 
+; step 19 of NpcBreedMenu_ChooseAndBreed: calls NpcBreedMenu_ChooseAndBreed_Multiply8; increments
+; wScreenStep
 NpcBreedMenu_ChooseAndBreed_WriteScreenStep::
     call NpcBreedMenu_ChooseAndBreed_Multiply8
     ld a, [wScreenTableIndex]
@@ -6323,6 +6634,10 @@ NpcBreedMenu_ChooseAndBreed_WriteScreenStep::
     ld [wScreenStep], a
     ret
 
+; step 20 of NpcBreedMenu_ChooseAndBreed: sets wArg1 to 1; calls ComputeBreedingChild; returns
+; unless wArg5 is $ff; increments wScreenStep; calls
+; NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; ...
 NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild::
     ld a, $01
     ld [wArg1], a
@@ -6342,6 +6657,9 @@ NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild::
     ld [wScreenSubStep], a
     ret
 
+; step 21 of NpcBreedMenu_ChooseAndBreed: plays sound $6c; calls CopyFromBankWaitVRAM; sets
+; wTwoChoiceCursor to 0; calls CopyRectTo20ByteRows_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; increments wScreenStep
 NpcBreedMenu_ChooseAndBreed_QueueSoundEffect::
     ld a, $6c
     call QueueSoundEffect
@@ -6380,6 +6698,9 @@ NpcBreedMenu_ChooseAndBreed_QueueSoundEffect::
     ld [wScreenStep], a
     ret
 
+; step 22 of NpcBreedMenu_ChooseAndBreed: calls UpdateTwoChoiceCursor_Bank1D; returns if
+; wMenuInputResult is 0; branches on wMenuInputResult; sets wTwoChoiceCursor to 1; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on wTwoChoiceCursor; ...
 NpcBreedMenu_ChooseAndBreed_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6416,6 +6737,9 @@ NpcBreedMenu_ChooseAndBreed_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; step 23 of NpcBreedMenu_ChooseAndBreed: branches on wScreenSubStep; sets wTwoChoiceCursor to 0;
+; sets wScreenSubStep to 0; increments wScreenStep; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; copies wSelectedRecord to wArg1; ...
 NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc::
     ld a, [wScreenSubStep]
     and a
@@ -6497,10 +6821,12 @@ NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc::
     ld [wScreenSubStep], a
     ret
 
+; data read by NpcBreedMenu (20 bytes)
 NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc_Data::
     db $0e, $01, $18, $01, $1a, $01, $25, $01, $29, $01, $32, $00, $33, $00, $34, $00
     db $35, $00, $36, $00
 
+; step 24 of NpcBreedMenu_ChooseAndBreed: calls RedrawFullScreenBoxes_0C; increments wScreenStep
 NpcBreedMenu_ChooseAndBreed_ToRedrawFullScreenBoxes_0CAndStep::
     farcall RedrawFullScreenBoxes_0C
     ld a, [wScreenStep]
@@ -6508,6 +6834,10 @@ NpcBreedMenu_ChooseAndBreed_ToRedrawFullScreenBoxes_0CAndStep::
     ld [wScreenStep], a
     ret
 
+; step 25 of NpcBreedMenu_ChooseAndBreed: copies wScriptStartRequest to wScriptReturnBank; copies
+; wScriptPointerLo to wScriptReturnLo; copies wScriptPointerHi to wScriptReturnHi; sets
+; wTalkEventIndex to 0; sets wTalkEventGroup to $20; calls DispatchTalkEvent; sets wScriptInDataBank
+; to 0; ...
 NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -6530,6 +6860,8 @@ NpcBreedMenu_ChooseAndBreed_DispatchTalkEvent::
     ld [wScreenStep], a
     ret
 
+; step 26 of NpcBreedMenu_ChooseAndBreed: calls RestorePlayerPositionState_Bank0D; increments
+; wScreenStep
 NpcBreedMenu_ChooseAndBreed_ToRestorePlayerPositionState_Bank0DAndStep::
     call RestorePlayerPositionState_Bank0D
     ld a, [wScreenStep]
@@ -6537,6 +6869,10 @@ NpcBreedMenu_ChooseAndBreed_ToRestorePlayerPositionState_Bank0DAndStep::
     ld [wScreenStep], a
     ret
 
+; step 27 of NpcBreedMenu_ChooseAndBreed: calls CopyBytesDEToHL_Bank0D; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls
+; DrawScreenBufferRect_Bank0D; calls BGMapAddressAtScroll_Bank0D; calls DrawScreenBufferRect_Bank0D;
+; ...
 NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -6577,6 +6913,8 @@ NpcBreedMenu_ChooseAndBreed_CopyBytesDEToHL_Bank0D::
     ld [wScriptStartRequest], a
     ret
 
+; step 12 of NpcBreedMenu: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
+; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState
 NpcBreedMenu_SwapMonstersMenu_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -6605,10 +6943,13 @@ NpcBreedMenu_RedrawListScreen::
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
     dw NpcBreedMenu_RedrawListScreen_ToBreedMenu
 
+; step 2 of NpcBreedMenu_RedrawListScreen: calls BreedMenu
 NpcBreedMenu_RedrawListScreen_ToBreedMenu::
     farcall BreedMenu
     ret
 
+; step 0 of NpcBreedMenu_RedrawListScreen: calls DecompressToVRAM; calls CopyFromBankWaitVRAM; sets
+; wBGPaletteUploadRequest to $7f; increments wScreenStep
 NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld a, [wScreenTableIndex]
     ld b, a
@@ -6644,6 +6985,7 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
+; data read by NpcBreedMenu_RedrawListScreen_DecompressToVRAM (48 bytes)
 NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data1::
     db $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9
     db $49, $48, $a9, $49, $48, $a9, $49, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b
@@ -6654,6 +6996,8 @@ NpcBreedMenu_RedrawListScreen_DecompressToVRAM_Data2::
     db $4c, $48, $87, $4c, $48, $87, $4c, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f
     db $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f, $48
 
+; step 1 of NpcBreedMenu_RedrawListScreen: calls CopyGlyphTileListFromBank1F; calls
+; CopyFromBankWaitVRAM; increments wScreenStep
 NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F::
     ld hl, NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_TileCopyDestList
     ld de, NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F_TileCopySrcList
@@ -6673,6 +7017,9 @@ NpcBreedMenu_RedrawListScreen_CopyGlyphTileListFromBank1F::
     ld [wScreenStep], a
     ret
 
+; step 6 of NpcBreedMenu_RedrawListScreen: sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; sets wTextWindowTileLo; sets
+; wTextWindowTileHi; ...
 NpcBreedMenu_RedrawListScreen_FillTilesFromRequest::
     ld hl, vTiles1 + $270
     ld a, l
@@ -6710,6 +7057,8 @@ NpcBreedMenu_RedrawListScreen_FillTilesFromRequest::
     inc [hl]
     ret
 
+; step 7 of NpcBreedMenu_RedrawListScreen: calls SetArg5ToListEntriesCell5; sets wArg1; calls
+; DrawRecordNameAndSpeciesNameTiles; increments wScreenStep
 NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -6725,6 +7074,9 @@ NpcBreedMenu_RedrawListScreen_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; called from NpcBreedMenu_ChooseAndBreed_ComputeBreedingChild: copies wArg6 to wArg1; copies wArg6
+; to wSpeciesIdLo; copies wArg7 to wArg2; copies wArg7 to wSpeciesIdHi; sets wArg3; sets wArg4;
+; calls TestBitInFieldAtArg3; ...
 NpcBreedMenu_ChooseAndBreed_TestBitInFieldAtArg3::
     ld a, [wArg6]
     ld [wArg1], a
@@ -6906,6 +7258,7 @@ LoadFamilyIconTileForRecordB_Bank0D::
     ld [rRAMG2], a
     ret
 
+; Sets rRAMG2 to $0a; sets rRAMB to 0; sets rRAMG2 to 0
 NpcBreedMenu_ChooseAndBreed_Multiply8::
     ld a, $0a
     ld [rRAMG2], a
@@ -6959,9 +7312,9 @@ NpcBreedMenu_ChooseAndBreed_QueueSoundEffect_TileRect::
     db $b6, $c3, $76, $73, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; NpcBreedMenu_Case04_Case13 reads the word at $78D6 + 2 * wScreenTableIndex and copies $A5 bytes
-; from it to wRecordBufB; the first ten words point at ten consecutive records and the last six
-; repeat the first (E-0235, C1)
+; NpcBreedMenu_ChooseAndBreed_WriteScreenStep reads the word at $78D6 + 2 * wScreenTableIndex and
+; copies $A5 bytes from it to wRecordBufB; the first ten words point at ten consecutive records and
+; the last six repeat the first (E-0235, C1)
 ; record: $A5-byte monster record
 PresetMonsterRecordTable::
     dw PresetMonsterRecords ; id 0
@@ -6999,7 +7352,7 @@ PresetMonsterRecords::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_UPPER, SKILL_MAGICBACK, SKILL_NAPATTACK, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $12 ; $56: level (E-0122)
     db $23 ; $57: level cap (C1, E-0296)
@@ -7028,7 +7381,7 @@ PresetMonsterRecords_01::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_BANG, SKILL_BOLT, SKILL_EVILSLASH, SKILL_RAMMING, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2a ; $56: level (E-0122)
     db $2a ; $57: level cap (C1, E-0296)
@@ -7057,7 +7410,7 @@ PresetMonsterRecords_02::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_BEAT, SKILL_STOPSPELL, SKILL_TWINSLASH, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $1c ; $56: level (E-0122)
     db $23 ; $57: level cap (C1, E-0296)
@@ -7086,7 +7439,7 @@ PresetMonsterRecords_03::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_HEALUS, SKILL_SLEEP, SKILL_CHANCE, SKILL_AQUAWALL, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $25 ; $56: level (E-0122)
     db $25 ; $57: level cap (C1, E-0296)
@@ -7115,7 +7468,7 @@ PresetMonsterRecords_04::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_FAREWELL, SKILL_PANICALL, SKILL_BIATTACK, SKILL_WARCRY, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $20 ; $56: level (E-0122)
     db $23 ; $57: level cap (C1, E-0296)
@@ -7144,7 +7497,7 @@ PresetMonsterRecords_05::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_KODANCE, SKILL_LIFEDANCE, SKILL_DANCESHUT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2e ; $56: level (E-0122)
     db $32 ; $57: level cap (C1, E-0296)
@@ -7173,7 +7526,7 @@ PresetMonsterRecords_06::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_TRANSFORM, SKILL_BEDRAGON, SKILL_LIFESONG, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $35 ; $56: level (E-0122)
     db $35 ; $57: level cap (C1, E-0296)
@@ -7202,7 +7555,7 @@ PresetMonsterRecords_07::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_HEALUS, SKILL_ULTRADOWN, SKILL_SEALPRAY, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $3b ; $56: level (E-0122)
     db $3b ; $57: level cap (C1, E-0296)
@@ -7231,7 +7584,7 @@ PresetMonsterRecords_08::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_FIRESLASH, SKILL_VACUSLASH, SKILL_BOLTSLASH, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $2b ; $56: level (E-0122)
     db $37 ; $57: level cap (C1, E-0296)
@@ -7260,7 +7613,7 @@ PresetMonsterRecords_09::
     db $98, $98, $98, $f0, $f0, $f0, $f0, $f0, $f0, $f0 ; $29: master name of parent 2 (E-0297)
     db $00 ; $33 (unused)
     db SKILL_RAMMING, SKILL_SURGE, SKILL_GEYSER, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; skills, $34-$3B (E-0122)
-    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToWCA67 appends to, up to $FF (E-0237)
+    db ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT, ACTION_FIGHT ; $3C-$54: the list AppendMappedSkillsToRecordBufBSkillList appends to, up to $FF (E-0237)
     db $00 ; $55: status bits (bit 2 read as poison, E-0085)
     db $36 ; $56: level (E-0122)
     db $36 ; $57: level cap (C1, E-0296)

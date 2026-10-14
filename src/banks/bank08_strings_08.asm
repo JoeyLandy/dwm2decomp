@@ -42,6 +42,7 @@ ShowString_Bank08::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_08::
+; data read by CopyMonsterNameToBuffer_B01 (3 words)
 StringDatabase::
     dw StringList_08 ; id 0
     dw StringList_08_2 ; id 1

@@ -4,9 +4,9 @@
 SECTION "Bank 1F", ROMX[$4000], BANK[$1F]
     db $1f, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-; GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable73BC copy the 16 bytes at $4010 + 16 * glyph
-; from bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number
-; is the character code; 259 glyphs up to SendSGBPacketSet at $5040 (E-0169, C1)
+; GlyphCopyArgsForA and LoadSixteenGlyphTilesFromTable copy the 16 bytes at $4010 + 16 * glyph from
+; bank $1F to VRAM, and CopyGlyphTilesToVRAM takes one glyph per text byte, so the glyph number is
+; the character code; 259 glyphs up to SendSGBPacketSet at $5040 (E-0169, C1)
 ; record: glyph tile (2bpp, 16 bytes)
 GlyphFont::
     db $ff, $7c, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $82, $ff, $7c, $ff, $00 ; id 0 '0'
@@ -1168,6 +1168,7 @@ DrawRecordListPageNames::
     ld [wScreenStep], a
     ret
 
+; data read by DrawRecordListPageNames (10 bytes)
 DrawRecordListPageNames_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
@@ -1248,6 +1249,7 @@ GlyphCopyArgsForA::
     ld c, $10
     ret
 
+; data read by GlyphCopyArgsForA (10 bytes)
 GlyphCopyArgsForA_Data::
     db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
@@ -1255,6 +1257,7 @@ GlyphCopyArgsForA_Data::
 ; destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT
 ; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
 ; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
+; code: branches on wArg6; branches on wIsCGB; branches on wArg7; branches on $01
 DrawTileRectFromArg1Params::
     ld hl, wArg1
     ld d, [hl]
@@ -1483,8 +1486,8 @@ SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect::
 
 ; the same box layout as
 ; SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E_TileRect, which
-; SwapMonstersMenu_Case08_Case03 draws as 20 x 18; the four screens are contiguous, 360 bytes each;
-; no reader of this one was found (E-0187, C1)
+; SwapMonstersMenu_ShowPartyMemberDetails_DrawTileRectAtHLFromDE_Bank1E draws as 20 x 18; the four
+; screens are contiguous, 360 bytes each; no reader of this one was found (E-0187, C1)
 TileScreen1F_1::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 1
@@ -1899,7 +1902,7 @@ GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24_TileRect::
 
 ; copies 16 glyph tiles (LoadSixteenGlyphTilesFromTable_Data1) from bank $1F to the VRAM addresses
 ; in LoadSixteenGlyphTilesFromTable_Data2 (E-0127) (E-0344: the address in its name dropped or read
-; as the label there; was LoadSixteenGlyphTilesFromTable73BC)
+; as the label there; was LoadSixteenGlyphTilesFromTable)
 LoadSixteenGlyphTilesFromTable::
     ld c, $00
 
@@ -1954,6 +1957,7 @@ LoadSixteenGlyphTilesFromTable::
     jr c, .loop
     ret
 
+; data read by LoadSixteenGlyphTilesFromTable (16 bytes)
 LoadSixteenGlyphTilesFromTable_Data1::
     db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
@@ -1965,7 +1969,7 @@ LoadSixteenGlyphTilesFromTable_Data2::
 ; LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params_TileRect_2 and loads the picture of
 ; species wRecordBufB + $B at vTiles2 + $200; second call: loads its CGB attributes and draws the
 ; picture (E-0128) (E-0340: the address in its name read as its RAM name; was
-; DrawWCA36MonsterPictureInTwoSteps)
+; DrawRecordBufBSpeciesMonsterPictureInTwoSteps)
 DrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     ld a, [wScreenSubStep]
     and a
@@ -2090,7 +2094,7 @@ ClearBGMapAndLoadFrameTiles::
 ; SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect_2 (12 x 15 at
 ; scroll + $68) and SwapMonstersMenu_ShowMonsterDetails_SpriteThenRedrawList_CheckGameMode_TileRect
 ; (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label
-; there; was DrawRects662BAnd653F)
+; there; was DrawRects)
 DrawRects::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0068
@@ -2137,7 +2141,7 @@ DrawRects::
 ; scroll + 8) and
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_2_TileRect_2 (8 x 7 at
 ; scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label there; was
-; DrawRects6B4FAnd6C27)
+; DrawRects_2)
 DrawRects_2::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
@@ -2183,7 +2187,7 @@ DrawRects_2::
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect (12 x 18) and
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_3_TileRect_2 (8 x 7)
 ; (E-0127) (E-0344: the address in its name dropped or read as the label there; was
-; ClearTilesAndDrawRects6C5FAnd6D37)
+; ClearTilesAndDrawRects)
 ClearTilesAndDrawRects::
     ld hl, vTiles2 + $200
     ld a, l
@@ -2342,7 +2346,7 @@ ShowRecordBufBSkillNamesOrNone::
 ; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect_2 and
 ; SwapMonstersMenu_ShowMonsterDetails_CursorThenRedrawList2_UpdatePagedListCursor_TileRect, clears
 ; tile rows and sets up the summary text window (E-0128) (E-0344: the address in its name dropped or
-; read as the label there; was DrawSummaryFrames6E47And6D6F)
+; read as the label there; was DrawSummaryFrames)
 DrawSummaryFrames::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0160
@@ -2420,7 +2424,7 @@ DrawSummaryFrames::
 ; SwapMonstersMenu_ShowMonsterDetails_DrawTileRectAtHLFromDE_Bank1E_SetArg3_5_TileRect (12 x 3 at
 ; scroll + 8) and SwapMonstersMenu_ShowMonsterDetails_DecompressGraphicsArg1ToArg4_TileRect (8 x 7
 ; at scroll + $160) (E-0121) (E-0344: the address in its name dropped or read as the label there;
-; was DrawRects5E13And66DF)
+; was DrawRects_3)
 DrawRects_3::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008

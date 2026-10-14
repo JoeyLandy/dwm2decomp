@@ -19,6 +19,10 @@ PauseMenu_State4_GiftMenu_ShowChoices::
     dw PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit
     dw PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1
 
+; step 0 of PauseMenu_State4_GiftMenu_ShowChoices: calls RefreshRecordListAndNameTiles_BankF1; calls
+; SetupInventoryMenuPages_BankF1; calls BuildInventoryScreenBase_BankF1; calls
+; SetMenuRowsForPage_BankF1; calls ShowSelectedItemDescription_BankF1; calls
+; CopyTileBufferToBGMap_BankF1; sets wTextWindowTileLo; ...
 PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit::
     ld a, [wLevelUpGains]
     or a
@@ -49,6 +53,10 @@ PauseMenu_State4_GiftMenu_ShowChoices_ShowGiftExit::
     ld [wCounterPtr0Lo], a
     ret
 
+; step 1 of PauseMenu_State4_GiftMenu_ShowChoices: branches on wInventory; calls
+; UpdateMenuCursor_BankF1; returns if wMenuRowCount is $01; calls
+; ShowSelectedItemDescription_BankF1; branches on wMenuCursor; clears bit 7 of wMenuCursor; calls
+; SetMenuRowsForPage_BankF1; ...
 PauseMenu_State4_GiftMenu_ShowChoices_UpdateMenuCursor_BankF1::
     ld a, [wInventory]
     or a
@@ -136,6 +144,8 @@ PauseMenu_State4_GiftMenu_ChooseGift::
     dw PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep
     dw PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1
 
+; step 0 of PauseMenu_State4_GiftMenu_ChooseGift: calls BuildScreenBlock32WithCursor_BankF1; calls
+; CopyTileBufferToBGMap_BankF1; sets wMenuRowCount to 2; sets wMenuPageCount to 1; increments wTemp1
 PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep::
     call BuildScreenBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -147,6 +157,9 @@ PauseMenu_State4_GiftMenu_ChooseGift_BuildScreenBlock32WithCursor_BankF1AndStep:
     inc [hl]
     ret
 
+; step 1 of PauseMenu_State4_GiftMenu_ChooseGift: calls UpdateMenuCursor_BankF1; branches on
+; wJoypadPressed; branches on wSubMenuCursor; copies wSubMenuCursor to wTemp0; sets wTemp1 to 0;
+; returns unless bit 1 of 0 is set; decrements wTemp0; ...
 PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1::
     ld de, PauseMenu_State4_GiftMenu_ChooseGift_UpdateMenuCursor_BankF1_Data
     ld hl, wSubMenuCursor
@@ -189,6 +202,9 @@ PauseMenu_State4_GiftMenu_GiveGift::
     dw PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_2AndStep
     dw PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags
 
+; step 0 of PauseMenu_State4_GiftMenu_GiveGift: branches on wItemId; sets wArg1 to $22; calls
+; RecordGiftAndMaybeApplyPrevious; sets wCounterPtr0Lo to $ff; plays sound $69; sets wInventory to
+; 0; calls CompactInventory; ...
 PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc::
     ld a, [wItemId]
     cp ITEM_BEASTTAIL
@@ -247,6 +263,8 @@ PauseMenu_State4_GiftMenu_GiveGift_WriteArg1AndCounterPtr0LoEtc::
     call QueueSoundEffect
     ret
 
+; step 1 of PauseMenu_State4_GiftMenu_GiveGift: calls ClearWindowAndBuildBlock32WithCursor_BankF1;
+; calls CopyTileBufferToBGMap_BankF1; increments wTemp1
 PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1::
     call ClearWindowAndBuildBlock32WithCursor_BankF1
     call CopyTileBufferToBGMap_BankF1
@@ -254,6 +272,8 @@ PauseMenu_State4_GiftMenu_GiveGift_ClearWindowAndBuildBlock32WithCursor_BankF1::
     inc [hl]
     ret
 
+; step 2 of PauseMenu_State4_GiftMenu_GiveGift: sets wStringCategory to 0; calls
+; BeginStringDisplay_BankF0_2; increments wTemp1
 PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_2AndStep::
     xor a
     ld [wStringCategory], a
@@ -262,6 +282,8 @@ PauseMenu_State4_GiftMenu_GiveGift_BeginStringDisplay_BankF0_2AndStep::
     inc [hl]
     ret
 
+; step 3 of PauseMenu_State4_GiftMenu_GiveGift: returns unless wTextFlags is 0; sets wTemp0 to 0;
+; sets wTemp1 to 0
 PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -619,6 +641,9 @@ SetupInventoryMenuPages_BankF1::
     ld [wMenuRowCount], a
     ret
 
+; called from BuildItemScreenForWItemId_BankF1: sets rRAMG to $0a; sets rRAMB to 0; branches on $00;
+; calls SRAMRecordAddressMapped; calls HLToDecimalDigits; calls WriteDecimalDigitTiles; calls
+; SRAMRecordAddressMapped; ...
 BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -885,6 +910,7 @@ SetScreenTileBufferRow16Col6TileC0_BankF1::
     ld [wScreenTileBuffer + $146], a
     ret
 
+; data read by BuildItemScreenForWItemId (27 bytes)
 BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc_Data::
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
@@ -1215,6 +1241,7 @@ UpdateMenuCursor_BankF1::
 .return:
     ret
 
+; called from UpdateMenuCursor_BankF1: works on registers only
 UpdateMenuCursor_BankF1_WaitForVRAMAccess::
     add a
     add e
@@ -1237,6 +1264,7 @@ UpdateMenuCursor_BankF1_WaitForVRAMAccess::
     ei
     ret
 
+; called from UpdateMenuCursor_BankF1: works on registers only
 UpdateMenuCursor_BankF1_WaitForVRAMAccess_2::
     add a
     add e
@@ -1287,6 +1315,8 @@ WriteBCTileAtWordTableEntry_BankF1::
     call WriteVRAMByte
     ret
 
+; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
+; ShowString_Bank08; sets wTextWindowRows; sets wTextWindowWidth; ...
 ShowStringBank08AtTilesHL_BankF1_2::
     ld a, [wTextWindowTileLo]
     ld c, a
@@ -1408,6 +1438,7 @@ ShowStringBank08AtTilesHL_BankF1::
     ld [wTextWindowTileHi], a
     ret
 
+; data read by BuildItemScreenWithRecordCursor (12 bytes)
 BuildItemScreenWithRecordCursor_BankF1_Data::
     db $61, $98, $a1, $98, $e1, $98, $21, $99, $61, $99, $a1, $99
 
@@ -1478,6 +1509,7 @@ RunScreenStateWhenNotFading_F1::
     dw RunScreenStateWhenNotFading_F1_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord
 
+; step 0 of RunScreenStateWhenNotFading_F1: calls SwapMonstersMenu; increments wScreenState
 RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -1485,6 +1517,8 @@ RunScreenStateWhenNotFading_F1_ToSwapMonstersMenuAndStep::
     ld [wScreenState], a
     ret
 
+; step 1 of RunScreenStateWhenNotFading_F1: returns if bit 0 of wTextFlags is set; branches on
+; wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1
 RunScreenStateWhenNotFading_F1_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -1507,6 +1541,8 @@ RunScreenStateWhenNotFading_F1_WaitTextFlags::
     ld [wModeChangeRequest], a
     ret
 
+; step 2 of RunScreenStateWhenNotFading_F1: increments wScreenState; sets wStringCategory to 0;
+; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to 0; advances wTitleScreenState
 RunScreenStateWhenNotFading_F1_ShowReadyToStartBreeding::
     ld a, [wScreenState]
     inc a
@@ -1530,6 +1566,8 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster::
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_SetScreenStep
 
+; step 0 of RunScreenStateWhenNotFading_F1_ChooseBreedingMonster: returns unless wTextFlags is 0;
+; calls BeginString_Bank0E_Cat0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1541,6 +1579,8 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowPleaseWait::
     ld [wScreenStep], a
     ret
 
+; step 1 of RunScreenStateWhenNotFading_F1_ChooseBreedingMonster: returns unless wTextFlags is 0;
+; sets wLinkSendByte to 1; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1552,6 +1592,8 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags::
     ld [wScreenStep], a
     ret
 
+; step 2 of RunScreenStateWhenNotFading_F1_ChooseBreedingMonster: returns unless wLinkMessage is
+; $01; sets wLinkSendByte to 0; calls BeginString_Bank0E_Cat0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor::
     ld a, [wLinkMessage]
     cp $01
@@ -1565,6 +1607,8 @@ RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_ShowChooseTheMonsterFor::
     ld [wScreenStep], a
     ret
 
+; step 3 of RunScreenStateWhenNotFading_F1_ChooseBreedingMonster: returns unless wTextFlags is 0;
+; sets wScreenStep to 0; increments wScreenState
 RunScreenStateWhenNotFading_F1_ChooseBreedingMonster_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -1615,6 +1659,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed::
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte
 
+; step 14 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wLinkMessage; sets wScreenStep to 9; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to $fe;
+; calls BreedMenu
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding::
     ld a, [wTextFlags]
     and a
@@ -1634,6 +1681,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefus
     farcall BreedMenu
     ret
 
+; step 8 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wLinkMessage; sets wScreenStep to 9; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to $fe;
+; calls BreedMenu; returns unless wMenuInputResult is $fe; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding::
     ld a, [wTextFlags]
     and a
@@ -1662,6 +1712,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding::
     ld [wLinkSendByte], a
     ret
 
+; step 0 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; calls
+; BreedMenu
 RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1669,6 +1721,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BreedMenu::
     farcall BreedMenu
     ret
 
+; step 16 of RunScreenStateWhenNotFading_F1_LinkBreed: branches on wSelectedRecord; returns unless
+; wTextFlags is 0; calls BreedMenu; calls BeginString_Bank0E_Cat0; dispatches on wScreenSubStep
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor::
     ld a, [wSelectedRecord]
     cp $ff
@@ -1693,6 +1747,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowChooseTheMonsterFor::
     dw RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor
     dw RunScreenStateWhenNotFading_F1_BreedMenu
 
+; step 0 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; sets wLinkSendByte to 0;
+; increments wScreenSubStep; calls BeginString_Bank0E_Cat0
 RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1706,6 +1762,8 @@ RunScreenStateWhenNotFading_F1_ShowPleaseWait::
     call BeginString_Bank0E_Cat0
     ret
 
+; step 1 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; increments
+; wScreenSubStep; sets wLinkSendByte to 1
 RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
@@ -1717,6 +1775,8 @@ RunScreenStateWhenNotFading_F1_WaitTextFlags_2::
     ld [wLinkSendByte], a
     ret
 
+; step 2 of RunScreenStateWhenNotFading_F1: returns unless wLinkMessage is $01; sets wLinkSendByte
+; to 0; calls BeginString_Bank0E_Cat0; increments wScreenSubStep
 RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor::
     ld a, [wLinkMessage]
     cp $01
@@ -1730,6 +1790,8 @@ RunScreenStateWhenNotFading_F1_ShowChooseTheMonsterFor::
     ld [wScreenSubStep], a
     ret
 
+; step 3 of RunScreenStateWhenNotFading_F1: returns unless wTextFlags is 0; calls BreedMenu; sets
+; wSelectedRecord to 0; sets wScreenSubStep to 0
 RunScreenStateWhenNotFading_F1_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1740,6 +1802,9 @@ RunScreenStateWhenNotFading_F1_BreedMenu::
     ld [wScreenSubStep], a
     ret
 
+; step 12 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wScreenSubStep; calls BeginString_Bank0E_Cat0; increments wScreenSubStep; calls BreedMenu; calls
+; CopyFromBankWaitVRAM; sets wScreenSubStep to 0
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK::
     ld a, [wTextFlags]
     and a
@@ -1770,6 +1835,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowIsThisOneOK::
     ld [wScreenSubStep], a
     ret
 
+; step 4 of RunScreenStateWhenNotFading_F1_LinkBreed: calls SetArg5ToListEntriesCell5; sets wArg1 to
+; $c7; calls LoadFamilyIconTileForRecordB_BankF1; calls CopyRectTo20ByteRows_BankF1; sets wArg1;
+; sets wArg2; sets wArg3; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1799,6 +1867,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
+; step 15 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -1806,7 +1875,7 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags::
 
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 5, HL = $0278, DE = $00AC, wArg1/2 = 0/8), wScreenStep
 ; += 1 and clears wSelectedRecord (E-0122) (E-0344: the address in its name dropped or read as the
-; label there; was RunFunc58FAAt0278AndStep_BankF1; shortened from
+; label there; was CopyScreenBufferRectAt0278AndStep_BankF1; shortened from
 ; RunCopyScreenBufferRectWithAttrs_F1At0278AndStep_BankF1)
 CopyScreenBufferRectAt0278AndStep_BankF1::
     ld bc, $0005
@@ -1824,6 +1893,9 @@ CopyScreenBufferRectAt0278AndStep_BankF1::
     ld [wSelectedRecord], a
     ret
 
+; step 17 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; sets rRAMG2
+; to $0a; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls LoadSRAMRecordByte; sets rRAMG2 to
+; 0; decrements wScreenStep; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo::
     ld a, [wTextFlags]
     and a
@@ -1901,6 +1973,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowThisOneIsToo::
     ld [wScreenStep], a
     ret
 
+; step 18 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; sets rRAMG2
+; to $0a; sets rRAMB to 0; sets rRAMG2 to 0; calls BeginString_Bank0E_Cat0; calls
+; CopyScreenBufferRectAt0278AndStep_BankF1; calls BGMapAddressAtScroll_BankF1; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
     ld a, [wTextFlags]
     and a
@@ -1934,6 +2009,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_BeginString_Bank0E_Cat0::
     call DrawScreenBufferRect_BankF1
     ret
 
+; step 19 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; increments
+; wScreenStep; sets wLinkSendByte to 1
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep::
     ld a, [wTextFlags]
     and a
@@ -1945,6 +2022,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenStep::
     ld [wLinkSendByte], a
     ret
 
+; step 20 of RunScreenStateWhenNotFading_F1_LinkBreed: branches on wLinkMessage; returns unless
+; wLinkMessage is $fe; sets wScreenStep to 9; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to
+; $fe; increments wScreenStep; sets wLinkBufferCountLo to $a5; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_2::
     ld a, [wLinkMessage]
     cp $01
@@ -1983,6 +2063,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefus
     ld [wLinkReady], a
     ret
 
+; step 21 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wLinkMessage is $f0; sets
+; wLinkReady to 0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady::
     ld a, [wLinkMessage]
     cp $f0
@@ -1994,6 +2076,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage_SetLinkReady::
     ld [wScreenStep], a
     ret
 
+; step 22 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wRecordBufB + MON_SEX; calls BeginString_Bank0E_Cat0; sets wScreenStep to $10; sets wScreenSubStep
+; to 0; sets wSelectedRecord to $ff; calls PersonalityPairValueToArg5; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed::
     ld a, [wTextFlags]
     and a
@@ -2080,6 +2165,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowIdenticalGendersCantBreed::
     ld [wScreenStep], a
     ret
 
+; step 29 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; sets wArg1 to
+; 2; calls ComputeBreedingChild; returns unless wArg5 is $ff; increments wScreenStep; calls
+; BeginString_Bank0E_Cat0
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach::
     ld a, [wTextFlags]
     and a
@@ -2097,6 +2185,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowTheMonstersLikeEach::
     call BeginString_Bank0E_Cat0
     ret
 
+; step 23 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; sets
+; wTextWindowTileLo to $12; sets wTwoChoiceCursor to 0; plays sound $6c; calls
+; CopyRectTo20ByteRows_BankF1; calls BGMapAddressAtScroll_BankF1; calls DrawScreenBufferRect_BankF1;
+; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect::
     ld a, [wTextFlags]
     and a
@@ -2126,6 +2218,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect::
     ld [wScreenStep], a
     ret
 
+; step 24 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wLinkMessage; calls CopyScreenBufferRectAt024FAndDrawBox_BankF1; sets wScreenStep to 9; calls
+; BeginString_Bank0E_Cat0; sets wLinkSendByte to $fe; calls HandleThreeChoiceCursorInput_F1; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_3::
     ld a, [wTextFlags]
     and a
@@ -2197,6 +2292,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefus
     ld [wScreenState], a
     ret
 
+; step 25 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wScreenSubStep; calls PrepareCounterPtr0LoCountersAndRequestScript; branches on wTwoChoiceCursor;
+; calls BeginString_Bank0E_Cat0; increments wScreenSubStep; sets wScreenSubStep to 0; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2::
     ld a, [wTextFlags]
     and a
@@ -2265,6 +2363,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_2::
     ld [wScreenStep], a
     ret
 
+; step 26 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; calls
+; UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0; branches on wMenuInputResult;
+; calls BeginString_Bank0E_Cat0; sets wScreenStep to $17; branches on wTwoChoiceCursor; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
     ld a, [wTextFlags]
     and a
@@ -2299,6 +2400,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_UpdateTwoChoiceCursor_Bank1D::
     call BeginString_Bank0E_Cat0
     ret
 
+; step 30 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; branches on
+; wScreenSubStep; returns unless wMenuCounter is 0; sets wScreenSubStep to 0; increments
+; wScreenStep; copies wItemGridX to wListCursor; copies wItemGridY to wListPageIndex; ...
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
@@ -2380,6 +2484,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetScreenSubStep::
     ld [wMenuCounter], a
     ret
 
+; step 28 of RunScreenStateWhenNotFading_F1_LinkBreed: branches on wLinkMessage; returns unless
+; wLinkMessage is $fe; sets wScreenStep to 9; calls BeginString_Bank0E_Cat0; sets wLinkSendByte to
+; $fe; sets wLinkSendByte to 0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefusedBreeding_4::
     ld a, [wLinkMessage]
     cp $01
@@ -2402,6 +2509,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_YourPalRefus
     ld [wScreenStep], a
     ret
 
+; step 9 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wLinkMessage is $fe; sets
+; wLinkSendByte to 0; increments wScreenStep
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
@@ -2413,6 +2522,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitLinkMessage::
     ld [wScreenStep], a
     ret
 
+; step 10 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; calls
+; BeginString_Bank0E_Cat0; increments wScreenStep; sets wScreenSubStep to 0
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
@@ -2433,6 +2544,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner::
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitTextFlags
     dw RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage
 
+; step 0 of RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner: returns unless wTextFlags
+; is 0; sets wLinkSendByte to 1; increments wScreenSubStep
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitTextFlags::
     ld a, [wTextFlags]
     and a
@@ -2444,6 +2557,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitTextFlags::
     ld [wScreenSubStep], a
     ret
 
+; step 1 of RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner: returns unless
+; wLinkMessage is $01; sets wLinkSendByte to 0; sets wScreenStep to 0; sets wScreenState to 1
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -2456,6 +2571,9 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextThenPartner_WaitLinkMessage::
     ld [wScreenState], a
     ret
 
+; step 32 of RunScreenStateWhenNotFading_F1_LinkBreed: returns unless wTextFlags is 0; returns
+; unless wLinkMessage is $01; sets wLinkSendByte to 0; branches on wLinkMessage; sets wLinkScene to
+; 1
 RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte::
     ld a, [wTextFlags]
     and a
@@ -2479,6 +2597,8 @@ RunScreenStateWhenNotFading_F1_LinkBreed_WaitTextFlags_SetLinkSendByte::
     ld [wLinkScene], a
     ret
 
+; step 12 of RunScreenStateWhenNotFading_F1: calls SwapMonstersMenu; returns unless wScreenStep is
+; $0a; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState
 RunScreenStateWhenNotFading_F1_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2507,10 +2627,12 @@ RunScreenStateWhenNotFading_F1_ShowChosenRecord::
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
     dw RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu
 
+; step 2 of RunScreenStateWhenNotFading_F1_ShowChosenRecord: calls BreedMenu
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_ToBreedMenu::
     farcall BreedMenu
     ret
 
+; step 0 of RunScreenStateWhenNotFading_F1_ShowChosenRecord: increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2525,6 +2647,8 @@ ShowString0EAndStep_BankF1::
     ld [wScreenStep], a
     ret
 
+; step 6 of RunScreenStateWhenNotFading_F1_ShowChosenRecord: calls FillTilesBxC; sets
+; wTextWindowTileLo to $12; advances wScreenStep
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -2544,6 +2668,8 @@ RunScreenStateWhenNotFading_F1_ShowChosenRecord_FillTilesBxC::
     inc [hl]
     ret
 
+; step 7 of RunScreenStateWhenNotFading_F1_ShowChosenRecord: calls SetArg5ToListEntriesCell5; sets
+; wArg1; calls DrawRecordNameAndSpeciesNameTiles; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowChosenRecord_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2598,9 +2724,12 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3
 
+; step 8 of RunScreenStateWhenNotFading_F1_ShowRecordStats: returns at once
 RunScreenStateWhenNotFading_F1_ShowRecordStats_Return::
     ret
 
+; step 0 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls ClearBGMapAndLoadFrameTiles;
+; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearBGMapAndLoadFrameTiles::
     farcall ClearBGMapAndLoadFrameTiles
     ld a, [wScreenStep]
@@ -2608,11 +2737,15 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ClearBGMapAndLoadFrameTiles::
     ld [wScreenStep], a
     ret
 
+; step 1 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; ShowString10Bank0EAtTiles2020ThenDefault; calls LoadSixteenGlyphTilesFromTable; calls
+; DrawShortStringRecordBufBNameAtTiles1500
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep::
     farcall ShowString10Bank0EAtTiles2020ThenDefault
     farcall LoadSixteenGlyphTilesFromTable
     call DrawShortStringRecordBufBNameAtTiles1500
 
+; step 2 of RunScreenStateWhenNotFading_F1_ShowRecordStats: increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2620,9 +2753,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_AdvanceScreenStep::
     ret
 
 ; clears a 5 x 1 tile area at vTiles1 + $500 (FillTilesBxC), copies the short string at wRecordBufB
-; + $1 to wNameGlyphBuf (CopyShortStringToWC8CF_BankF1) and draws its glyphs at vTiles1 + $500
-; (E-0116) (E-0340: the address in its name read as its RAM name; was
-; DrawShortStringWCA2CAtTiles1500)
+; + $1 to wNameGlyphBuf (CopyShortStringToNameGlyphBuf_BankF1) and draws its glyphs at vTiles1 +
+; $500 (E-0116) (E-0340: the address in its name read as its RAM name; was
+; DrawShortStringRecordBufBNameAtTiles1500)
 DrawShortStringRecordBufBNameAtTiles1500::
     ld hl, vTiles1 + $500
     ld bc, $0501
@@ -2633,6 +2766,9 @@ DrawShortStringRecordBufBNameAtTiles1500::
     call CopyGlyphTilesToVRAM
     ret
 
+; step 3 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1; sets
+; wArg3 to $14; sets wArg4 to $12; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_BankF1; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1::
     call BGMapAddressAtScroll_BankF1
     ld de, RunLinkSession5Exchange_ShowRecordStats_DrawTileRectAtHLFromDE_Bank37_TileRect
@@ -2648,6 +2784,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1::
     ld [wScreenStep], a
     ret
 
+; step 4 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls DrawRecordBufBStatsScreen;
+; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRecordBufBStatsScreen::
     farcall DrawRecordBufBStatsScreen
     ld a, [wScreenStep]
@@ -2655,10 +2793,15 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRecordBufBStatsScreen::
     ld [wScreenStep], a
     ret
 
+; step 5 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; DrawRecordBufBSpeciesMonsterPictureInTwoSteps
 RunScreenStateWhenNotFading_F1_ShowRecordStats_CallDrawRecordBufBSpeciesMonsterPictureInTwoSteps::
     farcall DrawRecordBufBSpeciesMonsterPictureInTwoSteps
     ret
 
+; step 6 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
+; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
+; wMenuInputResult; increments wScreenStep; calls BGMapAddressAtScroll_BankF1; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2698,6 +2841,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
+; step 7 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1; sets
+; wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to $20; sets wArg4 to $20; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTileRectWithArg1Tile::
     call BGMapAddressAtScroll_BankF1
     ld a, h
@@ -2724,6 +2869,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTileRectWithArg1Tile::
     ld [wScreenState], a
     ret
 
+; step 14 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls FillTilesBxC; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_ToFillTilesBxCAndStep::
     ld hl, vTiles2 + $200
     ld bc, $0f02
@@ -2733,6 +2880,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ToFillTilesBxCAndStep::
     ld [wScreenStep], a
     ret
 
+; step 15 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls FillTilesBxC; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTilesBxC::
     ld hl, vTiles1 + $270
     ld bc, $0901
@@ -2745,6 +2894,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_FillTilesBxC::
     ld [wScreenStep], a
     ret
 
+; step 16 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; DrawRecordBufBNameNameAndRecordBufBSpeciesString; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_2::
     call DrawRecordBufBNameNameAndRecordBufBSpeciesString
     ld a, [wScreenStep]
@@ -2752,6 +2903,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_2::
     ld [wScreenStep], a
     ret
 
+; step 17 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1; sets
+; wArg3 to $0c; sets wArg4 to $0f; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_BankF1; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_SetArg3::
     call BGMapAddressAtScroll_BankF1
     ld de, $0068
@@ -2769,12 +2923,17 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_Set
     ld [wScreenStep], a
     ret
 
+; step 18 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; ShowPersonalityNameAndRecordBufBMasterNameName; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStepAndArg1Etc::
     farcall ShowPersonalityNameAndRecordBufBMasterNameName
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
+; step 19 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wArg1 to $6d; sets wArg2 to 0;
+; sets wArg3 to $ea; sets wArg4 to $c7; calls DrawFamilyIconAndCountForRecordBufBFamily; calls
+; DrawRecordBufBExpExpAndToNextLevel; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteArg1AndArg2Etc::
     ld a, $6d
     ld [wArg1], a
@@ -2790,6 +2949,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteArg1AndArg2Etc::
     inc a
     ld [wScreenStep], a
 
+; step 20 of RunScreenStateWhenNotFading_F1_ShowRecordStats: copies wRecordBufB + MON_SPECIES to
+; wArg1; sets wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
+; DecompressGraphicsArg1ToArg4; calls ShowRecordBufBItemCategory11StringAtTiles2320; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -2820,6 +2982,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DecompressGraphicsArg1ToArg4::
     ld [wScreenStep], a
     ret
 
+; step 21 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
+; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
+; wMenuInputResult; increments wScreenStep; calls DrawRects; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2854,12 +3019,16 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPr
     ld [wScreenStep], a
     ret
 
+; step 22 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; DrawLevelAndStatusRowForRecordBufBLevel; sets wScreenStep to $0f
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld a, $0f
     ld [wScreenStep], a
     ret
 
+; step 23 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls DrawRects_2; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects_2AndStep::
     farcall DrawRects_2
     ld a, [wScreenStep]
@@ -2867,6 +3036,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ToDrawRects_2AndStep::
     ld [wScreenStep], a
     ret
 
+; step 24 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls ClearTilesAndDrawRects;
+; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_ToClearTilesAndDrawRectsAndStep::
     farcall ClearTilesAndDrawRects
     ld a, [wScreenStep]
@@ -2874,12 +3045,16 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_ToClearTilesAndDrawRectsAndStep::
     ld [wScreenStep], a
     ret
 
+; step 25 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls ShowRecordBufBSkillNamesOrNone;
+; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowRecordBufBSkillNamesOrNone::
     farcall ShowRecordBufBSkillNamesOrNone
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
 
+; step 26 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; ShowSpeciesCategory13StringAtTiles2680; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCategory13StringAtTiles2680::
     farcall ShowSpeciesCategory13StringAtTiles2680
     ld a, [wScreenStep]
@@ -2887,6 +3062,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_ShowSpeciesCatego
     ld [wScreenStep], a
     ret
 
+; step 27 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
+; wMenuInputResult to 0; calls UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on
+; wMenuInputResult; calls FillTilesFromRequest; increments wScreenStep; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_2::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -2921,6 +3099,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPr
     ld [wScreenStep], a
     ret
 
+; step 28 of RunScreenStateWhenNotFading_F1_ShowRecordStats: branches on wScreenSubStep; sets
+; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
+; FillTilesFromRequest; calls DrawRects_3; ...
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects_3::
     ld a, [wScreenSubStep]
     and a
@@ -2949,6 +3130,10 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawRects_3::
     ld [wScreenSubStep], a
     ret
 
+; step 29 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls
+; DrawLevelAndStatusRowForRecordBufBLevel; calls FillTilesBxC; calls
+; DrawRecordBufBNameNameAndRecordBufBSpeciesString; calls CopyFromBankWaitVRAM; sets
+; wTextWindowTileLo to $12; sets wScreenStep to $11
 RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatusRowForRecordBufBLevel_2::
     farcall DrawLevelAndStatusRowForRecordBufBLevel
     ld hl, vTiles1 + $270
@@ -2972,6 +3157,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_WriteScreenStep_DrawLevelAndStatu
     ld [wScreenStep], a
     ret
 
+; step 30 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls BGMapAddressAtScroll_BankF1; sets
+; wArg3 to $0c; sets wArg4 to $12; sets wArg7 to 0; calls DrawTileRectAtHLFromDE_BankF1; calls
+; DecompressRecordBufBSpeciesGraphics; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_2::
     call BGMapAddressAtScroll_BankF1
     ld de, $0008
@@ -2990,6 +3178,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawTileRectAtHLFromDE_BankF1_2::
     ld [wScreenStep], a
     ret
 
+; step 31 of RunScreenStateWhenNotFading_F1_ShowRecordStats: calls RunF2; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2::
     farcall RunF2
     ld a, $f0
@@ -2999,6 +3188,9 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_RunF2::
     ld [wScreenStep], a
     ret
 
+; step 32 of RunScreenStateWhenNotFading_F1_ShowRecordStats: sets wJoypadPressedRepeat; sets
+; wMenuInputResult to 0; calls UpdatePagedListCursor; branches on wMenuInputResult; sets wScreenStep
+; to $17; sets wScreenStep to 7
 RunScreenStateWhenNotFading_F1_ShowRecordStats_UpdatePagedListCursor_SetJoypadPressedRepeat_3::
     ld a, [wJoypadPressedRepeat]
     res 7, a
@@ -3048,6 +3240,8 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString::
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E
     dw RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_SetScreenState
 
+; step 0 of RunScreenStateWhenNotFading_F1_ResetListAndShowString: copies wItemGridX to wListCursor;
+; copies wItemGridY to wListPageIndex; increments wScreenStep
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor::
     ld a, [wItemGridX]
     ld [wListCursor], a
@@ -3058,6 +3252,8 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_SetListCursor::
     ld [wScreenStep], a
     ret
 
+; step 9 of RunScreenStateWhenNotFading_F1_ResetListAndShowString: sets wScreenState to $11; calls
+; BreedMenu
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_SetScreenState::
     ld a, [wScreenState]
     push af
@@ -3067,6 +3263,8 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu_SetScreenState::
     pop af
     ret
 
+; step 2 of RunScreenStateWhenNotFading_F1_ResetListAndShowString: sets wScreenState to $11; calls
+; BreedMenu; sets wScreenState
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
     ld a, [wScreenState]
     push af
@@ -3077,6 +3275,10 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_BreedMenu::
     ld [wScreenState], a
     ret
 
+; step 8 of RunScreenStateWhenNotFading_F1_ResetListAndShowString: calls
+; CopyRectTo20ByteRows_BankF1; sets wStringIndex to $0f; sets wStringCategory to 0; sets
+; wTextWindowTileLo to $0d; calls ShowString_Bank0E; sets wTextWindowTileLo to $12; increments
+; wScreenStep
 RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E::
     ld de, RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect_TileRect
     ld hl, wWindowTileBuffer + $e7
@@ -3110,7 +3312,7 @@ RunScreenStateWhenNotFading_F1_ResetListAndShowString_ShowString_Bank0E::
 
 ; wArg1/2 = the species wRecordBufB + $B/7, wArg3-6 = $00, $90, $40, $00, then far-calls
 ; DrawMetaSpritePartC0 (E-0122) (E-0340: the address in its name read as its RAM name; was
-; DrawWCA36SpritePart_BankF1)
+; DrawRecordBufBSpeciesSpritePart_BankF1)
 DrawRecordBufBSpeciesSpritePart_BankF1::
     ld a, [wRecordBufB + MON_SPECIES]
     ld [wArg1], a
@@ -3129,7 +3331,7 @@ DrawRecordBufBSpeciesSpritePart_BankF1::
 
 ; copies tiles from UploadTilesFromData_BankF1_Tiles: two to vTiles2 + $6E0 and three to vTiles2 +
 ; $7C0 (E-0118) (E-0344: the address in its name dropped or read as the label there; was
-; UploadTilesFromData5757_BankF1)
+; UploadTilesFromData_BankF1)
 UploadTilesFromData_BankF1::
     ld hl, UploadTilesFromData_BankF1_Tiles
     ld de, vTiles2 + $6e0
@@ -3151,7 +3353,7 @@ UploadTilesFromData_BankF1_Tiles::
     db $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0, $ff, $c0 ; entry 4
 
 ; copies 16 bytes from [HL] to [DE], each written with interrupts off after waiting for rSTAT bit 1
-; to clear; HL and DE advance (a counter variant of CopyTileBytesToVRAM) (E-0238)
+; to clear; HL and DE advance (a counter variant of CopyTileBytesToVRAM_BankF1) (E-0238)
 CopyTileBytesToVRAM_BankF1::
     ld a, $10
 
@@ -3194,7 +3396,7 @@ CopyShortStringToNameGlyphBuf_BankF1::
 
 ; draws the name at wRecordBufB + $1 at vTiles1 + $780 and shows string [wRecordBufB + $B] of
 ; category [wRecordBufB + $C] + 2 at $8A70 with size $0109 (E-0121) (E-0340: the address in its name
-; read as its RAM name; was DrawWCA2CNameAndWCA36String)
+; read as its RAM name; was DrawRecordBufBNameNameAndRecordBufBSpeciesString)
 DrawRecordBufBNameNameAndRecordBufBSpeciesString::
     ld hl, wRecordBufB + MON_NAME
     call CopyShortStringToNameGlyphBuf_BankF1
@@ -3234,7 +3436,7 @@ DrawTileRectAtHLFromDE_BankF1::
 
 ; runs CopyScreenBufferRectWithAttrs_F1 (C = 7, HL = $024F, DE = $0083, wArg1/2 = 0/9), then draws
 ; the box at scroll + $1CC (E-0122) (E-0344: the address in its name dropped or read as the label
-; there; was RunFunc58FAAt024FAndDrawBox_BankF1; shortened from
+; there; was CopyScreenBufferRectAt024FAndDrawBox_BankF1; shortened from
 ; RunCopyScreenBufferRectWithAttrs_F1At024FAndDrawBox_BankF1)
 CopyScreenBufferRectAt024FAndDrawBox_BankF1::
     ld bc, $0007
@@ -3358,6 +3560,7 @@ DrawBlankTileC3_BankF1::
 DrawArrowTileBCAtTwoChoiceEntry_BankF1::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_BankF1; calls StepBGMapAddressBackOnScrollWrap
 DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     add a
@@ -3378,6 +3581,7 @@ DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor::
     ei
     ret
 
+; data read by DrawArrowTileBCAtTwoChoiceEntry_BankF1_ReadTwoChoiceCursor (6 bytes)
 DrawArrowTileBCAtTwoChoiceEntry_BankF1_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
@@ -3659,6 +3863,10 @@ RunScreenStateWhenNotFading_F1_LinkBreed_QueueSoundEffect_TileRect::
 RunScreenStateWhenNotFading_F1_LinkBreed_ShowYourPalRefusedBreeding_Data::
     db $fc, $c3, $24, $c4, $4c, $c4
 
+; called from GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame_2: calls
+; LinkExchangeJoypadPerFrame; branches on wTitleScreenState; branches on wMenuCounter; calls
+; SendSGBPaletteSetForSGBPaletteSet; calls StartPaletteFade; sets wMenuCounter to 0; calls
+; GameMode5_Update_WaitPickCount; ...
 GameMode5_Update_LinkExchangeJoypadPerFrame_5::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -3690,6 +3898,8 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_5::
     call GameMode5_Update_RunNameEntryStateWhenNotFading
     ret
 
+; Returns if wPickCount is 0; sets rRAMG2 to $0a; sets rRAMB to 1; branches on the byte at
+; sSavedPlayerName; sets rRAMB to 0; sets rRAMG2 to 0; calls DrawSpritePart9000At88_28
 GameMode5_Update_WaitPickCount::
     ld a, [wPickCount]
     and a
@@ -3713,6 +3923,10 @@ GameMode5_Update_WaitPickCount::
     farcall DrawSpritePart9000At88_28
     ret
 
+; Branches on wLinkSceneSpeciesLo; returns unless wLinkSceneFamily is 0; branches on
+; wLinkSceneSpeciesHi; calls DrawListEntriesCell5SpeciesSprite; calls
+; CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; returns unless wLinkSceneFamily is 0; returns
+; unless wLinkSceneSpeciesHi is $07; ...
 GameMode5_Update_WriteArg1AndArg2Etc::
     ld a, [wLinkSceneSpeciesLo]
     cp $0c
@@ -3760,6 +3974,8 @@ GameMode5_Update_WriteArg1AndArg2Etc::
     farcall DrawPartySpeciesSprites
     ret
 
+; Returns if wSpriteSlotCount is 0; calls UpdateAndDrawSpriteSlots; returns if wArg1 is 0; calls
+; DrawFieldSprites
 GameMode5_Update_UpdateAndDrawSpriteSlots::
     ld a, [wSpriteSlotCount]
     and a
@@ -3771,6 +3987,9 @@ GameMode5_Update_UpdateAndDrawSpriteSlots::
     farcall DrawFieldSprites
     ret
 
+; Sets wArg1 to 1; copies wGiftRecord + MON_SEX to wArg2; copies wGiftRecord + MON_FAMILY to wArg3;
+; copies wGiftRecord + MON_SPECIES to wArg4; sets wArg5; calls RunNameEntryStateWhenNotFading;
+; returns unless wArg5 is $ff; ...
 GameMode5_Update_RunNameEntryStateWhenNotFading::
     ld a, $01
     ld [wArg1], a
@@ -3829,7 +4048,7 @@ GameMode5_Update_RunNameEntryStateWhenNotFading::
     ret
 
 ; copies the $40 bytes at LoadBGPalettesFromData_Data to wBGPaletteBuffer (E-0122) (E-0344: the
-; address in its name dropped or read as the label there; was LoadBGPalettesFrom5E04; a trailing
+; address in its name dropped or read as the label there; was LoadBGPalettesFromData; a trailing
 ; preposition left by the dropped address removed)
 LoadBGPalettesFromData::
     ld hl, LoadBGPalettesFromData_Data

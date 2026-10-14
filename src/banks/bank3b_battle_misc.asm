@@ -494,6 +494,9 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
 
+; step 0 of RunBattleActions_UseItem: advances wBattleResolveStep; sets wMultiHitCount to 0; sets
+; wSlotsOccupiedFlag to 0; branches on wBattleItemTarget; copies wBattleItemTarget to wBattleTarget;
+; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleItemId; ...
 RunBattleActions_UseItem_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -561,12 +564,16 @@ AllThreeSlotsFromCOccupied::
     jr nz, .loop
     ret
 
+; step 1 of RunBattleActions_UseItem: advances wBattleResolveStep; calls ShowActionBattleText
 RunBattleActions_UseItem_ShowActionBattleText::
     ld hl, wBattleResolveStep
     inc [hl]
     farcall ShowActionBattleText
     ret
 
+; step 2 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wBattleActionId;
+; calls TargetOnLocalSide_Bank3B; branches on wBattleKind; calls CarryUnlessBattleSlotOutSlotEmpty;
+; branches on the byte at wFoeJoinClass1; branches on the byte at wBattleStatus; ...
 RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -665,14 +672,15 @@ RunBattleActions_UseItem_TargetOnLocalSide_Bank3B::
     ret
 
 ; hTemp0 = wBattleFoeCount, then far-calls CallWithBattleFoeCount_WriteBattleStatResultLo (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was
-; Call774CWithBattleFoeCount)
+; (E-0344: the address in its name dropped or read as the label there; was CallWithBattleFoeCount)
 CallWithBattleFoeCount::
     ld a, [wBattleFoeCount]
     ldh [hTemp0], a
     farcall CallWithBattleFoeCount_WriteBattleStatResultLo
     ret
 
+; step 3 of RunBattleActions_UseItem: advances wBattleResolveStep; may return early; shows battle
+; text '0 is a hunk of iron!'; calls SetResolveStep0A
 RunBattleActions_UseItem_ShowHeroIsAHunk::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -687,12 +695,17 @@ RunBattleActions_UseItem_ShowHeroIsAHunk::
     call SetResolveStep0A
     ret
 
+; step 4 of RunBattleActions_UseItem: advances wBattleResolveStep; calls
+; DispatchActionEffectTable_Bank3B
 RunBattleActions_UseItem_DispatchActionEffectTable_Bank3BAndStep::
     ld hl, wBattleResolveStep
     inc [hl]
     call DispatchActionEffectTable_Bank3B
     ret
 
+; step 5 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgFlags;
+; sets wResolveMsgFlags; returns unless bit 4 of wResolveMsgFlags is set; sets wSlotsOccupiedFlag to
+; 1; sets wEffectFlags to 4; calls SelectEffectByEffectFlags; ...
 RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -781,6 +794,9 @@ RunBattleActions_UseItem_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
     call AddHLToBattleMeterCappedAt1800
     ret
 
+; step 6 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgFlags;
+; copies wResolveMsgActor to wTemp0; copies wResolveMsgTarget to wTemp0; calls ShowBattleText; calls
+; SetResolveStep0AUnlessResolveMsgFlagsBit4
 RunBattleActions_UseItem_ShowBattleText::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -812,9 +828,14 @@ SetResolveStep0AUnlessResolveMsgFlagsBit4::
     call SetResolveStep0A
     ret
 
+; step 7 of RunBattleActions_UseItem: returns at once
 RunBattleActions_UseItem_Return::
     ret
 
+; step 8 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
+; decrements wBattleResolveStep; sets wBattleSubStep2 to 0; calls
+; SetBit0OfLevelUpGainsIndexed_Bank3B; calls SetBit1OfLevelUpGainsIndexed_Bank3B; calls
+; SetBit2OfLevelUpGainsIndexed_Bank3B
 RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -871,10 +892,14 @@ RunBattleActions_UseItem_AddDoubleAToHL_Bank3B::
 .return:
     ret
 
+; step 9 of RunBattleActions_UseItem: calls RunBattleSubStep2_2
 RunBattleActions_UseItem_ToRunBattleSubStep2_2::
     farcall RunBattleSubStep2_2
     ret
 
+; step 10 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wBattleItemId;
+; branches on wBattleItemTarget; returns unless wBattleItemTarget is $20; branches on wBattleItemId;
+; returns if wBattleTarget is below $04; calls GroupTargetsBySpeciesToSpeciesGroups; ...
 RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -953,7 +978,7 @@ RunBattleActions_UseItem_WriteBattleTargetAndBattleResolveStepEtc::
 ; runs RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount),
 ; then RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount each time; returns
 ; wMultiHitCount & $7F (E-0122) (E-0344: the address in its name dropped or read as the label there;
-; was RunOnce4650Then4673; a trailing preposition left by the dropped address removed)
+; was RunOnceThenNext; a trailing preposition left by the dropped address removed)
 RunOnceThenNext::
     ld a, [wMultiHitCount]
     bit 7, a
@@ -969,6 +994,8 @@ RunOnceThenNext::
     and $7f
     ret
 
+; called from RunOnceThenNext: branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty;
+; increments wMultiHitCount
 RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     ld b, $04
     ld a, [wBattleTarget]
@@ -997,6 +1024,8 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
+; called from RunOnceThenNext: decrements wMultiHitCount; may return early; calls
+; CarryUnlessBattleSlotOutSlotEmpty; may return early
 RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
@@ -1029,6 +1058,9 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
     inc c
     jr .check_record_buffer_data
 
+; step 11 of RunBattleActions_UseItem: advances wBattleResolveStep; branches on wResolveMsgArg;
+; returns if wSlotsOccupiedFlag is 0; copies wBattleItemId to wItemId; copies wMenuOption to
+; wInventorySlot; calls LoadItemRecord; calls ConsumeSelectedItemByChance; ...
 RunBattleActions_UseItem_LoadItemRecord::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -1069,6 +1101,8 @@ RunBattleActions_UseItem_LoadItemRecord::
     farcall ShowBattleText
     ret
 
+; step 12 of RunBattleActions_UseItem: sets wMultiHitCount to 0; sets wBattleSubPhase to 7; sets
+; wBattleResolveStep to 0
 RunBattleActions_UseItem_SetMultiHitCount::
     xor a
     ld [wMultiHitCount], a
@@ -1078,6 +1112,8 @@ RunBattleActions_UseItem_SetMultiHitCount::
     ld [wBattleResolveStep], a
     ret
 
+; step 13 of RunBattleActions_UseItem: shows battle text 'But nothing happened!'; sets
+; wBattleResolveStep to $0c
 RunBattleActions_UseItem_ShowButNothingHappened::
     ld d, $cc ; battle text 'But nothing happened!'
     farcall ShowBattleText
@@ -1341,6 +1377,8 @@ RestoreTargetHPByActionAmount::
     ld [hl], b
     ret
 
+; called from RestoreTargetMPIfLow: branches on wBattleActionId; calls SetDamageRandomInRange; sets
+; wBattleDamageLo; sets wBattleDamageHi; calls GetBattleMaxMP_Bank3B; calls SetDamageDEMinusBCPlusHL
 RestoreTargetMPIfLow_SetDamageRandomInRange::
     ld a, [wBattleActionId]
     cp SKILL_FIREBANE
@@ -1439,6 +1477,7 @@ SubtractActionAmountFromTargetBattleWordArray3F::
     ld [hl], b
     ret
 
+; data read by SubtractActionAmountFromTargetBattleWordArray3F (10 bytes)
 SubtractActionAmountFromTargetBattleWordArray3F_Data::
     db $05, $00, $0a, $00, $14, $00, $64, $00, $05, $00
 
@@ -1454,6 +1493,7 @@ AddActionAmountToBattleMeter::
     call AddHLToBattleMeterCappedAt1800
     ret
 
+; data read by AddActionAmountToBattleMeter (10 bytes)
 AddActionAmountToBattleMeter_Data::
     db $0a, $00, $1e, $00, $64, $00, $e7, $03, $05, $00
 
@@ -1603,9 +1643,12 @@ RollTableDamageScaledByResistance::
     ld [wBattleDamageHi], a
     ret
 
+; data read by RollTableDamageScaledByResistance (16 bytes)
 RollTableDamageScaledByResistance_Data::
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8c, $00, $b4, $00, $c8, $00
 
+; called from InflictTargetStatus0Bit0: calls HLToBattleStatus8EntryOfBattleTarget_Bank3B; calls
+; TargetSlotResistances2Byte; calls RollChanceByHLBits6And7_Bank3B
 InflictTargetStatus0Bit0_HLToBattleStatus8EntryOfBattleTarget_Bank3B::
     call HLToBattleStatus8EntryOfBattleTarget_Bank3B
     call TargetSlotResistances2Byte
@@ -1641,16 +1684,18 @@ TargetSlotResistancesByte1_Bank3B::
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
 ; A = byte 2 of the target's 7-byte wSlotResistances record (wSlotResistances + $2 + 7 * target)
-; (E-0124) (E-0340: the address in its name read as its RAM name; was TargetWDA74Byte)
+; (E-0124) (E-0340: the address in its name read as its RAM name; was TargetSlotResistances2Byte)
 TargetSlotResistances2Byte::
     ld de, wSlotResistances + $2
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 
+; Continues in GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
 GetTargetSlotResistancesByte3_Bank3B::
     ld de, wSlotResistances + $3
     jr GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget
     db $11, $76, $da, $18, $08, $11, $77, $da, $18, $03, $11, $78, $da
 
+; Works on registers only
 GetTargetSlotResistancesByte3_Bank3B_ReadBattleTarget::
     ld a, [wBattleTarget]
     ld b, a
@@ -1726,6 +1771,9 @@ RollChanceByLevel_100_100_75_0_Bank3B::
     ccf
     ret
 
+; called from RollChanceByHLBits6And7_Bank3B: continues in
+; RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2; continues in
+; RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
     and a
     jr nz, .cp_01
@@ -1747,24 +1795,28 @@ RollChanceByHLBits6And7_Bank3B_ReadRandomLo::
     ccf
     ret
 
+; Calls AdvanceRandom
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $d8
     ret
 
+; Calls AdvanceRandom
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $bf
     ret
 
+; Calls AdvanceRandom
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom3::
     call AdvanceRandom
     ld a, [wRandomLo]
     cp $7f
     ret
 
+; Calls AdvanceRandom
 RollChanceByHLBits6And7_Bank3B_ReadRandomLo_CallAdvanceRandom4::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -1860,7 +1912,7 @@ ActionIdEffectTable_3B::
     dw ActionIdEffectNone_3B_2 ; id 63
 
 ; a lone ret: entry 0 of ActionIdEffectTable_3B (E-0239) (E-0344: the address in its name dropped or
-; read as the label there; was ActionIdEffectNone_3B_4B91)
+; read as the label there; was ActionIdEffectNone_3B)
 ActionIdEffectNone_3B::
     ret
 
@@ -2019,7 +2071,7 @@ ApplyTargetMaxHPIfPresent::
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
 ; a lone ret: the entry of ActionIdEffectTable_3B for 12 action ids (E-0239) (E-0344: the address in
-; its name dropped or read as the label there; was ActionIdEffectNone_3B_4C94)
+; its name dropped or read as the label there; was ActionIdEffectNone_3B_2)
 ActionIdEffectNone_3B_2::
     ret
 
@@ -2214,7 +2266,7 @@ SetBattleEndFlagAndMessage98::
 
 ; effect table entry that goes straight to the failure path
 ; ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A (E-0126) (E-0344: the address in its name
-; dropped or read as the label there; was JumpToEffectFailurePath4F15)
+; dropped or read as the label there; was JumpToEffectFailurePath)
 JumpToEffectFailurePath::
     jp ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A
 
@@ -2310,6 +2362,7 @@ RaiseWord3FAndRestoreHP::
 .skip2:
     jp ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip
 
+; Continues in UnreferencedStoreResolveMessage35D0_SetResolveMsgActor
 RaiseWord3FAndRestoreHP_Skip::
     ld hl, $b535
     ld bc, $80a8
@@ -2321,6 +2374,7 @@ UnreferencedStoreResolveMessage35D0:: ; configured code entry (E-0236); C0
     ld hl, $d035
     ld bc, $88a8
 
+; Sets wResolveMsgActor; sets wResolveMsgTarget; sets wResolveMsgFlags; sets wResolveMsgArg
 UnreferencedStoreResolveMessage35D0_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2339,6 +2393,7 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B::
     ld [wBattleDamageLo], a
     ld [wBattleDamageHi], a
 
+; Sets wResolveMsgActor; sets wResolveMsgFlags; sets wResolveMsgArg
 ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld a, l
     ld [wResolveMsgActor], a
@@ -2348,26 +2403,30 @@ ClearDamageAndStoreResolveMsgFlags_Bank3B_SetResolveMsgActor::
     ld [wResolveMsgArg], a
     ret
 
+; Continues in SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip::
     ld h, $cc
     ld bc, $0080
     jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
+; Continues in SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 ClearDamageAndStoreResolveMsgFlags_Bank3B_Skip2::
     ld h, $b5
     ld bc, $0080
     jr SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget
 
 ; wResolveMsgTarget = $B5 and the word wResolveMsgFlags = $0180 (E-0122) (E-0340: the address in its
-; name read as its RAM name; was SetWDAC3B5AndResolveMsgFlagsTo0180)
+; name read as its RAM name; was SetResolveMsgTargetB5AndResolveMsgFlagsTo0180)
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180::
     ld h, $b5
     ld bc, $0180
 
+; Sets wResolveMsgTarget
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgTarget::
     ld a, h
     ld [wResolveMsgTarget], a
 
+; Sets wResolveMsgFlags; sets wResolveMsgArg
 SetResolveMsgTargetB5AndResolveMsgFlagsTo0180_SetResolveMsgFlags::
     ld a, c
     ld [wResolveMsgFlags], a
@@ -2387,6 +2446,7 @@ ClearDamageAndReadTargetStatus0::
     ld a, [hl]
     ret
 
+; Sets wBattleResolveStep to $0a
 ClearDamageAndReadTargetStatus0_SetBattleResolveStepTo0A::
     ld a, $0a
     ld [wBattleResolveStep], a
@@ -2403,15 +2463,18 @@ GetBattleMaxMP_Bank3B::
     ld hl, wBattleMaxMP
     jr GetBattleMP_Bank3B_Skip
 
+; Continues in GetBattleMP_Bank3B_Skip
 GetBattleHP_Bank3B::
     ld hl, wBattleHP
     jr GetBattleMP_Bank3B_Skip
 
+; Continues in GetBattleMP_Bank3B_Skip
 GetBattleMP_Bank3B::
     ld hl, wBattleMP
     jr GetBattleMP_Bank3B_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
+; Works on registers only
 GetBattleMP_Bank3B_Skip::
     add a
     add_a_to_hl
@@ -2465,6 +2528,7 @@ TargetOnLocalSide_Bank3B::
     cp $04
     ret
 
+; Works on registers only
 ClearBattleStatusBitsWithMaskD_Bank3B::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3B_Data
@@ -2478,6 +2542,7 @@ ClearBattleStatusBitsWithMaskD_Bank3B::
     ld [hl], a
     ret
 
+; data read by ClearBattleStatusBitsWithMaskD_Bank3B (7 bytes)
 ClearBattleStatusBitsWithMaskD_Bank3B_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

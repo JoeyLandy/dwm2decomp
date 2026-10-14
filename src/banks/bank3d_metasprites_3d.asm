@@ -4,6 +4,10 @@
 SECTION "Bank 3D", ROMX[$4000], BANK[$3D]
     db $3d
 
+; called from DrawEffectSpriteForEffectTileOffsetRange: may continue in
+; DrawEffectSpriteAtEffectSpriteX_Bank3D; copies wBattleFoeCount to wLoadSlot; copies wBattleTarget
+; to wBattleArg0; calls CarryUnlessBattleSlotOutSlotEmpty; calls SetEffectSpriteXForTargets; calls
+; DrawEffectSpriteAtEffectSpriteX_Bank3D; decrements wLoadSlot; ...
 DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wEffectTileOffset]
     cp $2c

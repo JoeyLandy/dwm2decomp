@@ -1,5 +1,6 @@
-; RAM symbols referenced by the code. Names of the form wXXXX / hXXXX / sXXXX are
-; address names (no meaning claimed); any other name cites its evidence.
+; RAM symbols referenced by the code: s = cartridge SRAM, w = work RAM, h = high RAM.
+; Each comment says what the code keeps there and cites its evidence (config/symbols.json);
+; a name of the form wXXXX / hXXXX / sXXXX would be a bare address name (none is left).
 
 ; SRAM ($A000-$BFFF)
 DEF sRecords EQU $A000 ; SRAM bank 0: the monster records, $A5 bytes each from here (SRAMRecordAddress, LoadSRAMRecordByte); in SRAM bank 1 the extra record $1D sits here (RecordAddressWithBank1Slot1D) (E-0137)
@@ -550,7 +551,7 @@ DEF wTalkCountdown EQU $D069 ; frames before a talk event is dispatched (CountDo
 DEF wTitleScreenState EQU $D06A ; state of game mode 5's screens: the opening and title screens, name entry and new-player setup, and the link screens reached from them (StartFadeToLinkScreenState1/2); the boot trace runs the title flow through it first (was wLinkScreenState) (E-0136, E-0318)
 DEF wTitleScreenSubState EQU $D06B ; sub-state of game mode 5's screens (RunWD06BSubState_* tables); see wTitleScreenState (was wLinkScreenSubState) (E-0136, E-0318)
 DEF wLinkScreenFlag EQU $D06C ; flag set and tested by the link screen sub-states (E-0136)
-DEF wItemId EQU $D081 ; item id used by LoadItemRecord and RunItemEffect; $FF = none (reading)
+DEF wItemId EQU $D081 ; item id used by LoadItemRecord and CheckItemUsable; $FF = none (reading)
 DEF wInventorySlot EQU $D082 ; inventory slot chosen in the pause menu (LookupInventorySlotForRecordBuffer) (E-0136)
 DEF wTargetRecord EQU $D083 ; party member an item or skill is used on (pause menu, ItemUsable_* checks) (E-0136)
 DEF wItemRecord EQU $D084 ; 13-byte copy of an ItemTable record (reading)
@@ -604,8 +605,8 @@ DEF wArenaEntry EQU $D580 ; arena work bytes (script command $F7) (E-0136)
 DEF wArenaFeeLo EQU $D586 ; the arena's entry fee, low byte (subtracted from the gold) (E-0345, C1: named from its users; was wArenaByte86) (E-0136; E-0345)
 DEF wArenaFeeHi EQU $D587 ; the arena's entry fee, high byte (E-0345, C1: named from its users; was wArenaByte87) (E-0136; E-0345)
 DEF wArenaRound EQU $D588 ; arena counter (IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea) (E-0136)
-DEF wArenaList EQU $D589 ; arena list (ArenaRounds_Shared01_Sub01) (E-0136)
-DEF wArenaList2 EQU $D5B1 ; second arena list (ArenaRounds_Shared01_Sub01) (E-0136)
+DEF wArenaList EQU $D589 ; arena list (ArenaRounds_RandomModulo52) (E-0136)
+DEF wArenaList2 EQU $D5B1 ; second arena list (ArenaRounds_RandomModulo52) (E-0136)
 DEF wScreenState EQU $D780 ; state of the current menu or script screen (RunScreenStateStepEveryOtherFrame, RunWD780StateWhenNotFading_*); $FF = idle (E-0136)
 DEF wScreenStep EQU $D781 ; step within wScreenState; most screen jump tables index it (E-0136)
 DEF wScreenSubStep EQU $D782 ; sub-step of the current screen (E-0136)

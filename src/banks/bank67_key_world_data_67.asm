@@ -4,8 +4,8 @@
 SECTION "Bank 67", ROMX[$4000], BANK[$67]
     db $67
 
-; 1 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
-; each tile map (E-0146)
+; 1 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_WriteSVBK_2 skips the 8-byte header
+; before each tile map (E-0146)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
 ; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup00::
@@ -602,8 +602,8 @@ KeyWorldChunkGroup0F::
 KeyWorldChunkGroup0FOrder::
     db $00 ; entry 0
 
-; 2 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
-; each tile map (E-0146)
+; 2 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_WriteSVBK_2 skips the 8-byte header
+; before each tile map (E-0146)
 KeyWorldChunkGroup10::
     dfar KeyWorldScreenHeader_66_19 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_65_33 ; screen 1: 8-byte header, then the compressed tile map
@@ -2812,8 +2812,8 @@ KeyWorldChunkGroup2F::
 KeyWorldChunkGroup2FOrder::
     db $01, $00 ; entry 0
 
-; 4 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
-; each tile map (E-0146)
+; 4 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_WriteSVBK_2 skips the 8-byte header
+; before each tile map (E-0146)
 ; record: 16 far pointers to screen tile maps (each behind an 8-byte header whose bytes 6-7 pick the
 ; AutomapBlocks entry), then 16 to their attribute maps
 KeyWorldChunkGroup30::
@@ -4946,8 +4946,8 @@ KeyWorldChunkGroup3F::
 KeyWorldChunkGroup3FOrder::
     db $01, $00, $02, $03 ; entry 0
 
-; 6 sub-chunk(s) of a 4 x 4 grid of screens; Func_061_4472_Case00 skips the 8-byte header before
-; each tile map (E-0146)
+; 6 sub-chunk(s) of a 4 x 4 grid of screens; LoadMapScreen_WriteSVBK_2 skips the 8-byte header
+; before each tile map (E-0146)
 KeyWorldChunkGroup40::
     dfar KeyWorldScreenHeader_66_28 ; id 0: screen 0: 8-byte header, then the compressed tile map
     dfar KeyWorldScreenHeader_66_28 ; screen 1: 8-byte header, then the compressed tile map

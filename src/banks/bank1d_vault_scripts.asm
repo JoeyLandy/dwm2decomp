@@ -11,6 +11,7 @@ BeginStringDisplay_Bank1D::
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd
 
+; data read by DrawNameGlyphBufGlyphsOverlaying8DAnd8E (6 bytes)
 DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart_Data::
     db $01, $40, $cd, $11, $26, $c9
 
@@ -365,6 +366,8 @@ Script_GWasReleasedIn::
     script_message $c002 ; '*: Do you need me for'
     script_jump Script_Hibernate_2
 
+; called from VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess: branches on wScreenState;
+; branches on the byte at BGMap1TileRun; increments wScreenStep
 VaultMenu_Store_WaitForVRAMAccess::
     ld a, [wScreenState]
     cp $03
@@ -396,8 +399,8 @@ VaultMenu_Store_WaitForVRAMAccess::
     ld [wScreenStep], a
     ret
 
-; VaultMenu_Case03_Case00_Sub01 copies bytes from $44E3 to vBGMap1 + $300 until $7F (wScreenState =
-; 3) (E-0226, C1)
+; VaultMenu_Store_WaitForVRAMAccess copies bytes from $44E3 to vBGMap1 + $300 until $7F
+; (wScreenState = 3) (E-0226, C1)
 ; record: 99 tiles written in a run from vBGMap1 + $300 (32 per BG map row), then $7F
 BGMap1TileRun::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $a6, $cf, $a5, $a7, $df, $eb, $ad, $c3, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
@@ -406,7 +409,7 @@ BGMap1TileRun::
     db $b4, $b4, $b5
     db $7f ; end
 
-; VaultMenu_Case03_Case00_Sub01 copies bytes from $4547 to vBGMap1 + $300 until $7F (any other
+; VaultMenu_Store_WaitForVRAMAccess copies bytes from $4547 to vBGMap1 + $300 until $7F (any other
 ; wScreenState) (E-0226, C1)
 BGMap1TileRun_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $ea, $eb, $ad, $ed, $ee, $ef, $ab, $ac, $b7, $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9 ; entry 0
@@ -417,8 +420,8 @@ BGMap1TileRun_2::
 
 ; copies three tiles from bank $1F to vTiles2 + $7A0-$7C0, then draws the 4 x 1 rows
 ; LoadThreeTilesAndDrawRows_TileRect, 4607 and 460B at scroll + $62, $A2 and $E2 (E-0121) (E-0344:
-; the address in its name dropped or read as the label there; was
-; LoadThreeTilesAndDrawRows4603To460B; a trailing preposition left by the dropped address removed)
+; the address in its name dropped or read as the label there; was LoadThreeTilesAndDrawRows; a
+; trailing preposition left by the dropped address removed)
 LoadThreeTilesAndDrawRows::
     ld hl, vTiles2 + $7a0
     ld de, Tiles2Plus210Tiles
@@ -467,6 +470,9 @@ LoadThreeTilesAndDrawRows_TileRect_2::
 LoadThreeTilesAndDrawRows_TileRect_3::
     db $a9, $a4, $eb, $ad ; id 0
 
+; called from VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc: calls
+; VaultMenu_BlinkCursorBlinkEF_Bank1D; may return early; sets wTwoChoiceCursor to 6; increments
+; wScreenStep; branches on wVaultMode; sets wTwoChoiceCursor to 6; increments wScreenStep; ...
 VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
     call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
@@ -582,6 +588,9 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
+; called from VaultMenu_Store_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc: calls
+; VaultMenu_BlinkCursorBlinkEF_Bank1D; may return early; sets wTwoChoiceCursor to 6; increments
+; wScreenStep; branches on wVaultMode; sets wTwoChoiceCursor to 6; increments wScreenStep; ...
 VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
     call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
@@ -695,6 +704,8 @@ VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
     ld [wScreenStep], a
     jp .clear_script_command_type
 
+; Branches on wJoypadPressedRepeat; calls BlinkCursorBlinkEF_Bank1D; calls DrawBlankTileC3_Bank1D;
+; branches on wVaultMode; sets wVaultMode to 2; calls DrawCursorTileBB_Bank1D; plays sound $69; ...
 VaultMenu_BlinkCursorBlinkEF_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -753,7 +764,7 @@ VaultMenu_BlinkCursorBlinkEF_Bank1D::
 
 ; cycles wCursorBlinkEF through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
 ; $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorBlinkEF_Bank1D_4801)
+; dropped or read as the label there; was BlinkCursorBlinkEF_Bank1D)
 BlinkCursorBlinkEF_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -769,20 +780,22 @@ BlinkCursorBlinkEF_Bank1D::
     ld [wCursorBlinkEF], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawCursorTileBB_481B_Bank1D)
+; or read as the label there; was DrawCursorTileBB_Bank1D)
 DrawCursorTileBB_Bank1D::
     ld b, $bb
     jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_481F_Bank1D)
+; or read as the label there; was DrawBlankTileC3_Bank1D)
 DrawBlankTileC3_Bank1D::
     ld b, $c3
     jr VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode
 
+; Works on registers only
 VaultMenu_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D
 VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode::
     ld a, [wVaultMode]
     add a
@@ -802,6 +815,7 @@ VaultMenu_BGMapAddressAtScroll_Bank1D_ReadVaultMode::
     ei
     ret
 
+; data read by VaultMenu (6 bytes)
 VaultMenu_BGMapAddressAtScroll_Bank1D_Data::
     db $61, $00, $a1, $00, $e1, $00
 
@@ -835,6 +849,10 @@ DrawRect0140AtBGMap13E0AndStep::
     ld [wScreenStep], a
     ret
 
+; called from VaultMenu_Store_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D: sets wArg1 to
+; 1; calls VaultMenu_Store_CountNonZeroItemGridBytes; branches on wSavedSpriteSlotCount; calls
+; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; calls
+; BGMapAddressAtScroll_Bank1D; calls DrawRectSetTextCursorLoPlus21_Bank1D; ...
 VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld a, $01
     ld [wArg1], a
@@ -938,6 +956,10 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_TileRect_2::
     db $b6, $c3, $d8, $d9, $da, $db, $dc, $dd, $de, $aa, $ca, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
+; called from VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits: sets wArg1 to 0; calls
+; VaultMenu_Store_CountNonZeroItemGridBytes; calls HLToDecimalDigits; branches on
+; wSavedSpriteSlotCount; calls BGMapAddressAtScroll_Bank1D; calls HLToDecimalDigits; calls
+; BGMapAddressAtScroll_Bank1D; ...
 VaultMenu_Store_HLToDecimalDigits::
     xor a
     ld [wArg1], a
@@ -1025,6 +1047,8 @@ CountNonZeroItemGridBytes::
     jr c, .loop
     ret
 
+; Branches on the byte at wItemStorage; sets wSavedSpriteClipMode; branches on the byte at
+; wInventory; sets wListPages
 VaultMenu_WriteSavedSpriteClipModeAndListPages::
     ld hl, wItemStorage
     ld c, $00
@@ -1071,7 +1095,7 @@ VaultMenu_WriteSavedSpriteClipModeAndListPages::
 
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; BlinkCursorSelectedRecord_Bank1D_4A9A)
+; BlinkCursorSelectedRecord_Bank1D)
 BlinkCursorSelectedRecord_Bank1D::
     ld a, [wSelectedRecord]
     inc a
@@ -1087,11 +1111,13 @@ BlinkCursorSelectedRecord_Bank1D::
     ld b, $bb
     jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
 
+; Continues in VaultMenu_Store_ReadItemGridX_ReadItemGridX
 VaultMenu_Store_ReadItemGridX::
     ld b, $c3
     jr VaultMenu_Store_ReadItemGridX_ReadItemGridX
     db $06, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D
 VaultMenu_Store_ReadItemGridX_ReadItemGridX::
     ld a, [wItemGridX]
     add a
@@ -1111,9 +1137,13 @@ VaultMenu_Store_ReadItemGridX_ReadItemGridX::
     ei
     ret
 
+; data read by VaultMenu (8 bytes)
 VaultMenu_Store_ReadItemGridX_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
+; called from VaultMenu_Store_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc: branches on
+; wScreenState; branches on the byte at wItemStorage; branches on the byte at wInventory; calls
+; HLToDecimalDigits; sets wDigitWorkA; sets wDigitWorkB; calls BGMapAddressAtScroll_Bank1D; ...
 VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
     ld hl, VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data
     ld de, wScreenList
@@ -1279,10 +1309,15 @@ VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
     ld [wScreenStep], a
     ret
 
+; data read by VaultMenu (21 bytes)
 VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
+; called from VaultMenu_Store_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2: branches on
+; wJoypadPressedRepeat; calls BlinkCursorSelectedRecord_Bank1D_2; returns unless bit 1 of
+; wJoypadPressedRepeat is set; increments wScreenStep; sets wItemGridX to 0; sets wItemGridY to 0;
+; sets wTwoChoiceCursor to 2; ...
 VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -1468,7 +1503,7 @@ VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
 
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorSelectedRecord_Bank1D_4D41)
+; dropped or read as the label there; was BlinkCursorSelectedRecord_Bank1D_2)
 BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -1484,20 +1519,22 @@ BlinkCursorSelectedRecord_Bank1D_2::
     ld [wSelectedRecord], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawCursorTileBB_4D5B_Bank1D)
+; or read as the label there; was DrawCursorTileBB_Bank1D_2)
 DrawCursorTileBB_Bank1D_2::
     ld b, $bb
     jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_4D5F_Bank1D)
+; or read as the label there; was DrawBlankTileC3_Bank1D_2)
 DrawBlankTileC3_Bank1D_2::
     ld b, $c3
     jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX
 
+; Works on registers only
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
     ld a, [wItemGridX]
     add a
@@ -1517,9 +1554,11 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_ReadItemGridX::
     ei
     ret
 
+; data read by VaultMenu (8 bytes)
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
+; Branches on the byte at wItemStorage
 VaultMenu_Store_ReadItemGridYAndItemGridX::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -1563,6 +1602,10 @@ VaultMenu_Store_ReadItemGridYAndItemGridX::
     xor a
     ret
 
+; called from VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D: branches on
+; wJoypadPressedRepeat; calls BlinkCursorBlinkCD_Bank1D; sets wTwoChoiceCursor to 2; sets
+; wScreenStep to $0b; calls BGMapAddressAtScroll_Bank1D; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; ...
 VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 1, a
@@ -1849,7 +1892,7 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
 
 ; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
 ; $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorBlinkCD_Bank1D_4F99)
+; dropped or read as the label there; was BlinkCursorBlinkCD_Bank1D)
 BlinkCursorBlinkCD_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -1864,6 +1907,8 @@ BlinkCursorBlinkCD_Bank1D::
     xor a
     ld [wCursorBlinkCD], a
 
+; Branches on wNumberEditPos; continues in
+; VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
     ld a, [wNumberEditPos]
     and a
@@ -1879,9 +1924,11 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2::
     ld b, a
     jr VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos
 
+; Works on registers only
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_Skip::
     ld b, $cb
 
+; Calls BGMapAddressAtScroll_Bank1D
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos::
     ld a, [wNumberEditPos]
     add a
@@ -1901,11 +1948,12 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos::
     ei
     ret
 
+; data read by VaultMenu_Store_BGMapAddressAtScroll_Bank1D_2_ReadNumberEditPos (4 bytes)
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_2::
     db $61, $01, $62, $01
 
-; writes wNumberTens and wNumberOnes as digit tiles ($E0 + n) at BGMapAddressAtScroll + $161 and +
-; $162 (E-0120)
+; writes wNumberTens and wNumberOnes as digit tiles ($E0 + n) at BGMapAddressAtScroll_Bank1D + $161
+; and + $162 (E-0120)
 DrawNumberTensNumberOnesDigitsAtScroll161::
     call BGMapAddressAtScroll_Bank1D
     ld de, $0161
@@ -1946,6 +1994,9 @@ CheckListPagesPlusNumberAtMost18::
     xor a
     ret
 
+; Sets wTextCounter1 to 0; branches on the byte at wItemStorage; increments wTextCounter1; calls
+; TenTimesNumberTensPlusNumberOnes; copies the byte at wItemStorage to wTextCounter3; sets
+; wTextCounter1 to 0
 VaultMenu_Store_WriteTextCounter1AndTextCounter3::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -2012,6 +2063,10 @@ VaultMenu_Store_WriteTextCounter1AndTextCounter3::
     ld a, $ff
     ret
 
+; called from VaultMenu_Store_ReadScreenState: calls TenTimesNumberTensPlusNumberOnes; branches on
+; the byte at wItemStorage; branches on the byte at wInventory; calls
+; VaultMenu_WriteSavedSpriteClipModeAndListPages; branches on wListPages; sets wTwoChoiceCursor to
+; 0; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; ...
 VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     ld hl, wItemStorage
     ld a, [wItemGridY]
@@ -2093,6 +2148,11 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     ld [wTwoChoiceCursor], a
     jp VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1
 
+; called from VaultMenu_Store_ReadScreenState: branches on the byte at wInventory; sets
+; wTwoChoiceCursor to 0; continues in
+; VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; sets wTwoChoiceCursor to
+; 1; continues in VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1; branches
+; on the byte at wItemStorage; branches on wTextCounter3; ...
 VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld hl, wInventory
     ld c, $00
@@ -2173,6 +2233,8 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     ld a, $02
     ld [wTwoChoiceCursor], a
 
+; Sets wTextCounter1 to 0; sets wTextCounter3 to 0; increments wCounterPtr0Lo; calls
+; RunUnlessScreenStateIs3; increments wScreenStep
 VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc_ClearTextCounter1::
     xor a
     ld [wTextCounter1], a
@@ -2216,6 +2278,9 @@ ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
     jr nz, .loop
     ret
 
+; called from VaultMenu_Store_InitItemListScreenListAndDraw: branches on wTwoChoiceCursor;
+; increments wScreenStep; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; sets
+; wScreenStep to 7; calls BGMapAddressAtScroll_Bank1D; sets wItemGridX to 0; ...
 VaultMenu_Store_WriteScreenStepAndScriptCommandTypeEtc::
     ld a, [wTwoChoiceCursor]
     cp $02
@@ -2269,6 +2334,8 @@ DrawRect0147AndResetNumberEditPos::
     ld [wNumberEditPos], a
     ret
 
+; Copies the byte at wBankedGoldLo to wDigits; calls Number24ToPackedBCD; sets wSharedMenuWork; sets
+; wListEntries2; sets wMenuWordBuf; sets wMenuWordBuf1; sets wMenuWordBuf2; ...
 VaultMenu_Store_Number24ToPackedBCD::
     ld hl, wScreenList
     ld de, VaultMenu_Store_Number24ToPackedBCD_Data
@@ -2412,10 +2479,15 @@ VaultMenu_Store_Number24ToPackedBCD::
     ld [wScreenStep], a
     ret
 
+; data read by VaultMenu (27 bytes)
 VaultMenu_Store_Number24ToPackedBCD_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
+; called from VaultMenu_Store_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D: copies wThreeDigits to
+; wGrid2CursorX; sets wGrid2CursorY; sets wScreenArea; calls BGMapAddressAtScroll_Bank1D; calls
+; DrawRectSetTextCursorLoPlus21_Bank1D; branches on wScreenState; copies the byte at wGoldLo to
+; wDigits; ...
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
     ld hl, wScreenList
     ld de, VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3
@@ -2518,9 +2590,14 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
     ld [wItemGrid], a
     jp .check_screen_step
 
+; data read by VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3 (16 bytes)
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
+; called from VaultMenu_Store_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc: calls
+; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
+; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; sets wTwoChoiceCursor to 1; sets
+; wScriptCommandType to 0; ...
 VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
@@ -2657,6 +2734,10 @@ VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
+; called from VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc: calls
+; VaultMenu_WriteNumberEditPosAndThreeDigitsEtc; may return early; increments wScreenStep; calls
+; DrawThreeDigitsAtScrollOffset6E; branches on wThreeDigits; sets wTwoChoiceCursor to 1; sets
+; wScriptCommandType to 0; ...
 VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
     call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
     and a
@@ -2794,6 +2875,9 @@ VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
     ld [wScriptStartRequest], a
     ret
 
+; Branches on wJoypadPressed; branches on wJoypadPressedRepeat; calls VaultMenu_WriteCursorBlinkCD;
+; plays sound $69; branches on wNumberEditPos; branches on wThreeDigits; copies wCountTens to
+; wThreeDigits; ...
 VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     ld a, [wJoypadPressed]
     bit 0, a
@@ -3114,6 +3198,8 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     xor a
     ret
 
+; Branches on wJoypadRepeatTimer; increments wCursorBlinkCD; branches on wCursorBlinkCD; sets
+; wCursorBlinkCD to 0; calls BGMapAddressAtScroll_Bank1D
 VaultMenu_WriteCursorBlinkCD::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -3159,12 +3245,13 @@ VaultMenu_WriteCursorBlinkCD::
     ei
     ret
 
+; data read by VaultMenu (6 bytes)
 VaultMenu_WriteCursorBlinkCD_Data::
     db $6e, $00, $6f, $00, $70, $00
 
 ; writes the three bytes at wThreeDigits as digit tiles ($E0 + digit) at the BG map entry
-; BGMapAddressAtScroll + $6E (row 3, column 14 of the view), one per byte with WaitForVRAMAccess
-; (E-0104)
+; BGMapAddressAtScroll_Bank1D + $6E (row 3, column 14 of the view), one per byte with
+; WaitForVRAMAccess (E-0104)
 DrawThreeDigitsAtScrollOffset6E::
     call BGMapAddressAtScroll_Bank1D
     ld de, $006e
@@ -3522,6 +3609,7 @@ TenTimesNumberTensPlusNumberOnes::
     add_a_to_hl
     ret
 
+; Branches on wThreeDigits; copies wCountTens to wThreeDigits; calls DrawThreeDigitsAtScrollOffset6E
 VaultMenu_WriteThreeDigits::
     ld a, [wCountTens]
     ld b, a
@@ -3555,6 +3643,9 @@ VaultMenu_WriteThreeDigits::
 .return:
     ret
 
+; Branches on wScreenState; calls VaultMenu_WriteSavedSpriteClipModeAndListPages; calls
+; CountNonZeroItemGridBytes; calls VaultMenu_WriteSavedSpriteClipModeAndListPages; calls
+; CountNonZeroItemGridBytes; sets wSavedSpriteSlotCount; branches on wItemGridY; ...
 VaultMenu_Store_CountNonZeroItemGridBytes::
     ld a, [wScreenState]
     cp $03
@@ -3712,6 +3803,7 @@ DrawRecordStatsBoxForArg1::
     ld [rRAMG2], a
     ret
 
+; data read by DrawRecordStatsBoxForArg1 (4 bytes)
 DrawRecordStatsBoxForArg1_Data1::
     db $5b, $5d, $5f, $61
 
@@ -3835,7 +3927,7 @@ DrawListEntriesCell5SpeciesSprite::
 ; with SRAM bank 0 enabled reads the record at WD789 cell 5 and continues at
 ; HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
 ; (E-0126) (E-0344: the address in its name dropped or read as the label there; was
-; LoadListEntriesCell5RecordAndContinue5CAF)
+; LoadListEntriesCell5RecordAndContinue)
 LoadListEntriesCell5RecordAndContinue::
     call SetArg5ToListEntriesCell5
     ld a, $0a
@@ -3845,6 +3937,8 @@ LoadListEntriesCell5RecordAndContinue::
     ld a, [hl]
     jr HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf
 
+; called from HibernateMenu_ChooseRecords_UpdateTwoChoiceCursor_Bank1D_2: sets rRAMG2 to $0a; sets
+; rRAMB to 0
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld a, $0a
     ld [rRAMG2], a
@@ -3852,6 +3946,7 @@ HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2::
     ld [rRAMB], a
     ld a, [wSelectedRecord]
 
+; Calls CopyRecordNameToNameGlyphBuf; sets rRAMG2 to 0; branches on the byte at wNameGlyphBuf
 HibernateMenu_ChooseRecords_CopyRecordNameToNameGlyphBuf_2_CallCopyRecordNameToNameGlyphBuf::
     ld c, MON_NAME
     call CopyRecordNameToNameGlyphBuf
@@ -4188,7 +4283,7 @@ ListPartyRecordsWithState2ToListEntries::
 ; by LoadRecordCapacityFromFarmLevelTable): clears the 30-byte list wListEntries, then appends the
 ; number of every record whose byte 0 is 1 and byte $6E is 0; wListCount = the list length,
 ; wRecordsFlagged = how many state-1 records had byte $6E set (E-0104) (E-0345: record byte $6E is
-; MON_EGG; was ListRecordsState1WithByte6EClear)
+; MON_EGG; was ListRecordsState1NotEggs)
 ListRecordsState1NotEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
@@ -4261,7 +4356,7 @@ ListRecordsState1NotEggs::
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries and wListEntries2 (30 bytes each),
 ; then appends every record whose byte 0 is 1 or 2 and byte $6E is 0; wListCount = the list length,
 ; wRecordsFlagged = how many in-use records had byte $6E set (E-0104) (E-0345: record byte $6E is
-; MON_EGG; was ListRecordsInUseWithByte6EClear)
+; MON_EGG; was ListRecordsInUseNotEggs)
 ListRecordsInUseNotEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
@@ -4448,7 +4543,7 @@ MovePartyRecordsToFrontOfList::
 ; by LoadRecordCapacityFromFarmLevelTable): clears wListEntries, then appends every record whose
 ; byte 0 is 1 or 2 and byte $6E is non-zero; wListCount = the list length (E-0104) (C2 from E-0325:
 ; Evaluate with no egg in any record shows 'You don't have any eggs') (E-0345: record byte $6E is
-; MON_EGG; was ListRecordsInUseWithByte6ESet)
+; MON_EGG; was ListRecordsInUseEggs)
 ListRecordsInUseEggs::
     call LoadRecordCapacityFromFarmLevelTable
     ld hl, wListEntries
@@ -4671,6 +4766,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D::
     ld [wGlyphListPos], a
     ret
 
+; called from DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D: branches on wArg5
 DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
     swap a
     ld d, a
@@ -4738,10 +4834,10 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
     ld c, $10
     ret
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2
-; $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that
-; list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C =
-; $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
+; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
+; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
+; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_0::
     dw GlyphTileDests_1D_0_0 ; id 0
@@ -4770,10 +4866,10 @@ GlyphTileDests_1D_0_3::
     dw vTiles1 + $470, vTiles1 + $480, vTiles1 + $490, vTiles1 + $4a0, vTiles1 + $4b0, vTiles1 + $6a0 ; entry 0
     dw vTiles1 + $6b0, vTiles1 + $6c0, vTiles1 + $6d0
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2
-; $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that
-; list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C =
-; $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
+; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
+; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
+; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_1::
     dw GlyphTileDests_1D_1_0 ; id 0
@@ -4802,10 +4898,10 @@ GlyphTileDests_1D_1_3::
     dw vTiles1 + $400, vTiles1 + $410, vTiles1 + $420, vTiles1 + $470, vTiles1 + $480, vTiles1 + $490 ; entry 0
     dw vTiles1 + $4a0, vTiles1 + $4b0, vTiles1 + $7c0
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2
-; $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that
-; list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C =
-; $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
+; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
+; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
+; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_2::
     dw GlyphTileDests_1D_2_0 ; id 0
@@ -4823,10 +4919,10 @@ GlyphTileDests_1D_3_0::
     dw vTiles2 + $770, vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730 ; entry 0
     dw vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Sub01 picks the table by wArg5 (0 $61D9, 1 $6229, 2
-; $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that
-; list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C =
-; $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
+; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
+; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
+; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_4::
     dw GlyphTileDests_1D_4_0 ; id 0
@@ -4884,6 +4980,7 @@ DrawRecordListNameTiles_Bank1D::
     ld [hl], $12
     ret
 
+; data read by DrawRecordListNameTiles_Bank1D (6 bytes)
 DrawRecordListNameTiles_Bank1D_Data::
     db $00, $8d, $50, $8d, $a0, $8d
 
@@ -5063,6 +5160,7 @@ DrawRecordListPageMarks::
     ld [rRAMG2], a
     ret
 
+; data read by DrawRecordListPageMarks (8 bytes)
 DrawRecordListPageMarks_Data1::
     db $32, $00, $72, $00, $b2, $00, $f2, $00
 
@@ -5081,6 +5179,9 @@ DrawRecordListPageMarks_Data5::
 DrawRecordListPageMarks_Data6::
     db $83, $c3, $ab, $c3, $d3, $c3, $fb, $c3
 
+; Branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls BlinkCursorBlinkB8_Bank1D;
+; sets wMenuInputResult to 0; plays sound $69; calls
+; SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap; sets wMenuInputResult to $ff; ...
 SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5145,7 +5246,7 @@ SwapMonstersMenu_ChooseToView_BlinkCursorBlinkB8_Bank1D::
 
 ; cycles wListCursorBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorBlinkB8_Bank1D_648E)
+; dropped or read as the label there; was BlinkCursorBlinkB8_Bank1D)
 BlinkCursorBlinkB8_Bank1D::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -5161,20 +5262,22 @@ BlinkCursorBlinkB8_Bank1D::
     ld [wListCursorBlink], a
 
 ; B = $BB (cursor tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawCursorTileBB_64A8_Bank1D)
+; or read as the label there; was DrawCursorTileBB_Bank1D_3)
 DrawCursorTileBB_Bank1D_3::
     ld b, $bb
     jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
 
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_64AC_Bank1D)
+; or read as the label there; was DrawBlankTileC3_Bank1D_3)
 DrawBlankTileC3_Bank1D_3::
     ld b, $c3
     jr SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice
 
+; Works on registers only
 SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap
 SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice::
     ld a, [wMenuChoice]
     add a
@@ -5195,6 +5298,7 @@ SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_ReadMenuChoice::
     ei
     ret
 
+; data read by SwapMonstersMenu (4 bytes)
 SwapMonstersMenu_ChooseToView_StepBGMapAddressBackOnScrollWrap_Data::
     db $28, $01, $68, $01
 
@@ -5359,7 +5463,7 @@ BlinkTwoChoiceCursor::
     ld [wScreenCounter], a
 
 ; writes tile $BB at the position of wTwoChoiceCursor (DrawTwoChoiceCursorConfirmed_Data offset from
-; BGMapAddressAtScroll, StepBGMapAddressBackOnScrollWrap) (E-0068)
+; BGMapAddressAtScroll_Bank1D, StepBGMapAddressBackOnScrollWrap) (E-0068)
 DrawTwoChoiceCursor::
     ld b, $bb
     jr DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor
@@ -5373,6 +5477,7 @@ EraseTwoChoiceCursor::
 DrawTwoChoiceCursorConfirmed::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap
 DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     add a
@@ -5393,6 +5498,7 @@ DrawTwoChoiceCursorConfirmed_ReadTwoChoiceCursor::
     ei
     ret
 
+; data read by DrawTwoChoiceCursorConfirmed (4 bytes)
 DrawTwoChoiceCursorConfirmed_Data::
     db $2f, $01, $6f, $01
 
@@ -5470,6 +5576,9 @@ UpdateListCursorListCursor::
     ld [wMenuInputResult], a
     ret
 
+; called from UpdateListCursorListCursor: may continue in UpdateListCursorListCursor_ReadListCursor;
+; increments wListCursorAux; may continue in UpdateListCursorListCursor_ReadListCursor; may continue
+; in UpdateListCursorListCursor_ReadListCursor_2; sets wListCursorAux to 0
 UpdateListCursorListCursor_WriteListCursorAux::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -5484,17 +5593,23 @@ UpdateListCursorListCursor_WriteListCursorAux::
     xor a
     ld [wListCursorAux], a
 
+; called from UpdateListCursorListCursor: continues in
+; UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 UpdateListCursorListCursor_ReadListCursor::
     ld b, $bb
     jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 
+; called from UpdateListCursorListCursor: continues in
+; UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 UpdateListCursorListCursor_ReadListCursor_2::
     ld b, $c3
     jr UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor
 
+; called from UpdateListCursorListCursor: works on registers only
 UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap
 UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     ld a, [wListCursor]
     add a
@@ -5515,6 +5630,7 @@ UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_ReadListCursor::
     ei
     ret
 
+; data read by UpdateListCursorListCursor (8 bytes)
 UpdateListCursorListCursor_StepBGMapAddressBackOnScrollWrap_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00
 
@@ -5662,6 +5778,10 @@ UpdatePagedListCursor::
     ld [wMenuInputResult], a
     ret
 
+; called from UpdatePagedListCursor: may continue in
+; UpdatePagedListCursor_ReadMenuInputResultAndListCursor; increments wListCursorAux; may continue in
+; UpdatePagedListCursor_ReadMenuInputResultAndListCursor; may continue in
+; UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2; sets wListCursorAux to 0
 UpdatePagedListCursor_WriteListCursorAux::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -5676,17 +5796,23 @@ UpdatePagedListCursor_WriteListCursorAux::
     xor a
     ld [wListCursorAux], a
 
+; called from UpdatePagedListCursor: continues in
+; UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 UpdatePagedListCursor_ReadMenuInputResultAndListCursor::
     ld b, $bb
     jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 
+; called from UpdatePagedListCursor: continues in
+; UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2::
     ld b, $c3
     jr UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult
 
+; called from UpdatePagedListCursor: works on registers only
 UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank1D_2; calls StepBGMapAddressBackOnScrollWrap
 UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult::
     ld a, [wMenuInputResult]
     ld c, a
@@ -5714,6 +5840,7 @@ UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_ReadMenuInputResult::
     ei
     ret
 
+; data read by UpdatePagedListCursor (60 bytes)
 UpdatePagedListCursor_BGMapAddressAtScroll_Bank1D_2_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $28, $00, $68, $00, $a8, $00
     db $e8, $00, $28, $01, $a8, $00, $e8, $00, $28, $01, $68, $01, $a8, $01, $a6, $00
@@ -5800,6 +5927,7 @@ LoadPartySpeciesSpriteGraphics::
     ld [rRAMG], a
     ret
 
+; data read by LoadPartySpeciesSpriteGraphics (9 bytes)
 LoadPartySpeciesSpriteGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -5883,6 +6011,7 @@ DrawPartySpeciesSprites::
     ld [rRAMG2], a
     ret
 
+; data read by DrawPartySpeciesSprites (12 bytes)
 DrawPartySpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
@@ -5956,6 +6085,8 @@ LoadSpeciesSpriteGraphicsAndPalette::
 ; graphics number = the word wArg1/wArg2: reads its far pointer (3 bytes per entry) from
 ; MonsterSpriteTable in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in
 ; wArg4/wArg5; on CGB it continues with the palette (not read) (E-0104)
+; code: calls ReadFarPointerAtDEInBankB; calls DecompressToVRAM; branches on wIsCGB; calls
+; ReadByteInBank; sets wOBJPaletteUploadRequest to $7f
 DecompressGraphicsArg1ToArg4::
     ld a, [wArg1]
     ld l, a
@@ -6080,6 +6211,8 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+; called from DrawThreeMetaSpritePartsAtGridCursor: continues in
+; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
@@ -6090,6 +6223,8 @@ DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
 DrawMetaSpritePartC0::
     ld c, $00
 
+; called from DrawSpritePart9000At88_28: continues in
+; DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3
 DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
@@ -6108,6 +6243,8 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     xor a
     ldh [hSpriteSubIndex], a
 
+; Branches on wArg2; branches on wArg1; calls DrawMetaSpriteSet_Bank25; calls
+; DrawMetaSpriteSet_Bank26; calls DrawMetaSpriteSet_Bank27
 DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc_ReadArg3::
     ld a, [wArg3]
     ldh [hSpriteTileOffset], a
@@ -6233,12 +6370,16 @@ MarkPartyMembersInRecordListPage::
     ei
     jp .check_party_count
 
+; data read by MarkPartyMembersInRecordListPage (10 bytes)
 MarkPartyMembersInRecordListPage_Data1::
     db $78, $c3, $a0, $c3, $c8, $c3, $f0, $c3, $18, $c4
 
 MarkPartyMembersInRecordListPage_Data2::
     db $20, $00, $60, $00, $a0, $00, $e0, $00, $20, $01
 
+; called from SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries_2: sets wTextWindowTileLo to
+; $12; branches on wGridCursorX; calls ListPartyRecordsWithState2ToListEntries; increments
+; wScreenState; branches on wListCount; sets wScreenStep to 0; sets wTwoChoiceCursor to 1; ...
 SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries::
     ld hl, wTextWindowTileLo
     xor a
@@ -6449,7 +6590,7 @@ CopyTileBytesToVRAM_Bank1D::
 
 ; HL = SetupTileMapAtBGMap1_Data, wArg1/2 = $9C/0, DE = vBGMap1, wGlyphListPos = 0, then continues
 ; at LoadTileListSixPerFrame_Loop (E-0126) (E-0344: the address in its name dropped or read as the
-; label there; was SetupTileMap6D84AtBGMap1)
+; label there; was SetupTileMapAtBGMap1)
 SetupTileMapAtBGMap1::
     ld hl, SetupTileMapAtBGMap1_Data
     ld a, $9c
@@ -6463,7 +6604,7 @@ SetupTileMapAtBGMap1::
 
 ; copies tiles listed in LoadTileListSixPerFrame_Data to vBGMap1 + $200 onward six per call; at the
 ; $FF end resets the counters and wScreenStep += 1 (E-0127) (E-0344: the address in its name dropped
-; or read as the label there; was LoadTileList6DC4SixPerFrame)
+; or read as the label there; was LoadTileListSixPerFrame)
 LoadTileListSixPerFrame::
     ld hl, LoadTileListSixPerFrame_Data
     ld a, $9e
@@ -6474,6 +6615,9 @@ LoadTileListSixPerFrame::
     xor a
     ld [wGlyphListPos], a
 
+; Calls CopyTileBytesToVRAM_Bank1D; increments wGlyphListStart; increments wGlyphListPos; may
+; continue in LoadTileListSixPerFrame_Loop; sets wGlyphListPos to 0; sets wGlyphListStart to 0;
+; advances wScreenStep
 LoadTileListSixPerFrame_Loop::
     push hl
     push de
@@ -6530,7 +6674,7 @@ LoadTileListSixPerFrame_Loop::
 
 ; copies tiles from UploadTilesFromData_Tiles: two to vTiles2 + $6E0 and three to vTiles2 + $7C0
 ; (CopyTileBytesToVRAM_Bank1D) (E-0118) (E-0344: the address in its name dropped or read as the
-; label there; was UploadTilesFromData6D20)
+; label there; was UploadTilesFromData)
 UploadTilesFromData::
     ld hl, UploadTilesFromData_Tiles
     ld de, vTiles2 + $6e0
@@ -6566,6 +6710,7 @@ LoadRecordCapacityFromFarmLevelTable::
     ld [wRecordCapacity], a
     ret
 
+; data read by LoadRecordCapacityFromFarmLevelTable (3 bytes)
 LoadRecordCapacityFromFarmLevelTable_Data::
     db $0a, $14, $1e
 
@@ -6738,6 +6883,10 @@ PackRecordFieldsToBank1Slot::
     ld [rRAMG2], a
     ld [rRAMB], a
 
+; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2 to rRAMB; may
+; continue in PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1; may continue in
+; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12; may continue in
+; PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13; ...
 PackRecordFieldsToBank1Slot_Skip::
     ld hl, wPackFields
     ld c, $00
@@ -6872,9 +7021,13 @@ PackRecordFieldsToBank1Slot_Skip::
     jp z, PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15
     jp PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16
 
+; data read by PackRecordFieldsToBank1Slot (6 bytes)
 PackRecordFieldsToBank1Slot_Data::
     db $01, $0f, $1e, $29, $8e, $99
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
+; PackRecordFieldsToBank1Slot_Skip
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
     call SRAMRecordAddressOfArg1
     ld a, $21
@@ -6904,6 +7057,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg1::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
+; PackRecordFieldsToBank1Slot_Skip
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
     call SRAMRecordAddressOfArg1
     ld a, $22
@@ -6934,6 +7090,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg12::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
+; PackRecordFieldsToBank1Slot_Skip
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
     call SRAMRecordAddressOfArg1
     ld a, $23
@@ -6965,6 +7124,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg13::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
+; PackRecordFieldsToBank1Slot_Skip
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
     call SRAMRecordAddressOfArg1
     ld a, $24
@@ -6995,6 +7157,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg14::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; increments wPackFieldIndex; continues in
+; PackRecordFieldsToBank1Slot_Skip
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
     call SRAMRecordAddressOfArg1
     ld a, $25
@@ -7025,6 +7190,9 @@ PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg15::
     ld [wPackFieldIndex], a
     jp PackRecordFieldsToBank1Slot_Skip
 
+; Calls SRAMRecordAddressOfArg1; calls Pack2BitFieldsFromPackFields; copies wArg2 to rRAMB; sets
+; rRAMG2 to 0; sets rRAMB to 0; sets wPackFieldIndex to 0; continues in
+; Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1
 PackRecordFieldsToBank1Slot_Data_CallSRAMRecordAddressOfArg16::
     call SRAMRecordAddressOfArg1
     ld a, $26
@@ -7079,6 +7247,8 @@ Pack2BitFieldsFromPackFields::
     ld b, a
     ret
 
+; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; sets rRAMB to 0; copies wArg2 to rRAMB; sets
+; rRAMB to 0; copies wArg2 to rRAMB; sets rRAMB to 0; ...
 Pack2BitFieldsFromPackFields_CallSRAMRecordAddressOfArg1::
     call SRAMRecordAddressOfArg1
     ld a, $28
@@ -7891,6 +8061,8 @@ CopyTenBytesThenSelectSRAMBank0::
     jr c, .loop
     ret
 
+; Calls SRAMRecordAddressOfArg1; calls EnableSRAMBank0; copies wArg2 to rRAMB; sets rRAMB to 0;
+; copies wArg2 to rRAMB; sets rRAMB to 0; copies wArg2 to rRAMB; ...
 CopyTenBytesThenSelectSRAMBank0_CallSRAMRecordAddressOfArg1::
     call SRAMRecordAddressOfArg1
     call EnableSRAMBank0

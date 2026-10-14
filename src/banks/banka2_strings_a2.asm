@@ -5,8 +5,8 @@ SECTION "Bank A2", ROMX[$4000], BANK[$A2]
     db $a2
 
 ; HL = $4056 + 26 * (monster id - $250 + 1) + C; copies hTemp0 bytes from HL to DE (E-0121) (E-0344:
-; the address in its name dropped or read as the label there; was CopyMonsterTableBytesFrom4056; a
-; trailing preposition left by the dropped address removed)
+; the address in its name dropped or read as the label there; was CopyMonsterTableBytes; a trailing
+; preposition left by the dropped address removed)
 CopyMonsterTableBytes::
     push de
     push bc
@@ -38,6 +38,7 @@ CopyMonsterTableBytes::
     call CopyBytesDEFromHL_BankA2
     ret
 
+; called from LoadMonsterRecordTo: works on registers only
 LoadMonsterRecordTo_Multiply8By16::
     push de
     ld a, [wMonsterId]
@@ -73,7 +74,7 @@ CopyBytesDEFromHL_BankA2::
     db $00, $00, $ff, $ff, $ff, $ff
     ds $14, $00
 
-; CopyMonsterTableBytesFrom4056 and LoadMonsterRecordTo_Sub01 read the 26-byte record at $4056 + 26
+; CopyMonsterTableBytes and LoadMonsterRecordTo_Multiply8By16 read the 26-byte record at $4056 + 26
 ; * (monster id - $250 + 1) for ids at or above $250 (E-0033), so id $250 starts at $4070; 93
 ; records up to the code at $49E2, the same layout as MonsterTable (E-0240, C1)
 ; record: picture number: index into MonsterPictureTable, MonsterAttributeMapTable and
@@ -1761,6 +1762,7 @@ MonsterTableA2::
     db $01 ; byte 24 ($71)
     db $01 ; personality axis $72
 
+; called from BeginStringDisplay_BankE0: sets wStringCategory; calls BeginStringDisplay
 BeginStringDisplay_BankE0_BeginStringDisplay::
     ld de, BeginStringDisplay_BankE0_BeginStringDisplay_StringCategories
     ld a, [wStringCategory]

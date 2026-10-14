@@ -42,6 +42,7 @@ ShowString_Bank28::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_28::
+; data read by BeginStringDisplay_Bank28 (1 word)
 MessageStrings_Bank28::
     dw StringList_Bank28_0 ; id 0
 

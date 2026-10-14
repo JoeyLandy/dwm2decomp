@@ -4,6 +4,8 @@
 SECTION "Bank 0E", ROMX[$4000], BANK[$0E]
     db $0e
 
+; called from DebugMessageTest_Update_CallUpdate_BeginStringDisplay: branches on wStringIndex; calls
+; DebugMessageTest_Update_BeginStringDisplay_2; calls BeginStringDisplay
 DebugMessageTest_Update_BeginStringDisplay::
     ld a, [wStringIndex]
     cp $88
@@ -35,6 +37,7 @@ CopyStringToBuffer_Bank0E::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_0E::
+; data read by DebugMessageTest_Update_BeginStringDisplay (1 word)
 MessageStrings_Bank0E::
     dw StringList_Bank0E_0 ; id 0
 
@@ -1411,8 +1414,8 @@ ComputeBreedingChild::
 ; when wRecordBufA + $A4 or wRecordBufB + $A4 is set and listed for stat C
 ; (AdjustStatForRecordBufAAndBItems_Data1), subtracts AdjustStatForRecordBufAAndBItems_Data2[value]
 ; from DE (unless it is at 999) (E-0130) (E-0340: the address in its name read as its RAM name; was
-; AdjustStatForWCA2AAndWCACF) (E-0345: $CA2A and $CACF are the MON_ITEM of wRecordBufA and
-; wRecordBufB; was AdjustStatForRecordBufAByte7133AndRecordBufBItem)
+; AdjustStatForRecordBufAAndBItems) (E-0345: $CA2A and $CACF are the MON_ITEM of wRecordBufA and
+; wRecordBufB; was AdjustStatForRecordBufAAndBItems)
 AdjustStatForRecordBufAAndBItems::
     ld a, [wRecordBufA + MON_ITEM]
     and a
@@ -1534,6 +1537,7 @@ AdjustStatForRecordBufAAndBItems::
     pop de
     ret
 
+; data read by AdjustStatForRecordBufAAndBItems (8 words)
 AdjustStatForRecordBufAAndBItems_Data1::
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
@@ -1569,7 +1573,7 @@ AdjustStatForRecordBufAAndBItems_Data2::
 ; fills wChildRecord + $34 with $FF, appends species bytes 8-10 of wChildRecord + $B, wRecordBufA +
 ; $B and wRecordBufB + $B and eight bytes each from wRecordBufA + $34 and wRecordBufB + $34 to
 ; wChildRecord + $3C, maps them through SkillLineBaseTable and compacts the list (E-0124) (E-0340:
-; the address in its name read as its RAM name; was BuildWCB0CCandidateList)
+; the address in its name read as its RAM name; was BuildChildRecordSkillListCandidateList)
 BuildChildRecordSkillListCandidateList::
     ld hl, wChildRecord + MON_SKILLS
     ld c, $08
@@ -1605,8 +1609,8 @@ BuildChildRecordSkillListCandidateList::
 
 ; replaces each of the $19 bytes at wChildRecord + $3C (other than $FF) by SkillLineBaseTable[byte]
 ; (E-0124) (E-0340: the address in its name read as its RAM name; was
-; MapWCB0CEntriesThroughTable5B03) (E-0344: the address in its name dropped or read as the label
-; there; was MapChildRecordSkillListEntriesThroughTable5B03)
+; MapChildRecordSkillListEntriesThroughTable) (E-0344: the address in its name dropped or read as
+; the label there; was MapChildRecordSkillListEntriesThroughTable)
 MapChildRecordSkillListEntriesThroughTable::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $19
@@ -1631,10 +1635,10 @@ MapChildRecordSkillListEntriesThroughTable::
     jr nz, .loop
     ret
 
-; MapWCB0CEntriesThroughTable5B03 replaces each of the $19 skill bytes at wChildRecord + $3C (other
-; than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat for runs of
-; related skills (for example 1-3 map to 1, 4-6 to 4), so the table maps a skill to the first of its
-; line; 176 entries, skills 0-$AF (E-0200, C1)
+; MapChildRecordSkillListEntriesThroughTable replaces each of the $19 skill bytes at wChildRecord +
+; $3C (other than $FF) by the byte at $5B03 + skill; the values never exceed the index and repeat
+; for runs of related skills (for example 1-3 map to 1, 4-6 to 4), so the table maps a skill to the
+; first of its line; 176 entries, skills 0-$AF (E-0200, C1)
 ; record: replacement skill numbers for skills $X0-$XF (X = id)
 SkillLineBaseTable::
     db $00, $01, $01, $01, $04, $04, $04, $07, $07, $07, $0a, $0a, $0a, $0d, $0d, $0d ; id 0
@@ -1650,7 +1654,7 @@ SkillLineBaseTable::
     db $a0, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $aa, $ab, $ac, $ad, $ae, $af ; id 10
 
 ; moves the non-$FF bytes of the $19-byte list at wChildRecord + $3C to its front (E-0124) (E-0340:
-; the address in its name read as its RAM name; was CompactWCB0CRemovingFF)
+; the address in its name read as its RAM name; was CompactChildRecordSkillListRemovingFF)
 CompactChildRecordSkillListRemovingFF::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld de, wChildRecord + MON_SKILL_LIST
@@ -1675,7 +1679,7 @@ CompactChildRecordSkillListRemovingFF::
 
 ; in the child's skill list (wChildRecord + MON_SKILL_LIST, 25 entries) turns zeros and repeated
 ; skills into $FF (E-0340: the address in its name read as its RAM name; was
-; BuildWCB0CCandidateList_RemoveDuplicateSkills)
+; BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills)
 BuildChildRecordSkillListCandidateList_RemoveDuplicateSkills::
     ld hl, wChildRecord + MON_SKILL_LIST
     ld c, $00
@@ -1840,8 +1844,9 @@ RefreshRecordResistancesFromSpecies::
     ret
 
 ; for each of the 27 resistances of species wChildRecord + $B: levels below 3 may rise by the parent
-; rolls (RollWCB3DForCaseB_5D16 or 5D77); stores the result at wChildRecord + $73 (E-0127) (E-0340:
-; the address in its name read as its RAM name; was RollChildResistancesToWCB43)
+; rolls (RollChildRecordPlusForCaseB or 5D77); stores the result at wChildRecord + $73 (E-0127)
+; (E-0340: the address in its name read as its RAM name; was
+; RollChildResistancesToChildRecordResistances)
 RollChildResistancesToChildRecordResistances::
     ld hl, wChildRecord + MON_SPECIES
     ld a, [hli]
@@ -1901,10 +1906,10 @@ RollChildResistancesToChildRecordResistances::
     jr nz, .loop
     ret
 
-; when wChildRecord + $6D is set rolls RollWCB3DChanceOrIncArg5 with factor 1, 3 or 10 (then 3) for
-; B = 3, 4, 5, or 5 after counting otherwise (E-0125) (E-0340: the address in its name read as its
-; RAM name; was RollWCB3DForCaseB_5D16) (E-0344: the address in its name dropped or read as the
-; label there; was RollChildRecordPlusForCaseB_5D16)
+; when wChildRecord + $6D is set rolls RollChildRecordPlusChanceOrIncArg5 with factor 1, 3 or 10
+; (then 3) for B = 3, 4, 5, or 5 after counting otherwise (E-0125) (E-0340: the address in its name
+; read as its RAM name; was RollChildRecordPlusForCaseB) (E-0344: the address in its name dropped or
+; read as the label there; was RollChildRecordPlusForCaseB)
 RollChildRecordPlusForCaseB::
     push bc
     ld hl, wChildRecord + MON_PLUS
@@ -1951,7 +1956,7 @@ RollChildRecordPlusForCaseB::
 
 ; chance = A * wChildRecord + $6D; if below 100 and a random value is below it, A = $FF; otherwise
 ; wArg5 += 1 and A = 0 (E-0124) (E-0340: the address in its name read as its RAM name; was
-; RollWCB3DChanceOrIncArg5)
+; RollChildRecordPlusChanceOrIncArg5)
 RollChildRecordPlusChanceOrIncArg5::
     ld c, a
     ld hl, wChildRecord + MON_PLUS
@@ -1983,8 +1988,8 @@ RollChildRecordPlusChanceOrIncArg5::
 
 ; when wChildRecord + $6D is set: B = 5 rolls a random value against wChildRecord + $6D (A = $FF on
 ; success), other values roll factor 2 (E-0125) (E-0340: the address in its name read as its RAM
-; name; was RollWCB3DForCaseB_5D77) (E-0344: the address in its name dropped or read as the label
-; there; was RollChildRecordPlusForCaseB_5D77)
+; name; was RollChildRecordPlusForCaseB_2) (E-0344: the address in its name dropped or read as the
+; label there; was RollChildRecordPlusForCaseB_2)
 RollChildRecordPlusForCaseB_2::
     push bc
     ld hl, wChildRecord + MON_PLUS
@@ -2032,8 +2037,8 @@ RollChildRecordPlusForCaseB_2::
 
 ; B = TestResistanceEntry(wRecordBufA + $73) + TestResistanceEntry(wRecordBufB + $73) when both are
 ; valid and the sum is at least B; otherwise B = $FF (E-0124) (E-0340: the address in its name read
-; as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E) (E-0345: $C9F9 and $CA9E are the MON_RESISTANCES
-; of wRecordBufA and wRecordBufB; was SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances)
+; as its RAM name; was SumRecordBufAAndBResistanceTests) (E-0345: $C9F9 and $CA9E are the
+; MON_RESISTANCES of wRecordBufA and wRecordBufB; was SumRecordBufAAndBResistanceTests)
 SumRecordBufAAndBResistanceTests::
     ld hl, wRecordBufA + MON_RESISTANCES
     call TestResistanceEntry
@@ -2054,9 +2059,9 @@ SumRecordBufAAndBResistanceTests::
     ld b, $ff
     ret
 
-; (E-0345: was SumFunc5DCDOfRecordBufAByte712AndRecordBufBResistances_TestEntry) for entry C: when
-; it is 2 and the byte $31 later is 1-$1B and its table byte equals C, returns $FF (E-0340: the
-; address in its name read as its RAM name; was SumFunc5DCDOfWC9F9AndWCA9E_TestEntry)
+; (E-0345: was TestResistanceEntry) for entry C: when it is 2 and the byte $31 later is 1-$1B and
+; its table byte equals C, returns $FF (E-0340: the address in its name read as its RAM name; was
+; TestResistanceEntry)
 TestResistanceEntry::
     push hl
     ld a, c
@@ -2095,13 +2100,14 @@ TestResistanceEntry::
     pop af
     jr .done
 
+; data read by TestResistanceEntry (27 bytes)
 TestResistanceEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
 
 ; wArg5 = the byte at wSpeciesRecord + $12 + wArg4 (E-0114) (E-0340: the address in its name read as
-; its RAM name; was LoadWD01AByteArg4) (E-0345: reads wSpeciesRecord + $12 (SPECIES_RESISTANCES):
-; the resistance in arg 4; was LoadSpeciesExpCurveBByteArg4)
+; its RAM name; was LoadSpeciesResistanceArg4) (E-0345: reads wSpeciesRecord + $12
+; (SPECIES_RESISTANCES): the resistance in arg 4; was LoadSpeciesResistanceArg4)
 LoadSpeciesResistanceArg4::
     ld hl, wSpeciesRecord + SPECIES_RESISTANCES
     ld a, [wArg4]
@@ -2113,7 +2119,7 @@ LoadSpeciesResistanceArg4::
 ; copies six bytes from the addresses in CopySixBytesByChildRecordFamilyBit4Table_Data1 (or 5E6D
 ; when bit 4 of wChildRecord + $D is set) to the addresses in
 ; CopySixBytesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
-; its RAM name; was CopySixBytesByWCADDBit4Table)
+; its RAM name; was CopySixBytesByChildRecordFamilyBit4Table)
 CopySixBytesByChildRecordFamilyBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
@@ -2156,6 +2162,7 @@ CopySixBytesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
+; data read by CopySixBytesByChildRecordFamilyBit4Table (12 bytes)
 CopySixBytesByChildRecordFamilyBit4Table_Data1::
     db $91, $c9, $92, $c9, $36, $ca, $37, $ca, $f3, $c9, $98, $ca
 
@@ -2166,7 +2173,7 @@ CopySixBytesByChildRecordFamilyBit4Table_Data3::
     db $ea, $ca, $eb, $ca, $ec, $ca, $ed, $ca, $68, $cb, $73, $cb
 
 ; copies the 10-byte player name wPlayerName to wChildRecord + $F (E-0122) (E-0340: the address in
-; its name read as its RAM name; was CopyPlayerNameToWCADF)
+; its name read as its RAM name; was CopyPlayerNameToChildRecordMasterName)
 CopyPlayerNameToChildRecordMasterName::
     ld hl, wPlayerName
     ld de, wChildRecord + MON_MASTER_NAME
@@ -2183,7 +2190,7 @@ CopyPlayerNameToChildRecordMasterName::
 ; copies four 10-byte names from the addresses in CopyFourNamesByChildRecordFamilyBit4Table_Data1
 ; (or 5ED8 with bit 4 of wChildRecord + $D) to the addresses in
 ; CopyFourNamesByChildRecordFamilyBit4Table_Data3 (E-0125) (E-0340: the address in its name read as
-; its RAM name; was CopyFourNamesByWCADDBit4Table)
+; its RAM name; was CopyFourNamesByChildRecordFamilyBit4Table)
 CopyFourNamesByChildRecordFamilyBit4Table::
     ld hl, wChildRecord + MON_FAMILY
     ld a, [hl]
@@ -2234,6 +2241,7 @@ CopyFourNamesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
+; data read by CopyFourNamesByChildRecordFamilyBit4Table (8 bytes)
 CopyFourNamesByChildRecordFamilyBit4Table_Data1::
     db $87, $c9, $2c, $ca, $95, $c9, $3a, $ca
 
@@ -2371,6 +2379,7 @@ ApplyBreedingBonusToChildStats::
     jr nz, .loop
     ret
 
+; data read by ApplyBreedingBonusToChildStats (8 bytes)
 ApplyBreedingBonusToChildStats_Data::
     db $5b, $5d, $5f, $61, $63, $65, $67, $69
 
@@ -2450,7 +2459,7 @@ PersonalityPairValueToArg5::
     ret
 
 ; for the record at HL returns 9 * grade(field $6F) + 3 * grade(field $72) + grade(field $70)
-; (GradeHFFC6_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
+; (GradeTemp0_Bank0E); compare CombinedPersonalityLevelIndex (E-0121)
 CombinedPersonalityLevelIndexOfRecord::
     push hl
     ld a, $6f

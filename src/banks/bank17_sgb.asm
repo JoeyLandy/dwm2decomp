@@ -4,6 +4,9 @@
 SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
+; called from SendSGBPaletteSetPacket: returns if wSGBActive is 0; branches on wSGBPacketIndex;
+; returns if wSGBPacketIndex is $ff; branches on d; returns unless bit 0 of d is set; calls
+; SpinDelay
 SendSGBPaletteSetPacket_WaitSGBActive::
     ld a, [wSGBActive]
     or a
@@ -71,6 +74,7 @@ SendSGBPaletteSetPacket_WaitSGBActive::
     call SpinDelay
     jr .skip3
 
+; data read by SendSGBPaletteSetPacket (4 bytes, 19 words)
 SendSGBPaletteSetPacket_WaitSGBActive_Data::
     db $ff, $40, $0f, $41
     dw PointerRun_Entry00

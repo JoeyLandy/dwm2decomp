@@ -397,7 +397,7 @@
   },
   "D081": {
     "name": "wItemId",
-    "note": "item id used by LoadItemRecord and RunItemEffect; $FF = none",
+    "note": "item id used by LoadItemRecord and CheckItemUsable; $FF = none",
     "evidence": "reading"
   },
   "D084": {
@@ -3696,12 +3696,12 @@
   },
   "D589": {
     "name": "wArenaList",
-    "note": "arena list (ArenaRounds_Shared01_Sub01)",
+    "note": "arena list (ArenaRounds_RandomModulo52)",
     "evidence": "E-0136"
   },
   "D5B1": {
     "name": "wArenaList2",
-    "note": "second arena list (ArenaRounds_Shared01_Sub01)",
+    "note": "second arena list (ArenaRounds_RandomModulo52)",
     "evidence": "E-0136"
   },
   "D780": {

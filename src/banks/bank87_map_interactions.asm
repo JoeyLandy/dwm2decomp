@@ -4,6 +4,9 @@
 SECTION "Bank 87", ROMX[$4000], BANK[$87]
     db $87
 
+; called from FieldState_WalkATalks: may return early; returns if bit 7 of wFieldActionRequest is
+; set; returns if bit 0 of wFieldActionRequest is set; returns unless wStepTriggerFlag is 0;
+; increments wStepTriggerFlag; returns if wStepTriggerFlag is 0; may return early; ...
 FieldState_WalkATalks_WaitTextWindowState::
     ld a, [wTextWindowState]
     and $03
@@ -383,8 +386,7 @@ MapStepTriggerTable::
     dw $0000 ; id 255
 
 ; A in the field when nothing blocks input: walks this map's list in MapInteractionTable and runs
-; the talk event of the first spot that matches (E-0157, E-0339; was
-; FieldModeStateDispatch_WaitTextWindowState_Shared03)
+; the talk event of the first spot that matches (E-0157, E-0339; was CheckMapInteractionOnA)
 CheckMapInteractionOnA::
     ld a, [wTextWindowState]
     and $03
@@ -788,7 +790,7 @@ CheckMapInteractionOnA::
     jp .skip4
 
 ; part of CheckMapInteractionOnA that reads the key-world floor (E-0339; was
-; FieldModeStateDispatch_Shared03_ReadKeyWorldFloor)
+; CheckMapInteractionOnA_KeyWorldFloor)
 CheckMapInteractionOnA_KeyWorldFloor::
     cp $84
     jr nz, .cp_83
@@ -1063,7 +1065,7 @@ MapInteractionTable::
     dw $0000 ; id 231
 
 ; part of CheckMapInteractionOnA that reads the sprite slots (E-0339; was
-; FieldModeStateDispatch_Shared03_WaitSpriteSlotCount)
+; CheckMapInteractionOnA_SpriteSlots)
 CheckMapInteractionOnA_SpriteSlots::
     ld a, [wSpriteSlotCount]
     or a

@@ -28,6 +28,9 @@ FetchScriptCommand::
     ld a, $01
     ld [wScriptRunning], a
 
+; Branches on wScriptInDataBank; calls ReadWordFromDataBank; sets wScriptRunning to 0; sets
+; wScriptCommandType to 0; sets wScriptInDataBank to 0; branches on wMapType; sets wModeState to 0;
+; ...
 FetchScriptCommand_ReadScriptPointerLo::
     ld a, [wScriptPointerLo]
     ld l, a
@@ -436,6 +439,8 @@ ScriptFetch02::
     ld a, $03
     ld [wScriptCommandType], a
 
+; Sets wScriptParam0; sets wScriptParam1; sets wScriptStep to 0; sets wScriptPointerLo; sets
+; wScriptPointerHi
 ScriptFetch02_Restore::
     pop hl
     ld a, [hli]
@@ -1588,6 +1593,8 @@ ScriptCommand09::
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand09_ClearBit1OfPlayerAndObjectFlags
 
+; step 3 of ScriptCommand09: may return early; calls ClearBit1OfPlayerAndObjectFlags; sets
+; wScriptCommandType to 0; sets wScriptRunning to 0; sets wModeState to 0
 ScriptCommand09_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wTextWindowState]
     and $03
@@ -1610,6 +1617,9 @@ ScriptCommand01::
     dw ScriptCommand09_QueueSoundEffect
     dw ScriptCommand01_ClearBit1OfPlayerAndObjectFlags
 
+; step 0 of ScriptCommand09: branches on wScriptParam1; calls SetBit1OfPlayerAndObjectFlags; calls
+; FillTilesRequest; calls FillTilesFromRequest; plays sound $69; sets wTextWindowState to 1; sets
+; wTextWindowStep to 0; ...
 ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1640,6 +1650,8 @@ ScriptCommand09_SetBit1OfPlayerAndObjectFlags::
     inc [hl]
     ret
 
+; step 1 of ScriptCommand09: branches on wScriptParam1; returns if bit 7 of wScriptParam1 is set;
+; calls ScriptCommand09_WriteStringIndexAndStringCategory; advances wScriptStep
 ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     ld a, [wScriptParam1]
     bit 7, a
@@ -1658,6 +1670,9 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     inc [hl]
     ret
 
+; step 2 of ScriptCommand09: returns if bit 0 of wTextFlags is set; branches on wScriptParam1; plays
+; sound $69; sets wTextWindowState to 2; sets wTextWindowStep to 0; branches on $00; sets
+; wTextWindowState to $82; ...
 ScriptCommand09_QueueSoundEffect::
     ld a, [wTextFlags]
     bit 0, a
@@ -1684,6 +1699,9 @@ ScriptCommand09_QueueSoundEffect::
     inc [hl]
     ret
 
+; step 3 of ScriptCommand01: branches on wScriptParam1; returns if bit 6 of wScriptParam1 is set;
+; calls ClearBit1OfPlayerAndObjectFlags; sets wScriptCommandType to 0; sets wScriptStartRequest to
+; $80
 ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ld a, [wScriptParam1]
     bit 6, a
@@ -1700,6 +1718,9 @@ ScriptCommand01_ClearBit1OfPlayerAndObjectFlags::
     ld [wScriptStartRequest], a
     ret
 
+; called from ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc: may continue in
+; ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType; branches on wMessageMode;
+; sets wStringIndex; sets wStringCategory to 0
 ScriptCommand09_WriteStringIndexAndStringCategory::
     ld a, h
     and $3f
@@ -1738,11 +1759,14 @@ ScriptCommand09_WriteStringIndexAndStringCategory::
     rst $10
     ret
 
+; data read by ScriptCommand09 (33 bytes)
 ScriptCommand09_WriteStringIndexAndStringCategory_Data::
     db $01, $40, $f0, $01, $40, $f0, $0e, $52, $1f, $01, $40, $1d, $86, $4c, $1b, $d0
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
+; Branches on wMapType; may continue in ScriptCommand09_ToBeginStringDisplay_Bank89_Skip; sets
+; wStringIndex; sets wStringCategory to 0; dispatches through the table that follows
 ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
     pop hl
     ld a, [wMapType]
@@ -1773,54 +1797,68 @@ ScriptCommand09_WriteStringIndexAndStringCategory_Data_CheckMapType::
     dw ScriptCommand09_ToBeginStringDisplay_Bank86
     dw ScriptCommand09_ToBeginStringDisplay_Bank89
 
+; step 0 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank28
 ScriptCommand09_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
+; step 1 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank29
 ScriptCommand09_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
+; step 2 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2A
 ScriptCommand09_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
+; step 3 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2B
 ScriptCommand09_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
+; step 4 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2C
 ScriptCommand09_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
+; step 5 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2D
 ScriptCommand09_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
+; step 6 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank2E
 ScriptCommand09_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
+; step 8 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank7C
 ScriptCommand09_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
+; step 9 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank80
 ScriptCommand09_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
+; step 11 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank82
 ScriptCommand09_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
+; step 12 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank86
 ScriptCommand09_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
+; step 13 of ScriptCommand09_WriteStringIndexAndStringCategory: calls BeginStringDisplay_Bank89
 ScriptCommand09_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
+; Sets wStringIndex; sets wStringCategory to 0; calls BeginStringDisplay_Bank83; sets wStringIndex;
+; sets wStringCategory to 0; calls BeginStringDisplay_Bank8A
 ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
     ld a, h
     or a

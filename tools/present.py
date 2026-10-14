@@ -26,6 +26,9 @@ import sys
 import textwrap
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import describe  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 WIDTH = 100
 
@@ -34,6 +37,7 @@ DROP_COMMENT = re.compile(
     r"; (?:no direct call|\d+ call sites? from |only called from |reads: |writes: |points at: |"
     r"text \(E-0024\)|address loaded by |entry \d+ of the `rst \$00` table|heuristic: )")
 ALIAS = re.compile(r"^([A-Za-z_]\w*):: ; address name$")
+GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
 ADDR_NAME = re.compile(r"^(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})$")
 LABEL_TAG = re.compile(r"^([A-Za-z_][\w.]*::?) ; (?:heuristic: .*|code pointer of the table .*)$")
@@ -47,14 +51,24 @@ MENTION = re.compile(r"\b(?:(?:Func|Jump|Data)_[0-9A-F]{3}_[0-9A-F]{4}|[0-9A-F]{
 
 
 class Names:
-    """Address names and addresses of the listing, mapped to the labels src/ keeps."""
+    """Address names and addresses of the listing, mapped to the labels src/ keeps; and, for comments written
+    before later renames (E-0347), former names mapped to the current label: names config/names.json records as
+    "was X", step names `Parent_CaseNN` / `_SubNN` / `_TableK_CaseNN` resolved through the parent's jumptables,
+    and the generic name of a per-bank copy (StartScriptAtHL in bank $13 is StartScriptAtHL_B13)."""
+
+    WORD = re.compile(r"\b[A-Z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)*\b")
 
     def __init__(self, texts: dict[str, str]) -> None:
         self.alias: dict[str, str] = {}
         self.at: dict[str, str] = {}  # "BB:AAAA" -> label
-        for t in texts.values():
-            prev = None
-            for ln in t.split("\n"):
+        self.labels: set[str] = set()
+        self.tables: dict[str, list[list[str]]] = {}  # routine -> its jumptables' entries
+        self.bank_labels: dict[int, set[str]] = {}
+        for name, t in texts.items():
+            mb = re.match(r"bank([0-9a-f]{2})", name)
+            bank = int(mb.group(1), 16) if mb else -1
+            prev, cur, ls = None, None, t.split("\n")
+            for i, ln in enumerate(ls):
                 m = ALIAS.match(ln)
                 if m and prev:
                     self.alias[m.group(1)] = prev
@@ -63,17 +77,73 @@ class Names:
                         self.at.setdefault(f"{int(a.group(1), 16):02X}:{a.group(2)}", prev)
                     continue
                 m = LABEL.match(ln)
-                if m:
-                    prev = m.group(1)
+                if m and "::" in ln:
+                    prev = cur = m.group(1)
+                    self.labels.add(prev)
+                    self.bank_labels.setdefault(bank, set()).add(prev)
                     a = ADDR_NAME.match(prev)
                     if a:
                         self.at.setdefault(f"{int(a.group(1), 16):02X}:{a.group(2)}", prev)
+                elif cur and split_code(ln)[0].strip() == "rst $00":
+                    entries = []
+                    for nx in ls[i + 1:]:
+                        mm = re.match(r"^\s+dw (\w+)", nx)
+                        if not mm:
+                            break
+                        entries.append(mm.group(1))
+                    self.tables.setdefault(cur, []).append(entries)
+        self.referrer: dict[str, str] = {}  # label -> the first label whose code or data names it
+        for t in texts.values():
+            cur = None
+            for ln in t.split("\n"):
+                m = LABEL.match(ln)
+                if m and "::" in ln and "address name" not in ln:
+                    cur = m.group(1)
+                elif cur and ln.startswith("    "):
+                    for w in re.findall(r"\b[A-Za-z_]\w*\b", split_code(ln)[0]):
+                        if w != cur and w in self.labels:
+                            self.referrer.setdefault(w, cur)
+        self.history: dict[str, str] = {}
+        cfg = json.loads((ROOT / "config/names.json").read_text(encoding="utf-8"))
+        for k, v in cfg.items():
+            if not k.startswith("_") and isinstance(v, dict):
+                for old in re.findall(r"\bwas (\w+)", v.get("note", "")):
+                    self.history.setdefault(old, v["name"])
 
-    def sub(self, comment: str) -> str:
+    def resolve(self, w: str, bank: int | None = None, depth: int = 0) -> str | None:
+        if w in self.labels:
+            return w
+        if depth > 6:
+            return None
+        r = self.alias.get(w) or self.history.get(w)
+        if r:
+            return self.resolve(r, bank, depth + 1) or r
+        m = re.fullmatch(r"(\w+?)(?:_Table(\d))?_(?:Case|Sub)([0-9A-F]{2})", w)
+        if m:
+            parent = self.resolve(m.group(1), bank, depth + 1)
+            tabs = self.tables.get(parent or "", [])
+            k = int(m.group(2)) - 1 if m.group(2) else 0
+            if 0 <= k < len(tabs) and int(m.group(3), 16) < len(tabs[k]):
+                e = tabs[k][int(m.group(3), 16)]
+                return self.alias.get(e, e)
+        if bank is not None:  # the copy of a library routine in this bank
+            for suf in (f"_B{bank:02X}", f"_Bank{bank:02X}", f"_B{bank:02X}b"):
+                if w + suf in self.bank_labels.get(bank, ()):
+                    return w + suf
+        return None
+
+    def sub(self, comment: str, bank: int | None = None) -> str:
         def one(m: re.Match) -> str:
             w = m.group(0)
             return self.alias.get(w) or self.at.get(w) or w
-        return MENTION.sub(one, comment)
+        comment = MENTION.sub(one, comment)
+
+        def word(m: re.Match) -> str:
+            w = m.group(0)
+            if w in self.labels or "_" not in w and not re.search(r"[a-z][A-Z]", w):
+                return w
+            return self.resolve(w, bank) or w
+        return self.WORD.sub(word, comment)
 
 
 def split_code(line: str) -> tuple[str, str]:
@@ -156,10 +226,12 @@ def code_line(line: str) -> str:
 ASSETS: dict[str, tuple[int, int]] = {}  # asset path -> (ROM offset, length), filled by present()
 
 
-def present(text: str, names: Names) -> str:
+def present(text: str, names: Names, bank: int | None = None) -> str:
     out: list[str] = []
     recent: list[str] = []  # the last distinct full-line comments, to write a table's repeated comment once
     label, compressed, pending = "", False, False  # pending: an LZSS comment above the next label
+    dropped: list[str] = []  # bookkeeping comments above the next label (entry N of a table, callers)
+    dropped_at: dict[str, list[str]] = {}
     for ln in text.split("\n"):
         if ALIAS.match(ln):
             continue
@@ -167,8 +239,9 @@ def present(text: str, names: Names) -> str:
         if s.startswith(";"):
             pending = pending or "LZSS-compressed" in s
             if DROP_COMMENT.match(s):
+                dropped.append(names.sub(s, bank))
                 continue
-            c = reword(names.sub(s))
+            c = reword(names.sub(s, bank))
             if c in recent:
                 continue
             recent = (recent + [c])[-4:]
@@ -183,6 +256,7 @@ def present(text: str, names: Names) -> str:
         m = LABEL.match(ln)
         if m and "::" in ln:
             label, compressed, pending = m.group(1), pending, False
+            dropped_at[label], dropped = dropped, []
         elif ln.strip():
             pending = False
         m = LABEL_TAG.match(ln)
@@ -191,7 +265,7 @@ def present(text: str, names: Names) -> str:
         elif not LABEL.match(ln):
             code, comment = split_code(ln)
             if comment:
-                ln = code + names.sub(comment)
+                ln = code + names.sub(comment, bank)
             ln = code_line(ln)
             op = code.split(None, 1)[0] if code.strip() else ""
             if op and op not in DATA_OPS and not op.startswith(("script_", "objsel_")):
@@ -199,7 +273,44 @@ def present(text: str, names: Names) -> str:
         if ln == "" and out and out[-1] == "":
             continue  # a dropped block can leave two blank lines
         out.append(ln)
-    return "\n".join(rect_sizes(out))
+    return "\n".join(document(rect_sizes(out), dropped_at, names))
+
+
+def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names") -> list[str]:
+    """E-0347: a code label with no comment above it gets one restating its instructions (tools/describe.py)."""
+    out: list[str] = []
+    heads = [i for i, ln in enumerate(lines) if re.match(r"^[A-Za-z_]\w*::", ln)]
+    labels = {lines[h].split("::")[0] for h in heads} | names.labels
+    nxt = {h: (heads[k + 1] if k + 1 < len(heads) else len(lines)) for k, h in enumerate(heads)}
+    header = False  # a commented data label earlier in this run of data labels (one comment per table)
+    for i, ln in enumerate(lines):
+        if i in nxt:
+            documented = bool(out) and out[-1].startswith(";")
+            body = lines[i + 1:nxt[i]]
+            first = next((b for b in body if b.strip() and not b.startswith(";") and not re.match(r"^\.?\w+:", b)), "")
+            op = first.split(None, 1)[0] if first.strip() else ""
+            label = ln.split("::")[0]
+            is_data = op in DATA_OPS or op.startswith(("script_", "objsel_"))
+            if not first.startswith("    "):
+                pass
+            elif not is_data:
+                header = False
+                if not documented:
+                    out.extend(wrap("", "; " + describe.summarize(label, body, dropped_at.get(label, []), labels)))
+                else:  # a note that says the body was not read gets the restatement too
+                    k = len(out)
+                    while k > 0 and out[k - 1].startswith(";"):
+                        k -= 1
+                    if GAP_NOTE.search(" ".join(out[k:])):
+                        text = describe.summarize(label, body, [], labels)
+                        out.extend(wrap("", "; code: " + text[:1].lower() + text[1:]))
+            elif documented or re.match(r'^\s+db "', first):
+                header = header or documented
+            elif not header:
+                out.extend(wrap("", "; " + describe.data_note(label, body, labels, names.referrer.get(label))))
+                header = True
+        out.append(ln)
+    return out
 
 
 LD_BC = re.compile(r"^(\s+)ld bc, \$([0-9a-f]{2})([0-9a-f]{2})(\s*;.*)?$")
@@ -255,7 +366,7 @@ def main(argv: list[str]) -> int:
     ASSETS.clear()
     for name, text in texts.items():
         out = src_name(name, titles)
-        (dest / out).write_text(header(name, titles) + present(text, names), encoding="utf-8", newline="\n")
+        (dest / out).write_text(header(name, titles) + present(text, names, int(name[4:6], 16)), encoding="utf-8", newline="\n")
         written.append(out)
     for stale in set(p.name for p in dest.glob("bank*.asm")) - set(written):
         (dest / stale).unlink()  # a bank file under an earlier name

@@ -76,7 +76,7 @@ class PresentedTreeTest(unittest.TestCase):
         names = present.Names(texts)
         titles = present.bank_titles()
         stale = [n for n, t in texts.items() if (SRC / present.src_name(n, titles)).read_text(encoding="utf-8")
-                 != present.header(n, titles) + present.present(t, names)]
+                 != present.header(n, titles) + present.present(t, names, int(n[4:6], 16))]
         self.assertEqual(stale, [], "src/banks is not tools/present.py's output for build/listing")
 
     def test_no_code_or_data_line_is_lost(self):

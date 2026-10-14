@@ -4,7 +4,7 @@
 SECTION "Bank 65", ROMX[$4000], BANK[$65]
     db $65
 
-; entry 3 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 3 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes3::
@@ -145,12 +145,12 @@ KeyWorld1F_1_Y0X2_Attrs::
     INCBIN "maps/key_worlds/1_f_1_y0_x2_attrs.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 7: entry 7 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1185 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles7::
     INCBIN "maps/key_worlds/tiles7.lz"
 
-; entry 7 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 7 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes7::

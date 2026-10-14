@@ -5,7 +5,7 @@ SECTION "Bank 66", ROMX[$4000], BANK[$66]
     db $66
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 3: entry 3 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1188 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles3::
     INCBIN "maps/key_worlds/tiles3.lz"

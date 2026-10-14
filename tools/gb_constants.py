@@ -56,7 +56,9 @@ def build(rom: bytes) -> dict[str, dict[int, tuple[str, str]]]:
     return out
 
 
-def write_constants_inc(path, consts: dict, events: dict | None = None, status: list | None = None) -> None:
+def write_constants_inc(path, consts: dict, events: dict | None = None, status: list | None = None,
+                        id_notes: dict | None = None) -> None:
+    """id_notes: {name: comment} for ids whose name table gives no name (E-0347: the routines that handle them)."""
     head = {"MONSTER": "Monster ids: StringTable_MonsterNames (ids $00-$FF) and StringTable_MonsterNames2 ($100-$17F)",
             "SKILL": "Skill and battle action ids: StringTable_SkillNames; ACTION_FIGHT is the plain attack (E-0333)",
             "ITEM": "Item ids: StringTable_ItemNames"}
@@ -65,7 +67,8 @@ def write_constants_inc(path, consts: dict, events: dict | None = None, status: 
     for prefix, table in consts.items():
         lines.append(f"; {head[prefix]}")
         for v, (name, text) in sorted(table.items()):
-            lines.append(f"DEF {name} EQU ${v:02X}" + (f" ; {text}" if text and not name.endswith(text.upper()) else ""))
+            note = text if text and not name.endswith(text.upper()) else (id_notes or {}).get(name, "")
+            lines.append(f"DEF {name} EQU ${v:02X}" + (f" ; {note}" if note else ""))
         lines.append("")
     if events:
         lines += ["; Story flags (wStoryFlags; TestFlagBit, SetFlagBit, script_set_flag, object selectors), named after",

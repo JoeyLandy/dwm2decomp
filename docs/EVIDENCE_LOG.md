@@ -2431,6 +2431,45 @@ Use `OBSERVATION` for directly inspected source/tool output, `HARDWARE` for cite
 - **Result.** The old INCBIN slices 0E:$5B03, 0E:$603F and 1E:$778C are decoded.
 - Binary verification: build/run221 PASS, 0 differing bytes.
 
+### E-0347 — Every label documented; comments name only what exists
+
+- Kind: OBSERVATION and a presentation rule. Generated comments restate instructions; they make no semantic claim.
+- **Coverage before** (tools/doc_coverage.py on src/banks after E-0346):
+  - code labels: 5,112 of 9,822 had a comment above them;
+  - data labels: 22,977 of 23,390 were documented. A data label counts as documented when it has its own comment, its body is text, or an earlier label of its unbroken data run has a header comment (pokered documents a table once).
+- **Restatements (tools/describe.py, called by tools/present.py).** A code label that reaches src/ without a note gets a comment built from its instructions and the listing's bookkeeping above it:
+  - "step N of P", from the jumptable entry;
+  - "called from X", only when X is a current label;
+  - RAM stores ("sets X to 3", "copies Y to X", "increments X", "advances wScriptStep", bit set and clear through HL);
+  - story flags checked, set or cleared;
+  - messages shown (with their first words), scripts started, sounds played;
+  - calls, except address arithmetic and waits;
+  - early returns with their condition ("returns unless X is $60");
+  - "branches on X", "continues in Y", and "dispatches on X" at a jumptable.
+  - Seven clauses at most; "..." marks more.
+- **Data blocks.** A data block with no note is described by its reader (the label it extends, or the first routine whose operand names it) and its size: "data read by VaultMenu (8 bytes)".
+- **Notes that admit a gap.** A written note that says "not read", "not interpreted" or "unknown" about a code body is followed by a `; code:` line with the restatement (438 notes, among them the ActionEffect_* and ItemApply_* routines of E-0084).
+- **Names in comments.** Comments named 1,471 identifiers that are no label, RAM symbol or constant (2,616 uses). These were names from before later renames.
+  - present.py now maps such a name to the current label through:
+    - the listing's address aliases;
+    - former names recorded in config/names.json ("was X", "shortened from X");
+    - build/listing/step_names.json;
+    - the parent's jumptables for `Parent_CaseNN`, `_SubNN` and `_TableK_CaseNN` names;
+    - the copy in the same bank for a family name (StartScriptAtHL in bank $13 is StartScriptAtHL_B13).
+  - 104 stale names in config notes were rewritten through the address they had in revisions before D-005 (git history, where every label still had its address alias). 27 more were fixed by hand: local labels for addresses inside routines, and the current names of renamed tables and steps.
+  - A first attempt that also mapped every "was X" word replaced ordinary words ("was a", "was you") with labels. It was reverted before anything was committed; the rewrite now accepts only label-shaped names that the metric reports as stale.
+- **After.** Documented: 9,822 of 9,822 code labels and 23,390 of 23,390 data labels. Gap notes without a restatement: 0. Names in comments that are no label, RAM symbol, constant, family name, test class or game word: 0. Former names after "was" or "from" are history and are not counted. tests/test_doc_coverage.py checks all four counts and the summarizer's reading of common shapes.
+- Limits:
+  - A restatement says what the instructions do, not why.
+  - Branchy routines are summarized only by their first clauses.
+  - Pointer operands that are raw numbers (389 `ld rr, $4000-$7FFF` operands) stay as they are. Most are constants, message words or pointers into another bank, and labelling them needs each one's bank.
+- **Include files.**
+  - Every hardware symbol in src/hardware.inc (67) has a comment saying what the register or region does. These are Pan Docs facts (HARDWARE), from tools/gb_symbols.py.
+  - The 15 battle actions with no name (ACTION_D0 ... ACTION_DE) name the effect routine that handles them.
+  - The src/ram.asm header no longer says that some names are bare addresses. All 958 RAM symbols carry a comment.
+  - Monster, skill and item ids stay without comments. Each name is its id's own name string, and its value is in the `EQU`.
+- Binary verification: build/run529 PASS, 0 differing bytes.
+
 ### E-0346 — The other 36 battle status bits; every story flag named; unlisted object selectors
 
 - Kind: READING (C1) and generator naming rules, with the forced-bit runs of E-0339 (`build/status/s0.json` ... `s8.json`, tools/status_check.py).

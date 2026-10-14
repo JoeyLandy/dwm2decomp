@@ -29,6 +29,8 @@ LibraryMenu::
     dw LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile
     dw LibraryMenu_ShowMonsterEntry
 
+; step 0 of LibraryMenu: sets wMessageMode to 9; increments wScreenState; sets wScriptCommandType to
+; 0; sets wScriptStartRequest to $80
 LibraryMenu_WriteMessageModeAndScreenStateEtc::
     ld hl, wScreenState
     ld bc, $0020
@@ -51,6 +53,8 @@ LibraryMenu_WriteMessageModeAndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
+; step 1 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; sets wLibraryScrollY to 0; sets
+; wLibraryScrollX to 0; branches on $0f; calls LibraryMenu_WriteSVBK; increments wScreenState
 LibraryMenu_WriteScrollYAndScrollXEtc::
     call LibraryMenu_FillTileRectWithArg1Tile
     xor a
@@ -88,6 +92,7 @@ LibraryMenu_WriteScrollYAndScrollXEtc::
     ld [wScreenState], a
     ret
 
+; step 2 of LibraryMenu: calls ClearStringWindowAt2020; increments wScreenState
 LibraryMenu_ToClearStringWindowAt2020AndStep::
     call ClearStringWindowAt2020
     ld a, [wScreenState]
@@ -95,6 +100,10 @@ LibraryMenu_ToClearStringWindowAt2020AndStep::
     ld [wScreenState], a
     ret
 
+; step 3 of LibraryMenu: calls CopyRectTo20ByteRows_Bank0C; branches on wGridCursorY; calls
+; StoreBAtWordTableEntry_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; calls StoreBAtWordTableEntry_Bank0C; calls
+; BGMapAddressAtScroll_Bank0C; ...
 LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -131,6 +140,8 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C::
     ld [wScreenState], a
     ret
 
+; step 4 of LibraryMenu: calls BGMapAddressAtScroll_Bank0C; sets wArg1; sets wArg2; sets wArg3; sets
+; wArg4; calls TestBitInFieldAtArg3; branches on wArg5; ...
 LibraryMenu_BGMapAddressAtScroll_Bank0C::
     call BGMapAddressAtScroll_Bank0C
     ld de, $0182
@@ -283,6 +294,9 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C::
     ld [wTextWindowWidth], a
     ret
 
+; step 5 of LibraryMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
+; LibraryMenu_WriteGlyphListStart; branches on wGridCursorY; sets wGridCursorY to 0; branches on 0;
+; branches on wGridCursorX; ...
 LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
@@ -452,6 +466,10 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc: may continue in
+; LibraryMenu_ReadGridCursorX; increments wGlyphListStart; may continue in
+; LibraryMenu_ReadGridCursorX; may continue in LibraryMenu_ReadGridCursorX_2; sets wGlyphListStart
+; to 0
 LibraryMenu_WriteGlyphListStart::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -466,17 +484,23 @@ LibraryMenu_WriteGlyphListStart::
     xor a
     ld [wGlyphListStart], a
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc: continues in
+; LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 LibraryMenu_ReadGridCursorX::
     ld b, $bb
     jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc: continues in
+; LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 LibraryMenu_ReadGridCursorX_2::
     ld b, $c3
     jr LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc: works on registers only
 LibraryMenu_BGMapAddressAtScroll_Bank0C_2::
     ld b, $bc
 
+; Calls BGMapAddressAtScroll_Bank0C
 LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
@@ -496,9 +520,13 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C_2_ReadGridCursorX::
     ei
     ret
 
+; data read by LibraryMenu (12 bytes)
 LibraryMenu_BGMapAddressAtScroll_Bank0C_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $61, $01
 
+; step 6 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; calls LoadMapHeader; calls
+; LoadPlayerAndFollowerSpriteGraphics; sets wOBJPaletteUploadRequest to $7f; calls
+; LoadMapObjectsForScreen; increments wScreenState
 LibraryMenu_LoadMapHeader::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld a, $11
@@ -513,6 +541,10 @@ LibraryMenu_LoadMapHeader::
     ld [wScreenState], a
     ret
 
+; step 7 of LibraryMenu: calls CopyBytesDEToHL_Bank0C; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C;
+; ...
 LibraryMenu_CopyBytesDEToHL_Bank0C::
     ld hl, wWindowTileBuffer + $64
     ld de, wScreenTileBuffer
@@ -562,6 +594,10 @@ LibraryMenu_CopyBytesDEToHL_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
+; step 8 of LibraryMenu: calls CopyTileBytesToVRAM_Bank0C; calls
+; LibraryMenu_CopyTileBytesToVRAM_Bank0C; calls CopyTileBytesToVRAM_Bank0C; calls
+; DrawRecordListNameTiles_Bank1D; calls LoadTilesForPartyRecords; sets wMessageMode to 0; calls
+; WritePlayerNameWithFlag0SuffixToTextBuf0; ...
 LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ld hl, $2940
     ld de, vTiles1 + $500
@@ -602,6 +638,7 @@ LibraryMenu_DrawRecordListNameTiles_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; called from LibraryMenu_DrawRecordListNameTiles_Bank1D: calls CopyTileBytesToVRAM_Bank0C
 LibraryMenu_CopyTileBytesToVRAM_Bank0C::
     ld hl, $2940
     call CopyTileBytesToVRAM_Bank0C
@@ -613,6 +650,7 @@ LibraryMenu_CopyTileBytesToVRAM_Bank0C::
     call CopyTileBytesToVRAM_Bank0C
     ret
 
+; step 9 of LibraryMenu: calls ClearStringWindowAt2200; increments wScreenState
 LibraryMenu_ToClearStringWindowAt2200AndStep::
     call ClearStringWindowAt2200
     ld a, [wScreenState]
@@ -620,6 +658,10 @@ LibraryMenu_ToClearStringWindowAt2200AndStep::
     ld [wScreenState], a
     ret
 
+; step 10 of LibraryMenu: calls CopyRectTo20ByteRows_Bank0C; calls
+; GridIndexFromGridCursorXGridCursorY; calls StoreBAtWordTableEntry_Bank0C; calls
+; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; calls
+; StoreBAtWordTableEntry_Bank0C; calls LibraryMenu_GridIndexFromGridCursorXGridCursorY_2; ...
 LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld de, LibraryMenu_GridIndexFromGridCursorXGridCursorY_TileRect
     ld hl, wWindowTileBuffer + $6c
@@ -654,6 +696,8 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY::
     ld [wScreenState], a
     ret
 
+; step 11 of LibraryMenu: calls LibraryMenu_GridIndexFromGridCursorXGridCursorY_3; increments
+; wScreenState
 LibraryMenu_WriteScreenState::
     call LibraryMenu_GridIndexFromGridCursorXGridCursorY_3
     ld a, [wScreenState]
@@ -661,6 +705,9 @@ LibraryMenu_WriteScreenState::
     ld [wScreenState], a
     ret
 
+; step 12 of LibraryMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
+; LibraryMenu_WriteListEntries; calls GridIndexFromGridCursorXGridCursorY; branches on
+; wGrid2CursorY; sets wGrid2CursorY to 0; calls GridIndexFromGridCursorXGridCursorY; ...
 LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
@@ -843,6 +890,10 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld [wScriptStartRequest], a
     ret
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2: may continue in
+; LibraryMenu_ReadGrid2CursorX; increments wListEntries; may continue in
+; LibraryMenu_ReadGrid2CursorX; may continue in LibraryMenu_ReadGrid2CursorX_2; sets wListEntries to
+; 0
 LibraryMenu_WriteListEntries::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -857,15 +908,20 @@ LibraryMenu_WriteListEntries::
     xor a
     ld [wListEntries], a
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2: continues in
+; LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
 LibraryMenu_ReadGrid2CursorX::
     ld b, $bb
     jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
 
+; called from LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2: continues in
+; LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
 LibraryMenu_ReadGrid2CursorX_2::
     ld b, $c3
     jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
     db $06, $bc
 
+; Calls BGMapAddressAtScroll_Bank0C
 LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX::
     ld a, [wGrid2CursorX]
     add a
@@ -885,9 +941,13 @@ LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX::
     ei
     ret
 
+; data read by LibraryMenu (12 bytes)
 LibraryMenu_ReadGrid2CursorX_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00, $29, $01, $69, $01
 
+; step 13 of LibraryMenu: calls CopyRectTo20ByteRows_Bank0C; sets wArg1 to 1; calls
+; LibraryMenu_HLToDecimalDigits; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; increments wScreenState; sets wTextWindowTileLo; ...
 LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
     ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits_TileRect
     ld hl, wWindowTileBuffer + $6c
@@ -919,6 +979,9 @@ LibraryMenu_CopyRectTo20ByteRows_Bank0C_LibraryMenu_HLToDecimalDigits::
     ld [wScriptStartRequest], a
     ret
 
+; step 14 of LibraryMenu: calls StoreBAtWordTableEntry_Bank0C; calls BGMapAddressAtScroll_Bank0C;
+; calls DrawScreenBufferRect_Bank0C; sets wScreenState to 5; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80
 LibraryMenu_StoreBAtWordTableEntry_Bank0C::
     ld a, [wGridCursorX]
     ld hl, LibraryMenu_CopyRectTo20ByteRows_Bank0C_Data
@@ -936,6 +999,8 @@ LibraryMenu_StoreBAtWordTableEntry_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
+; step 15 of LibraryMenu: calls LibraryMenu_FillTileRectWithArg1Tile; calls LibraryMenu_WriteSVBK;
+; increments wScreenState
 LibraryMenu_WriteScreenState_LibraryMenu_FillTileRectWithArg1Tile::
     call LibraryMenu_FillTileRectWithArg1Tile
     call LibraryMenu_WriteSVBK
@@ -964,6 +1029,10 @@ LibraryMenu_ShowMonsterEntry::
     dw LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits
     dw LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C
 
+; step 0 of LibraryMenu_ShowMonsterEntry: calls
+; LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo; sets wTextWindowTileLo;
+; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest;
+; calls CopyTileBytesToVRAM_Bank0C; ...
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest::
     call LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo
     ld hl, vTiles1
@@ -1023,6 +1092,9 @@ LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $ff, $ff, $ff, $ff, $60, $ff, $60, $ff, $60 ; id 4
     db $ff, $60, $ff, $60, $ff, $60, $ff, $ff, $ff, $ff, $ff, $00, $ff, $00, $ff, $00 ; id 5
 
+; step 1 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; sets wTextWindowTileLo; sets
+; wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls FillTilesFromRequest; calls
+; DecompressToVRAM; ...
 LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo::
     ld a, [wScreenSubStep]
     and a
@@ -1178,6 +1250,8 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo_TileRect_8::
     db $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd, $be, $bf, $c0, $c1, $c2, $c3, $c4, $c5 ; id 0
     db $7e, $7f
 
+; step 2 of LibraryMenu_ShowMonsterEntry: branches on wScreenSubStep; calls
+; BGMapAddressAtScroll_Bank0C; sets wArg5; sets wArg6; sets wArg1; sets wArg2; sets wArg3 to 6; ...
 LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld a, [wScreenSubStep]
     and a
@@ -1260,6 +1334,9 @@ LibraryMenu_ShowMonsterEntry_DrawTileRectFromArg1Params::
     ld [wScreenStep], a
     ret
 
+; step 3 of LibraryMenu_ShowMonsterEntry: calls GridCellAddressFromGridCursorXAndGrid2CursorX; sets
+; wArg1; sets wArg2; sets wArg3 to 0; sets wArg4 to 0; sets wArg5 to $80; calls
+; DecompressGraphicsArg1ToArg4; ...
 LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld a, l
@@ -1277,6 +1354,9 @@ LibraryMenu_ShowMonsterEntry_GridCellAddressFromGridCursorXAndGrid2CursorX::
     ld [wScreenStep], a
     ret
 
+; step 4 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
+; GridCellAddressFromGridCursorXAndGrid2CursorX; sets wStringCategory; sets wStringIndex; sets
+; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1370,9 +1450,14 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor::
     ld [wScreenStep], a
     ret
 
+; data read by LibraryMenu (6 bytes)
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_Data::
     db $40, $94, $d0, $94, $60, $95
 
+; step 5 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
+; GridCellAddressFromGridCursorXAndGrid2CursorX; calls LibraryMenu_TestBitInFieldAtArg3; calls
+; CopyFromBankWaitVRAM; sets wStringCategory to 0; sets wStringIndex to 0; sets wTextWindowTileLo;
+; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1421,6 +1506,10 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_2::
     ld [wScreenStep], a
     ret
 
+; step 6 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
+; GridCellAddressFromGridCursorXAndGrid2CursorX; calls
+; LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6; calls
+; LibraryMenu_ShowMonsterEntry_ShowString_Bank08; increments wScreenStep
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1459,6 +1548,9 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3::
     ld [wScreenStep], a
     ret
 
+; step 7 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; calls
+; GridCellAddressFromGridCursorXAndGrid2CursorX; sets wStringCategory; sets wStringIndex; sets
+; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_4::
     call DrawThreeMetaSpritePartsAtGridCursor
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -1484,6 +1576,9 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_4::
     ld [wScreenStep], a
     ret
 
+; step 8 of LibraryMenu_ShowMonsterEntry: calls DrawThreeMetaSpritePartsAtGridCursor; branches on
+; the byte at wScreenCountPlusOne; branches on wJoypadPressedRepeat; branches on wJoypadPressed;
+; branches on wGrid2CursorX; sets wGrid2CursorX to 0; calls GridIndexFromGridCursorXGridCursorY; ...
 LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_5::
     call DrawThreeMetaSpritePartsAtGridCursor
     ld a, [wGridCursorY]
@@ -1680,6 +1775,8 @@ LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_5::
     ld [wScreenStep], a
     ret
 
+; step 9 of LibraryMenu_ShowMonsterEntry: calls LibraryMenu_FillTileRectWithArg1Tile; calls
+; DecompressToVRAM; calls LibraryMenu_WriteSVBK; increments wScreenStep
 LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
     call LibraryMenu_FillTileRectWithArg1Tile
     ld b, $46
@@ -1692,6 +1789,9 @@ LibraryMenu_ShowMonsterEntry_DecompressToVRAM::
     ld [wScreenStep], a
     ret
 
+; step 10 of LibraryMenu_ShowMonsterEntry: calls CopyRectTo20ByteRows_Bank0C; branches on
+; wGridCursorY; calls StoreBAtWordTableEntry_Bank0C; calls CopyRectTo20ByteRows_Bank0C; calls
+; StoreBAtWordTableEntry_Bank0C; calls ClearStringWindowAt2020; calls ClearStringWindowAt2200; ...
 LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld de, LibraryMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1740,6 +1840,9 @@ LibraryMenu_ShowMonsterEntry_CopyRectTo20ByteRows_Bank0C::
     ld [wScreenStep], a
     ret
 
+; step 11 of LibraryMenu_ShowMonsterEntry: calls WriteBGPalette0FromData; calls
+; LibraryMenu_WriteWorkBuf; calls LibraryMenu_GridIndexFromGridCursorXGridCursorY_2; increments
+; wScreenStep
 LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData::
     call WriteBGPalette0FromData
     call LibraryMenu_WriteWorkBuf
@@ -1749,6 +1852,10 @@ LibraryMenu_ShowMonsterEntry_WriteBGPalette0FromData::
     ld [wScreenStep], a
     ret
 
+; step 12 of LibraryMenu_ShowMonsterEntry: sets wArg1 to 1; calls LibraryMenu_HLToDecimalDigits;
+; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; calls
+; CopyRectTo20ByteRows_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C;
+; ...
 LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     ld a, $01
     ld [wArg1], a
@@ -1787,6 +1894,9 @@ LibraryMenu_ShowMonsterEntry_LibraryMenu_HLToDecimalDigits::
     ld [wScriptStartRequest], a
     ret
 
+; step 13 of LibraryMenu_ShowMonsterEntry: calls StoreBAtWordTableEntry_Bank0C; calls
+; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; sets wScreenStep to 0; sets
+; wScreenState to $0c; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
 LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld a, [wGrid2CursorX]
     ld b, $c3
@@ -1816,6 +1926,9 @@ LibraryMenu_ShowMonsterEntry_StoreBAtWordTableEntry_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
+; called from LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3: sets
+; wStringIndex; sets wStringCategory; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; sets wTextWindowWidth; calls ShowString_Bank08; ...
 LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
     push de
     inc hl
@@ -1869,6 +1982,9 @@ LibraryMenu_ShowMonsterEntry_ShowString_Bank08::
     farcall ShowString_Bank0B
     ret
 
+; called from LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3: sets wArg6; sets
+; wArg7; calls FamilyForSpeciesIdArg6; sets wWorkBuf; calls LoadFamilyIconTileForWorkBuf; calls
+; CopyFromBankWaitVRAM
 LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
     push af
     inc hl
@@ -1916,6 +2032,9 @@ LibraryMenu_ShowMonsterEntry_FamilyForSpeciesIdArg6::
     call CopyFromBankWaitVRAM
     ret
 
+; Calls GridIndexFromGridCursorXGridCursorY; calls LibraryMenu_TestBitInFieldAtArg3; sets
+; wStringCategory; sets wStringIndex; sets wTextWindowTileLo; sets wTextWindowTileHi; sets
+; wTextWindowRows; ...
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_2::
     call GridIndexFromGridCursorXGridCursorY
     add a
@@ -2026,9 +2145,13 @@ LibraryMenu_GridIndexFromGridCursorXGridCursorY_2::
     jp c, .loop
     ret
 
+; data read by LibraryMenu (12 bytes)
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_Data::
     db $00, $92, $90, $92, $20, $93, $b0, $93, $40, $94, $d0, $94
 
+; Branches on the byte at LibraryMenu_WriteWorkBuf_Data; copies the byte at
+; LibraryMenu_WriteWorkBuf_Data to wWorkBuf; branches on the byte at LibraryMenu_WriteWorkBuf_Data;
+; calls LoadFamilyIconTileForWorkBuf
 LibraryMenu_WriteWorkBuf::
     ld a, [wGridCursorY]
     add a
@@ -2071,6 +2194,7 @@ LibraryMenu_WriteWorkBuf::
     jr c, .loop
     ret
 
+; data read by LibraryMenu (24 bytes)
 LibraryMenu_WriteWorkBuf_Data::
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $ff, $20, $90, $70, $90
     db $c0, $90, $10, $91, $60, $91, $b0, $91
@@ -2078,7 +2202,7 @@ LibraryMenu_WriteWorkBuf_Data::
 ; with the pointer from GridCellAddressFromGridCursorXAndGrid2CursorX draws sub-indices 0, 4 and 2
 ; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc) at Y = $10, $24
 ; and $38, X = $6C (E-0121) (E-0344: the address in its name dropped or read as the label there; was
-; DrawThreeMetaSpritePartsFor5050; shortened from
+; DrawThreeMetaSpritePartsAtGridCursor; shortened from
 ; DrawThreeMetaSpritePartsForGridCellAddressFromGridCursorXAndGrid2CursorX)
 DrawThreeMetaSpritePartsAtGridCursor::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -2120,6 +2244,7 @@ DrawThreeMetaSpritePartsAtGridCursor::
     farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
     ret
 
+; Calls BGMapAddressAtScroll_Bank0C; calls GridIndexFromGridCursorXGridCursorY
 LibraryMenu_GridIndexFromGridCursorXGridCursorY_3::
     call BGMapAddressAtScroll_Bank0C
     ld de, $018f
@@ -2200,6 +2325,8 @@ ReadGridCellByteForGridCursorXGridCursorY::
     ld a, [de]
     ret
 
+; Branches on wGridCursorY; calls HLToDecimalDigits; calls BGMapAddressAtScroll_Bank0C; branches on
+; wArg1
 LibraryMenu_HLToDecimalDigits::
     ld a, [wGridCursorY]
     add a
@@ -2287,12 +2414,14 @@ LibraryMenu_HLToDecimalDigits::
     jr c, .loop
     ret
 
+; data read by LibraryMenu_HLToDecimalDigits (12 bytes)
 LibraryMenu_HLToDecimalDigits_Data1::
     db $26, $00, $66, $00, $a6, $00, $e6, $00, $26, $01, $66, $01
 
 LibraryMenu_HLToDecimalDigits_Data2::
     db $7e, $c3, $a6, $c3, $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
+; Branches on wIsCGB
 LibraryMenu_WriteSVBK::
     ld hl, wWindowTileBuffer + $64
     ld bc, $0104
@@ -2365,6 +2494,8 @@ BGMapAddressAtScroll_Bank0C::
     add_a_to_hl
     ret
 
+; Calls CopyTileBytesToVRAM_Bank0C; calls BGMapAddressAtScroll_Bank0C; sets wArg5; sets wArg6; sets
+; wArg1; sets wArg2; sets wArg3 to $20; ...
 LibraryMenu_FillTileRectWithArg1Tile::
     ld hl, LibraryMenu_FillTileRectWithArg1Tile_Tiles
     ld de, vTiles1 + $430
@@ -2506,6 +2637,7 @@ DrawScreenBufferRect_Bank0C::
     ldh [rVBK], a
     ret
 
+; called from ArenaMenu_BGMapAddressAtScroll_Bank0C: calls StoreBAtWordTableEntry_Bank0C
 ArenaMenu_StoreBAtWordTableEntry_Bank0C::
     ld a, c
     ld b, a
@@ -2571,6 +2703,8 @@ ClearStringWindowAt2200::
     call FillTilesFromRequest
     ret
 
+; Sets wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; calls
+; FillTilesFromRequest; sets wTextWindowTileLo; sets wTextWindowTileHi; ...
 LibraryMenu_ShowMonsterEntry_FillTilesFromRequest_SetTextWindowTileLo::
     ld hl, vTiles2
     ld a, l
@@ -2656,6 +2790,8 @@ GridIndexFromGrid2CursorXGrid2CursorY::
     pop bc
     ret
 
+; Sets wArg1; sets wArg2; sets wArg3; sets wArg4; calls TestBitInFieldAtArg3; branches on wArg5;
+; sets wSpeciesIdLo; ...
 LibraryMenu_TestBitInFieldAtArg3::
     push hl
     ld a, l
@@ -2695,6 +2831,8 @@ LibraryMenu_TestBitInFieldAtArg3::
     ld a, $fe
     ret
 
+; called from LibraryMenu_ShowMonsterEntry_DecompressToVRAM_SetTextWindowTileLo: calls
+; GridCellAddressFromGridCursorXAndGrid2CursorX
 LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
     ld de, LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_MonsterIconKindTable
@@ -2717,8 +2855,9 @@ LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX::
     jr nz, .loop
     ret
 
-; LibraryMenu_Case10_Case01_Sub01 reads the byte at $536A + the monster number from
-; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two tile bytes that
+; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX reads the byte at
+; $536A + the monster number from GridCellAddressFromGridCursorXAndGrid2CursorX and copies the two
+; tile bytes that
 ; LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_Data[value] points
 ; to into wScreenBlock9C; 373 bytes, one per monster id up to $174 (E-0206, C1)
 ; record: index into
@@ -3102,7 +3241,8 @@ LibraryMenu_ShowMonsterEntry_CallGridCellAddressFromGridCursorXAndGrid2CursorX_D
     db $e9, $54, $eb, $54, $ed, $54, $ef, $54, $f1, $54, $7c, $80, $7d, $80, $7e, $80
     db $7e, $7e, $7f, $80
 
-; takes the class byte of the grid cell (MonsterClassByteTable_5562) and copies its four bytes to
+; takes the class byte of the grid cell
+; (LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable) and copies its four bytes to
 ; wLibraryEntryBlock
 LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     call GridCellAddressFromGridCursorXAndGrid2CursorX
@@ -3126,6 +3266,7 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     jr nz, .loop
     ret
 
+; data read by LibraryMenu (8 words)
 LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data::
     dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry00
     dw LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry01
@@ -3162,7 +3303,7 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data_Entry07::
 
 ; writes six bytes from WriteBGPalette0FromData_Data to the CGB background palette data (rBCPS =
 ; $80, auto-increment), waiting for VRAM access (E-0122) (E-0344: the address in its name dropped or
-; read as the label there; was WriteBGPalette0From555C; a trailing preposition left by the dropped
+; read as the label there; was WriteBGPalette0FromData; a trailing preposition left by the dropped
 ; address removed)
 WriteBGPalette0FromData::
     ld hl, WriteBGPalette0FromData_Data
@@ -3183,14 +3324,15 @@ WriteBGPalette0FromData::
     jr nz, .loop
     ret
 
+; data read by WriteBGPalette0FromData (6 bytes)
 WriteBGPalette0FromData_Data::
     db $86, $7d, $ff, $7f, $e1, $7f
 
-; LibraryMenu_Case10_Case01_Sub02 reads the byte at $5562 + the monster number from
+; LibraryMenu_ShowMonsterEntry_LoadClassBlock reads the byte at $5562 + the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX and copies the 4-byte tile block that
 ; LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data[class] points to into wScreenBlock9C; the same
-; 373 values as MonsterClassByteTable_71AC in bank $16 except at ids 26, 352, 355, 358, 360, 364,
-; 366, 367, 372 (E-0206, C1)
+; 373 values as MonsterClassByteTable_1 in bank $16 except at ids 26, 352, 355, 358, 360, 364, 366,
+; 367, 372 (E-0206, C1)
 ; record: class 0-7
 LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable::
     db $00 ; id 0
@@ -3692,13 +3834,13 @@ ReadGridCellByteForGridCursorXGridCursorY_Data_Entry09::
 ReadGridCellByteForGridCursorXGridCursorY_Data_Entry0A::
     db $05, $05, $05, $03
 
-; LibraryMenu_Case10_Case06 takes the monster number from
+; LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3 takes the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
 ; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $599F
-; + 2 * number: the first word LibraryMenu_Case10_Case06 draws (graphics at vTiles2 + $300, sprite
-; part $42); the two parents shown for the monster: for all 95 monsters whose two entries are
-; families, FamilyPairResultTable (bank $0E) row A, column B gives that monster or parent A's
-; species (C2 for those entries); 384 words (E-0211, C1)
+; + 2 * number: the first word LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3
+; draws (graphics at vTiles2 + $300, sprite part $42); the two parents shown for the monster: for
+; all 95 monsters whose two entries are families, FamilyPairResultTable (bank $0E) row A, column B
+; gives that monster or parent A's species (C2 for those entries); 384 words (E-0211, C1)
 ; record: monster id, or $FExx = any monster of family xx ($FEFE = none)
 MonsterPedigreeTableA::
     dw $fe00 ; id 0 family 0
@@ -4475,7 +4617,7 @@ MonsterPedigreeTableA_Alt::
     dw $fefe ; id 382 Kagebou none
     dw $fefe ; id 383 ? none
 
-; LibraryMenu_Case10_Case06 takes the monster number from
+; LibraryMenu_ShowMonsterEntry_DrawThreeMetaSpritePartsAtGridCursor_3 takes the monster number from
 ; GridCellAddressFromGridCursorXAndGrid2CursorX (page base from
 ; LibraryMenu_BGMapAddressAtScroll_Bank0C_Data1 plus the grid position) and reads the word at $5F9F
 ; + 2 * number: the second word (vTiles2 + $390, sprite part $43); the two parents shown for the
@@ -5303,6 +5445,10 @@ ArenaMenu::
     dw ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2
     dw ArenaMenu_RandomModulo52
 
+; step 39 of ArenaMenu: calls RandomModulo52; sets wArg1; calls
+; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; calls GenerateNewKeyEntry; calls
+; ArenaMenu_AddArg1ToGoldCapped99999; calls ArenaMenu_RandomModulo52_2; calls
+; ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999; ...
 ArenaMenu_RandomModulo52::
     ld a, [wAreaGraphicsIndex]
     add a
@@ -5383,6 +5529,9 @@ ArenaMenu_RandomModulo52::
     ld [wAreaGraphicsIndex], a
     ret
 
+; step 38 of ArenaMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 1; decrements wScreenState; sets wArg1 to
+; 0; sets wArg2 to 6; ...
 ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -5432,6 +5581,9 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_2::
     ld [wScriptStartRequest], a
     ret
 
+; step 0 of ArenaMenu: calls CopyBytesDEToHL_Bank0C; branches on wIsCGB; calls
+; CopyLow3BitsToWRAMBank2_Bank0C; sets wMessageMode to $0a; branches on wArenaRank; branches on
+; wScreenTableIndex; sets wScreenState to $1d; ...
 ArenaMenu_CopyBytesDEToHL_Bank0C::
     ld hl, wScreenState
     ld b, $6f
@@ -5565,6 +5717,9 @@ ArenaMenu_CopyBytesDEToHL_Bank0C::
     ld [wScriptStartRequest], a
     ret
 
+; step 1 of ArenaMenu: calls CopyRectTo20ByteRows_Bank0C; calls ArenaMenu_ReadArenaRank; calls
+; ArenaMenu_Number24ToPackedBCD; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; increments wScreenState
 ArenaMenu_CopyRectTo20ByteRows_Bank0C::
     ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_TileRect
     ld hl, wWindowTileBuffer + $b4
@@ -5581,6 +5736,9 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C::
     ld [wScreenState], a
     ret
 
+; step 2 of ArenaMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
+; ArenaMenu_WriteGridCursorY; calls ArenaMenu_ReadGridCursorX_2; branches on wGridCursorX; sets
+; wGridCursorX to 3; calls ArenaMenu_ReadGridCursorX; ...
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5689,9 +5847,13 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
+; data read by ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc (4 bytes)
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1::
     db $0c, $0b, $0a, $1c
 
+; called from ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: may continue in
+; ArenaMenu_ReadGridCursorX; increments wGridCursorY; may continue in ArenaMenu_ReadGridCursorX; may
+; continue in ArenaMenu_ReadGridCursorX_2; sets wGridCursorY to 0
 ArenaMenu_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -5706,15 +5868,20 @@ ArenaMenu_WriteGridCursorY::
     xor a
     ld [wGridCursorY], a
 
+; called from ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: continues in
+; ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
 ArenaMenu_ReadGridCursorX::
     ld b, $bb
     jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
 
+; called from ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc: continues in
+; ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
 ArenaMenu_ReadGridCursorX_2::
     ld b, $c3
     jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
     db $06, $bc
 
+; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap
 ArenaMenu_ReadGridCursorX_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
@@ -5735,13 +5902,14 @@ ArenaMenu_ReadGridCursorX_2_ReadGridCursorX::
     ei
     ret
 
+; data read by ArenaMenu (8 bytes)
 ArenaMenu_ReadGridCursorX_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
 ; plays sound $6C, copies the 6 x 5 box ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect to
 ; wWindowTileBuffer + $112, draws it at the scroll position + $1CC, wScreenState += 1 and
 ; wTwoChoiceCursor = 0 (E-0122) (E-0340: the address in its name read as its RAM name; was
-; ShowTwoChoiceBoxAtWC412)
+; ShowTwoChoiceBoxAtWindowTileBufferRow13Col14)
 ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     ld a, $6c
     call QueueSoundEffect
@@ -5760,6 +5928,9 @@ ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     ld [wTwoChoiceCursor], a
     ret
 
+; step 4 of ArenaMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; calls ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1; increments
+; wScreenState; sets wTwoChoiceCursor to 2; sets wScriptCommandType to 0; ...
 ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -5836,6 +6007,8 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D::
     ld [wScriptStartRequest], a
     ret
 
+; Sets wArg1 to 0; sets wArg2 to 6; calls CopyScreenBufferRectWithAttrs_0C; calls
+; CopyRectTo20ByteRows_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C
 ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
     ld b, $00
     ld c, $05
@@ -5856,6 +6029,9 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1::
     call DrawScreenBufferRect_Bank0C
     ret
 
+; step 5 of ArenaMenu: calls ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1; calls
+; ArenaMenu_StoreBAtWordTableEntry_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; sets wScreenState to 2
 ArenaMenu_BGMapAddressAtScroll_Bank0C::
     call ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1
     ld c, $04
@@ -5869,12 +6045,16 @@ ArenaMenu_BGMapAddressAtScroll_Bank0C::
     ld [wScreenState], a
     ret
 
+; step 6 of ArenaMenu: increments wScreenState
 ArenaMenu_AdvanceScreenState::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
+; step 7 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent_SetScriptReturnBank; sets wArg3 to 0; sets
+; wArg2; sets wArg1; calls SubtractArg1AmountFromGold; increments wScreenState; copies
+; wScreenState+1 to wScreenTableIndex; ...
 ArenaMenu_SubtractArg1AmountFromGold::
     call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ld a, [wGridCursorX]
@@ -5909,6 +6089,9 @@ ArenaMenu_SubtractArg1AmountFromGold::
     call RedrawFullScreenBoxes_0C
     ret
 
+; step 8 of ArenaMenu: branches on wBattleScene; branches on wRecordCapacity; calls
+; SetupScreenCountPlusOneFromRecordCapacity; sets wScriptCommandType to 0; sets wScriptStartRequest
+; to $80; increments wScreenState; increments wArenaRank; ...
 ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity::
     ld a, [wBattleScene]
     and a
@@ -5958,15 +6141,21 @@ ArenaMenu_SetupScreenCountPlusOneFromRecordCapacity::
     ld [wScreenState], a
     ret
 
+; step 10 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
 ArenaMenu_CallArenaMenu_DispatchTalkEvent::
     call ArenaMenu_DispatchTalkEvent_SetScriptReturnBank
     ret
 
+; step 11 of ArenaMenu: calls ArenaMenu_Number24ToPackedBCD; calls
+; ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
 ArenaMenu_ShowTwoChoiceBoxAtWindowTileBufferRow13Col14::
     call ArenaMenu_Number24ToPackedBCD
     call ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     ret
 
+; step 12 of ArenaMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets
+; wScriptStartRequest to $80; branches on wTwoChoiceCursor; ...
 ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6003,12 +6192,15 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_3::
     ld [wScriptStartRequest], a
     ret
 
+; step 13 of ArenaMenu: increments wScreenState
 ArenaMenu_AdvanceScreenState_SetScreenState::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
+; step 14 of ArenaMenu: increments wScreenState; sets wTwoChoiceCursor to 0; sets wScriptCommandType
+; to 0; sets wScriptStartRequest to $80
 ArenaMenu_SetScreenState::
     ld a, [wScreenState]
     inc a
@@ -6022,6 +6214,9 @@ ArenaMenu_SetScreenState::
     ld [wScriptStartRequest], a
     ret
 
+; step 15 of ArenaMenu: sets wArg1 to 0; sets wArg2 to 8; calls CopyScreenBufferRectWithAttrs_0C;
+; sets wArg1 to 0; sets wArg2 to $0d; calls CopyScreenBufferRectWithAttrs_0C; calls
+; BGMapAddressAtScroll_Bank0C; ...
 ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ld b, $00
     ld c, $03
@@ -6054,6 +6249,10 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
     ld [wScriptStartRequest], a
     ret
 
+; step 16 of ArenaMenu: calls CopyRectTo20ByteRows_Bank0C; calls ArenaMenu_Number24ToPackedBCD;
+; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; calls
+; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; calls
+; ArenaMenu_WriteTwoChoiceCursor; ...
 ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
     ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $b4
@@ -6079,6 +6278,9 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD::
     ld [wScriptStartRequest], a
     ret
 
+; step 17 of ArenaMenu: calls CopyRectTo20ByteRows_Bank0C; calls ArenaMenu_Number24ToPackedBCD;
+; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; calls
+; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; increments wScreenState
 ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_2::
     ld de, ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $b4
@@ -6098,6 +6300,9 @@ ArenaMenu_CopyRectTo20ByteRows_Bank0C_ArenaMenu_Number24ToPackedBCD_2::
     ld [wScreenState], a
     ret
 
+; step 18 of ArenaMenu: branches on wJoypadPressedRepeat; branches on wJoypadPressed; calls
+; ArenaMenu_WriteGridCursorY_2; calls ArenaMenu_ReadGridCursorX_4; branches on wGridCursorX; sets
+; wGridCursorX to 3; calls ArenaMenu_ReadGridCursorX_3; ...
 ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -6182,9 +6387,13 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
+; data read by ArenaMenu_WriteTextBuf0AndScreenStateEtc (4 bytes)
 ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1::
     db $0c, $0b, $0a, $1c
 
+; called from ArenaMenu_WriteTextBuf0AndScreenStateEtc: may continue in ArenaMenu_ReadGridCursorX_3;
+; increments wGridCursorY; may continue in ArenaMenu_ReadGridCursorX_3; may continue in
+; ArenaMenu_ReadGridCursorX_4; sets wGridCursorY to 0
 ArenaMenu_WriteGridCursorY_2::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -6199,15 +6408,20 @@ ArenaMenu_WriteGridCursorY_2::
     xor a
     ld [wGridCursorY], a
 
+; called from ArenaMenu_WriteTextBuf0AndScreenStateEtc: continues in
+; ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
 ArenaMenu_ReadGridCursorX_3::
     ld b, $bb
     jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
 
+; called from ArenaMenu_WriteTextBuf0AndScreenStateEtc: continues in
+; ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
 ArenaMenu_ReadGridCursorX_4::
     ld b, $c3
     jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
     db $06, $bc
 
+; Calls BGMapAddressAtScroll_Bank0C; calls StepBGMapAddressBackOnScrollWrap
 ArenaMenu_ReadGridCursorX_4_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
@@ -6228,9 +6442,13 @@ ArenaMenu_ReadGridCursorX_4_ReadGridCursorX::
     ei
     ret
 
+; data read by ArenaMenu_ReadGridCursorX_4_ReadGridCursorX (8 bytes)
 ArenaMenu_ReadGridCursorX_Data_2::
     db $a1, $00, $e1, $00, $21, $01, $61, $01
 
+; step 19 of ArenaMenu: sets wArg1 to 0; sets wArg2 to 8; calls CopyScreenBufferRectWithAttrs_0C;
+; calls BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; sets wScreenState to $0d;
+; sets wGrid2CursorX to 0; ...
 ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2::
     ld b, $00
     ld c, $05
@@ -6255,12 +6473,17 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_2::
     ld [wScriptStartRequest], a
     ret
 
+; step 20 of ArenaMenu: increments wScreenState
 ArenaMenu_AdvanceScreenState_SetScreenState_2::
     ld a, [wScreenState]
     inc a
     ld [wScreenState], a
     ret
 
+; step 21 of ArenaMenu: copies wGridCursorX+1 to wScreenArea; sets wGrid2CursorX to 2; copies the
+; byte at ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data to wArenaFeeLo; copies the byte at
+; ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data to wArenaFeeHi; increments wScreenState; sets
+; wTwoChoiceCursor to 0; sets wScriptCommandType to 0; ...
 ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
     ld a, [wGridCursorX]
     inc a
@@ -6288,9 +6511,13 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
     ld [wScriptStartRequest], a
     ret
 
+; data read by ArenaMenu (8 bytes)
 ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data::
     db $e8, $03, $d0, $07, $b8, $0b, $88, $13
 
+; step 23 of ArenaMenu: calls UpdateTwoChoiceCursor_Bank1D; returns if wMenuInputResult is 0;
+; branches on wMenuInputResult; sets wTwoChoiceCursor to 2; increments wScreenState; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; ...
 ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -6352,6 +6579,9 @@ ArenaMenu_UpdateTwoChoiceCursor_Bank1D_4::
     ld [wScriptStartRequest], a
     ret
 
+; step 24 of ArenaMenu: sets wArg1 to 0; sets wArg2 to 6; calls CopyScreenBufferRectWithAttrs_0C;
+; calls CopyRectTo20ByteRows_Bank0C; calls BGMapAddressAtScroll_Bank0C; calls
+; DrawScreenBufferRect_Bank0C; calls ArenaMenu_WriteTwoChoiceCursor; ...
 ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
     ld b, $00
     ld c, $05
@@ -6382,6 +6612,9 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C_SetArg1_3::
     ld [wScriptStartRequest], a
     ret
 
+; step 25 of ArenaMenu: sets wArg3 to 0; copies wArenaFeeHi to wArg2; copies wArenaFeeLo to wArg1;
+; calls SubtractArg1AmountFromGold; calls ArenaMenu_Number24ToPackedBCD; calls
+; BGMapAddressAtScroll_Bank0C; calls DrawScreenBufferRect_Bank0C; ...
 ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
     xor a
     ld [wArg3], a
@@ -6404,6 +6637,9 @@ ArenaMenu_SubtractArg1AmountFromGold_ArenaMenu_Number24ToPackedBCD::
     ld [wScriptStartRequest], a
     ret
 
+; step 26 of ArenaMenu: copies wScreenArea to wAreaGraphicsIndex; calls
+; ArenaMenu_DispatchTalkEvent_2; increments wScreenState; copies wScreenState+1 to
+; wScreenTableIndex; calls RedrawFullScreenBoxes_0C
 ArenaMenu_RedrawFullScreenBoxes_0C::
     ld a, [wScreenArea]
     ld [wAreaGraphicsIndex], a
@@ -6415,6 +6651,10 @@ ArenaMenu_RedrawFullScreenBoxes_0C::
     call RedrawFullScreenBoxes_0C
     ret
 
+; step 27 of ArenaMenu: branches on wBattleScene; branches on wArenaRound; calls
+; IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea; sets wTwoChoiceCursor to 1; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; copies wScreenState to
+; wScreenTableIndex; ...
 ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld a, [wBattleScene]
     and a
@@ -6461,10 +6701,14 @@ ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea::
     ld a, $02
     jr .set_two_choice_cursor
 
+; step 28 of ArenaMenu: calls ArenaMenu_ReadArenaRound
 ArenaMenu_ToArenaMenu_ReadArenaRound::
     call ArenaMenu_ReadArenaRound
     ret
 
+; step 30 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent; increments wScreenState; copies
+; wScreenState+1 to wScreenTableIndex; sets wRecordCapacity to 0; sets wAreaGraphicsIndex to 0;
+; calls RedrawFullScreenBoxes_0C
 ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent::
     call ArenaMenu_DispatchTalkEvent
     ld a, [wScreenState]
@@ -6480,10 +6724,14 @@ ArenaMenu_RedrawFullScreenBoxes_0C_ArenaMenu_DispatchTalkEvent::
     call RedrawFullScreenBoxes_0C
     ret
 
+; step 33 of ArenaMenu: calls ArenaMenu_DispatchTalkEvent
 ArenaMenu_ToArenaMenu_DispatchTalkEvent::
     call ArenaMenu_DispatchTalkEvent
     ret
 
+; step 34 of ArenaMenu: branches on wBattleScene; copies wArenaRank-1 to wTwoChoiceCursor; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on wArenaRank; increments
+; wScreenState; branches on wArenaRank; ...
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor::
     ld a, [wBattleScene]
     and a
@@ -6530,6 +6778,10 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_SetTwoChoiceCursor::
     ld [wScriptStartRequest], a
     ret
 
+; step 35 of ArenaMenu: branches on wBattleScene; calls
+; ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0; sets wTwoChoiceCursor to 0; sets
+; wScriptCommandType to 0; sets wScriptStartRequest to $80; increments wScreenState; calls
+; WritePlayerNameWithFlag0SuffixToTextBuf0; ...
 ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
     ld a, [wBattleScene]
     and a
@@ -6563,6 +6815,9 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
     ld [wScriptStartRequest], a
     ret
 
+; step 36 of ArenaMenu: branches on wArenaRank; sets EVENT_ARENA_RANK1_KEY_GIVEN; calls
+; CountKeysOrFull; calls WriteKeyEntryTemp0; sets wInventorySortFlags; sets
+; EVENT_WARUBOU_WA_HEY_THIS_TIME; calls GenerateNewKeyEntry; ...
 ArenaMenu_SetFlagBit::
     ld a, [wArenaRank]
     cp $01
@@ -6658,6 +6913,9 @@ RedrawFullScreenBoxes_0C::
     call DrawScreenBufferRect_Bank0C
     ret
 
+; called from ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2: calls
+; WritePlayerNameWithFlag0SuffixToTextBuf0; copies the byte at
+; ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data to wTextBuf0
 ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0::
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
@@ -6669,6 +6927,7 @@ ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0::
     ld [wTextBuf0 + $1], a
     ret
 
+; data read by ArenaMenu (6 bytes)
 ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data::
     db $0c, $0c, $0c, $0b, $0a, $1c
 
@@ -6695,6 +6954,8 @@ SetupScreenCountPlusOneFromRecordCapacity::
     ld [wRecordCapacity], a
     ret
 
+; called from ArenaMenu_CopyRectTo20ByteRows_Bank0C: branches on wArenaRank; returns if wArenaRank
+; is below $05
 ArenaMenu_ReadArenaRank::
     ld hl, wWindowTileBuffer + $c9
     ld a, [wArenaRank]
@@ -6728,6 +6989,8 @@ ArenaMenu_ReadArenaRank::
     ld [hl], a
     ret
 
+; Calls CopyRectTo20ByteRows_Bank0C; copies wGoldLo to wDigits; calls Number24ToPackedBCD; calls
+; UnpackBCDToDigitsArg1_Bank1E
 ArenaMenu_Number24ToPackedBCD::
     ld de, ArenaMenu_Number24ToPackedBCD_TileRect
     ld hl, wWindowTileBuffer + $70
@@ -6756,6 +7019,7 @@ ArenaMenu_Number24ToPackedBCD::
     jr c, .loop
     ret
 
+; May return early
 ArenaMenu_DivideHLByA::
     ld hl, $0000
     ld de, wArenaEntry
@@ -6788,6 +7052,8 @@ ArenaMenu_DivideHLByA::
     ld l, $ff
     ret
 
+; Sets wArenaEntry to 0; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordWord; calls
+; AddTemp0WordToHL; calls LoadSRAMRecordWord; calls AddTemp0WordToHL; ...
 ArenaMenu_AddTemp0WordToHL::
     xor a
     ld [wArenaEntry], a
@@ -7103,6 +7369,7 @@ PickTableEntryByPartyLevelTotal::
     ld h, a
     ret
 
+; data read by PickTableEntryByPartyLevelTotal (12 bytes)
 PickTableEntryByPartyLevelTotal_Data::
     db $90, $01, $58, $02, $20, $03, $b0, $04, $78, $05, $78, $05
 
@@ -7173,6 +7440,7 @@ CopyScreenBufferRectWithAttrs_0C::
     jr c, CopyScreenBufferRectWithAttrs_0C
     ret
 
+; Calls RandomModulo52; branches on the byte at wArenaList
 ArenaRounds_RandomModulo52::
     ld hl, wArenaList
     ld b, $28
@@ -7291,9 +7559,14 @@ RandomModulo52::
     call DivideHLByA
     ret
 
+; called from ArenaMenu_IncArenaRoundAndCopyAreaGraphicsIndexToScreenArea: returns at once
 ArenaMenu_Return::
     ret
 
+; called from ArenaMenu_RedrawFullScreenBoxes_0C: copies wScriptStartRequest to wScriptReturnBank;
+; copies wScriptPointerLo to wScriptReturnLo; copies wScriptPointerHi to wScriptReturnHi; sets
+; wTalkEventIndex to 0; sets wTalkEventGroup to $1f; calls DispatchTalkEvent; sets wScriptInDataBank
+; to 0; ...
 ArenaMenu_DispatchTalkEvent_2::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7312,6 +7585,7 @@ ArenaMenu_DispatchTalkEvent_2::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; Sets wBattleIntroKind to 4; sets wEncounterKind to 2; calls ArenaRounds_RandomModulo52
 ArenaRounds_WriteBattleIntroKindAndEncounterKind::
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7319,6 +7593,7 @@ ArenaRounds_WriteBattleIntroKindAndEncounterKind::
     ld [wEncounterKind], a
     call ArenaRounds_RandomModulo52
 
+; called from ArenaMenu_ToArenaMenu_ReadArenaRound: works on registers only
 ArenaMenu_ReadArenaRound::
     ld a, [wArenaRound]
     sla a
@@ -7338,6 +7613,9 @@ ArenaMenu_ReadArenaRound::
     jr nz, .loop
     ret
 
+; Copies wScriptStartRequest to wScriptReturnBank; copies wScriptPointerLo to wScriptReturnLo;
+; copies wScriptPointerHi to wScriptReturnHi; sets wTalkEventIndex to 0; sets wTalkEventGroup to
+; $18; calls DispatchTalkEvent; sets wScriptInDataBank to 0; ...
 ArenaMenu_DispatchTalkEvent::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7356,6 +7634,7 @@ ArenaMenu_DispatchTalkEvent::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; Sets wBattleIntroKind to 4; sets wEncounterKind to 2
 ArenaGridBattle_WriteBattleIntroKindAndEncounterKind::
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7389,6 +7668,9 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind::
     jr nz, .loop
     ret
 
+; Copies wScriptStartRequest to wScriptReturnBank; copies wScriptPointerLo to wScriptReturnLo;
+; copies wScriptPointerHi to wScriptReturnHi; sets wTalkEventIndex to 0; sets wTalkEventGroup to
+; $18; calls DispatchTalkEvent; sets wScriptInDataBank to 0; ...
 ArenaMenu_DispatchTalkEvent_SetScriptReturnBank::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7407,6 +7689,7 @@ ArenaMenu_DispatchTalkEvent_SetScriptReturnBank::
     ldh [hSpriteWindowClipMode], a
     farcall ClearBit1OfPlayerAndObjectFlags
 
+; Sets wBattleIntroKind to 4; sets wEncounterKind to 2
 ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     ld a, $04
     ld [wBattleIntroKind], a
@@ -7443,6 +7726,7 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
     jr nz, .loop
     ret
 
+; Calls ArenaMenu_AddTemp0WordToHL; calls ArenaMenu_DivideHLByA; sets wTwoChoiceCursor to 4
 ArenaMenu_WriteTwoChoiceCursor::
     call ArenaMenu_AddTemp0WordToHL
     call ArenaMenu_DivideHLByA
@@ -7483,6 +7767,7 @@ ArenaMenu_WriteTwoChoiceCursor::
     ld [wTwoChoiceCursor], a
     ret
 
+; called from ArenaMenu_RandomModulo52: calls RandomModulo52; sets wArg1
 ArenaMenu_RandomModulo52_2::
     ld b, $1f
     call RandomModulo52
@@ -7514,11 +7799,14 @@ ArenaMenu_RandomModulo52_2::
     ld [wArg1], a
     ret
 
+; data read by ArenaMenu (36 bytes)
 ArenaMenu_RandomModulo52_Data::
     db $40, $75, $47, $75, $4e, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $5a, $5b, $5c, $5d
     db $5e, $5f, $60, $61
 
+; called from ArenaMenu_RandomModulo52: branches on the byte at wInventory; calls
+; ArenaMenu_AddArg1ToGoldCapped99999; sets wArg1; calls ArenaMenu_ReadFarPointerAtDEInBankB
 ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     ld hl, wInventory
     ld c, $18
@@ -7548,6 +7836,7 @@ ArenaMenu_ArenaMenu_AddArg1ToGoldCapped99999::
     xor a
     ret
 
+; Calls ReadFarPointerAtDEInBankB; calls ReadByteInBank
 ArenaMenu_ReadFarPointerAtDEInBankB::
     ld de, ArenaMenu_ReadFarPointerAtDEInBankB_Data
     ld b, $08
@@ -7585,6 +7874,7 @@ ArenaMenu_ReadFarPointerAtDEInBankB::
     ld [hli], a
     ret
 
+; Sets wArg1; sets wArg2; sets wArg3 to 0; calls AddArg1ToGoldCapped99999
 ArenaMenu_AddArg1ToGoldCapped99999::
     ld hl, $1770
     ld a, l
@@ -7596,6 +7886,7 @@ ArenaMenu_AddArg1ToGoldCapped99999::
     farcall AddArg1ToGoldCapped99999
     ret
 
+; data read by ArenaMenu_RandomModulo52 (48 bytes)
 ArenaMenu_RandomModulo52_Data1::
     db $de, $75, $de, $75, $de, $75, $e7, $75, $f0, $75, $f9, $75, $19, $23, $2d, $37
     db $41, $4b, $5f, $64, $ff, $14, $1f, $2a, $35, $40, $4b, $5a, $64, $ff, $0f, $17
@@ -7702,9 +7993,10 @@ ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data::
     db $7f, $78, $85, $78, $8b, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00
 
-; ArenaGridBattle_Shared02 sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 *
-; wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it
-; to wEncounterMonsters (three encounter words, as E-0202) (E-0236, C1)
+; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind sets battle intro 4 and
+; encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 *
+; wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as
+; E-0202) (E-0236, C1)
 ; record: encounter list for this wGridCursorX
 GridEncounterTable::
     dw GridEncounterList0 ; id 0
@@ -7796,7 +8088,7 @@ GridEncounters3_02::
     dw $00a7 ; MonsterTable $0A7: Serpentia
     dw $00a8 ; MonsterTable $0A8: GigaDraco
 
-; ArenaRounds_Shared01_Sub01 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random
+; ArenaRounds_RandomModulo52 reads the byte at $78FF + wAreaGraphicsIndex and reduces a random
 ; number below it by repeated subtraction before indexing the list (E-0183, C1)
 ; record: number of usable entries in the list (39 each)
 ArenaEncounterListSizes::
@@ -7807,7 +8099,7 @@ ArenaEncounterListSizes::
     db $27 ; id 4
     db $27 ; id 5
 
-; ArenaRounds_Shared01_Sub01 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and
+; ArenaRounds_RandomModulo52 doubles wAreaGraphicsIndex, reads the word at $7905 + 2 * index and
 ; then the word at that pointer + 2 * the chosen entry; indexes 0-2 share one list (E-0183, C1)
 ; record: encounter word list for this wAreaGraphicsIndex
 ArenaEncounterLists::
@@ -7818,7 +8110,7 @@ ArenaEncounterLists::
     dw ArenaEncounterList2 ; id 4
     dw ArenaEncounterList3 ; id 5
 
-; the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_Case1C_Sub01 copies
+; the chosen word is stored in wArenaList2 (3 rounds x 3 words) and ArenaMenu_ReadArenaRound copies
 ; one round's three words to wEncounterMonsters; each entry is drawn at most three times, counted in
 ; wArenaList (E-0183, C1)
 ; record: 40 encounter words (entries 0-38 are drawn; entry 39 is not reached)

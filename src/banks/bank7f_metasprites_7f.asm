@@ -4,15 +4,15 @@
 SECTION "Bank 7F", ROMX[$4000], BANK[$7F]
     db $7f
 
-; DrawMetaSpriteAt_40CC with DE = MetaSprites7FTable (E-0116) (E-0344: the address in its name
-; dropped or read as the label there; was DrawMetaSprite4008)
+; DrawMetaSpriteAt_2 with DE = MetaSprites7FTable (E-0116) (E-0344: the address in its name dropped
+; or read as the label there; was DrawMetaSprite_2)
 DrawMetaSprite_2::
     ld de, MetaSprites7FTable
     call DrawMetaSpriteAt_2
     ret
 
-; the caller of DrawMetaSprite4008 passes DE = $MetaSprites7FTable; the builder takes the word at DE
-; + 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98 words,
+; the caller of DrawMetaSprite_2 passes DE = $MetaSprites7FTable; the builder takes the word at DE +
+; 2 * hSpriteSetIndex as the set and the word at set + 2 * hSpriteSubIndex as the frame; 98 words,
 ; up to the next code or data (E-0147, C1)
 ; record: meta-sprite set
 MetaSprites7FTable::
@@ -117,7 +117,7 @@ MetaSprites7FTable::
 
 ; the same instruction sequence as DrawMetaSpriteAt (bank $7F) apart from label operands, which
 ; refer to this bank's own routines and tables; the twin's note describes the shape (E-0107)
-; (E-0344: the address in its name dropped or read as the label there; was DrawMetaSpriteAt_40CC)
+; (E-0344: the address in its name dropped or read as the label there; was DrawMetaSpriteAt_2)
 DrawMetaSpriteAt_2::
     ldh a, [hOamNextEntry]
     cp $27

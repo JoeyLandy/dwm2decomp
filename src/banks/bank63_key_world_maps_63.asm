@@ -5,12 +5,12 @@ SECTION "Bank 63", ROMX[$4000], BANK[$63]
     db $63
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 1: entry 1 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1127 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles1::
     INCBIN "maps/key_worlds/tiles1.lz"
 
-; entry 1 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 1 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes1::
@@ -150,12 +150,12 @@ KeyWorldScreen63_2::
     INCBIN "maps/key_worlds/screen63_2.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 5: entry 5 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1285 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles5::
     INCBIN "maps/key_worlds/tiles5.lz"
 
-; entry 5 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 5 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes5::
@@ -293,12 +293,12 @@ KeyWorldScreen63_6::
     INCBIN "maps/key_worlds/screen63_6.lz"
 
 ; compressed BG tiles (2048 bytes, 128 tiles) of key-world kind 9: entry 9 of KeyWorldTilesetTable,
-; decompressed to vTiles2 by RunWCC44Type_420D_Case00
+; decompressed to vTiles2 by LoadKeyWorldTilesetAndHeader
 ; LZSS-compressed: 1190 bytes that expand to 2048 (E-0016, E-0017)
 KeyWorldTiles9::
     INCBIN "maps/key_worlds/tiles9.lz"
 
-; entry 9 of KeyWorldTilesetTable; RunWCC44Type_420D_Case00 copies these $40 bytes to
+; entry 9 of KeyWorldTilesetTable; LoadKeyWorldTilesetAndHeader copies these $40 bytes to
 ; wBGPaletteBuffer (E-0139, C1)
 ; record: one CGB palette: 4 BGR555 colours
 KeyWorldPalettes9::

@@ -141,6 +141,7 @@ CheckItemUsable::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 0 (no name); item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: returns at once
 ItemUsable_Item00::
     ret
 
@@ -273,6 +274,9 @@ ItemUsable_WorldDew::
     ld [wItemUseMessage], a
     ret
 
+; called from ItemUsable_WorldDew: sets wTargetRecord; may return early; calls
+; SRAMRecordAddressMapped; returns if bit 7 of wPartyCount is set; calls SRAMRecordAddressMapped;
+; may return early; calls SRAMRecordAddressMapped; ...
 ItemUsable_WorldDew_SRAMRecordAddressMapped::
     ld [wTargetRecord], a
     ld hl, wPartyCount
@@ -350,6 +354,8 @@ ItemUsable_Potion::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 6 Antidote; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Antidote::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -365,6 +371,8 @@ ItemUsable_Antidote::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 7 MoonHerb; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_MoonHerb::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -380,6 +388,8 @@ ItemUsable_MoonHerb::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 8 Laurel; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Laurel::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -491,6 +501,8 @@ CopyEligibleRecordNameToTextBuf3Row::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 9 AwakeSand; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_AwakeSand::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -506,6 +518,8 @@ ItemUsable_AwakeSand::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 10 SkyBell; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_SkyBell::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -521,6 +535,7 @@ ItemUsable_SkyBell::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 12 WorldLeaf; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls SRAMRecordAddressMapped; may return early; sets wItemId to $ff
 ItemUsable_WorldLeaf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -534,6 +549,8 @@ ItemUsable_WorldLeaf::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 13 ATKseed; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_ATKseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -550,6 +567,8 @@ ItemUsable_ATKseed::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 14 DEFseed; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_DEFseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -566,6 +585,8 @@ ItemUsable_DEFseed::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 15 AGLseed; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_AGLseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -582,6 +603,8 @@ ItemUsable_AGLseed::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 16 INTseed; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_INTseed::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -598,6 +621,8 @@ ItemUsable_INTseed::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 17 LifeAcorn; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_LifeAcorn::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -614,6 +639,8 @@ ItemUsable_LifeAcorn::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 18 MysticNut; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; ShowRaiseAmountOrRefuse
 ItemUsable_MysticNut::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -630,6 +657,8 @@ ItemUsable_MysticNut::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 19 Quest?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Quest::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -646,6 +675,8 @@ ItemUsable_Quest::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 20 Horror?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Horror::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -662,6 +693,8 @@ ItemUsable_Horror::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 21 BeNice?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_BeNice::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -678,6 +711,8 @@ ItemUsable_BeNice::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 22 Cheater?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Cheater::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -694,6 +729,8 @@ ItemUsable_Cheater::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 23 Smart?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Smart::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -710,6 +747,8 @@ ItemUsable_Smart::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 24 Comedy?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; may
+; return early; sets wItemId to $ff
 ItemUsable_Comedy::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -726,6 +765,7 @@ ItemUsable_Comedy::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 25 BeefJerky, 26 PorkChop, 27 Rib, 28 Sirloin, 29 BadMeat, 30 MeteOrb; item names
 ; from StringTable_ItemNames; the body is not interpreted (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7; may return early
 ItemUsable_BeefJerky::
     call CheckTargetRecordFlag55Bit7
     ret nz
@@ -734,12 +774,14 @@ ItemUsable_BeefJerky::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 31 BeastTail; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: returns at once
 ItemUsable_BeastTail::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 32 Repellent, 33 ShinyHarp; item names from StringTable_ItemNames; the body is
 ; not interpreted (E-0085)
+; code: may return early; sets wItemId to $ff
 ItemUsable_Repellent::
     ld a, [wEncounterRate]
     and $7f
@@ -751,12 +793,14 @@ ItemUsable_Repellent::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 34 Mist?, 35 Friend?, 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?, 43 Bookmark; item
 ; names from StringTable_ItemNames; the body is not interpreted (E-0085)
+; code: returns at once
 ItemUsable_Mist::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 40 Warp?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: calls ItemUsable_WarpWing
 ItemUsable_Warp::
     call ItemUsable_WarpWing
     ret
@@ -764,6 +808,8 @@ ItemUsable_Warp::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; sets wItemId to $ff; branches on $ff; sets wItemId to $ff; calls
+; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc; may return early; sets wItemId to $fe
 ItemUsable_LogTwig::
     ld a, [wMapType]
     bit 7, a
@@ -837,6 +883,9 @@ ItemUsable_WarpWing::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 42 ExitBell; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; returns if wMapType is $81; returns if wMapType is $85; returns if
+; wMapType is $86; sets wItemId to $ff; returns if bit 5 of MapItemUseFlags is set; sets wItemId to
+; $ff
 ItemUsable_ExitBell::
     ld a, [wMapType]
     bit 7, a
@@ -870,12 +919,14 @@ ItemUsable_TinyMedal::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 47 (no name); item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: returns at once
 ItemUsable_Item2F::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 48 WaterCall; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; checks EVENT_SCENE_MONSTERS_IN_TOW; sets wItemId to $ff
 ItemUsable_WaterCall::
     ld a, [wMapType]
     bit 7, a
@@ -926,6 +977,7 @@ ItemUsable_WaterCall::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 49 MoonRock; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; checks EVENT_THE_PIRATES_WERE_SWALLOWED_BY; sets wItemId to $ff
 ItemUsable_MoonRock::
     ld a, [wMapType]
     bit 7, a
@@ -964,6 +1016,8 @@ ItemUsable_MoonRock::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 50 Crest; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; checks EVENT_SCENE_SHIELD_1E4; checks EVENT_SCENE_SHIELD2_1E5; sets
+; wItemId to $ff
 ItemUsable_Crest::
     ld a, [wMapType]
     bit 7, a
@@ -1003,12 +1057,14 @@ ItemUsable_Crest::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 51 YunaSoul; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: returns at once
 ItemUsable_YunaSoul::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 52 SleepHerb; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; checks EVENT_SCENE_SHIELD_GUARDIAN; sets wItemId to $ff
 ItemUsable_SleepHerb::
     ld a, [wMapType]
     bit 7, a
@@ -1045,6 +1101,7 @@ ItemUsable_SleepHerb::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 53 Change?; item names from StringTable_ItemNames; the body is not interpreted
 ; (E-0085)
+; code: branches on wMapType; returns unless wScreenSavedFlag is 0; sets wItemId to $ff
 ItemUsable_Change::
     ld a, [wMapType]
     bit 7, a
@@ -1085,12 +1142,14 @@ ItemUsable_HarMirror::
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; item names from
 ; StringTable_ItemNames; the body is not interpreted (E-0085)
+; code: returns at once
 ItemUsable_Heaven::
     ret
 
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 62 Accessory, 63 Accessory; item names from StringTable_ItemNames; the body is
 ; not interpreted (E-0085)
+; code: returns at once
 ItemUsable_Accessory::
     ret
 
@@ -1098,6 +1157,7 @@ ItemUsable_Accessory::
 ; $FF) for item(s) 64 VITbelt, 65 DracoBelt, 66 MagicBelt, 67 OddBelt, 68 StoneFang, 69 SteelFang,
 ; 70 MermScale, 71 DrakScale, 72 AGL?, 73 Starry? ...; item names from StringTable_ItemNames; the
 ; body is not interpreted (E-0085)
+; code: calls CheckTargetRecordFlag55Bit7
 ItemUsable_VITbelt::
     call CheckTargetRecordFlag55Bit7
     ret
@@ -1294,12 +1354,14 @@ ApplyItemEffect::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 0 (no name); the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_Item00::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 1 Herb, 2 LoveWater;
 ; the body is not interpreted beyond the Herb case (E-0089) (C2 from E-0326: a Herb on a record at
 ; 50 of 138 HP leaves 89; at 5 of 21, 21)
+; code: calls NextTableByte; calls AddHLToRecordHPCapped; calls ConsumeSelectedItemByChance
 ItemApply_Herb::
     call NextTableByte
     ld a, [wRandomLo]
@@ -1318,6 +1380,7 @@ ItemApply_Herb::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_WorldDew_CheckTargetRecordFlag55Bit7; calls ConsumeSelectedItemByChance
 ItemApply_WorldDew::
     ld a, $00
     call ItemApply_WorldDew_CheckTargetRecordFlag55Bit7
@@ -1328,6 +1391,9 @@ ItemApply_WorldDew::
     call ConsumeSelectedItemByChance
     ret
 
+; called from ItemApply_WorldDew: may return early; sets wTargetRecord; calls
+; CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
+; StoreHLToRecordField
 ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
     ld hl, wPartyCount
     cp [hl]
@@ -1346,6 +1412,7 @@ ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 4 Potion; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: calls NextTableByte; calls AddHLToRecordMPCapped; calls ConsumeSelectedItemByChance
 ItemApply_Potion::
     call NextTableByte
     ld a, [wRandomLo]
@@ -1364,6 +1431,7 @@ ItemApply_Potion::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 5 ElfWater; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls StoreHLToRecordField; calls ConsumeSelectedItemByChance
 ItemApply_ElfWater::
     ld a, [wTargetRecord]
     ld c, MON_MAX_MP
@@ -1377,6 +1445,7 @@ ItemApply_ElfWater::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 6 Antidote; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance
 ItemApply_Antidote::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1387,6 +1456,7 @@ ItemApply_Antidote::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 7 MoonHerb; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance
 ItemApply_MoonHerb::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1397,6 +1467,7 @@ ItemApply_MoonHerb::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 8 Laurel; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance
 ItemApply_Laurel::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1407,6 +1478,7 @@ ItemApply_Laurel::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 9 AwakeSand; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance
 ItemApply_AwakeSand::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1417,6 +1489,7 @@ ItemApply_AwakeSand::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 10 SkyBell; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls ConsumeSelectedItemByChance
 ItemApply_SkyBell::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1427,11 +1500,14 @@ ItemApply_SkyBell::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 11 SageRock; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_SageRock::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 12 WorldLeaf; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls SRAMRecordAddressMapped; calls StoreHLToRecordField; sets wLevelUpGains to 1; calls
+; ConsumeSelectedItemByChance
 ItemApply_WorldLeaf::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -1451,6 +1527,7 @@ ItemApply_WorldLeaf::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 13 ATKseed; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_ATKseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_ATKseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1462,6 +1539,7 @@ ItemApply_ATKseed::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 14 DEFseed; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_DEFseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_DEFseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1473,6 +1551,7 @@ ItemApply_DEFseed::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 15 AGLseed; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_AGLseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_AGLseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1484,6 +1563,7 @@ ItemApply_AGLseed::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 16 INTseed; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_INTseed_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_INTseed::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1495,6 +1575,7 @@ ItemApply_INTseed::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_LifeAcorn::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1506,6 +1587,7 @@ ItemApply_LifeAcorn::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_MysticNut_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_MysticNut::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1517,6 +1599,7 @@ ItemApply_MysticNut::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 19 Quest?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_Quest_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_Quest::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1528,6 +1611,7 @@ ItemApply_Quest::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 20 Horror?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_Horror_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_Horror::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1539,6 +1623,7 @@ ItemApply_Horror::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 21 BeNice?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_BeNice_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_BeNice::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1550,6 +1635,7 @@ ItemApply_BeNice::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 22 Cheater?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_Cheater_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_Cheater::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1561,6 +1647,7 @@ ItemApply_Cheater::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 23 Smart?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_Smart_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_Smart::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1572,6 +1659,7 @@ ItemApply_Smart::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 24 Comedy?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ItemApply_Comedy_MapIndexViaPartyListKeepHL; calls ConsumeSelectedItemByChance
 ItemApply_Comedy::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1583,6 +1671,7 @@ ItemApply_Comedy::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 25 BeefJerky, 26
 ; PorkChop, 27 Rib, 28 Sirloin; the body is not interpreted beyond the Herb case (E-0089)
+; code: calls ApplyMeatToRecordField6B; calls ConsumeSelectedItemByChance
 ItemApply_BeefJerky::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1594,6 +1683,8 @@ ItemApply_BeefJerky::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 29 BadMeat; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ApplyMeatToRecordField6B; calls SRAMRecordAddressMapped; calls
+; ConsumeSelectedItemByChance
 ItemApply_BadMeat::
     ld a, [wItemEffectAmount]
     ld l, a
@@ -1609,16 +1700,19 @@ ItemApply_BadMeat::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 30 MeteOrb; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_MeteOrb::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 31 BeastTail; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_BeastTail::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 32 Repellent; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: sets wEncounterDelay to $c8; calls ConsumeSelectedItemByChance
 ItemApply_Repellent::
     ld a, $c8
     ld [wEncounterDelay], a
@@ -1627,6 +1721,7 @@ ItemApply_Repellent::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 33 ShinyHarp; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 1; calls ConsumeSelectedItemByChance
 ItemApply_ShinyHarp::
     ld a, $01
     ld [wDataBankSave], a
@@ -1635,11 +1730,13 @@ ItemApply_ShinyHarp::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 34 Mist?, 35 Friend?,
 ; 36 Wind?, 37 Bolt?, 38 Snow?, 39 Fire?; the body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_Mist::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 40 Warp?; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 2; calls ConsumeSelectedItemByChance
 ItemApply_Warp::
     ld a, $02
     ld [wDataBankSave], a
@@ -1648,6 +1745,7 @@ ItemApply_Warp::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 41 WarpWing; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 3; calls ConsumeSelectedItemByChance
 ItemApply_WarpWing::
     ld a, $03
     ld [wDataBankSave], a
@@ -1656,6 +1754,7 @@ ItemApply_WarpWing::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 42 ExitBell; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 4; calls ConsumeSelectedItemByChance
 ItemApply_ExitBell::
     ld a, $04
     ld [wDataBankSave], a
@@ -1664,17 +1763,20 @@ ItemApply_ExitBell::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 43 Bookmark; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls ConsumeSelectedItemByChance
 ItemApply_Bookmark::
     call ConsumeSelectedItemByChance
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 44 TinyMedal, 45
 ; GoldPass; the body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_TinyMedal::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 46 LogTwig; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 9; calls ConsumeSelectedItemByChance
 ItemApply_LogTwig::
     ld a, $09
     ld [wDataBankSave], a
@@ -1683,11 +1785,13 @@ ItemApply_LogTwig::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 47 (no name); the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_Item2F::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 48 WaterCall; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 5
 ItemApply_WaterCall::
     ld a, $05
     ld [wDataBankSave], a
@@ -1695,6 +1799,7 @@ ItemApply_WaterCall::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 49 MoonRock; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 6
 ItemApply_MoonRock::
     ld a, $06
     ld [wDataBankSave], a
@@ -1702,6 +1807,7 @@ ItemApply_MoonRock::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 50 Crest; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 7
 ItemApply_Crest::
     ld a, $07
     ld [wDataBankSave], a
@@ -1709,11 +1815,13 @@ ItemApply_Crest::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 51 YunaSoul; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_YunaSoul::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 52 SleepHerb; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to 8
 ItemApply_SleepHerb::
     ld a, $08
     ld [wDataBankSave], a
@@ -1721,6 +1829,7 @@ ItemApply_SleepHerb::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 53 Change?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: sets wDataBankSave to $0a
 ItemApply_Change::
     ld a, $0a
     ld [wDataBankSave], a
@@ -1728,6 +1837,7 @@ ItemApply_Change::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 54 TidalBell; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: branches on $ff; sets wTownEventTimer to $f0
 ItemApply_TidalBell::
     ld a, [wTownEventTimer]
     add $32
@@ -1746,16 +1856,19 @@ ItemApply_TidalBell::
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 55 HarMirror, 56
 ; Sky?, 57 Heaven?, 58 Heaven?, 59 Heaven?, 60 WizStone, 61 Pretty?; the body is not interpreted
 ; beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_HarMirror::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 62 Accessory, 63
 ; Accessory; the body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_Accessory::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 64 VITbelt; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
@@ -1765,6 +1878,7 @@ ItemApply_VITbelt::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 65 DracoBelt; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
@@ -1774,6 +1888,7 @@ ItemApply_DracoBelt::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 66 MagicBelt; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
@@ -1783,6 +1898,7 @@ ItemApply_MagicBelt::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 67 OddBelt; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordPairCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
@@ -1792,6 +1908,7 @@ ItemApply_OddBelt::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 68 StoneFang; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_StoneFang::
     ld a, $0a
     ld c, MON_ATK
@@ -1801,6 +1918,7 @@ ItemApply_StoneFang::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 69 SteelFang; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_SteelFang::
     ld a, $32
     ld c, MON_ATK
@@ -1810,6 +1928,7 @@ ItemApply_SteelFang::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 70 MermScale; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_MermScale::
     ld a, $0a
     ld c, MON_DEF
@@ -1819,6 +1938,7 @@ ItemApply_MermScale::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 71 DrakScale; the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_DrakScale::
     ld a, $32
     ld c, MON_DEF
@@ -1828,6 +1948,7 @@ ItemApply_DrakScale::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 72 AGL?; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_AGL::
     ld a, $0a
     ld c, MON_AGL
@@ -1837,6 +1958,7 @@ ItemApply_AGL::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 73 Starry?; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_Starry::
     ld a, $32
     ld c, MON_AGL
@@ -1846,7 +1968,8 @@ ItemApply_Starry::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 74 Smart?; the body
 ; is not interpreted beyond the Herb case (E-0089) (E-0344: the address in its name dropped or read
-; as the label there; was ItemApply_Smart_4A1D)
+; as the label there; was ItemApply_Smart_2)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_Smart_2::
     ld a, $32
     ld c, MON_INT
@@ -1856,6 +1979,7 @@ ItemApply_Smart_2::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 75 Wise?; the body is
 ; not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_Wise::
     ld a, $64
     ld c, MON_INT
@@ -1872,6 +1996,7 @@ ItemApply_MagicCape::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 83 D-Scale; the body
 ; is not interpreted beyond the Herb case (E-0089)
+; code: calls AddAToRecordWordCapped; calls EquipItemOnRecordTargetRecord
 ItemApply_DScale::
     ld a, $05
     ld c, MON_DEF
@@ -1881,18 +2006,21 @@ ItemApply_DScale::
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 84 None, 85 None, 86
 ; None, 87 None, 88 None, 89 None; the body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_None::
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 90 Life?, 91 Divine?,
 ; 92 War?, 93 Mage?, 94 Fight?, 95 Sailor?, 96 Thief?, 97 Cleric?; the body is not interpreted
 ; beyond the Herb case (E-0089)
+; code: calls EquipItemOnRecordTargetRecord
 ItemApply_Life::
     call EquipItemOnRecordTargetRecord
     ret
 
 ; item effect reached through ApplyItemEffect (indexed by wItemId) for item(s) 98 (no name); the
 ; body is not interpreted beyond the Herb case (E-0089)
+; code: returns at once
 ItemApply_Item62::
     ret
 
@@ -1988,93 +2116,110 @@ ApplyEquipmentEffectKeepA_ByItem::
     dw ApplyEquipmentEffectKeepA_ByItem_Return_3
     dw ApplyEquipmentEffectKeepA_ByItem_Return_4
 
+; step 0 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1
 ApplyEquipmentEffect_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
+; step 1 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1
 ApplyEquipmentEffect_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
+; step 2 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1
 ApplyEquipmentEffect_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
+; step 3 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1
 ApplyEquipmentEffect_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
+; step 4 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_StoneFang::
     ld a, $0a
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 5 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_SteelFang::
     ld a, $32
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 6 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_MermScale::
     ld a, $0a
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 7 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_DrakScale::
     ld a, $32
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 8 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_AGL::
     ld a, $0a
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 9 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_Starry::
     ld a, $32
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 10 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_Smart::
     ld a, $32
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 11 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_Wise::
     ld a, $64
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 12 of ApplyEquipmentEffectKeepA_ByItem: returns at once
 ApplyEquipmentEffectKeepA_ByItem_Return::
     ret
 
+; step 19 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1
 ApplyEquipmentEffect_DScale::
     ld a, $05
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
+; step 20 of ApplyEquipmentEffectKeepA_ByItem: returns at once
 ApplyEquipmentEffectKeepA_ByItem_Return_2::
     ret
 
+; step 26 of ApplyEquipmentEffectKeepA_ByItem: returns at once
 ApplyEquipmentEffectKeepA_ByItem_Return_3::
     ret
 
+; step 34 of ApplyEquipmentEffectKeepA_ByItem: returns at once
 ApplyEquipmentEffectKeepA_ByItem_Return_4::
     ret
 
@@ -2186,6 +2331,7 @@ SubtractAFromRecordWordFloor1::
 ; A = amount, record wTargetRecord (SRAMRecordAddressMapped), field offset C: as
 ; SubtractAFromRecordWordFloor1 for the word at field C, then the same for the word two bytes before
 ; it (the second half is not read to its end) (E-0103)
+; code: calls SRAMRecordAddressMapped; may return early
 SubtractAFromRecordWordPairFloor1::
     ldh [hTemp0], a
     ld a, [wTargetRecord]
@@ -2378,7 +2524,7 @@ RemoveWItemIdFromInventory::
     ret
 
 ; E-0034 (C1: LoadItemRecord copies 13 bytes from here by item id (wItemId) to wItemRecord;
-; RunItemEffect dispatches on the same id; wInventory is a 24-slot bag of such ids, empty at the
+; CheckItemUsable dispatches on the same id; wInventory is a 24-slot bag of such ids, empty at the
 ; start of a new game, matching the item menu's 'No items'; the herb handler compares the words at
 ; save-record offsets $5B and $5D to refuse use at full HP). 99 records: the next bytes are a
 ; different table. The meaning of the fields is not established beyond the first amount being 10,
@@ -2949,6 +3095,8 @@ MapItemUseFlags::
     db $00 ; id 254
     db $00 ; id 255
 
+; called from PauseMenu_Skills_UseFieldSkill_WaitTextFlags: branches on wInventorySlot; sets wItemId
+; to $ff; dispatches on $ff
 PauseMenu_Skills_UseFieldSkill_WriteItemId::
     ld a, [wInventorySlot]
     cp $14
@@ -2980,16 +3128,22 @@ PauseMenu_Skills_UseFieldSkill_WriteItemId::
     dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp
     dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing
 
+; step 0 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Herb; calls
+; SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb::
     call ItemUsable_Herb
     call SetItemMessage12IfItemRefused
     ret
 
+; step 3 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldDew; calls
+; SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
     ret
 
+; step 5 of PauseMenu_Skills_UseFieldSkill_WriteItemId: branches on wTargetRecord; sets wItemId to
+; $ff; calls ItemUsable_Potion; calls SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -3007,21 +3161,30 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     call SetItemMessage12IfItemRefused
     ret
 
+; step 8 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldLeaf; calls
+; SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf::
     call ItemUsable_WorldLeaf
     call SetItemMessage12IfItemRefused
     ret
 
+; step 10 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Antidote; calls
+; SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
     ret
 
+; step 11 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ListPartyMembersWithField55Bit0;
+; calls SetItemMessage12IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
     ret
 
+; step 12 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Repellent; branches on
+; wInventorySlot; calls SetItemMessage14IfItemRefused; branches on wItemId; sets wItemMessage to
+; $15; calls CollectUniqueEncounterIdsToWorkBuf2
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
@@ -3042,11 +3205,16 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     call CollectUniqueEncounterIdsToWorkBuf2
     ret
 
+; step 15 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_ExitBell; calls
+; SetItemMessage14IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
     ret
 
+; step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Repellent; calls
+; SetItemMessage14IfItemRefused; may return early; branches on wGoldHi; branches on wGoldMid;
+; branches on wGoldLo; sets wItemId to $ff; ...
 PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
     call ItemUsable_Repellent
     call SetItemMessage14IfItemRefused
@@ -3078,6 +3246,9 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
     ld [wItemMessage], a
     ret
 
+; step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Warp; calls
+; SetItemMessage14IfItemRefused; may return early; branches on wMapObjectCount; branches on
+; wMapObjects; sets wItemId to $ff; sets wItemMessage to $18
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
     call ItemUsable_Warp
     call SetItemMessage14IfItemRefused
@@ -3111,13 +3282,15 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
 .return:
     ret
 
+; step 19 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WarpWing; calls
+; SetItemMessage14IfItemRefused
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
     ret
 
 ; when wItemId is $FF (refused): wItemMessage = $12 (E-0119) (E-0340: the address in its name read
-; as its RAM name; was SetWD08D12IfItemRefused)
+; as its RAM name; was SetItemMessage12IfItemRefused)
 SetItemMessage12IfItemRefused::
     ld a, [wItemId]
     cp $ff
@@ -3127,7 +3300,7 @@ SetItemMessage12IfItemRefused::
     ret
 
 ; when wItemId is $FF (refused): wItemMessage = $14 (E-0119) (E-0340: the address in its name read
-; as its RAM name; was SetWD08D14IfItemRefused)
+; as its RAM name; was SetItemMessage14IfItemRefused)
 SetItemMessage14IfItemRefused::
     ld a, [wItemId]
     cp $ff
@@ -3136,6 +3309,8 @@ SetItemMessage14IfItemRefused::
     ld [wItemMessage], a
     ret
 
+; called from PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: returns if wItemId is $ff;
+; dispatches on wInventorySlot
 PauseMenu_Skills_UseFieldSkill_WaitItemId::
     ld a, [wItemId]
     cp $ff
@@ -3163,6 +3338,8 @@ PauseMenu_Skills_UseFieldSkill_WaitItemId::
     dw PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill
     dw PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer
 
+; step 0 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0a; sets
+; wItemEffectRange to $1e; calls HealRecordHPByRandomAmount; sets wItemMessage to 6
 PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ld a, $0a
     ld [wItemEffectAmount], a
@@ -3173,6 +3350,8 @@ PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ld [wItemMessage], a
     ret
 
+; step 1 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; sets
+; wItemEffectRange to $4b; calls HealRecordHPByRandomAmount; sets wItemMessage to 6
 PauseMenu_Skills_UseFieldSkill_SetItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3197,6 +3376,8 @@ FullHealRecordTargetRecord::
     ld [wItemMessage], a
     ret
 
+; step 3 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $1e; sets
+; wItemEffectRange to $5a; copies wItemUseMessage to wItemMessage; calls HealPartyRecordAIfHurt
 PauseMenu_Skills_UseFieldSkill_HealPartyRecordAIfHurt::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3240,6 +3421,8 @@ HealPartyRecordAIfHurt::
     call HealRecordHPByRandomAmount
     ret
 
+; step 4 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage; calls
+; FullHealPartyRecordA
 PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3267,6 +3450,8 @@ FullHealPartyRecordA::
     call StoreHLToRecordField
     ret
 
+; step 5 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; calls
+; HealRecordMPByItemEffectAmount; sets wItemMessage to 7
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3275,6 +3460,8 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ld [wItemMessage], a
     ret
 
+; step 6 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $1e; calls
+; HealRecordMPByItemEffectAmount; sets wItemMessage to 7
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3283,6 +3470,8 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
     ld [wItemMessage], a
     ret
 
+; step 7 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $50; calls
+; HealRecordMPByItemEffectAmount; sets wItemMessage to 7
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount_2::
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3291,6 +3480,8 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
     ld [wItemMessage], a
     ret
 
+; step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
+; wItemMessage to 8; sets wLevelUpGains to 1
 PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3317,6 +3508,8 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ld [wLevelUpGains], a
     ret
 
+; step 9 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; calls
+; FullHealRecordTargetRecord; sets wItemMessage to 8; sets wLevelUpGains to 1
 PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3329,6 +3522,8 @@ PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ld [wLevelUpGains], a
     ret
 
+; step 10 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
+; wItemMessage to 9
 PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3338,6 +3533,8 @@ PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
     ld [wItemMessage], a
     ret
 
+; step 11 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage;
+; calls ClearPartyRecordFlag55Bit0
 PauseMenu_Skills_UseFieldSkill_ClearPartyRecordFlag55Bit0::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3362,6 +3559,8 @@ ClearPartyRecordFlag55Bit0::
     res 0, [hl]
     ret
 
+; step 12 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 1; sets wItemMessage
+; to $ff; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
     ld a, $01
     ld [wDataBankSave], a
@@ -3371,6 +3570,8 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
     ld [wItemId], a
     ret
 
+; step 13 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 1; calls
+; SRAMRecordAddressMapped; sets wNewRecordFamily; sets wItemMessage to $ff; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ld a, $01
     ld [wDataBankSave], a
@@ -3388,6 +3589,8 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ld [wItemId], a
     ret
 
+; step 14 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wTalkCountdown to $c8; sets
+; wItemMessage to $ff; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
@@ -3397,6 +3600,8 @@ PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ld [wItemId], a
     ret
 
+; step 15 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 4; sets wItemMessage
+; to $ff; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ld a, $04
     ld [wDataBankSave], a
@@ -3406,11 +3611,15 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ld [wItemId], a
     ret
 
+; step 16 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemMessage to $0b
 PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
     ret
 
+; step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId: branches on wMapType; branches on
+; wPendingFieldEvent; sets wSpriteSlotCount to 0; sets wScreenSavedFlag to 0; sets
+; wPendingFieldEvent to 0; calls NextTableByte; sets wItemId to $ff; ...
 PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ld a, [wMapType]
     cp $80
@@ -3513,6 +3722,8 @@ PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ld [wItemMessage], a
     ret
 
+; step 18 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wWorldMapByFieldSkill to 1; sets
+; wItemMessage to $11; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
@@ -3522,6 +3733,8 @@ PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
     ld [wItemId], a
     ret
 
+; step 19 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls MarkVisitedScreens5x5AroundPlayer;
+; sets wItemMessage to $1c; sets wItemId to $ff
 PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer::
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1c
@@ -3570,7 +3783,7 @@ TestTargetRecordFlag55Bit7::
 ; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, removes duplicates and stores
 ; the count in wWorkBuf; normal maps use
 ; CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags (E-0129) (E-0340: the address in
-; its name read as its RAM name; was CollectUniqueEncounterIdsToWD09F)
+; its name read as its RAM name; was CollectUniqueEncounterIdsToWorkBuf2)
 CollectUniqueEncounterIdsToWorkBuf2::
     ld a, [wMapType]
     bit 7, a
@@ -3780,6 +3993,7 @@ AddHLToRecordMPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
+; called from ItemApply_ATKseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
 ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_ATK
@@ -3787,6 +4001,7 @@ ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_DEFseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
 ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_DEF
@@ -3794,6 +4009,7 @@ ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_AGLseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
 ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_AGL
@@ -3801,6 +4017,7 @@ ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_INTseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
 ItemApply_INTseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_INT
@@ -3808,6 +4025,8 @@ ItemApply_INTseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_LifeAcorn: calls MapIndexViaPartyListKeepHL; calls
+; AddToRecordFieldWordCapped
 ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_HP
@@ -3815,6 +4034,8 @@ ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_MysticNut: calls MapIndexViaPartyListKeepHL; calls
+; AddToRecordFieldWordCapped
 ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_MP
@@ -3822,6 +4043,7 @@ ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
+; called from ItemApply_Quest: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
 ItemApply_Quest_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -3829,6 +4051,8 @@ ItemApply_Quest_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
+; called from ItemApply_Horror: calls MapIndexViaPartyListKeepHL; calls
+; SubtractFromRecordFieldByteFloored
 ItemApply_Horror_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -3836,6 +4060,7 @@ ItemApply_Horror_MapIndexViaPartyListKeepHL::
     call SubtractFromRecordFieldByteFloored
     ret
 
+; called from ItemApply_BeNice: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
 ItemApply_BeNice_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -3843,6 +4068,8 @@ ItemApply_BeNice_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
+; called from ItemApply_Cheater: calls MapIndexViaPartyListKeepHL; calls
+; SubtractFromRecordFieldByteFloored
 ItemApply_Cheater_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -3850,6 +4077,7 @@ ItemApply_Cheater_MapIndexViaPartyListKeepHL::
     call SubtractFromRecordFieldByteFloored
     ret
 
+; called from ItemApply_Smart: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
 ItemApply_Smart_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -3857,6 +4085,8 @@ ItemApply_Smart_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
+; called from ItemApply_Comedy: calls MapIndexViaPartyListKeepHL; calls
+; SubtractFromRecordFieldByteFloored
 ItemApply_Comedy_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -4369,6 +4599,7 @@ TestSpeciesFlag::
     ld c, a
     ret
 
+; data read by TestSpeciesFlag (8 bytes)
 TestSpeciesFlag_Data::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
@@ -4456,6 +4687,8 @@ CountSpeciesPerFamilyFlaggedOrListed::
     jr c, .loop
     ret
 
+; Calls FillBytes; sets wSpeciesIdLo to 0; sets wSpeciesIdHi to 0; calls LoadSpeciesFamily; branches
+; on wSpeciesRecord; calls TestSpeciesFlag; sets wSpeciesIdLo; ...
 BattleEnd_Step3_LoadSpeciesFamily::
     xor a
     ld hl, wWorkBuf
@@ -4503,6 +4736,10 @@ BattleEnd_Step3_LoadSpeciesFamily::
     jr c, .loop
     ret
 
+; called from BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc: sets wBattleFoeCount to 1;
+; branches on wLinkMode; branches on wBattleKind; branches on wDisplaySlot; branches on the byte at
+; wFoeJoinClass1; copies the byte at wBattleMonsterId to wSpeciesIdLo; copies the byte at
+; wBattleMonsterId to wSpeciesIdHi; ...
 BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, $01
     ld [wBattleFoeCount], a
@@ -4760,6 +4997,9 @@ BattleEnd_AskToJoin::
     dw BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12
     dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2
 
+; step 0 of BattleEnd_AskToJoin: advances wBattleSubStep; calls
+; CopyBattleMonsterNameWithLetterSuffix; branches on wBattleKind; calls KeyWorldAreaEncounterIndex;
+; sets wStringIndex to $1e; calls ShowStringCategory5_Bank16; calls CountRecordsByField6E; ...
 BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     ld hl, wBattleSubStep
     inc [hl]
@@ -4791,6 +5031,8 @@ BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     inc [hl]
     ret
 
+; step 1 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; advances wBattleStep; sets
+; wBattleSubPhase to 0; sets wBattleResolveStep to 0; sets wBattleSubStep to 0
 BattleEnd_AskToJoin_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -4803,6 +5045,8 @@ BattleEnd_AskToJoin_WaitTextFlags::
     ld [wBattleSubStep], a
     ret
 
+; step 2 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets wStringIndex to $0b; calls
+; ShowStringCategory5_Bank16; advances wBattleSubStep
 BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     ld a, [wTextFlags]
     or a
@@ -4814,6 +5058,9 @@ BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     inc [hl]
     ret
 
+; step 3 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; calls LoadCursorTileAndRect; calls
+; CopyRect32StrideToVRAM_Bank16; sets wMenuState to 0; sets wListPageSize to 2; sets wListPage to 0;
+; sets wListPageCount to 1; ...
 BattleEnd_AskToJoin_LoadCursorTileAndRect::
     ld a, [wTextFlags]
     or a
@@ -4837,6 +5084,10 @@ BattleEnd_AskToJoin_LoadCursorTileAndRect::
     inc [hl]
     ret
 
+; step 4 of BattleEnd_AskToJoin: calls SetDEFlagOnBButton; may return early; advances
+; wBattleSubStep; returns if the byte at wMenuState is 0; calls
+; CopyBattleMonsterNameWithLetterSuffix; sets wStringIndex to $0c; calls ShowStringCategory5_Bank16;
+; ...
 BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
@@ -4856,6 +5107,8 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld [wBattleSubStep], a
     ret
 
+; step 5 of BattleEnd_AskToJoin: calls WriteVRAMByte; branches on wTemp1; advances wBattleSubStep;
+; advances wBattleSubPhase; sets wBattleSubStep to 0
 BattleEnd_AskToJoin_WriteVRAMByte::
     ld a, $bc
     ld hl, vBGMap0 + $12f
@@ -4882,6 +5135,8 @@ BattleEnd_AskToJoin_WriteVRAMByte::
     ld [wBattleSubStep], a
     ret
 
+; step 6 of BattleEnd_AskToJoin: sets wStringIndex to $0d; calls ShowStringCategory5_Bank16;
+; advances wBattleSubStep
 BattleEnd_AskToJoin_ShowButThereIsNo::
     ld a, $0d
     ld [wStringIndex], a ; 'But there is no more room!'
@@ -4890,6 +5145,8 @@ BattleEnd_AskToJoin_ShowButThereIsNo::
     inc [hl]
     ret
 
+; step 9 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets wStringIndex to $0e; calls
+; ShowStringCategory5_Bank16; advances wBattleSubStep
 BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     ld a, [wTextFlags]
     or a
@@ -4901,6 +5158,9 @@ BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     inc [hl]
     ret
 
+; step 10 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; calls BuildBattleMenuScreen; calls
+; CopyRectRecordToScreenBuffer_11; plays sound $6c; calls CopyRect32StrideToVRAM_Bank16; sets
+; wMenuState to 0; sets wListPageSize to 2; ...
 BattleEnd_AskToJoin_BuildBattleMenuScreen::
     ld a, [wTextFlags]
     or a
@@ -4927,6 +5187,9 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen::
     inc [hl]
     ret
 
+; step 11 of BattleEnd_AskToJoin: calls SetDEFlagOnBButton; may return early; sets wMenuState to 0;
+; copies wSubMenuCursor2 to wListPage; advances wBattleSubStep; may return early; calls
+; CountRecordsByField6E; ...
 BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data
@@ -4972,6 +5235,9 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld [wBattleSubStep], a
     ret
 
+; step 12 of BattleEnd_AskToJoin: calls FillBytes; calls CopyRectRecordToScreenBufferAndPlaySound6C;
+; calls ListPartyAndStoredRecordsForPage; calls DrawRecordListPageWithNumbers; calls
+; CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte; sets wStringIndex to $11; ...
 BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     ld hl, wListEntries
     ld bc, $001e
@@ -4994,6 +5260,9 @@ BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     inc [hl]
     ret
 
+; step 13 of BattleEnd_AskToJoin: calls MovePagedListCursor; calls DrawRecordListPageWithNumbers;
+; branches on wJoypadPressed; copies wListPage to wSubMenuCursor2; calls ShowRecordNameString12;
+; advances wBattleSubStep; may return early; ...
 BattleEnd_AskToJoin_MovePagedListCursor::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
@@ -5024,6 +5293,9 @@ BattleEnd_AskToJoin_MovePagedListCursor::
     ld [wBattleSubStep], a
     ret
 
+; step 14 of BattleEnd_AskToJoin: calls WriteVRAMByte; calls CopyRectRecordAndPlaySound6C; calls
+; CopyRect32StrideToVRAM_Bank16; sets wMenuSubState to 0; sets wListPageSize to 2; sets wListPage to
+; 0; sets wListPageCount to 1; ...
 BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
     ld a, [wMenuState]
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
@@ -5053,6 +5325,9 @@ BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
     inc [hl]
     ret
 
+; step 15 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
+; wBattleSubStep; returns unless bit 0 of wJoypadPressed is set; advances wBattleSubStep; returns
+; unless bit 1 of wMenuSubState is set; calls CopyRectRecordToScreenBuffer_11; ...
 BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
     ld de, wMenuSubState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
@@ -5103,6 +5378,9 @@ BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
     ld [wBattleSubStep], a
     ret
 
+; step 16 of BattleEnd_AskToJoin: copies wTemp0 to wListCount; copies wMenuState to wListCursor;
+; copies wSubMenuCursor2 to wListPageIndex; calls ClampRecordListPageCursor5; calls
+; SaveAndHideSpriteState_Bank1E; sets wScreenState to $0c; sets wScreenStep to 0; ...
 BattleEnd_AskToJoin_ClampRecordListPageCursor5::
     ld a, [wTemp0]
     ld [wListCount], a
@@ -5127,6 +5405,11 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor5::
     inc [hl]
     ret
 
+; step 17 of BattleEnd_AskToJoin: calls CopyRectRecordToScreenBufferAndPlaySound6C; copies
+; wListCursor to wMenuState; sets
+; BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data to $bc; copies wListPageIndex
+; to wSubMenuCursor2; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; calls
+; ListPartyAndStoredRecordsForPage; ...
 BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
     farcall CopyRectRecordToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
@@ -5161,6 +5444,9 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
     ld [wBattleSubStep], a
     ret
 
+; step 18 of BattleEnd_AskToJoin: calls WriteVRAMByte; branches on wPartyCount; branches on
+; wPartyList; sets wStringIndex to $15; calls ShowStringCategory5_Bank16; sets wBattleSubStep to 9;
+; branches on wPartyCount; ...
 BattleEnd_AskToJoin_WriteVRAMByte_2::
     ld a, $bc
     ld hl, vBGMap0 + $16d
@@ -5245,11 +5531,14 @@ BattleEnd_AskToJoin_WriteVRAMByte_2::
     inc [hl]
     ret
 
+; step 19 of BattleEnd_AskToJoin: advances wBattleSubStep
 BattleEnd_AskToJoin_AdvanceBattleSubStep::
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
+; step 20 of BattleEnd_AskToJoin: advances wBattleSubStep; sets wStringIndex to $13; calls
+; ShowStringCategory5_Bank16
 BattleEnd_AskToJoin_ShowGWasSetFree::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5258,6 +5547,9 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
     call ShowStringCategory5_Bank16
     ret
 
+; step 21 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets rRAMG to $0a; sets rRAMB to
+; 0; copies the byte at wListEntries to wArg1; sets wArg2 to 0; calls DeleteSRAMRecordAndCompact;
+; copies wPartyCount to wBattlePartyCount; ...
 BattleEnd_AskToJoin_WaitTextFlags_SetArg1::
     ld a, [wTextFlags]
     or a
@@ -5316,6 +5608,9 @@ BattleEnd_AskToJoin_WaitTextFlags_SetArg1::
     ld [wBattleSubStep], a
     ret
 
+; step 22 of BattleEnd_AskToJoin: calls BuildBattleMenuScreen; calls
+; CopyRectRecordToScreenBuffer_11; calls CopyRectRecordToScreenBuffer_12; plays sound $6c; sets
+; wStringIndex to $16; calls ShowStringCategory5Immediate_Bank16; calls CountRecordsByField6E; ...
 BattleEnd_AskToJoin_ShowChooseAnEggTo::
     call BuildBattleMenuScreen
     farcall CopyRectRecordToScreenBuffer_11
@@ -5370,6 +5665,10 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     inc [hl]
     ret
 
+; step 23 of BattleEnd_AskToJoin: calls MovePagedListCursor; calls
+; DrawFourListEntriesForPageListPage; calls CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte;
+; branches on wJoypadPressed; copies wMenuState to wCommandCursorMax; copies wListPage to
+; wMenuOption; ...
 BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_3
@@ -5411,6 +5710,10 @@ BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
     ld [wBattleSubStep], a
     ret
 
+; step 24 of BattleEnd_AskToJoin: calls BuildBattleMenuScreen; calls
+; CopyRectRecordToScreenBuffer_12; calls CopyRectRecordAndPlaySound6C; branches on wListPageCount;
+; calls DrawFourListEntriesForPageListPage; sets BattleEnd_AskToJoin_MovePagedListCursor_Data_3 to
+; $bc; calls CopyRect32StrideToVRAM_Bank16; ...
 BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
     call BuildBattleMenuScreen
     farcall CopyRectRecordToScreenBuffer_12
@@ -5460,6 +5763,9 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
     inc [hl]
     ret
 
+; step 25 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
+; wBattleSubStep; returns if the byte at wMenuSelectedMember is 0; advances wBattleSubStep; sets
+; rRAMG to $0a; sets rRAMB to 0; ...
 BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep_2::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
@@ -5511,6 +5817,9 @@ BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep_2::
     ld [wBattleSubStep], a
     ret
 
+; step 26 of BattleEnd_AskToJoin: copies wMenuState to wListCursor; copies wMenuOption to
+; wListPageIndex; calls ClampRecordListPageCursor4; calls SaveAndHideSpriteState_Bank1E; sets
+; wScreenState to $0d; sets wScreenStep to 0; sets wScreenSubStep to 0; ...
 BattleEnd_AskToJoin_ClampRecordListPageCursor4::
     ld a, [wMenuState]
     ld [wListCursor], a
@@ -5533,6 +5842,10 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor4::
     inc [hl]
     ret
 
+; step 27 of BattleEnd_AskToJoin: calls CopyRectRecordToScreenBuffer_12; copies wListCursor to
+; wMenuState; copies wListCursor to wCommandCursorMax; sets
+; BattleEnd_AskToJoin_MovePagedListCursor_Data_3 to $bc; copies wListPageIndex to wMenuOption;
+; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; ...
 BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12::
     farcall CopyRectRecordToScreenBuffer_12
     ld a, [wListCursor]
@@ -5588,6 +5901,9 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12::
     ld [wBattleSubStep], a
     ret
 
+; step 28 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets rRAMG to $0a; sets rRAMB to
+; 0; copies the byte at wListEntries to wArg1; sets wArg2 to 0; calls DeleteSRAMRecordAndCompact;
+; sets rRAMG to 0; ...
 BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2::
     ld a, [wTextFlags]
     or a
@@ -6010,6 +6326,7 @@ DrawCursorTileAtTableEntryDE::
     pop hl
     ret
 
+; data read by BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C (10 bytes)
 BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data::
     db $b9, $c1, $f9, $c1, $39, $c2, $79, $c2, $b9, $c2
 
@@ -6251,6 +6568,10 @@ DrawFourListEntriesForPageListPage::
     ld [wTextWindowWidth], a
     ret
 
+; called from DrawFourListEntriesForPageListPage: calls
+; DrawFourListEntriesForPageListPage_SRAMRecordAddress_2; calls SRAMRecordAddress; calls
+; ShowStringBCAtTileRowBattleArg0; sets DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data to
+; $c3
 DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     ld a, [hl]
     cp $ff
@@ -6303,6 +6624,7 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     pop hl
     ret
 
+; Calls SRAMRecordAddress
 DrawFourListEntriesForPageListPage_SRAMRecordAddress_2::
     ld c, MON_SPECIES
     call SRAMRecordAddress
@@ -6330,6 +6652,7 @@ ShowStringBCAtTileRowBattleArg0::
     farcall ShowString_Bank08
     ret
 
+; data read by DrawFourListEntriesForPageListPage (8 bytes)
 DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data::
     db $43, $c2, $83, $c2, $c3, $c2, $03, $c3
 
@@ -6546,6 +6869,8 @@ RunBattleEndStep5SubSteps::
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
     dw RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc
 
+; step 0 of RunBattleEndStep5SubSteps: calls CopyBattleMonsterNameWithLetterSuffix; sets
+; wStringIndex to $14; calls ShowStringCategory5_Bank16; advances wBattleSubStep
 RunBattleEndStep5SubSteps_ShowPleaseNameHero::
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
@@ -6556,6 +6881,9 @@ RunBattleEndStep5SubSteps_ShowPleaseNameHero::
     inc [hl]
     ret
 
+; step 1 of RunBattleEndStep5SubSteps: returns unless wTextFlags is 0; calls FillBytes; sets wArg1
+; to 1; copies the byte at wSlotNameSuffix to wArg2; copies the byte at wRecordBufA to wArg3; copies
+; the byte at wRecordBufA to wArg4; copies the byte at wRecordBufA to wSpeciesIdLo; ...
 RunBattleEndStep5SubSteps_FillBytes::
     ld a, [wTextFlags]
     or a
@@ -6612,6 +6940,9 @@ RunBattleEndStep5SubSteps_FillBytes::
     inc [hl]
     ret
 
+; step 2 of RunBattleEndStep5SubSteps: sets wArg1 to 1; copies the byte at wSlotNameSuffix to wArg2;
+; copies the byte at wRecordBufA to wArg3; copies the byte at wRecordBufA to wArg4; copies the byte
+; at wRecordBufA to wArg5; calls RunNameEntryStateWhenNotFading; returns unless wArg5 is $ff; ...
 RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
     ld a, $01
     ld [wArg1], a
@@ -6668,11 +6999,15 @@ RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
     inc [hl]
     ret
 
+; step 3 of RunBattleEndStep5SubSteps: advances wBattleSubStep
 RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
+; step 4 of RunBattleEndStep5SubSteps: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
+; sRecords; sets wWorkBuf; sets sRecords to 1; calls CopyBBytesDEToHL_Bank16; calls
+; SRAMRecordAddressMapped; ...
 RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc::
     ld a, $0a
     ld [rRAMG], a
@@ -6783,6 +7118,7 @@ SetBit0AtHL::
     set 0, [hl]
     ret
 
+; Sets wBattleSlotOut to 1
 SetBit0AtHL_Skip::
     ld a, c
     ld hl, wBattleSlotOut
@@ -6816,6 +7152,9 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
     dw BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_WillYouTakeHero
 
+; step 0 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
+; CopyRect32StrideToVRAM_Bank16; calls SRAMRecordAddress; sets rRAMG to $0a; sets rRAMB to 0; sets
+; rRAMG to 0; calls LoadCursorTileAndRect; ...
 BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
@@ -6866,6 +7205,9 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
     ld [wMenuState], a
     ret
 
+; step 1 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; calls
+; CopyRect32StrideToVRAM_Bank16; sets wListPageSize to 2; sets wListPage to 0; sets wListPageCount
+; to 1; sets wListLastPageSize to 2; advances wBattleSubStep
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
     ld a, [wTextFlags]
     or a
@@ -6886,6 +7228,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
     inc [hl]
     ret
 
+; step 2 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; plays sound $6c; sets
+; wBattleSubStep to 5; may return early; advances wBattleSubStep
 BattleEnd_AddJoinedMonster_MovePagedListCursor::
     ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
     ld de, wMenuState
@@ -6912,6 +7256,9 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor::
     inc [hl]
     ret
 
+; step 3 of BattleEnd_AddJoinedMonster: advances wBattleSubStep; calls BattleMonsterTableAtLeast6;
+; sets wStringIndex to $20; calls ShowStringCategory5_Bank16; sets wStringIndex to $1a; calls
+; ShowStringCategory5_Bank16
 BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     ld hl, wBattleSubStep
     inc [hl]
@@ -6929,6 +7276,8 @@ BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     call ShowStringCategory5_Bank16
     ret
 
+; step 4 of BattleEnd_AddJoinedMonster: advances wBattleStep; sets wBattleSubPhase to 0; sets
+; wBattleSubStep to 0
 BattleEnd_AddJoinedMonster_SetBattleStep::
     ld hl, wBattleStep
     inc [hl]
@@ -6938,6 +7287,9 @@ BattleEnd_AddJoinedMonster_SetBattleStep::
     ld [wBattleSubStep], a
     ret
 
+; step 5 of BattleEnd_AddJoinedMonster: branches on wPartyCount; sets wBattleSubStep to 8; advances
+; wBattleSubStep; calls BattleMonsterTableAtLeast6; sets wStringIndex to $21; calls
+; ShowStringCategory5_Bank16; sets wStringIndex to $1b; ...
 BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
     ld a, [wPartyCount]
     cp $03
@@ -6963,6 +7315,9 @@ BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
     call ShowStringCategory5_Bank16
     ret
 
+; step 6 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; increments wPartyCount;
+; copies the byte at wPartyCount to wBattlePartyCount; calls SetRecordState2ForB; calls
+; LoadRecordListNameTiles; calls RunForPartyMembers; calls BuildBattleMenuScreen; ...
 BattleEnd_AddJoinedMonster_SetRecordState2ForB::
     ld a, [wTextFlags]
     or a
@@ -6987,6 +7342,8 @@ BattleEnd_AddJoinedMonster_SetRecordState2ForB::
     inc [hl]
     ret
 
+; step 7 of BattleEnd_AddJoinedMonster: calls CopyRect32StrideToVRAM_Bank16; sets wBattleSubStep to
+; 4
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -6996,6 +7353,9 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
     ld [wBattleSubStep], a
     ret
 
+; step 8 of BattleEnd_AddJoinedMonster: calls CopyRectAndDrawBattleArg0Values; sets wStringIndex to
+; $1c; calls ShowStringCategory5Immediate_Bank16; sets wMenuSubState to 0; sets wScreenTileBuffer +
+; $12f to $bc; advances wBattleSubStep
 BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     call CopyRectAndDrawBattleArg0Values
     ld a, $1c
@@ -7009,6 +7369,9 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     inc [hl]
     ret
 
+; step 9 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; sets wListPageSize to 4;
+; sets wListPage to 0; sets wListPageCount to 1; sets wListLastPageSize to 4; calls
+; CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte; ...
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize_2::
     ld a, [wTextFlags]
     or a
@@ -7036,6 +7399,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize_2::
     inc [hl]
     ret
 
+; step 10 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; sets rRAMG to $0a; sets rRAMB to
+; 0; calls SRAMRecordAddress; sets wBattleSubStep to $13; may return early; plays sound $69; ...
 BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     ld de, wMenuSubState
@@ -7079,6 +7444,9 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
     inc [hl]
     ret
 
+; step 11 of BattleEnd_AddJoinedMonster: sets wMenuSelectedMember to 0; calls
+; CopyRect32StrideToVRAM_Bank16; sets wListPageSize to 2; sets wListPage to 0; sets wListPageCount
+; to 1; sets wListLastPageSize to 2; calls WriteVRAMByte; ...
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetMenuSelectedMember::
     xor a
     ld [wMenuSelectedMember], a
@@ -7109,6 +7477,9 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetMenuSelectedMember::
     inc [hl]
     ret
 
+; step 12 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; plays sound $69; advances
+; wBattleSubStep; sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddress; sets wStringIndex to
+; $1a; ...
 BattleEnd_AddJoinedMonster_MovePagedListCursor_AdvanceBattleSubStep::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
@@ -7162,6 +7533,9 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_AdvanceBattleSubStep::
     ld [wBattleSubStep], a
     ret
 
+; step 13 of BattleEnd_AddJoinedMonster: calls FillBytes; copies wBattlePartyCount+1 to wListCount;
+; copies wMenuSubState to wListCursor; sets wListPageIndex to 0; calls ClampRecordListPageCursor5;
+; calls SaveAndHideSpriteState_Bank1E; sets wScreenState to $0e; ...
 BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
     ld hl, wListEntries
     ld bc, $001e
@@ -7196,6 +7570,9 @@ BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
     inc [hl]
     ret
 
+; step 14 of BattleEnd_AddJoinedMonster: calls SwapMonstersMenu; returns unless wScreenStep is $0a;
+; copies wSavedSpriteSlotCount to wSpriteSlotCount; calls DecompressToVRAM; increments
+; wBattleScreenFlags; advances wBattleSubStep
 BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -7223,6 +7600,11 @@ BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     inc [hl]
     ret
 
+; step 15 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
+; CopyRectAndDrawBattleArg0Values; copies wListCursor to wMenuSubState; sets
+; BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C_Data to $bc; calls
+; CopyRectRecordAndPlaySound6C; calls CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString1D;
+; ...
 BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values::
     call BuildBattleMenuScreen
     call CopyRectAndDrawBattleArg0Values
@@ -7243,6 +7625,9 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
     ld [wBattleSubStep], a
     ret
 
+; step 16 of BattleEnd_AddJoinedMonster: calls LoadCursorTileAndRect; calls
+; CopyRect32StrideToVRAM_Bank16; sets wStringIndex to $19; calls
+; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1
 BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld a, $1f
     ld [wScreenTileBuffer + $10c], a
@@ -7272,6 +7657,9 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld [wBattleSubStep], a
     ret
 
+; step 17 of BattleEnd_AddJoinedMonster: calls CopyRectAndDrawBattleArg0Values; sets
+; wScreenTileBuffer + $12f to $bc; sets wMenuSelectedMember to 0; sets wStringIndex to $1c; calls
+; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 9
 BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_ChooseTheMonsterTo::
     call CopyRectAndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12f
@@ -7285,6 +7673,9 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo_ChooseTheMonsterTo::
     ld [wBattleSubStep], a
     ret
 
+; step 18 of BattleEnd_AddJoinedMonster: calls RestoreRecordAFully; sets wBattleArg0 to $ff;
+; branches on the byte at wBattleArg0; calls SetRecordState2; calls LoadRecordListNameTiles; calls
+; RunForPartyMembers; calls BuildBattleMenuScreen; ...
 BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     ld a, [wMenuSubState]
     ld hl, wBattleArg0
@@ -7323,6 +7714,9 @@ BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     ld [wBattleSubStep], a
     ret
 
+; step 19 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
+; CopyRect32StrideToVRAM_Bank16; calls LoadCursorTileAndRect; sets wStringIndex to $19; calls
+; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1; sets wMenuState to 0
 BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_WillYouTakeHero::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
@@ -7341,7 +7735,7 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero_WillYouTakeHero::
 
 ; copies rectangle record $7923 to the screen buffer and draws the wBattleArg0 values at vTiles2 +
 ; $3B0 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; CopyRect7923AndDrawBattleArg0Values)
+; CopyRectAndDrawBattleArg0Values)
 CopyRectAndDrawBattleArg0Values::
     farcall CopyRectRecordToScreenBuffer_13
     call DrawBattleArg0ValuesAtTiles23B0
@@ -7419,7 +7813,7 @@ SetRecordState2::
 
 ; with SRAM enabled runs RunForPartyMembers_SRAMRecordAddress for each of the first one to three
 ; party records (E-0124) (E-0344: the address in its name dropped or read as the label there; was
-; RunFunc710FForPartyMembers)
+; RunForPartyMembers)
 RunForPartyMembers::
     ld a, $0a
     ld [rRAMG], a
@@ -7446,6 +7840,7 @@ RunForPartyMembers::
     ld [rRAMG], a
     ret
 
+; called from RunForPartyMembers: calls SRAMRecordAddress; calls SetBit5AtDE; calls SetBit0AtDE
 RunForPartyMembers_SRAMRecordAddress::
     push bc
     ld c, MON_LEVEL
@@ -7555,7 +7950,7 @@ SetBit0AtDE::
     ret
 
 ; A = 1 when Data $71AC[battle monster id of wDisplaySlot] is at least 6, else 0 (E-0124) (E-0344:
-; the address in its name dropped or read as the label there; was BattleMonsterTable71ACAtLeast6)
+; the address in its name dropped or read as the label there; was BattleMonsterTableAtLeast6)
 BattleMonsterTableAtLeast6::
     ld a, [wDisplaySlot]
     ld hl, wBattleMonsterId
@@ -7583,10 +7978,10 @@ BattleMonsterTableAtLeast6::
     xor a
     ret
 
-; BattleMonsterTable71ACAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and
-; returns A = 1 when it is 6 or more; BattleEnd_Step5_Case04_Sub01_Case03 and _Case05 call it; 373
-; bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean is not
-; read (E-0206, C1)
+; BattleMonsterTableAtLeast6 reads the byte at $71AC + the wBattleMonsterId of wDisplaySlot and
+; returns A = 1 when it is 6 or more; BattleEnd_AddJoinedMonster_ShowHeroWasSentTo and _Case05 call
+; it; 373 bytes (monster ids 0-$174) end at the rectangle copier after them; what the classes mean
+; is not read (E-0206, C1)
 ; record: class 0-7
 MonsterClassByteTable_1::
     db $00 ; id 0
@@ -7994,7 +8389,7 @@ CopyRect32StrideToVRAM_Bank16::
 
 ; clears attributes and the screen buffer and lays out the battle menu rectangles (bank $31 routines
 ; for wBattlePartyCount and wBattleFoeCount) (E-0122) (E-0344: the address in its name dropped or
-; read as the label there; was BuildBattleMenuScreen_733F)
+; read as the label there; was BuildBattleMenuScreen)
 BuildBattleMenuScreen::
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
@@ -8004,6 +8399,9 @@ BuildBattleMenuScreen::
     farcall CopyRectRecordToScreenBuffer
     ret
 
+; called from BattleEnd_Step3: branches on wBattleKind; calls NextTableByte; branches on wRecordBufA
+; + MON_LEVEL; sets wRecordBufA + MON_LEVEL to 1; sets wSpeciesIdLo; sets wSpeciesIdHi; calls
+; LoadSpeciesRecord; ...
 BattleEnd_Step3_NextTableByte::
     ld a, [wBattleKind]
     cp $02
@@ -8207,6 +8605,7 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
+; Branches on h; sets wBattleTempBuf; calls NextTableByte
 BattleEnd_Step3_Multiply8By16::
     ld hl, $03e7
     ld a, l
@@ -8249,6 +8648,7 @@ BattleEnd_Step3_Multiply8By16::
     ld h, a
     ret
 
+; Branches on h; sets wBattleTempBuf; calls NextTableByte; may return early
 BattleEnd_Step3_Multiply8By16_2::
     ld hl, $03e7
     ld a, l
@@ -8353,6 +8753,7 @@ ShowStrings6To8Bank09InRows::
     ld [wTextWindowWidth], a
     ret
 
+; data read by BattleEnd_AskToJoin_WriteVRAMByte (3 bytes)
 BattleEnd_AskToJoin_WriteVRAMByte_Data::
     db $0a, $14, $1e
 
@@ -8632,6 +9033,8 @@ DrawTitleSaveSummaryScreen::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
+; Calls LoadSaveFileSummary; branches on wBattlerRecords; branches on wGameMode; sets
+; wTextWindowTileLo; sets wTextWindowTileHi; sets wTextWindowRows; sets wTextWindowWidth; ...
 DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
     call LoadSaveFileSummary
     ld a, [wBattlerRecords]
@@ -8780,7 +9183,8 @@ DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
     ld [wTextWindowWidth], a
     ret
 
-; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesWC8C1NoBlank_Bank16 (E-0126)
+; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesDigits1NoBlank_Bank16
+; (E-0126)
 WriteThreeDigitTilesDigits_Bank16::
     ld hl, wDigits
     ld a, [hl]
@@ -8999,6 +9403,7 @@ CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
     ret
 
+; Copies wTitleKeyEntry to wStringIndex; sets wStringCategory to 6; calls ShowString_Bank09
 CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
     ld a, [wTitleKeyEntry]
     and $3f
@@ -9008,6 +9413,7 @@ CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
     farcall ShowString_Bank09
     ret
 
+; data read by DrawSaveSummaryPartyEntryC (3 bytes)
 DrawSaveSummaryPartyEntryC_Data1::
     db $25, $2b, $31
 
@@ -9045,7 +9451,7 @@ LoadAllFamilyIconTiles::
     call WriteBytesToVRAMTileWorkBuf1
     ret
 
-; with SRAM enabled (bank 0), runs LoadTileForRecordByte0D for record list entries 0, 1 and 2 with H
+; with SRAM enabled (bank 0), runs LoadTileForRecordFamily for record list entries 0, 1 and 2 with H
 ; = $C7, $C8 and $C9, stopping after wPartyCount entries; then disables SRAM (E-0103)
 LoadTilesForPartyRecords::
     ld a, $0a
@@ -9076,7 +9482,8 @@ LoadTilesForPartyRecords::
 ; A = record (SRAMRecordAddressMapped, offset $0D), H = destination page: picks 16 bytes from
 ; FamilyIconTiles by the low nibble of record byte $0D and copies them on through the shared copy
 ; loop at WriteBytesToVRAMTileWorkBuf1_Skip (not read to its end) (E-0103) (E-0345: record byte $0D
-; is MON_FAMILY; was LoadTileForRecordByte0D)
+; is MON_FAMILY; was LoadTileForRecordFamily)
+; code: calls SRAMRecordAddressMapped; continues in WriteBytesToVRAMTileWorkBuf1_Skip
 LoadTileForRecordFamily::
     push hl
     ld c, MON_FAMILY
@@ -9097,10 +9504,11 @@ LoadTileForRecordFamily::
 
 ; writes B bytes from DE to VRAM tile wWorkBuf + $1 ($8000 + 16 * index; indices below $80 use the
 ; $9000 area) (E-0124) (E-0340: the address in its name read as its RAM name; was
-; WriteBytesToVRAMTileWD09E)
+; WriteBytesToVRAMTileWorkBuf1)
 WriteBytesToVRAMTileWorkBuf1::
     ld a, [wWorkBuf + $1]
 
+; Calls WriteVRAMByteInc
 WriteBytesToVRAMTileWorkBuf1_Skip::
     swap a
     ld h, a

@@ -50,6 +50,7 @@ CopyStringToBuffer_Bank82_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_96::
+; data read by BeginStringDisplay_Bank80_Overflow (1 word)
 MessageStrings_Bank80_Overflow::
     dw StringList_Bank80_Overflow_0 ; id 0
 
@@ -1398,6 +1399,7 @@ Script_Rename_3::
     script_command SCRIPT_RENAME
     script_jump Script_Rename_2
 
+; Sets wStringIndex; calls BeginStringDisplay
 DebugMessageTest_Update_BeginStringDisplay_2::
     ld de, MessageStrings_Bank0E_Overflow
     ld a, [wStringIndex]
@@ -1421,6 +1423,7 @@ CopyStringToBuffer_Bank0E_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_96_3::
+; data read by DebugMessageTest_Update_BeginStringDisplay_2 (1 word)
 MessageStrings_Bank0E_Overflow::
     dw StringList_Bank0E_Overflow_0 ; id 0
 

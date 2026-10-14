@@ -292,6 +292,10 @@ MetaSprites27Attrs::
     db $01 ; id 126
     db $00
 
+; called from DrawMetaSpriteSet_Bank27: may return early; branches on the byte at hMetaSpriteXLo;
+; returns if the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if
+; the byte at hMetaSpriteXLo is $80; branches on the byte at hMetaSpriteXLo; returns if the byte at
+; hMetaSpriteXLo is $80; ...
 DrawMetaSpriteSet_Bank27_WaitOamNextEntry::
     ldh a, [hOamNextEntry]
     cp $27

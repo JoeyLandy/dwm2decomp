@@ -596,21 +596,21 @@ DEF SKILL_HIGHJUMP_CC EQU $CC ; HighJump
 DEF SKILL_LOVERAIN_CD EQU $CD ; LoveRain
 DEF SKILL_LOVERAIN_CE EQU $CE ; LoveRain
 DEF SKILL_LOVERAIN_CF EQU $CF ; LoveRain
-DEF ACTION_D0 EQU $D0
-DEF ACTION_D1 EQU $D1
-DEF ACTION_D2 EQU $D2
-DEF ACTION_D3 EQU $D3
-DEF ACTION_D4 EQU $D4
-DEF ACTION_D5 EQU $D5
-DEF ACTION_D6 EQU $D6
-DEF ACTION_D7 EQU $D7
-DEF ACTION_D8 EQU $D8
-DEF ACTION_D9 EQU $D9
-DEF ACTION_DA EQU $DA
-DEF ACTION_DB EQU $DB
-DEF ACTION_DC EQU $DC
-DEF ACTION_DD EQU $DD
-DEF ACTION_DE EQU $DE
+DEF ACTION_D0 EQU $D0 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD0
+DEF ACTION_D1 EQU $D1 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD1
+DEF ACTION_D2 EQU $D2 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD2
+DEF ACTION_D3 EQU $D3 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD3
+DEF ACTION_D4 EQU $D4 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD4
+DEF ACTION_D5 EQU $D5 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD5
+DEF ACTION_D6 EQU $D6 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD6
+DEF ACTION_D7 EQU $D7 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD7
+DEF ACTION_D8 EQU $D8 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD8
+DEF ACTION_D9 EQU $D9 ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionD9
+DEF ACTION_DA EQU $DA ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionDA
+DEF ACTION_DB EQU $DB ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionDB
+DEF ACTION_DC EQU $DC ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionDC
+DEF ACTION_DD EQU $DD ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionDD
+DEF ACTION_DE EQU $DE ; a battle action with no name in StringTable_SkillNames; handled by ActionEffect_ActionDE
 
 ; Item ids: StringTable_ItemNames
 DEF ITEM_00 EQU $00

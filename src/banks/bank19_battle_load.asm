@@ -4,6 +4,8 @@
 SECTION "Bank 19", ROMX[$4000], BANK[$19]
     db $19
 
+; called from GameMode4_Init: calls FillBytes; copies wDataBank to wDataBankSave; calls FillBytes;
+; sets wBattleKind; calls GameMode4_Init_FillBytes_2; branches on wLinkMode; calls FillBytes; ...
 GameMode4_Init_FillBytes::
     ld a, [wBattleKind]
     push af
@@ -55,6 +57,8 @@ GameMode4_Init_FillBytes::
     call GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
+; Branches on wBattleKind; sets wCommandMenuState to 1; sets wEffectId to $ff; sets wQueuedActionId
+; to $ff; sets wSealPrayState to $ff; sets wBattleItemTarget to $ff; calls FillBytes; ...
 GameMode4_Init_FillBytes_2::
     ld a, [wBattleKind]
     cp $04
@@ -192,6 +196,10 @@ GameMode4_Init_CountBattlerRecords::
     ld a, c
     ret
 
+; Calls GameMode4_Init_CopyGlyphTilesToVRAM; calls ClearAttributesAndScreenBuffer_Bank31; calls
+; CopyRectRecordForBattlePartyCount_Bank31; calls LayoutTileBlocksForBattleFoeCount; calls
+; DrawPartySlotStatusPanels; calls LoadBattleMonsterPictureAttributes; calls
+; CopyScreenTileBufferToVRAM_A0_Bank19; ...
 GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
     farcall GameMode4_Init_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
@@ -205,6 +213,9 @@ GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
     ld [wBGPaletteUploadRequest], a
     ret
 
+; Branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
+; branches on wLinkRole; calls GameMode4_Init_LoadMonsterPicture_2; branches on wBattleFoeCount;
+; branches on wLinkRole; ...
 GameMode4_Init_LoadMonsterPicture::
     ld de, wBattlerRecordSlot4 + BATTLER_SPECIES
     ld a, [wLinkRole]
@@ -246,6 +257,7 @@ GameMode4_Init_LoadMonsterPicture::
 .return:
     ret
 
+; Calls LoadMonsterPicture
 GameMode4_Init_LoadMonsterPicture_2::
     ld a, [de]
     push af
@@ -257,6 +269,9 @@ GameMode4_Init_LoadMonsterPicture_2::
     call LoadMonsterPicture
     ret
 
+; Branches on wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; branches on
+; wLinkRole; calls GameMode4_Init_LoadBattleSlotFromBattlerRecord; calls AdjustSkillsForBattleStart;
+; branches on the byte at wBattleSlotOut; copies the byte at wBattleMonsterId to wSpeciesIdLo; ...
 GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -881,6 +896,7 @@ ScaleHLToEightTenths_Bank19::
     pop bc
     ret
 
+; Branches on wBattleKind; plays music $13
 GameMode4_Init_QueueMusic::
     ld a, [wBattleKind]
     or a
@@ -899,6 +915,7 @@ GameMode4_Init_QueueMusic::
     call QueueMusic
     ret
 
+; Calls GameMode4_Init_SRAMRecordAddressMapped
 GameMode4_Init_ReadBattlePartyCount::
     ld a, [wBattlePartyCount]
     ld b, a
@@ -914,6 +931,7 @@ GameMode4_Init_ReadBattlePartyCount::
     jr nz, .loop
     ret
 
+; Calls SRAMRecordAddressMapped; calls ApplyIncrementOffsetRows19ForA0DTo13
 GameMode4_Init_SRAMRecordAddressMapped::
     ld a, c
     ld c, MON_NAME
@@ -1112,6 +1130,7 @@ IncrementOffsetRows_19::
     db $ff, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 18
     db $fa, $fb, $fc, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 19
 
+; Branches on wDisplaySlot; calls LoadMonsterAndSpeciesForListEntryC
 BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1145,6 +1164,8 @@ BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
     ld [de], a
     ret
 
+; Branches on wBattleKind; calls LoadMonsterAndSpeciesForListEntryC; calls
+; GameMode4_Init_WriteBattleArg2AndBattleArg3Etc
 GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1220,6 +1241,8 @@ LoadMonsterAndSpeciesForListEntryC::
     pop bc
     ret
 
+; Sets wBattleArg2; sets wBattleArg3; sets wBattleArg1; branches on the byte at wWildLevel; sets
+; wSpeciesIdLo; sets wSpeciesIdHi; calls LoadSpeciesRecord; ...
 GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
     push bc
     ld a, e
@@ -1384,7 +1407,7 @@ StoreRandomByteAtHL_Bank19::
     ret
 
 ; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118) (E-0345: was
-; StoreRandomByte80ToFFAtHL)
+; StoreRandom80ToFFAtHL)
 StoreRandom80ToFFAtHL::
     push af
     push bc
@@ -1489,6 +1512,8 @@ ScaleWordBy6Or12Capped10000::
     jr nz, ScaleWordBy6Or12Capped10000_CallMultiply24By8
     ld a, $0c
 
+; May continue in ScaleWordBy6Or12Capped10000_SetTemp2; continues in
+; ScaleWordBy6Or12Capped10000_SetTemp2
 ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     call Multiply24By8
     ld a, d
@@ -1497,11 +1522,13 @@ ScaleWordBy6Or12Capped10000_CallMultiply24By8::
     ld hl, $2710
     jr ScaleWordBy6Or12Capped10000_SetTemp2
 
+; Works on registers only
 ScaleWordBy6Or12Capped10000_Restore::
     pop bc
     ld l, c
     ld h, b
 
+; Works on registers only
 ScaleWordBy6Or12Capped10000_SetTemp2::
     ld a, l
     ldh [hTemp2], a
@@ -1757,6 +1784,7 @@ Multiply24By8::
     ld d, a
     ret
 
+; called from LoadMonsterAndSpeciesForListEntryC: works on registers only
 LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     push bc
     ld b, $0a
@@ -1886,6 +1914,8 @@ LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
     pop bc
     ret
 
+; called from LoadMonsterAndSpeciesForListEntryC: branches on wSpeciesRecord + SPECIES_SEX_RATIO;
+; calls NextTableByte; branches on wRandomLo; branches on wNewRecordFamily
 LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     ld a, $0c
     add e
@@ -1963,6 +1993,8 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
     pop bc
     ret
 
+; May continue in LoadBattleSlotFromBattlerRecord; calls LoadBattleSlotFromBattlerRecord; calls
+; LoadBattleSlotFromBattlerRecord_2; calls ClearSpeciesRecordBuffer_Bank19
 GameMode4_Init_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a
@@ -1982,7 +2014,7 @@ GameMode4_Init_LoadBattleSlotFromBattlerRecord::
 
 ; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and
 ; stats from its battler record into the battle arrays (E-0131) (E-0344: the address in its name
-; dropped or read as the label there; was LoadBattleSlotFromBattlerRecord_4BA8)
+; dropped or read as the label there; was LoadBattleSlotFromBattlerRecord)
 LoadBattleSlotFromBattlerRecord::
     ld a, c
     push bc
@@ -2216,7 +2248,7 @@ LoadBattleSlotFromBattlerRecord::
 
 ; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle
 ; arrays and loads its skills (E-0131) (E-0344: the address in its name dropped or read as the label
-; there; was LoadBattleSlotFromBattlerRecord_4CF8)
+; there; was LoadBattleSlotFromBattlerRecord_2)
 LoadBattleSlotFromBattlerRecord_2::
     push bc
     call BattlerRecordAddress_Bank19
@@ -2409,6 +2441,9 @@ BattlerRecordAddress_Bank19::
     ld h, a
     ret
 
+; Branches on wLinkMode; calls CarryUnlessBattleSlotOutSlotEmpty; sets wSlotMarks + $4 to 1; sets
+; wSlotMarks + $4 to $ff; calls CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; sets
+; wSlotMarks to 0; ...
 GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a
@@ -2464,10 +2499,10 @@ GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop2
     ret
 
-; LoadTable4E60EntryForWC991ToWC9DE copies the 3 bytes at $4E60 + $129 * (species record byte 7) + 3
-; * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and
-; DrawWCA83ExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row starting at 0
-; (E-0148, C1)
+; LoadTableEntryForRecordBufASpeciesToRecordBufAExp copies the 3 bytes at $4E60 + $129 * (species
+; record byte 7) + 3 * (level - 1) to the record's EXP field (+$58); RecordReachedNextLevelExp and
+; DrawRecordBufBExpExpAndToNextLevel read the same rows; 32 rows of 99 rising values, each row
+; starting at 0 (E-0148, C1)
 ; record: EXP needed for levels 1-99 (24-bit)
 ExpTable::
     d24 0, 2, 7, 15, 27, 45, 72, 113, 175, 268, 408 ; id 0
@@ -2786,9 +2821,9 @@ LoadExpTableEntryToTemp2::
 
 ; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121) (E-0340:
-; the address in its name read as its RAM name; was LoadTable4E60EntryForWC991ToWC9DE) (E-0344: the
-; address in its name dropped or read as the label there; was
-; LoadTable4E60EntryForRecordBufASpeciesToRecordBufAExp)
+; the address in its name read as its RAM name; was
+; LoadTableEntryForRecordBufASpeciesToRecordBufAExp) (E-0344: the address in its name dropped or
+; read as the label there; was LoadTableEntryForRecordBufASpeciesToRecordBufAExp)
 LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
     ld a, [wRecordBufA + MON_SPECIES]
     ld l, a
@@ -2828,9 +2863,9 @@ LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
 
 ; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121) (E-0340:
-; the address in its name read as its RAM name; was LoadTable4E60EntryForWCA36ToWCA83) (E-0344: the
-; address in its name dropped or read as the label there; was
-; LoadTable4E60EntryForRecordBufBSpeciesToRecordBufBExp)
+; the address in its name read as its RAM name; was
+; LoadTableEntryForRecordBufBSpeciesToRecordBufBExp) (E-0344: the address in its name dropped or
+; read as the label there; was LoadTableEntryForRecordBufBSpeciesToRecordBufBExp)
 LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
@@ -2868,9 +2903,10 @@ LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     ld [de], a
     ret
 
-; while GameMode4_Init_Sub01_Sub07_Sub01 builds a new monster record, the code reads the byte at
-; $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the
-; copied name; 384 bytes, one per species, values 1-7; what the field means is not read (E-0208, C1)
+; while GameMode4_Init_WriteBattleArg2AndBattleArg3Etc builds a new monster record, the code reads
+; the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that
+; follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read
+; (E-0208, C1)
 ; record: value 1-7 stored in a new monster record
 SpeciesNewRecordByteTable::
     db $07 ; id 0

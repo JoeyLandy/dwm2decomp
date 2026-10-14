@@ -6011,8 +6011,9 @@ class Rom:
         return text
 
     def write_ram_inc(self, path) -> None:
-        lines = ["; RAM symbols referenced by the code. Names of the form wXXXX / hXXXX / sXXXX are",
-                 "; address names (no meaning claimed); any other name cites its evidence.", ""]
+        lines = ["; RAM symbols referenced by the code: s = cartridge SRAM, w = work RAM, h = high RAM.",
+                 "; Each comment says what the code keeps there and cites its evidence (config/symbols.json);",
+                 "; a name of the form wXXXX / hXXXX / sXXXX would be a bare address name (none is left).", ""]
         sections = [("SRAM ($A000-$BFFF)", 0xA000, 0xBFFF), ("WRAM ($C000-$DFFF)", 0xC000, 0xDFFF),
                     ("HRAM ($FF80-$FFFE)", 0xFF80, 0xFFFE)]
         for title, lo, hi in sections:
@@ -6530,7 +6531,14 @@ def main() -> int:
         encoding="utf-8", newline="\n")
     gbs.write_hardware_inc(ROOT / "src/hardware.inc")
     gb_text.write_charmap_inc(ROOT / "src/charmap.inc")
-    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts, events, bstat_cfg)
+    final_labels = {m for x in texts for m in re.findall(r"^([A-Za-z_]\w*)::", x, re.M)}
+    id_notes = {}  # E-0347: an action id with no name is described by the routines that handle it
+    for v, (name, _text) in rom.consts.get("SKILL", {}).items():
+        if name.startswith("ACTION_") and name != "ACTION_FIGHT":
+            handlers = [f for f in (f"ActionEffect_Action{v:02X}", f"ChooseTarget_Action{v:02X}") if f in final_labels]
+            id_notes[name] = ("a battle action with no name in StringTable_SkillNames; handled by " + " and ".join(handlers)
+                              if handlers else "a battle action with no name in StringTable_SkillNames")
+    gb_constants.write_constants_inc(ROOT / "src/constants.inc", rom.consts, events, bstat_cfg, id_notes)
     rom.write_ram_inc(ROOT / "src/ram.asm")
     log(f"symbols: {len(rom.ram_used)} RAM addresses named "
         f"({sum(1 for a in rom.ram_used if a in rom.symbols)} with evidence)")
