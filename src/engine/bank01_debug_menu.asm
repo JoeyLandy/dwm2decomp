@@ -1697,7 +1697,7 @@ DebugShowMonsterRecord::
     ld hl, vBGMap0 + $16d
     ld bc, $0100
     call DebugShowMonsterRecord_Number24ToPackedBCD
-    ld a, [wScreenAttrBuffer]
+    ld a, [wRecordBufferData + $12]
     ld e, a
     ld a, [wRecordBufferData + $13]
     ld d, a
@@ -5986,7 +5986,7 @@ CreateMonsterRecordOfKindTemp1_LoadMonsterRecord::
     ld [hli], a
     ld a, [wRecordBufferData + $11]
     ld [hli], a
-    ld a, [wScreenAttrBuffer]
+    ld a, [wRecordBufferData + $12]
     ld [hli], a
     ld a, [wRecordBufferData + $13]
     ld [hli], a

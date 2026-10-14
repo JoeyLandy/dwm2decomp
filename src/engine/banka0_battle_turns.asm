@@ -4591,8 +4591,8 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytes::
     jr nz, .loop3
     ret
 
-; the same instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer
-; to this bank's own routines and tables; the twin's note describes the shape (E-0107)
+; a 13-step dispatcher on wBattleSubPhase laid out like RunBattleSetup (bank $31), but only the
+; dispatch matches: the steps are this bank's own (E-0363; narrows E-0107)
 RunBattleSetup_BankA0::
     ld a, [wBattleSubPhase]
     jumptable

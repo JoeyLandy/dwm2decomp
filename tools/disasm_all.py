@@ -6169,6 +6169,11 @@ class Rom:
             return text
         m = self._MEM.search(text)
         if m:
+            if int(m.group(1), 16) == 0xD000 and any("[$D001]" in f for f in following):
+                # byte $12 of a 26-byte monster record read with the next one (WRAM bank 1),
+                # not wScreenAttrBuffer, which lives at $D000 in WRAM bank 2 (E-0357)
+                base = self.sym_name(0xCFEE, False)
+                return text[:m.start()] + f"[{base} + $12]" + text[m.end():]
             nm = self.sym_name(int(m.group(1), 16), False)
             return text[:m.start()] + "[" + nm + "]" + text[m.end():] if nm else text
         m = self._IMM.match(text)

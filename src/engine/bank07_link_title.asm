@@ -4267,7 +4267,7 @@ GameMode5_Update_NewPlayerSetup_LoadMonsterRecord::
     ld [hli], a
     ld a, [wRecordBufferData + $11]
     ld [hli], a
-    ld a, [wScreenAttrBuffer]
+    ld a, [wRecordBufferData + $12]
     ld [hli], a
     ld a, [wRecordBufferData + $13]
     ld [hli], a

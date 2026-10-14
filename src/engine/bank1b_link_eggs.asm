@@ -4604,8 +4604,10 @@ RunLinkSession4ScreenState_DecompressToVRAM::
     jr nz, .loop2
     ret
 
-; the same instruction sequence as EggServiceMenu (bank $0D) apart from label operands, which refer
-; to this bank's own routines and tables; the twin's note describes the shape (E-0107)
+; a 16-step dispatcher on wScreenState laid out like EggServiceMenu (bank $0D), but only the
+; dispatch matches: the steps are this bank's own and run a link exchange (a message, waiting for
+; the partner, picking records, starting the link battle) rather than the egg service (E-0363;
+; narrows E-0107)
 EggServiceMenu_Bank1B::
     ld a, [wScreenState]
     jumptable

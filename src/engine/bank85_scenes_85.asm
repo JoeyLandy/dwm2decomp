@@ -13,11 +13,8 @@ SceneKeyShop::
     dw SceneKeyShop_WriteScriptStartRequest
     dw SceneKeyShop_StepObjectTowardCoord
 
-; step 1 of SceneKeyShop: sets wStepPtrHi to 0; sets wStepTarget to 1; sets wStepPtrLo to $60; calls
-; StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 1 of SceneKeyShop (when wScriptStep = 1); SceneKeyShop: implements script command type
-; CF (SCRIPT_SCENE_KEY_SHOP): a cutscene step named after the scene its only script shows: 'How good
-; of you to ... (E-0352, E-0038, E-0245)
+; Key shop scene, step 1: object 0 walks right to X $60, stops animating, and the script resumes.
+; (C1, E-0357)
 SceneKeyShop_StepObjectTowardCoord::
     ld a, $00
     ld [wStepPtrHi], a
@@ -35,11 +32,8 @@ SceneKeyShop_StepObjectTowardCoord::
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of SceneKeyShop: advances wScriptStep; may return early; sets wScriptStartRequest to $80
-; (E-0347)
-; why: step 0 of SceneKeyShop (when wScriptStep = 0); SceneKeyShop: implements script command type
-; CF (SCRIPT_SCENE_KEY_SHOP): a cutscene step named after the scene its only script shows: 'How good
-; of you to ... (E-0352, E-0038, E-0245)
+; Key shop scene, step 0: goes on; when object 0 is not already at X $50 the script resumes at once.
+; (C1, E-0357)
 SceneKeyShop_WriteScriptStartRequest::
     ld hl, wScriptStep
     inc [hl]
@@ -85,12 +79,8 @@ SceneWatchOut::
     dw SceneWatchOut_StepObjectCoordByDirection16Frames
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep
 
-; step 16 of SceneWatchOut: sets hTemp1 to 5; copies wArg5 to hTemp2; sets hTemp3 to 1; calls
-; CreateMonsterRecordOfKindTemp1; shows 'N headed off to the farm.'; decrements wSpriteSlotCount;
-; decrements wScriptStep (E-0347)
-; why: step 16 of SceneWatchOut (when wScriptStep = 16); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 16: creates the new monster on the farm (record kind 5, hTemp3 1), "<name>
+; headed off to the farm.", one sprite slot fewer, back to step 15. (C1, E-0357)
 SceneWatchOut_ShowNHeadedOffTo::
     ld a, $05
     ldh [hTemp1], a
@@ -107,13 +97,8 @@ SceneWatchOut_ShowNHeadedOffTo::
     dec [hl]
     ret
 
-; step 15 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; calls
-; RestoreScreenBufferFromBGMap1; decrements wSpriteSlotCount; calls DrawFullScreenBufferAtScroll;
-; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; calls PlayMapMusic; sets
-; EVENT_SCENE_WATCH_OUT_078; sets wScriptStartRequest to $80 (E-0347)
-; why: step 15 of SceneWatchOut (when wScriptStep = 15); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 15: after the message restores the screen and sprites, plays the map music,
+; sets EVENT_SCENE_WATCH_OUT_078 and resumes the script. (C1, E-0357)
 SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1::
     xor a
     call RunMessageBoxFar_Bank85
@@ -132,14 +117,9 @@ SceneWatchOut_RunMessageBoxFar_Bank85_RestoreScreenBufferFromBGMap1::
     ld [wScriptStartRequest], a
     ret
 
-; step 14 of SceneWatchOut: sets hTemp1 to 5; copies wArg5 to hTemp2; sets hTemp3 to 2; calls
-; CreateMonsterRecordOfKindTemp1; increments wPartyCount; calls MoveIncapacitatedPartyMembersBack;
-; calls LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets
-; wOBJPaletteUploadRequest to $7f; decrements wSpriteSlotCount; shows 'N joined the party.';
-; advances wScriptStep (E-0347)
-; why: step 14 of SceneWatchOut (when wScriptStep = 14); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 14: creates the new monster in the party (record kind 5, hTemp3 2) in place
+; wScriptMsgSelect - 1, with its follower position from object 0, reorders the party, reloads the
+; name tiles and sprites and shows '<name> joined the party.' (C1, E-0357)
 SceneWatchOut_CreateMonsterRecordOfKindTemp1::
     ld a, $05
     ldh [hTemp1], a
@@ -184,13 +164,9 @@ SceneWatchOut_CreateMonsterRecordOfKindTemp1::
     inc [hl]
     ret
 
-; step 13 of SceneWatchOut: calls RestoreScreenBufferFromBGMap1; calls
-; DrawScreenBufferAtScrollOrigin; branches on wScriptMsgSelect; sets wScriptStep to $10; calls
-; CopyRecordFields5DTo5BAnd61To5FAndMark; increments wScriptMsgSelect; decrements wPartyCount;
-; advances wScriptStep; continues in SceneWatchOut_CreateMonsterRecordOfKindTemp1 (E-0347)
-; why: step 13 of SceneWatchOut (when wScriptStep = 13); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 13: restores the screen; choice 3 (no party member picked) goes to the farm
+; (step $10); otherwise sends the chosen member to the farm (CopyRecordFields5DTo5BAnd61To5FAndMark)
+; and the new monster takes its place (step 14). (C1, E-0357)
 SceneWatchOut_RestoreScreenBufferFromBGMap1::
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -213,12 +189,8 @@ SceneWatchOut_RestoreScreenBufferFromBGMap1::
     inc [hl]
     jp SceneWatchOut_CreateMonsterRecordOfKindTemp1
 
-; step 7 of SceneWatchOut: calls CopyGlyphTilesToVRAM; sets wScriptSubStep to 0; sets
-; wScriptMsgSelect to 0; calls ShowBoxFromTable; calls SetBit1OfPlayerAndObjectFlags; advances
-; wScriptStep (E-0347)
-; why: step 7 of SceneWatchOut (when wScriptStep = 7); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 7: draws the names, opens the party box (ShowBoxFromTable) with the cursor
+; on the first and freezes the player and objects. (C1, E-0357)
 SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
@@ -231,14 +203,10 @@ SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
     inc [hl]
     ret
 
-; step 2 of SceneWatchOut: branches on wTextYesNoResult; calls
-; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows '…The farm has no room'; advances
-; wScriptStep; branches on wPartyCount; shows 'We are partners, and good'; calls
-; SaveScreenBufferToBGMap1; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; shows
-; 'Your party's full… There isn't'; advances wScriptStep; then 2 more steps (see the code) (E-0347)
-; why: step 2 of SceneWatchOut (when wScriptStep = 2); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 2: after the yes/no: no gives '... Oh, but... I can be ...' (message $0D12);
+; a full farm '... The farm has no room ...' ($0D57); a party with room '... We are partners, and
+; good ...' ($01B8) and the joining steps ($11); a full party "... Your party's full... There isn't
+; ..." ($0D11) and the choice of who goes. (C1, E-0357)
 SceneWatchOut_ShowTheFarmHasNo::
     ld a, [wTextYesNoResult]
     or a
@@ -283,11 +251,8 @@ SceneWatchOut_ShowTheFarmHasNo::
     inc [hl]
     ret
 
-; step 0 of SceneWatchOut: sets wNameGlyphBuf to $1c; shows 'Hm, you are quite strong…'; advances
-; wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 0 of SceneWatchOut (when wScriptStep = 0); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 0: sets the monster's five-glyph default name (in wNameGlyphBuf and
+; wTextBuf1 + 7) and shows '... Hm, you are quite strong...' (message $0D0F). (C1, E-0357)
 SceneWatchOut_ShowHmYouAreQuite::
     ld a, $1c
     ld [wNameGlyphBuf], a
@@ -339,11 +304,7 @@ SceneWaterReward::
     dw SceneWatchOut_StepObjectCoordByDirection16Frames
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep
 
-; step 18 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; sets wScriptStep to $0e
-; (E-0347)
-; why: step 18 of SceneWatchOut (when wScriptStep = 18); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 18: after the message goes to step $0E. (C1, E-0357)
 SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep::
     xor a
     call RunMessageBoxFar_Bank85
@@ -352,11 +313,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStep::
     ld [wScriptStep], a
     ret
 
-; step 17 of SceneWatchOut: calls StepObjectCoordByDirection16Frames; may return early; advances
-; wScriptStep (E-0347)
-; why: step 17 of SceneWatchOut (when wScriptStep = 17); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 17: object 1 walks one tile (16 frames) the way it faces. (C1, E-0357)
 SceneWatchOut_StepObjectCoordByDirection16Frames::
     ld hl, wObject1 + OBJ_STATE
     call StepObjectCoordByDirection16Frames
@@ -366,12 +323,8 @@ SceneWatchOut_StepObjectCoordByDirection16Frames::
     inc [hl]
     ret
 
-; step 16 of SceneWaterReward: sets hTemp1 to 0; copies wArg5 to hTemp2; sets hTemp3 to 1; calls
-; CreateMonsterRecordOfKindTemp1; shows 'N headed off to the farm.'; decrements wSpriteSlotCount;
-; decrements wScriptStep (E-0347)
-; why: step 16 of SceneWaterReward (when wScriptStep = 16); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 16: creates the new monster on the farm (record kind 0), "<name> headed
+; off to the farm.", back to step 15. (C1, E-0357)
 SceneWaterReward_ShowNHeadedOffTo::
     ld a, $00
     ldh [hTemp1], a
@@ -388,13 +341,8 @@ SceneWaterReward_ShowNHeadedOffTo::
     dec [hl]
     ret
 
-; step 15 of SceneWaterReward: calls RunMessageBoxFar_Bank85; may return early; calls
-; RestoreScreenBufferFromBGMap1; decrements wSpriteSlotCount; calls DrawFullScreenBufferAtScroll;
-; calls ClearBit1OfPlayerAndObjectFlags; sets hSpriteWindowClipMode to 0; calls PlayMapMusic; sets
-; EVENT_SCENE_WATER_REWARD; sets wScriptStartRequest to $80 (E-0347)
-; why: step 15 of SceneWaterReward (when wScriptStep = 15); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 15: after the message restores the screen and sprites, plays the map
+; music, sets EVENT_SCENE_WATER_REWARD and resumes the script. (C1, E-0357)
 SceneWaterReward_RunMessageBoxFar_Bank85::
     xor a
     call RunMessageBoxFar_Bank85
@@ -413,14 +361,9 @@ SceneWaterReward_RunMessageBoxFar_Bank85::
     ld [wScriptStartRequest], a
     ret
 
-; step 14 of SceneWaterReward: sets hTemp1 to 0; copies wArg5 to hTemp2; sets hTemp3 to 2; calls
-; CreateMonsterRecordOfKindTemp1; increments wPartyCount; calls MoveIncapacitatedPartyMembersBack;
-; calls LoadRecordListNameTiles; calls LoadPlayerAndFollowerSpriteGraphics; sets
-; wOBJPaletteUploadRequest to $7f; decrements wSpriteSlotCount; shows 'N joined the party.';
-; advances wScriptStep (E-0347)
-; why: step 14 of SceneWaterReward (when wScriptStep = 14); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 14: creates the new monster in the party (record kind 0) with its
+; follower position from object 1, reorders the party, reloads the names and sprites and shows
+; '<name> joined the party.' (C1, E-0357)
 SceneWaterReward_CreateMonsterRecordOfKindTemp1::
     ld a, $00
     ldh [hTemp1], a
@@ -465,14 +408,9 @@ SceneWaterReward_CreateMonsterRecordOfKindTemp1::
     inc [hl]
     ret
 
-; step 13 of SceneWaterReward: calls StepObjectCoordByDirection16Frames; may return early; calls
-; RestoreScreenBufferFromBGMap1; calls DrawScreenBufferAtScrollOrigin; branches on wScriptMsgSelect;
-; sets wScriptStep to $10; calls CopyRecordFields5DTo5BAnd61To5FAndMark; increments
-; wScriptMsgSelect; decrements wPartyCount; advances wScriptStep; continues in
-; SceneWaterReward_CreateMonsterRecordOfKindTemp1 (E-0347)
-; why: step 13 of SceneWaterReward (when wScriptStep = 13); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 13: object 1 walks one tile; then restores the screen and, with choice 3,
+; goes to the farm (step $10), otherwise sends the chosen member to the farm and the new monster
+; joins (step 14). (C1, E-0357)
 SceneWaterReward_StepObjectCoordByDirection16Frames::
     ld hl, wObject1 + OBJ_STATE
     call StepObjectCoordByDirection16Frames
@@ -546,11 +484,8 @@ StepObjectCoordByDirection16Frames::
     ld a, $01
     ret
 
-; step 10 of SceneWatchOut: branches on wScriptMsgSelect; advances wScriptStep; calls
-; ScriptStepMoveFollowersToLeader (E-0347)
-; why: step 10 of SceneWatchOut (when wScriptStep = 10); SceneWatchOut: implements script command
-; type 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows:
-; 'You can keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 10: with choice 3 goes on; otherwise moves the followers to the leader. (C1,
+; E-0357)
 SceneWatchOut_ReadScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     cp $03
@@ -563,12 +498,8 @@ SceneWatchOut_ReadScriptMsgSelect::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; step 9 of SceneWatchOut: calls RestoreScreenBufferFromBGMap1; calls
-; DrawScreenBufferAtScrollOrigin; shows 'Let me join your party?'; calls
-; ClearBit1OfPlayerAndObjectFlags; sets wScriptStep to 1 (E-0347)
-; why: step 9 of SceneWatchOut (when wScriptStep = 9); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 9 (B in the box): restores the screen, asks '... Let me join your party?'
+; ($0D56) again and returns to step 1. (C1, E-0357)
 SceneWatchOut_ShowLetMeJoinYour::
     farcall RestoreScreenBufferFromBGMap1
     call DrawScreenBufferAtScrollOrigin
@@ -579,20 +510,13 @@ SceneWatchOut_ShowLetMeJoinYour::
     ld [wScriptStep], a
     ret
 
-; step 8 of SceneWatchOut: calls SceneWatchOut_ReadJoypadPressedAndFrameCounterLo (E-0347)
-; why: step 8 of SceneWatchOut (when wScriptStep = 8); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 8: the box cursor (below). (C1, E-0357)
 SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     call SceneWatchOut_ReadJoypadPressedAndFrameCounterLo
     ret
 
-; step 7 of SceneWaterReward: calls CopyGlyphTilesToVRAM; sets wScriptSubStep to 0; sets
-; wScriptMsgSelect to 0; calls ShowBoxFromTable; calls SetBit1OfPlayerAndObjectFlags; advances
-; wScriptStep (E-0347)
-; why: step 7 of SceneWaterReward (when wScriptStep = 7); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 7: draws the names, opens the party box and freezes the player and
+; objects. (C1, E-0357)
 SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
@@ -605,10 +529,7 @@ SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
     inc [hl]
     ret
 
-; step 5 of SceneWatchOut: shows 'Pick the monster to go to'; advances wScriptStep (E-0347)
-; why: step 5 of SceneWatchOut (when wScriptStep = 5); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 5: 'Pick the monster to go to ...' (message $0D50). (C1, E-0357)
 SceneWatchOut_Msg_PickTheMonsterTo::
     ld hl, MSG_KEEP_OPEN | $0d50 ; 'Pick the monster to go to'
     call StartMessageHL_B85
@@ -616,14 +537,10 @@ SceneWatchOut_Msg_PickTheMonsterTo::
     inc [hl]
     ret
 
-; step 2 of SceneWaterReward: branches on wTextYesNoResult; calls
-; ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows '…Wait, the farm is full…';
-; advances wScriptStep; branches on wPartyCount; shows 'We are partners, and good'; calls
-; SaveScreenBufferToBGMap1; copies wPartyCount+1 to wScriptMsgSelect; sets wScriptStep to $11; shows
-; '…But you have no room'; advances wScriptStep; then 2 more steps (see the code) (E-0347)
-; why: step 2 of SceneWaterReward (when wScriptStep = 2); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 2: after the yes/no: no gives '... Tch, I think I can ...' ($01BA); a
+; full farm '... Wait, the farm is full...' ($0D55); a party with room '... We are partners ...'
+; ($01B8) and the joining steps; a full party '... But you have no room ...' ($01B9) and the choice
+; of who goes. (C1, E-0357)
 SceneWaterReward_ShowWaitTheFarmIs::
     ld a, [wTextYesNoResult]
     or a
@@ -668,11 +585,8 @@ SceneWaterReward_ShowWaitTheFarmIs::
     inc [hl]
     ret
 
-; step 0 of SceneWaterReward: sets wNameGlyphBuf to $0b; shows 'Cooh, I heard from others'; advances
-; wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 0 of SceneWaterReward (when wScriptStep = 0); SceneWaterReward: implements script
-; command type 4D (SCRIPT_SCENE_WATER_REWARD): a cutscene step named after the scene its only script
-; shows: 'King This ... (E-0352, E-0038, E-0245)
+; Water reward scene, step 0: sets the monster's default name and shows '... Cooh, I heard from
+; others ...' (message $01B7). (C1, E-0357)
 SceneWaterReward_ShowCoohIHeardFrom::
     ld a, $0b
     ld [wNameGlyphBuf], a
@@ -700,15 +614,8 @@ SceneWaterReward_ShowCoohIHeardFrom::
     inc [hl]
     ret
 
-; called from SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo: branches on
-; wJoypadPressed; advances wScriptStep; branches on wJoypadPressed; calls
-; SceneWatchOut_WriteScriptMsgSelect; calls WriteVRAMByte; plays sound $69; advances wScriptStep;
-; calls SceneWatchOut_WriteScriptMsgSelect; calls WriteVRAMByte; decrements wScriptMsgSelect; plays
-; sound $69; calls SceneWatchOut_WriteScriptMsgSelect; then 6 more steps (see the code) (E-0347)
-; why: a helper of SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo, in step 8 of
-; SceneWatchOut (when wScriptStep = 8); SceneWatchOut: implements script command type 2A
-; (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; The party box cursor: B goes on one step; A marks the choice ($BC, sound $69) and goes on two;
+; Up/Down move it (sound $69); the cursor blinks every 8 frames. (C1, E-0357)
 SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     ld a, [wJoypadPressed]
     bit 1, a
@@ -767,11 +674,8 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     call WriteVRAMByte
     ret
 
-; Copies wScriptMsgSelect & $03 to wScriptMsgSelect; also changes HL, A and C by register arithmetic
-; (E-0347)
-; why: part of SceneWatchOut; SceneWatchOut: implements script command type 2A
-; (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; HL = the BG map place of box row wScriptMsgSelect (0-3, 16 pixels apart) at the scroll position.
+; (C1, E-0357)
 SceneWatchOut_WriteScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     and $03
@@ -965,13 +869,8 @@ SceneWarubouLeaves::
     dw SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2
     dw SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi
 
-; step 3 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 3; sets wStepPtrLo to $e0;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 3; sets wStepPtrLo to $e0;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptStartRequest to $80
-; (E-0347)
-; why: step 3 of SceneWarubouLeaves (when wScriptStep = 3); SceneWarubouLeaves: implements script
-; command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only
-; script shows: 'C'mon, ... (E-0352, E-0038, E-0245)
+; Warubou leaves, step 3: objects 1 and 2 walk left off the screen (X $E0); then the script resumes.
+; (C1, E-0357)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
@@ -994,13 +893,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 3; sets wStepPtrLo to $e0;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $20;
-; calls StepObjectTowardCoord; continues in
-; SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived (E-0347)
-; why: step 2 of SceneWarubouLeaves (when wScriptStep = 2); SceneWarubouLeaves: implements script
-; command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only
-; script shows: 'C'mon, ... (E-0352, E-0038, E-0245)
+; Warubou leaves, step 2: object 1 walks left to $E0 while object 2 walks up to Y $20. (C1, E-0357)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1018,13 +911,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_2::
     farcall StepObjectTowardCoord
     jr SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived
 
-; step 1 of SceneWarubouLeaves: sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $30;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 1; sets wStepTarget to 2; sets wStepPtrLo to $20;
-; calls StepObjectTowardCoord; continues in
-; SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived (E-0347)
-; why: step 1 of SceneWarubouLeaves (when wScriptStep = 1); SceneWarubouLeaves: implements script
-; command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only
-; script shows: 'C'mon, ... (E-0352, E-0038, E-0245)
+; Warubou leaves, step 1: objects 2 and 1 walk up to Y $30 and $20. (C1, E-0357)
 SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3::
     ld a, $02
     ld [wStepPtrHi], a
@@ -1042,12 +929,7 @@ SceneWarubouLeaves_StepObjectTowardCoord_SetStepPtrHi_3::
     farcall StepObjectTowardCoord
     jr SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived
 
-; step 0 of SceneWarubouLeaves: sets wStepPtrHi to 1; sets wStepTarget to 2; sets wStepPtrLo to $50;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets wStepTarget to 3; sets wStepPtrLo to $40;
-; calls StepObjectTowardCoord (E-0347)
-; why: step 0 of SceneWarubouLeaves (when wScriptStep = 0); SceneWarubouLeaves: implements script
-; command type 1B (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only
-; script shows: 'C'mon, ... (E-0352, E-0038, E-0245)
+; Warubou leaves, step 0: object 1 walks up to Y $50 and object 2 left to X $40. (C1, E-0357)
 SceneWarubouLeaves_StepObjectTowardCoord::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1064,11 +946,7 @@ SceneWarubouLeaves_StepObjectTowardCoord::
     ld [wStepPtrLo], a
     farcall StepObjectTowardCoord
 
-; Returns if wStepArrived is 0; advances wScriptStep (E-0347)
-; why: part of SceneWarubouLeaves_StepObjectTowardCoord, in step 0 of SceneWarubouLeaves (when
-; wScriptStep = 0); SceneWarubouLeaves: implements script command type 1B
-; (SCRIPT_SCENE_WARUBOU_LEAVES): a cutscene step named after the scene its only script shows:
-; 'C'mon, ... (E-0352, E-0038, E-0245)
+; When the walk has arrived goes to the next step. (C1, E-0357)
 SceneWarubouLeaves_StepObjectTowardCoord_CheckStepArrived::
     ld a, [wStepArrived]
     or a
@@ -1115,22 +993,14 @@ SaveScreen::
     dw SaveScreen_BufferToBGMap1
     dw SaveScreen_SetScriptStartRequestTo80
 
-; step 1 of SaveScreen: sets wScriptStartRequest to $80 (E-0347)
-; why: step 1 of SaveScreen (when wScriptStep = 1); SaveScreen: implements script command type 78
-; (SCRIPT_SAVE_SCREEN): saves the screen buffer to BG map 1 (SaveScreenBufferToBGMap1) (E-0352,
-; E-0038, E-0245)
+; The save screen, step 1: the script resumes. (C1, E-0357)
 SaveScreen_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of SaveScreen: calls SaveScreenBufferToBGMap1; sets wFieldReturnPhase to 1; sets wGameMode
-; to 2; sets wModeState to $0c; sets wWorldMapState to 0; sets wTemp0 to 0; sets wTemp1 to 0; sets
-; wJoypadHeld to 0; sets wJoypadPressed to 0; sets wScriptRunning to 0; advances wScriptStep
-; (E-0347)
-; why: step 0 of SaveScreen (when wScriptStep = 0); SaveScreen: implements script command type 78
-; (SCRIPT_SAVE_SCREEN): saves the screen buffer to BG map 1 (SaveScreenBufferToBGMap1) (E-0352,
-; E-0038, E-0245)
+; The save screen, step 0: keeps the screen in BG map 1 and switches to game mode 2, state $0C (the
+; save menu), stopping the script. (C1, E-0357)
 SaveScreen_BufferToBGMap1::
     farcall SaveScreenBufferToBGMap1
     ld a, $01
@@ -1209,21 +1079,14 @@ SceneChestServant::
     dw SceneChestServant_ScriptStartFadeAndAdvanceStep
     dw SceneChestServant_SetScriptStartRequestTo80
 
-; step 5 of SceneChestServant: sets wScriptStartRequest to $80 (E-0347)
-; why: step 5 of SceneChestServant (when wScriptStep = 5); SceneChestServant: implements script
-; command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only
-; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest servant scene, step 5: the script resumes. (C1, E-0357)
 SceneChestServant_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of SceneChestServant: sets hPlayerX to $e0; sets hFieldDrawFlags to 0; sets hMapId to $48;
-; sets hMapScreenX to 8; sets hMapScreenY to 7; sets wWarpDestX to $40; sets wWarpDestY to $40; sets
-; wFieldTransitionKind to 1; calls ScriptStartFadeAndAdvanceStep (E-0347)
-; why: step 4 of SceneChestServant (when wScriptStep = 4); SceneChestServant: implements script
-; command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only
-; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest servant scene, step 4: puts the player and followers at X $E0 and warps to map $48, screen
+; (8, 7), position ($40, $40) with a fade. (C1, E-0357)
 SceneChestServant_ScriptStartFadeAndAdvanceStep::
     ld a, $e0
     ldh [hPlayerX], a
@@ -1247,11 +1110,8 @@ SceneChestServant_ScriptStartFadeAndAdvanceStep::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; step 1 of SceneChestServant: sets wStepPtrLo; calls StepPlayerUpTowardStepPtrLo; returns if
-; wStepArrived is 0; sets hFieldDrawFlags; increments wScriptParam0; advances wScriptStep (E-0347)
-; why: step 1 of SceneChestServant (when wScriptStep = 1); SceneChestServant: implements script
-; command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only
-; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest servant scene, step 1: walks the player up to Y $10 - 16 x wScriptParam0, then shifts in
+; another field draw flag bit and counts the walk. (C1, E-0357)
 SceneChestServant_StepPlayerUpTowardStepPtrLo::
     ld a, [wScriptParam0]
     swap a
@@ -1273,11 +1133,7 @@ SceneChestServant_StepPlayerUpTowardStepPtrLo::
     inc [hl]
     ret
 
-; step 0 of SceneChestServant: plays sound $65; sets hFieldDrawFlags to 1; sets wScriptParam0 to 0;
-; advances wScriptStep (E-0347)
-; why: step 0 of SceneChestServant (when wScriptStep = 0); SceneChestServant: implements script
-; command type 7F (SCRIPT_SCENE_CHEST_SERVANT): a cutscene step named after the scene its only
-; script shows: '0 checked the ... (E-0352, E-0038, E-0245)
+; Chest servant scene, step 0: plays sound $65 and starts the walk. (C1, E-0357)
 SceneChestServant_QueueSoundEffectAndStep::
     ld a, $65
     call QueueSoundEffect
@@ -1401,11 +1257,8 @@ SceneKamehaKeyBattle2::
     dw SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 3 of SceneKamehaKeyBattle2: branches on wScriptParam0; shows '0 received the Magic Key.';
-; advances wScriptStep (E-0347)
-; why: step 3 of SceneKamehaKeyBattle2 (when wScriptStep = 3); SceneKamehaKeyBattle2: implements
-; script command type 72 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2): a cutscene step named after the scene
-; its only script shows: the same ... (E-0352, E-0038, E-0245)
+; Kameha's second key battle, step 3: '<hero> received the Magic Key.' (message $0BC2) or, for a
+; generated key, message $0B9D. (C1, E-0357)
 SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
     ld hl, $0b9d
     ld a, [wScriptParam0]
@@ -1419,13 +1272,11 @@ SceneKamehaKeyBattle2_ShowHeroReceivedTheMagic::
     inc [hl]
     ret
 
-; step 1 of SceneKamehaKeyBattle2: branches on wBattleScene; sets EVENT_SCENE_KAMEHA_KEY_BATTLE2;
-; sets hTemp0 to 9; calls KeyListHasKindTemp0; branches on hTemp0; calls CountKeysOrFull; branches
-; on hTemp0; shows 'Kameha: That was a good warmup!'; sets wScriptStep to 4; sets hTemp1 to 9;
-; checks EVENT_KEY_BOSS_BEATEN_2_205; sets hTemp1 to $49; then 10 more steps (see the code) (E-0347)
-; why: step 1 of SceneKamehaKeyBattle2 (when wScriptStep = 1); SceneKamehaKeyBattle2: implements
-; script command type 72 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2): a cutscene step named after the scene
-; its only script shows: the same ... (E-0352, E-0038, E-0245)
+; Kameha's second key battle, step 1: a lost battle gives "Kameha: Wahahahah! You're weak! ..."
+; ($0B97); after a win sets EVENT_SCENE_KAMEHA_KEY_BATTLE2 and gives the story key of kind 9 ($49
+; after EVENT_KEY_BOSS_BEATEN_2_205) or, when that key is already held, a generated key; with no
+; room shows message $0B9E; on success sets EVENT_HERO_RECEIVED_THE_TRAVELER_KEY with 'Kameha: That
+; was a good warmup!' ($0B9C). (C1, E-0357)
 SceneKamehaKeyBattle2_SetFlagBit::
     ld a, [wBattleScene]
     or a
@@ -1489,11 +1340,7 @@ SceneKamehaKeyBattle2_SetFlagBit::
     ld [wScriptStep], a
     ret
 
-; step 0 of SceneKamehaKeyBattle2: sets hTemp0 to $30; calls StartScriptedEncounterTemp0; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneKamehaKeyBattle2 (when wScriptStep = 0); SceneKamehaKeyBattle2: implements
-; script command type 72 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE_2): a cutscene step named after the scene
-; its only script shows: the same ... (E-0352, E-0038, E-0245)
+; Kameha's second key battle, step 0: starts scripted encounter $30. (C1, E-0357)
 SceneKamehaKeyBattle2_StartScriptedEncounterTemp0AndStep::
     ld a, $30
     ldh [hTemp0], a
@@ -1514,11 +1361,8 @@ SceneKamehaKeyBattle::
     dw SceneKamehaKeyBattle_ShowHeroReceivedTheMagic
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 3 of SceneKamehaKeyBattle: branches on wScriptParam0; shows '0 received the Magic Key.';
-; advances wScriptStep (E-0347)
-; why: step 3 of SceneKamehaKeyBattle (when wScriptStep = 3); SceneKamehaKeyBattle: implements
-; script command type 71 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE): a cutscene step named after the scene its
-; only script shows: 'Kameha So ... (E-0352, E-0038, E-0245)
+; Kameha's key battle, step 3: '<hero> received the Magic Key.' or, for a generated key, message
+; $0B93. (C1, E-0357)
 SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
     ld hl, $0b93
     ld a, [wScriptParam0]
@@ -1532,13 +1376,10 @@ SceneKamehaKeyBattle_ShowHeroReceivedTheMagic::
     inc [hl]
     ret
 
-; step 1 of SceneKamehaKeyBattle: branches on wBattleScene; sets EVENT_SCENE_KAMEHA_KEY_BATTLE; sets
-; hTemp0 to 7; calls KeyListHasKindTemp0; branches on hTemp0; calls CountKeysOrFull; branches on
-; hTemp0; shows 'Kameha: Well, uh, luck and status'; sets wScriptStep to 4; sets hTemp1 to 7; checks
-; EVENT_KEY_BOSS_BEATEN_203; sets hTemp1 to $47; then 10 more steps (see the code) (E-0347)
-; why: step 1 of SceneKamehaKeyBattle (when wScriptStep = 1); SceneKamehaKeyBattle: implements
-; script command type 71 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE): a cutscene step named after the scene its
-; only script shows: 'Kameha So ... (E-0352, E-0038, E-0245)
+; Kameha's key battle, step 1: a lost battle gives "Kameha: Wahahahah! ..." ($0B97); after a win
+; sets EVENT_SCENE_KAMEHA_KEY_BATTLE and gives the story key of kind 7 ($47 after
+; EVENT_KEY_BOSS_BEATEN_203) or a generated one; with no room message $0B94; on success sets
+; EVENT_HERO_RECEIVED_THE_ELF_KEY with 'Kameha: Well, uh, luck and status ...' ($0B92). (C1, E-0357)
 SceneKamehaKeyBattle_SetFlagBit::
     ld a, [wBattleScene]
     or a
@@ -1602,11 +1443,7 @@ SceneKamehaKeyBattle_SetFlagBit::
     ld [wScriptStep], a
     ret
 
-; step 0 of SceneKamehaKeyBattle: sets hTemp0 to $2f; calls StartScriptedEncounterTemp0; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneKamehaKeyBattle (when wScriptStep = 0); SceneKamehaKeyBattle: implements
-; script command type 71 (SCRIPT_SCENE_KAMEHA_KEY_BATTLE): a cutscene step named after the scene its
-; only script shows: 'Kameha So ... (E-0352, E-0038, E-0245)
+; Kameha's key battle, step 0: starts scripted encounter $2F. (C1, E-0357)
 SceneKamehaKeyBattle_StartScriptedEncounterTemp0AndStep::
     ld a, $2f
     ldh [hTemp0], a
@@ -1625,11 +1462,8 @@ SceneArenaChallenge::
     dw SceneArenaChallenge_ShowAwwILoseYou
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 1 of SceneArenaChallenge: advances wScriptStep; branches on wBattleScene; shows 'Aww… I lose.
-; You are'; shows 'Yay! I won! Am I' (E-0347)
-; why: step 1 of SceneArenaChallenge (when wScriptStep = 1); SceneArenaChallenge: implements script
-; command type 7B (SCRIPT_SCENE_ARENA_CHALLENGE): a cutscene step named after the scene its only
-; script shows: 'Really? ... (E-0352, E-0038, E-0245)
+; Arena challenge, step 1: after the battle '... Aww... I lose. You are ...' ($0D82) or, when the
+; player lost, '... Yay! I won! ...' ($0D83). (C1, E-0357)
 SceneArenaChallenge_ShowAwwILoseYou::
     ld hl, wScriptStep
     inc [hl]
@@ -1645,11 +1479,7 @@ SceneArenaChallenge_ShowAwwILoseYou::
     call StartMessageHL_B85
     ret
 
-; step 0 of SceneArenaChallenge: sets hTemp0 to $15; calls StartScriptedEncounterTemp0; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneArenaChallenge (when wScriptStep = 0); SceneArenaChallenge: implements script
-; command type 7B (SCRIPT_SCENE_ARENA_CHALLENGE): a cutscene step named after the scene its only
-; script shows: 'Really? ... (E-0352, E-0038, E-0245)
+; Arena challenge, step 0: starts scripted encounter $15. (C1, E-0357)
 SceneArenaChallenge_StartScriptedEncounterTemp0AndStep::
     ld a, $15
     ldh [hTemp0], a
@@ -1668,12 +1498,9 @@ SceneTerryBattle::
     dw SceneTerryBattle_ShowTerryWellThisProves
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 1 of SceneTerryBattle: advances wScriptStep; branches on wBattleScene; shows 'Terry: Well,
-; this proves that I'; sets wLinkSetting to 1; sets EVENT_SCENE_TERRY_BATTLE_038; shows 'Terry:
-; Humph… Don't take it hard.' (E-0347)
-; why: step 1 of SceneTerryBattle (when wScriptStep = 1); SceneTerryBattle: implements script
-; command type 7C (SCRIPT_SCENE_TERRY_BATTLE): a cutscene step named after the scene its only script
-; shows: 'Terry Humph ... (E-0352, E-0038, E-0245)
+; Terry's battle, step 1: after a win 'Terry: Well, this proves that I ...' ($0BB1), sets
+; wLinkSetting 1 and EVENT_SCENE_TERRY_BATTLE_038; after a loss "Terry: Humph... Don't take it
+; hard." ($0BB2). (C1, E-0357)
 SceneTerryBattle_ShowTerryWellThisProves::
     ld hl, wScriptStep
     inc [hl]
@@ -1693,11 +1520,8 @@ SceneTerryBattle_ShowTerryWellThisProves::
     call StartMessageHL_B85
     ret
 
-; step 0 of SceneTerryBattle: sets EVENT_SCENE_TERRY_BATTLE; sets hTemp0 to $14; calls
-; StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
-; why: step 0 of SceneTerryBattle (when wScriptStep = 0); SceneTerryBattle: implements script
-; command type 7C (SCRIPT_SCENE_TERRY_BATTLE): a cutscene step named after the scene its only script
-; shows: 'Terry Humph ... (E-0352, E-0038, E-0245)
+; Terry's battle, step 0: sets EVENT_SCENE_TERRY_BATTLE and starts scripted encounter $14. (C1,
+; E-0357)
 SceneTerryBattle_SetFlagBitAndStep::
     ld de, EVENT_SCENE_TERRY_BATTLE
     call SetFlagBit
@@ -1818,13 +1642,8 @@ SceneLimboMonster2::
     dw SceneLimboMonster2_StepObjectTowardCoord
     dw SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags
 
-; step 15 of SceneLimboMonster2: sets hFieldDrawFlags to 0; sets wStepTarget to 1; sets wStepPtrHi
-; to 1; sets wStepPtrLo to $c0; calls StepObjectTowardCoord; returns if wStepArrived is 0; sets
-; hTemp1 to 3; copies wArg5 to hTemp2; sets hTemp3 to 1; calls CreateMonsterRecordOfKindTemp1; sets
-; EVENT_SCENE_LIMBO_MONSTER2; sets wScriptStartRequest to $80 (E-0347)
-; why: step 15 of SceneLimboMonster2 (when wScriptStep = 15); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 15: object 1 walks right to $C0; then creates the monster on the farm
+; (record kind 3), sets EVENT_SCENE_LIMBO_MONSTER2 and resumes the script. (C1, E-0357)
 SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags::
     xor a
     ldh [hFieldDrawFlags], a
@@ -1851,14 +1670,7 @@ SceneLimboMonster2_StepObjectTowardCoord_SetFieldDrawFlags::
     ld [wScriptStartRequest], a
     ret
 
-; step 14 of SceneLimboMonster2: sets wStepPtrHi to 1; branches on wScriptParam0; sets wStepTarget
-; to 1; sets wStepPtrLo to $70; calls StepObjectTowardCoord; returns if wStepArrived is 0;
-; increments wScriptParam0; sets wStepTarget to 0; sets wStepPtrLo to $40; calls
-; StepObjectTowardCoord; returns if wStepArrived is 0; sets wScriptParam0 to 0; then 1 more step
-; (see the code) (E-0347)
-; why: step 14 of SceneLimboMonster2 (when wScriptStep = 14); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 14: object 1 walks right to X $70, then down to Y $40. (C1, E-0357)
 SceneLimboMonster2_StepObjectTowardCoord::
     ld a, $01
     ld [wStepPtrHi], a
@@ -1892,11 +1704,7 @@ SceneLimboMonster2_StepObjectTowardCoord::
     inc [hl]
     ret
 
-; step 12 of SceneLimboMonster2: shows 'Warubou: Wa-hey, my kid has a'; advances wScriptStep
-; (E-0347)
-; why: step 12 of SceneLimboMonster2 (when wScriptStep = 12); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 12: 'Warubou: Wa-hey, my kid has a ...' (message $0BA7). (C1, E-0357)
 SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
     ld hl, $0ba7 ; 'Warubou: Wa-hey, my kid has a'
     call StartMessageHL_B85
@@ -1904,23 +1712,16 @@ SceneLimboMonster2_Msg0BA7_WarubouWaheyMyKid::
     inc [hl]
     ret
 
-; step 9 of SceneLimboMonster2: calls ScriptStepAdjust32TimesThenMessage_Bank85 (E-0347)
-; why: step 9 of SceneLimboMonster2 (when wScriptStep = 9); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 9: object 2 hops for 32 frames, then message $0BA6. (C1, E-0357)
 SceneLimboMonster2_ToScriptStepAdjust32TimesThenMessage_Bank85::
     ld de, wObject2 + OBJ_Y
     ld hl, $0ba6
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; step 3 of SceneLimboMonster2: branches on wTextYesNoResult; shows 'Warubou: Wa-hey! Good, good,
-; good! I'; copies the byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X;
-; copies the byte at SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances
-; wScriptStep; shows 'Warubou: Wa-hey… That's cold of you.'; sets wScriptStep to 1 (E-0347)
-; why: step 3 of SceneLimboMonster2 (when wScriptStep = 3); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 3: after the yes/no: yes gives 'Warubou: Wa-hey! Good, good, good! ...'
+; ($0BA5) and places object 2 beside the player by its facing; no gives "Warubou: Wa-hey... That's
+; cold of you." ($0D95) and back to step 1. (C1, E-0357)
 SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
@@ -1950,12 +1751,8 @@ SceneLimboMonster2_ShowWarubouWaheyGoodGood::
 SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
-; step 0 of SceneLimboMonster2: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5;
-; shows 'Warubou: Wa-hey! I was thinking… GreatLog'; advances wScriptStep; shows 'Warubou: Wa-hey! I
-; was thinking… GreatLog'; sets wScriptStep to 2 (E-0347)
-; why: step 0 of SceneLimboMonster2 (when wScriptStep = 0); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 0: with a full farm 'Warubou: Wa-hey! I was thinking... GreatLog ...'
+; ($0BA3); otherwise the same opening ($0BA4) and the question (step 2). (C1, E-0357)
 SceneLimboMonster2_ShowWarubouWaheyIWas::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -1996,14 +1793,9 @@ SceneLimboMonster::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 12 of SceneLimboMonster: branches on wScriptParam0; plays sound $65; sets wScriptParam0;
-; copies E to wStepPtrLo; copies D to wStepPtrHi; calls AddStepDeltaToPointedByte; sets
-; wScriptParam0; copies wObject2 + OBJ_STATE & $03 to wObject2 + OBJ_STATE; decrements wObject2 +
-; OBJ_X; increments wScriptParam0; returns unless wScriptParam0 is $40; shows 'Warubou: Wa-hey, my
-; kid has a'; then 8 more steps (see the code) (E-0347)
-; why: step 12 of SceneLimboMonster (when wScriptStep = 12); SceneLimboMonster: implements script
-; command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only
-; script shows: 'Limbo is the ... (E-0352, E-0038, E-0245)
+; Limbo monster, step 12: object 2 spins and hops leftward for 64 frames (sound $65 first); then
+; 'Warubou: Wa-hey, my kid has a ...' ($0B2C), creates the monster on the farm (record kind 4) and
+; sets EVENT_SCENE_LIMBO_MONSTER. (C1, E-0357)
 SceneLimboMonster_AddStepDeltaToPointedByte::
     ld a, [wScriptParam0]
     or a
@@ -2061,24 +1853,15 @@ SceneLimboMonster_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 9 of SceneLimboMonster: calls ScriptStepAdjust32TimesThenMessage_Bank85 (E-0347)
-; why: step 9 of SceneLimboMonster (when wScriptStep = 9); SceneLimboMonster: implements script
-; command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only
-; script shows: 'Limbo is the ... (E-0352, E-0038, E-0245)
+; Limbo monster, step 9: object 2 hops for 32 frames, then message $0B2B. (C1, E-0357)
 SceneLimboMonster_ToScriptStepAdjust32TimesThenMessage_Bank85::
     ld de, wObject2 + OBJ_Y
     ld hl, $0b2b
     call ScriptStepAdjust32TimesThenMessage_Bank85
     ret
 
-; step 8 of SceneLimboMonster2: sets hFieldDrawFlags to $0e; branches on wScriptParam0; plays sound
-; $65; sets wScriptParam0; copies E to wStepPtrLo; copies D to wStepPtrHi; calls
-; AddStepDeltaToPointedByte; sets wScriptParam0; copies wObject2 + OBJ_STATE & $03 to wObject2 +
-; OBJ_STATE; increments wObject2 + OBJ_X; increments wScriptParam0; returns unless wScriptParam0 is
-; $40; then 4 more steps (see the code) (E-0347)
-; why: step 8 of SceneLimboMonster2 (when wScriptStep = 8); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 8: object 2 spins and hops rightward for 64 frames (sound $65 first, $72 at
+; the end), then faces like the player. (C1, E-0357)
 SceneLimboMonster2_AddStepDeltaToPointedByte::
     ld a, $0e
     ldh [hFieldDrawFlags], a
@@ -2129,21 +1912,14 @@ SceneLimboMonster2_AddStepDeltaToPointedByte::
     inc [hl]
     ret
 
-; step 5 of SceneLimboMonster2: calls ScriptStepMoveFollowersToLeader (E-0347)
-; why: step 5 of SceneLimboMonster2 (when wScriptStep = 5); SceneLimboMonster2: implements script
-; command type 6E (SCRIPT_SCENE_LIMBO_MONSTER_2): a cutscene step named after the scene its only
-; script shows: the same ... (E-0352, E-0038, E-0245)
+; Limbo monster 2, step 5: moves the followers to the leader. (C1, E-0357)
 SceneLimboMonster2_ToScriptStepMoveFollowersToLeader::
     farcall ScriptStepMoveFollowersToLeader
     ret
 
-; step 3 of SceneLimboMonster: branches on wTextYesNoResult; shows 'Warubou: Wa-hey! Good, good,
-; good! I'; copies the byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_X;
-; copies the byte at SceneLimboMonster_ShowWarubouWaheyGoodGood_Data to wObject2 + OBJ_Y; advances
-; wScriptStep; shows 'Warubou: Wa-hey… That's cold of you.'; sets wScriptStep to 1 (E-0347)
-; why: step 3 of SceneLimboMonster (when wScriptStep = 3); SceneLimboMonster: implements script
-; command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only
-; script shows: 'Limbo is the ... (E-0352, E-0038, E-0245)
+; Limbo monster, step 3: after the yes/no: yes gives 'Warubou: Wa-hey! Good, good, good! ...'
+; ($0B2A) and places object 2 beside the player; no gives "... That's cold of you." and back to step
+; 1. (C1, E-0357)
 SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ld a, [wTextYesNoResult]
     or a
@@ -2173,12 +1949,8 @@ SceneLimboMonster_ShowWarubouWaheyGoodGood::
 SceneLimboMonster_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
-; step 0 of SceneLimboMonster: calls ClearArg5IfAtOrAboveLimitForFarmLevel; branches on wArg5; shows
-; 'Warubou: Wa-hey, I have a favor'; advances wScriptStep; shows 'Warubou: Wa-hey, I have a favor';
-; sets wScriptStep to 2 (E-0347)
-; why: step 0 of SceneLimboMonster (when wScriptStep = 0); SceneLimboMonster: implements script
-; command type 6D (SCRIPT_SCENE_LIMBO_MONSTER): a cutscene step named after the scene its only
-; script shows: 'Limbo is the ... (E-0352, E-0038, E-0245)
+; Limbo monster, step 0: with a full farm 'Warubou: Wa-hey, I have a favor ...' ($0B28); otherwise
+; the same opening ($0B29) and the question. (C1, E-0357)
 SceneLimboMonster_ShowWarubouWaheyIHave::
     farcall ClearArg5IfAtOrAboveLimitForFarmLevel
     ld a, [wArg5]
@@ -2223,12 +1995,8 @@ ScenePoorChurch::
     dw ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc
     dw ScenePoorChurch_NextRandomSeed
 
-; step 3 of ScenePoorChurch: calls NextRandomSeed; increments wScriptParam0; returns unless
-; wScriptParam0 is $3c; sets wScriptStartRequest to $80; also changes HL and A by register
-; arithmetic (E-0347)
-; why: step 3 of ScenePoorChurch (when wScriptStep = 3); ScenePoorChurch: implements script command
-; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
-; ... 'Our church ... (E-0352, E-0038, E-0245)
+; Poor church scene, step 3: every eight frames turns a random one of four objects a random way (1
+; or 3) for $3C frames; then the script resumes. (C1, E-0357)
 ScenePoorChurch_NextRandomSeed::
     ld a, [wScriptParam0]
     and $07
@@ -2258,13 +2026,9 @@ ScenePoorChurch_NextRandomSeed::
     ld [wScriptStartRequest], a
     ret
 
-; step 2 of ScenePoorChurch: increments wScriptParam0; returns unless wScriptParam0 is $01; sets
-; wScriptParam0 to 0; branches on wScriptParam1; increments wScriptParam1; decrements wScriptStep;
-; advances wScriptStep; checks EVENT_SCENE_TREASURE_THEFT; may return early; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 2 of ScenePoorChurch (when wScriptStep = 2); ScenePoorChurch: implements script command
-; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
-; ... 'Our church ... (E-0352, E-0038, E-0245)
+; Poor church scene, step 2: steps through screen animation frames 0-5 (back to step 1 each time);
+; after the last sets story flag byte $61 bit 3 and, unless EVENT_SCENE_TREASURE_THEFT is set,
+; resumes the script. (C1, E-0357)
 ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
     ld a, [wScriptParam0]
     inc a
@@ -2295,13 +2059,9 @@ ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of ScenePoorChurch: calls DecompressToVRAM; branches on wIsCGB; sets rSVBK to 2; calls
-; DecompressToVRAM; sets rSVBK to 0; calls DrawFullScreenBufferAtScroll; increments wScriptParam0;
-; returns unless wScriptParam0 is $04; sets wScriptParam0 to 0; advances wScriptStep; also changes
-; HL, DE, A and B by register arithmetic (E-0347)
-; why: step 1 of ScenePoorChurch (when wScriptStep = 1); ScenePoorChurch: implements script command
-; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
-; ... 'Our church ... (E-0352, E-0038, E-0245)
+; Poor church scene, step 1: decompresses animation frame wScriptParam1's screen (and on the GBC its
+; attributes) from ScreenAnimationTable into the screen buffer and draws it, four times, then goes
+; on. (C1, E-0357)
 ScenePoorChurch_WriteSVBKAndScriptParam0::
     ld a, [wScriptParam1]
     add a
@@ -2383,13 +2143,9 @@ ScreenAnimationTable::
     dw Map2FScreens4_Y1X0 ; frame 1 tile map
     dw Map2FAttrs4_Y1X0 ; frame 1 attribute map
 
-; step 0 of ScenePoorChurch: checks EVENT_SCENE_TREASURE_THEFT; sets wStepPtrHi to 1; sets
-; wStepTarget to 2; sets wStepPtrLo to $10; calls StepObjectTowardCoord; sets wStepPtrHi to 2; sets
-; wStepTarget to 2; sets wStepPtrLo to $40; calls StepObjectTowardCoord; sets wStepPtrHi to 3; sets
-; wStepTarget to 2; sets wStepPtrLo to $20; then 8 more steps (see the code) (E-0347)
-; why: step 0 of ScenePoorChurch (when wScriptStep = 0); ScenePoorChurch: implements script command
-; type 79 (SCRIPT_SCENE_POOR_CHURCH): a cutscene step named after the scene its only script shows:
-; ... 'Our church ... (E-0352, E-0038, E-0245)
+; Poor church scene, step 0: after the treasure theft (EVENT_SCENE_TREASURE_THEFT) objects 1, 2, 3
+; and 0 walk up to Y $10, $40, $20 and $30 first; then resets the animation frame and goes on. (C1,
+; E-0357)
 ScenePoorChurch_TestFlagBit::
     ld de, EVENT_SCENE_TREASURE_THEFT
     call TestFlagBit
@@ -2451,29 +2207,20 @@ SceneGiveBackCyal::
     dw SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
-; step 10 of SceneGiveBackCyal: sets wScriptStartRequest to $80 (E-0347)
-; why: step 10 of SceneGiveBackCyal (when wScriptStep = 10); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 10: the script resumes. (C1, E-0357)
 SceneGiveBackCyal_SetScriptStartRequestTo80::
     ld a, $80
     ld [wScriptStartRequest], a
     ret
 
-; step 9 of SceneGiveBackCyal: calls SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc (E-0347)
-; why: step 9 of SceneGiveBackCyal (when wScriptStep = 9); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 9: shakes the screen sideways for 30 frames. (C1, E-0357)
 SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld b, $1e
     call SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
     ret
 
-; step 8 of SceneGiveBackCyal: increments wObject2 + OBJ_X; returns unless wObject2 + OBJ_X is $60;
-; calls ClearBit1AtHL_Bank85; advances wScriptStep (E-0347)
-; why: step 8 of SceneGiveBackCyal (when wScriptStep = 8); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 8: object 2 moves right four pixels a frame to X $60, then stops animating.
+; (C1, E-0357)
 SceneGiveBackCyal_ClearBit1AtHL_Bank85::
     ld a, [wObject2 + OBJ_X]
     inc a
@@ -2489,12 +2236,8 @@ SceneGiveBackCyal_ClearBit1AtHL_Bank85::
     inc [hl]
     ret
 
-; step 7 of SceneGiveBackCyal: increments wScriptParam0; returns if wScriptParam0 is below $04;
-; plays sound $66; may return early; calls ClearBit2AtHL_Bank85; calls SetBit1AtHL_Bank85; sets
-; wObject2 + OBJ_STATE to 3; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 7 of SceneGiveBackCyal (when wScriptStep = 7); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 7: object 0 faces left, after 4 frames plays sound $66 and faces down, at 8
+; faces right; object 2 starts moving left (state 3). (C1, E-0357)
 SceneGiveBackCyal_ClearBit2AtHL_Bank85::
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2525,10 +2268,8 @@ SceneGiveBackCyal_ClearBit2AtHL_Bank85::
     inc [hl]
     ret
 
-; step 5 of SceneGiveBackCyal: shows 'Humph… How boring…'; advances wScriptStep (E-0347)
-; why: step 5 of SceneGiveBackCyal (when wScriptStep = 5); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 5: object 0 faces left and '... Humph... How boring...' (message $0737). (C1,
+; E-0357)
 SceneGiveBackCyal_ShowHumphHowBoring::
     ld a, $03
     ld [wSpriteSlots + $7], a
@@ -2538,13 +2279,8 @@ SceneGiveBackCyal_ShowHumphHowBoring::
     inc [hl]
     ret
 
-; step 0 of SceneGiveBackCyal: calls SetBit2AtHL_B0F_Bank85; branches on wScriptParam0; increments
-; wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $48; plays sound $63; increments
-; wScriptParam0; decrements wObject2 + OBJ_Y; returns unless wObject2 + OBJ_Y is $40; calls
-; RedrawColumnsBesideScreen; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 0 of SceneGiveBackCyal (when wScriptStep = 0); SceneGiveBackCyal: implements script
-; command type C2 (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only
-; script shows: 'Rolt Shut ... (E-0352, E-0038, E-0245)
+; Cyal's return, step 0: object 2 drops to Y $48 (sound $63), then rises two pixels a frame back to
+; $40 and the side columns are redrawn. (C1, E-0357)
 SceneGiveBackCyal_SetBit2AtHL_B0F_Bank85::
     ld hl, wObject2 + OBJ_FLAGS
     call SetBit2AtHL_B0F_Bank85
@@ -2576,14 +2312,8 @@ SceneGiveBackCyal_SetBit2AtHL_B0F_Bank85::
     inc [hl]
     ret
 
-; called from SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc: branches on
-; wFrameCounterLo & $03; sets hScrollX; sets hScrollXHi; sets hScrollX; sets hScrollXHi; increments
-; wScriptParam0; returns unless wScriptParam0 is b; sets hScrollX to 0; sets hScrollXHi to 0; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: a helper of SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc, in step 9 of
-; SceneGiveBackCyal (when wScriptStep = 9); SceneGiveBackCyal: implements script command type C2
-; (SCRIPT_SCENE_GIVE_BACK_CYAL): a cutscene step named after the scene its only script shows: 'Rolt
-; Shut ... (E-0352, E-0038, E-0245)
+; Shakes the screen sideways (hScrollX by +2 / -2 on alternate even frames) for B frames, then
+; resets the scroll. (C1, E-0357)
 SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
     ld a, [wFrameCounterLo]
     and $03
@@ -2637,13 +2367,8 @@ SceneYouDidIt::
     dw SceneYouDidIt_StartMessageHL_B85
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 0 of SceneYouDidIt: advances wScriptStep; returns if the byte at
-; SceneYouDidIt_StartMessageHL_B85_Data is $ff; branches on the byte at
-; SceneYouDidIt_StartMessageHL_B85_Data; calls StartMessageHL_B85; also changes HL, DE, A and C by
-; register arithmetic (E-0347)
-; why: step 0 of SceneYouDidIt (when wScriptStep = 0); SceneYouDidIt: implements script command type
-; CD (SCRIPT_SCENE_YOU_DID_IT): a cutscene step named after the scene its only script shows: ...
-; 'Warubou ... (E-0352, E-0038, E-0245)
+; You did it scene, step 0: looks up the map in SceneYouDidIt_StartMessageHL_B85_Data and starts its
+; message (group $0C). (C1, E-0357)
 SceneYouDidIt_StartMessageHL_B85::
     ld hl, wScriptStep
     inc [hl]
@@ -2694,11 +2419,8 @@ GrowthLimitInfo::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc
 
-; step 2 of GrowthLimitInfo: sets wScriptStep to 0; increments wScriptParam1; returns unless
-; wPartyCount is c; sets wScriptStartRequest to $80 (E-0347)
-; why: step 2 of GrowthLimitInfo (when wScriptStep = 2); GrowthLimitInfo: implements script command
-; type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone
-; has a growth ... (E-0352, E-0038, E-0245)
+; Growth limit info, step 2: moves to the next party member; after the last the script resumes. (C1,
+; E-0357)
 GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
     xor a
     ld [wScriptStep], a
@@ -2713,13 +2435,9 @@ GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
     ld [wScriptStartRequest], a
     ret
 
-; step 0 of GrowthLimitInfo: advances wScriptStep; sets rRAMG to $0a; calls
-; CopyRecordNameToNameGlyphBuf; calls LoadSRAMRecordByte; sets rRAMG to 0; branches on hTemp0; shows
-; 'N has reached its growth limit.'; calls HLToDecimalDigits; shows 'N's growth limit is Lv .'; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 0 of GrowthLimitInfo (when wScriptStep = 0); GrowthLimitInfo: implements script command
-; type 65 (SCRIPT_GROWTH_LIMIT_INFO): shows a monster's name and a record byte as digits: 'Everyone
-; has a growth ... (E-0352, E-0038, E-0245)
+; Growth limit info, step 0: copies the party member's name and shows '<name> has reached its growth
+; limit.' (message $0A56) when its level equals MON_MAX_LEVEL, otherwise "<name>'s growth limit is
+; Lv <n>." ($0A55). (C1, E-0357)
 GrowthLimitInfo_CopyRecordNameToNameGlyphBuf::
     ld hl, wScriptStep
     inc [hl]
@@ -2800,11 +2518,8 @@ SceneBarrel::
     dw SceneBarrel_ShowRobosterStoppedMoving
     dw SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest
 
-; step 8 of SceneBarrel: sets wObject1 + OBJ_Y to $20; shows '…Roboster stopped moving…'; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 8 of SceneBarrel (when wScriptStep = 8); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 8: keeps the second sprite shown and '...Roboster stopped moving...' (message
+; $078D). (C1, E-0357)
 SceneBarrel_ShowRobosterStoppedMoving::
     ld a, $e0
     ld [wSpriteSlots + $c], a
@@ -2818,13 +2533,8 @@ SceneBarrel_ShowRobosterStoppedMoving::
     inc [hl]
     ret
 
-; step 7 of SceneBarrel: branches on wScriptParam0; sets wObject1 + OBJ_Y to $e0; sets wObject1 +
-; OBJ_Y to $20; increments wScriptParam0; returns unless wScriptParam0 is $78; sets wObject1 + OBJ_Y
-; to $20; sets wScriptParam0 to 0; advances wScriptStep; also changes HL and A by register
-; arithmetic (E-0347)
-; why: step 7 of SceneBarrel (when wScriptStep = 7); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 7: flickers between two sprites for $78 frames, switching every 2, then 4, then
+; 8 frames (the flicker slows down). (C1, E-0357)
 SceneBarrel_WriteSpriteSlotsAndObject1Etc::
     ld a, [wScriptParam0]
     cp $1e
@@ -2874,11 +2584,8 @@ SceneBarrel_WriteSpriteSlotsAndObject1Etc::
     inc [hl]
     ret
 
-; step 5 of SceneBarrel: increments wScriptParam0; calls SceneBarrel_NextTableByte; returns unless
-; wScriptParam0 is $78; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of SceneBarrel (when wScriptStep = 5); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 5: for $78 frames jiggles object 1's X around $40 on alternate frames. (C1,
+; E-0357)
 SceneBarrel_WriteScriptParam0::
     ld a, [wScriptParam0]
     inc a
@@ -2897,11 +2604,7 @@ SceneBarrel_WriteScriptParam0::
     inc [hl]
     ret
 
-; called from SceneBarrel_WriteScriptParam0: calls NextTableByte; may continue in
-; SceneBarrel_NextTableByte; sets wObject1 + OBJ_X (E-0347)
-; why: a helper of SceneBarrel_WriteScriptParam0, in step 5 of SceneBarrel (when wScriptStep = 5);
-; SceneBarrel: implements script command type C4 (SCRIPT_SCENE_BARREL): a cutscene step named after
-; the scene its only script shows: '0 peered into the ... (E-0352, E-0038, E-0245)
+; Sets object 1's X to $3F, $40 or $41 at random. (C1, E-0357)
 SceneBarrel_NextTableByte::
     call NextTableByte
     ld a, [wRandomHi]
@@ -2915,12 +2618,9 @@ SceneBarrel_NextTableByte::
     ld [wObject1 + OBJ_X], a
     ret
 
-; step 4 of SceneBarrel: branches on wScriptParam1 & $03; sets $015f; checks
-; EVENT_KIRAL_PLEASE_GO_STOP_HIM; sets wScriptStartRequest to $80; sets EVENT_SCENE_BARREL; shows
-; 'PROFE… SOR… ORDER… MUST… OBEY…'; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 4 of SceneBarrel (when wScriptStep = 4); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 4: sets story flag $015F + the barrel number (unless it is 3); without
+; EVENT_KIRAL_PLEASE_GO_STOP_HIM the script resumes; with it sets EVENT_SCENE_BARREL and shows '...
+; PROFE... SOR... ORDER... MUST... OBEY...' ($0779). (C1, E-0357)
 SceneBarrel_SetFlagBit::
     ld a, [wScriptParam1]
     and $03
@@ -2954,12 +2654,8 @@ SceneBarrel_SetFlagBit::
     inc [hl]
     ret
 
-; step 3 of SceneBarrel: copies the byte at SceneBarrel_StartScriptedEncounterTemp0_Data to hTemp0;
-; calls StartScriptedEncounterTemp0; advances wScriptStep; also changes HL, DE and A by register
-; arithmetic (E-0347)
-; why: step 3 of SceneBarrel (when wScriptStep = 3); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 3: starts the barrel's scripted encounter
+; (SceneBarrel_StartScriptedEncounterTemp0_Data). (C1, E-0357)
 SceneBarrel_StartScriptedEncounterTemp0::
     ld a, [wScriptParam1]
     and $03
@@ -2981,11 +2677,8 @@ SceneBarrel_StartScriptedEncounterTemp0::
 SceneBarrel_StartScriptedEncounterTemp0_Data::
     db $0d, $0e, $0f, $10
 
-; step 1 of SceneBarrel: calls StartMessageHL_B85; advances wScriptStep; also changes HL, DE and A
-; by register arithmetic (E-0347)
-; why: step 1 of SceneBarrel (when wScriptStep = 1); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 1: starts the barrel's message (SceneBarrel_StartMessageHL_B85_Data). (C1,
+; E-0357)
 SceneBarrel_StartMessageHL_B85::
     ld a, [wScriptParam1]
     and $03
@@ -3011,13 +2704,8 @@ SceneBarrel_StartMessageHL_B85::
 SceneBarrel_StartMessageHL_B85_Data::
     db $6c, $07, $6f, $07, $72, $07, $75, $07
 
-; step 0 of SceneBarrel: advances wScriptStep; sets wScriptParam1 to 0; checks
-; EVENT_KIRAL_FETCH_ME_MY; may return early; increments wScriptParam1; checks
-; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY; may return early; increments wScriptParam1; checks
-; EVENT_ROBOSTER_STOPPED_MOVING_ENTIRELY_161; may return early; increments wScriptParam1 (E-0347)
-; why: step 0 of SceneBarrel (when wScriptStep = 0); SceneBarrel: implements script command type C4
-; (SCRIPT_SCENE_BARREL): a cutscene step named after the scene its only script shows: '0 peered into
-; the ... (E-0352, E-0038, E-0245)
+; Barrel scene, step 0: counts which barrel this is (0-3) from EVENT_KIRAL_FETCH_ME_MY and the two
+; Roboster flags. (C1, E-0357)
 SceneBarrel_TestFlagBit::
     ld hl, wScriptStep
     inc [hl]
@@ -3063,11 +2751,8 @@ SceneLimbo::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest
 
-; step 15 of SceneLimbo: branches on the byte at wInventory; sets wInventory to $36; sets wInventory
-; to $37; sets wInventory to $38; sets wInventorySortFlags; sets wScriptStartRequest to $80 (E-0347)
-; why: step 15 of SceneLimbo (when wScriptStep = 15); SceneLimbo: implements script command type 5B
-; (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou
-; Wa-hey! Take ... (E-0352, E-0038, E-0245)
+; The Limbo scene, step 15: adds items $36, $37 and $38 at the end of the inventory, sets inventory
+; sort flag bit 6 and resumes the script. (C1, E-0357)
 SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
     ld hl, wInventory
 
@@ -3093,13 +2778,8 @@ SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
     ld [wScriptStartRequest], a
     ret
 
-; step 3 of SceneLimbo: increments wObject5 + SCRIPTOBJ_Y; increments wObject5 + SCRIPTOBJ_X;
-; increments wObject5 + SCRIPTOBJ_Y; decrements wObject5 + SCRIPTOBJ_X; increments wObject5 +
-; SCRIPTOBJ_Y; calls ScriptApplyStepDeltaAtDE_Bank85; may return early; sets wObject5 to 0; advances
-; wScriptStep (E-0347)
-; why: step 3 of SceneLimbo (when wScriptStep = 3); SceneLimbo: implements script command type 5B
-; (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou
-; Wa-hey! Take ... (E-0352, E-0038, E-0245)
+; The Limbo scene, step 3: the item drops by the way object 0 faces (down; down-right; straight;
+; down-left) along the hop curve; then hides it. (C1, E-0357)
 SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2::
     ld a, [wSpriteSlots + $7]
     or a
@@ -3137,12 +2817,8 @@ SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85_2::
     inc [hl]
     ret
 
-; step 2 of SceneLimbo: increments wScriptParam0; returns unless wScriptParam0 is $3c; calls
-; StartMessageHL_B85; sets wScriptParam0 to 0; increments wScriptParam1; advances wScriptStep
-; (E-0347)
-; why: step 2 of SceneLimbo (when wScriptStep = 2); SceneLimbo: implements script command type 5B
-; (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou
-; Wa-hey! Take ... (E-0352, E-0038, E-0245)
+; The Limbo scene, step 2: after 60 frames starts message $052C + the item number and counts the
+; item. (C1, E-0357)
 SceneLimbo_StartMessageHL_B85::
     ld a, [wScriptParam0]
     inc a
@@ -3161,11 +2837,7 @@ SceneLimbo_StartMessageHL_B85::
     inc [hl]
     ret
 
-; step 1 of SceneLimbo: sets wObject5 to $80; decrements wObject5 + SCRIPTOBJ_Y; calls
-; ScriptApplyStepDeltaAtDE_Bank85; may return early; advances wScriptStep (E-0347)
-; why: step 1 of SceneLimbo (when wScriptStep = 1); SceneLimbo: implements script command type 5B
-; (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou
-; Wa-hey! Take ... (E-0352, E-0038, E-0245)
+; The Limbo scene, step 1: the item rises along the hop curve. (C1, E-0357)
 SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85::
     ld a, $80
     ld [wObject5], a
@@ -3178,12 +2850,8 @@ SceneLimbo_ScriptApplyStepDeltaAtDE_Bank85::
     inc [hl]
     ret
 
-; step 0 of SceneLimbo: copies the byte at SceneLimbo_RunFieldCommandTemp0_Data to hTemp0; calls
-; RunFieldCommandTemp0; sets wObject5 + SCRIPTOBJ_X to $40; sets wObject5 + SCRIPTOBJ_Y to $30; sets
-; wObject5 to 0; advances wScriptStep (E-0347)
-; why: step 0 of SceneLimbo (when wScriptStep = 0); SceneLimbo: implements script command type 5B
-; (SCRIPT_SCENE_LIMBO): a cutscene step named after the scene its only script shows: 'Warubou
-; Wa-hey! Take ... (E-0352, E-0038, E-0245)
+; The Limbo scene, step 0: starts the item's field command (SceneLimbo_RunFieldCommandTemp0_Data) at
+; ($40, $30), hidden. (C1, E-0357)
 SceneLimbo_RunFieldCommandTemp0::
     ld a, [wScriptParam1]
     ld hl, SceneLimbo_RunFieldCommandTemp0_Data
@@ -3218,12 +2886,8 @@ SceneFoundMeBattle::
     dw SceneFoundMeBattle_StepObjectTowardCoord
     dw SceneFoundMeBattle_SetFlagBit
 
-; step 5 of SceneFoundMeBattle: sets wSpriteSlotCount to 0; branches on hMapId; branches on
-; hMapScreenX; sets $00b9; sets wScriptStartRequest to $80; also changes DE and A by register
-; arithmetic (E-0347)
-; why: step 5 of SceneFoundMeBattle (when wScriptStep = 5); SceneFoundMeBattle: implements script
-; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
-; script shows: 'I'm ... (E-0352, E-0038, E-0245)
+; Found me battle, step 5: sets the guard's story flag ($0201 on map $96, otherwise $00B9 + the
+; screen column) and resumes the script. (C1, E-0357)
 SceneFoundMeBattle_SetFlagBit::
     xor a
     ld [wSpriteSlotCount], a
@@ -3249,13 +2913,8 @@ SceneFoundMeBattle_SetFlagBit::
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of SceneFoundMeBattle: sets wStepPtrLo to $e0; sets wStepPtrHi to 0; branches on hMapId;
-; sets wStepTarget to 2; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances
-; wScriptStep; sets wStepTarget to 3; calls StepObjectTowardCoord; returns if wStepArrived is 0;
-; advances wScriptStep (E-0347)
-; why: step 4 of SceneFoundMeBattle (when wScriptStep = 4); SceneFoundMeBattle: implements script
-; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
-; script shows: 'I'm ... (E-0352, E-0038, E-0245)
+; Found me battle, step 4: object 0 walks off (up, or left on map $96) to $E0 and stops animating.
+; (C1, E-0357)
 SceneFoundMeBattle_StepObjectTowardCoord::
     ld a, $e0
     ld [wStepPtrLo], a
@@ -3289,12 +2948,8 @@ SceneFoundMeBattle_StepObjectTowardCoord::
     inc [hl]
     ret
 
-; step 3 of SceneFoundMeBattle: sets hTemp1 to $20; branches on hMapId; sets hTemp1 to $40; sets
-; hTemp0 to 0; calls ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wScriptStep to 5
-; (E-0347)
-; why: step 3 of SceneFoundMeBattle (when wScriptStep = 3); SceneFoundMeBattle: implements script
-; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
-; script shows: 'I'm ... (E-0352, E-0038, E-0245)
+; Found me battle, step 3: blinks object 0 at Y $20 ($40 on map $96) for $78 frames, then step 5.
+; (C1, E-0357)
 SceneFoundMeBattle_ScriptStepBlinkObjectTemp0::
     ld a, $20
     ldh [hTemp1], a
@@ -3315,11 +2970,8 @@ SceneFoundMeBattle_ScriptStepBlinkObjectTemp0::
     ld [wScriptStep], a
     ret
 
-; step 2 of SceneFoundMeBattle: branches on wScriptParam1; sets wScriptStep to 4; sets hTemp0 to
-; $1b; calls StartScriptedEncounterTemp0; advances wScriptStep (E-0347)
-; why: step 2 of SceneFoundMeBattle (when wScriptStep = 2); SceneFoundMeBattle: implements script
-; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
-; script shows: 'I'm ... (E-0352, E-0038, E-0245)
+; Found me battle, step 2: in disguise (wScriptParam1 1) skips to step 4; otherwise starts scripted
+; encounter $1B. (C1, E-0357)
 SceneFoundMeBattle_WriteScriptStepAndTemp0::
     ld a, [wScriptParam1]
     cp $01
@@ -3336,14 +2988,9 @@ SceneFoundMeBattle_WriteScriptStepAndTemp0::
     inc [hl]
     ret
 
-; step 0 of SceneFoundMeBattle: advances wScriptStep; branches on hPlayerSpriteOverride; sets
-; wScriptParam1 to 0; shows 'You! I've never seen you'; branches on hPlayerSpriteGfxIdHi; branches
-; on hPlayerSpriteGfxIdLo; sets wScriptParam1 to 1; shows 'Oh, you're the cooking crew.'; sets
-; wScriptParam1 to 2; shows 'Hm? Are you a new'; also changes HL and A by register arithmetic
-; (E-0347)
-; why: step 0 of SceneFoundMeBattle (when wScriptStep = 0); SceneFoundMeBattle: implements script
-; command type 69 (SCRIPT_SCENE_FOUND_ME_BATTLE): a cutscene step named after the scene its only
-; script shows: 'I'm ... (E-0352, E-0038, E-0245)
+; Found me battle, step 0: by the player's disguise (hPlayerSpriteOverride bit 7 with sprite $D6 or
+; $EC): "... Oh, you're the cooking crew." ($0475), '... Hm? Are you a new ...' ($0474), or "...
+; You! I've never seen you ..." ($0473). (C1, E-0357)
 SceneFoundMeBattle_StartMessageHL_B85::
     ld hl, wScriptStep
     inc [hl]
@@ -3392,11 +3039,8 @@ ScenePirateGhosts::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw ScenePirateGhosts_ScriptStepBlinkObjectTemp0
 
-; step 0 of ScenePirateGhosts: advances wScriptStep; branches on hMapId; advances wScriptStep; shows
-; 'Check the wooden crate…' (E-0347)
-; why: step 0 of ScenePirateGhosts (when wScriptStep = 0); ScenePirateGhosts: implements script
-; command type 31 (SCRIPT_SCENE_PIRATE_GHOSTS): a cutscene step named after the scene its only
-; script shows: 'How could we ... (E-0352, E-0038, E-0245)
+; Pirate ghosts, step 0: on map $43 '... Check the wooden crate...' ($085D); elsewhere skips a step.
+; (C1, E-0357)
 ScenePirateGhosts_ReadMapId::
     ld hl, wScriptStep
     inc [hl]
@@ -3412,12 +3056,8 @@ ScenePirateGhosts_ReadMapId::
     call StartMessageHL_B85
     ret
 
-; step 2 of ScenePirateGhosts: branches on hMapId; branches on $10; sets hTemp1 to $30; sets hTemp0
-; to 0; calls ScriptStepBlinkObjectTemp0; returns if hTemp0 is 0; sets wSpriteSlotCount to 0; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 2 of ScenePirateGhosts (when wScriptStep = 2); ScenePirateGhosts: implements script
-; command type 31 (SCRIPT_SCENE_PIRATE_GHOSTS): a cutscene step named after the scene its only
-; script shows: 'How could we ... (E-0352, E-0038, E-0245)
+; Pirate ghosts, step 2: blinks object 0 at Y $10, $60 or $30 (by map) for $78 frames, then removes
+; the sprites and resumes the script. (C1, E-0357)
 ScenePirateGhosts_ScriptStepBlinkObjectTemp0::
     ldh a, [hMapId]
     cp $37
@@ -3464,13 +3104,9 @@ SceneTreasureTheft::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneTreasureTheft_StepObjectTowardCoord_SetStepPtrHi
 
-; step 8 of SceneTreasureTheft: sets wStepPtrHi to 1; branches on the byte at wObject1 + OBJ_X; sets
-; wStepTarget to 1; sets wStepPtrLo to $50; calls StepObjectTowardCoord; sets wStepTarget to 0; sets
-; wStepPtrLo to $b0; calls StepObjectTowardCoord; advances wStepPtrHi; branches on wObject3 + OBJ_X;
-; sets wScriptParam0 to 1; returns if wScriptParam0 is 0; then 11 more steps (see the code) (E-0347)
-; why: step 8 of SceneTreasureTheft (when wScriptStep = 8); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 8: objects 1-3 walk right to X $50 and then down off the screen ($B0); once
+; object 3 reaches $50, object 4 follows; when it has left, one sprite slot remains and the script
+; resumes. (C1, E-0357)
 SceneTreasureTheft_StepObjectTowardCoord_SetStepPtrHi::
     ld a, $01
     ld [wStepPtrHi], a
@@ -3543,13 +3179,8 @@ SceneTreasureTheft_StepObjectTowardCoord_SetStepPtrHi::
     ld [wScriptStartRequest], a
     ret
 
-; step 6 of SceneTreasureTheft: sets wStepTarget to 2; sets wStepPtrLo to $40; sets wStepPtrHi to 1;
-; calls StepObjectTowardCoord; sets wStepPtrHi to 3; calls StepObjectTowardCoord; sets wStepPtrHi to
-; 4; calls StepObjectTowardCoord; returns if wStepArrived is 0; shows 'King: Good! Your valor be
-; praised!'; advances wScriptStep (E-0347)
-; why: step 6 of SceneTreasureTheft (when wScriptStep = 6); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 6: objects 1, 3 and 4 walk up to Y $40; then 'King: Good! Your valor be
+; praised!' (message $0186). (C1, E-0357)
 SceneTreasureTheft_ShowKingGoodYourValor::
     ld a, $02
     ld [wStepTarget], a
@@ -3573,11 +3204,7 @@ SceneTreasureTheft_ShowKingGoodYourValor::
     inc [hl]
     ret
 
-; step 5 of SceneTreasureTheft: increments wScriptParam0; returns unless wScriptParam0 is $3c; sets
-; wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 5 of SceneTreasureTheft (when wScriptStep = 5); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 5: a 60-frame wait. (C1, E-0357)
 SceneTreasureTheft_WriteScriptParam0::
     ld a, [wScriptParam0]
     inc a
@@ -3590,11 +3217,7 @@ SceneTreasureTheft_WriteScriptParam0::
     inc [hl]
     ret
 
-; step 4 of SceneTreasureTheft: sets wStepPtrHi to 2; sets wStepTarget to 2; sets wStepPtrLo to $40;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; advances wScriptStep (E-0347)
-; why: step 4 of SceneTreasureTheft (when wScriptStep = 4); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 4: object 2 walks up to Y $40. (C1, E-0357)
 SceneTreasureTheft_StepObjectTowardCoord::
     ld a, $02
     ld [wStepPtrHi], a
@@ -3610,12 +3233,8 @@ SceneTreasureTheft_StepObjectTowardCoord::
     inc [hl]
     ret
 
-; step 3 of SceneTreasureTheft: calls NextRandomSeed; calls NextTableByte; increments wScriptParam0;
-; returns unless wScriptParam0 is $f0; sets wObject1 + OBJ_STATE to 2; sets wObject2 + OBJ_STATE to
-; 2; sets wObject3 + OBJ_STATE to 2; sets wScriptParam0 to 0; advances wScriptStep (E-0347)
-; why: step 3 of SceneTreasureTheft (when wScriptStep = 3); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 3: every 16 frames turns a random one of objects 1-4 left or right, for $F0
+; frames; then objects 1-3 face up. (C1, E-0357)
 SceneTreasureTheft_NextRandomSeed::
     ld a, [wScriptParam0]
     and $0f
@@ -3652,10 +3271,7 @@ SceneTreasureTheft_NextRandomSeed::
     inc [hl]
     ret
 
-; step 1 of SceneTreasureTheft: sets hFieldDrawFlags to $0e; advances wScriptStep (E-0347)
-; why: step 1 of SceneTreasureTheft (when wScriptStep = 1); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 1: sets field draw flags $0E. (C1, E-0357)
 SceneTreasureTheft_WriteFieldDrawFlags::
     ld a, $0e
     ldh [hFieldDrawFlags], a
@@ -3663,12 +3279,8 @@ SceneTreasureTheft_WriteFieldDrawFlags::
     inc [hl]
     ret
 
-; step 0 of SceneTreasureTheft: sets hMapId to $26; sets hMapScreenX to 0; sets hMapScreenY to 0;
-; sets wWarpDestX to $60; sets wWarpDestY to $20; sets wFieldTransitionKind to 1; calls
-; ScriptStartFadeAndAdvanceStep; shows 'King: The hideout of the thieves' (E-0347)
-; why: step 0 of SceneTreasureTheft (when wScriptStep = 0); SceneTreasureTheft: implements script
-; command type 24 (SCRIPT_SCENE_TREASURE_THEFT): a cutscene step named after the scene its only
-; script shows: 'King What? ... (E-0352, E-0038, E-0245)
+; Treasure theft, step 0: warps to map $26 at ($60, $20) with a fade and shows 'King: The hideout of
+; the thieves ...' (message $0185). (C1, E-0357)
 SceneTreasureTheft_ShowKingTheHideoutOf::
     ld a, $26
     ldh [hMapId], a
@@ -3700,11 +3312,8 @@ SceneCanalGate::
     dw SceneCanalGate_StepObjectTowardCoord
     dw SceneCanalGate_ClearBit1AtHL_Bank85
 
-; step 6 of SceneCanalGate: decrements wObject1 + OBJ_Y; returns unless wObject1 + OBJ_Y is $10;
-; calls ClearBit1AtHL_Bank85; sets wScriptStartRequest to $80 (E-0347)
-; why: step 6 of SceneCanalGate (when wScriptStep = 6); SceneCanalGate: implements script command
-; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
-; 'What? Open the ... (E-0352, E-0038, E-0245)
+; Canal gate, step 6: object 1 rises two pixels a frame to Y $10, stops animating, and the script
+; resumes. (C1, E-0357)
 SceneCanalGate_ClearBit1AtHL_Bank85::
     ld a, [wObject1 + OBJ_Y]
     dec a
@@ -3718,12 +3327,8 @@ SceneCanalGate_ClearBit1AtHL_Bank85::
     ld [wScriptStartRequest], a
     ret
 
-; step 5 of SceneCanalGate: sets wStepPtrHi to 0; sets wStepTarget to $82; sets wStepPtrLo to $50;
-; calls StepObjectTowardCoord; returns if wStepArrived is 0; calls SetBit1AtHL_Bank85; plays sound
-; $63; advances wScriptStep (E-0347)
-; why: step 5 of SceneCanalGate (when wScriptStep = 5); SceneCanalGate: implements script command
-; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
-; 'What? Open the ... (E-0352, E-0038, E-0245)
+; Canal gate, step 5: object 0 walks up two pixels a frame to Y $50; then object 1 animates and
+; sound $63 plays. (C1, E-0357)
 SceneCanalGate_StepObjectTowardCoord::
     xor a
     ld [wStepPtrHi], a
@@ -3743,11 +3348,7 @@ SceneCanalGate_StepObjectTowardCoord::
     inc [hl]
     ret
 
-; step 4 of SceneCanalGate: increments wScriptParam0; may return early; sets wScriptParam0 to 0;
-; advances wScriptStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 4 of SceneCanalGate (when wScriptStep = 4); SceneCanalGate: implements script command
-; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
-; 'What? Open the ... (E-0352, E-0038, E-0245)
+; Canal gate, step 4: object 0 moves down a pixel every other frame to Y $60. (C1, E-0357)
 SceneCanalGate_WriteScriptParam0AndSpriteSlots::
     ld a, [wScriptParam0]
     inc a
@@ -3765,10 +3366,7 @@ SceneCanalGate_WriteScriptParam0AndSpriteSlots::
     inc [hl]
     ret
 
-; step 2 of SceneCanalGate: shows 'King: Arrgh! I know that! I'; advances wScriptStep (E-0347)
-; why: step 2 of SceneCanalGate (when wScriptStep = 2); SceneCanalGate: implements script command
-; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
-; 'What? Open the ... (E-0352, E-0038, E-0245)
+; Canal gate, step 2: 'King: Arrgh! I know that! I ...' (message $0172). (C1, E-0357)
 SceneCanalGate_Msg0172_KingArrghIKnow::
     ld hl, $0172 ; 'King: Arrgh! I know that! I'
     call StartMessageHL_B85
@@ -3776,11 +3374,7 @@ SceneCanalGate_Msg0172_KingArrghIKnow::
     inc [hl]
     ret
 
-; step 0 of SceneCanalGate: calls ScriptApplyStepDeltaAtDE_Bank85; may return early; advances
-; wScriptStep (E-0347)
-; why: step 0 of SceneCanalGate (when wScriptStep = 0); SceneCanalGate: implements script command
-; type 22 (SCRIPT_SCENE_CANAL_GATE): a cutscene step named after the scene its only script shows:
-; 'What? Open the ... (E-0352, E-0038, E-0245)
+; Canal gate, step 0: object 0 hops along the hop curve. (C1, E-0357)
 SceneCanalGate_ScriptApplyStepDeltaAtDE_Bank85::
     ld de, wSpriteSlots + $c
     call ScriptApplyStepDeltaAtDE_Bank85
@@ -3801,14 +3395,9 @@ SceneGreatlogKey::
     dw SceneWatchOut_RunMessageBoxFar_Bank85
     dw SceneGreatlogKey_QueueSoundEffect
 
-; step 4 of SceneGreatlogKey: branches on wScriptParam0; plays sound $65; branches on wScriptParam1;
-; decrements wObject5 + SCRIPTOBJ_X; copies the byte at SceneGreatlogKey_QueueSoundEffect_Data to
-; wObject5 + SCRIPTOBJ_X; increments wObject5 + SCRIPTOBJ_Y; copies E to wStepPtrLo; copies D to
-; wStepPtrHi; calls AddStepDeltaToPointedByte; increments wScriptParam0; returns unless
-; wScriptParam0 is $20; sets wObject5 to 0; then 1 more step (see the code) (E-0347)
-; why: step 4 of SceneGreatlogKey (when wScriptStep = 4); SceneGreatlogKey: implements script
-; command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the scene its only script
-; shows: before '0 ... (E-0352, E-0038, E-0245)
+; GreatLog key scene, step 4: the key flies off for 32 frames (sound $65 first): left two pixels a
+; frame, or along SceneGreatlogKey_QueueSoundEffect_Data when thrown the other way, falling along
+; the step curve; then hides it and resumes the script. (C1, E-0357)
 SceneGreatlogKey_QueueSoundEffect::
     ld a, [wScriptParam0]
     or a
@@ -3859,12 +3448,8 @@ SceneGreatlogKey_QueueSoundEffect_Data::
     db $42, $45, $47, $4a, $4c, $4f, $51, $54, $56, $59, $5b, $5e, $60, $63, $65, $68
     db $6a, $6d, $6f, $72, $74, $77, $79, $7c, $7e, $81, $83, $86, $88, $8b, $8d, $90
 
-; step 2 of SceneGreatlogKey: sets wObject5 to $80; decrements wObject5 + SCRIPTOBJ_Y; calls
-; ScriptApplyStepDeltaAtDE_Bank85; may return early; shows 'Warubou: This you use to come'; advances
-; wScriptStep (E-0347)
-; why: step 2 of SceneGreatlogKey (when wScriptStep = 2); SceneGreatlogKey: implements script
-; command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the scene its only script
-; shows: before '0 ... (E-0352, E-0038, E-0245)
+; GreatLog key scene, step 2: the key rises along the hop curve; then 'Warubou: This you use to come
+; ...' (message $0084). (C1, E-0357)
 SceneGreatlogKey_ShowWarubouThisYouUse::
     ld a, $80
     ld [wObject5], a
@@ -3879,14 +3464,9 @@ SceneGreatlogKey_ShowWarubouThisYouUse::
     inc [hl]
     ret
 
-; step 0 of SceneGreatlogKey: sets hTemp0 to 2; calls RunFieldCommandTemp0; sets wObject5 +
-; SCRIPTOBJ_X to $40; sets wObject5 + SCRIPTOBJ_Y to $30; shows 'Warubou: Wa-hey! Forgot
-; something!'; advances wScriptStep; branches on hPlayerX; sets hPlayerFacing to 1; sets
-; wFollowerRecords to 1; sets wScriptParam1 to 0; sets hPlayerFacing to 3; sets wFollowerRecords to
-; 3; then 1 more step (see the code) (E-0347)
-; why: step 0 of SceneGreatlogKey (when wScriptStep = 0); SceneGreatlogKey: implements script
-; command type 18 (SCRIPT_SCENE_GREATLOG_KEY): a cutscene step named after the scene its only script
-; shows: before '0 ... (E-0352, E-0038, E-0245)
+; GreatLog key scene, step 0: shows the key (field command 2) at ($40, $30), 'Warubou: Wa-hey!
+; Forgot something!' (message $0083), and turns the player and object 0 to face each other by the
+; player's X (and the throw direction in wScriptParam1). (C1, E-0357)
 SceneGreatlogKey_ShowWarubouWaheyForgotSomething::
     ld a, $02
     ldh [hTemp0], a
@@ -4030,11 +3610,7 @@ RunMessageBoxFar_Bank85::
     scf
     ret
 
-; step 1 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; advances wScriptStep
-; (E-0347)
-; why: step 1 of SceneWatchOut (when wScriptStep = 1); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 1: after the message goes on. (C1, E-0357)
 SceneWatchOut_RunMessageBoxFar_Bank85::
     xor a
     call RunMessageBoxFar_Bank85
@@ -4043,11 +3619,7 @@ SceneWatchOut_RunMessageBoxFar_Bank85::
     inc [hl]
     ret
 
-; step 3 of SceneWatchOut: calls RunMessageBoxFar_Bank85; may return early; sets wScriptStartRequest
-; to $80 (E-0347)
-; why: step 3 of SceneWatchOut (when wScriptStep = 3); SceneWatchOut: implements script command type
-; 2A (SCRIPT_SCENE_WATCH_OUT): a cutscene step named after the scene its only script shows: 'You can
-; keep ... (E-0352, E-0038, E-0245)
+; Watch Out scene, step 3: after the message the script resumes. (C1, E-0357)
 SceneWatchOut_RunMessageBoxFar_Bank85_SetScriptStartRequest::
     xor a
     call RunMessageBoxFar_Bank85
@@ -4106,12 +3678,8 @@ PartyHasField6FAtLeastC0Without55Bit7::
     ldh [hTemp0], a
     ret
 
-; called from FhuntTalkEvents_ShowBeGoneIfYour: branches on wPartyCount; sets rRAMG to 0; sets
-; hTemp0 to 0; sets rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls
-; LoadSRAMRecordWord; sets rRAMG to 0; sets hTemp0 to 1; also changes HL, BC and A by register
-; arithmetic (E-0347)
-; why: a helper of FhuntTalkEvents_ShowBeGoneIfYour; FhuntTalkEvents_ShowBeGoneIfYour: Fhunt talk
-; 15, the grave's voice: silent once tile $68 is in the screen buffer (E-0352, E-0357)
+; hTemp0 = 1 when every living party member has a wildness (MON_WLD) of 0, otherwise 0; 0 with no
+; party. (C1, E-0357)
 FhuntTalkEvents_WriteRAMGAndTemp0::
     ld a, [wPartyCount]
     or a
@@ -4160,14 +3728,8 @@ FhuntTalkEvents_WriteRAMGAndTemp0::
     ldh [hTemp0], a
     ret
 
-; called from FhuntTalkEvents_TestFlagBit_Kweeeeeh: branches on hPlayerSpriteOverride; branches on
-; the byte at TalkEvent29WordList; sets hTemp0 to 1; branches on wPartyCount; sets hTemp0 to 0; sets
-; rRAMG to $0a; calls LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on
-; the byte at TalkEvent29WordList; sets rRAMG to 0; sets hTemp0 to 0; then 2 more steps (see the
-; code) (E-0347)
-; why: a helper of FhuntTalkEvents_TestFlagBit_Kweeeeeh; FhuntTalkEvents_TestFlagBit_Kweeeeeh: Fhunt
-; talk 41, the giant bird: after EVENT_SCENE_MADCONDOR, 'Kweeeeeh!' when the player is disguised as
-; a monster listed in ... (E-0352, E-0357)
+; hTemp0 = 1 when the player is disguised as a monster in TalkEvent29WordList or a living party
+; member's species is in it. (C1, E-0357)
 FhuntTalkEvents_WriteTemp0AndRAMG::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4300,13 +3862,8 @@ TalkEvent29WordList::
     dw $0119, $011b, $011f, $0120, $0124, $0126, $0127, $0129
     dw $012a, $012f, $0130, $0135, $0137, $0000
 
-; called from FhuntTalkEvents_ShowHeroCheckedTheSmall: checks EVENT_NEVER_SET; branches on
-; hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteOverride; sets hTemp0 to 0;
-; branches on the byte at TalkEvent47WordList; sets hTemp0 to 2; also changes HL, DE, A and C by
-; register arithmetic (E-0347)
-; why: a helper of FhuntTalkEvents_ShowHeroCheckedTheSmall; FhuntTalkEvents_ShowHeroCheckedTheSmall:
-; Fhunt talk 71, the small hole: by FhuntTalkEvents_TestFlagBit_3's answer (the player's monster
-; disguise listed in TalkEvent47WordList): ... (E-0352, E-0357)
+; hTemp0 = 2 when the player is disguised as a monster in TalkEvent47WordList (also behind
+; EVENT_NEVER_SET), otherwise 0. (C1, E-0357)
 FhuntTalkEvents_TestFlagBit_3::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -4386,10 +3943,9 @@ TalkEvent47WordList::
     dw $013c, $013d, $0140, $015a, $0149, $014d, $014e, $015b
     dw $0144, $0000
 
-; Branches on hPlayerSpriteOverride; sets hTemp0 to 0; branches on hPlayerSpriteGfxIdHi; branches on
-; hPlayerSpriteGfxIdLo; sets hTemp1 to 1; also changes A by register arithmetic (E-0347)
-; why: part of FhuntTalkEvents; FhuntTalkEvents: talk category 5: jumps by wTalkEventGroup to the
-; talk handlers of Fhunt village and Pei (messages $0400-$04AF) (E-0352)
+; hTemp1 = 1 when the player's monster disguise is sprite $00F6-$00FF or any $01xx sprite (the
+; second test compares the decremented high byte, always 0, with $11), otherwise hTemp0 = 0. (C1,
+; E-0357)
 FhuntTalkEvents_WriteTemp0AndTemp1::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
@@ -4422,13 +3978,8 @@ FhuntTalkEvents_WriteTemp0AndTemp1::
     ldh [hTemp1], a
     ret
 
-; called from Talk04CB_ThatKeyIUsed: returns if wPartyCount is 0; sets rRAMG to $0a; calls
-; LoadSRAMRecordByte; branches on hTemp0; calls LoadSRAMRecordWord; branches on the byte at
-; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data; sets rRAMG to 0; sets hTemp0 to 0; sets rRAMG to 0;
-; sets hTemp0 to 1; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of Talk04CB_ThatKeyIUsed; Talk04CB_ThatKeyIUsed: talk handler (bank-$04/$13 event
-; code, reached from the DispatchTalkEvent groups): starts 5 constant message(s) depending on story
-; flags ... (E-0352, E-0097)
+; hTemp0 = 1 when a living party member's species is in
+; Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte_Data, otherwise 0. (C1, E-0357)
 Talk04CB_ThatKeyIUsed_LoadSRAMRecordByte::
     ld a, [wPartyCount]
     or a
@@ -4720,15 +4271,11 @@ SetupMap0BMonsterObjects_Data2::
     db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $10, $11, $12, $13, $14, $15, $16, $1a
     db $1b, $1c, $1d, $21, $24, $25, $26, $28, $29, $2a, $2e, $2f, $33, $38, $39, $3d
 
-; called from RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: branches on wTriggerKind; branches
-; on wPendingFieldEvent; calls NextRandomSeed; sets wTriggerMarkerFlags to 0; sets
-; wScriptStartRequest to $80; calls RandomGoldOrItem_NextRandomSeed_2; sets wTriggerMarkerFlags to
-; $80; calls ComputePartyStrengthLevelPartyStrength; calls NextRandomSeed; sets wTriggerMarkerFlags;
-; sets wTriggerMarkerFlags to $80; calls RandomGoldOrItem_NextRandomSeed_2; then 13 more steps (see
-; the code) (E-0347)
-; why: a helper of RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed;
-; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: Random gold or item, step 4: picks the gold or
-; item at random (RandomGoldOrItem_NextRandomSeed) (E-0352, E-0357)
+; Random gold or item: with no trigger, no pending field event and a free 24th inventory slot, one
+; chance in 32 of a find: for map sprite kind 1 the marker flags are $80 on a 0-98 roll below 5,
+; otherwise $80 | (the party's strength + a random -16..15, at least 1), with wScriptParam1 $2C; for
+; other kinds a tier 0-5 from a 0-98 roll (below 50, 70, 80, 90, 95, or above) and the rest;
+; otherwise the script resumes with no find. (C1, E-0357)
 RandomGoldOrItem_NextRandomSeed::
     ld a, [wTriggerKind]
     cp $ff
@@ -4857,11 +4404,7 @@ RandomGoldOrItem_NextRandomSeed::
     inc [hl]
     ret
 
-; Calls NextRandomSeed; may continue in RandomGoldOrItem_NextRandomSeed_2 (E-0347)
-; why: part of RandomGoldOrItem_NextRandomSeed, in a helper of
-; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed;
-; RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed: Random gold or item, step 4: picks the gold or
-; item at random (RandomGoldOrItem_NextRandomSeed) (E-0352, E-0357)
+; A = a random number 0-98 (rerolling 99-127). (C1, E-0357)
 RandomGoldOrItem_NextRandomSeed_2::
     call NextRandomSeed
     ld a, [wKeyRandomLo]

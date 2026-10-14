@@ -244,7 +244,7 @@ GetBaseINT::
     ld a, h
     ld [wMonsterId + $1], a
     farcall LoadMonsterRecord
-    ld a, [wScreenAttrBuffer]
+    ld a, [wRecordBufferData + $12]
     ld c, a
     ld a, [wRecordBufferData + $13]
     ld b, a

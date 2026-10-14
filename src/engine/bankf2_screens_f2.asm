@@ -3920,9 +3920,9 @@ RunUnlessScreenStateIs3::
 
 ; called from VaultMenu_Store_ReadScreenState: branches on wCounterPtr0Lo; calls
 ; VaultMenu_Store_MapItemsToInventory; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: a helper of VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep
-; = 14); VaultMenu_Store: storing: moves items from wInventory into wItemStorage
-; (RemoveItemCountFromInventory) (E-0352, E-0276)
+; why: a helper of VaultMenu_Store_ReadScreenState; VaultMenu_Store_ReadScreenState: Storing, step
+; 14: in state 3 removes the items from the bag and puts them in storage
+; (VaultMenu_Store_VaultMenu_Store_MapItemsToInventory) (E-0352, E-0357)
 VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
     ld hl, wWorkBuf
     ld b, $18
@@ -3948,9 +3948,9 @@ VaultMenu_Store_VaultMenu_Store_MapItemsToInventory::
 ; Branches on wCounterPtr0Lo; sets wCounterPtr0Lo to 0; also changes HL, DE, A and B by register
 ; arithmetic (E-0347)
 ; why: part of VaultMenu_Store_VaultMenu_Store_MapItemsToInventory, in a helper of
-; VaultMenu_Store_ReadScreenState, in step 14 of VaultMenu_Store (when wScreenStep = 14);
-; VaultMenu_Store: storing: moves items from wInventory into wItemStorage
-; (RemoveItemCountFromInventory) (E-0352, E-0276)
+; VaultMenu_Store_ReadScreenState; VaultMenu_Store_ReadScreenState: Storing, step 14: in state 3
+; removes the items from the bag and puts them in storage
+; (VaultMenu_Store_VaultMenu_Store_MapItemsToInventory) (E-0352, E-0357)
 VaultMenu_Store_MapItemsToInventory_Skip::
     ld hl, wWorkBuf
     ld b, $18

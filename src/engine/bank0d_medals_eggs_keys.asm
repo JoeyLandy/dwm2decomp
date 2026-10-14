@@ -5727,7 +5727,7 @@ MedalPrizeMenu_ChoosePrize_SetArg5ToListEntriesCell4_3::
     ld [hli], a
     ld a, [wRecordBufferData + $11]
     ld [hli], a
-    ld a, [wScreenAttrBuffer]
+    ld a, [wRecordBufferData + $12]
     ld [hli], a
     ld a, [wRecordBufferData + $13]
     ld [hli], a

@@ -21,13 +21,9 @@ RunBattleCommandEntry::
     dw RunBattleCommandEntry_CompareHLToBC
     dw RunBattleCommandEntry_AddWordAtHLToBC_Bank30
 
-; step 0 of RunBattleCommandEntry: advances wBattleSubPhase; returns unless wLinkMode is 0; sets
-; wCommandEntryMonster to 0; calls RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; sets
-; wCommandEntryMonster to 1; calls RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; sets
-; wCommandEntryMonster to 2; calls RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; sets
-; wCommandEntryMonster to 3; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 0 of RunBattleCommandEntry (when wBattleSubPhase = 0); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 0: next step; outside link battles, sets wCommandEntryMonster to whichever of the
+; party's summed personality bytes is largest (0 Hi, 1 Mid, 2 Lo, 3 trait; an earlier one wins
+; ties). (C1, E-0357)
 RunBattleCommandEntry_WriteCommandEntryMonster::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -99,13 +95,8 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
 .return:
     ret
 
-; called from RunBattleCommandEntry_WriteCommandEntryMonster: calls
-; CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_WriteCommandEntryMonster, in step 0 of
-; RunBattleCommandEntry (when wBattleSubPhase = 0); RunBattleCommandEntry: battle fight step 2:
-; returns while a message is being drawn (wTextFlags) (E-0352)
+; DE += the byte at HL for each of B slots from slot C that is present (HL steps per slot). (C1,
+; E-0357)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -124,13 +115,9 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2::
     jr nz, RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_2
     ret
 
-; step 1 of RunBattleCommandEntry: calls NextTableByteSecondStream; branches on wBattleActor;
-; branches on the byte at wSlotMarks; copies E to wBattleActor; calls
-; CarryUnlessBattleSlotOutSlotEmpty; sets wBattleActor; advances wBattleSubPhase; sets
-; wBattleResolveStep to 0; advances wBattleSubPhase; also changes HL, A and E by register arithmetic
-; (E-0347)
-; why: step 1 of RunBattleCommandEntry (when wBattleSubPhase = 1); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 1: advances the second random stream in link battles; walks wBattleActor to the
+; next slot marked 1 that is present and goes to its command entry (step 2); after slot 7 skips to
+; step 4. (C1, E-0357)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wLinkMode]
     or a
@@ -173,17 +160,13 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
 .return:
     ret
 
-; step 2 of RunBattleCommandEntry: calls RunCommandEntryResolveStep (E-0347)
-; why: step 2 of RunBattleCommandEntry (when wBattleSubPhase = 2); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 2: the command entry for the actor (RunCommandEntryResolveStep). (C1, E-0357)
 RunBattleCommandEntry_ToRunCommandEntryResolveStep::
     call RunCommandEntryResolveStep
     ret
 
-; step 3 of RunBattleCommandEntry: calls ChooseTargetForActor; sets wBattleSubPhase to 1; increments
-; wBattleActor (E-0347)
-; why: step 3 of RunBattleCommandEntry (when wBattleSubPhase = 3); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 3: chooses the actor's target (ChooseTargetForActor), marks the slot done (2) and
+; returns to step 1 with the next actor. (C1, E-0357)
 RunBattleCommandEntry_ChooseTargetForActor::
     call ChooseTargetForActor
     ld a, [wBattleActor]
@@ -249,15 +232,10 @@ ChooseTargetForActor::
     ld d, [hl]
     ret
 
-; step 4 of RunBattleCommandEntry: calls FillBytes; sets wActionQueuePos to 0; sets wLoadSlot to 0;
-; copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on the byte at wSlotMarks; calls
-; RunBattleCommandEntry_AdvanceRandom; calls
-; RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc; increments wLoadSlot; increments
-; wBattleTempPtrLo; calls RunBattleCommandEntry_WaitBattleItemTarget; then 2 more steps (see the
-; code) (E-0347)
-; why: step 4 of RunBattleCommandEntry (when wBattleSubPhase = 4); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 4: clears the action queue and the speed list, lists every present slot marked 2
+; with a speed (RunBattleCommandEntry_AdvanceRandom plus the action's bonus,
+; RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc), adds the item entry
+; (RunBattleCommandEntry_WaitBattleItemTarget); next step. (C1, E-0357)
 RunBattleCommandEntry_SetActionQueuePos::
     ld hl, wActionQueue
     ld bc, $0009
@@ -319,11 +297,7 @@ RunBattleCommandEntry_SetActionQueuePos::
     inc [hl]
     ret
 
-; called from RunBattleCommandEntry_SetActionQueuePos: calls AdvanceRandom; calls RandomInRange;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
-; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
-; drawn (wTextFlags) (E-0352)
+; BC = a random speed for slot E between 3/10 of its agility and its agility. (C1, E-0357)
 RunBattleCommandEntry_AdvanceRandom::
     push de
     call AdvanceRandom
@@ -346,14 +320,9 @@ RunBattleCommandEntry_AdvanceRandom::
     pop de
     ret
 
-; called from RunBattleCommandEntry_SetActionQueuePos: branches on the byte at wBattleActionChoice;
-; copies the byte at wBattleActionChoice to wRecordBuffer; sets wBattleArg0 to 5; sets wBattleArg1
-; to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; copies L to
-; wBattleArg2; copies H to wBattleArg3; copies L to wBattleArg0; copies H to wBattleArg1; calls
-; AdvanceRandom; then 1 more step (see the code) (E-0347)
-; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
-; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
-; drawn (wTextFlags) (E-0352)
+; Adds the action's speed bonus to BC: actions $62 and $D8 add 3,000 (they go first); a skill whose
+; record byte 5 has bit 2 set adds 1,000, others 10; action $69 instead gives a random speed of 1 to
+; 9 (random mod 9 + 1). Bank $A1's copy adds 2,000 for the bit-2 skills. (C1, E-0357)
 RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     push de
     ld a, e
@@ -442,11 +411,8 @@ RunBattleCommandEntry_WriteRecordBufferAndBattleArg0Etc::
     pop de
     ret
 
-; called from RunBattleCommandEntry_SetActionQueuePos: returns if wBattleItemTarget is $ff; sets
-; wBattleArg0 to $10; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_SetActionQueuePos, in step 4 of RunBattleCommandEntry (when
-; wBattleSubPhase = 4); RunBattleCommandEntry: battle fight step 2: returns while a message is being
-; drawn (wTextFlags) (E-0352)
+; When an item is being used (wBattleItemTarget not $FF), lists entry $10 with speed 2,010, ahead of
+; every turn but the 3,000 ones. (C1, E-0357)
 RunBattleCommandEntry_WaitBattleItemTarget::
     ld a, [wBattleItemTarget]
     cp $ff
@@ -463,13 +429,8 @@ RunBattleCommandEntry_WaitBattleItemTarget::
     ld [hl], $10
     ret
 
-; step 5 of RunBattleCommandEntry: copies L to wBattleTempPtrLo; copies H to wBattleTempPtrHi;
-; copies L to wBattleDamageLo; copies H to wBattleDamageHi; copies C to wTargetEstimates; branches
-; on E; increments wBattleTempPtrLo; branches on E; branches on the byte at wBattleArg0; sets
-; wActionQueuePos to 0; advances wBattleSubPhase; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: step 5 of RunBattleCommandEntry (when wBattleSubPhase = 5); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 5: sorts the listed entries by speed, fastest first (swapping neighbours, eight
+; passes), and copies the order into wActionQueue; next step. (C1, E-0357)
 RunBattleCommandEntry_CompareHLToBC::
     ld d, $08
 
@@ -565,12 +526,9 @@ RunBattleCommandEntry_CompareHLToBC::
     inc [hl]
     ret
 
-; step 6 of RunBattleCommandEntry: calls AddWordAtHLToBC_Bank30; copies C to wBattleCommandArgs;
-; calls AddWordAtHLToBC_Bank30; advances wBattleStep; sets wBattleSubPhase to 0; calls FillBytes;
-; calls SaveActionChoicesAndPickFormations; calls
-; RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3 (E-0347)
-; why: step 6 of RunBattleCommandEntry (when wBattleSubPhase = 6); RunBattleCommandEntry: battle
-; fight step 2: returns while a message is being drawn (wTextFlags) (E-0352)
+; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
+; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
+; actors (RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3); next battle step. (C1, E-0357)
 RunBattleCommandEntry_AddWordAtHLToBC_Bank30::
     ld hl, wBattleHP
     ld bc, $0000
@@ -612,12 +570,7 @@ AddWordAtHLToBC_Bank30::
     ld b, a
     ret
 
-; called from RunBattleCommandEntry_AddWordAtHLToBC_Bank30: calls CarryUnlessBattleSlotOutSlotEmpty;
-; branches on the byte at wBattleActionChoice; sets BSTAT6_BERSERK of wBattleStatus6; also changes
-; HL, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattleCommandEntry_AddWordAtHLToBC_Bank30, in step 6 of RunBattleCommandEntry
-; (when wBattleSubPhase = 6); RunBattleCommandEntry: battle fight step 2: returns while a message is
-; being drawn (wTextFlags) (E-0352)
+; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C1, E-0357)
 RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty_3::
     ld c, $00
     ld b, $08
@@ -655,14 +608,9 @@ RunCommandEntryResolveStep::
     dw AIChooseActionResolveStep
     dw RunCommandEntryResolveStep_RunActorActionHandlersForAISlots
 
-; step 0 of RunCommandEntryResolveStep: calls PersonalityIndexOfSlot_Bank30; sets wPersonalityIndex;
-; calls ForcedActionForActorStatus; branches on wLinkMode; branches on wBattleActor; branches on
-; wMenuState & $03; advances wBattleResolveStep; also changes HL and A by register arithmetic
-; (E-0347)
-; why: step 0 of RunCommandEntryResolveStep (when wBattleResolveStep = 0);
-; RunCommandEntryResolveStep: battle command entry for the computer-controlled slots: by
-; wBattleResolveStep it reads each slot's personality, chooses its action ... (E-0352, E-0354,
-; E-0122)
+; Command entry, step 0: works out the actor's personality index; a status that forces an action
+; skips to step 2; otherwise with battle command 1 (from wMenuState, or the link's wSlotCommands)
+; goes to step 1, other commands to step 2. (C1, E-0357)
 RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_Bank30
@@ -711,16 +659,12 @@ RunCommandEntryResolveStep_PersonalityIndexOfSlot_Bank30::
     inc [hl]
     ret
 
-; step 1 of RunCommandEntryResolveStep: advances wBattleResolveStep; sets wBattleStatResultLo to 0;
-; branches on wLinkMode; branches on wBattleActor; sets wBattleStatResultLo to 1; branches on
-; wBattleStatus; calls ActorBattleWordArray3FBand; calls RunCommandEntryResolveStep_ReadBattleActor;
-; calls RunCommandEntryResolveStep_GetActorSlotTacticLow2; calls AddPersonalityWeightToBattleArg0;
-; calls AddActorBattleWordArray3FDiv16ToBattleArg2; calls AddRandom0To63ToBattleArg2; then 13 more
-; steps (see the code) (E-0347)
-; why: step 1 of RunCommandEntryResolveStep (when wBattleResolveStep = 1);
-; RunCommandEntryResolveStep: battle command entry for the computer-controlled slots: by
-; wBattleResolveStep it reads each slot's personality, chooses its action ... (E-0352, E-0354,
-; E-0122)
+; Command entry, step 1: decides whether the actor follows the command: for party slots (any slot in
+; link mode 1) unless paralysed and when its wBattleExtraStat band is 2 or 3, compares trait / 4 +
+; the tactic's byte / 4 + the personality weight with wBattleExtraStat / 16 + random 0-63; when the
+; first is lower it acts on its own (tactic bit 6 set, action $FF, wSideControl bit 7, message $28
+; unless slot 3 or 7) and goes to step 3; otherwise clears bit 6 and its action byte; both adjust
+; the personality (RunCommandEntryResolveStep_WaitLinkMode). (C1, E-0357)
 RunCommandEntryResolveStep_AddAx9ToHL::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -834,23 +778,14 @@ ActorBattleWordArray3FBand::
 .return:
     ret
 
-; called from RunCommandEntryResolveStep_AddAx9ToHL: changes HL; continues in
-; RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor (E-0347)
-; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
-; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Adds the actor's wSlotTrait byte / 4 to wBattleArg0
+; (RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor). (C1, E-0357)
 RunCommandEntryResolveStep_ReadBattleActor::
     ld hl, wSlotTrait
     jr RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor
 
-; called from RunCommandEntryResolveStep_AddAx9ToHL: calls GetActorSlotTacticLow2; may return early;
-; calls ReadBattleWordFromArray_Bank30; continues in
-; RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor (E-0347)
-; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
-; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Unless the actor's tactic is 3, adds its byte from the tactic's array
+; (RunCommandEntryResolveStep_GetActorSlotTacticLow2's table) / 4 to wBattleArg0. (C1, E-0357)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2::
     call GetActorSlotTacticLow2
     cp $03
@@ -863,13 +798,7 @@ RunCommandEntryResolveStep_GetActorSlotTacticLow2::
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data::
     db $68, $d9, $70, $d9, $78, $d9
 
-; Takes HL; changes HL and A (E-0347)
-; why: part of RunCommandEntryResolveStep_GetActorSlotTacticLow2_Data, in part of
-; RunCommandEntryResolveStep_GetActorSlotTacticLow2, in a helper of
-; RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep (when
-; wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; The word wBattleArg0 += the byte at HL + actor, / 4. (C1, E-0357)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_ReadBattleActor::
     ld a, [wBattleActor]
     add_a_to_hl
@@ -931,9 +860,7 @@ AddRandom0To63ToBattleArg2::
     ld h, $00
     jr AddRandom0To63ToBattleArg2_ReadBattleArg2
 
-; Sets wBattleArg2; sets wBattleArg3 (E-0347)
-; why: part of AddRandom0To63ToBattleArg2; AddRandom0To63ToBattleArg2: adds a random value 0-63
-; (wRandomLo & $3F) to the word wBattleArg2 (E-0352, E-0122)
+; The word wBattleArg2 += HL. (C1, E-0357)
 AddRandom0To63ToBattleArg2_ReadBattleArg2::
     ld a, [wBattleArg2]
     add l
@@ -1461,12 +1388,9 @@ AddWeightsForSkillD::
 .return:
     ret
 
-; called from AddWeightsForSkillD: branches on wLinkMode; branches on wBattleActor; branches on
-; wMenuState & $03; calls GetActorSlotTacticLow2; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: a helper of AddWeightsForSkillD; AddWeightsForSkillD: for each of the actor's skills equal to
-; D adds weight through AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc to wAIWeights[index]
-; (E-0352, E-0125)
+; Scales skill weight E by the battle command (wMenuState, or the link's wSlotCommands): command 1
+; doubles it (0 when the tactic is 3), command 3 keeps it, 0 and 2 clear it; then adds it to the
+; word at HL. (C1, E-0357)
 AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
     push de
     push hl
@@ -1780,13 +1704,11 @@ ScoreActionsWithAIScoreTableA::
     ld a, h
     ld [wBattleExpAward + $1], a
 
-; Branches on wBattleActor & $03; branches on wLinkMode; branches on wBattleActor; calls
-; GetActorSlotTacticLow2; calls ActorActionChoiceAddress; calls
-; EstimateDamageVsEachFoeToAIDamageEstimates; calls ScoreSkillAtHLForAI; calls
-; DoubleWordAtDEUnlessBit15; calls ScoreSkillForAI; calls DoubleWordAtDEUnlessBit15; calls
-; ScoreSkillForAI; branches on wBattleActor & $03; then 6 more steps (see the code) (E-0347)
-; why: part of ScoreActionsWithAIScoreTableA; ScoreActionsWithAIScoreTableA: sets wBattleExpAward/C
-; to AIScoreRoutineTableA (E-0352, E-0129)
+; Scores the actor's actions: a party slot with tactic 3 under the player's command does nothing
+; (action 0); otherwise estimates the damage to each foe, scores its eight skills (doubling those
+; whose category is the first choice), the attack (doubled when the first choice is 1) and action
+; $AC (quartered for foes and slots 3/7, doubled when the first choice is 3), and takes the highest.
+; (C1, E-0357)
 ScoreActionsWithAIScoreTableA_CheckBattleActor::
     ld a, [wBattleActor]
     and $03
@@ -2158,11 +2080,7 @@ AddSkillBaseWeightAndLoadSkill::
     pop de
     ret
 
-; called from AddSkillBaseWeightAndLoadSkill: calls AdvanceRandom; also changes DE, A and B by
-; register arithmetic (E-0347)
-; why: a helper of AddSkillBaseWeightAndLoadSkill; AddSkillBaseWeightAndLoadSkill: A = skill number:
-; when the word at $55F3 + 2 * A (a per-skill weight table in this bank) is non-zero it is added to
-; the word at DE and ... (E-0352, E-0083)
+; Adds a random 0-63 to the word ending at DE. (C1, E-0357)
 AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
     push af
     dec de
@@ -2180,12 +2098,8 @@ AddSkillBaseWeightAndLoadSkill_AdvanceRandom::
     pop af
     ret
 
-; step 3 of RunCommandEntryResolveStep: calls RunActorActionHandlersForAISlots; advances
-; wBattleSubPhase; sets wBattleResolveStep to 0 (E-0347)
-; why: step 3 of RunCommandEntryResolveStep (when wBattleResolveStep = 3);
-; RunCommandEntryResolveStep: battle command entry for the computer-controlled slots: by
-; wBattleResolveStep it reads each slot's personality, chooses its action ... (E-0352, E-0354,
-; E-0122)
+; Command entry, step 3: runs the action handlers of the computer-controlled slots, then the next
+; turn-order step. (C1, E-0357)
 RunCommandEntryResolveStep_RunActorActionHandlersForAISlots::
     call RunActorActionHandlersForAISlots
     ld hl, wBattleSubPhase
@@ -2614,12 +2528,9 @@ RollSlotTraitLowFlag80::
     jr RollSlotTraitLowFlag80_CallAdvanceRandom2
     db $af, $c9
 
-; Calls AdvanceRandom; may return early; may continue in RollSlotTraitLowFlag80_Skip2; may continue
-; in RollSlotTraitLowFlag80_Skip3; may continue in RollSlotTraitLowFlag80_Skip4; continues in
-; RollSlotTraitLowFlag80_Skip; also changes HL, A and B by register arithmetic (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; Trait roll for a high trait ($80 or more): a chance of 1/256 below $A2, 2/256 below $C3, 4/256
+; below $E4, otherwise 8/256; on success ORs DE into wPersonalityActs[actor] and returns carry. (C1,
+; E-0357)
 RollSlotTraitLowFlag80_CallAdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -2637,12 +2548,8 @@ RollSlotTraitLowFlag80_CallAdvanceRandom::
     jr c, RollSlotTraitLowFlag80_Skip4
     jr RollSlotTraitLowFlag80_Skip
 
-; Calls AdvanceRandom; may return early; may continue in RollSlotTraitLowFlag80_Skip2; may continue
-; in RollSlotTraitLowFlag80_Skip3; may continue in RollSlotTraitLowFlag80_Skip4; also changes HL, A
-; and B by register arithmetic (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; Trait roll for a low trait (below $80): a chance of 1/256 from $60, 2/256 from $3F, 4/256 from
+; $1E, otherwise 8/256; on success as RollSlotTraitLowFlag80_CallAdvanceRandom. (C1, E-0357)
 RollSlotTraitLowFlag80_CallAdvanceRandom2::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -2659,41 +2566,27 @@ RollSlotTraitLowFlag80_CallAdvanceRandom2::
     cp $1e
     jr nc, RollSlotTraitLowFlag80_Skip4
 
-; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; C = 8 (chance 8/256), then the roll. (C1, E-0357)
 RollSlotTraitLowFlag80_Skip::
     ld c, $08
     jr RollSlotTraitLowFlag80_Skip5
 
-; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; C = 1 (chance 1/256), then the roll. (C1, E-0357)
 RollSlotTraitLowFlag80_Skip2::
     ld c, $01
     jr RollSlotTraitLowFlag80_Skip5
 
-; Changes C; continues in RollSlotTraitLowFlag80_Skip5 (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; C = 2 (chance 2/256), then the roll. (C1, E-0357)
 RollSlotTraitLowFlag80_Skip3::
     ld c, $02
     jr RollSlotTraitLowFlag80_Skip5
 
-; Changes C (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; C = 4 (chance 4/256), then the roll. (C1, E-0357)
 RollSlotTraitLowFlag80_Skip4::
     ld c, $04
 
-; Returns if B is at least c; also changes HL and A by register arithmetic (E-0347)
-; why: part of RollSlotTraitLowFlag80; RollSlotTraitLowFlag80: AI trait roll with mask DE = $80:
-; when the actor's wSlotTrait value is below $80 rolls a chance that grows with its distance from
-; $80) (E-0352, E-0125, E-0337)
+; Succeeds when the random byte is below C: ORs DE into the actor's wPersonalityActs word and
+; returns carry. (C1, E-0357)
 RollSlotTraitLowFlag80_Skip5::
     ld a, b
     cp c
@@ -2711,16 +2604,10 @@ RollSlotTraitLowFlag80_Skip5::
     scf
     ret
 
-; called from RunCommandEntryResolveStep_AddAx9ToHL: calls IncBIfActorEntryBelow40; branches on B;
-; calls CountIfActorPersonalityHiAtLeastHLEntry; branches on B; calls FillBytes; calls
-; RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc; branches on the byte at
-; wSlotPersonalityHi; branches on wTemp0; calls FilterSkillListByMP; branches on wPauseMenuStep;
-; calls RunCommandEntryResolveStep_FillBytes; branches on wTemp0; then 8 more steps (see the code)
-; (E-0347)
-; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
-; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Picks the action of a monster acting on its own: action $AB when all three personality bytes are
+; below $40; action $AC unless Hi is the largest; otherwise its strongest usable skill (enough MP,
+; of the kinds in RunCommandEntryResolveStep_Cp01, the highest record byte 0), or the attack (0)
+; when there is none. (C1, E-0357)
 RunCommandEntryResolveStep_IncBIfActorEntryBelow40::
     ld b, $00
     ld hl, wSlotPersonalityHi
@@ -2812,12 +2699,8 @@ CountIfActorPersonalityHiAtLeastHLEntry::
     inc b
     ret
 
-; Branches on the byte at wBattleSkills; copies the byte at wBattleSkills to wRecordBuffer; sets
-; wBattleArg0 to 3; sets wBattleArg1 to 1; copies L to wBattleArg2; copies H to wBattleArg3; calls
-; LoadSkillRecordPart; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Lists the actor's skills into wTemp0, leaving out those whose record byte 3 has kind 2. (C1,
+; E-0357)
 RunCommandEntryResolveStep_WriteRecordBufferAndBattleArg0Etc::
     ld a, [wBattleActor]
     swap a
@@ -2935,11 +2818,8 @@ FilterSkillListByMP::
     ld de, wPauseMenuStep
     jr RunCommandEntryResolveStep_FillBytes_Skip
 
-; Branches on the byte at wPauseMenuStep; calls RunCommandEntryResolveStep_Cp01; calls FillBytes;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Keeps only the listed skills of the kinds in RunCommandEntryResolveStep_Cp01 and packs them to the
+; front of wTemp0. (C1, E-0357)
 RunCommandEntryResolveStep_FillBytes::
     ld hl, wPauseMenuStep
     ld b, $08
@@ -2976,11 +2856,7 @@ RunCommandEntryResolveStep_FillBytes::
     ld hl, wPauseMenuStep
     ld de, wTemp0
 
-; Takes HL and DE; changes HL, DE, A and B (E-0347)
-; why: part of RunCommandEntryResolveStep_FillBytes, in part of RunCommandEntryResolveStep;
-; RunCommandEntryResolveStep: battle command entry for the computer-controlled slots: by
-; wBattleResolveStep it reads each slot's personality, chooses its action ... (E-0352, E-0354,
-; E-0122)
+; Copies the entries at HL that are not $FF to DE (eight entries). (C1, E-0357)
 RunCommandEntryResolveStep_FillBytes_Skip::
     ld b, $08
 
@@ -2998,10 +2874,8 @@ RunCommandEntryResolveStep_FillBytes_Skip::
     jr nz, .loop
     ret
 
-; Takes A (E-0347)
-; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Carry for skills $01-$15, $3D-$67 and $6B-$70 (the kinds a monster acting on its own may use).
+; (C1, E-0357)
 RunCommandEntryResolveStep_Cp01::
     cp $01
     jr c, .done
@@ -3033,13 +2907,8 @@ RunCommandEntryResolveStep_Cp01::
     scf
     ret
 
-; Copies wTemp0 to wRecordBuffer; sets wBattleArg0 to 0; sets wBattleArg1 to 1; copies L to
-; wBattleArg2; copies H to wBattleArg3; calls LoadSkillRecordPart; branches on the byte at wTemp1;
-; copies the byte at wTemp1 to wRecordBuffer; sets wBattleArg0 to 0; sets wBattleArg1 to 1; copies L
-; to wBattleArg2; copies H to wBattleArg3; then 2 more steps (see the code) (E-0347)
-; why: part of RunCommandEntryResolveStep; RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; C = the listed skill (wTemp0 onward) with the highest record byte 0; a later one wins ties. (C1,
+; E-0357)
 RunCommandEntryResolveStep_LoadSkillRecordPart::
     ld a, [wTemp0]
     ld [wRecordBuffer], a
@@ -3144,16 +3013,9 @@ ForcedActionForActorStatus::
 .return:
     ret
 
-; called from RunCommandEntryResolveStep_AddAx9ToHL: returns unless wLinkMode is 0; returns if
-; wBattleActor is at least $03; sets hTemp0 to 0; sets hTemp1 to 0; sets hTemp2 to 0; sets hTemp3 to
-; 0; branches on the byte at wBattleLevel; branches on the byte at wSlotTrait; calls
-; GetActorSlotTacticLow2; calls ReadBattleWordFromArray_Bank30; calls
-; CopyFourBytesNegatedByActorSlotTactic; calls RunCommandEntryResolveStep_GetActorSlotTacticLow2_2;
-; then 1 more step (see the code) (E-0347)
-; why: a helper of RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep
-; (when wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Outside link battles, for party slots 0-2: picks the personality changes for the actor from
+; TacticOffsetTable by tactic, level band (below 10, 20, 30, or 30 and over) and trait ($97 or
+; more), and applies them (RunCommandEntryResolveStep_GetActorSlotTacticLow2_2). (C1, E-0357)
 RunCommandEntryResolveStep_WaitLinkMode::
     ld a, [wLinkMode]
     or a
@@ -3242,14 +3104,9 @@ CopyByteNegateIfCBit6::
     ld [de], a
     ret
 
-; Calls GetActorSlotTacticLow2; branches on hTemp0; calls
-; AddSignedEToByteAtHLClampedForActorEntryOfHL; also changes HL, BC, A and E by register arithmetic
-; (E-0347)
-; why: part of RunCommandEntryResolveStep_GetActorSlotTacticLow2, in a helper of
-; RunCommandEntryResolveStep_AddAx9ToHL, in step 1 of RunCommandEntryResolveStep (when
-; wBattleResolveStep = 1); RunCommandEntryResolveStep: battle command entry for the
-; computer-controlled slots: by wBattleResolveStep it reads each slot's personality, chooses its
-; action ... (E-0352, E-0354, E-0122)
+; Negates the change for wCommandEntryMonster's byte when the actor acted on its own (tactic bit 6),
+; then adds the four signed changes to the actor's personality Hi, Mid, Lo and trait, clamped. (C1,
+; E-0357)
 RunCommandEntryResolveStep_GetActorSlotTacticLow2_2::
     ld a, [wCommandEntryMonster]
     ld c, a
@@ -3423,13 +3280,9 @@ AIChooseActionForActor::
     ld [wAIFlag], a
     ret
 
-; called from AIChooseActionForActor: calls FillBytes; sets wAIChoiceWeights to 0; sets
-; wAIChoiceOrder to 1; sets wAIChoiceIndex to 3; calls AIChooseActionForActor_ReadRecordBufferData;
-; calls AddCommandWeightToAIChoiceWeights; calls AddActorPersonalityTensToAIChoiceWeights; calls
-; AddStatusAndHPWeightsToAI; calls AIChooseActionForActor_WriteAIChoiceWeights; calls
-; AddRandomPersonalityWeights; calls SortThreeAIWeightsRandomTies; sets wLoadSlot to 0 (E-0347)
-; why: a helper of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
-; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
+; Sets up the three choice weights (cleared, order 1, 2, 3), adds the skill-kind, command,
+; personality, status and HP, side-HP and random weights, and sorts them (ties at random). (C1,
+; E-0357)
 AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ld hl, wAIWeights
     ld bc, $0014
@@ -3458,9 +3311,8 @@ AIChooseActionForActor_AddCommandWeightToAIChoiceWeights::
     ld [wLoadSlot], a
     ret
 
-; Changes HL and A (E-0347)
-; why: part of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
-; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
+; Adds 10 to choice weight 0, 1 or 2 by the high nibble (1, 2 or 3) of skill record byte 3. (C1,
+; E-0357)
 AIChooseActionForActor_ReadRecordBufferData::
     ld a, [wRecordBufferData + $3]
     and $f0
@@ -3491,9 +3343,9 @@ AIChooseActionForActor_ReadRecordBufferData::
 .return:
     ret
 
-; Sets wAIChoiceWeights; also changes HL, BC and A by register arithmetic (E-0347)
-; why: part of AIChooseActionForActor; AIChooseActionForActor: wPersonalityIndex =
-; PersonalityIndexOfSlot_Bank30(actor) (E-0352, E-0120)
+; Compares the sides' HP totals with those saved at the turn start (wBattleCommandArgs): when twice
+; the actor's side's HP is below one, choice weight 2 + 20; when three times the other side's HP is
+; below the other, choice weight 0 + 20. (C1, E-0357)
 AIChooseActionForActor_WriteAIChoiceWeights::
     ld a, [wBattleActor]
     rrca
@@ -4276,9 +4128,7 @@ ReadBattleHPOfSlot_Bank30::
     ld hl, wBattleHP
     jr ReadBattleWordFromArray_Bank30
 
-; Changes HL; continues in ReadBattleWordFromArray_Bank30 (E-0347)
-; why: part of GetBattleMP; GetBattleMP: A = battle slot: HL = the word for that slot in the array
-; at wBattleMP (ReadBattleWordFromArray) (E-0352)
+; HL = wBattleMP, then the slot's word (ReadBattleWordFromArray_Bank30). (C1, E-0357)
 GetBattleMP_Bank30::
     ld hl, wBattleMP
     jr ReadBattleWordFromArray_Bank30
@@ -4338,9 +4188,8 @@ TargetOnLocalSide_Bank30::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D (E-0347)
-; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
-; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
+; Status byte 0 of slot E &= the mask for D (ClearBattleStatusBitsWithMaskD_Bank30_Data); a copy of
+; the bank $05 routine. (C1, E-0357)
 ClearBattleStatusBitsWithMaskD_Bank30::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank30_Data

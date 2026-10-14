@@ -695,15 +695,9 @@ TileRect_ScreenBlockTable_45::
     db $b6, $c3, $28, $c3, $c3, $c3, $29, $c3, $c3, $c3, $2a, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; row 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
-; called from GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame: calls
-; LinkExchangeJoypadPerFrame; branches on wTitleScreenState; branches on wScreenState; returns
-; unless wScreenSubStep is 0; branches on wScreenStep; calls DrawListEntriesCell5SpeciesSprite;
-; calls CallDrawPartySpeciesSpritesPreservingArg1AndTemp0; branches on wScreenStep; calls
-; DrawRecordBufBSpeciesSpritePart_BankF1; calls DrawRecordBufBSpeciesSprites; also changes A by
-; register arithmetic (E-0347)
-; why: a helper of GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame;
-; GameMode5_Update_ToGameMode5_Update_LinkExchangeJoypadPerFrame: Game mode 5 frame, wModeState 5:
-; far-calls GameMode5_Update_LinkExchangeJoypadPerFrame_4 (E-0352, E-0357)
+; Game mode 5, state 5 frame: exchanges the joypad over the link and, on the link screens, draws the
+; monster sprites (in screen state $0C the list entry's or the party's at steps $15/$20, in state
+; $0D the partner's monster's). (C1, E-0357)
 GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     call LinkExchangeJoypadPerFrame
     ld a, [wTitleScreenState]
@@ -754,12 +748,9 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_4::
     farcall DrawRecordBufBSpeciesSprites
     ret
 
-; called from RunLinkSession6Exchange_LinkReceiveStepWithBuffer: branches on wTitleScreenState;
-; dispatches on wTitleScreenSubState; returns unless wFadeState is 0; dispatches on wScreenState;
-; also changes A by register arithmetic (E-0347)
-; why: a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Link session 6's screen (Team Mode): before the menu starts, the fee steps by
+; wTitleScreenSubState; afterwards, once no fade runs, the screen states (waiting, the list, the
+; info screens, the swap menu and the record panels). (C1, E-0357)
 RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wTitleScreenState]
     or a
@@ -804,13 +795,8 @@ RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps
     dw RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2
 
-; step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
-; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; calls
-; SetDefaultStringWindow_Bank33; advances wTitleScreenSubState (E-0347)
-; why: step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 0: draws the frame and the player's name and heading (string 0 of category 1) and
+; sets the default text window. (C1, E-0357)
 RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
@@ -826,14 +812,8 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
     inc [hl]
     ret
 
-; step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
-; wLinkSendByte to 0; calls WriteGoldDigitsToScreenTileBufferRow1Col14; calls RunFourTimes; calls
-; BGMapAddressAtScroll_Bank33; calls DrawScreenBufferRectToBGMap_33; advances wTitleScreenSubState
-; (E-0347)
-; why: step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 1: draws the gold and four numbers into the screen buffer and copies it to the BG
+; map. (C1, E-0357)
 RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
     xor a
     ld [wLinkSendByte], a
@@ -849,13 +829,8 @@ RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
-; wFadeState is 0; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte
-; to 0 (E-0347)
-; why: step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 2: after the fade 'For Team Mode, 1000G is charged.' (category 5, string $19).
+; (C1, E-0357)
 RunLinkSession6Exchange_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
@@ -868,15 +843,10 @@ RunLinkSession6Exchange_ShowForTeamMode1Hero::
     ld [wLinkSendByte], a
     ret
 
-; step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; sets wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2;
-; calls BeginString_Bank07_Cat5; returns unless wTextFlags is 0; branches on wTextFlags; sets
-; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5; sets wTitleScreenSubState; then 7 more steps (see the code) (E-0347)
-; why: step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 3: the partner's refusal ($FE) gives 'Your pal refused the Team Mode.' ($0A); this
+; side's no gives 'You refused the Team Mode.' ($09); otherwise below 1000 gold 'Not enough money.
+; Please wait.' (string 0) and sends $10; with enough pays 1000 gold, 'Please wait.' and sends 1.
+; (C1, E-0357)
 RunLinkSession6Exchange_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -941,15 +911,9 @@ RunLinkSession6Exchange_ShowYourPalRefusedThe::
     ld [wLinkSendByte], a
     ret
 
-; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; sets wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2;
-; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte to 0; calls
-; BeginString_Bank07_Cat5; advances wTitleScreenSubState; also changes HL and A by register
-; arithmetic (E-0347)
-; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 4: the partner's refusal as above; the partner's 1 gives 'You paid the 1000G
+; battle fee.' (string 7); its $10 gives "Your pal doesn't have enough gold." (string 1) and the
+; offer to pay for both (three steps on). (C1, E-0357)
 RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -991,12 +955,7 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
-; wLinkSendByte to 0; advances wTitleScreenSubState; sets wLinkScreenFlag to 0 (E-0347)
-; why: step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 5: clears the send byte and the screen flag. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_2::
     xor a
     ld [wLinkSendByte], a
@@ -1014,11 +973,7 @@ RunLinkSession6Exchange_ChooseTeamMonster::
     dw RunLinkSession6Exchange_ShowChooseAMonsterFor
     dw RunLinkSession6Exchange_SetTitleScreenSubState
 
-; step 0 of RunLinkSession6Exchange_ChooseTeamMonster: returns unless wTextFlags is 0; branches on
-; wTextFlags; increments wLinkScreenFlag; also changes HL, BC and A by register arithmetic (E-0347)
-; why: step 0 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 0);
-; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
-; (E-0352)
+; Choosing the team monster, step 0: after the text blanks the screen buffer. (C1, E-0357)
 RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -1037,11 +992,8 @@ RunLinkSession6Exchange_ChooseTeamMonster_WaitTextFlags::
     inc [hl]
     ret
 
-; step 1 of RunLinkSession6Exchange_ChooseTeamMonster: calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; increments wLinkScreenFlag (E-0347)
-; why: step 1 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 1);
-; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
-; (E-0352)
+; Choosing the team monster, step 1: draws it and 'Choose a monster for the Team ...' (string 8).
+; (C1, E-0357)
 RunLinkSession6Exchange_ShowChooseAMonsterFor::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -1053,11 +1005,8 @@ RunLinkSession6Exchange_ShowChooseAMonsterFor::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_ChooseTeamMonster: sets wTitleScreenSubState to 0; sets
-; wLinkScreenFlag to 0; sets wTitleScreenState to 1; sets wScreenState to 0 (E-0347)
-; why: step 2 of RunLinkSession6Exchange_ChooseTeamMonster (when wLinkScreenFlag = 2);
-; RunLinkSession6Exchange_ChooseTeamMonster: by its step: 'Choose a monster for the Team ...'
-; (E-0352)
+; Choosing the team monster, step 2: starts the menu (wTitleScreenState 1, screen state 0). (C1,
+; E-0357)
 RunLinkSession6Exchange_SetTitleScreenSubState::
     xor a
     ld [wTitleScreenSubState], a
@@ -1069,15 +1018,9 @@ RunLinkSession6Exchange_SetTitleScreenSubState::
     ld [wScreenState], a
     ret
 
-; step 7 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
-; wTextFlags is 0; branches on wTextFlags; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $40;
-; advances wTitleScreenSubState; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $30; advances
-; wTitleScreenSubState; sets wGoldHi to $30; copies B to wGoldMid; copies C to wGoldLo; calls
-; BeginString_Bank07_Cat5; then 2 more steps (see the code) (E-0347)
-; why: step 7 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 7), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 7 (paying for both): no gives 'You refused to pay the battle ...' (string 5, sends
+; $40); below 1000 gold 'Insufficient gold for Team Mode.' (string 4, sends $30); otherwise pays
+; 1000 more, 'You paid for both combatants.' (string 2, sends $20). (C1, E-0357)
 RunLinkSession6Exchange_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
@@ -1129,14 +1072,8 @@ RunLinkSession6Exchange_ShowYouRefusedToPay::
     inc [hl]
     ret
 
-; step 8 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; returns unless wLinkMessage is $20; decrements wTitleScreenSubState; sets
-; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5 (E-0347)
-; why: step 8 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 8), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 8: the partner's refusal ends; on its $20 goes back two steps (to choosing the
+; monster). (C1, E-0357)
 RunLinkSession6Exchange_BackTitleScreenSubState::
     ld a, [wLinkMessage]
     cp $fe
@@ -1160,14 +1097,7 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
     call BeginString_Bank07_Cat5
     ret
 
-; step 9 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; returns unless wLinkMessage is $40; advances wTitleScreenSubState; sets
-; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5 (E-0347)
-; why: step 9 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 9), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 9: the partner's refusal ends; on its $30 or $40 goes on. (C1, E-0357)
 RunLinkSession6Exchange_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1193,13 +1123,7 @@ RunLinkSession6Exchange_2::
     call BeginString_Bank07_Cat5
     ret
 
-; step 10 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
-; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets
-; wScreenState to 2 (E-0347)
-; why: step 10 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 10), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 10: gives up (sends $FE, screen state 2). (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
@@ -1211,16 +1135,9 @@ RunLinkSession6Exchange_SetLinkSendByte::
     ld [wScreenState], a
     ret
 
-; step 11 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; returns unless wLinkMessage is $40; copies wLinkMessage to wLinkSendByte; calls
-; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; calls
-; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; calls
-; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; then 6 more steps (see
-; the code) (E-0347)
-; why: step 11 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 11), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 11 (waiting for the partner who pays): its $10 or $30 gives 'Insufficient gold for
+; Team Mode.', $20 'Your pal paid your battle fee.' (string 3), $40 'Your pal refused to pay the
+; ...' (string 6), echoing the byte. (C1, E-0357)
 RunLinkSession6Exchange_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -1281,14 +1198,7 @@ RunLinkSession6Exchange_ShowYourPalRefusedTo::
     call BeginString_Bank07_Cat5
     ret
 
-; step 12 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; returns unless wLinkMessage is $20; sets wTitleScreenSubState to 5; sets
-; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
-; BeginString_Bank07_Cat5 (E-0347)
-; why: step 12 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 12), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 12: the partner's refusal ends; 0 or $20 returns to step 5. (C1, E-0357)
 RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -1314,13 +1224,8 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
     call BeginString_Bank07_Cat5
     ret
 
-; step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: branches on
-; wLinkMessage; returns unless wLinkMessage is $fe; sets wLinkSendByte to $fe; sets
-; wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets wScreenState to 2 (E-0347)
-; why: step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Team Mode, step 13: on the partner's $10, $30, $40 or $FE gives up (sends $FE, screen state 2).
+; (C1, E-0357)
 RunLinkSession6Exchange_3::
     ld a, [wLinkMessage]
     cp $10
@@ -1351,23 +1256,13 @@ BeginString_Bank07_Cat5::
     farcall BeginStringDisplay_Bank07
     ret
 
-; step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
-; wScreenState (E-0347)
-; why: step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 0: the next state. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
     ret
 
-; step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
-; wTextFlags is 0; advances wScreenState (E-0347)
-; why: step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 1: after the text skips a state. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_2::
     ld a, [wTextFlags]
     and a
@@ -1377,12 +1272,7 @@ RunLinkSession6Exchange_AdvanceScreenState_2::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep (E-0347)
-; why: step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 2 (leaving): its five waiting steps. (C1, E-0357)
 RunLinkSession6Exchange_PleaseWaitSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1392,13 +1282,7 @@ RunLinkSession6Exchange_PleaseWaitSteps::
     dw RunLinkSession6Exchange_SetLinkSendByte_5
     dw RunLinkSession6Exchange_AdvanceModeChangeRequest
 
-; step 0 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wLinkMessage is $fe; sets
-; wLinkSendByte to 0; increments wScreenStep (E-0347)
-; why: step 0 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 0), in step 2 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Leaving, step 0: on the partner's $FE goes on. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $fe
@@ -1410,13 +1294,7 @@ RunLinkSession6Exchange_SetLinkSendByte_3::
     ld [wScreenStep], a
     ret
 
-; step 1 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wTextFlags is 0; calls
-; ShowStringA10_Bank33; advances wScreenStep (E-0347)
-; why: step 1 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 1), in step 2 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Leaving, step 1: after the text 'Please wait.'. (C1, E-0357)
 RunLinkSession6Exchange_PleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1427,13 +1305,7 @@ RunLinkSession6Exchange_PleaseWait::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wTextFlags is 0; sets
-; wLinkSendByte to 1; advances wScreenStep (E-0347)
-; why: step 2 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 2), in step 2 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Leaving, step 2: after the text sends 1. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_4::
     ld a, [wTextFlags]
     and a
@@ -1444,13 +1316,7 @@ RunLinkSession6Exchange_SetLinkSendByte_4::
     inc [hl]
     ret
 
-; step 3 of RunLinkSession6Exchange_PleaseWaitSteps: returns unless wLinkMessage is $01; sets
-; wLinkSendByte to 0; advances wScreenStep (E-0347)
-; why: step 3 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 3), in step 2 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Leaving, step 3: on the partner's 1 goes on. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $01
@@ -1461,14 +1327,8 @@ RunLinkSession6Exchange_SetLinkSendByte_5::
     inc [hl]
     ret
 
-; step 4 of RunLinkSession6Exchange_PleaseWaitSteps: returns if bit 0 of wTextFlags is set; branches
-; on wTextFlags; increments wModeChangeRequest; also changes HL, BC and A by register arithmetic
-; (E-0347)
-; why: step 4 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 4), in step 2 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Leaving, step 4: after the text clears $6F bytes of screen state and returns to game mode 5, state
+; 1 (the link menu). (C1, E-0357)
 RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ld a, [wTextFlags]
     bit 0, a
@@ -1495,23 +1355,14 @@ RunLinkSession6Exchange_AdvanceModeChangeRequest::
     inc [hl]
     ret
 
-; step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
-; wScreenState (E-0347)
-; why: step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 3: the next state. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_3::
     ld hl, wScreenState
     inc [hl]
     ret
 
-; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep; also changes A by register arithmetic (E-0347)
-; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 4 (picking the team monster): sixteen steps: the list, the panel, the
+; cursor, 'Info / OK', waiting and the record exchange. (C1, E-0357)
 RunLinkSession6Exchange_BreedMenuSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1532,13 +1383,7 @@ RunLinkSession6Exchange_BreedMenuSteps::
     dw RunLinkSession6Exchange_YourPalRefusedThe_3
     dw RunLinkSession6Exchange_AdvanceScreenState_4
 
-; step 0 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls BreedMenu
-; (E-0347)
-; why: step 0 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 0), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, steps 0, 1 and 3: after the text the list's steps (BreedMenu). (C1, E-0357)
 RunLinkSession6Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1546,12 +1391,7 @@ RunLinkSession6Exchange_BreedMenu::
     farcall BreedMenu
     ret
 
-; step 2 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawRecordListPageIndicators_1B (E-0347)
-; why: step 2 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 2), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 2: lists the monsters that may be picked and draws the page indicator. (C1, E-0357)
 RunLinkSession6Exchange_DrawRecordListPageIndicators_1B::
     farcall DrawRecordListPageIndicators_1B
     ret
@@ -1580,15 +1420,8 @@ CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
     inc [hl]
     ret
 
-; step 7 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls
-; StoreBAtWordTableEntry_Bank33; calls RunFourTimes; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; calls StoreBAtWordTableEntry_Bank33; calls
-; SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
-; why: step 7 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 7), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 7: after the text marks the cursor, draws four numbers into the window and redraws,
+; then clears the mark. (C1, E-0357)
 RunLinkSession6Exchange_RunFourTimes::
     ld a, [wTextFlags]
     and a
@@ -1614,16 +1447,10 @@ RunLinkSession6Exchange_RunFourTimes::
     ld [wScreenStep], a
     ret
 
-; step 8 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; sets wScreenState to
-; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wMenuInputResult to 0; calls UpdatePagedListCursor; returns if
-; wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; sets wScreenState to 2;
-; then 9 more steps (see the code) (E-0347)
-; why: step 8 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 8), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 8: the partner's refusal gives 'Your pal refused the Team Mode.' (to leaving); the
+; list cursor: a page change back seven steps, $FD back four, B 'You refused the Team Mode.' (to
+; leaving), A records the pick, marks it and asks 'Pick <name> for the team?' (bank-$1B string 2).
+; (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -1695,16 +1522,8 @@ RunLinkSession6Exchange_YourPalRefusedThe::
     call ShowStringA10_Bank33
     ret
 
-; step 9 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B;
-; plays sound $6c; calls CopyRectTo20ByteRowsJp_Bank33; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; then 3 more steps (see the code) (E-0347)
-; why: step 9 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 9), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 9: after the text shows 'Info / OK' (bank-$1B string $1E) with sound $6C in its 8 x
+; 5 box. (C1, E-0357)
 RunLinkSession6Exchange_InfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -1741,16 +1560,8 @@ RunLinkSession6Exchange_InfoOKYesN::
     inc [hl]
     ret
 
-; step 10 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; sets wScreenState to
-; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wArg5 to 0; calls HandleTwoChoiceCursorInput_0D; returns if wArg5 is 0;
-; branches on wArg5; advances wScreenStep; branches on wChoiceCursor; then 7 more steps (see the
-; code) (E-0347)
-; why: step 10 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 10), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 10: the partner's refusal as before; the Info / OK choice: B goes on; Info opens the
+; stats screen (state $0C); OK records the pick and goes on two steps. (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1806,14 +1617,8 @@ RunLinkSession6Exchange_YourPalRefusedThe_2::
     inc [hl]
     ret
 
-; step 11 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wTextFlags is 0; calls
-; WriteC3AtWordTableEntries_Bank33; calls DrawBoxAndKeyRows; calls BGMapAddressAtScroll_Bank33;
-; calls DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wScreenStep (E-0347)
-; why: step 11 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 11), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 11: clears the five marks, redraws and asks 'Choose a monster for the Team ...'
+; again (three steps back). (C1, E-0357)
 RunLinkSession6Exchange_ChooseAMonsterFor::
     ld a, [wTextFlags]
     and a
@@ -1833,14 +1638,8 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
     ld [wScreenStep], a
     ret
 
-; step 12 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawBoxAndKeyRows; calls
-; BGMapAddressAtScroll_Bank33; calls DrawScreenBufferRectToBGMap_33; increments wPickCount; calls
-; ShowStringA10_Bank33; calls FinishPickedRecordsEntryAndStep_33 (E-0347)
-; why: step 12 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 12), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 12: redraws, counts the pick, 'Please wait.' and finishes the picks
+; (FinishPickedRecordsEntryAndStep_33). (C1, E-0357)
 RunLinkSession6Exchange_PleaseWait_2::
     call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -1854,15 +1653,8 @@ RunLinkSession6Exchange_PleaseWait_2::
     call FinishPickedRecordsEntryAndStep_33
     ret
 
-; step 13 of RunLinkSession6Exchange_BreedMenuSteps: sets rRAMG to $0a; sets rRAMB to 0; calls
-; SRAMRecordAddress; copies E to wLinkTimeoutLo; copies D to wLinkTimeoutHi; copies E to
-; wLinkBufferPtrLo; copies D to wLinkBufferPtrHi; sets rRAMG to 0; sets wLinkScene to 0; sets
-; wLinkSendByte to 1; advances wScreenStep (E-0347)
-; why: step 13 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 13), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 13: copies the picked SRAM record into wRecordBufA for the exchange (into
+; wRecordBufB), clears the link scene and sends 1. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkTimeoutLo::
     ld a, $0a
     ld [rRAMG], a
@@ -1899,16 +1691,8 @@ RunLinkSession6Exchange_SetLinkTimeoutLo::
     inc [hl]
     ret
 
-; step 14 of RunLinkSession6Exchange_BreedMenuSteps: branches on wLinkMessage; returns unless
-; wLinkMessage is $fe; sets wScreenState to 2; sets wScreenStep to 0; sets wScreenSubStep to 0;
-; calls BeginString_Bank07_Cat5; sets wLinkSendByte to $fe; copies L to wLinkBufferCountLo; copies H
-; to wLinkBufferCountHi; sets wLinkSendByte to $ff; sets wLinkReady to 1; advances wScreenStep
-; (E-0347)
-; why: step 14 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 14), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 14: on the partner's 1 starts the $A5-byte record exchange; on $FE 'Your pal refused
+; the Team Mode.'. (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_3::
     ld a, [wLinkMessage]
     cp $01
@@ -1940,13 +1724,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_3::
     inc [hl]
     ret
 
-; step 15 of RunLinkSession6Exchange_BreedMenuSteps: returns unless wLinkMessage is $f0; advances
-; wScreenState; sets wScreenStep to 0 (E-0347)
-; why: step 15 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 15), in step 4 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Picking, step 15: when the exchange ends the next screen state. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_4::
     ld a, [wLinkMessage]
     cp $f0
@@ -1957,12 +1735,7 @@ RunLinkSession6Exchange_AdvanceScreenState_4::
     ld [wScreenStep], a
     ret
 
-; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep; also changes A by register arithmetic (E-0347)
-; why: step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 5 (the fight info): its eighteen steps. (C1, E-0357)
 RunLinkSession6Exchange_FightInfoExSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1985,13 +1758,7 @@ RunLinkSession6Exchange_FightInfoExSteps::
     dw RunLinkSession6Exchange_SetScreenStep_2
     dw RunLinkSession6Exchange_SetLinkSendByte_9
 
-; step 0 of RunLinkSession6Exchange_FightInfoExSteps: advances wScreenStep; sets wLinkSendByte to 0;
-; calls CopyBBytesThenMark1 (E-0347)
-; why: step 0 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 0), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 0: packs this side's key bytes and the player's name to send. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
@@ -2015,13 +1782,7 @@ CopyBBytesThenMark1::
     ld [de], a
     ret
 
-; step 1 of RunLinkSession6Exchange_FightInfoExSteps: sets wLinkSendByte to 1; advances wScreenStep
-; (E-0347)
-; why: step 1 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 1), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 1: sends 1. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_6::
     ld a, $01
     ld [wLinkSendByte], a
@@ -2029,15 +1790,8 @@ RunLinkSession6Exchange_SetLinkSendByte_6::
     inc [hl]
     ret
 
-; step 2 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $01; copies L
-; to wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
-; wLinkBufferPtrHi; sets wLinkBufferCountLo to $10; sets wLinkSendByte to $ff; advances wScreenStep
-; (E-0347)
-; why: step 2 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 2), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 2: on the partner's 1 starts a 16-byte exchange into wLinkPartnerName. (C1,
+; E-0357)
 RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ld a, [wLinkMessage]
     cp $01
@@ -2060,13 +1814,7 @@ RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     inc [hl]
     ret
 
-; step 3 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $f0; sets
-; wLinkSendByte to 0; advances wScreenStep (E-0347)
-; why: step 3 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 3), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 3: when the exchange ends goes on. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
@@ -2077,16 +1825,8 @@ RunLinkSession6Exchange_SetLinkSendByte_7::
     inc [hl]
     ret
 
-; step 4 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyRectTo20ByteRowsJp_Bank33; copies L
-; to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; calls CopyGlyphTilesToVRAM; copies
-; wLinkTradeByte to wLinkFightInfo; calls RunFourTimes; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; then 15 more steps (see the code) (E-0347)
-; why: step 4 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 4), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 4: draws the 10 x 11 info window with the partner's name and four numbers, 'Fight
+; / Info / Ex' (bank-$1B string $20) in its 9 x 7 box and string 1 of category 1. (C1, E-0357)
 RunLinkSession6Exchange_FightInfoEx::
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2154,14 +1894,7 @@ RunLinkSession6Exchange_FightInfoEx::
     inc [hl]
     ret
 
-; step 5 of RunLinkSession6Exchange_FightInfoExSteps: calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wTwoChoiceCursor to 0;
-; advances wScreenStep (E-0347)
-; why: step 5 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 5), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 5: redraws and asks 'Battle in Team Mode?' (category 5, string $0D). (C1, E-0357)
 RunLinkSession6Exchange_BattleInTeamMode::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2175,16 +1908,9 @@ RunLinkSession6Exchange_BattleInTeamMode::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState to
-; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; calls HandleThreeChoiceCursorInput_F1; returns if wMenuInputResult is 0;
-; branches on wMenuInputResult; sets wScreenState to 2; calls BeginString_Bank07_Cat5; sets
-; wScreenStep to 0; then 13 more steps (see the code) (E-0347)
-; why: step 6 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 6), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 6: the partner's refusal ends; the three-way choice: Fight goes on, Info opens
+; the partner's monster's stats (state $0D, keeping the list place), Ex or B 'You refused the Team
+; Mode.' (to leaving). (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_4::
     ld a, [wLinkMessage]
     cp $fe
@@ -2254,13 +1980,8 @@ RunLinkSession6Exchange_YourPalRefusedThe_4::
     ld [wScreenSubStep], a
     ret
 
-; step 7 of RunLinkSession6Exchange_FightInfoExSteps: calls CopyBytes; calls
-; BeginString_Bank07_Cat5; sets wLinkSendByte to 0; advances wScreenStep (E-0347)
-; why: step 7 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 7), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 7: saves the window into the screen buffer and 'The battle results will be
+; recorded.' (string $0E). (C1, E-0357)
 RunLinkSession6Exchange_TheBattleResultsWill::
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
@@ -2274,15 +1995,8 @@ RunLinkSession6Exchange_TheBattleResultsWill::
     inc [hl]
     ret
 
-; step 8 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState to
-; 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; returns unless wTextFlags is 0; branches on wTextFlags; calls
-; BeginString_Bank07_Cat5; decrements wScreenStep; advances wScreenStep (E-0347)
-; why: step 8 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 8), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 8: the partner's refusal ends; after the text, no asks 'Battle in Team Mode?'
+; again (two steps back); yes goes on. (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_5::
     ld a, [wLinkMessage]
     cp $fe
@@ -2318,13 +2032,7 @@ RunLinkSession6Exchange_YourPalRefusedThe_5::
     inc [hl]
     ret
 
-; step 9 of RunLinkSession6Exchange_FightInfoExSteps: advances wScreenStep; calls
-; BeginString_Bank07_Cat5 (E-0347)
-; why: step 9 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 9), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 9: 'Please wait.'. (C1, E-0357)
 RunLinkSession6Exchange_PleaseWait_3::
     ld hl, wScreenStep
     inc [hl]
@@ -2332,13 +2040,7 @@ RunLinkSession6Exchange_PleaseWait_3::
     call BeginString_Bank07_Cat5
     ret
 
-; step 10 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wTextFlags is 0; advances
-; wScreenStep; sets wLinkSendByte to 1 (E-0347)
-; why: step 10 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 10), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 10: after the text sends 1. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep_2::
     ld a, [wTextFlags]
     and a
@@ -2349,15 +2051,8 @@ RunLinkSession6Exchange_AdvanceScreenStep_2::
     ld [wLinkSendByte], a
     ret
 
-; step 11 of RunLinkSession6Exchange_FightInfoExSteps: branches on wLinkMessage; sets wScreenState
-; to 2; sets wScreenStep to 0; sets wScreenSubStep to 0; calls BeginString_Bank07_Cat5; sets
-; wLinkSendByte to $fe; sets wLinkSendByte to 0; advances wScreenStep; calls BeginString_Bank07_Cat5
-; (E-0347)
-; why: step 11 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 11), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 11: on the partner's 1 'Saving... Please wait.' (string $1A); on $FE 'Your pal
+; refused the Team Mode.'. (C1, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_6::
     ld a, [wLinkMessage]
     cp $fe
@@ -2387,14 +2082,8 @@ RunLinkSession6Exchange_YourPalRefusedThe_6::
     call BeginString_Bank07_Cat5
     ret
 
-; step 12 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wTextFlags is 0; advances
-; wScreenStep; copies wGoldLo to wWorkBuf; calls VerifySaveChecksum; copies wWorkBuf to wGoldLo;
-; sets wGoldMid; sets wGoldHi; calls SaveGameToSRAMWithChecksum; sets wLinkSendByte to 5 (E-0347)
-; why: step 12 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 12), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 12: after the text checks the save (VerifySaveChecksum, keeping the gold) and
+; saves, then sends 5. (C1, E-0357)
 RunLinkSession6Exchange_VerifySaveChecksum::
     ld a, [wTextFlags]
     and a
@@ -2419,14 +2108,8 @@ RunLinkSession6Exchange_VerifySaveChecksum::
     ld [wLinkSendByte], a
     ret
 
-; step 13 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $05; sets
-; wLinkSendByte to 0; calls CopyBytes; calls SetArg5ToListEntriesCell5; copies the byte at
-; wRandomSeed2Hi to wLinkReceivedByte; increments wScreenStep (E-0347)
-; why: step 13 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 13), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 13: on the partner's 5 keeps the partner's name (wLinkSeedCopy) and the picked
+; record number. (C1, E-0357)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ld a, [wLinkMessage]
     cp $05
@@ -2449,16 +2132,7 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
-; step 14 of RunLinkSession6Exchange_FightInfoExSteps: increments wScreenStep; copies wRandomLo to
-; wBattleSetupFlagsLo; copies wRandomHi to wBattleSetupFlagsHi; copies L to wLinkTimeoutLo; copies H
-; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets
-; wLinkBufferCountLo to 2; sets wLinkBufferCountHi to 0; sets wLinkSendByte to $ff; sets wLinkReady
-; to 1 (E-0347)
-; why: step 14 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 14), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 14: starts a 2-byte exchange of the random seed. (C1, E-0357)
 RunLinkSession6Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2487,15 +2161,8 @@ RunLinkSession6Exchange_SetScreenStep::
     ld [wLinkReady], a
     ret
 
-; step 15 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $f0; sets
-; wLinkSendByte to 0; sets wLinkReady to 0; branches on wLinkRole; copies wRandomLo to
-; wRandomSeed2Lo; copies wRandomHi to wRandomSeed2Hi; copies wRandomSeed2Lo to wRandomLo; copies
-; wRandomSeed2Hi to wRandomHi; increments wScreenStep (E-0347)
-; why: step 15 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 15), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 15: when it ends both sides use one seed: the leader its own, the follower (link
+; role bit 1) the leader's. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_8::
     ld a, [wLinkMessage]
     cp $f0
@@ -2525,13 +2192,7 @@ RunLinkSession6Exchange_SetLinkSendByte_8::
     ld [wScreenStep], a
     ret
 
-; step 16 of RunLinkSession6Exchange_FightInfoExSteps: increments wScreenStep; sets wLinkSendByte to
-; $d2 (E-0347)
-; why: step 16 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 16), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 16: sends $D2. (C1, E-0357)
 RunLinkSession6Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
@@ -2540,15 +2201,8 @@ RunLinkSession6Exchange_SetScreenStep_2::
     ld [wLinkSendByte], a
     ret
 
-; step 17 of RunLinkSession6Exchange_FightInfoExSteps: returns unless wLinkMessage is $d2; sets
-; wLinkSendByte to 0; sets wGameMode to 7; sets wModeState to 0; sets wWorldMapState to 0; sets
-; wGameMode2Arg to 0; sets wModeChangeRequest to 1; sets wLinkSession to 7; sets wLinkExchangeState
-; to 0; sets wLinkSendByte to 0; sets wLinkMessage to 0 (E-0347)
-; why: step 17 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 17), in step 5 of
-; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Fight info, step 17: on the partner's $D2 switches to game mode 7 (the Team Mode battle) with link
+; session 7. (C1, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_9::
     ld a, [wLinkMessage]
     cp $d2
@@ -2573,13 +2227,8 @@ RunLinkSession6Exchange_SetLinkSendByte_9::
     ld [wLinkMessage], a
     ret
 
-; step 6 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
-; SwapMonstersMenu; returns unless wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to
-; 0; sets wScreenState (E-0347)
-; why: step 6 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 6), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen states 6-12: runs the stats screen until its step $0A, then three states on.
+; (C1, E-0357)
 RunLinkSession6Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2593,13 +2242,8 @@ RunLinkSession6Exchange_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
-; step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: calls
-; RunScreenStateWhenNotFading_F1; returns unless wScreenState is $0e; copies wItemGridX to
-; wListCursor; copies wItemGridY to wListPageIndex (E-0347)
-; why: step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 13: runs the record screens (RunScreenStateWhenNotFading_F1); back in
+; state $0E restores the list place. (C1, E-0357)
 RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
@@ -2611,12 +2255,7 @@ RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     ld [wListPageIndex], a
     ret
 
-; step 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep (E-0347)
-; why: step 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 14 (back from the partner's stats): its eight steps. (C1, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     ld a, [wScreenStep]
     jumptable
@@ -2629,16 +2268,8 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     dw RunLinkSession6Exchange_FightInfoEx_2
     dw RunLinkSession6Exchange_SetSpriteHideTile
 
-; step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls ClearRecordPanelTiles; calls
-; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; sets wStringCategory to 1; sets wStringIndex to 1; calls ShowString_Bank07;
-; calls SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
-; why: step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 0), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 0: clears the record panel tiles, draws the info window, the name and
+; heading and string 1 of category 1. (C1, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
@@ -2666,27 +2297,14 @@ RunLinkSession6Exchange_ClearRecordPanelTiles::
     ld [wScreenStep], a
     ret
 
-; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: advances wScreenStep (E-0347)
-; why: step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 1), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, steps 1 and 2: move on. (C1, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep_3::
     ld hl, wScreenStep
     inc [hl]
     ret
 
-; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls SetArg5ToListEntriesCell5;
-; sets wArg1 to $c7; sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; copies hTemp0 &
-; $0f to wWorkBuf; calls LoadFamilyIconTileForWorkBuf; sets rRAMG2 to 0; calls
-; CopyRectTo20ByteRowsJp_Bank33; sets wArg1; copies L to wArg2; copies H to wArg3; then 8 more steps
-; (see the code) (E-0347)
-; why: step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 3), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 3: draws the picked monster's family icon, level and sex mark in its 13 x 2
+; panel. (C1, E-0357)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2782,27 +2400,13 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
 
-; step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls
-; ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0347)
-; why: step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 4), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 4: draws the picked monster's name. (C1, E-0357)
 RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls CopyRectTo20ByteRowsJp_Bank33;
-; calls RunFourTimes; calls CopyRectTo20ByteRowsJp_Bank33; calls RunFourTimes; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; calls FillTilesFromRequest; calls CopyBytes; calls CopyGlyphTilesToVRAM;
-; advances wScreenStep (E-0347)
-; why: step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 5), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 5: draws both info windows with their four numbers and the partner's name.
+; (C1, E-0357)
 RunLinkSession6Exchange_RunFourTimes_2::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
@@ -2841,16 +2445,8 @@ RunLinkSession6Exchange_RunFourTimes_2::
     inc [hl]
     ret
 
-; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $20; calls ShowString_Bank1B; calls
-; CopyRectTo20ByteRowsJp_Bank33; calls CopyListEntriesCell5NameToTextBuf0_Bank33; calls
-; SetDefaultStringWindow_Bank33; sets wTwoChoiceCursor to 1; increments wScreenStep (E-0347)
-; why: step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 6), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 6: shows 'Fight / Info / Ex' in its box with the cursor on Info. (C1,
+; E-0357)
 RunLinkSession6Exchange_FightInfoEx_2::
     ld hl, vTiles2 + $300
     ld a, l
@@ -2880,16 +2476,8 @@ RunLinkSession6Exchange_FightInfoEx_2::
     ld [wScreenStep], a
     ret
 
-; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: calls BGMapAddressAtScroll_Bank33;
-; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
-; wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; calls
-; SetDefaultStringWindow_Bank33 (E-0347)
-; why: step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 7), in step
-; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from stats, step 7: redraws, restores hide tile $70 and returns to the saved state and step.
+; (C1, E-0357)
 RunLinkSession6Exchange_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2912,12 +2500,7 @@ RunLinkSession6Exchange_SetSpriteHideTile::
     call SetDefaultStringWindow_Bank33
     ret
 
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
-; wScreenStep (E-0347)
-; why: step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Session 6, screen state 15 (back from this side's stats): its eight steps. (C1, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
     ld a, [wScreenStep]
     jumptable
@@ -2930,14 +2513,8 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
     dw RunLinkSession6Exchange_InfoOKYesN_2
     dw RunLinkSession6Exchange_SetSpriteHideTile_2
 
-; step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls ClearRecordPanelTiles; calls
-; CopyRectTo20ByteRowsJp_Bank33; calls StoreBAtWordTableEntry_Bank33; calls
-; DrawPlayerNameAndString0Category1; increments wScreenStep (E-0347)
-; why: step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 0), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 0: clears the record panel tiles, draws the list box with the
+; cursor mark and the name and heading. (C1, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect
@@ -2954,26 +2531,13 @@ RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     ld [wScreenStep], a
     ret
 
-; step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CallDrawListEntriesCell5RecordPanel (E-0347)
-; why: step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 3), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 3: draws the record panel. (C1, E-0357)
 RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
 
-; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; ListAvailableRecordsForSelection_Bank33; calls ClampRecordListPageCursor5; branches on wListPages;
-; calls StoreC5BEC6AtHLStride2_Bank33; copies H to wArg1; copies L to wArg2; calls
-; DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
-; why: step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 1), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 1: lists the monsters that may be picked, clamps the page cursor
+; of five and draws the page indicator. (C1, E-0357)
 RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
@@ -2995,13 +2559,8 @@ RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     ld [wScreenStep], a
     ret
 
-; step 2 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls DrawRecordListPageNames;
-; sets wArg1 to 0; calls MarkPartyMembersInRecordListPage (E-0347)
-; why: step 2 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 2), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 2: draws the page's names and marks the party members. (C1,
+; E-0357)
 RunLinkSession6Exchange_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -3009,38 +2568,18 @@ RunLinkSession6Exchange_DrawRecordListPageNames::
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CallClearAndDrawListEntriesCell5Name (E-0347)
-; why: step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 4), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 4: draws the cursor entry's name. (C1, E-0357)
 RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
     call CallClearAndDrawListEntriesCell5Name
     ret
 
-; step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls
-; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep (E-0347)
-; why: step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 5), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 5: draws the info window. (C1, E-0357)
 RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
     call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
 
-; step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $1e; calls ShowString_Bank1B; calls
-; CopyListEntriesCell5NameToTextBuf0_Bank33; calls SetDefaultStringWindow_Bank33; sets wStringIndex
-; to $12; calls ShowString_Bank1B; calls RunFourTimes; then 3 more steps (see the code) (E-0347)
-; why: step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 6), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 6: shows 'Info / OK' and the pick question (bank-$1B string
+; $12), the four numbers and the choice box. (C1, E-0357)
 RunLinkSession6Exchange_InfoOKYesN_2::
     ld hl, vTiles2 + $700
     ld a, l
@@ -3077,16 +2616,8 @@ RunLinkSession6Exchange_InfoOKYesN_2::
     ld [wScreenStep], a
     ret
 
-; step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2: calls BGMapAddressAtScroll_Bank33;
-; calls DrawScreenBufferRectToBGMap_33; calls BGMapAddressAtScroll_Bank33; calls
-; DrawScreenBufferRectToBGMap_33; sets hSpriteHideTile to $70; sets wScreenSubStep to 0; copies
-; wReturnScreenState to wScreenState; copies wReturnScreenStep to wScreenStep; calls
-; SetDefaultStringWindow_Bank33 (E-0347)
-; why: step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 7), in
-; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
-; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
-; byte, then runs a frame and the session's screen (E-0352, E-0357)
+; Back from this side's stats, step 7: redraws, restores hide tile $70 and returns to the saved
+; state and step. (C1, E-0357)
 RunLinkSession6Exchange_SetSpriteHideTile_2::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -3590,10 +3121,8 @@ RunFourTimes::
     call RunFourTimes_HLToDecimalDigits
     call RunFourTimes_HLToDecimalDigits
 
-; called from RunFourTimes: calls HLToDecimalDigits; also changes HL, DE and A by register
-; arithmetic (E-0347)
-; why: a helper of RunFourTimes; RunFourTimes: calls RunFourTimes_HLToDecimalDigits three times and
-; falls into it once more (E-0352, E-0122, E-0344)
+; Draws the byte at DE as up to two digits at HL (the tens left blank when zero) and moves HL two
+; rows down. (C1, E-0357)
 RunFourTimes_HLToDecimalDigits::
     push hl
     ld a, [de]

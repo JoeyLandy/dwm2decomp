@@ -163,8 +163,8 @@ class SymbolicOperands(unittest.TestCase):
             for first in (n - 1, n - 2):
                 if pair.match(code(first)) and pair.match(code(first + 1)):
                     k = first + 2
-                    while k < len(lines) and not lines[k].strip():
-                        k += 1  # a label the pair falls into follows a blank line
+                    while k < len(lines) and (not lines[k].strip() or lines[k].startswith(";")):
+                        k += 1  # a label the pair falls into follows a blank line and its note
                     after = lines[k] if k < len(lines) else ""
                     m = re.match(r"\s+(?:jp|jr|call) ([.\w]+)$", after) or re.match(r"([.\w]+)::?$", after)
                     if m and m.group(1) in entries:
@@ -533,6 +533,18 @@ class EventScripts(unittest.TestCase):
 
 class BufferOffsetAliases(unittest.TestCase):
     """An "of" symbol renders as an offset into the buffer it names (E-0136)."""
+
+    def test_record_byte_pair_after_a_record_load_is_not_the_attribute_buffer(self):
+        """E-0357: $D000 read just before $D001 is byte $12 of the 26-byte record at wRecordBufferData (WRAM bank 1),
+        not wScreenAttrBuffer, which is $D000 in WRAM bank 2."""
+        pairs = 0
+        for p in BANKS.glob("bank*.asm"):
+            code = [line.split(";")[0].strip() for line in p.read_text(encoding="utf-8").splitlines()]
+            for i, line in enumerate(code):
+                if "[wRecordBufferData + $13]" in "".join(code[i + 1:i + 3]):
+                    self.assertNotIn("[wScreenAttrBuffer]", line, f"{p.name}:{i + 1}")
+                    pairs += "[wRecordBufferData + $12]" in line
+        self.assertGreaterEqual(pairs, 7)
 
     def test_bank2_attribute_addresses_use_the_attribute_buffer(self):
         symbols = json.loads((BANKS.parents[1] / "config/symbols.json").read_text(encoding="utf-8"))
