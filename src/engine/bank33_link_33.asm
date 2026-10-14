@@ -757,9 +757,9 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_4::
 ; called from RunLinkSession6Exchange_LinkReceiveStepWithBuffer: branches on wTitleScreenState;
 ; dispatches on wTitleScreenSubState; returns unless wFadeState is 0; dispatches on wScreenState;
 ; also changes A by register arithmetic (E-0347)
-; why: a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; why: a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ld a, [wTitleScreenState]
     or a
@@ -808,9 +808,9 @@ RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc::
 ; CopyRectTo20ByteRowsJp_Bank33; calls DrawPlayerNameAndString0Category1; calls
 ; SetDefaultStringWindow_Bank33; advances wTitleScreenSubState (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
@@ -831,9 +831,9 @@ RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep::
 ; BGMapAddressAtScroll_Bank33; calls DrawScreenBufferRectToBGMap_33; advances wTitleScreenSubState
 ; (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
     xor a
     ld [wLinkSendByte], a
@@ -853,9 +853,9 @@ RunLinkSession6Exchange_WriteGoldDigitsToScreenTileBufferRow1Col14::
 ; wFadeState is 0; calls BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte
 ; to 0 (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
@@ -874,9 +874,9 @@ RunLinkSession6Exchange_ShowForTeamMode1Hero::
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
 ; BeginString_Bank07_Cat5; sets wTitleScreenSubState; then 7 more steps (see the code) (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -947,9 +947,9 @@ RunLinkSession6Exchange_ShowYourPalRefusedThe::
 ; BeginString_Bank07_Cat5; advances wTitleScreenSubState; also changes HL and A by register
 ; arithmetic (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -994,9 +994,9 @@ RunLinkSession6Exchange_WriteLinkSendByteAndTitleScreenStateEtc::
 ; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: sets
 ; wLinkSendByte to 0; advances wTitleScreenSubState; sets wLinkScreenFlag to 0 (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_2::
     xor a
     ld [wLinkSendByte], a
@@ -1075,9 +1075,9 @@ RunLinkSession6Exchange_SetTitleScreenSubState::
 ; wTitleScreenSubState; sets wGoldHi to $30; copies B to wGoldMid; copies C to wGoldLo; calls
 ; BeginString_Bank07_Cat5; then 2 more steps (see the code) (E-0347)
 ; why: step 7 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 7), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 7), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
@@ -1134,9 +1134,9 @@ RunLinkSession6Exchange_ShowYouRefusedToPay::
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
 ; BeginString_Bank07_Cat5 (E-0347)
 ; why: step 8 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 8), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 8), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_BackTitleScreenSubState::
     ld a, [wLinkMessage]
     cp $fe
@@ -1165,9 +1165,9 @@ RunLinkSession6Exchange_BackTitleScreenSubState::
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
 ; BeginString_Bank07_Cat5 (E-0347)
 ; why: step 9 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 9), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 9), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1197,9 +1197,9 @@ RunLinkSession6Exchange_2::
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets
 ; wScreenState to 2 (E-0347)
 ; why: step 10 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 10), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 10), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
@@ -1218,9 +1218,9 @@ RunLinkSession6Exchange_SetLinkSendByte::
 ; BeginString_Bank07_Cat5; advances wTitleScreenSubState; sets wLinkSendByte; then 6 more steps (see
 ; the code) (E-0347)
 ; why: step 11 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 11), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 11), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
@@ -1286,9 +1286,9 @@ RunLinkSession6Exchange_ShowYourPalRefusedTo::
 ; wLinkSendByte to $fe; sets wTitleScreenState to 1; sets wScreenState to 2; calls
 ; BeginString_Bank07_Cat5 (E-0347)
 ; why: step 12 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 12), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 12), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
     ld a, [wLinkMessage]
     cp $fe
@@ -1318,9 +1318,9 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
 ; wLinkMessage; returns unless wLinkMessage is $fe; sets wLinkSendByte to $fe; sets
 ; wTitleScreenState to 1; sets wTitleScreenSubState to 0; sets wScreenState to 2 (E-0347)
 ; why: step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_3::
     ld a, [wLinkMessage]
     cp $10
@@ -1354,9 +1354,9 @@ BeginString_Bank07_Cat5::
 ; step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
 ; wScreenState (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 0), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
@@ -1365,9 +1365,9 @@ RunLinkSession6Exchange_AdvanceScreenState::
 ; step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: returns unless
 ; wTextFlags is 0; advances wScreenState (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 1), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_2::
     ld a, [wTextFlags]
     and a
@@ -1380,9 +1380,9 @@ RunLinkSession6Exchange_AdvanceScreenState_2::
 ; step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
 ; wScreenStep (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_PleaseWaitSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1396,9 +1396,9 @@ RunLinkSession6Exchange_PleaseWaitSteps::
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 0), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $fe
@@ -1414,9 +1414,9 @@ RunLinkSession6Exchange_SetLinkSendByte_3::
 ; ShowStringA10_Bank33; advances wScreenStep (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 1), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_PleaseWait::
     ld a, [wTextFlags]
     and a
@@ -1431,9 +1431,9 @@ RunLinkSession6Exchange_PleaseWait::
 ; wLinkSendByte to 1; advances wScreenStep (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 2), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_4::
     ld a, [wTextFlags]
     and a
@@ -1448,9 +1448,9 @@ RunLinkSession6Exchange_SetLinkSendByte_4::
 ; wLinkSendByte to 0; advances wScreenStep (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 3), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $01
@@ -1466,9 +1466,9 @@ RunLinkSession6Exchange_SetLinkSendByte_5::
 ; (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_PleaseWaitSteps (when wScreenStep = 4), in step 2 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 2), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceModeChangeRequest::
     ld a, [wTextFlags]
     bit 0, a
@@ -1498,9 +1498,9 @@ RunLinkSession6Exchange_AdvanceModeChangeRequest::
 ; step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: advances
 ; wScreenState (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 3), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_3::
     ld hl, wScreenState
     inc [hl]
@@ -1509,9 +1509,9 @@ RunLinkSession6Exchange_AdvanceScreenState_3::
 ; step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
 ; wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_BreedMenuSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1536,9 +1536,9 @@ RunLinkSession6Exchange_BreedMenuSteps::
 ; (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 0), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -1549,9 +1549,9 @@ RunLinkSession6Exchange_BreedMenu::
 ; step 2 of RunLinkSession6Exchange_BreedMenuSteps: calls DrawRecordListPageIndicators_1B (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 2), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_DrawRecordListPageIndicators_1B::
     farcall DrawRecordListPageIndicators_1B
     ret
@@ -1586,9 +1586,9 @@ CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
 ; SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
 ; why: step 7 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 7), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_RunFourTimes::
     ld a, [wTextFlags]
     and a
@@ -1621,9 +1621,9 @@ RunLinkSession6Exchange_RunFourTimes::
 ; then 9 more steps (see the code) (E-0347)
 ; why: step 8 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 8), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
@@ -1702,9 +1702,9 @@ RunLinkSession6Exchange_YourPalRefusedThe::
 ; DrawScreenBufferRectToBGMap_33; then 3 more steps (see the code) (E-0347)
 ; why: step 9 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 9), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_InfoOKYesN::
     ld a, [wTextFlags]
     and a
@@ -1748,9 +1748,9 @@ RunLinkSession6Exchange_InfoOKYesN::
 ; code) (E-0347)
 ; why: step 10 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 10), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_2::
     ld a, [wLinkMessage]
     cp $fe
@@ -1811,9 +1811,9 @@ RunLinkSession6Exchange_YourPalRefusedThe_2::
 ; calls DrawScreenBufferRectToBGMap_33; calls BeginString_Bank07_Cat5; sets wScreenStep (E-0347)
 ; why: step 11 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 11), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ChooseAMonsterFor::
     ld a, [wTextFlags]
     and a
@@ -1838,9 +1838,9 @@ RunLinkSession6Exchange_ChooseAMonsterFor::
 ; ShowStringA10_Bank33; calls FinishPickedRecordsEntryAndStep_33 (E-0347)
 ; why: step 12 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 12), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_PleaseWait_2::
     call DrawBoxAndKeyRows
     call BGMapAddressAtScroll_Bank33
@@ -1860,9 +1860,9 @@ RunLinkSession6Exchange_PleaseWait_2::
 ; wLinkSendByte to 1; advances wScreenStep (E-0347)
 ; why: step 13 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 13), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkTimeoutLo::
     ld a, $0a
     ld [rRAMG], a
@@ -1906,9 +1906,9 @@ RunLinkSession6Exchange_SetLinkTimeoutLo::
 ; (E-0347)
 ; why: step 14 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 14), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_3::
     ld a, [wLinkMessage]
     cp $01
@@ -1944,9 +1944,9 @@ RunLinkSession6Exchange_YourPalRefusedThe_3::
 ; wScreenState; sets wScreenStep to 0 (E-0347)
 ; why: step 15 of RunLinkSession6Exchange_BreedMenuSteps (when wScreenStep = 15), in step 4 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 4), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenState_4::
     ld a, [wLinkMessage]
     cp $f0
@@ -1960,9 +1960,9 @@ RunLinkSession6Exchange_AdvanceScreenState_4::
 ; step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
 ; wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_FightInfoExSteps::
     ld a, [wScreenStep]
     jumptable
@@ -1989,9 +1989,9 @@ RunLinkSession6Exchange_FightInfoExSteps::
 ; calls CopyBBytesThenMark1 (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 0), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
@@ -2019,9 +2019,9 @@ CopyBBytesThenMark1::
 ; (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 1), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_6::
     ld a, $01
     ld [wLinkSendByte], a
@@ -2035,9 +2035,9 @@ RunLinkSession6Exchange_SetLinkSendByte_6::
 ; (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 2), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkTimeoutLo_2::
     ld a, [wLinkMessage]
     cp $01
@@ -2064,9 +2064,9 @@ RunLinkSession6Exchange_SetLinkTimeoutLo_2::
 ; wLinkSendByte to 0; advances wScreenStep (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 3), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
@@ -2084,9 +2084,9 @@ RunLinkSession6Exchange_SetLinkSendByte_7::
 ; wTextWindowTileHi; then 15 more steps (see the code) (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 4), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_FightInfoEx::
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -2159,9 +2159,9 @@ RunLinkSession6Exchange_FightInfoEx::
 ; advances wScreenStep (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 5), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_BattleInTeamMode::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2182,9 +2182,9 @@ RunLinkSession6Exchange_BattleInTeamMode::
 ; wScreenStep to 0; then 13 more steps (see the code) (E-0347)
 ; why: step 6 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 6), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_4::
     ld a, [wLinkMessage]
     cp $fe
@@ -2258,9 +2258,9 @@ RunLinkSession6Exchange_YourPalRefusedThe_4::
 ; BeginString_Bank07_Cat5; sets wLinkSendByte to 0; advances wScreenStep (E-0347)
 ; why: step 7 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 7), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_TheBattleResultsWill::
     ld de, wScreenTileBuffer
     ld hl, wWindowTileBuffer + $64
@@ -2280,9 +2280,9 @@ RunLinkSession6Exchange_TheBattleResultsWill::
 ; BeginString_Bank07_Cat5; decrements wScreenStep; advances wScreenStep (E-0347)
 ; why: step 8 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 8), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_5::
     ld a, [wLinkMessage]
     cp $fe
@@ -2322,9 +2322,9 @@ RunLinkSession6Exchange_YourPalRefusedThe_5::
 ; BeginString_Bank07_Cat5 (E-0347)
 ; why: step 9 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 9), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_PleaseWait_3::
     ld hl, wScreenStep
     inc [hl]
@@ -2336,9 +2336,9 @@ RunLinkSession6Exchange_PleaseWait_3::
 ; wScreenStep; sets wLinkSendByte to 1 (E-0347)
 ; why: step 10 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 10), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep_2::
     ld a, [wTextFlags]
     and a
@@ -2355,9 +2355,9 @@ RunLinkSession6Exchange_AdvanceScreenStep_2::
 ; (E-0347)
 ; why: step 11 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 11), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_YourPalRefusedThe_6::
     ld a, [wLinkMessage]
     cp $fe
@@ -2392,9 +2392,9 @@ RunLinkSession6Exchange_YourPalRefusedThe_6::
 ; sets wGoldMid; sets wGoldHi; calls SaveGameToSRAMWithChecksum; sets wLinkSendByte to 5 (E-0347)
 ; why: step 12 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 12), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_VerifySaveChecksum::
     ld a, [wTextFlags]
     and a
@@ -2424,9 +2424,9 @@ RunLinkSession6Exchange_VerifySaveChecksum::
 ; wRandomSeed2Hi to wLinkReceivedByte; increments wScreenStep (E-0347)
 ; why: step 13 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 13), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
     ld a, [wLinkMessage]
     cp $05
@@ -2456,9 +2456,9 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5::
 ; to 1 (E-0347)
 ; why: step 14 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 14), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -2493,9 +2493,9 @@ RunLinkSession6Exchange_SetScreenStep::
 ; wRandomSeed2Hi to wRandomHi; increments wScreenStep (E-0347)
 ; why: step 15 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 15), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_8::
     ld a, [wLinkMessage]
     cp $f0
@@ -2529,9 +2529,9 @@ RunLinkSession6Exchange_SetLinkSendByte_8::
 ; $d2 (E-0347)
 ; why: step 16 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 16), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
@@ -2546,9 +2546,9 @@ RunLinkSession6Exchange_SetScreenStep_2::
 ; to 0; sets wLinkSendByte to 0; sets wLinkMessage to 0 (E-0347)
 ; why: step 17 of RunLinkSession6Exchange_FightInfoExSteps (when wScreenStep = 17), in step 5 of
 ; RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when wTitleScreenSubState =
-; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the routine
-; for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; 5), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetLinkSendByte_9::
     ld a, [wLinkMessage]
     cp $d2
@@ -2577,9 +2577,9 @@ RunLinkSession6Exchange_SetLinkSendByte_9::
 ; SwapMonstersMenu; returns unless wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to
 ; 0; sets wScreenState (E-0347)
 ; why: step 6 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 6), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 6), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -2597,9 +2597,9 @@ RunLinkSession6Exchange_SwapMonstersMenu::
 ; RunScreenStateWhenNotFading_F1; returns unless wScreenState is $0e; copies wItemGridX to
 ; wListCursor; copies wItemGridY to wListPageIndex (E-0347)
 ; why: step 13 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 13), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
     farcall RunScreenStateWhenNotFading_F1
     ld a, [wScreenState]
@@ -2614,9 +2614,9 @@ RunLinkSession6Exchange_RunScreenStateWhenNotFading_F1::
 ; step 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
 ; wScreenStep (E-0347)
 ; why: step 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
     ld a, [wScreenStep]
     jumptable
@@ -2636,9 +2636,9 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps::
 ; calls SetDefaultStringWindow_Bank33; increments wScreenStep (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 0), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTiles::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_FightInfoEx_TileRect
@@ -2669,9 +2669,9 @@ RunLinkSession6Exchange_ClearRecordPanelTiles::
 ; step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps: advances wScreenStep (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 1), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_AdvanceScreenStep_3::
     ld hl, wScreenStep
     inc [hl]
@@ -2684,9 +2684,9 @@ RunLinkSession6Exchange_AdvanceScreenStep_3::
 ; (see the code) (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 3), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -2786,9 +2786,9 @@ RunLinkSession6Exchange_SetArg5ToListEntriesCell5_2_TileRect::
 ; ClearAndDrawListEntriesCell5NameAtTiles1780 (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 4), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
@@ -2800,9 +2800,9 @@ RunLinkSession6Exchange_ClearAndDrawListEntriesCell5NameAtTiles1780::
 ; advances wScreenStep (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 5), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_RunFourTimes_2::
     ld de, RunLinkSession6Exchange_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
@@ -2848,9 +2848,9 @@ RunLinkSession6Exchange_RunFourTimes_2::
 ; SetDefaultStringWindow_Bank33; sets wTwoChoiceCursor to 1; increments wScreenStep (E-0347)
 ; why: step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 6), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_FightInfoEx_2::
     ld hl, vTiles2 + $300
     ld a, l
@@ -2887,9 +2887,9 @@ RunLinkSession6Exchange_FightInfoEx_2::
 ; SetDefaultStringWindow_Bank33 (E-0347)
 ; why: step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps (when wScreenStep = 7), in step
 ; 14 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 14), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetSpriteHideTile::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d
@@ -2915,9 +2915,9 @@ RunLinkSession6Exchange_SetSpriteHideTile::
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc: dispatches on
 ; wScreenStep (E-0347)
 ; why: step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
     ld a, [wScreenStep]
     jumptable
@@ -2935,9 +2935,9 @@ RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2::
 ; DrawPlayerNameAndString0Category1; increments wScreenStep (E-0347)
 ; why: step 0 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 0), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ClearRecordPanelTiles_2::
     farcall ClearRecordPanelTiles
     ld de, RunLinkSession6Exchange_ClearRecordPanelTiles_2_TileRect
@@ -2958,9 +2958,9 @@ RunLinkSession6Exchange_ClearRecordPanelTiles_2::
 ; CallDrawListEntriesCell5RecordPanel (E-0347)
 ; why: step 3 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 3), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
     call CallDrawListEntriesCell5RecordPanel
     ret
@@ -2971,9 +2971,9 @@ RunLinkSession6Exchange_CallDrawListEntriesCell5RecordPanel::
 ; DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
 ; why: step 1 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 1), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
     call ListAvailableRecordsForSelection_Bank33
     farcall ClampRecordListPageCursor5
@@ -2999,9 +2999,9 @@ RunLinkSession6Exchange_ListAvailableRecordsForSelection_Bank33::
 ; sets wArg1 to 0; calls MarkPartyMembersInRecordListPage (E-0347)
 ; why: step 2 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 2), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -3013,9 +3013,9 @@ RunLinkSession6Exchange_DrawRecordListPageNames::
 ; CallClearAndDrawListEntriesCell5Name (E-0347)
 ; why: step 4 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 4), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
     call CallClearAndDrawListEntriesCell5Name
     ret
@@ -3024,9 +3024,9 @@ RunLinkSession6Exchange_CallClearAndDrawListEntriesCell5Name::
 ; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep (E-0347)
 ; why: step 5 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 5), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
     call CopyRectToWindowTileBufferRow5Col10AndIncScreenStep
     ret
@@ -3038,9 +3038,9 @@ RunLinkSession6Exchange_CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
 ; to $12; calls ShowString_Bank1B; calls RunFourTimes; then 3 more steps (see the code) (E-0347)
 ; why: step 6 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 6), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_InfoOKYesN_2::
     ld hl, vTiles2 + $700
     ld a, l
@@ -3084,9 +3084,9 @@ RunLinkSession6Exchange_InfoOKYesN_2::
 ; SetDefaultStringWindow_Bank33 (E-0347)
 ; why: step 7 of RunLinkSession6Exchange_ClearRecordPanelTilesSteps_2 (when wScreenStep = 7), in
 ; step 15 of RunLinkSession6Exchange_ReadTitleScreenStateAndTitleScreenSubStateEtc (when
-; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer, in
-; step 1 of RunLinkSession6Exchange (when wLinkExchangeState = 1); RunLinkSession6Exchange: runs the
-; routine for wLinkExchangeState (jump table of two) (E-0352, E-0122)
+; wTitleScreenSubState = 15), in a helper of RunLinkSession6Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession6Exchange_LinkReceiveStepWithBuffer: Link session 6, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession6Exchange_SetSpriteHideTile_2::
     call BGMapAddressAtScroll_Bank33
     lb bc, $14, $0d

@@ -4,12 +4,9 @@
 SECTION "Bank A0", ROMX[$4000], BANK[$A0]
     db $a0
 
-; called from GameMode7_Init: calls FillBytes; copies wDataBank to wDataBankSave; calls FillBytes;
-; sets wBattleKind to $0a; calls GameMode7_Init_FillBytes_2; calls FillBytes; calls
-; GameMode7_Init_ReadLinkRole; calls GameMode7_Init_RunA0OrBySlotC; calls
-; GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31; calls GameMode7_Init_QueueMusic; calls
-; GameMode7_Init_CarryUnlessBattleSlotOutSlotEmpty (E-0347)
-; why: a helper of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Game mode 7's start: clears the effect and battle state, keeps the data bank, sets wBattleKind
+; $0A, resets the battle variables, copies the two linked monsters into battlers 0 and 1, sets up
+; slots 0 and 1, draws the screen, starts the music and marks the slots. (C1, E-0357)
 GameMode7_Init_FillBytes::
     ld hl, wEffectAnimState
     ld bc, $0303
@@ -120,12 +117,10 @@ InitBattleSlotsForFoeCount::
     ld [hl], a
     ret
 
-; Sets wEffectId to $ff; sets wQueuedActionId to $ff; sets wSealPrayState to $ff; sets
-; wBattleItemTarget to $ff; calls FillBytes; sets wDebugValue3 to 0; sets wDebugState to 0; sets
-; wDebugSubState to 0; calls FillBytes; sets wDisplaySlot to $ff; sets wBattleMeter to $0a; calls
-; FillBytes; then 9 more steps (see the code) (E-0347)
-; why: part of GameMode7_Init_FillBytes, in a helper of GameMode7_Init; GameMode7_Init: start-up for
-; wGameMode = 7 (E-0352, E-0029)
+; Resets the battle variables: no effect, queued action, SealPray or item target ($FF); slot marks
+; 0, 0, $FF, $FF, 0, 0, 0, $FF; side control $80; every slot out and no species ($FF); skill and
+; name tables $FF; meter 10; an empty action queue; turn 0; two party slots and three foes; text
+; speed 3. (C1, E-0357)
 GameMode7_Init_FillBytes_2::
     ld a, $ff
     ld [wEffectId], a
@@ -203,11 +198,9 @@ GameMode7_Init_FillBytes_2::
     ld [wTextSpeed], a
     ret
 
-; Calls ClearAttributesAndScreenBuffer_Bank31; calls GameMode7_Init_CopyGlyphTilesToVRAM; calls
-; GameMode7_Init_ReadScreenBufferRectHeader_BankA0; calls GameMode7_Init_DrawSlotPanelValues_BankA0;
-; calls FillTilesFromRequest; calls CopyRectRecordToScreenBuffer; calls
-; CopyScreenTileBufferToVRAM_A0; sets wBGPaletteUploadRequest to $7f (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Draws game mode 7's screen: clears the attributes and buffer, loads the name tiles, the frame,
+; both slots' HP, MP and marks, clears the text tiles, draws the record rectangle and copies the
+; buffer to the BG map, then requests the palettes. (C1, E-0357)
 GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31::
     farcall ClearAttributesAndScreenBuffer_Bank31
     call GameMode7_Init_CopyGlyphTilesToVRAM
@@ -221,8 +214,7 @@ GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31::
     ld [wBGPaletteUploadRequest], a
     ret
 
-; Calls RunA0OrBySlotC (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Sets up battle slots 0 and 1 (RunA0OrBySlotC). (C1, E-0357)
 GameMode7_Init_RunA0OrBySlotC::
     ld bc, $0200
 
@@ -246,12 +238,9 @@ PrepareTwoFoeSlots::
 PrepareThreeFoeSlots::
     ld bc, $0304
 
-; Calls RunA0OrBySlotC; may continue in PrepareThreeFoeSlots_Loop; calls
-; AdjustSkillsForBattleStart_A0; branches on the byte at wBattleSlotOut; copies the byte at
-; wBattleMonsterId to wSpeciesIdLo; copies the byte at wBattleMonsterId to wSpeciesIdHi; calls
-; LoadSpeciesRecord; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of PrepareThreeFoeSlots; PrepareThreeFoeSlots: runs the slot setup (RunA0OrBySlotC) for
-; slots 4-6, then AdjustSkillsForBattleStart_A0 and the slot damage flags (E-0352)
+; Sets up the foe slots from C on, adjusts the skills for the battle start and stores each present
+; slot's body flags (SPECIES_METAL with SPECIES_UNTRIPPABLE in the high nibble) in wSlotBodyFlags.
+; (C1, E-0357)
 PrepareThreeFoeSlots_Loop::
     push bc
     call RunA0OrBySlotC
@@ -518,8 +507,7 @@ CopyScreenTileBufferToVRAM_A0::
     jr nz, .loop
     ret
 
-; Branches on wBattleKind; plays music $13 (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Starts the battle music: $0F for wBattleKind 0, otherwise $13. (C1, E-0357)
 GameMode7_Init_QueueMusic::
     ld a, [wBattleKind]
     or a
@@ -534,9 +522,8 @@ GameMode7_Init_QueueMusic::
     call QueueMusic
     ret
 
-; Branches on wLinkRole; calls GameMode7_Init_CopyBytesDEFromHL_BankA0; continues in
-; GameMode7_Init_CopyBytesDEFromHL_BankA0; calls GameMode7_Init_CopyBytesDEFromHL_BankA0 (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Copies the two linked records into battler records 0 and 1: wRecordBufA first and wRecordBufB
+; second, the other way round for link role bit 1. (C1, E-0357)
 GameMode7_Init_ReadLinkRole::
     ld de, wBattlerRecords
     ld a, [wLinkRole]
@@ -552,9 +539,9 @@ GameMode7_Init_ReadLinkRole::
     call GameMode7_Init_CopyBytesDEFromHL_BankA0
     ld hl, wRecordBufA
 
-; Calls CopyBytesDEFromHL_BankA0; calls ApplyIncrementOffsetRowsA0ForA0DTo13; also changes HL, DE, A
-; and B by register arithmetic (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Packs record HL into the battler record at DE: its name (14 bytes), skills (8) and a zero, one
+; byte, $15 bytes of stats, $1F bytes from the personality and the item byte, applies the stat
+; increments (ApplyIncrementOffsetRowsA0ForA0DTo13) and ends with $FF. (C1, E-0357)
 GameMode7_Init_CopyBytesDEFromHL_BankA0::
     inc hl
     ld b, $0e
@@ -699,15 +686,11 @@ RunA0OrBySlotC::
     ld [wBattleArg0], a
     ret
 
-; called from RunA0OrBySlotC: calls BattlerRecordAddress_BankA0; branches on C; branches on
-; wLinkRole; branches on wBattleArg0; calls LoadSlotSkillsFromBattlerRecord; calls
-; SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord; calls
-; RunA0OrBySlotC_SetSlotOutAndStatus; calls StoreByteAtDEPlusC_BankA0; branches on wLoadSlot; calls
-; StoreWordAtDEPlus2C_BankA0; branches on wLoadSlot; calls StoreByteAtDEPlusC_BankA0; then 7 more
-; steps (see the code) (E-0347)
-; why: a helper of RunA0OrBySlotC; RunA0OrBySlotC: runs RunA0OrBySlotC_BattlerRecordAddress_BankA0
-; for slots 0-3 or RunA0OrBySlotC_BattlerRecordAddress_BankA0_2 for slots 4-7, clears the ...
-; (E-0352, E-0122, E-0344)
+; Loads battle slot C (0-3) from its battler record: species id, name suffix (low nibble), tactic
+; and last tactic cleared, the link side byte (& 3, for this side's slots), skills, the out flag and
+; status (not when reloading, wLoadSlot), level, HP and MP (only the maximums when reloading), ATK,
+; DEF, AGL, INT, the extra stat, the personality bytes and trait (kept when reloading unless status
+; 1 bits 4-5 are set), then the resistances. (C1, E-0357)
 RunA0OrBySlotC_BattlerRecordAddress_BankA0::
     ld a, c
     push bc
@@ -930,14 +913,9 @@ RunA0OrBySlotC_BattlerRecordAddress_BankA0::
     farcall SetSlotAIModeFromINT
     ret
 
-; called from RunA0OrBySlotC: calls BattlerRecordAddress_BankA0; branches on wBattleArg0; calls
-; LoadSlotSkillsFromBattlerRecord; calls SetCFromBattleArg0ThenRunLoadSlotSkillsFromBattlerRecord;
-; calls RunA0OrBySlotC_SetSlotOutAndStatus; calls StoreByteAtDEPlusC_BankA0; branches on wLoadSlot;
-; calls StoreWordAtDEPlus2C_BankA0; branches on wLoadSlot; calls StoreByteAtDEPlusC_BankA0; copies L
-; to wBattleArg0; copies H to wBattleArg1; then 5 more steps (see the code) (E-0347)
-; why: a helper of RunA0OrBySlotC; RunA0OrBySlotC: runs RunA0OrBySlotC_BattlerRecordAddress_BankA0
-; for slots 0-3 or RunA0OrBySlotC_BattlerRecordAddress_BankA0_2 for slots 4-7, clears the ...
-; (E-0352, E-0122, E-0344)
+; Loads foe slot C (4-7) from its battler record the same way: species, name suffix byte, tactic
+; cleared, skills, out flag and status, level (clearing three bytes), HP and MP and the stats. (C1,
+; E-0357)
 RunA0OrBySlotC_BattlerRecordAddress_BankA0_2::
     push bc
     call BattlerRecordAddress_BankA0
@@ -1128,9 +1106,8 @@ BattlerRecordAddress_BankA0::
     ld h, a
     ret
 
-; Calls CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; sets wSlotMarks to 0; sets
-; wSlotMarks to 1; sets wSlotMarks to $ff (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Marks slots 0 and 1: $FF when absent, 1 when it cannot act (CheckSlotStatusBlock), otherwise 0.
+; (C1, E-0357)
 GameMode7_Init_CarryUnlessBattleSlotOutSlotEmpty::
     ld bc, $0200
     ld hl, wSlotMarks
@@ -1593,13 +1570,9 @@ ApplyLevelScaledStatsToSlots::
     jr nz, .loop
     ret
 
-; called from ApplyLevelScaledStatsToSlots: copies C to wBattleArg1; copies L to wSpeciesIdLo;
-; copies H to wSpeciesIdHi; calls LoadSpeciesRecord; copies wSpeciesRecord + SPECIES_GROWTH to
-; hTemp0; calls StatFromGrowthRow; sets wBattleArg0 to 1; calls ScaleStatByWildLevelCapped999; calls
-; StoreTemp2WordAtHL_BankA0; sets hTemp0; calls StatFromGrowthRow; sets wBattleArg0 to 0; then 18
-; more steps (see the code) (E-0347)
-; why: a helper of ApplyLevelScaledStatsToSlots; ApplyLevelScaledStatsToSlots: hTemp1 = min(4 *
-; wWildLevel / 5 + 5, 99) (E-0352, E-0125)
+; Builds wild monster C's battler record from its species (wEncounterMonsters): id, family, sex
+; ratio, its three skills, the level (hTemp1) and each stat from its growth rows scaled by the wild
+; level (at most 999). (C1, E-0357)
 ApplyLevelScaledStatsToSlots_LoadSpeciesRecord::
     push bc
     ld a, c
@@ -1885,11 +1858,9 @@ Multiply24By8_BankA0::
 ApplyLevelScaledStatsToSlots_Data::
     db $bf, $d1, $0d, $d2, $5b, $d2
 
-; Sets wNameGlyphBuf to $90; calls CopyGlyphTilesToVRAM; calls CopyBytes; calls
-; CopyGlyphTilesToVRAM; calls CopyBytes; calls CopyGlyphTilesToVRAM; branches on wLinkRole; calls
-; CopyBytes; calls CopyGlyphTilesToVRAM; calls CopyBytes; calls CopyGlyphTilesToVRAM; branches on
-; the byte at wPlayerName; then 10 more steps (see the code) (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Loads the name tiles: blanks three name areas, then battler 0's and 1's names and the player's and
+; partner's names (by link role) at VRAM $9500, $9550 and $95A0, and a short form of the first name
+; (two glyphs plus marks $8D/$8E) at $9240. (C1, E-0357)
 GameMode7_Init_CopyGlyphTilesToVRAM::
     ld a, $90
     ld [wNameGlyphBuf], a
@@ -2043,8 +2014,7 @@ FillScreenTileBufferRow11Col4WithC3_BankA0::
     jr nz, .loop
     ret
 
-; Calls ReadScreenBufferRectHeader_BankA0; calls CopyRectToStride32_BankA0 (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Copies game mode 7's frame rectangle into the screen buffer. (C1, E-0357)
 GameMode7_Init_ReadScreenBufferRectHeader_BankA0::
     ld hl, GameMode7_Init_ReadScreenBufferRectHeader_BankA0_TileRect
     call ReadScreenBufferRectHeader_BankA0
@@ -2072,8 +2042,7 @@ DrawRectAndWriteDATiles::
     jr nz, .loop
     ret
 
-; Calls DrawSlotPanelValues_BankA0 (E-0347)
-; why: part of GameMode7_Init; GameMode7_Init: start-up for wGameMode = 7 (E-0352, E-0029)
+; Draws slots 0 and 1's HP, MP and status marks. (C1, E-0357)
 GameMode7_Init_DrawSlotPanelValues_BankA0::
     ld c, $00
     call DrawSlotPanelValues_BankA0
@@ -2112,10 +2081,7 @@ DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0::
     call CopyRect32StrideToVRAM_BankA0
     ret
 
-; Calls CopyRect32StrideToVRAM_BankA0 (E-0347)
-; why: part of RunBattleSetup_BankA0_EntrySelect; RunBattleSetup_BankA0_EntrySelect: by
-; wBattleResolveStep: lays out the tile blocks for the foe count and moves a selection over entries,
-; setting or clearing bit 6 and the ... (E-0352)
+; Copies the 14 x 5 window buffer area to the BG map's row 13. (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0::
     ld de, wWindowTileBuffer + $38
     ld hl, vBGMap0 + $1a0
@@ -2424,12 +2390,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wFadeState is 0;
-; advances wBattleStep; sets wLinkSendByte to $0c (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 0);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Game mode 7's introduction, step 0: after the fade sends $0C. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_WaitFadeState::
     ld a, [wFadeState]
     and a
@@ -2440,12 +2401,7 @@ RunBattlePhaseWhenTextIdle_A0_WaitFadeState::
     ld [wLinkSendByte], a
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wLinkMessage is $0c;
-; sets wLinkSendByte to 0; advances wBattleStep (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 1);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 1: when the partner answers $0C goes on. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $0c
@@ -2456,14 +2412,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 2 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: advances wBattleStep; copies wRandomLo
-; to wLinkRecvBuffer; copies wRandomHi to wIntroOrFamilyCount; copies L to wLinkTimeoutLo; copies H
-; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets
-; wLinkBufferCountLo to 2; sets wLinkSendByte to $ff; sets wLinkReady to 1 (E-0347)
-; why: step 2 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 2);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 2: starts a 2-byte exchange of the random seed (wRandomLo/Hi out, into
+; wLinkPartnerName). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo::
     ld hl, wBattleStep
     inc [hl]
@@ -2489,12 +2439,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_ReadRandomLo::
     ld [wLinkReady], a
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wLinkMessage is $f0;
-; sets wLinkSendByte to 0; sets wLinkReady to 0; advances wBattleStep (E-0347)
-; why: step 3 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 3);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 3: when the exchange ends ($F0) goes on. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
@@ -2507,12 +2452,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetLinkSendByte:
     inc [hl]
     ret
 
-; step 4 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: advances wBattleStep; sets
-; wLinkSendByte to 3 (E-0347)
-; why: step 4 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 4);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 4: sends 3. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SetBattleStep::
     ld hl, wBattleStep
     inc [hl]
@@ -2520,14 +2460,8 @@ RunBattlePhaseWhenTextIdle_A0_SetBattleStep::
     ld [wLinkSendByte], a
     ret
 
-; step 5 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wLinkMessage is $03;
-; sets wLinkSendByte to 0; branches on wLinkRole; copies L to wLinkPartnerName; copies L to
-; wRandomSeed2Lo; copies L to wRandomLo; copies H to wLinkPartnerByte1; copies H to wRandomSeed2Hi;
-; copies H to wRandomHi; advances wBattleStep (E-0347)
-; why: step 5 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 5);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 5: on the partner's 3 both sides take one seed (its own, or the partner's for
+; link role bit 1) as wRandomLo/Hi and the second seed. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_2::
     ld a, [wLinkMessage]
     cp $03
@@ -2562,15 +2496,9 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_2::
     inc [hl]
     ret
 
-; step 6 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: calls InitBattleSlotsForFoeCount;
-; branches on wScreenCountPlusOne; sets wEncounterKind to 2; calls ComputeWildLevelAndScaleStats;
-; calls PrepareThreeFoeSlots; advances wBattleStep; sets wEncounterKind to 1; sets wBattleFoeCount
-; to 2; sets wSide1Flag to 2; calls BackupBattlerRecords0And1; calls PrepareTwoFoeSlots; advances
-; wBattleStep (E-0347)
-; why: step 6 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 6);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 6: sets up the foes: with wScreenCountPlusOne 2 two foes (encounter kind 1)
+; from backed-up battler records; otherwise three wild monsters (encounter kind 2) at the computed
+; wild level. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount::
     call InitBattleSlotsForFoeCount
     ld a, [wScreenCountPlusOne]
@@ -2598,13 +2526,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_InitBattleSlotsForFoeCount::
     inc [hl]
     ret
 
-; step 7 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wFadeState is 0; copies
-; wScreenCountPlusOne to wStringIndex; sets wStringCategory to 6; calls BeginStringDisplay_Bank07;
-; advances wBattleStep (E-0347)
-; why: step 7 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 7);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 7: after the fade shows string wScreenCountPlusOne of category 6. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07::
     ld a, [wFadeState]
     or a
@@ -2618,13 +2540,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_BeginStringDisplay_Bank07::
     inc [hl]
     ret
 
-; step 8 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wTextFlags is 0; calls
-; CopyStringHLToDE; sets wStringIndex to 3; sets wStringCategory to 6; calls
-; BeginStringDisplay_Bank07; advances wBattleStep (E-0347)
-; why: step 8 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 8);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 8: 'The first monster is <name>!' (string 3 of category 6). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ShowTheFirstMonsterIs::
     ld a, [wTextFlags]
     or a
@@ -2645,13 +2561,7 @@ RunBattlePhaseWhenTextIdle_A0_ShowTheFirstMonsterIs::
     inc [hl]
     ret
 
-; step 9 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wIsCGB; sets hTemp0 to 1;
-; calls LoadMonsterPictureAttributes; calls LoadMonsterPicture; sets wBGPaletteUploadRequest to $7f;
-; advances wBattleStep (E-0347)
-; why: step 9 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 9);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 9: loads the first monster's picture into VRAM $9140 (palette 1). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
     ld a, [wIsCGB]
     or a
@@ -2676,14 +2586,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes::
     inc [hl]
     ret
 
-; step 10 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wScreenCountPlusOne; calls
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on wIsCGB; branches on
-; wScreenCountPlusOne; sets hTemp0 to 1; calls LoadMonsterPictureAttributes; advances wBattleStep;
-; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 10 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 10);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 10: draws the first picture's 6 x 6 tiles (at column 1, or 4 with two foes)
+; with its attributes on the GBC. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_2::
     ld hl, vBGMap0 + $e1
     ld a, [wScreenCountPlusOne]
@@ -2717,13 +2621,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAttributes_2::
     inc [hl]
     ret
 
-; step 11 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wTextFlags is 0; calls
-; CopyStringHLToDE; sets wStringIndex to 4; sets wStringCategory to 6; calls
-; BeginStringDisplay_Bank07; advances wBattleStep (E-0347)
-; why: step 11 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 11);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 11: 'The second monster is <name>!' (string 4). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ShowTheSecondMonsterIs::
     ld a, [wTextFlags]
     or a
@@ -2744,12 +2642,8 @@ RunBattlePhaseWhenTextIdle_A0_ShowTheSecondMonsterIs::
     inc [hl]
     ret
 
-; step 12 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: calls LoadMonsterPicture; sets
-; wBGPaletteUploadRequest to $7f; advances wBattleStep (E-0347)
-; why: step 12 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 12);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 12: loads the second monster's picture into VRAM $9380 (palette 3). (C1,
+; E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep::
     ld a, [wBattlePictureIds + $2]
     ld e, a
@@ -2764,14 +2658,8 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep::
     inc [hl]
     ret
 
-; step 13 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: branches on wScreenCountPlusOne; sets
-; wBattleStep; calls RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on
-; wIsCGB; branches on wScreenCountPlusOne; sets hTemp0 to 3; calls LoadMonsterPictureAttributes;
-; advances wBattleStep; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 13 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 13);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 13: draws the second picture (column 7, or 10 with two foes, then skipping the
+; third). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_WriteBattleStepAndTemp0::
     ld hl, vBGMap0 + $e7
     ld a, [wScreenCountPlusOne]
@@ -2808,13 +2696,7 @@ RunBattlePhaseWhenTextIdle_A0_WriteBattleStepAndTemp0::
     inc [hl]
     ret
 
-; step 14 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wTextFlags is 0; calls
-; CopyStringHLToDE; sets wStringIndex to 5; sets wStringCategory to 6; calls
-; BeginStringDisplay_Bank07; advances wBattleStep (E-0347)
-; why: step 14 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 14);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 14: 'The third monster is <name>!' (string 5). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ShowTheThirdMonsterIs::
     ld a, [wTextFlags]
     or a
@@ -2835,12 +2717,7 @@ RunBattlePhaseWhenTextIdle_A0_ShowTheThirdMonsterIs::
     inc [hl]
     ret
 
-; step 15 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: calls LoadMonsterPicture; sets
-; wBGPaletteUploadRequest to $7f; advances wBattleStep (E-0347)
-; why: step 15 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 15);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 15: loads the third monster's picture into VRAM $95C0 (palette 5). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SetBGPaletteUploadRequest::
     ld a, [wBattlePictureIds + $4]
     ld e, a
@@ -2855,14 +2732,7 @@ RunBattlePhaseWhenTextIdle_A0_SetBGPaletteUploadRequest::
     inc [hl]
     ret
 
-; step 16 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: calls
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc; branches on wIsCGB; sets hTemp0
-; to 5; calls LoadMonsterPictureAttributes; advances wBattleStep; also changes HL, DE and A by
-; register arithmetic (E-0347)
-; why: step 16 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 16);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 16: draws the third picture at column 13. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_3::
     ld d, $5c
     ld hl, vBGMap0 + $ed
@@ -2884,13 +2754,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_3::
     inc [hl]
     ret
 
-; step 17 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wTextFlags is 0; sets
-; wStringCategory to 5; sets wStringIndex to $0c; calls ShowString_Bank07; sets wLinkSendByte to 1;
-; advances wBattleStep (E-0347)
-; why: step 17 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 17);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 17: 'Please wait.' and sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait::
     ld a, [wTextFlags]
     or a
@@ -2906,12 +2770,7 @@ RunBattlePhaseWhenTextIdle_A0_ShowPleaseWait::
     inc [hl]
     ret
 
-; step 18 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: returns unless wLinkMessage is $01;
-; sets wBattleStep to 0; sets wLinkSendByte to 0; advances wBattlePhase (E-0347)
-; why: step 18 of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters (when wBattleStep = 18);
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Introduction, step 18: on the partner's 1 goes to the next battle phase. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep::
     ld a, [wLinkMessage]
     cp $01
@@ -2924,11 +2783,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WaitLinkMessage_SetBattleStep::
     inc [hl]
     ret
 
-; Calls WriteVRAMByteInc; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: part of RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters;
-; RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters: by wBattleStep: waits for the link, computes the
-; wild level and shows each opposing monster's picture ('The first/second/third monster is ...
-; (E-0352)
+; Writes a 6 x 6 block of tile numbers from D on at HL in the BG map. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_WriteVRAMByteInc::
     ld bc, $0606
 
@@ -2960,45 +2815,29 @@ RunBattlePhaseWhenTextIdle_A0_RunTurn::
     dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleActions
     dw RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleStep4
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_RunTurn: calls
-; RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytes; advances wBattleStep (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 0);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Game mode 7's turn, step 0: clears its work buffer. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytesAndStep::
     call RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytes
     ld hl, wBattleStep
     inc [hl]
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_RunTurn: calls RunBattleSetup_BankA0 (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 1);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Game mode 7's turn, step 1: the battle setup (RunBattleSetup_BankA0). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ToRunBattleSetup_BankA0::
     call RunBattleSetup_BankA0
     ret
 
-; step 2 of RunBattlePhaseWhenTextIdle_A0_RunTurn: calls RunBattleCommandEntry_BankA1 (E-0347)
-; why: step 2 of RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 2);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Game mode 7's turn, step 2: the command entry (RunBattleCommandEntry_BankA1). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ToRunBattleCommandEntry_BankA1::
     farcall RunBattleCommandEntry_BankA1
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_RunTurn: calls RunBattleActions (E-0347)
-; why: step 3 of RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 3);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Game mode 7's turn, step 3: the actions (RunBattleActions). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleActions::
     farcall RunBattleActions
     ret
 
-; step 4 of RunBattlePhaseWhenTextIdle_A0_RunTurn: calls RunBattleStep4 (E-0347)
-; why: step 4 of RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 4);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Game mode 7's turn, step 4: fight step 4 (RunBattleStep4). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_ToRunBattleStep4::
     farcall RunBattleStep4
     ret
@@ -3017,11 +2856,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink::
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetLinkSendByte
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_SyncLink: sets wLinkSendByte to 1; advances wBattleStep
-; (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 0);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Game mode 7's round end, step 0: sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte::
     ld a, $01
     ld [wLinkSendByte], a
@@ -3029,13 +2864,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SetLinkSendByte::
     inc [hl]
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wLinkMessage is $01; copies L to
-; wLinkTimeoutLo; copies H to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to
-; wLinkBufferPtrHi; sets wLinkBufferCountLo to 8; sets wLinkSendByte to $ff; advances wBattleStep
-; (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 1);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 1: on the partner's 1 starts an 8-byte exchange of wBattleSlotOut into
+; wLinkPartnerName. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -3058,12 +2888,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage::
     inc [hl]
     ret
 
-; step 2 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wLinkMessage is $f0; branches on
-; wLinkRole; copies wLinkPartnerName to wBattleSlotOut; advances wBattleStep; sets wLinkSendByte to
-; 0 (E-0347)
-; why: step 2 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 2);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 2: when the exchange ends takes the partner's out flag for its slot (slot 1 from
+; the partner's byte 1, or slot 0 for link role bit 1). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2::
     ld a, [wLinkMessage]
     cp $f0
@@ -3086,14 +2912,9 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2::
     ld [wLinkSendByte], a
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_SyncLink: sets wLinkRuleTurnLimit to $63; branches on the
-; byte at wBattleSlotOut; branches on the byte at wBattleStatus; branches on the byte at
-; wBattleSlotOut + $1; branches on the byte at wBattleStatus; sets wStringIndex; sets
-; wStringCategory to 6; calls BeginStringDisplay_Bank07; advances wBattleStep; plays music $02;
-; advances wBattlePhase; sets wBattleStep to 0; then 1 more step (see the code) (E-0347)
-; why: step 3 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 3);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 3: adds the turns (wBattleTurn + 1) to the total in wLinkRuleTurnLimit (at most
+; 99); when both slots are out or paralyzed (status bit 6) plays music 2 and goes to the next phase;
+; otherwise shows string wScreenCountPlusOne + 6 of category 6. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL::
     ld a, [wBattleTurn]
     inc a
@@ -3149,15 +2970,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_AddAx9ToHL::
     ld [wBattleStep], a
     ret
 
-; step 4 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wTextFlags is 0; branches on
-; wScreenCountPlusOne; increments wScreenCountPlusOne; calls
-; RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty; calls
-; DrawSlotStatusMarks; calls CopySlotPanelRowToVRAM; calls DrawSlotHPDigits; calls
-; CopySlotPanelPartToVRAM; calls DrawSlotMPDigits; calls CopySlotPanelPartToVRAM_2; calls
-; DrawSlotStatusMarks; calls CopySlotPanelRowToVRAM; then 12 more steps (see the code) (E-0347)
-; why: step 4 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 4);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 4: after the text, after round 2 goes to the next phase; otherwise counts the
+; round up, refreshes slots 0 and 1 (marks, HP, MP), shows 'Please wait.' and goes on. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
     ld a, [wTextFlags]
     or a
@@ -3206,12 +3020,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
     ld [wLinkSendByte], a
     ret
 
-; step 5 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on rSTAT; sets vBGMap0 + $e1 to $c3;
-; branches on rSTAT; advances wBattleStep; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: step 5 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 5);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 5: blanks the 18 x 6 picture area at row 7 with tile $C3. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT::
     ld hl, vBGMap0 + $e1
     ld bc, $1206
@@ -3237,12 +3046,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT::
     inc [hl]
     ret
 
-; step 6 of RunBattlePhaseWhenTextIdle_A0_SyncLink: branches on wIsCGB; sets rVBK to 1; branches on
-; rSTAT; sets vBGMap0 + $e1 to 0; branches on rSTAT; sets rVBK to 0; advances wBattleStep; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 6 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 6);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 6: on the GBC clears that area's attributes (VRAM bank 1). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK::
     ld a, [wIsCGB]
     or a
@@ -3277,11 +3081,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK::
     inc [hl]
     ret
 
-; step 7 of RunBattlePhaseWhenTextIdle_A0_SyncLink: advances wBattleStep; sets wLinkSendByte to 1
-; (E-0347)
-; why: step 7 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 7);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 7: sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep::
     ld hl, wBattleStep
     inc [hl]
@@ -3289,11 +3089,8 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep::
     ld [wLinkSendByte], a
     ret
 
-; step 8 of RunBattlePhaseWhenTextIdle_A0_SyncLink: returns unless wLinkMessage is $01; sets
-; wLinkSendByte to 0; sets wBattlePhase to 0; sets wBattleStep to 0 (E-0347)
-; why: step 8 of RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 8);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; Round end, step 8: on the partner's 1 returns to battle phase 0 (the next round's introduction).
+; (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
@@ -3379,14 +3176,10 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: sets wTextSpeed to 1; copies L to
-; wResultsUnreadWordLo; copies H to wResultsUnreadWordHi; branches on C & $30; branches on C & $21;
-; branches on C & $12; branches on the byte at wBattleSlotOut; sets wBattleResultStep to 3; copies
-; wBattleResultDelay to wBattleResultCounter; calls ComputeBattleResultRank; calls
-; ApplyBattleResultStatChanges; sets wSaveStep to 0; then 4 more steps (see the code) (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 0);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 0: text speed 1; works out the result (0 both stand, 1 the partner fell, 2 both
+; fell (out or paralyzed), 3 this side's monster fell) into wBattleResultStep, computes the rank and
+; the stat changes, resets the save steps and stores the battle state in the party records. (C1,
+; E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
     ld a, $01
     ld [wTextSpeed], a
@@ -3475,12 +3268,8 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_SetTextSpeedTo01::
     call StoreBattleStateToPartyRecords
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls RunBackupAndSaveSteps; returns unless
-; bit 7 of wSaveStep is set; calls SaveGameToSRAMWithChecksum; sets wStringIndex; sets
-; wStringCategory to 5; calls BeginStringDisplay_Bank07; advances wBattleStep (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 1);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 1: backs up and saves (RunBackupAndSaveSteps, then SaveGameToSRAMWithChecksum)
+; and shows string $0F + the result of category 5. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
     farcall RunBackupAndSaveSteps
     ld a, [wSaveStep]
@@ -3497,11 +3286,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_RunBackupAndSaveSteps::
     inc [hl]
     ret
 
-; step 2 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: returns unless wTextFlags is 0; calls
-; FillBytes; calls CopyScreenTileBufferToVRAM_A0; advances wBattleStep (E-0347)
-; why: step 2 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 2);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 2: after the text blanks the screen buffer and the BG map. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
     ld a, [wTextFlags]
     or a
@@ -3516,14 +3301,8 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0::
     inc [hl]
     ret
 
-; step 3 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
-; to 1; sets wStringIndex to 3; calls ShowString_Bank07; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
-; to 1; then 3 more steps (see the code) (E-0347)
-; why: step 3 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 3);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 3: shows the results headings (string 3 of category 1, 44 x 1 at VRAM $9700) and
+; the rank letters 'GFEDCBAS' (string 5, at $9200). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
     ld hl, vTiles1 + $700
     ld a, l
@@ -3559,12 +3338,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowString_Bank07::
     inc [hl]
     ret
 
-; step 4 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls DrawRectAndWriteDATiles; branches on
-; E; calls WriteTwoDigitsBlankLeading_A0; sets wWindowTileBuffer; calls WriteThreeTwoDigitRows;
-; advances wBattleStep; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 4 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 4);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 4: draws the frame, the result's label tiles, the wild level, the turn total,
+; wWildBand, the rank letter (wEncounterClass + $20) and three two-digit rows from wKeyNameBuf. (C1,
+; E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_DrawRectAndWriteDATiles::
     call DrawRectAndWriteDATiles
     ld a, [wBattleResultStep]
@@ -3686,11 +3462,8 @@ WriteTwoDigitsFromDEStepRow::
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_Data::
     db $04, $f7, $04, $0e, $04, $12, $04, $16
 
-; step 5 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: calls CopyScreenTileBufferToVRAM_A0; calls
-; FillTilesRequest; calls CopyBytes; advances wBattleStep (E-0347)
-; why: step 5 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 5);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 5: copies the screen to the BG map, clears the text tiles and copies record A's
+; name into wTextBuf0. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTilesRequest::
     ld hl, vBGMap0
     call CopyScreenTileBufferToVRAM_A0
@@ -3707,13 +3480,9 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyScreenTileBufferToVRAM_A0_FillTi
     inc [hl]
     ret
 
-; step 6 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: advances wBattleStep; continues in
-; RunBattlePhaseWhenTextIdle_A0_ReadBattleSubPhase; calls CopyF0StringFromTableToTextBuf1; calls
-; WriteDecimalByteString; branches on wBattleResultStep; sets wStringIndex to $15; sets
-; wStringCategory to 5; calls BeginStringDisplay_Bank07; advances wBattleStep (E-0347)
-; why: step 6 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 6);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 6: with one stat change (wWorkBuf + 9 not $FF) shows it (string $14 for results
+; 0-1, $15 otherwise, with the stat's name and the amount at wWorkBuf + $0A) and skips step 7;
+; otherwise goes straight to step 7. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1::
     ld a, [wWorkBuf + $9]
     cp $ff
@@ -3744,22 +3513,15 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1::
     inc [hl]
     ret
 
-; step 7 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: returns unless wTextFlags is 0 (E-0347)
-; why: step 7 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 7);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 7: after the text shows the six stats falling in turn ('<name>'s <stat> fell by
+; <n>.', string $15, amounts from wWorkBuf + $0A). (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1_2::
     ld a, [wTextFlags]
     or a
     ret nz
 
-; Calls CopyF0StringFromTableToTextBuf1; calls WriteDecimalByteString; sets wStringCategory to 5;
-; sets wStringIndex to $15; calls BeginStringDisplay_Bank07; increments wBattleSubPhase; returns if
-; wBattleSubPhase is below $06; sets wBattleSubPhase to 0; advances wBattleStep (E-0347)
-; why: part of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_CopyF0StringFromTableToTextBuf1_2, in
-; step 7 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 7);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; Shows stat wBattleSubPhase's fall (string $15, amount wWorkBuf + $0A + it); after the sixth goes
+; on. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ReadBattleSubPhase::
     ld a, [wBattleSubPhase]
     call CopyF0StringFromTableToTextBuf1
@@ -3785,14 +3547,8 @@ RunBattlePhaseWhenTextIdle_A0_ReadBattleSubPhase::
     inc [hl]
     ret
 
-; step 8 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen: returns unless wTextFlags is 0; sets
-; hTemp0; sets hTemp1; sets hTemp2 to 0; calls WriteNumber24AsDecimalString; sets wStringCategory to
-; 5; sets wStringIndex to $16; calls BeginStringDisplay_Bank07; sets wBattleSubPhase to 0; sets
-; wLinkSendByte to 0; advances wBattleStep; returns if wBattleResultStep is $01; then 1 more step
-; (see the code) (E-0347)
-; why: step 8 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen (when wBattleStep = 8);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen: by wBattleStep: the results screen ('RESULTS ...
-; Level Turns Win Rank', the rank letters 'GFEDCBAS', "0's G fell by W.", 'received WG.') (E-0352)
+; The results, step 8: after the text shows 'received <n>G.' (string $16, the amount at wWorkBuf +
+; $10); result 1 goes on to step 9, the others skip to step 10. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_ShowReceivedWG::
     ld a, [wTextFlags]
     or a
@@ -3831,12 +3587,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitTextFlags
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitLinkMessage
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord: returns unless
-; wTextFlags is 0; sets wLinkSendByte to 1; advances wBattleSubPhase (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord (when
-; wBattleSubPhase = 0); RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord: waits for
-; the text, then fills record buffer B with '???' names and $FF species
-; (WriteUnknownNamePlaceholder) (E-0352)
+; The partner's egg, sub-step 0: after the text sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -3847,17 +3598,16 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitTextFlags::
     inc [hl]
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord: returns unless
-; wLinkMessage is $01; sets wBattleScene to 8; calls CopyBytes; sets wRecordBufB to 1; sets
-; wRecordBufB + MON_PARENT1_SPECIES to $ff; sets wRecordBufB + MON_PARENT2_SPECIES to $ff; calls
-; WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_28 to $ff; calls
-; WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_33 to $ff; calls
+; The partner's egg, sub-step 1: on the partner's 1 sets wBattleScene $08 and the prize rule, and
+; makes record B a newborn copy of record A: unknown parents ('???' masters, species $FF), skills
+; mapped (AppendMappedSkillsToRecordBufBSkillList), status 0, level 1, no experience, and HP, MP and
+; stats quartered (at least 1). (C1, E-0357)
+; code: returns unless wLinkMessage is $01; sets wBattleScene to 8; calls CopyBytes; sets
+; wRecordBufB to 1; sets wRecordBufB + MON_PARENT1_SPECIES to $ff; sets wRecordBufB +
+; MON_PARENT2_SPECIES to $ff; calls WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_28 to
+; $ff; calls WriteUnknownNamePlaceholder; sets wRecordBufB + MON_UNUSED_33 to $ff; calls
 ; AppendMappedSkillsToRecordBufBSkillList; sets wRecordBufB + MON_STATUS to 0; then 40 more steps
 ; (see the code) (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord (when
-; wBattleSubPhase = 1); RunBattlePhaseWhenTextIdle_A0_ResultsScreen_BlankPartnerRecord: waits for
-; the text, then fills record buffer B with '???' names and $FF species
-; (WriteUnknownNamePlaceholder) (E-0352)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -4161,11 +3911,7 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut::
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags
     dw RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade
 
-; step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut: returns unless wTextFlags is 0;
-; sets wLinkSendByte to 1; advances wBattleSubPhase (E-0347)
-; why: step 0 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut (when wBattleSubPhase = 0);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut: waits for the text, then starts the palette
-; fade (E-0352)
+; The results' end, sub-step 0: after the text sends 1. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -4176,14 +3922,8 @@ RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_WaitTextFlags::
     inc [hl]
     ret
 
-; step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut: returns unless wLinkMessage is $01;
-; calls StartPaletteFade; sets wGameMode to 5; sets wModeState to 1; sets wWorldMapState to 0; sets
-; wGameMode2Arg to 0; sets wScreenState to 0; increments wModeChangeRequest; sets wLinkSession to 0;
-; sets wLinkExchangeState to 0; sets wLinkRole to 0; sets wLinkStatus to 0; then 4 more steps (see
-; the code) (E-0347)
-; why: step 1 of RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut (when wBattleSubPhase = 1);
-; RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut: waits for the text, then starts the palette
-; fade (E-0352)
+; The results' end, sub-step 1: on the partner's 1 starts fade 4, switches to game mode 5, state 1
+; and clears the link state. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_ResultsScreen_FadeOut_StartPaletteFade::
     ld a, [wLinkMessage]
     cp $01
@@ -4761,15 +4501,10 @@ BattleResultStatPenaltyByRank::
 BattleResultGoldByRank::
     db $e8, $03, $e8, $03, $e8, $03, $e8, $03, $e8, $03, $e8, $03, $e8, $03, $e8, $03
 
-; called from RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytesAndStep: sets bit 7 of wSideControl;
-; calls FillBytes; sets wBattleItemTarget to $ff; sets wBattleItemId to $ff; sets wMenuState to 0;
-; branches on the byte at wSlotMarks; branches on C; advances wBattleStep; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; also changes HL, BC, A and E by
-; register arithmetic (E-0347)
-; why: a helper of RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytesAndStep, in step 0 of
-; RunBattlePhaseWhenTextIdle_A0_RunTurn (when wBattleStep = 0);
-; RunBattlePhaseWhenTextIdle_A0_RunTurn: by wBattleStep: clears a buffer, then
-; RunBattleSetup_BankA0, the command entry (bank $A1), RunBattleActions and RunBattleStep4 (E-0352)
+; Starts a turn: sets every slot's side control bit 7, clears the personality acts and action queue,
+; sets the action choices and item to $FF; when neither slot 0 nor 1 had mark 0 skips the command
+; step; then marks slots 0-1: 3 absent, 1 when it cannot act or has status 3 bits 6-7, status 4 bits
+; 2-3, status 5 bits 4-5 or status 8 bits 0-1, otherwise 0. (C1, E-0357)
 RunBattlePhaseWhenTextIdle_A0_RunTurn_FillBytes::
     ld hl, wSideControl
     ld b, $08
@@ -4890,13 +4625,8 @@ RunBattleSetup_BankA0_EntrySelect::
     dw RunBattleSetup_BankA0_ToBeginStringDisplay_Bank2FAndStep
     dw RunBattleSetup_BankA0_EntrySelect_3
 
-; step 0 of RunBattleSetup_BankA0_EntrySelect: sets bit 7 of wSideControl; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; calls DrawScreenTileBufferRow11Col4RowsToBGMapRow7;
-; sets wStringCategory to 2; sets wStringIndex to 0; calls ShowStringBank09AtTilesHL_BankA0; calls
-; CopyRectRecordToScreenBuffer_2; advances wBattleResolveStep (E-0347)
-; why: step 0 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 0);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 0: sets side control bit 7 on slots 0-3, lays out the screen, shows the
+; choices (string 0 of category 2, 7 x 1 at VRAM $96D0) and draws the record frame. (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount::
     ld hl, wSideControl
     set 7, [hl]
@@ -4920,12 +4650,8 @@ RunBattleSetup_BankA0_EntrySelect_ClearAndLayoutTileBlocksForBattleFoeCount::
     inc [hl]
     ret
 
-; step 1 of RunBattleSetup_BankA0_EntrySelect: calls
-; RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0; calls WriteVRAMByte; advances
-; wBattleResolveStep; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 1 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 1);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 1: draws the window and the cursor ($BB) at choice wMenuState. (C1,
+; E-0357)
 RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep::
     call RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0
     ld hl, RunBattleSetup_BankA0_EntrySelect_Data
@@ -4944,13 +4670,8 @@ RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep::
     inc [hl]
     ret
 
-; step 2 of RunBattleSetup_BankA0_EntrySelect: calls
-; RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0; branches on wJoypadPressed;
-; plays sound $69; calls FillBytes; calls ClearAndLayoutTileBlocksForBattleFoeCount; advances
-; wBattleResolveStep (E-0347)
-; why: step 2 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 2);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 2: moves the cursor; A (sound $69) clears the menu bytes, lays out the
+; screen and goes on. (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_2::
     ld de, RunBattleSetup_BankA0_EntrySelect_Data
     ld hl, wMenuState
@@ -4971,26 +4692,16 @@ RunBattleSetup_BankA0_EntrySelect_2::
 .return:
     ret
 
-; step 3 of RunBattleSetup_BankA0_EntrySelect: calls
-; RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0; advances wBattleResolveStep
-; (E-0347)
-; why: step 3 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 3);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 3: redraws the window. (C1, E-0357)
 RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0AndStep::
     call RunBattleSetup_BankA0_EntrySelect_ToCopyRect32StrideToVRAM_BankA0
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; step 4 of RunBattleSetup_BankA0_EntrySelect: copies wMenuState & $03 to wBattleSetupDB; branches
-; on wMenuState & $03; calls RunBattleSetup_BankA0_EntrySelect_ReadLinkRole; sets wBattleSubPhase to
-; 3; sets wBattleResolveStep to 0; branches on the byte at wSlotMarks; sets wStringCategory to 0;
-; sets wStringIndex to $2d; advances wBattleResolveStep; copies C to wCommandMonster; sets
-; wBattleSubPhase to 1; sets wBattleResolveStep to 0; then 3 more steps (see the code) (E-0347)
-; why: step 4 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 4);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 4: by the choice (wBattleSetupDB): 0 clears this side's action and
+; fights (sub-phase 3); 1 commands this side's monster (wCommandMonster, sub-phase 1) when it can
+; act, otherwise string $2D; 2 string $1D; 3 string $20. (C1, E-0357)
 RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc::
     ld a, [wMenuState]
     and $03
@@ -5055,11 +4766,7 @@ RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc::
 .return:
     ret
 
-; called from RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc: changes HL and A (E-0347)
-; why: a helper of RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc, in step 4 of
-; RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 4);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Clears this side's action choice (slot 0, or 1 for link role bit 1). (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_ReadLinkRole::
     ld a, [wLinkRole]
     and $02
@@ -5070,12 +4777,7 @@ RunBattleSetup_BankA0_EntrySelect_ReadLinkRole::
     ld [hli], a
     ret
 
-; step 5 of RunBattleSetup_BankA0_EntrySelect: calls RunBattleSetup_BankA0_ReadSTAT; calls
-; CopyRectRecordToScreenBuffer; calls DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; advances
-; wBattleResolveStep (E-0347)
-; why: step 5 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 5);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 5: redraws, draws the record frame and the bottom rows. (C1, E-0357)
 RunBattleSetup_BankA0_CopyRectRecordToScreenBufferAndStep::
     call RunBattleSetup_BankA0_ReadSTAT
     farcall CopyRectRecordToScreenBuffer
@@ -5084,24 +4786,14 @@ RunBattleSetup_BankA0_CopyRectRecordToScreenBufferAndStep::
     inc [hl]
     ret
 
-; step 6 of RunBattleSetup_BankA0_EntrySelect: calls BeginStringDisplay_Bank2F; advances
-; wBattleResolveStep (E-0347)
-; why: step 6 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 6);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 6: starts the chosen string (bank $2F). (C1, E-0357)
 RunBattleSetup_BankA0_ToBeginStringDisplay_Bank2FAndStep::
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattleResolveStep
     inc [hl]
     ret
 
-; step 7 of RunBattleSetup_BankA0_EntrySelect: returns unless wTextFlags is 0; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; calls CopyRectRecordToScreenBuffer_2; sets
-; wBattleResolveStep to 1 (E-0347)
-; why: step 7 of RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 7);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; Choosing what to do, step 7: after the text redraws and returns to step 1. (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_3::
     ld a, [wTextFlags]
     or a
@@ -5144,14 +4836,8 @@ RunBattleSetup_BankA0_CommandMenu::
     dw RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
 
-; step 0 of RunBattleSetup_BankA0_CommandMenu: sets wStringCategory to 2; sets wStringIndex to 1;
-; calls ShowStringBank09AtTilesHL_BankA0; sets wStringIndex to 8; calls
-; ShowStringBank09AtTilesHL_BankA0; sets wCommandPageCount to 0; sets wCommandCursorMax to 3; sets
-; wCommandCursor to 0; calls CopyRectRecordToScreenBuffer_4; calls WriteFiveTilesFromTable_2;
-; advances wBattleResolveStep (E-0347)
-; why: step 0 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 0);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 0: shows the tactic list (string 1 of category 2) and the command list
+; (string 8), four places, and draws the frame. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0::
     ld hl, vTiles1 + $6d0
     ld de, $2001
@@ -5178,13 +4864,8 @@ RunBattleSetup_BankA0_CommandMenu_ShowStringBank09AtTilesHL_BankA0::
     inc [hl]
     ret
 
-; step 1 of RunBattleSetup_BankA0_CommandMenu: copies the byte at wBattleLoadWork to wMenuSubState;
-; calls DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0; calls WriteVRAMByte; advances
-; wBattleResolveStep; sets wListLastPageSize to 3; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 1 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 1);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 1: puts the cursor on the monster's tactic (wBattleLoadWork) and draws it.
+; (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize::
     ld a, [wCommandMonster]
     ld hl, wBattleLoadWork
@@ -5210,15 +4891,9 @@ RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize::
     ld [wListLastPageSize], a
     ret
 
-; step 2 of RunBattleSetup_BankA0_CommandMenu: calls
-; RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0; branches on wJoypadPressed;
-; plays sound $69; calls SetSlotTacticAndSlotLastTacticForCommandMonster_BankA0; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; advances wBattleResolveStep; sets wBattleArg1 to 0;
-; branches on $00; sets wBattleArg1 to 0; sets bit 7 of wSideControl; sets wBattleResolveStep to 0;
-; sets wBattleSubPhase to 3; then 3 more steps (see the code) (E-0347)
-; why: step 2 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 2);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 2: A (sound $69) sets the tactic; tactic 3 goes on two steps to the
+; commands, the others clear the action, set side control bit 7 and fight (sub-phase 3); B goes
+; back. (C1, E-0357)
 RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc::
     ld de, RunBattleSetup_BankA0_CommandMenu_Data
     ld hl, wMenuSubState
@@ -5279,12 +4954,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc::
 .return:
     ret
 
-; step 3 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0; sets wBattleResolveStep to 0; sets
-; wBattleSubPhase to 0 (E-0347)
-; why: step 3 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 3);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 3: redraws and returns to choosing (sub-phase 0). (C1, E-0357)
 RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase::
     call DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0
     xor a
@@ -5293,14 +4963,8 @@ RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase::
     ld [wBattleSubPhase], a
     ret
 
-; step 4 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0; sets wBattleArg1 to 0; sets
-; wStringCategory to 2; sets wStringIndex to 9; calls ShowStringBank09AtTilesHL_BankA0; calls
-; CopyRectRecordToScreenBuffer_6; calls WriteFiveTilesFromTable_2; copies the byte at wSideControl &
-; $03 to wMenuSelectedMember; advances wBattleResolveStep (E-0347)
-; why: step 4 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 4);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 4: shows the command list (string 9 of category 2, 8 x 3), draws its frame
+; and puts the cursor at side control bits 4-5. (C1, E-0357)
 RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc::
     ld a, [wBattleArg1]
     or a
@@ -5330,12 +4994,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc::
     inc [hl]
     ret
 
-; step 5 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0; calls WriteVRAMByte; advances
-; wBattleResolveStep; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 5 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 5);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 5: draws the cursor ($BB) at the command. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
     call DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     ld hl, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
@@ -5354,17 +5013,9 @@ RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
     inc [hl]
     ret
 
-; step 6 of RunBattleSetup_BankA0_CommandMenu: calls
-; RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2; branches on wJoypadPressed;
-; sets wBattleArg1 to 0; calls ClearAndLayoutTileBlocksForBattleFoeCount; advances
-; wBattleResolveStep; plays sound $69; branches on wMenuSelectedMember & $03; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls ClearAndLayoutTileBlocksForBattleFoeCount; sets
-; wBattleResolveStep to $15; calls
-; RunBattleSetup_BankA0_CommandMenu_WriteBattleArg2AndBattleArg3Etc; branches on D; then 9 more
-; steps (see the code) (E-0347)
-; why: step 6 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 6);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 6: B goes back; A (sound $69) stores the command in side control bits 4-5:
+; 0 picks action $C0 aimed at the partner slot (step $15 when absent), 1 the skills (step 8 when
+; none can be used, otherwise step $0C), 2 action $AC on itself. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount::
     ld de, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
     ld hl, wMenuSelectedMember
@@ -5463,12 +5114,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount::
 .return:
     ret
 
-; step 7 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0; branches on wBattleArg1; sets
-; wBattleResolveStep to $14 (E-0347)
-; why: step 7 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 7);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 7: redraws; step $14 after a choice, otherwise step 0. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep::
     call DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     ld a, [wBattleArg1]
@@ -5480,12 +5126,7 @@ RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep::
     ld [wBattleResolveStep], a
     ret
 
-; step 8 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0; calls FillTilesFromRequest; calls
-; CopyRectRecordToScreenBuffer; advances wBattleResolveStep (E-0347)
-; why: step 8 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 8);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 8: redraws, clears the text tiles and draws the record frame. (C1, E-0357)
 RunBattleSetup_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0::
     call DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
     call FillTilesFromRequest
@@ -5494,12 +5135,7 @@ RunBattleSetup_CallDrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0::
     inc [hl]
     ret
 
-; step 9 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; sets wStringCategory to 0; sets wStringIndex
-; to $29; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
-; why: step 9 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 9);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 9: 'It has no usable battle skills!' (string $29). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $00
@@ -5511,12 +5147,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable::
     inc [hl]
     ret
 
-; step 22 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; sets wStringCategory to 0; sets wStringIndex
-; to $7f; calls BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
-; why: step 22 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 22);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 22: 'But there is no one to ...' (string $7F). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $00
@@ -5528,11 +5159,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowButThereIsNo::
     inc [hl]
     ret
 
-; step 10 of RunBattleSetup_BankA0_CommandMenu: returns unless wTextFlags is 0; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; advances wBattleResolveStep (E-0347)
-; why: step 10 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 10);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 10: after the text lays out the screen and goes on. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep::
     ld a, [wTextFlags]
     or a
@@ -5542,28 +5169,17 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Adva
     inc [hl]
     ret
 
-; step 11 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; sets wBattleResolveStep to 4 (E-0347)
-; why: step 11 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 11);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 11: draws the bottom rows and returns to the command list (step 4). (C1,
+; E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $04
     ld [wBattleResolveStep], a
     ret
 
-; step 12 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0; sets wBattleArg1 to 0; copies the byte at
-; wSideControl & $03 to wMenuCursor; sets wCommandCursor; clears bit 7 of wCommandCursor; calls
-; ShowSkillPageNames_BankA0; calls
-; RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0; calls
-; CopyRectRecordsAndToScreenBuffer; sets wStringCategory to 9; calls
-; RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0; advances wBattleResolveStep
-; (E-0347)
-; why: step 12 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 12);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 12 (the skills): takes the cursor from side control (bits 0-1 the entry,
+; bit 2 the page), shows the page's skill names, the cursor and frame, and the chosen skill's name
+; and MP cost. (C1, E-0357)
 RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
     ld a, [wBattleArg1]
     or a
@@ -5608,13 +5224,8 @@ RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
     inc [hl]
     ret
 
-; step 13 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0; calls WriteVRAMByte; calls
-; DrawInventoryPageIndicator_BankA0; advances wBattleResolveStep; sets wListLastPageSize to 3
-; (E-0347)
-; why: step 13 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 13);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 13: draws the list, the cursor ($BB) and the page indicator (three entries
+; a page). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
     ld hl, RunBattleSetup_BankA0_CommandMenu_Data
@@ -5636,15 +5247,10 @@ RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize::
     ld [wListLastPageSize], a
     ret
 
-; step 14 of RunBattleSetup_BankA0_CommandMenu: calls
-; RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0; branches on wJoypadPressed;
-; plays sound $69; calls ClearAndLayoutTileBlocksForBattleFoeCount; sets wBattleArg1 to $14; calls
-; LoadSelectedSkillRecord_BankA0; branches on wRecordBufferData; branches on h; advances
-; wBattleResolveStep; branches on wJoypadPressed; calls ClearAndLayoutTileBlocksForBattleFoeCount;
-; sets wBattleArg1 to 4; then 10 more steps (see the code) (E-0347)
-; why: step 14 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 14);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 14: the skill cursor: A (sound $69) loads the skill; one without record
+; byte 3 bit 0 shows string $25, one costing more MP than the monster has (cost $FF counts as 1)
+; string $26, both returning here through step 16; otherwise stores the page and entry in side
+; control and the skill as the action and goes on; B returns to the commands. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_2::
     ld de, RunBattleSetup_BankA0_CommandMenu_Data
     ld hl, wMenuCursor
@@ -5749,12 +5355,7 @@ RunBattleSetup_BankA0_CommandMenu_2::
     inc [hl]
     jr .return
 
-; step 15 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0; copies wBattleArg1 to
-; wBattleResolveStep; sets wBattleArg1 to 0 (E-0347)
-; why: step 15 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 15);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 15: redraws and goes to the return step in wBattleArg1. (C1, E-0357)
 RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
     ld a, [wBattleArg1]
@@ -5763,12 +5364,7 @@ RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1::
     ld [wBattleArg1], a
     ret
 
-; step 16 of RunBattleSetup_BankA0_CommandMenu: calls ClearAndLayoutTileBlocksForBattleFoeCount;
-; calls DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0; calls
-; CopyRectRecordToScreenBuffer; advances wBattleResolveStep (E-0347)
-; why: step 16 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 16);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 16: lays out, redraws and draws the record frame. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_3::
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
@@ -5777,12 +5373,8 @@ RunBattleSetup_BankA0_CommandMenu_3::
     inc [hl]
     ret
 
-; step 17 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; sets wStringCategory to 0; calls
-; BeginStringDisplay_Bank2F; advances wBattleResolveStep (E-0347)
-; why: step 17 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 17);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 17: draws the bottom rows and starts the chosen string (bank $2F). (C1,
+; E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteStringCategory::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     xor a
@@ -5792,11 +5384,7 @@ RunBattleSetup_BankA0_CommandMenu_WriteStringCategory::
     inc [hl]
     ret
 
-; step 18 of RunBattleSetup_BankA0_CommandMenu: returns unless wTextFlags is 0; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; advances wBattleResolveStep (E-0347)
-; why: step 18 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 18);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 18: after the text lays out the screen. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_AdvanceBattleResolveStep_2::
     ld a, [wTextFlags]
     or a
@@ -5806,22 +5394,15 @@ RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount_Adva
     inc [hl]
     ret
 
-; step 19 of RunBattleSetup_BankA0_CommandMenu: calls
-; DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0; sets wBattleResolveStep to $0c (E-0347)
-; why: step 19 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 19);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 19: draws the bottom rows and returns to the skill list (step $0C). (C1,
+; E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep_2::
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
     ld a, $0c
     ld [wBattleResolveStep], a
     ret
 
-; step 20 of RunBattleSetup_BankA0_CommandMenu: sets wBattleResolveStep to 0; sets wBattleSubPhase
-; to 3 (E-0347)
-; why: step 20 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 20);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; The command menu, step 20: the choice is made: fights (sub-phase 3). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SetBattleResolveStep::
     xor a
     ld [wBattleResolveStep], a
@@ -5829,21 +5410,12 @@ RunBattleSetup_BankA0_CommandMenu_SetBattleResolveStep::
     ld [wBattleSubPhase], a
     ret
 
-; step 2 of RunBattleSetup_BankA0: returns at once (E-0347)
-; why: step 2 of RunBattleSetup_BankA0 (when wBattleSubPhase = 2); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 2: nothing (a bare ret). (C1, E-0357)
 RunBattleSetup_BankA0_Return::
     ret
 
-; step 3 of RunBattleSetup_BankA0: branches on the byte at wSlotMarks; sets wSlotMarks to 1;
-; branches on the byte at wSlotMarks; sets wBattleActor to 0; calls
-; ClearAndLayoutTileBlocksForBattleFoeCount; calls RunBattleSetup_BankA0_ReadSTAT; calls
-; CopyRectRecordToScreenBuffer; calls DrawScreenTileBufferRow11Col4RowsToBGMapRow7; advances
-; wBattleSubPhase; sets wLinkSendByte to 0 (E-0347)
-; why: step 3 of RunBattleSetup_BankA0 (when wBattleSubPhase = 3); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 3: marks every slot with mark 0 as chosen (1), resets the actor, lays out
+; the screen, blanks the text tiles, draws the frame and clears the send byte. (C1, E-0357)
 RunBattleSetup_BankA0_ClearAndLayoutTileBlocksForBattleFoeCount::
     ld b, $08
     ld hl, wSlotMarks
@@ -5870,11 +5442,8 @@ RunBattleSetup_BankA0_ClearAndLayoutTileBlocksForBattleFoeCount::
     ld [wLinkSendByte], a
     ret
 
-; step 4 of RunBattleSetup_BankA0: calls CopyFiveGlyphsPlusMarks; sets wStringCategory to 0; sets
-; wStringIndex to $22; calls BeginStringDisplay_Bank2F; advances wBattleSubPhase (E-0347)
-; why: step 4 of RunBattleSetup_BankA0 (when wBattleSubPhase = 4); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 4: 'Selecting <partner>'s move...' (string $22) with the partner's name
+; (wLinkSeedCopy). (C1, E-0357)
 RunBattleSetup_BankA0_ShowSelectingHeroSMove::
     ld de, wLinkSeedCopy
     ld hl, wTextBuf0
@@ -5888,12 +5457,9 @@ RunBattleSetup_BankA0_ShowSelectingHeroSMove::
     inc [hl]
     ret
 
-; step 5 of RunBattleSetup_BankA0: calls AdvanceRandom; returns if wRandomLo is $f3; returns if
-; wRandomHi is $f3; sets wLinkSendByte to 1; advances wBattleSubPhase; also changes HL, A and D by
-; register arithmetic (E-0347)
-; why: step 5 of RunBattleSetup_BankA0 (when wBattleSubPhase = 5); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 5: rolls the random bytes until neither is $F3, packs this side's choice
+; (menu bytes, its tactic, the two random bytes, side controls and action choices; 11 bytes) into
+; wLinkRecvBuffer and sends 1. (C1, E-0357)
 RunBattleSetup_BankA0_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -5937,12 +5503,8 @@ RunBattleSetup_BankA0_AdvanceRandom::
     inc [hl]
     ret
 
-; step 6 of RunBattleSetup_BankA0: returns unless wLinkMessage is $01; advances wBattleSubPhase;
-; sets wLinkBufferCountHi to 0; sets wLinkBufferCountLo to $0b; copies L to wLinkTimeoutLo; copies H
-; to wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi (E-0347)
-; why: step 6 of RunBattleSetup_BankA0 (when wBattleSubPhase = 6); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 6: on the partner's 1 prepares an 11-byte exchange into wLinkPartnerName.
+; (C1, E-0357)
 RunBattleSetup_BankA0_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $01
@@ -5965,11 +5527,7 @@ RunBattleSetup_BankA0_WaitLinkMessage::
     ld [wLinkBufferPtrHi], a
     ret
 
-; step 7 of RunBattleSetup_BankA0: advances wBattleSubPhase; sets wLinkSendByte to $ff; sets
-; wLinkReady to 1 (E-0347)
-; why: step 7 of RunBattleSetup_BankA0 (when wBattleSubPhase = 7); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 7: starts the exchange (send byte $FF, wLinkReady). (C1, E-0357)
 RunBattleSetup_BankA0_SetBattleSubPhase::
     ld hl, wBattleSubPhase
     inc [hl]
@@ -5979,16 +5537,10 @@ RunBattleSetup_BankA0_SetBattleSubPhase::
     ld [wLinkReady], a
     ret
 
-; step 8 of RunBattleSetup_BankA0: returns unless wLinkMessage is $f0; sets wLinkSendByte to 0; sets
-; wLinkReady to 0; branches on wLinkRole; copies the byte at wLinkPartnerName to wSlotCommands;
-; copies the byte at wLinkPartnerName to wPartnerCommand; copies the byte at wMenuState to
-; wSlotCommands; copies the byte at wMenuState to wPartnerCommand; copies the byte at
-; wLinkPartnerName to wMenuState; copies the byte at wLinkPartnerName to wMenuSubState; copies the
-; byte at wLinkPartnerName to wSlotTactic; copies the byte at wLinkPartnerName to wRandomLo; then 7
-; more steps (see the code) (E-0347)
-; why: step 8 of RunBattleSetup_BankA0 (when wBattleSubPhase = 8); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 8: when the exchange ends takes the partner's choice for its slot (the
+; leader takes slot 1's commands, tactic, side control and action; the follower slot 0's together
+; with the leader's menu bytes and random seed), and copies the tactic into the last tactic unless
+; it is 3. (C1, E-0357)
 RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $f0
@@ -6062,12 +5614,9 @@ RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte::
     inc [hl]
     ret
 
-; step 9 of RunBattleSetup_BankA0: branches on wRandomSeed2Lo; branches on wRandomSeed2Hi; sets
-; wLinkSendByte to $22; sets wCounterPtr0Lo to $22; sets wLinkSendByte to $33; sets wCounterPtr0Lo
-; to $33; advances wBattleSubPhase; also changes HL, A and B by register arithmetic (E-0347)
-; why: step 9 of RunBattleSetup_BankA0 (when wBattleSubPhase = 9); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 9: compares the second random seed with the exchanged one
+; (wBattleSetupFlags) and sends $22 when they match, $33 when not (kept in wCounterPtr0Lo). (C1,
+; E-0357)
 RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo::
     ld hl, wBattleSetupFlagsLo
     ld a, [hli]
@@ -6099,11 +5648,8 @@ RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo::
     inc [hl]
     ret
 
-; step 10 of RunBattleSetup_BankA0: branches on wLinkMessage; copies wLinkMessage to wCounterPtr0Hi;
-; sets wLinkSendByte to 0; advances wBattleSubPhase (E-0347)
-; why: step 10 of RunBattleSetup_BankA0 (when wBattleSubPhase = 10); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 10: waits for the partner's $22 or $33 (kept in wCounterPtr0Hi). (C1,
+; E-0357)
 RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte::
     ld a, [wLinkMessage]
     cp $22
@@ -6120,12 +5666,8 @@ RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte::
     inc [hl]
     ret
 
-; step 11 of RunBattleSetup_BankA0: branches on wCounterPtr0Lo; branches on wCounterPtr0Hi; sets
-; wBattleSubPhase to 5; advances wBattleSubPhase; sets wLinkSendByte to 2; also changes HL and A by
-; register arithmetic (E-0347)
-; why: step 11 of RunBattleSetup_BankA0 (when wBattleSubPhase = 11); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 11: when both sides sent $22 sends 2 and goes on; otherwise exchanges again
+; from sub-phase 5. (C1, E-0357)
 RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase::
     ld a, [wCounterPtr0Lo]
     cp $22
@@ -6147,11 +5689,8 @@ RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase::
     ld [wLinkSendByte], a
     ret
 
-; step 12 of RunBattleSetup_BankA0: returns unless wLinkMessage is $02; calls FillTilesFromRequest;
-; advances wBattleStep; sets wBattleSubPhase to 0 (E-0347)
-; why: step 12 of RunBattleSetup_BankA0 (when wBattleSubPhase = 12); RunBattleSetup_BankA0: the same
-; instruction sequence as RunBattleSetup (bank $31) apart from label operands, which refer to this
-; bank's own routines and tables (E-0352, E-0107)
+; Turn setup, sub-phase 12: on the partner's 2 clears the text tiles and goes to the next battle
+; step. (C1, E-0357)
 RunBattleSetup_BankA0_FillTilesFromRequest::
     ld a, [wLinkMessage]
     cp $02
@@ -6163,14 +5702,8 @@ RunBattleSetup_BankA0_FillTilesFromRequest::
     ld [wBattleSubPhase], a
     ret
 
-; called from RunBattleSetup_BankA0_EntrySelect_2: calls SetBit6AndBlankEntryTile_BankA0; calls
-; ClearBit6AndCursorEntryTile_BankA0; plays sound $69; calls SetBit6AndBlankEntryTile_BankA0; calls
-; ClearBit6AndCursorEntryTile_BankA0; plays sound $69; calls ClearBit6AndCursorEntryTile_BankA0;
-; calls SetBit6AndBlankEntryTile_BankA0; copies wFrameCounterLo & $f0 to wFrameCounterLo (E-0347)
-; why: a helper of RunBattleSetup_BankA0_EntrySelect_2, in step 2 of
-; RunBattleSetup_BankA0_EntrySelect (when wBattleResolveStep = 2);
-; RunBattleSetup_BankA0_EntrySelect: by wBattleResolveStep: lays out the tile blocks for the foe
-; count and moves a selection over entries, setting or clearing bit 6 and the ... (E-0352)
+; A 2 x 2 cursor (entry byte HL, BG map offsets DE): Up/Down toggle bit 0, Left/Right bit 1 (sound
+; $69); otherwise blinks the cursor every 16 frames. (C1, E-0357)
 RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $c0
@@ -6217,14 +5750,8 @@ RunBattleSetup_BankA0_EntrySelect_SetBit6AndBlankEntryTile_BankA0::
 .return:
     ret
 
-; called from RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount: calls
-; SetBit6AndBlankEntryTile_BankA0; calls ClearBit6AndCursorEntryTile_BankA0; plays sound $69; calls
-; ClearBit6AndCursorEntryTile_BankA0; calls SetBit6AndBlankEntryTile_BankA0; copies wFrameCounterLo
-; & $f0 to wFrameCounterLo; also changes A by register arithmetic (E-0347)
-; why: a helper of RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount, in
-; step 6 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 6);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; A three-entry cursor: Up/Down move with wrap (sound $69); otherwise blinks the cursor every 16
+; frames. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -6277,15 +5804,9 @@ RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0_2::
 .return:
     ret
 
-; Branches on wCommandPageCount; branches on wCommandCursorMax; calls
-; SetBit6AndBlankEntryTile_BankA0; calls ClearBit6AndCursorEntryTile_BankA0; plays sound $69;
-; branches on wCommandPageCount; branches on wCommandCursorMax; calls
-; SetBit6AndBlankEntryTile_BankA0; calls ClearBit6AndCursorEntryTile_BankA0; plays sound $69;
-; branches on wCommandPageCount; branches on wCommandCursor; then 11 more steps (see the code)
-; (E-0347)
-; why: part of RunBattleSetup_BankA0_CommandMenu; RunBattleSetup_BankA0_CommandMenu: by
-; wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_CommandMenu (command windows, 'It has no
-; usable ...') (E-0352)
+; The skill list cursor: Up/Down move within the page (the last page up to wCommandCursorMax, others
+; up to wListLastPageSize) with wrap, Left/Right turn the page when there are two; marks a change
+; (bit 7) for redrawing. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $40
@@ -6537,14 +6058,8 @@ WriteFiveTilesFromTable_2::
 WriteFiveTilesFromTable_2_Data::
     db $d0, $d5
 
-; called from RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount: copies L
-; to wBattleArg2; copies H to wBattleArg3; branches on the byte at wBattleSkills; branches on C;
-; sets wCommandPageCount to 0; branches on C; copies C & $03 & $03 to wCommandCursorMax; sets
-; wCommandCursor to 0; also changes HL, BC, A and D by register arithmetic (E-0347)
-; why: a helper of RunBattleSetup_BankA0_CommandMenu_ClearAndLayoutTileBlocksForBattleFoeCount, in
-; step 6 of RunBattleSetup_BankA0_CommandMenu (when wBattleResolveStep = 6);
-; RunBattleSetup_BankA0_CommandMenu: by wBattleResolveStep: the bank-$A0 copy of
-; RunBattleSetup_CommandMenu (command windows, 'It has no usable ...') (E-0352)
+; Counts the command monster's skills (up to eight, stopping at $FF or 0) for the skill list: two
+; pages from five on, the last page's size, and returns D = the skills outside $A2-$A9. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteBattleArg2AndBattleArg3Etc::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
@@ -6646,14 +6161,8 @@ ReturnZero_3::
     xor a
     ret
 
-; Branches on wCommandCursor; sets wCommandCursor; calls ClearBit6AndCursorEntryTile_BankA0; calls
-; ShowSkillPageNames_BankA0; sets bit 7 of wMenuCursor; returns unless bit 7 of wMenuCursor is set;
-; sets wMenuCursor; sets wStringCategory to 9; calls
-; RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0; calls WriteVRAMByteInc; calls
-; WriteVRAMByte; also changes HL, DE, A and C by register arithmetic (E-0347)
-; why: part of RunBattleSetup_BankA0_CommandMenu; RunBattleSetup_BankA0_CommandMenu: by
-; wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_CommandMenu (command windows, 'It has no
-; usable ...') (E-0352)
+; Redraws after a cursor change: a new page shows its skill names; a new entry shows the skill's
+; name and its MP cost at row 15. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0::
     ld a, [wCommandCursor]
     bit 7, a
@@ -6741,12 +6250,8 @@ ShowStringAAtTiles2080_BankA0::
     call ShowStringBank08AtTilesHL_BankA0
     ret
 
-; Sets wStringIndex; calls ShowStringBank08AtTilesHL_BankA0; sets wRecordBuffer; calls
-; LoadSkillRecord; branches on wRecordBufferData; calls HLToDecimalDigits; calls
-; WriteDecimalDigitTiles; also changes HL, DE and A by register arithmetic (E-0347)
-; why: part of RunBattleSetup_BankA0_CommandMenu; RunBattleSetup_BankA0_CommandMenu: by
-; wBattleResolveStep: the bank-$A0 copy of RunBattleSetup_CommandMenu (command windows, 'It has no
-; usable ...') (E-0352)
+; Shows skill A's name in a 6 x 3 window at VRAM $8800 and its MP cost (record byte 0; $FF shows the
+; monster's own MP) as three digits at wWindowTileBuffer + $88. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0::
     push af
     ld [wStringIndex], a
@@ -6911,10 +6416,7 @@ CallRunDebugStateInBankE0_BankA0::
     farcall RunDebugState_E0
     ret
 
-; Changes HL, BC and A; branches on rSTAT (E-0347)
-; why: part of RunBattleSetup_BankA0; RunBattleSetup_BankA0: the same instruction sequence as
-; RunBattleSetup (bank $31) apart from label operands, which refer to this bank's own routines and
-; tables (E-0352, E-0107)
+; Fills $120 two-byte rows at VRAM $8800 with $FF, $00 (blank tiles). (C1, E-0357)
 RunBattleSetup_BankA0_ReadSTAT::
     ld hl, vTiles1
     ld bc, $0120
@@ -7002,10 +6504,7 @@ DrawSlotStatusMarks_BankA0::
     pop bc
     ret
 
-; called from DrawSlotStatusMarks_BankA0: takes HL; changes HL and A (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Blanks slot C's five status mark places (tile $C3). (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data
@@ -7019,11 +6518,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data to $c0 (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the curse mark ($C0, status bit 5) for slot C. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_2::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data
@@ -7032,11 +6527,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_2::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_3 to $c1 (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the poison mark ($C1, status bit 0) for slot C. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_3::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_3
@@ -7045,11 +6536,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_3::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_3 to $c7 (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the bad poison mark ($C7, status bit 1) for slot C at the poison place. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_4::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_3
@@ -7058,11 +6545,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_4::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_4 to $c8 (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the sleep mark ($C8, status bit 7) for slot C. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_5::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_4
@@ -7071,11 +6554,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_5::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets
-; DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_2 to $c9 (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the confusion mark ($C9, status bit 4) for slot C. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_6::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_Data_2
@@ -7084,10 +6563,7 @@ DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_6::
     pop hl
     ret
 
-; called from DrawSlotStatusMarks_BankA0: sets DrawSlotStatusMarks_BankA0_Data to $ca (E-0347)
-; why: a helper of DrawSlotStatusMarks_BankA0; DrawSlotStatusMarks_BankA0: C = slot 0-2: when the
-; slot is present and its status byte 0 is non-zero, calls one marker routine for each of bits 0, 1,
-; 4, 5, 6 and 7 ... (E-0352, E-0111)
+; Draws the paralysis mark ($CA, status bit 6) for slot C. (C1, E-0357)
 DrawSlotStatusMarks_BankA0_ReadWordTableEntryForSlotC_BankA0_7::
     push hl
     ld hl, DrawSlotStatusMarks_BankA0_Data

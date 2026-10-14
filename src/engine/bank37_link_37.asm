@@ -563,10 +563,9 @@ String_37_01_1C::
 
 ; called from RunLinkSession5Exchange_LinkReceiveStepWithBuffer: returns unless wFadeState is 0;
 ; dispatches on wScreenState; also changes A by register arithmetic (E-0347)
-; why: a helper of RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession5Exchange (when wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5
-; and 6 (RunLinkSession): by wLinkExchangeState it sends and receives one exchange of the session's
-; buffer (E-0352, E-0354, E-0122)
+; why: a helper of RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_WaitFadeState::
     ld a, [wFadeState]
     and a
@@ -595,10 +594,9 @@ RunLinkSession5Exchange_WaitFadeState::
 ; step 0 of RunLinkSession5Exchange_WaitFadeState: calls SwapMonstersMenu; increments wScreenState
 ; (E-0347)
 ; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
     farcall SwapMonstersMenu
     ld a, [wScreenState]
@@ -610,10 +608,9 @@ RunLinkSession5Exchange_ToSwapMonstersMenuAndStep::
 ; on wTextFlags; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1; also
 ; changes HL, BC and A by register arithmetic (E-0347)
 ; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_WaitTextFlags::
     ld a, [wTextFlags]
     bit 0, a
@@ -639,10 +636,9 @@ RunLinkSession5Exchange_WaitTextFlags::
 ; step 5 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 3; advances wScreenState (E-0347)
 ; why: step 5 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 5), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_SetLinkSendByte::
     ld a, [wTextFlags]
     or a
@@ -656,10 +652,9 @@ RunLinkSession5Exchange_SetLinkSendByte::
 ; step 6 of RunLinkSession5Exchange_WaitFadeState: returns unless wLinkMessage is $03; sets
 ; wLinkSendByte to 0; sets wScreenState to 1 (E-0347)
 ; why: step 6 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 6), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $03
@@ -673,10 +668,9 @@ RunLinkSession5Exchange_WaitLinkMessage::
 ; step 2 of RunLinkSession5Exchange_WaitFadeState: increments wScreenState; sets wLinkSendByte to 2;
 ; advances wTitleScreenState (E-0347)
 ; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_SetScreenState::
     ld a, [wScreenState]
     inc a
@@ -924,10 +918,9 @@ RunLinkSession5Exchange_LinkBreed_BreedMenu_ShowStringIndexA_Bank37::
 ; step 0 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 0; increments wScreenSubStep; calls ShowStringIndexA_Bank37 (E-0347)
 ; why: step 0 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 0), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37::
     ld a, [wTextFlags]
     and a
@@ -944,10 +937,9 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37::
 ; step 1 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; increments
 ; wScreenSubStep; sets wLinkSendByte to 1 (E-0347)
 ; why: step 1 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 1), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_SetScreenSubStep::
     ld a, [wTextFlags]
     and a
@@ -962,10 +954,9 @@ RunLinkSession5Exchange_SetScreenSubStep::
 ; step 2 of RunLinkSession5Exchange_WaitFadeState: returns unless wLinkMessage is $01; sets
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
 ; why: step 2 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 2), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
     ld a, [wLinkMessage]
     cp $01
@@ -982,10 +973,9 @@ RunLinkSession5Exchange_ShowStringIndexA_Bank37_2::
 ; step 3 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; calls BreedMenu;
 ; sets wSelectedRecord to 0; sets wScreenSubStep to 0 (E-0347)
 ; why: step 3 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 3), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_BreedMenu::
     ld a, [wTextFlags]
     and a
@@ -999,10 +989,9 @@ RunLinkSession5Exchange_BreedMenu::
 ; step 9 of RunLinkSession5Exchange_WaitFadeState: returns unless wTextFlags is 0; sets
 ; wLinkSendByte to 0; calls ShowStringIndexA_Bank37; increments wScreenSubStep (E-0347)
 ; why: step 9 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 9), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_ShowStringIndexA_Bank37_3::
     ld a, [wTextFlags]
     or a
@@ -1929,10 +1918,9 @@ RunLinkSession5Exchange_WriteLinkSendByteAndLinkSceneEtc::
 ; step 12 of RunLinkSession5Exchange_WaitFadeState: calls SwapMonstersMenu; returns unless
 ; wScreenStep is $0a; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
 ; why: step 12 of RunLinkSession5Exchange_WaitFadeState (when wScreenState = 12), in a helper of
-; RunLinkSession5Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession5Exchange (when
-; wLinkExchangeState = 1); RunLinkSession5Exchange: link sessions 5 and 6 (RunLinkSession): by
-; wLinkExchangeState it sends and receives one exchange of the session's buffer (E-0352, E-0354,
-; E-0122)
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession5Exchange_LinkReceiveStepWithBuffer: Link session 5, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession5Exchange_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]

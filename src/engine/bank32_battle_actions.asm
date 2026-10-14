@@ -4729,10 +4729,9 @@ ActionEffect_BeDragon_ReadLinkMode::
 ; wSideFlags1 to 0; copies C to wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; calls
 ; RecomputeTargetMaxHPAndMP; calls ResetTargetAGLAndDEFToBase; branches on C; sets wBattleSlotOut to
 ; $ff; sets wSlotMarks to $ff; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait, in step 4 of
-; RunBattlePhaseWhenTextIdle_A0_SyncLink (when wBattleStep = 4);
-; RunBattlePhaseWhenTextIdle_A0_SyncLink: by wBattleStep: exchanges bytes and messages over the link
-; ('Please wait.') (E-0352)
+; why: a helper of RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait;
+; RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait: Round end, step 4: after the text, after round
+; 2 goes to the next phase (E-0352, E-0357)
 RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty::
     xor a
     ld [wSideFlags0], a

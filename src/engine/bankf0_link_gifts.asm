@@ -586,10 +586,9 @@ Text_CantBeGivenTo::
 ; called from RunLinkSession8Exchange_LinkReceiveStepWithBuffer: sets wTitleScreenState to 1;
 ; returns unless wFadeState is 0; branches on wScreenState; returns if bit 0 of wTextFlags is set;
 ; dispatches on wScreenState; also changes A by register arithmetic (E-0347)
-; why: a helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of
-; RunLinkSession8Exchange (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8
-; (RunLinkSession runs it each frame while linked): by wLinkExchangeState it sends (0,
-; LinkSendStepWithBuffer) and receives ... (E-0352, E-0354, E-0122)
+; why: a helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteTitleScreenState::
     ld a, $01
     ld [wTitleScreenState], a
@@ -624,10 +623,9 @@ RunLinkSession8Exchange_WriteTitleScreenState::
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; sets wLinkSendByte to $bb;
 ; dispatches on wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 0 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 0), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc::
     ld a, [wLinkMessage]
     cp $bd
@@ -656,10 +654,9 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc::
 ; step 0 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
 ; wLinkSendByte to $ba (E-0347)
 ; why: step 0 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 0), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep::
     ld a, [wScreenStep]
     inc a
@@ -671,10 +668,9 @@ RunLinkSession8Exchange_SetScreenStep::
 ; step 1 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $ba; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
 ; why: step 1 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 1), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $ba
@@ -692,10 +688,9 @@ RunLinkSession8Exchange_SetLinkSendByte::
 ; wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to $ff; sets wLinkReady to 1
 ; (E-0347)
 ; why: step 2 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 2), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_2::
     ld a, [wScreenStep]
     inc a
@@ -743,10 +738,9 @@ RunLinkSession8Exchange_SetScreenStep_2::
 ; step 3 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $f0; sets
 ; wLinkSendByte to 0; sets wLinkReady to 0; increments wScreenStep (E-0347)
 ; why: step 3 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 3), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_2::
     ld a, [wLinkMessage]
     cp $f0
@@ -763,10 +757,9 @@ RunLinkSession8Exchange_SetLinkSendByte_2::
 ; step 4 of RunLinkSession8Exchange_WriteTitleScreenState: branches on the byte at wLinkPartnerName;
 ; increments wScreenStep; also changes HL, DE, A and C by register arithmetic (E-0347)
 ; why: step 4 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 4), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_9::
     ld hl, wLinkPartnerName
     ld de, wTextBuf3
@@ -795,10 +788,9 @@ RunLinkSession8Exchange_SetScreenStep_9::
 ; wTextWindowRows; copies H to wTextWindowWidth; calls ShowString_BankF0; sets wTextWindowTileLo to
 ; $12; branches on wGiftRecord; calls BeginString_BankF0_Cat0; advances wScreenStep (E-0347)
 ; why: step 5 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 5), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetStringCategory_3::
     ld hl, wFamilyRankTaken
     ld b, $35
@@ -850,10 +842,9 @@ RunLinkSession8Exchange_SetStringCategory_3::
 ; BGMapAddressAtScroll_BankF0; calls DrawScreenBufferRect_BankF0; sets wMenuChoice to 0; advances
 ; wScreenStep (E-0347)
 ; why: step 6 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 6), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetMenuChoice::
     ld de, RunLinkSession8Exchange_SetMenuChoice_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -875,10 +866,9 @@ RunLinkSession8Exchange_SetMenuChoice::
 ; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; calls
 ; BeginString_BankF0_Cat0; then 1 more step (see the code) (E-0347)
 ; why: step 7 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 7), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0::
     ld a, $02
     ld [wArg2], a
@@ -919,10 +909,9 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0::
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; sets wLinkSendByte to $bb;
 ; calls RunLinkSession8Case01Steps (E-0347)
 ; why: step 1 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 1), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
     ld a, [wLinkMessage]
     cp $bd
@@ -944,10 +933,9 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; sets wLinkSendByte to $bb;
 ; dispatches on wScreenStep (E-0347)
 ; why: step 2 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 2), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_2::
     ld a, [wLinkMessage]
     cp $bd
@@ -974,10 +962,9 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_2::
 ; step 0 of RunLinkSession8Exchange_WriteTitleScreenState: calls BeginString_BankF0_Cat0; advances
 ; wScreenStep (E-0347)
 ; why: step 0 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 0), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_IsItOKTo::
     ld a, $06 ; 'Is it OK to transfer the'
     call BeginString_BankF0_Cat0
@@ -992,10 +979,9 @@ RunLinkSession8Exchange_IsItOKTo::
 ; wTextWindowWidth; calls ShowString_BankF0; sets wTextWindowTileLo to $12; then 1 more step (see
 ; the code) (E-0347)
 ; why: step 1 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 1), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetStringCategory::
     ld de, RunLinkSession8Exchange_SetStringCategory_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1041,10 +1027,9 @@ RunLinkSession8Exchange_SetStringCategory::
 ; BGMapAddressAtScroll_BankF0; calls DrawScreenBufferRect_BankF0; sets wMenuChoice to 0; increments
 ; wScreenStep (E-0347)
 ; why: step 2 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 2), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetMenuChoice_2::
     ld de, RunLinkSession8Exchange_SetMenuChoice_2_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1067,10 +1052,9 @@ RunLinkSession8Exchange_SetMenuChoice_2::
 ; sets wScreenStep to 0; sets wScreenState to 5; sets wF0ScreenKind to 0; calls
 ; BeginString_BankF0_Cat0; then 1 more step (see the code) (E-0347)
 ; why: step 3 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 3), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2::
     xor a
     ld [wArg2], a
@@ -1118,10 +1102,9 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_2::
 ; wTextWindowWidth; calls ShowString_BankF0; sets wTextWindowTileLo to $12; then 1 more step (see
 ; the code) (E-0347)
 ; why: step 4 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 4), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetStringCategory_2::
     ld de, RunLinkSession8Exchange_SetStringCategory_2_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1167,10 +1150,9 @@ RunLinkSession8Exchange_SetStringCategory_2::
 ; DrawScreenBufferRect_BankF0; sets wScreenSubStep to 0; sets wScreenState to 1; sets wScreenStep to
 ; 6 (E-0347)
 ; why: step 5 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 5), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenSubStep::
     ld de, RunLinkSession8Exchange_SetScreenSubStep_TileRect
     ld hl, wWindowTileBuffer + $125
@@ -1194,10 +1176,9 @@ RunLinkSession8Exchange_SetScreenSubStep::
 
 ; step 3 of RunLinkSession8Exchange_WriteTitleScreenState: calls RunLinkSession8Case03Steps (E-0347)
 ; why: step 3 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 3), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_ToRunLinkSession8Case03Steps::
     call RunLinkSession8Case03Steps
     ret
@@ -1313,10 +1294,9 @@ RunLinkSession8Exchange_ShowMessage_WaitTextFlags::
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; sets wLinkSendByte to $bb;
 ; dispatches on wScreenStep (E-0347)
 ; why: step 5 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 5), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_3::
     ld a, [wLinkMessage]
     cp $bd
@@ -1343,10 +1323,9 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_3::
 ; step 1 of RunLinkSession8Exchange_WriteTitleScreenState: calls
 ; CopyRectToWindowTileBufferRow5AndDraw; advances wScreenStep (E-0347)
 ; why: step 1 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 1), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_CopyRectToWindowTileBufferRow5AndDraw::
     farcall CopyRectToWindowTileBufferRow5AndDraw
     ld hl, wScreenStep
@@ -1356,10 +1335,9 @@ RunLinkSession8Exchange_CopyRectToWindowTileBufferRow5AndDraw::
 ; step 2 of RunLinkSession8Exchange_WriteTitleScreenState: calls ShowSaveFileInfoWindow; advances
 ; wScreenStep; sets wPickCount to 1 (E-0347)
 ; why: step 2 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 2), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_ShowSaveFileInfoWindow::
     farcall ShowSaveFileInfoWindow
     ld hl, wScreenStep
@@ -1372,10 +1350,9 @@ RunLinkSession8Exchange_ShowSaveFileInfoWindow::
 ; DrawBottomBoxForLinkAndSetScreenSubStep; sets wTextWindowTileLo to $12; advances wScreenStep
 ; (E-0347)
 ; why: step 3 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 3), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep::
     farcall DrawBottomBoxForLinkAndSetScreenSubStep
     ld hl, wTextWindowTileLo
@@ -1396,10 +1373,9 @@ RunLinkSession8Exchange_DrawBottomBoxForLinkAndSetScreenSubStep::
 ; sets wStringIndex to $1f; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L
 ; to wTextWindowRows; then 5 more steps (see the code) (E-0347)
 ; why: step 0 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 0), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
     ld c, $09
     ld hl, $01d3
@@ -1460,10 +1436,9 @@ RunLinkSession8Exchange_CopyScreenBufferRectWithAttrs_F0::
 ; BGMapAddressAtScroll_BankF0; calls DrawScreenBufferRect_BankF0; sets wMenuChoice to 0; advances
 ; wScreenStep (E-0347)
 ; why: step 4 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 4), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetMenuChoice_3::
     ld de, RunLinkSession8Exchange_SetMenuChoice_TileRect
     ld hl, wWindowTileBuffer + $112
@@ -1485,10 +1460,9 @@ RunLinkSession8Exchange_SetMenuChoice_3::
 ; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; calls
 ; BeginString_BankF0_Cat0; then 1 more step (see the code) (E-0347)
 ; why: step 5 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 5), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_3::
     ld a, $02
     ld [wArg2], a
@@ -1529,10 +1503,9 @@ RunLinkSession8Exchange_HandleTwoChoiceCursorInput_F0_3::
 ; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to 4; sets wLinkSendByte to $bb;
 ; dispatches on wScreenStep; also changes A by register arithmetic (E-0347)
 ; why: step 6 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 6), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_4::
     ld a, [wLinkMessage]
     cp $bd
@@ -1581,10 +1554,9 @@ RunLinkSession8Exchange_WriteScreenStepAndScreenSubStepEtc_4::
 ; step 21 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
 ; wLinkSendByte to $b3 (E-0347)
 ; why: step 21 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 21), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_3::
     ld a, [wScreenStep]
     inc a
@@ -1596,10 +1568,9 @@ RunLinkSession8Exchange_SetScreenStep_3::
 ; step 24 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wMenuCounter is 0;
 ; increments wScreenStep; sets wLinkSendByte to $a8 (E-0347)
 ; why: step 24 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 24), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_4::
     ld a, [wMenuCounter]
     and a
@@ -1614,10 +1585,9 @@ RunLinkSession8Exchange_SetScreenStep_4::
 ; step 22 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $b3; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
 ; why: step 22 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 22), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_3::
     ld a, [wLinkMessage]
     cp $b3
@@ -1632,10 +1602,9 @@ RunLinkSession8Exchange_SetLinkSendByte_3::
 ; step 25 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $a8; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
 ; why: step 25 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 25), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_4::
     ld a, [wLinkMessage]
     cp $a8
@@ -1650,10 +1619,9 @@ RunLinkSession8Exchange_SetLinkSendByte_4::
 ; step 26 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
 ; wLinkSendByte to $b6 (E-0347)
 ; why: step 26 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 26), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_5::
     ld a, [wScreenStep]
     inc a
@@ -1665,10 +1633,9 @@ RunLinkSession8Exchange_SetScreenStep_5::
 ; step 27 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $b6; sets
 ; wLinkSendByte to 0; sets wScreenState; sets wScreenStep to 0; sets wScreenSubStep to 0 (E-0347)
 ; why: step 27 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 27), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_5::
     ld a, [wLinkMessage]
     cp $b6
@@ -1691,10 +1658,9 @@ RunLinkSession8Exchange_SetLinkSendByte_5::
 ; wLinkBufferCountLo; copies H to wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to
 ; wLinkBufferPtrHi; sets wLinkSendByte to $ff; sets wLinkReady to 1 (E-0347)
 ; why: step 9 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 9), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_10::
     ld a, [wGiftRecord]
     and a
@@ -1734,10 +1700,9 @@ RunLinkSession8Exchange_SetScreenStep_10::
 ; wLinkBufferCountHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte
 ; to $ff; sets wLinkReady to 1 (E-0347)
 ; why: step 13 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 13), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_6::
     ld a, [wScreenStep]
     inc a
@@ -1770,10 +1735,9 @@ RunLinkSession8Exchange_SetScreenStep_6::
 ; wLinkEggSpeciesHi; copies wGiftRecord + MON_FAMILY to wLinkEggFamily; increments wScreenStep;
 ; copies L to wLinkTimeoutLo; then 7 more steps (see the code) (E-0347)
 ; why: step 17 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 17), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -1850,10 +1814,9 @@ RunLinkSession8Exchange_TestFlagBit::
 ; step 1 of RunLinkSession8Exchange_WriteTitleScreenState: increments wScreenStep; sets
 ; wLinkSendByte to $ba (E-0347)
 ; why: step 1 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 1), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_7::
     ld a, [wScreenStep]
     inc a
@@ -1865,10 +1828,9 @@ RunLinkSession8Exchange_SetScreenStep_7::
 ; step 2 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $ba; sets
 ; wLinkSendByte to 0; increments wScreenStep (E-0347)
 ; why: step 2 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 2), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_6::
     ld a, [wLinkMessage]
     cp $ba
@@ -1884,10 +1846,9 @@ RunLinkSession8Exchange_SetLinkSendByte_6::
 ; copies wGiftRecord to wIntroOrFamilyCount; calls MarkBitBInFamilyBitsAndCount; calls
 ; RollMarkChangeCountChance; sets wLinkEggState; increments wScreenStep (E-0347)
 ; why: step 0 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 0), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
     ld a, [wF0ScreenKind]
     ld [wLinkRecvBuffer], a
@@ -1908,10 +1869,9 @@ RunLinkSession8Exchange_MarkBitBInFamilyBitsAndCount::
 ; wLinkTimeoutHi; copies L to wLinkBufferPtrLo; copies H to wLinkBufferPtrHi; sets wLinkSendByte to
 ; $ff; sets wLinkReady to 1 (E-0347)
 ; why: step 3 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 3), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetScreenStep_8::
     ld a, [wScreenStep]
     inc a
@@ -1940,10 +1900,9 @@ RunLinkSession8Exchange_SetScreenStep_8::
 ; step 4 of RunLinkSession8Exchange_WriteTitleScreenState: returns unless wLinkMessage is $f0; sets
 ; wLinkSendByte to 0; sets wLinkReady to 0; increments wScreenStep (E-0347)
 ; why: step 4 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 4), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetLinkSendByte_7::
     ld a, [wLinkMessage]
     cp $f0
@@ -1962,10 +1921,9 @@ RunLinkSession8Exchange_SetLinkSendByte_7::
 ; BeginString_BankF0_Cat0; advances wScreenStep; also changes HL and A by register arithmetic
 ; (E-0347)
 ; why: step 5 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 5), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_MAlreadyHasA::
     ld a, [wGiftRecord]
     and a
@@ -2003,10 +1961,9 @@ RunLinkSession8Exchange_MAlreadyHasA::
 ; step 6 of RunLinkSession8Exchange_WriteTitleScreenState: calls BeginString_BankF0_Cat0; sets
 ; wScreenSubStep to 0; sets wScreenStep to 1; sets wScreenState to 4 (E-0347)
 ; why: step 6 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 6), in a helper
-; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange (when
-; wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it each
-; frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives ...
-; (E-0352, E-0354, E-0122)
+; of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_PleaseWait::
     ld a, $12 ; 'Please wait…'
     call BeginString_BankF0_Cat0
@@ -2022,10 +1979,9 @@ RunLinkSession8Exchange_PleaseWait::
 ; wLinkPartnerByte2; branches on wGiftRecord; sets wF0ScreenKind to 0; advances wScreenStep; also
 ; changes HL and A by register arithmetic (E-0347)
 ; why: step 19 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 19), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetF0ScreenKind::
     ld a, [wLinkEggState]
     and a
@@ -2059,10 +2015,9 @@ RunLinkSession8Exchange_SetF0ScreenKind::
 ; step 20 of RunLinkSession8Exchange_WriteTitleScreenState: branches on wF0ScreenKind; advances
 ; wScreenStep; sets wPickCount to 0; also changes HL, DE, A and B by register arithmetic (E-0347)
 ; why: step 20 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 20), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_AdvanceScreenStep::
     ld a, [wF0ScreenKind]
     and a
@@ -2124,10 +2079,9 @@ RunLinkSession8Exchange_AdvanceScreenStep::
 ; RunWithArg1ForF0ScreenKind; sets hSpriteWindowClipMode to 0; increments wScreenStep; then 1 more
 ; step (see the code) (E-0347)
 ; why: step 23 of RunLinkSession8Exchange_WriteTitleScreenState (when wScreenState = 23), in a
-; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer, in step 1 of RunLinkSession8Exchange
-; (when wLinkExchangeState = 1); RunLinkSession8Exchange: link session 8 (RunLinkSession runs it
-; each frame while linked): by wLinkExchangeState it sends (0, LinkSendStepWithBuffer) and receives
-; ... (E-0352, E-0354, E-0122)
+; helper of RunLinkSession8Exchange_LinkReceiveStepWithBuffer;
+; RunLinkSession8Exchange_LinkReceiveStepWithBuffer: Link session 8, exchange state 1: receives one
+; byte, then runs a frame and the session's screen (E-0352, E-0357)
 RunLinkSession8Exchange_SetArg5::
     call BGMapAddressAtScroll_BankF0
     ld a, h

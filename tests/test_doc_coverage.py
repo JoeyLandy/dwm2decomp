@@ -67,10 +67,10 @@ class Coverage(unittest.TestCase):
         """E-0357 through E-0361: a routine read by hand carries its note from config/annotations.json instead of
         the generated restatement, and the number of routines described only by a restatement never grows. Lower
         RESTATED_AT_MOST as notes are added."""
-        RESTATED_AT_MOST = 3148
+        RESTATED_AT_MOST = 2143
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 2006)
+        self.assertGreaterEqual(hand, 3012)
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]

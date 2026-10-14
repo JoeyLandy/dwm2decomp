@@ -202,14 +202,11 @@ GameMode6_Update_ObtainedEgg::
     dw GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24
     dw GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState
 
-; step 0 of GameMode6_Update_ObtainedEgg: branches on wBattleScene; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls GameMode6_Update_ObtainedEgg_WaitForVRAMAccess; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; increments wScreenStep;
-; branches on wBattleScene; calls ShowStringAInDefaultWindow_Bank24; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; increments wScreenStep; calls
-; CopyBytes; then 3 more steps (see the code) (E-0347)
-; why: step 0 of GameMode6_Update_ObtainedEgg (when wScreenStep = 0); GameMode6_Update_ObtainedEgg:
-; by wScreenStep: shows 'obtained an egg of 0.' (E-0352)
+; The result screen, step 0: for an egg (wBattleScene $08) copies wRecordBufA's name and shows
+; 'obtained an egg of <name>.' (category 5, string $13); otherwise draws a 17 x 2 banner (one for a
+; draw, $80, one for a result) and shows the link battle's result (bank-$33 strings: 0 'It ends in a
+; draw!', 1 'Congratulations! You've won!' with scene bit 0 clear, 2 'Too bad! You've lost!' with it
+; set). (C1, E-0357)
 GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
     ld a, [wBattleScene]
     cp $08
@@ -271,12 +268,9 @@ GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24::
     farcall BeginStringDisplay_Bank07
     ret
 
-; step 1 of GameMode6_Update_ObtainedEgg: calls GameMode6_Update_WriteLinkSceneAndGameModeEtc;
-; branches on wBattleScene; branches on wBattleScene & $01; branches on wRecordBufA; branches on
-; wRecordBufB; sets wScreenStep to 0; increments wScreenState; also changes A by register arithmetic
-; (E-0347)
-; why: step 1 of GameMode6_Update_ObtainedEgg (when wScreenStep = 1); GameMode6_Update_ObtainedEgg:
-; by wScreenStep: shows 'obtained an egg of 0.' (E-0352)
+; The result screen, step 1: without the prize rule (wLinkRules + 9 zero) or after a draw ends the
+; screen; otherwise when the prize record is empty (wRecordBufB for the winner, wRecordBufA for the
+; loser) ends too, else goes on. (C1, E-0357)
 GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
     ld a, [wLinkRules + $9]
     and a
@@ -311,11 +305,8 @@ GameMode6_Update_ObtainedEgg_WriteScreenStepAndScreenState::
     ld [wScreenState], a
     ret
 
-; step 1 of GameMode6_Update: calls CopyRectTo20ByteRowsJp_Bank24; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; sets wScreenState (E-0347)
-; why: step 1 of GameMode6_Update (when wScreenState = 1); GameMode6_Update: game mode 6, the egg
-; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
-; prompt and the save, ... (E-0352, E-0354)
+; Game mode 6, state 1: draws a 20 x 6 box and goes to state 2 for the winner (taking the prize) or
+; 3 for the loser (scene bit 0). (C1, E-0357)
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24::
     ld de, GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_Data
     ld hl, wWindowTileBuffer + $f0
@@ -355,12 +346,9 @@ GameMode6_Update_SavePrompt::
     dw GameMode6_Update_SavePrompt_ObjectScene_GameMode6_Update_UpdateAndDrawSpriteSlots
     dw GameMode6_Update_SavePrompt_SetScreenStep
 
-; step 0 of GameMode6_Update_SavePrompt: branches on wBattleScene; branches on wScreenSubStep; sets
-; wScreenStep to $0d; calls CountRecordsInUse; calls LoadRecordCapacityFromFarmLevelTable; branches
-; on wRecordsInUse; sets wScreenStep to 3; sets wScreenSubStep to 0; increments wScreenStep; sets
-; wScreenSubStep to 0 (E-0347)
-; why: step 0 of GameMode6_Update_SavePrompt (when wScreenStep = 0); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 0: except for an egg ($08), first plays the hand-over scene (step $0D, back
+; with sub-step 1); then with the farm full (CountRecordsInUse against wRecordCapacity) goes to step
+; 3, otherwise step 1. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep::
     ld a, [wBattleScene]
     cp $08
@@ -395,12 +383,8 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndScreenSubStep::
     ret
     db $0a, $14, $1e
 
-; step 1 of GameMode6_Update_SavePrompt: calls LoadRecordCapacityFromFarmLevelTable; sets rRAMG to
-; $0a; sets rRAMB to 0; branches on the byte at sRecords; copies wRecordBufB + MON_SPECIES to
-; wSpeciesIdLo; sets wSpeciesIdHi; calls SetSpeciesFlag; sets rRAMG to 0; sets rRAMB to 0; sets
-; wSaveStep to 0; sets wSaveRecordIndex to 0; increments wScreenStep (E-0347)
-; why: step 1 of GameMode6_Update_SavePrompt (when wScreenStep = 1); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 1: copies wRecordBufB ($A5 bytes) into the first free SRAM record (first
+; byte 0 or $FF), sets its species flag and resets the save steps. (C1, E-0357)
 GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable::
     farcall LoadRecordCapacityFromFarmLevelTable
     ld a, $0a
@@ -445,10 +429,7 @@ GameMode6_Update_SavePrompt_LoadRecordCapacityFromFarmLevelTable::
     ld [wScreenStep], a
     ret
 
-; step 2 of GameMode6_Update_SavePrompt: calls RunSaveGameSteps; returns unless bit 7 of wSaveStep
-; is set; calls GameMode6_Update_WriteLinkSceneAndGameModeEtc (E-0347)
-; why: step 2 of GameMode6_Update_SavePrompt (when wScreenStep = 2); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 2: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
 GameMode6_Update_SavePrompt_RunSaveGameSteps::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -457,10 +438,8 @@ GameMode6_Update_SavePrompt_RunSaveGameSteps::
     call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
-; step 3 of GameMode6_Update_SavePrompt: calls ShowStringAInDefaultWindow_Bank24; increments
-; wScreenStep (E-0347)
-; why: step 3 of GameMode6_Update_SavePrompt (when wScreenStep = 3); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 3: 'But you have no room for it... Switch it with another monster?'
+; (bank-$33 string 5). (C1, E-0357)
 GameMode6_Update_ToShowStringAInDefaultWindow_Bank24AndStep::
     ld a, $05
     call ShowStringAInDefaultWindow_Bank24
@@ -469,12 +448,8 @@ GameMode6_Update_ToShowStringAInDefaultWindow_Bank24AndStep::
     ld [wScreenStep], a
     ret
 
-; step 4 of GameMode6_Update_SavePrompt: plays sound $6c; calls
-; GameMode6_Update_SavePrompt_ShowYesNo; calls CopyRectTo20ByteRowsJp_Bank24; calls ReturnStub;
-; calls BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; sets wTwoChoiceCursor to
-; 0; increments wScreenStep (E-0347)
-; why: step 4 of GameMode6_Update_SavePrompt (when wScreenStep = 4); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 4: plays sound $6C and draws the yes/no box with the cursor on yes. (C1,
+; E-0357)
 GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub::
     ld a, $6c
     call QueueSoundEffect
@@ -495,13 +470,9 @@ GameMode6_Update_SavePrompt_ShowYesNo_ReturnStub::
     ld [wScreenStep], a
     ret
 
-; step 5 of GameMode6_Update_SavePrompt: calls UpdateTwoChoiceCursor_Bank1D; returns if
-; wMenuInputResult is 0; branches on wMenuInputResult; branches on wTwoChoiceCursor; calls
-; ShowStringAInDefaultWindow_Bank24; sets wScreenStep; calls GameMode6_Update_SavePrompt_ShowYesNo;
-; calls CopyRecordBufBNameNameToTextBuf0; calls ShowStringAInDefaultWindow_Bank24; increments
-; wScreenStep (E-0347)
-; why: step 5 of GameMode6_Update_SavePrompt (when wScreenStep = 5); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 5: the answer: B or no copies the prize's name and shows 'Gave up on
+; getting <name> and released it in the wild...' (string 6); yes asks 'Switch with which?' (string
+; 7) and goes on two steps. (C1, E-0357)
 GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -534,19 +505,13 @@ GameMode6_Update_SavePrompt_UpdateTwoChoiceCursor_Bank1D::
     ld [wScreenStep], a
     ret
 
-; step 6 of GameMode6_Update_SavePrompt: calls GameMode6_Update_WriteLinkSceneAndGameModeEtc
-; (E-0347)
-; why: step 6 of GameMode6_Update_SavePrompt (when wScreenStep = 6); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 6: ends the screen. (C1, E-0357)
 GameMode6_Update_ToGameMode6_Update_WriteLinkSceneAndGameModeEtc::
     call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
-; step 7 of GameMode6_Update_SavePrompt: plays sound $6c; calls GameMode6_Update_ShowMonsterEg;
-; calls CopyRectTo20ByteRowsJp_Bank24; calls ReturnStub; calls BGMapAddressAtScroll_Bank24; calls
-; DrawScreenBufferRectToBGMap_24; sets wTwoChoiceCursor to 0; increments wScreenStep (E-0347)
-; why: step 7 of GameMode6_Update_SavePrompt (when wScreenStep = 7); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 7: plays sound $6C and draws the 'Monster / Egg' choice with the cursor on
+; Monster. (C1, E-0357)
 GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
     ld a, $6c
     call QueueSoundEffect
@@ -567,14 +532,9 @@ GameMode6_Update_SavePrompt_GameMode6_Update_ShowMonsterEg::
     ld [wScreenStep], a
     ret
 
-; step 8 of GameMode6_Update_SavePrompt: calls
-; GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc; returns if wMenuInputResult
-; is 0; branches on wMenuInputResult; branches on wTwoChoiceCursor; calls ListRecordsInUseNotEggs;
-; calls ListRecordsInUseEggs; sets wScreenStep; calls GameMode6_Update_SavePrompt_ShowYesNo; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls StoreBAtWordTableEntry_Bank24_2; calls ReturnStub; calls
-; BGMapAddressAtScroll_Bank24; then 5 more steps (see the code) (E-0347)
-; why: step 8 of GameMode6_Update_SavePrompt (when wScreenStep = 8); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 8: the Monster / Egg choice: B redraws the yes/no box and asks again
+; (string 5, back to step 5 through step 9); A lists the monsters that are not eggs or the eggs and
+; goes on two steps. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
     call GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc
     ld a, [wMenuInputResult]
@@ -630,19 +590,14 @@ GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor::
     ld [wScreenStep], a
     ret
 
-; step 9 of GameMode6_Update_SavePrompt: sets wScreenStep to 5 (E-0347)
-; why: step 9 of GameMode6_Update_SavePrompt (when wScreenStep = 9); GameMode6_Update_SavePrompt: by
-; wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 9: back to step 5. (C1, E-0357)
 GameMode6_Update_SavePrompt_SetScreenStepTo05::
     ld a, $05
     ld [wScreenStep], a
     ret
 
-; step 10 of GameMode6_Update_SavePrompt: branches on wListCount; calls
-; ShowStringAInDefaultWindow_Bank24; sets wScreenStep; calls StoreBAtWordTableEntry_Bank24_2;
-; increments wScreenStep; also changes HL, A and B by register arithmetic (E-0347)
-; why: step 10 of GameMode6_Update_SavePrompt (when wScreenStep = 10); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 10: with an empty list 'There are no eggs.' (string $11) and back to the
+; choice; otherwise marks the choice and goes on. (C1, E-0357)
 GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24::
     ld a, [wListCount]
     and a
@@ -664,14 +619,8 @@ GameMode6_Update_SavePrompt_ShowStringAInDefaultWindow_Bank24::
     ld [wScreenStep], a
     ret
 
-; step 11 of GameMode6_Update_SavePrompt: branches on wBattleScene; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls
-; GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls ReturnStub; calls BGMapAddressAtScroll_Bank24; calls
-; DrawScreenBufferRectToBGMap_24; increments wScreenStep (E-0347)
-; why: step 11 of GameMode6_Update_SavePrompt (when wScreenStep = 11); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 11: redraws the boxes over the screen and the bottom five rows. (C1,
+; E-0357)
 GameMode6_Update_SavePrompt_ReturnStub::
     ld a, [wBattleScene]
     cp $08
@@ -706,12 +655,9 @@ GameMode6_Update_SavePrompt_ReturnStub::
     ld [wScreenStep], a
     ret
 
-; step 12 of GameMode6_Update_SavePrompt: calls DecompressToVRAM; calls
-; CopyTileBytesToVRAM_Bank24_2; calls CopyRectTo20ByteRowsJp_Bank24; calls ReturnStub; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; ShowStringAInDefaultWindow_Bank24; sets wScreenStep to 0; sets wScreenState (E-0347)
-; why: step 12 of GameMode6_Update_SavePrompt (when wScreenStep = 12); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 12: reloads the text tiles, draws the bottom five rows, asks 'Switch with
+; which?' or 'Switch which egg?' (string 8 + choice) and goes to state 4 (the monster list) or 5
+; (the egg list). (C1, E-0357)
 GameMode6_Update_SavePrompt_DecompressToVRAM::
     ld b, $46
     ld de, Tiles1Gfx
@@ -756,10 +702,8 @@ GameMode6_Update_SavePrompt_DecompressToVRAM::
 GameMode6_Update_SavePrompt_DecompressToVRAM_Tiles::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00 ; entry 0
 
-; step 13 of GameMode6_Update_SavePrompt: calls GameMode6_Update_Save_TestFlagBit; increments
-; wScreenStep (E-0347)
-; why: step 13 of GameMode6_Update_SavePrompt (when wScreenStep = 13); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 13: starts the hand-over scene (GameMode6_Update_Save_TestFlagBit). (C1,
+; E-0357)
 GameMode6_Update_ToGameMode6_Update_Save_TestFlagBitAndStep::
     call GameMode6_Update_Save_TestFlagBit
     ld a, [wScreenStep]
@@ -767,18 +711,13 @@ GameMode6_Update_ToGameMode6_Update_Save_TestFlagBitAndStep::
     ld [wScreenStep], a
     ret
 
-; step 14 of GameMode6_Update_SavePrompt: calls GameMode6_Update_UpdateAndDrawSpriteSlots; calls
-; GameMode6_Update_SavePrompt_ObjectScene (E-0347)
-; why: step 14 of GameMode6_Update_SavePrompt (when wScreenStep = 14); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 14: draws the sprites and runs the hand-over scene. (C1, E-0357)
 GameMode6_Update_SavePrompt_ObjectScene_GameMode6_Update_UpdateAndDrawSpriteSlots::
     call GameMode6_Update_UpdateAndDrawSpriteSlots
     call GameMode6_Update_SavePrompt_ObjectScene
     ret
 
-; step 15 of GameMode6_Update_SavePrompt: sets wScreenStep to 0; sets wScreenSubStep to 1 (E-0347)
-; why: step 15 of GameMode6_Update_SavePrompt (when wScreenStep = 15); GameMode6_Update_SavePrompt:
-; by wScreenStep: RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Taking the prize, step 15: back to step 0 with sub-step 1 (the scene has played). (C1, E-0357)
 GameMode6_Update_SavePrompt_SetScreenStep::
     xor a
     ld [wScreenStep], a
@@ -795,10 +734,7 @@ GameMode6_Update_Save::
     dw GameMode6_Update_Save_SetSaveStep
     dw GameMode6_Update_Save_RunSaveGameSteps
 
-; step 0 of GameMode6_Update_Save: calls GameMode6_Update_Save_TestFlagBit; increments wScreenStep
-; (E-0347)
-; why: step 0 of GameMode6_Update_Save (when wScreenStep = 0); GameMode6_Update_Save: by
-; wScreenStep: draws the sprites, then RunSaveGameSteps (E-0352)
+; Giving up the prize, step 0: starts the hand-over scene. (C1, E-0357)
 GameMode6_Update_Save_WriteScreenStep::
     call GameMode6_Update_Save_TestFlagBit
     ld a, [wScreenStep]
@@ -806,19 +742,13 @@ GameMode6_Update_Save_WriteScreenStep::
     ld [wScreenStep], a
     ret
 
-; step 1 of GameMode6_Update_Save: calls GameMode6_Update_UpdateAndDrawSpriteSlots; calls
-; GameMode6_Update_Save_ObjectScene (E-0347)
-; why: step 1 of GameMode6_Update_Save (when wScreenStep = 1); GameMode6_Update_Save: by
-; wScreenStep: draws the sprites, then RunSaveGameSteps (E-0352)
+; Giving up the prize, step 1: draws the sprites and runs the hand-over scene. (C1, E-0357)
 GameMode6_Update_Save_GameMode6_Update_UpdateAndDrawSpriteSlots::
     call GameMode6_Update_UpdateAndDrawSpriteSlots
     call GameMode6_Update_Save_ObjectScene
     ret
 
-; step 2 of GameMode6_Update_Save: sets wSaveStep to 0; sets wSaveRecordIndex to 0; increments
-; wScreenStep (E-0347)
-; why: step 2 of GameMode6_Update_Save (when wScreenStep = 2); GameMode6_Update_Save: by
-; wScreenStep: draws the sprites, then RunSaveGameSteps (E-0352)
+; Giving up the prize, step 2: resets the save steps. (C1, E-0357)
 GameMode6_Update_Save_SetSaveStep::
     xor a
     ld [wSaveStep], a
@@ -828,10 +758,7 @@ GameMode6_Update_Save_SetSaveStep::
     ld [wScreenStep], a
     ret
 
-; step 3 of GameMode6_Update_Save: calls RunSaveGameSteps; returns unless bit 7 of wSaveStep is set;
-; calls GameMode6_Update_WriteLinkSceneAndGameModeEtc (E-0347)
-; why: step 3 of GameMode6_Update_Save (when wScreenStep = 3); GameMode6_Update_Save: by
-; wScreenStep: draws the sprites, then RunSaveGameSteps (E-0352)
+; Giving up the prize, step 3: saves (RunSaveGameSteps), then ends the screen. (C1, E-0357)
 GameMode6_Update_Save_RunSaveGameSteps::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -860,38 +787,26 @@ GameMode6_Update_ChooseRecordList::
     dw GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5
     dw GameMode6_Update_ChooseRecordList_RunSaveGameSteps
 
-; step 0 of GameMode6_Update_ChooseRecordList: calls BreedMenu (E-0347)
-; why: step 0 of GameMode6_Update_ChooseRecordList (when wScreenStep = 0);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 0: runs the record list's steps (BreedMenu). (C1, E-0357)
 GameMode6_Update_ChooseRecordList_ToBreedMenu::
     farcall BreedMenu
     ret
 
-; step 4 of GameMode6_Update_ChooseRecordList: calls EggServiceMenu_Bank1B (E-0347)
-; why: step 4 of GameMode6_Update_ChooseRecordList (when wScreenStep = 4);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 4: runs the list's later steps (EggServiceMenu_Bank1B). (C1,
+; E-0357)
 GameMode6_Update_ChooseRecordList_ToEggServiceMenu_Bank1B::
     farcall EggServiceMenu_Bank1B
     ret
 
-; step 6 of GameMode6_Update_ChooseRecordList: increments wScreenStep (E-0347)
-; why: step 6 of GameMode6_Update_ChooseRecordList (when wScreenStep = 6);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 6: moves on. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; step 7 of GameMode6_Update_ChooseRecordList: calls StoreBAtWordTableEntry_Bank24_2; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; StoreBAtWordTableEntry_Bank24_2; increments wScreenStep (E-0347)
-; why: step 7 of GameMode6_Update_ChooseRecordList (when wScreenStep = 7);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 7: draws the cursor mark at the list entry, redraws and
+; clears it again. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wListCursor]
     ld b, $bb
@@ -919,14 +834,9 @@ GameMode6_Update_PageList::
     dw GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24
     dw GameMode6_Update_PageList_SetScreenSubStep
 
-; step 0 of GameMode6_Update_PageList: sets wMenuInputResult to 0; calls UpdatePagedListCursor;
-; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets wScreenStep; increments
-; wScreenSubStep; calls GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc; sets
-; wScreenSubStep to 2; calls ShowStringAInDefaultWindow_Bank24; calls
-; StoreBAtWordTableEntry_Bank24_2; calls CopyListEntriesCell5NameToTextBuf0; increments wScreenStep;
-; then 1 more step (see the code) (E-0347)
-; why: step 0 of GameMode6_Update_PageList (when wScreenSubStep = 0); GameMode6_Update_PageList:
-; moves the paged cursor, copies a rectangle and sets the sub-step (E-0352, E-0345)
+; The switch list's cursor (sub-step 0): a page change goes back seven steps, $FD back four, B to
+; sub-step 1; A, when the pick would leave the party empty, 'You'll be left with no monster.'
+; (string $12, sub-step 2); otherwise marks the entry, copies its name and goes on. (C1, E-0357)
 GameMode6_Update_PageList_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -985,14 +895,8 @@ GameMode6_Update_PageList_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
-; step 1 of GameMode6_Update_PageList: calls CopyRectTo20ByteRowsJp_Bank24; calls
-; StoreBAtWordTableEntry_Bank24_2; branches on wBattleScene; calls CopyRectTo20ByteRowsJp_Bank24;
-; branches on wLinkBreedResult; calls CopyRectTo20ByteRowsJp_Bank24; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; StoreBAtWordTableEntry_Bank24_2; sets wScreenSubStep to 0; sets wListPageIndex to 0; sets
-; wListCursor to 0; then 3 more steps (see the code) (E-0347)
-; why: step 1 of GameMode6_Update_PageList (when wScreenSubStep = 1); GameMode6_Update_PageList:
-; moves the paged cursor, copies a rectangle and sets the sub-step (E-0352, E-0345)
+; The switch list's B (sub-step 1): redraws the boxes, resets the list and asks 'Switch with which?'
+; (string 7) again at the Monster / Egg choice (state 2, step 8). (C1, E-0357)
 GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24::
     ld de, GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24_2
     ld hl, wWindowTileBuffer + $64
@@ -1045,22 +949,16 @@ GameMode6_Update_PageList_CopyRectTo20ByteRowsJp_Bank24::
     ld [wScreenStep], a
     ret
 
-; step 2 of GameMode6_Update_PageList: sets wScreenSubStep to 0 (E-0347)
-; why: step 2 of GameMode6_Update_PageList (when wScreenSubStep = 2); GameMode6_Update_PageList:
-; moves the paged cursor, copies a rectangle and sets the sub-step (E-0352, E-0345)
+; The switch list, sub-step 2: back to sub-step 0. (C1, E-0357)
 GameMode6_Update_PageList_SetScreenSubStep::
     xor a
     ld [wScreenSubStep], a
     ret
 
-; step 10 of GameMode6_Update_ChooseRecordList: sets wArg5 to 0; calls
-; HandleTwoChoiceCursorInput_0D; returns if wArg5 is 0; branches on wArg5; increments wScreenStep;
-; branches on wChoiceCursor; copies wScreenState to wReturnScreenState; copies wScreenStep to
-; wReturnScreenStep; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to $0c;
-; branches on wPartyCount; then 6 more steps (see the code) (E-0347)
-; why: step 10 of GameMode6_Update_ChooseRecordList (when wScreenStep = 10);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 10: the 'Info / OK' choice: B goes on one step; Info opens
+; the stats screen (state $0C) returning here; OK on the only party member (fewer than two, first
+; entry) gives 'You'll be left with no monster.', otherwise '<name> was released.' (string $0A) and
+; on two steps. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
     xor a
     ld [wArg5], a
@@ -1118,13 +1016,8 @@ GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D::
     ld [wScreenStep], a
     ret
 
-; step 11 of GameMode6_Update_ChooseRecordList: calls CopyRectTo20ByteRowsJp_Bank24; calls
-; StoreBAtWordTableEntry_Bank24_2; calls GameMode6_Update_ShowMonsterEg; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; StoreBAtWordTableEntry_Bank24_2; sets wScreenStep (E-0347)
-; why: step 11 of GameMode6_Update_ChooseRecordList (when wScreenStep = 11);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 11: redraws the choice box and goes back three steps to the
+; list. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
     ld de, GameMode6_Update_ChooseRecordList_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1148,13 +1041,9 @@ GameMode6_Update_ChooseRecordList_GameMode6_Update_ShowMonsterEg::
     ld [wScreenStep], a
     ret
 
-; step 12 of GameMode6_Update_ChooseRecordList: calls SetArg5ToListEntriesCell5; sets wArg1; sets
-; wArg2 to 0; calls DeleteSRAMRecordAndCompact; sets rRAMG to $0a; sets rRAMB to 0; copies
-; wRecordBufB + MON_SPECIES to wSpeciesIdLo; sets wSpeciesIdHi; calls SetSpeciesFlag; sets rRAMG to
-; 0; sets rRAMB to 0; sets wSaveStep to 0; then 2 more steps (see the code) (E-0347)
-; why: step 12 of GameMode6_Update_ChooseRecordList (when wScreenStep = 12);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 12: deletes the chosen SRAM record
+; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
+; flag and resets the save steps. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5::
     farcall SetArg5ToListEntriesCell5
     ld a, [wArg5]
@@ -1199,11 +1088,7 @@ GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5::
     ld [wScreenStep], a
     ret
 
-; step 13 of GameMode6_Update_ChooseRecordList: calls RunSaveGameSteps; returns unless bit 7 of
-; wSaveStep is set; calls GameMode6_Update_WriteLinkSceneAndGameModeEtc (E-0347)
-; why: step 13 of GameMode6_Update_ChooseRecordList (when wScreenStep = 13);
-; GameMode6_Update_ChooseRecordList: by wScreenStep: a paged record list with strings
-; (ShowStringAInDefaultWindow_Bank24), record buffer B and a two-choice input (E-0352)
+; Choosing the monster to switch, step 13: saves, then ends the screen. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_RunSaveGameSteps::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1230,11 +1115,7 @@ GameMode6_Update_ChooseRecordAndSave::
     dw GameMode6_Update_ChooseRecordAndSave_SetArg5ToListEntriesCell4
     dw GameMode6_Update_ChooseRecordAndSave_RunSaveGameSteps
 
-; step 0 of GameMode6_Update_ChooseRecordAndSave: calls GameMode6_Update_FillTilesFromRequest;
-; increments wScreenStep (E-0347)
-; why: step 0 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 0);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 0: fills the requested tiles. (C1, E-0357)
 GameMode6_Update_ToGameMode6_Update_FillTilesFromRequestAndStep::
     call GameMode6_Update_FillTilesFromRequest
     ld a, [wScreenStep]
@@ -1242,11 +1123,7 @@ GameMode6_Update_ToGameMode6_Update_FillTilesFromRequestAndStep::
     ld [wScreenStep], a
     ret
 
-; step 1 of GameMode6_Update_ChooseRecordAndSave: calls CopyRectTo20ByteRowsJp_Bank24; increments
-; wScreenStep (E-0347)
-; why: step 1 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 1);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 1: copies the 13 x 9 list box. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep::
     ld de, GameMode6_Update_ChooseRecordAndSave_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -1257,13 +1134,8 @@ GameMode6_Update_ChooseRecordAndSave_ToCopyRectTo20ByteRowsJp_Bank24AndStep::
     ld [wScreenStep], a
     ret
 
-; step 2 of GameMode6_Update_ChooseRecordAndSave: calls ClampRecordListPageCursor4; branches on
-; wListPages; calls StoreC5BEC6AtHLStride2_Bank24; copies H to wArg1; copies L to wArg2; calls
-; DrawPageOfPagesAtArg1_Bank1E; calls BGMapAddressAtScroll_Bank24; calls
-; DrawScreenBufferRectToBGMap_24; increments wScreenStep (E-0347)
-; why: step 2 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 2);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 2: clamps the page cursor of four and, with two or more pages,
+; draws the page arrows and numbers. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4::
     farcall ClampRecordListPageCursor4
     ld a, [wListPages]
@@ -1288,11 +1160,7 @@ GameMode6_Update_ChooseRecordAndSave_ClampRecordListPageCursor4::
     ld [wScreenStep], a
     ret
 
-; step 3 of GameMode6_Update_ChooseRecordAndSave: sets wArg5 to 0; calls
-; DrawRecordListPageSpeciesNames; increments wScreenStep (E-0347)
-; why: step 3 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 3);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 3: draws the page's species names. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageSpeciesNames::
     xor a
     ld [wArg5], a
@@ -1302,11 +1170,7 @@ GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageSpeciesNames::
     ld [wScreenStep], a
     ret
 
-; step 4 of GameMode6_Update_ChooseRecordAndSave: calls CopyFromBankWaitVRAM; sets wArg1 to 0; sets
-; wArg2 to 2; calls DrawRecordListPageMarks; increments wScreenStep (E-0347)
-; why: step 4 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 4);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 4: loads the mark tiles and draws the page's marks. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
@@ -1323,14 +1187,8 @@ GameMode6_Update_ChooseRecordAndSave_DrawRecordListPageMarks::
     ld [wScreenStep], a
     ret
 
-; step 5 of GameMode6_Update_ChooseRecordAndSave: sets wMenuInputResult to 0; calls
-; UpdatePagedListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets
-; wScreenStep; increments wScreenStep; calls StoreBAtWordTableEntry_Bank24_2; calls
-; CopyListEntriesCell5NameToTextBuf0; sets wScreenStep; also changes HL, A and B by register
-; arithmetic (E-0347)
-; why: step 5 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 5);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 5: the list cursor: a page change goes back five steps, B on one,
+; A marks the entry, copies its name and goes on two. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -1376,12 +1234,8 @@ GameMode6_Update_ChooseRecordAndSave_UpdatePagedListCursor::
     ld [wScreenStep], a
     ret
 
-; step 6 of GameMode6_Update_ChooseRecordAndSave: calls StoreBAtWordTableEntry_Bank24_2; sets
-; wScreenState to 4; sets wScreenStep to 8; sets wScreenSubStep to 1; sets wListPageIndex to 0; sets
-; wListCursor to 0 (E-0347)
-; why: step 6 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 6);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 6 (B): clears the choice mark and goes through the monster list's
+; B (state 4, step 8, sub-step 1) back to the Monster / Egg choice. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wTwoChoiceCursor]
     ld b, $c3
@@ -1398,15 +1252,8 @@ GameMode6_Update_ChooseRecordAndSave_StoreBAtWordTableEntry_Bank24_2::
     ld [wListCursor], a
     ret
 
-; step 7 of GameMode6_Update_ChooseRecordAndSave: copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets wStringCategory
-; to 0; sets wStringIndex to $0d; calls ShowString_Bank33_2; plays sound $6c; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls BGMapAddressAtScroll_Bank24; calls
-; DrawScreenBufferRectToBGMap_24; copies L to wTextWindowTileLo; then 5 more steps (see the code)
-; (E-0347)
-; why: step 7 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 7);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 7: shows 'Info / OK' (bank-$33 string $0D) in its 8 x 5 box with
+; sound $6C and the cursor on Info. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN::
     ld hl, vTiles2 + $700
     ld a, l
@@ -1450,14 +1297,9 @@ GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN::
     ld [wScreenStep], a
     ret
 
-; step 8 of GameMode6_Update_ChooseRecordAndSave: sets wArg5 to 0; calls
-; HandleTwoChoiceCursorInput_0D; returns if wArg5 is 0; branches on wArg5; increments wScreenStep;
-; branches on wChoiceCursor; copies wScreenState to wReturnScreenState; copies wScreenStep to
-; wReturnScreenStep; sets wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState to $0d;
-; calls SetArg5ToListEntriesCell4; then 4 more steps (see the code) (E-0347)
-; why: step 8 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 8);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 8: B goes on one step; Info opens the stats screen (state $0D)
+; returning here; OK copies the egg's species name (its record's MON_SPECIES word) and shows '<name>
+; was released.' (string $0A), on two steps. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
     xor a
     ld [wArg5], a
@@ -1507,13 +1349,8 @@ GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D::
     ld [wScreenStep], a
     ret
 
-; step 9 of GameMode6_Update_ChooseRecordAndSave: calls CopyRectTo20ByteRowsJp_Bank24; calls
-; StoreBAtWordTableEntry_Bank24_2; calls GameMode6_Update_ShowMonsterEg; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; StoreBAtWordTableEntry_Bank24_2; sets wScreenStep (E-0347)
-; why: step 9 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 9);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 9: redraws the Monster / Egg box with Egg marked and goes back
+; four steps to the list cursor. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
     ld de, GameMode6_Update_ChooseRecordAndSave_ShowMonsterEg_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1537,13 +1374,9 @@ GameMode6_Update_ChooseRecordAndSave_GameMode6_Update_ShowMonsterEg::
     ld [wScreenStep], a
     ret
 
-; step 10 of GameMode6_Update_ChooseRecordAndSave: calls SetArg5ToListEntriesCell4; sets wArg1; sets
-; wArg2 to 0; calls DeleteSRAMRecordAndCompact; sets rRAMG to $0a; sets rRAMB to 0; copies
-; wRecordBufB + MON_SPECIES to wSpeciesIdLo; sets wSpeciesIdHi; calls SetSpeciesFlag; sets rRAMG to
-; 0; sets rRAMB to 0; sets wSaveStep to 0; then 2 more steps (see the code) (E-0347)
-; why: step 10 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 10);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 10: deletes the chosen egg's SRAM record
+; (DeleteSRAMRecordAndCompact), writes the prize (wRecordBufB) at record wArg5, sets its species
+; flag and resets the save steps. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_SetArg5ToListEntriesCell4::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -1589,11 +1422,7 @@ GameMode6_Update_ChooseRecordAndSave_SetArg5ToListEntriesCell4::
     ld [wScreenStep], a
     ret
 
-; step 11 of GameMode6_Update_ChooseRecordAndSave: calls RunSaveGameSteps; returns unless bit 7 of
-; wSaveStep is set; calls GameMode6_Update_WriteLinkSceneAndGameModeEtc (E-0347)
-; why: step 11 of GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 11);
-; GameMode6_Update_ChooseRecordAndSave: by wScreenStep: a paged record list, the 'Info / OK / Yes /
-; No' window, the monster-egg message and RunSaveGameSteps (E-0352)
+; Choosing the egg to switch, step 11: saves, then ends the screen. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_RunSaveGameSteps::
     farcall RunSaveGameSteps
     ld a, [wSaveStep]
@@ -1602,18 +1431,12 @@ GameMode6_Update_ChooseRecordAndSave_RunSaveGameSteps::
     call GameMode6_Update_WriteLinkSceneAndGameModeEtc
     ret
 
-; step 6 of GameMode6_Update: returns at once (E-0347)
-; why: step 6 of GameMode6_Update (when wScreenState = 6); GameMode6_Update: game mode 6, the egg
-; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
-; prompt and the save, ... (E-0352, E-0354)
+; Game mode 6, states 6-11: unused (a bare ret). (C1, E-0357)
 GameMode6_Update_Return::
     ret
 
-; step 12 of GameMode6_Update: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
-; wScreenStep to 0; sets wScreenSubStep to 0; sets wScreenState (E-0347)
-; why: step 12 of GameMode6_Update (when wScreenState = 12); GameMode6_Update: game mode 6, the egg
-; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
-; prompt and the save, ... (E-0352, E-0354)
+; Game mode 6, state 12: runs the stats screen (SwapMonstersMenu) for the monster list until its
+; step $0A, then state 15 (back to the monster list). (C1, E-0357)
 GameMode6_Update_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1627,11 +1450,8 @@ GameMode6_Update_SwapMonstersMenu::
     ld [wScreenState], a
     ret
 
-; step 13 of GameMode6_Update: calls SwapMonstersMenu; returns unless wScreenStep is $0a; sets
-; wScreenStep to 0; sets wScreenSubStep to 0; increments wScreenState (E-0347)
-; why: step 13 of GameMode6_Update (when wScreenState = 13); GameMode6_Update: game mode 6, the egg
-; and save screens after a link or the priest: by wScreenState it shows an obtained egg, the save
-; prompt and the save, ... (E-0352, E-0354)
+; Game mode 6, state 13: runs the stats screen for the egg list until its step $0A, then state 14
+; (back to the egg list). (C1, E-0357)
 GameMode6_Update_SwapMonstersMenu_SetScreenStep::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -1657,16 +1477,8 @@ GameMode6_Update_SwitchEgg::
     dw GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg
     dw GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_2
 
-; step 0 of GameMode6_Update_SwitchEgg: calls DecompressToVRAM; copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $0d; calls ShowString_Bank33_2; calls
-; GameMode6_Update_FillTilesFromRequest; branches on wBattleScene; calls
-; CopyRectTo20ByteRowsJp_Bank24; calls
-; GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM; then 3 more
-; steps (see the code) (E-0347)
-; why: step 0 of GameMode6_Update_SwitchEgg (when wScreenStep = 0); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back from the stats screen to the egg list, step 0: reloads the text tiles and 'Info / OK', clears
+; the tile areas, redraws the boxes and marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     ld b, $46
     ld de, Tiles1Gfx
@@ -1714,12 +1526,8 @@ GameMode6_Update_SwitchEgg_ShowInfoOKYesN::
     ld [wScreenStep], a
     ret
 
-; step 1 of GameMode6_Update_SwitchEgg: calls ListRecordsInUseEggs; calls
-; ClampRecordListPageCursor4; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank24; copies H
-; to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
-; why: step 1 of GameMode6_Update_SwitchEgg (when wScreenStep = 1); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back to the egg list, step 1: lists the eggs, clamps the page cursor of four and draws the page
+; arrows and numbers when there are two or more pages. (C1, E-0357)
 GameMode6_Update_SwitchEgg_ListRecordsInUseEggs::
     farcall ListRecordsInUseEggs
     farcall ClampRecordListPageCursor4
@@ -1741,11 +1549,7 @@ GameMode6_Update_SwitchEgg_ListRecordsInUseEggs::
     ld [wScreenStep], a
     ret
 
-; step 2 of GameMode6_Update_SwitchEgg: sets wArg5 to 0; calls DrawRecordListPageSpeciesNames;
-; increments wScreenStep (E-0347)
-; why: step 2 of GameMode6_Update_SwitchEgg (when wScreenStep = 2); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back to the egg list, step 2: draws the page's species names. (C1, E-0357)
 GameMode6_Update_SwitchEgg_DrawRecordListPageSpeciesNames::
     xor a
     ld [wArg5], a
@@ -1755,11 +1559,7 @@ GameMode6_Update_SwitchEgg_DrawRecordListPageSpeciesNames::
     ld [wScreenStep], a
     ret
 
-; step 3 of GameMode6_Update_SwitchEgg: calls CopyFromBankWaitVRAM; sets wArg1 to 1; sets wArg2 to
-; 2; calls DrawRecordListPageMarks; increments wScreenStep (E-0347)
-; why: step 3 of GameMode6_Update_SwitchEgg (when wScreenStep = 3); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back to the egg list, step 3: loads the mark tiles and draws the page's marks. (C1, E-0357)
 GameMode6_Update_SwitchEgg_DrawRecordListPageMarks::
     ld de, Tiles2Plus420Tiles
     ld hl, vTiles1 + $4e0
@@ -1776,13 +1576,8 @@ GameMode6_Update_SwitchEgg_DrawRecordListPageMarks::
     ld [wScreenStep], a
     ret
 
-; step 4 of GameMode6_Update_SwitchEgg: calls CopyRectTo20ByteRowsJp_Bank24; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to 9; calls ShowString_Bank33_2;
-; increments wScreenStep (E-0347)
-; why: step 4 of GameMode6_Update_SwitchEgg (when wScreenStep = 4); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back to the egg list, step 4: draws the Info / OK box and 'Switch which egg?' (string 9). (C1,
+; E-0357)
 GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg::
     ld de, GameMode6_Update_ChooseRecordAndSave_ShowInfoOKYesN_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1808,15 +1603,9 @@ GameMode6_Update_SwitchEgg_ShowSwitchWhichEgg::
     ld [wScreenStep], a
     ret
 
-; step 5 of GameMode6_Update_SwitchEgg: calls StoreBAtWordTableEntry_Bank24_2; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; calls
-; BGMapAddressAtScroll_Bank24; calls DrawScreenBufferRectToBGMap_24; sets hSpriteHideTile to $70;
-; sets wScreenSubStep to 0; copies wReturnScreenState to wScreenState; copies wReturnScreenStep to
-; wScreenStep; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
-; wTextWindowRows; then 5 more steps (see the code) (E-0347)
-; why: step 5 of GameMode6_Update_SwitchEgg (when wScreenStep = 5); GameMode6_Update_SwitchEgg: by
-; wScreenStep: the 'Info / OK / Yes / No' window, the list of records with byte $6E set and 'Switch
-; which egg?' (E-0352)
+; Back to the egg list, step 5: marks the entry, redraws the screen and the bottom rows, restores
+; hide tile $70 and returns to the saved state and step; in game mode 5 outside link session 8,
+; state $11 step 8 instead. (C1, E-0357)
 GameMode6_Update_SwitchEgg_StoreBAtWordTableEntry_Bank24_2::
     ld a, [wListCursor]
     ld b, $bc
@@ -1875,15 +1664,9 @@ GameMode6_Update_SwitchMonster::
     dw GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B
     dw GameMode6_Update_SwitchMonster_ShowSwitchWithWhich
 
-; step 0 of GameMode6_Update_SwitchMonster: calls DecompressToVRAM; copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; sets
-; wStringCategory to 0; sets wStringIndex to $0d; calls ShowString_Bank33_2; calls
-; GameMode6_Update_SwitchMonster_FillTilesFromRequest; branches on wBattleScene; calls
-; GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM; branches on
-; wBattleScene; then 4 more steps (see the code) (E-0347)
-; why: step 0 of GameMode6_Update_SwitchMonster (when wScreenStep = 0);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back from the stats screen to the monster list, step 0: reloads the text tiles and 'Info / OK',
+; clears the tile areas, redraws the boxes (for a link battle with the chosen monster's picture) and
+; marks the entry. (C1, E-0357)
 GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld b, $46
     ld de, Tiles1Gfx
@@ -1937,12 +1720,8 @@ GameMode6_Update_SwitchMonster_ShowInfoOKYesN::
     ld [wScreenStep], a
     ret
 
-; step 1 of GameMode6_Update_SwitchMonster: calls ListRecordsInUseNotEggs; calls
-; ClampRecordListPageCursor5; branches on wListPages; calls StoreC5BEC6AtHLStride2_Bank24; copies H
-; to wArg1; copies L to wArg2; calls DrawPageOfPagesAtArg1_Bank1E; increments wScreenStep (E-0347)
-; why: step 1 of GameMode6_Update_SwitchMonster (when wScreenStep = 1);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back to the monster list, step 1: lists the monsters that are not eggs, clamps the page cursor of
+; five and draws the page arrows and numbers when there are two or more pages. (C1, E-0357)
 GameMode6_Update_SwitchMonster_ListRecordsInUseNotEggs::
     farcall ListRecordsInUseNotEggs
     farcall ClampRecordListPageCursor5
@@ -1964,11 +1743,7 @@ GameMode6_Update_SwitchMonster_ListRecordsInUseNotEggs::
     ld [wScreenStep], a
     ret
 
-; step 2 of GameMode6_Update_SwitchMonster: calls DrawRecordListPageNames; sets wArg1 to 0; calls
-; MarkPartyMembersInRecordListPage (E-0347)
-; why: step 2 of GameMode6_Update_SwitchMonster (when wScreenStep = 2);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back to the monster list, step 2: draws the page's names and marks the party members. (C1, E-0357)
 GameMode6_Update_SwitchMonster_DrawRecordListPageNames::
     farcall DrawRecordListPageNames
     xor a
@@ -1976,31 +1751,21 @@ GameMode6_Update_SwitchMonster_DrawRecordListPageNames::
     farcall MarkPartyMembersInRecordListPage
     ret
 
-; step 3 of GameMode6_Update_SwitchMonster: calls EggServiceMenu_Bank1B (E-0347)
-; why: step 3 of GameMode6_Update_SwitchMonster (when wScreenStep = 3);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back to the monster list, step 3: runs the list's later steps (EggServiceMenu_Bank1B). (C1,
+; E-0357)
 GameMode6_Update_SwitchMonster_ToEggServiceMenu_Bank1B::
     farcall EggServiceMenu_Bank1B
     ret
 
-; step 5 of GameMode6_Update_SwitchMonster: increments wScreenStep (E-0347)
-; why: step 5 of GameMode6_Update_SwitchMonster (when wScreenStep = 5);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back to the monster list, step 5: moves on. (C1, E-0357)
 GameMode6_Update_SwitchMonster_AdvanceScreenStep::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
     ret
 
-; step 7 of GameMode6_Update_SwitchMonster: copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
-; FillTilesFromRequest; sets wStringIndex to 8; sets wStringCategory to 0; calls
-; ShowString_Bank33_2; calls EggServiceMenu_Bank1B (E-0347)
-; why: step 7 of GameMode6_Update_SwitchMonster (when wScreenStep = 7);
-; GameMode6_Update_SwitchMonster: by wScreenStep: the 'Info / OK / Yes / No' window, a record list
-; and 'Switch with which?' (E-0352)
+; Back to the monster list, step 7: clears the text window, shows 'Switch with which?' (string 8)
+; and runs the list's steps. (C1, E-0357)
 GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     ld hl, vTiles1
     ld a, l
@@ -2021,12 +1786,8 @@ GameMode6_Update_SwitchMonster_ShowSwitchWithWhich::
     farcall EggServiceMenu_Bank1B
     ret
 
-; Returns unless wLinkBreedResult is 0; calls GameMode6_Update_DecompressToVRAM; calls
-; CopyRectTo20ByteRowsJp_Bank24 (E-0347)
-; why: part of GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24, in step 1 of GameMode6_Update (when
-; wScreenState = 1); GameMode6_Update: game mode 6, the egg and save screens after a link or the
-; priest: by wScreenState it shows an obtained egg, the save prompt and the save, ... (E-0352,
-; E-0354)
+; Unless a link breeding result is set, loads the result banner's tiles and copies its 17 x 2
+; rectangle. (C1, E-0357)
 GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM::
     ld a, [wLinkBreedResult]
     and a
@@ -2038,11 +1799,8 @@ GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM
     call CopyRectTo20ByteRowsJp_Bank24
     ret
 
-; called from GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24: returns if wIsCGB is 0;
-; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: a helper of GameMode6_Update_ObtainedEgg_CopyRectTo20ByteRowsJp_Bank24, in step 0 of
-; GameMode6_Update_ObtainedEgg (when wScreenStep = 0); GameMode6_Update_ObtainedEgg: by wScreenStep:
-; shows 'obtained an egg of 0.' (E-0352)
+; On the GBC loads background palette 7 (BGPI $B8, auto-increment; 8 bytes) and $1C attribute bytes
+; for the result banner. (C1, E-0357)
 GameMode6_Update_ObtainedEgg_WaitForVRAMAccess::
     ld a, [wIsCGB]
     and a
@@ -2077,13 +1835,8 @@ GameMode6_Update_ObtainedEgg_WaitForVRAMAccess::
     jr nz, .loop2
     ret
 
-; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
-; H to wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $0c; calls
-; ShowString_Bank33_2; sets wTextFlags to 0; sets wTextControl to 0; copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; then 1 more step (see the code)
-; (E-0347)
-; why: part of GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep:
-; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Shows 'Yes / No' (bank-$33 string $0C) in a 3 x 1 window at VRAM $96D0 and resets the text window.
+; (C1, E-0357)
 GameMode6_Update_SavePrompt_ShowYesNo::
     ld hl, vTiles2 + $6d0
     ld a, l
@@ -2115,14 +1868,8 @@ GameMode6_Update_SavePrompt_ShowYesNo::
     ld [wTextWindowWidth], a
     ret
 
-; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
-; H to wTextWindowWidth; sets wStringCategory to 0; sets wStringIndex to $0b; calls
-; ShowString_Bank33_2; sets wTextFlags to 0; sets wTextControl to 0; copies L to wTextWindowTileLo;
-; copies H to wTextWindowTileHi; copies L to wTextWindowRows; then 1 more step (see the code)
-; (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
-; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
-; (E-0352, E-0354)
+; Shows 'Monster / Egg' (bank-$33 string $0B) in a 7 x 1 window at VRAM $9760 and resets the text
+; window. (C1, E-0357)
 GameMode6_Update_ShowMonsterEg::
     ld hl, vTiles2 + $760
     ld a, l
@@ -2154,11 +1901,8 @@ GameMode6_Update_ShowMonsterEg::
     ld [wTextWindowWidth], a
     ret
 
-; Sets wLinkScene to 0; sets wGameMode to 5; sets wModeState to 1; sets wModeChangeRequest to 1;
-; returns unless wBattleScene is $08 (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
-; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
-; (E-0352, E-0354)
+; Ends game mode 6: clears $6F bytes of screen state from wScreenState, the link scene, and switches
+; to game mode 5, state 1 (the link menu). (C1, E-0357)
 GameMode6_Update_WriteLinkSceneAndGameModeEtc::
     ld hl, wScreenState
     ld bc, $006f
@@ -2389,10 +2133,8 @@ CopyRecordBufBNameNameToTextBuf0::
 CopyRecordBufANameNameToTextBuf0::
     ld hl, wRecordBufA + MON_NAME
 
-; Takes HL; changes HL, DE, A and B (E-0347)
-; why: part of CopyRecordBufANameNameToTextBuf0; CopyRecordBufANameNameToTextBuf0: copies up to 10
-; name bytes from wRecordBufA + $1 (stopping at $F0) to wTextBuf0 with a $F0 terminator (E-0352,
-; E-0124, E-0340)
+; Copies the name at HL (up to ten bytes, stopping at $F0) to wTextBuf0 and ends it with $F0. (C1,
+; E-0357)
 CopyRecordBufANameNameToTextBuf0_Skip::
     ld de, wTextBuf0
     ld b, $0a
@@ -2412,11 +2154,8 @@ CopyRecordBufANameNameToTextBuf0_Skip::
     ld [de], a
     ret
 
-; called from GameMode6_Update_PageList_UpdatePagedListCursor: changes A; branches on wPartyCount;
-; branches on wListCursor; branches on wListPageIndex (E-0347)
-; why: a helper of GameMode6_Update_PageList_UpdatePagedListCursor, in step 0 of
-; GameMode6_Update_PageList (when wScreenSubStep = 0); GameMode6_Update_PageList: moves the paged
-; cursor, copies a rectangle and sets the sub-step (E-0352, E-0345)
+; Returns $FF when the pick would leave the party empty (fewer than two party members and the cursor
+; on page 0's first entry), otherwise 0. (C1, E-0357)
 GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc::
     ld a, [wPartyCount]
     cp $02
@@ -2434,13 +2173,7 @@ GameMode6_Update_PageList_ReadPartyCountAndListCursorEtc::
     xor a
     ret
 
-; called from GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D: sets rRAMG to $0a;
-; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: a helper of GameMode6_Update_ChooseRecordAndSave_HandleTwoChoiceCursorInput_0D, in step 8 of
-; GameMode6_Update_ChooseRecordAndSave (when wScreenStep = 8); GameMode6_Update_ChooseRecordAndSave:
-; by wScreenStep: a paged record list, the 'Info / OK / Yes / No' window, the monster-egg message
-; and RunSaveGameSteps (E-0352)
+; HL = the MON_SPECIES word of SRAM record [HL]. (C1, E-0357)
 GameMode6_Update_ChooseRecordAndSave_Multiply8::
     ld a, $0a
     ld [rRAMG], a
@@ -2500,13 +2233,8 @@ CopyMonsterNameToBuffer_B24::
     call CopyFromBankWaitVRAM
     ret
 
-; called from GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D: sets rRAMG to $0a;
-; sets rRAMB to 0; calls SetArg5ToListEntriesCell5; calls CopyRecordNameToNameGlyphBuf; branches on
-; the byte at wNameGlyphBuf; also changes HL, DE, A and C by register arithmetic (E-0347)
-; why: a helper of GameMode6_Update_ChooseRecordList_HandleTwoChoiceCursorInput_0D, in step 10 of
-; GameMode6_Update_ChooseRecordList (when wScreenStep = 10); GameMode6_Update_ChooseRecordList: by
-; wScreenStep: a paged record list with strings (ShowStringAInDefaultWindow_Bank24), record buffer B
-; and a two-choice input (E-0352)
+; Copies the name of the list entry under the cursor (five per page) from its SRAM record into
+; wTextBuf0. (C1, E-0357)
 GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5_2::
     ld a, $0a
     ld [rRAMG], a
@@ -2539,14 +2267,7 @@ GameMode6_Update_ChooseRecordList_SetArg5ToListEntriesCell5_2::
     ld [de], a
     ret
 
-; called from GameMode6_Update_SwitchMonster_ShowInfoOKYesN: copies L to wTextWindowTileLo; copies H
-; to wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
-; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to
-; wTextWindowRows; copies H to wTextWindowWidth; calls FillTilesFromRequest; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; then 11 more steps (see the code) (E-0347)
-; why: a helper of GameMode6_Update_SwitchMonster_ShowInfoOKYesN, in step 0 of
-; GameMode6_Update_SwitchMonster (when wScreenStep = 0); GameMode6_Update_SwitchMonster: by
-; wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?' (E-0352)
+; Clears five tile areas of the monster list (FillTilesFromRequest). (C1, E-0357)
 GameMode6_Update_SwitchMonster_FillTilesFromRequest::
     ld hl, vTiles1 + $500
     ld a, l
@@ -2600,10 +2321,9 @@ GameMode6_Update_SwitchMonster_FillTilesFromRequest::
     call FillTilesFromRequest
     ret
 
-; Calls DecompressToVRAM (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
-; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
-; (E-0352, E-0354)
+; Decompresses $24 banner tiles into VRAM $9000 by A bit 0: GameMode6_Init_Data1 when clear (the
+; only case from GameMode6_Update_CopyRectTo20ByteRowsJp_Bank24_GameMode6_Update_DecompressToVRAM),
+; Tiles1Plus600Gfx when set. (C1, E-0357)
 GameMode6_Update_DecompressToVRAM::
     and $01
     and a
@@ -2621,12 +2341,10 @@ GameMode6_Update_DecompressToVRAM::
     call DecompressToVRAM
     ret
 
-; called from GameMode6_Init: returns if wBattleScene is $08; branches on wIsCGB; calls
-; GameMode6_Init_ReadLinkScene; sets wBGPaletteUploadRequest to $7f; calls UploadBGPalettes; sets
-; hTemp0 to 1; calls BGMapAddressAtScroll_Bank24; calls GameMode6_Init_ReadSharedMenuWork; calls
-; LoadMonsterPictureAttributes; branches on wSharedMenuWork; calls GameMode6_Init_ReadLinkScene;
-; sets wBGPaletteUploadRequest to $7f; then 15 more steps (see the code) (E-0347)
-; why: a helper of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
+; Game mode 6's palettes: except for an egg, on the GBC loads the palettes and 6 x 6 picture
+; attributes of up to three battlers (from wBattlerRecords, or from slot 4 when wLinkScene is set);
+; then draws the pictures' tiles: one picture for an egg, otherwise the shown battlers' 20 x 6 row.
+; (C1, E-0357)
 GameMode6_Init_UploadBGPalettes::
     ld a, [wBattleScene]
     cp $08
@@ -2703,9 +2421,8 @@ GameMode6_Init_UploadBGPalettes::
     call GameMode6_Init_WriteVRAMByteInc
     ld hl, wScreenTileBuffer + $93
 
-; Calls WriteVRAMByteInc; calls ReturnStub; also changes HL, BC, A and D by register arithmetic
-; (E-0347)
-; why: part of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
+; Writes a 6 x 6 block of tile numbers $20 onward into the window buffer and the BG map. (C1,
+; E-0357)
 GameMode6_Init_WriteVRAMByteInc::
     ld bc, $0606
     ld d, $20
@@ -2747,11 +2464,8 @@ GameMode6_Init_WriteVRAMByteInc::
     call ReturnStub
     ret
 
-; Calls BGMapAddressAtScroll_Bank24; copies H to wArg5; copies L to wArg6; copies H to wArg1; copies
-; L to wArg2; sets wArg3 to $14; sets wArg4 to 6; sets wArg7 to 1; calls DrawTileRectFromArg1Params
-; (E-0347)
-; why: part of GameMode6_Init_WriteVRAMByteInc, in part of GameMode6_Init; GameMode6_Init: start-up
-; for wGameMode = 6 (E-0352, E-0029)
+; Draws the 20 x 6 picture row for the number of battlers shown (wSharedMenuWork) at the BG map's
+; row 7. (C1, E-0357)
 GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
     call BGMapAddressAtScroll_Bank24
     ld de, $00e0
@@ -2779,8 +2493,8 @@ GameMode6_Init_WriteVRAMByteInc_CallBGMapAddressAtScroll_Bank24::
     farcall DrawTileRectFromArg1Params
     ret
 
-; Takes HL and A; changes HL, DE and A (E-0347)
-; why: part of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
+; DE = word A of the picture position table for the number of battlers shown (1, 2 or 3). (C1,
+; E-0357)
 GameMode6_Init_ReadSharedMenuWork::
     push hl
     ld e, a
@@ -2859,8 +2573,8 @@ CopyAttributeBlockToBattlerRecordSlot64::
 CopyAttributeBlockToBattlerRecordSlot64_Data::
     ds $24, $01
 
-; Takes DE; changes HL and A; branches on wLinkScene (E-0347)
-; why: part of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
+; HL = DE when wLinkScene is set, else HL unchanged: picks which side's battler records to read.
+; (C1, E-0357)
 GameMode6_Init_ReadLinkScene::
     ld a, [wLinkScene]
     and a
@@ -2872,12 +2586,8 @@ GameMode6_Init_ReadLinkScene::
     ld h, d
     ret
 
-; called from GameMode6_Init: branches on wBattleScene; calls GameMode6_Init_ReadLinkScene; calls
-; LoadMonsterPicture; sets wSharedMenuWork to 1; calls GameMode6_Init_ReadLinkScene; calls
-; LoadMonsterPicture; calls GameMode6_Init_ReadLinkScene; sets wSharedMenuWork to 1; calls
-; LoadMonsterPicture; calls GameMode6_Init_ReadLinkScene; sets wSharedMenuWork to 2; calls
-; LoadMonsterPicture; then 2 more steps (see the code) (E-0347)
-; why: a helper of GameMode6_Init; GameMode6_Init: start-up for wGameMode = 6 (E-0352, E-0029)
+; Loads the battlers' pictures: for an egg only the first; otherwise up to three (palettes 1, 3 and
+; 5) until an empty species, counting them in wSharedMenuWork. (C1, E-0357)
 GameMode6_Init_LoadMonsterPicture::
     ld a, [wBattleScene]
     cp $08
@@ -2949,12 +2659,8 @@ GameMode6_Init_LoadMonsterPicture::
     ld [wSharedMenuWork], a
     ret
 
-; called from GameMode6_Update_SwitchMonster_ShowInfoOKYesN: sets rRAMG2 to $0a; sets rRAMB to 0;
-; calls LoadSRAMRecordWord; calls LoadMonsterPicture; sets rRAMG2 to 0; also changes HL, DE, BC and
-; A by register arithmetic (E-0347)
-; why: a helper of GameMode6_Update_SwitchMonster_ShowInfoOKYesN, in step 0 of
-; GameMode6_Update_SwitchMonster (when wScreenStep = 0); GameMode6_Update_SwitchMonster: by
-; wScreenStep: the 'Info / OK / Yes / No' window, a record list and 'Switch with which?' (E-0352)
+; Loads the picture of the list entry under the cursor (its MON_SPECIES) into VRAM $9200. (C1,
+; E-0357)
 GameMode6_Update_SwitchMonster_LoadSRAMRecordWord::
     ld a, [wListPageIndex]
     ld b, a
@@ -3091,14 +2797,7 @@ StoreC5BEC6AtHLStride2_Bank24::
     ld [hl], a
     ret
 
-; Copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies
-; H to wTextWindowWidth; calls FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies L to wTextWindowRows; copies H to wTextWindowWidth; calls
-; FillTilesFromRequest; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; then 17 more
-; steps (see the code) (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
-; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
-; (E-0352, E-0354)
+; Clears five tile areas of the egg list and resets the text window. (C1, E-0357)
 GameMode6_Update_FillTilesFromRequest::
     ld hl, vTiles1 + $3f0
     ld a, l
@@ -3187,11 +2886,8 @@ GameMode6_Update_Save_ObjectScene::
     dw GameMode6_Update_Save_ObjectScene_WriteObject2AndObject1Etc
     dw GameMode6_Update_Save_WriteSpriteSlotsAndScreenSubStepEtc
 
-; step 1 of GameMode6_Update_Save_ObjectScene: may return early; decrements wObject2 + OBJ_X; may
-; return early; increments wScreenSubStep; also changes A by register arithmetic (E-0347)
-; why: step 1 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 1);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 1: on three counts of every four (wSpriteSlots + 9) moves object 2 and
+; the sprite at wSpriteSlots + $B left until it reaches $58. (C1, E-0357)
 GameMode6_Update_Save_WriteObject2AndSpriteSlotsEtc::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -3210,11 +2906,7 @@ GameMode6_Update_Save_WriteObject2AndSpriteSlotsEtc::
     ld [wScreenSubStep], a
     ret
 
-; step 0 of GameMode6_Update_Save_ObjectScene: increments wScreenCounter; returns if wScreenCounter
-; is below $10; sets wScreenCounter to 0; increments wScreenSubStep (E-0347)
-; why: step 0 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 0);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 0: a 16-frame wait. (C1, E-0357)
 GameMode6_Update_Save_WriteScreenCounterAndScreenSubStep::
     ld a, [wScreenCounter]
     inc a
@@ -3228,12 +2920,8 @@ GameMode6_Update_Save_WriteScreenCounterAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 3 of GameMode6_Update_Save_ObjectScene: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0;
-; increments wObject1 + OBJ_X; returns unless wObject1 + OBJ_X is $38; increments wScreenSubStep
-; (E-0347)
-; why: step 3 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 3);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 3: on three counts of every four moves object 1 right until X $38. (C1,
+; E-0357)
 GameMode6_Update_Save_WriteObject1AndScreenSubStep::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -3249,11 +2937,7 @@ GameMode6_Update_Save_WriteObject1AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 5 of GameMode6_Update_Save_ObjectScene: branches on wRecordBufB + MON_EGG; sets wObject5 to
-; $80; increments wScreenSubStep (E-0347)
-; why: step 5 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 5);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 5: shows object 5 (state $80) when wRecordBufB is an egg. (C1, E-0357)
 GameMode6_Update_Save_WriteObject5AndScreenSubStep::
     ld a, [wRecordBufB + MON_EGG]
     and a
@@ -3267,12 +2951,8 @@ GameMode6_Update_Save_WriteObject5AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 7 of GameMode6_Update_Save_ObjectScene: branches on wRecordBufB + MON_EGG; returns if
-; wObject2 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject2 + OBJ_X; returns unless wObject2 +
-; OBJ_X is $28; sets wObject2 + OBJ_STATE to 1; increments wScreenSubStep (E-0347)
-; why: step 7 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 7);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 7: unless wRecordBufB is an egg, on three counts of every four moves
+; object 2 left until X $28, then turns it right (state 1). (C1, E-0357)
 GameMode6_Update_Save_WriteObject2AndScreenSubStep::
     ld a, [wRecordBufB + MON_EGG]
     and a
@@ -3295,11 +2975,8 @@ GameMode6_Update_Save_WriteObject2AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 8 of GameMode6_Update_Save_ObjectScene: calls CopyRecordBufANameNameToTextBuf0; calls
-; ShowStringAInDefaultWindow_Bank24; increments wScreenSubStep (E-0347)
-; why: step 8 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 8);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 8: copies the prize's name (wRecordBufA) and shows 'Turned over
+; <name>...' (bank-$33 string 3). (C1, E-0357)
 GameMode6_Update_Save_ObjectScene_CopyRecordBufANameNameToTextBuf0::
     call CopyRecordBufANameNameToTextBuf0
     ld a, $03
@@ -3309,12 +2986,8 @@ GameMode6_Update_Save_ObjectScene_CopyRecordBufANameNameToTextBuf0::
     ld [wScreenSubStep], a
     ret
 
-; step 11 of GameMode6_Update_Save_ObjectScene: sets wObject5 to 0; sets wObject1 + OBJ_STATE to 3;
-; returns if wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1 + OBJ_X; returns unless
-; wObject1 + OBJ_X is $18; increments wScreenSubStep (E-0347)
-; why: step 11 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 11);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 11: hides object 5, turns object 1 left (state 3) and walks it on three
+; counts of every four until X $18. (C1, E-0357)
 GameMode6_Update_Save_ObjectScene_WriteObject5AndObject1Etc::
     xor a
     ld [wObject5], a
@@ -3334,12 +3007,8 @@ GameMode6_Update_Save_ObjectScene_WriteObject5AndObject1Etc::
     ld [wScreenSubStep], a
     ret
 
-; step 12 of GameMode6_Update_Save_ObjectScene: sets wObject2 + OBJ_STATE to 3; returns if wObject1
-; + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject2 + OBJ_X; decrements wObject1 + OBJ_X; returns
-; unless wObject1 + OBJ_X is $d8; increments wScreenSubStep (E-0347)
-; why: step 12 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 12);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 12: turns object 2 left and walks objects 1 and 2 left on three counts
+; of every four until object 1 reaches X $D8 (off the screen). (C1, E-0357)
 GameMode6_Update_Save_ObjectScene_WriteObject2AndObject1Etc::
     ld a, $03
     ld [wObject2 + OBJ_STATE], a
@@ -3360,11 +3029,8 @@ GameMode6_Update_Save_ObjectScene_WriteObject2AndObject1Etc::
     ld [wScreenSubStep], a
     ret
 
-; step 13 of GameMode6_Update_Save_ObjectScene: may return early; sets wScreenSubStep to 0;
-; increments wScreenStep; also changes A by register arithmetic (E-0347)
-; why: step 13 of GameMode6_Update_Save_ObjectScene (when wScreenSubStep = 13);
-; GameMode6_Update_Save_ObjectScene: by wScreenSubStep: alternates timed waits (wScreenCounter) with
-; moves of field objects 1, 2 and 5, and copies a name to the text buffer: a ... (E-0352)
+; Hand-over scene, sub-step 13: moves the sprite at wSpriteSlots + $B right on three counts of every
+; four until $B0, then ends the scene. (C1, E-0357)
 GameMode6_Update_Save_WriteSpriteSlotsAndScreenSubStepEtc::
     ld a, $01
     ld [wSpriteSlots + $7], a
@@ -3404,11 +3070,8 @@ GameMode6_Update_SavePrompt_ObjectScene::
     dw GameMode6_Update_SavePrompt_WriteObject5AndSpriteSlotsEtc
     dw GameMode6_Update_SavePrompt_WriteObject2AndSpriteSlotsEtc
 
-; step 1 of GameMode6_Update_SavePrompt_ObjectScene: may return early; increments wScreenSubStep;
-; also changes A by register arithmetic (E-0347)
-; why: step 1 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 1);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 1: moves the sprite at wSpriteSlots + $B left on three counts of every
+; four until $58 at most. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteSpriteSlotsAndScreenSubStep::
     ld a, [wSpriteSlots + $9]
     and $03
@@ -3426,12 +3089,8 @@ GameMode6_Update_SavePrompt_WriteSpriteSlotsAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 3 of GameMode6_Update_SavePrompt_ObjectScene: returns if wObject1 + OBJ_ANIM_COUNTER & $03 is
-; 0; increments wObject2 + OBJ_X; increments wObject1 + OBJ_X; returns unless wObject1 + OBJ_X is
-; $38; increments wScreenSubStep (E-0347)
-; why: step 3 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 3);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 3: on three counts of every four moves objects 1 and 2 right until
+; object 1 reaches X $38. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject2AndObject1Etc::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
@@ -3450,11 +3109,7 @@ GameMode6_Update_SavePrompt_WriteObject2AndObject1Etc::
     ld [wScreenSubStep], a
     ret
 
-; step 0 of GameMode6_Update_SavePrompt_ObjectScene: increments wScreenCounter; returns if
-; wScreenCounter is below $10; sets wScreenCounter to 0; increments wScreenSubStep (E-0347)
-; why: step 0 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 0);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 0: a 16-frame wait. (C1, E-0357)
 GameMode6_Update_WriteScreenCounterAndScreenSubStep::
     ld a, [wScreenCounter]
     inc a
@@ -3468,11 +3123,8 @@ GameMode6_Update_WriteScreenCounterAndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 5 of GameMode6_Update_SavePrompt_ObjectScene: branches on wRecordBufB + MON_EGG; sets
-; wObject5 to $80; increments wScreenSubStep (E-0347)
-; why: step 5 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 5);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 5: shows object 5 (state $80) when the prize (wRecordBufB) is an egg.
+; (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject5AndScreenSubStep::
     ld a, [wRecordBufB + MON_EGG]
     and a
@@ -3486,13 +3138,8 @@ GameMode6_Update_SavePrompt_WriteObject5AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 7 of GameMode6_Update_SavePrompt_ObjectScene: branches on wRecordBufB + MON_EGG; returns if
-; wObject2 + OBJ_ANIM_COUNTER & $03 is 0; increments wObject2 + OBJ_X; returns if wObject2 + OBJ_X
-; is below $68; sets wObject2 + OBJ_X to $68; sets wObject2 + OBJ_STATE to 3; increments
-; wScreenSubStep (E-0347)
-; why: step 7 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 7);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 7: unless the prize is an egg, on three counts of every four moves
+; object 2 right until X $68, then turns it left (state 3). (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject2AndScreenSubStep::
     ld a, [wRecordBufB + MON_EGG]
     and a
@@ -3517,11 +3164,8 @@ GameMode6_Update_SavePrompt_WriteObject2AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 8 of GameMode6_Update_SavePrompt_ObjectScene: calls CopyRecordBufBNameNameToTextBuf0; calls
-; ShowStringAInDefaultWindow_Bank24; increments wScreenSubStep (E-0347)
-; why: step 8 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 8);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 8: copies the prize's name and shows 'Received <name>' (bank-$33 string
+; 4). (C1, E-0357)
 GameMode6_Update_SavePrompt_ObjectScene_CopyRecordBufBNameNameToTextBuf0::
     call CopyRecordBufBNameNameToTextBuf0
     ld a, $04
@@ -3531,12 +3175,8 @@ GameMode6_Update_SavePrompt_ObjectScene_CopyRecordBufBNameNameToTextBuf0::
     ld [wScreenSubStep], a
     ret
 
-; step 11 of GameMode6_Update_SavePrompt_ObjectScene: sets wObject1 + OBJ_STATE to 3; returns if
-; wObject1 + OBJ_ANIM_COUNTER & $03 is 0; decrements wObject1 + OBJ_X; returns unless wObject1 +
-; OBJ_X is $e0; increments wScreenSubStep (E-0347)
-; why: step 11 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 11);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 11: turns object 1 left (state 3) and walks it on three counts of every
+; four until X $E0 (off the screen). (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject1AndScreenSubStep::
     ld a, $03
     ld [wObject1 + OBJ_STATE], a
@@ -3554,11 +3194,8 @@ GameMode6_Update_SavePrompt_WriteObject1AndScreenSubStep::
     ld [wScreenSubStep], a
     ret
 
-; step 12 of GameMode6_Update_SavePrompt_ObjectScene: sets wObject5 to 0; may return early;
-; increments wScreenSubStep; also changes A by register arithmetic (E-0347)
-; why: step 12 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 12);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 12: hides object 5 and moves the sprite at wSpriteSlots + $B right on
+; three counts of every four until $78. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject5AndSpriteSlotsEtc::
     xor a
     ld [wObject5], a
@@ -3578,12 +3215,8 @@ GameMode6_Update_SavePrompt_WriteObject5AndSpriteSlotsEtc::
     ld [wScreenSubStep], a
     ret
 
-; step 13 of GameMode6_Update_SavePrompt_ObjectScene: sets wObject2 + OBJ_STATE to 1; may return
-; early; increments wObject2 + OBJ_X; may return early; sets wScreenSubStep to 0; increments
-; wScreenStep; also changes A by register arithmetic (E-0347)
-; why: step 13 of GameMode6_Update_SavePrompt_ObjectScene (when wScreenSubStep = 13);
-; GameMode6_Update_SavePrompt_ObjectScene: by wScreenSubStep: timed waits and moves of field objects
-; 1, 2 and 5 with a name copy, as GameMode6_Update_Save_ObjectScene (E-0352)
+; Receiving scene, sub-step 13: turns object 2 right (state 1) and moves it and that sprite right on
+; three counts of every four until the sprite reaches $C0, then ends the scene. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteObject2AndSpriteSlotsEtc::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
@@ -3606,11 +3239,7 @@ GameMode6_Update_SavePrompt_WriteObject2AndSpriteSlotsEtc::
     ld [wScreenStep], a
     ret
 
-; Calls UpdateAndDrawSpriteSlots; returns if wRecordBufB + MON_EGG is 0; calls DrawFieldSprites
-; (E-0347)
-; why: part of GameMode6_Update; GameMode6_Update: game mode 6, the egg and save screens after a
-; link or the priest: by wScreenState it shows an obtained egg, the save prompt and the save, ...
-; (E-0352, E-0354)
+; Draws the sprite slots, and the field sprites too when the prize is an egg. (C1, E-0357)
 GameMode6_Update_UpdateAndDrawSpriteSlots::
     farcall UpdateAndDrawSpriteSlots
     ld a, [wRecordBufB + MON_EGG]
@@ -3619,13 +3248,10 @@ GameMode6_Update_UpdateAndDrawSpriteSlots::
     farcall DrawFieldSprites
     ret
 
-; Checks EVENT_NEVER_SET; calls CopyBytesDEFromHL_Bank24; checks EVENT_NEVER_SET; calls
-; CopyBytesDEFromHL_Bank24; calls DecompressGraphicsTemp0ToTemp4; calls CopyBytesDEFromHL_Bank24;
-; calls DecompressGraphicsTemp0ToTemp4; branches on wRecordBufB + MON_EGG; calls
-; CopyBytesDEFromHL_Bank24; branches on wBattleScene; branches on wBattleScene & $01; copies
-; wRecordBufB + MON_SPECIES to hTemp0; then 21 more steps (see the code) (E-0347)
-; why: part of GameMode6_Update_Save; GameMode6_Update_Save: by wScreenStep: draws the sprites, then
-; RunSaveGameSteps (E-0352)
+; Sets up the hand-over scene: the sprite slots and object 1 (the alternative sets behind
+; EVENT_NEVER_SET are never chosen), decompresses their graphics, then unless the prize is an egg
+; the monster's graphics and object 2 as the prize (wRecordBufB's species for the winner,
+; wRecordBufA's for an egg or the loser). (C1, E-0357)
 GameMode6_Update_Save_TestFlagBit::
     ld de, EVENT_NEVER_SET
     call TestFlagBit
@@ -3925,16 +3551,8 @@ GameMode6_Update_Save_TestFlagBit_Data6::
 Object2Init::
     db $00, $00, $00, $00, $b0, $40, $02, $03, $20, $00, $00, $b0, $40, $04, $00, $00 ; entry 0
 
-; called from GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor: branches on
-; wJoypadPressedRepeat; branches on wJoypadPressed; calls
-; GameMode6_Update_SavePrompt_WriteScreenCounter; sets wMenuInputResult to 0; calls
-; GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2; branches on wTwoChoiceCursor; sets
-; wTwoChoiceCursor to 1; calls GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2; branches on
-; wTwoChoiceCursor; sets wTwoChoiceCursor to 0; sets wScreenCounter to 0; calls
-; GameMode6_Update_SavePrompt_ReadTwoChoiceCursor; then 6 more steps (see the code) (E-0347)
-; why: a helper of GameMode6_Update_SavePrompt_WriteScreenStepAndTwoChoiceCursor, in step 8 of
-; GameMode6_Update_SavePrompt (when wScreenStep = 8); GameMode6_Update_SavePrompt: by wScreenStep:
-; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; The prize yes/no and Monster / Egg cursor: Up/Down toggle wTwoChoiceCursor with sound $69 ($FD); A
+; $FF with sound $69; B $FE; otherwise blinks the cursor and returns 0. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -4001,12 +3619,8 @@ GameMode6_Update_SavePrompt_WriteMenuInputResultAndTwoChoiceCursorEtc::
     ld [wMenuInputResult], a
     ret
 
-; May continue in GameMode6_Update_SavePrompt_ReadTwoChoiceCursor; increments wScreenCounter; may
-; continue in GameMode6_Update_SavePrompt_ReadTwoChoiceCursor; may continue in
-; GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2; sets wScreenCounter to 0; also changes A by
-; register arithmetic (E-0347)
-; why: part of GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep:
-; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Blinks the two-choice cursor: after $14 frames of the repeat timer, shown for 16 counts and hidden
+; for 8. (C1, E-0357)
 GameMode6_Update_SavePrompt_WriteScreenCounter::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -4021,34 +3635,23 @@ GameMode6_Update_SavePrompt_WriteScreenCounter::
     xor a
     ld [wScreenCounter], a
 
-; Changes B; continues in
-; GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (E-0347)
-; why: part of GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep:
-; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Draws the cursor tile ($BB) at the two-choice cursor. (C1, E-0357)
 GameMode6_Update_SavePrompt_ReadTwoChoiceCursor::
     ld b, $bb
     jr GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; Changes B; continues in
-; GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor (E-0347)
-; why: part of GameMode6_Update_SavePrompt_ReadTwoChoiceCursor, in part of
-; GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep: RunSaveGameSteps, a
-; yes/no prompt and a 'monster egg' message (E-0352)
+; Draws the blank tile ($C3) at the two-choice cursor. (C1, E-0357)
 GameMode6_Update_SavePrompt_ReadTwoChoiceCursor_2::
     ld b, $c3
     jr GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor
 
-; Takes BC; changes B (E-0347)
-; why: part of GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep:
-; RunSaveGameSteps, a yes/no prompt and a 'monster egg' message (E-0352)
+; Draws the chosen tile ($BC) at the two-choice cursor. (C1, E-0357)
 GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank24_3; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
-; and A by register arithmetic (E-0347)
-; why: part of GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap, in part of
-; GameMode6_Update_SavePrompt; GameMode6_Update_SavePrompt: by wScreenStep: RunSaveGameSteps, a
-; yes/no prompt and a 'monster egg' message (E-0352)
+; Writes tile B at the two-choice cursor's place
+; (GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_Data), stepping back on a scroll
+; wrap, waiting for VRAM access. (C1, E-0357)
 GameMode6_Update_SavePrompt_StepBGMapAddressBackOnScrollWrap_ReadTwoChoiceCursor::
     ld a, [wTwoChoiceCursor]
     add a
@@ -4261,10 +3864,7 @@ PriestMenu::
     dw PriestMenu_ShowServices
     dw PriestMenu_PayForService
 
-; step 0 of PriestMenu: calls SwapMonstersMenu; sets wMessageMode to $0b (E-0347)
-; why: step 0 of PriestMenu (when wScreenState = 0); PriestMenu: implements script command type F8
-; (SCRIPT_PRIEST): the priest: 'Which monster should be revived?', curse removal (mode 11, bank $24
-; strings) (E-0352, E-0038, E-0244)
+; The priest, state 0: runs SwapMonstersMenu and sets message mode $0B. (C1, E-0357)
 PriestMenu_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, $0b
@@ -4279,11 +3879,8 @@ PriestMenu_ShowServices::
     dw PriestMenu_ShowServices_DrawGoldPanel_Bank24
     dw PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_2
 
-; step 0 of PriestMenu_ShowServices: sets wTextWindowTileLo to $0e; sets wStringCategory to 0; sets
-; wStringIndex to $15; calls ShowString_Bank24; sets wTextWindowTileLo to $12; increments
-; wScreenStep; also changes HL and A by register arithmetic (E-0347)
-; why: step 0 of PriestMenu_ShowServices (when wScreenStep = 0); PriestMenu_ShowServices: by
-; wScreenStep: the 'Revive / Detox / Uncurse' window and the gold panel (E-0352)
+; The priest's services, step 0: shows 'Revive / Detox / Uncurse' (string $15) in a 14 x 1 window at
+; VRAM $8F00, then resets the window to $8800. (C1, E-0357)
 PriestMenu_ShowServices_ShowRviDoxUncurt::
     ld hl, wTextWindowTileLo
     xor a
@@ -4311,10 +3908,7 @@ PriestMenu_ShowServices_ShowRviDoxUncurt::
     ld [wScreenStep], a
     ret
 
-; step 1 of PriestMenu_ShowServices: calls CopyRectTo20ByteRows_Bank24; calls DrawGoldPanel_Bank24;
-; increments wScreenStep (E-0347)
-; why: step 1 of PriestMenu_ShowServices (when wScreenStep = 1); PriestMenu_ShowServices: by
-; wScreenStep: the 'Revive / Detox / Uncurse' window and the gold panel (E-0352)
+; The priest's services, step 1: draws the 10 x 9 service box and the gold panel. (C1, E-0357)
 PriestMenu_ShowServices_DrawGoldPanel_Bank24::
     ld de, PriestMenu_ShowServices_DrawGoldPanel_Bank24_TileRect
     ld hl, wWindowTileBuffer + $64
@@ -4326,10 +3920,7 @@ PriestMenu_ShowServices_DrawGoldPanel_Bank24::
     ld [wScreenStep], a
     ret
 
-; step 2 of PriestMenu_ShowServices: calls BGMapAddressAtScroll_Bank24_2; calls
-; DrawScreenBufferRectNoOrigin_Bank24; sets wScreenStep to 0; increments wScreenState (E-0347)
-; why: step 2 of PriestMenu_ShowServices (when wScreenStep = 2); PriestMenu_ShowServices: by
-; wScreenStep: the 'Revive / Detox / Uncurse' window and the gold panel (E-0352)
+; The priest's services, step 2: draws the screen and goes to the next state. (C1, E-0357)
 PriestMenu_ShowServices_BGMapAddressAtScroll_Bank24_2::
     call BGMapAddressAtScroll_Bank24_2
     lb bc, $14, $0b
@@ -4366,14 +3957,10 @@ PriestMenu_PayForService::
     dw PriestMenu_PayForService_SRAMRecordAddress
     dw PriestMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
 
-; step 0 of PriestMenu_PayForService: sets wMenuInputResult to 0; sets wListCount to 4; calls
-; UpdateListCursorListCursor; returns if wMenuInputResult is 0; branches on wMenuInputResult; sets
-; wTwoChoiceCursor to 4; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; branches on
-; wListCursor; calls PriestMenu_PayForService_LoadSRAMRecordByte_2; sets wTwoChoiceCursor to 0;
-; increments wScreenStep; then 5 more steps (see the code) (E-0347)
-; why: step 0 of PriestMenu_PayForService (when wScreenStep = 0); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, picking the service (step 0): B answers 4 (leave); A on Revive, Detox or Uncurse
+; answers the service + 1 when no party member is dead (status bit 7), poisoned (bit 2) or cursed
+; (bit 0) by it, otherwise 0 and marks it; each answer is wTwoChoiceCursor and resumes the script
+; ($80). (C1, E-0357)
 PriestMenu_PayForService_UpdateListCursorListCursor::
     xor a
     ld [wMenuInputResult], a
@@ -4452,12 +4039,8 @@ PriestMenu_PayForService_UpdateListCursorListCursor::
     ld [wScriptStartRequest], a
     ret
 
-; step 1 of PriestMenu_PayForService: copies wListCursor to wTwoChoiceCursor; calls
-; CopyTileBytesToVRAM_Bank24; increments wScreenStep; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 1 of PriestMenu_PayForService (when wScreenStep = 1); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 1: answers the service number, loads the three status mark tiles and resumes the
+; script. (C1, E-0357)
 PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24::
     ld a, [wListCursor]
     ld [wTwoChoiceCursor], a
@@ -4491,13 +4074,7 @@ PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_2::
 PriestMenu_PayForService_CopyTileBytesToVRAM_Bank24_Tiles_3::
     db $ff, $60, $ff, $60, $ff, $60, $ff, $1f, $ff, $3f, $ff, $70, $ff, $60, $ff, $60 ; entry 0
 
-; step 2 of PriestMenu_PayForService: calls CopyRectTo20ByteRows_Bank24; calls
-; PriestMenu_PayForService_PriestMenu_PayForService_WriteMarkC0; calls
-; BGMapAddressAtScroll_Bank24_2; calls DrawScreenBufferRectNoOrigin_Bank24; increments wScreenStep
-; (E-0347)
-; why: step 2 of PriestMenu_PayForService (when wScreenStep = 2); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 2: draws the 11 x 7 party box with each member's status marks. (C1, E-0357)
 PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
     ld de, PriestMenu_PayForService_TileRect
     ld hl, wWindowTileBuffer + $dc
@@ -4513,14 +4090,8 @@ PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24::
     ld [wScreenStep], a
     ret
 
-; step 3 of PriestMenu_PayForService: calls
-; PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc; returns if wMenuInputResult is 0;
-; branches on wMenuInputResult; increments wScreenStep; sets wTwoChoiceCursor to 1; sets
-; wScriptCommandType to 0; sets wScriptStartRequest to $80; sets wScreenStep; sets wTwoChoiceCursor
-; to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 3 of PriestMenu_PayForService (when wScreenStep = 3); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 3: the party cursor: B answers 1 and goes on; A answers 0 and goes on two steps.
+; (C1, E-0357)
 PriestMenu_WriteScreenStepAndTwoChoiceCursorEtc::
     call PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc
     ld a, [wMenuInputResult]
@@ -4556,14 +4127,8 @@ PriestMenu_WriteScreenStepAndTwoChoiceCursorEtc::
     ld [wScriptStartRequest], a
     ret
 
-; step 4 of PriestMenu_PayForService: sets wArg1 to 0; sets wArg2 to $0b; calls
-; PriestMenu_PayForService_CopyBytesDEToHL_Bank24; calls CopyRectTo20ByteRows_Bank24; calls
-; DrawGoldPanel_Bank24; calls StoreBAtWordTableEntry_Bank24; calls BGMapAddressAtScroll_Bank24_2;
-; calls DrawScreenBufferRectNoOrigin_Bank24; calls StoreBAtWordTableEntry_Bank24; sets wScreenStep
-; to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80 (E-0347)
-; why: step 4 of PriestMenu_PayForService (when wScreenStep = 4); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 4 (back): restores the box area, redraws the service box and gold panel, draws
+; and clears the service mark and returns to step 0. (C1, E-0357)
 PriestMenu_PayForService_DrawGoldPanel_Bank24::
     ld b, $00
     ld c, $07
@@ -4599,13 +4164,8 @@ PriestMenu_PayForService_DrawGoldPanel_Bank24::
     ld [wScriptStartRequest], a
     ret
 
-; step 5 of PriestMenu_PayForService: branches on wListCursor; sets rRAMG to $0a; sets rRAMB to 0;
-; calls LoadSRAMRecordByte; sets rRAMG to 0; sets rRAMB to 0; branches on hTemp0; sets wScreenStep
-; to 1; increments wScreenStep; sets wTwoChoiceCursor to 0; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; then 1 more step (see the code) (E-0347)
-; why: step 5 of PriestMenu_PayForService (when wScreenStep = 5); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 5: when the chosen member lacks the service's status answers the service + 1 and
+; returns to step 1; otherwise answers 0 and goes on. (C1, E-0357)
 PriestMenu_PayForService_LoadSRAMRecordByte::
     ld a, [wListCursor]
     and a
@@ -4662,14 +4222,8 @@ PriestMenu_PayForService_LoadSRAMRecordByte::
     ld [wScriptStartRequest], a
     ret
 
-; step 6 of PriestMenu_PayForService: branches on wListCursor; sets wListEntries to $14; sets
-; wGrid2CursorX to 0; sets wGrid2CursorY to 0; sets wTextBuf0 to 2; sets wListEntries to 3; sets
-; wGrid2CursorX to 0; sets wGrid2CursorY to 0; sets wTextBuf0 to 3; increments wScreenStep; sets
-; wScriptCommandType to 0; sets wScriptStartRequest to $80; then 15 more steps (see the code)
-; (E-0347)
-; why: step 6 of PriestMenu_PayForService (when wScreenStep = 6); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 6: sets the price (wListEntries, wGrid2CursorX/Y as a 24-bit number) and its
+; digits in wTextBuf0: Revive costs (level x 10 + 10) / 2, Detox 3, Uncurse 20. (C1, E-0357)
 PriestMenu_PayForService_WriteListEntriesAndGrid2CursorXEtc::
     ld a, [wListCursor]
     and a
@@ -4771,12 +4325,7 @@ PriestMenu_PayForService_WriteListEntriesAndGrid2CursorXEtc::
     ld [wScriptStartRequest], a
     ret
 
-; step 7 of PriestMenu_PayForService: plays sound $6c; calls CopyRectTo20ByteRows_Bank24; calls
-; StoreBAtWordTableEntry_Bank24; calls BGMapAddressAtScroll_Bank24_2; calls
-; DrawScreenBufferRectNoOrigin_Bank24; increments wScreenStep; sets wTwoChoiceCursor to 0 (E-0347)
-; why: step 7 of PriestMenu_PayForService (when wScreenStep = 7); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 7: plays sound $6C and draws the yes/no box with the member marked. (C1, E-0357)
 PriestMenu_PayForService_QueueSoundEffect::
     ld a, $6c
     call QueueSoundEffect
@@ -4809,15 +4358,9 @@ PriestMenu_PayForService_QueueSoundEffect_TileRect::
     db $b6, $c3, $a5, $f5, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-; step 8 of PriestMenu_PayForService: calls UpdateTwoChoiceCursor_Bank1D; returns if
-; wMenuInputResult is 0; branches on wMenuInputResult; calls
-; PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2; sets wScreenSubStep to 0; sets
-; wTwoChoiceCursor to 2; increments wScreenStep; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; branches on wTwoChoiceCursor; copies wGrid2CursorY to wArg3; copies
-; wGrid2CursorX to wArg2; then 10 more steps (see the code) (E-0347)
-; why: step 8 of PriestMenu_PayForService (when wScreenStep = 8); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 8: the yes/no answer: B or no restores the box and answers 2; yes with too little
+; gold (IsAmountInArg1AboveGold) answers 1 (sub-step 1); otherwise restores the box, answers 0 and
+; goes on two steps. (C1, E-0357)
 PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -4880,12 +4423,8 @@ PriestMenu_PayForService_UpdateTwoChoiceCursor_Bank1D::
     ld a, $01
     jr .set_two_choice_cursor
 
-; step 9 of PriestMenu_PayForService: calls PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2;
-; branches on wScreenSubStep; sets wScreenStep to 1; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80; sets wScreenStep to 4; sets wScreenSubStep to 0 (E-0347)
-; why: step 9 of PriestMenu_PayForService (when wScreenStep = 9); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 9: restores the box; after a refusal returns to step 1 (resuming the script),
+; after too little gold to step 4. (C1, E-0357)
 PriestMenu_WriteScreenStepAndScriptCommandTypeEtc::
     call PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2
     ld a, [wScreenSubStep]
@@ -4906,15 +4445,8 @@ PriestMenu_WriteScreenStepAndScriptCommandTypeEtc::
     ld [wScreenSubStep], a
     ret
 
-; step 10 of PriestMenu_PayForService: branches on wScreenSubStep; sets wArg3 to 0; copies
-; wGrid2CursorX to wArg2; copies wListEntries to wArg1; calls SubtractArg1AmountFromGold; calls
-; DrawGoldPanel_Bank24; calls BGMapAddressAtScroll_Bank24_2; calls
-; DrawScreenBufferRectNoOrigin_Bank24; calls PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf;
-; increments wScreenSubStep; branches on wListCursor; increments wScreenSubStep; then 9 more steps
-; (see the code) (E-0347)
-; why: step 10 of PriestMenu_PayForService (when wScreenStep = 10); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 10: pays the price (SubtractArg1AmountFromGold), redraws the gold panel and
+; copies the member's name; then answers the service number and goes on. (C1, E-0357)
 PriestMenu_PayForService_SubtractArg1AmountFromGold::
     ld a, [wScreenSubStep]
     and a
@@ -4977,14 +4509,9 @@ PriestMenu_PayForService_SubtractArg1AmountFromGold::
     ld [wScriptStartRequest], a
     ret
 
-; step 11 of PriestMenu_PayForService: branches on wScreenSubStep; plays music $3d; increments
-; wScreenSubStep; sets wScreenCounter; sets wGlyphListPos; returns if wGlyphListPos is 0; returns if
-; wScreenCounter is below $28; sets wScreenCounter to 0; sets wGlyphListPos to 0; increments
-; wScreenSubStep; calls CopyBytesDEToHL_Bank24; branches on wIsCGB; then 8 more steps (see the code)
-; (E-0347)
-; why: step 11 of PriestMenu_PayForService (when wScreenStep = 11); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 11: plays music $3D, waits $128 frames, then restores the window tile buffer (and
+; the GBC attributes) from the saved copy in wScreenTileBuffer, redraws and clears the sprite window
+; clip mode. (C1, E-0357)
 PriestMenu_PayForService_QueueMusic::
     ld a, [wScreenSubStep]
     and a
@@ -5063,13 +4590,8 @@ PriestMenu_PayForService_QueueMusic::
     ld [wScreenStep], a
     ret
 
-; step 15 of PriestMenu_PayForService: sets wTextWindowTileLo to $12; calls FillTilesFromRequest;
-; calls CopyRectTo20ByteRows_Bank24; calls BGMapAddressAtScroll_Bank24_2; calls
-; DrawScreenBufferRectNoOrigin_Bank24; sets hSpriteWindowClipMode to 2; increments wScreenStep
-; (E-0347)
-; why: step 15 of PriestMenu_PayForService (when wScreenStep = 15); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 15: clears the text tiles, draws the bottom five rows and sets sprite window clip
+; mode 2. (C1, E-0357)
 PriestMenu_PayForService_FillTilesFromRequest::
     ld hl, wTextWindowTileLo
     xor a
@@ -5097,11 +4619,7 @@ PriestMenu_PayForService_FillTilesFromRequest::
     ld [wScreenStep], a
     ret
 
-; step 12 of PriestMenu_PayForService: increments wScreenCounter; returns if wScreenCounter is below
-; $1c; sets wScreenCounter to 0; increments wScreenStep (E-0347)
-; why: step 12 of PriestMenu_PayForService (when wScreenStep = 12); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 12: a $1C-frame wait. (C1, E-0357)
 PriestMenu_PayForService_WriteScreenCounterAndScreenStep::
     ld hl, wScreenCounter
     inc [hl]
@@ -5122,10 +4640,7 @@ PriestMenu_PayForService_CopyBuffers::
     dw PriestMenu_PayForService_CopyBuffers_CopyBytes
     dw PriestMenu_PayForService_CopyBuffers_CopyBytes_2
 
-; step 0 of PriestMenu_PayForService_CopyBuffers: branches on wIsCGB; calls CopyBytes; increments
-; wScreenSubStep (E-0347)
-; why: step 0 of PriestMenu_PayForService_CopyBuffers (when wScreenSubStep = 0);
-; PriestMenu_PayForService_CopyBuffers: two CopyBytes steps (E-0352)
+; The priest's flash, sub-step 0: on the GBC saves the 64 bytes of background palettes. (C1, E-0357)
 PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld a, [wIsCGB]
     or a
@@ -5141,13 +4656,9 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes::
     ld [wScreenSubStep], a
     ret
 
-; step 1 of PriestMenu_PayForService_CopyBuffers: branches on wIsCGB; calls CopyBytes; branches on
-; wIsCGB; sets wBGPaletteUploadRequest to $7f; increments wScreenCounter; returns if wScreenCounter
-; is below $1e; sets wScreenCounter to 0; sets wScreenSubStep to 0; increments wScreenStep; returns
-; unless wListCursor is 0; calls RestartMapMusic; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: step 1 of PriestMenu_PayForService_CopyBuffers (when wScreenSubStep = 1);
-; PriestMenu_PayForService_CopyBuffers: two CopyBytes steps (E-0352)
+; The priest's flash, sub-step 1: every four frames swaps the palettes between $D2, $D2, $E2 (DMG)
+; with the saved GBC palettes and $2D, $2D, $1D with every saved GBC byte inverted, for $1E frames;
+; then unless the service was Revive restarts the map music. (C1, E-0357)
 PriestMenu_PayForService_CopyBuffers_CopyBytes_2::
     ld a, [wScreenCounter]
     sra a
@@ -5216,14 +4727,10 @@ PriestMenu_PayForService_CopyBuffers_CopyBytes_2::
     farcall RestartMapMusic
     ret
 
-; step 16 of PriestMenu_PayForService: sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddress;
-; branches on wListCursor; calls SRAMRecordAddress; calls RunMoveIncapacitatedPartyMembersBackTwice;
-; calls LoadRecordListNameTiles; sets rRAMG to 0; sets rRAMB to 0; calls
-; PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf; increments wScreenStep; calls
-; LoadPlayerAndFollowerSpriteGraphics; then 4 more steps (see the code) (E-0347)
-; why: step 16 of PriestMenu_PayForService (when wScreenStep = 16); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 16: clears the service's status bit on the member
+; (PriestMenu_PayForService_SRAMRecordAddress_Data); for Revive also sets HP and MP to their
+; maximums and moves the party's fallen members back (RunMoveIncapacitatedPartyMembersBackTwice);
+; copies the name, reloads the player sprites and resumes the script. (C1, E-0357)
 PriestMenu_PayForService_SRAMRecordAddress::
     ld a, $0a
     ld [rRAMG], a
@@ -5301,13 +4808,8 @@ PriestMenu_PayForService_SRAMRecordAddress::
 PriestMenu_PayForService_SRAMRecordAddress_Data::
     db $00, $fb, $fe
 
-; step 17 of PriestMenu_PayForService: calls PriestMenu_PayForService_LoadSRAMRecordByte_2; sets
-; wTwoChoiceCursor to 1; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; sets
-; wTwoChoiceCursor to 0; sets wScreenStep to 4; sets wScriptCommandType to 0; sets
-; wScriptStartRequest to $80 (E-0347)
-; why: step 17 of PriestMenu_PayForService (when wScreenStep = 17); PriestMenu_PayForService:
-; PriestMenu screen state 2, by wScreenStep: picks a party member, shows the gold panel, confirms
-; with two choices and ... (E-0352)
+; The priest, step 17: when any party member is still dead, poisoned or cursed answers 0 and returns
+; to step 4; otherwise answers 1. (C1, E-0357)
 PriestMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld b, $80
     call PriestMenu_PayForService_LoadSRAMRecordByte_2
@@ -5537,12 +5039,8 @@ DrawGoldPanel_Bank24_TileRect::
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
-; Sets rRAMG to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; branches on hTemp0; branches on E;
-; sets rRAMG to 0; sets rRAMB to 0; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, BC and A
-; by register arithmetic (E-0347)
-; why: part of PriestMenu_PayForService_LoadSRAMRecordByte, in step 5 of PriestMenu_PayForService
-; (when wScreenStep = 5); PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep: picks
-; a party member, shows the gold panel, confirms with two choices and ... (E-0352)
+; Returns $FF when any party member's status has a bit of mask B (bit 7 dead, bit 2 poisoned, bit 0
+; cursed), otherwise 0. (C1, E-0357)
 PriestMenu_PayForService_LoadSRAMRecordByte_2::
     ld a, $0a
     ld [rRAMG], a
@@ -5589,14 +5087,8 @@ PriestMenu_PayForService_LoadSRAMRecordByte_2::
     ld a, $ff
     ret
 
-; called from PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24: sets rRAMG to $0a; sets rRAMB to
-; 0; calls LoadSRAMRecordByte; calls PriestMenu_PayForService_WriteMarkC0; calls
-; PriestMenu_PayForService_WriteMarkC1; calls PriestMenu_PayForService_WriteMarkC2; branches on E;
-; sets rRAMG to 0; sets rRAMB to 0; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of PriestMenu_PayForService_CopyRectTo20ByteRows_Bank24, in step 2 of
-; PriestMenu_PayForService (when wScreenStep = 2); PriestMenu_PayForService: PriestMenu screen state
-; 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Draws the status marks of every party member: tile $C0 for bit 0, $C1 for bit 2, $C2 for bit 7.
+; (C1, E-0357)
 PriestMenu_PayForService_PriestMenu_PayForService_WriteMarkC0::
     ld a, $0a
     ld [rRAMG], a
@@ -5693,17 +5185,8 @@ PriestMenu_PayForService_WriteMarkC1_Data::
 PriestMenu_PayForService_WriteMarkC2_Data::
     db $f9, $c3, $21, $c4, $49, $c4
 
-; called from PriestMenu_WriteScreenStepAndTwoChoiceCursorEtc: branches on wJoypadPressedRepeat;
-; branches on wJoypadPressed; calls PriestMenu_PayForService_WriteCursorBlinkAE; sets
-; wMenuInputResult to 0; calls PriestMenu_PayForService_ReadChoiceCursor_2; branches on
-; wChoiceCursor; copies wPartyCount-1 to wChoiceCursor; calls
-; PriestMenu_PayForService_ReadChoiceCursor_2; branches on wChoiceCursor; sets wChoiceCursor to 0;
-; sets wCursorBlinkAE to 0; calls PriestMenu_PayForService_ReadChoiceCursor; then 6 more steps (see
-; the code) (E-0347)
-; why: a helper of PriestMenu_WriteScreenStepAndTwoChoiceCursorEtc, in step 3 of
-; PriestMenu_PayForService (when wScreenStep = 3); PriestMenu_PayForService: PriestMenu screen state
-; 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; The priest's party cursor: Up/Down move wChoiceCursor over the party with wrap and sound $69
+; ($FD); A $FF with sound $69; B $FE; otherwise blinks the cursor and returns 0. (C1, E-0357)
 PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
@@ -5774,13 +5257,8 @@ PriestMenu_PayForService_WriteMenuInputResultAndChoiceCursorEtc::
     ld [wMenuInputResult], a
     ret
 
-; May continue in PriestMenu_PayForService_ReadChoiceCursor; increments wCursorBlinkAE; may continue
-; in PriestMenu_PayForService_ReadChoiceCursor; may continue in
-; PriestMenu_PayForService_ReadChoiceCursor_2; sets wCursorBlinkAE to 0; also changes A by register
-; arithmetic (E-0347)
-; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
-; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Blinks the party cursor: after $14 frames of the repeat timer, shown for 16 counts and hidden for
+; 8. (C1, E-0357)
 PriestMenu_PayForService_WriteCursorBlinkAE::
     ld a, [wJoypadRepeatTimer]
     cp $14
@@ -5795,36 +5273,22 @@ PriestMenu_PayForService_WriteCursorBlinkAE::
     xor a
     ld [wCursorBlinkAE], a
 
-; Changes B; continues in PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
-; (E-0347)
-; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
-; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Draws the cursor tile ($BB) at the party cursor. (C1, E-0357)
 PriestMenu_PayForService_ReadChoiceCursor::
     ld b, $bb
     jr PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-; Changes B; continues in PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
-; (E-0347)
-; why: part of PriestMenu_PayForService_ReadChoiceCursor, in part of PriestMenu_PayForService;
-; PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep: picks a party member, shows
-; the gold panel, confirms with two choices and ... (E-0352)
+; Draws the blank tile ($C3) at the party cursor. (C1, E-0357)
 PriestMenu_PayForService_ReadChoiceCursor_2::
     ld b, $c3
     jr PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor
 
-; Takes BC; changes B (E-0347)
-; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
-; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Draws the chosen tile ($BC) at the party cursor. (C1, E-0357)
 PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Calls BGMapAddressAtScroll_Bank24_2; calls StepBGMapAddressBackOnScrollWrap; also changes HL, DE
-; and A by register arithmetic (E-0347)
-; why: part of PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap, in part of
-; PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep:
-; picks a party member, shows the gold panel, confirms with two choices and ... (E-0352)
+; Writes tile B at the party cursor's place (PriestMenu_PayForService_Data), stepping back on a
+; scroll wrap, waiting for VRAM access. (C1, E-0357)
 PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
     ld a, [wChoiceCursor]
     add a
@@ -5849,14 +5313,8 @@ PriestMenu_PayForService_StepBGMapAddressBackOnScrollWrap_ReadChoiceCursor::
 PriestMenu_PayForService_Data::
     db $e1, $00, $21, $01, $61, $01
 
-; called from PriestMenu_PayForService_DrawGoldPanel_Bank24: calls CopyBytesDEToHL_Bank24; branches
-; on wIsCGB; calls CopyLow3BitsToWRAMBank2_Bank24; may continue in
-; PriestMenu_PayForService_CopyBytesDEToHL_Bank24; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: a helper of PriestMenu_PayForService_DrawGoldPanel_Bank24, in step 4 of
-; PriestMenu_PayForService (when wScreenStep = 4); PriestMenu_PayForService: PriestMenu screen state
-; 2, by wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Copies C rows of wArg1:wArg2 bytes from offset DE to offset HL within wScreenTileBuffer (and
+; wScreenAttrBuffer on the GBC), rows 20 bytes apart. (C1, E-0357)
 PriestMenu_PayForService_CopyBytesDEToHL_Bank24::
     push bc
     push hl
@@ -5916,12 +5374,8 @@ PriestMenu_PayForService_CopyBytesDEToHL_Bank24::
     jr nz, PriestMenu_PayForService_CopyBytesDEToHL_Bank24
     ret
 
-; Calls PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2; branches on wIsCGB; sets rSVBK; calls
-; PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2; sets rSVBK; calls
-; BGMapAddressAtScroll_Bank24_2; calls DrawScreenBufferRectNoOrigin_Bank24 (E-0347)
-; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
-; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Restores the yes/no box area (six bytes, five rows) of wWindowTileBuffer from wScreenTileBuffer
+; (on the GBC its attributes from WRAM bank 2) and redraws the screen. (C1, E-0357)
 PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2::
     ld hl, wWindowTileBuffer + $112
     ld de, wScreenTileBuffer + $ae
@@ -5948,12 +5402,7 @@ PriestMenu_PayForService_BGMapAddressAtScroll_Bank24_2::
     call DrawScreenBufferRectNoOrigin_Bank24
     ret
 
-; Calls CopyBytesDEToHL_Bank24; may continue in PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of PriestMenu_PayForService_CopyBytesDEToHL_Bank24, in a helper of
-; PriestMenu_PayForService_DrawGoldPanel_Bank24, in step 4 of PriestMenu_PayForService (when
-; wScreenStep = 4); PriestMenu_PayForService: PriestMenu screen state 2, by wScreenStep: picks a
-; party member, shows the gold panel, confirms with two choices and ... (E-0352)
+; Copies five rows of six bytes from DE to HL, 20-byte rows. (C1, E-0357)
 PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2::
     push hl
     push de
@@ -5978,12 +5427,7 @@ PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2::
     jr c, PriestMenu_PayForService_CopyBytesDEToHL_Bank24_2
     ret
 
-; Sets rRAMG to $0a; sets rRAMB to 0; calls CopyRecordNameToNameGlyphBuf; sets rRAMG to 0; sets
-; rRAMB to 0; branches on the byte at wNameGlyphBuf; branches on C; also changes HL, DE, A and C by
-; register arithmetic (E-0347)
-; why: part of PriestMenu_PayForService; PriestMenu_PayForService: PriestMenu screen state 2, by
-; wScreenStep: picks a party member, shows the gold panel, confirms with two choices and ...
-; (E-0352)
+; Copies the chosen party member's name (up to ten bytes) into wTextBuf0. (C1, E-0357)
 PriestMenu_PayForService_CopyRecordNameToNameGlyphBuf::
     ld a, $0a
     ld [rRAMG], a

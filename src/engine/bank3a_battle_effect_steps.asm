@@ -1229,15 +1229,13 @@ ActionEffectTable_Flag3::
     db $ff, $ff ; id 62
     db $ff, $ff ; id 63
 
-; Sets wEffectAnimFlags to 0; branches on wBattleActionId; sets wEffectAnimFlags to 1; calls
-; SelectEffectByEffectFlags_WriteBattleArg0; calls
-; SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc; branches on B; branches on wBattleActionId;
-; returns unless wBattleActionId is SKILL_ROBDANCE; returns unless wEffectFlags is $41; copies
-; wBattleActor to wBattleArg0; copies B to wEffectTileOffset; copies B to wEffectAnimArg; then 20
-; more steps (see the code) (E-0347)
-; why: part of ActionEffectTable_Flag3; ActionEffectTable_Flag3: E-0209, indexed by wBattleActionId:
-; byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near
-; side, ... (E-0352, E-0209)
+; Starts battle effect A: clears wEffectAnimFlags (1 for ACTION_D7) and picks its slot
+; (wBattleArg0); on the near side (slot below 4, or 4 and up for the link follower) only effects
+; $2B, $32 and $13 go on ($13 only for RobMagic or RobDance with wEffectFlags $41, then on the
+; actor). Then sets the effect's tile offset and target mode (0 for effect 9 with WindBeast or
+; effect $0D with flag bit 1, 2 for effect $1D with RainSlash, otherwise
+; SelectEffectByEffectFlags_Data), stops for mode 0 when the slot is out or empty, and starts the
+; animation. (C1, E-0357)
 ActionEffectTable_Flag3_ClearEffectAnimFlags::
     push af
     xor a
@@ -1353,11 +1351,8 @@ SelectEffectByEffectFlags_Data::
     db $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $01, $01, $00, $00, $01, $00
     db $00, $00, $01, $01, $00, $00, $00, $00, $01, $01, $01, $01
 
-; called from SelectEffectByEffectFlags: changes A; branches on wLinkMode; branches on wLinkRole
-; (E-0347)
-; why: a helper of SelectEffectByEffectFlags; SelectEffectByEffectFlags: reads the effect flags in
-; wEffectFlags. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88,
-; it returns ... (E-0352, E-0057)
+; Carry when the effect's slot (wBattleArg0) is below 4; for the link follower (link mode 1, role
+; bit 1) the carry is inverted. (C1, E-0357)
 SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc::
     ld a, [wLinkMode]
     cp $01
@@ -1375,11 +1370,8 @@ SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc::
     cp $04
     ret
 
-; called from SelectEffectByEffectFlags: returns if bit 3 of wEffectFlags is set; returns unless B
-; is $1d; returns unless wBattleActionId is SKILL_RAINSLASH (E-0347)
-; why: a helper of SelectEffectByEffectFlags; SelectEffectByEffectFlags: reads the effect flags in
-; wEffectFlags. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88,
-; it returns ... (E-0352, E-0057)
+; Returns Z with A = 2 for effect $1D of RainSlash when wEffectFlags bit 3 is clear; otherwise NZ.
+; (C1, E-0357)
 SelectEffectByEffectFlags_WaitEffectFlags::
     ld a, [wEffectFlags]
     bit 3, a
@@ -1393,12 +1385,8 @@ SelectEffectByEffectFlags_WaitEffectFlags::
     ld a, $02
     ret
 
-; called from SelectEffectByEffectFlags: branches on wEffectFlags; branches on wBattleActionId;
-; copies wBattleActor to wBattleArg0; copies wBattleTarget to wBattleArg0; also changes A by
-; register arithmetic (E-0347)
-; why: a helper of SelectEffectByEffectFlags; SelectEffectByEffectFlags: reads the effect flags in
-; wEffectFlags. First, when the low two bits of wBattleTarget are 3 and wBattleActionId is $85-$88,
-; it returns ... (E-0352, E-0057)
+; The effect's slot (wBattleArg0): the target, or the actor for Transform unless wEffectFlags bit 3
+; is set. (C1, E-0357)
 SelectEffectByEffectFlags_WriteBattleArg0::
     ld a, [wEffectFlags]
     bit 3, a
@@ -1679,11 +1667,8 @@ RunBattleEffectAnimation::
 RunBattleEffectAnimation_Data::
     db $22, $00
 
-; Calls RunEffectRoutineEffectEvery5Frames; calls UploadBGPalettesWithFade; returns unless wEffectId
-; is $ff; sets wBGPaletteUploadRequest to $7f (E-0347)
-; why: part of RunBattleEffectAnimation_Data, in part of RunBattleEffectAnimation;
-; RunBattleEffectAnimation: runs the battle effect animation state wEffectAnimState: loads the
-; effect graphics, steps the effect sprite and its X positions, and ends ... (E-0352, E-0130)
+; Runs the effect routine every fifth frame and the faded background palettes; when the effect has
+; ended ($FF) requests all background palettes. (C1, E-0357)
 RunBattleEffectAnimation_CallRunEffectRoutineEffectEvery5Frames::
     call RunEffectRoutineEffectEvery5Frames
     call UploadBGPalettesWithFade
@@ -1721,11 +1706,7 @@ RunEffectRoutineEffectEvery5Frames::
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen
     dw RunEffectRoutineEffectEvery5Frames_2
 
-; step 0 of RunEffectRoutineEffectEvery5Frames: sets wEffectId to $ff; sets wEffectSpriteX to 0
-; (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 0);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 0: ends the effect at once. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -1733,15 +1714,8 @@ RunEffectRoutineEffectEvery5Frames_SetEffectId::
     ld [wEffectSpriteX], a
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames: may continue in
-; RunEffectRoutineEffectEvery5Frames_SetEffectId_2; branches on wLinkMode; branches on wLinkRole;
-; may continue in RunEffectRoutineEffectEvery5Frames_SetEffectId_2; calls
-; CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunEffectRoutineEffectEvery5Frames_SetEffectId_2; dispatches on wEffectSpriteX; also changes A by
-; register arithmetic (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 2);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 2: ends unless the target is one present slot on the far side (4 and up, or below 4
+; for the link follower); then blinks its picture through four steps. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleTarget]
     and $03
@@ -1775,12 +1749,8 @@ RunEffectRoutineEffectEvery5Frames_CarryUnlessBattleSlotOutSlotEmpty::
     dw RunEffectRoutineEffectEvery5Frames_SetEffectStep
     dw RunEffectRoutineEffectEvery5Frames_SetEffectId_2
 
-; step 0 of RunEffectRoutineEffectEvery5Frames: sets wEffectStep to 6; calls
-; EffectPositionIndexForTarget; calls CopyVRAMRectToBuffer; increments wEffectSpriteX; also changes
-; HL, DE, A and C by register arithmetic (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 0);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 2, steps 0 and 2: covers the target's picture place with tile block 3 (six rows).
+; (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget::
     ld a, $06
     ld [wEffectStep], a
@@ -1800,12 +1770,8 @@ RunEffectRoutineEffectEvery5Frames_EffectPositionIndexForTarget::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames: sets wEffectStep to 6; calls
-; EffectPositionIndexForTarget; calls CopyVRAMRectToBuffer; increments wEffectSpriteX; also changes
-; HL, DE, A and C by register arithmetic (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 1);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 2, steps 1 and 3: restores the target's picture place from its own tile block (slot
+; & 3). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
@@ -1826,11 +1792,7 @@ RunEffectRoutineEffectEvery5Frames_SetEffectStep::
     inc [hl]
     ret
 
-; step 4 of RunEffectRoutineEffectEvery5Frames: sets wEffectId to $ff; sets wEffectSpriteX to 0;
-; sets wEffectStep to 0 (E-0347)
-; why: step 4 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 4);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Ends the effect ($FF) and resets its steps. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetEffectId_2::
     ld a, $ff
     ld [wEffectId], a
@@ -1979,11 +1941,7 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake::
     dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
     dw RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_ScrollShake: sets hScrollY to 2; sets hScrollX to 0;
-; increments wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_ScrollShake (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_ScrollShake: steps that write hScrollY/hScrollX, then the next
-; effect id (E-0352)
+; The scroll shake, step 0: moves the screen 2 pixels (hScrollY 2). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX::
     ld a, $02
     ldh [hScrollY], a
@@ -2003,11 +1961,7 @@ SetScroll0_1AndIncEffectSpriteX::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_ScrollShake: sets hScrollY to 0; sets hScrollX to 0;
-; increments wEffectSpriteX (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_ScrollShake (when wEffectSpriteX = 1);
-; RunEffectRoutineEffectEvery5Frames_ScrollShake: steps that write hScrollY/hScrollX, then the next
-; effect id (E-0352)
+; The scroll shake, step 1: back to 0. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY::
     xor a
     ldh [hScrollY], a
@@ -2017,11 +1971,7 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY::
     inc [hl]
     ret
 
-; step 3 of RunEffectRoutineEffectEvery5Frames_ScrollShake: sets wEffectId to $ff; sets hScrollY to
-; 0; sets hScrollX to 0; sets wEffectSpriteX to 0 (E-0347)
-; why: step 3 of RunEffectRoutineEffectEvery5Frames_ScrollShake (when wEffectSpriteX = 3);
-; RunEffectRoutineEffectEvery5Frames_ScrollShake: steps that write hScrollY/hScrollX, then the next
-; effect id (E-0352)
+; The scroll shake, step 3: resets the scroll and ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc::
     ld a, $ff
     ld [wEffectId], a
@@ -2045,11 +1995,7 @@ RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite::
     dw SetDMGPaletteBGPPatternAndIncEffectSpriteX
     dw RunEffectRoutineEffectEvery5Frames_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: sets wDMGPaletteBGP to 0;
-; increments wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: alternates rBGP writes with a palette
-; pattern that moves the effect sprite right (E-0352)
+; Flash and move, step 0: sets all three DMG palettes to 0 (white). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2073,12 +2019,7 @@ SetDMGPaletteBGPPatternAndIncEffectSpriteX::
     inc [hl]
     ret
 
-; step 6 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: calls
-; SetDMGPaletteBGPPatternAndIncEffectSpriteX; sets wEffectId to $ff; sets wEffectSpriteX to 0
-; (E-0347)
-; why: step 6 of RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite (when wEffectSpriteX = 6);
-; RunEffectRoutineEffectEvery5Frames_FlashAndMoveSprite: alternates rBGP writes with a palette
-; pattern that moves the effect sprite right (E-0352)
+; Flash and move, step 6: restores the palettes ($D2, $D2, $E2) and ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_CallSetDMGPaletteBGPPatternAndIncEffectSpriteX::
     call SetDMGPaletteBGPPatternAndIncEffectSpriteX
     ld a, $ff
@@ -2096,12 +2037,7 @@ RunEffectRoutineEffectEvery5Frames_FlashOnce::
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashOnce_SetEffectId
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_FlashOnce: calls
-; RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep; returns if wEffectCounter is below $04; sets
-; wEffectFlashState to 0; sets wEffectCounter to 0; increments wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashOnce (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_FlashOnce: sets the effect counter, writes rBGP once, then the
-; next effect id (E-0352)
+; Flash once, step 0: darkens the DMG palettes a shade per call, four times. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_CallDarkenPaletteStep::
     call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
     ld a, [wEffectCounter]
@@ -2115,11 +2051,7 @@ RunEffectRoutineEffectEvery5Frames_CallDarkenPaletteStep::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_FlashOnce: advances wEffectStep; returns unless
-; wEffectStep is $0a; increments wEffectSpriteX; sets wEffectStep to 0 (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_FlashOnce (when wEffectSpriteX = 1);
-; RunEffectRoutineEffectEvery5Frames_FlashOnce: sets the effect counter, writes rBGP once, then the
-; next effect id (E-0352)
+; Flash once, step 1: waits ten calls. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectStep::
     ld hl, wEffectStep
     inc [hl]
@@ -2132,11 +2064,7 @@ RunEffectRoutineEffectEvery5Frames_FlashOnce_WriteEffectStep::
     ld [wEffectStep], a
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames_FlashOnce: sets wDMGPaletteBGP to $d2; sets
-; wDMGPaletteBGP to $e2; increments wEffectSpriteX (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames_FlashOnce (when wEffectSpriteX = 2);
-; RunEffectRoutineEffectEvery5Frames_FlashOnce: sets the effect counter, writes rBGP once, then the
-; next effect id (E-0352)
+; Flash once, step 2: restores the palettes ($D2, $D2, $E2). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $d2
@@ -2148,11 +2076,7 @@ RunEffectRoutineEffectEvery5Frames_FlashOnce_SetDMGPaletteBGP::
     inc [hl]
     ret
 
-; step 3 of RunEffectRoutineEffectEvery5Frames_FlashOnce: sets wEffectId to $ff; sets wEffectSpriteX
-; to 0 (E-0347)
-; why: step 3 of RunEffectRoutineEffectEvery5Frames_FlashOnce (when wEffectSpriteX = 3);
-; RunEffectRoutineEffectEvery5Frames_FlashOnce: sets the effect counter, writes rBGP once, then the
-; next effect id (E-0352)
+; Flash once, step 3: ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashOnce_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -2250,11 +2174,7 @@ RunEffectRoutineEffectEvery5Frames_Delay_InvertPalettes::
     inc [hl]
     ret
 
-; step 12 of RunEffectRoutineEffectEvery5Frames_Delay: sets wEffectId to $ff; sets wEffectSpriteX to
-; 0 (E-0347)
-; why: step 12 of RunEffectRoutineEffectEvery5Frames_Delay (when wEffectSpriteX = 12);
-; RunEffectRoutineEffectEvery5Frames_Delay: twelve identical waiting steps, then the next effect id
-; (E-0352)
+; The delay, step 12: ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_Delay_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -2274,12 +2194,7 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice::
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_FlashTwice: calls
-; RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep; returns if wEffectCounter is below $04; sets
-; wEffectFlashState to 0; sets wEffectCounter to 0; increments wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashTwice (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_FlashTwice: the FlashOnce steps twice, then the next effect id
-; (E-0352)
+; Flash twice, step 0: darkens the DMG palettes a shade per call, four times. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashTwice_CallDarkenPaletteStep::
     call RunEffectRoutineEffectEvery5Frames_DarkenPaletteStep
     ld a, [wEffectCounter]
@@ -2293,11 +2208,7 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice_CallDarkenPaletteStep::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_FlashTwice: advances wEffectStep; returns unless
-; wEffectStep is $05; increments wEffectSpriteX; sets wEffectStep to 0 (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_FlashTwice (when wEffectSpriteX = 1);
-; RunEffectRoutineEffectEvery5Frames_FlashTwice: the FlashOnce steps twice, then the next effect id
-; (E-0352)
+; Flash twice, step 1: waits five calls. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteEffectStep::
     ld hl, wEffectStep
     inc [hl]
@@ -2310,11 +2221,7 @@ RunEffectRoutineEffectEvery5Frames_WriteEffectStep::
     ld [wEffectStep], a
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames_FlashTwice: sets wDMGPaletteBGP to $d2; sets
-; wDMGPaletteBGP to $e2; increments wEffectSpriteX (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames_FlashTwice (when wEffectSpriteX = 2);
-; RunEffectRoutineEffectEvery5Frames_FlashTwice: the FlashOnce steps twice, then the next effect id
-; (E-0352)
+; Flash twice, step 2: restores the palettes ($D2, $D2, $E2). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $d2
@@ -2326,11 +2233,7 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice_SetDMGPaletteBGP::
     inc [hl]
     ret
 
-; step 6 of RunEffectRoutineEffectEvery5Frames_FlashTwice: sets wEffectId to $ff; sets
-; wEffectSpriteX to 0 (E-0347)
-; why: step 6 of RunEffectRoutineEffectEvery5Frames_FlashTwice (when wEffectSpriteX = 6);
-; RunEffectRoutineEffectEvery5Frames_FlashTwice: the FlashOnce steps twice, then the next effect id
-; (E-0352)
+; Flash twice, step 6: ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -2338,13 +2241,8 @@ RunEffectRoutineEffectEvery5Frames_FlashTwice_SetEffectId::
     ld [wEffectSpriteX], a
     ret
 
-; step 8 of RunEffectRoutineEffectEvery5Frames: calls
-; RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX; calls RunEffectStep; returns if
-; wEffectSpriteX is 0; sets wEffectId to $ff; sets wEffectSpriteX to 0; sets wEffectStep to 0
-; (E-0347)
-; why: step 8 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 8: runs the 27-step shake and the palette flash (RunEffectStep) together; when the
+; shake has ended, ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_RunEffectStep::
     ld a, [wEffectSpriteX]
     or a
@@ -2361,12 +2259,8 @@ RunEffectRoutineEffectEvery5Frames_RunEffectStep::
     ld [wEffectStep], a
     ret
 
-; called from RunEffectRoutineEffectEvery5Frames_RunEffectStep: returns unless wEffectSpriteX is 0;
-; dispatches on wEffectStep; also changes A by register arithmetic (E-0347)
-; why: a helper of RunEffectRoutineEffectEvery5Frames_RunEffectStep, in step 8 of
-; RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8); RunEffectRoutineEffectEvery5Frames:
-; every fifth frame (wEffectFrameCounter) runs the effect routine for wEffectRoutine (jump table of
-; fourteen) (E-0352, E-0124)
+; Effect routine 8's shake: steps through Y 4, 0, X 3, 0 and repeats, until step 26 ends it. (C1,
+; E-0357)
 RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX::
     ld a, [wEffectSpriteX]
     or a
@@ -2401,13 +2295,7 @@ RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX::
     dw RunEffectRoutineEffectEvery5Frames_SetScrollY
     dw RunEffectRoutineEffectEvery5Frames_WriteEffectSpriteXAndScrollYEtc
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX: sets hScrollY to 4; sets hScrollX
-; to 0; advances wEffectStep (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX (when wEffectStep = 0), in a
-; helper of RunEffectRoutineEffectEvery5Frames_RunEffectStep, in step 8 of
-; RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8); RunEffectRoutineEffectEvery5Frames:
-; every fifth frame (wEffectFrameCounter) runs the effect routine for wEffectRoutine (jump table of
-; fourteen) (E-0352, E-0124)
+; Routine 8's shake: hScrollY 4, hScrollX 0. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX::
     ld a, $04
     ldh [hScrollY], a
@@ -2417,13 +2305,7 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX::
     inc [hl]
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX: sets hScrollY to 0; sets hScrollX
-; to 3; advances wEffectStep (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX (when wEffectStep = 2), in a
-; helper of RunEffectRoutineEffectEvery5Frames_RunEffectStep, in step 8 of
-; RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8); RunEffectRoutineEffectEvery5Frames:
-; every fifth frame (wEffectFrameCounter) runs the effect routine for wEffectRoutine (jump table of
-; fourteen) (E-0352, E-0124)
+; Routine 8's shake: hScrollY 0, hScrollX 3. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_SetScrollY::
     ld a, $00
     ldh [hScrollY], a
@@ -2433,13 +2315,7 @@ RunEffectRoutineEffectEvery5Frames_SetScrollY::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX: sets hScrollY to 0; sets hScrollX
-; to 0; advances wEffectStep (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX (when wEffectStep = 1), in a
-; helper of RunEffectRoutineEffectEvery5Frames_RunEffectStep, in step 8 of
-; RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8); RunEffectRoutineEffectEvery5Frames:
-; every fifth frame (wEffectFrameCounter) runs the effect routine for wEffectRoutine (jump table of
-; fourteen) (E-0352, E-0124)
+; Routine 8's shake: hScrollY and hScrollX 0. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY::
     xor a
     ldh [hScrollY], a
@@ -2449,13 +2325,8 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollYAndScrollX_SetScrollY::
     inc [hl]
     ret
 
-; step 26 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX: sets wEffectSpriteX to 1; sets
-; hScrollY to 0; sets hScrollX to 0; sets wEffectStep to 0 (E-0347)
-; why: step 26 of RunEffectRoutineEffectEvery5Frames_WaitEffectSpriteX (when wEffectStep = 26), in a
-; helper of RunEffectRoutineEffectEvery5Frames_RunEffectStep, in step 8 of
-; RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 8); RunEffectRoutineEffectEvery5Frames:
-; every fifth frame (wEffectFrameCounter) runs the effect routine for wEffectRoutine (jump table of
-; fourteen) (E-0352, E-0124)
+; Routine 8's shake, step 26: resets the scroll and marks the shake done (wEffectSpriteX 1). (C1,
+; E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteEffectSpriteXAndScrollYEtc::
     ld a, $01
     ld [wEffectSpriteX], a
@@ -2501,10 +2372,7 @@ RunEffectStep::
     dw RunEffectStep_SetDMGPaletteBGP_2
     dw RunEffectStep_SetDMGPaletteBGP
 
-; step 9 of RunEffectStep: sets wDMGPaletteBGP to 0 (E-0347)
-; why: step 9 of RunEffectStep (when wEffectStep = 9); RunEffectStep: the frames of a screen-flash
-; effect, run every fifth frame: each step sets the DMG background palette (rBGP) to the next shade)
-; (E-0352, E-0354, E-0124)
+; The palette flash, step 9: all three DMG palettes 0 (white). (C1, E-0357)
 RunEffectStep_SetDMGPaletteBGP_2::
     ld hl, wDMGPaletteBGP
     ld [hl], $00
@@ -2514,10 +2382,7 @@ RunEffectStep_SetDMGPaletteBGP_2::
     ld [hl], $00
     ret
 
-; step 0 of RunEffectStep: sets wDMGPaletteBGP to $d2; sets wDMGPaletteBGP to $e2 (E-0347)
-; why: step 0 of RunEffectStep (when wEffectStep = 0); RunEffectStep: the frames of a screen-flash
-; effect, run every fifth frame: each step sets the DMG background palette (rBGP) to the next shade)
-; (E-0352, E-0354, E-0124)
+; The palette flash, step 0: the normal DMG palettes ($D2, $D2, $E2). (C1, E-0357)
 RunEffectStep_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $d2
@@ -2527,11 +2392,7 @@ RunEffectStep_SetDMGPaletteBGP::
     ld [hl], $e2
     ret
 
-; step 9 of RunEffectRoutineEffectEvery5Frames: branches on wEffectCounter; increments
-; wEffectCounter (E-0347)
-; why: step 9 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 9);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 9: counts wEffectCounter up (both branches the same). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ReadEffectCounter::
     ld a, [wEffectCounter]
     or a
@@ -2555,12 +2416,7 @@ RunEffectRoutineEffectEvery5Frames_FlashPalette::
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP
     dw RunEffectRoutineEffectEvery5Frames_FlashPalette_SetEffectId
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_FlashPalette: calls LightenDMGPaletteOneStep; returns
-; if wEffectCounter is below $04; sets wEffectFlashState to 0; sets wEffectCounter to 0; increments
-; wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_FlashPalette (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_FlashPalette: by wEffectStep: sets the effect counter, writes
-; the DMG palette rBGP and picks the effect position (E-0352)
+; Flash light, step 0: lightens the DMG palettes a shade per call, four times. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep::
     call LightenDMGPaletteOneStep
     ld a, [wEffectCounter]
@@ -2574,11 +2430,7 @@ RunEffectRoutineEffectEvery5Frames_FlashPalette_LightenDMGPaletteOneStep::
     inc [hl]
     ret
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_FlashPalette: advances wEffectStep; returns unless
-; wEffectStep is $0a; increments wEffectSpriteX; sets wEffectStep to 0 (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_FlashPalette (when wEffectSpriteX = 1);
-; RunEffectRoutineEffectEvery5Frames_FlashPalette: by wEffectStep: sets the effect counter, writes
-; the DMG palette rBGP and picks the effect position (E-0352)
+; Flash light, step 1: waits ten calls. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashPalette_WriteEffectStep::
     ld hl, wEffectStep
     inc [hl]
@@ -2591,11 +2443,7 @@ RunEffectRoutineEffectEvery5Frames_FlashPalette_WriteEffectStep::
     ld [wEffectStep], a
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames_FlashPalette: sets wDMGPaletteBGP to $d2; sets
-; wDMGPaletteBGP to $e2; increments wEffectSpriteX (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames_FlashPalette (when wEffectSpriteX = 2);
-; RunEffectRoutineEffectEvery5Frames_FlashPalette: by wEffectStep: sets the effect counter, writes
-; the DMG palette rBGP and picks the effect position (E-0352)
+; Flash light, step 2: restores the palettes ($D2, $D2, $E2). (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP::
     ld hl, wDMGPaletteBGP
     ld [hl], $d2
@@ -2607,11 +2455,7 @@ RunEffectRoutineEffectEvery5Frames_FlashPalette_SetDMGPaletteBGP::
     inc [hl]
     ret
 
-; step 3 of RunEffectRoutineEffectEvery5Frames_FlashPalette: sets wEffectId to $ff; sets
-; wEffectSpriteX to 0 (E-0347)
-; why: step 3 of RunEffectRoutineEffectEvery5Frames_FlashPalette (when wEffectSpriteX = 3);
-; RunEffectRoutineEffectEvery5Frames_FlashPalette: by wEffectStep: sets the effect counter, writes
-; the DMG palette rBGP and picks the effect position (E-0352)
+; Flash light, step 3: ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_FlashPalette_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -2726,11 +2570,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2
     dw RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc
 
-; step 1 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 0; sets hScrollY to 0;
-; increments wEffectSpriteX (E-0347)
-; why: step 1 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 1);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 1: scroll back to 0. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY::
     xor a
     ldh [hScrollX], a
@@ -2739,11 +2579,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY::
     inc [hl]
     ret
 
-; step 0 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to $fe; increments
-; wEffectSpriteX (E-0347)
-; why: step 0 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 0);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 0: hScrollX -2. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX::
     ld a, $fe
     ldh [hScrollX], a
@@ -2751,11 +2587,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX::
     inc [hl]
     ret
 
-; step 2 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 2; increments
-; wEffectSpriteX (E-0347)
-; why: step 2 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 2);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 2: hScrollX +2. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
     ld a, $02
     ldh [hScrollX], a
@@ -2763,11 +2595,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX_SetScrollX::
     inc [hl]
     ret
 
-; step 4 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to $fc; increments
-; wEffectSpriteX (E-0347)
-; why: step 4 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 4);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 4: hScrollX -4. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_2::
     ld a, $fc
     ldh [hScrollX], a
@@ -2775,11 +2603,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_2::
     inc [hl]
     ret
 
-; step 6 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 4; increments
-; wEffectSpriteX (E-0347)
-; why: step 6 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 6);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 6: hScrollX +4. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_3::
     ld a, $04
     ldh [hScrollX], a
@@ -2787,11 +2611,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_3::
     inc [hl]
     ret
 
-; step 8 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to $f8; increments
-; wEffectSpriteX (E-0347)
-; why: step 8 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 8);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 8: hScrollX -8. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_4::
     ld a, $f8
     ldh [hScrollX], a
@@ -2799,11 +2619,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_4::
     inc [hl]
     ret
 
-; step 10 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 8; increments
-; wEffectSpriteX (E-0347)
-; why: step 10 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 10);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 10: hScrollX +8. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_5::
     ld a, $08
     ldh [hScrollX], a
@@ -2811,11 +2627,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_5::
     inc [hl]
     ret
 
-; step 12 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to $f8; sets hScrollY to
-; 2; increments wEffectSpriteX (E-0347)
-; why: step 12 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 12);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 12: hScrollX -8 and hScrollY 2. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX::
     ld a, $f8
     ldh [hScrollX], a
@@ -2825,11 +2637,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
     inc [hl]
     ret
 
-; step 14 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 8; sets hScrollY to 2;
-; increments wEffectSpriteX (E-0347)
-; why: step 14 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 14);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 14: hScrollX +8 and hScrollY 2. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2::
     ld a, $08
     ldh [hScrollX], a
@@ -2839,11 +2647,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_2::
     inc [hl]
     ret
 
-; step 27 of RunEffectRoutineEffectEvery5Frames_ShakeScreen: sets hScrollX to 0; sets hScrollY to 0;
-; sets wEffectId to $ff; sets wEffectSpriteX to 0 (E-0347)
-; why: step 27 of RunEffectRoutineEffectEvery5Frames_ShakeScreen (when wEffectSpriteX = 27);
-; RunEffectRoutineEffectEvery5Frames_ShakeScreen: a sequence of steps that only write
-; hScrollX/hScrollY: a screen shake (E-0352)
+; The screen shake, step 27: resets the scroll and ends the effect. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc::
     xor a
     ldh [hScrollX], a
@@ -2854,14 +2658,8 @@ RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc::
     ld [wEffectSpriteX], a
     ret
 
-; step 13 of RunEffectRoutineEffectEvery5Frames: may continue in
-; LightenDMGPaletteOneStep_SetEffectId; branches on wBattleActor; may continue in
-; LightenDMGPaletteOneStep_SetEffectId; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; LightenDMGPaletteOneStep_SetEffectId; dispatches on wEffectSpriteX; also changes BC and A by
-; register arithmetic (E-0347)
-; why: step 13 of RunEffectRoutineEffectEvery5Frames (when wEffectRoutine = 13);
-; RunEffectRoutineEffectEvery5Frames: every fifth frame (wEffectFrameCounter) runs the effect
-; routine for wEffectRoutine (jump table of fourteen) (E-0352, E-0124)
+; Effect routine 13: ends unless the actor is a present slot 4-6 (0-2 in link mode 1, whatever the
+; role; never slot 3 or 7 up); then blinks its picture through four steps. (C1, E-0357)
 RunEffectRoutineEffectEvery5Frames_2::
     ld a, [wLinkRole]
     ld b, a
@@ -2894,12 +2692,8 @@ RunEffectRoutineEffectEvery5Frames_2::
     dw LightenDMGPaletteOneStep_SetEffectStep
     dw LightenDMGPaletteOneStep_SetEffectId
 
-; step 0 of LightenDMGPaletteOneStep: sets wEffectStep to 6; calls EffectPositionIndexForActor;
-; calls CopyVRAMRectToBuffer; increments wEffectSpriteX; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: step 0 of LightenDMGPaletteOneStep; LightenDMGPaletteOneStep: increments wEffectCounter and
-; steps the three DMG palette bytes one shade lighter (each 2-bit shade minus 1, not below 0)
-; (E-0352)
+; Effect routine 13, steps 0 and 2: covers the actor's picture place with tile block 3 (six rows).
+; (C1, E-0357)
 LightenDMGPaletteOneStep_EffectPositionIndexForActor::
     ld a, $06
     ld [wEffectStep], a
@@ -2919,12 +2713,8 @@ LightenDMGPaletteOneStep_EffectPositionIndexForActor::
     inc [hl]
     ret
 
-; step 1 of LightenDMGPaletteOneStep: sets wEffectStep to 6; calls EffectPositionIndexForActor;
-; calls CopyVRAMRectToBuffer; increments wEffectSpriteX; also changes HL, DE, A and C by register
-; arithmetic (E-0347)
-; why: step 1 of LightenDMGPaletteOneStep; LightenDMGPaletteOneStep: increments wEffectCounter and
-; steps the three DMG palette bytes one shade lighter (each 2-bit shade minus 1, not below 0)
-; (E-0352)
+; Effect routine 13, steps 1 and 3: restores the actor's picture place from its own tile block (slot
+; & 3). (C1, E-0357)
 LightenDMGPaletteOneStep_SetEffectStep::
     ld a, $06
     ld [wEffectStep], a
@@ -2945,11 +2735,7 @@ LightenDMGPaletteOneStep_SetEffectStep::
     inc [hl]
     ret
 
-; step 4 of LightenDMGPaletteOneStep: sets wEffectId to $ff; sets wEffectSpriteX to 0; sets
-; wEffectStep to 0 (E-0347)
-; why: step 4 of LightenDMGPaletteOneStep; LightenDMGPaletteOneStep: increments wEffectCounter and
-; steps the three DMG palette bytes one shade lighter (each 2-bit shade minus 1, not below 0)
-; (E-0352)
+; Ends the effect ($FF) and resets its steps. (C1, E-0357)
 LightenDMGPaletteOneStep_SetEffectId::
     ld a, $ff
     ld [wEffectId], a
@@ -3125,15 +2911,8 @@ DrawEffectSpriteForEffectTileOffsetRange::
     farcall DrawEffectSpriteAtEffectSpriteX_Bank3B
     ret
 
-; called from DrawSkillDebugDigitsAndRecord: copies L to wBattleArg0; copies H to wBattleArg1;
-; copies L to wBattleArg2; copies H to wBattleArg3; calls
-; DrawSkillDebugDigitsAndRecord_WriteVRAMByte; copies L to wBattleArg0; copies H to wBattleArg1;
-; copies L to wBattleArg2; copies H to wBattleArg3; calls
-; DrawSkillDebugDigitsAndRecord_WriteVRAMByte; copies L to wBattleArg0; copies H to wBattleArg1;
-; then 2 more steps (see the code) (E-0347)
-; why: a helper of DrawSkillDebugDigitsAndRecord; DrawSkillDebugDigitsAndRecord:
-; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_LoadSkillRecord, then far-calls ...
-; (E-0352, E-0122, E-0345)
+; The debug skill page: draws the entries of the skill wDebugValue0 in ActionEffectTable_Flag7,
+; Flag6, Flag5 and the rest as hex digits, each at two BG map places a row apart. (C1, E-0357)
 DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
     ld hl, vBGMap0 + $1ce
     ld a, l
@@ -3171,10 +2950,8 @@ DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
     ld [wBattleArg3], a
     ld hl, ActionEffectTable_Flag5
 
-; Calls WriteVRAMByte; also changes HL, BC and A by register arithmetic (E-0347)
-; why: part of DrawSkillDebugDigitsAndRecord; DrawSkillDebugDigitsAndRecord:
-; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_LoadSkillRecord, then far-calls ...
-; (E-0352, E-0122, E-0345)
+; Draws the two bytes of entry wDebugValue0 of table HL as hex digits ($E0 + 0-9, n - 2 for A-F):
+; the second at wBattleArg0/1, the first at wBattleArg2/3; a byte $FF is left out. (C1, E-0357)
 DrawSkillDebugDigitsAndRecord_WriteVRAMByte::
     ld a, [wDebugValue0]
     ld c, a
@@ -3273,14 +3050,8 @@ DrawSkillDebugDigitsAndRecord_WriteVRAMByte::
 .return:
     ret
 
-; called from DrawHexByteAtBGMap8A: copies wDebugSubState to wEffectTileOffset; copies
-; wDebugSubState to wEffectAnimArg; sets wEffectTargetMode to 1; sets wEffectSpriteX to 0; calls
-; FillBytes; sets wEffectId to 1; sets wEffectAnimState to 1; sets wEffectActive to 1; sets
-; wEffectAnimId to 0; copies L to wSequencePtrLo; copies H to wSequencePtrHi; calls
-; TickSequencePtrLoSequence; then 2 more steps (see the code) (E-0347)
-; why: a helper of DrawHexByteAtBGMap8A; DrawHexByteAtBGMap8A: writes A as two hex-digit tiles (0-9
-; as $E0 + n, 10-15 as n - 2): the low digit at vBGMap0 + $8A, then the high digit (the second write
-; is ... (E-0352, E-0112)
+; Starts the debug effect wDebugSubState (target mode 1): resets its steps, starts its sequence,
+; sets its X and loads its object palette. (C1, E-0357)
 DrawHexByteAtBGMap8A_FillBytes::
     ld a, [wDebugSubState]
     ld [wEffectTileOffset], a
@@ -3313,15 +3084,8 @@ DrawHexByteAtBGMap8A_FillBytes::
     call LoadEffectOBJPaletteC
     ret
 
-; called from RunDebugState_E0_DecompressGraphicsAToTiles0_2: branches on wEffectAnimState; calls
-; DecompressGraphicsAToTiles0; sets wEffectAnimState to 2; calls TickSequencePtrLoSequence; calls
-; AdvanceEffectSpriteXBy4InMode3; branches on wEffectAnimId; branches on wEffectActive; calls
-; DrawEffectSpriteForEffectTileOffsetRange; sets wEffectAnimState to 0; sets wEffectActive to 0;
-; sets wEffectId to $ff (E-0347)
-; why: a helper of RunDebugState_E0_DecompressGraphicsAToTiles0_2, in step 10 of RunDebugState_E0
-; (when wDebugState = 10); RunDebugState_E0: the bank-$E0 debug battle viewer: by wDebugState it
-; draws strings, slot HP/MP stats, packed 2-bit fields and bytes in hex, waits for ... (E-0352,
-; E-0354, E-0122)
+; Runs the debug effect: first decompresses its graphics; then ticks its sequence, moves it in mode
+; 3 and draws it until it ends ($FF). (C1, E-0357)
 RunDebugState_E0_DecompressGraphicsAToTiles0::
     ld a, [wEffectAnimState]
     cp $01
@@ -3459,11 +3223,9 @@ UploadBGPalettesWithFade::
     ld [wDMGPaletteBytes], a
     jp UploadBGPalettesWithFade_CheckDMGPaletteOBP0
 
-; called from UploadBGPalettesWithFade: takes HL and C; changes HL, DE and A; branches on rSTAT
-; (E-0347)
-; why: a helper of UploadBGPalettesWithFade; UploadBGPalettesWithFade: on CGB, when wDMGPaletteBGP
-; changed, writes the eight background palettes through
-; UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI ... (E-0352, E-0128)
+; Writes one background palette to port C with its four colours picked by the DMG BGP shades
+; (UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data), waiting for VRAM access before each
+; colour. (C1, E-0357)
 UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
     push hl
     ld a, [wDMGPaletteBGP]
@@ -3579,15 +3341,8 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
     ld h, a
     ret
 
-; May continue in UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return; branches on rSTAT; sets
-; rOBPI to $80; calls UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT; branches on rSTAT; sets
-; rOBPI to $88; calls UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT; branches on rSTAT; sets
-; rOBPI to $90; calls UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT; branches on rSTAT; sets
-; rOBPI to $98; then 14 more steps (see the code) (E-0347)
-; why: part of UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT, in a helper of
-; UploadBGPalettesWithFade; UploadBGPalettesWithFade: on CGB, when wDMGPaletteBGP changed, writes
-; the eight background palettes through UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI ...
-; (E-0352, E-0128)
+; When wDMGPaletteOBP0 has changed, writes the eight object palettes the same way by its shades and
+; remembers it. (C1, E-0357)
 UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
@@ -3663,10 +3418,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     ld [wDMGPaletteBytes + $1], a
     jp UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return
 
-; Takes HL and C; changes HL, DE and A; branches on rSTAT (E-0347)
-; why: part of UploadBGPalettesWithFade; UploadBGPalettesWithFade: on CGB, when wDMGPaletteBGP
-; changed, writes the eight background palettes through
-; UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI ... (E-0352, E-0128)
+; Writes one object palette to port C with its four colours picked by the OBP0 shades. (C1, E-0357)
 UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     push hl
     ld a, [wDMGPaletteOBP0]
@@ -3782,11 +3534,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     ld h, a
     ret
 
-; Returns at once (E-0347)
-; why: part of UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT, in part of
-; UploadBGPalettesWithFade; UploadBGPalettesWithFade: on CGB, when wDMGPaletteBGP changed, writes
-; the eight background palettes through UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI ...
-; (E-0352, E-0128)
+; A bare ret, the shared exit. (C1, E-0357)
 UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return::
     ret
 
@@ -3870,11 +3618,9 @@ SelectEffectByEffectFlags2Flags::
     call QueueSoundEffect
     ret
 
-; called from SelectEffectByEffectFlags2Flags: may return early; branches on wBattleActionId; plays
-; sound $81; also changes HL and A by register arithmetic (E-0347)
-; why: a helper of SelectEffectByEffectFlags2Flags; SelectEffectByEffectFlags2Flags: reads the
-; effect flags in wEffectFlags2 and tests bits 7, 6, 5, 3, 2, 0 in that order. Bits 0 and 2 set
-; wBattleActor to wBattleTarget and ... (E-0352, E-0057)
+; With wEffectFlags2 bit 4: for Sacrifice or ACTION_D6 plays sound $81 and returns the carry of
+; wBattleDamage minus 1000; for Farewell or LifeDance returns wResolveMsgFlags bit 6 (in Z);
+; otherwise A = 0. (C1, E-0357)
 SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags::
     bit 4, a
     ret z
@@ -5175,24 +4921,19 @@ RunBattleActions::
     dw RunBattleActions_WearOffAndDefeat
     dw RunBattleActions_SetBattlePhase
 
-; step 0 of RunBattleActions: calls RunBattleActions_StatusChecks (E-0347)
-; why: step 0 of RunBattleActions (when wBattleSubPhase = 0); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 0: the per-action status checks (RunBattleActions_StatusChecks).
+; (C1, E-0357)
 RunBattleActions_ToRunBattleActions_StatusChecks::
     farcall RunBattleActions_StatusChecks
     ret
 
-; step 1 of RunBattleActions: calls RunBattleResolveStep (E-0347)
-; why: step 1 of RunBattleActions (when wBattleSubPhase = 1); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 1: one resolve step (RunBattleResolveStep). (C1, E-0357)
 RunBattleActions_ToRunBattleResolveStep::
     farcall RunBattleResolveStep
     ret
 
-; step 2 of RunBattleActions: copies wBattleActionId to wRecordBuffer; calls LoadSkillRecord; calls
-; RunActionResolveStep (E-0347)
-; why: step 2 of RunBattleActions (when wBattleSubPhase = 2); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 2: loads the action's skill record and resolves the action
+; (RunActionResolveStep). (C1, E-0357)
 RunBattleActions_LoadSkillRecord::
     ld a, [wBattleActionId]
     ld [wRecordBuffer], a
@@ -5202,13 +4943,10 @@ RunBattleActions_LoadSkillRecord::
     call RunActionResolveStep
     ret
 
-; step 3 of RunBattleActions: branches on wBattleActionId; advances wBattleSubPhase; may continue in
-; RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc; advances wBattleSubPhase; branches on
-; wBattleActionId; branches on wBattleStatus6; advances wBattleSubPhase; calls
-; RollRepeatCountForAction; calls RunMultiHitCounter; also changes HL and A by register arithmetic
-; (E-0347)
-; why: step 3 of RunBattleActions (when wBattleSubPhase = 3); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 3: after the action, by its record's byte 4: for a group action
+; ($80 or kind 2) moves to the next target unless an attack was inhaled; kind 4 runs QuadHits' hits
+; or, when the actor called help, rolls the repeat count; BiAttack runs its hits; otherwise goes on.
+; (C1, E-0357)
 RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
     ld a, [wRecordBufferData + $4]
     cp $80
@@ -5316,12 +5054,9 @@ RunActionSpecificPostStep::
     inc [hl]
     ret
 
-; step 5 of RunBattleActions: branches on wAttackInhaled; sets wAttackInhaled to 0; sets
-; wActionRepeatFlag to 1; calls CheckSlotStatusBlockWide_Bank3A; branches on wBattleStatus6;
-; advances wBattleStep; sets wBattleSubPhase to 0; sets wBattleResolveStep to 0; shows battle text
-; '0 blew back G!'; advances wBattleSubPhase (E-0347)
-; why: step 5 of RunBattleActions (when wBattleSubPhase = 5); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 5: after an inhaled attack clears it and sets the repeat flag; when
+; the target can act and has SuckAll, shows battle text $7E and goes to the next battle step;
+; otherwise goes on. (C1, E-0357)
 RunBattleActions_ShowHeroBlewBackG::
     ld a, [wAttackInhaled]
     or a
@@ -5351,13 +5086,9 @@ RunBattleActions_ShowHeroBlewBackG::
     ld hl, wBattleSubPhase
     inc [hl]
 
-; step 6 of RunBattleActions: calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleStatus4;
-; clears BSTAT4_FOCUS_LO of wBattleStatus4; calls CheckActionBDOrRun; sets wEffectFlags to 0; sets
-; wEffectId to $ff; sets wMultiHitCount to 0; sets wRedirectFlags to 0; sets wFollowUpAction to 0;
-; sets wOriginalTarget to $ff; sets wBattleSubPhase to 0; sets wBattleResolveStep to 1; then 5 more
-; steps (see the code) (E-0347)
-; why: step 6 of RunBattleActions (when wBattleSubPhase = 6); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 6: when the present actor had Focus, clears it and, for a skill
+; with record byte 7 bit 4 while the battle goes on, acts again: resets the effect and hits, picks a
+; new target and resolves again. (C1, E-0357)
 RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, [wBattleActor]
     call CarryUnlessBattleSlotOutSlotEmpty
@@ -5404,13 +5135,9 @@ RunBattleActions_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleSubPhase
     inc [hl]
 
-; step 7 of RunBattleActions: sets wFollowUpAction to 0; sets wDefeatStep to 0; sets
-; wBattleScreenFlags to 0; calls CheckActionBDOrRun; advances wBattlePhase; sets wBattleStep to 0;
-; sets wBattleSubPhase to 0; sets wBattleResolveStep to 0; branches on the byte at wActionQueue;
-; sets wSlotMarks to 3; branches on the byte at wBattleActionChoice; increments wActionQueuePos;
-; then 9 more steps (see the code) (E-0347)
-; why: step 7 of RunBattleActions (when wBattleSubPhase = 7); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 7: when the battle is decided goes to the next phase; otherwise
+; marks the actor done (wSlotMarks 3; choice $CC clears status 4 bits 2-3) and moves to the next
+; queued action of a present slot, or with none left (or nine done) to sub-phase 9. (C1, E-0357)
 RunBattleActions_CheckActionBDOrRun::
     xor a
     ld [wFollowUpAction], a
@@ -5512,10 +5239,8 @@ CheckActionBDOrRun::
     call CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty
     ret
 
-; called from CheckActionBDOrRun: changes A and C; may continue in
-; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6 (E-0347)
-; why: a helper of CheckActionBDOrRun; CheckActionBDOrRun: returns A = 0 for action $BD while
-; wMultiHitCount & $7F is non-zero (E-0352, E-0122, E-0344)
+; Carry only when slots 0-2 (4-6 for the link follower) all pass SlotPresentWithStatus0Bit6. (C1,
+; E-0357)
 CheckActionBDOrRun_SlotPresentWithStatus0Bit6::
     ld c, $00
     ld a, [wLinkMode]
@@ -5526,11 +5251,7 @@ CheckActionBDOrRun_SlotPresentWithStatus0Bit6::
     jr z, CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6
     ld c, $04
 
-; Calls SlotPresentWithStatus0Bit6; may return early; calls SlotPresentWithStatus0Bit6; may return
-; early; calls SlotPresentWithStatus0Bit6 (E-0347)
-; why: part of CheckActionBDOrRun_SlotPresentWithStatus0Bit6, in a helper of CheckActionBDOrRun;
-; CheckActionBDOrRun: returns A = 0 for action $BD while wMultiHitCount & $7F is non-zero (E-0352,
-; E-0122, E-0344)
+; Carry only when slots C, C + 1 and C + 2 all pass SlotPresentWithStatus0Bit6. (C1, E-0357)
 CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6::
     call SlotPresentWithStatus0Bit6
     ret nc
@@ -5541,13 +5262,8 @@ CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6::
     call SlotPresentWithStatus0Bit6
     ret
 
-; called from CheckActionBDOrRun: branches on wLinkMode; may continue in
-; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6; continues in
-; CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6; calls CarryUnlessBattleSlotOutSlotEmpty; may
-; return early; calls CarryUnlessBattleSlotOutSlotEmpty; may return early; calls
-; CarryUnlessBattleSlotOutSlotEmpty; also changes A and C by register arithmetic (E-0347)
-; why: a helper of CheckActionBDOrRun; CheckActionBDOrRun: returns A = 0 for action $BD while
-; wMultiHitCount & $7F is non-zero (E-0352, E-0122, E-0344)
+; The other side's check: outside a link carry only when slots 4-6 are all out or empty; in a link
+; the status test on slots 4-6 (0-2 for the follower). (C1, E-0357)
 CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty::
     ld c, $04
     ld a, [wLinkMode]
@@ -5586,9 +5302,7 @@ SlotPresentWithStatus0Bit6::
     scf
     ret
 
-; step 8 of RunBattleActions: calls RunBattleActions_UseItem (E-0347)
-; why: step 8 of RunBattleActions (when wBattleSubPhase = 8); RunBattleActions: battle fight step 3:
-; returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 8: an item action (RunBattleActions_UseItem). (C1, E-0357)
 RunBattleActions_ToRunBattleActions_UseItem::
     farcall RunBattleActions_UseItem
     ret
@@ -5605,12 +5319,10 @@ RunBattleActions_WearOffAndDefeat::
     dw RunBattleActions_WearOffAndDefeat_WaitTextFlags
     dw RunBattleActions_WearOffAndDefeat_QueueMusic
 
-; step 0 of RunBattleActions_WearOffAndDefeat: advances wBattleResolveStep; sets wBattleActor to 0;
-; calls CarryUnlessBattleSlotOutSlotEmpty; may return early; sets wBattleResolveStep to 4; also
-; changes HL, A, B and E by register arithmetic (E-0347)
-; why: step 0 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 0);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 0: clears side flag bits 4 and 6 and the slot pair bytes' bits 2-7; for nine
+; 9-byte status rows counts down the two-bit timers (byte 4 all four, byte 5 bits 4-5, byte 8 bits
+; 0-1: the high bit moves down, the low one drops), keeps byte 6 bits 6-7 and clears byte 7; then
+; starts with slot 0 (step 4 when it is absent). (C1, E-0357)
 RunBattleActions_WriteBattleActorAndBattleResolveStep::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5683,12 +5395,8 @@ RunBattleActions_WriteBattleActorAndBattleResolveStep::
     ld [wBattleResolveStep], a
     ret
 
-; step 1 of RunBattleActions_WearOffAndDefeat: advances wBattleResolveStep; shows battle text '0's
-; Ironize wore off!'; sets wBattleResolveStep to 4; also changes HL, DE and A by register arithmetic
-; (E-0347)
-; why: step 1 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 1);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 1: counts down the slot's Ironize ($40 a turn), showing "<name>'s Ironize wore
+; off!" (text $84) at zero; an Ironized slot skips the poison step. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5720,15 +5428,9 @@ RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore::
 .return:
     ret
 
-; step 2 of RunBattleActions_WearOffAndDefeat: advances wBattleResolveStep; may return early;
-; branches on the byte at wBattleStatus & $03; sets wBattleArg0 to $89; sets wBattleArg0 to $88;
-; copies wBattleActor to wBattleTarget; calls
-; RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A; calls
-; RunBattleActions_WearOffAndDefeat_AddDoubleAToHL_Bank3A; calls ShowBattleText; returns if
-; wLoadSlot is 0; decrements wBattleResolveStep (E-0347)
-; why: step 2 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 2);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 2: poison: BSTAT0_POISONED takes max HP / 16 (at least 1, at most 50) with text
+; $88, BSTAT0_BADLY_POISONED max HP / 6 (at most 150) with text $89; when that defeats the slot goes
+; back to step 3, otherwise on to step 4. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5767,13 +5469,8 @@ RunBattleActions_WearOffAndDefeat_AddAx9ToHL::
     dec [hl]
     ret
 
-; called from RunBattleActions_WearOffAndDefeat_AddAx9ToHL: calls GetBattleMaxHP_Bank3A; branches on
-; B; branches on H; branches on L; branches on H; branches on L; copies L to wBattleDamageLo; copies
-; H to wBattleDamageHi; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of RunBattleActions_WearOffAndDefeat_AddAx9ToHL, in step 2 of
-; RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 2);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; The poison damage: wBattleDamage = max HP / B (B = 16 or 6), at least 1, at most 50 (B = 16) or
+; 150 (B = 6). (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A::
     push bc
     ld a, [wBattleActor]
@@ -5819,14 +5516,8 @@ RunBattleActions_WearOffAndDefeat_GetBattleMaxHP_Bank3A::
     ld [wBattleDamageHi], a
     ret
 
-; called from RunBattleActions_WearOffAndDefeat_AddAx9ToHL: sets wLoadSlot to 0; calls
-; SetBit2OfLevelUpGainsIndexed_Bank3A; calls DefeatTarget; sets wBattleArg0; sets wDefeatStep to 0;
-; sets wLoadSlot to 1; calls SetBit0OfLevelUpGainsIndexed_Bank3A; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
-; why: a helper of RunBattleActions_WearOffAndDefeat_AddAx9ToHL, in step 2 of
-; RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 2);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; Takes the poison damage from the slot's HP; at zero clears it, marks the slot's level-up gains
+; (bit 2) and defeats it (DefeatTarget, wLoadSlot 1); marks bit 0 either way. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_AddDoubleAToHL_Bank3A::
     xor a
     ld [wLoadSlot], a
@@ -5878,12 +5569,8 @@ RunBattleActions_WearOffAndDefeat_AddDoubleAToHL_Bank3A::
     call SetBit0OfLevelUpGainsIndexed_Bank3A
     ret
 
-; step 3 of RunBattleActions_WearOffAndDefeat: advances wBattleResolveStep; calls
-; BlankTargetMonsterPicture; shows battle text '0 dropped dead!'; calls CheckActionBDOrRun; may
-; return early; sets wBattleSubPhase to $0a; sets wBattleResolveStep to 0 (E-0347)
-; why: step 3 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 3);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 3: blanks the slot's picture and shows '<name> dropped dead!' (text $90); when
+; the battle is decided goes to sub-phase $0A. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -5898,15 +5585,10 @@ RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead::
     ld [wBattleResolveStep], a
     ret
 
-; step 4 of RunBattleActions_WearOffAndDefeat: increments wBattleActor; branches on the byte at
-; wBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty; sets wBattleResolveStep to 1;
-; calls FillBytes; calls SetSlotMarksForPresentSlots; branches on wLinkMode; calls
-; SetSlotMarksForPresentSlots; branches on the byte at wBattleTurn; increments wBattleTurn; branches
-; on wLinkMode; then 13 more steps (see the code) (E-0347)
-; why: step 4 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 4);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 4: moves to the next present slot (back to step 1); after slot 7 resets the slot
+; marks, counts the turn (up to $FF) and, in a link battle with a turn limit (wLinkRuleTurnLimit bit
+; 7), shows the turns left (string $61, or $88 when the number starts with 1) or past the limit
+; string $62 and goes to the draw (step 6); otherwise starts the next turn. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleActor
     inc [hl]
@@ -6021,11 +5703,7 @@ SetSlotMarksForPresentSlots::
     jr nz, SetSlotMarksForPresentSlots
     ret
 
-; step 5 of RunBattleActions_WearOffAndDefeat: returns unless wTextFlags is 0; sets wBattleStep to
-; 0; sets wBattleSubPhase to 0; sets wBattleResolveStep to 0 (E-0347)
-; why: step 5 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 5);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 5: after the text starts the next turn. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -6038,12 +5716,8 @@ RunBattleActions_WearOffAndDefeat_WaitTextFlags::
     ld [wBattleResolveStep], a
     ret
 
-; step 6 of RunBattleActions_WearOffAndDefeat: returns unless wTextFlags is 0; sets wBattlePhase to
-; 2; sets wBattleStep to 8; sets wBattleSubPhase to 0; sets wBattleResolveStep to 0; sets
-; wBattleScene to $80; plays music $42 (E-0347)
-; why: step 6 of RunBattleActions_WearOffAndDefeat (when wBattleResolveStep = 6);
-; RunBattleActions_WearOffAndDefeat: by wBattleResolveStep: battle texts "0's Ironize wore off!" and
-; '0 dropped dead!' (E-0352)
+; End of turn, step 6 (the turn limit): after the text ends the battle as a draw: phase 2, step 8,
+; wBattleScene $80, music $42. (C1, E-0357)
 RunBattleActions_WearOffAndDefeat_QueueMusic::
     ld a, [wTextFlags]
     or a
@@ -6061,10 +5735,7 @@ RunBattleActions_WearOffAndDefeat_QueueMusic::
     call QueueMusic
     ret
 
-; step 10 of RunBattleActions: advances wBattlePhase; sets wBattleStep to 0; sets wBattleSubPhase to
-; 0; sets wBattleResolveStep to 0 (E-0347)
-; why: step 10 of RunBattleActions (when wBattleSubPhase = 10); RunBattleActions: battle fight step
-; 3: returns while a message is being drawn (E-0352)
+; Battle fight step 3, sub-phase 10: the next battle phase. (C1, E-0357)
 RunBattleActions_SetBattlePhase::
     ld hl, wBattlePhase
     inc [hl]
@@ -6135,12 +5806,8 @@ RedrawChangedSlotPanels::
     jr nz, .loop
     ret
 
-; called from RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc: calls
-; RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc; may return early; copies C to
-; wBattleTarget; sets wBattleSubPhase to 1; sets wBattleResolveStep to 0 (E-0347)
-; why: a helper of RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc, in step 3 of
-; RunBattleStep4 (when wBattleSubPhase = 3); RunBattleStep4: battle fight step 4: the same prologue
-; as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; When the group action has another target, makes it the target (and the actor's target choice) and
+; resolves again (sub-phase 1). (C1, E-0357)
 RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc::
     call RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc
     ret z
@@ -6157,13 +5824,10 @@ RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc::
     ld [wBattleResolveStep], a
     ret
 
-; Branches on wMultiHitCount; calls RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty; sets
-; wMultiHitCount; calls RunBattleStep4_BackMultiHitCount; may return early; branches on
-; wBattleActionId; advances wBattleSubPhase; copies wBattleActor to wSavedActorSlot; sets
-; wSavedActorByte to 0; sets wBattleSubPhase to 1; sets wBattleResolveStep to $0e; sets
-; wBattleSubStep to 0; then 1 more step (see the code) (E-0347)
-; why: part of RunBattleStep4; RunBattleStep4: battle fight step 4: the same prologue as
-; RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; A group action's next target: counts the targets on the first call (wMultiHitCount bit 7 marks
+; it), then steps on; with none left, Sacrifice, Farewell and LifeDance (and ACTION_D6, saving the
+; actor) go to resolve step $0E with screen flag bit 0, other actions to the next sub-phase; returns
+; Z then. (C1, E-0357)
 RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc::
     ld a, [wMultiHitCount]
     bit 7, a
@@ -6211,11 +5875,9 @@ RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc::
     xor a
     ret
 
-; Branches on wBattleTarget; calls CarryUnlessBattleSlotOutSlotEmpty; branches on wBattleActionId;
-; increments wMultiHitCount; branches on B; also changes HL, BC and A by register arithmetic
-; (E-0347)
-; why: part of RunBattleStep4; RunBattleStep4: battle fight step 4: the same prologue as
-; RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Counts a group action's targets into wMultiHitCount: the target and the present slots of its side
+; (both sides when record byte 4 is $80); Farewell, LifeDance, LoveRain and HighJump also count
+; fallen slots. (C1, E-0357)
 RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty::
     ld b, $04
     ld a, [wRecordBufferData + $4]
@@ -6271,12 +5933,8 @@ RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty::
     jr nz, .loop
     ret
 
-; Decrements wMultiHitCount; may return early; calls CarryUnlessBattleSlotOutSlotEmpty; may return
-; early; returns if wBattleActionId is SKILL_FAREWELL; returns if wBattleActionId is
-; SKILL_LIFEDANCE; returns if wBattleActionId is SKILL_LOVERAIN_CE; returns if wBattleActionId is
-; SKILL_HIGHJUMP_BB; also changes HL, A and C by register arithmetic (E-0347)
-; why: part of RunBattleStep4; RunBattleStep4: battle fight step 4: the same prologue as
-; RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Moves C to the group action's next target after the current one (present, or fallen for those four
+; skills), crossing to the other side for record byte 4 $80; counts one down. (C1, E-0357)
 RunBattleStep4_BackMultiHitCount::
     ld a, [wBattleTarget]
     inc a
@@ -6376,12 +6034,8 @@ RunMultiHitCounter::
     jr nc, RunMultiHitCounter_SetBattleSubPhaseTo01
     jr RunMultiHitCounter_Done
 
-; Decrements wMultiHitCount; may continue in RunMultiHitCounter_Done; may continue in
-; RunMultiHitCounter_ReadBattleActor; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunMultiHitCounter_SetBattleSubPhaseTo01 (E-0347)
-; why: part of RunMultiHitCounter; RunMultiHitCounter: sets up and counts down the multi-hit counter
-; in wMultiHitCount (1 or 3 hits for action $63), choosing a new target for $63 when the old ...
-; (E-0352, E-0128)
+; The next hit of a multi-hit action: when hits remain, BiAttack keeps a present target or picks
+; another; other actions pick a new target. (C1, E-0357)
 RunMultiHitCounter_Skip::
     ld hl, wMultiHitCount
     dec [hl]
@@ -6395,19 +6049,13 @@ RunMultiHitCounter_Skip::
     call CarryUnlessBattleSlotOutSlotEmpty
     jr nc, RunMultiHitCounter_SetBattleSubPhaseTo01
 
-; Calls ChooseTargetForActor; copies D to wBattleTarget (E-0347)
-; why: part of RunMultiHitCounter; RunMultiHitCounter: sets up and counts down the multi-hit counter
-; in wMultiHitCount (1 or 3 hits for action $63), choosing a new target for $63 when the old ...
-; (E-0352, E-0128)
+; Picks a new target (ChooseTargetForActor). (C1, E-0357)
 RunMultiHitCounter_CallChooseTargetForActor::
     farcall ChooseTargetForActor
     ld a, d
     ld [wBattleTarget], a
 
-; Sets wBattleSubPhase to 1; sets wBattleResolveStep to 1 (E-0347)
-; why: part of RunMultiHitCounter; RunMultiHitCounter: sets up and counts down the multi-hit counter
-; in wMultiHitCount (1 or 3 hits for action $63), choosing a new target for $63 when the old ...
-; (E-0352, E-0128)
+; Resolves the action again (sub-phase 1, resolve step 1). (C1, E-0357)
 RunMultiHitCounter_SetBattleSubPhaseTo01::
     ld a, $01
     ld [wBattleSubPhase], a
@@ -6415,20 +6063,14 @@ RunMultiHitCounter_SetBattleSubPhaseTo01::
     ld [wBattleResolveStep], a
     ret
 
-; Advances wBattleSubPhase (E-0347)
-; why: part of RunMultiHitCounter; RunMultiHitCounter: sets up and counts down the multi-hit counter
-; in wMultiHitCount (1 or 3 hits for action $63), choosing a new target for $63 when the old ...
-; (E-0352, E-0128)
+; The hits are done: the next sub-phase. (C1, E-0357)
 RunMultiHitCounter_Done::
     ld hl, wBattleSubPhase
     inc [hl]
     ret
 
-; Calls ChooseTargetForActor; copies D to wBattleTarget; continues in
-; RunMultiHitCounter_SetBattleSubPhaseTo01; also changes HL and A by register arithmetic (E-0347)
-; why: part of RunMultiHitCounter; RunMultiHitCounter: sets up and counts down the multi-hit counter
-; in wMultiHitCount (1 or 3 hits for action $63), choosing a new target for $63 when the old ...
-; (E-0352, E-0128)
+; Picks a new target with the actor's side control bit 7 set for the choice (the automatic choice),
+; then resolves again. (C1, E-0357)
 RunMultiHitCounter_ReadBattleActor::
     ld a, [wBattleActor]
     ld hl, wSideControl
@@ -6472,33 +6114,24 @@ RunBattleStep4::
     dw RunBattleStep4_ToRunActionSpecificPostStep
     dw RunBattleStep4_WriteBattleActorAndBattleTargetEtc
 
-; step 0 of RunBattleStep4: calls RunBattleStep4_ResolveSkill (E-0347)
-; why: step 0 of RunBattleStep4 (when wBattleSubPhase = 0); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 0: resolves the skill (RunBattleStep4_ResolveSkill). (C1, E-0357)
 RunBattleStep4_ToRunBattleStep4_ResolveSkill::
     farcall RunBattleStep4_ResolveSkill
     ret
 
-; step 1 of RunBattleStep4: calls RunBattleResolveStep (E-0347)
-; why: step 1 of RunBattleStep4 (when wBattleSubPhase = 1); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 1: one resolve step. (C1, E-0357)
 RunBattleStep4_ToRunBattleResolveStep::
     farcall RunBattleResolveStep
     ret
 
-; step 2 of RunBattleStep4: calls RunActionResolveStep (E-0347)
-; why: step 2 of RunBattleStep4 (when wBattleSubPhase = 2); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 2: resolves the action. (C1, E-0357)
 RunBattleStep4_ToRunActionResolveStep::
     call RunActionResolveStep
     ret
 
-; step 3 of RunBattleStep4: branches on wBattleActionId; advances wBattleSubPhase; calls
-; RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc; branches on wBattleActionId; branches on
-; wBattleStatus6; advances wBattleSubPhase; calls RollRepeatCountForAction; calls
-; RunMultiHitCounter; also changes HL and A by register arithmetic (E-0347)
-; why: step 3 of RunBattleStep4 (when wBattleSubPhase = 3); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 3: after the action, by record byte 4: kind 2 moves to the next
+; target; kind 4 runs QuadHits' hits or rolls the called-help repeats; BiAttack runs its hits;
+; otherwise goes on. (C1, E-0357)
 RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
     ld a, [wRecordBufferData + $4]
     and $0f
@@ -6538,20 +6171,15 @@ RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
     call RunMultiHitCounter
     ret
 
-; step 4 of RunBattleStep4: calls RunActionSpecificPostStep (E-0347)
-; why: step 4 of RunBattleStep4 (when wBattleSubPhase = 4); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 4: the action's own after-step (RunActionSpecificPostStep). (C1,
+; E-0357)
 RunBattleStep4_ToRunActionSpecificPostStep::
     call RunActionSpecificPostStep
     ret
 
-; step 5 of RunBattleStep4: copies the byte at wSavedActorTarget to wBattleActor; copies the byte at
-; wSavedActorTarget to wBattleTarget; copies the byte at wSavedActorTarget to wMultiHitCount; sets
-; wFollowUpAction to 0; decrements wBattleStep; sets wBattleSubPhase to 3; sets wBattleResolveStep
-; to 0; sets wBattleSubStep to 0; returns if wActionRepeatFlag is 0; sets wActionRepeatFlag to 0;
-; sets wBattleSubPhase to 6; also changes HL, DE and A by register arithmetic (E-0347)
-; why: step 5 of RunBattleStep4 (when wBattleSubPhase = 5); RunBattleStep4: battle fight step 4: the
-; same prologue as RunBattleActions, then its own sub-steps (not seen in the first battle) (E-0352)
+; Battle fight step 4, sub-phase 5: restores the saved actor, target, hit count, both action choices
+; and the target's slot mark, steps the battle back one step and resumes at sub-phase 3 (6 when the
+; repeat flag was set, clearing it). (C1, E-0357)
 RunBattleStep4_WriteBattleActorAndBattleTargetEtc::
     ld hl, wSavedActorTarget
     ld a, [hli]
@@ -6635,15 +6263,10 @@ RunActionResolveStep::
     dw RunActionResolveStep_AdvanceBattleResolveStep
     dw RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A
 
-; step 0 of RunActionResolveStep: advances wBattleResolveStep; may continue in
-; RunActionResolveStep_HeroWokeUp; calls CarryUnlessBattleSlotOutSlotEmpty; may continue in
-; RunActionResolveStep_HeroWokeUp; branches on wFollowUpAction; may continue in
-; RunActionResolveStep_HeroWokeUp; calls GetBattleMaxMP_Bank3A; calls GetBattleMP_Bank3A; may
-; continue in RunActionResolveStep_HeroWokeUp; copies E to wBattleDamageLo; copies D to
-; wBattleDamageHi; copies E to wBattleDamageLo; then 6 more steps (see the code) (E-0347)
-; why: step 0 of RunActionResolveStep (when wBattleResolveStep = 0); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 0 (TakeMagic): when the present target has BSTAT2_TAKE_MAGIC, the skill's record byte
+; 7 bit 0 (and, for a follow-up, message flag bit 4) and less than full MP, it gains MP equal to
+; record byte 0, at most up to its max (wBattleDamage holds the gain while text $40 shows); then
+; step 1. (C1, E-0357)
 RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6729,16 +6352,10 @@ RunActionResolveStep_CarryUnlessBattleSlotOutSlotEmpty::
     ld [wBattleDamageHi], a
     ret
 
-; step 1 of RunActionResolveStep: advances wBattleResolveStep; calls
-; CarryUnlessBattleSlotOutSlotEmpty; branches on wResolveMsgFlags; calls AdvanceRandom; calls
-; RollRandomBelowTargetThreshold; may continue in
-; RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A; sets wSlotMarks to 3; calls
-; SetBit2OfLevelUpGainsIndexed_Bank3A; shows battle text '0 woke up!'; advances wBattleResolveStep;
-; continues in RunActionResolveStep_CheckActionBDOrRun; also changes HL, A and D by register
-; arithmetic (E-0347)
-; why: step 1 of RunActionResolveStep (when wBattleResolveStep = 1); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 1: when the present target is asleep or confused (status bits 7 or 4), the skill's
+; record byte 7 bit 3 and message flag bit 4, a roll below $40 (a foe outside a link) or $80 wakes a
+; sleeper (clearing bits 7, 3 and 2, mark 3, text $82 '<name> woke up!'); a confused target goes to
+; step 2; otherwise on to step 3. (C1, E-0357)
 RunActionResolveStep_HeroWokeUp::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6782,13 +6399,8 @@ RunActionResolveStep_HeroWokeUp::
     inc [hl]
     jr RunActionResolveStep_CheckActionBDOrRun
 
-; step 2 of RunActionResolveStep: advances wBattleResolveStep; may continue in
-; RunActionResolveStep_CheckActionBDOrRun; clears BSTAT0_CONFUSED of wBattleStatus; sets wSlotMarks
-; to 3; calls SetBit2OfLevelUpGainsIndexed_Bank3A; shows battle text '0 snapped out of confusion!'
-; (E-0347)
-; why: step 2 of RunActionResolveStep (when wBattleResolveStep = 2); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 2: a confused target that passed step 1's roll snaps out of it (clears
+; BSTAT0_CONFUSED, mark 3, text $83). (C1, E-0357)
 RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6809,11 +6421,7 @@ RunActionResolveStep_SetBit2OfLevelUpGainsIndexed_Bank3A::
     farcall ShowBattleText
     ret
 
-; step 3 of RunActionResolveStep: advances wBattleResolveStep; calls CheckActionBDOrRun; may
-; continue in RunActionResolveStep_SetBattleArg0; advances wBattleResolveStep (E-0347)
-; why: step 3 of RunActionResolveStep (when wBattleResolveStep = 3); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 3: when the battle is decided skips to step 6; otherwise step 4. (C1, E-0357)
 RunActionResolveStep_CheckActionBDOrRun::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -6825,14 +6433,11 @@ RunActionResolveStep_CheckActionBDOrRun::
     inc [hl]
     ret
 
-; step 4 of RunActionResolveStep: branches on wFollowUpAction; branches on wBattleStatus7; calls
-; CarryUnlessBattleSlotOutSlotEmpty; calls CheckSlotStatusBlock; branches on wResolveMsgFlags;
-; copies the byte at wPersonalityActs & $08 to wBattleArg0; branches on wBattleStatus7; copies L to
-; wBattleDamageLo; copies H to wBattleDamageHi; copies L to wBattleDamageLo; copies H to
-; wBattleDamageHi; branches on wBattleStatus7; then 14 more steps (see the code) (E-0347)
-; why: step 4 of RunActionResolveStep (when wBattleResolveStep = 4); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 4 (Counter): when there is no follow-up and the target has BSTAT7_COUNTER, the
+; skill's record byte 5 bit 7, the actor is present, the target can act and message flag bit 4 is
+; set: halves the damage (doubles it with BSTAT7_DAMAGE_DOUBLED), swaps actor and target, sets
+; effect flags $11 ($10 for no damage) and shows the counter's text by the target's personality act
+; bit 3 or a random pick. (C1, E-0357)
 RunActionResolveStep_SetBattleArg0::
     ld a, [wFollowUpAction]
     or a
@@ -6965,23 +6570,14 @@ RunActionResolveStep_SetBattleArg0::
     inc [hl]
     ret
 
-; step 5 of RunActionResolveStep: calls RunBattleSubStep (E-0347)
-; why: step 5 of RunActionResolveStep (when wBattleResolveStep = 5); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 5: the effect's sub-steps (RunBattleSubStep). (C1, E-0357)
 RunActionResolveStep_ToRunBattleSubStep::
     farcall RunBattleSubStep
     ret
 
-; step 6 of RunActionResolveStep: advances wBattleResolveStep; branches on wOriginalTarget; copies
-; wOriginalTarget to wBattleTarget; sets wOriginalTarget to $ff; may continue in
-; RunActionResolveStep_RunDefeatStepMinus1Step; sets wFollowUpAction to 0; copies the byte at
-; wSavedActorTarget to wBattleActor; copies the byte at wSavedActorTarget to wBattleTarget; copies
-; the byte at wSavedActorTarget to wMultiHitCount; calls RunActionResolveStep_StoreWordAtIndex; also
-; changes HL, DE, A and B by register arithmetic (E-0347)
-; why: step 6 of RunActionResolveStep (when wBattleResolveStep = 6); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 6: puts back a redirected target (wOriginalTarget) as the target and choice;
+; otherwise outside fight step 4 after a follow-up restores the saved actor, target, hits and
+; choices. (C1, E-0357)
 RunActionResolveStep_AddDoubleAToHL_Bank3A::
     ld hl, wBattleResolveStep
     inc [hl]
@@ -7036,11 +6632,7 @@ RunActionResolveStep_StoreWordAtIndex::
     ld [de], a
     ret
 
-; step 7 of RunActionResolveStep: calls RunDefeatStepMinus1Step; advances wBattleResolveStep
-; (E-0347)
-; why: step 7 of RunActionResolveStep (when wBattleResolveStep = 7); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 7: runs the pending defeat step (RunDefeatStepMinus1Step). (C1, E-0357)
 RunActionResolveStep_RunDefeatStepMinus1Step::
     ld a, [wDefeatStep]
     or a
@@ -7049,11 +6641,8 @@ RunActionResolveStep_RunDefeatStepMinus1Step::
     inc [hl]
     ret
 
-; step 8 of RunActionResolveStep: calls CheckActionBDOrRun; advances wBattleResolveStep; sets
-; wMultiHitCount to 0; sets wBattleSubPhase to 4; sets wBattleResolveStep to 0 (E-0347)
-; why: step 8 of RunActionResolveStep (when wBattleResolveStep = 8); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 8: when the battle is decided clears the hits and goes to sub-phase 4; otherwise step
+; 9. (C1, E-0357)
 RunActionResolveStep_AdvanceBattleResolveStep::
     call CheckActionBDOrRun
     jr c, .clear_multi_hit_count
@@ -7070,11 +6659,7 @@ RunActionResolveStep_AdvanceBattleResolveStep::
     ld [wBattleResolveStep], a
     ret
 
-; step 9 of RunActionResolveStep: calls RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A_2
-; (E-0347)
-; why: step 9 of RunActionResolveStep (when wBattleResolveStep = 9); RunActionResolveStep: resolves
-; one battle action of the current actor (battle step 4): by wBattleResolveStep it checks that the
-; actor can act (out of the battle, ... (E-0352, E-0354, E-0122)
+; Resolve step 9: the Imitate check. (C1, E-0357)
 RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A::
     call RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A_2
     ret
@@ -7116,12 +6701,7 @@ RunDefeatStepMinus1Step::
     dw RunDefeatStepMinus1Step_ShowHeroWentAway
     dw RunDefeatStepMinus1Step_Return
 
-; step 0 of RunDefeatStepMinus1Step: calls TargetOnLocalSide_Bank3A; may continue in
-; RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText; continues in
-; RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText (E-0347)
-; why: step 0 of RunDefeatStepMinus1Step (when wDefeatStep - 1 = 0); RunDefeatStepMinus1Step: the
-; defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and
-; shows '0 went away') (E-0352, E-0354, E-0122)
+; Defeat step 0: battle text $85 for a target on the near side, $E8 otherwise. (C1, E-0357)
 RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A::
     call TargetOnLocalSide_Bank3A
     ld d, $85
@@ -7129,12 +6709,7 @@ RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A::
     ld d, $e8
     jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
-; step 1 of RunDefeatStepMinus1Step: calls TargetOnLocalSide_Bank3A; may continue in
-; RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText; continues in
-; RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText (E-0347)
-; why: step 1 of RunDefeatStepMinus1Step (when wDefeatStep - 1 = 1); RunDefeatStepMinus1Step: the
-; defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and
-; shows '0 went away') (E-0352, E-0354, E-0122)
+; Defeat step 1: battle text $80 for a target on the near side, $E7 otherwise. (C1, E-0357)
 RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A_2::
     call TargetOnLocalSide_Bank3A
     ld d, $80
@@ -7142,48 +6717,30 @@ RunDefeatStepMinus1Step_TargetOnLocalSide_Bank3A_2::
     ld d, $e7
     jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
-; step 2 of RunDefeatStepMinus1Step: changes D; continues in
-; RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText (E-0347)
-; why: step 2 of RunDefeatStepMinus1Step (when wDefeatStep - 1 = 2); RunDefeatStepMinus1Step: the
-; defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and
-; shows '0 went away') (E-0352, E-0354, E-0122)
+; Defeat step 2: battle text $AC. (C1, E-0357)
 RunDefeatStepMinus1Step_WriteDefeatStep::
     ld d, $ac
     jr RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText
 
-; step 3 of RunDefeatStepMinus1Step: returns at once (E-0347)
-; why: step 3 of RunDefeatStepMinus1Step (when wDefeatStep - 1 = 3); RunDefeatStepMinus1Step: the
-; defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and
-; shows '0 went away') (E-0352, E-0354, E-0122)
+; Defeat step 3: nothing (a bare ret). (C1, E-0357)
 RunDefeatStepMinus1Step_Return::
     ret
 
-; step 8 of RunDefeatStepMinus1Step: changes D (E-0347)
-; why: step 8 of RunDefeatStepMinus1Step (when wDefeatStep - 1 = 8); RunDefeatStepMinus1Step: the
-; defeat steps of a resolved action (wDefeatStep - 1): handles a defeated target on either side and
-; shows '0 went away') (E-0352, E-0354, E-0122)
+; Defeat step 8: battle text $7F ('<name> went away'). (C1, E-0357)
 RunDefeatStepMinus1Step_ShowHeroWentAway::
     ld d, $7f ; battle text '0 went away!'
 
-; Calls ShowBattleText; sets wDefeatStep to 0 (E-0347)
-; why: part of RunDefeatStepMinus1Step_ShowHeroWentAway, in step 8 of RunDefeatStepMinus1Step (when
-; wDefeatStep - 1 = 8); RunDefeatStepMinus1Step: the defeat steps of a resolved action (wDefeatStep
-; - 1): handles a defeated target on either side and shows '0 went away') (E-0352, E-0354, E-0122)
+; Shows battle text D and clears the defeat step. (C1, E-0357)
 RunDefeatStepMinus1Step_ShowHeroWentAway_CallShowBattleText::
     farcall ShowBattleText
     xor a
     ld [wDefeatStep], a
     ret
 
-; called from RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A: branches on wBattleStep;
-; branches on wFollowUpAction; calls CheckSlotStatusBlockWide_Bank3A; branches on wBattleStatus6;
-; branches on wBattleActionId; branches on wAttackDeflected; branches on wResolveMsgFlags; shows
-; battle text '0 struck back!'; advances wBattleStep; sets wBattleSubPhase to 0; sets
-; wBattleResolveStep to 0; sets wBattleSubStep to 0; then 6 more steps (see the code) (E-0347)
-; why: a helper of RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A, in step 9 of
-; RunActionResolveStep (when wBattleResolveStep = 9); RunActionResolveStep: resolves one battle
-; action of the current actor (battle step 4): by wBattleResolveStep it checks that the actor can
-; act (out of the battle, ... (E-0352, E-0354, E-0122)
+; The Imitate check (outside fight step 4): after a follow-up shows text $7B; when the target can
+; act and has BSTAT6_IMITATE, a skill without record byte 7 bit 2 shows text $7B, otherwise
+; (Massacre only across sides, not deflected, with message flag bit 4) text $7A and the next battle
+; step, returning NC; every other case goes to the next sub-phase with carry. (C1, E-0357)
 RunActionResolveStep_CheckSlotStatusBlockWide_Bank3A_2::
     ld a, [wBattleStep]
     cp $04
@@ -7299,11 +6856,8 @@ ShowActionBattleTextFromActionBattleTextTable::
     call z, ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom
     jp ShowBattleText
 
-; called from ShowActionBattleTextFromActionBattleTextTable: calls AdvanceRandom; branches on
-; wRandomLo; sets wLoveRainFlag to 0; sets wLoveRainFlag to 1 (E-0347)
-; why: a helper of ShowActionBattleTextFromActionBattleTextTable;
-; ShowActionBattleTextFromActionBattleTextTable: D = ActionBattleTextTable[wBattleActionId] (E-0352,
-; E-0118)
+; Half the time (a roll below $80) sets the LoveRain flag and picks battle text $D6, otherwise
+; clears it and picks $91. (C1, E-0357)
 ShowActionBattleTextFromActionBattleTextTable_AdvanceRandom::
     call AdvanceRandom
     ld a, [wRandomLo]
@@ -8758,20 +8312,13 @@ ShowSpecialActionMessage_Data::
     db $66, $66, $67, $67, $67, $67, $67, $67, $67, $68, $67, $67, $66, $67, $67, $67
     db $67, $67, $67, $67
 
-; called from CallWithBattleFoeCount: changes A and B (E-0347)
-; why: a helper of CallWithBattleFoeCount; CallWithBattleFoeCount: hTemp0 = wBattleFoeCount, then
-; far-calls CallWithBattleFoeCount_WriteBattleStatResultLo (E-0352, E-0122, E-0344)
+; Battle text $BE's name: B = the number of targets. (C1, E-0357)
 CallWithBattleFoeCount_WriteBattleStatResultLo::
     ldh a, [hTemp0]
     ld b, a
 
-; May continue in BattleTextPrepBE_CallCopyTargetNameToTextBuf0; sets wBattleStatResultLo to 0;
-; branches on wBattleTarget; branches on E; branches on D; increments wBattleStatResultLo; branches
-; on D; branches on wBattleStatResultLo; sets wTextBuf0 to $16; sets wTextBuf0 to $32; sets
-; wTextBuf0 to $31; sets wTextBuf0 to $36; then 8 more steps (see the code) (E-0347)
-; why: part of CallWithBattleFoeCount_WriteBattleStatResultLo, in a helper of
-; CallWithBattleFoeCount; CallWithBattleFoeCount: hTemp0 = wBattleFoeCount, then far-calls
-; CallWithBattleFoeCount_WriteBattleStatResultLo (E-0352, E-0122, E-0344)
+; Names the targets in wTextBuf0: one gives its name; two or more give 'Monsters' (when all share a
+; species the name is copied first but then overwritten by 'Monsters'). (C1, E-0357)
 CallWithBattleFoeCount_WriteBattleStatResultLo_Skip::
     ld a, b
     cp $01
@@ -8865,23 +8412,16 @@ CopyTargetOrSideNameToTextBuf0::
     cp $01
     jr z, BattleTextPrepBE_CallCopyTargetNameToTextBuf0
 
-; Calls CopyTargetSideNameToTextBuf0 (E-0347)
-; why: part of CopyTargetOrSideNameToTextBuf0; CopyTargetOrSideNameToTextBuf0: E = 1: copies the
-; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
+; Copies the target side's name, then 'Monsters' over it in wTextBuf0. (C1, E-0357)
 CopyTargetOrSideNameToTextBuf0_CallCopyTargetSideNameToTextBuf0::
     call CopyTargetSideNameToTextBuf0
 
-; called from BattleTextPrepBE: calls WriteMonstersWordToTextBuf0 (E-0347)
-; why: a helper of BattleTextPrepBE; BattleTextPrepBE: prepares the arguments of battle text BE
-; (entry 190 of BattleTextPrepTable) (E-0352, E-0180)
+; Writes 'Monsters' into wTextBuf0. (C1, E-0357)
 BattleTextPrepBE_ToWriteMonstersWordToTextBuf0::
     call WriteMonstersWordToTextBuf0
     ret
 
-; Calls CopyTargetNameToTextBuf0 (E-0347)
-; why: part of BattleTextPrepBE_ToWriteMonstersWordToTextBuf0, in a helper of BattleTextPrepBE;
-; BattleTextPrepBE: prepares the arguments of battle text BE (entry 190 of BattleTextPrepTable)
-; (E-0352, E-0180)
+; Copies the target's name into wTextBuf0. (C1, E-0357)
 BattleTextPrepBE_CallCopyTargetNameToTextBuf0::
     call CopyTargetNameToTextBuf0
     ret
@@ -8892,13 +8432,8 @@ CheckAllTargetsSame:: ; configured code entry (E-0210); C0
     ldh a, [hTemp0]
     ld b, a
 
-; May continue in CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0; sets
-; wBattleStatResultLo to 0; branches on wBattleTarget; branches on E; branches on D; increments
-; wBattleStatResultLo; branches on D; branches on wBattleStatResultLo; sets wTextBuf0 to $16; sets
-; wTextBuf0 to $32; sets wTextBuf0 to $31; sets wTextBuf0 to $36; then 8 more steps (see the code)
-; (E-0347)
-; why: part of CheckAllTargetsSame; CheckAllTargetsSame: counts equal pairs among the hTemp0 target
-; words at wTemp0 (or wPauseMenuStep for the foe side) (E-0352, E-0128)
+; Names the targets in wTextBuf0: one gives its name; two or more give 'Monsters' (the all-same case
+; copies the name and then overwrites it). (C1, E-0357)
 CheckAllTargetsSame_Skip::
     ld a, b
     cp $01
@@ -8993,16 +8528,12 @@ CopyTargetOrSideNameToTextBuf0_2::
     jr z, CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0
     call CopyTargetSideNameToTextBuf0
 
-; Calls WriteMonstersWordToTextBuf0 (E-0347)
-; why: part of CopyTargetOrSideNameToTextBuf0_2; CopyTargetOrSideNameToTextBuf0_2: E = 1: copies the
-; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
+; Writes 'Monsters' into wTextBuf0. (C1, E-0357)
 CopyTargetOrSideNameToTextBuf0_CallWriteMonstersWordToTextBuf0::
     call WriteMonstersWordToTextBuf0
     ret
 
-; Calls CopyTargetNameToTextBuf0 (E-0347)
-; why: part of CopyTargetOrSideNameToTextBuf0_2; CopyTargetOrSideNameToTextBuf0_2: E = 1: copies the
-; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
+; Copies the target's name into wTextBuf0. (C1, E-0357)
 CopyTargetOrSideNameToTextBuf0_CallCopyTargetNameToTextBuf0::
     call CopyTargetNameToTextBuf0
     ret
@@ -9013,13 +8544,8 @@ WriteTargetNameOrTheMonsters:: ; configured code entry (E-0210); C0
     ldh a, [hTemp0]
     ld b, a
 
-; May continue in CopyTargetOrSideNameToTextBuf0_3_CallCopyTargetNameToTextBuf0; sets
-; wBattleStatResultLo to 0; branches on wBattleTarget; branches on E; branches on D; increments
-; wBattleStatResultLo; branches on D; branches on wBattleStatResultLo; sets wTextBuf0 to $1d; sets
-; wTextBuf0 to $2b; sets wTextBuf0 to $28; sets wTextBuf0 to $90; then 12 more steps (see the code)
-; (E-0347)
-; why: part of WriteTargetNameOrTheMonsters; WriteTargetNameOrTheMonsters: when the hTemp0 targets
-; are all the same, copies the target name to wTextBuf0 (E-0352, E-0129)
+; Names the targets in wTextBuf0: one gives its name; mixed species give 'The monsters'; all the
+; same give 'Monsters' (the name copy is overwritten). (C1, E-0357)
 WriteTargetNameOrTheMonsters_Skip::
     ld a, b
     cp $01
@@ -9122,16 +8648,12 @@ CopyTargetOrSideNameToTextBuf0_3::
     jr z, CopyTargetOrSideNameToTextBuf0_3_CallCopyTargetNameToTextBuf0
     call CopyTargetSideNameToTextBuf0
 
-; Calls WriteMonstersWordToTextBuf0 (E-0347)
-; why: part of CopyTargetOrSideNameToTextBuf0_3; CopyTargetOrSideNameToTextBuf0_3: E = 1: copies the
-; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
+; Writes 'Monsters' into wTextBuf0. (C1, E-0357)
 CopyTargetOrSideNameToTextBuf0_3_CallWriteMonstersWordToTextBuf0::
     call WriteMonstersWordToTextBuf0
     ret
 
-; Calls CopyTargetNameToTextBuf0 (E-0347)
-; why: part of CopyTargetOrSideNameToTextBuf0_3; CopyTargetOrSideNameToTextBuf0_3: E = 1: copies the
-; target's name to wTextBuf0 (E-0352, E-0122, E-0344)
+; Copies the target's name into wTextBuf0. (C1, E-0357)
 CopyTargetOrSideNameToTextBuf0_3_CallCopyTargetNameToTextBuf0::
     call CopyTargetNameToTextBuf0
     ret
@@ -9276,22 +8798,15 @@ CopyBattlerNameToHL::
     inc hl
     jr .skip
 
-; Takes B; changes BC and A; continues in CopyBattlerNameToHL (E-0347)
-; why: part of CopyBattlerNameToHL; CopyBattlerNameToHL: A = battle slot (0-2 or 4-6): copies the
-; name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and leaves
-; ... (E-0352, E-0077)
+; In link mode 1 copies the battler record's name (CopyBattlerNameToHL). (C1, E-0357)
 CopyBattlerNameToHL_Loop::
     ld a, b
     pop bc
     jr CopyBattlerNameToHL
 
-; May continue in CopyBattlerNameToHL_Loop; branches on the byte at wSlotNameBytes; may continue in
-; CopyBattlerNameToHL_CopyStringHLToDE_CallCopyBattlerNameToHL; calls
-; CopyBattlerNameToHL_CopyStringHLToDE; calls CopyBattlerNameToHL_ListSideMonsterIdsToTemp0; also
-; changes HL, BC and A by register arithmetic (E-0347)
-; why: part of CopyBattlerNameToHL; CopyBattlerNameToHL: A = battle slot (0-2 or 4-6): copies the
-; name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and leaves
-; ... (E-0352, E-0077)
+; A foe slot's name: slot 3 or 7, or one whose name byte is $FF, gets its species name with a letter
+; when others share it; in link mode 1 the battler record's name; otherwise the battler name with a
+; letter suffix. (C1, E-0357)
 CopyBattlerNameToHL_Skip::
     push bc
     ld b, a
@@ -9327,12 +8842,8 @@ CopyBattlerNameToHL_Skip::
     call CopyBattlerNameToHL_ListSideMonsterIdsToTemp0
     ret
 
-; called from CopyBattlerNameToHL: sets wBattleTempSlot; copies E to wBattleTempPtrLo; copies D to
-; wBattleTempPtrHi; calls CopyStringHLToDE; also changes HL, DE, BC and A by register arithmetic
-; (E-0347)
-; why: a helper of CopyBattlerNameToHL; CopyBattlerNameToHL: A = battle slot (0-2 or 4-6): copies
-; the name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and
-; leaves ... (E-0352, E-0077)
+; Copies slot A's species name (category = the high byte of wBattleMonsterId + 2, index = the low
+; byte) to HL, keeping the slot and destination. (C1, E-0357)
 CopyBattlerNameToHL_CopyStringHLToDE::
     ld [wBattleTempSlot], a
     push hl
@@ -9355,12 +8866,9 @@ CopyBattlerNameToHL_CopyStringHLToDE::
     call CopyStringHLToDE
     ret
 
-; Calls CopyBattlerNameToHL; branches on wNameSlot & $03; branches on the byte at wSlotNameBytes;
-; branches on D; sets wBattleArg1 to $0b; sets wSlotNameBytes to $f0; sets wBattleArg1 to 0; also
-; changes HL, A and D by register arithmetic (E-0347)
-; why: part of CopyBattlerNameToHL_CopyStringHLToDE, in a helper of CopyBattlerNameToHL;
-; CopyBattlerNameToHL: A = battle slot (0-2 or 4-6): copies the name at offset 0 of the slot's
-; battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and leaves ... (E-0352, E-0077)
+; Copies the battler's name and appends glyph $47 and, when another slot of the side has the same
+; name byte, its letter by order (A $0A, B $0B, C $0C, also in wBattleArg1); otherwise wBattleArg1 =
+; 0. (C1, E-0357)
 CopyBattlerNameToHL_CopyStringHLToDE_CallCopyBattlerNameToHL::
     call CopyBattlerNameToHL
     ld a, $47
@@ -9438,13 +8946,8 @@ CopyBattlerNameToHL_CopyStringHLToDE_CallCopyBattlerNameToHL::
     ld [wBattleArg1], a
     ret
 
-; called from CopyBattlerNameToHL: calls ListSideMonsterIdsToTemp0; sets wTemp0 to 0; branches on
-; the byte at wBattleMonsterId; branches on wBattleTempSlot; increments wTemp0; branches on
-; wBattleTempSlot; branches on wTemp0; branches on the byte at wBattleMonsterId; also changes HL,
-; DE, BC and A by register arithmetic (E-0347)
-; why: a helper of CopyBattlerNameToHL; CopyBattlerNameToHL: A = battle slot (0-2 or 4-6): copies
-; the name at offset 0 of the slot's battler record (5 glyphs, CopyFiveGlyphsPlusMarks) to HL and
-; leaves ... (E-0352, E-0077)
+; When another foe slot has the same species, appends the letter $0A + the number of earlier ones to
+; the species name. (C1, E-0357)
 CopyBattlerNameToHL_ListSideMonsterIdsToTemp0::
     call ListSideMonsterIdsToTemp0
     inc b
@@ -9625,11 +9128,8 @@ ListSideMonsterIdsToTemp0::
     ld b, d
     ret
 
-; called from ActionEffect_Ironize: branches on wLinkMode; branches on wBattleTarget; calls
-; ListSideMonsterIdsToTemp0; branches on E; also changes A and D by register arithmetic (E-0347)
-; why: a helper of ActionEffect_Ironize; ActionEffect_Ironize: effect routine reached through
-; DispatchActionEffectTable (ActionEffectTable, indexed by wBattleActionId) for action(s) 53
-; Ironize, 174 ... (E-0352, E-0084)
+; Ironize's text: D = $47 for a foe outside link mode 1 or a side of one species, otherwise $46.
+; (C1, E-0357)
 ActionEffect_Ironize_ReadLinkModeAndBattleTarget::
     ld a, [wLinkMode]
     cp $01
@@ -9672,12 +9172,9 @@ WriteMonstersWordToTextBuf0::
     ld [hl], $f0
     ret
 
-; Calls FillBytes; branches on wLinkMode; calls CarryUnlessBattleSlotOutSlotEmpty; branches on
-; wBattleArg1; calls RunBattleSetup_CopySlotNameToHL; also changes HL, BC, A and E by register
-; arithmetic (E-0347)
-; why: part of RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty, in part of RunBattleSetup;
-; RunBattleSetup: battle fight step 1: one sub-step per wBattleSubPhase (13 cases, 0-12 observed in
-; the first battle) that builds the battle screen and loads ... (E-0352)
+; Lists the far side's three slots (4-6, or 0-2 for the link follower) that are present (or fallen,
+; with wBattleArg1 set) in wSlotChoices and shows their names in three windows at VRAM $96D0, $9770
+; and $8810. (C1, E-0357)
 RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld a, $ff
     ld hl, wSlotChoices
@@ -9729,12 +9226,8 @@ RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2::
     ld hl, vTiles2 + $10
     ld a, [wSlotChoices + $2]
 
-; Sets wNameSlot; calls CopySlotNameToHL; sets wStringCategory to 8; sets wStringIndex to 5; sets
-; wStringCategory to 2; sets wStringIndex to 0; copies L to wTextWindowTileLo; copies H to
-; wTextWindowTileHi; copies E to wTextWindowRows; copies D to wTextWindowWidth; calls
-; ShowString_Bank08; copies L to wTextWindowTileLo; then 3 more steps (see the code) (E-0347)
-; why: part of RunBattleSetup; RunBattleSetup: battle fight step 1: one sub-step per wBattleSubPhase
-; (13 cases, 0-12 observed in the first battle) that builds the battle screen and loads ... (E-0352)
+; Shows slot A's name (string 5 of category 8 through wTextBuf0) or, for $FF, string 0 of category
+; 2, in a 10 x 1 window at HL, keeping the text window. (C1, E-0357)
 RunBattleSetup_CopySlotNameToHL::
     cp $ff
     jr z, .set_string_category_to_02
@@ -9806,9 +9299,7 @@ GetBattleMP_Bank3A::
     jr GetBattleMP_Bank3A_Skip
     db $21, $1f, $d9, $18, $0a, $21, $53, $da, $85, $6f, $30, $01, $24, $7e, $c9
 
-; Takes HL and A; changes HL and A (E-0347)
-; why: part of GetBattleMP_Bank3A; GetBattleMP_Bank3A: A = battle slot: HL = the word for that slot
-; at wBattleMP (E-0352, E-0064)
+; HL = word A of the array at HL. (C1, E-0357)
 GetBattleMP_Bank3A_Skip::
     add a
     add_a_to_hl
@@ -9862,9 +9353,8 @@ TargetOnLocalSide_Bank3A::
     cp $04
     ret
 
-; Takes DE; changes HL, A and D (E-0347)
-; why: a copy of ClearBattleStatusBitsWithMaskD_Bank05; ClearBattleStatusBitsWithMaskD_Bank05:
-; wBattleStatus + 9 * E &= ClearBitMaskTable_Bank05[D] (AddAx9ToHL) (E-0352, E-0205)
+; ANDs status byte 0 of slot E with entry D of ClearBattleStatusBitsWithMaskD_Bank3A_Data. (C1,
+; E-0357)
 ClearBattleStatusBitsWithMaskD_Bank3A::
     ld a, d
     ld hl, ClearBattleStatusBitsWithMaskD_Bank3A_Data

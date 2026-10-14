@@ -6583,10 +6583,9 @@ MarkPartyMembersInRecordListPage_Data2::
 ; wScreenState; branches on wListCount; sets wScreenStep to 0; sets wTwoChoiceCursor to 1; sets
 ; wListPageIndex to 0; sets wScriptCommandType to 0; sets wScriptStartRequest to $80; sets
 ; wScreenStep to $10; sets wTwoChoiceCursor to 0; then 27 more steps (see the code) (E-0347)
-; why: a helper of SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries_2, in step 3 of
-; SwapMonstersMenu (when wScreenState = 3); SwapMonstersMenu: implements script command type E8
-; (SCRIPT_SWAP_MONSTERS): Cobi's swap of party and farm monsters: 'What'll you switch it with?', 'I
-; ... (E-0352, E-0038, E-0244)
+; why: a helper of SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries_2;
+; SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries_2: Swap menu, state 3: lists the party
+; (SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries) (E-0352, E-0357)
 SwapMonstersMenu_ListPartyRecordsWithState2ToListEntries::
     ld hl, wTextWindowTileLo
     xor a

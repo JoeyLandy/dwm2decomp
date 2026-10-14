@@ -275,12 +275,9 @@ ItemUsable_WorldDew::
     ld [wItemUseMessage], a
     ret
 
-; called from ItemUsable_WorldDew: sets wTargetRecord; may return early; calls
-; SRAMRecordAddressMapped; returns if bit 7 of wPartyCount is set; calls SRAMRecordAddressMapped;
-; may return early; calls SRAMRecordAddressMapped; calls CopyFiveGlyphsPlusMarks; also changes HL,
-; DE, BC and A by register arithmetic (E-0347)
-; why: a helper of ItemUsable_WorldDew; ItemUsable_WorldDew: usability check reached through
-; CheckItemUsable (indexed by wItemId (E-0352, E-0085)
+; WorldDew check for party member A: skips one that is not in the party, has fallen (MON_STATUS bit
+; 7) or is at full HP; otherwise copies its name (five glyphs and marks) into wTextBuf3 at 16 x D
+; and counts it (D + 1). (C1, E-0357)
 ItemUsable_WorldDew_SRAMRecordAddressMapped::
     ld [wTargetRecord], a
     ld hl, wPartyCount
@@ -1407,11 +1404,8 @@ ItemApply_WorldDew::
     call ConsumeSelectedItemByChance
     ret
 
-; called from ItemApply_WorldDew: may return early; sets wTargetRecord; calls
-; CheckTargetRecordFlag55Bit7; may return early; calls SRAMRecordAddressMapped; calls
-; StoreHLToRecordField (E-0347)
-; why: a helper of ItemApply_WorldDew; ItemApply_WorldDew: item effect reached through
-; ApplyItemEffect (indexed by wItemId) for item(s) 3 WorldDew (E-0352, E-0089)
+; WorldDew effect for party member A: unless it is not in the party or has fallen
+; (CheckTargetRecordFlag55Bit7), sets its HP to its maximum. (C1, E-0357)
 ItemApply_WorldDew_CheckTargetRecordFlag55Bit7::
     ld hl, wPartyCount
     cp [hl]
@@ -2146,161 +2140,110 @@ ApplyEquipmentEffectKeepA_ByItem::
     dw ApplyEquipmentEffectKeepA_ByItem_Return_3
     dw ApplyEquipmentEffectKeepA_ByItem_Return_4
 
-; step 0 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1 (E-0347)
-; why: step 0 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the VITbelt: max HP and HP down by 30 (each at least 1). (C1, E-0357)
 ApplyEquipmentEffect_VITbelt::
     ld a, $1e
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; step 1 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1 (E-0347)
-; why: step 1 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the DracoBelt: max HP and HP down by 80 (each at least 1). (C1, E-0357)
 ApplyEquipmentEffect_DracoBelt::
     ld a, $50
     ld c, MON_MAX_HP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; step 2 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1 (E-0347)
-; why: step 2 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the MagicBelt: max MP and MP down by 30 (each at least 1). (C1, E-0357)
 ApplyEquipmentEffect_MagicBelt::
     ld a, $1e
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; step 3 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordPairFloor1 (E-0347)
-; why: step 3 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the OddBelt: max MP and MP down by 80 (each at least 1). (C1, E-0357)
 ApplyEquipmentEffect_OddBelt::
     ld a, $50
     ld c, MON_MAX_MP
     call SubtractAFromRecordWordPairFloor1
     ret
 
-; step 4 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 4 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the StoneFang: ATK down by 10 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_StoneFang::
     ld a, $0a
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 5 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 5 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the SteelFang: ATK down by 50 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_SteelFang::
     ld a, $32
     ld c, MON_ATK
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 6 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 6 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the MermScale: DEF down by 10 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_MermScale::
     ld a, $0a
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 7 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 7 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the DrakScale: DEF down by 50 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_DrakScale::
     ld a, $32
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 8 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 8 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the AGL item: AGL down by 10 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_AGL::
     ld a, $0a
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 9 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 9 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the Starry item: AGL down by 50 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_Starry::
     ld a, $32
     ld c, MON_AGL
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 10 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 10 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the Smart item: INT down by 50 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_Smart::
     ld a, $32
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 11 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 11 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the Wise item: INT down by 100 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_Wise::
     ld a, $64
     ld c, MON_INT
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 12 of ApplyEquipmentEffectKeepA_ByItem: returns at once (E-0347)
-; why: step 12 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Equipment with no stat change on removal: returns. (C1, E-0357)
 ApplyEquipmentEffectKeepA_ByItem_Return::
     ret
 
-; step 19 of ApplyEquipmentEffectKeepA_ByItem: calls SubtractAFromRecordWordFloor1 (E-0347)
-; why: step 19 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Removing the DScale: DEF down by 5 (at least 1). (C1, E-0357)
 ApplyEquipmentEffect_DScale::
     ld a, $05
     ld c, MON_DEF
     call SubtractAFromRecordWordFloor1
     ret
 
-; step 20 of ApplyEquipmentEffectKeepA_ByItem: returns at once (E-0347)
-; why: step 20 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Equipment with no stat change on removal: returns. (C1, E-0357)
 ApplyEquipmentEffectKeepA_ByItem_Return_2::
     ret
 
-; step 26 of ApplyEquipmentEffectKeepA_ByItem: returns at once (E-0347)
-; why: step 26 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Equipment with no stat change on removal: returns. (C1, E-0357)
 ApplyEquipmentEffectKeepA_ByItem_Return_3::
     ret
 
-; step 34 of ApplyEquipmentEffectKeepA_ByItem: returns at once (E-0347)
-; why: step 34 of ApplyEquipmentEffectKeepA_ByItem; ApplyEquipmentEffectKeepA_ByItem: jumps by (item
-; id - $40) to a step that subtracts A from one or two record words with a floor of 1, or returns
-; (E-0352)
+; Equipment with no stat change on removal: returns. (C1, E-0357)
 ApplyEquipmentEffectKeepA_ByItem_Return_4::
     ret
 
@@ -3177,11 +3120,9 @@ MapItemUseFlags::
     db $00 ; id 254
     db $00 ; id 255
 
-; called from PauseMenu_Skills_UseFieldSkill_WaitTextFlags: branches on wInventorySlot; sets wItemId
-; to $ff; dispatches on $ff; also changes A by register arithmetic (E-0347)
-; why: a helper of PauseMenu_Skills_UseFieldSkill_WaitTextFlags;
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using a field skill, step 2: after the message
-; applies the skill to the target (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; The usability check of field skill wInventorySlot (20 skills; a larger index refuses with wItemId
+; $FF): most reuse an item's check (the Herb, WorldDew, Potion, WorldLeaf, Antidote, Repellent,
+; ExitBell, Warp and WarpWing checks) and set the refusal message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_WriteItemId::
     ld a, [wInventorySlot]
     cp $14
@@ -3213,34 +3154,21 @@ PauseMenu_Skills_UseFieldSkill_WriteItemId::
     dw PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp
     dw PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing
 
-; step 0 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Herb; calls
-; SetItemMessage12IfItemRefused (E-0347)
-; why: step 0 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skills 0-2 (one-monster HP healing): the Herb's check, refusing with message $12. (C1,
+; E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Herb::
     call ItemUsable_Herb
     call SetItemMessage12IfItemRefused
     ret
 
-; step 3 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldDew; calls
-; SetItemMessage12IfItemRefused (E-0347)
-; why: step 3 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skills 3-4 (party HP healing): the WorldDew's check, refusing with message $12. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldDew::
     call ItemUsable_WorldDew
     call SetItemMessage12IfItemRefused
     ret
 
-; step 5 of PauseMenu_Skills_UseFieldSkill_WriteItemId: branches on wTargetRecord; sets wItemId to
-; $ff; calls ItemUsable_Potion; calls SetItemMessage12IfItemRefused (E-0347)
-; why: step 5 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skills 5-7 (MP to another monster): refuses when the target is the caster itself, otherwise
+; the Potion's check; refusal message $12. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     ld a, [wMenuSelectedMember]
     ld c, a
@@ -3258,46 +3186,28 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Potion::
     call SetItemMessage12IfItemRefused
     ret
 
-; step 8 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WorldLeaf; calls
-; SetItemMessage12IfItemRefused (E-0347)
-; why: step 8 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skills 8-9 (revival): the WorldLeaf's check, refusing with message $12. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WorldLeaf::
     call ItemUsable_WorldLeaf
     call SetItemMessage12IfItemRefused
     ret
 
-; step 10 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Antidote; calls
-; SetItemMessage12IfItemRefused (E-0347)
-; why: step 10 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 10 (poison cure): the Antidote's check, refusing with message $12. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Antidote::
     call ItemUsable_Antidote
     call SetItemMessage12IfItemRefused
     ret
 
-; step 11 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ListPartyMembersWithField55Bit0;
-; calls SetItemMessage12IfItemRefused (E-0347)
-; why: step 11 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 11 (party poison cure): lists the poisoned party members
+; (ListPartyMembersWithField55Bit0), refusing with message $12. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ListPartyMembersWithField55Bit0::
     call ListPartyMembersWithField55Bit0
     call SetItemMessage12IfItemRefused
     ret
 
-; step 12 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Repellent; branches on
-; wInventorySlot; calls SetItemMessage14IfItemRefused; branches on wItemId; sets wItemMessage to
-; $15; calls CollectUniqueEncounterIdsToWorkBuf2 (E-0347)
-; why: step 12 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skills 12-14 and 16: the Repellent's check; skill 16 refused gives message $15, otherwise
+; collects the area's encounter ids (CollectUniqueEncounterIdsToWorkBuf2); the others refuse with
+; message $14. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     call ItemUsable_Repellent
     ld a, [wInventorySlot]
@@ -3318,25 +3228,14 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Repellent::
     call CollectUniqueEncounterIdsToWorkBuf2
     ret
 
-; step 15 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_ExitBell; calls
-; SetItemMessage14IfItemRefused (E-0347)
-; why: step 15 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 15 (leaving a dungeon): the ExitBell's check, refusing with message $14. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_ExitBell::
     call ItemUsable_ExitBell
     call SetItemMessage14IfItemRefused
     ret
 
-; step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Repellent; calls
-; SetItemMessage14IfItemRefused; may return early; branches on wGoldHi; branches on wGoldMid;
-; branches on wGoldLo; sets wItemId to $ff; sets wItemMessage to $17; may return early; sets wItemId
-; to $ff; sets wItemMessage to $16; also changes A by register arithmetic (E-0347)
-; why: step 17 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 17: the Repellent's check; then refuses with message $17 when the gold is under 100,
+; or $16 when the last inventory slot is taken. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
     call ItemUsable_Repellent
     call SetItemMessage14IfItemRefused
@@ -3368,14 +3267,8 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage14IfItemRefused::
     ld [wItemMessage], a
     ret
 
-; step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_Warp; calls
-; SetItemMessage14IfItemRefused; may return early; branches on wMapObjectCount; branches on
-; wMapObjects; sets wItemId to $ff; sets wItemMessage to $18; also changes HL, A and B by register
-; arithmetic (E-0347)
-; why: step 18 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 18: the Warp's check; then refuses with message $18 when there are no map objects or
+; every one has bit 7 set. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
     call ItemUsable_Warp
     call SetItemMessage14IfItemRefused
@@ -3409,12 +3302,7 @@ PauseMenu_Skills_UseFieldSkill_ItemUsable_Warp::
 .return:
     ret
 
-; step 19 of PauseMenu_Skills_UseFieldSkill_WriteItemId: calls ItemUsable_WarpWing; calls
-; SetItemMessage14IfItemRefused (E-0347)
-; why: step 19 of PauseMenu_Skills_UseFieldSkill_WriteItemId, in a helper of
-; PauseMenu_Skills_UseFieldSkill_WaitTextFlags; PauseMenu_Skills_UseFieldSkill_WaitTextFlags: Using
-; a field skill, step 2: after the message applies the skill to the target
-; (PauseMenu_Skills_UseFieldSkill_WriteItemId) (E-0352, E-0357)
+; Field skill 19: the WarpWing's check, refusing with message $14. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ItemUsable_WarpWing::
     call ItemUsable_WarpWing
     call SetItemMessage14IfItemRefused
@@ -3440,12 +3328,8 @@ SetItemMessage14IfItemRefused::
     ld [wItemMessage], a
     ret
 
-; called from PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: returns if wItemId is $ff;
-; dispatches on wInventorySlot; also changes A by register arithmetic (E-0347)
-; why: a helper of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; The effect of field skill wInventorySlot (unless refused): one routine per skill (healing, MP,
+; revival, cures, field effects). (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_WaitItemId::
     ld a, [wItemId]
     cp $ff
@@ -3473,13 +3357,8 @@ PauseMenu_Skills_UseFieldSkill_WaitItemId::
     dw PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill
     dw PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer
 
-; step 0 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0a; sets
-; wItemEffectRange to $1e; calls HealRecordHPByRandomAmount; sets wItemMessage to 6 (E-0347)
-; why: step 0 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 0), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 0: heals the target 10-40 HP (HealRecordHPByRandomAmount, amount 10 and range 30);
+; message 6. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ld a, $0a
     ld [wItemEffectAmount], a
@@ -3490,13 +3369,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordHPByRandomAmount::
     ld [wItemMessage], a
     ret
 
-; step 1 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; sets
-; wItemEffectRange to $4b; calls HealRecordHPByRandomAmount; sets wItemMessage to 6 (E-0347)
-; why: step 1 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 1), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 1: heals the target 15-90 HP (amount 15, range 75); message 6. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3521,14 +3394,8 @@ FullHealRecordTargetRecord::
     ld [wItemMessage], a
     ret
 
-; step 3 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $1e; sets
-; wItemEffectRange to $5a; copies wItemUseMessage to wItemMessage; calls HealPartyRecordAIfHurt
-; (E-0347)
-; why: step 3 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 3), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 3: heals each party member that is hurt 30-120 HP (amount 30, range 90), with the use
+; message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealPartyRecordAIfHurt::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3572,13 +3439,7 @@ HealPartyRecordAIfHurt::
     call HealRecordHPByRandomAmount
     ret
 
-; step 4 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage; calls
-; FullHealPartyRecordA (E-0347)
-; why: step 4 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 4), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 4: fully heals each party member, with the use message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_FullHealPartyRecordA::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3606,13 +3467,7 @@ FullHealPartyRecordA::
     call StoreHLToRecordField
     ret
 
-; step 5 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $0f; calls
-; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
-; why: step 5 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 5), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 5: gives the target 15 MP; message 7. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ld a, $0f
     ld [wItemEffectAmount], a
@@ -3621,13 +3476,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount::
     ld [wItemMessage], a
     ret
 
-; step 6 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $1e; calls
-; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
-; why: step 6 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 6), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 6: gives the target 30 MP; message 7. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmount::
     ld a, $1e
     ld [wItemEffectAmount], a
@@ -3636,13 +3485,7 @@ PauseMenu_Skills_UseFieldSkill_HealRecordMPByItemEffectAmount_SetItemEffectAmoun
     ld [wItemMessage], a
     ret
 
-; step 7 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemEffectAmount to $50; calls
-; HealRecordMPByItemEffectAmount; sets wItemMessage to 7 (E-0347)
-; why: step 7 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 7), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 7: gives the target 80 MP; message 7. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_2::
     ld a, $50
     ld [wItemEffectAmount], a
@@ -3651,14 +3494,8 @@ PauseMenu_Skills_UseFieldSkill_2::
     ld [wItemMessage], a
     ret
 
-; step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
-; wItemMessage to 8; sets wLevelUpGains to 1; also changes HL, BC and A by register arithmetic
-; (E-0347)
-; why: step 8 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 8), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 8: revives the target (MON_STATUS cleared) with half its max HP; message 8 and the
+; stats redraw flag (wLevelUpGains 1). (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3685,13 +3522,7 @@ PauseMenu_Skills_UseFieldSkill_SetItemMessage::
     ld [wLevelUpGains], a
     ret
 
-; step 9 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; calls
-; FullHealRecordTargetRecord; sets wItemMessage to 8; sets wLevelUpGains to 1 (E-0347)
-; why: step 9 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 9), in a helper of
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 9: revives the target with full HP and MP; message 8 and the redraw flag. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3704,13 +3535,7 @@ PauseMenu_Skills_UseFieldSkill_FullHealRecordTargetRecord::
     ld [wLevelUpGains], a
     ret
 
-; step 10 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls SRAMRecordAddressMapped; sets
-; wItemMessage to 9 (E-0347)
-; why: step 10 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 10), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 10: cures the target's poison (MON_STATUS bit 2); message 9. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
     ld a, [wTargetRecord]
     ld c, MON_STATUS
@@ -3720,13 +3545,8 @@ PauseMenu_Skills_UseFieldSkill_SRAMRecordAddressMapped_2::
     ld [wItemMessage], a
     ret
 
-; step 11 of PauseMenu_Skills_UseFieldSkill_WaitItemId: copies wItemUseMessage to wItemMessage;
-; calls ClearPartyRecordFlag55Bit0 (E-0347)
-; why: step 11 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 11), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 11: clears flag bit 0 of each party member (ClearPartyRecordFlag55Bit0), with the use
+; message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_ClearPartyRecordFlag55Bit0::
     ld a, [wItemUseMessage]
     ld [wItemMessage], a
@@ -3751,13 +3571,7 @@ ClearPartyRecordFlag55Bit0::
     res 0, [hl]
     ret
 
-; step 12 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 1; sets wItemMessage
-; to $ff; sets wItemId to $ff (E-0347)
-; why: step 12 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 12), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 12: sets wDataBankSave to 1 and ends with no message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
     ld a, $01
     ld [wDataBankSave], a
@@ -3767,14 +3581,8 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_2::
     ld [wItemId], a
     ret
 
-; step 13 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 1; calls
-; SRAMRecordAddressMapped; sets wNewRecordFamily; sets wItemMessage to $ff; sets wItemId to $ff
-; (E-0347)
-; why: step 13 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 13), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 13: sets wDataBankSave to 1 and wNewRecordFamily to $10 + the opposite of the caster's
+; sex; no message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ld a, $01
     ld [wDataBankSave], a
@@ -3792,13 +3600,7 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave::
     ld [wItemId], a
     ret
 
-; step 14 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wTalkCountdown to $c8; sets
-; wItemMessage to $ff; sets wItemId to $ff (E-0347)
-; why: step 14 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 14), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 14: sets the talk countdown to 200 (wTalkCountdown $C8); no message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ld a, $c8
     ld [wTalkCountdown], a
@@ -3808,13 +3610,7 @@ PauseMenu_Skills_UseFieldSkill_SetTalkCountdown::
     ld [wItemId], a
     ret
 
-; step 15 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wDataBankSave to 4; sets wItemMessage
-; to $ff; sets wItemId to $ff (E-0347)
-; why: step 15 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 15), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 15: sets wDataBankSave to 4 (leaving the dungeon); no message. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ld a, $04
     ld [wDataBankSave], a
@@ -3824,27 +3620,15 @@ PauseMenu_Skills_UseFieldSkill_SetDataBankSave_SetDataBankSave::
     ld [wItemId], a
     ret
 
-; step 16 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wItemMessage to $0b (E-0347)
-; why: step 16 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 16), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 16: message $0B. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetItemMessageTo0B::
     ld a, $0b
     ld [wItemMessage], a
     ret
 
-; step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId: branches on wMapType; branches on
-; wPendingFieldEvent; sets wSpriteSlotCount to 0; sets wScreenSavedFlag to 0; sets
-; wPendingFieldEvent to 0; calls NextTableByte; sets wItemId to $ff; calls CopyStringHLToDE; calls
-; CompactInventory; sets wItemMessage to $0e; also changes HL, DE, A and C by register arithmetic
-; (E-0347)
-; why: step 17 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 17), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 17: ends a pending event in a key world, pays 100 gold and draws one of 18 items by
+; chance (out of 100: Herb 25, LoveWater 10, then 5, 2 or 1 each), putting it in the last inventory
+; slot with its name in wTextBuf3 (CompactInventory); message $0E. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ld a, [wMapType]
     cp $80
@@ -3947,13 +3731,7 @@ PauseMenu_Skills_UseFieldSkill_NextTableByte::
     ld [wItemMessage], a
     ret
 
-; step 18 of PauseMenu_Skills_UseFieldSkill_WaitItemId: sets wWorldMapByFieldSkill to 1; sets
-; wItemMessage to $11; sets wItemId to $ff (E-0347)
-; why: step 18 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 18), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 18: sets wWorldMapByFieldSkill; message $11. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
     ld a, $01
     ld [wWorldMapByFieldSkill], a
@@ -3963,13 +3741,8 @@ PauseMenu_Skills_UseFieldSkill_SetWorldMapByFieldSkill::
     ld [wItemId], a
     ret
 
-; step 19 of PauseMenu_Skills_UseFieldSkill_WaitItemId: calls MarkVisitedScreens5x5AroundPlayer;
-; sets wItemMessage to $1c; sets wItemId to $ff (E-0347)
-; why: step 19 of PauseMenu_Skills_UseFieldSkill_WaitItemId (when wInventorySlot = 19), in a helper
-; of PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc;
-; PauseMenu_Skills_UseFieldSkill_WriteRAMGAndRAMBEtc: Using a field skill, step 7: runs the skill's
-; effect (PauseMenu_Skills_UseFieldSkill_WaitItemId) and shows its message (category 0 for ...
-; (E-0352, E-0357)
+; Field skill 19: marks the 5 x 5 map screens around the player visited
+; (MarkVisitedScreens5x5AroundPlayer); message $1C. (C1, E-0357)
 PauseMenu_Skills_UseFieldSkill_MarkVisitedScreens5x5AroundPlayer::
     farcall MarkVisitedScreens5x5AroundPlayer
     ld a, $1c
@@ -4228,10 +4001,7 @@ AddHLToRecordMPCapped::
     call AddDEToWordAtHLCappedAtBC
     ret
 
-; called from ItemApply_ATKseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
-; (E-0347)
-; why: a helper of ItemApply_ATKseed; ItemApply_ATKseed: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 13 ATKseed (E-0352, E-0089)
+; ATKseed: party member's ATK up (AddToRecordFieldWordCapped, cap 999). (C1, E-0357)
 ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_ATK
@@ -4239,10 +4009,7 @@ ItemApply_ATKseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_DEFseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
-; (E-0347)
-; why: a helper of ItemApply_DEFseed; ItemApply_DEFseed: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 14 DEFseed (E-0352, E-0089)
+; DEFseed: party member's DEF up (cap 999). (C1, E-0357)
 ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_DEF
@@ -4250,10 +4017,7 @@ ItemApply_DEFseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_AGLseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
-; (E-0347)
-; why: a helper of ItemApply_AGLseed; ItemApply_AGLseed: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 15 AGLseed (E-0352, E-0089)
+; AGLseed: party member's AGL up (cap 999). (C1, E-0357)
 ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_AGL
@@ -4261,10 +4025,7 @@ ItemApply_AGLseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_INTseed: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldWordCapped
-; (E-0347)
-; why: a helper of ItemApply_INTseed; ItemApply_INTseed: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 16 INTseed (E-0352, E-0089)
+; INTseed: party member's INT up (cap 999). (C1, E-0357)
 ItemApply_INTseed_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_INT
@@ -4272,10 +4033,7 @@ ItemApply_INTseed_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_LifeAcorn: calls MapIndexViaPartyListKeepHL; calls
-; AddToRecordFieldWordCapped (E-0347)
-; why: a helper of ItemApply_LifeAcorn; ItemApply_LifeAcorn: item effect reached through
-; ApplyItemEffect (indexed by wItemId) for item(s) 17 LifeAcorn (E-0352, E-0089)
+; LifeAcorn: party member's max HP up (cap 999). (C1, E-0357)
 ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_HP
@@ -4283,10 +4041,7 @@ ItemApply_LifeAcorn_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_MysticNut: calls MapIndexViaPartyListKeepHL; calls
-; AddToRecordFieldWordCapped (E-0347)
-; why: a helper of ItemApply_MysticNut; ItemApply_MysticNut: item effect reached through
-; ApplyItemEffect (indexed by wItemId) for item(s) 18 MysticNut (E-0352, E-0089)
+; MysticNut: party member's max MP up (cap 999). (C1, E-0357)
 ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_MAX_MP
@@ -4294,10 +4049,7 @@ ItemApply_MysticNut_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldWordCapped
     ret
 
-; called from ItemApply_Quest: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
-; (E-0347)
-; why: a helper of ItemApply_Quest; ItemApply_Quest: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 19 Quest? (E-0352, E-0089)
+; Quest: the first personality axis up (MON_PERSONALITY, cap 255). (C1, E-0357)
 ItemApply_Quest_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -4305,10 +4057,7 @@ ItemApply_Quest_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
-; called from ItemApply_Horror: calls MapIndexViaPartyListKeepHL; calls
-; SubtractFromRecordFieldByteFloored (E-0347)
-; why: a helper of ItemApply_Horror; ItemApply_Horror: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 20 Horror? (E-0352, E-0089)
+; Horror: the first personality axis down (floor 0). (C1, E-0357)
 ItemApply_Horror_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY
@@ -4316,10 +4065,7 @@ ItemApply_Horror_MapIndexViaPartyListKeepHL::
     call SubtractFromRecordFieldByteFloored
     ret
 
-; called from ItemApply_BeNice: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
-; (E-0347)
-; why: a helper of ItemApply_BeNice; ItemApply_BeNice: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 21 BeNice? (E-0352, E-0089)
+; BeNice: the second personality axis up (cap 255). (C1, E-0357)
 ItemApply_BeNice_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -4327,10 +4073,7 @@ ItemApply_BeNice_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
-; called from ItemApply_Cheater: calls MapIndexViaPartyListKeepHL; calls
-; SubtractFromRecordFieldByteFloored (E-0347)
-; why: a helper of ItemApply_Cheater; ItemApply_Cheater: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 22 Cheater? (E-0352, E-0089)
+; Cheater: the second personality axis down (floor 0). (C1, E-0357)
 ItemApply_Cheater_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 1
@@ -4338,10 +4081,7 @@ ItemApply_Cheater_MapIndexViaPartyListKeepHL::
     call SubtractFromRecordFieldByteFloored
     ret
 
-; called from ItemApply_Smart: calls MapIndexViaPartyListKeepHL; calls AddToRecordFieldByteCapped
-; (E-0347)
-; why: a helper of ItemApply_Smart; ItemApply_Smart: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 23 Smart? (E-0352, E-0089)
+; Smart: the fourth personality axis up (cap 255). (C1, E-0357)
 ItemApply_Smart_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -4349,10 +4089,7 @@ ItemApply_Smart_MapIndexViaPartyListKeepHL::
     call AddToRecordFieldByteCapped
     ret
 
-; called from ItemApply_Comedy: calls MapIndexViaPartyListKeepHL; calls
-; SubtractFromRecordFieldByteFloored (E-0347)
-; why: a helper of ItemApply_Comedy; ItemApply_Comedy: item effect reached through ApplyItemEffect
-; (indexed by wItemId) for item(s) 24 Comedy? (E-0352, E-0089)
+; Comedy: the fourth personality axis down (floor 0). (C1, E-0357)
 ItemApply_Comedy_MapIndexViaPartyListKeepHL::
     call MapIndexViaPartyListKeepHL
     ld c, MON_PERSONALITY + 3
@@ -4953,12 +4690,8 @@ CountSpeciesPerFamilyFlaggedOrListed::
     jr c, .loop
     ret
 
-; Calls FillBytes; sets wSpeciesIdLo to 0; sets wSpeciesIdHi to 0; calls LoadSpeciesFamily; branches
-; on wSpeciesRecord; calls TestSpeciesFlag; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; also
-; changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; Counts the species seen per family for the battle end: clears 11 bytes of wWorkBuf, then for every
+; species $0000-$0174 adds 1 to its family's byte when its species flag is set. (C1, E-0357)
 BattleEnd_Step3_LoadSpeciesFamily::
     xor a
     ld hl, wWorkBuf
@@ -5006,16 +4739,13 @@ BattleEnd_Step3_LoadSpeciesFamily::
     jr c, .loop
     ret
 
-; called from BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc: sets wBattleFoeCount to 1;
-; branches on wLinkMode; branches on wBattleKind; branches on wDisplaySlot; branches on the byte at
-; wFoeJoinClass1; copies the byte at wBattleMonsterId to wSpeciesIdLo; copies the byte at
-; wBattleMonsterId to wSpeciesIdHi; calls TestSpeciesFlag; calls LoadSpeciesRecord; calls
-; NextTableByte; branches on wSpeciesRecord + SPECIES_JOIN_CLASS; branches on the byte at
-; JoinChanceByClass; then 9 more steps (see the code) (E-0347)
-; why: a helper of BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc, in step 0 of
-; BattleEnd_Step5 (when wBattleSubPhase = 0); BattleEnd_Step5: battle end, step 5: offers the
-; defeated monster to join, by wBattleSubPhase (BattleEnd_Step5_DrawThenAskToJoin, the swap menu,
-; ... (E-0352, E-0354, E-0044)
+; Decides whether a defeated foe offers to join: never in a link, battle kinds 3-5 and 8 or above,
+; or for a display slot that is not a foe (4-6) or whose join class is 7. A species not yet seen
+; offers at once when a random 0-199 falls at or below JoinChanceByClass for its class. Otherwise
+; (unless wBattleEndFlag is set) the battle meter (wBattleMeter), scaled by the foe's entry of one
+; of two tables (unseen or seen species: x5, x2, x1, /2, /5, /16, /4, /8 or /20; 0 always offers, 7
+; never), minus a random 10-100 must stay positive, and a final random 1-100 must be under 91;
+; otherwise wDisplaySlot becomes $FF (no offer). (C1, E-0357)
 BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, $01
     ld [wBattleFoeCount], a
@@ -5273,14 +5003,10 @@ BattleEnd_AskToJoin::
     dw BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12
     dw BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2
 
-; step 0 of BattleEnd_AskToJoin: advances wBattleSubStep; calls
-; CopyBattleMonsterNameWithLetterSuffix; branches on wBattleKind; calls KeyWorldAreaEncounterIndex;
-; branches on hTemp0; sets wStringIndex to $1e; calls ShowStringCategory5_Bank16; calls
-; CountRecordsByField6E; sets wSubMenuCursor2 to 0; sets wMenuOption to 0; sets wCommandCursorMax to
-; 0; advances wBattleSubStep (E-0347)
-; why: step 0 of BattleEnd_AskToJoin (when wBattleSubStep = 0); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 0: copies the foe's name (with its letter) into wTextBuf0; in battle kinds 8
+; and up, or an odd kind where KeyWorldAreaEncounterIndex returns 0, shows '<name> got up, looking
+; hopeful. But ...' (string $1E); otherwise counts the farm's monsters and eggs
+; (CountRecordsByField6E) and goes on. (C1, E-0357)
 BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5312,11 +5038,8 @@ BattleEnd_AskToJoin_CopyBattleMonsterNameWithLetterSuffix::
     inc [hl]
     ret
 
-; step 1 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; advances wBattleStep; sets
-; wBattleSubPhase to 0; sets wBattleResolveStep to 0; sets wBattleSubStep to 0 (E-0347)
-; why: step 1 of BattleEnd_AskToJoin (when wBattleSubStep = 1); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 1: once the text has finished, ends this battle-end step (wBattleStep + 1).
+; (C1, E-0357)
 BattleEnd_AskToJoin_WaitTextFlags::
     ld a, [wTextFlags]
     or a
@@ -5329,11 +5052,7 @@ BattleEnd_AskToJoin_WaitTextFlags::
     ld [wBattleSubStep], a
     ret
 
-; step 2 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets wStringIndex to $0b; calls
-; ShowStringCategory5_Bank16; advances wBattleSubStep (E-0347)
-; why: step 2 of BattleEnd_AskToJoin (when wBattleSubStep = 2); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 2: '<name> got up, looking hopeful. Allow ...' (string $0B). (C1, E-0357)
 BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     ld a, [wTextFlags]
     or a
@@ -5345,12 +5064,7 @@ BattleEnd_AskToJoin_ShowHeroGotUpLooking::
     inc [hl]
     ret
 
-; step 3 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; calls LoadCursorTileAndRect; calls
-; CopyRect32StrideToVRAM_Bank16; sets wMenuState to 0; sets wListPageSize to 2; sets wListPage to 0;
-; sets wListPageCount to 1; sets wListLastPageSize to 2; advances wBattleSubStep (E-0347)
-; why: step 3 of BattleEnd_AskToJoin (when wBattleSubStep = 3); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 3: draws the yes/no box (two entries). (C1, E-0357)
 BattleEnd_AskToJoin_LoadCursorTileAndRect::
     ld a, [wTextFlags]
     or a
@@ -5374,13 +5088,8 @@ BattleEnd_AskToJoin_LoadCursorTileAndRect::
     inc [hl]
     ret
 
-; step 4 of BattleEnd_AskToJoin: calls SetDEFlagOnBButton; may return early; advances
-; wBattleSubStep; returns if the byte at wMenuState is 0; calls
-; CopyBattleMonsterNameWithLetterSuffix; sets wStringIndex to $0c; calls ShowStringCategory5_Bank16;
-; sets wBattleSubStep to 1 (E-0347)
-; why: step 4 of BattleEnd_AskToJoin (when wBattleSubStep = 4); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 4: the answer: no (or B) shows '<name> departed sadly...' (string $0C) and
+; returns to step 1; yes goes on. (C1, E-0357)
 BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
@@ -5400,12 +5109,9 @@ BattleEnd_AskToJoin_ShowHeroDepartedSadly::
     ld [wBattleSubStep], a
     ret
 
-; step 5 of BattleEnd_AskToJoin: calls WriteVRAMByte; advances wBattleSubStep; advances
-; wBattleSubPhase; sets wBattleSubStep to 0; also changes HL, A and B by register arithmetic
-; (E-0347)
-; why: step 5 of BattleEnd_AskToJoin (when wBattleSubStep = 5); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 5: marks yes; with the farm's monsters and eggs below the farm level's
+; capacity (BattleEnd_AskToJoin_WriteVRAMByte_Data) moves on two sub-phases to add it, otherwise
+; goes on to step 6. (C1, E-0357)
 BattleEnd_AskToJoin_WriteVRAMByte::
     ld a, $bc
     ld hl, vBGMap0 + $12f
@@ -5432,11 +5138,7 @@ BattleEnd_AskToJoin_WriteVRAMByte::
     ld [wBattleSubStep], a
     ret
 
-; step 6 of BattleEnd_AskToJoin: sets wStringIndex to $0d; calls ShowStringCategory5_Bank16;
-; advances wBattleSubStep (E-0347)
-; why: step 6 of BattleEnd_AskToJoin (when wBattleSubStep = 6); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 6: 'But there is no more room!' (string $0D). (C1, E-0357)
 BattleEnd_AskToJoin_ShowButThereIsNo::
     ld a, $0d
     ld [wStringIndex], a ; 'But there is no more room!'
@@ -5445,11 +5147,7 @@ BattleEnd_AskToJoin_ShowButThereIsNo::
     inc [hl]
     ret
 
-; step 9 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets wStringIndex to $0e; calls
-; ShowStringCategory5_Bank16; advances wBattleSubStep (E-0347)
-; why: step 9 of BattleEnd_AskToJoin (when wBattleSubStep = 9); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 9: 'Which will you choose?' (string $0E). (C1, E-0357)
 BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     ld a, [wTextFlags]
     or a
@@ -5461,13 +5159,7 @@ BattleEnd_AskToJoin_ShowWhichWillYouChoose::
     inc [hl]
     ret
 
-; step 10 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; calls BuildBattleMenuScreen; calls
-; CopyRectRecordToScreenBuffer_11; plays sound $6c; calls CopyRect32StrideToVRAM_Bank16; sets
-; wMenuState to 0; sets wListPageSize to 2; sets wListPage to 0; sets wListPageCount to 1; sets
-; wListLastPageSize to 2; advances wBattleSubStep (E-0347)
-; why: step 10 of BattleEnd_AskToJoin (when wBattleSubStep = 10); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 10: draws the release-or-abandon choice and plays sound $6C. (C1, E-0357)
 BattleEnd_AskToJoin_BuildBattleMenuScreen::
     ld a, [wTextFlags]
     or a
@@ -5494,14 +5186,9 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen::
     inc [hl]
     ret
 
-; step 11 of BattleEnd_AskToJoin: calls SetDEFlagOnBButton; may return early; sets wMenuState to 0;
-; copies wSubMenuCursor2 to wListPage; advances wBattleSubStep; returns if E is 0; calls
-; CountRecordsByField6E; branches on wTemp1; sets wStringIndex to $0f; calls
-; ShowStringCategory5_Bank16; sets wBattleSubStep to 9; sets wBattleSubStep to $16; then 3 more
-; steps (see the code) (E-0347)
-; why: step 11 of BattleEnd_AskToJoin (when wBattleSubStep = 11); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 11: the choice: B returns to step 6; the first option (release a monster)
+; goes to step 12; the second (abandon an egg) to step $16, or 'You have no eggs.' (string $0F) and
+; back to step 9 without eggs. (C1, E-0357)
 BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data
@@ -5547,13 +5234,8 @@ BattleEnd_AskToJoin_ShowYouHaveNoEggs::
     ld [wBattleSubStep], a
     ret
 
-; step 12 of BattleEnd_AskToJoin: calls FillBytes; calls CopyRectRecordToScreenBufferAndPlaySound6C;
-; calls ListPartyAndStoredRecordsForPage; calls DrawRecordListPageWithNumbers; calls
-; CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte; sets wStringIndex to $11; calls
-; ShowStringCategory5Immediate_Bank16; advances wBattleSubStep (E-0347)
-; why: step 12 of BattleEnd_AskToJoin (when wBattleSubStep = 12); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 12: lists the party and the farm monsters and shows 'Choose a monster to
+; release.' (string $11). (C1, E-0357)
 BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     ld hl, wListEntries
     ld bc, $001e
@@ -5576,13 +5258,8 @@ BattleEnd_AskToJoin_ShowChooseAMonsterTo::
     inc [hl]
     ret
 
-; step 13 of BattleEnd_AskToJoin: calls MovePagedListCursor; calls DrawRecordListPageWithNumbers;
-; branches on wJoypadPressed; copies wListPage to wSubMenuCursor2; calls ShowRecordNameString12;
-; advances wBattleSubStep; may return early; copies wListPage to wSubMenuCursor2; sets
-; wBattleSubStep to 9 (E-0347)
-; why: step 13 of BattleEnd_AskToJoin (when wBattleSubStep = 13); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 13: the list cursor (Left/Right turn pages); A picks the monster and shows
+; its name (string $12); B returns to step 9. (C1, E-0357)
 BattleEnd_AskToJoin_MovePagedListCursor::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
@@ -5613,12 +5290,7 @@ BattleEnd_AskToJoin_MovePagedListCursor::
     ld [wBattleSubStep], a
     ret
 
-; step 14 of BattleEnd_AskToJoin: calls WriteVRAMByte; calls CopyRectRecordAndPlaySound6C; calls
-; CopyRect32StrideToVRAM_Bank16; sets wMenuSubState to 0; sets wListPageSize to 2; sets wListPage to
-; 0; sets wListPageCount to 1; sets wListLastPageSize to 2; advances wBattleSubStep (E-0347)
-; why: step 14 of BattleEnd_AskToJoin (when wBattleSubStep = 14); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 14: marks the pick and draws its two options. (C1, E-0357)
 BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
     ld a, [wMenuState]
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
@@ -5648,14 +5320,8 @@ BattleEnd_AskToJoin_WriteVRAMByte_CopyRectRecordAndPlaySound6C::
     inc [hl]
     ret
 
-; step 15 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
-; wBattleSubStep; returns unless bit 0 of wJoypadPressed is set; advances wBattleSubStep; returns
-; unless bit 1 of wMenuSubState & $01 is set; calls CopyRectRecordToScreenBuffer_11; calls
-; CopyRect32StrideToVRAM_Bank16; copies wSubMenuCursor2 to wListPage; sets wBattleSubStep to $0c;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 15 of BattleEnd_AskToJoin (when wBattleSubStep = 15); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 15: the options: the first (look) goes to step 16, the second (release) to
+; step 18; B clears the box and returns to the list (step 12). (C1, E-0357)
 BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
     ld de, wMenuSubState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
@@ -5706,14 +5372,8 @@ BattleEnd_AskToJoin_MovePagedListCursor_AdvanceBattleSubStep::
     ld [wBattleSubStep], a
     ret
 
-; step 16 of BattleEnd_AskToJoin: copies wTemp0 to wListCount; copies wMenuState to wListCursor;
-; copies wSubMenuCursor2 to wListPageIndex; calls ClampRecordListPageCursor5; calls
-; SaveAndHideSpriteState_Bank1E; sets wScreenState to $0c; sets wScreenStep to 0; sets
-; wScreenSubStep to 0; calls ListRecordsInUseNotEggs; calls FillBytes; advances wBattleSubPhase
-; (E-0347)
-; why: step 16 of BattleEnd_AskToJoin (when wBattleSubStep = 16); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 16: opens the stats screen for the picked monster (screen state $0C) after
+; saving the sprites. (C1, E-0357)
 BattleEnd_AskToJoin_ClampRecordListPageCursor5::
     ld a, [wTemp0]
     ld [wListCount], a
@@ -5738,15 +5398,8 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor5::
     inc [hl]
     ret
 
-; step 17 of BattleEnd_AskToJoin: calls CopyRectRecordToScreenBufferAndPlaySound6C; copies
-; wListCursor to wMenuState; sets BattleEnd_AskToJoin_Data to $bc; copies wListPageIndex to
-; wSubMenuCursor2; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; calls
-; ListPartyAndStoredRecordsForPage; calls DrawRecordListPageWithNumbers; calls
-; CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString12; sets wListPageSize to 2; sets
-; wListPage to 0; then 3 more steps (see the code) (E-0347)
-; why: step 17 of BattleEnd_AskToJoin (when wBattleSubStep = 17); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 17: after the stats screen redraws the list with the pick and its options
+; (step $0F). (C1, E-0357)
 BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
     farcall CopyRectRecordToScreenBufferAndPlaySound6C
     ld a, [wListCursor]
@@ -5781,14 +5434,9 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBufferAndPlaySound6C::
     ld [wBattleSubStep], a
     ret
 
-; step 18 of BattleEnd_AskToJoin: calls WriteVRAMByte; branches on wPartyCount; branches on
-; wPartyList; sets wStringIndex to $15; calls ShowStringCategory5_Bank16; sets wBattleSubStep to 9;
-; branches on wPartyCount; branches on wPartyList; branches on the byte at wBattleSlotOut + $1;
-; branches on wPartyList; sets rRAMG to 0; advances wBattleSubStep; then 1 more step (see the code)
-; (E-0347)
-; why: step 18 of BattleEnd_AskToJoin (when wBattleSubStep = 18); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 18: refuses to release the only party member, or the last party member still
+; able to fight (by wBattleSlotOut), with 'You can't travel all alone.' (string $15) and step 9;
+; otherwise goes on. (C1, E-0357)
 BattleEnd_AskToJoin_WriteVRAMByte_2::
     ld a, $bc
     ld hl, vBGMap0 + $16d
@@ -5873,20 +5521,13 @@ BattleEnd_AskToJoin_WriteVRAMByte_2::
     inc [hl]
     ret
 
-; step 19 of BattleEnd_AskToJoin: advances wBattleSubStep (E-0347)
-; why: step 19 of BattleEnd_AskToJoin (when wBattleSubStep = 19); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 19: moves on. (C1, E-0357)
 BattleEnd_AskToJoin_AdvanceBattleSubStep::
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; step 20 of BattleEnd_AskToJoin: advances wBattleSubStep; sets wStringIndex to $13; calls
-; ShowStringCategory5_Bank16 (E-0347)
-; why: step 20 of BattleEnd_AskToJoin (when wBattleSubStep = 20); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 20: '<name> was set free in the ...' (string $13). (C1, E-0357)
 BattleEnd_AskToJoin_ShowGWasSetFree::
     ld hl, wBattleSubStep
     inc [hl]
@@ -5895,14 +5536,9 @@ BattleEnd_AskToJoin_ShowGWasSetFree::
     call ShowStringCategory5_Bank16
     ret
 
-; step 21 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets rRAMG to $0a; sets rRAMB to
-; 0; copies the byte at wListEntries to wArg1; sets wArg2 to 0; calls DeleteSRAMRecordAndCompact;
-; copies wPartyCount to wBattlePartyCount; branches on wPartyCount; copies wPartyList to wTemp0;
-; sets wTemp1; sets wMenuRowCount; calls RunForPartyMembers; then 4 more steps (see the code)
-; (E-0347)
-; why: step 21 of BattleEnd_AskToJoin (when wBattleSubStep = 21); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 21: once the text has finished deletes the released monster's record
+; (DeleteSRAMRecordAndCompact), rebuilds the party list ($FF for empty places) and the battle slots
+; (RunForPartyMembers), and moves on two sub-phases to add the new monster. (C1, E-0357)
 BattleEnd_AskToJoin_WaitTextFlags_SetArg1::
     ld a, [wTextFlags]
     or a
@@ -5961,15 +5597,8 @@ BattleEnd_AskToJoin_WaitTextFlags_SetArg1::
     ld [wBattleSubStep], a
     ret
 
-; step 22 of BattleEnd_AskToJoin: calls BuildBattleMenuScreen; calls
-; CopyRectRecordToScreenBuffer_11; calls CopyRectRecordToScreenBuffer_12; plays sound $6c; sets
-; wStringIndex to $16; calls ShowStringCategory5Immediate_Bank16; calls CountRecordsByField6E; calls
-; ListRecordsWithField6EToListEntries; copies wTemp1 to wListCount; copies wTemp1 & $03 to
-; wListLastPageSize; sets wCommandPageCount; sets wListPageCount; then 6 more steps (see the code)
-; (E-0347)
-; why: step 22 of BattleEnd_AskToJoin (when wBattleSubStep = 22); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 22: 'Choose an egg to abandon.' (string $16) and the paged list of eggs. (C1,
+; E-0357)
 BattleEnd_AskToJoin_ShowChooseAnEggTo::
     call BuildBattleMenuScreen
     farcall CopyRectRecordToScreenBuffer_11
@@ -6024,14 +5653,7 @@ BattleEnd_AskToJoin_ShowChooseAnEggTo::
     inc [hl]
     ret
 
-; step 23 of BattleEnd_AskToJoin: calls MovePagedListCursor; calls
-; DrawFourListEntriesForPageListPage; calls CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte;
-; branches on wJoypadPressed; copies wMenuState to wCommandCursorMax; copies wListPage to
-; wMenuOption; advances wBattleSubStep; returns unless bit 1 of wListPage is set; calls
-; BuildBattleMenuScreen; calls CopyRect32StrideToVRAM_Bank16; sets wBattleSubStep to 9 (E-0347)
-; why: step 23 of BattleEnd_AskToJoin (when wBattleSubStep = 23); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 23: the egg list cursor; A picks the egg, B returns to step 9. (C1, E-0357)
 BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
     ld de, wMenuState
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_3
@@ -6073,15 +5695,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_DrawFourListEntriesForPageListPage::
     ld [wBattleSubStep], a
     ret
 
-; step 24 of BattleEnd_AskToJoin: calls BuildBattleMenuScreen; calls
-; CopyRectRecordToScreenBuffer_12; calls CopyRectRecordAndPlaySound6C; branches on wListPageCount;
-; calls DrawFourListEntriesForPageListPage; sets BattleEnd_AskToJoin_MovePagedListCursor_Data_3 to
-; $bc; calls CopyRect32StrideToVRAM_Bank16; sets wMenuSelectedMember to 0; sets wListPageSize to 2;
-; sets wListPage to 0; sets wListPageCount to 1; sets wListLastPageSize to 2; then 2 more steps (see
-; the code) (E-0347)
-; why: step 24 of BattleEnd_AskToJoin (when wBattleSubStep = 24); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 24: marks the egg and draws its two options with its name. (C1, E-0357)
 BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
     call BuildBattleMenuScreen
     farcall CopyRectRecordToScreenBuffer_12
@@ -6131,14 +5745,9 @@ BattleEnd_AskToJoin_BuildBattleMenuScreen_CopyRectRecordToScreenBuffer_12::
     inc [hl]
     ret
 
-; step 25 of BattleEnd_AskToJoin: calls MovePagedListCursor; branches on wJoypadPressed; advances
-; wBattleSubStep; returns if the byte at wMenuSelectedMember is 0; advances wBattleSubStep; sets
-; rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddress; calls CopyStringHLToDE; sets wStringIndex
-; to $18; calls ShowStringCategory5_Bank16; sets rRAMG to 0; then 2 more steps (see the code)
-; (E-0347)
-; why: step 25 of BattleEnd_AskToJoin (when wBattleSubStep = 25); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 25: the options: the first (look) goes to step 26; the second shows
+; '<species>'s egg was abandoned.' (string $18) and goes to step 28; B returns to step $16. (C1,
+; E-0357)
 BattleEnd_AskToJoin_MovePagedListCursor_2::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
@@ -6190,13 +5799,7 @@ BattleEnd_AskToJoin_MovePagedListCursor_2::
     ld [wBattleSubStep], a
     ret
 
-; step 26 of BattleEnd_AskToJoin: copies wMenuState to wListCursor; copies wMenuOption to
-; wListPageIndex; calls ClampRecordListPageCursor4; calls SaveAndHideSpriteState_Bank1E; sets
-; wScreenState to $0d; sets wScreenStep to 0; sets wScreenSubStep to 0; calls ListRecordsInUseEggs;
-; calls FillBytes; advances wBattleSubPhase (E-0347)
-; why: step 26 of BattleEnd_AskToJoin (when wBattleSubStep = 26); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 26: opens the egg's stats screen (screen state $0D). (C1, E-0357)
 BattleEnd_AskToJoin_ClampRecordListPageCursor4::
     ld a, [wMenuState]
     ld [wListCursor], a
@@ -6219,16 +5822,8 @@ BattleEnd_AskToJoin_ClampRecordListPageCursor4::
     inc [hl]
     ret
 
-; step 27 of BattleEnd_AskToJoin: calls CopyRectRecordToScreenBuffer_12; copies wListCursor to
-; wMenuState; copies wListCursor to wCommandCursorMax; sets
-; BattleEnd_AskToJoin_MovePagedListCursor_Data_3 to $bc; copies wListPageIndex to wMenuOption;
-; copies wListPageIndex to wListPage; calls CopyRectRecordAndPlaySound6C; branches on
-; wCommandPageCount; calls ListRecordsWithField6EToListEntries; calls
-; DrawFourListEntriesForPageListPage; calls CopyRect32StrideToVRAM_Bank16; sets wListPageSize to 2;
-; then 5 more steps (see the code) (E-0347)
-; why: step 27 of BattleEnd_AskToJoin (when wBattleSubStep = 27); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 27: after the stats screen redraws the egg list with the pick and its options
+; (step $19). (C1, E-0357)
 BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12::
     farcall CopyRectRecordToScreenBuffer_12
     ld a, [wListCursor]
@@ -6284,13 +5879,8 @@ BattleEnd_AskToJoin_CopyRectRecordToScreenBuffer_12::
     ld [wBattleSubStep], a
     ret
 
-; step 28 of BattleEnd_AskToJoin: returns unless wTextFlags is 0; sets rRAMG to $0a; sets rRAMB to
-; 0; copies the byte at wListEntries to wArg1; sets wArg2 to 0; calls DeleteSRAMRecordAndCompact;
-; sets rRAMG to 0; advances wBattleSubPhase; sets wBattleResolveStep to 0; sets wBattleSubStep to 0
-; (E-0347)
-; why: step 28 of BattleEnd_AskToJoin (when wBattleSubStep = 28); BattleEnd_AskToJoin: by
-; wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0 to
-; join you?' (category 5 string $0B), ... (E-0352)
+; Asking to join, step 28: once the text has finished deletes the egg's record and moves on two
+; sub-phases to add the new monster. (C1, E-0357)
 BattleEnd_AskToJoin_WaitTextFlags_SetArg1_2::
     ld a, [wTextFlags]
     or a
@@ -6955,14 +6545,8 @@ DrawFourListEntriesForPageListPage::
     ld [wTextWindowWidth], a
     ret
 
-; called from DrawFourListEntriesForPageListPage: calls
-; DrawFourListEntriesForPageListPage_SRAMRecordAddress_2; calls SRAMRecordAddress; calls
-; ShowStringBCAtTileRowBattleArg0; sets DrawFourListEntriesForPageListPage_SRAMRecordAddress_Data to
-; $c3; also changes HL, BC and A by register arithmetic (E-0347)
-; why: a helper of DrawFourListEntriesForPageListPage; DrawFourListEntriesForPageListPage: for the
-; four entries of wListEntries page wListPage runs
-; DrawFourListEntriesForPageListPage_SRAMRecordAddress with wBattleArg0 = 0-3, draws ... (E-0352,
-; E-0121)
+; Draws one egg-list entry: its species name; an appraised egg (MON_EGG 2) gets its sex mark ($CC +
+; sex), an unappraised one mark $C9; an empty entry is blanked. (C1, E-0357)
 DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     ld a, [hl]
     cp $ff
@@ -7015,11 +6599,8 @@ DrawFourListEntriesForPageListPage_SRAMRecordAddress::
     pop hl
     ret
 
-; Calls SRAMRecordAddress (E-0347)
-; why: part of DrawFourListEntriesForPageListPage_SRAMRecordAddress, in a helper of
-; DrawFourListEntriesForPageListPage; DrawFourListEntriesForPageListPage: for the four entries of
-; wListEntries page wListPage runs DrawFourListEntriesForPageListPage_SRAMRecordAddress with
-; wBattleArg0 = 0-3, draws ... (E-0352, E-0121)
+; Points BC at the species name of the record at HL (its MON_SPECIES word + $200: the species-name
+; strings). (C1, E-0357)
 DrawFourListEntriesForPageListPage_SRAMRecordAddress_2::
     ld c, MON_SPECIES
     call SRAMRecordAddress
@@ -7264,10 +6845,7 @@ RunBattleEndStep5SubSteps::
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
     dw RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc
 
-; step 0 of RunBattleEndStep5SubSteps: calls CopyBattleMonsterNameWithLetterSuffix; sets
-; wStringIndex to $14; calls ShowStringCategory5_Bank16; advances wBattleSubStep (E-0347)
-; why: step 0 of RunBattleEndStep5SubSteps (when wBattleSubStep = 0); RunBattleEndStep5SubSteps:
-; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
+; Naming the new monster, step 0: 'Please name <name>.' (string $14). (C1, E-0357)
 RunBattleEndStep5SubSteps_ShowPleaseNameHero::
     ld de, wTextBuf0
     call CopyBattleMonsterNameWithLetterSuffix
@@ -7278,13 +6856,9 @@ RunBattleEndStep5SubSteps_ShowPleaseNameHero::
     inc [hl]
     ret
 
-; step 1 of RunBattleEndStep5SubSteps: returns unless wTextFlags is 0; calls FillBytes; sets wArg1
-; to 1; copies the byte at wSlotNameSuffix to wArg2; copies the byte at wRecordBufA to wArg3; copies
-; the byte at wRecordBufA to wArg4; copies the byte at wRecordBufA to wSpeciesIdLo; copies the byte
-; at wRecordBufA to wArg5; copies the byte at wRecordBufA to wSpeciesIdHi; calls SetSpeciesFlag;
-; calls FillBytes; copies L to wTextWindowTileLo; then 4 more steps (see the code) (E-0347)
-; why: step 1 of RunBattleEndStep5SubSteps (when wBattleSubStep = 1); RunBattleEndStep5SubSteps:
-; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
+; Naming the new monster, step 1: once the text has finished clears the name entry's state, sets its
+; arguments (a monster: its letter suffix, family and species) and marks the species seen
+; (SetSpeciesFlag), clears the screen buffer and resets the text window. (C1, E-0357)
 RunBattleEndStep5SubSteps_FillBytes::
     ld a, [wTextFlags]
     or a
@@ -7341,13 +6915,8 @@ RunBattleEndStep5SubSteps_FillBytes::
     inc [hl]
     ret
 
-; step 2 of RunBattleEndStep5SubSteps: sets wArg1 to 1; copies the byte at wSlotNameSuffix to wArg2;
-; copies the byte at wRecordBufA to wArg3; copies the byte at wRecordBufA to wArg4; copies the byte
-; at wRecordBufA to wArg5; calls RunNameEntryStateWhenNotFading; returns unless wArg5 is $ff; calls
-; DecompressToVRAM; increments wBattleScreenFlags; advances wBattleSubStep; also changes HL, DE, A
-; and B by register arithmetic (E-0347)
-; why: step 2 of RunBattleEndStep5SubSteps (when wBattleSubStep = 2); RunBattleEndStep5SubSteps:
-; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
+; Naming the new monster, step 2: runs the name entry (RunNameEntryStateWhenNotFading); when it
+; finishes reloads two battle tile sets and copies the name into wWorkBuf + 1. (C1, E-0357)
 RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
     ld a, $01
     ld [wArg1], a
@@ -7404,21 +6973,16 @@ RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
     inc [hl]
     ret
 
-; step 3 of RunBattleEndStep5SubSteps: advances wBattleSubStep (E-0347)
-; why: step 3 of RunBattleEndStep5SubSteps (when wBattleSubStep = 3); RunBattleEndStep5SubSteps:
-; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
+; Naming the new monster, step 3: moves on. (C1, E-0357)
 RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
     ld hl, wBattleSubStep
     inc [hl]
     ret
 
-; step 4 of RunBattleEndStep5SubSteps: sets rRAMG to $0a; sets rRAMB to 0; branches on the byte at
-; sRecords; copies C to wWorkBuf; sets sRecords to 1; calls CopyBBytesDEToHL_Bank16; calls
-; SRAMRecordAddressMapped; calls InitSlotFromRecordFlags; branches on wPartyCount; calls
-; SRAMRecordAddressMapped; calls InitSlotFromRecordFlags; branches on wPartyCount; then 6 more steps
-; (see the code) (E-0347)
-; why: step 4 of RunBattleEndStep5SubSteps (when wBattleSubStep = 4); RunBattleEndStep5SubSteps:
-; runs the routine for wBattleSubStep (jump table of five) (E-0352, E-0122)
+; Naming the new monster, step 4: stores the monster in the first free farm record within the farm
+; level's capacity (state 1, the new name, then $9A bytes from wRecordBufA's species on) and keeps
+; its number in wWorkBuf; re-initialises each party slot's status (InitSlotFromRecordFlags); with no
+; free record nothing is stored. (C1, E-0357)
 RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc::
     ld a, $0a
     ld [rRAMG], a
@@ -7529,8 +7093,7 @@ SetBit0AtHL::
     set 0, [hl]
     ret
 
-; Sets wBattleSlotOut to 1 (E-0347)
-; why: part of SetBit0AtHL; SetBit0AtHL: [HL] |= $01 (E-0352, E-0114)
+; Marks battle slot C as out (wBattleSlotOut + C = 1). (C1, E-0357)
 SetBit0AtHL_Skip::
     ld a, c
     ld hl, wBattleSlotOut
@@ -7564,13 +7127,9 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_RestoreRecordAFully
     dw BattleEnd_AddJoinedMonster_WillYouTakeHero
 
-; step 0 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
-; CopyRect32StrideToVRAM_Bank16; calls SRAMRecordAddress; sets rRAMG to $0a; sets rRAMB to 0; sets
-; rRAMG to 0; calls LoadCursorTileAndRect; sets wStringIndex to $19; calls
-; ShowStringCategory5Immediate_Bank16; advances wBattleSubStep; sets wMenuState to 0 (E-0347)
-; why: step 0 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 0); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 0: redraws the battle screen, lists the party and the new monster (in
+; wBattleArg0 on), copies its name into wTextBuf0 and asks 'Will you take <name> with you?' (string
+; $19). (C1, E-0357)
 BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
@@ -7621,12 +7180,7 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen::
     ld [wMenuState], a
     ret
 
-; step 1 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; calls
-; CopyRect32StrideToVRAM_Bank16; sets wListPageSize to 2; sets wListPage to 0; sets wListPageCount
-; to 1; sets wListLastPageSize to 2; advances wBattleSubStep (E-0347)
-; why: step 1 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 1); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 1: draws the yes/no box. (C1, E-0357)
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
     ld a, [wTextFlags]
     or a
@@ -7647,12 +7201,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_SetListPageSize::
     inc [hl]
     ret
 
-; step 2 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; plays sound $6c; sets
-; wBattleSubStep to 5; may return early; advances wBattleSubStep; also changes HL, DE and A by
-; register arithmetic (E-0347)
-; why: step 2 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 2); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 2: yes goes to step 5; no or B to step 3; plays sound $6C on A. (C1,
+; E-0357)
 BattleEnd_AddJoinedMonster_MovePagedListCursor::
     ld hl, BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data
     ld de, wMenuState
@@ -7679,12 +7229,8 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor::
     inc [hl]
     ret
 
-; step 3 of BattleEnd_AddJoinedMonster: advances wBattleSubStep; calls BattleMonsterTableAtLeast6;
-; sets wStringIndex to $20; calls ShowStringCategory5_Bank16; sets wStringIndex to $1a; calls
-; ShowStringCategory5_Bank16 (E-0347)
-; why: step 3 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 3); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 3: '<name> was sent to the farm.' (string $20), or 'was sent back to
+; the ...' (string $1A) when BattleMonsterTableAtLeast6 returns 0. (C1, E-0357)
 BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     ld hl, wBattleSubStep
     inc [hl]
@@ -7702,11 +7248,7 @@ BattleEnd_AddJoinedMonster_ShowHeroWasSentTo::
     call ShowStringCategory5_Bank16
     ret
 
-; step 4 of BattleEnd_AddJoinedMonster: advances wBattleStep; sets wBattleSubPhase to 0; sets
-; wBattleSubStep to 0 (E-0347)
-; why: step 4 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 4); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 4: ends this battle-end step. (C1, E-0357)
 BattleEnd_AddJoinedMonster_SetBattleStep::
     ld hl, wBattleStep
     inc [hl]
@@ -7716,12 +7258,8 @@ BattleEnd_AddJoinedMonster_SetBattleStep::
     ld [wBattleSubStep], a
     ret
 
-; step 5 of BattleEnd_AddJoinedMonster: branches on wPartyCount; sets wBattleSubStep to 8; advances
-; wBattleSubStep; calls BattleMonsterTableAtLeast6; sets wStringIndex to $21; calls
-; ShowStringCategory5_Bank16; sets wStringIndex to $1b; calls ShowStringCategory5_Bank16 (E-0347)
-; why: step 5 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 5); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 5: with a full party goes to step 8 (who goes home); otherwise
+; '<name> joined the party.' (string $21 or $1B by BattleMonsterTableAtLeast6). (C1, E-0357)
 BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
     ld a, [wPartyCount]
     cp $03
@@ -7747,13 +7285,8 @@ BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
     call ShowStringCategory5_Bank16
     ret
 
-; step 6 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; increments wPartyCount;
-; copies the byte at wPartyCount to wBattlePartyCount; calls SetRecordState2ForB; calls
-; LoadRecordListNameTiles; calls RunForPartyMembers; calls BuildBattleMenuScreen; advances
-; wBattleSubStep (E-0347)
-; why: step 6 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 6); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 6: once the text has finished adds it to the party (state 2), reloads
+; the name tiles and battle slots and redraws. (C1, E-0357)
 BattleEnd_AddJoinedMonster_SetRecordState2ForB::
     ld a, [wTextFlags]
     or a
@@ -7778,11 +7311,7 @@ BattleEnd_AddJoinedMonster_SetRecordState2ForB::
     inc [hl]
     ret
 
-; step 7 of BattleEnd_AddJoinedMonster: calls CopyRect32StrideToVRAM_Bank16; sets wBattleSubStep to
-; 4 (E-0347)
-; why: step 7 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 7); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 7: draws the screen and goes to step 4. (C1, E-0357)
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
@@ -7792,12 +7321,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16::
     ld [wBattleSubStep], a
     ret
 
-; step 8 of BattleEnd_AddJoinedMonster: calls CopyRectAndDrawBattleArg0Values; sets wStringIndex to
-; $1c; calls ShowStringCategory5Immediate_Bank16; sets wMenuSubState to 0; sets wScreenTileBuffer +
-; $12f to $bc; advances wBattleSubStep (E-0347)
-; why: step 8 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 8); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 8: draws the four monsters and 'Choose the monster to send home.'
+; (string $1C). (C1, E-0357)
 BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     call CopyRectAndDrawBattleArg0Values
     ld a, $1c
@@ -7811,12 +7336,8 @@ BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo::
     inc [hl]
     ret
 
-; step 9 of BattleEnd_AddJoinedMonster: returns unless wTextFlags is 0; sets wListPageSize to 4;
-; sets wListPage to 0; sets wListPageCount to 1; sets wListLastPageSize to 4; calls
-; CopyRect32StrideToVRAM_Bank16; calls WriteVRAMByte; advances wBattleSubStep (E-0347)
-; why: step 9 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 9); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 9: once the text has finished sets up the four-entry list and shows
+; its cursor. (C1, E-0357)
 BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
     ld a, [wTextFlags]
     or a
@@ -7844,13 +7365,8 @@ BattleEnd_AddJoinedMonster_CopyRect32StrideToVRAM_Bank16_2::
     inc [hl]
     ret
 
-; step 10 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; sets rRAMG to $0a; sets rRAMB to
-; 0; calls SRAMRecordAddress; sets wBattleSubStep to $13; may return early; plays sound $69; calls
-; CopyRectRecordAndPlaySound6C; advances wBattleSubStep; also changes HL, DE, BC and A by register
-; arithmetic (E-0347)
-; why: step 10 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 10); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 10: the list cursor: B copies the new monster's name and goes to step
+; $13 (asking again); A plays sound $69 and goes on. (C1, E-0357)
 BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data
     ld de, wMenuSubState
@@ -7894,13 +7410,8 @@ BattleEnd_AddJoinedMonster_MovePagedListCursor_2::
     inc [hl]
     ret
 
-; step 11 of BattleEnd_AddJoinedMonster: sets wMenuSelectedMember to 0; calls
-; CopyRect32StrideToVRAM_Bank16; sets wListPageSize to 2; sets wListPage to 0; sets wListPageCount
-; to 1; sets wListLastPageSize to 2; calls WriteVRAMByte; calls ShowRecordNameString1D; advances
-; wBattleSubStep (E-0347)
-; why: step 11 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 11); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 11: draws the two options for the pick and its name (string $1D).
+; (C1, E-0357)
 BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
     xor a
     ld [wMenuSelectedMember], a
@@ -7931,13 +7442,9 @@ BattleEnd_AddJoinedMonster_SetMenuSelectedMember::
     inc [hl]
     ret
 
-; step 12 of BattleEnd_AddJoinedMonster: calls MovePagedListCursor; plays sound $69; advances
-; wBattleSubStep; sets rRAMG to $0a; sets rRAMB to 0; calls SRAMRecordAddress; sets wStringIndex to
-; $1a; calls ShowStringCategory5_Bank16; sets wBattleSubStep to $12; may return early; calls
-; BuildBattleMenuScreen; calls LoadCursorTileAndRect; then 1 more step (see the code) (E-0347)
-; why: step 12 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 12); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 12: the options: the first (look) goes to step 13; the second sends
+; the pick home with '<name> was sent back to the ...' (string $1A) and step $12; B returns to the
+; list (step $11). (C1, E-0357)
 BattleEnd_AddJoinedMonster_AdvanceBattleSubStep::
     ld hl, BattleEnd_AskToJoin_MovePagedListCursor_Data_2
     ld de, wMenuSelectedMember
@@ -7991,13 +7498,8 @@ BattleEnd_AddJoinedMonster_AdvanceBattleSubStep::
     ld [wBattleSubStep], a
     ret
 
-; step 13 of BattleEnd_AddJoinedMonster: calls FillBytes; copies wBattlePartyCount+1 to wListCount;
-; copies wMenuSubState to wListCursor; sets wListPageIndex to 0; calls ClampRecordListPageCursor5;
-; calls SaveAndHideSpriteState_Bank1E; sets wScreenState to $0e; sets wScreenStep to 0; sets
-; wScreenSubStep to 0; advances wBattleSubStep (E-0347)
-; why: step 13 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 13); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 13: lists the four and opens the pick's stats screen (screen state
+; $0E), saving the sprites. (C1, E-0357)
 BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
     ld hl, wListEntries
     ld bc, $001e
@@ -8032,13 +7534,8 @@ BattleEnd_AddJoinedMonster_ClampRecordListPageCursor5::
     inc [hl]
     ret
 
-; step 14 of BattleEnd_AddJoinedMonster: calls SwapMonstersMenu; returns unless wScreenStep is $0a;
-; copies wSavedSpriteClipMode to hSpriteWindowClipMode; sets hSpriteHideTile to $80; copies
-; wSavedFieldDrawFlags to hFieldDrawFlags; copies wSavedSpriteSlotCount to wSpriteSlotCount; calls
-; DecompressToVRAM; increments wBattleScreenFlags; advances wBattleSubStep (E-0347)
-; why: step 14 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 14); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 14: runs the stats screen (SwapMonstersMenu) until its step $0A, then
+; restores the sprite state and reloads the battle tiles. (C1, E-0357)
 BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     farcall SwapMonstersMenu
     ld a, [wScreenStep]
@@ -8066,13 +7563,8 @@ BattleEnd_AddJoinedMonster_SwapMonstersMenu::
     inc [hl]
     ret
 
-; step 15 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
-; CopyRectAndDrawBattleArg0Values; copies wListCursor to wMenuSubState; sets
-; BattleEnd_AskToJoin_Data to $bc; calls CopyRectRecordAndPlaySound6C; calls
-; CopyRect32StrideToVRAM_Bank16; calls ShowRecordNameString1D; sets wBattleSubStep to $0c (E-0347)
-; why: step 15 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 15); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 15: redraws the list with the pick and its options (step $0C). (C1,
+; E-0357)
 BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values::
     call BuildBattleMenuScreen
     call CopyRectAndDrawBattleArg0Values
@@ -8093,13 +7585,8 @@ BattleEnd_AddJoinedMonster_BuildBattleMenuScreen_CopyRectAndDrawBattleArg0Values
     ld [wBattleSubStep], a
     ret
 
-; step 16 of BattleEnd_AddJoinedMonster: calls LoadCursorTileAndRect; calls
-; CopyRect32StrideToVRAM_Bank16; sets wStringIndex to $19; calls
-; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: step 16 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 16); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 16: clears the options box and asks 'Will you take <name> with you?'
+; again (step 1). (C1, E-0357)
 BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld a, $1f
     ld [wScreenTileBuffer + $10c], a
@@ -8129,12 +7616,8 @@ BattleEnd_AddJoinedMonster_ShowWillYouTakeHero::
     ld [wBattleSubStep], a
     ret
 
-; step 17 of BattleEnd_AddJoinedMonster: calls CopyRectAndDrawBattleArg0Values; sets
-; wScreenTileBuffer + $12f to $bc; sets wMenuSelectedMember to 0; sets wStringIndex to $1c; calls
-; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 9 (E-0347)
-; why: step 17 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 17); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 17: redraws the list and 'Choose the monster to send home.' (step 9).
+; (C1, E-0357)
 BattleEnd_AddJoinedMonster_ChooseTheMonsterTo::
     call CopyRectAndDrawBattleArg0Values
     ld hl, wScreenTileBuffer + $12f
@@ -8148,13 +7631,9 @@ BattleEnd_AddJoinedMonster_ChooseTheMonsterTo::
     ld [wBattleSubStep], a
     ret
 
-; step 18 of BattleEnd_AddJoinedMonster: calls RestoreRecordAFully; sets wBattleArg0 to $ff;
-; branches on the byte at wBattleArg0; calls SetRecordState2; calls LoadRecordListNameTiles; calls
-; RunForPartyMembers; calls BuildBattleMenuScreen; calls CopyRect32StrideToVRAM_Bank16; sets
-; wBattleSubStep to 4; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: step 18 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 18); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 18: sends the pick to the farm restored (RestoreRecordAFully) and
+; rebuilds the party from the others (state 2), reloads names and slots, redraws; step 4. (C1,
+; E-0357)
 BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     ld a, [wMenuSubState]
     ld hl, wBattleArg0
@@ -8193,12 +7672,8 @@ BattleEnd_AddJoinedMonster_RestoreRecordAFully::
     ld [wBattleSubStep], a
     ret
 
-; step 19 of BattleEnd_AddJoinedMonster: calls BuildBattleMenuScreen; calls
-; CopyRect32StrideToVRAM_Bank16; calls LoadCursorTileAndRect; sets wStringIndex to $19; calls
-; ShowStringCategory5Immediate_Bank16; sets wBattleSubStep to 1; sets wMenuState to 0 (E-0347)
-; why: step 19 of BattleEnd_AddJoinedMonster (when wBattleSubStep = 19); BattleEnd_AddJoinedMonster:
-; by wBattleSubStep: the record list and cursor, SetRecordState2ForB, SwapMonstersMenu and
-; RestoreRecordAFully: places the monster that joined (E-0352)
+; Adding the new monster, step 19: redraws and asks 'Will you take <name> with you?' again (step 1).
+; (C1, E-0357)
 BattleEnd_AddJoinedMonster_WillYouTakeHero::
     call BuildBattleMenuScreen
     ld hl, vBGMap0
@@ -8322,11 +7797,9 @@ RunForPartyMembers::
     ld [rRAMG], a
     ret
 
-; called from RunForPartyMembers: calls SRAMRecordAddress; calls SetBit5AtDE; calls SetBit0AtDE;
-; also changes HL, DE, BC and A by register arithmetic (E-0347)
-; why: a helper of RunForPartyMembers; RunForPartyMembers: with SRAM enabled runs
-; RunForPartyMembers_SRAMRecordAddress for each of the first one to three party records (E-0352,
-; E-0124, E-0344)
+; Sets battle slot C from party record HL: level, HP and MP into wBattleLevel/wBattleHP/wBattleMP; a
+; fallen monster (MON_STATUS bit 7) marks the slot out; otherwise clears its battle status and
+; carries MON_STATUS bit 0 to status bit 5 and bit 2 (poison) to bit 0. (C1, E-0357)
 RunForPartyMembers_SRAMRecordAddress::
     push bc
     ld c, MON_LEVEL
@@ -8885,14 +8358,10 @@ BuildBattleMenuScreen::
     farcall CopyRectRecordToScreenBuffer
     ret
 
-; called from BattleEnd_Step3: branches on wBattleKind; calls NextTableByte; sets wRecordBufA +
-; MON_LEVEL to 1; copies L to wSpeciesIdLo; copies H to wSpeciesIdHi; calls LoadSpeciesRecord;
-; branches on wRecordBufA + MON_LEVEL; copies C to wRecordBufA + MON_MAX_LEVEL; branches on
-; wBattleKind; calls BattleEnd_Step3_Multiply8By16_2; copies L to wRecordBufA + MON_MAX_HP; copies L
-; to wRecordBufA + MON_HP; then 19 more steps (see the code) (E-0347)
-; why: a helper of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; Shapes a joining foe's record in wRecordBufA: its level changes by a random -2 to +2 (not in
+; battle kind 2), kept within 1-99, and its level cap becomes at least that level; outside kind 2
+; each stat (HP and MP with their maxima, ATK, DEF and the rest) is lowered by a random part of up
+; to 20% (BattleEnd_Step3_Multiply8By16). (C1, E-0357)
 BattleEnd_Step3_NextTableByte::
     ld a, [wBattleKind]
     cp $02
@@ -9096,11 +8565,8 @@ BattleEnd_Step3_NextTableByte::
     ld [wRecordBufA + MON_WLD + 1], a
     ret
 
-; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; also changes HL, BC and A by
-; register arithmetic (E-0347)
-; why: part of BattleEnd_Step3; BattleEnd_Step3: battle end, step 3: settles the battle MP
-; (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the next steps for link battles and
-; ... (E-0352, E-0354, E-0044)
+; Lowers stat BC (capped at 999) by a random amount: random mod (20% of the stat, low byte); returns
+; the result in HL. (C1, E-0357)
 BattleEnd_Step3_Multiply8By16::
     ld hl, $03e7
     ld a, l
@@ -9143,11 +8609,7 @@ BattleEnd_Step3_Multiply8By16::
     ld h, a
     ret
 
-; Branches on h; copies C to wBattleTempBuf; calls NextTableByte; returns if H is $03; also changes
-; HL, BC and A by register arithmetic (E-0347)
-; why: part of BattleEnd_Step3_Multiply8By16, in part of BattleEnd_Step3; BattleEnd_Step3: battle
-; end, step 3: settles the battle MP (BattleEnd_Step3_SubtractBattleMP_2) and moves on, skipping the
-; next steps for link battles and ... (E-0352, E-0354, E-0044)
+; As the routine before for HP, then adds 8 unless the result's high byte is 3. (C1, E-0357)
 BattleEnd_Step3_Multiply8By16_2::
     ld hl, $03e7
     ld a, l
@@ -9532,14 +8994,9 @@ DrawTitleSaveSummaryScreen::
     ld a, $7f
     ld [wOBJPaletteUploadRequest], a
 
-; Calls LoadSaveFileSummary; branches on wBattlerRecords; branches on wGameMode; copies L to
-; wTextWindowTileLo; copies H to wTextWindowTileHi; copies L to wTextWindowRows; copies H to
-; wTextWindowWidth; sets wStringCategory to 8; sets wStringIndex to $0a; calls ShowString_Bank08;
-; copies L to wTextWindowTileLo; copies H to wTextWindowTileHi; then 22 more steps (see the code)
-; (E-0347)
-; why: part of DrawTitleSaveSummaryScreen; DrawTitleSaveSummaryScreen: loads the summary graphics
-; and palette, the save file summary, and draws the player name, party icons, names, levels and key
-; name on the ... (E-0352, E-0131)
+; The title's save summary: with no save data blanks the box and shows string $0A of category 8;
+; otherwise shows the player's name, play time and the rest (positions differ in game mode 5). (C1,
+; E-0357)
 DrawTitleSaveSummaryScreen_CallLoadSaveFileSummary::
     call LoadSaveFileSummary
     ld a, [wBattlerRecords]
@@ -9908,10 +9365,7 @@ CopyKeyNameWordToDE_Bank16::
     call CopyKeyNameWordToDE
     ret
 
-; Copies wTitleKeyEntry & $3f to wStringIndex; sets wStringCategory to 6; calls ShowString_Bank09
-; (E-0347)
-; why: part of CopyKeyNameWordToDE_Bank16; CopyKeyNameWordToDE_Bank16: calls CopyKeyNameWordToDE
-; (bank $00) (E-0352, E-0114)
+; Shows the name of the title's key entry (string wTitleKeyEntry & $3F of category 6). (C1, E-0357)
 CopyKeyNameWordToDE_Bank16_CheckTitleKeyEntry::
     ld a, [wTitleKeyEntry]
     and $3f
@@ -10017,9 +9471,8 @@ LoadTileForRecordFamily::
 WriteBytesToVRAMTileWorkBuf1::
     ld a, [wWorkBuf + $1]
 
-; Calls WriteVRAMByteInc; also changes HL, DE, A and B by register arithmetic (E-0347)
-; why: part of WriteBytesToVRAMTileWorkBuf1; WriteBytesToVRAMTileWorkBuf1: writes B bytes from DE to
-; VRAM tile wWorkBuf + $1 ($8000 + 16 * index (E-0352, E-0124, E-0340)
+; Writes B bytes from DE into VRAM tile A in the signed numbering ($00-$7F at $9000, $80-$FF at
+; $8800). (C1, E-0357)
 WriteBytesToVRAMTileWorkBuf1_Skip::
     swap a
     ld h, a
