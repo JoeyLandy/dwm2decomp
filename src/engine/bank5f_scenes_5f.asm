@@ -260,6 +260,8 @@ Map43Attrs0_Y0X1::
 Map43Attrs0_Y0X2::
     INCBIN "maps/map43/attrs0_y0_x2.lz"
 
+; Runs the message box by wMessageState ($FF idle): 0 opens the window, 1 shows the message, 2 waits
+; for the text and closes the window, 3 waits for the close (RunMessageBox_*). (C1, E-0357)
 ; wMessageState ($FF = idle) steps a message: 0 opens the message window (unless wMessageGroup bit
 ; 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then
 ; ShowMessageFromMessageIndex starts the text; 2 waits until wTextFlags bit 0 clears (text done),
@@ -267,7 +269,6 @@ Map43Attrs0_Y0X2::
 ; state 0 also calls SetBit1OfPlayerAndObjectFlags and state 3 ClearBit1OfPlayerAndObjectFlags
 ; (probably freezing and releasing the player and objects). The steps after state 3 are not read
 ; (E-0079)
-; code: branches on wMessageState; dispatches on wMessageState (E-0347)
 RunMessageBox::
     ld a, [wMessageState]
     cp $ff

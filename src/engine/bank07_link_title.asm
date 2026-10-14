@@ -782,9 +782,9 @@ CopyRect32StrideToVRAM_Bank07::
     ret
 
 ; Game mode 5 start-up, wModeState 2 (returning to the title from a game): clears the screen state,
-; loads the save (RunSaveSteps until done, and the key world when in one), fades in, decompresses
-; the title tiles, opens the text window and plays music 9 with the window and scroll reset, then
-; turns the screen on. (C1, E-0357)
+; loads the save (RunLoadGameSteps until done, and the key world when in one), fades in,
+; decompresses the title tiles, opens the text window and plays music 9 with the window and scroll
+; reset, then turns the screen on. (C1, E-0357)
 GameMode5_Init_SendSGBPaletteSetPacket::
     ld hl, wScreenState
     ld bc, $006f
@@ -816,7 +816,7 @@ GameMode5_Init_SendSGBPaletteSetPacket::
     farcall LoadPalette0FromData
 
 .loop2:
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop2
@@ -919,7 +919,7 @@ GameMode5_Init_SendSGBPaletteSetPacket_2::
     farcall LoadPalette0FromData
 
 .loop2:
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop2
@@ -1012,7 +1012,7 @@ GameMode5_Init_SendSGBPaletteSetPacket_ReadLinkSetupMode::
     farcall LoadPalette0FromData
 
 .loop:
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop
@@ -1185,7 +1185,7 @@ GameMode5_Init_SendSGBPaletteSetPacket_3::
     farcall LoadPalette0FromData
 
 .loop2:
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop2
@@ -3187,7 +3187,7 @@ RunGameMode5Case01SubStates_SerialSendByte_2::
     jumptable
     dw RunGameMode5Case01SubStates_ShowMaster
     dw RunGameMode5Case01SubStates_FillBytes
-    dw RunGameMode5Case01SubStates_RunSaveSteps
+    dw RunGameMode5Case01SubStates_RunLoadGameSteps
 
 ; Continue, step 0: draws the save summary: the 'Master' title string, the summary frame and
 ; graphics with the cursor, and the completion mark. (C1, E-0357)
@@ -3259,12 +3259,12 @@ RunGameMode5Case01SubStates_FillBytes::
     call RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc
     ret
 
-; Continue, step 2: loads the save (RunSaveSteps until done) and the key world, sets the map size in
-; a key world, clears the field return state and timers, puts the followers on the player, picks a
-; new encounter countdown and goes to state 3 (start the game). (C1, E-0357)
-RunGameMode5Case01SubStates_RunSaveSteps::
+; Continue, step 2: loads the save (RunLoadGameSteps until done) and the key world, sets the map
+; size in a key world, clears the field return state and timers, puts the followers on the player,
+; picks a new encounter countdown and goes to state 3 (start the game). (C1, E-0357)
+RunGameMode5Case01SubStates_RunLoadGameSteps::
     call RunGameMode5Case01SubStates_WriteRAMGAndRAMBEtc
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     ret z
@@ -4556,7 +4556,7 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_3::
 RunLinkSession4ScreenState::
     ld a, [wTitleScreenState]
     jumptable
-    dw RunLinkSession4ScreenState_SaveAndSync
+    dw RunLinkSession4ScreenState_LoadAndSync
     dw RunLinkSession4ScreenState_WriteTitleScreenSubStateAndLinkScreenFlagEtc
     dw RunLinkSession4ScreenState_SetBattleKindAndSync
     dw RunLinkSession4ScreenState_EditRules
@@ -4566,24 +4566,25 @@ RunLinkSession4ScreenState::
     dw RunLinkSession4ScreenState_ToEggServiceMenu_Bank1B
     dw RunLinkSession4ScreenState_ResetAndSignal
 
-; by wTitleScreenSubState: RunSaveSteps, then a link message wait (E-0293)
-RunLinkSession4ScreenState_SaveAndSync::
+; by wTitleScreenSubState: RunLoadGameSteps (loading the save), then a link message wait (renamed
+; from RunLinkSession4ScreenState_SaveAndSync, E-0366)
+RunLinkSession4ScreenState_LoadAndSync::
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps
+    dw RunLinkSession4ScreenState_LoadAndSync_RunLoadGameSteps
     dw RunLinkSession4ScreenState_SetTitleScreenSubState
-    dw RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage
+    dw RunLinkSession4ScreenState_LoadAndSync_WaitLinkMessage
 
 ; Link battle set-up, save and sync, step 0: after the fade saves the game, copies the party's HP,
 ; MP and status, fully heals the party and starts the sync. (C1, E-0357)
-RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps::
+RunLinkSession4ScreenState_LoadAndSync_RunLoadGameSteps::
     ld a, [wFadeState]
     or a
     ret nz
     di
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ei
-    call RunLinkSession4ScreenState_SaveAndSync_LoadSRAMRecordWord
+    call RunLinkSession4ScreenState_LoadAndSync_LoadSRAMRecordWord
     farcall FullyHealParty
     ld a, $04
     ld [wSubMenuCursor], a
@@ -4596,7 +4597,7 @@ RunLinkSession4ScreenState_SaveAndSync_RunSaveSteps::
 
 ; Copies each party member's HP, MP and status from SRAM into wBattleStateBuffer (5 bytes each),
 ; then fills the entries of absent members. (C1, E-0357)
-RunLinkSession4ScreenState_SaveAndSync_LoadSRAMRecordWord::
+RunLinkSession4ScreenState_LoadAndSync_LoadSRAMRecordWord::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wPartyCount]
@@ -4663,7 +4664,7 @@ RunLinkSession4ScreenState_SetTitleScreenSubState::
 
 ; Save and sync, step 2: waits for the partner's $D3, then moves to the next set-up state. (C1,
 ; E-0357)
-RunLinkSession4ScreenState_SaveAndSync_WaitLinkMessage::
+RunLinkSession4ScreenState_LoadAndSync_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $d3
     ret nz

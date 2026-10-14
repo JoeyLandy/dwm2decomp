@@ -6069,12 +6069,13 @@ LoadSpeciesSpriteGraphicsAndPalette::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; Graphics number = word wArg1/wArg2: decompresses its picture (far pointer from MonsterSpriteTable
+; in bank $04) to the VRAM address wArg4/wArg5; on CGB also copies its 8 palette bytes from bank $27
+; ($7328 + 8 x number) into wOBJPaletteBuffer + wArg3 and requests an object palette upload. (C1,
+; E-0357)
 ; graphics number = the word wArg1/wArg2: reads its far pointer (3 bytes per entry) from
 ; MonsterSpriteTable in bank $04 (ReadFarPointerAtDEInBankB) and DecompressToVRAM to the address in
 ; wArg4/wArg5; on CGB it continues with the palette (not read) (E-0104)
-; code: calls ReadFarPointerAtDEInBankB; calls DecompressToVRAM; branches on wIsCGB; calls
-; ReadByteInBank; branches on rSTAT; sets wOBJPaletteUploadRequest to $7f; also changes HL, DE, BC
-; and A by register arithmetic (E-0347)
 DecompressGraphicsArg1ToArg4::
     ld a, [wArg1]
     ld l, a

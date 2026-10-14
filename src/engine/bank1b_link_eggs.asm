@@ -37,9 +37,9 @@ RunLinkSession::
 ; $DD, $E1, $F3, only in title sub-state 2 and when it differs from wLinkTimerLo) names link option
 ; 2-7; when this side's menu stands on the same option it takes the link role (bit 0, bit 1 for a
 ; leader code) and starts the link: sound $69, link mode 1 (2 for option 6), game mode 5 with the
-; option's state and the link session (5, 2, 3, 8, 4 or 6; option 7 saves first, RunSaveSteps);
-; otherwise it notes the partner's option or a mismatch ($FF). Always sets wLinkStatus 3 and sends
-; $F8. Eight unreached bytes sit inside it. (C1, E-0357)
+; option's state and the link session (5, 2, 3, 8, 4 or 6; option 7 first reloads the save,
+; RunLoadGameSteps); otherwise it notes the partner's option or a mismatch ($FF). Always sets
+; wLinkStatus 3 and sends $F8. Eight unreached bytes sit inside it. (C1, E-0357)
 RunLinkSession_WaitSerialTransferDone::
     ld a, $ff
     ld [wGlyphListPos], a
@@ -328,7 +328,7 @@ RunLinkSession_WaitSerialTransferDone::
     ld a, $01
     ld [wLinkMode], a
     di
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wMapType]
     bit 7, a
     jr z, .skip

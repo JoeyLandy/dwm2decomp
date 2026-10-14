@@ -1253,12 +1253,14 @@ GlyphCopyArgsForA::
 GlyphCopyArgsForA_Data::
     db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
+; Copies a tile rectangle: wArg1/wArg2 = source, wArg3 = width, wArg4 = rows, wArg5/wArg6 = BG map
+; address; each row is written in mode 0-1 only, wrapping at the 32-tile row, and on CGB (unless
+; wArg7) the attribute bytes of the same cells are cleared in VRAM bank 1; rows step $20, wrapping
+; within the BG map. (C1, E-0357)
 ; parameters wArg1/wArg2 = source (high, low), wArg3 = width, wArg4 = rows, wArg5/wArg6 = BG map
 ; destination (high, low): copies each row of tiles to the BG map with interrupts off after rSTAT
 ; bit 1 clears, wrapping columns inside the 32-entry row; on CGB, when wArg7 is 0, also zero-fills
 ; the same entries in VRAM bank 1 (attributes); the row loop is not read to its end (E-0093)
-; code: branches on rSTAT; branches on wIsCGB; branches on wArg7; sets rVBK to 1; branches on rSTAT;
-; sets rVBK to 0; branches on rSTAT; also changes HL, DE, BC and A by register arithmetic (E-0347)
 DrawTileRectFromArg1Params::
     ld hl, wArg1
     ld d, [hl]

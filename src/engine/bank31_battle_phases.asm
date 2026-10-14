@@ -8616,16 +8616,15 @@ TileRect_PartyCountRects_3::
     db $b6, $ea, $af, $c3, $c3, $c3, $c3, $ea, $af, $c3, $c3, $c3, $c3, $ea, $af, $c3, $c3, $c3, $c3, $b7 ; row 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 6
 
+; Draws slot C's status mark: in link mode 2 the bank-$A0 version (DrawSlotStatusMarks_BankA0);
+; otherwise only for the local side's slots 0-2 (the far side's when the link role bit 1 is set):
+; tile $C2 with the level for an absent slot, $C3 with the level when status 0 is clear, else the
+; marker of each set status (poisoned, badly poisoned, confused, cursed, paralyzed, asleep). (C1,
+; E-0357)
 ; C = battle slot, drawn only for the displayed side (slots 0-2 normally, 4-6 when wLinkMode = 1 and
 ; wLinkRole bit 1 is set; slots 3 and 7 never); with wLinkMode = 2 the bank-$A0 version is
 ; far-called instead: draws the slot's status markers from its status bytes (the per-status part is
 ; not read to its end) (E-0111)
-; code: branches on wLinkMode; calls DrawSlotStatusMarks_BankA0; branches on wLinkMode; branches on
-; wLinkRole; branches on C; branches on C & $03; calls CarryUnlessBattleSlotOutSlotEmpty; branches
-; on the byte at wBattleStatus; calls DrawSlotStatusMarks_ReadWordTableEntryForSlotC; calls
-; DrawSlotStatusMarks_ReadWordTableEntryForSlotC_3; calls
-; DrawSlotStatusMarks_ReadWordTableEntryForSlotC_4; calls
-; DrawSlotStatusMarks_ReadWordTableEntryForSlotC_6; then 10 more steps (see the code) (E-0347)
 DrawSlotStatusMarks::
     ld a, [wLinkMode]
     cp $02

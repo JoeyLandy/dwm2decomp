@@ -8778,15 +8778,13 @@ StartSound_Skip::
     pop bc
     ret
 
-; C1 (E-0018): appears to be the sound engine's update routine. It switches to the bank in $FFDD,
-; walks the channel-state slots at $DC00 and writes the sound registers (including $FF1A).
-; Identified from those writes and from the banks it reads at runtime ($40-$43 via the tables
-; above); not decoded further.
+; The sound engine's frame step (from VBlankHandler; E-0018 identified it from its sound register
+; writes): saves the ROM bank, starts at channel wSoundEngineState, clears wSoundSkipMaskA, counts
+; the frame in wSoundTickBuf and goes on with the per-slot pass from wSoundChannelSlots. (C1,
+; E-0357)
 ; for each of the 6 channel slots at wSoundChannelSlots: copies the slot into HRAM $FFD8-$FFF7,
 ; reads events from the track in bank hSoundBank and writes the channel's sound registers (the
 ; per-frame sound engine; called from VBlankHandler)
-; code: copies wSoundEngineState to wSoundChannelIndex; sets wSoundSkipMaskA to 0; increments
-; wSoundTickBuf (E-0347)
 SoundTick::
     ld a, [BANK_NUMBER_BYTE]
     push af

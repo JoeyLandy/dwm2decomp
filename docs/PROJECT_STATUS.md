@@ -55,7 +55,24 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Current handoff (2026-10-14, E-0365)
+## Current handoff (2026-10-14, E-0366)
+
+E-0365 was committed after suite578 (OK). This round reads the last 105
+routines that only had a generated restatement (95 AI scorers in bank $E2 and
+ten others), so every code label now carries a note written after reading the
+whole routine or an older reading. Reading the save copies corrected E-0109:
+the routine named CopySaveBlocksToSRAM copies from SRAM into WRAM, and the
+sequence called RunSaveSteps only restores the save; they are now
+LoadSaveBlocksFromSRAM and RunLoadGameSteps (with UnpackNextSavedRecord,
+RestoreSRAMBank2FromBank3, LoadGM2TimerBlockFromSRAM). 5,246 hand notes, 0
+restatements. Final binary identity: **PASS**, `build/run580/report.json`,
+4,194,304 bytes, approved SHA-256, zero differences; full suite:
+`build/logs/suite580.log`. Next: the long generated step labels (2,087 over 50
+characters, many repeating their parent after `_To`), then a review pass over
+names that still describe instructions rather than purpose. The full
+readability goal remains active.
+
+## Prior handoff (2026-10-14, E-0365)
 
 The E-0364 round was committed after suite576 (OK). This round adds 553 notes:
 the rest of bank $73's scenes and the 406 routines whose older notes admitted
@@ -225,7 +242,7 @@ Measured from `src/` by `tools/readability.py` and `tools/doc_coverage.py`; E-03
 | Labels | 33,306 global labels. None is an address name or spells a RAM or ROM address, none carries a `_CaseNN`/`_SubNN` state-machine index, and none lacks a description beyond its structure (E-0340, E-0344). Steps say what they show, call or write (`FhuntTalkEvents_ShowHeroCheckedBehindThe`, `..._SetDataBankSave`); data is named by its content or its reader (`Script_HowMayWeServe`, `MapObjects_Map94_3_Unlisted_0`). Copies and repeats are numbered `_2`, `_3`. A step name no longer repeats its parent's name (683 shortened in the current generation, E-0356); 722 labels are longer than 60 characters |
 | RAM | 957 named addresses; none spells a byte number. Work bytes that different routines reuse are named after their main use, and the note lists the others (E-0345) |
 | Pointers | No operand is a bare address (readability.py raw_pointer_operands 0). Pointers name their target, in another bank where the code shows which (`ld de, GlyphFont`, `ld hl, MonsterAttributeMapTable`, `NameEntryTileSrcListB + $..`). Values say what they are: `lb bc, $40, $90` pairs, `ld hl, -999`, `ld hl, 20000`, `PAL_WHITE`, `MSG_KEEP_OPEN | $0487`, `MSG_ALREADY_OPEN | $048b` (E-0357). 99 operands were read one by one (config/operands.json, E-0348, E-0350) |
-| Documentation | Every label has a comment (9,822 code, 23,484 data; tools/doc_coverage.py), and every routine comment and table header cites an evidence or decision id. Notes written by reading cite their entry; restatements of the instructions cite E-0347; the 185 early readings were re-read against the code and 8 corrected (E-0353). Every restated routine also says what it is for (`; why:`): the step, helper, part or copy it is and the documented routine it serves (E-0352); no purpose line quotes a note that only names a dispatch (E-0354). A review of 30 random restated routines found every claim accurate and two weaknesses, both fixed (E-0355). 5,141 routines are now described by a note written after reading the whole routine (E-0357 through E-0362, E-0365), which replaces the restatement; 105 code labels are still described only by the restatement and purpose line. No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347, E-0350) |
+| Documentation | Every label has a comment (9,822 code, 23,484 data; tools/doc_coverage.py), and every routine comment and table header cites an evidence or decision id. Notes written by reading cite their entry; restatements of the instructions cite E-0347; the 185 early readings were re-read against the code and 8 corrected (E-0353). Every restated routine also says what it is for (`; why:`): the step, helper, part or copy it is and the documented routine it serves (E-0352); no purpose line quotes a note that only names a dispatch (E-0354). A review of 30 random restated routines found every claim accurate and two weaknesses, both fixed (E-0355). 5,246 routines are now described by a note written after reading the whole routine (E-0357 through E-0362, E-0365, E-0366), which replaces the restatement; no code label is described only by the restatement. No comment names a label, RAM symbol or constant that does not exist. Every RAM symbol and hardware register has a comment (E-0347, E-0350) |
 | Guide | [READING_GUIDE.md](READING_GUIDE.md) explains the layout, idioms, text tokens, constants, assets and evidence |
 
 ## Source presentation (2026-10-13, decision D-005)

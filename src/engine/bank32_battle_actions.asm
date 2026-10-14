@@ -2021,11 +2021,11 @@ ShowBattleTextCategory0Entry_ReturnCarry::
     scf
     ret
 
+; The actor loses a sixth of its max HP: wBattleDamage = max HP / 6, subtracted from its HP with no
+; floor. (C1, E-0357)
 ; damage = the actor's max HP / 6 (wBattleDamageLo/Hi) is subtracted from the actor's HP without a
 ; floor: HP 10 with max HP 120 becomes $FFF6 (executed, test SixthOfMaxHPWithoutFloor); whether
 ; callers keep HP above the damage is not read (E-0121, E-0154)
-; code: copies L to wBattleDamageLo; copies H to wBattleDamageHi; also changes HL, DE and A by
-; register arithmetic (E-0347)
 ActorLosesSixthOfMaxHP::
     ld a, [wBattleActor]
     ld hl, wBattleHP

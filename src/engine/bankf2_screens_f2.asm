@@ -20,7 +20,7 @@ GameMode8_Init::
     ld [wSaveRecordIndex], a
 
 .loop2:
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ld a, [wSaveStep]
     bit 7, a
     jr z, .loop2

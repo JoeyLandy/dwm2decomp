@@ -5285,10 +5285,12 @@ BGMapAddressAtScroll_Bank15::
     add_a_to_hl
     ret
 
+; Unpacks a BCD number into seven digits at wArg1, high first: hTemp3 as one digit, then the two
+; nibbles of hTemp2, hTemp1 and hTemp0; leading zeros among the first six become tile $E3 (blank).
+; (C1, E-0357)
 ; wArg1 = hTemp3, then the high and low digits of hTemp2, hTemp1 and hTemp0 go to wArg2-wArg7 (seven
 ; digits of a packed-BCD number, most significant first); the loop that follows (C = 6) is not read
 ; (E-0106)
-; code: changes HL, DE, A and C; branches on the byte at wArg1 (E-0347)
 UnpackBCDToDigitsArg1::
     ld de, hTemp3
     ld hl, wArg1

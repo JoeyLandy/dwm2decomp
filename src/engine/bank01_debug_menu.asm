@@ -5360,9 +5360,9 @@ ClampDebugValueToTableLimit::
 
 ; Makes sure the debug battle has usable party data: when the party has 1-3 members, the farm level
 ; is below 3 and each member's record index is below 10, 20 or 30 (by farm level) and its record
-; state is 2, nothing is done. Otherwise it loads the save (CheckSaveData, RunSaveSteps) or, with no
-; save, creates the default debug game (DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc). (C1,
-; E-0357)
+; state is 2, nothing is done. Otherwise it loads the save (CheckSaveData, RunLoadGameSteps) or,
+; with no save, creates the default debug game (DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc).
+; (C1, E-0357)
 DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ld a, [wPartyCount]
     or a
@@ -5401,7 +5401,7 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ldh a, [hTemp0]
     or a
     jr nz, .call_debug_battle_setup_update_write_map_id
-    farcall RunSaveSteps
+    farcall RunLoadGameSteps
     ret
 
 .call_debug_battle_setup_update_write_map_id:

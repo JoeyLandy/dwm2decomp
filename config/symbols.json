@@ -2204,12 +2204,12 @@
   },
   "C8C3": {
     "name": "wSaveStep",
-    "note": "save-routine stage (RunSaveGameSteps); bit 7 marks the end",
+    "note": "stage of the save and load step routines (RunSaveGameSteps, RunLoadGameSteps); bit 7 marks the end (E-0366)",
     "evidence": "E-0133"
   },
   "C8C4": {
     "name": "wSaveRecordIndex",
-    "note": "record index of the save-record steps",
+    "note": "record index of the save and load record steps (UnpackNextSavedRecord, E-0366)",
     "evidence": "E-0133"
   },
   "C8C5": {

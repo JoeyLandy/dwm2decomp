@@ -7495,11 +7495,13 @@ VerifySaveBank3Checksum::
     ld a, $01
     ret
 
-; with SRAM enabled, steps by wSaveStep: on the first call (0) sets it to 1 and runs
-; CopySaveBlocksToSRAM and three more save routines; on the second runs
-; ScanBank1RecordStepSaveRecordIndex; afterwards sets bit 7 of wSaveStep (finished); disables SRAM
-; each time (E-0109)
-RunSaveSteps::
+; with SRAM enabled, steps by wSaveStep: on the first call (0) sets it to 1, loads the saved WRAM
+; blocks (LoadSaveBlocksFromSRAM), restores SRAM bank 2 from its bank-3 copy, the records from their
+; bank-1 backup (RestoreRecordsFromSRAMBank1Backup) and the game-mode-2 timer block; while it is 1
+; unpacks one saved record per call (UnpackNextSavedRecord, which moves it on after record 30); then
+; sets bit 7 of wSaveStep (finished); disables SRAM each time. It only reads the save (renamed from
+; RunSaveSteps, E-0366)
+RunLoadGameSteps::
     ld a, $0a
     ld [rRAMG], a
     ld a, [wSaveStep]
@@ -7507,16 +7509,16 @@ RunSaveSteps::
     jr nz, .skip
     inc a
     ld [wSaveStep], a
-    call CopySaveBlocksToSRAM
-    call RunSaveSteps_WriteRAMB
+    call LoadSaveBlocksFromSRAM
+    call RestoreSRAMBank2FromBank3
     call RestoreRecordsFromSRAMBank1Backup
-    call RunSaveSteps_WriteSVBKAndRAMB
+    call LoadGM2TimerBlockFromSRAM
     jr .skip2
 
 .skip:
     dec a
     jr nz, .check_save_step
-    call ScanBank1RecordStepSaveRecordIndex
+    call UnpackNextSavedRecord
     jr .skip2
 
 .check_save_step:
@@ -7530,9 +7532,10 @@ RunSaveSteps::
     ld [rRAMB], a
     ret
 
-; runs UnpackRecordFromBank1Slot for SRAM bank 1 record wSaveRecordIndex ($A06F + $6F * index); when
-; wArg5 is $FF advances wSaveRecordIndex and, after record 30, increments wSaveStep (E-0121)
-ScanBank1RecordStepSaveRecordIndex::
+; unpacks SRAM bank 1 record wSaveRecordIndex ($A06F + $6F * index) with UnpackRecordFromBank1Slot;
+; when wArg5 is $FF advances wSaveRecordIndex and, after record 30, increments wSaveStep (renamed
+; from ScanBank1RecordStepSaveRecordIndex, E-0366)
+UnpackNextSavedRecord::
     ld a, [wSaveRecordIndex]
     ld [wArg1], a
     ld c, $6f
@@ -7633,7 +7636,9 @@ RestoreRecordsFromSRAMBank1Backup::
 
 ; Restores SRAM bank 2 (where the key-world slots are saved) from its backup in bank 3: $1FFE bytes
 ; from $A000, 10 bytes per pass. (C1, E-0357)
-RunSaveSteps_WriteRAMB::
+; copies $1FFE bytes from SRAM bank 3 back to bank 2 at $A000 (the key-world slots and their saved
+; copy, E-0366)
+RestoreSRAMBank2FromBank3::
     ld hl, sRecords
     ld bc, $0333
 
@@ -7706,16 +7711,16 @@ RunSaveSteps_WriteRAMB::
     jp nz, .loop
     ret
 
-; with SRAM bank 1 selected, walks the list at CopySaveBlocksToSRAM_Data (word address, word length;
-; a zero address ends it) and copies each WRAM block to SRAM from sSaveData onward (the copy loop is
-; not read to its end) (E-0109)
-; code: sets rRAMB to 1; copies the byte at CopySaveBlocksToSRAM_Data to hTemp0; copies the byte at
-; CopySaveBlocksToSRAM_Data to hTemp1; sets wSaveStateFlag to $80; also changes HL, DE, BC and A by
-; register arithmetic (E-0347)
-CopySaveBlocksToSRAM::
+; Loads the saved WRAM blocks: with SRAM bank 1 mapped, walks LoadSaveBlocksFromSRAM_Data (word
+; address, word length; address 0 ends it) and copies each block from sSaveData onward into WRAM
+; (SRAM to WRAM, despite the name); then wSaveStateFlag = $80. (C1, E-0357)
+; with SRAM bank 1 mapped, walks LoadSaveBlocksFromSRAM_Data (word address, word length; a zero
+; address ends it) and copies each block from sSaveData onward into WRAM, then sets wSaveStateFlag
+; to $80 (renamed from CopySaveBlocksToSRAM: the copy goes from SRAM to WRAM, E-0366)
+LoadSaveBlocksFromSRAM::
     ld a, $01
     ld [rRAMB], a
-    ld hl, CopySaveBlocksToSRAM_Data
+    ld hl, LoadSaveBlocksFromSRAM_Data
     ld de, sSaveData
 
 .set_temp0:
@@ -7755,7 +7760,9 @@ CopySaveBlocksToSRAM::
 
 ; Restores the game-mode-2 timer block ($D8 bytes at sSavedTimerBlock in SRAM bank 1) into
 ; wGM2TimerFrames when sSavedGM2Mode is 0 or 1. (C1, E-0357)
-RunSaveSteps_WriteSVBKAndRAMB::
+; when sSavedGM2Mode is 0 or 1 copies the $D8 bytes at sSavedTimerBlock (SRAM bank 1) to
+; wGM2TimerFrames; the counterpart of the save routine that writes them (E-0366)
+LoadGM2TimerBlockFromSRAM::
     xor a
     ldh [rSVBK], a
     ld a, $01
@@ -8276,16 +8283,16 @@ SnapshotSpritesForSave::
     and $fd
     ld [wSnapshotSlot5], a
 
-; the same walk of CopySaveBlocksToSRAM_Data into SRAM from sSaveData, also clearing the running sum
-; in hTemp2/hTemp3 (accumulation not read to its end) (E-0109)
-; code: sets rRAMB to 1; sets hTemp2 to 0; sets hTemp3 to 0; copies the byte at
-; CopySaveBlocksToSRAM_Data to hTemp0; copies the byte at CopySaveBlocksToSRAM_Data to hTemp1; sets
-; sSaveSignature to $55; copies L to sSaveChecksumLo; copies H to sSaveChecksumHi; sets hTemp2; sets
-; hTemp3; also changes HL, DE, BC and A by register arithmetic (E-0347)
+; Saves the WRAM blocks: the same walk of LoadSaveBlocksFromSRAM_Data, copying each block from WRAM
+; to sSaveData onward while summing its bytes; then writes the signature $55 and the sum + $9753 as
+; the checksum (sSaveChecksumLo/Hi). (C1, E-0357)
+; the save's counterpart of LoadSaveBlocksFromSRAM: copies each block of LoadSaveBlocksFromSRAM_Data
+; from WRAM to sSaveData onward while summing its bytes, then writes the signature $55 to
+; sSaveSignature and the sum + $9753 to sSaveChecksumLo/Hi (E-0109, E-0366)
 CopySaveBlocksToSRAMWithSum::
     ld a, $01
     ld [rRAMB], a
-    ld hl, CopySaveBlocksToSRAM_Data
+    ld hl, LoadSaveBlocksFromSRAM_Data
     ld de, sSaveData
     xor a
     ldh [hTemp2], a
@@ -8346,8 +8353,8 @@ CopySaveBlocksToSRAMWithSum::
     add_a_to_hl
     jr .set_temp0
 
-; data read by CopySaveBlocksToSRAM (20 bytes) (E-0347)
-CopySaveBlocksToSRAM_Data::
+; data read by LoadSaveBlocksFromSRAM (20 bytes) (E-0347)
+LoadSaveBlocksFromSRAM_Data::
     db $8a, $ff, $0e, $00, $0c, $c6, $91, $02, $d7, $cb, $6b, $00, $42, $cc, $b5, $00
     db $00, $00, $00, $00
 
@@ -8497,13 +8504,13 @@ RunBank1RecordScanSteps::
     ld [rRAMG], a
     ld a, [wSaveStep]
     or a
-    jr nz, .call_scan_bank1_record_step_save_record_index
+    jr nz, .call_unpack_next_saved_record
     inc a
     ld [wSaveStep], a
     call RestoreRecordsFromSRAMBank1Backup
 
-.call_scan_bank1_record_step_save_record_index:
-    call ScanBank1RecordStepSaveRecordIndex
+.call_unpack_next_saved_record:
+    call UnpackNextSavedRecord
     ld a, [wSaveStep]
     cp $02
     jr nz, .done

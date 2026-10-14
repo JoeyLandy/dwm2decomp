@@ -6054,12 +6054,12 @@ ShowRecordPersonalityName::
     ld [hl], $12
     ret
 
+; Draws record B's parents (field offsets from DrawRecordParentNames_Data1, or _Data2 when family
+; bit 4 is set): for each parent its name into VRAM tiles ($8A00, $8B40), or '???' when its species
+; word is $FFFF, its species name at ($92, $50) / ($93, $90) (DrawMonsterNameOfRecordField), and one
+; more name field ($8AF0, $8C30); SRAM is enabled for the reads and disabled after. (C1, E-0357)
 ; for record B draws the names of its parents (fields from $6ED2 or $6EDA by bit 4 of field $0D), or
 ; '???' when unknown (E-0131)
-; code: sets rRAMG2 to $0a; sets rRAMB to 0; calls LoadSRAMRecordByte; branches on hTemp0 & $10;
-; calls LoadSRAMRecordWord; branches on hTemp1; sets wNameGlyphBuf to $98; calls
-; CopyGlyphTilesToVRAM; calls CopyRecordNameToNameGlyphBuf; calls CopyGlyphTilesToVRAM; sets wArg1
-; to $92; sets wArg2 to $50; then 18 more steps (see the code) (E-0347)
 DrawRecordParentNames::
     ld a, $0a
     ld [rRAMG2], a
