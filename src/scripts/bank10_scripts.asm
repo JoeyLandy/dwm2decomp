@@ -1601,7 +1601,7 @@ ScriptCommand09_Finish::
     ld a, [wTextWindowState]
     and $03
     ret nz
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     xor a
     ld [wScriptCommandType], a
     xor a
@@ -1626,7 +1626,7 @@ ScriptCommand09_OpenWindow::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .done
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -1710,7 +1710,7 @@ ScriptCommand01_CloseWindow::
     ld a, [wTextWindowState]
     and $03
     ret nz
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 .clear_script_command_type:
     xor a

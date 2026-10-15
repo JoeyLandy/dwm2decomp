@@ -266,9 +266,8 @@ Map43Attrs0_Y0X2::
 ; 7) at the bottom, or at the top when hPlayerY >= $48, with sound $69; 1 waits for the window, then
 ; ShowMessageFromMessageIndex starts the text; 2 waits until wTextFlags bit 0 clears (text done),
 ; then closes the window (unless wMessageGroup bit 6); 3 waits for the close. When wStepPtrLo is 0,
-; state 0 also calls SetBit1OfPlayerAndObjectFlags and state 3 ClearBit1OfPlayerAndObjectFlags
-; (probably freezing and releasing the player and objects). The steps after state 3 are not read
-; (E-0079)
+; state 0 also calls FreezeFieldAnimation and state 3 ResumeFieldAnimation (probably freezing and
+; releasing the player and objects). The steps after state 3 are not read (E-0079)
 RunMessageBox::
     ld a, [wMessageState]
     cp $ff
@@ -290,7 +289,7 @@ RunMessageBox_Open::
     ld a, [wStepPtrLo]
     or a
     jr nz, .check_message_group
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
 
 .check_message_group:
     ld a, [wMessageGroup]
@@ -381,7 +380,7 @@ RunMessageBox_Finish::
     ld a, [wStepPtrLo]
     or a
     jr nz, .set_message_state_to_FF
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 .set_message_state_to_FF:
     ld a, $ff
@@ -2917,7 +2916,7 @@ RunOneTimeTreasure_OpenWindow::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .done
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -2997,7 +2996,7 @@ RunOneTimeTreasure_RedrawChest::
     ret nz
     farcall ApplyMapScreenFlagEvents
     farcall DrawFullScreenBufferAtScroll
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     xor a
     ld [wScriptCommandType], a
     xor a

@@ -1144,7 +1144,7 @@
   },
   "C0A4": {
     "name": "wPauseMenuScreen",
-    "note": "screen index of the pause menu (RunPauseMenuScreen dispatches on it; PauseMenu_Info cases set it)",
+    "note": "screen index of the pause menu (RunPauseMenuSave dispatches on it; PauseMenu_Info cases set it)",
     "evidence": "E-0133"
   },
   "C0A7": {
@@ -1903,7 +1903,7 @@
   },
   "C5FF": {
     "name": "wDebugCounter",
-    "note": "debug screens: cursor blink and position counter (StepDebugCursorDebugCounter)",
+    "note": "debug screens: cursor blink and position counter (DebugResultsDisplay_BlinkSelectedField)",
     "evidence": "E-0133"
   },
   "C600": {

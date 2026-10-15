@@ -853,3 +853,63 @@ reading itself. Labels are as named when the batch was applied; later renames ar
 - `CheckSlotStatusBlock` (00:3E25): BSTAT8_UNUSED_8_3 says no static reader was found, but this routine tests it; what sets it?
 - `DebugMode_InitByModeState` (01:4045): State 1 ('1:GOTO PROGRAM') uses the main menu init and update; what starts the game from it is not read here.
 - `DebugResultsDisplay_Init` (01:4472): The final loop looks meant to clear $60 bytes from wScreenState; as written it clears one byte.
+
+## E-0374
+
+- `LoadMapScreen_DrawMarker_IfOnScreen` (00:1AD6): The CGB attribute bytes go to WRAM bank 2, which the probe cannot read back after rSVBK returns to 0; the palette choice (3, 5 or 1 by entry index) is a reading only.
+- `DebugMapEditor_CheckPosition` (00:1D90): What the RAM byte the record points to ($CC37/$CC38) holds is not established here.
+- `SoundTick_StepEnvelope` (00:3DC8): Whether a reload nibble of 15 with start volume 15 occurs in any track is not checked.
+- `FillRectWithTileSequence` (01:4A75): That the LCD is off when these builders run is assumed from GameMode0_Init calling them before ResumeAfterModeChange; not traced.
+- `LoadPalette0FromData` (01:4AA4): The second copy goes to wBGPaletteBuffer, not wOBJPaletteBuffer, while the OBJ upload is requested; whether that is a slip of the original code is open.
+- `DebugMonsterRecordViewer_Update` (01:4ED4): Left below 0 lands on $2AB, one past the largest id Right reaches ($2AA); whether id $2AB is a valid template is not checked.
+- `DebugShowMonsterRecord` (01:4F80): Which template field each row shows (level, HP, MP and so on) needs the MonsterTable layout; not established here.
+- `DebugSkillViewer_Update` (01:50ED): What the string categories $10-$14 of bank $08 name (skill kinds, targets and so on) is not checked here.
+- `DebugToggleArg1Marker` (01:57E1): What the 0/2 mode of ComputeBreedingChild selects is not established here.
+- `CopyMonsterNameToBuffer_B01` (01:5BAD): Ids from $100 index past the 256-entry list; constants.inc places them in StringTable_MonsterNames2, which this routine does not choose.
+- `DebugAutomap_Update` (01:5BFA): Right can reach key numbers $14-$1F that Left never reaches; whether those keys exist is not checked.
+- `DebugMainMenu_Update` (01:616A): Who sets wDebugMenuFlag0-3 (the mode the menu returns to) is not traced here.
+- `DebugBattleSetupShowFieldString` (01:6903): Field 5 always shows string 4/0 whatever its value; whether that is meant to clear it is open.
+- `DebugBattleSetupShowFieldString` (01:6903): For fields 7, 9 and 11 DivideBByA leaves the quotient in B and the remainder in A; values of 100 or more give a first tile above $19.
+- `CopyBGPalettesToBuffer` (02:42C0): No caller or pointer was found in src/; is it reached through a computed address, or unused?
+- `CopyOBJPalettesToBuffer` (02:42DD): No caller or pointer was found in src/; is it reached through a computed address, or unused?
+- `WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0` (02:452C): No caller or pointer was found in src/; is it reached through a computed address, or unused?
+- `WritePlayerNameWithFlag0SuffixToTextBuf0` (02:470B): Which characters are $58, $87 and $60 in the text encoding, and is the flag-0 suffix ever shown (EVENT_NEVER_SET)?
+- `FarClearRollCounterWhenGM2TimerMinutesIs59` (02:4DD6): What counts the wGM2TimerFrames block, and so how often the gift count is cleared?
+- `CheckTileInFrontOnA` (02:4DED): wTileActionKind is only ever set to 1 here (the result of the flag test), not to the kind; who reads it?
+- `CheckTallTileInFront` (02:4ED6): The test is tile <= wMapTallTileMin, the opposite of the tall-tile reading in the wMapTallTileMin comment; which reading is right?
+- `CheckInteractionInFront` (02:4FE8): What does the tile in wMapHeaderByte7 mark on the maps that set it?
+- `UpdatePlayerMovement` (02:541B): After a screen scroll down it does not return and goes on to the Up check in the same call (as read); does that ever matter?
+- `UpdatePlayerMovement` (02:541B): The Up step loads its step word as ld hl, hSndNoteTimer, which is the value $FFF0 (-16) named as an HRAM symbol.
+- `SendSGBFieldPaletteSet` (02:5F9B): Which SGB packets does SendSGBPacketSet send with index $FF (the earlier note said PAL_SET; $B1 is the ATTR_SET header byte)?
+- `MapMusicByPlayerStateFlagsBit3` (02:630C): What field state does bit 3 of hPlayerStateFlags mark on maps $30 and $36?
+- `ShowIdlePartyStatusWindow` (02:66CC): Was the $B4-frame idle count used by code not in this ROM, or is it dead here?
+- `BuildPartyStatusWindowRows` (02:6788): What does MON_STATUS bit 0 mark (tile $C0)?
+- `WarpEffect` (02:6C40): FieldState_FieldMenu is named for the field menu; which actions set field state 6?
+- `UnpackNextSavedRecord` (02:71B2): What does wArg5 = $FF from UnpackRecordFromBank1Slot mean (record finished)?
+- `RunRestoreAndUnpackRecordsSteps` (02:76F2): Unreferenced: is it reached through a pointer not yet found?
+- `CopyRectRecordBlankingText_Bank03` (03:42B0): Unreferenced in bank $03; is it reached through a pointer?
+- `DecompressMenuTilesTo16E0` (03:4A27): DrawRecordMonsterPictureForMenuSelectedMember reads SRAM records; this path does not enable SRAM itself, so whether SRAM is already enabled when PauseMenu_State4_BuildInfoPage runs is not checked.
+- `BuildRecordLevelAndStatusRow_MarkStatusBit0` (03:4B42): What MON_STATUS bit 0 means is not established.
+- `DecompressRecordSpeciesGraphicsToTiles0` (03:4F6F): wArg3-wArg6 = 0, $90, $40, 0 after the expansion look like arguments for DrawMetaSpritePartC0 (a position?); not checked.
+- `PauseMenu_Info_PartyOverview_Close_LoadTile` (03:5253): Which BG tile id vTiles2 + $140 is depends on the LCDC tile addressing; if it is tile $14 it would be the level-cap mark of BuildRecordLevelAndStatusRow. Not checked.
+- `BuildRecordField5FValueScreenWithCursor` (03:650C): BuildRecordField5FValueScreen reads SRAM; PauseMenu_Skills_ChooseSkill_Redraw and PauseMenu_Skills_ChooseTarget_Build do not enable it here. Not checked whether it is enabled at that point.
+- `ShowString1Bank09AtTiles16E0ThenDetails` (03:6595): ShowRecordSkillPageNames_Bank03 reads SRAM; whether SRAM is enabled when PauseMenu_State4_BuildSkillsPage runs is not checked.
+- `PauseMenu_Plan_MessageSpeed_DrawCursor` (03:7049): Its data label MenuCursorAddressMenuCursor_Data would follow the rename of MenuCursorAddressMenuCursor (tables.json).
+- `PauseMenu_Plan_Keys_DrawKeyEntryMark` (03:7880): What bit 6 of a wKeyList entry byte 0 means (the mark it draws) is not known.
+- `PauseMenu_State4_BuildPlanPage_ShowHeading` (03:7AE8): Which of the plan page labels use the letters of string 2 (category 0, bank $09) was not checked on screen.
+- `SetupKeyWorldObjectsForMapType` (04:4025): What the floor info values 2, 3 and 6 and the floor state bit 7 stand for in the key world is not established.
+- `SetupKeyWorldObjectsForMapType_PlaceFirstSlot` (04:42CD): The older note limited the kind-9 case to screen (1, 0); the code accepts any non-zero hMapScreenX on row 0.
+- `IsCellBlockedByFieldEventKind` (04:4852): What field event kind $0A is (the reason the tall-tile rule replaces the blocking rule) is not known.
+- `UpdateSpriteSlots_FrameLoopType4` (04:4863): The data labels UpdateSpriteSlots_FollowPath4_Data and _FollowPath5_Data also say path; they hold frame sequences.
+- `IsCellBlockedByFieldEventKind_IsCellTall` (04:495A): The existing note names its parent RunPendingFieldEventType0AOrOther and UpdateSpriteSlots_FixedMoves; both are proposed for renaming in this draft.
+- `LoadPlayerAndFollowerSpriteGraphics` (04:4AA8): Which characters field graphics 1 and 4 show in mode 1 (before the long-faces scene) was not checked on screen.
+- `DrawPartyFollowerSprites` (04:4D43): The words at wPartyList + 3..8 (between wPartyList and wKeyList) have no RAM name; they act as the followers sprite ids here.
+- `Talk_ListenYouTwoQuitYourHorsing` (04:567D): The unreached 7 bytes stay inside this routine in the source; no entry of ReadableTalkEvents points at them.
+- `Talk_SceneSpinning` (04:5698): What field command 0 does here (RunFieldCommandTemp0 entry 0) was not read.
+- `ReadableTalkEvents_LibraryDesk` (04:573F): The earlier note read the species test as at least 56; the code also needs hTemp1 non-zero (312 or more, or a low byte of $38 or more above 256). Whether that is intended or a bug is not known; the at-least-312 path was not probed.
+- `ReadableTalkEvents_GreatLogKey` (04:581C): Why two key entries (kinds 1 and 2) are added for one GreatLog Key message; what kinds 1 and 2 name.
+- `ReadableTalkEvents_GreatLogKey` (04:581C): Nothing here tests EVENT_HERO_RECEIVED_THE_GREAT_LOG, so whether the talk can repeat depends on the map objects or the script.
+- `YoldTalkEvents` (04:58C2): Which map objects pick which wTalkEventGroup values was not traced.
+- `YoldTalkEvents_MermaidPast` (04:5AA5): FindPartyMemberWithSkill76To7DOr92 stops a member at its first $FF skill byte; a record with no $FF among its 8 skills falls through to the next member as well.
+- `TalkMsg0889_HeroPeeredIntoTheOvenIt_04` (04:5B54): Which map uses entry 25 rather than entry 13; the two routines are byte-identical apart from position.
+- `PartyHasSpeciesLo3CTo5BWithHiSet` (04:5D14): Whether the $13C-$15B species share a family (sea monsters) that the sleeper reacts to; not checked against the family table.

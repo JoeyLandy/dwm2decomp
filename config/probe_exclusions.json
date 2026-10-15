@@ -1,0 +1,8 @@
+{
+ "04:4704": {
+  "evidence": "E-0374",
+  "label": "UpdateSpriteSlots_NoHandler",
+  "reason": "A bare ret reached only through the jump table; entered alone it returns to the probe at once, and from the loop it would jump into the slot bytes, so no meaningful probe exists."
+ },
+ "_comment": "Probe-scope routines (tools/probe_scope.py) not probed, with the reader's reason (D-012)."
+}

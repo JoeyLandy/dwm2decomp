@@ -4,6 +4,10 @@
 SECTION "Bank 04", ROMX[$4000], BANK[$04]
     db $04
 
+; The sprite work shared by the field states: AdvancePlayerAnimCounterAndRunPlayerSpriteMode (the
+; player animation counter, then the player and follower sprites for hPlayerSpriteMode) and
+; UpdateAndDrawSpriteSlots (moves and draws the map objects). Far-called seven times from bank $02,
+; among them FieldState_WalkATalks, FieldState_RunScript and FieldState_Still. (C1, E-0374)
 ; runs AdvancePlayerAnimCounterAndRunPlayerSpriteMode and UpdateAndDrawSpriteSlots; shared by the
 ; field mode states (E-0122)
 FieldStateCommonUpdate::
@@ -11,6 +15,11 @@ FieldStateCommonUpdate::
     call UpdateAndDrawSpriteSlots
     ret
 
+; When wSaveStateFlag bit 7 is set: clears wSaveStateFlag, sets wSpriteSlotCount =
+; wSpriteSnapshotCount and copies the $50 bytes at wSpriteSnapshot to wSpriteSlots (the first five
+; 16-byte slots), undoing SnapshotSpritesForSave; otherwise does nothing. LoadMapObjectsForScreen
+; calls it after SetupKeyWorldObjectsForMapType on a special map, and again at line 275 of bank $69.
+; (C2, E-0374)
 ; when wSaveStateFlag bit 7 is set: clears wSaveStateFlag, wSpriteSlotCount = wSpriteSnapshotCount
 ; and the $50 bytes at wSpriteSnapshot go back to wSpriteSlots (undoes SnapshotSpritesForSave)
 ; (E-0117)
@@ -28,6 +37,17 @@ RestoreSpriteSnapshot::
     call CopyBytes
     ret
 
+; Called by LoadMapObjectsForScreen on a special map (wMapType bit 7). Clears wKeyWorldObjFlag and,
+; by wMapType & 7, picks an entry of KeyWorldObjectGridTable and the source of the object graphics
+; in hTemp9 (0 the list, 1 wKeyWorldEncounter, 2 the floor entry of wKeyWorldEncounterTable) for
+; SetupKeyWorldObjectsForMapType_LoadObjects. Type 3: the floor byte wKeyWorldFloorInfo + 1 + 4 *
+; wKeyWorldFloor picks entry byte - 1 (byte 2 or 3 moves to entry 9 or 10 when the floor state byte
+; has bit 7 set, and byte 2 sets wKeyWorldObjFlag, which then runs
+; SetupKeyWorldObjectsForMapType_PlaceFirstSlot); byte 6 uses entry 5 with hTemp9 = 1, or clears
+; wSpriteSlotCount when wKeyWorldFlags bit 7 is set. Type 4: entry 3, or 7 for goal kind 7. Type 6:
+; entry 4 with hTemp9 = 1 unless floor state byte 3 is $FF or odd or wKeyWorldFlags bit 7 is set
+; (then no objects). Type 2: entry 6 with hTemp9 = 2 only when the floor encounter byte 3 and
+; wKeyWorldSetting are 0, else no objects. Other types return. (C1, E-0374)
 ; for key-world map types 2, 3, 4 and 6 places the area objects (stairs, chests, monsters) from the
 ; wKeyWorldFloorInfo + $1/wKeyWorldFloorState entries (E-0130)
 SetupKeyWorldObjectsForMapType::
@@ -104,7 +124,7 @@ SetupKeyWorldObjectsForMapType::
     ld a, [wKeyWorldObjFlag]
     or a
     ret z
-    call PlaceObjectCB86ForKeyWorldGoalKind
+    call SetupKeyWorldObjectsForMapType_PlaceFirstSlot
     ret
 
 .clear_temp9:
@@ -413,9 +433,14 @@ KeyWorldGoalGraphicsTable::
     db $15, $15, $15, $15, $15, $15, $15, $44, $15, $15, $00, $00, $00, $00, $00, $00 ; id 7
     db $00, $16, $00, $00, $00, $00, $00, $44, $16, $33, $00, $00, $00, $00, $00, $00 ; id 8
 
+; Positions sprite slot 0 for the goal kind (wKeyWorldGoalKind) on the top screen row: returns
+; unless hMapScreenY is 0. On screen (0, 0) sets OBJ_Y = $20 and, for kind 1 or 7, OBJ_X = $20 and
+; OBJ_STATE = 1, for kind 8 OBJ_X = $30 and OBJ_STATE = 0. On any other screen of row 0 and kind 9
+; sets OBJ_X = $70, OBJ_Y = $10, OBJ_STATE = 3. SetupKeyWorldObjectsForMapType calls it after
+; loading the objects when wKeyWorldObjFlag is set (map type 3, floor byte 2). (C2, E-0374)
 ; on map screen (0, 0) or (1, 0) sets wSpriteSlots + $B/wSpriteSlots + $C and wSpriteSlots + $7 for
 ; wKeyWorldGoalKind values 1, 7, 8 or 9 (E-0125)
-PlaceObjectCB86ForKeyWorldGoalKind::
+SetupKeyWorldObjectsForMapType_PlaceFirstSlot::
     ldh a, [hMapScreenY]
     or a
     ret nz
@@ -685,10 +710,15 @@ FieldSpriteGraphicsTable50::
     dw FieldSpriteGfx60 ; id 96
     dw FieldSpriteGfx61 ; id 97
 
+; Sets bit 1 of hPlayerStateFlags and of OBJ_FLAGS of sprite slots 0-4 (wSpriteSlots and
+; wObject1-wObject4), keeping their other bits. Bit 1 stops the player animation counter
+; (AdvancePlayerAnimCounterAndRunPlayerSpriteMode) and the slot timers and moves of
+; UpdateSpriteSlots, so the field stands still; scenes, shops and field menus in eleven places
+; far-call it, and ResumeFieldAnimation undoes it. (C2, E-0374)
 ; sets bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object
-; entries 0-4 (the counterpart of ClearBit1OfPlayerAndObjectFlags; RunMessageBox calls them around a
-; message) (E-0120)
-SetBit1OfPlayerAndObjectFlags::
+; entries 0-4 (the counterpart of ResumeFieldAnimation; RunMessageBox calls them around a message)
+; (E-0120)
+FreezeFieldAnimation::
     ldh a, [hPlayerStateFlags]
     or $02
     ldh [hPlayerStateFlags], a
@@ -709,9 +739,13 @@ SetBit1OfPlayerAndObjectFlags::
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
+; Clears bit 1 of hPlayerStateFlags and of OBJ_FLAGS of sprite slots 0-4 (wSpriteSlots and
+; wObject1-wObject4), keeping their other bits, so the player animation counter and the object
+; timers run again; the counterpart of FreezeFieldAnimation, far-called by fifteen scenes and menus.
+; (C2, E-0374)
 ; clears bit 1 of hPlayerStateFlags and of the flag byte (wSpriteSlots + $D + 16 * n) of object
 ; entries 0-4 (E-0072)
-ClearBit1OfPlayerAndObjectFlags::
+ResumeFieldAnimation::
     ldh a, [hPlayerStateFlags]
     and $fd
     ldh [hPlayerStateFlags], a
@@ -732,6 +766,15 @@ ClearBit1OfPlayerAndObjectFlags::
     ld [wObject4 + OBJ_FLAGS], a
     ret
 
+; Returns at once when wFieldActionRequest bit 7 is set or wSpriteSlotCount is 0. Otherwise runs
+; UpdateSpriteSlots, then draws each of the wSpriteSlotCount 16-byte slots: hSpriteAttrXor =
+; OBJ_ATTR & 7, hSpriteTileOffset = OBJ_TILE_OFFSET, origin X = OBJ_X + 8 + hScrollX and Y = OBJ_Y +
+; 16 + hScrollY (16-bit with the high bytes), hSpriteSubIndex = OBJ_SUBINDEX with bit 7 turned into
+; the flip bit $20. With OBJ_SET_MODE 0 the set is OBJ_SPRITE_ID & $7F drawn by
+; DrawMetaSpriteSet_Bank27 (high byte non-zero), DrawMetaSpriteSet_Bank26 (low bit 7) or
+; DrawMetaSpriteSet_Bank25; otherwise the set is the OBJ_SPRITE_ID low byte drawn by
+; DrawMetaSprite_2. Called by FieldStateCommonUpdate and four screens in banks $14, $24, $F1 and
+; $F2. (C1, E-0374)
 ; unless bit 7 of wFieldActionRequest is set: updates the sprite slots, then draws each slot's
 ; metasprite at its position relative to the scroll (E-0129)
 UpdateAndDrawSpriteSlots::
@@ -835,6 +878,11 @@ UpdateAndDrawSpriteSlots::
     jp nz, .loop
     ret
 
+; Runs the update of each of the wSpriteSlotCount 16-byte slots from wSpriteSlots: B = count, HL =
+; wSpriteSlots, then falls into UpdateSpriteSlots_RunSlot, which dispatches on slot byte 0 (0 still,
+; 1 no handler, 2 wander left and right, 3 wander in four directions, 4 and 5 frame sequences). A
+; count of 0 is not checked here (it would run 256 slots); its caller UpdateAndDrawSpriteSlots
+; returns first in that case. (C2, E-0374)
 ; for each of wSpriteSlotCount 16-byte slots at wSpriteSlots runs the routine for its type byte
 ; (jump table of six) (E-0124)
 UpdateSpriteSlots::
@@ -843,7 +891,7 @@ UpdateSpriteSlots::
     ld hl, wSpriteSlots
 
 ; The loop over the sprite slots: runs the routine for each 16-byte slot's type byte (types 0-5).
-; (C1, E-0357)
+; (C2, E-0357; probed E-0374)
 UpdateSpriteSlots_RunSlot::
     push bc
     push hl
@@ -853,11 +901,11 @@ UpdateSpriteSlots_RunSlot::
     dw UpdateSpriteSlots_Still
     dw UpdateSpriteSlots_NoHandler
     dw UpdateSpriteSlots_Wander
-    dw UpdateSpriteSlots_FixedMoves
-    dw UpdateSpriteSlots_FollowPath4
-    dw UpdateSpriteSlots_FollowPath5
+    dw UpdateSpriteSlots_WanderFourWays
+    dw UpdateSpriteSlots_FrameLoopType4
+    dw UpdateSpriteSlots_FrameLoopType5
 
-; Moves to the next sprite slot (16 bytes on) and continues the loop. (C1, E-0357)
+; Moves to the next sprite slot (16 bytes on) and continues the loop. (C2, E-0357; probed E-0374)
 UpdateSpriteSlots_NextSlot::
     pop hl
     pop bc
@@ -868,7 +916,7 @@ UpdateSpriteSlots_NextSlot::
     ret
 
 ; Sprite slot type 0, a still object: unless its flags (slot byte $0D) have bit 1 set, counts its
-; animation timer up; then picks its animation frame. (C1, E-0357)
+; animation timer up; then picks its animation frame. (C2, E-0357; probed E-0374)
 UpdateSpriteSlots_Still::
     pop hl
     ld a, $0d
@@ -891,7 +939,7 @@ UpdateSpriteSlots_Still::
 ; timer when flag bit 2 (slot byte $0D) is set, otherwise bit 5; stores slot byte $0E = $82 + that
 ; bit when slot byte 7 is 3, otherwise byte 7 * 2 + that bit. Then moves to the next slot (pops the
 ; loop's HL and BC, HL += $10) and continues UpdateSpriteSlots_RunSlot. Types 0 (by fallthrough), 2
-; and 3 end here. (C1, E-0369)
+; and 3 end here. (C2, E-0369; probed E-0374)
 UpdateSpriteSlots_PickFrame::
     ld c, a
     inc hl
@@ -957,11 +1005,15 @@ UpdateSpriteSlots_PickFrame::
     jp nz, UpdateSpriteSlots_RunSlot
     ret
 
-; Sprite slot type 2, a wandering object: counts its timer, and while a move is in progress (bit 7
-; of its move byte) steps it one pixel in its direction and counts the move down; otherwise, when no
-; script runs, it may start a new move in a random direction (wRandomLo), checking that the target
-; cell is neither a blocking tile (IsTileUnderCellBlocking) nor taken by the player or a follower.
-; (C1, E-0357)
+; Sprite slot type 2, an object that wanders left and right. Unless OBJ_FLAGS bit 1 is set it counts
+; its timer (slot byte 9). While a move runs (move byte $A bit 7) it steps one pixel, left (OBJ_X -
+; 1, OBJ_STATE 3) or right with bit 6 (OBJ_X + 1, OBJ_STATE 1); after 16 steps the move byte is 0
+; and OBJ_FLAGS bit 2 is cleared. Otherwise, when no script runs (wScriptRunning) and the timer is
+; $70, it resets the timer and takes NextTableByte: wRandomLo & 3 = 3 tries right (move byte $C0;
+; not at OBJ_X $90 or $20 right of its home X, slot byte 4), 1 tries left ($80; not at 0 or $20 left
+; of home), 0 and 2 wait; the target must not be blocking (IsTileUnderCellBlocking) or taken by the
+; party (IsCellOccupiedByParty). Then UpdateSpriteSlots_PickFrame. The OR 4 meant for the flags
+; lands on slot byte $E, which UpdateSpriteSlots_PickFrame overwrites. (C2, E-0374)
 UpdateSpriteSlots_Wander::
     pop hl
     push hl
@@ -1149,9 +1201,16 @@ UpdateSpriteSlots_Wander::
 UpdateSpriteSlots_NoHandler::
     ret
 
-; Sprite slot type 3, an object that moves along fixed directions: like type 2, but the direction of
-; each move comes from bits 5-6 of its move byte instead of chance. (C1, E-0357)
-UpdateSpriteSlots_FixedMoves::
+; Sprite slot type 3, an object that wanders in four directions. Unless OBJ_FLAGS bit 1 is set it
+; counts its timer (slot byte 9). While a move runs (move byte $A bit 7) it steps one pixel in the
+; direction in bits 5-6: 0 down (OBJ_Y + 1), 1 right (OBJ_X + 1), 2 up (OBJ_Y - 1), 3 left (OBJ_X -
+; 1), with OBJ_STATE = that direction; after 16 steps the move byte is 0 and OBJ_FLAGS bit 2 is
+; cleared. Otherwise, when no script runs and the timer is $E0, it resets the timer and picks the
+; direction from NextTableByte (wRandomLo & 3), refusing at OBJ_Y $80 (down), OBJ_X $90 (right),
+; OBJ_Y 0 (up) or OBJ_X 0 (left), on a blocked cell (IsCellBlockedByFieldEventKind) or one taken by
+; the party (IsCellOccupiedByParty); a move byte $80, $A0, $C0 or $E0 starts it. Then
+; UpdateSpriteSlots_PickFrame. (C2, E-0374)
+UpdateSpriteSlots_WanderFourWays::
     pop hl
     push hl
     ld a, $0d
@@ -1283,7 +1342,7 @@ UpdateSpriteSlots_FixedMoves::
     ld b, a
     ld a, [hl]
     ld c, a
-    call RunPendingFieldEventType0AOrOther
+    call IsCellBlockedByFieldEventKind
     cp $01
     jp z, .restore2
     call IsCellOccupiedByParty
@@ -1311,7 +1370,7 @@ UpdateSpriteSlots_FixedMoves::
     ld b, a
     ld a, [hl]
     ld c, a
-    call RunPendingFieldEventType0AOrOther
+    call IsCellBlockedByFieldEventKind
     cp $01
     jr z, .restore2
     call IsCellOccupiedByParty
@@ -1341,7 +1400,7 @@ UpdateSpriteSlots_FixedMoves::
     ld a, [hl]
     sub $10
     ld c, a
-    call RunPendingFieldEventType0AOrOther
+    call IsCellBlockedByFieldEventKind
     cp $01
     jr z, .restore2
     call IsCellOccupiedByParty
@@ -1371,7 +1430,7 @@ UpdateSpriteSlots_FixedMoves::
     ld a, [hl]
     add $11
     ld c, a
-    call RunPendingFieldEventType0AOrOther
+    call IsCellBlockedByFieldEventKind
     cp $01
     jr z, .restore2
     call IsCellOccupiedByParty
@@ -1398,43 +1457,53 @@ UpdateSpriteSlots_FixedMoves::
     ld a, [hl]
     jp UpdateSpriteSlots_PickFrame
 
-; runs RunPendingFieldEventType0AOrOther_IsCellTall when wPendingFieldEvent & $0F = $0A, else
+; B = pixel X, C = pixel Y: the blocked-cell test of the four-way wandering objects
+; (UpdateSpriteSlots_WanderFourWays). While the pending field event kind (wPendingFieldEvent & $0F)
+; is $0A it returns IsCellBlockedByFieldEventKind_IsCellTall (A = 1 when all four tiles under the
+; cell are above wMapTallTileMin), otherwise IsTileUnderCellBlocking (A = 1 when any tile is at or
+; below wMaxBlockingTile); the caller treats A = 1 as blocked. It runs no event. (C2, E-0374)
+; runs IsCellBlockedByFieldEventKind_IsCellTall when wPendingFieldEvent & $0F = $0A, else
 ; IsTileUnderCellBlocking (E-0122)
-RunPendingFieldEventType0AOrOther::
+IsCellBlockedByFieldEventKind::
     ld a, [wPendingFieldEvent]
     and $0f
     cp $0a
-    jr z, .call_run_pending_field_event_type0_a_or_other
+    jr z, .call_is_cell_blocked_by_field_event_kind_is
     call IsTileUnderCellBlocking
     ret
 
-.call_run_pending_field_event_type0_a_or_other:
-    call RunPendingFieldEventType0AOrOther_IsCellTall
+.call_is_cell_blocked_by_field_event_kind_is:
+    call IsCellBlockedByFieldEventKind_IsCellTall
     ret
 
-; Sprite slot type 4, an object that follows the path at UpdateSpriteSlots_FollowPath4_Data. (C1,
-; E-0357)
-UpdateSpriteSlots_FollowPath4::
-    ld hl, UpdateSpriteSlots_FollowPath4_Data
+; Sprite slot type 4: hTemp0/hTemp1 = UpdateSpriteSlots_FrameLoopType4_Data and on to
+; UpdateSpriteSlots_StepFrameLoop, which plays it as a looping list of (frame, frames to hold) pairs
+; into OBJ_SUBINDEX: frames 0, 3, 4, 5 twice ($E or $A frames each), then 0, 1, 2, 1, 2, 0, 6, 7, 6.
+; The object does not move. (C2, E-0374)
+UpdateSpriteSlots_FrameLoopType4::
+    ld hl, UpdateSpriteSlots_FrameLoopType4_Data
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    jr UpdateSpriteSlots_StepPath
+    jr UpdateSpriteSlots_StepFrameLoop
 
-; Sprite slot type 5, an object that follows the path at UpdateSpriteSlots_FollowPath5_Data. (C1,
-; E-0357)
-UpdateSpriteSlots_FollowPath5::
-    ld hl, UpdateSpriteSlots_FollowPath5_Data
+; Sprite slot type 5: hTemp0/hTemp1 = UpdateSpriteSlots_FrameLoopType5_Data, then falls into
+; UpdateSpriteSlots_StepFrameLoop, which plays it as a looping list of (frame, frames to hold) pairs
+; into OBJ_SUBINDEX: frames 0, 1, 2, 1, $E frames each. The object does not move. (C2, E-0374)
+UpdateSpriteSlots_FrameLoopType5::
+    ld hl, UpdateSpriteSlots_FrameLoopType5_Data
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
 
-; Steps a path-following sprite slot: counts its timer, and when it reaches the length of the
-; current path entry (path at hTemp0/hTemp1), moves to the next entry and its direction; the object
-; then moves one pixel that way. (C1, E-0357)
-UpdateSpriteSlots_StepPath::
+; hTemp0/hTemp1 = a list of (frame, count) pairs ending in $FF: steps a frame-sequence slot. Unless
+; OBJ_FLAGS bit 1 is set, the timer (slot byte 9) counts up and, when it equals the count of the
+; current pair (index in slot byte $A), the timer is reset and the index advanced, wrapping to 0 at
+; the $FF end. Then OBJ_SUBINDEX = the frame of the current pair. The position is not changed.
+; Continues with UpdateSpriteSlots_NextSlot. (C2, E-0374)
+UpdateSpriteSlots_StepFrameLoop::
     pop hl
     ld a, $0d
     add_a_to_hl
@@ -1514,14 +1583,19 @@ UpdateSpriteSlots_StepPath::
     jp UpdateSpriteSlots_NextSlot
 
 ; data read by UpdateSpriteSlots (36 bytes) (E-0347)
-UpdateSpriteSlots_FollowPath4_Data::
+UpdateSpriteSlots_FrameLoopType4_Data::
     db $00, $0e, $03, $0a, $04, $0e, $05, $0a, $00, $0e, $03, $0a, $04, $0e, $05, $0a
     db $00, $10, $01, $0e, $02, $0e, $01, $0e, $02, $0e, $00, $20, $06, $0e, $07, $20
     db $06, $0e, $ff, $ff
 
-UpdateSpriteSlots_FollowPath5_Data::
+UpdateSpriteSlots_FrameLoopType5_Data::
     db $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
 
+; B = pixel X, C = pixel Y: copies the 2 x 2 tiles of wScreenTileBuffer at row C / 8, column B / 8
+; (indexed as 20-byte rows) to wTilesUnderPoint and returns A = 1 when any of them is at or below
+; wMaxBlockingTile, A = 0 otherwise; BC and DE kept, HL changed. The wandering objects check their
+; target cell with it (UpdateSpriteSlots_Wander directly, UpdateSpriteSlots_WanderFourWays through
+; IsCellBlockedByFieldEventKind). (C2, E-0374)
 ; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A
 ; = 1 when any is at or below wMaxBlockingTile, else 0 (E-0127)
 IsTileUnderCellBlocking::
@@ -1590,10 +1664,10 @@ IsTileUnderCellBlocking::
 ; B = pixel X, C = pixel Y: copies the 2 x 2 tiles of wScreenTileBuffer under that cell to
 ; wTilesUnderPoint (as IsTileUnderCellBlocking does) and returns A = 1 when all four tile ids are
 ; above wMapTallTileMin, A = 0 when any is at or below it; BC and DE kept.
-; RunPendingFieldEventType0AOrOther uses it in place of IsTileUnderCellBlocking while the pending
-; field event kind (wPendingFieldEvent low nibble) is $0A, and its caller
-; UpdateSpriteSlots_FixedMoves treats A = 1 as a blocked cell. (C1, E-0369)
-RunPendingFieldEventType0AOrOther_IsCellTall::
+; IsCellBlockedByFieldEventKind uses it in place of IsTileUnderCellBlocking while the pending field
+; event kind (wPendingFieldEvent low nibble) is $0A, and its caller UpdateSpriteSlots_WanderFourWays
+; treats A = 1 as a blocked cell. (C2, E-0369; probed E-0374)
+IsCellBlockedByFieldEventKind_IsCellTall::
     push bc
     push de
     ld a, c
@@ -1658,7 +1732,7 @@ RunPendingFieldEventType0AOrOther_IsCellTall::
 
 ; Returns A = 1 when the metatile cell at pixel (B, C) is occupied by the player or by any party
 ; follower (each checked at its position and the position 15 pixels on), otherwise 0. Used before an
-; object moves into a cell. (C1, E-0357)
+; object moves into a cell. (C2, E-0357; probed E-0374)
 IsCellOccupiedByParty::
     push bc
     ld a, c
@@ -1872,6 +1946,15 @@ FieldSpritePaletteIndex::
     db $00 ; id 96
     db $14 ; id 97
 
+; Picks hPlayerSpriteMode and loads the field sprite graphics for it. Mode 1 when
+; EVENT_SCENE_LONG_FACES_002 is clear or when EVENT_STAFF_ROLL_PARTY_SAVED is set without
+; EVENT_THANKS_FOR_COMING_BY_025, otherwise 0; mode 2 overrides both when hPlayerStateFlags bit 3 is
+; set. Mode 0: LoadPlayerSpriteGraphics and LoadPlayerAndFollowerSpriteGraphics_Followers. Mode 1:
+; LoadPlayerSpriteGraphics, then field graphics 1 (0 if EVENT_NEVER_SET were set) at vTiles0 + $100
+; with palette slot 1 and field graphics 4 at vTiles0 + $200 with palette slot 2
+; (DecompressGraphicsTemp0ToTemp4). Mode 2: as mode 0, then
+; LoadAltObjectGraphicsIfPlayerStateFlagsBit3. Called from map loads, scenes and menus in many banks
+; (34 call sites). (C1, E-0374)
 ; hPlayerSpriteMode = sprite mode from story flags $19F, $25 and 2 and bit 3 of hPlayerStateFlags,
 ; then loads the matching player and follower sprite graphics (E-0128)
 LoadPlayerAndFollowerSpriteGraphics::
@@ -2014,6 +2097,12 @@ LoadPlayerSpriteGraphics::
     call DecompressGraphicsTemp0ToTemp4
     ret
 
+; When hPlayerStateFlags bit 3 is set: decompresses Tiles0Plus700Gfx_2 from bank $7E to vTiles0 +
+; $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at
+; LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData + $108 into OBJ palette 7 of
+; wOBJPaletteBuffer (+ $38), then sets wOBJPaletteUploadRequest = $7F. Only
+; LoadPlayerAndFollowerSpriteGraphics calls it, in sprite mode 2; DrawPlayerOverlaySprite21Or22 then
+; draws with tile offset $70 and palette 7. (C1, E-0374)
 ; when hPlayerStateFlags bit 3 is set: decompresses Tiles0Plus700Gfx_2 (bank $7E) to vTiles0 + $700
 ; and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer
 ; (wOBJPaletteUploadRequest = $7F) (E-0120)
@@ -2042,6 +2131,10 @@ LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ld [wOBJPaletteUploadRequest], a
     ret
 
+; Unless hPlayerStateFlags bit 1 is set, adds 1 to hPlayerAnimCounter, and 3 more when bit 2
+; (moving) is set. Then dispatches on hPlayerSpriteMode: 0 DrawPlayerAndFollowers, 1
+; DrawPlayerAndFlagFollower, 2 DrawPlayerWithOverlay. Called by FieldStateCommonUpdate and once more
+; from bank $02 (line 1787). (C1, E-0374)
 ; unless bit 1 of hPlayerStateFlags is set, hPlayerAnimCounter += 1 (+3 more with bit 2); then runs
 ; the routine for hPlayerSpriteMode (jump table of three) (E-0124)
 AdvancePlayerAnimCounterAndRunPlayerSpriteMode::
@@ -2074,11 +2167,11 @@ DrawPlayerAndFollowers::
 
 ; Player sprite mode 1 (entry 1 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
 ; hPlayerSpriteMode): draws the player (DrawPlayerSprite) and the single follower that
-; DrawFollowerSpriteIfFlag1B shows when EVENT_SCENE_LAND_HO (flag $1B) is set and hFieldDrawFlags
+; DrawFollowerSpriteAfterLandHo shows when EVENT_SCENE_LAND_HO (flag $1B) is set and hFieldDrawFlags
 ; bit 1 is clear. (C1, E-0372)
 DrawPlayerAndFlagFollower::
     call DrawPlayerSprite
-    call DrawFollowerSpriteIfFlag1B
+    call DrawFollowerSpriteAfterLandHo
     ret
 
 ; Player sprite mode 2 (entry 2 of AdvancePlayerAnimCounterAndRunPlayerSpriteMode by
@@ -2090,6 +2183,10 @@ DrawPlayerWithOverlay::
     call DrawPlayerOverlaySprite21Or22
     ret
 
+; Draws the overlay of sprite mode 2 after DrawPlayerSprite: adds 8 to the 16-bit origin Y it left
+; (hSpriteOriginY/Hi), sets hSpriteTileOffset = $70 and palette 7 (hSpriteAttrXor low 3 bits), and
+; draws meta-sprite set $21 when hPlayerStateFlags bit 3 is set, otherwise $22, sub-index 0, with
+; DrawMetaSprite. Only DrawPlayerWithOverlay calls it. (C1, E-0374)
 ; moves the sprite origin down 8, sets tile offset $70 and palette 7, then draws meta-sprite set $21
 ; (hPlayerStateFlags bit 3 set) or $22 with DrawMetaSprite (E-0175)
 DrawPlayerOverlaySprite21Or22::
@@ -2127,10 +2224,17 @@ DrawPlayerOverlaySprite21Or22::
     farcall DrawMetaSprite
     ret
 
+; The single follower of sprite mode 1. Returns when hFieldDrawFlags bit 1 is set or
+; EVENT_SCENE_LAND_HO is clear. Otherwise draws the follower in wFollowerRecords: set
+; (hPlayerSpriteVariant + 1) & 1, palette 1, tile offset $10, origin follower X + 8 + hScrollX and Y
+; + 16 + hScrollY; the frame pair is 2 when UseSpecialSpritePoseAtPosition matches its position,
+; else its direction byte, with direction 3 drawn as pair 1 flipped (attribute $21); the frame is
+; pair * 2 + bit 5 of hPlayerAnimCounter. Drawn with DrawMetaSprite_2. Only
+; DrawPlayerAndFlagFollower calls it. (C1, E-0374)
 ; unless hFieldDrawFlags bit 1 is set, and only when story flag $1B is set: draws the follower
 ; sprite from wFollowerRecords bytes 1-2 (set from hPlayerSpriteVariant, with a different frame when
 ; UseSpecialSpritePoseAtPosition) (E-0175)
-DrawFollowerSpriteIfFlag1B::
+DrawFollowerSpriteAfterLandHo::
     ldh a, [hFieldDrawFlags]
     bit 1, a
     ret nz
@@ -2309,6 +2413,14 @@ DrawPlayerSprite::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+; Sprite mode 0 followers: for each of wPartyCount members draws the follower from its 5-byte
+; wFollowerRecords entry, skipped while its hFieldDrawFlags bit is set (bit 1, 2, 3 for members
+; 1-3). Palette = 4 - members left to draw, tile offset $10, $20, $30; the frame pair is 2 at a
+; special pose position (UseSpecialSpritePoseAtPosition), else the direction, direction 3 as pair 1
+; flipped; frame = pair * 2 + bit 5 of hPlayerAnimCounter. The sprite is the word at wPartyList + 3
+; + 2 * member: a high byte of $FF draws set $19 with DrawMetaSprite, otherwise set low & $7F with
+; DrawMetaSpriteSet_Bank27 (high non-zero), DrawMetaSpriteSet_Bank26 (low bit 7) or
+; DrawMetaSpriteSet_Bank25. Only DrawPlayerAndFollowers calls it. (C1, E-0374)
 ; for each party member (wPartyCount) walks wFollowerRecords and wPartyList and draws its follower
 ; sprite unless the matching hFieldDrawFlags bit is set (E-0175)
 DrawPartyFollowerSprites::
@@ -2444,7 +2556,7 @@ DrawPartyFollowerSprites::
 ; and screen, require B=pixel X and minimum Y <= C <= maximum Y with unsigned inclusive comparisons.
 ; Return A=1 on a match, else 0 at the $FF sentinel. Preserve HL/DE in the table path and do not
 ; mutate coordinates. This extends the older fade-only interpretation: ordinary positions in the
-; table also select the special pose. (C1, E-0362)
+; table also select the special pose. (C2, E-0362; probed E-0374)
 UseSpecialSpritePoseAtPosition::
     ld a, [wFadeState]
     or a
@@ -3294,10 +3406,14 @@ KeyWorldObjectList_6_0_1::
     db $01 ; entry 0
     db $85, $00, $28, $00, $00, $40, $50, $05, $00, $50, $fb
 
+; HL = message word: starts script command 9 (the message box) with HL in wScriptParam0 (low) and
+; wScriptParam1 (high); sets wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep
+; = 0 and wScriptStartRequest = 0 (its earlier store of $80 is overwritten). The talk handlers of
+; this bank call it for their one-message replies (over 350 call sites). (C2, E-0374)
 ; starts a message through script command $09 (message word HL, shown by the same group dispatch as
 ; ShowMessageHL when wMessageMode = 0): HL is stored in wScriptParam0 (low) and wScriptParam1
 ; (high); then wModeState = 1, wScriptCommandType = 9, wScriptRunning = 1, wScriptStep = 0 and
-; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten) (E-0353)
+; wScriptStartRequest = 0 (an earlier store of $80 to wScriptStartRequest is overwritten)
 StartMessageCommand09HL_B04::
     ld a, l
     ld [wScriptParam0], a
@@ -3316,6 +3432,11 @@ StartMessageCommand09HL_B04::
     ld [wScriptStep], a
     ret
 
+; DE = story flag of a treasure: starts script command $0A (RunOneTimeTreasure) with DE in
+; wMessageIndex (low) and wMessageGroup (high), which that command tests and sets as a flag; sets
+; wModeState = 1, wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep = 0 and
+; wScriptStartRequest = 0. The chest, vase and barrel handlers of this bank call it (about 100 call
+; sites). (C2, E-0374)
 ; starts script command $0A (RunOneTimeTreasure) with DE = the treasure's story flag, stored in
 ; wMessageIndex/wMessageGroup (which that command passes to TestFlagBit and SetFlagBit; it is not a
 ; message word, correcting E-0081); then wScriptCommandType = $0A, wScriptRunning = 1, wScriptStep =
@@ -3338,6 +3459,9 @@ StartTreasureFlagDE_B04::
     ld [wScriptStep], a
     ret
 
+; HL = script address: stores it in wScriptPointerLo/Hi, sets wScriptStartRequest = $80 (the script
+; engine starts fetching at HL) and wModeState = 1. wScriptRunning is not touched here. The talk and
+; map event handlers of this bank use it to start their scripts (over 180 call sites). (C2, E-0374)
 ; HL is stored in wScriptPointerLo/Hi; then wScriptStartRequest = $80 and wModeState = 1, so the
 ; script engine starts fetching at HL (E-0082)
 StartScriptAtHL_B04::
@@ -3351,8 +3475,13 @@ StartScriptAtHL_B04::
     ld [wModeState], a
     ret
 
+; Talk category $0A (DispatchTalkEvent_Readable): dispatches on wTalkEventGroup through 35 entries:
+; scene starters (0-2, 4-6), the Vault keeper (7), notices (8, $16, $17), the pedestal (9), the
+; library desk ($0A), the bookshelves ($0B-$15), a vase ($18), a barrel ($19), the key count
+; (ReadableTalkEvents_GreatLogKey, $1A) and eight replies after flag $D1 ($1B-$22). Entry 3 is $0000
+; and would crash; the unreached bytes after Talk_ListenYouTwoQuitYourHorsing look like its handler.
+; (C1, E-0374)
 ; talk category $0A: notices and bookshelves ("Hero read the notice", "Hero checked the bookshelf")
-; (E-0288)
 ReadableTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -3360,9 +3489,9 @@ ReadableTalkEvents::
     dw Talk_HehSoTheseAreTheNewcomers
     dw Talk_ListenYouTwoQuitYourHorsing
     dw $0000 ; unused index (E-0207)
-    dw StartScriptAndSetFlag5
-    dw StartScriptAndSetFlag06
-    dw IfFlag000AStartScript
+    dw Talk_OhItsAllSpinningAround
+    dw Talk_SceneSpinning
+    dw Talk_WarubouCalmDownAndListen
     dw Talk0046_ThanksForComingBy
     dw TalkMsg0047_HeroReadTheNoticeWeGuarantee
     dw Talk_HeroCheckedThePedestalIts
@@ -3382,7 +3511,7 @@ ReadableTalkEvents::
     dw ReadableTalkEvents_Notice
     dw TalkMsg0010_HeroPeeredIntoTheVaseFreshly
     dw TalkMsg000F_HeroPeeredIntoTheBarrelIt
-    dw MapEventCountKeysAndStartScript
+    dw ReadableTalkEvents_GreatLogKey
     dw IfFlag00D1Msg0D33_YouSavedUsAll
     dw IfFlag00D1Msg0D34_PleaseEatUpEat
     dw IfFlag00D1Msg0D35_HmISawYour
@@ -3395,7 +3524,7 @@ ReadableTalkEvents::
 ; Readable talk 0: starts the 'In the middle of the sea' scene, Script_InTheMiddleOf (its second
 ; message 'Tara: There you are, big brother!') when EVENT_IN_THE_MIDDLE_OF_THE is set, otherwise
 ; Script_InTheMiddleOf_2 (second message 'Papa's calling'); both scripts set EVENT_SCENE_AT_SEA.
-; (C1, E-0369)
+; (C2, E-0369; probed E-0374)
 ; starts Script_InTheMiddleOf: 'In the middle of the sea' (E-0248)
 ReadableTalkEvents_AtSeaScene::
     ld de, EVENT_IN_THE_MIDDLE_OF_THE
@@ -3410,6 +3539,8 @@ ReadableTalkEvents_AtSeaScene::
     call StartScriptAtHL_B04
     ret
 
+; Readable talk 1 (wTalkEventGroup = 1 in ReadableTalkEvents): starts Script_HehSoTheseAre
+; (StartScriptAtHL_B04), whose first message begins 'Heh, so these are the newcomers?'. (C2, E-0374)
 ; starts Script_HehSoTheseAre (StartScriptAtHL_B04); its first message begins 'Heh, so these are the
 ; newcomers?' (E-0271; was Talk_HehSoTheseAreTheNewcomers) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HehSoTheseAreTheNewcomers; shortened from
@@ -3420,6 +3551,11 @@ Talk_HehSoTheseAreTheNewcomers::
     call StartScriptAtHL_B04
     ret
 
+; Readable talk 2: starts Script_ListenYouTwoQuit (StartScriptAtHL_B04), whose first message begins
+; 'Listen you two! Quit your horsing'. The seven bytes after its ret are never reached: they decode
+; as ld hl, $0044 / call StartMessageCommand09HL_B04 / ret, the shape of a handler for message $0044
+; ('checked the peculiar door. It has an oddly shaped keyhole'), probably the missing entry 3 of
+; ReadableTalkEvents, which is $0000. (C2, E-0374)
 ; starts Script_ListenYouTwoQuit (StartScriptAtHL_B04); its first message begins 'Listen you two!
 ; Quit your horsing' (E-0271; was Talk_ListenYouTwoQuitYourHorsing) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_ListenYouTwoQuitYourHorsing; shortened from
@@ -3431,34 +3567,41 @@ Talk_ListenYouTwoQuitYourHorsing::
     ret
     db $21, $44, $00, $cd, $bb, $55, $c9
 
+; Readable talk 4: starts Script_OhIt ('Oh... It is all spinning around', StartScriptAtHL_B04) and
+; sets EVENT_OH_ITS_ALL_SPINNING_AROUND (flag 5) at once, so the scene does not repeat. (C2, E-0374)
 ; StartScriptAtHL_B04 with HL = $4F73, then sets story flag 5 (E-0119) (E-0344: the address in its
-; name dropped or read as the label there; was StartScriptAndSetFlag5)
+; name dropped or read as the label there; was Talk_OhItsAllSpinningAround)
 ; starts Script_OhIt: '*: Oh… It's… all spinning around…' (E-0248)
-StartScriptAndSetFlag5::
+Talk_OhItsAllSpinningAround::
     ld hl, Script_OhIt ; script '*: Oh… It's… all spinning around…'
     call StartScriptAtHL_B04
     ld de, EVENT_OH_ITS_ALL_SPINNING_AROUND
     call SetFlagBit
     ret
 
+; Readable talk 5: starts Script_SceneSpinning (StartScriptAtHL_B04), runs field command 0
+; (RunFieldCommandTemp0 with hTemp0 = 0) and sets EVENT_MAP_00_OBJECT_REMOVED (flag 6). (C1, E-0374)
 ; map event: starts script $4F7C, runs RunFieldCommandTemp0 with hTemp0 = 0 and sets story flag 6
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; StartScriptAndSetFlag06)
+; Talk_SceneSpinning)
 ; starts Script_SceneSpinning (E-0248)
-StartScriptAndSetFlag06::
+Talk_SceneSpinning::
     ld hl, Script_SceneSpinning
     call StartScriptAtHL_B04
     ld a, $00
     ldh [hTemp0], a
     farcall RunFieldCommandTemp0
-    ld de, EVENT_MAP_00_OBJECT_REMOVED
+    ld de, EVENT_SCENE_SPINNING
     call SetFlagBit
     ret
 
+; Readable talk 6: only when EVENT_SCENE_WARUBOU_SMELLS (flag $0A) is set, starts
+; Script_WarubouCalmDownAnd ('Warubou: Calm down and listen!'); otherwise nothing happens. (C2,
+; E-0374)
 ; when story flag $0A is set, StartScriptAtHL_B04 with HL = $4F9D (E-0119) (E-0344: the address in
-; its name dropped or read as the label there; was IfFlag000AStartScript)
+; its name dropped or read as the label there; was Talk_WarubouCalmDownAndListen)
 ; starts Script_WarubouCalmDownAnd: 'Warubou: Calm down and listen! What' (E-0248)
-IfFlag000AStartScript::
+Talk_WarubouCalmDownAndListen::
     ld de, EVENT_SCENE_WARUBOU_SMELLS
     call TestFlagBit
     ret nc
@@ -3531,6 +3674,8 @@ Talk0046_ThanksForComingBy::
     call StartScriptAtHL_B04
     ret
 
+; Readable talk 8, a notice: starts message $0047 through StartMessageCommand09HL_B04, '<BUF0> read
+; the notice.' followed by the notice text beginning We guarantee the safekeeping of. (C2, E-0374)
 ; starts message $0047 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 read the notice. We guarantee the' (E-0268, the E-0082 shape; was
 ; TalkMsg0047_HeroReadTheNoticeWeGuarantee)
@@ -3540,6 +3685,8 @@ TalkMsg0047_HeroReadTheNoticeWeGuarantee::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 9: starts Script_HeroCheckedThePedestal (StartScriptAtHL_B04), whose first message
+; begins '<BUF0> checked the pedestal.'. (C2, E-0374)
 ; starts Script_HeroCheckedThePedestal (StartScriptAtHL_B04); its first message begins '0 checked
 ; the pedestal. It's the' (E-0271; was Talk_HeroCheckedThePedestalIts) (E-0344: the address in its
 ; name dropped or read as the label there; was Talk_HeroCheckedThePedestalIts; shortened from
@@ -3550,11 +3697,13 @@ Talk_HeroCheckedThePedestalIts::
     call StartScriptAtHL_B04
     ret
 
-; Talk event $0A step 10, the library's front desk: places its clerk sprite by the player's X
-; position and starts its script: the first-visit welcome until EVENT_WELCOME_TO_THE_LIBRARY, then
-; the normal one; after the game's end (EVENT_THANKS_FOR_COMING_BY_025), with at least 56 ($38)
-; species seen (TotalSpeciesFlaggedOrListed), a further script, otherwise 'Hello, our young savior'
-; once. (C1, E-0357)
+; Readable talk $0A, the library front desk: turns sprite slot 0 (OBJ_STATE 0 when hPlayerX is $40,
+; else 3), sets wDataBank = $1F and starts a script. Before EVENT_THANKS_FOR_COMING_BY_025:
+; Script_WelcomeToTheLibrary until EVENT_WELCOME_TO_THE_LIBRARY, then Script_WelcomeToTheLibrary_2.
+; After it, TotalSpeciesFlaggedOrListed: only when its high byte (hTemp1) is non-zero and its low
+; byte (hTemp0) at least $38, that is a total of at least 312 ($138), Script_WelcomeToTheLibrary_3
+; once (until EVENT_WELCOME_TO_THE_LIBRARY_19E); otherwise Script_HelloOurYoungSavior until
+; EVENT_HELLO_OUR_YOUNG_SAVIOR, then Script_WelcomeToTheLibrary_2. (C2, E-0374)
 ReadableTalkEvents_LibraryDesk::
     ldh a, [hPlayerX]
     cp $40
@@ -3611,6 +3760,8 @@ ReadableTalkEvents_LibraryDesk::
     call StartScriptAtHL_B04
     ret
 
+; Readable talk $0B, a library bookshelf: starts message $0233 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Monster Skills. (C2, E-0374)
 ; starts message $0233 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Monster Skills Every' (E-0268, the E-0082 shape; was
 ; TalkMsg0233_HeroCheckedTheBookshelfMonster)
@@ -3619,6 +3770,8 @@ TalkMsg0233_HeroCheckedTheBookshelfMonster::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $0C, a library bookshelf: starts message $0234 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Monster Growth. (C2, E-0374)
 ; starts message $0234 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Monster Growth By' (E-0268, the E-0082 shape; was
 ; TalkMsg0234_HeroCheckedTheBookshelfMonster)
@@ -3627,6 +3780,9 @@ TalkMsg0234_HeroCheckedTheBookshelfMonster::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $0D, a library bookshelf: starts message $0235 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Personalities of Monsters.
+; (C2, E-0374)
 ; starts message $0235 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Personalities of Monsters' (E-0268, the E-0082 shape; was
 ; TalkMsg0235_HeroCheckedTheBookshelfPersonalities)
@@ -3635,6 +3791,8 @@ TalkMsg0235_HeroCheckedTheBookshelfPersonalities::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $0E, a library bookshelf: starts message $0236 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Nuts and Seeds. (C2, E-0374)
 ; starts message $0236 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Nuts and Seeds' (E-0268, the E-0082 shape; was
 ; TalkMsg0236_HeroCheckedTheBookshelfNuts)
@@ -3643,6 +3801,8 @@ TalkMsg0236_HeroCheckedTheBookshelfNuts::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $0F, a library bookshelf: starts message $0237 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book WorldLeaf. (C2, E-0374)
 ; starts message $0237 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. WorldLeaf An indispensable' (E-0268, the E-0082 shape; was
 ; TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf)
@@ -3651,6 +3811,9 @@ TalkMsg0237_HeroCheckedTheBookshelfWorldLeaf::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $10, a library bookshelf: starts message $0238 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Magic Key Guide. (C2,
+; E-0374)
 ; starts message $0238 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was
 ; TalkMsg0238_HeroCheckedTheBookshelfMagic)
@@ -3659,6 +3822,9 @@ TalkMsg0238_HeroCheckedTheBookshelfMagic::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $11, a library bookshelf: starts message $0239 through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Magic Key Guide. (C2,
+; E-0374)
 ; starts message $0239 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Magic Key Guide' (E-0268, the E-0082 shape; was
 ; TalkMsg0239_HeroCheckedTheBookshelfMagic)
@@ -3667,6 +3833,8 @@ TalkMsg0239_HeroCheckedTheBookshelfMagic::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $12, a library bookshelf: starts message $023A through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Starry Shrine. (C2, E-0374)
 ; starts message $023A through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Starry Shrine A' (E-0268, the E-0082 shape; was
 ; TalkMsg023A_HeroCheckedTheBookshelfStarry)
@@ -3675,6 +3843,8 @@ TalkMsg023A_HeroCheckedTheBookshelfStarry::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $13, a library bookshelf: starts message $023B through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Egg Evaluators. (C2, E-0374)
 ; starts message $023B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Egg Evaluators Those' (E-0268, the E-0082 shape; was
 ; TalkMsg023B_HeroCheckedTheBookshelfEgg)
@@ -3683,6 +3853,9 @@ TalkMsg023B_HeroCheckedTheBookshelfEgg::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk $14, a library bookshelf: starts message $023C through StartMessageCommand09HL_B04
+; (script command 9): '<BUF0> checked the bookshelf.' and then the book Accessory Guide. (C2,
+; E-0374)
 ; starts message $023C through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Accessory Guide A' (E-0268, the E-0082 shape; was
 ; TalkMsg023C_HeroCheckedTheBookshelfAccessory)
@@ -3691,6 +3864,10 @@ TalkMsg023C_HeroCheckedTheBookshelfAccessory::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 21 (ReadableTalkEvents): starts message $023D through StartMessageCommand09HL_B04
+; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
+; 1, wModeState = 1); the hero checks the bookshelf and reads 'Hidden Abilities', which begins
+; 'Monsters remain mysterious in many'. (C2, E-0374)
 ; starts message $023D through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 checked the bookshelf. Hidden Abilities Monsters' (E-0268, the E-0082 shape; was
 ; TalkMsg023D_HeroCheckedTheBookshelfHidden)
@@ -3699,6 +3876,10 @@ TalkMsg023D_HeroCheckedTheBookshelfHidden::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 22 (ReadableTalkEvents): starts message $023E through StartMessageCommand09HL_B04
+; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
+; 1, wModeState = 1); the hero reads the notice 'Please return books to their proper places!'. (C2,
+; E-0374)
 ; starts message $023E through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 read the notice. Please return books' (E-0268, the E-0082 shape; was
 ; TalkMsg023E_HeroReadTheNoticePleaseReturn)
@@ -3708,7 +3889,7 @@ TalkMsg023E_HeroReadTheNoticePleaseReturn::
     ret
 
 ; Talk event $0A step 23: a notice (message $0042) shown before the three-item scene and again after
-; the game's end. (C1, E-0357)
+; the game's end. (C2, E-0357; probed E-0374)
 ReadableTalkEvents_Notice::
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
@@ -3722,6 +3903,9 @@ ReadableTalkEvents_Notice::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 24 (ReadableTalkEvents): starts message $0010 through StartMessageCommand09HL_B04
+; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
+; 1, wModeState = 1); the hero peers into the vase: 'Freshly caught fish were inside.'. (C2, E-0374)
 ; starts message $0010 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the vase. Freshly caught' (E-0268, the E-0082 shape; was
 ; TalkMsg0010_HeroPeeredIntoTheVaseFreshly)
@@ -3730,6 +3914,10 @@ TalkMsg0010_HeroPeeredIntoTheVaseFreshly::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 25 (ReadableTalkEvents): starts message $000F through StartMessageCommand09HL_B04
+; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
+; 1, wModeState = 1); the hero peers into the barrel: 'It was filled with clean water.'. (C2,
+; E-0374)
 ; starts message $000F through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg000F_HeroPeeredIntoTheBarrelIt)
@@ -3738,10 +3926,17 @@ TalkMsg000F_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 26 (ReadableTalkEvents): returns at once unless EVENT_SCENE_OASIS_KEY is set. Then
+; it appends two key entries to wKeyList: twice CountKeysOrFull (hTemp0 = the first free entry) and
+; WriteKeyEntryTemp0 with hTemp1 = 1 and then 2, so the new entries get byte 0 = 1 and 2 and byte 3
+; = $80, bytes 1-2 left as they were. It sets bit 7 of wInventorySortFlags and starts
+; Script_HeroReceivedTheGreatLog through StartScriptAtHL_B04 ('received the GreatLog Key.'). With
+; all 32 entries in use CountKeysOrFull returns $80 and the entry written lies past the list. (C2,
+; E-0374)
 ; with story flag $1A set: counts keys twice (WriteKeyEntryTemp0 with hTemp1 = 1 and 2), sets bit 7
 ; of wInventorySortFlags and starts script $5039 (E-0124) (E-0344: the address in its name dropped
-; or read as the label there; was MapEventCountKeysAndStartScript)
-MapEventCountKeysAndStartScript::
+; or read as the label there; was ReadableTalkEvents_GreatLogKey)
+ReadableTalkEvents_GreatLogKey::
     ld de, EVENT_SCENE_OASIS_KEY
     call TestFlagBit
     ret nc
@@ -3760,6 +3955,10 @@ MapEventCountKeysAndStartScript::
     call StartScriptAtHL_B04
     ret
 
+; Readable talk 27 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D33
+; ('You saved us all by yourself.') through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
+; otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D33 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'You saved
 ; us all by yourself.' (E-0082)
@@ -3771,6 +3970,10 @@ IfFlag00D1Msg0D33_YouSavedUsAll::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 28 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D34
+; ('Please, eat up, eat up!') through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
+; otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D34 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Please,
 ; eat up, eat up! Don't' (E-0082)
@@ -3782,6 +3985,10 @@ IfFlag00D1Msg0D34_PleaseEatUpEat::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 29 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D35
+; ('Hm? I saw your family.') through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
+; otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D35 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Hm? I saw
 ; your family. They' (E-0082)
@@ -3793,6 +4000,10 @@ IfFlag00D1Msg0D35_HmISawYour::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 30 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D36
+; ('The Kingdom is rejoicing!') through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1);
+; otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D36 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'The
 ; Kingdom is rejoicing!' (E-0082)
@@ -3804,6 +4015,11 @@ IfFlag00D1Msg0D36_TheKingdomIsRejoicing::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 31 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D37
+; ('Instead of standing around, you should go and enjoy yourselves.') through
+; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); otherwise returns without changing
+; anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D37 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Instead
 ; of standing around, you should' (E-0082)
@@ -3815,6 +4031,10 @@ IfFlag00D1Msg0D37_InsteadOfStandingAround::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 32 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D38
+; ('Just imagine if' the hero were not here) through StartMessageCommand09HL_B04 (script command
+; $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState =
+; 1); otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D38 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Just
 ; imagine if you weren't here.' (E-0082)
@@ -3826,6 +4046,10 @@ IfFlag00D1Msg0D38_JustImagineIfYou::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 33 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D39
+; (GreatLog 'mighty hero!') through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1
+; = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1); otherwise returns
+; without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D39 through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'Ah,
 ; GreatLog's mighty hero! I hope' (E-0082)
@@ -3837,6 +4061,10 @@ IfFlag00D1Msg0D39_AhGreatLogsMightyHero::
     call StartMessageCommand09HL_B04
     ret
 
+; Readable talk 34 (ReadableTalkEvents): when EVENT_SCENE_DARCK_DEFEATED is set starts message $0D3A
+; ('To be honest, I was getting ready to clear out.') through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); otherwise returns without changing anything. (C2, E-0374)
 ; when story flag $00D1 is set (TestFlagBit), starts message $0D3A through
 ; StartMessageCommand09HL_B04 (script command $09); otherwise returns; that string begins 'To be
 ; honest, I was getting' (E-0082)
@@ -3848,8 +4076,12 @@ IfFlag00D1Msg0D3A_ToBeHonestI::
     call StartMessageCommand09HL_B04
     ret
 
+; Talk category 3 (DispatchTalkEvent_Yold far-calls it): jumps through its table of 110 handlers by
+; wTalkEventGroup, with no range check. The handlers cover the people, signs, barrels, vases, ovens
+; and chests of Yold, Polona and Port Ritz and the mermaid and pirate-ship scenes (messages mostly
+; $0800-$088F, plus some $0Dxx). (C2, E-0374)
 ; talk category 3: jumps by wTalkEventGroup to the talk handlers of Yold, Polona and Port Ritz
-; (messages $0800-$088F) (E-0288)
+; (messages $0800-$088F)
 YoldTalkEvents::
     ld a, [wTalkEventGroup]
     jumptable
@@ -3900,7 +4132,7 @@ YoldTalkEvents::
     dw YoldTalkEvents_SecondInn
     dw TalkMsg082F_ThisAreaWasALotMore
     dw TalkMsg0830_WhenYoureOutAtSeaYou
-    dw TalkScript
+    dw Talk_SceneWhoAreYou
     dw TalkMsg0834_WhenThatOldManGetsGrogged
     dw TalkMsg0835_TheOldFellowThereTheInstant
     dw TalkMsg0836_TheVolcanicIslandOffTheCoast
@@ -3964,6 +4196,9 @@ YoldTalkEvents::
     dw Talk_ThickSuctionCuppedTentacles
     dw YoldTalkEvents_Church
 
+; Yold talk 0 (YoldTalkEvents): starts message $0800 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'This is the village of Yold.'. (C2, E-0374)
 ; starts message $0800 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'This is the village of Yold. We're' (E-0268, the E-0082 shape; was
 ; TalkMsg0800_ThisIsTheVillageOfYold)
@@ -3972,6 +4207,9 @@ TalkMsg0800_ThisIsTheVillageOfYold::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 1 (YoldTalkEvents): starts message $0801 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'In the northwest is a village that is famous for mermaids.'. (C2, E-0374)
 ; starts message $0801 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'In the northwest is a village that' (E-0268, the E-0082 shape; was
 ; TalkMsg0801_InTheNorthwestIsAVillage)
@@ -3980,6 +4218,9 @@ TalkMsg0801_InTheNorthwestIsAVillage::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 2 (YoldTalkEvents): starts message $0802 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); about travel 'by boat than walking'. (C2, E-0374)
 ; starts message $0802 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Around these parts it's faster to travel' (E-0268, the E-0082 shape; was
 ; TalkMsg0802_AroundThesePartsItsFaster)
@@ -3988,6 +4229,11 @@ TalkMsg0802_AroundThesePartsItsFaster::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 3 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0874
+; (the speaker has not seen 'the ghost ship in some time now' but is still afraid at night),
+; otherwise message $0803 ('I saw a haunted ship in the north.'), through
+; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0803_ISawAHauntedShipIn.call_start_message_command09_hl_b04); starts message $0803 through
 ; StartMessageCommand09HL_B04 (script command $09); that string begins 'I saw a haunted ship in the'
@@ -4005,6 +4251,11 @@ TalkMsg0803_ISawAHauntedShipIn::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 4 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0875
+; (the island 'appears to have calmed down again.'), otherwise message $0804 (the volcanic island
+; 'appears to be in a bad mood.'), through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1).
+; (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0804_TheVolcanicIslandOffTheCoast.call_start_message_command09_hl_b04); starts message
 ; $0804 through StartMessageCommand09HL_B04 (script command $09); that string begins 'The volcanic
@@ -4023,6 +4274,10 @@ TalkMsg0804_TheVolcanicIslandOffTheCoast::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 5 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0876
+; ('Will the HarMirror make me appear beautiful'), otherwise message $0805 ('Mermaids lived in the
+; sea in the northwest.'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1
+; = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0805_MermaidsLivedInTheSeaIn.call_start_message_command09_hl_b04); starts message $0805
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'Mermaids lived in
@@ -4041,7 +4296,8 @@ TalkMsg0805_MermaidsLivedInTheSeaIn::
     ret
 
 ; Yold talk 6: 'The birds are noisy' the first time (setting its flag), message $0808 afterwards,
-; message $0877 after the mermaid kingdom scene (EVENT_SCENE_MERMAID_KINGDOM_05F). (C1, E-0357)
+; message $0877 after the mermaid kingdom scene (EVENT_SCENE_MERMAID_KINGDOM_05F). (C2, E-0357;
+; probed E-0374)
 YoldTalkEvents_NoisyBirds::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -4065,7 +4321,8 @@ YoldTalkEvents_NoisyBirds::
     call StartMessageCommand09HL_B04
     ret
 
-; Yold talk 7: a shop: screen table 4, script data in bank $10, script Script_IDon. (C1, E-0357)
+; Yold talk 7: a shop: screen table 4, script data in bank $10, script Script_IDon. (C2, E-0357;
+; probed E-0374)
 YoldTalkEvents_Shop::
     ld a, $04
     ld [wScreenTableIndex], a
@@ -4075,6 +4332,10 @@ YoldTalkEvents_Shop::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 8 (YoldTalkEvents): starts message $080A through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the barrel: 'A folded fishnet was tucked inside.'. (C2,
+; E-0374)
 ; starts message $080A through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the barrel. A folded' (E-0268, the E-0082 shape; was
 ; TalkMsg080A_HeroPeeredIntoTheBarrelA)
@@ -4083,6 +4344,10 @@ TalkMsg080A_HeroPeeredIntoTheBarrelA::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 9 (YoldTalkEvents): starts message $080B through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the barrel: 'It was filled with colorful fruits.'. (C2,
+; E-0374)
 ; starts message $080B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg080B_HeroPeeredIntoTheBarrelIt)
@@ -4091,6 +4356,11 @@ TalkMsg080B_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 10 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
+; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL and story
+; flag $0061 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
+; That command gives the item and sets the flag when the flag is clear (group-0 message $A6), shows
+; $A7 when the flag is already set and $A8 when the bag is full. (C2, E-0374)
 ; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
 ; flag $0061 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
@@ -4104,6 +4374,11 @@ BarrelItem_TinyMedal::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 11 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
+; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_WARP and story flag
+; $0062 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A6), shows $A7
+; when the flag is already set and $A8 when the bag is full. (C2, E-0374)
 ; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $28, story
 ; flag $0062 in DE: when the flag is clear it gives item $28 (Warp) and sets the flag (message $A6
 ; of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
@@ -4117,6 +4392,9 @@ BarrelItem_Warp::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 12 (YoldTalkEvents): starts message $088A through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the vase ('It was ...'). (C2, E-0374)
 ; starts message $088A through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the vase. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg088A_HeroPeeredIntoTheVaseIt)
@@ -4125,6 +4403,10 @@ TalkMsg088A_HeroPeeredIntoTheVaseIt::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 13 (YoldTalkEvents): starts message $0889 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the oven ('It smelled ...'); entry 25,
+; TalkMsg0889_HeroPeeredIntoTheOvenIt_04, is an identical copy. (C2, E-0374)
 ; starts message $0889 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the oven. It smelled' (E-0268, the E-0082 shape; was
 ; TalkMsg0889_HeroPeeredIntoTheOvenIt)
@@ -4133,6 +4415,9 @@ TalkMsg0889_HeroPeeredIntoTheOvenIt::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 14 (YoldTalkEvents): starts message $0037 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero tries to open the chest: 'But the chest was locked tight.'. (C2, E-0374)
 ; starts message $0037 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 tried to open the chest. But' (E-0268, the E-0082 shape; was
 ; TalkMsg0037_HeroTriedToOpenTheChest)
@@ -4141,6 +4426,9 @@ TalkMsg0037_HeroTriedToOpenTheChest::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 15 (YoldTalkEvents): starts message $080C through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'Welcome to Polona.', a resort known for its mermaids. (C2, E-0374)
 ; starts message $080C through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Welcome to Polona. It's a tourist resort' (E-0268, the E-0082 shape; was
 ; TalkMsg080C_WelcomeToPolonaItsATourist)
@@ -4149,6 +4437,10 @@ TalkMsg080C_WelcomeToPolonaItsATourist::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 16 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0878
+; ('The mermaids came back.'), otherwise message $080D ('You could meet mermaids here in the past,
+; but not anymore.'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the
+; message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg080D_YouCouldMeetMermaidsHere.call_start_message_command09_hl_b04); starts message $080D
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'You could meet
@@ -4166,6 +4458,9 @@ TalkMsg080D_YouCouldMeetMermaidsHere::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 17 (YoldTalkEvents): starts message $080E through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the speaker is 'from the port in the northeast'. (C2, E-0374)
 ; starts message $080E through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'I'm from the port in the northeast.' (E-0268, the E-0082 shape; was
 ; TalkMsg080E_ImFromThePortInThe)
@@ -4174,6 +4469,9 @@ TalkMsg080E_ImFromThePortInThe::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 18 (YoldTalkEvents): starts message $080F through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); a warning about going 'near the cave in the west.'. (C2, E-0374)
 ; starts message $080F through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'You're not supposed to go near the' (E-0268, the E-0082 shape; was
 ; TalkMsg080F_YoureNotSupposedToGoNear)
@@ -4182,11 +4480,16 @@ TalkMsg080F_YoureNotSupposedToGoNear::
     call StartMessageCommand09HL_B04
     ret
 
-; Yold talk 19, the mermaid's past: after EVENT_IN_THE_PAST_MERMAIDS_ARE a fixed message; otherwise,
-; with a party member who knows one of skills $76-$7D or $92 (FindPartyMemberWithSkill76To7DOr92),
-; the story script; with a member marked in record byte $55 bit 7, another; otherwise it names the
-; member and skill in the text buffers and starts one of two scripts by EVENT_THE_PIRATES. (C1,
-; E-0357)
+; Yold talk 19, the mermaid past: after EVENT_IN_THE_PAST_MERMAIDS_ARE message $084A ('Mermaids
+; exist.'). Otherwise FindPartyMemberWithSkill76To7DOr92 looks for a party member knowing
+; SKILL_ODDDANCE through SKILL_SIDESTEP ($76-$7D) or SKILL_DANCESHUT; with none (hTemp1 = $80) it
+; starts Script_InThePastMermaids (the yes answer gets the SCRIPT_SCENE_DANCING scene). With one,
+; when any party record has MON_STATUS bit 7 set (SetWStepArrivedIfPartyHasField55Bit7) it starts
+; Script_InThePastMermaids_4 ('Your monsters appear dispirited'); otherwise it copies that member
+; name (11 bytes of wNameGlyphBuf) to wTextBuf1 + 7 and the skill name to wTextBuf2 + 2 and starts
+; Script_InThePastMermaids_3 when EVENT_THE_PIRATES is set, else Script_InThePastMermaids_2
+; (SCRIPT_SCENE_MERMAID_SONG_2 and SCRIPT_SCENE_MERMAID_SONG on yes). All four scripts start with
+; the yes/no question $4810. (C2, E-0374)
 YoldTalkEvents_MermaidPast::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
     call TestFlagBit
@@ -4244,7 +4547,8 @@ YoldTalkEvents_MermaidPast::
     ret
 
 ; Yold talk 20, an inn: starts Script_WelcomeToOurInn_3 ('Welcome to our inn!', then a jump to the
-; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C1, E-0369)
+; inn script Script_It_3 in the data bank) and sets wDataBank = $10 for that jump. (C2, E-0369;
+; probed E-0374)
 ; starts Script_WelcomeToOurInn_3: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_Inn::
     ld hl, Script_WelcomeToOurInn_3 ; script '*: Welcome to our inn!'
@@ -4253,6 +4557,10 @@ YoldTalkEvents_Inn::
     ld [wDataBank], a
     ret
 
+; Yold talk 21 (YoldTalkEvents): starts Script_HaveYouHeardThe through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); its question $4818
+; 'Have you heard the legend' leads to message $8819 on yes and $881A ('Long ago, a deft craftsman')
+; on no. (C2, E-0374)
 ; starts Script_HaveYouHeardThe (StartScriptAtHL_B04); its first message begins 'Have you heard the
 ; legend about' (E-0271; was Talk_HaveYouHeardTheLegendAbout) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_HaveYouHeardTheLegendAbout; shortened from
@@ -4263,6 +4571,9 @@ Talk_HaveYouHeardTheLegendAbout::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 22 (YoldTalkEvents): starts message $081B through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'This is heavenly! It makes me feel alive again!'. (C2, E-0374)
 ; starts message $081B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Ahh This is heavenly! It makes me' (E-0268, the E-0082 shape; was
 ; TalkMsg081B_AhhThisIsHeavenlyItMakes)
@@ -4271,6 +4582,10 @@ TalkMsg081B_AhhThisIsHeavenlyItMakes::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 23 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0879
+; (the speaker has now seen 'mermaids too.'), otherwise message $081C ('I came from far away to see
+; some mermaids'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the
+; message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg081C_ICameFromFarAwayTo.call_start_message_command09_hl_b04); starts message $081C through
 ; StartMessageCommand09HL_B04 (script command $09); that string begins 'I came from far away to see'
@@ -4288,6 +4603,9 @@ TalkMsg081C_ICameFromFarAwayTo::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 24 (YoldTalkEvents): starts message $088B through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero reads the sign ('Welcome to ...'). (C2, E-0374)
 ; starts message $088B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 read the sign. Welcome to the' (E-0268, the E-0082 shape; was
 ; TalkMsg088B_HeroReadTheSignWelcomeTo)
@@ -4296,6 +4614,10 @@ TalkMsg088B_HeroReadTheSignWelcomeTo::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 25 (YoldTalkEvents): starts message $0889 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the oven ('It smelled ...'); an identical copy of entry 13,
+; TalkMsg0889_HeroPeeredIntoTheOvenIt. (C2, E-0374)
 ; starts message $0889 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the oven. It smelled' (E-0268, the E-0082 shape; was
 ; TalkMsg0889_HeroPeeredIntoTheOvenIt_04) (E-0344: the address in its name dropped or read as the
@@ -4305,6 +4627,9 @@ TalkMsg0889_HeroPeeredIntoTheOvenIt_04::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 26 (YoldTalkEvents): starts message $081D through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'This is Port Ritz, where ships gather from all over the world.'. (C2, E-0374)
 ; starts message $081D through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'This is Port Ritz, where ships gather' (E-0268, the E-0082 shape; was
 ; TalkMsg081D_ThisIsPortRitzWhereShips)
@@ -4313,6 +4638,11 @@ TalkMsg081D_ThisIsPortRitzWhereShips::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 27 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
+; $087A ('The pirates hid their loot on the volcanic island'), otherwise message $081E ('The pirates
+; were swallowed by the sea after monsters overwhelmed them.'), through StartMessageCommand09HL_B04
+; (script command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning =
+; 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 007A then jr c,
 ; TalkMsg081E_ThePiratesWereSwallowedBy.call_start_message_command09_hl_b04); starts message $081E
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'The pirates were
@@ -4330,6 +4660,10 @@ TalkMsg081E_ThePiratesWereSwallowedBy::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 28 (YoldTalkEvents): starts message $081F through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); about an old 'sailor man in the tavern who likes his grog too much.'. (C2,
+; E-0374)
 ; starts message $081F through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'There's this old sailor man in the' (E-0268, the E-0082 shape; was
 ; TalkMsg081F_TheresThisOldSailorManIn)
@@ -4338,6 +4672,10 @@ TalkMsg081F_TheresThisOldSailorManIn::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 29 (YoldTalkEvents): sets wDataBank = $1F, then starts Script_HowMayOurChurch through
+; StartScriptAtHL_B04 (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1);
+; its message 'How may our church serve' is followed by a jump to Script_Priest in the data bank.
+; (C2, E-0374)
 ; sets wDataBank = $1F, then starts Script_HowMayOurChurch (StartScriptAtHL_B04); its first message
 ; begins 'How may our church serve you?' (E-0271; was Talk_HowMayOurChurchServeYou) (E-0344: the
 ; address in its name dropped or read as the label there; was Talk_HowMayOurChurchServeYou;
@@ -4350,6 +4688,9 @@ Talk_HowMayOurChurchServeYou::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 30 (YoldTalkEvents): starts message $0821 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'All sorts of people come here from around the world.'. (C2, E-0374)
 ; starts message $0821 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'All sorts of people come here from' (E-0268, the E-0082 shape; was
 ; TalkMsg0821_AllSortsOfPeopleComeHere)
@@ -4358,6 +4699,9 @@ TalkMsg0821_AllSortsOfPeopleComeHere::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 31 (YoldTalkEvents): starts message $0822 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'I went to Polona a while back'. (C2, E-0374)
 ; starts message $0822 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'I went to Polona a while back' (E-0268, the E-0082 shape; was TalkMsg0822_IWentToPolonaAWhile)
 TalkMsg0822_IWentToPolonaAWhile::
@@ -4365,8 +4709,8 @@ TalkMsg0822_IWentToPolonaAWhile::
     call StartMessageCommand09HL_B04
     ret
 
-; Yold talk 32: a shop: screen table 6, script data in bank $10, 'I offer quality merchandise'. (C1,
-; E-0357)
+; Yold talk 32: a shop: screen table 6, script data in bank $10, 'I offer quality merchandise'. (C2,
+; E-0357; probed E-0374)
 YoldTalkEvents_Shop2::
     ld a, $06
     ld [wScreenTableIndex], a
@@ -4376,6 +4720,11 @@ YoldTalkEvents_Shop2::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 33 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $0D13
+; ('The lighthouse is out east.', still roamed by monsters though the MoonRock is back), otherwise
+; message $0824 ('There is a lighthouse to the east'), through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0824_ThereIsALighthouseToThe.call_start_message_command09_hl_b04); starts message $0824
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'There is a
@@ -4393,6 +4742,9 @@ TalkMsg0824_ThereIsALighthouseToThe::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 34 (YoldTalkEvents): starts message $0825 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'My ship sank in the eastern sea.'. (C2, E-0374)
 ; starts message $0825 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'My ship sank in the eastern sea.' (E-0268, the E-0082 shape; was
 ; TalkMsg0825_MyShipSankInTheEastern)
@@ -4401,6 +4753,9 @@ TalkMsg0825_MyShipSankInTheEastern::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 35 (YoldTalkEvents): starts message $0826 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); about the old man in the tavern: 'He tells me all sorts of things.'. (C2, E-0374)
 ; starts message $0826 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'The old man in the tavern's neat!' (E-0268, the E-0082 shape; was
 ; TalkMsg0826_TheOldManInTheTaverns)
@@ -4409,6 +4764,10 @@ TalkMsg0826_TheOldManInTheTaverns::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 36 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $087B
+; ('The sea around here is safe now.'), otherwise message $0827 ('This port used to be lively in the
+; past'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message
+; word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0827_ThisPortUsedToBeLively.call_start_message_command09_hl_b04); starts message $0827
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'This port used to be
@@ -4426,6 +4785,11 @@ TalkMsg0827_ThisPortUsedToBeLively::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 37 (YoldTalkEvents): when EVENT_SCENE_MERMAID_KINGDOM_05F is set starts message $087C
+; ('The MoonRock glows at night from atop the lighthouse again.'), otherwise message $0829 ('The
+; lighthouse had the MoonRock'), through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1).
+; (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0829_TheLighthouseHadTheMoonRock.call_start_message_command09_hl_b04); starts message $0829
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'The lighthouse had
@@ -4443,6 +4807,10 @@ TalkMsg0829_TheLighthouseHadTheMoonRock::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 38 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
+; $087D (the sea level 'has risen.'), otherwise message $082A (the sea level 'has gone down.'),
+; through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 007A then jr c,
 ; TalkMsg082A_TheSeasLevelHasGoneDown.call_start_message_command09_hl_b04); starts message $082A
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'The sea's level has
@@ -4460,6 +4828,9 @@ TalkMsg082A_TheSeasLevelHasGoneDown::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 39 (YoldTalkEvents): starts message $082B through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'Mermaids appear to love dancing.'. (C2, E-0374)
 ; starts message $082B through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Listen, did you know? Mermaids appear to' (E-0268, the E-0082 shape; was
 ; TalkMsg082B_ListenDidYouKnowMermaids)
@@ -4468,6 +4839,9 @@ TalkMsg082B_ListenDidYouKnowMermaids::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 40 (YoldTalkEvents): starts message $088D through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the oven ('Two shiny ...'). (C2, E-0374)
 ; starts message $088D through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the oven. Two shiny' (E-0268, the E-0082 shape; was
 ; TalkMsg088D_HeroPeeredIntoTheOvenTwo)
@@ -4477,6 +4851,10 @@ TalkMsg088D_HeroPeeredIntoTheOvenTwo::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 41 (YoldTalkEvents): starts Script_HeroTriedToCheck through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
+; message $082C (the hero 'tried to check the chest.') and then $082D 'Whoa! Hands off my
+; merchandise!'. (C2, E-0374)
 ; starts Script_HeroTriedToCheck (StartScriptAtHL_B04); its first message begins '0 tried to check
 ; the chest.' (E-0271; was Talk_HeroTriedToCheckTheChest) (E-0344: the address in its name dropped
 ; or read as the label there; was Talk_HeroTriedToCheckTheChest; shortened from
@@ -4487,6 +4865,10 @@ Talk_HeroTriedToCheckTheChest::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 42 (YoldTalkEvents): starts message $082E through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); the hero peers into the barrel: 'It was filled with gigantic beans.'. (C2,
+; E-0374)
 ; starts message $082E through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; '0 peered into the barrel. It was' (E-0268, the E-0082 shape; was
 ; TalkMsg082E_HeroPeeredIntoTheBarrelIt)
@@ -4495,6 +4877,11 @@ TalkMsg082E_HeroPeeredIntoTheBarrelIt::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 43 (YoldTalkEvents), a one-time barrel: StartTreasureFlagDE_B04 starts script command
+; $0A (RunOneTimeTreasure) with wScriptParam0 = 2 (barrel), wScriptParam1 = ITEM_TINYMEDAL and story
+; flag $0063 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1).
+; That command gives the item and sets the flag when the flag is clear (group-0 message $A6), shows
+; $A7 when the flag is already set and $A8 when the bag is full. (C2, E-0374)
 ; a one-time barrel: script command $0A with wScriptParam0 = 2 (kind) and wScriptParam1 = $2C, story
 ; flag $0063 in DE: when the flag is clear it gives item $2C (TinyMedal) and sets the flag (message
 ; $A6 of group 0; $A7 when the flag is already set, $A8 when there is no room) (E-0269; was
@@ -4510,7 +4897,7 @@ BarrelItem_TinyMedal_Flag0063::
 
 ; Yold talk 44, a second inn with the same code as YoldTalkEvents_Inn (talk 20): starts
 ; Script_WelcomeToOurInn_4 ('Welcome to our inn!', then the inn script Script_It_3 in the data bank)
-; and sets wDataBank = $10. (C1, E-0369)
+; and sets wDataBank = $10. (C2, E-0369; probed E-0374)
 ; starts Script_WelcomeToOurInn_4: '*: Welcome to our inn!' (E-0248)
 YoldTalkEvents_SecondInn::
     ld hl, Script_WelcomeToOurInn_4 ; script '*: Welcome to our inn!'
@@ -4519,6 +4906,10 @@ YoldTalkEvents_SecondInn::
     ld [wDataBank], a
     ret
 
+; Yold talk 45 (YoldTalkEvents): when EVENT_THE_PIRATES_WERE_SWALLOWED_BY is set starts message
+; $087E ('the shoals sank almost instantly.'), otherwise message $082F ('This area was a lot more
+; lively in the old days'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1
+; = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 007A then jr c,
 ; TalkMsg082F_ThisAreaWasALotMore.call_start_message_command09_hl_b04); starts message $082F through
 ; StartMessageCommand09HL_B04 (script command $09); that string begins 'This area was a lot more
@@ -4536,6 +4927,10 @@ TalkMsg082F_ThisAreaWasALotMore::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 46 (YoldTalkEvents): starts message $0830 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); about seeing 'some peculiar sights.' at sea, among them a ghost ship. (C2,
+; E-0374)
 ; starts message $0830 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'When you're out at sea, you get' (E-0268, the E-0082 shape; was TalkMsg0830_WhenYoureOutAtSeaYou)
 ; starts Script_SceneWhoAreYou (E-0248)
@@ -4544,14 +4939,22 @@ TalkMsg0830_WhenYoureOutAtSeaYou::
     call StartMessageCommand09HL_B04
     ret
 
-; starts Script_SceneWhoAreYou (StartScriptAtHL_B04) (E-0271; was TalkScript) (E-0344: the address
-; in its name dropped or read as the label there; was TalkScript)
+; Yold talk 47 (YoldTalkEvents): starts Script_SceneWhoAreYou through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script plays
+; sound $28, waits 140 frames, runs SCRIPT_SCENE_WHO_ARE_YOU and walks objects 0-2. (C2, E-0374)
+; starts Script_SceneWhoAreYou (StartScriptAtHL_B04) (E-0271; was Talk_SceneWhoAreYou) (E-0344: the
+; address in its name dropped or read as the label there; was Talk_SceneWhoAreYou)
 ; starts Script_SceneWhoAreYou (E-0248)
-TalkScript::
+Talk_SceneWhoAreYou::
     ld hl, Script_SceneWhoAreYou
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 48 (YoldTalkEvents): after EVENT_SCENE_MERMAID_KINGDOM_05F message $0D14 ('Another
+; master was here with two monsters', naming Kameha); otherwise after EVENT_THE_PIRATES message
+; $0842 (tired of the tales of the old man); otherwise message $0834 'When that old man gets
+; grogged'. Each goes through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the
+; message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b042; flag 006D then jr c,
 ; TalkMsg0834_WhenThatOldManGetsGrogged.call_start_message_command09_hl_b04); starts message $0834
@@ -4578,6 +4981,13 @@ TalkMsg0834_WhenThatOldManGetsGrogged::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 49 (YoldTalkEvents): after EVENT_SCENE_MERMAID_KINGDOM_05F message $087F ('Did you hear?
+; Pirates hid their treasure on the volcanic island.'); otherwise after
+; EVENT_THE_PIRATES_WERE_SWALLOWED_BY message $0DC3 ('The shoals that ringed the volcano have
+; suddenly disappeared.'); otherwise message $0835 ('The old fellow there, the instant he smells a
+; sea monster', wakes up). Each goes through StartMessageCommand09HL_B04 (script command $09:
+; wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1).
+; (C2, E-0374)
 ; tests story flags (flag 005F then jr c,
 ; TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b042; flag 007A then jr c,
 ; TalkMsg0835_TheOldFellowThereTheInstant.call_start_message_command09_hl_b04); starts message $0835
@@ -4604,6 +5014,9 @@ TalkMsg0835_TheOldFellowThereTheInstant::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 50 (YoldTalkEvents): starts message $0836 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'The volcanic island off the coast is vicious to ships.'. (C2, E-0374)
 ; starts message $0836 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'The volcanic island off the coast is' (E-0268, the E-0082 shape; was
 ; TalkMsg0836_TheVolcanicIslandOffTheCoast)
@@ -4616,7 +5029,7 @@ TalkMsg0836_TheVolcanicIslandOffTheCoast::
 ; $3C-$5B with a high byte (PartyHasSpeciesLo3CTo5BWithHiSet), otherwise mutters (message $0837,
 ; object 3 state 1); after EVENT_THE_PIRATES 'What are you here ...'; after the pirates were
 ; swallowed the species check picks between the mutter and a second waking script; after the mermaid
-; kingdom scene message $0880. (C1, E-0357)
+; kingdom scene message $0880. (C2, E-0357; probed E-0374)
 YoldTalkEvents_ShowHnnnrHicGnnZzz::
     ld de, EVENT_SCENE_MERMAID_KINGDOM_05F
     call TestFlagBit
@@ -4664,6 +5077,12 @@ YoldTalkEvents_ShowHnnnrHicGnnZzz::
     call StartMessageCommand09HL_B04
     ret
 
+; Carry set when some party record (wPartyCount entries of wPartyList, read with LoadSRAMRecordWord
+; with SRAM enabled) has a MON_SPECIES word whose high byte is non-zero and low byte is $3C-$5B (for
+; ids up to $17F this is MONSTER_PETITEEL through MONSTER_STARFISH); A = 0 either way, carry clear
+; and Z set when none does. SRAM is disabled on return. Its only caller is the sleeper of
+; YoldTalkEvents_ShowHnnnrHicGnnZzz (twice). With wPartyCount = 0 the loop runs 256 times. (C2,
+; E-0374)
 ; carry when a party record has a species word with a non-zero high byte and low byte $3C-$5B
 ; (E-0124)
 PartyHasSpeciesLo3CTo5BWithHiSet::
@@ -4701,7 +5120,7 @@ PartyHasSpeciesLo3CTo5BWithHiSet::
     ret
 
 ; Yold talk 52: 'Who are you? This is ...' the first time (setting its flag), then 'You can keep
-; trying'; after EVENT_SCENE_WATCH_OUT the watch-out scene script. (C1, E-0357)
+; trying'; after EVENT_SCENE_WATCH_OUT the watch-out scene script. (C2, E-0357; probed E-0374)
 YoldTalkEvents_WhoAreYou::
     ld de, EVENT_SCENE_WATCH_OUT
     call TestFlagBit
@@ -4725,6 +5144,11 @@ YoldTalkEvents_WhoAreYou::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 53 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_RIB and story flag $0067
+; in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That command
+; gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1 when the
+; flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $1B, story flag $0067 in DE: when the flag is clear it gives item $1B (Rib) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4738,6 +5162,11 @@ ChestItem_Rib::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 54 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LOVEWATER and story flag
+; $0068 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1
+; when the flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $02, story flag $0068 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -4751,6 +5180,11 @@ ChestItem_LoveWater::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 55 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_LOVEWATER and story flag
+; $0069 in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1
+; when the flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $02, story flag $0069 in DE: when the flag is clear it gives item $02 (LoveWater) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -4764,6 +5198,11 @@ ChestItem_LoveWater_Flag0069::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 56 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_EXITBELL and story flag
+; $006A in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1
+; when the flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $2A, story flag $006A in DE: when the flag is clear it gives item $2A (ExitBell) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4777,6 +5216,11 @@ ChestItem_ExitBell::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 57 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_MERMSCALE and story flag
+; $006B in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1
+; when the flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $46, story flag $006B in DE: when the flag is clear it gives item $46 (MermScale) and sets the
 ; flag (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room)
@@ -4790,6 +5234,11 @@ ChestItem_MermScale::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 58 (YoldTalkEvents), a one-time chest: StartTreasureFlagDE_B04 starts script command $0A
+; (RunOneTimeTreasure) with wScriptParam0 = 0 (chest), wScriptParam1 = ITEM_WARP and story flag
+; $006C in wMessageIndex/wMessageGroup (wScriptRunning = 1, wScriptStep = 0, wModeState = 1). That
+; command gives the item and sets the flag when the flag is clear (group-0 message $A0), shows $A1
+; when the flag is already set and $A2 when the bag is full. (C2, E-0374)
 ; a one-time treasure chest: script command $0A with wScriptParam0 = 0 (kind) and wScriptParam1 =
 ; $28, story flag $006C in DE: when the flag is clear it gives item $28 (Warp) and sets the flag
 ; (message $A0 of group 0; $A1 when the flag is already set, $A2 when there is no room) (E-0269; was
@@ -4803,6 +5252,9 @@ ChestItem_Warp::
     call StartTreasureFlagDE_B04
     ret
 
+; Yold talk 59 (YoldTalkEvents): starts message $0843 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'I saw a child cross the sea on a giant clam.'. (C2, E-0374)
 ; starts message $0843 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'I saw a child cross the sea' (E-0268, the E-0082 shape; was TalkMsg0843_ISawAChildCrossThe)
 TalkMsg0843_ISawAChildCrossThe::
@@ -4810,6 +5262,9 @@ TalkMsg0843_ISawAChildCrossThe::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 60 (YoldTalkEvents): starts message $0844 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'Watch me dance,' the speaker says. (C2, E-0374)
 ; starts message $0844 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'Watch me dance, and you'll want to' (E-0268, the E-0082 shape; was
 ; TalkMsg0844_WatchMeDanceAndYoullWant)
@@ -4820,7 +5275,8 @@ TalkMsg0844_WatchMeDanceAndYoullWant::
 
 ; Yold talk 61: does nothing until EVENT_IN_THE_PAST_MERMAIDS_ARE is set (WarpToMap41 sets it); then
 ; starts Script_DoYouWantTo_2, which asks 'Do you want to go ...' and on yes says 'Close your eyes a
-; little ...' and warps to map $41 (SCRIPT_WARP_MAP41), on no 'Come back for a visit'. (C1, E-0369)
+; little ...' and warps to map $41 (SCRIPT_WARP_MAP41), on no 'Come back for a visit'. (C2, E-0369;
+; probed E-0374)
 ; starts Script_DoYouWantTo_2: '*: Do you want to go' (E-0248)
 YoldTalkEvents_OfferMap41Warp::
     ld de, EVENT_IN_THE_PAST_MERMAIDS_ARE
@@ -4831,7 +5287,7 @@ YoldTalkEvents_OfferMap41Warp::
     ret
 
 ; Yold talk 62: message $084E the first time (setting EVENT_THIS_IS_THE_MERMAID), then the mermaid
-; script. (C1, E-0357)
+; script. (C2, E-0357; probed E-0374)
 YoldTalkEvents_ShowThisIsTheMermaid::
     ld de, EVENT_THIS_IS_THE_MERMAID
     call TestFlagBit
@@ -4847,6 +5303,10 @@ YoldTalkEvents_ShowThisIsTheMermaid::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 63 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0881 ('Our words of
+; thanks could never do justice'), otherwise message $084F ('I know not all humans are bad'),
+; through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 0076 then jr c,
 ; TalkMsg084F_IKnowNotAllHumansAre.call_start_message_command09_hl_b04); starts message $084F
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'I know not all
@@ -4864,6 +5324,10 @@ TalkMsg084F_IKnowNotAllHumansAre::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 64 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0882 ('Mermaids and
+; humans can live side by side in harmony again!'), otherwise message $0850 ('The pirates caught us
+; in nets'), through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message
+; word, wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 0076 then jr c,
 ; TalkMsg0850_ThePiratesCaughtUsInNets.call_start_message_command09_hl_b04); starts message $0850
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'The pirates caught
@@ -4881,6 +5345,9 @@ TalkMsg0850_ThePiratesCaughtUsInNets::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 65 (YoldTalkEvents): starts message $0851 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'The HarMirror was exquisite.'. (C2, E-0374)
 ; starts message $0851 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'The HarMirror was exquisite. It was so' (E-0268, the E-0082 shape; was
 ; TalkMsg0851_TheHarMirrorWasExquisite)
@@ -4889,6 +5356,9 @@ TalkMsg0851_TheHarMirrorWasExquisite::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 66 (YoldTalkEvents): starts message $0852 through StartMessageCommand09HL_B04 (script
+; command $09: wScriptParam0/1 = the message word, wScriptCommandType = 9, wScriptRunning = 1,
+; wModeState = 1); 'The MoonRock fell from the sky.'. (C2, E-0374)
 ; starts message $0852 through StartMessageCommand09HL_B04 (script command $09); that string begins
 ; 'The MoonRock fell from the sky. It' (E-0268, the E-0082 shape; was
 ; TalkMsg0852_TheMoonRockFellFromTheSky)
@@ -4897,6 +5367,10 @@ TalkMsg0852_TheMoonRockFellFromTheSky::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 67 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0883 ('Thanks to you,
+; the spectral ship sank again'), otherwise message $0853 ('The pirates sank with their ship.'),
+; through StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 0076 then jr c,
 ; TalkMsg0853_ThePiratesSankWithTheirShip.call_start_message_command09_hl_b04); starts message $0853
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'The pirates sank
@@ -4914,6 +5388,10 @@ TalkMsg0853_ThePiratesSankWithTheirShip::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 68 (YoldTalkEvents): when EVENT_SCENE_CRATE is set starts message $0884 ('That wandering
+; ghost ship' is gone), otherwise message $0854 ('We mermaids are peaceful beings.'), through
+; StartMessageCommand09HL_B04 (script command $09: wScriptParam0/1 = the message word,
+; wScriptCommandType = 9, wScriptRunning = 1, wModeState = 1). (C2, E-0374)
 ; tests story flags (flag 0076 then jr c,
 ; TalkMsg0854_WeMermaidsArePeacefulBeings.call_start_message_command09_hl_b04); starts message $0854
 ; through StartMessageCommand09HL_B04 (script command $09); that string begins 'We mermaids are
@@ -4934,7 +5412,7 @@ TalkMsg0854_WeMermaidsArePeacefulBeings::
 ; Yold talk 69: the sailor ring giver. Before the crate scene 'Welcome, young human' once, then
 ; message $0858; after EVENT_SCENE_CRATE it gives item $5F when the inventory has room (marking
 ; wInventorySortFlags bit 6) with its script, or message $0DC7 when it is full; after
-; EVENT_HERO_RECEIVED_THE_SAILOR_RING message $0885. (C1, E-0357)
+; EVENT_HERO_RECEIVED_THE_SAILOR_RING message $0885. (C2, E-0357; probed E-0374)
 YoldTalkEvents_SailorRingGiver::
     ld de, EVENT_HERO_RECEIVED_THE_SAILOR_RING
     call TestFlagBit
@@ -4975,6 +5453,9 @@ YoldTalkEvents_SailorRingGiver::
     call StartMessageCommand09HL_B04
     ret
 
+; Yold talk 70 (YoldTalkEvents): starts Script_SceneSailorRing through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script runs
+; only the scene command SCRIPT_SCENE_SAILOR_RING. (C2, E-0374)
 ; starts Script_SceneSailorRing (StartScriptAtHL_B04) (E-0271; was Talk_SceneSailorRing) (E-0344:
 ; the address in its name dropped or read as the label there; was Talk_SceneSailorRing; named after
 ; the script it starts, Script_SceneSailorRing)
@@ -4984,6 +5465,10 @@ Talk_SceneSailorRing::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 71 (YoldTalkEvents): starts Script_HowCouldWeDie through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
+; 'How could we die before enjoying all the loot we amassed', runs encounter $17, sets
+; EVENT_HOW_COULD_WE_DIE_BEFORE and runs SCRIPT_SCENE_PIRATE_GHOSTS. (C2, E-0374)
 ; starts Script_HowCouldWeDie (StartScriptAtHL_B04); its first message begins 'How could we die
 ; before enjoying' (E-0271; was Talk_HowCouldWeDieBeforeEnjoying) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_HowCouldWeDieBeforeEnjoying; shortened from
@@ -4994,6 +5479,10 @@ Talk_HowCouldWeDieBeforeEnjoying::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 72 (YoldTalkEvents): starts Script_TheTreasuresAreOurs through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
+; message $085A ('The treasures are ours'), runs encounter $17, sets EVENT_THE_TREASURES_ARE_OURS_NO
+; and runs SCRIPT_SCENE_PIRATE_GHOSTS. (C2, E-0374)
 ; starts Script_TheTreasuresAreOurs (StartScriptAtHL_B04); its first message begins 'The treasures
 ; are ours No one' (E-0271; was Talk_TheTreasuresAreOursNoOne) (E-0344: the address in its name
 ; dropped or read as the label there; was Talk_TheTreasuresAreOursNoOne; shortened from
@@ -5004,6 +5493,10 @@ Talk_TheTreasuresAreOursNoOne::
     call StartScriptAtHL_B04
     ret
 
+; Yold talk 73 (YoldTalkEvents): starts Script_ItNagsAndNags through StartScriptAtHL_B04
+; (wScriptPointerLo/Hi = the script, wScriptStartRequest = $80, wModeState = 1); that script shows
+; message $085C ('It nags and nags that we'), runs encounter $17, sets EVENT_IT_NAGS_AND_NAGS_THAT
+; and runs SCRIPT_SCENE_PIRATE_GHOSTS. (C2, E-0374)
 ; starts Script_ItNagsAndNags (StartScriptAtHL_B04); its first message begins 'It nags and nags that
 ; we' (E-0271; was Talk_ItNagsAndNagsThatWe) (E-0344: the address in its name dropped or read as the
 ; label there; was Talk_ItNagsAndNagsThatWe; shortened from TalkScript_ItNagsAndNagsThatWe)

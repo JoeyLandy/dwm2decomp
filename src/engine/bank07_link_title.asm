@@ -3291,7 +3291,7 @@ TitleMenu_Continue_LoadSave::
     xor a
     ld [wTalkCountdown], a
     ld [wEncounterDelay], a
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     ldh a, [hPlayerFacing]
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a

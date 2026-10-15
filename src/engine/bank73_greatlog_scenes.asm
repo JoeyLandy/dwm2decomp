@@ -2311,7 +2311,7 @@ RunMessageBox_Bank73_Open::
     pop af
     or a
     jr nz, .check_message_group
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
 
 .check_message_group:
     ld a, [wMessageGroup]
@@ -2393,9 +2393,8 @@ RunMessageBox_Bank73_Close::
     ret
 
 ; Event message, step 3: once wTextWindowState shows the window closed, pops the A that
-; RunMessageBox_Bank73 saved on entry; when it is 0 calls ClearBit1OfPlayerAndObjectFlags
-; (unfreezing the player and objects), then marks the message idle (wMessageState = $FF). (C1,
-; E-0371)
+; RunMessageBox_Bank73 saved on entry; when it is 0 calls ResumeFieldAnimation (unfreezing the
+; player and objects), then marks the message idle (wMessageState = $FF). (C1, E-0371)
 RunMessageBox_Bank73_Finish::
     ld a, [wTextWindowState]
     and $03
@@ -2407,7 +2406,7 @@ RunMessageBox_Bank73_Finish::
     pop af
     or a
     jr nz, .set_message_state_to_FF
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 .set_message_state_to_FF:
     ld a, $ff

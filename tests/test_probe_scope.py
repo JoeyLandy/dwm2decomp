@@ -43,6 +43,12 @@ Dispatch::
     jumptable
     dw Pure
     dw UsesBankRegs
+Padded::
+    ret
+    db $00, $00
+AfterPadding::
+    ldh a, [rLCDC]
+    ret
 Table::
     db $01, $02
 """
@@ -74,6 +80,10 @@ class Scope(unittest.TestCase):
     def test_a_conditional_return_does_not_end_a_routine(self):
         self.assertFalse(self.rs["Pure"]["calls"])  # `ret z` runs on; its last instruction, `ret`, ends it
         self.assertIn("DrawsTiles", self.rs["FallsIntoScreen"]["calls"])
+
+    def test_padding_after_a_return_does_not_run_on(self):
+        self.assertEqual(self.cls["Padded"], "probe")
+        self.assertEqual(self.cls["AfterPadding"], "hardware")
 
     def test_data_is_not_classified(self):
         self.assertNotIn("Table", self.cls)

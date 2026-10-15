@@ -601,6 +601,13 @@ DebugAutomap_Init::
 DebugAutomap_Init_TileRect::
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
+; Builds debug screen 4 ('4:GRAFHICS' in the debug menu): prints string 0/0 '0123456789ABCDEF' into
+; a 16 x 1 window at vTiles2 + $100 and string 0/3 'MONSTER BGSD CHARA' into a 16-wide, 8-row window
+; at vTiles1 (ShowString_Bank08), fills a 16 x 2 block of tiles $80 on at vBGMap0 + $A3
+; (FillRectWithTileSequence), copies the 6 x 6 DebugMonsterPictureViewer_Init_TileRect to vBGMap0 +
+; $124 and on CGB DebugMonsterPictureViewer_Init_TileRect_2 into VRAM bank 1. It sets wDebugValue0 =
+; 0, wDebugValue1 = $80, wDebugValue2 = 0, wDebugValue3 = $80 (picture and sprite number 0, both
+; marked for loading by bit 7) and wDebugState = 0. (C1, E-0374)
 ; init for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite
 ; viewer (E-0041)
 DebugMonsterPictureViewer_Init::
@@ -690,6 +697,11 @@ DebugMonsterPictureViewer_Init_TileRect_2::
     db $01, $01, $01, $01, $01, $01 ; id 4
     db $01, $01, $01, $01, $01, $01 ; id 5
 
+; Builds debug screen 5 ('5:SOUNDS' in the debug menu): prints string 0/0 '0123456789ABCDEF' into a
+; 16 x 1 window at vTiles2 + $100 and string 0/6 (the same text as 0/5, '? SOUND ?' with 'BGM' and
+; 'SE') into a 16-wide, 8-row window at vTiles1, copies the 11 x 4 DebugSoundTest_Init_TileRect to
+; vBGMap0 + $A3, and clears wMenuState (the selected line) and wTemp0 and wTemp1 (the music and
+; effect numbers). (C1, E-0374)
 ; init for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 DebugSoundTest_Init::
     ld hl, vTiles2 + $100
@@ -743,6 +755,12 @@ DebugSoundTest_Init_TileRect::
     db $a0, $a1, $a2, $a3, $a4, $a5, $10, $10, $a8, $10, $12 ; id 2
     db $b0, $b1, $b2, $b3, $b4, $b5, $10, $10, $b8, $10, $10 ; id 3
 
+; Builds debug screen 6 ('6:BATTLE' in the debug menu): prints string 0/0 '0123456789ABCDEF' into a
+; 16 x 1 window at vTiles2 + $100 and string 0/9 ('? BATTLE ?', 'No. foes', 'Monster 1' to 'Monster
+; 3', 'Debug', 'Skill ID', 'Species', 'Level') into an 11-wide, 9-row window at vTiles1, copies the
+; 20 x 14 DebugBattleSetup_Init_TileRect to vBGMap0 + $40, clears the 24 bytes of wWorkBuf (the 12
+; field words) and draws fields 1-6, 8 and 10 with DebugBattleSetupShowFieldString, leaving
+; wMenuState = 0. (C1, E-0374)
 ; init for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters, skill,
 ; levels) (E-0041)
 DebugBattleSetup_Init::
@@ -832,6 +850,11 @@ DebugBattleSetup_Init_TileRect::
     db $cd, $ce, $cf, $d0, $d1, $d2, $d3, $10, $10, $10, $d7, $60, $61, $62, $63, $64, $65, $66, $67, $68 ; id 12
     db $d8, $d9, $da, $db, $dc, $dd, $de, $10, $10, $10, $e2, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 13
 
+; A = first tile, B = width, C = rows, HL = BG map address: writes the consecutive tile numbers A, A
+; + 1, ... row by row (rows 32 bytes apart); A ends past the last tile. On CGB it then switches to
+; VRAM bank 1, zero-fills the $240 bytes from vBGMap0 (all attributes 0, not only the rectangle) and
+; switches back to bank 0. It writes VRAM without waiting, so its callers (the debug screen
+; builders) run it while the screen is off. (C1, E-0374)
 ; A = first tile, B = width, C = rows, HL = BG map address (rows 32 apart): writes consecutive tile
 ; numbers A, A + 1, ... row by row; on CGB then zero-fills the $240 bytes at vBGMap0 in VRAM bank 1
 ; (all attributes 0, regardless of the rectangle) (E-0073)
@@ -867,6 +890,11 @@ FillRectWithTileSequence::
     ldh [c], a
     ret
 
+; On CGB copies the 8 bytes of LoadPalette0FromData_Data (palette 0, four colours) to
+; wBGPaletteBuffer, sets wBGPaletteUploadRequest = $7F, copies the same 8 bytes to wBGPaletteBuffer
+; again and sets wOBJPaletteUploadRequest = $7F, so wOBJPaletteBuffer is not changed by it. Does
+; nothing on DMG (wIsCGB = 0). Used by the debug screens and three link/title screens in bank $07.
+; (C2, E-0374)
 ; on CGB copies the 8-byte palette LoadPalette0FromData_Data into wBGPaletteBuffer twice and sets
 ; wBGPaletteUploadRequest and wOBJPaletteUploadRequest = $7F (E-0117) (E-0344: the address in its
 ; name dropped or read as the label there; was LoadPalette0FromData)
@@ -892,7 +920,13 @@ LoadPalette0FromData::
 LoadPalette0FromData_Data::
     db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
-; per-frame routine for wGameMode = 0 (E-0029)
+; The per-frame routine of game mode 0, the debug menu (far-called by RunGameModeUpdate): jumps
+; through a 12-entry table by wModeState in the order of DebugMode_InitByModeState: 0 and 1
+; DebugMainMenu_Update, 2 DebugMapEditor_Update, 3 DebugAutomap_Update, 4
+; DebugMonsterPictureViewer_Update, 5 DebugSoundTest_Update, 6 DebugBattleSetup_Update, 7
+; DebugResultsDisplay_Update, 8 DebugStaffRoll_Update, 9 DebugSkillViewer_Update, 10
+; DebugMonsterRecordViewer_Update, 11 DebugMessageTest_Update. (C1, E-0374)
+; per-frame routine for wGameMode = 0
 GameMode0_Update::
     ld a, [wModeState]
     jumptable
@@ -909,6 +943,13 @@ GameMode0_Update::
     dw DebugMonsterRecordViewer_Update
     dw DebugMessageTest_Update
 
+; Each frame of the message test (debug screen 11, 'B:MESSAGE CHK'): returns while bit 0 of
+; wTextFlags is set (a message still printing). Without A pressed it goes to
+; DebugMessageTest_Update_HandleInput. With A it sets wStringIndex = wMenuRowCount (the third
+; number), wStringCategory = wTemp1 (the second), an 18-wide, 4-row text window at vTiles2 + $300,
+; and jumps through a 34-entry table by wTemp0 (the library number) to the step that far-calls the
+; BeginStringDisplay of one bank (DebugMessageTest_Update_ShowBank08 for 0,
+; DebugMessageTest_Update_ShowBank09 for 1, 1 $09, 2-8 $28-$2E, 9 $7C, ..., 33 $1B). (C1, E-0374)
 ; update for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 DebugMessageTest_Update::
     ld a, [wTextFlags]
@@ -1467,7 +1508,7 @@ DebugMessageTest_WrapNumber::
     ret
 
 ; Clears the message numbers that depend on the one just changed: changing the library clears both,
-; changing the first clears the second. (C1, E-0357)
+; changing the first clears the second. (C2, E-0357; probed E-0374)
 DebugMessageTest_ClearDependentNumbers::
     ld a, [wMenuState]
     cp $00
@@ -1533,6 +1574,11 @@ DebugMessageTestTable::
 DebugMessageTestSubLists::
     db $14, $ff, $10, $ff, $7f, $df, $6f, $6f, $27, $0d, $af, $00, $23, $00, $06, $05, $01, $08, $0a, $1b, $07, $03, $09, $02, $19, $09, $57, $00, $53, $0c, $0d, $00, $21, $06, $06, $05, $00, $06, $02, $1a, $08, $05, $85, $fc, $03, $00, $00, $21, $01, $35, $1f, $02, $ff, $ff, $ff, $02, $ff, $84, $0a, $c9 ; entry 0
 
+; Each frame of the monster record viewer (debug screen 10, 'A:ENEMY TBL CHK'): B returns to the
+; debug menu (wGameMode 0, wModeState 0, mode change request). Left and Right step the monster id
+; (wDebugCursor low, wDebugValue0 high) by 1, or by 16 while Select is held, within 0-$2AA: Left
+; below 0 gives $2AB, Right at $2AB or more gives 0; then DebugShowMonsterRecord draws the new id.
+; With neither it returns (DebugShowMonsterRecord_Done). (C1, E-0374)
 ; update for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 DebugMonsterRecordViewer_Update::
     ld a, [wJoypadPressed]
@@ -1628,10 +1674,18 @@ DebugMonsterRecordViewer_Update::
     jr c, DebugShowMonsterRecord
     ld hl, $0000
 
+; HL = monster id: stores it in wDebugCursor/wDebugValue0 and wMonsterId, loads the MonsterTable
+; entry with LoadMonsterRecord and draws it on the record viewer: the id as three hex digits at BG
+; row 1, column 4; the name (ShowString_Bank88, category = id high byte, index = id low byte) in a 9
+; x 1 window at vTiles2 + $400, saving and restoring the text window settings; the word at
+; wRecordBuffer as hex at row 2; bytes 0-3 of wRecordBufferData as hex at row 3; the words at bytes
+; 4, 8, $A, $C, $E, $10 and $12 as decimal (DebugShowMonsterRecord_Number24ToPackedBCD) at rows 4
+; and 7-12; and bytes 6, 7 and $14-$17 as decimal (WriteDecimalByteTiles_Bank01) at rows 5, 6 and
+; 13-16. Falls through to DebugShowMonsterRecord_Done. (C1, E-0374)
 ; HL = monster id (the debug monster viewer wraps it at $02AB): stores it in
 ; wDebugCursor/wDebugValue0 and wMonsterId/wMonsterId + $1, loads the record with LoadMonsterRecord
 ; and draws the id, the name (string bank $88, category = id high byte, index = id low byte) and the
-; record's fields on the debug screen (E-0033)
+; record's fields on the debug screen
 DebugShowMonsterRecord::
     ld a, l
     ld [wDebugCursor], a
@@ -1779,11 +1833,22 @@ DebugShowMonsterRecord::
     call WriteDecimalByteTiles_Bank01
 
 ; Ends DebugShowMonsterRecord (its drawing falls through to here) and is the exit
-; DebugMonsterRecordViewer_Update jumps to when Right is not pressed this frame: returns. (C1,
-; E-0369)
+; DebugMonsterRecordViewer_Update jumps to when Right is not pressed this frame: returns. (C2,
+; E-0369; probed E-0374)
 DebugShowMonsterRecord_Done::
     ret
 
+; Each frame of the skill viewer (debug screen 9, '9:TOKUGI CHECK'): B returns to the debug menu.
+; Left and Right step the skill number wDebugCursor through 0-$AE with wrap; the number is copied to
+; wDebugValue0 and nothing more happens while it equals the one there before. A new number is drawn
+; as hex at BG row 2, column 7; its record is loaded into wRecordBufferData (LoadSkillRecordPart,
+; wBattleArg0 = 0, $11 bytes); byte 0 is drawn in decimal at row 4; the skill name (string category
+; 4, index = the number; number 0 shows string $0E/1) goes to vTiles1 + $200; bytes 1, 2, 3 & 3, the
+; high nibble of byte 3 and byte 4 (through DebugSkillViewer_Update_IndexOfFlagValue) pick strings
+; of categories $12, $13, $14, $10 and $11; bytes 5-8 are drawn as 8 flag tiles each at rows 10-13
+; (DebugSkillViewer_Update_DrawFlagBits); and four numbers capped at 9999
+; (DebugSkillViewer_Update_ToCappedBCD) show the words at bytes 9 and $D and the sums byte 9 + byte
+; $B and byte $D + byte $F (words) at rows 15 and 16. (C1, E-0374)
 ; update for debug-mode state 9: the screen shows the skill viewer (E-0041)
 DebugSkillViewer_Update::
     ld a, [wJoypadPressed]
@@ -1967,7 +2032,8 @@ DebugSkillViewer_Update::
     ret
 
 ; For the debug skill viewer: converts HL to packed decimal digits (Number24ToPackedBCD) and caps
-; the display at 9999: when the value has a digit above the thousands it shows $99 $99. (C1, E-0357)
+; the display at 9999: when the value has a digit above the thousands it shows $99 $99. (C2, E-0357;
+; probed E-0374)
 DebugSkillViewer_Update_ToCappedBCD::
     ld a, l
     ld [wDigits], a
@@ -2043,8 +2109,12 @@ DebugSkillViewer_Update_DrawFourDigits::
     ei
     ret
 
+; A = a skill record byte (byte 4): returns A = C = its position in the list $11, $12, $14, $21,
+; $22, $31, $32, $40, $80 (1-9), or 10 for any other value; A = 0 returns at once with A = 0 and C
+; unchanged. DebugSkillViewer_Update uses the result as the string index of category $11. (C2,
+; E-0374)
 ; C = the position of A in the list $11, $12, $14, $21, $22, $31, $32, $40, $80, ...; returns at
-; once for 0 (E-0305)
+; once for 0
 DebugSkillViewer_Update_IndexOfFlagValue::
     or a
     ret z
@@ -2208,6 +2278,11 @@ DebugShowMonsterRecord_Number24ToPackedBCD::
     ei
     ret
 
+; A = number, HL = VRAM address, B = the tile of digit 0, C = the blank tile: writes three tiles at
+; HL, HL + 1 and HL + 2: the hundreds and tens as tile B + digit, a leading zero (A below 100, or
+; below 10) as tile C, and the ones as tile B + digit. HL ends on the last tile and D = the ones
+; digit; each write is a WriteVRAMByte between di and ei. The debug record and skill viewers call it
+; with B = 1, C = 0. (C1, E-0374)
 ; writes A as decimal digit tiles at HL (three digits, with tile C for absent leading digits)
 ; (E-0124)
 WriteDecimalByteTiles_Bank01::
@@ -2238,6 +2313,8 @@ WriteDecimalByteTiles_Bank01::
     call WriteTileDPlusBAtHL
     ret
 
+; D = A / E and A = A mod E by repeated subtraction (E must not be 0); E is kept. Used by
+; WriteDecimalByteTiles_Bank01 with E = 100 and 10. (C2, E-0374)
 ; D = A / E and A = A mod E by repeated subtraction (E-0122)
 DivModAByE_Bank01::
     ld d, $ff
@@ -2249,6 +2326,9 @@ DivModAByE_Bank01::
     add e
     ret
 
+; Writes tile D + B at VRAM address HL with WriteVRAMByte between di and ei; AF is kept. The digit
+; writer of the debug record and skill viewers (WriteDecimalByteTiles_Bank01, WriteHexByteTilesAtHL,
+; DebugShowMonsterRecord_DrawLowHexDigit). (C1, E-0374)
 ; writes tile D + B at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
 WriteTileDPlusBAtHL::
     push af
@@ -2260,6 +2340,8 @@ WriteTileDPlusBAtHL::
     pop af
     ret
 
+; Writes tile C at VRAM address HL with WriteVRAMByte between di and ei; AF is kept.
+; WriteDecimalByteTiles_Bank01 uses it for blank leading digits. (C1, E-0374)
 ; writes tile C at VRAM address HL with interrupts off (WriteVRAMByte); AF kept (E-0114)
 WriteTileCAtHL::
     push af
@@ -2270,6 +2352,11 @@ WriteTileCAtHL::
     pop af
     ret
 
+; A = byte, B = the tile of digit 0, HL = VRAM address: writes the high nibble of A at HL + 1 and
+; the low nibble at HL + 2 as tiles B + nibble (falling into
+; DebugShowMonsterRecord_DrawLowHexDigit); HL ends at HL + 2. DebugShowMonsterRecord uses it with B
+; = 1 and puts the third hex digit of an id at HL with DebugShowMonsterRecord_DrawLowHexDigit. (C1,
+; E-0374)
 ; HL += 1, writes the high nibble of A as a tile (WriteTileDPlusBAtHL), then falls into the
 ; low-nibble write (E-0122)
 WriteHexByteTilesAtHL::
@@ -2290,12 +2377,23 @@ DebugShowMonsterRecord_DrawLowHexDigit::
     call WriteTileDPlusBAtHL
     ret
 
+; Each frame of debug screen 8 ('8:STAFF ROLL'): far-calls DebugStaffRoll_Update_RunScene (bank
+; $E0), which runs the credits or one of the staff roll scenes. (C1, E-0374)
 ; update for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
 ; HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 DebugStaffRoll_Update::
     farcall DebugStaffRoll_Update_RunScene
     ret
 
+; Each frame of the debug breeding screen (debug screen 7, '7:HAIGOU'), by wScreenState: 0 runs
+; DebugResultsDisplay_Update_HandleInput (the field editor), 1 DebugResultsDisplay_Update_ShowChild.
+; Any other state is the resistance editor: A builds the parents
+; (DebugResultsDisplay_Update_BuildParents), B leaves (DebugResultsDisplay_Update_ExitToMenu), Right
+; and Left move wSharedMenuWork over the 27 resistances (0-$1A, wrapping; the digit left is redrawn
+; first), Up and Down decrease and increase the selected value in parent A list (wGridCursorY, when
+; wDebugCursor = 4) or parent B list (wDebugResultsBuf), wrapping through 0-3, and Start redraws the
+; digit and returns to the field editor (wScreenState = 0, wSharedMenuWork = 0). With no button the
+; selected digit blinks (DebugResultsDisplay_Update_BlinkResistance). (C1, E-0374)
 ; update for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 DebugResultsDisplay_Update::
     ld a, [wScreenState]
@@ -2459,7 +2557,8 @@ DebugResultsDisplay_Update_BlankResistance::
 
 ; HL = the screen address of resistance wSharedMenuWork on the debug breeding screen: a row for
 ; parent A (wDebugCursor = 4) or B, from the two address words in
-; DebugResultsDisplay_ResistanceAddress_Data1/2; indices from 14 use the second row. (C1, E-0357)
+; DebugResultsDisplay_ResistanceAddress_Data1/2; indices from 14 use the second row. (C2, E-0357;
+; probed E-0374)
 DebugResultsDisplay_ResistanceAddress::
     ld a, [wDebugCursor]
     cp $04
@@ -2721,7 +2820,7 @@ DebugResultsDisplay_Update_ShowChild_DrawBCD::
 ; (DebugResultsDisplay_Update_PressStart). Select loads both parents' default resistances from their
 ; species records (LoadSpeciesRecord, CopySpeciesResistancesFromIndexCToDE) into wGridCursorY
 ; (parent A) and wDebugResultsBuf (parent B) and draws them as digit tiles. With no button it blinks
-; the selected field (StepDebugCursorDebugCounter). (C1, E-0369)
+; the selected field (DebugResultsDisplay_BlinkSelectedField). (C1, E-0369)
 DebugResultsDisplay_Update_HandleInput::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
@@ -2740,7 +2839,7 @@ DebugResultsDisplay_Update_HandleInput::
     jp nz, DebugResultsDisplay_Update_PressStart
     bit 2, a
     jp nz, .read_debug_value0
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 .read_debug_value0:
@@ -2832,6 +2931,12 @@ DebugResultsDisplay_Update_HandleInput::
     jr c, .loop4
     ret
 
+; C = first resistance index, DE = destination: copies the species resistances from index C through
+; $1A (wSpeciesRecord + SPECIES_RESISTANCES + C, one at a time through LoadSpeciesResistanceArg4 in
+; bank $0E, which leaves each in wArg5) to DE, DE + 1, ...; the first byte is copied before the
+; test, so C = $1B or more copies one byte. DE ends past the copy, C = $1B, wArg4 = the last index.
+; DebugResultsDisplay_Update_HandleInput uses it with C = 0 to load both parents default
+; resistances. (C2, E-0374)
 ; for C up to $1A, loads byte C of wSpeciesRecord + $12 (LoadSpeciesResistanceArg4) and stores it at
 ; DE (E-0122) (E-0340: the address in its name read as its RAM name; was
 ; CopySpeciesResistancesFromIndexCToDE) (E-0345: copies from wSpeciesRecord + $12
@@ -2853,6 +2958,10 @@ CopySpeciesResistancesFromIndexCToDE::
     jr c, CopySpeciesResistancesFromIndexCToDE
     ret
 
+; Toggles wArg1 between 0 and 2 and, with interrupts off after WaitForVRAMAccess, writes tile $10 +
+; wArg1 (tile $10 or $12) at vBGMap0 + $81 (BG row 4, column 1).
+; DebugResultsDisplay_Update_PressStart calls it for Start on a field other than the plus values;
+; DebugResultsDisplay_Update_ShowChild passes wArg1 (0 or 2) to ComputeBreedingChild. (C1, E-0374)
 ; debug: toggles wArg1 between 0 and 2 and writes tile $10 + wArg1 at vBGMap0 + $81; the following
 ; entries are the debug results screen input handlers (E-0131)
 DebugToggleArg1Marker::
@@ -2882,15 +2991,15 @@ DebugToggleArg1Marker::
 DebugResultsDisplay_Update_PressStart::
     ld a, [wDebugCursor]
     cp $04
-    jr z, .call_draw_debug_field_value_debug_cursor
+    jr z, .call_debug_results_display_draw_selected
     cp $07
-    jr z, .call_draw_debug_field_value_debug_cursor
+    jr z, .call_debug_results_display_draw_selected
     call DebugToggleArg1Marker
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
-.call_draw_debug_field_value_debug_cursor:
-    call DrawDebugFieldValueDebugCursor
+.call_debug_results_display_draw_selected:
+    call DebugResultsDisplay_DrawSelectedField
     ld a, [wScreenState]
     inc a
     inc a
@@ -2902,25 +3011,25 @@ DebugResultsDisplay_Update_PressStart::
 ; Up on the debug breeding screen: redraws the current field and moves to the previous one (stops at
 ; field 0). (C1, E-0357)
 DebugResultsDisplay_Update_PrevField::
-    call DrawDebugFieldValueDebugCursor
+    call DebugResultsDisplay_DrawSelectedField
     ld a, [wDebugCursor]
     and a
     ret z
     dec a
     ld [wDebugCursor], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 ; Down on the debug breeding screen: redraws the current field and moves to the next one (stops at
 ; field 9). (C1, E-0357)
 DebugResultsDisplay_Update_NextField::
-    call DrawDebugFieldValueDebugCursor
+    call DebugResultsDisplay_DrawSelectedField
     ld a, [wDebugCursor]
     cp $09
     ret z
     inc a
     ld [wDebugCursor], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 ; Right on the debug breeding screen: increases the selected field. The species fields (0 and 2)
@@ -2960,7 +3069,7 @@ DebugResultsDisplay_Update_IncreaseField::
     pop hl
     ld a, c
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 .skip5:
@@ -2990,7 +3099,7 @@ DebugResultsDisplay_Update_IncreaseField::
     ld [hli], a
     ld a, b
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ld a, [wDebugCursor]
     cp $02
     jr z, DebugResultsDisplay_Update_DrawParentBName
@@ -3056,7 +3165,7 @@ DebugResultsDisplay_Update_DecreaseField::
     dec a
     pop hl
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 .skip5:
@@ -3086,7 +3195,7 @@ DebugResultsDisplay_Update_DecreaseField::
     ld [hli], a
     ld a, b
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ld a, [wDebugCursor]
     cp $02
     jp z, DebugResultsDisplay_Update_DrawParentBName
@@ -3131,7 +3240,7 @@ DebugResultsDisplay_Update_IncreaseField_Number::
     inc a
     pop hl
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 .skip5:
@@ -3189,7 +3298,7 @@ DebugResultsDisplay_Update_DecreaseField_Number::
     dec a
     pop hl
     ld [hl], a
-    call StepDebugCursorDebugCounter
+    call DebugResultsDisplay_BlinkSelectedField
     ret
 
 .skip5:
@@ -3213,7 +3322,7 @@ DebugResultsDisplay_Update_DecreaseField_Number::
     jr .skip3
 
 ; B on the debug breeding screen: clears all its values and leaves for the debug menu (wModeState =
-; 0 and a mode change request). (C1, E-0357)
+; 0 and a mode change request). (C2, E-0357; probed E-0374)
 DebugResultsDisplay_Update_ExitToMenu::
     xor a
     ld [wDebugCursor], a
@@ -3236,7 +3345,7 @@ DebugResultsDisplay_Update_ExitToMenu::
 ; (FamilyForSpeciesIdArg6), sex, plus value, level, item and resistances, then adds 1 to
 ; wScreenState and clears wNameEntryState. From state 0 this moves to state 1,
 ; DebugResultsDisplay_Update_ShowChild; the resistance editor (state 2 or more) also jumps here on
-; A, and the same increment leaves it in the editor. (C1, E-0369)
+; A, and the same increment leaves it in the editor. (C2, E-0369; probed E-0374)
 DebugResultsDisplay_Update_BuildParents::
     ld a, [wScreenCounter]
     cp $0a
@@ -3343,25 +3452,40 @@ DebugResultsDisplay_Update_BuildParents::
     ld [wNameEntryState], a
     ret
 
-; debug: wDebugCounter += 1; below $10 continues at DrawDebugFieldValueDebugCursor, below $18 at
-; StepDebugCursorDebugCounter_BlankField, then wraps to 0 (E-0126)
-StepDebugCursorDebugCounter::
+; The blink of the selected field on the debug breeding screen: wDebugCounter + 1; counts 1-$0F draw
+; the field (DebugResultsDisplay_DrawSelectedField), $10-$17 blank its three tiles
+; (StepDebugCursorDebugCounter_BlankField), and $18 sets the counter to 0 and draws.
+; DebugResultsDisplay_Update_HandleInput calls it on frames with no button, and the field steps
+; (DebugResultsDisplay_Update_PressStart, DebugResultsDisplay_Update_PrevField,
+; DebugResultsDisplay_Update_NextField, DebugResultsDisplay_Update_IncreaseField and others) after a
+; change. (C1, E-0374)
+; debug: wDebugCounter += 1; below $10 continues at DebugResultsDisplay_DrawSelectedField, below $18
+; at StepDebugCursorDebugCounter_BlankField, then wraps to 0 (E-0126)
+DebugResultsDisplay_BlinkSelectedField::
     ld a, [wDebugCounter]
     inc a
     ld [wDebugCounter], a
     cp $10
-    jr c, DrawDebugFieldValueDebugCursor
+    jr c, DebugResultsDisplay_DrawSelectedField
     cp $18
     jp c, StepDebugCursorDebugCounter_BlankField
     xor a
     ld [wDebugCounter], a
 
-; debug: draws the value of field wDebugCursor (DrawDebugFieldValueDebugCursor_Data1) at
-; DrawDebugFieldValueDebugCursor_Data2[wDebugCursor] as hex, a tile or BCD (E-0128)
-DrawDebugFieldValueDebugCursor::
+; Draws field wDebugCursor (0-9) of the debug breeding screen at the BG address
+; DebugResultsDisplay_DrawSelectedField_Data2[field], from the RAM word whose address is
+; DebugResultsDisplay_DrawSelectedField_Data1[field]. Fields 0 and 2 (the species words of parents A
+; and B, wDebugValue0 and wDebugValue3) are drawn as three hex digits (WriteThreeHexDigitsAtDE);
+; fields 1 and 3 (their sexes, wDebugValue2 and wDebugSubState) as one tile, the byte + $FE; fields
+; 4-9 (plus value, level and item of A, wScreenStep, wScreenCounter and wGlyphListStart, then of B,
+; wScreenSubStep, wGlyphListPos and wGridCursorX) as the last two decimal digits of the low byte
+; (PackTwoDigitsOfCAsBCD, WriteHexByteTilesAtDE). (C1, E-0374)
+; debug: draws the value of field wDebugCursor (DebugResultsDisplay_DrawSelectedField_Data1) at
+; DebugResultsDisplay_DrawSelectedField_Data2[wDebugCursor] as hex, a tile or BCD (E-0128)
+DebugResultsDisplay_DrawSelectedField::
     ld a, [wDebugCursor]
     sla a
-    ld de, DrawDebugFieldValueDebugCursor_Data1
+    ld de, DebugResultsDisplay_DrawSelectedField_Data1
     add e
     ld e, a
     jr nc, .skip
@@ -3385,7 +3509,7 @@ DrawDebugFieldValueDebugCursor::
     jr nz, .read_debug_cursor
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data2
+    ld hl, DebugResultsDisplay_DrawSelectedField_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3398,7 +3522,7 @@ DrawDebugFieldValueDebugCursor::
 .read_debug_cursor:
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data2
+    ld hl, DebugResultsDisplay_DrawSelectedField_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3416,7 +3540,7 @@ DrawDebugFieldValueDebugCursor::
 .read_debug_cursor2:
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data2
+    ld hl, DebugResultsDisplay_DrawSelectedField_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3427,6 +3551,9 @@ DrawDebugFieldValueDebugCursor::
     call WriteHexByteTilesAtDE
     ret
 
+; C = the tens and ones digits of C packed as BCD (tens in the high nibble), through
+; HLToDecimalDigits (wDigits); the hundreds are dropped and DE is kept. Used for the two-digit
+; fields of the debug breeding screen. (C2, E-0374)
 ; C = the last two decimal digits of C packed as BCD (E-0125)
 PackTwoDigitsOfCAsBCD::
     push de
@@ -3449,7 +3576,7 @@ PackTwoDigitsOfCAsBCD::
 StepDebugCursorDebugCounter_BlankField::
     ld a, [wDebugCursor]
     sla a
-    ld hl, DrawDebugFieldValueDebugCursor_Data2
+    ld hl, DebugResultsDisplay_DrawSelectedField_Data2
     add_a_to_hl
     ld a, [hl]
     ld e, a
@@ -3476,15 +3603,20 @@ StepDebugCursorDebugCounter_BlankField::
     ei
     ret
 
-; data read by DrawDebugFieldValueDebugCursor (20 bytes) (E-0347)
-DrawDebugFieldValueDebugCursor_Data1::
+; data read by DebugResultsDisplay_DrawSelectedField (20 bytes) (E-0347)
+DebugResultsDisplay_DrawSelectedField_Data1::
     db $f9, $c5, $fb, $c5, $fc, $c5, $fe, $c5, $81, $d7, $83, $d7, $85, $d7, $82, $d7
     db $84, $d7, $86, $d7
 
-DrawDebugFieldValueDebugCursor_Data2::
+DebugResultsDisplay_DrawSelectedField_Data2::
     db $e6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $a2, $99, $c2, $99, $e2, $99
     db $02, $9a, $22, $9a
 
+; DE points at a monster id word, HL = tile address: copies that monster name to wNameGlyphBuf
+; (CopyMonsterNameToBuffer_B01), ends it with $F0 at wNameGlyphBuf + $A (at most 10 glyphs) and
+; draws its glyphs at HL (CopyGlyphTilesToVRAM). Used for the species names of the debug breeding
+; screen (DebugResultsDisplay_Update_ShowChild, DebugResultsDisplay_Update_DrawSpeciesName). (C1,
+; E-0374)
 ; reads a monster id word at DE, copies its name and draws its glyphs at HL (E-0122)
 DrawMonsterNameForWordAtDE_Bank01::
     push hl
@@ -3502,8 +3634,12 @@ DrawMonsterNameForWordAtDE_Bank01::
     call CopyGlyphTilesToVRAM
     ret
 
+; HL = monster id: with wDataBank = $08 it reads entry 2 of StringDatabase (StringList_08_3, also
+; labelled StringTable_MonsterNames) with ReadWordFromDataBank, then the string pointer at that list
+; + 2 * HL, and copies 16 bytes from it in bank $08 to wNameGlyphBuf with CopyFromBankWaitVRAM;
+; wDataBank is restored. (C1, E-0374)
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
-; wDataBank) to wNameGlyphBuf; wDataBank is restored (E-0026)
+; wDataBank) to wNameGlyphBuf; wDataBank is restored
 CopyMonsterNameToBuffer_B01::
     push hl
     ld a, [wDataBank]
@@ -3539,7 +3675,9 @@ CopyMonsterNameToBuffer_B01::
     call CopyFromBankWaitVRAM
     ret
 
-; fills wNameGlyphBuf with nine $98 placeholder glyphs and $F0 (E-0305)
+; Fills wNameGlyphBuf with nine $98 placeholder glyphs followed by $F0; HL ends on the $F0.
+; DebugResultsDisplay_Update_ShowChild draws it as the child name placeholder. (C2, E-0374)
+; fills wNameGlyphBuf with nine $98 placeholder glyphs and $F0
 DebugResultsDisplay_Update_WriteUnknownName::
     ld c, $00
     ld hl, wNameGlyphBuf
@@ -3555,6 +3693,20 @@ DebugResultsDisplay_Update_WriteUnknownName::
     ld [hl], a
     ret
 
+; Each frame of the automap check (debug screen 3, '3:AUTOMAP CHECK'). A starts a key world
+; (DebugAutomap_Update_EnterKeyWorld) when wDebugState is $FF or wDebugSubState bit 7 is clear,
+; otherwise it acts as B. B (unless wDebugState is $FF) sets wCurrentKeyIndex = wDebugValue0 and
+; hMapScreenX/Y = wDebugValue2/3 and enters the field (game mode 1, wScriptRunning 0): with
+; wDebugSubState bit 7 set on map DebugAutomap_Update_Data[wDebugState & $1F] (wMapType 0,
+; wModeState 0); otherwise in the key world of SRAM slot wDebugState & $7F
+; (LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot, wMapType $80, map size from
+; wKeyWorldWidth/Height, wModeState 5). Start returns to the debug menu. Up and Down move
+; wDebugCursor over four fields; Right and Left change field 0 the key (wDebugValue0: Left from 0
+; gives $13, Right wraps after $1F; LoadKeyEntryFieldsToDebugState reloads its fields), 1 the level
+; (wDebugValue1, 0-99 wrapping, not while wDebugSubState bit 7 is set), 2 and 3 the screen X and Y
+; (wDebugValue2/3, 0-15). A changed key or level (bit 7) is redrawn
+; (DebugAutomap_Update_DrawKeyName, the number at row 8, DebugAutomap_Update_DrawLevel), X and Y at
+; rows 10 and 11, and tile $F8 marks the field at column 9 (tile $80 elsewhere). (C1, E-0374)
 ; update for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 DebugAutomap_Update::
     ld a, [wJoypadPressed]
@@ -3808,12 +3960,15 @@ DebugAutomap_Update::
 DebugAutomap_Update_Data::
     db $00, $05, $20, $30, $48, $70, $a0, $a8, $b0, $b8, $c8, $d1, $da
 
-; Starts a debug key world from the automap screen: rolls the key's contents for level wDebugValue1
-; (RollKeyContentsForLevelTemp0), stores the key (wCurrentKeyIndex = wDebugValue0) in its 4-byte
-; entry of the key list at $C707, saving it to a free SRAM slot when wDebugState is $FF; then saves
-; the key world record, sets the map size from the key world, places the player and the followers at
-; the key world's goal position, and enters the field (game mode 1, wModeState 5, wMapType $80).
-; (C1, E-0357)
+; Starts a debug key world from the automap screen: rolls the key contents for level wDebugValue1
+; (RollKeyContentsForLevelTemp0) and sets wCurrentKeyIndex = wDebugValue0. Byte 0 of its wKeyList
+; entry ($C707 + 4 * key) becomes, when wDebugState is $FF, the first free SRAM key-world slot
+; (FindSRAMSlotMarkerIndex; with none free it returns here), otherwise its old value & $7F; it is
+; also wKeyWorldSlot. Bytes 1-3 get hTemp1-hTemp3 (byte 3 also wPartyStrength). It then generates
+; the key world (GenerateKeyWorld, which sets bit 7 of byte 0 again), saves the key world record
+; (SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot), sets the map size from the key world, places the
+; player and the three followers facing 0 at the goal screen and position, and enters the field
+; (game mode 1, wModeState 5, wMapType $80). (C2, E-0374)
 DebugAutomap_Update_EnterKeyWorld::
     ld a, [wDebugValue1]
     ldh [hTemp0], a
@@ -3897,6 +4052,9 @@ DebugAutomap_Update_EnterKeyWorld::
     inc [hl]
     ret
 
+; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry ($C707 + 4 *
+; A), and wDebugValue1 = byte 3 | $80 (the level, marked for redrawing). Used by DebugAutomap_Init
+; and when the key changes in DebugAutomap_Update. (C2, E-0374)
 ; A = key slot: wDebugState = byte 0 and wDebugSubState = byte 3 of its wKeyList entry, wDebugValue1
 ; = byte 3 | $80 (E-0120)
 LoadKeyEntryFieldsToDebugState::
@@ -4039,6 +4197,16 @@ DebugMenuNames::
     db $43, $47, $3d, $35, $29, $25, $3d, $29, $2a, $8d, $f0, $00, $00, $00, $00, $00 ; id 10
     db $2f, $51, $55, $3d, $29, $2a, $8d, $f0 ; end
 
+; Each frame of the map editor (debug screen 2, '2:EDIT'). A: when DebugMapEditor_CheckPosition
+; (hTemp0 = wDebugValue0) rejects the position it draws tiles $F0-$F7 at vBGMap0 + $1A5 (the 'NOT
+; DATA' text); otherwise it sets hMapId = wDebugValue0, hMapScreenX = wDebugValue1, hMapScreenY =
+; wDebugValue3, hPlayerX = wDebugValue2, hPlayerY = wDebugState, clears wFieldReturnPhase and
+; returns to the debug menu (game mode 0, wModeState 0). Up and Down move wDebugCursor over five
+; fields; Left and Right held change the field every fourth frame: 0 the map (wDebugValue0; going
+; below 0 or reaching $FF gives $E1; the map name, string 0/(10 + map), is reprinted at vTiles2 +
+; $200), 1 screen X (wDebugValue1) and 2 screen Y (wDebugValue3), 0-15 wrapping, 3 and 4 the player
+; X and Y (wDebugValue2, wDebugState) in steps of 16. It redraws the values at rows 8-11 and marks
+; the field with tile $F8 at column 9. (C1, E-0374)
 ; update for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 DebugMapEditor_Update::
     ld a, [wJoypadPressedRepeat]
@@ -4244,6 +4412,13 @@ DebugMapEditor_Update::
     jr nz, .loop2
     ret
 
+; Each frame of the debug menu (wModeState 0 and 1): Down or Right select the next of 12 items and
+; Up or Left the previous one (wDebugCursor, wrapping); the selected line is highlighted by writing
+; its 16 tiles (wDebugCursor * 16 + $A0 on) at vBGMap0 + $122. A on item 0 ('1:GOTO PROGRAM') enters
+; the field (wGameMode 1, wMapType 0, wKeyWorldRefresh $80); items 1-10 open debug screens 2-11
+; (wGameMode 0, wModeState = item + 1; item 3 also sets wFieldTransitionStep = $80); item 11
+; ('RETURN') copies wDebugMenuFlag0-3 into wGameMode, wModeState and the two bytes after them. Each
+; choice requests a mode change. (C1, E-0374)
 ; update for debug-mode state 0: the screen shows the debug menu (E-0041)
 DebugMainMenu_Update::
     ld a, [wJoypadPressedRepeat]
@@ -4423,6 +4598,19 @@ DebugMainMenu_Update::
     inc [hl]
     ret
 
+; Each frame of the picture viewer (debug screen 4, '4:GRAFHICS'). A cycles wDebugState 0-3 (the
+; sprite pose), B returns to the debug menu, Up or Down switch wDebugCursor between the picture
+; number (wDebugValue0/1) and the sprite number (wDebugValue2/3). Left and Right step the selected
+; number through 0-$17E with wrap, setting bit 7 of its high byte. A marked picture number is
+; cleared of the mark and loaded (LoadMonsterPicture to vTiles2 + $200; on CGB
+; LoadMonsterPictureAttributes and a BG palette upload); a marked sprite number is decompressed from
+; its MonsterSpriteTable entry (bank $04) to vTiles0 + $200, and on CGB its 8 palette bytes from
+; bank $27 ($7328 + 8 * number) go to wOBJPaletteBuffer. The selected number blinks (bit 3 of the
+; wDebugSubState frame count), both are drawn as three hex digits at rows 5 and 6, and the sprite is
+; drawn at the scroll position + ($70, $60) with sub-sprite 2 * pose (pose 3 is sub-sprite 2
+; mirrored, hSpriteAttrXor $20) plus a frame that alternates every 16 frames, by
+; DrawMetaSpriteSet_Bank27 (high byte not 0), DrawMetaSpriteSet_Bank26 (wDebugValue2 bit 7) or
+; DrawMetaSpriteSet_Bank25. (C1, E-0374)
 ; update for debug-mode state 4: the screen shows 'MONSTER BGSD CHARA': monster picture and sprite
 ; viewer (E-0041)
 DebugMonsterPictureViewer_Update::
@@ -4758,6 +4946,13 @@ DebugMonsterPictureViewer_Update::
     farcall DrawMetaSpriteSet_Bank27
     ret
 
+; Each frame of the sound test (debug screen 5, '5:SOUNDS'). Start plays the selection: on the music
+; line (wMenuState 0) it resets the sound hardware (InitSoundHardware) and queues music
+; DebugSoundTestMusic[wTemp0]; on the effect line it queues effect DebugSoundTestEffects[wTemp1]. Up
+; or Down switch the line (redrawing the old one). Right and Left step the selected number and A
+; sets it to 0; each change plays effect $69 and wraps it to $20 music entries or $54 effect entries
+; with DebugSoundTest_WrapAndDrawId, which draws the sound id. B returns to the debug menu
+; (wModeState 0). The selected number blinks at row 7 or 8, column 9. (C1, E-0374)
 ; update for debug-mode state 5: the screen shows '? SOUND ?' (BGM, SE) (E-0041)
 DebugSoundTest_Update::
     ld a, [wJoypadPressed]
@@ -4887,7 +5082,7 @@ DebugSoundTest_Update_DrawEffectNumber::
     ld de, vBGMap0 + $109
     call WriteHexByteTilesAtDE
 
-; The sound test's shared exit: returns. (C1, E-0357)
+; The sound test's shared exit: returns. (C2, E-0357; probed E-0374)
 DebugSoundTest_Update_Done::
     ret
 
@@ -5059,6 +5254,12 @@ DebugSoundTestEffects::
     db $dc ; id 82
     db $dd ; id 83
 
+; Each frame of the battle set-up (debug screen 6, '6:BATTLE'). Without Start it runs
+; DebugBattleSetup_Update_HandleInput. Start sets wEncounterKind = the first field (wWorkBuf, 'No.
+; foes') and wBattleKind = the 'Debug' field (wWorkBuf + 8) shifted right; a non-zero battle kind
+; goes to DebugBattleSetup_Update_LoadEncounter, otherwise the three monster ids at wWorkBuf + 2 are
+; copied to wEncounterMonsters (DebugBattleSetup_CopyMonsterId, 0 becomes 1) and it falls into
+; DebugBattleSetup_Update_StartBattle. (C1, E-0374)
 ; update for debug-mode state 6: the screen shows '? BATTLE ?' (number of foes, three monsters,
 ; skill, levels) (E-0041)
 DebugBattleSetup_Update::
@@ -5074,9 +5275,9 @@ DebugBattleSetup_Update::
     jr nz, DebugBattleSetup_Update_LoadEncounter
     ld hl, wEncounterMonsters
     ld de, wWorkBuf + $2
-    call DebugBattleSetupLoadWords
-    call DebugBattleSetupLoadWords
-    call DebugBattleSetupLoadWords
+    call DebugBattleSetup_CopyMonsterId
+    call DebugBattleSetup_CopyMonsterId
+    call DebugBattleSetup_CopyMonsterId
 
 ; Starts the debug battle (DebugBattleSetup_Update falls through to here after loading the foes, and
 ; DebugBattleSetup_Update_LoadEncounter jumps here): clears the menu values, creates the save data
@@ -5112,9 +5313,13 @@ DebugBattleSetup_Update_StartBattle::
     inc [hl]
     ret
 
+; Copies one word from DE to HL; a zero word is stored as 1. DE and HL end past the word, A = the
+; high byte. The debug battle set-up uses it three times to copy the foe monster ids into
+; wEncounterMonsters (DebugBattleSetup_Update and DebugBattleSetup_Update_LoadEncounter). (C2,
+; E-0374)
 ; debug battle setup: copies a word from DE to HL (a zero word becomes 1); the following entries
 ; load the setup into wEncounterMonsters-wEncounterClass and handle input (E-0131)
-DebugBattleSetupLoadWords::
+DebugBattleSetup_CopyMonsterId::
     ld a, [de]
     inc de
     ld [hli], a
@@ -5183,9 +5388,9 @@ DebugBattleSetup_Update_HandleInput::
     ld [wEncounterKind], a
     ld hl, wEncounterMonsters
     ld de, wWorkBuf + $2
-    call DebugBattleSetupLoadWords
-    call DebugBattleSetupLoadWords
-    call DebugBattleSetupLoadWords
+    call DebugBattleSetup_CopyMonsterId
+    call DebugBattleSetup_CopyMonsterId
+    call DebugBattleSetup_CopyMonsterId
     xor a
     ld [wDebugCursor], a
     ld [wDebugValue0], a
@@ -5243,7 +5448,7 @@ DebugBattleSetup_Update_HandleInput::
     jr z, .check_joypad_held
     ld a, [wJoypadHeld]
     bit 2, a
-    jr z, .call_subtract_de_from_debug_limit
+    jr z, .call_debug_battle_setup_wrap_value_after_step
     inc de
     inc de
     inc de
@@ -5260,12 +5465,12 @@ DebugBattleSetup_Update_HandleInput::
     inc de
     inc de
     inc de
-    call ClampDebugValueToTableLimit
+    call DebugBattleSetup_WrapValueAfterBigStep
     jr .call_draw_debug_value_hex_for_menu_state
 
-.call_subtract_de_from_debug_limit:
+.call_debug_battle_setup_wrap_value_after_step:
     inc de
-    call SubtractDEFromDebugLimit
+    call DebugBattleSetup_WrapValueAfterStep
 
 .call_draw_debug_value_hex_for_menu_state:
     call DrawDebugValueHexForMenuState
@@ -5274,7 +5479,7 @@ DebugBattleSetup_Update_HandleInput::
 .check_joypad_held:
     ld a, [wJoypadHeld]
     bit 2, a
-    jr z, .call_subtract_de_from_debug_limit2
+    jr z, .call_debug_battle_setup_wrap_value_after_step2
     dec de
     dec de
     dec de
@@ -5291,12 +5496,12 @@ DebugBattleSetup_Update_HandleInput::
     dec de
     dec de
     dec de
-    call ClampDebugValueToTableLimit
+    call DebugBattleSetup_WrapValueAfterBigStep
     jr .call_draw_debug_value_hex_for_menu_state2
 
-.call_subtract_de_from_debug_limit2:
+.call_debug_battle_setup_wrap_value_after_step2:
     dec de
-    call SubtractDEFromDebugLimit
+    call DebugBattleSetup_WrapValueAfterStep
 
 .call_draw_debug_value_hex_for_menu_state2:
     call DrawDebugValueHexForMenuState
@@ -5338,6 +5543,10 @@ DebugBattleSetup_Update_HandleInput::
 .return:
     ret
 
+; Draws field wMenuState of the battle set-up: the word wWorkBuf[wMenuState] as three hex digits
+; (WriteThreeHexDigitsAtDE) at the BG address DebugBattleSetup_Update_HandleInput_Data[wMenuState]
+; (rows 4-15, column 7). DebugBattleSetup_Update_HandleInput calls it after a change and before the
+; cursor moves. (C1, E-0374)
 ; writes the word wWorkBuf[wMenuState] as three hex digits at the address
 ; DebugBattleSetup_Update_HandleInput_Data[wMenuState] (E-0122)
 DrawDebugValueHexForMenuState::
@@ -5358,12 +5567,16 @@ DrawDebugValueHexForMenuState::
     call WriteThreeHexDigitsAtDE
     ret
 
-; stores SubtractDEFromDebugLimit_Data[wMenuState] - DE at HL (floored at 0; DE = $FFFF stores the
-; limit) (E-0125)
-SubtractDEFromDebugLimit::
+; DE = a battle set-up value after a step of 1, HL = where it goes: stores DE at HL when it is at
+; most the limit DebugBattleSetup_WrapValueAfterStep_Data[wMenuState] (limit - DE is computed only
+; to test its sign); a DE above the limit stores 0, and DE = $FFFF (0 - 1) stores the limit. So
+; Right and Left wrap the field between 0 and its limit. (C2, E-0374)
+; stores DebugBattleSetup_WrapValueAfterStep_Data[wMenuState] - DE at HL (floored at 0; DE = $FFFF
+; stores the limit) (E-0125)
+DebugBattleSetup_WrapValueAfterStep::
     push hl
     ld a, [wMenuState]
-    ld hl, SubtractDEFromDebugLimit_Data
+    ld hl, DebugBattleSetup_WrapValueAfterStep_Data
     add a
     add_a_to_hl
     ld a, [hli]
@@ -5397,12 +5610,16 @@ SubtractDEFromDebugLimit::
     ld [hl], d
     ret
 
-; clamps the word DE to 0 .. SubtractDEFromDebugLimit_Data[wMenuState] (negative becomes the limit)
-; and stores it at HL (E-0124)
-ClampDebugValueToTableLimit::
+; DE = a battle set-up value after a step of 16 (Select held), HL = where it goes: stores DE at HL
+; when it is at most the limit DebugBattleSetup_WrapValueAfterStep_Data[wMenuState]; otherwise a
+; negative DE (bit 15 set) stores the limit and a positive one stores 0. It wraps rather than
+; clamps. (C2, E-0374)
+; clamps the word DE to 0 .. DebugBattleSetup_WrapValueAfterStep_Data[wMenuState] (negative becomes
+; the limit) and stores it at HL (E-0124)
+DebugBattleSetup_WrapValueAfterBigStep::
     push hl
     ld a, [wMenuState]
-    ld hl, SubtractDEFromDebugLimit_Data
+    ld hl, DebugBattleSetup_WrapValueAfterStep_Data
     add a
     add_a_to_hl
     ld a, [hli]
@@ -5483,7 +5700,7 @@ DebugBattleSetup_Update_EnsureSave::
     call DebugBattleSetup_CreateDefaultGame
     ret
 
-; Returns Z when party record A has state 2 (MON_STATE). (C1, E-0357)
+; Returns Z when party record A has state 2 (MON_STATE). (C2, E-0357; probed E-0374)
 DebugBattleSetup_Update_EnsureSave_InParty::
     ld c, MON_STATE
     call SRAMRecordAddressMapped
@@ -5496,10 +5713,18 @@ DebugBattleSetup_Update_HandleInput_Data::
     db $87, $98, $a7, $98, $c7, $98, $e7, $98, $07, $99, $27, $99, $47, $99, $67, $99
     db $87, $99, $a7, $99, $c7, $99, $e7, $99
 
-SubtractDEFromDebugLimit_Data::
+DebugBattleSetup_WrapValueAfterStep_Data::
     db $02, $00, $ab, $02, $ab, $02, $ab, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
 
+; Draws field wMenuState of the battle set-up from its wWorkBuf word (low byte = index, high byte =
+; category), saving and restoring the text window settings: field 0 nothing; fields 1-3 (the
+; monsters) the bank $88 string (ShowString_Bank88) in a 9 x 1 window from
+; DebugBattleSetupShowFieldString_Data1; field 4 ('Debug') string wWorkBuf + 8 of category 2 in bank
+; $2F at vTiles2 + $3C0; field 5 ('Skill ID') string 0 of category 4 of bank $08 (an empty name) at
+; vTiles2 + $450; fields 6, 8 and 10 the bank $08 string of category high byte + 2 at
+; DebugBattleSetupShowFieldString_Data2; fields 7, 9 and 11 the low byte as two decimal digit tiles
+; ($10 + digit) at DebugBattleSetupShowFieldString_Data3. (C1, E-0374)
 ; debug battle setup: shows the string for field wMenuState (wWorkBuf entries, ShowString_Bank88) at
 ; the window from DebugBattleSetupShowFieldString_Data1, with special cases for fields 4-6 (E-0131)
 DebugBattleSetupShowFieldString::
@@ -5691,6 +5916,9 @@ DebugBattleSetupShowFieldString_Data2::
 DebugBattleSetupShowFieldString_Data3::
     db $6b, $99, $ab, $99, $eb, $99
 
+; DE = VRAM address: writes A as two hex-digit tiles, $10 + high nibble at DE and $10 + low nibble
+; at DE + 1, each after WaitForVRAMAccess (interrupts are not disabled); DE ends on the second tile
+; and A = its tile. (C1, E-0374)
 ; DE = VRAM address: writes A as two hex-digit tiles ($10 + high nibble, then $10 + low nibble),
 ; each after WaitForVRAMAccess; DE ends on the second tile (E-0071)
 WriteHexByteTilesAtDE::
@@ -5712,6 +5940,10 @@ WriteHexByteTilesAtDE::
     ld [de], a
     ret
 
+; DE = VRAM address: writes the low nibble of B, then the high and low nibbles of C, as tiles $10 +
+; nibble at DE, DE + 1 and DE + 2, each after WaitForVRAMAccess; DE ends on the last tile. Draws
+; 12-bit numbers (monster, picture and sprite ids, battle set-up words) on the debug screens. (C1,
+; E-0374)
 ; writes the low nibble of B, then both nibbles of C, as tiles $10 + nibble at DE (WaitForVRAMAccess
 ; each); DE ends on the last tile (E-0120)
 WriteThreeHexDigitsAtDE::
@@ -5744,7 +5976,8 @@ WriteThreeHexDigitsAtDE::
 ; Creates the default debug game: the player at map 0, screen (2, 0), position ($40, $40) with the
 ; followers on the same spot, a fixed six-glyph player name, 99,999 gold ($01869F), three party
 ; members (records 0-2), 24 inventory items, 80 tiny medals (wTinyMedals), an empty key list, and 30
-; random monster records (DebugBattleSetup_CreateDefaultGame_RandomMonsters). (C1, E-0357)
+; random monster records (DebugBattleSetup_CreateDefaultGame_RandomMonsters). (C2, E-0357; probed
+; E-0374)
 DebugBattleSetup_CreateDefaultGame::
     ld a, $00
     ldh [hMapId], a
@@ -5865,8 +6098,8 @@ DebugBattleSetup_CreateDefaultGame::
     ret
 
 ; Fills the debug save with 30 random monsters (PickRandomMonsterSkipping7ETo82 for records 0 to
-; $1D), then marks records 0-2 with state 2 (in the party) and the next 27 with state 1. (C1,
-; E-0357)
+; $1D), then marks records 0-2 with state 2 (in the party) and the next 27 with state 1. (C2,
+; E-0357; probed E-0374)
 DebugBattleSetup_CreateDefaultGame_RandomMonsters::
     ld b, $1e
     xor a
@@ -5908,6 +6141,11 @@ DebugBattleSetup_CreateDefaultGame_RandomMonsters::
     ld [rRAMG], a
     ret
 
+; Draws table random numbers (NextTableByte) until E = wRandomLo | wRandomHi is neither 0 nor
+; $7E-$82, then creates record wBattleArg0 from MonsterTable entry D = 0, E with
+; PickRandomMonsterSkipping7ETo82_CreateRecord (random sex and personality, state 1). Only ids 1-$FF
+; can come out. DebugBattleSetup_CreateDefaultGame_RandomMonsters calls it for each of 30 records.
+; (C2, E-0374)
 ; draws random ids until one is non-zero and not $7E-$82, then creates that record
 ; (PickRandomMonsterSkipping7ETo82_CreateRecord) (E-0124)
 PickRandomMonsterSkipping7ETo82::
@@ -5940,7 +6178,7 @@ PickRandomMonsterSkipping7ETo82::
 ; of $400 or more becomes 999) and MP, stats and other fields, a random personality word when
 ; wBattleArg2 is set, the species' family, starting skills, maximum level and resistances; a name
 ; (random from 14, or from the per-kind table CreateMonsterRecordInSlot_Build_Data2), the experience
-; for its level, and the species marked as seen (SetSpeciesFlag). (C1, E-0369)
+; for its level, and the species marked as seen (SetSpeciesFlag). (C2, E-0369; probed E-0374)
 CreateMonsterRecordInSlot_Build::
     ldh a, [hTemp3]
     push af
@@ -6204,6 +6442,9 @@ CreateMonsterRecordInSlot_Build::
     ret
 
 ; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
+; the copy, B = 0. The bank $01 copy of a helper found in 4 banks; CreateMonsterRecordInSlot_Build
+; copies the owner name, resistances and default names with it. (C2, E-0374)
+; DE = source, HL = destination, B = count: copies B bytes (B = 0 copies 256); DE and HL end past
 ; the copy; clobbers A, B = 0 (E-0064) (the same 7 bytes appear in 4 banks)
 CopyBBytesDEToHL_Bank01::
     ld a, [de]
@@ -6213,6 +6454,9 @@ CopyBBytesDEToHL_Bank01::
     jr nz, CopyBBytesDEToHL_Bank01
     ret
 
+; Stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0, A is kept.
+; CreateMonsterRecordInSlot_Build uses it to fill $16 bytes with $FF after the starting skills of a
+; new record. (C2, E-0374)
 ; stores A in B bytes from HL (B = 0 fills 256); HL ends past the fill, B = 0 (E-0065) (the same 5
 ; bytes appear in 2 banks)
 FillBBytesAtHL_Bank01::
@@ -6221,6 +6465,9 @@ FillBBytesAtHL_Bank01::
     jr nz, FillBBytesAtHL_Bank01
     ret
 
+; Writes the placeholder name '???' ($98 three times), seven $F0 bytes and a 0 at HL (11 bytes); HL
+; ends past them, A = 0, B = 0. CreateMonsterRecordInSlot_Build calls it twice in a row for the two
+; parent names of a new record. (C2, E-0374)
 ; writes '???' ($98 x 3), seven $F0 bytes and a 0 at HL (E-0122)
 WriteUnknownNamePlaceholder_Bank01::
     ld a, $98
@@ -6240,6 +6487,12 @@ WriteUnknownNamePlaceholder_Bank01::
     ld [hli], a
     ret
 
+; Creates a monster record of kind hTemp1 (0-8) in record slot hTemp2 with state hTemp3: enables
+; SRAM (bank 0), stores the kind in wBattleArg1, clears wBattleArg2 (no random personality), takes
+; the word for the kind from CreateMonsterRecordOfKindTemp1_Data as the MonsterTable entry DE and
+; runs CreateMonsterRecordInSlot (slot to wBattleArg0). Kinds 1 and 2 then set MON_EGG of the new
+; record to 1 (an egg not yet appraised); SRAM is disabled at the end. Talk events and scenes in
+; banks $13, $73 and $85 far-call it. (C2, E-0374)
 ; with SRAM enabled creates a record from the template CreateMonsterRecordOfKindTemp1_Data[hTemp1]
 ; (wBattleArg1 = hTemp1, level hTemp2); kinds 1 and 2 also set field $6E = 1 (E-0124)
 CreateMonsterRecordOfKindTemp1::
@@ -6277,7 +6530,7 @@ CreateMonsterRecordOfKindTemp1::
     ret
 
 ; The record creation of PickRandomMonsterSkipping7ETo82 for a random monster: wBattleArg1 and
-; wBattleArg2 = $FF (random sex and personality), state 1. (C1, E-0357)
+; wBattleArg2 = $FF (random sex and personality), state 1. (C2, E-0357; probed E-0374)
 PickRandomMonsterSkipping7ETo82_CreateRecord::
     ld a, $ff
     ld [wBattleArg1], a
@@ -6288,12 +6541,16 @@ PickRandomMonsterSkipping7ETo82_CreateRecord::
 
 ; Creates the record in slot A (stored in wBattleArg0) with CreateMonsterRecordInSlot_Build.
 ; CreateMonsterRecordOfKindTemp1 calls it, and PickRandomMonsterSkipping7ETo82_CreateRecord falls
-; through into it. (C1, E-0369)
+; through into it. (C2, E-0369; probed E-0374)
 CreateMonsterRecordInSlot::
     ld [wBattleArg0], a
     call CreateMonsterRecordInSlot_Build
     ret
 
+; Copies the 128 bytes of DebugBattleSetup_ClearKeyList_Data (all $FF in this ROM) into wKeyList,
+; four bytes per pass for 32 passes (B ends 0), so the debug default-game set-up that calls it, just
+; before DebugBattleSetup_CreateDefaultGame_RandomMonsters, leaves the key list empty ($FF
+; throughout). (C2, E-0374)
 ; copies 128 bytes (32 four-byte entries) from its table into wKeyList; the table is all $FF in this
 ; ROM, so the debug battle set-up empties the key list (E-0334: wKeyList reads $FF throughout after
 ; it) (was DebugBattleSetup_ClearKeyList)

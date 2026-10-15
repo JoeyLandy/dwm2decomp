@@ -3958,7 +3958,7 @@ MapObjectScreens_Map00::
 ; map object selector (E-0163): the first entry that applies picks the object list
 ObjSelector_Map00_4::
     objsel_unless_flag EVENT_SCENE_WARUBOU_LEAVES, MapObjects_Map00_4_0
-    objsel_unless_flag EVENT_MAP_00_OBJECT_REMOVED, MapObjects_Map00_4_1
+    objsel_unless_flag EVENT_SCENE_SPINNING, MapObjects_Map00_4_1
     objsel_list MapObjects_Map00_4_2
 
 ; record: count, then 3 object(s): VRAM page, graphics table (0 = monster sprites), graphics number

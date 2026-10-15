@@ -4,6 +4,10 @@
 SECTION "Bank 03", ROMX[$4000], BANK[$03]
     db $03
 
+; Start-up for wGameMode = 2 (the pause menu; RunGameModeInit_PauseMenu far-calls it): wDataBankSave
+; = 0, wTextCursorLo/Hi = vBGMap0 + $1C1, then ResumeAfterModeChange with A = 1 (only the VBlank
+; interrupt enabled). Forcing this mode on the emulator showed the monster status panel, incomplete
+; when forced (E-0029). (C1, E-0374)
 ; start-up for wGameMode = 2; forcing this mode on the emulator shows: monster status panel
 ; (incomplete when forced) (E-0029)
 GameMode2_Init::
@@ -17,6 +21,11 @@ GameMode2_Init::
     ld a, $01
     jp ResumeAfterModeChange
 
+; Per-frame routine of game mode 2, the pause menu (RunGameModeUpdate_PauseMenu): while
+; wWorldMapState bit 7 is clear it builds the page (GameMode2_Update_OpenPage); then each frame
+; counts the pause and play time (GameMode2_Update_CountPauseTime) and runs the page chosen by
+; wModeState & 7: 0 PauseMenu_Info, 1 PauseMenu_Items, 2 PauseMenu_Skills, 3 PauseMenu_Plan, 4
+; PauseMenu_State4 (the gift menu); 5-7 have no entry. (C1, E-0374)
 ; game mode 2, the pause menu: by wModeState, its pages Info, Items, Skills and Plan, and its
 ; closing state (E-0354; was: per-frame routine for wGameMode = 2)
 GameMode2_Update::
@@ -33,6 +42,8 @@ GameMode2_Update::
     dw PauseMenu_Plan
     dw PauseMenu_State4
 
+; Pause menu page 4 (wModeState 4 in GameMode2_Update): far-calls PauseMenu_State4_GiftMenu in bank
+; $F1 (the Gift / Exit window). (C1, E-0374)
 ; GameMode2_Update, wModeState 4: hands over to PauseMenu_State4_GiftMenu (state 4) (E-0046)
 PauseMenu_State4::
     farcall PauseMenu_State4_GiftMenu
@@ -342,10 +353,12 @@ PauseMenu_State4_BuildPlanPage::
 
 .call_load_screen_block21:
     call LoadScreenBlock21
-    call ShowString2Bank09InWindowThenDefault
+    call PauseMenu_State4_BuildPlanPage_ShowHeading
     ret
 
-; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks) (E-0353)
+; Fills the $240 bytes at wScreenTileBuffer with the blank tile $C3 (FillBytes). The same 12 bytes
+; appear in 2 banks. (C2, E-0374)
+; fills the $240 bytes at wScreenTileBuffer with $C3 (the same 12 bytes appear in 2 banks)
 ClearScreenTileBuffer_Bank03::
     ld hl, wScreenTileBuffer
     ld bc, $0240
@@ -353,6 +366,10 @@ ClearScreenTileBuffer_Bank03::
     call FillBytes
     ret
 
+; HL = header (word offset, width B, rows C) followed by the tile bytes: copies the rectangle into
+; wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader
+; then CopyRectToStride32); returns DE past the tiles, C = 0. The same 32 bytes appear in 2 banks.
+; (C2, E-0374)
 ; HL = header (word offset, width, rows) followed by the tile bytes: copies the rectangle into
 ; wScreenTileBuffer + offset with rows 32 bytes apart (the same steps as ReadScreenBufferRectHeader
 ; then CopyRectToStride32) (E-0065) (the same 32 bytes appear in 2 banks)
@@ -388,6 +405,9 @@ CopyRecordRectToScreenBuffer_Bank03::
     jr nz, .loop
     ret
 
+; Like CopyRecordRectToScreenBuffer_Bank03 (header word offset, width, rows, then tiles, copied into
+; wScreenTileBuffer with 32-byte rows) but tiles $15-$A3 are written as the blank $C3; tiles below
+; $15 and from $A4 up are copied. No caller names it in src/. (C2, E-0374)
 ; copies a rectangle record (offset, width, height, tiles) to the screen buffer, replacing tiles
 ; $15-$A3 with blank $C3 (E-0125)
 CopyRectRecordBlankingText_Bank03::
@@ -429,16 +449,21 @@ CopyRectRecordBlankingText_Bank03::
     jr nz, .loop
     ret
 
+; Copies the 20 x 18 tiles at the start of wScreenTileBuffer (32-byte rows) to vBGMap0 by falling
+; into CopyRectToBGMap with B = $14, C = $12. (C1, E-0374)
 ; copies the 20 x 18 tiles at the start of wScreenTileBuffer to vBGMap0 (CopyRectToBGMap with BC =
-; $1412) (E-0353)
+; $1412)
 CopyTileBufferToBGMap::
     ld hl, vBGMap0
     ld de, wScreenTileBuffer
     lb bc, $14, $12
 
+; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte,
+; HL wrapping inside its 32-entry row; then the source moves down 32 bytes and HL moves down 32 and
+; is masked with $9B (wrapping in the $9800 map). Returns C = 0, B kept. (C1, E-0374)
 ; HL = BG map address, DE = source, B = width, C = rows: writes B bytes per row with WriteVRAMByte
 ; (HL wraps inside its 32-entry row, then the source and destination each move down 32 and HL is
-; masked with $9B) (E-0353)
+; masked with $9B)
 CopyRectToBGMap::
     push bc
     push hl
@@ -483,6 +508,10 @@ CopyRectToBGMap::
 
 ; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with
 ; WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle);
+; B kept, C = 0. Used for the 6 x 6 picture attributes
+; (DrawRecordMonsterPictureForMenuSelectedMember). The same 28 bytes appear in 2 banks. (C1, E-0374)
+; B = width, C = rows, DE = source, HL = VRAM with rows 32 bytes apart: copies B bytes per row with
+; WriteVRAMByteInc, then skips 14 source bytes (rows B + 14 bytes apart, 20 for a 6-wide rectangle);
 ; B kept, C = 0 (E-0067) (the same 28 bytes appear in 2 banks)
 CopyRectToVRAMSourceStrideBPlus14_Bank03::
     push bc
@@ -508,6 +537,8 @@ CopyRectToVRAMSourceStrideBPlus14_Bank03::
     jr nz, CopyRectToVRAMSourceStrideBPlus14_Bank03
     ret
 
+; Far-calls RunMoveIncapacitatedPartyMembersBackTwice (reorders wPartyList) and reloads the party
+; name tiles (LoadRecordListNameTiles). (C1, E-0374)
 ; far-calls RunMoveIncapacitatedPartyMembersBackTwice and reloads the record list name tiles
 ; (E-0122)
 RefreshRecordListAndNameTiles::
@@ -515,6 +546,11 @@ RefreshRecordListAndNameTiles::
     call LoadRecordListNameTiles
     ret
 
+; Leaves the pause menu for the field: clears bit 1 of the player and object flags
+; (ClearBit1OfPlayerAndObjectFlags_Bank03), stores hPlayerX/hPlayerY in wWarpDestX/wWarpDestY with
+; wWarpDestFacing = 0, disables SRAM, on CGB fills wBGPaletteBuffer with $FF (white) and uploads it,
+; blanks wScreenTileBuffer with $C3 and copies it to the BG map, then runs InitFieldScreen with
+; wFieldInitStage incremented, clears wFieldInitStage and sets wGameMode = 1. (C1, E-0374)
 ; clears the object flag bits, saves the player position to wWarpDestX/9, whitens the CGB palettes,
 ; blanks the screen and returns to game mode 1 through InitFieldScreen (E-0125)
 ExitPauseMenuToField::
@@ -553,6 +589,8 @@ ExitPauseMenuToField::
     ld [wGameMode], a
     ret
 
+; Clears bit 1 of hPlayerStateFlags and of byte $D (the flags) of wSpriteSlots and the next four
+; 16-byte object slots (wObject1-wObject4); the counterpart of FreezeFieldAnimation. (C2, E-0374)
 ; clears bit 1 of hPlayerStateFlags and of the flags byte of the five objects at wSpriteSlots + $D,
 ; wObject1 + $D ... (stride $10) (E-0121)
 ClearBit1OfPlayerAndObjectFlags_Bank03::
@@ -585,12 +623,18 @@ ClearBit1OfPlayerAndObjectFlags_Bank03::
     ld [hl], a
     ret
 
+; HL = word table, A = index: HL = the word at HL + 2 * A, then falls into
+; SelectString5Category8ThenShow, which shows string 5 of category 8 (the name the caller put in
+; wTextBuf0) in a 5 x 1 window at that tile address. (C1, E-0374)
 ; HL = the word at HL + 2 * A; falls through (E-0122)
 DerefWordTableEntryA_Bank03::
     add a
     add_a_to_hl
     deref_hl
 
+; HL = tile address: wStringCategory = 8, wStringIndex = 5, then falls into ShowStringIn5x1Window
+; (DE = $0501) and ShowStringBank08AtTilesHL_Bank03, showing that string in a 5-wide, 1-row window.
+; Its callers first copy a 10-byte name to wTextBuf0 (CopyTenBytesToTextBuf0). (C1, E-0374)
 ; wStringCategory = 8, wStringIndex = 5, then falls into the window setup and display (E-0122)
 SelectString5Category8ThenShow::
     ld a, $08
@@ -602,6 +646,10 @@ SelectString5Category8ThenShow::
 ShowStringIn5x1Window::
     ld de, $0501
 
+; HL = tile destination, D = width, E = rows: saves wTextWindowTileLo/Hi and wTextWindowRows/Width,
+; sets them from HL and DE, far-calls ShowString_Bank08 (the string chosen by wStringCategory and
+; wStringIndex), then restores them. The same 59 bytes appear in 2 banks (the bank-$31 copy restores
+; in another register order). (C1, E-0374)
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
 ; the size to DE, far-calls ShowString_Bank08, then restores the window (restores in a different
 ; register order from the bank-$31 copy, same effect) (E-0067) (the same 59 bytes appear in 2 banks)
@@ -637,6 +685,8 @@ ShowStringBank08AtTilesHL_Bank03::
     ld [wTextWindowTileHi], a
     ret
 
+; Copies 10 bytes from HL to wTextBuf0 and writes the $F0 end mark after them; HL advances 10, BC is
+; kept, DE ends at the end mark. (C2, E-0374)
 ; copies 10 bytes from HL to wTextBuf0 and writes $F0 after them; HL advances; BC kept (E-0101)
 CopyTenBytesToTextBuf0::
     ld de, wTextBuf0
@@ -654,6 +704,15 @@ CopyTenBytesToTextBuf0::
     pop bc
     ret
 
+; HL = cursor byte (low nibble = row, bit 7 = page-changed flag), DE = word table of BG map
+; addresses for the rows. Up or Down (wJoypadPressedRepeat bits 6 or 7) move the row with wrap over
+; wMenuRowCount; if it changes, the old cursor is erased (UpdateMenuCursor_EraseCursor) and sound
+; $69 plays; the row is stored (clearing the high bits) and drawn (UpdateMenuCursor_DrawCursor).
+; When wMenuPageCount is 2 or more, Left or Right (bits 5 or 4) step wMenuPage with wrap, on the
+; last page move the row down to wMenuLastPageRows - 1 when it is past it, set bit 7 and play sound
+; $69. Each move clears wFrameCounterLo. With no input the cursor blinks: drawn when wFrameCounterLo
+; & $1F is $10, erased at 0 (then wFrameCounterLo bit 3 is set, so it stays hidden 8 frames). (C1,
+; E-0374)
 ; HL = cursor byte (low nibble = row, bit 7 = page-changed flag). Up/Down (wJoypadPressedRepeat bits
 ; 6/7) move the row with wrap over wMenuRowCount, erase the old cursor
 ; (UpdateMenuCursor_EraseCursor), play sound $69, store the row (clearing bit 7) and draw it
@@ -839,6 +898,8 @@ UpdateMenuCursor_DrawCursor::
     ei
     ret
 
+; Writes the cursor tile $BB into wScreenTileBuffer at the position of
+; MenuCursorPositions_Bank03[wMenuSelectedMember & 3] (that BG map address + $2998). (C2, E-0374)
 ; writes the cursor tile $BB into wScreenTileBuffer at the position of
 ; MenuCursorPositions_Bank03[wMenuSelectedMember & 3] (BG map address + $2998) (E-0101)
 DrawMenuCursorTileInBuffer::
@@ -859,6 +920,9 @@ DrawMenuCursorTileInBuffer::
 
 ; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG
 ; map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC
+; there; HL ends at that address. The same 20 bytes appear in 2 banks. (C2, E-0374)
+; HL = table of BG map addresses ($98xx), A = index: adds $2998 to entry A, which turns a $9800 BG
+; map address into the same position in wScreenTileBuffer ($C198, 32-wide rows), and writes tile $BC
 ; there (E-0072) (the same 20 bytes appear in 2 banks)
 WriteBCTileToScreenBufferAtTableEntry_Bank03::
     add a
@@ -873,6 +937,8 @@ WriteBCTileToScreenBufferAtTableEntry_Bank03::
     ld [hl], $bc
     ret
 
+; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A
+; (WriteVRAMByte). The same 15 bytes appear in 3 banks. (C1, E-0374)
 ; HL = table of VRAM addresses, A = index: writes tile $BC at the address in entry A (WriteVRAMByte)
 ; (E-0067) (the same 15 bytes appear in 3 banks)
 WriteBCTileAtWordTableEntry_Bank03::
@@ -920,7 +986,7 @@ ShowStringBank08AtTilesHL_Bank03_2::
 
 ; Counts time while the pause menu is open: a minutes/seconds/frames timer (wGM2TimerFrames, each
 ; part wrapping at 60), and the play time (wPlayFrames, seconds, minutes, then the 16-bit hours),
-; which stops at 999 hours 59 minutes. (C1, E-0357)
+; which stops at 999 hours 59 minutes. (C2, E-0357; probed E-0374)
 GameMode2_Update_CountPauseTime::
     ld a, [wGM2TimerFrames]
     inc a
@@ -1038,11 +1104,16 @@ PauseMenu_Plan_PartyOrder_Cursor_Data::
 PauseMenu_Items_UseItem_ChoiceCursor_Data::
     db $2f, $99, $6f, $99
 
-MenuCursorAddressMenuCursor_Data::
+PauseMenu_Plan_MessageSpeed_CursorAddress_Data::
     db $82, $99, $84, $99, $86, $99, $88, $99, $8a, $99, $8c, $99, $8e, $99, $90, $99
 
+; Runs one screen of the pause menu save, chosen by wPauseMenuScreen: 0
+; RunPauseMenuScreen_PrepareSave, 1 RunPauseMenuScreen_BeforeSave, 2 RunPauseMenuScreen_Save (one
+; RunSaveGameSteps_2 stage per frame until wSaveStep bit 7), 3 RunPauseMenuScreen_AfterSave; each
+; moves wPauseMenuScreen on, and its callers (the item use and record steps) wait for 4. (C1,
+; E-0374)
 ; runs the routine for wPauseMenuScreen (jump table of four screens) (E-0122)
-RunPauseMenuScreen::
+RunPauseMenuSave::
     ld a, [wPauseMenuScreen]
     jumptable
     dw RunPauseMenuScreen_PrepareSave
@@ -1051,7 +1122,7 @@ RunPauseMenuScreen::
     dw RunPauseMenuScreen_AfterSave
 
 ; Saving from the pause menu, screen 0: remembers the current music (in wMenuLastPageRows) and
-; clears the save step and record index. (C1, E-0357)
+; clears the save step and record index. (C2, E-0357; probed E-0374)
 RunPauseMenuScreen_PrepareSave::
     ld a, [wCurrentMusic]
     ld [wMenuLastPageRows], a
@@ -1062,7 +1133,7 @@ RunPauseMenuScreen_PrepareSave::
     inc [hl]
     ret
 
-; Saving, screen 1: moves on at once. (C1, E-0357)
+; Saving, screen 1: moves on at once. (C2, E-0357; probed E-0374)
 RunPauseMenuScreen_BeforeSave::
     ld hl, wPauseMenuScreen
     inc [hl]
@@ -1079,12 +1150,18 @@ RunPauseMenuScreen_Save::
     inc [hl]
     ret
 
-; Saving, screen 3: moves on (the save is finished). (C1, E-0357)
+; Saving, screen 3: moves on (the save is finished). (C2, E-0357; probed E-0374)
 RunPauseMenuScreen_AfterSave::
     ld hl, wPauseMenuScreen
     inc [hl]
     ret
 
+; Pause menu page 0, INFO (wModeState 0 in GameMode2_Update): when wDataBankSave is not 0 (Select on
+; a page sets it) it runs PauseMenu_Info_PartyOverview; otherwise the page chosen by wTemp0:
+; PauseMenu_Info_Page1 to Page4, then 4 PauseMenu_Info_ExitToField. For each party monster the pages
+; show its level, sex, personality, species and EXP, its stats (ATK, DEF, AGL, INT, WLD, HP, MP),
+; its skills and its family (C2 from E-0322: in game mode 2 wModeState is the field menu choice, 0
+; INFO, 1 ITEM, 2 SKILLS, 3 PLAN). (C1, E-0374)
 ; GameMode2_Update, wModeState 0: INFO, chosen from the field menu: for each party monster its
 ; level, sex, personality, species and EXP page, its stats page (ATK, DEF, AGL, INT, WLD, HP, MP)
 ; and its skills page (C2 from E-0322: in game mode 2 wModeState is the field menu's choice, 0 INFO,
@@ -1101,6 +1178,10 @@ PauseMenu_Info::
     dw PauseMenu_Info_Page4
     dw PauseMenu_Info_ExitToField
 
+; INFO page 1, by wTemp1: 0 PauseMenu_Info_Page1_Build (blank blocks 0-3 with the cursor), 1
+; PauseMenu_Info_Page1_Draw (picture, level and status row), 2 PauseMenu_Info_Page1_Cursor (Up/Down
+; member, A next page, B leaves the menu, Select party overview), 3 PauseMenu_Info_Page1_Idle
+; (reached only by falling through from Build). (C1, E-0374)
 ; builds screen blocks 0-3 (blanked first, with the cursor) and runs the menu cursor (renamed from
 ; PauseMenu_Info_Blocks00To03 from its E-0357 note, E-0367)
 PauseMenu_Info_Page1::
@@ -1124,7 +1205,7 @@ PauseMenu_Info_Page1_Build::
     ld hl, wTemp1
     inc [hl]
 
-; Info page 1, step 3: nothing (the page waits here). (C1, E-0357)
+; Info page 1, step 3: nothing (the page waits here). (C2, E-0357; probed E-0374)
 PauseMenu_Info_Page1_Idle::
     ret
 
@@ -1197,6 +1278,10 @@ PauseMenu_Info_Page1_Cursor::
 .return:
     ret
 
+; INFO page 2, by wTemp1: 0 PauseMenu_Info_Page2_Build (blank blocks 0 and 4-6 with the cursor), 1
+; PauseMenu_Info_Page2_Draw (the stats, and the sprite decompressed to vTiles0), 2
+; PauseMenu_Info_Page2_Cursor (draws meta-sprite part $C0, the monster; Up/Down member, A next page,
+; B previous page, Select party overview). (C1, E-0374)
 ; builds screen blocks 0 and 4-6 and draws meta-sprite part $C0 (the INFO panel's monster, E-0046)
 ; (renamed from PauseMenu_Info_Blocks04To06 from its E-0357 note, E-0367)
 PauseMenu_Info_Page2::
@@ -1220,15 +1305,15 @@ PauseMenu_Info_Page2_Build::
     ret
 
 ; Info page 2, step 1: draws the member's stats (BuildRecordLevelAndStatusRow and the strings of
-; WithSRAMDrawBuildRecordLevelAndStatusRow_2) and decompresses its sprite to vTiles0. (C1, E-0357)
+; PauseMenu_Info_Page2_Draw_LevelAndDetails) and decompresses its sprite to vTiles0. (C1, E-0357)
 PauseMenu_Info_Page2_Draw::
     ld a, [wPauseMenuScreen]
     or a
-    jr nz, .call_with_sram_draw_build_record_level_and
+    jr nz, .call_pause_menu_info_page2_draw_level_and
     call LoadScreenBlocks00And04To06
 
-.call_with_sram_draw_build_record_level_and:
-    call WithSRAMDrawBuildRecordLevelAndStatusRow_2
+.call_pause_menu_info_page2_draw_level_and:
+    call PauseMenu_Info_Page2_Draw_LevelAndDetails
     ld hl, vBGMap0 + $21
     lb bc, $13, $11
     ld de, wScreenTileBuffer + $21
@@ -1287,6 +1372,9 @@ PauseMenu_Info_Page2_Cursor::
 .return:
     ret
 
+; INFO page 3, by wTemp1: 0 PauseMenu_Info_Page3_Build (blank blocks 0, 7 and 8 with the cursor), 1
+; PauseMenu_Info_Page3_Draw (species and skill names), 2 PauseMenu_Info_Page3_Cursor (Up/Down
+; member, A next page, B previous page, Select party overview). (C1, E-0374)
 ; builds screen blocks 0, 7 and 8 and runs the menu cursor (renamed from
 ; PauseMenu_Info_Blocks07And08 from its E-0357 note, E-0367)
 PauseMenu_Info_Page3::
@@ -1374,6 +1462,10 @@ PauseMenu_Info_Page3_Cursor::
 .return:
     ret
 
+; INFO page 4, by wTemp1: 0 PauseMenu_Info_Page4_Build (blank blocks 0, 9 and $0A with the cursor),
+; 1 PauseMenu_Info_Page4_Draw (the family: parents and icons, party sprites loaded), 2
+; PauseMenu_Info_Page4_Cursor (draws the party sprites; Up/Down member, A clears the sprites and
+; goes on to PauseMenu_Info_ExitToField, B previous page, Select party overview). (C1, E-0374)
 ; builds screen blocks 0, 9 and $0A and runs the menu cursor (renamed from
 ; PauseMenu_Info_Blocks09And0A from its E-0357 note, E-0367)
 PauseMenu_Info_Page4::
@@ -1480,6 +1572,8 @@ PauseMenu_Info_ExitToField::
     call ExitPauseMenuToField
     ret
 
+; Clears the screen tile buffer (ClearScreenTileBuffer_Bank03), copies screen blocks $00-$03 into it
+; (CopyBlockToTileBuffer), then increments wPauseMenuScreen. (C2, E-0374)
 ; clears the screen tile buffer, copies blocks $00-$03 into it, then wPauseMenuScreen += 1 (E-0117)
 LoadScreenBlocks00To03::
     call ClearScreenTileBuffer_Bank03
@@ -1495,6 +1589,8 @@ LoadScreenBlocks00To03::
     inc [hl]
     ret
 
+; Clears the screen tile buffer, copies screen blocks $00, $04, $05 and $06 into it
+; (CopyBlockToTileBuffer), then increments wPauseMenuScreen. (C2, E-0374)
 ; clears the screen tile buffer, copies blocks $00, $04, $05, $06, then wPauseMenuScreen += 1
 ; (E-0117)
 LoadScreenBlocks00And04To06::
@@ -1511,6 +1607,8 @@ LoadScreenBlocks00And04To06::
     inc [hl]
     ret
 
+; Clears the screen tile buffer, copies screen blocks $00, $07 and $08 (CopyBlockToTileBuffer), then
+; increments wPauseMenuScreen. (C2, E-0374)
 ; clears the screen tile buffer, copies blocks $00, $07, $08, then wPauseMenuScreen += 1 (E-0117)
 LoadScreenBlocks00_07_08::
     call ClearScreenTileBuffer_Bank03
@@ -1524,6 +1622,8 @@ LoadScreenBlocks00_07_08::
     inc [hl]
     ret
 
+; Clears the screen tile buffer, copies screen blocks $00, $09 and $0A (CopyBlockToTileBuffer), then
+; increments wPauseMenuScreen. (C2, E-0374)
 ; clears the screen tile buffer, copies blocks $00, $09, $0A, then wPauseMenuScreen += 1 (E-0117)
 LoadScreenBlocks00_09_0A::
     call ClearScreenTileBuffer_Bank03
@@ -1537,6 +1637,8 @@ LoadScreenBlocks00_09_0A::
     inc [hl]
     ret
 
+; Clears the screen tile buffer, copies screen block $2D + wPartyCount and then block $31
+; (CopyBlockToTileBuffer), then increments wPauseMenuScreen. (C2, E-0374)
 ; clears the screen tile buffer, copies block $2D + wPartyCount and block $31, then wPauseMenuScreen
 ; += 1 (E-0117)
 LoadScreenBlockForPartySize::
@@ -1551,6 +1653,9 @@ LoadScreenBlockForPartySize::
     inc [hl]
     ret
 
+; Clears the screen tile buffer, copies screen blocks $00-$03 with their text tiles ($15-$A3)
+; blanked (CopyBlockToTileBufferBlankingText), then draws the cursor tile for wMenuSelectedMember
+; (DrawMenuCursorTileInBuffer); wPauseMenuScreen is not changed. (C2, E-0374)
 ; clears the screen tile buffer, copies blocks $00-$03 with CopyBlockToTileBufferBlankingText, then
 ; DrawMenuCursorTileInBuffer (E-0117)
 LoadBlankedBlocks00To03WithCursor::
@@ -1566,6 +1671,12 @@ LoadBlankedBlocks00To03WithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
+; Builds the base of Info page 2 in wScreenTileBuffer: clears it to $C3
+; (ClearScreenTileBuffer_Bank03), copies screen blocks $00, $04, $05 and $06 with
+; CopyBlockToTileBufferBlankingText (text glyph tiles $15-$A3 come out as blank $C3), then puts
+; cursor tile $BB at the MenuCursorPositions_Bank03 entry for wMenuSelectedMember & 3
+; (DrawMenuCursorTileInBuffer). PauseMenu_Info_Page2_Build calls it on the first visit
+; (wPauseMenuScreen 0) and copies the result to the BG map. (C2, E-0374)
 ; as LoadBlankedBlocks00To03WithCursor with blocks $00, $04, $05, $06 (E-0117)
 LoadBlankedBlocks00And04To06WithCursor::
     call ClearScreenTileBuffer_Bank03
@@ -1580,6 +1691,10 @@ LoadBlankedBlocks00And04To06WithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
+; As LoadBlankedBlocks00And04To06WithCursor for Info page 3: clears wScreenTileBuffer to $C3, copies
+; blocks $00, $07 and $08 with their text glyphs blanked (CopyBlockToTileBufferBlankingText) and
+; puts cursor tile $BB at the MenuCursorPositions_Bank03 entry for wMenuSelectedMember & 3. Called
+; by PauseMenu_Info_Page3_Build on the first visit. (C2, E-0374)
 ; as LoadBlankedBlocks00To03WithCursor with blocks $00, $07, $08 (E-0117)
 LoadBlankedBlocks00_07_08WithCursor::
     call ClearScreenTileBuffer_Bank03
@@ -1592,6 +1707,10 @@ LoadBlankedBlocks00_07_08WithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
+; As LoadBlankedBlocks00And04To06WithCursor for Info page 4: clears wScreenTileBuffer to $C3, copies
+; blocks $00, $09 and $0A with their text glyphs blanked (CopyBlockToTileBufferBlankingText) and
+; puts cursor tile $BB at the MenuCursorPositions_Bank03 entry for wMenuSelectedMember & 3. Called
+; by PauseMenu_Info_Page4_Build on the first visit. (C2, E-0374)
 ; as LoadBlankedBlocks00To03WithCursor with blocks $00, $09, $0A (E-0117)
 LoadBlankedBlocks00_09_0AWithCursor::
     call ClearScreenTileBuffer_Bank03
@@ -1604,6 +1723,9 @@ LoadBlankedBlocks00_09_0AWithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
+; Expands Tiles1Plus6E0Gfx (bank $16) into vTiles1 + $6E0 with DecompressToVRAM, then loads the
+; picture of the selected member (DrawRecordMonsterPictureForMenuSelectedMember). Only
+; PauseMenu_State4_BuildInfoPage calls it, when the Info page is opened. (C1, E-0374)
 ; decompresses Tiles1Plus6E0Gfx (bank $16) to vTiles1 + $6E0, then runs
 ; DrawRecordMonsterPictureForMenuSelectedMember (E-0122)
 DecompressMenuTilesTo16E0::
@@ -1614,6 +1736,12 @@ DecompressMenuTilesTo16E0::
     call DrawRecordMonsterPictureForMenuSelectedMember
     ret
 
+; Loads the picture of the species (MON_SPECIES) of record wMenuSelectedMember & $0F into vTiles2 +
+; $5C0 (LoadMonsterPicture, C = 1); SRAM must already be enabled. On CGB (wIsCGB non-zero) it also
+; sets wBGPaletteUploadRequest = $7F and runs UploadBGPalettes, builds the 6 x 6 attribute block in
+; wScreenAttrBuffer (LoadMonsterPictureAttributeBlock with hTemp0 = 1) and copies it to vBGMap0 +
+; $161 in VRAM bank 1 (rVBK 1, rSVBK 2, both set back to 0). Called by PauseMenu_Info_Page1_Draw
+; (with SRAM bank 0 enabled around it) and DecompressMenuTilesTo16E0. (C1, E-0374)
 ; loads the picture of the species of record wMenuSelectedMember & $0F at vTiles2 + $5C0; on CGB
 ; also uploads palettes and copies its 6 x 6 attribute block to vBGMap0 + $161 (E-0125)
 DrawRecordMonsterPictureForMenuSelectedMember::
@@ -1657,6 +1785,11 @@ DrawRecordMonsterPictureForMenuSelectedMember::
 .return:
     ret
 
+; Info page 1: enables SRAM bank 0 (rRAMG = $0A, rRAMB = 0), draws the level and status row
+; (BuildRecordLevelAndStatusRow) and the stat numbers
+; (WithSRAMDrawBuildRecordLevelAndStatusRow_DrawStats) of record wMenuSelectedMember & $0F into
+; wScreenTileBuffer and wWindowTileBuffer, then disables SRAM (rRAMG = 0). Only
+; PauseMenu_Info_Page1_Draw calls it. (C2, E-0374)
 ; with SRAM bank 0 enabled runs BuildRecordLevelAndStatusRow and
 ; WithSRAMDrawBuildRecordLevelAndStatusRow_DrawStats (E-0122) (E-0344: the address in its name
 ; dropped or read as the label there; was WithSRAMDrawBuildRecordLevelAndStatusRow)
@@ -1671,10 +1804,14 @@ WithSRAMDrawBuildRecordLevelAndStatusRow::
     ld [rRAMG], a
     ret
 
+; Info page 2: enables SRAM bank 0, draws the level and status row (BuildRecordLevelAndStatusRow)
+; and the details of record wMenuSelectedMember & $0F (PauseMenu_Info_Page2_DrawDetails: equipped
+; item, personality, species name, member number and plus value, master name, experience), then
+; disables SRAM. Only PauseMenu_Info_Page2_Draw calls it. (C1, E-0374)
 ; with SRAM bank 0 enabled runs BuildRecordLevelAndStatusRow and PauseMenu_Info_Page2_DrawDetails
 ; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; WithSRAMDrawBuildRecordLevelAndStatusRow_2)
-WithSRAMDrawBuildRecordLevelAndStatusRow_2::
+; PauseMenu_Info_Page2_Draw_LevelAndDetails)
+PauseMenu_Info_Page2_Draw_LevelAndDetails::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -1685,6 +1822,9 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_2::
     ld [rRAMG], a
     ret
 
+; Info page 3: enables SRAM bank 0, shows the field ability and the eight skill names of record
+; wMenuSelectedMember & $0F (ShowRecordSpeciesAndSkillNames), then disables SRAM. Only
+; PauseMenu_Info_Page3_Draw calls it. (C1, E-0374)
 ; with SRAM bank 0 enabled runs ShowRecordSpeciesAndSkillNames (E-0122)
 WithSRAMShowRecordSpeciesAndSkillNames::
     ld a, $0a
@@ -1696,6 +1836,10 @@ WithSRAMShowRecordSpeciesAndSkillNames::
     ld [rRAMG], a
     ret
 
+; Info page 4: enables SRAM bank 0, draws the family (parents) of record wMenuSelectedMember & $0F
+; with WithSRAMDrawMemberRecordFamily_DrawParents (species names and family icons, master names,
+; names and plus values, or the unknown-parents placeholder when MON_PARENT1_SPECIES is $FFFF), then
+; disables SRAM. Only PauseMenu_Info_Page4_Draw calls it. (C1, E-0374)
 ; with SRAM bank 0 enabled, reads byte $0D of the selected member's record (wMenuSelectedMember) and
 ; draws species name and icon (ShowSpeciesNameAndIconForSlotB) from it and the following word unless
 ; it is $FFFF (E-0122, E-0259) (E-0345: record byte $0D is MON_FAMILY; was
@@ -1710,6 +1854,13 @@ WithSRAMDrawMemberRecordFamily::
     ld [rRAMG], a
     ret
 
+; Writes the level and status row of record wMenuSelectedMember & $0F (SRAM enabled by the caller)
+; at wScreenTileBuffer + $29 (row 1, column 9 of the 32-wide buffer): tiles $C3, $EA, $ED, then
+; MON_LEVEL as two digit tiles at + $2C (WriteTwoDigitTilesFromDigits1, tens blank when 0) and $C3
+; up to + $30; tile $14 replaces + $29 when MON_LEVEL is at least MON_MAX_LEVEL. MON_STATUS bit 7, 0
+; and 2 put $C2 at + $30, $C0 at + $2E and $C1 at + $2F, and + $32 gets $CC + MON_SEX bit 0. Called
+; by WithSRAMDrawBuildRecordLevelAndStatusRow and PauseMenu_Info_Page2_Draw_LevelAndDetails. (C2,
+; E-0374)
 ; writes record wMenuSelectedMember's level (field $56, marked with tile $14 at the cap in field
 ; $57), status marks from field $55 and the field $0E mark into the row at wScreenTileBuffer + $29
 ; (E-0127)
@@ -1757,11 +1908,11 @@ BuildRecordLevelAndStatusRow::
     or a
     jr z, .check_menu_selected_member2
     bit 7, a
-    call nz, SetScreenTileBufferRow2Col8TileC2
+    call nz, BuildRecordLevelAndStatusRow_MarkStatusBit7
     bit 0, a
-    call nz, SetScreenTileBufferRow2Col6TileC0
+    call nz, BuildRecordLevelAndStatusRow_MarkStatusBit0
     bit 2, a
-    call nz, SetScreenTileBufferRow2Col7TileC1
+    call nz, BuildRecordLevelAndStatusRow_MarkStatusBit2
 
 .check_menu_selected_member2:
     ld c, $0e
@@ -1774,27 +1925,36 @@ BuildRecordLevelAndStatusRow::
     ld [wScreenTileBuffer + $32], a
     ret
 
+; wScreenTileBuffer + $30 = $C2, AF kept. BuildRecordLevelAndStatusRow calls it when MON_STATUS bit
+; 7 (dead) is set. In the 32-wide pause-menu buffer + $30 is row 1, column 16, so the Row2Col8 in
+; the name reads the offset as 20-wide rows. (C2, E-0374)
 ; wScreenTileBuffer + $30 = $C2; AF kept (E-0119) (E-0340: the address in its name read as its RAM
-; name; was SetScreenTileBufferRow2Col8TileC2)
-SetScreenTileBufferRow2Col8TileC2::
+; name; was BuildRecordLevelAndStatusRow_MarkStatusBit7)
+BuildRecordLevelAndStatusRow_MarkStatusBit7::
     push af
     ld a, $c2
     ld [wScreenTileBuffer + $30], a
     pop af
     ret
 
+; wScreenTileBuffer + $2E = $C0, AF kept. BuildRecordLevelAndStatusRow calls it when MON_STATUS bit
+; 0 is set. In the 32-wide pause-menu buffer + $2E is row 1, column 14 (the Row2Col6 of the name
+; reads it as 20-wide rows). (C2, E-0374)
 ; wScreenTileBuffer + $2E = $C0; AF kept (E-0119) (E-0340: the address in its name read as its RAM
-; name; was SetScreenTileBufferRow2Col6TileC0)
-SetScreenTileBufferRow2Col6TileC0::
+; name; was BuildRecordLevelAndStatusRow_MarkStatusBit0)
+BuildRecordLevelAndStatusRow_MarkStatusBit0::
     push af
     ld a, $c0
     ld [wScreenTileBuffer + $2e], a
     pop af
     ret
 
+; wScreenTileBuffer + $2F = $C1, AF kept. BuildRecordLevelAndStatusRow calls it when MON_STATUS bit
+; 2 (read as poison) is set. In the 32-wide pause-menu buffer + $2F is row 1, column 15 (the
+; Row2Col7 of the name reads it as 20-wide rows). (C2, E-0374)
 ; wScreenTileBuffer + $2F = $C1; AF kept (E-0119) (E-0340: the address in its name read as its RAM
-; name; was SetScreenTileBufferRow2Col7TileC1)
-SetScreenTileBufferRow2Col7TileC1::
+; name; was BuildRecordLevelAndStatusRow_MarkStatusBit2)
+BuildRecordLevelAndStatusRow_MarkStatusBit2::
     push af
     ld a, $c1
     ld [wScreenTileBuffer + $2f], a
@@ -1805,7 +1965,7 @@ SetScreenTileBufferRow2Col7TileC1::
 ; enabled by WithSRAMDrawBuildRecordLevelAndStatusRow) as three digit tiles each (HLToDecimalDigits,
 ; WriteDecimalDigitTiles): MON_ATK, MON_DEF, MON_AGL and MON_INT into wScreenTileBuffer + $70, $B0,
 ; $F0 and $130, MON_WLD into wWindowTileBuffer + $8, then MON_HP, MON_MAX_HP, MON_MP and MON_MAX_MP
-; into wWindowTileBuffer + $64, $68, $A4 and $A8. (C1, E-0369)
+; into wWindowTileBuffer + $64, $68, $A4 and $A8. (C2, E-0369; probed E-0374)
 WithSRAMDrawBuildRecordLevelAndStatusRow_DrawStats::
     ld c, $63
     ld a, [wMenuSelectedMember]
@@ -1893,17 +2053,16 @@ WithSRAMDrawBuildRecordLevelAndStatusRow_DrawStats::
     ret
 
 ; Draws the details of record wMenuSelectedMember & $0F on Info page 2 (SRAM must be enabled;
-; WithSRAMDrawBuildRecordLevelAndStatusRow_2 does that). It shows the equipped item (MON_ITEM,
-; string category $0B, a two-line item name, 6 x 3 at vTiles2 + $350); the personality (category 7,
-; index 18, 9 or 0 for MON_PERSONALITY byte $6F below $40, $40-$BF or from $C0, plus 2, 1 or 0 for
-; byte $70 and 6, 3 or 0 for byte $72, 9 x 1 at vTiles2 + $4C0); the species name (MON_SPECIES,
-; category = high byte + 2, at vTiles2 + $550); the member number tile $C7 + member at
-; wScreenTileBuffer + $E9 followed, when MON_PLUS is not 0, by '+' (tile $FC) and its one or two
-; digits; the master's name (MON_MASTER_NAME through wTextBuf0, SelectString5Category8ThenShow at
-; vTiles2 + $470); MON_EXP (24-bit) at wWindowTileBuffer + $24; and the experience still needed for
-; the next level (the species' curve wSpeciesExpCurve and MON_LEVEL through
-; LoadExpTableEntryToTemp2, minus MON_EXP) at wWindowTileBuffer + $A4, or 0 when MON_LEVEL is at
-; least MON_MAX_LEVEL. (C1, E-0372)
+; PauseMenu_Info_Page2_Draw_LevelAndDetails does that). It shows the equipped item (MON_ITEM, string
+; category $0B, a two-line item name, 6 x 3 at vTiles2 + $350); the personality (category 7, index
+; 18, 9 or 0 for MON_PERSONALITY byte $6F below $40, $40-$BF or from $C0, plus 2, 1 or 0 for byte
+; $70 and 6, 3 or 0 for byte $72, 9 x 1 at vTiles2 + $4C0); the species name (MON_SPECIES, category
+; = high byte + 2, at vTiles2 + $550); the member number tile $C7 + member at wScreenTileBuffer +
+; $E9 followed, when MON_PLUS is not 0, by '+' (tile $FC) and its one or two digits; the master's
+; name (MON_MASTER_NAME through wTextBuf0, SelectString5Category8ThenShow at vTiles2 + $470);
+; MON_EXP (24-bit) at wWindowTileBuffer + $24; and the experience still needed for the next level
+; (the species' curve wSpeciesExpCurve and MON_LEVEL through LoadExpTableEntryToTemp2, minus
+; MON_EXP) at wWindowTileBuffer + $A4, or 0 when MON_LEVEL is at least MON_MAX_LEVEL. (C1, E-0372)
 PauseMenu_Info_Page2_DrawDetails::
     ld c, $a4
     ld a, [wMenuSelectedMember]
@@ -2098,6 +2257,13 @@ PauseMenu_Info_Page2_DrawDetails::
     call WritePackedBCDAsSevenDigitTiles
     ret
 
+; For record wMenuSelectedMember & $0F (SRAM enabled by WithSRAMShowRecordSpeciesAndSkillNames):
+; loads its species record (MON_SPECIES into wSpeciesIdLo/Hi, LoadSpeciesRecord) and shows the field
+; ability, SPECIES_FIELD_ABILITY as a string of category $0D (StringTable_FieldAbilities), in a 6 x
+; 2 window at vTiles2 + $2C0; then shows the eight MON_SKILLS bytes in skill slots 0-7: slot 0
+; through ShowRecordSpeciesAndSkillNames_EmptySlot (a $FF there shows the No skills text,
+; String_08_08_0E), slots 1-7 through ShowSkillNameAtSlotB (a $FF shows skill string 0). (C1,
+; E-0374)
 ; for SRAM record wMenuSelectedMember & $0F: shows the species category $0D string at vTiles2 + $2C0
 ; and the eight skills of field $34 in slots 0-7 (E-0121)
 ShowRecordSpeciesAndSkillNames::
@@ -2159,6 +2325,11 @@ ShowRecordSpeciesAndSkillNames_EmptySlot::
     ld [wStringIndex], a
     jr ShowSkillNameAtSlotB_Skip
 
+; A = skill id, B = slot 0-7: shows the skill name (wStringIndex = A, or 0 for $FF; wStringCategory
+; = 4, StringTable_SkillNames) in a 9 x 1 window at the tile address ShowSkillNameAtSlotB_Data[B]
+; ($9380, $9410, ... $9770) with ShowStringBank08AtTilesHL_Bank03; HL kept. It falls into
+; ShowSkillNameAtSlotB_Skip, which ShowRecordSpeciesAndSkillNames_EmptySlot also jumps to.
+; ShowRecordSpeciesAndSkillNames calls it for slots 1-7. (C1, E-0374)
 ; A = skill number ($FF shows entry 0), B = slot: wStringIndex = A, wStringCategory = 4
 ; (StringTable_SkillNames in the bank-$08 database), then ShowStringBank08AtTilesHL_Bank03 with the
 ; tile address from ShowSkillNameAtSlotB_Data[B] and size $0901; HL kept (E-0076)
@@ -2298,6 +2469,12 @@ WithSRAMDrawMemberRecordFamily_DrawParents::
     call ShowStringIn5x1Window
     ret
 
+; HL = a species word in a record, B = parent slot 0 or 1: shows the species name (index = low byte,
+; category = high byte + 2) in a 9 x 1 window at ShowSpeciesNameAndIconForSlotB_Data1[B] ($95E0 or
+; $9720), loads the species record (LoadSpeciesRecord), then sets wWorkBuf = its family (first byte
+; of wSpeciesRecord, SPECIES_FAMILY) and wWorkBuf + $1 = ShowSpeciesNameAndIconForSlotB_Data2[B]
+; ($5D or $71) and far-calls LoadFamilyIconTileForWorkBuf to draw the family icon tile. Returns HL
+; past the word. WithSRAMDrawMemberRecordFamily_DrawParents calls it for both parents. (C1, E-0374)
 ; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from
 ; ShowSpeciesNameAndIconForSlotB_Data1[B], loads the species record, sets wWorkBuf = family,
 ; wWorkBuf + $1 = ShowSpeciesNameAndIconForSlotB_Data2[B] and far-calls LoadFamilyIconTileForWorkBuf
@@ -2434,6 +2611,11 @@ ParentNameTileAddrs::
 ParentPlusTileBufAddrs::
     db $02, $c2, $22, $c3
 
+; With SRAM bank 0 enabled, reads MON_SPECIES of record wMenuSelectedMember & $0F into wArg1/wArg2,
+; sets wArg3 = 0 and wArg4/wArg5 = vTiles0 and expands that species graphics there
+; (DecompressGraphicsArg1ToArg4); then disables SRAM and sets wArg3 = 0, wArg4 = $90, wArg5 = $40,
+; wArg6 = 0 and hSpriteWindowClipMode = 0. Called by PauseMenu_Info_Page2_Draw;
+; PauseMenu_Info_Page2_Cursor then draws the sprite (DrawMetaSpritePartC0). (C1, E-0374)
 ; reads field $0B of SRAM record wMenuSelectedMember & $0F and decompresses its graphics to vTiles0
 ; (DecompressGraphicsArg1ToArg4); then sets wArg3-wArg6 = $00, $90, $40, $00 and
 ; hSpriteWindowClipMode = 0 (E-0121)
@@ -2643,6 +2825,11 @@ PauseMenu_Info_PartyOverview_Build::
     ld [wBGPaletteUploadRequest], a
     ret
 
+; Party overview: C = party slot 0-2 (SRAM enabled by the caller): DE =
+; DrawRecordHPMPAndLevelForRowC_Data[C] ($C1FA, $C200 or $C206 in wScreenTileBuffer, one column per
+; member); writes MON_HP as three digit tiles at DE, MON_MP at DE + $20 (the next row) and MON_LEVEL
+; as two digit tiles at DE + $41 (WriteTwoDigitTilesFromDigits1). BC kept. Called in the loop of
+; PauseMenu_Info_PartyOverview_Build. (C2, E-0374)
 ; for record C writes HP (field $5B), MP (field $5F) and level (field $56) as digits at the
 ; screen-buffer position DrawRecordHPMPAndLevelForRowC_Data[C] (E-0127)
 DrawRecordHPMPAndLevelForRowC::
@@ -2707,6 +2894,11 @@ DrawRecordHPMPAndLevelForRowC::
     pop bc
     ret
 
+; Party overview: C = party slot 0-2: sets the text window to the tile address
+; ShowRecordSpeciesNameForRowC_Data[C] ($8800, $8890 or $8920) with 1 row of 9 tiles (left set
+; afterwards) and shows the species name of its MON_SPECIES (index = low byte, category = high byte
+; + 2) with ShowString_Bank08. BC kept. Called in the loop of PauseMenu_Info_PartyOverview_Build.
+; (C1, E-0374)
 ; shows the species name (field $0B) of SRAM record C in the window from
 ; ShowRecordSpeciesNameForRowC_Data[C], size $0109 (E-0121)
 ShowRecordSpeciesNameForRowC::
@@ -2738,6 +2930,9 @@ ShowRecordSpeciesNameForRowC::
     pop bc
     ret
 
+; Party overview: C = party slot 0-2: writes tile $CC + MON_SEX bit 0 at
+; DrawRecordSexMarkTile_Data[C] ($C366, $C386 or $C3A6, inside wScreenTileBuffer); BC kept. Called
+; in the loop of PauseMenu_Info_PartyOverview_Build. (C2, E-0374)
 ; C = record: writes tile $CC + (bit 0 of record byte $0E) at the address from
 ; DrawRecordSexMarkTile_Data[C]; BC kept (E-0120) (E-0345: record byte $0E is MON_SEX; was
 ; DrawRecordSexMarkTile)
@@ -2820,7 +3015,7 @@ PauseMenu_Info_PartyOverview_Draw::
     inc [hl]
     ret
 
-; Party overview step 3: waits for Select. (C1, E-0357)
+; Party overview step 3: waits for Select. (C2, E-0357; probed E-0374)
 PauseMenu_Info_PartyOverview_CloseOnSelect::
     ld a, [wJoypadPressed]
     and $04
@@ -2838,7 +3033,7 @@ PauseMenu_Info_PartyOverview_Close::
     call FillVRAMRowsWithD
     ld a, [wIsCGB]
     or a
-    jr z, .call_write_sixteen_tiles_from_at_tiles2140
+    jr z, .call_pause_menu_info_party_overview_close
     ld a, $01
     ldh [rVBK], a
     ld hl, vBGMap0 + $e0
@@ -2848,8 +3043,8 @@ PauseMenu_Info_PartyOverview_Close::
     xor a
     ldh [rVBK], a
 
-.call_write_sixteen_tiles_from_at_tiles2140:
-    call WriteSixteenTilesFromAtTiles2140
+.call_pause_menu_info_party_overview_close:
+    call PauseMenu_Info_PartyOverview_Close_LoadTile
     xor a
     ld [wDataBankSave], a
     xor a
@@ -2858,6 +3053,11 @@ PauseMenu_Info_PartyOverview_Close::
     ld [wPauseMenuScreen], a
     ret
 
+; HL = VRAM address, D = tile, B = width of the first row, C = rows: writes D with WriteVRAMByteInc
+; B times, then adds 12 to HL (the rest of the 32-entry BG map row), uses width 20 for the following
+; rows and repeats for C rows. PauseMenu_Info_PartyOverview_Close uses it to fill vBGMap0 with $C3
+; (20 x 18) and, on CGB in VRAM bank 1, the attributes from vBGMap0 + $E0 with 0 (20 x 6). (C1,
+; E-0374)
 ; D = tile, B = first-row width, C = rows: writes D with WriteVRAMByteInc; after each row moves 12
 ; entries on (to the next 32-entry row) and uses width 20 (E-0117)
 FillVRAMRowsWithD::
@@ -2876,10 +3076,15 @@ FillVRAMRowsWithD::
     jr nz, FillVRAMRowsWithD
     ret
 
-; writes the 16 bytes at WriteSixteenTilesFromAtTiles2140_Data to vTiles2 + $140 (E-0122) (E-0344:
-; the address in its name dropped or read as the label there; was WriteSixteenTilesFromAtTiles2140)
-WriteSixteenTilesFromAtTiles2140::
-    ld de, WriteSixteenTilesFromAtTiles2140_Data
+; Writes the 16 bytes of PauseMenu_Info_PartyOverview_Close_LoadTile_Data (one 8 x 8 tile) to
+; vTiles2 + $140 with WriteVRAMByteInc. Only PauseMenu_Info_PartyOverview_Close calls it, when the
+; party overview is closed. The name says sixteen tiles; it writes one tile of 16 bytes. (C1,
+; E-0374)
+; writes the 16 bytes at PauseMenu_Info_PartyOverview_Close_LoadTile_Data to vTiles2 + $140 (E-0122)
+; (E-0344: the address in its name dropped or read as the label there; was
+; PauseMenu_Info_PartyOverview_Close_LoadTile)
+PauseMenu_Info_PartyOverview_Close_LoadTile::
+    ld de, PauseMenu_Info_PartyOverview_Close_LoadTile_Data
     ld hl, vTiles2 + $140
     ld b, $10
 
@@ -2891,21 +3096,30 @@ WriteSixteenTilesFromAtTiles2140::
     jr nz, .loop
     ret
 
-; data read by WriteSixteenTilesFromAtTiles2140 (16 bytes) (E-0347)
-WriteSixteenTilesFromAtTiles2140_Data::
+; data read by PauseMenu_Info_PartyOverview_Close_LoadTile (16 bytes) (E-0347)
+PauseMenu_Info_PartyOverview_Close_LoadTile_Data::
     db $ff, $00, $ff, $10, $ff, $10, $ff, $fe, $ff, $7c, $ff, $38, $ff, $7c, $ff, $c6
 
+; GameMode2_Update, wModeState 1: the ITEM page, by wTemp0: 0 PauseMenu_Items_ItemList (the
+; inventory list and its cursor), 1 PauseMenu_Items_ActionMenu (the use or discard choice for the
+; picked item), 2 PauseMenu_Items_UseItem, 3 PauseMenu_Items_Discard. With an empty bag the list
+; shows the No items text (String_08_08_00). (C1, E-0374)
 ; GameMode2_Update, wModeState 1: the ITEM list ('No items' at the start of a game) (E-0046)
 PauseMenu_Items::
     ld a, [wTemp0]
     jumptable
-    dw PauseMenu_Items_MemberList
-    dw PauseMenu_Items_ChooseItem
+    dw PauseMenu_Items_ItemList
+    dw PauseMenu_Items_ActionMenu
     dw PauseMenu_Items_UseItem
     dw PauseMenu_Items_Discard
 
-; refreshes the record list and name tiles, then the menu cursor (E-0303)
-PauseMenu_Items_MemberList::
+; Item page, wTemp0 0, by wTemp1: 0 PauseMenu_Items_MemberList_Build (refreshes the party list after
+; a level-up, sets up the inventory pages and draws the list with the selected item description), 1
+; PauseMenu_Items_MemberList_Cursor (the inventory cursor; A takes the selected item to
+; PauseMenu_Items_ActionMenu, B leaves the menu, Select sorts the bag). Despite the name it lists
+; items, not members. (C1, E-0374)
+; refreshes the record list and name tiles, then the menu cursor
+PauseMenu_Items_ItemList::
     ld a, [wTemp1]
     jumptable
     dw PauseMenu_Items_MemberList_Build
@@ -3007,14 +3221,19 @@ PauseMenu_Items_MemberList_Cursor::
     call ShowInventoryPageItemNames_Bank03
     ret
 
-; by wTemp1: the item list (screen block $0E) with a cursor, before PauseMenu_Items_UseItem (E-0292)
-PauseMenu_Items_ChooseItem::
+; Item page, wTemp0 1 (after an item is picked), by wTemp1: 0 PauseMenu_Items_ChooseItem_BuildMenu
+; (redraws the list with the two-row action choice), 1 PauseMenu_Items_ChooseItem_ActionCursor (A
+; sets wTemp0 = 2, PauseMenu_Items_UseItem, or 3, PauseMenu_Items_Discard, by wSubMenuCursor bit 0;
+; B returns to the list). The item is already chosen here; this step chooses what to do with it.
+; (C1, E-0374)
+; by wTemp1: the item list (screen block $0E) with a cursor, before PauseMenu_Items_UseItem
+PauseMenu_Items_ActionMenu::
     ld a, [wTemp1]
     jumptable
     dw PauseMenu_Items_ChooseItem_BuildMenu
     dw PauseMenu_Items_ChooseItem_ActionCursor
 
-; Item action menu (PauseMenu_Items_ChooseItem step 0): redraws the item list with its cursor
+; Item action menu (PauseMenu_Items_ActionMenu step 0): redraws the item list with its cursor
 ; (BuildScreenBlock0EWithCursor, then CopyTileBufferToBGMap), sets a two-choice cursor range
 ; (wMenuRowCount = 2, wMenuPageCount = 1) and moves on to the action cursor of step 1. (C1, E-0369)
 PauseMenu_Items_ChooseItem_BuildMenu::
@@ -3056,8 +3275,17 @@ PauseMenu_Items_ChooseItem_ActionCursor::
     ld [wTemp1], a
     ret
 
+; Item page, wTemp0 2: using the picked item, by wTemp1 (34 steps). Step 0
+; PauseMenu_Items_UseItem_ChoosePath picks a path from wItemRecord: items with byte 4 bit 1 run
+; steps 1-3 (the tried-using message, String_08_08_06, then back to the list); target kinds 0 and 4
+; choose a member (steps 4-6, member cursor with a stat preview) and then show the item message,
+; check it (CheckItemUsable) and apply it (ApplyItemEffect, steps 7-12); kind 7 runs steps $14-$1A
+; (message, recheck, apply, maybe leave for the field); other kinds run steps $0D-$13. Steps $1B-$21
+; cover the item that asks a question and starts the save screens (Your progress has been recorded,
+; String_37_00_26) or reports String_37_01_14. Most paths end in
+; PauseMenu_Items_UseItem_BackToFirstPage or PauseMenu_Items_UseItem_BackToList. (C1, E-0374)
 ; by wTemp1: picks an item and a member, CheckItemUsable, ApplyItemEffect ('But nothing happened',
-; 'But it couldn't be used') and may leave for the field (E-0288)
+; 'But it couldn't be used') and may leave for the field
 PauseMenu_Items_UseItem::
     ld a, [wTemp1]
     jumptable
@@ -3099,7 +3327,7 @@ PauseMenu_Items_UseItem::
 ; Using an item, step 0: picks the path from the item record. When wItemRecord + 4 has bit 1 set it
 ; goes to step 1 (redraw, then message 6 of category 8, '... tried using' the item and 'But nothing
 ; happened.', then back to the item list); otherwise by the target kind in wItemRecord + 6: 0 and 4
-; go to choosing a member (step 4), 7 to step $14, others to step $0D. (C1, E-0369)
+; go to choosing a member (step 4), 7 to step $14, others to step $0D. (C2, E-0369; probed E-0374)
 PauseMenu_Items_UseItem_ChoosePath::
     ld a, [wItemRecord + $4]
     bit 1, a
@@ -3153,7 +3381,7 @@ PauseMenu_Items_UseItem_ShowTriedUsing::
     inc [hl]
     ret
 
-; Using an item, step 3: after the message returns to the item list. (C1, E-0357)
+; Using an item, step 3: after the message returns to the item list. (C2, E-0357; probed E-0374)
 PauseMenu_Items_UseItem_CloseTriedUsing::
     ld a, [wTextFlags]
     or a
@@ -3257,8 +3485,11 @@ PauseMenu_Items_UseItem_ShowMessage::
     ld [wTemp1], a
     ret
 
-; Using an item, step 8: after the message checks whether the item can be used (CheckItemUsable);
-; target kinds 0, 2 and 4 go on to apply it (step $0B), others to step $12. (C1, E-0357)
+; Using an item, steps 8 and $0F: waits while wTextFlags is non-zero; then with SRAM bank 0 enabled
+; runs CheckItemUsable and moves on one step. When the check refused (wItemId $FF) it stays there,
+; at PauseMenu_Items_UseItem_CannotUse (step 9 or $10); otherwise target kinds 0, 2 and 4
+; (wItemRecord + 6) go to step $0B (PauseMenu_Items_UseItem_Apply) and others to step $12 (also
+; Apply). (C2, E-0374)
 PauseMenu_Items_UseItem_CheckUsable::
     ld a, [wTextFlags]
     or a
@@ -3362,8 +3593,11 @@ PauseMenu_Items_UseItem_Apply::
     ld [wStringIndex], a
     jr .loop
 
-; Using an item, step 22: after the message checks the item again; $FF or $FE end here, otherwise
-; the step skips one or two further steps by wItemUseMessage. (C1, E-0357)
+; Using an item, step $16 (the kind 7 path): waits while wTextFlags is non-zero, then with SRAM bank
+; 0 enabled runs CheckItemUsable again. wItemId $FF or $FE goes to step $17
+; (PauseMenu_Items_UseItem_ShowButNothingHappened); otherwise a non-zero wItemUseMessage goes to
+; step $19 (PauseMenu_Items_UseItem_ApplyAgain) and 0 to step $1A
+; (PauseMenu_Items_UseItem_ExitToField). (C2, E-0374)
 PauseMenu_Items_UseItem_RecheckUsable::
     ld a, [wTextFlags]
     or a
@@ -3404,7 +3638,7 @@ PauseMenu_Items_UseItem_ShowButNothingHappened::
     inc [hl]
     ret
 
-; Using an item, step 24: after the message returns to the item list. (C1, E-0357)
+; Using an item, step 24: after the message returns to the item list. (C2, E-0357; probed E-0374)
 PauseMenu_Items_UseItem_CloseNothingHappened::
     ld a, [wTextFlags]
     or a
@@ -3536,17 +3770,17 @@ PauseMenu_Items_UseItem_ChoiceCursor::
     bit 1, a
     ret z
 
-; Returns to the item list (wTemp0 and wTemp1 = 0). (C1, E-0357)
+; Returns to the item list (wTemp0 and wTemp1 = 0). (C2, E-0357; probed E-0374)
 PauseMenu_Items_UseItem_BackToList::
     xor a
     ld [wTemp0], a
     ld [wTemp1], a
     ret
 
-; Using an item, step 30: runs the save screens (RunPauseMenuScreen) until all four are done, then
+; Using an item, step 30: runs the save screens (RunPauseMenuSave) until all four are done, then
 ; skips a step. (C1, E-0357)
 PauseMenu_Items_UseItem_RunSaveScreens::
-    call RunPauseMenuScreen
+    call RunPauseMenuSave
     ld a, [wPauseMenuScreen]
     cp $04
     ret nz
@@ -3558,7 +3792,8 @@ PauseMenu_Items_UseItem_RunSaveScreens::
 
 ; Using an item, step 31, reached from step 27 (PauseMenu_Items_UseItem_ShowButItCouldntBe skips
 ; three steps) when the item cannot be used: once 'But it couldn't be used here.' is done
-; (wTextFlags = 0) returns to the item list (PauseMenu_Items_UseItem_BackToList). (C1, E-0369)
+; (wTextFlags = 0) returns to the item list (PauseMenu_Items_UseItem_BackToList). (C2, E-0369;
+; probed E-0374)
 PauseMenu_Items_UseItem_CloseCouldntBeUsed::
     ld a, [wTextFlags]
     or a
@@ -3602,6 +3837,13 @@ PauseMenu_Items_UseItem_RestoreAndReturn::
     ld [wPauseMenuScreen], a
     ret
 
+; Item page, wTemp0 3: throwing the picked item away, by wTemp1: 0
+; PauseMenu_Items_Discard_RedrawMenu, 1 PauseMenu_Items_Discard_AskToss (Toss this away?,
+; String_08_08_01), 2 PauseMenu_Items_Discard_DrawYesNo, 3 PauseMenu_Items_Discard_YesNoCursor (yes
+; to step 4, no to step 6, B back to the action choice), 4 PauseMenu_Items_Discard_ThrowAway
+; (refused with String_08_08_02 when wItemRecord + 8 bit 1 is set, otherwise empties the slot, shows
+; String_08_08_04 and compacts the bag), 5 PauseMenu_Items_Discard_BackToFirstPage, 6
+; PauseMenu_Items_Discard_Cancel. (C1, E-0374)
 ; screen blocks $0E and $0F with the sub-menu cursor, strings, and the inventory reset to its first
 ; page (renamed from PauseMenu_Items_SubMenu from its E-0357 note, E-0367)
 PauseMenu_Items_Discard::
@@ -3739,6 +3981,11 @@ PauseMenu_Items_Discard_Cancel::
     call ResetInventoryMenuToFirstPage
     ret
 
+; Builds the inventory screen in wScreenTileBuffer: clears it to $C3 and copies screen blocks $0B
+; and $0C; when the bag has an item (wInventory non-zero) also block $0D and, with wMenuItemCount
+; (the page count) of 2 or more, the page indicator $C5, $E1 + wMenuPage, $BE, $E0 + wMenuItemCount,
+; $C6 at wScreenTileBuffer + $10E. Called by PauseMenu_State4_BuildItemPage,
+; PauseMenu_Items_MemberList_Build and BuildScreenBlock0EWithCursor. (C2, E-0374)
 ; clears the screen buffer, copies blocks $0B and $0C and, with items, block $0D and the page
 ; indicator (page wMenuPage of wMenuItemCount) (E-0124)
 BuildInventoryScreenBase::
@@ -3771,6 +4018,11 @@ BuildInventoryScreenBase::
 .return:
     ret
 
+; Builds the inventory screen (BuildInventoryScreenBase), copies screen block $0E and writes cursor
+; tile $BC at the PauseMenu_Items_MemberList_Cursor_Data entry for wMenuCursor & 7
+; (WriteBCTileToScreenBufferAtTableEntry_Bank03; that table has four rows, + $29, + $69, + $A9, +
+; $E9). Called by PauseMenu_Items_ChooseItem_BuildMenu, BuildItemScreenForWItemId,
+; BuildScreenBlocks0EAnd0F and BuildScreenBlock0EWithSubMenuCursor. (C2, E-0374)
 ; runs BuildInventoryScreenBase, copies screen block $0E to the tile buffer and draws the cursor for
 ; wMenuCursor & 7 (E-0122)
 BuildScreenBlock0EWithCursor::
@@ -3783,6 +4035,12 @@ BuildScreenBlock0EWithCursor::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; Builds the target screen of an item: BuildScreenBlock0EWithCursor, blocks $11 and $1B, then the
+; rectangle BuildItemScreenForWItemId_Data2[kind] (CopyRecordRectToScreenBuffer_Bank03), where kind
+; = BuildItemScreenForWItemId_Data1[wItemId] (0 HP, 1 MP, 2 personality, 3 WLD, 4 ATK, 5 DEF, 6 AGL,
+; 7 INT, 8 the equipped item, by the field DrawItemTargetStatPreview reads), and the preview for the
+; selected member (DrawItemTargetStatPreview). Called by PauseMenu_Items_UseItem_BuildTargetList and
+; BuildItemScreenWithRecordCursor. (C1, E-0374)
 ; builds block $0E with the cursor, blocks $11 and $1B, and the rectangle chosen by wItemId
 ; (BuildItemScreenForWItemId_Data1 to BuildItemScreenForWItemId_Data2), then runs
 ; DrawItemTargetStatPreview (E-0122)
@@ -3804,6 +4062,10 @@ BuildItemScreenForWItemId::
     call DrawItemTargetStatPreview
     ret
 
+; Blanks the text window tiles (FillTilesFromRequest), builds the item target screen
+; (BuildItemScreenForWItemId), copies block $10 and writes cursor tile $BC at the
+; MenuCursorPositions_Bank03 entry for wMenuSelectedMember & 3. Only
+; PauseMenu_Items_UseItem_RedrawTargetList (step 6) calls it. (C1, E-0374)
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember
 ; & 3 (E-0122)
 BuildItemScreenWithRecordCursor::
@@ -3817,6 +4079,9 @@ BuildItemScreenWithRecordCursor::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; Builds the inventory screen with its cursor (BuildScreenBlock0EWithCursor) and copies screen block
+; $0F. Three unreachable bytes follow the ret ($CD, $0E, $29, the encoding of a call to $290E). Only
+; BuildScreenBlocks0EAnd0FWithCursor calls it. (C2, E-0374)
 ; builds block $0E with the cursor and copies block $0F (E-0122)
 BuildScreenBlocks0EAnd0F::
     call BuildScreenBlock0EWithCursor
@@ -3825,6 +4090,10 @@ BuildScreenBlocks0EAnd0F::
     ret
     db $cd, $0e, $29
 
+; Builds blocks $0E and $0F (BuildScreenBlocks0EAnd0F), copies block $10 and writes cursor tile $BC
+; at the PauseMenu_Items_ChooseItem_ActionCursor_Data entry for wSubMenuCursor & 3 (the use or
+; discard choice). Only PauseMenu_Items_Discard_DrawYesNo calls it, for the yes/no question. (C2,
+; E-0374)
 ; builds blocks $0E and $0F, copies block $10 and draws the cursor for wSubMenuCursor & 3 (E-0122)
 BuildScreenBlocks0EAnd0FWithCursor::
     call BuildScreenBlocks0EAnd0F
@@ -3836,6 +4105,10 @@ BuildScreenBlocks0EAnd0FWithCursor::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; Blanks the text window tiles (FillTilesFromRequest), builds the inventory screen with its cursor
+; (BuildScreenBlock0EWithCursor), copies block $10 and writes cursor tile $BC at the
+; PauseMenu_Items_ChooseItem_ActionCursor_Data entry for wSubMenuCursor & 3. Called by
+; PauseMenu_Items_UseItem_RedrawMenu and PauseMenu_Items_Discard_RedrawMenu. (C1, E-0374)
 ; fills tiles, builds block $0E with the cursor, copies block $10 and draws the cursor for
 ; wSubMenuCursor & 3 (E-0122)
 BuildScreenBlock0EWithSubMenuCursor::
@@ -3849,6 +4122,11 @@ BuildScreenBlock0EWithSubMenuCursor::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; Shows the description of the item under the cursor: slot (wMenuPage & $0F) * 4 + (wMenuCursor &
+; $0F) of wInventory, as a string of category 6 (StringTable_ItemDescriptions; item $1F uses string
+; $6F instead) in an 18 x 3 window at vTiles2 + $230 (ShowStringBank08AtTilesHL_Bank03). Called by
+; PauseMenu_Items_MemberList_Build, PauseMenu_Items_MemberList_Cursor (three places) and
+; ShowString0Bank09AtTiles16E0ThenItemDescription. (C1, E-0374)
 ; inventory slot = (wMenuPage & $0F) * 4 + (wMenuCursor & $0F): shows that item's string of category
 ; 6 (the item descriptions of the bank-$08 database; item $1F uses string $6F) at vTiles2 + $230
 ; with size $1203 (ShowStringBank08AtTilesHL_Bank03) (E-0101)
@@ -3879,6 +4157,13 @@ ShowSelectedItemDescription::
     call ShowStringBank08AtTilesHL_Bank03
     ret
 
+; Shows the item names of inventory page wMenuPage, saving and restoring the text window (tile
+; address, rows, width) around it: each name is a string of category 5 (StringTable_ItemNames; $FF
+; shows string 0) in a 9 x 1 window, from vTiles2 + $5C0 in steps of $90. With an empty bag
+; (wInventory = 0) it shows the No items text (String_08_08_00) at vTiles2 + $5C0 and three names
+; from wInventory + 1 from vTiles2 + $650; otherwise four names from wInventory + (wMenuPage & $0F)
+; * 4. Called by PauseMenu_Items_MemberList_Cursor (twice),
+; ShowString0Bank09AtTiles16E0ThenItemDescription and ResetInventoryMenuToFirstPage. (C1, E-0374)
 ; shows the four item names of inventory page wMenuPage (or the empty-inventory text and wInventory
 ; + $1 entries) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ShowInventoryPageItemNames_Bank03::
@@ -3970,6 +4255,9 @@ ShowInventoryPageItemNames_Bank03::
     ld [wTextWindowTileHi], a
     ret
 
+; When wMenuPageCount is non-zero writes tile $E1 + (wMenuPage & $0F), the page number, straight to
+; vBGMap0 + $10F (WriteVRAMByte). Only PauseMenu_Items_MemberList_Cursor calls it, after a page
+; change. (C1, E-0374)
 ; when wMenuPageCount is non-zero, writes tile $E1 + (wMenuPage & $0F) at vBGMap0 + $10F (E-0067)
 ; (the same 20 bytes appear in 2 banks)
 DrawMenuPageNumber_Bank03::
@@ -3989,7 +4277,7 @@ DrawMenuPageNumber_Bank03::
 ; (PauseMenu_Items_MemberList_Build and PauseMenu_Items_MemberList_Cursor): when wMenuPage & $0F is
 ; the last page (wMenuItemCount - 1), wMenuRowCount = wMenuLastPageRows and wMenuCursor is clamped
 ; to at most wMenuLastPageRows - 1; otherwise wMenuRowCount = 4; then clears bit 7 of wMenuPage.
-; (C1, E-0369)
+; (C2, E-0369; probed E-0374)
 ; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and
 ; the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of
 ; wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
@@ -4021,6 +4309,10 @@ SetMenuRowsForPage_Bank03_2::
     res 7, [hl]
     ret
 
+; Shows string 0 of category 0 from bank $09 (ShowString_Bank09; the heading words of the item page)
+; in a 39 x 1 window at vTiles1 + $6E0, saving and restoring the text window around it, then the
+; selected item description (ShowSelectedItemDescription) and the page item names
+; (ShowInventoryPageItemNames_Bank03). Only PauseMenu_State4_BuildItemPage calls it. (C1, E-0374)
 ; shows string 0 of category 0 (ShowString_Bank09) at vTiles1 + $6E0 with size $0127, preserving the
 ; window, then ShowSelectedItemDescription and ShowInventoryPageItemNames_Bank03 (E-0121)
 ShowString0Bank09AtTiles16E0ThenItemDescription::
@@ -4063,6 +4355,11 @@ ShowString0Bank09AtTiles16E0ThenItemDescription::
     call ShowInventoryPageItemNames_Bank03
     ret
 
+; Counts the items of wInventory (24 slots) up to the first 0; a $FF ends the list and that slot and
+; all later ones are set to 0. Pages of four: wMenuPageCount = wMenuItemCount = ceil(count / 4), at
+; least 1; wMenuLastPageRows = count mod 4, or 4 when that is 0; wMenuRowCount = wMenuLastPageRows
+; when wMenuPage equals the page count (not the last page index), else 4. Called by
+; PauseMenu_Items_MemberList_Build and ResetInventoryMenuToFirstPage. (C2, E-0374)
 ; counts wInventory items until a $00 or $FF byte (24 slots); a $FF ends the list and that slot and
 ; the rest are rewritten as $00. Pages of 4: wMenuPageCount = wMenuItemCount = ceil(count / 4), at
 ; least 1; wMenuLastPageRows = count mod 4, or 4; wMenuRowCount = wMenuLastPageRows when wMenuPage
@@ -4131,6 +4428,18 @@ SetupInventoryMenuPages_Bank03::
     ld [wMenuRowCount], a
     ret
 
+; Draws what item wItemId would change for member wMenuSelectedMember (SRAM bank 0 enabled here,
+; disabled at the end), by kind BuildItemScreenForWItemId_Data1[wItemId]: 0 MON_HP and MON_MAX_HP, 1
+; MON_MP and MON_MAX_MP (three digit tiles at wWindowTileBuffer + $19 and + $1D); 3 MON_WLD, 4
+; MON_ATK, 5 MON_DEF, 6 MON_AGL, 7 MON_INT (one value at wWindowTileBuffer + $1D); these blank
+; wScreenTileBuffer + $146/$147 and redraw the MON_STATUS marks there (bits 7, 2, 0 through the
+; _Bank03_2 setters). Kind 2 shows the personality name (PersonalityIndexOfRecord, category 7) at
+; vTiles2 + $1A0 with DrawItemTargetStatPreview_Data[index] tiles from $1A at wWindowTileBuffer +
+; $19, pads to 9 with $C3, sets the text window to vTiles1 with 2 rows of 18, and draws the status
+; marks. Any other kind (8) shows the equipped item MON_ITEM (category 5, id + $3F when non-zero) at
+; vTiles2 + $1A0 with the tile counts of RecordA4StringTileCounts_03 at wScreenTileBuffer + $141 and
+; wWindowTileBuffer + $19. Called by PauseMenu_Items_UseItem_TargetCursor and
+; BuildItemScreenForWItemId. (C1, E-0374)
 ; for item wItemId (kind BuildItemScreenForWItemId_Data1) writes the target record's affected value
 ; (HP, MP or a stat word) as digits in the item screen (E-0131)
 DrawItemTargetStatPreview::
@@ -4381,18 +4690,25 @@ DrawItemTargetStatPreview::
     ld [rRAMG], a
     ret
 
+; wScreenTileBuffer + $147 = $C2 (A = $C2). DrawItemTargetStatPreview calls it when the member has
+; MON_STATUS bit 7 set. One of the per-bank copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC2_Bank03_2::
     ld a, $c2
     ld [wScreenTileBuffer + $147], a
     ret
 
+; wScreenTileBuffer + $147 = $C1 (A = $C1). DrawItemTargetStatPreview calls it when the member has
+; MON_STATUS bit 2 set (after the bit 7 test, so it overwrites that mark). One of the per-bank
+; copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC1_Bank03_2::
     ld a, $c1
     ld [wScreenTileBuffer + $147], a
     ret
 
+; wScreenTileBuffer + $146 = $C0 (A = $C0). DrawItemTargetStatPreview calls it when the member has
+; MON_STATUS bit 0 set. One of the per-bank copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col6TileC0_Bank03_2::
     ld a, $c0
@@ -4512,6 +4828,13 @@ BuildItemScreenForWItemId_Data2_Entry08::
     db $41, $01, $0c, $03
     ds $24, $c3
 
+; Returns the item page to its start: wMenuPage = wMenuCursor = 0, sets up the inventory pages
+; (SetupInventoryMenuPages_Bank03), lowers wMenuPage while it is not below wMenuItemCount (no change
+; from 0, since the page count is at least 1), shows the page item names
+; (ShowInventoryPageItemNames_Bank03) and sets wTemp0 = wTemp1 = 0 (PauseMenu_Items_ItemList, step
+; 0). Called by PauseMenu_State4_BuildItemPage, PauseMenu_Items_UseItem_BackToFirstPage,
+; PauseMenu_Items_UseItem_RestoreAndReturn, PauseMenu_Items_Discard_BackToFirstPage and
+; PauseMenu_Items_Discard_Cancel. (C1, E-0374)
 ; wMenuPage = 0, wMenuCursor = 0, sets up the inventory pages, clamps the page, runs
 ; ShowInventoryPageItemNames_Bank03 and clears wTemp0/1 (E-0124)
 ResetInventoryMenuToFirstPage::
@@ -4537,6 +4860,9 @@ ResetInventoryMenuToFirstPage::
     ld [wTemp1], a
     ret
 
+; GameMode2_Update, wModeState 2: the SKILLS page, by wTemp0: 0 PauseMenu_Skills_ChooseMember, 1
+; PauseMenu_Skills_ChooseSkill, 2 PauseMenu_Skills_ChooseTarget, 3 PauseMenu_Skills_UseFieldSkill. A
+; member with no skills shows the No skills text (String_08_08_0E). (C1, E-0374)
 ; GameMode2_Update, wModeState 2: the SKILLS list ('No skills' at the start) (E-0046)
 PauseMenu_Skills::
     ld a, [wTemp0]
@@ -4546,8 +4872,12 @@ PauseMenu_Skills::
     dw PauseMenu_Skills_ChooseTarget
     dw PauseMenu_Skills_UseFieldSkill
 
+; Skills page, wTemp0 0, by wTemp1: 0 PauseMenu_Skills_ChooseMember_Build (party cursor and the
+; member skill pages), 1 PauseMenu_Skills_ChooseMember_Cursor (A on a member with skills goes to
+; PauseMenu_Skills_ChooseSkill; a dead member, MON_STATUS bit 7, goes to step 2; B leaves the menu),
+; 2 PauseMenu_Skills_ChooseMember_Redraw, 3 PauseMenu_Skills_ChooseMember_ShowADeadMonsterCant
+; (String_37_01_1A), 4 PauseMenu_Skills_ChooseMember_CloseMessage (back to step 0). (C1, E-0374)
 ; by wTemp1: the record list and cursor; a dead member is refused ('A dead monster can't use a ...')
-; (E-0292)
 PauseMenu_Skills_ChooseMember::
     ld a, [wTemp1]
     jumptable
@@ -4691,7 +5021,7 @@ PauseMenu_Skills_ChooseMember_ShowADeadMonsterCant::
     ret
 
 ; Skills page, step 4: once 'A dead monster can't use a skill.' is done (wTextFlags = 0), returns to
-; step 0 (wTemp1 = 0), which rebuilds the page and the party cursor. (C1, E-0369)
+; step 0 (wTemp1 = 0), which rebuilds the page and the party cursor. (C2, E-0369; probed E-0374)
 PauseMenu_Skills_ChooseMember_CloseMessage::
     ld a, [wTextFlags]
     or a
@@ -4700,8 +5030,14 @@ PauseMenu_Skills_ChooseMember_CloseMessage::
     ld [wTemp1], a
     ret
 
+; Skills page, wTemp0 1, by wTemp1: 0 PauseMenu_Skills_ChooseSkill_Build (the skill list of the
+; member with its MP and pages), 1 PauseMenu_Skills_ChooseSkill_Cursor (A on a field skill the
+; member can pay for goes to PauseMenu_Skills_ChooseTarget; otherwise wStringIndex = $1B or $19 and
+; step 2; B back to choosing a member), 2 PauseMenu_Skills_ChooseSkill_Redraw, 3
+; PauseMenu_Skills_ChooseSkill_ShowRefusal (String_37_01_1B or String_37_01_19, Not enough MP!), 4
+; PauseMenu_Skills_ChooseSkill_CloseRefusal (back to choosing a member). (C1, E-0374)
 ; by wTemp1: the screen built from the member's record field $5F (MP) with a cursor, then the
-; skill's string (E-0292)
+; skill's string
 PauseMenu_Skills_ChooseSkill::
     ld a, [wTemp1]
     jumptable
@@ -4870,7 +5206,7 @@ PauseMenu_Skills_ChooseSkill_ShowRefusal::
     ret
 
 ; Choosing a skill, step 4: once the message is done (wTextFlags = 0) returns to choosing a member
-; (wTemp0, wTemp1 and wMenuPage = 0). (C1, E-0369)
+; (wTemp0, wTemp1 and wMenuPage = 0). (C2, E-0369; probed E-0374)
 PauseMenu_Skills_ChooseSkill_CloseRefusal::
     ld a, [wTextFlags]
     or a
@@ -4883,8 +5219,13 @@ PauseMenu_Skills_ChooseSkill_CloseRefusal::
     ld [wMenuPage], a
     ret
 
+; Skills page, wTemp0 2, by wTemp1: 0 PauseMenu_Skills_ChooseTarget_Build, which goes to step 1 when
+; byte 4 of the skill record (wRecordBufferData + 4) is $21 and otherwise redraws the skill screen
+; and goes straight to PauseMenu_Skills_UseFieldSkill (wTemp0 3) without a target; 1
+; PauseMenu_Skills_ChooseTarget_Draw (the target screen); 2 PauseMenu_Skills_ChooseTarget_Cursor (A
+; sets wTargetRecord and goes to PauseMenu_Skills_UseFieldSkill; B back to choosing a skill). (C1,
+; E-0374)
 ; by wTemp1: the record field $5F screen with a cursor, before PauseMenu_Skills_UseFieldSkill
-; (E-0292)
 PauseMenu_Skills_ChooseTarget::
     ld a, [wTemp1]
     jumptable
@@ -4995,8 +5336,15 @@ PauseMenu_Skills_ChooseTarget_Cursor::
     ld [wMenuPage], a
     ret
 
+; Skills page, wTemp0 3: using the chosen field skill (field skill number in wInventorySlot), by
+; wTemp1: 0 _Prepare (names into wTextBuf0 and wTextBuf2), 1 _ShowMessage, 2 _CheckUsable
+; (FieldSkillUsable; refused goes to 3, else to 5), 3 _ShowFailure and 4 _CloseFailure (back to
+; choosing a member), 5 _PayMP, 6 _PlaySound, 7 _RunEffect (FieldSkillEffect and its message), 8
+; _PickResultStep, 9 _ShowResultLines (field skill $10), 10 _ShowItemResult (field skill $11), 11
+; _Finish (leaves for the field when wDataBankSave is set, otherwise back to the list). All steps
+; are PauseMenu_Skills_UseFieldSkill_ labels. (C1, E-0374)
 ; by wTemp1: shows the skill's strings, applies it to the SRAM record and leaves the pause menu for
-; the field ('Hero returned with ...', ExitPauseMenuToField) (E-0288)
+; the field ('Hero returned with ...', ExitPauseMenuToField)
 PauseMenu_Skills_UseFieldSkill::
     ld a, [wTemp1]
     jumptable
@@ -5062,8 +5410,11 @@ PauseMenu_Skills_UseFieldSkill_ShowMessage::
     inc [hl]
     ret
 
-; Using a field skill, step 2: after the message applies the skill to the target (FieldSkillUsable);
-; when it had no effect ($FF) the next step shows why, otherwise two steps are skipped. (C1, E-0357)
+; Using a field skill, step 2: waits while wTextFlags is non-zero; then wTargetRecord =
+; wSubMenuCursor and, with SRAM bank 0 enabled, FieldSkillUsable checks the skill (it only sets
+; wItemId = $FF and a refusal message when it cannot be used; the effect itself is FieldSkillEffect
+; in step 7). Refused goes to step 3 (PauseMenu_Skills_UseFieldSkill_ShowFailure); otherwise to step
+; 5 (PauseMenu_Skills_UseFieldSkill_PayMP). (C2, E-0374)
 PauseMenu_Skills_UseFieldSkill_CheckUsable::
     ld a, [wTextFlags]
     or a
@@ -5103,7 +5454,7 @@ PauseMenu_Skills_UseFieldSkill_ShowFailure::
     ret
 
 ; Using a field skill, step 4: once the failure message of step 3 is done (wTextFlags = 0) returns
-; to choosing a member (wTemp0, wTemp1 and wMenuPage = 0). (C1, E-0369)
+; to choosing a member (wTemp0, wTemp1 and wMenuPage = 0). (C2, E-0369; probed E-0374)
 PauseMenu_Skills_UseFieldSkill_CloseFailure::
     ld a, [wTextFlags]
     or a
@@ -5115,8 +5466,12 @@ PauseMenu_Skills_UseFieldSkill_CloseFailure::
     ld [wMenuPage], a
     ret
 
-; Using a field skill, step 5: subtracts the MP cost from the user's MP (a cost of $FF uses all of
-; it); for ITEM_METEORB a random bit decides whether it fails instead (message $13). (C1, E-0357)
+; Using a field skill, step 5: with SRAM bank 0 enabled subtracts the cost wRecordBufferData from
+; MON_MP (word) of member wMenuSelectedMember; a cost of $FF takes all of it and also stores that MP
+; in wItemEffectAmount and wItemEffectRange. Moves to step 6. When wItemId (here the skill id, set
+; by PauseMenu_Skills_ChooseSkill_ShowSelected) is $1E, SKILL_VIVIFY (the source compares with
+; ITEM_METEORB, the same value), NextTableByte runs and a wRandomLo with bit 7 set makes it fail:
+; wItemMessage = $13 and wTemp1 = 3 (the failure message, after the MP is paid). (C2, E-0374)
 PauseMenu_Skills_UseFieldSkill_PayMP::
     ld a, $0a
     ld [rRAMG], a
@@ -5168,8 +5523,9 @@ PauseMenu_Skills_UseFieldSkill_PayMP::
     ld [wTemp1], a
     ret
 
-; Using a field skill, step 6: plays the skill's effect sound from
-; PauseMenu_Skills_UseFieldSkill_QueueSoundEffect_Data. (C1, E-0357)
+; Using a field skill, step 6: queues the sound
+; PauseMenu_Skills_UseFieldSkill_PlaySound_Data[wInventorySlot] ($85 for field skills 0-$0B, none
+; for $FF) with QueueSoundEffect and moves to step 7. (C2, E-0374)
 PauseMenu_Skills_UseFieldSkill_PlaySound::
     ld a, [wInventorySlot]
     ld hl, PauseMenu_Skills_UseFieldSkill_PlaySound_Data
@@ -5219,7 +5575,7 @@ PauseMenu_Skills_UseFieldSkill_RunEffect::
     ret
 
 ; Using a field skill, step 8: after the message picks the next step by skill: field skill $10 goes
-; to step 9, $11 to step 10, others to step 11. (C1, E-0357)
+; to step 9, $11 to step 10, others to step 11. (C2, E-0357; probed E-0374)
 PauseMenu_Skills_UseFieldSkill_PickResultStep::
     ld a, [wTextFlags]
     or a
@@ -5330,6 +5686,10 @@ PauseMenu_Skills_UseFieldSkill_Finish::
     ld [wMenuCursor], a
     ret
 
+; Clears wScreenTileBuffer to $C3 (ClearScreenTileBuffer_Bank03) and copies screen blocks $1C and
+; $0C (CopyBlockToTileBuffer), the base of the skills page. Called by
+; PauseMenu_State4_BuildSkillsPage, PauseMenu_Skills_ChooseMember_Build,
+; BuildRecordField5FValueScreen and BuildScreenBlocks1CAnd0CWithCursor. (C2, E-0374)
 ; clears the screen tile buffer and copies blocks $1C and $0C into it (CopyBlockToTileBuffer)
 ; (E-0101)
 LoadScreenBlocks1CAnd0C::
@@ -5381,6 +5741,11 @@ PauseMenu_Skills_DrawPageIndicator::
     ld [hl], $c6
     ret
 
+; Builds the skill list screen: blocks $1C and $0C (LoadScreenBlocks1CAnd0C) and $1D, MON_MP of
+; member wMenuSelectedMember & 3 (SRAM enabled by the caller) as three digit tiles at
+; wWindowTileBuffer + $A2, and cursor tile $BC at the MenuCursorPositions_Bank03 entry for that
+; member. Called by PauseMenu_Skills_ChooseSkill_Build and BuildRecordField5FValueScreenWithCursor.
+; (C2, E-0374)
 ; loads blocks $1C, $0C and $1D, writes field $5F of record wMenuSelectedMember & 3 as decimal
 ; digits at wWindowTileBuffer + $A2 and draws the cursor for wMenuSelectedMember & 3 (E-0122)
 BuildRecordField5FValueScreen::
@@ -5402,7 +5767,8 @@ BuildRecordField5FValueScreen::
     ret
 
 ; Builds the target screen: blocks $20, $0C and $1D, the user's MP and the skill's cost (all of it
-; when the cost is $FF), the skill cursor mark and the rectangle for the skill's kind. (C1, E-0357)
+; when the cost is $FF), the skill cursor mark and the rectangle for the skill's kind. (C2, E-0357;
+; probed E-0374)
 PauseMenu_Skills_ChooseTarget_Draw_BuildScreen::
     call ClearScreenTileBuffer_Bank03
     ld e, $20
@@ -5451,6 +5817,11 @@ PauseMenu_Skills_ChooseTarget_Draw_BuildScreen::
     call CopyRecordRectToScreenBuffer_Bank03
     ret
 
+; Blanks the text window tiles (FillTilesFromRequest), builds the skill list screen
+; (BuildRecordField5FValueScreen), writes cursor tile $BC at the
+; PauseMenu_Items_MemberList_Cursor_Data entry for wMenuCursor & 7 (the skill row) and copies block
+; $10. Called by PauseMenu_Skills_ChooseSkill_Redraw and PauseMenu_Skills_ChooseTarget_Build. (C1,
+; E-0374)
 ; fills tiles, builds the field-$5F screen, draws the cursor for wMenuCursor & 7 and copies block
 ; $10 (E-0122)
 BuildRecordField5FValueScreenWithCursor::
@@ -5464,6 +5835,13 @@ BuildRecordField5FValueScreenWithCursor::
     farcall CopyBlockToTileBuffer
     ret
 
+; Builds the screen after a target is picked: blanks the text window tiles (FillTilesFromRequest),
+; clears wScreenTileBuffer, copies blocks $20 and $0C, writes cursor tile $BC for the skill row
+; (PauseMenu_Items_MemberList_Cursor_Data entry wMenuCursor & 7) and for the target
+; (MenuCursorPositions_Bank03 entry wSubMenuCursor & 3), the box SkillTargetBoxRects[kind] (kind =
+; the byte at $6851 + skill id in wRecordBuffer, 1 for the MPass skills) with
+; CopyRecordRectToScreenBuffer_Bank03, then block $10. Only PauseMenu_Skills_ChooseTarget_Cursor
+; calls it. (C1, E-0374)
 ; fills the screen tile buffer: blocks $20 and $0C, cursor marks for wMenuCursor and wSubMenuCursor,
 ; the rectangle chosen by the skill wRecordBuffer (table $6851 to SkillTargetBoxRects), then block
 ; $10 (E-0121)
@@ -5502,6 +5880,10 @@ BuildSkillScreenTileBuffer::
     farcall CopyBlockToTileBuffer
     ret
 
+; Blanks the text window tiles (FillTilesFromRequest), clears the buffer and copies blocks $1C and
+; $0C (LoadScreenBlocks1CAnd0C), writes cursor tile $BC at the MenuCursorPositions_Bank03 entry for
+; wMenuSelectedMember & 3 and copies block $10. Only PauseMenu_Skills_ChooseMember_Redraw calls it.
+; (C1, E-0374)
 ; fills tiles, loads blocks $1C and $0C, draws the cursor for wMenuSelectedMember & 3 and copies
 ; block $10 (E-0122)
 BuildScreenBlocks1CAnd0CWithCursor::
@@ -5515,6 +5897,10 @@ BuildScreenBlocks1CAnd0CWithCursor::
     farcall CopyBlockToTileBuffer
     ret
 
+; Shows string 1 of category 0 from bank $09 (ShowString_Bank09; the heading words of the skills
+; page) in a 7 x 1 window at vTiles1 + $6E0, saving and restoring the text window around it, then
+; the skill names of the current page (ShowRecordSkillPageNames_Bank03). Only
+; PauseMenu_State4_BuildSkillsPage calls it. (C1, E-0374)
 ; shows string 1 of category 0 (ShowString_Bank09) at vTiles1 + $6E0 with size $0107, preserving the
 ; window, then ShowRecordSkillPageNames_Bank03 (E-0121)
 ShowString1Bank09AtTiles16E0ThenDetails::
@@ -5614,7 +6000,7 @@ PauseMenu_Skills_ChooseSkill_ShowSelected::
     ret
 
 ; Shows the target's HP or MP (by the skill's kind from its table byte) as current and maximum, and
-; its status mark. (C1, E-0357)
+; its status mark. (C2, E-0357; probed E-0374)
 PauseMenu_Skills_ChooseTarget_ShowHPOrMP::
     ld a, [wRecordBuffer]
     ld l, a
@@ -5667,18 +6053,25 @@ PauseMenu_Skills_ChooseTarget_ShowHPOrMP::
     call nz, SetScreenTileBufferRow16Col6TileC0_Bank03
     ret
 
+; wScreenTileBuffer + $147 = $C2 (A = $C2). PauseMenu_Skills_ChooseTarget_ShowHPOrMP calls it when
+; the target has MON_STATUS bit 7 set. One of the per-bank copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $147 = $C2 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC2_Bank03::
     ld a, $c2
     ld [wScreenTileBuffer + $147], a
     ret
 
+; wScreenTileBuffer + $147 = $C1 (A = $C1). PauseMenu_Skills_ChooseTarget_ShowHPOrMP calls it when
+; the target has MON_STATUS bit 2 set (after the bit 7 test, so it overwrites that mark). One of the
+; per-bank copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $147 = $C1 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col7TileC1_Bank03::
     ld a, $c1
     ld [wScreenTileBuffer + $147], a
     ret
 
+; wScreenTileBuffer + $146 = $C0 (A = $C0). PauseMenu_Skills_ChooseTarget_ShowHPOrMP calls it when
+; the target has MON_STATUS bit 0 set. One of the per-bank copies of this helper. (C2, E-0374)
 ; wScreenTileBuffer + $146 = $C0 (E-0114) (the same 6 bytes appear in 3 banks)
 SetScreenTileBufferRow16Col6TileC0_Bank03::
     ld a, $c0
@@ -5686,7 +6079,7 @@ SetScreenTileBufferRow16Col6TileC0_Bank03::
     ret
 
 ; Returns the user's MP minus the skill's cost in DE (the whole MP when the cost is $FF), with Z
-; clear when that is negative (bit 7 of D). (C1, E-0357)
+; clear when that is negative (bit 7 of D). (C2, E-0357; probed E-0374)
 PauseMenu_Skills_ChooseSkill_Cursor_CheckMP::
     ld a, $0a
     ld [rRAMG], a
@@ -5722,6 +6115,11 @@ PauseMenu_Skills_ChooseSkill_Cursor_CheckMP::
     bit 7, d
     ret
 
+; Maps the skill in wRecordBuffer to its field skill number: wInventorySlot =
+; LookupInventorySlotForRecordBuffer_Data[wRecordBuffer] and Z set when that is $FF (no field use).
+; SKILL_HEAL ($16) to SKILL_REVIVE ($1F) give 0-9, $21 gives $0A, $24 gives $0B and SKILL_WHISTLE
+; ($A2) to SKILL_MAPMAGIC ($A9) give $0C-$13. PauseMenu_Skills_ChooseSkill_Cursor refuses a skill
+; with Z set (message $1B). (C2, E-0374)
 ; wInventorySlot = LookupInventorySlotForRecordBuffer_Data[wRecordBuffer]; Z set when it is $FF
 ; (E-0119)
 LookupInventorySlotForRecordBuffer::
@@ -5740,6 +6138,14 @@ LookupInventorySlotForRecordBuffer_Data::
     ds $7d, $ff
     db $0c, $0d, $0e, $0f, $10, $11, $12, $13, $ff, $ff, $ff, $ff, $ff, $ff
 
+; Shows the skill names of member wMenuSelectedMember & 3 (SRAM enabled by the caller) for page
+; wMenuPage, saving and restoring the text window: each a string of category 4
+; (StringTable_SkillNames; $FF shows string 0) in a 9 x 1 window from vTiles2 + $5C0 in steps of
+; $90. When its first MON_SKILLS byte is $FF it shows the No skills text (String_08_08_0E) at
+; vTiles2 + $5C0 and three names from the second slot at vTiles2 + $650 on; otherwise four names
+; from MON_SKILLS + (wMenuPage & $0F) * 4. Called by PauseMenu_Skills_ChooseMember_Build,
+; PauseMenu_Skills_ChooseMember_Cursor, PauseMenu_Skills_ChooseSkill_Build,
+; PauseMenu_Skills_ChooseSkill_Cursor and ShowString1Bank09AtTiles16E0ThenDetails. (C1, E-0374)
 ; shows four skill names of record wMenuSelectedMember & 3 for page wMenuPage (or string $0E when it
 ; has none) at vTiles2 + $5C0 onward, preserving the window (E-0129)
 ShowRecordSkillPageNames_Bank03::
@@ -5887,7 +6293,7 @@ PauseMenu_Skills_UseFieldSkill_ShowMessage_Data2::
 ; Counts the selected member's skills (MON_SKILLS bytes up to the first $FF; the count is not capped
 ; at 8) and sets the skill pages: wMenuPageCount = wMenuItemCount = 0 for none, 1 for 1-4 skills, 2
 ; for more; wMenuLastPageRows = the count mod 4, or 4 when that is 0 or the count is 9 or more. SRAM
-; must be enabled by the caller. (C1, E-0369)
+; must be enabled by the caller. (C2, E-0369; probed E-0374)
 PauseMenu_Skills_ChooseMember_CountSkills::
     ld a, [wMenuSelectedMember]
     and $03
@@ -5934,8 +6340,8 @@ PauseMenu_Skills_ChooseMember_CountSkills::
     ret
 
 ; Sets the skill pages from the count in C (as PauseMenu_Skills_ChooseMember_CountSkills) and
-; returns the rows of the current page: the last page's rows on the last page, otherwise 4. (C1,
-; E-0357)
+; returns the rows of the current page: the last page's rows on the last page, otherwise 4. (C2,
+; E-0357; probed E-0374)
 PauseMenu_Skills_SetSkillPages::
     ld a, c
     cp $00
@@ -5977,6 +6383,11 @@ PauseMenu_Skills_SetSkillPages::
 .return:
     ret
 
+; When wMenuPage & $0F is the last page (wMenuItemCount - 1): wMenuRowCount = wMenuLastPageRows and
+; wMenuCursor is lowered to wMenuLastPageRows - 1 when it is not below it; otherwise wMenuRowCount =
+; 4. Then clears bit 7 of wMenuPage (the page-changed flag UpdateMenuCursor sets). Called by
+; PauseMenu_Skills_ChooseSkill_Build and PauseMenu_Skills_ChooseSkill_Cursor;
+; SetMenuRowsForPage_Bank03_2 is the same code for the item list. (C2, E-0374)
 ; when wMenuPage & $0F = wMenuItemCount - 1 (the last page): wMenuRowCount = wMenuLastPageRows and
 ; the cursor row wMenuCursor is clamped below it; otherwise wMenuRowCount = 4; then clears bit 7 of
 ; wMenuPage (E-0064) (the same 44 bytes appear in 3 banks)
@@ -6050,6 +6461,12 @@ PauseMenu_Skills_DrawPageNumber::
 PauseMenu_Skills_DrawPageIndicator_TileRect::
     db $b4, $b4, $b4, $b4, $b4 ; id 0
 
+; GameMode2_Update, wModeState 3: the PLAN page, by wTemp0: 0 PauseMenu_Plan_Block21Menu (the
+; six-entry plan menu itself), then the entries it opens with wTemp0 = entry + 1: 1
+; PauseMenu_Plan_Keys (Keys), 2 PauseMenu_Plan_Tactics (Plan), 3 PauseMenu_Plan_MessageSpeed (Text
+; Speed), 4 PauseMenu_Plan_PartyOrder (Re-Order), 5 PauseMenu_Plan_PlayerRecord (Info), 6
+; PauseMenu_Plan_Record (Journal, the save). The entry names are from the earlier C2 observation
+; (E-0322). (C1, E-0374)
 ; GameMode2_Update, wModeState 3: PLAN, chosen from the field menu: Keys, Plan, Text Speed,
 ; Re-Order, Info, Journal (C2 from E-0322; E-0046 read it as an item list screen) (was
 ; PauseMenu_Plan)
@@ -6064,7 +6481,12 @@ PauseMenu_Plan::
     dw PauseMenu_Plan_PlayerRecord
     dw PauseMenu_Plan_Record
 
-; screen block $21, the menu cursor, a rectangle and a text wait (E-0303)
+; Plan page, wTemp0 0, by wTemp1: 0 PauseMenu_Plan_Build (block $21 with the record name and party
+; tiles, six rows), 1 PauseMenu_Plan_Cursor (A opens the entry with wTemp0 = entry + 1; the Journal
+; where saving is forbidden, TestSaveForbiddenHere, goes to step 2 instead; B leaves the menu), 2
+; PauseMenu_Plan_CannotSave (You can not save here, String_08_08_0D), 3
+; PauseMenu_Plan_Block21Menu_CloseRefusal (back to step 0). (C1, E-0374)
+; screen block $21, the menu cursor, a rectangle and a text wait
 PauseMenu_Plan_Block21Menu::
     ld a, [wTemp1]
     jumptable
@@ -6086,7 +6508,7 @@ PauseMenu_Plan_Build::
     ld [wMenuPageCount], a
     ld hl, wTemp1
     inc [hl]
-    call FillTiles21E0PreservingWindow
+    call PauseMenu_Plan_Build_BlankTiles
     ret
 
 ; Plan page, step 1: the six-entry cursor. A marks the entry and opens it (wTemp0 = entry + 1);
@@ -6153,7 +6575,7 @@ PauseMenu_Plan_CannotSave::
     ret
 
 ; Plan page, step 3: once the refusal message of step 2 is done (wTextFlags = 0), returns to step 0
-; (wTemp1 = 0), which rebuilds the plan page and its six-entry cursor. (C1, E-0369)
+; (wTemp1 = 0), which rebuilds the plan page and its six-entry cursor. (C2, E-0369; probed E-0374)
 PauseMenu_Plan_Block21Menu_CloseRefusal::
     ld a, [wTextFlags]
     or a
@@ -6162,6 +6584,11 @@ PauseMenu_Plan_Block21Menu_CloseRefusal::
     ld [wTemp1], a
     ret
 
+; Far-calls SaveForbiddenHere and returns A = its result C with Z set from it: Z (A = 0) when saving
+; is allowed, Z clear (A = 1) when it is forbidden, on a special map (wMapType bit 7) while
+; wEncounterRate & $7F is non-zero, or elsewhere when bit 4 of MapItemUseFlags + hMapId is clear.
+; PauseMenu_Plan_Cursor uses it for the Journal entry, which then shows the refusal
+; (String_08_08_0D) instead of saving. (C2, E-0374)
 ; far-calls SaveForbiddenHere and sets Z from its result C: Z when saving is allowed; PLAN's Journal
 ; (the save) shows 'You can't save here.' otherwise (C2 from E-0322) (was TestSaveForbiddenHere)
 TestSaveForbiddenHere::
@@ -6170,6 +6597,14 @@ TestSaveForbiddenHere::
     or a
     ret
 
+; Plan page, wTemp0 1: the key list, by wTemp1 (17 steps, all PauseMenu_Plan_Keys_ labels): 0
+; _Build, 1 _Cursor (A picks a key, B leaves; Select switches the order), 2 _DrawUseDiscard, 3
+; _UseOrDiscard (use goes to 4; discard goes to $0A, or to 7 when the key cannot be tossed, such as
+; the key in use inside its key world), 4 _RedrawForUse, 5 _UseKey, 6 _AfterMessage (back to the
+; list, or to the field from a key-world exit), 7 _RedrawForRefusal, 8 _ShowCantToss
+; (String_08_08_08), 9 _CloseCantToss, $0A _RedrawForDiscard, $0B _AskToss (String_08_08_07), $0C
+; _AfterTossQuestion, $0D _DrawYesNo, $0E _YesNoCursor (yes to $0F, no back to step 3), $0F
+; _ShowThrewAway (String_08_08_04), $10 _DeleteKey. (C1, E-0374)
 ; by wTemp1: menu rows and pages, a list-entry bit-7 test, strings, and an exit to the field
 ; (renamed from PauseMenu_Plan_ChooseListEntry from its E-0357 note, E-0367)
 PauseMenu_Plan_Keys::
@@ -6533,7 +6968,7 @@ PauseMenu_Plan_Keys_ShowCantToss::
     ret
 
 ; Key list, step 9: once the message is done (wTextFlags = 0), returns to step 0 (wTemp1 = 0), which
-; rebuilds the key list. (C1, E-0369)
+; rebuilds the key list. (C2, E-0369; probed E-0374)
 PauseMenu_Plan_Keys_CloseCantToss::
     ld a, [wTextFlags]
     or a
@@ -6565,7 +7000,7 @@ PauseMenu_Plan_Keys_AskToss::
     inc [hl]
     ret
 
-; Key list, step 12: waits for the question to finish. (C1, E-0357)
+; Key list, step 12: waits for the question to finish. (C2, E-0357; probed E-0374)
 PauseMenu_Plan_Keys_AfterTossQuestion::
     ld a, [wTextFlags]
     or a
@@ -6656,8 +7091,11 @@ PauseMenu_Plan_Keys_ShowThrewAway::
     inc [hl]
     ret
 
-; Key list, step 16: after the message deletes the key entry (DeleteKeyEntryTemp0, its index with
-; bit 7 and the high bits cleared) and returns to the first page. (C1, E-0357)
+; Key list, step $10: waits while wTextFlags is non-zero; then wTemp1 = 0 and the key of list row
+; wMenuPage * 4 + (wMenuCursor & 7) is deleted: TestListEntryBit7 reads the row from wWorkBuf + $A,
+; a value with bit 7 set is reduced to value & $3F, and DeleteKeyEntryTemp0 (hTemp0 = that index)
+; removes the wKeyList entry, moving the later entries and their wKeySeeds down. Then wMenuPage =
+; wMenuCursor = 0, so the list is rebuilt from its first page. (C2, E-0374)
 PauseMenu_Plan_Keys_DeleteKey::
     ld a, [wTextFlags]
     or a
@@ -6677,6 +7115,11 @@ PauseMenu_Plan_Keys_DeleteKey::
     ld [wMenuCursor], a
     ret
 
+; A = the key-list entry under the cursor, wWorkBuf + $A + wMenuPage * 4 + (wMenuCursor & 7) (the
+; list BuildScreenBlocks21To23_BuildKeyList builds: a wKeyList index, + $80 for the second group); Z
+; set when its bit 7 is clear, Z clear when set. HL ends at the entry. The key list steps
+; PauseMenu_Plan_Keys_UseOrDiscard, PauseMenu_Plan_Keys_UseKey (twice) and
+; PauseMenu_Plan_Keys_DeleteKey call it to read the chosen key. (C2, E-0374)
 ; index = wMenuPage * 4 + (wMenuCursor & 7): A = wWorkBuf + $A[index], Z clear when its bit 7 is set
 ; (E-0117)
 TestListEntryBit7::
@@ -6694,6 +7137,10 @@ TestListEntryBit7::
     bit 7, a
     ret
 
+; PLAN entry 2, chosen when wTemp0 = 2 in PauseMenu_Plan (the second entry of the plan page cursor):
+; dispatches on wTemp1 to PauseMenu_Plan_Tactics_Build (0), PauseMenu_Plan_Tactics_ShowCurrent (1)
+; and PauseMenu_Plan_Tactics_Cursor (2), which set a tactic for each party member in turn (bits 4-5
+; of MON_SEX) and return to the plan page with wTemp0 = wTemp1 = 0. (C1, E-0374)
 ; copies the tile buffer and a rectangle, then the menu cursor (renamed from
 ; PauseMenu_Plan_TileBufferMenu from its E-0357 note, E-0367)
 PauseMenu_Plan_Tactics::
@@ -6834,6 +7281,10 @@ PauseMenu_Plan_Tactics_Cursor::
 PauseMenu_Plan_Tactics_ShowCurrent_Data::
     db $d0, $d5, $da
 
+; PLAN entry 3, chosen when wTemp0 = 3 in PauseMenu_Plan: dispatches on wTemp1 to
+; PauseMenu_Plan_MessageSpeed_Build (0), which draws block $21, the cursor and block $2C with the
+; cursor on wBattleTextSpeed, and PauseMenu_Plan_MessageSpeed_Cursor (1), where Left/Right pick one
+; of eight speeds and A stores it in wBattleTextSpeed. (C1, E-0374)
 ; screen block $21 with the cursor and block $2C, then a sound (renamed from
 ; PauseMenu_Plan_Blocks21And2C from its E-0357 note, E-0367)
 PauseMenu_Plan_MessageSpeed::
@@ -6880,7 +7331,7 @@ PauseMenu_Plan_MessageSpeed_Cursor::
     ld a, [wJoypadPressedRepeat]
     bit 5, a
     jr z, .check_bit4
-    call EraseMenuCursorMenuCursor
+    call PauseMenu_Plan_MessageSpeed_EraseCursor
     ld a, [wMenuCursor]
     dec a
     jr .set_menu_cursor
@@ -6888,14 +7339,14 @@ PauseMenu_Plan_MessageSpeed_Cursor::
 .check_bit4:
     bit 4, a
     jr z, .check_frame_counter_lo
-    call EraseMenuCursorMenuCursor
+    call PauseMenu_Plan_MessageSpeed_EraseCursor
     ld a, [wMenuCursor]
     inc a
 
 .set_menu_cursor:
     and $07
     ld [wMenuCursor], a
-    call DrawMenuCursorMenuCursor
+    call PauseMenu_Plan_MessageSpeed_DrawCursor
     ld a, [wFrameCounterLo]
     and $f0
     ld [wFrameCounterLo], a
@@ -6909,12 +7360,12 @@ PauseMenu_Plan_MessageSpeed_Cursor::
     jr nz, .return
     ld a, [wFrameCounterLo]
     bit 4, a
-    jr z, .call_erase_menu_cursor_menu_cursor
-    call DrawMenuCursorMenuCursor
+    jr z, .call_pause_menu_plan_message_speed_erase
+    call PauseMenu_Plan_MessageSpeed_DrawCursor
     jr .return
 
-.call_erase_menu_cursor_menu_cursor:
-    call EraseMenuCursorMenuCursor
+.call_pause_menu_plan_message_speed_erase:
+    call PauseMenu_Plan_MessageSpeed_EraseCursor
     ld a, [wFrameCounterLo]
     set 3, a
     ld [wFrameCounterLo], a
@@ -6922,30 +7373,46 @@ PauseMenu_Plan_MessageSpeed_Cursor::
 .return:
     ret
 
-; writes the cursor tile $BB at MenuCursorAddressMenuCursor (E-0114)
-DrawMenuCursorMenuCursor::
-    call MenuCursorAddressMenuCursor
+; Writes the cursor tile $BB straight into VRAM (WriteVRAMByte) at the BG map address for
+; wMenuCursor from MenuCursorAddressMenuCursor (row 12, column 2 + 2 * wMenuCursor). Only
+; PauseMenu_Plan_MessageSpeed_Cursor calls it: after a move and on the blink frames. (C1, E-0374)
+; writes the cursor tile $BB at PauseMenu_Plan_MessageSpeed_CursorAddress (E-0114)
+PauseMenu_Plan_MessageSpeed_DrawCursor::
+    call PauseMenu_Plan_MessageSpeed_CursorAddress
     ld a, $bb
     call WriteVRAMByte
     ret
 
-; writes the blank tile $C3 at MenuCursorAddressMenuCursor (E-0114)
-EraseMenuCursorMenuCursor::
-    call MenuCursorAddressMenuCursor
+; Writes the blank tile $C3 into VRAM (WriteVRAMByte) at the BG map address for wMenuCursor from
+; MenuCursorAddressMenuCursor. Only PauseMenu_Plan_MessageSpeed_Cursor calls it: before moving the
+; cursor and on the other half of the blink. (C1, E-0374)
+; writes the blank tile $C3 at PauseMenu_Plan_MessageSpeed_CursorAddress (E-0114)
+PauseMenu_Plan_MessageSpeed_EraseCursor::
+    call PauseMenu_Plan_MessageSpeed_CursorAddress
     ld a, $c3
     call WriteVRAMByte
     ret
 
-; HL = the word at MenuCursorAddressMenuCursor_Data + 2 * wMenuCursor (the cursor row's VRAM
-; address) (E-0114)
-MenuCursorAddressMenuCursor::
+; HL = word wMenuCursor of PauseMenu_Plan_MessageSpeed_CursorAddress_Data: eight BG map addresses
+; $9982, $9984, ... $9990 (row 12, columns 2-16 in steps of 2), one per message speed; wMenuCursor
+; is not masked here (its callers keep it in 0-7). A is changed. Called by
+; PauseMenu_Plan_MessageSpeed_DrawCursor and PauseMenu_Plan_MessageSpeed_EraseCursor. (C2, E-0374)
+; HL = the word at PauseMenu_Plan_MessageSpeed_CursorAddress_Data + 2 * wMenuCursor (the cursor
+; row's VRAM address) (E-0114)
+PauseMenu_Plan_MessageSpeed_CursorAddress::
     ld a, [wMenuCursor]
-    ld hl, MenuCursorAddressMenuCursor_Data
+    ld hl, PauseMenu_Plan_MessageSpeed_CursorAddress_Data
     add a
     add_a_to_hl
     deref_hl
     ret
 
+; PLAN entry 4, chosen when wTemp0 = 4 in PauseMenu_Plan: the party re-ordering, dispatched on
+; wTemp1: 0 PauseMenu_Plan_PartyOrder_Start, 1 PauseMenu_Plan_PartyOrder_NextPlacement, 2
+; PauseMenu_Plan_PartyOrder_Cursor (A places the member under the cursor next in the new order), 3
+; PauseMenu_Plan_PartyOrder_RedrawForConfirm, 4 PauseMenu_Plan_PartyOrder_Finish (A writes the new
+; order into wPartyList), 5 PauseMenu_Plan_PartyOrder_Redraw (after B undoes a placement). The
+; unplaced members are kept in wWorkBuf + 3..5 and the new order in wWorkBuf + 6..8. (C1, E-0374)
 ; sets the page count, the cursor and screen block $21 (renamed from PauseMenu_Plan_PagedMenu from
 ; its E-0357 note, E-0367)
 PauseMenu_Plan_PartyOrder::
@@ -7081,7 +7548,7 @@ PauseMenu_Plan_PartyOrder_Cursor::
 ; member at that place of the new order (wWorkBuf + 6..8, set back to $FF) returns to the unplaced
 ; list at wWorkBuf + 3 + (new wWorkBuf + 2), which is re-sorted
 ; (PauseMenu_Plan_PartyOrder_SortUnplaced); then wTemp1 -= 1. B in step 2 jumps here (back to step
-; 1); step 5 (PauseMenu_Plan_PartyOrder_Redraw) calls it. (C1, E-0369)
+; 1); step 5 (PauseMenu_Plan_PartyOrder_Redraw) calls it. (C2, E-0369; probed E-0374)
 PauseMenu_Plan_PartyOrder_UndoPlacement::
     ld hl, wWorkBuf + $2
     inc [hl]
@@ -7119,7 +7586,7 @@ PauseMenu_Plan_PartyOrder_RedrawForConfirm::
     ret
 
 ; Party order, step 4: A writes the new order into wPartyList and returns to the plan page; B undoes
-; the last placement. (C1, E-0357)
+; the last placement. (C2, E-0357; probed E-0374)
 PauseMenu_Plan_PartyOrder_Finish::
     ld a, [wJoypadPressed]
     and $01
@@ -7155,7 +7622,7 @@ PauseMenu_Plan_PartyOrder_Redraw::
     ret
 
 ; Writes the new party order (wWorkBuf + 6..8, ignoring $FF) into the first entries of wPartyList.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0374)
 PauseMenu_Plan_PartyOrder_Finish_ApplyOrder::
     ld a, [wWorkBuf + $6]
     ld hl, wPartyList
@@ -7225,12 +7692,17 @@ PauseMenu_Plan_PartyOrder_DrawColumns::
 ; Shared tail of PauseMenu_Plan_PartyOrder_DrawUnplacedEntry and
 ; PauseMenu_Plan_PartyOrder_DrawPlacedEntry: DE += 2, then falls into
 ; PauseMenu_Plan_PagedMenu_WriteFiveTileRun, which writes the five consecutive tiles starting at
-; $D0, $D5 or $DA for member A at DE. (C1, E-0369)
+; $D0, $D5 or $DA for member A at DE. (C2, E-0369; probed E-0374)
 PauseMenu_Plan_PartyOrder_DrawMemberTiles::
     inc de
     inc de
 
-; writes five consecutive tile numbers, starting at the table byte for A, at DE (E-0305)
+; A = member 0-2, DE = destination: writes five consecutive tile ids starting at
+; PauseMenu_Plan_PagedMenu_WriteFiveTileRun_Data[A] ($D0, $D5 or $DA) at DE..DE + 4; DE ends at the
+; fifth tile, HL at the table byte. PauseMenu_Plan_PartyOrder_ShowMemberDetails calls it and
+; PauseMenu_Plan_PartyOrder_DrawMemberTiles falls into it to draw a party member in the party-order
+; screen (the same three starting tiles as PauseMenu_Plan_Tactics_ShowCurrent_Data). (C2, E-0374)
+; writes five consecutive tile numbers, starting at the table byte for A, at DE
 PauseMenu_Plan_PagedMenu_WriteFiveTileRun::
     ld hl, PauseMenu_Plan_PagedMenu_WriteFiveTileRun_Data
     add_a_to_hl
@@ -7252,7 +7724,7 @@ PauseMenu_Plan_PagedMenu_WriteFiveTileRun::
 
 ; A = member index or $FF, DE = row position: unless A is $FF (an empty slot, nothing drawn), writes
 ; the member number tile $E1 + A at DE and, two tiles further on, the member's five tiles
-; (PauseMenu_Plan_PartyOrder_DrawMemberTiles). (C1, E-0369)
+; (PauseMenu_Plan_PartyOrder_DrawMemberTiles). (C2, E-0369; probed E-0374)
 PauseMenu_Plan_PartyOrder_DrawUnplacedEntry::
     cp $ff
     ret z
@@ -7264,7 +7736,7 @@ PauseMenu_Plan_PartyOrder_DrawUnplacedEntry::
 
 ; A = member index or $FF, B = place tile ($E1-$E3), DE = row position: unless A is $FF (nothing
 ; drawn), writes tile B at DE and, two tiles further on, the five tiles of member A
-; (PauseMenu_Plan_PartyOrder_DrawMemberTiles). (C1, E-0369)
+; (PauseMenu_Plan_PartyOrder_DrawMemberTiles). (C2, E-0369; probed E-0374)
 PauseMenu_Plan_PartyOrder_DrawPlacedEntry::
     cp $ff
     ret z
@@ -7377,7 +7849,7 @@ PauseMenu_Plan_PartyOrder_ShowMemberDetails::
     ret
 
 ; Sorts the three unplaced-member slots (wWorkBuf + 3..5) into ascending order, so the empty $FF
-; slots go last. (C1, E-0357)
+; slots go last. (C2, E-0357; probed E-0374)
 PauseMenu_Plan_PartyOrder_SortUnplaced::
     ld a, [wWorkBuf + $3]
     ld c, a
@@ -7444,6 +7916,10 @@ PauseMenu_Plan_PartyOrder_SortUnplaced::
 PauseMenu_Plan_PagedMenu_WriteFiveTileRun_Data::
     db $d0, $d5, $da
 
+; PLAN entry 5, chosen when wTemp0 = 5 in PauseMenu_Plan: the player record page, dispatched on
+; wTemp1 to PauseMenu_Plan_PlayerRecord_Build (0: name, play time, monster counts and species seen)
+; and PauseMenu_Plan_PlayerRecord_UpdateTime (1: redraws the play time each minute; A or B return to
+; the plan page with wTemp0 = wTemp1 = 0). (C1, E-0374)
 ; screen block $2D and a decimal number (renamed from PauseMenu_Plan_Block2DNumber from its E-0357
 ; note, E-0367)
 PauseMenu_Plan_PlayerRecord::
@@ -7573,6 +8049,10 @@ PauseMenu_Plan_PlayerRecord_UpdateTime::
     ld [wTemp1], a
     ret
 
+; A = value 0-255: HL = A and HLToDecimalDigits, so wDigits, wDigits + 1 and wDigits + 2 hold its
+; hundreds, tens and ones. HL and BC are changed. PauseMenu_Plan_PlayerRecord_Build and
+; PauseMenu_Plan_PlayerRecord_UpdateTime convert wPlayMinutes with it; WriteAAsTwoDigitTiles uses
+; it. (C2, E-0374)
 ; HL = A (zero-extended), then HLToDecimalDigits (E-0101)
 ByteAToDecimalDigits::
     ld l, a
@@ -7580,6 +8060,11 @@ ByteAToDecimalDigits::
     call HLToDecimalDigits
     ret
 
+; A = value, DE = destination: converts A (ByteAToDecimalDigits, DE kept) and writes its tens and
+; ones as tiles $E0 + digit at DE and DE + 1 (WriteTwoDigitTilesFromDigits1), a zero tens digit as
+; the blank tile $C3; a hundreds digit is dropped (255 is drawn as 55). DE ends at the second tile.
+; PauseMenu_Plan_PlayerRecord_Build draws the monster counts and the per-family species counts with
+; it. (C2, E-0374)
 ; ByteAToDecimalDigits, then WriteTwoDigitTilesFromDigits1 at DE (leading zero blank); DE kept
 ; across the conversion (E-0114) (E-0345: was WriteAAsTwoDigitTiles)
 WriteAAsTwoDigitTiles::
@@ -7589,6 +8074,11 @@ WriteAAsTwoDigitTiles::
     call WriteTwoDigitTilesFromDigits1
     ret
 
+; DE = destination: writes wDigits (hundreds) as tile $E0 + digit at DE and falls into
+; WriteTwoDigitTilesDigits1NoBlank_Bank03 for the tens and ones, so all three digits are drawn and
+; leading zeros stay $E0 tiles. DE ends at the third tile, HL at wDigits + 2.
+; PauseMenu_Plan_PlayerRecord_Build and PauseMenu_Plan_PlayerRecord_UpdateTime draw the play hours
+; (wPlayHoursLo/Hi through HLToDecimalDigits) with it. (C2, E-0374)
 ; writes wDigits as a digit tile at DE and falls into WriteTwoDigitTilesDigits1NoBlank_Bank03
 ; (E-0126)
 WriteThreeDigitTilesDigits_Bank03::
@@ -7598,6 +8088,10 @@ WriteThreeDigitTilesDigits_Bank03::
     ld [de], a
     inc de
 
+; DE = destination: writes wDigits + 1 and wDigits + 2 (tens and ones) as tiles $E0 + digit at DE
+; and DE + 1, keeping a zero tens digit (no blank). DE ends at the second tile, HL at wDigits + 2.
+; PauseMenu_Plan_PlayerRecord_Build and PauseMenu_Plan_PlayerRecord_UpdateTime draw the play minutes
+; with it; WriteThreeDigitTilesDigits_Bank03 falls into it. (C2, E-0374)
 ; writes wDigits + $1 and wDigits + $2 as tiles $E0 + digit at DE and DE + 1 (no leading-zero blank)
 ; (E-0117) (the same 13 bytes appear in 2 banks)
 WriteTwoDigitTilesDigits1NoBlank_Bank03::
@@ -7611,6 +8105,13 @@ WriteTwoDigitTilesDigits1NoBlank_Bank03::
     ld [de], a
     ret
 
+; PLAN entry 6 (the Journal), chosen when wTemp0 = 6 in PauseMenu_Plan: saving the game, dispatched
+; on wTemp1: 0 PauseMenu_Plan_Record_ShowMaster asks 'Want to record your journey?', 1
+; PauseMenu_Plan_Record_DrawYesNo, 2 PauseMenu_Plan_Record_YesNoCursor, 3
+; PauseMenu_Plan_Record_RunSaveScreens, 4 PauseMenu_Plan_Record_ShowYourProgressHasBeen ('Your
+; progress has been recorded.'), 5 PauseMenu_Plan_Record_Return, 6
+; PauseMenu_Plan_Record_RestartGame. PauseMenu_State4_BuildPlanPage also enters it directly (wTemp0
+; = 6) from a key-world exit after the staff roll. (C1, E-0374)
 ; by wTemp1: 'Want to record your journey?', then 'Your progress has been recorded.' (renamed from
 ; PauseMenu_Plan_RecordJourney from its E-0357 note, E-0367)
 PauseMenu_Plan_Record::
@@ -7622,7 +8123,7 @@ PauseMenu_Plan_Record::
     dw PauseMenu_Plan_Record_RunSaveScreens
     dw PauseMenu_Plan_Record_ShowYourProgressHasBeen
     dw PauseMenu_Plan_Record_Return
-    dw PauseMenu_Plan_RecordJourney_RestartGame
+    dw PauseMenu_Plan_Record_RestartGame
 
 ; Plan, recording the journey, step 0: builds the save screen and shows the 'Master' title string
 ; from bank $07 in a 4 x 1 window. (C1, E-0357)
@@ -7748,7 +8249,7 @@ PauseMenu_Plan_Record_YesNoCursor::
 ; Recording, step 3: runs the save screens until all four are done. (C1, E-0357)
 PauseMenu_Plan_Record_RunSaveScreens::
     call DrawSaveCompletionMark
-    call RunPauseMenuScreen
+    call RunPauseMenuSave
     ld a, [wPauseMenuScreen]
     cp $04
     ret nz
@@ -7786,12 +8287,16 @@ PauseMenu_Plan_Record_Return::
     ld [wTemp1], a
     ret
 
-; jumps to BootAndMainLoop (restarts the game) (E-0305)
-PauseMenu_Plan_RecordJourney_RestartGame::
+; Step 6 of PauseMenu_Plan_Record (wTemp1 = 6): jumps to BootAndMainLoop_StartUp, restarting the
+; game. PauseMenu_Plan_Record_PrepareRestart blanks the screen and sets this step when the plan page
+; was opened from a key-world exit (wModeState bit 3) and the player declines or finishes saving.
+; (C1, E-0374)
+; jumps to BootAndMainLoop (restarts the game)
+PauseMenu_Plan_Record_RestartGame::
     jp BootAndMainLoop_StartUp
 
 ; Blanks the screen (wScreenTileBuffer filled with $C3, CopyTileBufferToBGMap) and sets wTemp1 = 6,
-; the recording step PauseMenu_Plan_RecordJourney_RestartGame, which restarts the game.
+; the recording step PauseMenu_Plan_Record_RestartGame, which restarts the game.
 ; PauseMenu_Plan_Record_YesNoCursor (no or B) and PauseMenu_Plan_Record_Return jump here when the
 ; plan page was opened from a key-world exit (wModeState bit 3). (C1, E-0369)
 PauseMenu_Plan_Record_PrepareRestart::
@@ -7848,6 +8353,10 @@ DrawSaveCompletionMark::
     ld [rRAMG], a
     ret
 
+; Fills the $240 bytes of wScreenTileBuffer with the blank tile $C3 (ClearScreenTileBuffer_Bank03)
+; and copies screen block $21, the plan page frame (13 x 15 tiles at the top left), into it with
+; CopyBlockToTileBuffer. Called by PauseMenu_State4_BuildPlanPage, PauseMenu_Plan_Build,
+; PauseMenu_Plan_PartyOrder_RedrawForConfirm and LoadScreenBlock21WithCursor. (C2, E-0374)
 ; clears the screen tile buffer (ClearScreenTileBuffer_Bank03) and copies block $21 into it
 ; (CopyBlockToTileBuffer, E = $21) (E-0101)
 LoadScreenBlock21::
@@ -7856,6 +8365,12 @@ LoadScreenBlock21::
     farcall CopyBlockToTileBuffer
     ret
 
+; LoadScreenBlock21, then writes the cursor tile $BC into the buffer at
+; MenuCursorPositions_Bank03[wMenuSelectedMember & 7]
+; (WriteBCTileToScreenBufferAtTableEntry_Bank03), marking the plan entry being used. The base of the
+; PLAN sub-screens: BuildScreenBlocks21To23 (keys), PauseMenu_Plan_Tactics_Build_DrawScreen,
+; LoadScreenBlock21CursorAnd2C (message speed) and PauseMenu_Plan_PartyOrder_BuildScreen. (C2,
+; E-0374)
 ; LoadScreenBlock21, then writes tile $BC at MenuCursorPositions_Bank03[wMenuSelectedMember & 7] in
 ; the buffer (WriteBCTileToScreenBufferAtTableEntry_Bank03) (E-0101)
 LoadScreenBlock21WithCursor::
@@ -7866,6 +8381,11 @@ LoadScreenBlock21WithCursor::
     call WriteBCTileToScreenBufferAtTableEntry_Bank03
     ret
 
+; Builds the key list screen in wScreenTileBuffer: the plan page with its cursor
+; (LoadScreenBlock21WithCursor), block $23, then the key list
+; (BuildScreenBlocks21To23_BuildKeyList); when the list is not empty it adds block $22, and finally
+; sets the pages and rows for wPauseListCount (ComputeMenuPagesForPauseListCountItems). Called by
+; PauseMenu_Plan_Keys_Build and BuildScreenBlocks21To24. (C2, E-0374)
 ; loads block $21 with its cursor and block $23, adds block $22 when
 ; BuildScreenBlocks21To23_BuildKeyList returns NZ, then runs ComputeMenuPagesForPauseListCountItems
 ; (E-0122)
@@ -7882,6 +8402,10 @@ BuildScreenBlocks21To23::
     call ComputeMenuPagesForPauseListCountItems
     ret
 
+; BuildScreenBlocks21To23 (the key list screen and its list), then copies block $24 (7 x 7 at the
+; top left) into wScreenTileBuffer. Used by the key list redraws:
+; PauseMenu_Plan_Keys_DrawUseDiscard, PauseMenu_Plan_Keys_YesNoCursor,
+; PauseMenu_Plan_Keys_RedrawWithChoice and BuildScreenBlocks21To25WithCursor. (C2, E-0374)
 ; builds blocks $21-$23 and copies block $24 (E-0122)
 BuildScreenBlocks21To24::
     call BuildScreenBlocks21To23
@@ -7910,6 +8434,10 @@ PauseMenu_Plan_Keys_RedrawWithChoice::
     call CopyRectToBGMap
     ret
 
+; BuildScreenBlocks21To24, then the choice cursor tile $BC at
+; PauseMenu_Plan_Keys_UseOrDiscard_Data[wSubMenuCursor & 7] in the buffer, block $25 (6 x 5) and
+; block $10 (the 20 x 5 message window at row 13). Its only caller is PauseMenu_Plan_Keys_DrawYesNo,
+; which draws the yes/no choice of the key list with it. (C2, E-0374)
 ; builds blocks $21-$24, draws the cursor for wSubMenuCursor & 7 and copies blocks $25 and $10
 ; (E-0122)
 BuildScreenBlocks21To25WithCursor::
@@ -7937,6 +8465,8 @@ PauseMenu_Plan_Tactics_Build_DrawScreen::
     farcall CopyBlockToTileBuffer
     ret
 
+; LoadScreenBlock21WithCursor, then copies block $2C (18 x 5 from row 9) into wScreenTileBuffer: the
+; message speed screen that PauseMenu_Plan_MessageSpeed_Build draws. (C2, E-0374)
 ; LoadScreenBlock21WithCursor, then block $2C (E-0114)
 LoadScreenBlock21CursorAnd2C::
     call LoadScreenBlock21WithCursor
@@ -7945,18 +8475,25 @@ LoadScreenBlock21CursorAnd2C::
     ret
 
 ; Builds the party order screen: the plan page with its cursor (LoadScreenBlock21WithCursor) and
-; block $29, then falls into LoadScreenBlock28 (block $28). (C1, E-0369)
+; block $29, then falls into LoadScreenBlock28 (block $28). (C2, E-0369; probed E-0374)
 PauseMenu_Plan_PartyOrder_BuildScreen::
     call LoadScreenBlock21WithCursor
     ld e, $29
     farcall CopyBlockToTileBuffer
 
+; Copies screen block $28 (18 x 7 from row 2, column 2) into wScreenTileBuffer with
+; CopyBlockToTileBuffer, leaving the rest of the buffer. PauseMenu_Plan_PartyOrder_DrawColumns calls
+; it before drawing the order columns, and PauseMenu_Plan_PartyOrder_BuildScreen falls into it. (C2,
+; E-0374)
 ; copies screen block $28 into the tile buffer (CopyBlockToTileBuffer) (E-0114)
 LoadScreenBlock28::
     ld e, $28
     farcall CopyBlockToTileBuffer
     ret
 
+; Copies screen block $2D, a full 20 x 18 screen, into wScreenTileBuffer (CopyBlockToTileBuffer):
+; the frame of the player record page that PauseMenu_Plan_PlayerRecord_Build draws first. (C2,
+; E-0374)
 ; copies screen block $2D into the tile buffer (E-0114)
 LoadScreenBlock2D::
     ld e, $2d
@@ -7978,6 +8515,9 @@ PauseMenu_Plan_Record_BuildScreen::
     farcall DecompressA4GraphicsAndContinue
     ret
 
+; Copies screen block $2B (6 x 5 from row 8, column 14) into wScreenTileBuffer, leaving the rest:
+; the two-choice box drawn by PauseMenu_Items_UseItem_AskQuestion and
+; PauseMenu_Plan_Record_DrawYesNo after a question. (C2, E-0374)
 ; copies screen block $2B into the tile buffer (E-0114)
 LoadScreenBlock2B::
     ld e, $2b
@@ -8034,7 +8574,7 @@ PauseMenu_Plan_Keys_DrawKeyNames::
     ld a, h
     ld [wTextWindowTileHi], a
     ld a, [de]
-    call PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark
+    call PauseMenu_Plan_Keys_DrawKeyEntryMark
     cp $ff
     jr z, .set_string_category_to_06
     and $3f
@@ -8112,8 +8652,13 @@ PauseMenu_Plan_Keys_DrawKeyNames::
     ld [wTextWindowWidth], a
     ret
 
-; reads the key entry byte for A (bit flags) and writes a mark tile for list row C (E-0305)
-PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark::
+; A = key-list entry (a wKeyList index, bit 7 for the second group, or $FF), C = visible row 0-3:
+; writes one tile straight into VRAM (WriteVRAMByte) at KeyListMarkBGMapAddrs[C]: the mark tile $1D
+; when A is not $FF and byte 0 of wKeyList entry (A & $3F) has bit 6 set and a high nibble other
+; than $F, otherwise the blank tile $C3. A and the flags are kept (the caller then tests A for $FF).
+; Only PauseMenu_Plan_Keys_DrawKeyNames calls it, once per row. (C1, E-0374)
+; reads the key entry byte for A (bit flags) and writes a mark tile for list row C
+PauseMenu_Plan_Keys_DrawKeyEntryMark::
     push af
     cp $ff
     jr z, .skip
@@ -8159,8 +8704,8 @@ PauseMenu_Plan_Keys_DrawKeyNames_Data::
     db $40, $94, $00, $95, $c0, $95, $80, $96, $40, $97
 
 ; Four words: vBGMap0 addresses $9946, $9986, $99C6 and $9A06 (column 6 of rows 10, 12, 14 and 16),
-; one per visible key-list row C. PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark writes the mark
-; tile $1D there when the key's wKeyList entry byte 0 has bit 6 set and a high nibble other than $F,
+; one per visible key-list row C. PauseMenu_Plan_Keys_DrawKeyEntryMark writes the mark tile $1D
+; there when the key's wKeyList entry byte 0 has bit 6 set and a high nibble other than $F,
 ; otherwise the blank tile $C3. (C1, E-0372)
 KeyListMarkBGMapAddrs::
     db $46, $99, $86, $99, $c6, $99, $06, $9a
@@ -8280,7 +8825,7 @@ PauseMenu_Plan_Keys_ShowKeyDetails::
 ; wKeyList and returns A = wPauseListCount, Z when the list is empty. Entries whose byte 0 is $FF
 ; are skipped; entries with byte 3 bit 7 clear are listed as their index, entries with byte 3 bit 7
 ; set (and byte 0 not 0) as index + $80. With wInventorySortFlags bit 1 clear the bit-7-clear group
-; comes first, with it set the bit-7-set group comes first. (C1, E-0369)
+; comes first, with it set the bit-7-set group comes first. (C2, E-0369; probed E-0374)
 BuildScreenBlocks21To23_BuildKeyList::
     ld hl, wWorkBuf + $a
     ld bc, $0020
@@ -8439,6 +8984,12 @@ BuildScreenBlocks21To23_BuildKeyList::
     or a
     ret
 
+; From wPauseListCount (0-32) sets wMenuPageCount = ceil(count / 4) and wMenuLastPageRows = the
+; entries on the last page (0 when the list is empty), and wMenuRowCount = wMenuLastPageRows when
+; wMenuPage + 1 equals the page count, otherwise 4 (also 4 for an empty list). With two or more
+; pages it writes the page indicator into wWindowTileBuffer + $C6..$CA: $C5, tile $E0 + wMenuPage +
+; 1, $BE, tile $E0 + page count, $C6. Called by BuildScreenBlocks21To23 and
+; PauseMenu_Plan_Keys_Cursor. (C2, E-0374)
 ; from wPauseListCount items computes wMenuPageCount (4 rows per page, up to 8 pages),
 ; wMenuLastPageRows and wMenuRowCount for wMenuPage, and draws the page indicator (E-0128)
 ComputeMenuPagesForPauseListCountItems::
@@ -8534,9 +9085,13 @@ ComputeMenuPagesForPauseListCountItems::
     ld [wWindowTileBuffer + $ca], a
     ret
 
+; Sets the text window to vTiles1 + $6E0, 16 tiles wide and 3 rows, shows string 2 of category 0
+; through ShowString_Bank09 (its text is a run of single letters, presumably the glyphs of the plan
+; page labels), then puts the window back to vTiles1, 18 x 2. Its only caller is
+; PauseMenu_State4_BuildPlanPage, right after LoadScreenBlock21. (C1, E-0374)
 ; shows string 2 of category 0 (ShowString_Bank09) in a window at vTiles1 + $6E0 with size $1003,
 ; then restores the default window (vTiles1, $1202) (E-0120)
-ShowString2Bank09InWindowThenDefault::
+PauseMenu_State4_BuildPlanPage_ShowHeading::
     ld hl, vTiles1 + $6e0
     ld a, l
     ld [wTextWindowTileLo], a
@@ -8565,7 +9120,7 @@ ShowString2Bank09InWindowThenDefault::
     ret
 
 ; Counts the stored monsters in SRAM: of the 30 records with state 1, those with byte $6E zero
-; (wWorkBuf) and non-zero (wWorkBuf + 1). (C1, E-0357)
+; (wWorkBuf) and non-zero (wWorkBuf + 1). (C2, E-0357; probed E-0374)
 PauseMenu_Plan_PlayerRecord_CountMonsters::
     ld a, $0a
     ld [rRAMG], a
@@ -8608,9 +9163,13 @@ PauseMenu_Plan_PlayerRecord_CountMonsters::
     ld [rRAMG], a
     ret
 
+; Saves the text window settings (wTextWindowTileLo/Hi, wTextWindowRows/Width), points the window at
+; vTiles2 + $1E0 with 1 row and width $62 and runs FillTilesFromRequest, which fills those 98 tiles
+; ($91E0-$97FF, up to the BG map) with its 16-byte $FF, $00 pattern, then restores the four
+; settings. PauseMenu_Plan_Build calls it last when it builds the plan page. (C1, E-0374)
 ; fills the tiles at vTiles2 + $1E0 (size $0162) through FillTilesFromRequest, preserving the window
 ; settings wTextWindowTileLo-wTextWindowWidth (E-0121)
-FillTiles21E0PreservingWindow::
+PauseMenu_Plan_Build_BlankTiles::
     ld a, [wTextWindowTileLo]
     ld l, a
     ld a, [wTextWindowTileHi]

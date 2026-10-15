@@ -7625,8 +7625,8 @@ ArenaMenu_AfterRoundAgain_NoOp::
 
 ; Saves the script position (wScriptStartRequest, wScriptPointerLo/Hi into wScriptReturnBank/Lo/Hi)
 ; and starts talk event group $1F (Talk_ArenaRounds, through DispatchTalkEvent); then clears
-; wScriptInDataBank and hSpriteWindowClipMode, runs ClearBit1OfPlayerAndObjectFlags and falls
-; through into ArenaRounds_SetUpBattle, which sets up the round battle and its three foes. Called by
+; wScriptInDataBank and hSpriteWindowClipMode, runs ResumeFieldAnimation and falls through into
+; ArenaRounds_SetUpBattle, which sets up the round battle and its three foes. Called by
 ; ArenaMenu_StartArenaTalk (state 26). (C1, E-0369)
 ArenaMenu_StartArenaTalk_StartRoundsBattle::
     ld a, [wScriptStartRequest]
@@ -7644,7 +7644,7 @@ ArenaMenu_StartArenaTalk_StartRoundsBattle::
     ld [wScriptInDataBank], a
     xor a
     ldh [hSpriteWindowClipMode], a
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 ; Sets up an arena round battle: wBattleIntroKind = 4, wEncounterKind = 2, rebuilds the round list
 ; (ArenaRounds_RandomModulo52) and falls through into ArenaRounds_LoadRoundFoes, which copies round
@@ -7681,10 +7681,10 @@ ArenaRounds_LoadRoundFoes::
 
 ; Saves the script position (into wScriptReturnBank/Lo/Hi) and starts talk event group $18
 ; (Talk_ArenaGridBattle, through DispatchTalkEvent); then clears wScriptInDataBank and
-; hSpriteWindowClipMode, runs ClearBit1OfPlayerAndObjectFlags and falls through into
-; ArenaGridBattle_SetUp, which sets battle intro 4, encounter kind 2 and the three foes of entry
-; wScreenCountPlusOne of the list at ArenaGridBattle_SetUp_Data. Called by
-; ArenaMenu_StartTalkAndClearRun (state 30) and state 33. (C1, E-0369)
+; hSpriteWindowClipMode, runs ResumeFieldAnimation and falls through into ArenaGridBattle_SetUp,
+; which sets battle intro 4, encounter kind 2 and the three foes of entry wScreenCountPlusOne of the
+; list at ArenaGridBattle_SetUp_Data. Called by ArenaMenu_StartTalkAndClearRun (state 30) and state
+; 33. (C1, E-0369)
 ArenaMenu_StartFixedListBattle::
     ld a, [wScriptStartRequest]
     ld [wScriptReturnBank], a
@@ -7701,7 +7701,7 @@ ArenaMenu_StartFixedListBattle::
     ld [wScriptInDataBank], a
     xor a
     ldh [hSpriteWindowClipMode], a
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 ; Sets up an arena grid battle: intro kind 4, encounter kind 2, and the three foes of entry
 ; wScreenCountPlusOne from the grid table. (C1, E-0357)
@@ -7740,7 +7740,7 @@ ArenaGridBattle_SetUp::
 
 ; Saves the script position (into wScriptReturnBank/Lo/Hi) and starts talk event group $18
 ; (Talk_ArenaGridBattle, through DispatchTalkEvent); then clears wScriptInDataBank and
-; hSpriteWindowClipMode, runs ClearBit1OfPlayerAndObjectFlags and falls through into
+; hSpriteWindowClipMode, runs ResumeFieldAnimation and falls through into
 ; ArenaGridBattle_SetUpFromGrid, which sets battle intro 4, encounter kind 2 and the three foes of
 ; entry wScreenCountPlusOne of the GridEncounterTable list for class wGridCursorX. Called by
 ; ArenaMenu_PayEntryFee (state 7) and state 10. (C1, E-0369)
@@ -7760,7 +7760,7 @@ ArenaMenu_StartClassBattle::
     ld [wScriptInDataBank], a
     xor a
     ldh [hSpriteWindowClipMode], a
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 ; Sets up a grid battle from GridEncounterTable: the table chosen by wGridCursorX, entry
 ; wScreenCountPlusOne, three foes into wEncounterMonsters. (C1, E-0357)

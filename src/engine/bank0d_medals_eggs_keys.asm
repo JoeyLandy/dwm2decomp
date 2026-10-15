@@ -6789,7 +6789,7 @@ NpcBreedMenu_ChooseAndBreed_StartResultTalk::
     ld [wScriptInDataBank], a
     xor a
     ldh [hSpriteWindowClipMode], a
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a

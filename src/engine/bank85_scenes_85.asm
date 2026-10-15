@@ -107,7 +107,7 @@ SceneWatchOut_Finish::
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall DrawFullScreenBufferAtScroll
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     xor a
     ldh [hSpriteWindowClipMode], a
     farcall PlayMapMusic
@@ -198,7 +198,7 @@ SceneWatchOut_OpenPartyBox::
     ld [wScriptSubStep], a
     ld [wScriptMsgSelect], a
     call ShowBoxFromTable
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -351,7 +351,7 @@ SceneWaterReward_Finish::
     ld hl, wSpriteSlotCount
     dec [hl]
     farcall DrawFullScreenBufferAtScroll
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     xor a
     ldh [hSpriteWindowClipMode], a
     farcall PlayMapMusic
@@ -505,7 +505,7 @@ SceneWatchOut_ShowLetMeJoinYour::
     call DrawScreenBufferAtScrollOrigin
     ld hl, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $0d56 ; '*: Let me join your party?'
     call StartMessageHL_B85
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
     ld a, $01
     ld [wScriptStep], a
     ret
@@ -524,7 +524,7 @@ SceneWaterReward_OpenPartyBox::
     ld [wScriptSubStep], a
     ld [wScriptMsgSelect], a
     call ShowBoxFromTable
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
     ld hl, wScriptStep
     inc [hl]
     ret

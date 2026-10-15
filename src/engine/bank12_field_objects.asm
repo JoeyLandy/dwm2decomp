@@ -5860,14 +5860,14 @@ RunMessageBox_Bank12::
     dw RunMessageBox_Bank12_Finish
 
 ; Bank-$12 message box, state 0: unless the flag on the stack is set, freezes the player's and
-; objects' animation (SetBit1OfPlayerAndObjectFlags); unless wMessageGroup bit 7 says the box is
-; open, clears its tiles, plays sound $69 and opens the window at the bottom (or at the top when the
-; player is low on the screen, Y $48 or more), sprite clip mode 2 except on map $14. (C1, E-0357)
+; objects' animation (FreezeFieldAnimation); unless wMessageGroup bit 7 says the box is open, clears
+; its tiles, plays sound $69 and opens the window at the bottom (or at the top when the player is
+; low on the screen, Y $48 or more), sprite clip mode 2 except on map $14. (C1, E-0357)
 RunMessageBox_Bank12_Open::
     pop af
     or a
     jr nz, .check_message_group
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
 
 .check_message_group:
     ld a, [wMessageGroup]
@@ -5968,7 +5968,7 @@ RunMessageBox_Bank12_Finish::
     pop af
     or a
     jr nz, .set_message_state_to_FF
-    farcall ClearBit1OfPlayerAndObjectFlags
+    farcall ResumeFieldAnimation
 
 .set_message_state_to_FF:
     ld a, $ff
@@ -5998,7 +5998,7 @@ RunMessageBoxStateIfActive_Bank12_Open::
     pop af
     or a
     jr nz, .check_message_index
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
 
 .check_message_index:
     ld a, [wMessageIndex]
@@ -6103,7 +6103,7 @@ KeyWorldBossBattle_OpenMessageBox::
     pop af
     or a
     jr nz, .call_fill_tiles_request
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
 
 .call_fill_tiles_request:
     ld hl, vTiles1

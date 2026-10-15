@@ -104,6 +104,8 @@ def validate_probes(probes: list[dict], entries: list[dict], rom: bytes | None =
     for e in entries:
         if e.get("confidence") == "C2" and key(e) not in probed:
             problems.append(f"{Path(e['_draft']).name} {e['label']}: C2 without a probe")
+        if e.get("probe_status") == "not_probed" and len(e.get("not_probed_reason") or "") < 10:
+            problems.append(f"{Path(e['_draft']).name} {e['label']}: not probed without a reason")
     return problems
 
 
@@ -161,8 +163,8 @@ def validate(entries: list[dict], snap: dict[str, str], root: Path = ROOT) -> li
                 w = m.group(1)
                 if w not in known and w not in all_new and w not in given:
                     problems.append(f"{where}: note names {w}, which is no label or symbol")
-        elif not new or new == e.get("label"):
-            problems.append(f"{where}: neither a name nor a note")
+        elif (not new or new == e.get("label")) and e.get("probe_status") not in ("probed", "not_probed"):
+            problems.append(f"{where}: neither a name nor a note")  # a probe of a kept note is enough (D-012)
     return problems
 
 
@@ -259,6 +261,16 @@ def main() -> int:
     if args.cmd == "validate" or problems:
         return 1 if problems else 0
     print(apply(entries, snap, args.evidence))
+    skipped = {key(e): {"label": e.get("proposed_name") or e["label"], "reason": e.get("not_probed_reason", ""),
+                        "evidence": args.evidence}
+               for e in entries if e.get("probe_status") == "not_probed"}
+    if skipped:  # D-012: probe-scope routines a reader judged not meaningfully probeable, with the reason
+        p = ROOT / "config/probe_exclusions.json"
+        data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {
+            "_comment": "Probe-scope routines (tools/probe_scope.py) not probed, with the reader's reason (D-012)."}
+        data.update(skipped)
+        p.write_text(json.dumps(data, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+        print(f"{len(skipped)} not-probed reasons in config/probe_exclusions.json")
     if probes:
         out = ROOT / "config/probes" / f"{args.evidence}.json"
         out.parent.mkdir(exist_ok=True)

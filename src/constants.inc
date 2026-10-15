@@ -741,8 +741,8 @@ DEF EVENT_IN_THE_MIDDLE_OF_THE EQU $001 ; set by GameMode5_Update_NewPlayerSetup
 DEF EVENT_SCENE_LONG_FACES_002 EQU $002 ; set by SceneLongFaces_Fade
 DEF EVENT_SCENE_VAULT_SETTLED EQU $003 ; set by Script_You_3
 DEF EVENT_YO_DID_YOU_ENJOY EQU $004 ; set by GreatLogTalkEvents_ShowYoDidYouEnjoy
-DEF EVENT_OH_ITS_ALL_SPINNING_AROUND EQU $005 ; set by StartScriptAndSetFlag5
-DEF EVENT_MAP_00_OBJECT_REMOVED EQU $006 ; set by StartScriptAndSetFlag06
+DEF EVENT_OH_ITS_ALL_SPINNING_AROUND EQU $005 ; set by Talk_OhItsAllSpinningAround
+DEF EVENT_SCENE_SPINNING EQU $006 ; set by Talk_SceneSpinning
 DEF EVENT_THANKS_FOR_COMING_BY EQU $007 ; set by Talk0046_ThanksForComingBy
 DEF EVENT_IM_PRINCE_KAMEHA_OF EQU $008 ; set by GreatLogTalkEvents_ShowImPrinceKamehaOf
 DEF EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT EQU $009 ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit

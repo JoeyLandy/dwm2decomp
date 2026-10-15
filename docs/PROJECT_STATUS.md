@@ -120,6 +120,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 3: instruction-named, banks $31-$F2 (5 slices of 120-141, 7 derived) | E-0371 | 649 | 516 | 133 (worker 1: a name repeated a wrong 'link menu' note; 20.7%: slices halved to 60) | PASS build/run614 | par613 OK (392, 4 skipped) |
 | 4: 130 re-queued instruction-named + 288 long (6 slices of 60-80 with callers and tables) | E-0372 | 418 | 418 | 0 (43 spot checks, all correct) | PASS build/run616 | par616 OK (392, 4 skipped) |
 | 5: 101 long + 243 unread with probes (6 slices of 50-63) | E-0373 | 345 | 345 (135 probed, 257 probes) | 0 (35 spot checks, all correct) | PASS build/run618 | par618 OK (392, 3 skipped) |
+| 6: unread + probe scope, banks $00-$04 (6 slices of 90) | E-0374 | 544 | 544 (378 probed, 729 probes) | 0 (54 spot checks, all correct) | PASS build/run621 | par621 OK (393, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -133,7 +134,13 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0373)
+## Current handoff (2026-10-15, E-0374)
+
+Batch 6 (E-0374) covered the combined queue (unread routines and probe-scope routines without a probe) in banks
+$00-$04: 402 notes, 378 routines probed (729 probes; 986 in config/probes/ in all). Queue: unread 3,896, reader-only
+data 490, assets 155. Next: E-0375, the next six slices of the combined queue at 135 (0% rejection twice more).
+
+## Prior handoff (2026-10-15, E-0373)
 
 Batch 5 (E-0373) finished the long labels (none over 60; two referrer aliases of 51-57 characters remain) and read
 243 routines, probing 135 of them (257 probes in config/probes/E-0373.json, run by the suite). Queue: unread 4,252,

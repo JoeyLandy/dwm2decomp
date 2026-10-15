@@ -2125,8 +2125,8 @@ RunLinkSession6Exchange_FightInfo_SaveAnswer::
     call BeginString_Bank07_Cat5
     ret
 
-; Fight info, step 12: after the text checks the save (VerifySaveChecksum, keeping the gold) and
-; saves, then sends 5. (C1, E-0357)
+; Fight info, step 12: after the text checks the save (ReloadSaveBlocksWithChecksum, keeping the
+; gold) and saves, then sends 5. (C1, E-0357)
 RunLinkSession6Exchange_FightInfo_Save::
     ld a, [wTextFlags]
     and a
@@ -2139,7 +2139,7 @@ RunLinkSession6Exchange_FightInfo_Save::
     ld [wWorkBuf + $1], a
     ld a, [wGoldHi]
     ld [wWorkBuf + $2], a
-    farcall VerifySaveChecksum
+    farcall ReloadSaveBlocksWithChecksum
     ld a, [wWorkBuf]
     ld [wGoldLo], a
     ld a, [wWorkBuf + $1]

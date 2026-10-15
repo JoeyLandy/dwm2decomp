@@ -537,7 +537,7 @@ TryStartFieldMenu::
     jr nz, .return_0
     ld a, $03
     ldh [hSpriteWindowClipMode], a
-    farcall SetBit1OfPlayerAndObjectFlags
+    farcall FreezeFieldAnimation
     ld a, $ff
     ret
 

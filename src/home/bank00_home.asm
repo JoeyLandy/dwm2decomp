@@ -243,7 +243,7 @@ BootAndMainLoop_StartUp::
     ldh [rVBK], a
     ldh [rSVBK], a
     ldh [rRP], a
-    farcall LoadPalette0FromData_2
+    farcall LoadPalette0FromData_Bank02
     jr .clear_sgb_active
 
 .call_detect_sgb:
@@ -435,7 +435,7 @@ RunGameModeInit_PauseMenu::
     farcall GameMode2_Init
     ret
 
-; Game mode 3 has no start-up routine: returns at once. (C1, E-0357)
+; Game mode 3 has no start-up routine: returns at once. (C2, E-0357; probed E-0374)
 RunGameModeInit_None::
     ret
 
@@ -679,7 +679,7 @@ RunGameModeUpdate_PauseMenu::
     farcall GameMode2_Update
     ret
 
-; Game mode 3 has no per-frame routine: returns at once. (C1, E-0357)
+; Game mode 3 has no per-frame routine: returns at once. (C2, E-0357; probed E-0374)
 RunGameModeUpdate_None::
     ret
 
@@ -1651,7 +1651,7 @@ RandomByteTable::
 ; addition and low-byte add/high-byte carry. Preserve HL and BC on the stack; A and flags are
 ; working outputs. PlayerSpriteFlash samples low three bits of the resulting high byte, while other
 ; callers consume the same shared state. The recurrence does not by itself establish a uniform
-; sprite selection or independent draws. (C1, E-0362)
+; sprite selection or independent draws. (C2, E-0362; probed E-0374)
 NextRandomSeed::
     push hl
     push bc
@@ -2830,7 +2830,7 @@ StepFade::
 ; Super Game Boy step of the palette fade: fades the colour groups chosen by bits 0-3 of wFadeMask
 ; (8 bytes each, StepFade_SGBColorGroup; groups 2 and 3 only when bit 4 is set), then sends the
 ; colours at wOBJPaletteBuffer as SGB packet $01 (PAL01); when bit 4 is set it also sends
-; wOBJPaletteBuffer + $10 as packet $09 (PAL23). (C1, E-0369)
+; wOBJPaletteBuffer + $10 as packet $09 (PAL23). (C2, E-0369; probed E-0374)
 StepFade_SGB::
     ld a, [wFadeMask]
     bit 0, a
@@ -2909,14 +2909,14 @@ CopySGBPacketFieldsAndSend::
 
 ; Fades one SGB palette group of four colours: StepFade_SGBColor for the colour at the current
 ; offset (wFadeStepSize), then StepFade_NextSGBColor three times (twice by call, once by falling
-; through), each moving the offset on by 2 bytes and fading that colour. (C1, E-0369)
+; through), each moving the offset on by 2 bytes and fading that colour. (C2, E-0369; probed E-0374)
 StepFade_SGBColorGroup::
     call StepFade_SGBColor
     call StepFade_NextSGBColor
     call StepFade_NextSGBColor
 
 ; Moves the fade offset wFadeStepSize to the next colour (2 bytes) and falls through to fade it.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0374)
 StepFade_NextSGBColor::
     ld a, [wFadeStepSize]
     add $02
@@ -2925,7 +2925,7 @@ StepFade_NextSGBColor::
 ; Fades one 15-bit colour for the SGB path: takes the target colour from wOBJPaletteBuffer + $20 +
 ; wFadeStepSize, moves each of its red, green and blue channels by wFadeLevel with
 ; AdjustColorChannelForFade, packs them back and stores the result at the same offset of
-; wOBJPaletteBuffer. (C1, E-0357)
+; wOBJPaletteBuffer. (C2, E-0357; probed E-0374)
 StepFade_SGBColor::
     ld hl, wOBJPaletteBuffer + $20
     ld a, [wFadeStepSize]
@@ -3016,7 +3016,7 @@ StepFade_CGB::
 ; Waits wFadeDelay frames per step; each step redraws the chosen DMG palettes
 ; (LightenSelectedDMGPalettes) and moves wFadeLevel up (fading out) or down (fading in, wFadeState
 ; bit 7); the fade ends (StepFade_End, wFadeState = 0) when the level reaches 4 or wraps below 0.
-; (C1, E-0369)
+; (C2, E-0369; probed E-0374)
 StepFade_DMG::
     ld a, [wFadeMode]
     bit 7, a
@@ -3131,7 +3131,7 @@ LightenDMGShade::
 
 ; DMG fade step toward black (wFadeMode bit 7 set): the same timing as the fade toward white, but
 ; each step redraws the palettes with DarkenDMGPaletteByFadeLevel; the fade ends at level 4 or below
-; 0. (C1, E-0357)
+; 0. (C2, E-0357; probed E-0374)
 StepFade_DMGToBlack::
     ld a, [wFadeState]
     bit 7, a
@@ -3175,7 +3175,7 @@ StepFade_DMGToBlack::
 
 ; Redraws the DMG palettes the fade affects: for each of bits 0-2 of wFadeMode it darkens the
 ; matching saved palette in wFadeDMGPalettes (BGP, OBP0, OBP1) by wFadeLevel into wDMGPaletteBGP and
-; the bytes after it. (C1, E-0357)
+; the bytes after it. (C2, E-0357; probed E-0374)
 DarkenSelectedDMGPalettes::
     ld a, [wFadeMode]
     bit 0, a
@@ -3239,7 +3239,7 @@ DarkenDMGShade::
     rrc c
     ret
 
-; Ends a fade: wFadeState = 0. (C1, E-0357)
+; Ends a fade: wFadeState = 0. (C2, E-0357; probed E-0374)
 StepFade_End::
     xor a
     ld [wFadeState], a
@@ -4925,7 +4925,7 @@ LoadMapScreen::
 ; entry matching hMapId it draws the marker with LoadMapScreen_DrawMarker_IfOnScreen, passing the
 ; entry's index in hTemp0. In a key world (wKeyWorldActive) whose key (wKeyWorldKey) is that index +
 ; 1, the position comes from wKeyWorldGoal instead. What the marker shows in play is not yet
-; confirmed. (C1, E-0369)
+; confirmed. (C2, E-0369; probed E-0374)
 LoadMapScreen_DrawMarker::
     ld a, [wMapType]
     bit 7, a
@@ -4983,7 +4983,8 @@ LoadMapScreen_DrawMarker::
 ; in the low) matches the current screen (hMapScreenX, hMapScreenY). DE points at the position byte,
 ; whose low nibble gives the metatile row and high nibble the column; tiles $46 $47 over $56 $57 go
 ; into wScreenTileBuffer, and on CGB the same cells of wScreenAttrBuffer (WRAM bank 2) get palette 3
-; (entries 4 and 10), 5 (entries 5-7) or 1 (others), by the entry index in hTemp0. (C1, E-0369)
+; (entries 4 and 10), 5 (entries 5-7) or 1 (others), by the entry index in hTemp0. (C2, E-0369;
+; probed E-0374)
 LoadMapScreen_DrawMarker_IfOnScreen::
     ldh a, [hMapScreenX]
     swap a
@@ -5081,7 +5082,8 @@ LoadMapScreen_DrawMarker_IfOnScreen::
 
 ; After the story flag EVENT_SCENE_STRONGEST_MASTER is set, patches two map screens at screen X 0:
 ; map $0D gets tiles $44 $45 over $46 $47 at wScreenTileBuffer + $14A, and map $05 gets $78 $79 over
-; $7A $7B at wScreenTileBuffer + $32. What the changed tiles show is not yet confirmed. (C1, E-0357)
+; $7A $7B at wScreenTileBuffer + $32. What the changed tiles show is not yet confirmed. (C2, E-0357;
+; probed E-0374)
 LoadMapScreen_PatchStrongestMasterTiles::
     ld de, EVENT_SCENE_STRONGEST_MASTER
     call TestFlagBit
@@ -5434,11 +5436,14 @@ MapRecordPointer::
     ret
 
 ; Debug map editor check of the edit position. With bank $11 mapped it follows entry hTemp0 of the
-; pointer table at $44B8 to a map record, and returns A = 1 when the position is outside it:
-; wDebugValue1 not below the record's byte 6 (its width) or wDebugValue3 not below byte 7 (its
-; height), or the 3-byte cell at row wDebugValue3, column wDebugValue1 holds a zero word. The cell
-; table is chosen through the record's pointer at offset 16 and the first set bit of the byte it
-; points to. Otherwise returns A = 0. Restores the ROM bank. (C1, E-0357)
+; pointer table at $44B8 to a map record and returns A = 1 when the position is outside it:
+; wDebugValue1 not below the record byte 6 (its width) or wDebugValue3 not below byte 7 (its
+; height). Otherwise it picks a cell table by the byte at the record pointer at offset 16 (a RAM
+; byte such as $CC37 in the records read): the highest set bit N chooses the 6-byte entry at offset
+; $18 + 6 * N (bit 7 first), and no set bit the entry at offset $12; the entry starts with a table
+; address and its ROM bank, which is mapped. It returns A = 1 when the 3-byte cell at row
+; wDebugValue3, column wDebugValue1 (row size = width * 3, computed in 8 bits) holds a zero word,
+; otherwise A = 0, and restores the ROM bank. (C2, E-0374)
 DebugMapEditor_CheckPosition::
     ld a, [BANK_NUMBER_BYTE]
     push af
@@ -6853,7 +6858,8 @@ CopyItemNameToDE::
 
 ; The shared tail of CopyItemNameToDE and CopySkillNameToDE: with ROM bank $08 mapped and the
 ; caller's bank pushed, HL points at a string pointer; it follows the pointer, copies the string up
-; to and including its $F0 terminator to DE, and restores the caller's ROM bank. (C1, E-0369)
+; to and including its $F0 terminator to DE, and restores the caller's ROM bank. (C2, E-0369; probed
+; E-0374)
 CopyItemNameToDE_CopyString::
     ld a, [hli]
     ld c, a
@@ -8999,25 +9005,25 @@ WriteBCAsDecimalString::
     jr WriteBCAsDecimalString_Ones
 
 ; The thousands digit of WriteBCAsDecimalString: BC / 1000 is stored as a digit and BC keeps the
-; remainder. (C1, E-0357)
+; remainder. (C2, E-0357; probed E-0374)
 WriteBCAsDecimalString_CallDivideBCByDE::
     ld de, $03e8
     call DivideBCByDE
     call StoreAThenTerminator
 
-; The hundreds digit of WriteBCAsDecimalString: BC / 100. (C1, E-0357)
+; The hundreds digit of WriteBCAsDecimalString: BC / 100. (C2, E-0357; probed E-0374)
 WriteBCAsDecimalString_CallDivideBCByDE2::
     ld de, $0064
     call DivideBCByDE
     call StoreAThenTerminator
 
-; The tens digit of WriteBCAsDecimalString: BC / 10. (C1, E-0357)
+; The tens digit of WriteBCAsDecimalString: BC / 10. (C2, E-0357; probed E-0374)
 WriteBCAsDecimalString_CallDivideBCByDE3::
     ld de, $000a
     call DivideBCByDE
     call StoreAThenTerminator
 
-; The ones digit of WriteBCAsDecimalString: stores what is left in C. (C1, E-0357)
+; The ones digit of WriteBCAsDecimalString: stores what is left in C. (C2, E-0357; probed E-0374)
 WriteBCAsDecimalString_Ones::
     ld a, c
     call StoreAThenTerminator
@@ -9389,7 +9395,7 @@ InitSoundHardware::
 ; wSoundChannelSlots are processed again, and copies wSoundSavedMode back into wSoundEngineMode, the
 ; stereo mask SoundTick_NextChannel writes to rNR51; clobbers A. Its neighbour
 ; SetSoundEngineStateTo4AndClearSoundEngineMode does the opposite (start at slot 4, mask 0). No
-; caller and no code that writes wSoundSavedMode was found. (C1, E-0372)
+; caller and no code that writes wSoundSavedMode was found. (C2, E-0372; probed E-0374)
 ; wSoundEngineState = 0, wSoundEngineMode = wSoundSavedMode (sound engine state) (E-0119)
 SoundRunAllSlotsRestoreMode::
     xor a
@@ -9412,8 +9418,8 @@ SetSoundEngineStateTo4AndClearSoundEngineMode::
     ret
 
 ; Sets which sound channels to wait for (wSoundChannelMask = B, and C into wSoundChannelMaskCount)
-; and clears the set of channels that have finished. InitSoundHardware calls it with BC = 0. (C1,
-; E-0357)
+; and clears the set of channels that have finished. InitSoundHardware calls it with BC = 0. (C2,
+; E-0357; probed E-0374)
 SetSoundChannelsToWaitFor::
     ld a, b
     ld [wSoundChannelMask], a
@@ -9424,7 +9430,7 @@ SetSoundChannelsToWaitFor::
     ret
 
 ; Marks the current sound channel (wSoundChannelIndex) as finished: ORs bit (index) into
-; wSoundChannelsDone. (C1, E-0357)
+; wSoundChannelsDone. (C2, E-0357; probed E-0374)
 SoundTick_MarkChannelDone::
     ld a, [wSoundChannelIndex]
     inc a
@@ -9447,7 +9453,7 @@ SoundTick_MarkChannelDone::
 ; When every channel in wSoundChannelMask has finished, writes the low nibble of
 ; wSoundChannelMaskCount into the low nibble of byte 6 of each of those channels' 32-byte slots in
 ; wSoundChannelSlots, then clears the mask; it always clears wSoundChannelsDone. What byte 6
-; controls is not yet known. (C1, E-0357)
+; controls is not yet known. (C2, E-0357; probed E-0374)
 SoundTick_CheckChannelsDone::
     ld a, [wSoundChannelsDone]
     ld hl, wSoundChannelMask
@@ -9513,7 +9519,7 @@ StartSoundAfterBankTable::
     jr StartSound_FromTable
 
 ; Calls StartSound and falls into StartThreeSoundTracks, so four sound ids start together: A, A + 1,
-; A + 2 and A + 3. StartMusic uses it for music ids $02, $0F and $58. (C1, E-0369)
+; A + 2 and A + 3. StartMusic uses it for music ids $02, $0F and $58. (C2, E-0369; probed E-0374)
 StartFourSoundTracks::
     call StartSound
 
@@ -9547,12 +9553,14 @@ StartSound::
     ld [wSoundId], a
     ld hl, SoundBankTable
 
-; The body of StartSound. It walks SoundBankTable (4-byte entries) to the range that holds wSoundId,
-; maps that range's bank, and reads the sound's 4-byte record: the channel slot, a flags byte and
-; the track pointer. If the slot is already in use, the flags' low two bits pick which stereo bits
-; of wSoundEngineMode to clear ($EE, $DD, $BB or $77). It then fills the 32-byte slot in
-; wSoundChannelSlots: cleared position, flags, track pointer, the track's bank, $FF in byte 11 and
-; cleared timers. Restores the ROM bank and returns wSoundId + 1. (C1, E-0357)
+; The body of StartSound (and of StartSoundAfterBankTable), entered with BC, DE and HL pushed and HL
+; at the table. It walks SoundBankTable (4-byte entries) to the range that holds wSoundId, maps that
+; range bank and reads the sound record at the range array + 4 * (id - first id): a slot offset into
+; wSoundChannelSlots, a flags byte and the track pointer. If the slot is in use (its byte 0 is not
+; $FF), the low two bits of the slot old byte 1 pick the stereo bits of wSoundEngineMode to clear
+; ($EE, $DD, $BB or $77). The 32-byte slot then gets 0, 0, the flags, the track pointer, the bank,
+; $FF at byte 10 and zeros at bytes 21 and 25-31. It restores the ROM bank, returns A = wSoundId + 1
+; and pops HL, DE and BC. (C2, E-0374)
 StartSound_FromTable::
     cp [hl]
     jr c, .skip
@@ -10696,7 +10704,8 @@ ComputeNotePitch::
     ld c, $11
     call WriteChannelRegisterC
 
-; The high byte of a note's frequency: H & 7 with bit 7 set (restart the channel). (C1, E-0357)
+; The high byte of a note's frequency: H & 7 with bit 7 set (restart the channel). (C2, E-0357;
+; probed E-0374)
 ComputeNotePitch_TriggerChannel::
     ld a, h
     and $07
@@ -10704,7 +10713,7 @@ ComputeNotePitch_TriggerChannel::
 
 ; Writes the frequency high byte (register offset 4, $14) for the current channel, keeping it in
 ; hSndFreqHi, and clears the length bits of the duty register so the note plays without a length
-; cut-off. (C1, E-0357)
+; cut-off. (C2, E-0357; probed E-0374)
 ComputeNotePitch_UpdateFrequency::
     ldh [hSndFreqHi], a
     ld c, $14
@@ -10712,7 +10721,7 @@ ComputeNotePitch_UpdateFrequency::
     call ClearChannelLengthBits
 
 ; Sets the current channel's stereo bits in wSoundEngineMode from hSndPanning: the channel's bits
-; (wSoundNoteWork) are replaced by the matching bits of hSndPanning. (C1, E-0357)
+; (wSoundNoteWork) are replaced by the matching bits of hSndPanning. (C2, E-0357; probed E-0374)
 ComputeNotePitch_ApplyPanning::
     ld a, [wSoundNoteWork]
     ld b, a
@@ -10740,11 +10749,14 @@ ComputeNotePitch_WaveChannel::
     and $07
     jr ComputeNotePitch_UpdateFrequency
 
-; The volume slide of a note (not on the wave channel): every hSndPitchSlideTime ticks the
-; envelope's start volume (high nibble of hSndEnvelope) moves one step up while hSndPitchSlide is
-; positive and one step down while it is negative (bit 7), stopping at 15 or 0, and the new envelope
-; is written to the channel. The names of these HRAM bytes say pitch; the code changes the volume.
-; (C1, E-0357)
+; The volume slide of a note (not on the wave channel, wSoundHwChannel = 2, and not while
+; hSndPitchSlide is 0). Each call counts hSndPitchSlideCounter down; when it reaches 0 and the low
+; nibble of hSndEnvelope is 0 it reloads the counter from hSndPitchSlideTime and moves the start
+; volume (high nibble of hSndEnvelope) one step: up while hSndPitchSlide is positive (counting it
+; down toward 0), down while it is negative (bit 7, counting it up), and writes the new envelope
+; with WriteChannelEnvelopeIfChanged. At volume 15 (up) or 0 (down) the slide count still moves but
+; the envelope stays. With a non-zero low nibble the counter is left at 0 and not reloaded. The
+; names of these HRAM bytes say pitch; the code changes the volume. (C2, E-0374)
 SoundTick_VolumeSlide::
     ld a, [wSoundHwChannel]
     cp $02
@@ -10789,7 +10801,7 @@ SoundTick_VolumeSlide::
 ; The pitch offset of a note in progress (not on the noise channel), applied when the note timer has
 ; run out and the channel flags' high nibble is not 0: adds the entry of SoundPitchOffsetRows chosen
 ; by that nibble and the low nibble of wSoundTickBuf to the frequency low byte and writes it
-; (register offset 3). Skipped when the channel is muted this frame. (C1, E-0357)
+; (register offset 3). Skipped when the channel is muted this frame. (C2, E-0357; probed E-0374)
 SoundTick_PitchOffset::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundHwChannel]
@@ -10873,7 +10885,7 @@ WriteChannelRegisterC::
     ret
 
 ; Writes hSndEnvelope to the channel's envelope register (offset 2, $12); for the wave channel this
-; is its output level. (C1, E-0357)
+; is its output level. (C2, E-0357; probed E-0374)
 ComputeNotePitch_WaveLevel::
     ldh a, [hSndEnvelope]
     ld c, $12
@@ -11057,15 +11069,15 @@ SoundTick_VolumeModulation::
     or b
     jp WriteChannelEnvelopeIfChanged
 
-; A rest: unless the channel is muted this frame, writes envelope 0 (silence) to the channel. (C1,
-; E-0357)
+; A rest: unless the channel is muted this frame, writes envelope 0 (silence) to the channel. (C2,
+; E-0357; probed E-0374)
 SoundNextEvent_SilenceNote::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, $00
     jp WriteChannelEnvelopeIfChanged
 
 ; Unless the channel is muted this frame, clears the channel's stereo bits (wSoundSkipMaskB) in
-; wSoundEngineMode, silencing it on both sides. (C1, E-0357)
+; wSoundEngineMode, silencing it on both sides. (C2, E-0357; probed E-0374)
 SoundNextEvent_MuteChannel::
     call ReturnTwiceIfSoundSkipMaskAAndSoundSkipMaskB
     ld a, [wSoundSkipMaskB]
@@ -11157,8 +11169,11 @@ LoadWavePatternIfChanged::
     xor a
     ldh [rNR30], a
 
-; Copies a 16-byte wave pattern to wave RAM (rWAVE): the set chosen by the high nibble of
-; hSndWaveParam in SoundWaveSetTable, then the pattern at offset DE within it. (C1, E-0357)
+; A = high byte and E = low byte of an offset (D is replaced by A): copies 16 bytes to wave RAM
+; (rWAVE) from the wave set chosen by the high nibble of hSndWaveParam in SoundWaveSetTable plus
+; that offset. Its caller passes A = 0 and E = the wave number * 16 (hSndSweepOrWave swapped), with
+; rNR30 cleared around the copy. SoundWaveSetTable has one entry, so a non-zero high nibble of
+; hSndWaveParam would read past it. (C2, E-0374)
 LoadWavePattern::
     ld d, a
     ld hl, SoundWaveSetTable
@@ -11212,8 +11227,10 @@ SoundLabelSlot::
     ret
 
 ; Recomputes the envelope for an envelope step: (reload nibble + 1) * (start volume + 1) / 16, at
-; least 1, becomes the new start volume (high nibble of hSndEnvelope); hSndEnvelopeReload keeps its
-; low nibble and takes the old start volume as its high nibble. Keeps BC and DE. (C1, E-0357)
+; least 1, becomes the new start volume (high nibble of hSndEnvelope, low nibble kept);
+; hSndEnvelopeReload keeps its low nibble and takes the old start volume as its high nibble. Keeps
+; BC and DE. When both nibbles are 15 the result 16 does not fit: the high nibble becomes 0 and bit
+; 0 of the low nibble is set. (C2, E-0374)
 SoundTick_StepEnvelope::
     push de
     push bc
