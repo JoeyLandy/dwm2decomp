@@ -11,19 +11,19 @@ SECTION "Bank 0C", ROMX[$4000], BANK[$0C]
 LibraryMenu::
     ld a, [wScreenState]
     jumptable
-    dw LibraryMenu_WriteMessageModeAndScreenStateEtc
-    dw LibraryMenu_WriteScrollYAndScrollXEtc
+    dw LibraryMenu_Init
+    dw LibraryMenu_SetUpScreen
     dw LibraryMenu_ToClearStringWindowAt2020AndStep
     dw LibraryMenu_DrawFamilyChooser
     dw LibraryMenu_CountSeenMonsters
-    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc
+    dw LibraryMenu_FamilyCursor
     dw LibraryMenu_LeaveReloadMap
     dw LibraryMenu_LeaveRestoreScreen
     dw LibraryMenu_LeaveReloadNames
     dw LibraryMenu_ToClearStringWindowAt2200AndStep
     dw LibraryMenu_DrawMonsterList
     dw LibraryMenu_WriteScreenState
-    dw LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2
+    dw LibraryMenu_MonsterCursor
     dw LibraryMenu_BackToFamilies
     dw LibraryMenu_EraseFamilyMark
     dw LibraryMenu_ClearForEntry
@@ -31,7 +31,7 @@ LibraryMenu::
 
 ; Library, state 0: clears the library's state bytes, sets message mode 9 and lets the script show
 ; the welcome ('Which family will you check?'). (C1, E-0357)
-LibraryMenu_WriteMessageModeAndScreenStateEtc::
+LibraryMenu_Init::
     ld hl, wScreenState
     ld bc, $0020
 
@@ -56,7 +56,7 @@ LibraryMenu_WriteMessageModeAndScreenStateEtc::
 ; Library, state 1: clears the screen area, resets the scroll, saves the sprite clipping and hide
 ; tile (in wLibraryScrollY/X) and hides the field sprites, clears vTiles0 and blanks the window
 ; buffer. (C1, E-0357)
-LibraryMenu_WriteScrollYAndScrollXEtc::
+LibraryMenu_SetUpScreen::
     call LibraryMenu_FillTileRectWithArg1Tile
     xor a
     ldh [hScrollY], a
@@ -296,22 +296,22 @@ LibraryMenu_CountSeenMonsters::
 
 ; Library, state 5: the family cursor. Right/Left switch between the two rows, Up/Down move along
 ; the row; A opens the family; B leaves the library. The cursor blinks while waiting. (C1, E-0357)
-LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
+LibraryMenu_FamilyCursor::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .check_grid_cursor_y
     bit 5, a
     jr nz, .check_grid_cursor_y2
     bit 6, a
-    jr nz, .call_library_menu_read_grid_cursor_x_2
+    jr nz, .call_library_menu_family_cursor_read_grid2
     bit 7, a
-    jr nz, .call_library_menu_read_grid_cursor_x_22
+    jr nz, .call_library_menu_family_cursor_read_grid3
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .read_grid_cursor_y
     bit 1, a
     jp nz, .check_screen_state
-    call LibraryMenu_WriteGlyphListStart
+    call LibraryMenu_FamilyCursor_WriteGlyphListStart
     ret
 
 .check_grid_cursor_y:
@@ -327,15 +327,15 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 .set_grid_cursor_y2:
     ld [wGridCursorY], a
     cp $01
-    jr c, .call_library_menu_read_grid_cursor_x
+    jr c, .call_library_menu_family_cursor_read_grid
     ld a, [wGridCursorX]
     cp $05
-    jr c, .call_library_menu_read_grid_cursor_x
+    jr c, .call_library_menu_family_cursor_read_grid
     dec a
     ld [wGridCursorX], a
 
-.call_library_menu_read_grid_cursor_x:
-    call LibraryMenu_ReadGridCursorX
+.call_library_menu_family_cursor_read_grid:
+    call LibraryMenu_FamilyCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -354,10 +354,10 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     dec a
     jr .set_grid_cursor_y2
 
-.call_library_menu_read_grid_cursor_x_2:
-    call LibraryMenu_ReadGridCursorX_2
+.call_library_menu_family_cursor_read_grid2:
+    call LibraryMenu_FamilyCursor_ReadGridCursorX_2
     ld a, [wGridCursorY]
-    ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
+    ld de, LibraryMenu_FamilyCursor_Data
     add e
     ld e, a
     jr nc, .check_grid_cursor_x
@@ -377,15 +377,15 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call LibraryMenu_ReadGridCursorX
+    call LibraryMenu_FamilyCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_library_menu_read_grid_cursor_x_22:
-    call LibraryMenu_ReadGridCursorX_2
+.call_library_menu_family_cursor_read_grid3:
+    call LibraryMenu_FamilyCursor_ReadGridCursorX_2
     ld a, [wGridCursorY]
-    ld de, LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data
+    ld de, LibraryMenu_FamilyCursor_Data
     add e
     ld e, a
     jr nc, .check_grid_cursor_x2
@@ -418,7 +418,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
     ld a, [hl]
     and a
     jr nz, .call_queue_sound_effect
-    call LibraryMenu_BGMapAddressAtScroll_Bank0C
+    call LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C
     ld a, $01
     ld [wTwoChoiceCursor], a
     xor a
@@ -430,7 +430,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call LibraryMenu_BGMapAddressAtScroll_Bank0C
+    call LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C
     ld a, [wGridCursorX]
     ld hl, LibraryMenu_DrawFamilyChooser_Data
     ld b, $bc
@@ -467,40 +467,40 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc::
 
 ; Blinks the library cursor: after the repeat timer, a 24-frame cycle shows the cursor for 16 frames
 ; and hides it for 8. (C1, E-0357)
-LibraryMenu_WriteGlyphListStart::
+LibraryMenu_FamilyCursor_WriteGlyphListStart::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, LibraryMenu_ReadGridCursorX
+    jr c, LibraryMenu_FamilyCursor_ReadGridCursorX
     ld a, [wGlyphListStart]
     inc a
     ld [wGlyphListStart], a
     cp $10
-    jr c, LibraryMenu_ReadGridCursorX
+    jr c, LibraryMenu_FamilyCursor_ReadGridCursorX
     cp $18
-    jr c, LibraryMenu_ReadGridCursorX_2
+    jr c, LibraryMenu_FamilyCursor_ReadGridCursorX_2
     xor a
     ld [wGlyphListStart], a
 
 ; Draws the family cursor (tile $BB). (C1, E-0357)
-LibraryMenu_ReadGridCursorX::
+LibraryMenu_FamilyCursor_ReadGridCursorX::
     ld b, $bb
-    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
+    jr LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
 
 ; Hides the family cursor (tile $C3). (C1, E-0357)
-LibraryMenu_ReadGridCursorX_2::
+LibraryMenu_FamilyCursor_ReadGridCursorX_2::
     ld b, $c3
-    jr LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
+    jr LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C_ReadGridCursorX
 
 ; Marks the chosen family (tile $BC). (C1, E-0357)
-LibraryMenu_BGMapAddressAtScroll_Bank0C::
+LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C::
     ld b, $bc
 
 ; Writes tile B at the family cursor position (from LibraryMenu_BGMapAddressAtScroll_Bank0C_Data by
 ; wGridCursorX). (C1, E-0357)
-LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
+LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
-    ld hl, LibraryMenu_BGMapAddressAtScroll_Bank0C_Data
+    ld hl, LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -517,7 +517,7 @@ LibraryMenu_BGMapAddressAtScroll_Bank0C_ReadGridCursorX::
     ret
 
 ; data read by LibraryMenu (12 bytes) (E-0347)
-LibraryMenu_BGMapAddressAtScroll_Bank0C_Data::
+LibraryMenu_FamilyCursor_BGMapAddressAtScroll_Bank0C_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $61, $01
 
 ; Library, state 6 (leaving): clears the screen area and reloads map $11's header, the player's
@@ -696,22 +696,22 @@ LibraryMenu_WriteScreenState::
 
 ; Library, state 12: the monster cursor. Right/Left change page within the family, Up/Down move in
 ; the list; A opens the monster's entry; B returns to the family chooser. (C1, E-0357)
-LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
+LibraryMenu_MonsterCursor::
     ld a, [wJoypadPressedRepeat]
     bit 4, a
     jr nz, .call_grid_index_from_grid_cursor_x_grid
     bit 5, a
     jr nz, .check_grid2_cursor_y2
     bit 6, a
-    jp nz, .call_library_menu_read_grid2_cursor_x_2
+    jp nz, .call_library_menu_monster_cursor_read_grid22
     bit 7, a
-    jp nz, .call_library_menu_read_grid2_cursor_x_22
+    jp nz, .call_library_menu_monster_cursor_read_grid23
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_grid_index_from_grid_cursor_x_grid2
     bit 1, a
     jp nz, .check_screen_state
-    call LibraryMenu_WriteListEntries
+    call LibraryMenu_MonsterCursor_WriteListEntries
     ret
 
 .call_grid_index_from_grid_cursor_x_grid:
@@ -749,12 +749,12 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld b, a
     pop af
     cp b
-    jr c, .call_library_menu_read_grid2_cursor_x
+    jr c, .call_library_menu_monster_cursor_read_grid2
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
     cp b
-    jr c, .call_library_menu_read_grid2_cursor_x
+    jr c, .call_library_menu_monster_cursor_read_grid2
     ld a, b
     ld [wGrid2CursorX], a
     ld a, [wScreenState]
@@ -764,8 +764,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     call QueueSoundEffect
     ret
 
-.call_library_menu_read_grid2_cursor_x:
-    call LibraryMenu_ReadGrid2CursorX
+.call_library_menu_monster_cursor_read_grid2:
+    call LibraryMenu_MonsterCursor_ReadGrid2CursorX
     ld a, [wScreenState]
     sub $03
     ld [wScreenState], a
@@ -792,8 +792,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     dec a
     jr .set_grid2_cursor_y2
 
-.call_library_menu_read_grid2_cursor_x_2:
-    call LibraryMenu_ReadGrid2CursorX_2
+.call_library_menu_monster_cursor_read_grid22:
+    call LibraryMenu_MonsterCursor_ReadGrid2CursorX_2
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -807,13 +807,13 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
 
 .set_grid2_cursor_x2:
     ld [wGrid2CursorX], a
-    call LibraryMenu_ReadGrid2CursorX
+    call LibraryMenu_MonsterCursor_ReadGrid2CursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_library_menu_read_grid2_cursor_x_22:
-    call LibraryMenu_ReadGrid2CursorX_2
+.call_library_menu_monster_cursor_read_grid23:
+    call LibraryMenu_MonsterCursor_ReadGrid2CursorX_2
     call ReadGridCellByteForGridCursorXGridCursorY
     ld b, a
     ld a, [wGrid2CursorX]
@@ -847,7 +847,7 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     add_a_to_hl
     call LibraryMenu_TestBitInFieldAtArg3
     and a
-    jr z, .call_library_menu_read_grid2_cursor_x2
+    jr z, .call_library_menu_monster_cursor_read_grid24
     ld a, $69
     call QueueSoundEffect
     ld a, [wScreenState]
@@ -859,8 +859,8 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ld [wScriptStartRequest], a
     ret
 
-.call_library_menu_read_grid2_cursor_x2:
-    call LibraryMenu_ReadGrid2CursorX
+.call_library_menu_monster_cursor_read_grid24:
+    call LibraryMenu_MonsterCursor_ReadGrid2CursorX
     ret
 
 .check_screen_state:
@@ -879,37 +879,37 @@ LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_2::
     ret
 
 ; Blinks the monster cursor: 16 frames shown, 8 hidden. (C1, E-0357)
-LibraryMenu_WriteListEntries::
+LibraryMenu_MonsterCursor_WriteListEntries::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, LibraryMenu_ReadGrid2CursorX
+    jr c, LibraryMenu_MonsterCursor_ReadGrid2CursorX
     ld a, [wListEntries]
     inc a
     ld [wListEntries], a
     cp $10
-    jr c, LibraryMenu_ReadGrid2CursorX
+    jr c, LibraryMenu_MonsterCursor_ReadGrid2CursorX
     cp $18
-    jr c, LibraryMenu_ReadGrid2CursorX_2
+    jr c, LibraryMenu_MonsterCursor_ReadGrid2CursorX_2
     xor a
     ld [wListEntries], a
 
 ; Draws the monster cursor (tile $BB). (C1, E-0357)
-LibraryMenu_ReadGrid2CursorX::
+LibraryMenu_MonsterCursor_ReadGrid2CursorX::
     ld b, $bb
-    jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
+    jr LibraryMenu_MonsterCursor_ReadGrid2CursorX_ReadGrid2CursorX
 
 ; Hides the monster cursor (tile $C3). (C1, E-0357)
-LibraryMenu_ReadGrid2CursorX_2::
+LibraryMenu_MonsterCursor_ReadGrid2CursorX_2::
     ld b, $c3
-    jr LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX
+    jr LibraryMenu_MonsterCursor_ReadGrid2CursorX_ReadGrid2CursorX
     db $06, $bc
 
 ; Writes tile B at the monster cursor position (from LibraryMenu_ReadGrid2CursorX_Data by
 ; wGrid2CursorX). (C1, E-0357)
-LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX::
+LibraryMenu_MonsterCursor_ReadGrid2CursorX_ReadGrid2CursorX::
     ld a, [wGrid2CursorX]
     add a
-    ld hl, LibraryMenu_ReadGrid2CursorX_Data
+    ld hl, LibraryMenu_MonsterCursor_ReadGrid2CursorX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -926,7 +926,7 @@ LibraryMenu_ReadGrid2CursorX_2_ReadGrid2CursorX::
     ret
 
 ; data read by LibraryMenu (12 bytes) (E-0347)
-LibraryMenu_ReadGrid2CursorX_Data::
+LibraryMenu_MonsterCursor_ReadGrid2CursorX_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00, $29, $01, $69, $01
 
 ; Library, state 13 (back to the families): redraws the family panel with the seen counts and lets
@@ -2162,8 +2162,8 @@ LibraryMenu_WriteWorkBuf_Data::
     db $c0, $90, $10, $91, $60, $91, $b0, $91
 
 ; with the pointer from GridCellAddressFromGridCursorXAndGrid2CursorX draws sub-indices 0, 4 and 2
-; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc) at Y = $10, $24
-; and $38, X = $6C (E-0121) (E-0344: the address in its name dropped or read as the label there; was
+; (DrawThreeMetaSpritePartsAtGridCursor_SetAttrs) at Y = $10, $24 and $38, X = $6C (E-0121) (E-0344:
+; the address in its name dropped or read as the label there; was
 ; DrawThreeMetaSpritePartsAtGridCursor; shortened from
 ; DrawThreeMetaSpritePartsForGridCellAddressFromGridCursorXAndGrid2CursorX)
 DrawThreeMetaSpritePartsAtGridCursor::
@@ -2183,7 +2183,7 @@ DrawThreeMetaSpritePartsAtGridCursor::
     ld c, $01
     xor a
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_SetAttrs
     ld a, $24
     ld [wArg4], a
     ld a, $6c
@@ -2193,7 +2193,7 @@ DrawThreeMetaSpritePartsAtGridCursor::
     ld c, $01
     ld a, $04
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_SetAttrs
     ld a, $38
     ld [wArg4], a
     ld a, $6c
@@ -2203,7 +2203,7 @@ DrawThreeMetaSpritePartsAtGridCursor::
     ld c, $01
     ld a, $02
     ldh [hSpriteSubIndex], a
-    farcall DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc
+    farcall DrawThreeMetaSpritePartsAtGridCursor_SetAttrs
     ret
 
 ; Draws the list page indicator: the current page and the family's page count as digit tiles. (C1,
@@ -3690,7 +3690,7 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock_MonsterClassByteTable::
     db $07 ; id 371 Orgodemir
     db $06 ; id 372 Darck
 
-LibraryMenu_WriteScreenStateAndTwoChoiceCursorEtc_Data::
+LibraryMenu_FamilyCursor_Data::
     db $05, $04
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
@@ -5386,7 +5386,7 @@ ArenaMenu::
     jumptable
     dw ArenaMenu_Init
     dw ArenaMenu_DrawClassChooser
-    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
+    dw ArenaMenu_ClassCursor
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     dw ArenaMenu_AskEnterClass
     dw ArenaMenu_CancelClass
@@ -5402,10 +5402,10 @@ ArenaMenu::
     dw ArenaMenu_RestoreClassPanels
     dw ArenaMenu_DrawClassPanel
     dw ArenaMenu_DrawClassPanelGold
-    dw ArenaMenu_WriteTextBuf0AndScreenStateEtc
+    dw ArenaMenu_ClassCursor2
     dw ArenaMenu_RestorePanel
     dw ArenaMenu_AdvanceScreenState_SetScreenState_2
-    dw ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc
+    dw ArenaMenu_SetClassFee
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     dw ArenaMenu_ReadFeeAnswer
     dw ArenaMenu_ClosePanelBox
@@ -5418,8 +5418,8 @@ ArenaMenu::
     dw ArenaMenu_AfterRound
     dw ArenaMenu_AdvanceScreenState
     dw ArenaMenu_ToArenaMenu_DispatchTalkEvent
-    dw ArenaMenu_SetTwoChoiceCursor
-    dw ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2
+    dw ArenaMenu_ResultMessage
+    dw ArenaMenu_PrepareResultName
     dw ArenaMenu_GiveRankReward
     dw ShowTwoChoiceBoxAtWindowTileBufferRow13Col14
     dw ArenaMenu_ReadQuestion
@@ -5713,22 +5713,22 @@ ArenaMenu_DrawClassChooser::
 
 ; Arena, state 2: the class cursor: Up/Down move over the four classes (wrapping), A chooses one, B
 ; cancels (wTwoChoiceCursor = 3). (C1, E-0357)
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
+ArenaMenu_ClassCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_arena_menu_read_grid_cursor_x_2
+    jr nz, .call_arena_menu_class_cursor_read_grid_cursor
     bit 7, a
-    jr nz, .call_arena_menu_read_grid_cursor_x_22
+    jr nz, .call_arena_menu_class_cursor_read_grid_cursor2
     ld a, [wJoypadPressed]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_03
     bit 0, a
-    jr nz, .call_arena_menu_read_grid_cursor_x
-    call ArenaMenu_WriteGridCursorY
+    jr nz, .call_arena_menu_class_cursor_read_grid_cursor3
+    call ArenaMenu_ClassCursor_WriteGridCursorY
     ret
 
-.call_arena_menu_read_grid_cursor_x_2:
-    call ArenaMenu_ReadGridCursorX_2
+.call_arena_menu_class_cursor_read_grid_cursor:
+    call ArenaMenu_ClassCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
@@ -5740,13 +5740,13 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call ArenaMenu_ReadGridCursorX
+    call ArenaMenu_ClassCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_arena_menu_read_grid_cursor_x_22:
-    call ArenaMenu_ReadGridCursorX_2
+.call_arena_menu_class_cursor_read_grid_cursor2:
+    call ArenaMenu_ClassCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     cp $03
     jr c, .skip
@@ -5766,8 +5766,8 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
-.call_arena_menu_read_grid_cursor_x:
-    call ArenaMenu_ReadGridCursorX
+.call_arena_menu_class_cursor_read_grid_cursor3:
+    call ArenaMenu_ClassCursor_ReadGridCursorX
     ld a, [wArenaRank]
     dec a
     ld b, a
@@ -5796,14 +5796,14 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1
+    ld hl, ArenaMenu_ClassCursor_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
+    ld hl, ArenaMenu_ClassCursor_Data2
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -5821,42 +5821,42 @@ ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc (4 bytes) (E-0347)
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data1::
+; data read by ArenaMenu_ClassCursor (4 bytes) (E-0347)
+ArenaMenu_ClassCursor_Data1::
     db $0c, $0b, $0a, $1c
 
 ; Blinks the arena class cursor: 16 frames shown, 8 hidden. (C1, E-0357)
-ArenaMenu_WriteGridCursorY::
+ArenaMenu_ClassCursor_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, ArenaMenu_ReadGridCursorX
+    jr c, ArenaMenu_ClassCursor_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, ArenaMenu_ReadGridCursorX
+    jr c, ArenaMenu_ClassCursor_ReadGridCursorX
     cp $18
-    jr c, ArenaMenu_ReadGridCursorX_2
+    jr c, ArenaMenu_ClassCursor_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
 ; Draws the arena class cursor (tile $BB). (C1, E-0357)
-ArenaMenu_ReadGridCursorX::
+ArenaMenu_ClassCursor_ReadGridCursorX::
     ld b, $bb
-    jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
+    jr ArenaMenu_ClassCursor_ReadGridCursorX_2_ReadGridCursorX
 
 ; Hides the arena class cursor (tile $C3). (C1, E-0357)
-ArenaMenu_ReadGridCursorX_2::
+ArenaMenu_ClassCursor_ReadGridCursorX_2::
     ld b, $c3
-    jr ArenaMenu_ReadGridCursorX_2_ReadGridCursorX
+    jr ArenaMenu_ClassCursor_ReadGridCursorX_2_ReadGridCursorX
     db $06, $bc
 
-; Writes tile B at the class cursor position (ArenaMenu_ReadGridCursorX_Data by wGridCursorX),
-; allowing for the scroll wrap. (C1, E-0357)
-ArenaMenu_ReadGridCursorX_2_ReadGridCursorX::
+; Writes tile B at the class cursor position (ArenaMenu_ClassCursor_ReadGridCursorX_Data by
+; wGridCursorX), allowing for the scroll wrap. (C1, E-0357)
+ArenaMenu_ClassCursor_ReadGridCursorX_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
-    ld hl, ArenaMenu_ReadGridCursorX_Data
+    ld hl, ArenaMenu_ClassCursor_ReadGridCursorX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5874,7 +5874,7 @@ ArenaMenu_ReadGridCursorX_2_ReadGridCursorX::
     ret
 
 ; data read by ArenaMenu (8 bytes) (E-0347)
-ArenaMenu_ReadGridCursorX_Data::
+ArenaMenu_ClassCursor_ReadGridCursorX_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
 ; plays sound $6C, copies the 6 x 5 box ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect to
@@ -6004,7 +6004,7 @@ ArenaMenu_CopyScreenBufferRectWithAttrs_0C::
 ArenaMenu_CancelClass::
     call ArenaMenu_CopyScreenBufferRectWithAttrs_0C
     ld c, $04
-    ld hl, ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2
+    ld hl, ArenaMenu_ClassCursor_Data2
     call ArenaMenu_CancelClass_StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
@@ -6263,22 +6263,22 @@ ArenaMenu_DrawClassPanelGold::
 
 ; Arena, state 18: the class cursor of the second panel: Up/Down move over the four classes, A
 ; chooses, B cancels. (C1, E-0357)
-ArenaMenu_WriteTextBuf0AndScreenStateEtc::
+ArenaMenu_ClassCursor2::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_arena_menu_read_grid_cursor_x_4
+    jr nz, .call_arena_menu_class_cursor2_read_grid
     bit 7, a
-    jr nz, .call_arena_menu_read_grid_cursor_x_42
+    jr nz, .call_arena_menu_class_cursor2_read_grid2
     ld a, [wJoypadPressed]
     bit 1, a
     jr nz, .set_two_choice_cursor_to_01
     bit 0, a
-    jr nz, .call_arena_menu_read_grid_cursor_x_3
-    call ArenaMenu_WriteGridCursorY_2
+    jr nz, .call_arena_menu_class_cursor2_read_grid3
+    call ArenaMenu_ClassCursor2_WriteGridCursorY
     ret
 
-.call_arena_menu_read_grid_cursor_x_4:
-    call ArenaMenu_ReadGridCursorX_4
+.call_arena_menu_class_cursor2_read_grid:
+    call ArenaMenu_ClassCursor2_ReadGridCursorX_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
@@ -6290,13 +6290,13 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
 
 .set_grid_cursor_x2:
     ld [wGridCursorX], a
-    call ArenaMenu_ReadGridCursorX_3
+    call ArenaMenu_ClassCursor2_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_arena_menu_read_grid_cursor_x_42:
-    call ArenaMenu_ReadGridCursorX_4
+.call_arena_menu_class_cursor2_read_grid2:
+    call ArenaMenu_ClassCursor2_ReadGridCursorX_2
     ld a, [wGridCursorX]
     cp $03
     jr c, .skip
@@ -6316,19 +6316,19 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
-.call_arena_menu_read_grid_cursor_x_3:
-    call ArenaMenu_ReadGridCursorX_3
+.call_arena_menu_class_cursor2_read_grid3:
+    call ArenaMenu_ClassCursor2_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1
+    ld hl, ArenaMenu_ClassCursor2_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data2
+    ld hl, ArenaMenu_ClassCursor2_Data2
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -6347,42 +6347,42 @@ ArenaMenu_WriteTextBuf0AndScreenStateEtc::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ArenaMenu_WriteTextBuf0AndScreenStateEtc (4 bytes) (E-0347)
-ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data1::
+; data read by ArenaMenu_ClassCursor2 (4 bytes) (E-0347)
+ArenaMenu_ClassCursor2_Data1::
     db $0c, $0b, $0a, $1c
 
 ; Blinks the second panel's cursor: 16 frames shown, 8 hidden. (C1, E-0357)
-ArenaMenu_WriteGridCursorY_2::
+ArenaMenu_ClassCursor2_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, ArenaMenu_ReadGridCursorX_3
+    jr c, ArenaMenu_ClassCursor2_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, ArenaMenu_ReadGridCursorX_3
+    jr c, ArenaMenu_ClassCursor2_ReadGridCursorX
     cp $18
-    jr c, ArenaMenu_ReadGridCursorX_4
+    jr c, ArenaMenu_ClassCursor2_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
 ; Draws the second panel's cursor (tile $BB). (C1, E-0357)
-ArenaMenu_ReadGridCursorX_3::
+ArenaMenu_ClassCursor2_ReadGridCursorX::
     ld b, $bb
-    jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
+    jr ArenaMenu_ClassCursor2_ReadGridCursorX_2_ReadGridCursorX
 
 ; Hides the second panel's cursor (tile $C3). (C1, E-0357)
-ArenaMenu_ReadGridCursorX_4::
+ArenaMenu_ClassCursor2_ReadGridCursorX_2::
     ld b, $c3
-    jr ArenaMenu_ReadGridCursorX_4_ReadGridCursorX
+    jr ArenaMenu_ClassCursor2_ReadGridCursorX_2_ReadGridCursorX
     db $06, $bc
 
-; Writes tile B at the second panel's cursor position (ArenaMenu_ReadGridCursorX_Data_2). (C1,
-; E-0357)
-ArenaMenu_ReadGridCursorX_4_ReadGridCursorX::
+; Writes tile B at the second panel's cursor position (ArenaMenu_ClassCursor2_ReadGridCursorX_Data).
+; (C1, E-0357)
+ArenaMenu_ClassCursor2_ReadGridCursorX_2_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
-    ld hl, ArenaMenu_ReadGridCursorX_Data_2
+    ld hl, ArenaMenu_ClassCursor2_ReadGridCursorX_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -6399,8 +6399,8 @@ ArenaMenu_ReadGridCursorX_4_ReadGridCursorX::
     ei
     ret
 
-; data read by ArenaMenu_ReadGridCursorX_4_ReadGridCursorX (8 bytes) (E-0347)
-ArenaMenu_ReadGridCursorX_Data_2::
+; data read by ArenaMenu (8 bytes) (E-0347)
+ArenaMenu_ClassCursor2_ReadGridCursorX_Data::
     db $a1, $00, $e1, $00, $21, $01, $61, $01
 
 ; Arena, state 19: restores the screen behind the panel and goes back to state $0D. (C1, E-0357)
@@ -6437,7 +6437,7 @@ ArenaMenu_AdvanceScreenState_SetScreenState_2::
 
 ; Arena, state 21: sets the chosen class's area (wScreenArea = class + 2) and its entry fee from
 ; ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data. (C1, E-0357)
-ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
+ArenaMenu_SetClassFee::
     ld a, [wGridCursorX]
     inc a
     inc a
@@ -6446,7 +6446,7 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
     ld [wGrid2CursorX], a
     ld a, [wGridCursorX]
     add a
-    ld hl, ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data
+    ld hl, ArenaMenu_SetClassFee_Data
     add_a_to_hl
     ld a, [hl]
     ld [wArenaFeeLo], a
@@ -6465,7 +6465,7 @@ ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc::
     ret
 
 ; data read by ArenaMenu (8 bytes) (E-0347)
-ArenaMenu_WriteScreenAreaAndGrid2CursorXEtc_Data::
+ArenaMenu_SetClassFee_Data::
     db $e8, $03, $d0, $07, $b8, $0b, $88, $13
 
 ; Arena, state 23: the fee question: yes checks the gold (IsAmountInArg1AboveGold) and moves on when
@@ -6678,7 +6678,7 @@ ArenaMenu_ToArenaMenu_DispatchTalkEvent::
 ; Arena, state 34, the result message: after a lost battle picks the message by rank (below 3 or
 ; not); otherwise the message index is the rank - 2, and for ranks 1-4 two states are skipped. (C1,
 ; E-0357)
-ArenaMenu_SetTwoChoiceCursor::
+ArenaMenu_ResultMessage::
     ld a, [wBattleScene]
     and a
     jr nz, .check_arena_rank
@@ -6726,17 +6726,17 @@ ArenaMenu_SetTwoChoiceCursor::
 
 ; Arena, state 35: puts the player's name (and, after a win, the class letter) in the text buffer
 ; for the message. (C1, E-0357)
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_2::
+ArenaMenu_PrepareResultName::
     ld a, [wBattleScene]
     and a
     jr nz, .skip
-    jr .call_arena_menu_write_player_name_with_flag0
+    jr .call_arena_menu_prepare_result_name_write
 
 .skip:
     jr .call_write_player_name_with_flag0_suffix_to
 
-.call_arena_menu_write_player_name_with_flag0:
-    call ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0
+.call_arena_menu_prepare_result_name_write:
+    call ArenaMenu_PrepareResultName_WritePlayerNameWithFlag0SuffixToTextBuf0
     xor a
     ld [wTwoChoiceCursor], a
     xor a
@@ -6860,10 +6860,10 @@ RedrawFullScreenBoxes_0C::
 
 ; Puts the player's name and the class letter of wAreaGraphicsIndex (from
 ; ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data) in the text buffer. (C1, E-0357)
-ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0::
+ArenaMenu_PrepareResultName_WritePlayerNameWithFlag0SuffixToTextBuf0::
     farcall WritePlayerNameWithFlag0SuffixToTextBuf0
     ld a, [wAreaGraphicsIndex]
-    ld hl, ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data
+    ld hl, ArenaMenu_PrepareResultName_Data
     add_a_to_hl
     ld a, [hl]
     ld [wTextBuf0], a
@@ -6872,7 +6872,7 @@ ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0::
     ret
 
 ; data read by ArenaMenu (6 bytes) (E-0347)
-ArenaMenu_WritePlayerNameWithFlag0SuffixToTextBuf0_Data::
+ArenaMenu_PrepareResultName_Data::
     db $0c, $0c, $0c, $0b, $0a, $1c
 
 ; Advance the eight-bit random-arena round counter, wrapping at $FF, and copy wAreaGraphicsIndex to
@@ -7585,12 +7585,12 @@ ArenaMenu_DispatchTalkEvent::
 
 ; Sets up an arena grid battle: intro kind 4, encounter kind 2, and the three foes of entry
 ; wScreenCountPlusOne from the grid table. (C1, E-0357)
-ArenaGridBattle_WriteBattleIntroKindAndEncounterKind::
+ArenaGridBattle_SetUp::
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
     ld [wEncounterKind], a
-    ld hl, ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data
+    ld hl, ArenaGridBattle_SetUp_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -7639,7 +7639,7 @@ ArenaMenu_DispatchTalkEvent_SetScriptReturnBank::
 
 ; Sets up a grid battle from GridEncounterTable: the table chosen by wGridCursorX, entry
 ; wScreenCountPlusOne, three foes into wEncounterMonsters. (C1, E-0357)
-ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind::
+ArenaGridBattle_SetUpFromGrid::
     ld a, $04
     ld [wBattleIntroKind], a
     ld a, $02
@@ -7931,24 +7931,23 @@ ShowTwoChoiceBoxAtWindowTileBufferRow13Col14_TileRect::
     db $b6, $c3, $ae, $af, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-ArenaMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc_Data2::
+ArenaMenu_ClassCursor_Data2::
     db $ca, $c3, $f2, $c3, $1a, $c4, $42, $c4
 
-ArenaMenu_WriteTextBuf0AndScreenStateEtc_Data2::
+ArenaMenu_ClassCursor2_Data2::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4, $8d, $c3, $8f, $c3, $91, $c3, $8d, $c3
     db $8f, $c3, $91, $c3, $b5, $c3, $b7, $c3, $b9, $c3
 
 ArenaMenu_AskEnterClass_Data::
     db $64, $00, $f4, $01, $e8, $03, $88, $13, $02, $04, $08, $10
 
-ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_Data::
+ArenaGridBattle_SetUp_Data::
     db $7f, $78, $85, $78, $8b, $78, $91, $78, $83, $00, $84, $00, $83, $00, $85, $00
     db $86, $00, $87, $00, $88, $00, $89, $00, $88, $00
 
-; ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind sets battle intro 4 and
-; encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 *
-; wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as
-; E-0202) (E-0236, C1)
+; ArenaGridBattle_SetUpFromGrid sets battle intro 4 and encounter kind 2, reads the word at $7897 +
+; 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from
+; it to wEncounterMonsters (three encounter words, as E-0202) (E-0236, C1)
 ; record: encounter list for this wGridCursorX
 GridEncounterTable::
     dw GridEncounterList0 ; id 0

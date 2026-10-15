@@ -1048,20 +1048,20 @@ ClearSGBPacketBuffer::
 
 ; Turns the screen back on after a mode change and re-enables interrupts with the mask in A: when
 ; linked it first re-synchronises with the partner (the serial handshake at
-; ClearSGBPacketBuffer_WaitSerialTransferDone), then sets LCDC bit 7 and sends the SGB unfreeze
-; packet, clears rIF, writes rIE and enables interrupts. Not part of ClearSGBPacketBuffer; it only
-; follows it in the ROM. (C1, E-0357)
+; ClearSGBPacketBuffer_SetInterruptEnable), then sets LCDC bit 7 and sends the SGB unfreeze packet,
+; clears rIF, writes rIE and enables interrupts. Not part of ClearSGBPacketBuffer; it only follows
+; it in the ROM. (C1, E-0357)
 ClearSGBPacketBuffer_CheckLinkMode::
     push af
     ld a, [wLinkMode]
     or a
     jr z, .call_clear_sgb_packet_buffer_send_sgb_packet
-    call ClearSGBPacketBuffer_WaitSerialTransferDone
+    call ClearSGBPacketBuffer_SetInterruptEnable
 
 .call_clear_sgb_packet_buffer_send_sgb_packet:
     call ClearSGBPacketBuffer_SendSGBPacketSet
     pop af
-    call ClearSGBPacketBuffer_WriteIFAndIE
+    call SetInterruptEnable
     ei
     ret
 
@@ -1117,7 +1117,7 @@ WaitSerialTransferDone::
     ret
 
 ; Clears pending interrupts (rIF = 0) and enables those in A (rIE = A). (C1, E-0357)
-ClearSGBPacketBuffer_WriteIFAndIE::
+SetInterruptEnable::
     ld b, a
     xor a
     ldh [rIF], a
@@ -2263,10 +2263,10 @@ ResetFadeFromDMGPaletteBGP::
 ; $20, sets wFadeLevel and the delays, fills the palettes with PAL_WHITE or black ($0000, wFadeMode
 ; bit 7) and sends them as SGB packets ($01, and $09 when wFadeMask bit 4 is set); a DMG takes the
 ; separate wFadeMode path (E-0353: corrected; was: A = level (bit 7 set selects the second form); on
-; CGB it hands over to StartPaletteFade_WriteFadeLevelAndFadeDelayEtc; on DMG it rebuilds the
-; palette copy at wOBJPaletteBuffer + $20 from wOBJPaletteBuffer and sets wFadeState,
-; wFadeLevel-wFadeDelayCounter, with $7FFF (white) or $0000 (black) fill chosen by bit 7 of
-; wFadeMode; observed writes only, the purpose is a palette fade by inference)
+; CGB it hands over to StartPaletteFade_SetUpTiming; on DMG it rebuilds the palette copy at
+; wOBJPaletteBuffer + $20 from wOBJPaletteBuffer and sets wFadeState, wFadeLevel-wFadeDelayCounter,
+; with $7FFF (white) or $0000 (black) fill chosen by bit 7 of wFadeMode; observed writes only, the
+; purpose is a palette fade by inference)
 StartPaletteFade::
     ld b, a
     ld a, [wIsCGB]
@@ -2360,7 +2360,7 @@ StartPaletteFade::
 .set_fade_state2:
     ld a, b
     ld [wFadeState], a
-    farcall StartPaletteFade_WriteFadeLevelAndFadeDelayEtc
+    farcall StartPaletteFade_SetUpTiming
     jp .return
 
 .check_fade_mode:
@@ -2466,7 +2466,7 @@ StepFade::
     or a
     ret z
     bit 7, a
-    call z, StepFade_WriteSoundFadeTargetAndNR50Etc
+    call z, StepMusicVolumeFade
     ld a, [wIsCGB]
     or a
     jp nz, AdjustColorChannelForFade_CallStepCGBFade
@@ -3177,7 +3177,7 @@ UnreferencedStartSoundFadeA:: ; configured code entry (E-0239); C0
 ; stereo side of the master volume (rNR50) by one, keeping the left/right enable bits; when the
 ; volume reaches 0, or wSoundFadeTimer steps have passed, the fade stops (wSoundFadeLevel = 0). (C1,
 ; E-0357)
-StepFade_WriteSoundFadeTargetAndNR50Etc::
+StepMusicVolumeFade::
     ld a, [wFieldInitStage]
     or a
     jr nz, .clear_sound_fade_level
@@ -3375,12 +3375,12 @@ LoadSGBBorderForSetA::
 ; 5, otherwise $70 | wIsCGB, expecting $70 or $71 back. It settles which side drives the clock
 ; (wLinkRole bit 1) from the two consoles' CGB flags, clears the busy bits, and resets
 ; wLinkExchangeState and the 14 joypad bytes from wJoypadHeld. (C1, E-0357)
-ClearSGBPacketBuffer_WaitSerialTransferDone::
+ClearSGBPacketBuffer_SetInterruptEnable::
     ld a, [wLinkMode]
     or a
     jp z, .clear_link_exchange_state
     ld a, $08
-    call ClearSGBPacketBuffer_WriteIFAndIE
+    call SetInterruptEnable
     ld a, [wLinkStatus]
     set 7, a
     res 6, a
@@ -4970,7 +4970,7 @@ MapRecordPointer::
 ; height), or the 3-byte cell at row wDebugValue3, column wDebugValue1 holds a zero word. The cell
 ; table is chosen through the record's pointer at offset 16 and the first set bit of the byte it
 ; points to. Otherwise returns A = 0. Restores the ROM bank. (C1, E-0357)
-DebugMapEditor_Update_WriteROMB0AndTemp0::
+DebugMapEditor_CheckPosition::
     ld a, [BANK_NUMBER_BYTE]
     push af
     ld a, $11
@@ -6533,8 +6533,8 @@ StatInterruptHandler::
     jumptable
     dw StatInterruptHandler_WriteSVBK
     dw StatInterruptHandler_WriteSVBK_2
-    dw StatInterruptHandler_WriteSCXAndLYCEtc
-    dw StatInterruptHandler_WriteSCYAndLYCEtc
+    dw StatInterruptHandler_HorizontalWave
+    dw StatInterruptHandler_VerticalWave
 
 ; The common exit of StatInterruptHandler: restores the WRAM bank and the saved registers and
 ; returns from the interrupt. It is also split 0 (no split). (C1, E-0357)
@@ -6553,7 +6553,7 @@ StatInterruptHandler_WriteSVBK_2::
 ; STAT split 2, a horizontal wave: on each interrupt sets rSCX to the byte at wBGPaletteCopy + rLY
 ; (the buffer here holds per-line scroll values) and moves the LYC line on by 2; after line $8F it
 ; restores rSCX from hScrollX and restarts at line 0. (C1, E-0357)
-StatInterruptHandler_WriteSCXAndLYCEtc::
+StatInterruptHandler_HorizontalWave::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
     add_a_to_hl
@@ -6574,7 +6574,7 @@ StatInterruptHandler_WriteSCXAndLYCEtc::
 ; STAT split 3, a vertical wave: on each interrupt sets rSCY to the byte at wBGPaletteCopy + rLY and
 ; moves the LYC line on by 2; after line $80 it restores rSCY from hScrollY and restarts at line 0.
 ; (C1, E-0357)
-StatInterruptHandler_WriteSCYAndLYCEtc::
+StatInterruptHandler_VerticalWave::
     ldh a, [rLY]
     ld hl, wBGPaletteCopy
     add_a_to_hl
@@ -8494,11 +8494,11 @@ SoundModulationRows0::
 ; wSoundChannelSlots ($20 apart) to $FF; clears the 72 bytes at wSoundLabelSlots, wSoundEngineState
 ; and wSoundWaveReload (E-0353: corrected; was: rNR52 = $80, rNR51 = 0, rNR50 = $77; sets the first
 ; two bytes of each of the 6 channel slots at wSoundChannelSlots to $FF; clears the 72 bytes at
-; wSoundLabelSlots, wSoundEngineState and wSoundWaveReload; calls
-; InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc with BC = 0)
+; wSoundLabelSlots, wSoundEngineState and wSoundWaveReload; calls SetSoundChannelsToWaitFor with BC
+; = 0)
 InitSoundHardware::
     ld bc, $0000
-    call InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc
+    call SetSoundChannelsToWaitFor
     ld a, $80
     ldh [rNR52], a
     xor a
@@ -8549,7 +8549,7 @@ SetSoundEngineStateTo4AndClearSoundEngineMode::
 ; Sets which sound channels to wait for (wSoundChannelMask = B, and C into wSoundChannelMaskCount)
 ; and clears the set of channels that have finished. InitSoundHardware calls it with BC = 0. (C1,
 ; E-0357)
-InitSoundHardware_WriteSoundChannelMaskAndSoundChannelMaskCountEtc::
+SetSoundChannelsToWaitFor::
     ld a, b
     ld [wSoundChannelMask], a
     ld a, c
@@ -8583,7 +8583,7 @@ SoundTick_WriteSoundChannelsDone::
 ; wSoundChannelMaskCount into the low nibble of byte 6 of each of those channels' 32-byte slots in
 ; wSoundChannelSlots, then clears the mask; it always clears wSoundChannelsDone. What byte 6
 ; controls is not yet known. (C1, E-0357)
-SoundTick_WriteSoundChannelsDoneAndSoundChannelMask::
+SoundTick_CheckChannelsDone::
     ld a, [wSoundChannelsDone]
     ld hl, wSoundChannelMask
     and [hl]
@@ -8930,15 +8930,15 @@ SoundTick_ReadSndNoteLength::
     jr SoundTick_CheckSoundWaveReload
 
 ; Envelope step: when the envelope counter reaches the value in the low nibble of hSndEnvFlags - 1,
-; it recomputes the envelope (SoundTick_WriteSndEnvelopeReloadAndSndEnvelope) and writes it to the
-; channel if it changed. (C1, E-0357)
+; it recomputes the envelope (SoundTick_StepEnvelope) and writes it to the channel if it changed.
+; (C1, E-0357)
 SoundTick_CheckSndEnvFlags::
     ldh a, [hSndEnvFlags]
     and $0f
     dec a
     cp [hl]
     jr nz, SoundTick_CheckSoundWaveReload
-    call SoundTick_WriteSndEnvelopeReloadAndSndEnvelope
+    call SoundTick_StepEnvelope
     ldh a, [hSndEnvelope]
     call WriteChannelEnvelopeIfChanged
     jr SoundTick_CheckSoundWaveReload
@@ -9033,7 +9033,7 @@ SoundTick_CheckSoundWaveReload::
 ; Moves to the next of the 6 channel slots (32 bytes on); after the last it applies the stereo mask:
 ; wSoundEngineMode keeps only the channels that played (wSoundSkipMaskA) and goes to rNR51. Restores
 ; the ROM bank and checks whether a waited-for group of channels has finished
-; (SoundTick_WriteSoundChannelsDoneAndSoundChannelMask). (C1, E-0357)
+; (SoundTick_CheckChannelsDone). (C1, E-0357)
 SoundTick_CheckSoundChannelIndex::
     ld de, $0020
     add hl, de
@@ -9050,7 +9050,7 @@ SoundTick_CheckSoundChannelIndex::
     ldh [rNR51], a
     pop af
     ld [rROMB0], a
-    call SoundTick_WriteSoundChannelsDoneAndSoundChannelMask
+    call SoundTick_CheckChannelsDone
     ret
 
 ; C2 static reading (E-0019): channel start. Reads the 4-byte track header (byte 0 low nibble ->
@@ -9751,7 +9751,7 @@ ComputeNotePitch::
     ld a, [wSoundHwChannel]
     cp $02
     jr nz, .call_compute_note_pitch_write_nr32
-    call ComputeNotePitch_WriteSoundEventArgAndNR30
+    call LoadWavePatternIfChanged
     ld a, $80
     ldh [rNR30], a
 
@@ -10199,8 +10199,8 @@ SoundEnvelopeScaleTable::
 
 ; the routine before ComputeNotePitch_WriteNR32 adds the byte at SoundPitchOffsetRows +
 ; ((hSndChanFlags & $F0) - $10) + (wSoundTickBuf0E & $0F) to hSndFreqLo and writes it to register
-; $13 of the channel; row 1 is the first; 15 rows end at ComputeNotePitch_WriteSoundEventArgAndNR30
-; ($3D7C) (E-0209, C1)
+; $13 of the channel; row 1 is the first; 15 rows end at LoadWavePatternIfChanged ($3D7C) (E-0209,
+; C1)
 ; record: 16 signed frequency offsets, one per tick phase
 SoundPitchOffsetRows::
     db $00, $00, $01, $01, $00, $00, $ff, $ff, $00, $00, $01, $01, $00, $00, $ff, $ff ; id 1
@@ -10221,7 +10221,7 @@ SoundPitchOffsetRows::
 
 ; Loads a new wave pattern when hSndSweepOrWave differs from the last one used (wSoundEventArg):
 ; records it and switches the wave channel off before the pattern is written. (C1, E-0357)
-ComputeNotePitch_WriteSoundEventArgAndNR30::
+LoadWavePatternIfChanged::
     ld a, [wSoundEventArg]
     ld b, a
     ldh a, [hSndSweepOrWave]
@@ -10287,7 +10287,7 @@ SoundLabelSlot::
 ; Recomputes the envelope for an envelope step: (reload nibble + 1) * (start volume + 1) / 16, at
 ; least 1, becomes the new start volume (high nibble of hSndEnvelope); hSndEnvelopeReload keeps its
 ; low nibble and takes the old start volume as its high nibble. Keeps BC and DE. (C1, E-0357)
-SoundTick_WriteSndEnvelopeReloadAndSndEnvelope::
+SoundTick_StepEnvelope::
     push de
     push bc
     ldh a, [hSndEnvelopeReload]

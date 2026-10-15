@@ -153,7 +153,7 @@ SceneHomecoming::
     ld a, [wScriptStep]
     jumptable
     dw SceneHomecoming_PlaceObject
-    dw SceneHomecoming_WriteScriptParam0AndScriptParam1Etc
+    dw SceneHomecoming_FlyArc
     dw SceneHomecoming_ShowWarubouWaheyInsteadOf
     dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowWarubouNoOneKnows
@@ -179,23 +179,23 @@ SceneHomecoming::
     dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_ShowKamehaNoOnesTaking
     dw SceneHomecoming_WaitMessage
-    dw SceneHomecoming_WritePlayerFacingAndPlayerYEtc
-    dw SceneHomecoming_WriteObject2AndPlayerXEtc
-    dw SceneHomecoming_WriteObject2AndPlayerXEtc_2
+    dw SceneHomecoming_WalkPlayer
+    dw SceneHomecoming_MoveTogether
+    dw SceneHomecoming_MoveBack
     dw SceneHomecoming_Msg0DB8_WarubouWaheyIHave
     dw SceneHomecoming_WaitMessage
     dw SceneHomecoming_WriteFollowerRecords
     dw SceneHomecoming_HopFollower
     dw SceneHomecoming_WaitMessage
-    dw SceneHomecoming_WriteObject2AndPlayerXEtc
-    dw SceneHomecoming_WriteObject2AndPlayerXEtc_2
-    dw SceneHomecoming_WriteObject2AndPlayerXEtc
+    dw SceneHomecoming_MoveTogether
+    dw SceneHomecoming_MoveBack
+    dw SceneHomecoming_MoveTogether
     dw SceneHomecoming_HopAndWalk
     dw SceneHomecoming_ToStartPaletteFadeAndStep
     dw SceneHomecoming_WaitFadeState
     dw SceneHomecoming_ShowTHEEND
-    dw SceneHomecoming_WriteScriptParam0AndScriptParam1
-    dw SceneHomecoming_WriteMapIdAndMapScreenXEtc
+    dw SceneHomecoming_CountDelay
+    dw SceneHomecoming_GoToMap6
     dw SceneHomecoming_SetScriptStartRequestTo80
 
 ; Homecoming scene, step 44: resumes the script. (C1, E-0357)
@@ -206,7 +206,7 @@ SceneHomecoming_SetScriptStartRequestTo80::
 
 ; Homecoming scene, step 43: moves the player to map 6, screen (0, 0) and switches to game mode 2 at
 ; wModeState $0B (the pages after the ending). (C1, E-0357)
-SceneHomecoming_WriteMapIdAndMapScreenXEtc::
+SceneHomecoming_GoToMap6::
     ld a, $06
     ldh [hMapId], a
     xor a
@@ -227,7 +227,7 @@ SceneHomecoming_WriteMapIdAndMapScreenXEtc::
     ret
 
 ; Homecoming scene, step 42: counts down the 16-bit delay in wScriptParam0/1. (C1, E-0357)
-SceneHomecoming_WriteScriptParam0AndScriptParam1::
+SceneHomecoming_CountDelay::
     ld a, [wScriptParam0]
     ld l, a
     ld a, [wScriptParam1]
@@ -433,31 +433,30 @@ SceneHomecoming_Msg0DB8_WarubouWaheyIHave::
 
 ; Homecoming scene, step 29: moves object 2, the player and the scene object back by the negated
 ; amounts of the step-28 table. (C1, E-0357)
-SceneHomecoming_WriteObject2AndPlayerXEtc_2::
+SceneHomecoming_MoveBack::
     ld a, [wScriptParam0]
-    ld hl, SceneHomecoming_WriteObject2AndPlayerXEtc_Data
+    ld hl, SceneHomecoming_MoveBack_Data
     add_a_to_hl
     ld a, [hl]
     xor $ff
     inc a
     ld c, a
-    jr SceneHomecoming_WriteObject2AndPlayerXEtc_ReadObject2
+    jr SceneHomecoming_AddToX
 
 ; Homecoming scene, step 28: sets object 2 walking and moves it, the player and the scene object
-; together by the per-frame amounts of SceneHomecoming_WriteObject2AndPlayerXEtc_Data for $40
-; frames. (C1, E-0357)
-SceneHomecoming_WriteObject2AndPlayerXEtc::
+; together by the per-frame amounts of SceneHomecoming_MoveBack_Data for $40 frames. (C1, E-0357)
+SceneHomecoming_MoveTogether::
     ld a, $01
     ld [wObject2 + OBJ_STATE], a
     ld a, [wScriptParam0]
-    ld hl, SceneHomecoming_WriteObject2AndPlayerXEtc_Data
+    ld hl, SceneHomecoming_MoveBack_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
 
 ; Adds C to the X of object 2, the player and the scene object; after $40 frames moves on. (C1,
 ; E-0357)
-SceneHomecoming_WriteObject2AndPlayerXEtc_ReadObject2::
+SceneHomecoming_AddToX::
     ld a, [wObject2 + OBJ_X]
     add c
     ld [wObject2 + OBJ_X], a
@@ -479,14 +478,14 @@ SceneHomecoming_WriteObject2AndPlayerXEtc_ReadObject2::
     ret
 
 ; data read by SceneHomecoming (64 bytes) (E-0347)
-SceneHomecoming_WriteObject2AndPlayerXEtc_Data::
+SceneHomecoming_MoveBack_Data::
     db $01, $00, $01, $00, $01, $01, $00, $ff, $01, $00, $00, $ff, $00, $ff, $ff, $00
     db $01, $00, $00, $00, $01, $01, $ff, $00, $00, $ff, $00, $00, $00, $ff, $01, $00
     db $01, $00, $01, $00, $00, $01, $01, $01, $00, $00, $ff, $00, $00, $00, $ff, $01
     db $ff, $00, $00, $01, $ff, $ff, $ff, $00, $00, $00, $ff, $00, $00, $ff, $ff, $00
 
 ; Homecoming scene, step 27: walks the player up to Y $30, then left to X $78. (C1, E-0357)
-SceneHomecoming_WritePlayerFacingAndPlayerYEtc::
+SceneHomecoming_WalkPlayer::
     ld a, [wScriptParam0]
     or a
     jr nz, .set_player_facing_to_03
@@ -753,7 +752,7 @@ SceneHomecoming_ShowWarubouWaheyInsteadOf::
 
 ; Homecoming scene, step 1: object 3 flies in an arc (a 16-bit vertical speed growing by $18 per
 ; frame) moving right two pixels per frame to X $40, then lands at Y $40. (C1, E-0357)
-SceneHomecoming_WriteScriptParam0AndScriptParam1Etc::
+SceneHomecoming_FlyArc::
     ld de, $0018
     ld a, [wScriptParam0]
     ld l, a
@@ -2532,14 +2531,13 @@ SceneDarckDefeated_MoveSceneObjectAgain::
     ld a, [wScriptParam1]
     and $0f
     jumptable
-    dw SceneDarckDefeated_WriteScriptSubStepAndObject5
-    dw SceneDarckDefeated_WriteObject5AndScriptSubStepEtc
+    dw SceneDarckDefeated_MovePathBackward
+    dw SceneDarckDefeated_CountPathPasses
 
-; Moves the scene object backwards along its path
-; (SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable, the row chosen by wScriptParam1
-; bits 4-6), one point every other frame, shifted 16 pixels right; after $17 points the next phase.
-; (C1, E-0357)
-SceneDarckDefeated_WriteScriptSubStepAndObject5::
+; Moves the scene object backwards along its path (SceneDarckDefeated_ObjectPath, the row chosen by
+; wScriptParam1 bits 4-6), one point every other frame, shifted 16 pixels right; after $17 points
+; the next phase. (C1, E-0357)
+SceneDarckDefeated_MovePathBackward::
     ld a, [wScriptSubStep]
     bit 0, a
     jr z, .skip
@@ -2553,7 +2551,7 @@ SceneDarckDefeated_WriteScriptSubStepAndObject5::
     ld a, $17
     sub c
     add a
-    ld de, SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable
+    ld de, SceneDarckDefeated_ObjectPath
     add e
     ld e, a
     jr nc, .check_script_param1
@@ -2587,7 +2585,7 @@ SceneDarckDefeated_WriteScriptSubStepAndObject5::
 
 ; Counts the path passes: hides the scene object and moves to the next row; after the eighth the
 ; scene goes on. (C1, E-0357)
-SceneDarckDefeated_WriteObject5AndScriptSubStepEtc::
+SceneDarckDefeated_CountPathPasses::
     xor a
     ld [wObject5], a
     ld a, [wScriptParam1]
@@ -2615,12 +2613,12 @@ SceneDarckDefeated_MoveSceneObject::
     ld a, [wScriptParam1]
     and $0f
     jumptable
-    dw SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5
-    dw SceneDarckDefeated_WriteScriptSubStepAndScriptParam1
+    dw SceneDarckDefeated_MovePathForward
+    dw SceneDarckDefeated_CountPathPasses2
 
 ; Moves the scene object forwards along its path (the row chosen by wScriptParam1 bits 4-6), one
 ; point every other frame; after $17 points the next phase. (C1, E-0357)
-SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5::
+SceneDarckDefeated_MovePathForward::
     ld a, [wScriptSubStep]
     bit 0, a
     jr z, .skip
@@ -2630,7 +2628,7 @@ SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5::
 
 .skip:
     and $fe
-    ld de, SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable
+    ld de, SceneDarckDefeated_ObjectPath
     add e
     ld e, a
     jr nc, .check_script_param1
@@ -2662,7 +2660,7 @@ SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5::
     ret
 
 ; Counts the path passes: after the eighth row the scene goes on. (C1, E-0357)
-SceneDarckDefeated_WriteScriptSubStepAndScriptParam1::
+SceneDarckDefeated_CountPathPasses2::
     ld a, [wScriptParam1]
     add $10
     and $f0
@@ -2678,11 +2676,11 @@ SceneDarckDefeated_WriteScriptSubStepAndScriptParam1::
     ld [wScriptParam1], a
     ret
 
-; SceneDarckDefeated_MoveSceneObject_WriteScriptSubStepAndObject5 reads, every other frame, the pair
-; at $5284 + $30 * ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps
-; per path; 8 paths end at SceneThreeItems (E-0206, C1)
+; SceneDarckDefeated_MovePathForward reads, every other frame, the pair at $5284 + $30 *
+; ((wScriptParam1 & $70) >> 4) + 2 * step into wObject5 + 5 and + 4, for 23 steps per path; 8 paths
+; end at SceneThreeItems (E-0206, C1)
 ; record: 24 steps of two bytes (wObject5 + 5, wObject5 + 4), 12 per line
-SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable::
+SceneDarckDefeated_ObjectPath::
     db $fe, $06, $00, $09, $02, $0c, $04, $0f, $06, $12, $08, $15, $0a, $18, $0c, $1b, $0e, $1e, $10, $21, $12, $23, $14, $26 ; id 0
     db $16, $28, $18, $2b, $1a, $2d, $1c, $30, $1e, $32, $20, $34, $22, $36, $24, $38, $26, $3a, $28, $3c, $2a, $3e, $2c, $40
     db $fe, $63, $00, $61, $02, $5f, $04, $5d, $06, $5b, $08, $59, $0a, $57, $0c, $55, $0e, $53, $10, $52, $12, $50, $14, $4f ; id 1
@@ -4372,10 +4370,10 @@ SceneCheerYuna::
     dw SceneHomecoming_WaitMessage
     dw SceneCheerYuna_SetScriptSubStep
     dw SceneCheerYuna_ToRunScriptSubStep
-    dw SceneCheerYuna_WritePlayerFacingAndScriptStartRequest
+    dw SceneCheerYuna_FaceUp
 
 ; Cheer Yuna scene, step 16: the player faces up and the script resumes. (C1, E-0357)
-SceneCheerYuna_WritePlayerFacingAndScriptStartRequest::
+SceneCheerYuna_FaceUp::
     ld a, $02
     ldh [hPlayerFacing], a
     ld a, $80
@@ -4965,7 +4963,7 @@ SceneWallExit::
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_MoveObject1
-    dw SceneWallExit_WriteScriptParam0AndObject1
+    dw SceneWallExit_LowerObject1
     dw SceneWallExit_WalkObject1
     dw SceneWallExit_ShowKamehaHeroThatWasnt
     dw SceneHomecoming_WaitMessage
@@ -5084,7 +5082,7 @@ SceneWallExit_WalkObject1::
     ret
 
 ; Wall exit scene, step 8: object 1 moves down one pixel every eight frames to Y $30. (C1, E-0357)
-SceneWallExit_WriteScriptParam0AndObject1::
+SceneWallExit_LowerObject1::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -5226,13 +5224,13 @@ SceneReportToKing::
     dw SceneHomecoming_WaitMessage
     dw SceneReportToKing_DrawTiles
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneReportToKing_WriteFieldDrawFlagsAndScriptStep
+    dw SceneReportToKing_HideFollower
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
-    dw SceneReportToKing_AdvanceScriptStep
+    dw SceneReportToKing_HideSecondFollower
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneReportToKing_WriteFieldDrawFlags
     dw SceneReportToKing_Warp
-    dw SceneReportToKing_SetBit1AtHL_Bank0FAndStep
+    dw SceneReportToKing_HideParty
     dw SceneReportToKing_WalkDown
 
 ; Report to king scene, step 17: the player and the followers walk down two pixels a frame to Y $40;
@@ -5303,7 +5301,7 @@ SceneReportToKing_WalkDown::
 
 ; Report to king scene, step 16: freezes the player's animation (bit 1), puts the followers above
 ; the screen (Y $D0, $C0, $B0) and plays sound $65. (C1, E-0357)
-SceneReportToKing_SetBit1AtHL_Bank0FAndStep::
+SceneReportToKing_HideParty::
     ld hl, hPlayerStateFlags
     call SetBit1AtHL_Bank0F
     ld a, $d0
@@ -5354,7 +5352,7 @@ SceneReportToKing_WriteFieldDrawFlags::
 
 ; Report to king scene, step 12: hides the second follower too (hFieldDrawFlags 7); with two party
 ; monsters skips to step $0F. (C1, E-0357)
-SceneReportToKing_AdvanceScriptStep::
+SceneReportToKing_HideSecondFollower::
     ld hl, wScriptStep
     inc [hl]
     ld a, $07
@@ -5369,7 +5367,7 @@ SceneReportToKing_AdvanceScriptStep::
 
 ; Report to king scene, step 10: hides the first follower too (hFieldDrawFlags 3); with one party
 ; monster skips to step $0F. (C1, E-0357)
-SceneReportToKing_WriteFieldDrawFlagsAndScriptStep::
+SceneReportToKing_HideFollower::
     ld hl, wScriptStep
     inc [hl]
     ld a, $03
@@ -5609,14 +5607,14 @@ SceneReportToKing_WalkUp::
 SceneMermaidKingdom::
     ld a, [wScriptStep]
     jumptable
-    dw SceneMermaidKingdom_WriteScriptStepAndStepPtrLoEtc
+    dw SceneMermaidKingdom_WalkPlayerLeft2
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneWallExit_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidKingdom_ShowKamehaGaspHackI
     dw SceneHomecoming_WaitMessage
     dw SceneMermaidKingdom_WalkObject1
-    dw SceneMermaidKingdom_WriteScriptParam0AndObject1Etc
+    dw SceneMermaidKingdom_MoveObject1
     dw SceneMermaidKingdom_MoveObject2
     dw SceneMermaidKingdom_ToScriptStepDeltaThenMessage
     dw SceneHomecoming_WaitMessage
@@ -5645,7 +5643,7 @@ SceneMermaidKingdom::
     dw SceneMermaidKingdom_WalkPlayerDown
     dw SceneMermaidKingdom_ShowKamehaIWasStupid
     dw SceneHomecoming_WaitMessage
-    dw SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc
+    dw SceneMermaidKingdom_WalkObject0
     dw SceneMermaidKingdom_WalkPlayerLeft
     dw SceneMermaidKingdom_DriftObject
     dw SceneMermaidKingdom_Wait
@@ -5826,7 +5824,7 @@ SceneMermaidKingdom_WalkPlayerLeft::
 
 ; Mermaid kingdom scene, step 36: walks object 0 (two pixels a frame) left to X $70, up to Y $30,
 ; left to X $50 and up to Y 0; then draws no sprite slots and plays the map music. (C1, E-0357)
-SceneMermaidKingdom_WriteStepTargetAndStepPtrLoEtc::
+SceneMermaidKingdom_WalkObject0::
     ld a, [wScriptParam0]
     or a
     jr nz, .skip
@@ -6185,7 +6183,7 @@ SceneMermaidKingdom_MoveObject2::
 
 ; Mermaid kingdom scene, step 7: object 1 moves left one pixel every four frames to X $30, then
 ; right two pixels a frame to X $40; then sound $63. (C1, E-0357)
-SceneMermaidKingdom_WriteScriptParam0AndObject1Etc::
+SceneMermaidKingdom_MoveObject1::
     ld a, [wScriptParam1]
     or a
     jr nz, .check_object1
@@ -6368,7 +6366,7 @@ SceneWallExit_ToScriptStepMoveFollowersToLeader::
 
 ; Mermaid kingdom scene, step 0: walks the player left to X $40 and turns it down; a player already
 ; at X $40 skips to step 4. (C1, E-0357)
-SceneMermaidKingdom_WriteScriptStepAndStepPtrLoEtc::
+SceneMermaidKingdom_WalkPlayerLeft2::
     ldh a, [hPlayerX]
     cp $40
     jr nz, .set_step_ptr_lo_to_40
@@ -6403,7 +6401,7 @@ SceneKamehaFlees::
     dw SceneKamehaFlees_WalkPlayerUp
     dw SceneKamehaFlees_KeepInStep
     dw SceneKamehaFlees_Wait
-    dw SceneKamehaFlees_WriteObject2AndTemp0Etc
+    dw SceneKamehaFlees_MoveObjectsUp
     dw SceneKamehaFlees_DropObject
     dw SceneKamehaFlees_ShakeAndHop
     dw SceneKamehaFlees_WalkRight
@@ -6548,7 +6546,7 @@ SceneKamehaFlees_DropObject::
 ; Kameha flees scene, step 8: objects 0-2 each move up two pixels a frame to Y $40, then left
 ; (facing left) until object 0 reaches X $40; then they stop, object 2 faces left, field command 7
 ; runs, the scene object is shown and sound $65 plays. (C1, E-0357)
-SceneKamehaFlees_WriteObject2AndTemp0Etc::
+SceneKamehaFlees_MoveObjectsUp::
     ld b, $03
     ld hl, wSpriteSlots + $c
 
@@ -6710,12 +6708,12 @@ SceneCrewFollows::
     jumptable
     dw SceneCrewFollows_MoveRight
     dw SceneCrewFollows_ShakeScreen
-    dw SceneCrewFollows_SetBit2AtHL_B0FAndStep
-    dw SceneCrewFollows_WriteScriptParam0AndSpriteSlotsEtc
+    dw SceneCrewFollows_StartMoving
+    dw SceneCrewFollows_TurnObjects
 
 ; Crew follows scene, step 3: objects 0 and 2 face one way and object 1 the other, swapping between
 ; left and right every 16 frames, for $78 frames; then the script resumes. (C1, E-0357)
-SceneCrewFollows_WriteScriptParam0AndSpriteSlotsEtc::
+SceneCrewFollows_TurnObjects::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6743,7 +6741,7 @@ SceneCrewFollows_WriteScriptParam0AndSpriteSlotsEtc::
     ret
 
 ; Crew follows scene, step 2: sets objects 0-2 moving and clears the counter. (C1, E-0357)
-SceneCrewFollows_SetBit2AtHL_B0FAndStep::
+SceneCrewFollows_StartMoving::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
     ld hl, wObject1 + OBJ_FLAGS
@@ -6839,11 +6837,11 @@ SceneCrewFollows_MoveRight::
 SceneKamehaCaught::
     ld a, [wScriptStep]
     jumptable
-    dw SceneKamehaCaught_SetBit2AtHL_B0FAndStep
-    dw SceneKamehaCaught_WriteSpriteSlotCountAndScriptStartRequest
+    dw SceneKamehaCaught_StartMoving
+    dw SceneKamehaCaught_MoveOff
 
 ; Kameha caught scene, step 0: sets objects 0-2 moving and clears the counter. (C1, E-0357)
-SceneKamehaCaught_SetBit2AtHL_B0FAndStep::
+SceneKamehaCaught_StartMoving::
     ld hl, wSpriteSlots + $d
     call SetBit2AtHL_B0F
     ld hl, wObject1 + OBJ_FLAGS
@@ -6858,7 +6856,7 @@ SceneKamehaCaught_SetBit2AtHL_B0FAndStep::
 
 ; Kameha caught scene, step 1: objects 0-2 move up two pixels a frame off the screen (Y $E0); then
 ; draws no sprite slots and resumes the script. (C1, E-0357)
-SceneKamehaCaught_WriteSpriteSlotCountAndScriptStartRequest::
+SceneKamehaCaught_MoveOff::
     ld b, $03
     ld hl, wSpriteSlots + $c
 
@@ -6950,7 +6948,7 @@ SceneWhoAreYou::
     dw SceneWhoAreYou_ShowKamehaHeyYoureHero
     dw SceneHomecoming_WaitMessage
     dw SceneWhoAreYou_WalkObject0
-    dw SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc
+    dw SceneWhoAreYou_MoveObject0
     dw SceneWhoAreYou_WalkPlayerRight
     dw SceneWhoAreYou_KeepInStep
 
@@ -6999,7 +6997,7 @@ SceneWhoAreYou_WalkPlayerRight::
 ; Who are you scene, step 7: object 0 moves left one pixel every four frames to X $20, then right
 ; (two pixels a frame) to X $30; then freezes the player's animation (bit 1) and plays sound $63.
 ; (C1, E-0357)
-SceneWhoAreYou_WriteScriptParam0AndSpriteSlotsEtc::
+SceneWhoAreYou_MoveObject0::
     ld a, [wScriptParam1]
     or a
     jr nz, .set_step_ptr_hi_to_00
@@ -7187,7 +7185,7 @@ ShakeScreen_Finish::
 
 ; Shakes the screen for wStepPtrLo frames: puts the count in B and falls into ScriptStepShakeScreen.
 ; (C1, E-0357)
-SceneKamehaEscape_WriteScrollXAndScrollXHi::
+ShakeScreenForStepCount::
     ld a, [wStepPtrLo]
     ld b, a
 
@@ -7257,7 +7255,7 @@ SceneRivalDefeated::
     dw SceneRivalDefeated_WalkObjectsDown
     dw SceneRivalDefeated_ShowKingWahahWeveBagged
     dw SceneHomecoming_WaitMessage
-    dw SceneRivalDefeated_WriteObject5AndScriptTemp4Etc
+    dw SceneRivalDefeated_ShowObject5
     dw SceneRivalDefeated_ShowKingThisIsThe
     dw SceneHomecoming_WaitMessage
     dw SceneRivalDefeated_ShowHeroObtainedTheTidalBell
@@ -7447,7 +7445,7 @@ SceneRivalDefeated_ShowKingThisIsThe::
 
 ; Rival defeated scene, step 19: shows the scene object at ($40, $20); saves the party count in
 ; wScriptTemp4 and lowers a count of 3 to 2 for the scene. (C1, E-0357)
-SceneRivalDefeated_WriteObject5AndScriptTemp4Etc::
+SceneRivalDefeated_ShowObject5::
     ld a, $40
     ld [wObject5 + SCRIPTOBJ_X], a
     ld a, $20
@@ -8017,10 +8015,10 @@ SceneLongFaces::
     dw SceneLongFaces_HopPlayer
     dw SceneLongFaces_ShowSlashThatsSettledThen
     dw SceneLongFaces_Fade
-    dw SceneLongFaces_WriteStoryFlagsAndScriptStartRequest
+    dw SceneLongFaces_Finish
 
 ; Long faces scene, step 12: sets bit 0 of story byte $60 and resumes the script. (C1, E-0357)
-SceneLongFaces_WriteStoryFlagsAndScriptStartRequest::
+SceneLongFaces_Finish::
     ld a, [wStoryFlags + $60]
     set 0, a
     ld [wStoryFlags + $60], a
@@ -8373,7 +8371,7 @@ SceneLandHo::
     dw SceneLandHo_ScrollUp
     dw SceneLandHo_ScrollUp
     dw SceneLandHo_SetFieldActionStep
-    dw SceneLandHo_WriteScriptParam0AndScrollY
+    dw SceneLandHo_ScrollRows
     dw SceneLandHo_ShowThisIsATale
     dw SceneHomecoming_WaitMessage
     dw SceneLandHo_WarpHome
@@ -8428,7 +8426,7 @@ SceneLandHo_ShowThisIsATale::
 ; Land ho scene, step 10: every four frames scrolls up one pixel and copies a 20-tile row of
 ; wScreenTileBuffer (row $11 - wFieldActionStep / 8) into the background row above the screen; after
 ; $90 steps aligns the scroll to a whole tile. (C1, E-0357)
-SceneLandHo_WriteScriptParam0AndScrollY::
+SceneLandHo_ScrollRows::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -8495,7 +8493,7 @@ SceneLandHo_WriteScriptParam0AndScrollY::
     ld a, h
     adc $c1
     ld h, a
-    call SceneLandHo_WriteBGWriteDestLoAndBGWriteDestHiEtc
+    call QueueBGMapRow
     ldh a, [hScrollY]
     sub $01
     ldh [hScrollY], a
@@ -8518,7 +8516,7 @@ SceneLandHo_WriteScriptParam0AndScrollY::
 
 ; Queues a 20-tile background row write at DE from HL (wBGWriteData) and, on the GBC, its attributes
 ; from WRAM bank 2 at HL + $0E68 (low three bits, the palette). (C1, E-0357)
-SceneLandHo_WriteBGWriteDestLoAndBGWriteDestHiEtc::
+QueueBGMapRow::
     ld a, e
     ld [wBGWriteDestLo], a
     ld a, d
@@ -8822,7 +8820,7 @@ SceneVaultSettled_HopFollower::
 SceneHorsingAround::
     ld a, [wScriptStep]
     jumptable
-    dw SceneHorsingAround_WriteMessageIndexAndMessageGroup
+    dw SceneHorsingAround_WalkLoop
     dw SceneHorsingAround_WalkObject0
     dw SceneHorsingAround_WriteMessageIndex
     dw SceneHorsingAround_HopObject0
@@ -8877,7 +8875,7 @@ SceneHorsingAround_WalkObject0::
 
 ; Horsing around scene, step 0: the player walks its loop for $140 frames (counted in
 ; wMessageIndex/wMessageGroup). (C1, E-0357)
-SceneHorsingAround_WriteMessageIndexAndMessageGroup::
+SceneHorsingAround_WalkLoop::
     call SceneHorsingAround_StepPlayerLeftTowardStepPtrLo
     ld a, [wMessageIndex]
     ld l, a

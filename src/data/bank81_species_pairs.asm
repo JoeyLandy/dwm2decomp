@@ -7,7 +7,7 @@ SECTION "Bank 81", ROMX[$4000], BANK[$81]
 ; Checks record B's parents against the breeding recipes for its species (the list at $4167 by
 ; species id): first in their order, then swapped; when only the swapped order matches, sets record
 ; B's family bit 4 (which the parents screen reads to swap their places). (C1, E-0357)
-CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
+CheckBreedingRecipes::
     ld a, [wRecordBufB + MON_SPECIES]
     ld l, a
     ld a, [wRecordBufB + MON_SPECIES + 1]
@@ -82,7 +82,7 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ldh [hTemp4], a
     ld a, [wAIWeights + $8]
     ldh [hTemp5], a
-    call CallInBank81KeepRegs_CompareHLToBC
+    call CheckBreedingRecipes_CompareHLToBC
     pop hl
     ld a, c
     or a
@@ -107,7 +107,7 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
     ldh [hTemp4], a
     ld a, [wAIWeights + $7]
     ldh [hTemp5], a
-    call CallInBank81KeepRegs_CompareHLToBC
+    call CheckBreedingRecipes_CompareHLToBC
     ld a, c
     or a
     jr nz, .set_species_id_lo
@@ -127,7 +127,7 @@ CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc::
 ; first parent is the record's own species and the second parent's family is the record's; a kind-0
 ; rule names a family, a kind-1 rule a first-parent species, each followed by partners (a species
 ; when bit 15 is set, otherwise a family) checked against the second parent. (C1, E-0357)
-CallInBank81KeepRegs_CompareHLToBC::
+CheckBreedingRecipes_CompareHLToBC::
     ld a, [hli]
     ld d, [hl]
     inc hl
@@ -137,7 +137,7 @@ CallInBank81KeepRegs_CompareHLToBC::
     jr z, .skip
     cp $01
     jp z, .skip2
-    jr CallInBank81KeepRegs_CompareHLToBC
+    jr CheckBreedingRecipes_CompareHLToBC
 
 .read_temp0:
     ldh a, [hTemp0]
@@ -176,7 +176,7 @@ CallInBank81KeepRegs_CompareHLToBC::
     inc hl
     dec d
     jr nz, .loop2
-    jr CallInBank81KeepRegs_CompareHLToBC
+    jr CheckBreedingRecipes_CompareHLToBC
 
 .loop3:
     ld c, [hl]
@@ -204,7 +204,7 @@ CallInBank81KeepRegs_CompareHLToBC::
 .next:
     dec d
     jr nz, .loop3
-    jp CallInBank81KeepRegs_CompareHLToBC
+    jp CheckBreedingRecipes_CompareHLToBC
 
 .skip2:
     ld c, [hl]
@@ -225,13 +225,13 @@ CallInBank81KeepRegs_CompareHLToBC::
     inc hl
     dec d
     jr nz, .loop4
-    jp CallInBank81KeepRegs_CompareHLToBC
+    jp CheckBreedingRecipes_CompareHLToBC
 
 .skip3:
     jr .loop3
 
 ; the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and
-; runs CallInBank81KeepRegs_CompareHLToBC over it twice, with the two parents swapped; a group of
+; runs CheckBreedingRecipes_CompareHLToBC over it twice, with the two parents swapped; a group of
 ; kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species,
 ; and then its words are matched against the other parent; when neither order matches, bit 4 of
 ; wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453 (E-0223, C1)

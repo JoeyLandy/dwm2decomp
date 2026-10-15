@@ -7,7 +7,7 @@ SECTION "Bank 3F", ROMX[$4000], BANK[$3F]
 ; Effect tile $15 with wEffectFlags bit 3 draws the effect sprite over each present slot of the
 ; target's side, as many as wBattlePartyCount (SetEffectSpriteXForTargets); other effects draw once
 ; at wEffectSpriteX. (C1, E-0357)
-DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot::
+DrawEffectSpriteOverTargets_Bank3F::
     ld a, [wEffectTileOffset]
     cp $15
     jr nz, DrawEffectSpriteAtEffectSpriteX_Bank3F

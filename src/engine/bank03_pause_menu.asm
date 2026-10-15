@@ -23,7 +23,7 @@ GameMode2_Update::
     ld a, [wWorldMapState]
     bit 7, a
     jr z, PauseMenu_State4_CheckWorldMapState
-    call GameMode2_Update_WriteGM2TimerFramesAndGM2TimerSecondsEtc
+    call GameMode2_Update_CountPauseTime
     ld a, [wModeState]
     and $07
     jumptable
@@ -598,7 +598,7 @@ SelectString5Category8ThenShow::
     ld [wStringIndex], a
 
 ; Shows a string at HL in a 5 x 1 window (falls into ShowStringBank08AtTilesHL_Bank03). (C1, E-0357)
-WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc::
+ShowStringIn5x1Window::
     ld de, $0501
 
 ; saves the string window wTextWindowTileLo-wTextWindowWidth, sets the tile destination to HL and
@@ -921,7 +921,7 @@ ShowStringBank08AtTilesHL_Bank03_2::
 ; Counts time while the pause menu is open: a minutes/seconds/frames timer (wGM2TimerFrames, each
 ; part wrapping at 60), and the play time (wPlayFrames, seconds, minutes, then the 16-bit hours),
 ; which stops at 999 hours 59 minutes. (C1, E-0357)
-GameMode2_Update_WriteGM2TimerFramesAndGM2TimerSecondsEtc::
+GameMode2_Update_CountPauseTime::
     ld a, [wGM2TimerFrames]
     inc a
     cp $3c
@@ -2115,7 +2115,7 @@ ShowRecordSpeciesAndSkillNames::
     call SRAMRecordAddressMapped
     ld a, [hli]
     ld b, $00
-    call ShowRecordSpeciesAndSkillNames_WriteStringCategoryAndStringIndex
+    call ShowRecordSpeciesAndSkillNames_EmptySlot
     ld a, [hli]
     ld b, $01
     call ShowSkillNameAtSlotB
@@ -2141,7 +2141,7 @@ ShowRecordSpeciesAndSkillNames::
 
 ; A skill slot holding $FF shows string $0E of category 8 (the empty-slot text) instead of a skill
 ; name. (C1, E-0357)
-ShowRecordSpeciesAndSkillNames_WriteStringCategoryAndStringIndex::
+ShowRecordSpeciesAndSkillNames_EmptySlot::
     cp $ff
     jr nz, ShowSkillNameAtSlotB
     push hl
@@ -2277,11 +2277,11 @@ WithSRAMDrawMemberRecordFamily_ShowSpeciesNameAndIconForSlotB::
     ld hl, vTiles2 + $580
     call SelectString5Category8ThenShow
     ld hl, vTiles2 + $670
-    call WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc
+    call ShowStringIn5x1Window
     ld hl, vTiles2 + $6c0
-    call WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc
+    call ShowStringIn5x1Window
     ld hl, vTiles2 + $7b0
-    call WithSRAMDrawMemberRecordFamily_WriteTextWindowTileLoAndTextWindowTileHiEtc
+    call ShowStringIn5x1Window
     ret
 
 ; reads a species id at [HL] (HL += 2), shows its name (category id-high + 2) at the window from
@@ -4695,7 +4695,7 @@ PauseMenu_Skills_ChooseSkill_Build::
 .next:
     dec b
     jr nz, .loop
-    call PauseMenu_Skills_ChooseSkill_Build_WriteMenuPageCountAndMenuItemCountEtc
+    call PauseMenu_Skills_SetSkillPages
     ld [wMenuRowCount], a
     call PauseMenu_Skills_CopyRectToBGMap
     call SetMenuRowsForPage_Bank03
@@ -5866,7 +5866,7 @@ PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped::
 ; Sets the skill pages from the count in C (as
 ; PauseMenu_Skills_ChooseMember_SRAMRecordAddressMapped) and returns the rows of the current page:
 ; the last page's rows on the last page, otherwise 4. (C1, E-0357)
-PauseMenu_Skills_ChooseSkill_Build_WriteMenuPageCountAndMenuItemCountEtc::
+PauseMenu_Skills_SetSkillPages::
     ld a, c
     cp $00
     jr z, .set_menu_page_count2
@@ -6112,7 +6112,7 @@ PauseMenu_Plan_Keys::
     dw PauseMenu_Plan_Keys_AdvanceTemp1
     dw PauseMenu_Plan_Keys_BeginStringDisplay_Bank08AndStep
     dw PauseMenu_Plan_Keys_WaitTextFlags
-    dw PauseMenu_Plan_Keys_WriteMenuRowCountAndMenuPageCount
+    dw PauseMenu_Plan_Keys_RedrawForDiscard
     dw PauseMenu_Plan_Keys_SetStringCategory
     dw PauseMenu_Plan_Keys_WaitTextFlags_AdvanceTemp1
     dw PauseMenu_Plan_Keys_DrawYesNo
@@ -6151,7 +6151,7 @@ PauseMenu_Plan_Keys_Build::
     ld [hli], a
     call FillTilesFromRequest
     call CopyTileBufferToBGMap
-    call PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_Plan_Keys_DrawKeyNames
     call PauseMenu_Plan_Keys_WaitPauseListCount
     ld hl, wTemp1
     inc [hl]
@@ -6200,7 +6200,7 @@ PauseMenu_Plan_Keys_Cursor::
     ld a, [wMenuPageCount]
     cp $02
     ret c
-    call PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_Plan_Keys_DrawKeyNames
     call PauseMenu_Plan_Keys_WaitPauseListCount
     ld a, [wMenuPageCount]
     cp $02
@@ -6468,7 +6468,7 @@ PauseMenu_Plan_Keys_WaitTextFlags::
     ret
 
 ; Key list, step 10: redraws the list for the discard question. (C1, E-0357)
-PauseMenu_Plan_Keys_WriteMenuRowCountAndMenuPageCount::
+PauseMenu_Plan_Keys_RedrawForDiscard::
     call PauseMenu_Plan_Keys_BuildScreenBlocks21To24
     ld a, $02
     ld [wMenuRowCount], a
@@ -6556,7 +6556,7 @@ PauseMenu_Plan_Keys_YesNoCursor::
     ld de, wWindowTileBuffer + $38
     lb bc, $14, $05
     call CopyRectToBGMap
-    call PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc
+    call PauseMenu_Plan_Keys_DrawKeyNames
     ld a, $02
     ld [wMenuRowCount], a
     ld a, $01
@@ -6621,16 +6621,16 @@ TestListEntryBit7::
 PauseMenu_Plan_Tactics::
     ld a, [wTemp1]
     jumptable
-    dw PauseMenu_Plan_Tactics_CopyTileBufferToBGMapAndStep
+    dw PauseMenu_Plan_Tactics_Build
     dw PauseMenu_Plan_Tactics_ShowCurrent
     dw PauseMenu_Plan_Tactics_Cursor
 
 ; Plan, tactics: builds the tactics screen for the first party member (wPauseMenuStep = 0) with four
 ; choices. (C1, E-0357)
-PauseMenu_Plan_Tactics_CopyTileBufferToBGMapAndStep::
+PauseMenu_Plan_Tactics_Build::
     xor a
     ld [wPauseMenuStep], a
-    call PauseMenu_Plan_Tactics_LoadScreenBlock21WithCursor
+    call PauseMenu_Plan_Tactics_Build_LoadScreenBlock21WithCursor
     call CopyTileBufferToBGMap
     ld a, $04
     ld [wMenuRowCount], a
@@ -6873,16 +6873,16 @@ MenuCursorAddressMenuCursor::
 PauseMenu_Plan_PartyOrder::
     ld a, [wTemp1]
     jumptable
-    dw PauseMenu_Plan_PartyOrder_WriteWorkBufAndMenuPageCountEtc
+    dw PauseMenu_Plan_PartyOrder_Start
     dw PauseMenu_Plan_PartyOrder_WriteMenuCursor
     dw PauseMenu_Plan_PartyOrder_Cursor
     dw PauseMenu_Plan_PartyOrder_LoadScreenBlock21AndStep
-    dw PauseMenu_Plan_PartyOrder_WriteTemp0AndTemp1
+    dw PauseMenu_Plan_PartyOrder_Finish
     dw PauseMenu_Plan_PartyOrder_Redraw
 
 ; Plan, party order: starts the reordering: the members still to place (wWorkBuf + 3..5, $FF for
 ; absent ones), the new order (wWorkBuf + 6..8, empty), and the screen. (C1, E-0357)
-PauseMenu_Plan_PartyOrder_WriteWorkBufAndMenuPageCountEtc::
+PauseMenu_Plan_PartyOrder_Start::
     ld a, [wPartyCount]
     dec a
     ld [wWorkBuf + $2], a
@@ -7039,11 +7039,11 @@ PauseMenu_Plan_PartyOrder_LoadScreenBlock21AndStep::
 
 ; Party order, step 4: A writes the new order into wPartyList and returns to the plan page; B undoes
 ; the last placement. (C1, E-0357)
-PauseMenu_Plan_PartyOrder_WriteTemp0AndTemp1::
+PauseMenu_Plan_PartyOrder_Finish::
     ld a, [wJoypadPressed]
     and $01
     jr z, .check_joypad_pressed
-    call PauseMenu_Plan_PartyOrder_WritePartyList
+    call PauseMenu_Plan_PartyOrder_Finish_WritePartyList
     xor a
     ld [wTemp0], a
     ld [wTemp1], a
@@ -7075,7 +7075,7 @@ PauseMenu_Plan_PartyOrder_Redraw::
 
 ; Writes the new party order (wWorkBuf + 6..8, ignoring $FF) into the first entries of wPartyList.
 ; (C1, E-0357)
-PauseMenu_Plan_PartyOrder_WritePartyList::
+PauseMenu_Plan_PartyOrder_Finish_WritePartyList::
     ld a, [wWorkBuf + $6]
     ld hl, wPartyList
     add_a_to_hl
@@ -7377,7 +7377,7 @@ PauseMenu_Plan_PlayerRecord_Build::
     call ByteAToDecimalDigits
     ld de, wScreenTileBuffer + $6c
     call WriteTwoDigitTilesDigits1NoBlank_Bank03
-    call PauseMenu_Plan_PlayerRecord_Build_WriteRAMGAndRAMBEtc
+    call PauseMenu_Plan_PlayerRecord_CountMonsters
     ld a, [wWorkBuf]
     ld de, wScreenTileBuffer + $ab
     call WriteAAsTwoDigitTiles
@@ -7523,7 +7523,7 @@ PauseMenu_Plan_Record::
     dw PauseMenu_Plan_Record_YesNoCursor
     dw PauseMenu_Plan_Record_RunSaveScreens
     dw PauseMenu_Plan_Record_ShowYourProgressHasBeen
-    dw PauseMenu_Plan_Record_WriteTemp0AndTemp1
+    dw PauseMenu_Plan_Record_Return
     dw PauseMenu_Plan_RecordJourney_RestartGame
 
 ; Plan, recording the journey, step 0: builds the save screen and shows the 'Master' title string
@@ -7575,7 +7575,7 @@ PauseMenu_Plan_Record_ShowMaster::
     ld a, $25
     ld [wStringIndex], a ; 'Want to record your journey?'
     farcall BeginStringDisplay_Bank37
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     ld hl, wTemp1
     inc [hl]
     ret
@@ -7583,7 +7583,7 @@ PauseMenu_Plan_Record_ShowMaster::
 ; Recording, step 1: after the question loads the choice tiles, plays sound $6C and builds the
 ; yes/no choice (block $2B). (C1, E-0357)
 PauseMenu_Plan_Record_DrawYesNo::
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     ld a, [wTextFlags]
     or a
     ret nz
@@ -7625,7 +7625,7 @@ PauseMenu_Plan_Record_YesNoCursor::
     ld a, [wSubMenuCursor]
     and $01
     jr nz, .loop
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     xor a
     ld [wPauseMenuScreen], a
     ld hl, wTemp1
@@ -7644,12 +7644,12 @@ PauseMenu_Plan_Record_YesNoCursor::
 .check_bit1:
     bit 1, a
     jr nz, .loop
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     ret
 
 ; Recording, step 3: runs the save screens until all four are done. (C1, E-0357)
 PauseMenu_Plan_Record_RunSaveScreens::
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     call RunPauseMenuScreen
     ld a, [wPauseMenuScreen]
     cp $04
@@ -7660,7 +7660,7 @@ PauseMenu_Plan_Record_RunSaveScreens::
 
 ; Recording, step 4: shows 'Your progress has been recorded' (message $26, bank $37). (C1, E-0357)
 PauseMenu_Plan_Record_ShowYourProgressHasBeen::
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     ld a, $00
     ld [wStringCategory], a
     ld a, $26
@@ -7672,11 +7672,11 @@ PauseMenu_Plan_Record_ShowYourProgressHasBeen::
 
 ; Recording, step 5: after the message returns to the plan page, or restarts from a key-world exit.
 ; (C1, E-0357)
-PauseMenu_Plan_Record_WriteTemp0AndTemp1::
+PauseMenu_Plan_Record_Return::
     ld a, [wTextFlags]
     or a
     jr z, .check_mode_state
-    call PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc
+    call DrawSaveCompletionMark
     ret
 
 .check_mode_state:
@@ -7706,7 +7706,7 @@ PauseMenu_Plan_RecordJourney_RestartGame_Skip::
 ; Draws the completion mark on the save screen: when the save in SRAM bank 1 has a battle record
 ; (wBattlerRecords) and the game was completed (wTitleGameCompleted), draws meta-sprite set $29 at
 ; (128, 48). (C1, E-0357)
-PauseMenu_Plan_Record_WriteRAMGAndRAMBEtc::
+DrawSaveCompletionMark::
     ld a, $0a
     ld [rRAMG], a
     ld a, $01
@@ -7825,10 +7825,10 @@ BuildScreenBlocks21To25WithCursor::
 
 ; Builds the tactics screen: the plan page with the cursor, tiles from bank $1F, and blocks $26 and
 ; $27. (C1, E-0357)
-PauseMenu_Plan_Tactics_LoadScreenBlock21WithCursor::
+PauseMenu_Plan_Tactics_Build_LoadScreenBlock21WithCursor::
     call LoadScreenBlock21WithCursor
-    ld hl, PauseMenu_Plan_Tactics_TileCopyDestList
-    ld de, PauseMenu_Plan_Tactics_TileCopySrcList
+    ld hl, PauseMenu_Plan_Tactics_Build_TileCopyDestList
+    ld de, PauseMenu_Plan_Tactics_Build_TileCopySrcList
     call PauseMenu_Plan_TileBufferMenu_CopyTileListFromBank1F
     ld e, $26
     farcall CopyBlockToTileBuffer
@@ -7884,7 +7884,7 @@ LoadScreenBlock2B::
 
 ; Draws the names of the four keys on the current page of the key list (12 x 1 windows), or the
 ; empty-list text when there are none. (C1, E-0357)
-PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc::
+PauseMenu_Plan_Keys_DrawKeyNames::
     ld hl, $0c01
     ld a, l
     ld [wTextWindowRows], a
@@ -7923,7 +7923,7 @@ PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc::
     push bc
     push de
     ld a, c
-    ld hl, PauseMenu_Plan_Keys_Data
+    ld hl, PauseMenu_Plan_Keys_DrawKeyNames_Data
     add a
     add_a_to_hl
     deref_hl
@@ -8052,8 +8052,8 @@ PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark::
     pop af
     ret
 
-; data read by PauseMenu_Plan_Keys_WriteTextWindowRowsAndTextWindowWidthEtc (10 bytes) (E-0347)
-PauseMenu_Plan_Keys_Data::
+; data read by PauseMenu_Plan_Keys_DrawKeyNames (10 bytes) (E-0347)
+PauseMenu_Plan_Keys_DrawKeyNames_Data::
     db $40, $94, $00, $95, $c0, $95, $80, $96, $40, $97
 
 PauseMenu_Plan_ChooseListEntry_DrawKeyEntryMark_Data::
@@ -8454,7 +8454,7 @@ ShowString2Bank09InWindowThenDefault::
 
 ; Counts the stored monsters in SRAM: of the 30 records with state 1, those with byte $6E zero
 ; (wWorkBuf) and non-zero (wWorkBuf + 1). (C1, E-0357)
-PauseMenu_Plan_PlayerRecord_Build_WriteRAMGAndRAMBEtc::
+PauseMenu_Plan_PlayerRecord_CountMonsters::
     ld a, $0a
     ld [rRAMG], a
     ld a, $00
@@ -8535,11 +8535,11 @@ FillTiles21E0PreservingWindow::
 ; a list passed to a tile-list copier, which copies 16 bytes from bank $1F per destination until a
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
-PauseMenu_Plan_Tactics_TileCopyDestList::
+PauseMenu_Plan_Tactics_Build_TileCopyDestList::
     dw vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90, vTiles2 + $a0, vTiles2 + $b0, rIE ; entry 0
 
 ; record: bank-$1F tile sources
-PauseMenu_Plan_Tactics_TileCopySrcList::
+PauseMenu_Plan_Tactics_Build_TileCopySrcList::
     dw $40e0, $4370, $42b0, $42d0, $4310, $42c0, $43b0, $ffff ; entry 0
 
 ; copies $10-byte tiles from bank $1F by a list of source and destination words until $FF (E-0305)

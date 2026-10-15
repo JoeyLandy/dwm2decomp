@@ -2901,7 +2901,7 @@ ChooseTarget_Heal::
 
 ; For each of D ally slots from E: how hurt it is, as max HP / HP (quotient in wTargetEstimates,
 ; remainder in wBattleTempBuf); full HP counts as 0 remainder 1 and an absent slot as 0; then picks
-; the most hurt (ChooseTarget_Heal_WriteTemp0AndTemp1Etc). (C1, E-0357)
+; the most hurt (ChooseTarget_Heal_MostHurt). (C1, E-0357)
 ChooseTarget_Heal_Loop::
     ld a, e
     ld [wBattleArg3], a
@@ -2967,7 +2967,7 @@ ChooseTarget_Heal_Loop::
     inc e
     dec d
     jr nz, ChooseTarget_Heal_Loop
-    call ChooseTarget_Heal_WriteTemp0AndTemp1Etc
+    call ChooseTarget_Heal_MostHurt
     ret
 
 ; Heal (another): a threshold from the present allies' max HP (thirty times it for a slot with body
@@ -3757,7 +3757,7 @@ ChooseTarget_UltraDown::
 
 ; Cover's target: of the allies other than the actor, those with HP x 10 below their max HP (under a
 ; tenth), the one with the least; the last such ally is also kept in hTemp5; finished by
-; ChooseTarget_Cover_ReadBattleActorAndTemp0Etc. (C1, E-0357)
+; ChooseTarget_Cover_StoreChoice. (C1, E-0357)
 ; per-action target routine of ChooseActionTarget (the five mode tables of ActionTargetModeTable,
 ; 228 entries each, indexed by action id) for action(s) 151 Cover; writes the target to
 ; wBattleTargetChoice (E-0086)
@@ -3818,7 +3818,7 @@ ChooseTarget_Cover::
     inc c
     dec b
     jr nz, .loop
-    call ChooseTarget_Cover_ReadBattleActorAndTemp0Etc
+    call ChooseTarget_Cover_StoreChoice
     ret
 
 ; MouthShut's target: a foe with at least one mouth skill (ChooseTarget_MouthShut_CountMouthSkills)
@@ -7550,7 +7550,7 @@ EstimateThreeTargets::
 ; Heal target: the ally with the highest max HP / HP (a larger remainder breaks a tie, the earlier
 ; slot otherwise), on the actor's side; stores it as wBattleTarget and the actor's target choice.
 ; (C1, E-0357)
-ChooseTarget_Heal_WriteTemp0AndTemp1Etc::
+ChooseTarget_Heal_MostHurt::
     ld a, $00
     ldh [hTemp0], a
     ld a, $01
@@ -7780,7 +7780,7 @@ SetActorTargetFromHRAMChoice4::
 
 ; Cover's target choice: wBattleTargetChoice[actor] = hTempA OR the first of hTemp0, hTemp5 and
 ; hTemp4 that is not $FF, else hTemp3. (C1, E-0357)
-ChooseTarget_Cover_ReadBattleActorAndTemp0Etc::
+ChooseTarget_Cover_StoreChoice::
     ld a, [wBattleActor]
     ld hl, wBattleTargetChoice
     add a

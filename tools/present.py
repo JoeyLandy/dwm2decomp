@@ -42,8 +42,10 @@ THIN_NOTE = re.compile(r"^(?:unless .{0,40}?, )?runs the (?:routine|field comman
                        r"|^as \w+$|^implements script command type \w+(?: \(also \w+\))?$|^wBattlePhase \d|"
                        r"^handler \w+ \(entry|^step \d+ of |^by \w+(?: & \$\w+)?$")
 GAP_NOTE = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")
-# E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself
-HAND_NOTE = re.compile(r"\(C\d,(?: ;)? E-03(?:5[7-9]|6[0-2])\)")
+# E-0365: a hand-written reading of the whole routine (config/annotations.json) answers such a gap itself;
+# E-0368: the readability batches from E-0369 on write such readings too (tools/apply_drafts.py)
+HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362", "E-0369")
+HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")\)")
 LABEL = re.compile(r"^([A-Za-z_]\w*)::?")
 ADDR_NAME = re.compile(r"^(?:Func|Jump|Data)_([0-9A-F]{3})_([0-9A-F]{4})$")
 LABEL_TAG = re.compile(r"^([A-Za-z_][\w.]*::?) ; (?:heuristic: .*|code pointer of the table .*)$")

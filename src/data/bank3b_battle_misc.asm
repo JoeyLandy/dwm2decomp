@@ -484,12 +484,12 @@ RunBattleActions_UseItem::
     dw RunBattleActions_UseItem_ThrowMeat
     dw RunBattleActions_UseItem_ShowHeroIsAHunk
     dw RunBattleActions_DispatchActionEffectTable_Bank3BAndStep
-    dw RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc
+    dw RunBattleActions_UseItem_MarkUsed
     dw RunBattleActions_UseItem_ShowResultText
     dw RunBattleActions_UseItem_Return
     dw RunBattleActions_UseItem_ApplyAmount
     dw RunBattleActions_UseItem_ToRunBattleSubStep2_2
-    dw RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc
+    dw RunBattleActions_UseItem_BeastTail
     dw RunBattleActions_UseItem_ConsumeItem
     dw RunBattleActions_UseItem_SetMultiHitCount
     dw RunBattleActions_UseItem_ShowButNothingHappened
@@ -711,7 +711,7 @@ RunBattleActions_DispatchActionEffectTable_Bank3BAndStep::
 ; $0B by half the amount (down for the near side, up, capped at 1,800, for the far side), items
 ; $06-$0A and $0C by 5 down (near side) or 100 up (far side), and the Wind, Bolt, Snow and Fire
 ; items ($24-$27) by half the amount down. (C1, E-0357)
-RunBattleActions_WriteResolveMsgFlagsAndSlotsOccupiedFlagEtc::
+RunBattleActions_UseItem_MarkUsed::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wResolveMsgFlags]
@@ -904,7 +904,7 @@ RunBattleActions_UseItem_ToRunBattleSubStep2_2::
 ; target of the same species in turn (back to step 4); BadMeat on the far side, items aimed at the
 ; user's side ($10) and side items ($20, except the MeteOrb) move on to the side's next slot (back
 ; to step 3); otherwise next step. (C1, E-0357)
-RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc::
+RunBattleActions_UseItem_BeastTail::
     ld hl, wBattleResolveStep
     inc [hl]
     ld a, [wBattleItemId]
@@ -979,27 +979,27 @@ RunBattleActions_WriteBattleTargetAndBattleResolveStepEtc::
     ld [wBattleResolveStep], a
     ret
 
-; runs RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty once (marked by bit 7 of wMultiHitCount),
-; then RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount each time; returns
-; wMultiHitCount & $7F (E-0122) (E-0344: the address in its name dropped or read as the label there;
-; was RunOnceThenNext; a trailing preposition left by the dropped address removed)
+; runs CountTargetSideSlots once (marked by bit 7 of wMultiHitCount), then
+; NextPresentSlotAfterTarget each time; returns wMultiHitCount & $7F (E-0122) (E-0344: the address
+; in its name dropped or read as the label there; was RunOnceThenNext; a trailing preposition left
+; by the dropped address removed)
 RunOnceThenNext::
     ld a, [wMultiHitCount]
     bit 7, a
-    jr nz, .call_run_once_then_next_carry_unless_battle
-    call RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty
+    jr nz, .call_next_present_slot_after_target
+    call CountTargetSideSlots
     ld a, [wMultiHitCount]
     or $80
     ld [wMultiHitCount], a
 
-.call_run_once_then_next_carry_unless_battle:
-    call RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount
+.call_next_present_slot_after_target:
+    call NextPresentSlotAfterTarget
     ld a, [wMultiHitCount]
     and $7f
     ret
 
 ; Counts into wMultiHitCount the target and every present slot on its side. (C1, E-0357)
-RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
+CountTargetSideSlots::
     ld b, $04
     ld a, [wBattleTarget]
     and $04
@@ -1030,7 +1030,7 @@ RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty::
 ; C = the next present slot after the target (the count down by one; 0 left returns); the search
 ; runs on through the slot numbers, and with item record byte 4 = $80 a far-side target's search
 ; goes on from slot 0. (C1, E-0357)
-RunOnceThenNext_CarryUnlessBattleSlotOutSlotEmpty_BackMultiHitCount::
+NextPresentSlotAfterTarget::
     ld a, [wBattleTarget]
     inc a
     ld c, a

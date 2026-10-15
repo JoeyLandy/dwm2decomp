@@ -785,8 +785,8 @@ ItemUsable_Warp::
     ret
 
 ; LogTwig: in a key world only in map type $80, otherwise only on the region maps $20, $30, $48,
-; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA; then ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
-; decides, and when it finds nothing (hTempA = 0) wItemId becomes $FE (no effect here). (C1, E-0357)
+; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA; then ItemUsable_LogTwig_Check decides, and when it
+; finds nothing (hTempA = 0) wItemId becomes $FE (no effect here). (C1, E-0357)
 ; usability check reached through CheckItemUsable (indexed by wItemId; refuses by setting wItemId =
 ; $FF) for item(s) 46 LogTwig; item names from StringTable_ItemNames (E-0085)
 ItemUsable_LogTwig::
@@ -794,7 +794,7 @@ ItemUsable_LogTwig::
     bit 7, a
     jr z, .check_map_id
     cp $80
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     ld a, $ff
     ld [wItemId], a
     ret
@@ -802,33 +802,33 @@ ItemUsable_LogTwig::
 .check_map_id:
     ldh a, [hMapId]
     cp $20
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $30
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $48
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $70
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $a0
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $a8
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $b0
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $b8
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $c8
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $d1
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     cp $da
-    jr z, .call_item_usable_log_twig_write_temp_a_and
+    jr z, .call_item_usable_log_twig_check
     ld a, $ff
     ld [wItemId], a
     ret
 
-.call_item_usable_log_twig_write_temp_a_and:
-    farcall ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc
+.call_item_usable_log_twig_check:
+    farcall ItemUsable_LogTwig_Check
     ldh a, [hTempA]
     or a
     ret nz
@@ -3715,14 +3715,13 @@ TestTargetRecordFlag55Bit7::
 
 ; for special maps copies the eight monster entries of the current screen
 ; (AddressOfKeyWorldMonstersEntryForCurrentScreen) to wWorkBuf + $2, removes duplicates and stores
-; the count in wWorkBuf; normal maps use
-; CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags (E-0129) (E-0340: the address in
-; its name read as its RAM name; was CollectUniqueEncounterIdsToWorkBuf2)
+; the count in wWorkBuf; normal maps use CollectUniqueEncounterIdsToWorkBuf2_FindTable (E-0129)
+; (E-0340: the address in its name read as its RAM name; was CollectUniqueEncounterIdsToWorkBuf2)
 CollectUniqueEncounterIdsToWorkBuf2::
     ld a, [wMapType]
     bit 7, a
     jr nz, .call_address_of_key_world_monsters_entry_for
-    farcall CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags
+    farcall CollectUniqueEncounterIdsToWorkBuf2_FindTable
     ret
 
 .call_address_of_key_world_monsters_entry_for:
@@ -4672,7 +4671,7 @@ BattleEnd_Step3_LoadSpeciesFamily::
 ; of two tables (unseen or seen species: x5, x2, x1, /2, /5, /16, /4, /8 or /20; 0 always offers, 7
 ; never), minus a random 10-100 must stay positive, and a final random 1-100 must be under 91;
 ; otherwise wDisplaySlot becomes $FF (no offer). (C1, E-0357)
-BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
+BattleEnd_Step5_DecideJoinOffer::
     ld a, $01
     ld [wBattleFoeCount], a
     ld a, [wLinkMode]
@@ -4709,7 +4708,7 @@ BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, [hl]
     ld [wSpeciesIdHi], a
     call TestSpeciesFlag
-    ld de, BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc_Data2
+    ld de, BattleEnd_Step5_DecideJoinOffer_Data2
     jr nz, .read_battle_meter
     farcall LoadSpeciesRecord
     call NextTableByte
@@ -4731,7 +4730,7 @@ BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
     ld a, [wBattleEndFlag]
     or a
     jp nz, .return
-    ld de, BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc_Data1
+    ld de, BattleEnd_Step5_DecideJoinOffer_Data1
 
 .read_battle_meter:
     ld a, [wBattleMeter]
@@ -4887,10 +4886,10 @@ BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc::
 JoinChanceByClass::
     db $64, $32, $18, $0a, $06, $02, $01, $00
 
-BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc_Data1::
+BattleEnd_Step5_DecideJoinOffer_Data1::
     db $00, $01, $02, $03, $04, $05, $06, $07
 
-BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc_Data2::
+BattleEnd_Step5_DecideJoinOffer_Data2::
     db $00, $11, $12, $13, $14, $15, $16, $07
 
 ; by wBattleSubStep: copies the defeated monster's name and asks 'got up, looking hopeful. Allow 0
@@ -6767,9 +6766,9 @@ RunBattleEndStep5SubSteps::
     jumptable
     dw RunBattleEndStep5SubSteps_ShowPleaseNameHero
     dw RunBattleEndStep5SubSteps_SetUpNameEntry
-    dw RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc
+    dw RunBattleEndStep5SubSteps_EnterName
     dw RunBattleEndStep5SubSteps_AdvanceBattleSubStep
-    dw RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc
+    dw RunBattleEndStep5SubSteps_StoreOnFarm
 
 ; Naming the new monster, step 0: 'Please name <name>.' (string $14). (C1, E-0357)
 RunBattleEndStep5SubSteps_ShowPleaseNameHero::
@@ -6843,7 +6842,7 @@ RunBattleEndStep5SubSteps_SetUpNameEntry::
 
 ; Naming the new monster, step 2: runs the name entry (RunNameEntryStateWhenNotFading); when it
 ; finishes reloads two battle tile sets and copies the name into wWorkBuf + 1. (C1, E-0357)
-RunBattleEndStep5SubSteps_WriteArg1AndArg2Etc::
+RunBattleEndStep5SubSteps_EnterName::
     ld a, $01
     ld [wArg1], a
     ld a, [wDisplaySlot]
@@ -6909,7 +6908,7 @@ RunBattleEndStep5SubSteps_AdvanceBattleSubStep::
 ; level's capacity (state 1, the new name, then $9A bytes from wRecordBufA's species on) and keeps
 ; its number in wWorkBuf; re-initialises each party slot's status (InitSlotFromRecordFlags); with no
 ; free record nothing is stored. (C1, E-0357)
-RunBattleEndStep5SubSteps_WriteRAMGAndRAMBEtc::
+RunBattleEndStep5SubSteps_StoreOnFarm::
     ld a, $0a
     ld [rRAMG], a
     xor a
@@ -7037,7 +7036,7 @@ BattleEnd_AddJoinedMonster::
     dw BattleEnd_AddJoinedMonster_ReadAnswer
     dw BattleEnd_AddJoinedMonster_ShowHeroWasSentTo
     dw BattleEnd_AddJoinedMonster_SetBattleStep
-    dw BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex
+    dw BattleEnd_AddJoinedMonster_Join
     dw BattleEnd_AddJoinedMonster_AddToParty
     dw BattleEnd_AddJoinedMonster_DrawScreen
     dw BattleEnd_AddJoinedMonster_ShowChooseTheMonsterTo
@@ -7186,7 +7185,7 @@ BattleEnd_AddJoinedMonster_SetBattleStep::
 
 ; Adding the new monster, step 5: with a full party goes to step 8 (who goes home); otherwise
 ; '<name> joined the party.' (string $21 or $1B by BattleMonsterTableAtLeast6). (C1, E-0357)
-BattleEnd_AddJoinedMonster_WriteBattleSubStepAndStringIndex::
+BattleEnd_AddJoinedMonster_Join::
     ld a, [wPartyCount]
     cp $03
     jr c, .call_battle_monster_table_at_least6

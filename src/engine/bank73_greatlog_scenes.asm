@@ -118,7 +118,7 @@ TravelerEvents_HealerBattle::
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
     dw TravelerEvents_HealerBattle_ShowIWillPrayFor
-    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_AfterHealing
     dw ScriptStepBlinkSpritesThenEnd
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_Thief_ShowHeroLostG
@@ -203,8 +203,8 @@ TravelerEvents_CasinoShip::
     dw TravelerEvents_CasinoShip_ShowStopTheReelsWith
     dw TravelerEvents_Thief_WaitMessage
     dw TravelerEvents_CasinoShip_SpinReels
-    dw TravelerEvents_CasinoShip_WriteScriptParam0
-    dw TravelerEvents_CasinoShip_ReadJoypadPressed
+    dw TravelerEvents_CasinoShip_DrawReels_WaitFrameCounterLo
+    dw TravelerEvents_CasinoShip_DrawReels_AdvanceMenuCursor
     dw TravelerEvents_CasinoShip_TickCounter_WaitFrameCounterLo
     dw TravelerEvents_CasinoShip_PayOut
     dw TravelerEvents_Thief_WaitMessage
@@ -384,17 +384,17 @@ TravelerEvents_CasinoShip_TickCounter_WaitFrameCounterLo::
     call TravelerEvents_CasinoShip_WaitFrameCounterLo
     ld a, [wFrameCounterLo]
     and $01
-    jr z, .call_traveler_events_casino_ship_write_temp0
+    jr z, .call_traveler_events_casino_ship_draw_reels
     ld a, [wMenuCursor]
     dec a
     jr nz, .skip
     ld hl, wMenuState
     call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_traveler_events_casino_ship_write_temp0
+    jr z, .call_traveler_events_casino_ship_draw_reels
     ld hl, wScriptStep
     dec [hl]
-    jr .call_traveler_events_casino_ship_write_temp0
+    jr .call_traveler_events_casino_ship_draw_reels
 
 .skip:
     dec a
@@ -402,21 +402,21 @@ TravelerEvents_CasinoShip_TickCounter_WaitFrameCounterLo::
     ld hl, wMenuSubState
     call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_traveler_events_casino_ship_write_temp0
+    jr z, .call_traveler_events_casino_ship_draw_reels
     ld hl, wScriptStep
     dec [hl]
-    jr .call_traveler_events_casino_ship_write_temp0
+    jr .call_traveler_events_casino_ship_draw_reels
 
 .call_traveler_events_casino_ship_tick_counter:
     ld hl, wMenuSelectedMember
     call TravelerEvents_CasinoShip_TickCounter
     or a
-    jr z, .call_traveler_events_casino_ship_write_temp0
+    jr z, .call_traveler_events_casino_ship_draw_reels
     ld hl, wScriptStep
     inc [hl]
 
-.call_traveler_events_casino_ship_write_temp0:
-    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
+.call_traveler_events_casino_ship_draw_reels:
+    call TravelerEvents_CasinoShip_DrawReels
     ret
 
 ; returns 1 when the low nibble at HL is 0; otherwise counts the high nibble up and wraps it at 10,
@@ -445,7 +445,7 @@ TravelerEvents_CasinoShip_TickCounter::
 
 ; Casino ship, step 6: A stops the next reel (wMenuCursor + 1); the reels keep spinning and are
 ; redrawn. (C1, E-0357)
-TravelerEvents_CasinoShip_ReadJoypadPressed::
+TravelerEvents_CasinoShip_DrawReels_AdvanceMenuCursor::
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .call_traveler_events_casino_ship_wait_frame
@@ -456,13 +456,13 @@ TravelerEvents_CasinoShip_ReadJoypadPressed::
 
 .call_traveler_events_casino_ship_wait_frame:
     call TravelerEvents_CasinoShip_WaitFrameCounterLo
-    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
+    call TravelerEvents_CasinoShip_DrawReels
     ret
 
 ; Casino ship, step 5: spins and redraws the reels for 30 frames; next step. (C1, E-0357)
-TravelerEvents_CasinoShip_WriteScriptParam0::
+TravelerEvents_CasinoShip_DrawReels_WaitFrameCounterLo::
     call TravelerEvents_CasinoShip_WaitFrameCounterLo
-    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
+    call TravelerEvents_CasinoShip_DrawReels
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -495,7 +495,7 @@ TravelerEvents_CasinoShip_SpinReels::
     ld [wMenuSelectedMember], a
     xor a
     ld [wMenuCursor], a
-    call TravelerEvents_CasinoShip_WriteTemp0AndTemp1
+    call TravelerEvents_CasinoShip_DrawReels
     ld de, TravelerEvents_CasinoShip_SpinReels_Data
     ld hl, wScreenTileBuffer
     ld b, $03
@@ -648,7 +648,7 @@ TravelerEvents_CasinoShip_WaitFrameCounterLo::
 
 ; Draws the three reels' current and next symbols (DrawSymbolTilesForTemp1) from their symbol rows.
 ; (C1, E-0357)
-TravelerEvents_CasinoShip_WriteTemp0AndTemp1::
+TravelerEvents_CasinoShip_DrawReels::
     ld hl, vTiles1 + $240
     ld a, [wMenuState]
     and $f0
@@ -2012,7 +2012,7 @@ TravelerEvents_PaidHealer::
     dw TravelerEvents_MapSeller_SavePalettes
     dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
     dw TravelerEvents_PaidHealer_ShowHeheheMoneyIsMy
-    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_AfterHealing
     dw TravelerEvents_Thief_WaitMessage
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -2142,7 +2142,7 @@ TravelerEvents_Healer::
     dw TravelerEvents_MapSeller_SavePalettes
     dw TravelerEvents_HealerBattle_ToScriptStepFlashScreenNegative
     dw TravelerEvents_HealerBattle_ShowIWillPrayFor
-    dw TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw TravelerEvents_AfterHealing
     dw TravelerEvents_Thief_WaitMessage
     dw ScriptStepBlinkSpritesThenEnd
 
@@ -2204,7 +2204,7 @@ TravelerEvents_Thief_WaitMessage::
 ; After healing: first frame redraws the field; second puts fallen monsters behind the others
 ; (twice), reloads the name tiles, the player and follower sprites and the object palettes; next
 ; step. (C1, E-0357)
-TravelerEvents_WriteScriptParam0AndFieldDrawFlagsEtc::
+TravelerEvents_AfterHealing::
     ld a, [wScriptParam0]
     or a
     jr nz, .call_move_incapacitated_party_members_back
@@ -2296,7 +2296,7 @@ RunMessageBox_Bank73::
     jumptable
     dw RunMessageBox_Bank73_Open
     dw RunMessageBox_Bank73_ShowText
-    dw RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc
+    dw RunMessageBox_Bank73_Close
     dw RunMessageBox_Bank73_WriteMessageState
 
 ; Event message, step 0: unless a step pointer is set, freezes the player and objects; unless
@@ -2355,7 +2355,7 @@ RunMessageBox_Bank73_ShowText::
 
 ; Event message, step 2: after the text, with wMessageGroup bit 6 (keep open) ends at once ($FF);
 ; otherwise plays sound $69 and starts closing the window; next step. (C1, E-0357)
-RunMessageBox_Bank73_WriteMessageStateAndTextWindowStateEtc::
+RunMessageBox_Bank73_Close::
     pop af
     ld a, [wTextFlags]
     bit 0, a
@@ -2767,7 +2767,7 @@ SceneChestBattle::
     dw SceneChestBattle_StartBattle
     dw SceneChestBattle_ToSceneChestBattle_StartMessageHL_B73b_2
     dw SceneChestBattle_WaitMessage
-    dw SceneChestBattle_WriteTemp0AndScriptStep
+    dw SceneChestBattle_MarkKeyUsed
     dw SceneChestBattle_BlinkOut
     dw SceneChestBattle_SetChestFlag
     dw SceneChestBattle_StartSprite
@@ -2838,7 +2838,7 @@ SceneChestBattle_BlinkOut::
 
 ; Chest battle, step 5: on maps $CE, $D7 and $E0 marks the key of kind $0A, $0B or $0C as used (bit
 ; 6) and sets EVENT_SCENE_CHEST_BATTLE, _207 or _208, then step 8; other maps go on. (C1, E-0357)
-SceneChestBattle_WriteTemp0AndScriptStep::
+SceneChestBattle_MarkKeyUsed::
     ldh a, [hMapId]
     cp $ce
     jr z, .set_temp0_to_0A
@@ -3137,7 +3137,7 @@ SceneMercy::
 SceneWizstone::
     ld a, [wScriptStep]
     jumptable
-    dw SceneWizstone_WriteSpriteSlotsAndScriptStep
+    dw SceneWizstone_Start
     dw SceneWizstone_WalkKiral
     dw SceneWizstone_Msg0780_ProfessorKiralUsedThe
     dw SceneChestBattle_WaitMessage
@@ -3247,7 +3247,7 @@ SceneWizstone_WalkKiral::
 
 ; Wizstone, step 0: when the player or a follower already stands at ($40, $40) goes on to step 1;
 ; otherwise Kiral faces up and the scene jumps to step 2. (C1, E-0357)
-SceneWizstone_WriteSpriteSlotsAndScriptStep::
+SceneWizstone_Start::
     ldh a, [hPlayerX]
     cp $40
     jr nz, .check_party_count
@@ -3383,12 +3383,12 @@ SceneTooStrong::
     dw SceneTooStrong_BlinkOut
     dw SceneChestBattle_WaitMessage
     dw SceneTooStrong_WalkRight
-    dw SceneTooStrong_WriteMessageIndexAndMessageGroupEtc
+    dw SceneTooStrong_JumpOff
 
 ; Too strong, step 3: walks sprite 0 and object 1 right to X $C0 together while moving their Y by
 ; the high byte of a counter (wMessageIndex/Group reused) that starts at $0300 and drops by 8 a
 ; frame, a jump arc; once there asks for the next script command. (C1, E-0357)
-SceneTooStrong_WriteMessageIndexAndMessageGroupEtc::
+SceneTooStrong_JumpOff::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -3493,8 +3493,8 @@ SceneRoltElder::
     ld a, [wScriptStep]
     jumptable
     dw SceneRoltElder_WalkUp
-    dw SceneRoltElder_WriteObject1AndObject2
-    dw SceneRoltElder_WriteObject2AndObject1
+    dw SceneRoltElder_WalkApart
+    dw SceneRoltElder_WalkRight
     dw SceneRoltElder_WalkUpTogether
 
 ; Rolt elder, step 3: objects 1 and 2 walk up together until object 1 reaches Y $50; then they stop
@@ -3518,7 +3518,7 @@ SceneRoltElder_WalkUpTogether::
 
 ; Rolt elder, step 2: objects 1 and 2 walk right together until object 1 reaches X $60; then both
 ; face up; next step. (C1, E-0357)
-SceneRoltElder_WriteObject2AndObject1::
+SceneRoltElder_WalkRight::
     ld a, [wObject2 + OBJ_X]
     inc a
     ld [wObject2 + OBJ_X], a
@@ -3536,7 +3536,7 @@ SceneRoltElder_WriteObject2AndObject1::
 
 ; Rolt elder, step 1: object 1 walks right and object 2 up until object 2 reaches Y $60; it then
 ; faces right; next step. (C1, E-0357)
-SceneRoltElder_WriteObject1AndObject2::
+SceneRoltElder_WalkApart::
     ld a, [wObject1 + OBJ_X]
     inc a
     ld [wObject1 + OBJ_X], a
@@ -3626,15 +3626,15 @@ SceneKamehaStole::
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
     dw SceneKamehaStole_ToScriptStepMoveFollowersToLeader
-    dw SceneKamehaStole_WriteFollowerRecordsAndScriptStep
-    dw SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2
+    dw SceneKamehaStole_WalkFollowers
+    dw SceneKamehaStole_WalkFollower2
     dw SceneKamehaStole_WriteFollowerRecords
-    dw SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc
+    dw SceneKamehaStole_DrawBlocks
 
 ; Kameha stole, step 6: draws a 2 x 2 block of tiles $2B-$2E behind each follower's place (as many
 ; as the party has), redraws the screen, sets the follower delay to 1, clears the map sprite kind
 ; and asks for the next script command. (C1, E-0357)
-SceneKamehaStole_WriteFollowerDelayAndMapSpriteKindEtc::
+SceneKamehaStole_DrawBlocks::
     ld hl, wScreenTileBuffer + $a8
     ld [hl], $2b
     inc hl
@@ -3703,7 +3703,7 @@ SceneKamehaStole_WriteFollowerRecords::
 
 ; Kameha stole, step 4: the second follower walks left to X $30 and then down to Y $50; with two in
 ; the party the scene skips to step 6, otherwise next step. (C1, E-0357)
-SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2::
+SceneKamehaStole_WalkFollower2::
     ld a, [wFollowerRecords + $6]
     cp $30
     jr z, .clear_follower_records
@@ -3737,7 +3737,7 @@ SceneKamehaStole_WriteFollowerRecordsAndScriptStep_2::
 
 ; Kameha stole, step 3: all three followers walk up to Y $40 and then left to X $40; with one in the
 ; party the scene skips to step 6, otherwise next step. (C1, E-0357)
-SceneKamehaStole_WriteFollowerRecordsAndScriptStep::
+SceneKamehaStole_WalkFollowers::
     ld a, [wFollowerRecords + $2]
     cp $40
     jr z, .set_follower_records_to_03
@@ -4600,8 +4600,8 @@ SceneMadcondorCry::
     ld a, [wScriptStep]
     jumptable
     dw SceneMadcondorCry_Start
-    dw SceneMadcondorCry_WriteScriptParam0
-    dw SceneMadcondorCry_WritePlayerYAndFollowerRecordsEtc
+    dw SceneMadcondorCry_ArcY_2
+    dw SceneMadcondorCry_FlyRight
     dw SceneMadcondorCry_Warp
     dw SceneMadcondorCry_Msg0433_Kweeeeeh
     dw SceneWizstone_WaitMessage
@@ -4629,21 +4629,21 @@ SceneMadcondorCry_Warp::
     ret
 
 ; Madcondor cry, step 2: Madcondor (sprite 0) flies right one or two pixels a frame on its arc
-; (SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc), carrying the player and the followers 16
-; pixels below it; once its Y reaches $C0 (off the screen) the next step. (C1, E-0357)
-SceneMadcondorCry_WritePlayerYAndFollowerRecordsEtc::
+; (SceneMadcondorCry_ArcY), carrying the player and the followers 16 pixels below it; once its Y
+; reaches $C0 (off the screen) the next step. (C1, E-0357)
+SceneMadcondorCry_FlyRight::
     ld hl, wSpriteSlots + $b
     inc [hl]
     ld a, [wScriptParam0]
     and $01
-    jr nz, .call_scene_madcondor_cry_write_message_index
+    jr nz, .call_scene_madcondor_cry_arc_y
     ld hl, wSpriteSlots + $b
     inc [hl]
 
-.call_scene_madcondor_cry_write_message_index:
+.call_scene_madcondor_cry_arc_y:
     ld hl, wScriptParam0
     inc [hl]
-    call SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc
+    call SceneMadcondorCry_ArcY
     add $10
     ldh [hPlayerY], a
     ld [wFollowerRecords + $2], a
@@ -4665,19 +4665,19 @@ SceneMadcondorCry_WritePlayerYAndFollowerRecordsEtc::
 
 ; Madcondor cry, step 1: Madcondor flies right one or two pixels a frame along its arc until its Y
 ; comes to $70; next step. (C1, E-0357)
-SceneMadcondorCry_WriteScriptParam0::
+SceneMadcondorCry_ArcY_2::
     ld hl, wSpriteSlots + $b
     inc [hl]
     ld a, [wScriptParam0]
     and $01
-    jr nz, .call_scene_madcondor_cry_write_message_index
+    jr nz, .call_scene_madcondor_cry_arc_y
     ld hl, wSpriteSlots + $b
     inc [hl]
 
-.call_scene_madcondor_cry_write_message_index:
+.call_scene_madcondor_cry_arc_y:
     ld hl, wScriptParam0
     inc [hl]
-    call SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc
+    call SceneMadcondorCry_ArcY
     cp $70
     ret nz
     xor a
@@ -4689,7 +4689,7 @@ SceneMadcondorCry_WriteScriptParam0::
 ; Adds the high byte of the arc counter in wMessageIndex/Group, which drops by $18 a frame, to
 ; sprite 0's Y (down at first, then up once the counter goes below zero); returns A = the new Y.
 ; (C1, E-0357)
-SceneMadcondorCry_WriteMessageIndexAndMessageGroupEtc::
+SceneMadcondorCry_ArcY::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -4735,17 +4735,17 @@ SceneMadcondor::
     ld a, [wScriptStep]
     jumptable
     dw SceneMadcondor_Start
-    dw SceneMadcondor_WriteScriptParam0
-    dw SceneMadcondor_WriteObject1AndScriptStartRequest
+    dw SceneMadcondor_ArcY_AdvanceScriptParam0
+    dw SceneMadcondor_FlyLeft
 
 ; Madcondor, step 2: Madcondor flies left on its arc with object 1 hanging 16 pixels below; at X $E0
 ; (off the screen) asks for the next script command. (C1, E-0357)
-SceneMadcondor_WriteObject1AndScriptStartRequest::
+SceneMadcondor_FlyLeft::
     ld hl, wSpriteSlots + $b
     dec [hl]
     ld hl, wScriptParam0
     inc [hl]
-    call SceneMadcondor_WriteMessageIndexAndMessageGroupEtc
+    call SceneMadcondor_ArcY
     add $10
     ld [wObject1 + OBJ_Y], a
     ld a, [wSpriteSlots + $b]
@@ -4758,12 +4758,12 @@ SceneMadcondor_WriteObject1AndScriptStartRequest::
     ret
 
 ; Madcondor, step 1: Madcondor flies left on its arc until X $40; next step. (C1, E-0357)
-SceneMadcondor_WriteScriptParam0::
+SceneMadcondor_ArcY_AdvanceScriptParam0::
     ld hl, wSpriteSlots + $b
     dec [hl]
     ld hl, wScriptParam0
     inc [hl]
-    call SceneMadcondor_WriteMessageIndexAndMessageGroupEtc
+    call SceneMadcondor_ArcY
     ld a, [wSpriteSlots + $b]
     cp $40
     ret nz
@@ -4775,7 +4775,7 @@ SceneMadcondor_WriteScriptParam0::
 
 ; Adds the high byte of the arc counter in wMessageIndex/Group, which drops by $10 a frame, to
 ; sprite 0's Y; returns A = the new Y. (C1, E-0357)
-SceneMadcondor_WriteMessageIndexAndMessageGroupEtc::
+SceneMadcondor_ArcY::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5116,12 +5116,12 @@ SceneStrongestMaster::
     dw SceneStrongestMaster_SetUpSprite
     dw SceneStrongestMaster_ToPlaySound83AndAdvanceScriptStep
     dw SceneStrongestMaster_ToScriptStepAnimateSpriteBySteps
-    dw SceneStrongestMaster_WriteFieldDrawFlagsAndMapSpriteKindEtc
+    dw SceneStrongestMaster_DrawBlock
 
 ; Strongest master, step 3: draws tiles $44-$47 (a 2 x 2 block) at the place kept in
 ; wMessageIndex/Group's high nibbles, redraws the screen, clears the field draw flags and map sprite
 ; kind and asks for the next script command. (C1, E-0357)
-SceneStrongestMaster_WriteFieldDrawFlagsAndMapSpriteKindEtc::
+SceneStrongestMaster_DrawBlock::
     ld a, [wMessageGroup]
     swap a
     and $0f
@@ -5199,7 +5199,7 @@ RewardItemOrKey2::
     ld a, [wScriptStep]
     jumptable
     dw RewardItemOrKey2_FindDigger
-    dw RewardItemOrKey2_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey2_WalkDigger
     dw RewardItemOrKey2_WriteObject3
     dw RewardItemOrKey2_RestoreDigger
     dw RewardItemOrKey2_Wait
@@ -5360,7 +5360,7 @@ RewardItemOrKey2_WriteObject3::
 
 ; Dig reward 2, step 1: the digger walks down to Y $40 and then left to X $20; next step. (C1,
 ; E-0357)
-RewardItemOrKey2_ReadMessageIndexAndMessageGroup::
+RewardItemOrKey2_WalkDigger::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5431,18 +5431,18 @@ RewardItemOrKey::
     ld a, [wScriptStep]
     jumptable
     dw RewardItemOrKey_FindDigger
-    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey_WalkTowardX50
     dw RewardItemOrKey_WriteObject1
-    dw RewardItemOrKey_WriteObject1AndScriptStep
-    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup_2
+    dw RewardItemOrKey_WalkToX60
+    dw RewardItemOrKey_WalkTowardY40
     dw RewardItemOrKey_WriteObject1_AdvanceScriptStep_3
-    dw RewardItemOrKey_WriteObject1AndScriptStep_SetScriptStep
-    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup
+    dw RewardItemOrKey_WalkToY30
+    dw RewardItemOrKey_WalkTowardX50
     dw RewardItemOrKey_WriteObject1_AdvanceScriptStep_2
-    dw RewardItemOrKey_WriteObject1AndScriptStep
-    dw RewardItemOrKey_ReadMessageIndexAndMessageGroup_2
+    dw RewardItemOrKey_WalkToX60
+    dw RewardItemOrKey_WalkTowardY40
     dw RewardItemOrKey_WriteObject1_AdvanceScriptStep
-    dw RewardItemOrKey_WriteObject1AndScriptStep_SetScriptStep
+    dw RewardItemOrKey_WalkToY30
     dw RewardItemOrKey_RestoreDigger
     dw RewardItemOrKey_Wait
     dw RewardItemOrKey_ShowOKLetMeDig
@@ -5649,7 +5649,7 @@ RewardItemOrKey_WriteObject1_AdvanceScriptStep_2::
 
 ; Dig reward, a walking leg: the digger walks to Y $30 (down or up); there object 1 takes Y $30 and
 ; the scene goes to step $0D. (C1, E-0357)
-RewardItemOrKey_WriteObject1AndScriptStep_SetScriptStep::
+RewardItemOrKey_WalkToY30::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5697,7 +5697,7 @@ RewardItemOrKey_WriteObject1_AdvanceScriptStep_3::
 
 ; Dig reward, a walking leg: the digger walks toward Y $40, stopping at $20 or $40; next step. (C1,
 ; E-0357)
-RewardItemOrKey_ReadMessageIndexAndMessageGroup_2::
+RewardItemOrKey_WalkTowardY40::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5726,7 +5726,7 @@ RewardItemOrKey_ReadMessageIndexAndMessageGroup_2::
 
 ; Dig reward, a walking leg: the digger walks to X $60 (right or left); there object 1 takes X $60
 ; and the scene goes to step $0D. (C1, E-0357)
-RewardItemOrKey_WriteObject1AndScriptStep::
+RewardItemOrKey_WalkToX60::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5774,7 +5774,7 @@ RewardItemOrKey_WriteObject1::
 
 ; Dig reward, a walking leg: the digger walks toward X $50, stopping at $50 or $70; next step. (C1,
 ; E-0357)
-RewardItemOrKey_ReadMessageIndexAndMessageGroup::
+RewardItemOrKey_WalkTowardX50::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5897,14 +5897,14 @@ SceneMasterThanks::
     jumptable
     dw SceneMasterThanks_FindMaster
     dw SceneMasterThanks_WriteScriptStep
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_3
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_2
-    dw SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc
+    dw SceneMasterThanks_WalkUpToY50
+    dw SceneMasterThanks_WalkRightToX60
+    dw SceneMasterThanks_WalkUpToY30
+    dw SceneMasterThanks_WalkToX40AndFaceDown
     dw SceneMasterThanks_WriteScriptStep_2
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_3
-    dw SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep
-    dw SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags
+    dw SceneMasterThanks_WalkRightToX60
+    dw SceneMasterThanks_WalkDownToY50
+    dw SceneMasterThanks_WalkToX40
     dw SceneMasterThanks_RestoreMaster
     dw SceneMasterThanks_Hop
 
@@ -5953,7 +5953,7 @@ SceneMasterThanks_RestoreMaster::
 
 ; Master thanks, a walking leg: the monster walks to X $40 (right or left); there it faces up,
 ; sprite 0 faces up at ($40, $50) and the field is redrawn (draw flags $0E); next step. (C1, E-0357)
-SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags::
+SceneMasterThanks_WalkToX40::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -5992,7 +5992,7 @@ SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlags::
     ret
 
 ; Master thanks, a walking leg: the monster walks down to Y $50; next step. (C1, E-0357)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup_AdvanceScriptStep::
+SceneMasterThanks_WalkDownToY50::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6039,7 +6039,7 @@ SceneMasterThanks_WriteScriptStep_2::
 
 ; Master thanks, a walking leg: the monster walks to X $40; there it faces down, sprite 0 takes X
 ; $40, the field is redrawn and the scene goes to step $0A. (C1, E-0357)
-SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc::
+SceneMasterThanks_WalkToX40AndFaceDown::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6074,7 +6074,7 @@ SceneMasterThanks_WriteSpriteSlotsAndFieldDrawFlagsEtc::
     ret
 
 ; Master thanks, a walking leg: the monster walks up to Y $30; next step. (C1, E-0357)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup_2::
+SceneMasterThanks_WalkUpToY30::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6097,7 +6097,7 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_2::
     ret
 
 ; Master thanks, a walking leg: the monster walks right to X $60; next step. (C1, E-0357)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup_3::
+SceneMasterThanks_WalkRightToX60::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6118,7 +6118,7 @@ SceneMasterThanks_ReadMessageIndexAndMessageGroup_3::
     ret
 
 ; Master thanks, a walking leg: the monster walks up to Y $50; next step. (C1, E-0357)
-SceneMasterThanks_ReadMessageIndexAndMessageGroup::
+SceneMasterThanks_WalkUpToY50::
     ld a, [wMessageIndex]
     ld l, a
     ld a, [wMessageGroup]
@@ -6255,21 +6255,21 @@ SceneKamehaEscape::
     jumptable
     dw SceneKamehaEscape_PlayMusic
     dw SceneKamehaEscape_Wait
-    dw SceneKamehaEscape_WriteStepPtrLo
+    dw SceneKamehaEscape_Shake
     dw SceneKamehaEscape_SetScriptParam0
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_Warp
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
-    dw SceneKamehaEscape_WriteStepPtrLo
+    dw SceneKamehaEscape_Shake
     dw SceneKamehaEscape_WriteScriptParam0
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_Wait
-    dw SceneKamehaEscape_WriteMapScreenXAndMapScreenYEtc
+    dw SceneKamehaEscape_WarpToScreen54
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_RedrawColumnsBesideScreenAndStep
-    dw SceneKamehaEscape_WriteStepPtrLo
+    dw SceneKamehaEscape_Shake
     dw SceneKamehaEscape_WriteScriptParam0_SetScriptParam0
     dw SceneKamehaEscape_Wait
     dw SceneKamehaEscape_Wait
@@ -6336,7 +6336,7 @@ SceneKamehaEscape_WriteScriptParam0_SetScriptParam0::
 
 ; Kameha escape: sets screen (5, 4) and warps there on map $30 (the same warp setup as the step
 ; after it). (C1, E-0357)
-SceneKamehaEscape_WriteMapScreenXAndMapScreenYEtc::
+SceneKamehaEscape_WarpToScreen54::
     ld a, $05
     ldh [hMapScreenX], a
     ld a, $04
@@ -6460,10 +6460,10 @@ SceneKamehaEscape_DecompressToVRAM_Data::
     db $06, $47, $42, $4c, $ff, $45, $b3, $4b
 
 ; Kameha escape, step 2: shakes the screen for 180 frames. (C1, E-0357)
-SceneKamehaEscape_WriteStepPtrLo::
+SceneKamehaEscape_Shake::
     ld a, $b4
     ld [wStepPtrLo], a
-    farcall SceneKamehaEscape_WriteScrollXAndScrollXHi
+    farcall ShakeScreenForStepCount
     ret
 
 ; Kameha escape, step 1: waits 60 frames; next step. (C1, E-0357)
@@ -6519,10 +6519,10 @@ SceneCrate::
     ld a, [wScriptStep]
     jumptable
     dw SceneCrate_Warp
-    dw SceneCrate_WriteScriptParam0AndSpriteSlotsEtc
+    dw SceneCrate_LowerCrate
     dw SceneCrate_Scroll
-    dw SceneCrate_SetScriptParam0
-    dw SceneCrate_WritePlayerYAndFollowerRecords
+    dw SceneCrate_LowerCrateToY30
+    dw SceneCrate_WalkPlayerDown
     dw SceneCrate_WriteFollowerRecords
     dw SceneCrate_WriteFollowerRecords_AdvanceScriptStep_2
     dw SceneCrate_WriteFollowerRecords_AdvanceScriptStep
@@ -6577,7 +6577,7 @@ SceneCrate_WriteFollowerRecords::
 
 ; Crate, step 4: the player walks down to Y $40; then the first follower is placed at ($40, $30)
 ; facing down; next step. (C1, E-0357)
-SceneCrate_WritePlayerYAndFollowerRecords::
+SceneCrate_WalkPlayerDown::
     ldh a, [hPlayerY]
     inc a
     ldh [hPlayerY], a
@@ -6595,7 +6595,7 @@ SceneCrate_WritePlayerYAndFollowerRecords::
 
 ; Crate, step 3: the crate (sprite 0) moves down a pixel every other frame to Y $30; then the player
 ; appears at ($40, $30) facing down; next step. (C1, E-0357)
-SceneCrate_SetScriptParam0::
+SceneCrate_LowerCrateToY30::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6637,7 +6637,7 @@ SceneCrate_Scroll::
 ; Crate, step 1: the crate moves down a pixel every other frame to Y $80; then the screen scrolls
 ; down (field action $80, scroll direction 8, the next screen row, the player frozen and stepping up
 ; 128); next step. (C1, E-0357)
-SceneCrate_WriteScriptParam0AndSpriteSlotsEtc::
+SceneCrate_LowerCrate::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -6831,7 +6831,7 @@ SceneDancing::
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_ToScriptStepMoveFollowersToLeader
     dw SceneMermaidSong2_WalkLeft
-    dw SceneDancing_SetBit2AtHL_B73AndStep
+    dw SceneDancing_FreezePlayer
     dw SceneDancing_ToSceneDancing_DanceSteps
     dw SceneDancing_LuredMermaid
     dw SceneDancing_SetScriptStartRequestTo80
@@ -6856,7 +6856,7 @@ SceneDancing_ToSceneDancing_DanceSteps::
     ret
 
 ; Dancing, step 5: the player moves and is frozen (bits 2 and 1); next step. (C1, E-0357)
-SceneDancing_SetBit2AtHL_B73AndStep::
+SceneDancing_FreezePlayer::
     ld hl, hPlayerStateFlags
     call SetBit2AtHL_B73
     ld hl, hPlayerStateFlags
@@ -7449,7 +7449,7 @@ ScriptCommand20_Run::
     ld a, [wScriptStep]
     jumptable
     dw ScriptCommand20_Run_WriteScriptParam0
-    dw ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords
+    dw ScriptCommand20_Run_WalkFollower2
     dw ScriptCommand20_Run_WriteFollowerRecords
     dw ScriptCommand20_Run_FaceAndSetFlag
 
@@ -7492,7 +7492,7 @@ ScriptCommand20_Run_WriteFollowerRecords::
 
 ; Command 20, step 1: the second follower walks right to X $50, then to Y $40 (down or up); next
 ; step. (C1, E-0357)
-ScriptCommand20_Run_WriteScriptParam0AndFollowerRecords::
+ScriptCommand20_Run_WalkFollower2::
     ld a, [wScriptParam0]
     or a
     jr nz, .check_follower_records
@@ -7589,12 +7589,12 @@ SceneWarubouFood2::
     dw SceneChestBattle_WaitMessage
     dw SceneWarubouFood2_WalkPlayer
     dw SceneWarubouFood2_SinkObject5
-    dw SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc
+    dw SceneWarubouFood2_WalkPlayerLeft
 
 ; Warubou food 2, step 28: after 30 frames the player walks left to X $40; there the player and the
 ; first follower face up, EVENT_SCENE_WARUBOU_FOOD2_00C is set and the next script command is asked
 ; for. (C1, E-0357)
-SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc::
+SceneWarubouFood2_WalkPlayerLeft::
     ld a, [wScriptParam0]
     inc a
     cp $1e
@@ -8052,14 +8052,14 @@ SceneWarubouFood::
     ld a, [wScriptStep]
     jumptable
     dw SceneWarubouFood_WalkPlayer
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc_2
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc_2
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc_2
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc_2
-    dw SceneWarubouFood_WriteObject2AndPlayerXEtc
+    dw SceneWarubouFood_MoveRight
+    dw SceneWarubouFood_MoveLeft
+    dw SceneWarubouFood_MoveLeft
+    dw SceneWarubouFood_MoveRight
+    dw SceneWarubouFood_MoveRight
+    dw SceneWarubouFood_MoveLeft
+    dw SceneWarubouFood_MoveLeft
+    dw SceneWarubouFood_MoveRight
     dw SceneWarubouFood_FlyObject5
     dw SceneWarubouFood_WalkObjects
 
@@ -8183,9 +8183,8 @@ SceneWarubouFood_FlyObject5_Data::
     db $46, $47, $48, $48, $49, $4a, $4a, $4b, $4c, $4c, $4d, $4e, $4e, $4f, $50, $50
 
 ; Warubou food, step 2: moves object 2, the player, the first follower and object 5 left by the
-; table for 64 frames (SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2); next step. (C1,
-; E-0357)
-SceneWarubouFood_WriteObject2AndPlayerXEtc_2::
+; table for 64 frames (SceneWarubouFood_AddToX); next step. (C1, E-0357)
+SceneWarubouFood_MoveLeft::
     ld a, [wScriptParam0]
     ld hl, ShiftObjectsYByTable_Data
     add_a_to_hl
@@ -8193,11 +8192,11 @@ SceneWarubouFood_WriteObject2AndPlayerXEtc_2::
     xor $ff
     inc a
     ld c, a
-    jr SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2
+    jr SceneWarubouFood_AddToX
 
-; Warubou food, step 1: moves them right by the table for 64 frames
-; (SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2); next step. (C1, E-0357)
-SceneWarubouFood_WriteObject2AndPlayerXEtc::
+; Warubou food, step 1: moves them right by the table for 64 frames (SceneWarubouFood_AddToX); next
+; step. (C1, E-0357)
+SceneWarubouFood_MoveRight::
     ld a, [wScriptParam0]
     ld hl, ShiftObjectsYByTable_Data
     add_a_to_hl
@@ -8206,7 +8205,7 @@ SceneWarubouFood_WriteObject2AndPlayerXEtc::
 
 ; Adds C to the X of object 2, the player, the first follower and object 5; after 64 frames the next
 ; step. (C1, E-0357)
-SceneWarubouFood_WriteObject2AndPlayerXEtc_ReadObject2::
+SceneWarubouFood_AddToX::
     ld a, [wObject2 + OBJ_X]
     add c
     ld [wObject2 + OBJ_X], a
@@ -8400,18 +8399,18 @@ SceneWarubouSmells_WriteObject2::
 SceneSpinning::
     ld a, [wScriptStep]
     jumptable
-    dw SceneSpinning_WriteObject2AndObject1Etc
+    dw SceneSpinning_PlaceObjects
     dw SceneSpinning_WalkObjects
     dw SceneSpinning_Wait
     dw SceneSpinning_RaiseObject5
     dw SceneSpinning_Wait
     dw SceneSpinning_HopObject5
     dw SceneSpinning_Wait
-    dw SceneSpinning_WriteStepPtrLoAndStepPtrHiEtc
+    dw SceneSpinning_HopObject5Right
     dw SceneSpinning_Wait
     dw SceneSpinning_HopObject5
     dw SceneSpinning_Wait
-    dw SceneSpinning_WriteStepPtrLoAndStepPtrHiEtc
+    dw SceneSpinning_HopObject5Right
     dw SceneSpinning_Wait
     dw SceneSpinning_ToScriptStepAdjust32TimesThenMessage_Bank73
     dw SceneChestBattle_WaitMessage
@@ -8492,7 +8491,7 @@ SceneSpinning_ToScriptStepAdjust32TimesThenMessage_Bank73::
 
 ; Spinning, step 7: object 5 hops right for 32 frames (SceneSpinning_HopObject5_SetStepPtrLo). (C1,
 ; E-0357)
-SceneSpinning_WriteStepPtrLoAndStepPtrHiEtc::
+SceneSpinning_HopObject5Right::
     ld hl, wObject5 + SCRIPTOBJ_X
     inc [hl]
     jr SceneSpinning_HopObject5_SetStepPtrLo
@@ -8580,7 +8579,7 @@ SceneSpinning_WalkObjects::
 
 ; Spinning, step 0: over 180 frames sets object 2's X to $50 at frame 60 and object 1's X to $20 at
 ; frame 120; next step. (C1, E-0357)
-SceneSpinning_WriteObject2AndObject1Etc::
+SceneSpinning_PlaceObjects::
     ld hl, wScriptParam0
     inc [hl]
     ld a, [wScriptParam0]
@@ -8617,13 +8616,12 @@ SceneLearnQuick::
     dw SceneLearnQuick_RunSquareFast
     dw SceneLearnQuick_RunLeft
     dw SceneLearnQuick_RunOff
-    dw SceneLearnQuick_WriteScriptStartRequest
+    dw SceneLearnQuick_SpinSprite_SetScriptStartRequest
 
-; Learn quick, step 5: sprite 0 spins on, slowing down
-; (SceneLearnQuick_WriteScriptParam0AndSpriteSlots); when it has stopped (wScriptParam1 = 0) asks
-; for the next script command. (C1, E-0357)
-SceneLearnQuick_WriteScriptStartRequest::
-    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
+; Learn quick, step 5: sprite 0 spins on, slowing down (SceneLearnQuick_SpinSprite); when it has
+; stopped (wScriptParam1 = 0) asks for the next script command. (C1, E-0357)
+SceneLearnQuick_SpinSprite_SetScriptStartRequest::
+    call SceneLearnQuick_SpinSprite
     ld a, [wScriptParam1]
     or a
     ret nz
@@ -8635,7 +8633,7 @@ SceneLearnQuick_WriteScriptStartRequest::
 ; object 2 left to X $20 and then up to Y $30 and left off the screen (two pixels a frame); then the
 ; next step. (C1, E-0357)
 SceneLearnQuick_RunOff::
-    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
+    call SceneLearnQuick_SpinSprite
     ld a, [wObject1 + OBJ_Y]
     cp $30
     jr z, .set_step_target_to_83
@@ -8705,7 +8703,7 @@ SceneLearnQuick_RunOff::
 ; Learn quick, step 3: while sprite 0 spins, objects 1 and 2 run left to X $20; next step. (C1,
 ; E-0357)
 SceneLearnQuick_RunLeft::
-    call SceneLearnQuick_WriteScriptParam0AndSpriteSlots
+    call SceneLearnQuick_SpinSprite
     ld a, $02
     ld [wStepPtrHi], a
     ld a, $83
@@ -8727,11 +8725,11 @@ SceneLearnQuick_RunLeft::
     inc [hl]
     ret
 
-; Learn quick, step 2: objects 1 and 2 keep running round the square
-; (SceneLearnQuick_RunSquare_WriteStepTargetAndStepPtrLoEtc) and sprite 0 faces by object 2's leg,
-; for 160 frames; then the spin starts (speed $40); next step. (C1, E-0357)
+; Learn quick, step 2: objects 1 and 2 keep running round the square (SceneLearnQuick_RunSquareStep)
+; and sprite 0 faces by object 2's leg, for 160 frames; then the spin starts (speed $40); next step.
+; (C1, E-0357)
 SceneLearnQuick_RunSquareFast::
-    call SceneLearnQuick_RunSquare_WriteStepTargetAndStepPtrLoEtc
+    call SceneLearnQuick_RunSquareStep
     call SceneLearnQuick_RunSquare_WriteSpriteSlots
     ld b, $a0
     call StepScriptParam0Counter_Bank73
@@ -8747,7 +8745,7 @@ SceneLearnQuick_RunSquareFast::
 ; Learn quick, step 1: the same run round the square for 128 frames; then both runners go fast (leg
 ; bit 7 in wMessageIndex/Group); next step. (C1, E-0357)
 SceneLearnQuick_RunSquare::
-    call SceneLearnQuick_RunSquare_WriteStepTargetAndStepPtrLoEtc
+    call SceneLearnQuick_RunSquareStep
     call SceneLearnQuick_RunSquare_WriteSpriteSlots
     ld b, $80
     call StepScriptParam0Counter_Bank73
@@ -8774,7 +8772,7 @@ SceneLearnQuick_SetMessageIndex::
 ; Runs objects 1 and 2 round the square between $30 and $50 (right to X $50, down to Y $50, left to
 ; X $30, up to Y $30), each on its own leg (wMessageIndex for object 1, wMessageGroup for object 2;
 ; bit 7 means two pixels a frame), moving to the next leg on arrival. (C1, E-0357)
-SceneLearnQuick_RunSquare_WriteStepTargetAndStepPtrLoEtc::
+SceneLearnQuick_RunSquareStep::
     ld b, $00
     ld a, [wMessageIndex]
     bit 7, a
@@ -8905,7 +8903,7 @@ SceneLearnQuick_RunSquare_WriteSpriteSlots_Data::
 
 ; Spins sprite 0: every 8 frames the speed (wScriptParam1) drops by one; the angle (wScriptParam0)
 ; grows by speed / 16 and gives the facing (3 minus its quarter). (C1, E-0357)
-SceneLearnQuick_WriteScriptParam0AndSpriteSlots::
+SceneLearnQuick_SpinSprite::
     ld a, [wFrameCounterLo]
     and $08
     jr nz, .read_script_param1

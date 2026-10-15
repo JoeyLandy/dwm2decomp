@@ -751,26 +751,26 @@ GameMode5_Update_LinkExchangeJoypadPerFrame::
 ; Link session 6's screen (Team Mode): before the menu starts, the fee steps by
 ; wTitleScreenSubState; afterwards, once no fade runs, the screen states (waiting, the list, the
 ; info screens, the swap menu and the record panels). (C1, E-0357)
-RunLinkSession6Exchange_Receive_ReadTitleScreenStateAndTitleScreenSubStateEtc::
+TeamMode_Screen::
     ld a, [wTitleScreenState]
     or a
     jr nz, .check_fade_state
     ld a, [wTitleScreenSubState]
     jumptable
-    dw RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep
+    dw TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep
     dw RunLinkSession6Exchange_DrawTeamGold
-    dw RunLinkSession6Exchange_Receive_ShowForTeamMode1Hero
-    dw RunLinkSession6Exchange_Receive_ShowYourPalRefusedThe
-    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc
-    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_2
+    dw TeamMode_Screen_ShowForTeamMode1Hero
+    dw TeamMode_Screen_ShowYourPalRefusedThe
+    dw TeamMode_PayFee
+    dw TeamMode_Screen_SetLinkSendByte
     dw RunLinkSession6Exchange_ChooseTeamMonster
-    dw RunLinkSession6Exchange_Receive_ShowYouRefusedToPay
-    dw RunLinkSession6Exchange_Receive_BackTitleScreenSubState
-    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_2
-    dw RunLinkSession6Exchange_Receive_SetLinkSendByte
-    dw RunLinkSession6Exchange_Receive_ShowYourPalRefusedTo
-    dw RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc
-    dw RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_3
+    dw TeamMode_Screen_ShowYouRefusedToPay
+    dw TeamMode_BackToChoose
+    dw TeamMode_WaitPartner
+    dw TeamMode_Screen_SetLinkSendByte_SetLinkSendByte
+    dw TeamMode_Screen_ShowYourPalRefusedTo
+    dw TeamMode_ReturnToChoice
+    dw TeamMode_GiveUp
 
 .check_fade_state:
     ld a, [wFadeState]
@@ -778,10 +778,10 @@ RunLinkSession6Exchange_Receive_ReadTitleScreenStateAndTitleScreenSubStateEtc::
     ret nz
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession6Exchange_Receive_AdvanceScreenState
-    dw RunLinkSession6Exchange_Receive_AdvanceScreenState_2
-    dw RunLinkSession6Exchange_Receive_2
-    dw RunLinkSession6Exchange_Receive_AdvanceScreenState_3
+    dw TeamMode_Screen_AdvanceScreenState_2
+    dw TeamMode_Screen_WaitTextFlags
+    dw TeamMode_Screen_Leave
+    dw TeamMode_Screen_AdvanceScreenState
     dw RunLinkSession6Exchange_Pick
     dw RunLinkSession6Exchange_FightInfo
     dw RunLinkSession6Exchange_RunStatsScreen
@@ -797,12 +797,12 @@ RunLinkSession6Exchange_Receive_ReadTitleScreenStateAndTitleScreenSubStateEtc::
 
 ; Team Mode, step 0: draws the frame and the player's name and heading (string 0 of category 1) and
 ; sets the default text window. (C1, E-0357)
-RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep::
-    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_TileRect
+TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep::
+    ld de, TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_TileRect
     ld hl, wScreenTileBuffer + $c
     lb bc, $08, $03
     call CopyRectTo20ByteRowsJp_Bank33
-    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
+    ld de, TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wScreenTileBuffer
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -831,7 +831,7 @@ RunLinkSession6Exchange_DrawTeamGold::
 
 ; Team Mode, step 2: after the fade 'For Team Mode, 1000G is charged.' (category 5, string $19).
 ; (C1, E-0357)
-RunLinkSession6Exchange_Receive_ShowForTeamMode1Hero::
+TeamMode_Screen_ShowForTeamMode1Hero::
     ld a, [wFadeState]
     or a
     ret nz
@@ -847,7 +847,7 @@ RunLinkSession6Exchange_Receive_ShowForTeamMode1Hero::
 ; side's no gives 'You refused the Team Mode.' ($09); otherwise below 1000 gold 'Not enough money.
 ; Please wait.' (string 0) and sends $10; with enough pays 1000 gold, 'Please wait.' and sends 1.
 ; (C1, E-0357)
-RunLinkSession6Exchange_Receive_ShowYourPalRefusedThe::
+TeamMode_Screen_ShowYourPalRefusedThe::
     ld a, [wLinkMessage]
     cp $fe
     jr nz, .check_text_flags
@@ -914,7 +914,7 @@ RunLinkSession6Exchange_Receive_ShowYourPalRefusedThe::
 ; Team Mode, step 4: the partner's refusal as above; the partner's 1 gives 'You paid the 1000G
 ; battle fee.' (string 7); its $10 gives "Your pal doesn't have enough gold." (string 1) and the
 ; offer to pay for both (three steps on). (C1, E-0357)
-RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc::
+TeamMode_PayFee::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -956,7 +956,7 @@ RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc::
     ret
 
 ; Team Mode, step 5: clears the send byte and the screen flag. (C1, E-0357)
-RunLinkSession6Exchange_Receive_SetLinkSendByte_2::
+TeamMode_Screen_SetLinkSendByte::
     xor a
     ld [wLinkSendByte], a
     ld hl, wTitleScreenSubState
@@ -1021,7 +1021,7 @@ RunLinkSession6Exchange_SetTitleScreenSubState::
 ; Team Mode, step 7 (paying for both): no gives 'You refused to pay the battle ...' (string 5, sends
 ; $40); below 1000 gold 'Insufficient gold for Team Mode.' (string 4, sends $30); otherwise pays
 ; 1000 more, 'You paid for both combatants.' (string 2, sends $20). (C1, E-0357)
-RunLinkSession6Exchange_Receive_ShowYouRefusedToPay::
+TeamMode_Screen_ShowYouRefusedToPay::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -1074,7 +1074,7 @@ RunLinkSession6Exchange_Receive_ShowYouRefusedToPay::
 
 ; Team Mode, step 8: the partner's refusal ends; on its $20 goes back two steps (to choosing the
 ; monster). (C1, E-0357)
-RunLinkSession6Exchange_Receive_BackTitleScreenSubState::
+TeamMode_BackToChoose::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1098,7 +1098,7 @@ RunLinkSession6Exchange_Receive_BackTitleScreenSubState::
     ret
 
 ; Team Mode, step 9: the partner's refusal ends; on its $30 or $40 goes on. (C1, E-0357)
-RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_2::
+TeamMode_WaitPartner::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1124,7 +1124,7 @@ RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_2::
     ret
 
 ; Team Mode, step 10: gives up (sends $FE, screen state 2). (C1, E-0357)
-RunLinkSession6Exchange_Receive_SetLinkSendByte::
+TeamMode_Screen_SetLinkSendByte_SetLinkSendByte::
     ld a, $fe
     ld [wLinkSendByte], a
     ld a, $01
@@ -1138,7 +1138,7 @@ RunLinkSession6Exchange_Receive_SetLinkSendByte::
 ; Team Mode, step 11 (waiting for the partner who pays): its $10 or $30 gives 'Insufficient gold for
 ; Team Mode.', $20 'Your pal paid your battle fee.' (string 3), $40 'Your pal refused to pay the
 ; ...' (string 6), echoing the byte. (C1, E-0357)
-RunLinkSession6Exchange_Receive_ShowYourPalRefusedTo::
+TeamMode_Screen_ShowYourPalRefusedTo::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1199,7 +1199,7 @@ RunLinkSession6Exchange_Receive_ShowYourPalRefusedTo::
     ret
 
 ; Team Mode, step 12: the partner's refusal ends; 0 or $20 returns to step 5. (C1, E-0357)
-RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
+TeamMode_ReturnToChoice::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_link_send_byte_to_FE
@@ -1226,7 +1226,7 @@ RunLinkSession6Exchange_WriteTitleScreenSubStateAndLinkSendByteEtc::
 
 ; Team Mode, step 13: on the partner's $10, $30, $40 or $FE gives up (sends $FE, screen state 2).
 ; (C1, E-0357)
-RunLinkSession6Exchange_Receive_WriteLinkSendByteAndTitleScreenStateEtc_3::
+TeamMode_GiveUp::
     ld a, [wLinkMessage]
     cp $10
     jr z, .set_link_send_byte_to_FE
@@ -1257,13 +1257,13 @@ BeginString_Bank07_Cat5::
     ret
 
 ; Session 6, screen state 0: the next state. (C1, E-0357)
-RunLinkSession6Exchange_Receive_AdvanceScreenState::
+TeamMode_Screen_AdvanceScreenState_2::
     ld hl, wScreenState
     inc [hl]
     ret
 
 ; Session 6, screen state 1: after the text skips a state. (C1, E-0357)
-RunLinkSession6Exchange_Receive_AdvanceScreenState_2::
+TeamMode_Screen_WaitTextFlags::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1273,17 +1273,17 @@ RunLinkSession6Exchange_Receive_AdvanceScreenState_2::
     ret
 
 ; Session 6, screen state 2 (leaving): its five waiting steps. (C1, E-0357)
-RunLinkSession6Exchange_Receive_2::
+TeamMode_Screen_Leave::
     ld a, [wScreenStep]
     jumptable
-    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_3
-    dw RunLinkSession6Exchange_Receive_PleaseWait
-    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_4
-    dw RunLinkSession6Exchange_Receive_SetLinkSendByte_5
-    dw RunLinkSession6Exchange_Receive_3
+    dw TeamMode_Screen_Leave_WaitLinkMessage
+    dw TeamMode_Screen_Leave_ShowPleaseWait
+    dw TeamMode_Screen_Leave_WaitTextFlags
+    dw TeamMode_Screen_Leave_WaitLinkMessage_SetLinkSendByte
+    dw TeamMode_Screen_Leave_WaitTextFlags_2
 
 ; Leaving, step 0: on the partner's $FE goes on. (C1, E-0357)
-RunLinkSession6Exchange_Receive_SetLinkSendByte_3::
+TeamMode_Screen_Leave_WaitLinkMessage::
     ld a, [wLinkMessage]
     cp $fe
     ret nz
@@ -1295,7 +1295,7 @@ RunLinkSession6Exchange_Receive_SetLinkSendByte_3::
     ret
 
 ; Leaving, step 1: after the text 'Please wait.'. (C1, E-0357)
-RunLinkSession6Exchange_Receive_PleaseWait::
+TeamMode_Screen_Leave_ShowPleaseWait::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1306,7 +1306,7 @@ RunLinkSession6Exchange_Receive_PleaseWait::
     ret
 
 ; Leaving, step 2: after the text sends 1. (C1, E-0357)
-RunLinkSession6Exchange_Receive_SetLinkSendByte_4::
+TeamMode_Screen_Leave_WaitTextFlags::
     ld a, [wTextFlags]
     and a
     ret nz
@@ -1317,7 +1317,7 @@ RunLinkSession6Exchange_Receive_SetLinkSendByte_4::
     ret
 
 ; Leaving, step 3: on the partner's 1 goes on. (C1, E-0357)
-RunLinkSession6Exchange_Receive_SetLinkSendByte_5::
+TeamMode_Screen_Leave_WaitLinkMessage_SetLinkSendByte::
     ld a, [wLinkMessage]
     cp $01
     ret nz
@@ -1329,7 +1329,7 @@ RunLinkSession6Exchange_Receive_SetLinkSendByte_5::
 
 ; Leaving, step 4: after the text clears $6F bytes of screen state and returns to game mode 5, state
 ; 1 (the link menu). (C1, E-0357)
-RunLinkSession6Exchange_Receive_3::
+TeamMode_Screen_Leave_WaitTextFlags_2::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1356,7 +1356,7 @@ RunLinkSession6Exchange_Receive_3::
     ret
 
 ; Session 6, screen state 3: the next state. (C1, E-0357)
-RunLinkSession6Exchange_Receive_AdvanceScreenState_3::
+TeamMode_Screen_AdvanceScreenState::
     ld hl, wScreenState
     inc [hl]
     ret
@@ -1406,14 +1406,13 @@ CallClearAndDrawListEntriesCell5Name::
     farcall ClearAndDrawListEntriesCell5NameAtTiles1780
     ret
 
-; copies the 10 x 11 rectangle
-; RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2 into wWindowTileBuffer
-; + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340: the address in its
-; name read as its RAM name; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the
-; address in its name dropped or read as the label there; was
-; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
+; copies the 10 x 11 rectangle TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_2 into
+; wWindowTileBuffer + $6E (CopyRectTo20ByteRowsJp_Bank33), then wScreenStep += 1 (E-0119) (E-0340:
+; the address in its name read as its RAM name; was
+; CopyRectToWindowTileBufferRow5Col10AndIncScreenStep) (E-0344: the address in its name dropped or
+; read as the label there; was CopyRectToWindowTileBufferRow5Col10AndIncScreenStep)
 CopyRectToWindowTileBufferRow5Col10AndIncScreenStep::
-    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
+    ld de, TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -1751,10 +1750,10 @@ RunLinkSession6Exchange_FightInfo::
     dw RunLinkSession6Exchange_FightInfo_YourPalRefusedThe
     dw RunLinkSession6Exchange_FightInfo_ShowPleaseWait
     dw RunLinkSession6Exchange_FightInfo_WaitTextFlags
-    dw RunLinkSession6Exchange_WriteLinkSendByteAndScreenStateEtc
+    dw RunLinkSession6Exchange_FightInfo_SaveAnswer
     dw RunLinkSession6Exchange_FightInfo_Save
     dw RunLinkSession6Exchange_FightInfo_KeepPartner
-    dw RunLinkSession6Exchange_WriteScreenStepAndBattleSetupFlagsLoEtc
+    dw RunLinkSession6Exchange_FightInfo_ExchangeSeed
     dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage_2
     dw RunLinkSession6Exchange_FightInfo_SetScreenStep
     dw RunLinkSession6Exchange_FightInfo_WaitLinkMessage_3
@@ -2054,7 +2053,7 @@ RunLinkSession6Exchange_FightInfo_WaitTextFlags::
 
 ; Fight info, step 11: on the partner's 1 'Saving... Please wait.' (string $1A); on $FE 'Your pal
 ; refused the Team Mode.'. (C1, E-0357)
-RunLinkSession6Exchange_WriteLinkSendByteAndScreenStateEtc::
+RunLinkSession6Exchange_FightInfo_SaveAnswer::
     ld a, [wLinkMessage]
     cp $fe
     jr z, .set_screen_state_to_02
@@ -2134,7 +2133,7 @@ RunLinkSession6Exchange_FightInfo_KeepPartner::
     ret
 
 ; Fight info, step 14: starts a 2-byte exchange of the random seed. (C1, E-0357)
-RunLinkSession6Exchange_WriteScreenStepAndBattleSetupFlagsLoEtc::
+RunLinkSession6Exchange_FightInfo_ExchangeSeed::
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -2409,7 +2408,7 @@ RunLinkSession6Exchange_BackFromStats_DrawName::
 ; Back from stats, step 5: draws both info windows with their four numbers and the partner's name.
 ; (C1, E-0357)
 RunLinkSession6Exchange_BackFromStats_DrawInfoWindows::
-    ld de, RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2
+    ld de, TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_2
     ld hl, wWindowTileBuffer + $6e
     lb bc, $0a, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -3237,13 +3236,13 @@ StoreC5BEC6AtHLStride2_Bank33::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
-RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_TileRect::
+TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 2
 
 ; record: 10 x 11 tiles, one row per line
-RunLinkSession6Exchange_Receive_DrawPlayerNameAndString0Category1AndStep_2::
+TeamMode_Screen_DrawPlayerNameAndString0Category1AndStep_2::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2

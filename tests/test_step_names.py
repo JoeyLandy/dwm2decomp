@@ -32,8 +32,10 @@ class StepNamesTest(unittest.TestCase):
                 cls.bodies[name] = text[a:b]
 
     def test_every_rename_has_a_description(self):
-        # E-0367 named most state handlers from their notes, so fewer names are left to this pass
-        self.assertGreaterEqual(len(self.tags), 150)
+        # E-0367 named most state handlers from their notes, so fewer names are left to this pass; from E-0368 the
+        # readability batches name the rest from readings (D-011), and tests/test_doc_coverage.py's ratchet on
+        # instruction-named labels replaces the floor that was here (150)
+        self.assertGreaterEqual(len(self.tags), 1)
         self.assertTrue(all(self.tags.values()))
 
     def test_set_and_advance_descriptions_write_their_variable(self):

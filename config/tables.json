@@ -995,7 +995,7 @@
           "reason": "key-world room record"
         }
       ],
-      "note": "E-0141 (C1: LoadMapScreen_WriteTemp0AndSVBK reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n)."
+      "note": "E-0141 (C1: LoadMapScreen_Type5 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with ReadByteInBank; every non-zero word is $4181 + $63 * n)."
     },
     {
       "bank": "72",
@@ -1394,7 +1394,7 @@
           "name": "bank of attribute map 15"
         }
       ],
-      "note": "E-0141 (C1: LoadMapScreen_WriteTemp0AndSVBK skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).",
+      "note": "E-0141 (C1: LoadMapScreen_Type5 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360 bytes).",
       "record": "3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16 far pointers to their attribute maps"
     },
     {
@@ -2235,7 +2235,7 @@
         }
       ],
       "record": "5 x 5 tiles, one row per line (block number = id)",
-      "note": "E-0166 (C1: RunWorldMapState_DrawCloseUp_WriteTemp0AndTemp1 (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
+      "note": "E-0166 (C1: RunWorldMapState_DrawCloseUpCell (A1:4640, the game mode 2 map view) reads the word at bytes 6-7 of a key-world screen's 8-byte header (E-0146), and writes the tile at 5E:$43A0 + 25 * (word - 1) + 5 * row + column to the BG map; block numbers 1-281 fit before Map49Tileset at $5F2A)."
     },
     {
       "bank": "A1",
@@ -2953,7 +2953,7 @@
         }
       ],
       "record": "size nibbles (width, height in screens); pointer and bank of the 25-byte-per-screen cell grid",
-      "note": "E-0185 (C1: RunWorldMapState_DrawCloseUp_WriteTemp3AndTemp4Etc reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692)."
+      "note": "E-0185 (C1: RunWorldMapState_SetUpCloseUp reads the record at $497C + 4 * wGameMode2Byte44: width and height from the nibbles of byte 0, then a 24-bit pointer; it adds (hMapScreenX - 2) * 25 and (hMapScreenY - 2) * width * 25, then steps 5 cells per row; each grid is exactly width * height * 25 bytes and the 11 grids fill bank $5D from $45A5 to $7692)."
     },
     {
       "bank": "5D",
@@ -3625,7 +3625,7 @@
         }
       ],
       "record": "a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes",
-      "note": "E-0191 (C1: RunNameEntryStateWhenNotFading_CheckName_ReadArg1 walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
+      "note": "E-0191 (C1: IsNameRejected walks 10-byte records from $70F0 until a first byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals, then the $FF terminator)."
     },
     {
       "bank": "60",
@@ -3810,7 +3810,7 @@
           "reason": "key-world area layout"
         }
       ],
-      "note": "E-0193 (C1: DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16)."
+      "note": "E-0193 (C1: KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16)."
     },
     {
       "bank": "60",
@@ -3826,7 +3826,7 @@
           "reason": "key-world area layout"
         }
       ],
-      "note": "E-0193 (C1: a copy of KeyWorldAreaLayoutTable (84:$4CCB), word for word; DebugAutomap_Update_SetTemp0.read_key_world_area_count and PlaceObjectInAreaC read the layout's first byte or a block byte through ReadByteInBank with B = $84)."
+      "note": "E-0193 (C1: a copy of KeyWorldAreaLayoutTable (84:$4CCB), word for word; KeyWorldLayout_NumberCellsAndPlaceEntrances.read_key_world_area_count and PlaceObjectInAreaC read the layout's first byte or a block byte through ReadByteInBank with B = $84)."
     },
     {
       "bank": "84",
@@ -6274,7 +6274,7 @@
         }
       ],
       "record": "map id; screen XY; two tile positions ($FF = none)",
-      "note": "E-0193 (C1: ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc, on maps from $20, walks 4-byte records from $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it goes on to Data_084_4887; 50 records then $FF)."
+      "note": "E-0193 (C1: ItemUsable_LogTwig_Check, on maps from $20, walks 4-byte records from $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it goes on to Data_084_4887; 50 records then $FF)."
     },
     {
       "bank": "61",
@@ -6455,7 +6455,7 @@
           }
         ]
       },
-      "note": "E-0195 (C1: CheckKeyWorldWarpTable and CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2 read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
+      "note": "E-0195 (C1: CheckKeyWorldWarpTable and CheckWarpsByMapType_FloorWarpList read the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705)."
     },
     {
       "bank": "04",
@@ -8662,7 +8662,7 @@
         }
       ],
       "record": "one screen, row by row (8 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -8690,7 +8690,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8718,7 +8718,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8746,7 +8746,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8774,7 +8774,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8802,7 +8802,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8830,7 +8830,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8858,7 +8858,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8874,7 +8874,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -8902,7 +8902,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8930,7 +8930,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8958,7 +8958,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: passed directly in DE to FillEncounterFromEntry; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -8974,7 +8974,7 @@
         }
       ],
       "record": "one screen, row by row (8 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 8 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 64 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9002,7 +9002,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9030,7 +9030,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9058,7 +9058,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9086,7 +9086,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9114,7 +9114,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9142,7 +9142,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9170,7 +9170,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9198,7 +9198,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9226,7 +9226,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9254,7 +9254,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9282,7 +9282,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9310,7 +9310,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9338,7 +9338,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9366,7 +9366,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9394,7 +9394,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9422,7 +9422,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9450,7 +9450,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9478,7 +9478,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9506,7 +9506,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: passed directly in DE to FillEncounterFromEntry; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9522,7 +9522,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9550,7 +9550,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9578,7 +9578,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: no reference found; it follows the group before it; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9594,7 +9594,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9622,7 +9622,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9638,7 +9638,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9666,7 +9666,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9682,7 +9682,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9710,7 +9710,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9726,7 +9726,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9754,7 +9754,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9770,7 +9770,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9798,7 +9798,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9814,7 +9814,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9842,7 +9842,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9870,7 +9870,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: no reference found; it follows the group before it; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: no reference found; it follows the group before it; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9886,7 +9886,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9914,7 +9914,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9930,7 +9930,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 3 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -9958,7 +9958,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -9974,7 +9974,7 @@
         }
       ],
       "record": "one screen, row by row (12 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10002,7 +10002,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10030,7 +10030,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10058,7 +10058,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10086,7 +10086,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10114,7 +10114,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10142,7 +10142,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10170,7 +10170,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10198,7 +10198,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10226,7 +10226,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10254,7 +10254,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10282,7 +10282,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10310,7 +10310,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10338,7 +10338,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10366,7 +10366,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: passed directly in DE to FillEncounterFromEntry; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10382,7 +10382,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10410,7 +10410,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10438,7 +10438,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: passed directly in DE to FillEncounterFromEntry; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10454,7 +10454,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10482,7 +10482,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10498,7 +10498,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 8 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 8 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10526,7 +10526,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10542,7 +10542,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10558,7 +10558,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10574,7 +10574,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10602,7 +10602,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10618,7 +10618,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10634,7 +10634,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10662,7 +10662,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10678,7 +10678,7 @@
         }
       ],
       "record": "one screen, row by row (12 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 12 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 144 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -10706,7 +10706,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10734,7 +10734,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10762,7 +10762,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10790,7 +10790,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10818,7 +10818,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10846,7 +10846,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10874,7 +10874,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10902,7 +10902,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10930,7 +10930,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10958,7 +10958,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -10986,7 +10986,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11014,7 +11014,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11042,7 +11042,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11070,7 +11070,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11098,7 +11098,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11114,7 +11114,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11142,7 +11142,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11158,7 +11158,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11186,7 +11186,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11202,7 +11202,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11230,7 +11230,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11246,7 +11246,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11274,7 +11274,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11290,7 +11290,7 @@
         }
       ],
       "record": "one screen, row by row (1 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11318,7 +11318,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11334,7 +11334,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11362,7 +11362,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11378,7 +11378,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11406,7 +11406,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11422,7 +11422,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11450,7 +11450,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11466,7 +11466,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11494,7 +11494,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11510,7 +11510,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11538,7 +11538,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11554,7 +11554,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11582,7 +11582,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 5 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11598,7 +11598,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11626,7 +11626,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11642,7 +11642,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11670,7 +11670,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11686,7 +11686,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 9 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11714,7 +11714,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11730,7 +11730,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11758,7 +11758,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11774,7 +11774,7 @@
         }
       ],
       "record": "one screen, row by row (4 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 4 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 16 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11802,7 +11802,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11830,7 +11830,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11846,7 +11846,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11874,7 +11874,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11890,7 +11890,7 @@
         }
       ],
       "record": "one screen, row by row (6 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 6 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 36 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 6 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 36 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -11918,7 +11918,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11946,7 +11946,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -11974,7 +11974,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12002,7 +12002,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12030,7 +12030,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12046,7 +12046,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 12 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12074,7 +12074,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12090,7 +12090,7 @@
         }
       ],
       "record": "one screen, row by row (3 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 3 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 6 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12118,7 +12118,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12134,7 +12134,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12162,7 +12162,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12178,7 +12178,7 @@
         }
       ],
       "record": "one screen, row by row (5 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 5 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 25 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 5 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 25 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12206,7 +12206,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12234,7 +12234,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12262,7 +12262,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12290,7 +12290,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12318,7 +12318,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 2 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12346,7 +12346,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: passed directly in DE to RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: passed directly in DE to FillEncounterFromEntry; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12362,7 +12362,7 @@
         }
       ],
       "record": "one screen, row by row (1 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 1 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 1 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12390,7 +12390,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12406,7 +12406,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12434,7 +12434,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 4 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12450,7 +12450,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12478,7 +12478,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12494,7 +12494,7 @@
         }
       ],
       "record": "one screen, row by row (2 per row): its encounter group",
-      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_ReadMapIdAndPlayerStateFlags pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
+      "note": "E-0202 (C1: RunBattleIntroKindCase_Case00 and CollectUniqueEncounterIdsToWorkBuf2_FindTable pass it in DE with A = 2 to ReadMapCellWordForScreenXY, which reads the word at DE + 2 * (A * (hMapScreenY & $0F) + (hMapScreenX & $0F)); 4 words, up to its first group)."
     },
     {
       "bank": "0A",
@@ -12522,7 +12522,7 @@
         }
       ],
       "record": "wEncounterKind + 1; random limit and five slot thresholds; 3 encounter word(s)",
-      "note": "E-0202 (C1: named by an encounter grid; RunBattleIntroKindCase_WriteEncounterKindAndTemp0Etc draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
+      "note": "E-0202 (C1: named by an encounter grid; FillEncounterFromEntry draws three times a random 0-127 below byte 1 and stores the word of the first slot whose threshold (bytes 2-6) is not below it in wEncounterMonsters; the record has one word per non-zero threshold)."
     },
     {
       "bank": "0A",
@@ -12643,7 +12643,7 @@
     {
       "bank": "0F",
       "addr": "5284",
-      "label": "SceneDarckDefeated_WriteScriptSubStepAndObject5_ObjectPathTable",
+      "label": "SceneDarckDefeated_ObjectPath",
       "count": 8,
       "id_base": 0,
       "fields": [
@@ -12725,7 +12725,7 @@
           "name": "value 1-7 stored in a new monster record"
         }
       ],
-      "note": "E-0208 (C1: while GameMode4_Init_WriteBattleArg2AndBattleArg3Etc builds a new monster record, the code reads the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read)."
+      "note": "E-0208 (C1: while GameMode4_Init_BuildFoeRecord builds a new monster record, the code reads the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read)."
     },
     {
       "bank": "30",
@@ -12818,7 +12818,7 @@
         }
       ],
       "record": "16 signed frequency offsets, one per tick phase",
-      "note": "E-0209 (C1: the routine before ComputeNotePitch_WriteNR32 adds the byte at $3C8C + ((hSndChanFlags & $F0) - $10) + (wSoundTickBuf0E & $0F) to hSndFreqLo and writes it to register $13 of the channel; row 1 is the first; 15 rows end at ComputeNotePitch_WriteSoundEventArgAndNR30 ($3D7C))."
+      "note": "E-0209 (C1: the routine before ComputeNotePitch_WriteNR32 adds the byte at $3C8C + ((hSndChanFlags & $F0) - $10) + (wSoundTickBuf0E & $0F) to hSndFreqLo and writes it to register $13 of the channel; row 1 is the first; 15 rows end at LoadWavePatternIfChanged ($3D7C))."
     },
     {
       "bank": "3A",
@@ -12834,7 +12834,7 @@
         }
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 228 entries)."
+      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugPage shows the first three tables; 228 entries)."
     },
     {
       "bank": "3A",
@@ -12850,7 +12850,7 @@
         }
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 6 (with bit 0), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 228 entries)."
+      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 6 (with bit 0), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugPage shows the first three tables; 228 entries)."
     },
     {
       "bank": "3A",
@@ -12866,7 +12866,7 @@
         }
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 228 entries)."
+      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugPage shows the first three tables; 228 entries)."
     },
     {
       "bank": "3A",
@@ -12882,7 +12882,7 @@
         }
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 2 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 64 entries)."
+      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 2 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugPage shows the first three tables; 64 entries)."
     },
     {
       "bank": "3A",
@@ -12898,7 +12898,7 @@
         }
       ],
       "record": "effect byte for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 3 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 64 entries)."
+      "note": "E-0209 (C1: SelectEffectByEffectFlags uses this table for wEffectFlags bit 3 (the target acts), indexed by wBattleActionId: byte 1 when ActorOnLocalSide (or, for action $6C and some flags, TargetOnLocalSide) says near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values go to Jump_03A_48EC; the debug viewer DrawSkillDebugPage shows the first three tables; 64 entries)."
     },
     {
       "bank": "3A",
@@ -12962,7 +12962,7 @@
         }
       ],
       "record": "sound effect for a far-side actor, for a near-side actor ($FF = none)",
-      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 with bit 4 (after SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
+      "note": "E-0210 (C1: SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 with bit 4 (after SelectEffectByEffectFlags2Flags_SacrificeSound), indexed by wBattleActionId: byte 1 for a near-side actor (ActorOnLocalSide), else byte 0; a value other than $FF goes to QueueSoundEffect; 228 entries, up to the next table)."
     },
     {
       "bank": "3A",
@@ -14356,7 +14356,7 @@
         ],
         "record": "groups of kind, count, key word, count words; $FF ends"
       },
-      "note": "E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CallInBank81KeepRegs_CompareHLToBC over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453)."
+      "note": "E-0223 (C1: the routine at 81:$4001 reads the word at $4167 + 2 * species (parent B's, wRecordBufB + $B) and runs CheckBreedingRecipes_CompareHLToBC over it twice, with the two parents swapped; a group of kind 0 applies when its key's low byte equals the family, kind 1 when its key equals the species, and then its words are matched against the other parent; when neither order matches, bit 4 of wRecordBufB + $D is set; 321 words, and the lists tile $43E9-$5453)."
     },
     {
       "bank": "14",
@@ -14389,7 +14389,7 @@
           "name": "79 VRAM destinations, then $FFFF"
         }
       ],
-      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2 copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; CloseHibernateMenu_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall)."
+      "note": "E-0224 (C1: CopyGlyphTilesFromListsAtOnce copies 16 bytes from bank $1F for each destination word (until a low byte of $FF) from the parallel source list in DE; CloseHibernateMenu_Case01 also passes $6D84, entry 23 of this list, to LoadTileListSixPerCall)."
     },
     {
       "bank": "14",
@@ -14403,7 +14403,7 @@
           "name": "$FFFF: no destinations"
         }
       ],
-      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case04 and _Case09 pass this list to RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2, which therefore copies nothing)."
+      "note": "E-0224 (C1: RunNameEntryStateWhenNotFading_Case01_Case04 and _Case09 pass this list to CopyGlyphTilesFromListsAtOnce, which therefore copies nothing)."
     },
     {
       "bank": "14",
@@ -14418,7 +14418,7 @@
           "name": "80 bank-$1F tile sources (the last is $FFFF)"
         }
       ],
-      "note": "E-0224 (C1: the source list paired with NameEntryTileDestList (RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5) and with the empty list (RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5))."
+      "note": "E-0224 (C1: the source list paired with NameEntryTileDestList (RunNameEntryStateWhenNotFading_Setup_CopyGlyphs) and with the empty list (RunNameEntryStateWhenNotFading_SwapGlyphsBack))."
     },
     {
       "bank": "14",
@@ -14450,7 +14450,7 @@
           "name": "27 VRAM destinations, then $FFFF"
         }
       ],
-      "note": "E-0224 (C1: HibernateMenu_Case01_Case01 passes $5A28 with sources Data_014_5A84 to HibernateMenu_WriteGlyphListPosAndGlyphListStart, which copies one tile per destination until $FFFF)."
+      "note": "E-0224 (C1: HibernateMenu_Case01_Case01 passes $5A28 with sources Data_014_5A84 to CopyGlyphTilesFromLists_Bank14, which copies one tile per destination until $FFFF)."
     },
     {
       "bank": "14",
@@ -18420,7 +18420,7 @@
           "reason": "grid encounter list"
         }
       ],
-      "note": "E-0236 (C1: ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202))."
+      "note": "E-0236 (C1: ArenaGridBattle_SetUpFromGrid sets battle intro 4 and encounter kind 2, reads the word at $7897 + 2 * wGridCursorX, then the word at that pointer + 2 * wScreenCountPlusOne, and copies 6 bytes from it to wEncounterMonsters (three encounter words, as E-0202))."
     },
     {
       "bank": "0C",
@@ -18559,7 +18559,7 @@
           "name": "words to match, then $0000"
         }
       ],
-      "note": "E-0236 (C1: FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read)."
+      "note": "E-0236 (C1: FhuntTalkEvents_GiantBird_IsBirdPresent compares the words of this list, up to $0000, with hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord); a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read)."
     },
     {
       "bank": "85",
@@ -18798,7 +18798,7 @@
     {
       "bank": "1C",
       "addr": "6289",
-      "label": "ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable",
+      "label": "ShopMenu_Buy_ListTileDests",
       "count": 4,
       "id_base": 0,
       "fields": [
@@ -18824,7 +18824,7 @@
           "name": "VRAM tile addresses, indexed by wGlyphListPos"
         }
       ],
-      "note": "E-0238 (C1: list 0 of ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable; 9 words)."
+      "note": "E-0238 (C1: list 0 of ShopMenu_Buy_ListTileDests; 9 words)."
     },
     {
       "bank": "1C",
@@ -18840,7 +18840,7 @@
           "name": "VRAM tile addresses, indexed by wGlyphListPos"
         }
       ],
-      "note": "E-0238 (C1: list 1 of ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable; 9 words)."
+      "note": "E-0238 (C1: list 1 of ShopMenu_Buy_ListTileDests; 9 words)."
     },
     {
       "bank": "1C",
@@ -18856,7 +18856,7 @@
           "name": "VRAM tile addresses, indexed by wGlyphListPos"
         }
       ],
-      "note": "E-0238 (C1: list 2 of ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable; 9 words)."
+      "note": "E-0238 (C1: list 2 of ShopMenu_Buy_ListTileDests; 9 words)."
     },
     {
       "bank": "1C",
@@ -18872,7 +18872,7 @@
           "name": "VRAM tile addresses, indexed by wGlyphListPos"
         }
       ],
-      "note": "E-0238 (C1: list 3 of ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable; 9 words)."
+      "note": "E-0238 (C1: list 3 of ShopMenu_Buy_ListTileDests; 9 words)."
     },
     {
       "bank": "01",
@@ -18887,7 +18887,7 @@
           "name": "music number"
         }
       ],
-      "note": "E-0238 (C1: DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and DebugSoundTest_Update_ReadMenuStateAndTemp0Etc draws it in hex; 32 entries)."
+      "note": "E-0238 (C1: DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and DebugSoundTest_WrapAndDrawId draws it in hex; 32 entries)."
     },
     {
       "bank": "01",
@@ -19292,7 +19292,7 @@
           "reason": "glyph tile destination list"
         }
       ],
-      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+      "note": "E-0239 (C1: DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
     },
     {
       "bank": "1D",
@@ -19371,7 +19371,7 @@
           "reason": "glyph tile destination list"
         }
       ],
-      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+      "note": "E-0239 (C1: DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
     },
     {
       "bank": "1D",
@@ -19450,7 +19450,7 @@
           "reason": "glyph tile destination list"
         }
       ],
-      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+      "note": "E-0239 (C1: DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
     },
     {
       "bank": "1D",
@@ -19481,7 +19481,7 @@
           "reason": "glyph tile destination list"
         }
       ],
-      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+      "note": "E-0239 (C1: DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
     },
     {
       "bank": "1D",
@@ -19512,7 +19512,7 @@
           "reason": "glyph tile destination list"
         }
       ],
-      "note": "E-0239 (C1: DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
+      "note": "E-0239 (C1: DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy (E-0235))."
     },
     {
       "bank": "1D",

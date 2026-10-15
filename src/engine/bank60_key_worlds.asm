@@ -38,24 +38,24 @@ WarpEffect_Warp_FindSRAMSlotMarkerIndex::
     ld [wKeyRandomHi], a
 
 ; Generates the key world from the key's seed: the size and areas (repeated until
-; DebugAutomap_Update_SetTemp0 accepts the layout), the rooms, the floor menus, the objects, the
-; monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6 clear). (C1,
-; E-0357)
-DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas::
-    call DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc
+; KeyWorldLayout_NumberCellsAndPlaceEntrances accepts the layout), the rooms, the floor menus, the
+; objects, the monsters and the goal; then marks the key's list entry generated (bit 7 set, bit 6
+; clear). (C1, E-0357)
+DebugAutomap_Update_KeyWorldLayout_Start::
+    call KeyWorldLayout_Start
     call DebugAutomap_Update_RunRandomPatternCase
     call DebugAutomap_Update_NextRandomSeed
     call DebugAutomap_Update_MergeKeyWorldAreas
-    call DebugAutomap_Update_WriteTemp0AndTemp1Etc
+    call KeyWorldLayout_PlaceAreaExits
     call DebugAutomap_Update_Return
-    call DebugAutomap_Update_SetTemp0
+    call KeyWorldLayout_NumberCellsAndPlaceEntrances
     or a
-    jr nz, DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
-    farcall DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc
-    call DebugAutomap_Update_WriteTemp0AndTemp1
+    jr nz, DebugAutomap_Update_KeyWorldLayout_Start
+    farcall KeyWorldLayout_FillEntrances
+    call KeyWorldLayout_SetEntranceFlags
     call DebugAutomap_Update_SetKeyWorldBandForA
     call DebugAutomap_Update_LoadKeyWorldLevelBaseTripleForPartyStrength
-    call DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc
+    call KeyWorldLayout_PlaceGoal
     ld a, [wCurrentKeyIndex]
     ld l, a
     ld h, $00
@@ -1170,7 +1170,7 @@ KeyWorldLevelTable::
 ; entry of the table row for the party strength rounded down to 10; a 0 nibble means 10 screens) and
 ; the area count (the row for strength / 10: a base plus a random part), and clears the four chunk
 ; slots and areas. (C1, E-0357)
-DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
+KeyWorldLayout_Start::
     xor a
     ld [wKeyWorldFlags], a
     call ClearKeyWorldActiveWhenKeyWorldKeyMatchesKeyWorldSlot
@@ -1238,7 +1238,7 @@ DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     call DivideBByA
     ld a, b
     add a
-    ld hl, DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data
+    ld hl, KeyWorldLayout_Start_Data
     add_a_to_hl
     ld a, [hli]
     ld b, a
@@ -1341,8 +1341,8 @@ DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc::
     db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
     ds $5a, $88
 
-; data read by DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc (20 bytes) (E-0347)
-DebugAutomap_Update_WriteKeyWorldFlagsAndKeyWorldWidthEtc_Data::
+; data read by KeyWorldLayout_Start (20 bytes) (E-0347)
+KeyWorldLayout_Start_Data::
     db $00, $0f, $08, $0f, $08, $0f, $10, $1f, $10, $1f, $10, $1f, $10, $1f, $10, $1f
     db $10, $1f, $10, $1f
 
@@ -1820,7 +1820,7 @@ SwapDEByteWithMatchingKeyWorldAreas::
 ; Clears the area exits and, for each area after the first, finds where it meets the next one and
 ; places two random open cells between them (PlaceTwoRandomOpenCells); $FF ends the list. (C1,
 ; E-0357)
-DebugAutomap_Update_WriteTemp0AndTemp1Etc::
+KeyWorldLayout_PlaceAreaExits::
     ld hl, wKeyWorldAreaExits + $2
     ld b, $05
 
@@ -2080,7 +2080,7 @@ DebugAutomap_Update_Return::
 ; Sets the menu flag of each floor entrance of kind 4 or 5 ($FF ends the list): floor state 1 gives
 ; $80, state 2 nothing, otherwise a random 0-99 below 5 gives state 3 and $81, below 30 state 1 and
 ; $80, else a flag from a random entry of a 64-byte table. (C1, E-0357)
-DebugAutomap_Update_WriteTemp0AndTemp1::
+KeyWorldLayout_SetEntranceFlags::
     ld hl, wKeyWorldMenuFlag
     ld a, l
     ldh [hTemp0], a
@@ -2133,7 +2133,7 @@ DebugAutomap_Update_WriteTemp0AndTemp1::
     call NextRandomSeed
     ld a, [wKeyRandomLo]
     and $3f
-    ld hl, DebugAutomap_Update_WriteTemp0AndTemp1_Data
+    ld hl, KeyWorldLayout_SetEntranceFlags_Data
     add_a_to_hl
     ld a, [hl]
     push af
@@ -2179,8 +2179,8 @@ DebugAutomap_Update_WriteTemp0AndTemp1::
 .skip3:
     jp .skip
 
-; data read by DebugAutomap_Update_WriteTemp0AndTemp1 (64 bytes) (E-0347)
-DebugAutomap_Update_WriteTemp0AndTemp1_Data::
+; data read by KeyWorldLayout_SetEntranceFlags (64 bytes) (E-0347)
+KeyWorldLayout_SetEntranceFlags_Data::
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f
     db $50, $51, $52, $53, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43
     db $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53
@@ -2189,9 +2189,9 @@ DebugAutomap_Update_WriteTemp0AndTemp1_Data::
 ; With more than one area, numbers the areas' cells one after another; then places the floor
 ; entrances (their number from the area count's entry in KeyWorldAreaLayoutTable_Bank60, bank $84)
 ; spread evenly over the cells into wKeyWorldFloorInfo (PlaceObjectInAreaC); A = 0 when all fit,
-; otherwise non-zero, which makes DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
-; generate the layout again. (C1, E-0357)
-DebugAutomap_Update_SetTemp0::
+; otherwise non-zero, which makes DebugAutomap_Update_KeyWorldLayout_Start generate the layout
+; again. (C1, E-0357)
+KeyWorldLayout_NumberCellsAndPlaceEntrances::
     ldh a, [hTemp7]
     cp $01
     jr z, .read_key_world_area_count
@@ -3117,7 +3117,7 @@ FieldState_MapTransition_NextRandomSeed_Data::
 ; The goal: wKeyWorldGoalScreen = the first floor entrance's screen; reads that screen's chunk and
 ; takes the goal position from the table by its first byte (a byte of $FF hangs in an endless loop).
 ; (C1, E-0357)
-DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
+KeyWorldLayout_PlaceGoal::
     ld a, [wKeyWorldFloorInfo]
     ld [wKeyWorldGoalScreen], a
     swap a
@@ -3195,7 +3195,7 @@ DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
 
 .skip2:
     sla a
-    ld hl, DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data
+    ld hl, KeyWorldLayout_PlaceGoal_Data
     add_a_to_hl
     ld a, [hli]
     ld [wKeyWorldGoalPos], a
@@ -3203,8 +3203,8 @@ DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc::
     ld [wKeyWorldGoalPos2], a
     ret
 
-; data read by DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc (16 bytes) (E-0347)
-DebugAutomap_Update_WriteKeyWorldGoalScreenAndTemp3Etc_Data::
+; data read by KeyWorldLayout_PlaceGoal (16 bytes) (E-0347)
+KeyWorldLayout_PlaceGoal_Data::
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
 ; runs one of four routines chosen by random & $0F through a 16-entry table (E-0124)
@@ -4189,15 +4189,15 @@ RemoveMapObjectsEntryMatching_NextRandomSeed::
     ld a, $01
     ret
 
-; After a warp onto a map listed in FieldState_MapTransition_Data2 (except map $39 at screen (1, 1)
-; and map $2B at (1, 2)): sets the band from the map's entry in FieldState_MapTransition_Data1 and
-; rolls three screen triggers; otherwise none. In key worlds
-; FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending decides. (C1, E-0357)
-FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
+; After a warp onto a map listed in FieldState_MapTransition_AfterWarp_Data2 (except map $39 at
+; screen (1, 1) and map $2B at (1, 2)): sets the band from the map's entry in
+; FieldState_MapTransition_AfterWarp_Data1 and rolls three screen triggers; otherwise none. In key
+; worlds FieldState_MapTransition_RoomWarp decides. (C1, E-0357)
+FieldState_MapTransition_AfterWarp::
     ld a, [wMapType]
     bit 7, a
     jr z, .check_map_id
-    call FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending
+    call FieldState_MapTransition_RoomWarp
     ret
 
 .check_map_id:
@@ -4225,7 +4225,7 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
 .read_map_id:
     ldh a, [hMapId]
     ld c, a
-    ld hl, FieldState_MapTransition_Data2
+    ld hl, FieldState_MapTransition_AfterWarp_Data2
     ld b, $00
 
 .skip:
@@ -4252,7 +4252,7 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     ld [wWarpPending], a
     ld a, b
     push af
-    ld hl, FieldState_MapTransition_Data1
+    ld hl, FieldState_MapTransition_AfterWarp_Data1
     add_a_to_hl
     ld a, [hl]
     ld [wKeyWorldBand], a
@@ -4284,11 +4284,11 @@ FieldState_MapTransition_WriteScreenTriggerCountAndWarpPendingEtc::
     jr nz, .loop2
     ret
 
-; data read by FieldState_MapTransition (11 bytes) (E-0347)
-FieldState_MapTransition_Data1::
+; data read by FieldState_MapTransition_AfterWarp (11 bytes) (E-0347)
+FieldState_MapTransition_AfterWarp_Data1::
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0c, $0c
 
-FieldState_MapTransition_Data2::
+FieldState_MapTransition_AfterWarp_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
 ; DE += 2; writes the word at $669C + 16 * hTemp2 + 2 * KeyContentsColumnPicks[hTemp3] at DE
@@ -4369,7 +4369,7 @@ KeyContentsWordRows::
 ; In a key world's rooms (map type 5), after a warp into an area other than the floor's two special
 ; ones: the band from the key's level byte, two screen triggers rolled; when both landed in the same
 ; place only one is kept. (C1, E-0357)
-FieldState_MapTransition_WriteScreenTriggerCountAndWarpPending::
+FieldState_MapTransition_RoomWarp::
     ld a, [wMapType]
     and $07
     cp $05
@@ -4698,8 +4698,8 @@ LoadKeyWorldFlagsRecordFromSRAMSlotKeyWorldSlot::
     ret
 
 ; a copy of KeyWorldAreaLayoutTable (84:$4CCB), word for word;
-; DebugAutomap_Update_SetTemp0.read_key_world_area_count and PlaceObjectInAreaC read the layout's
-; first byte or a block byte through ReadByteInBank with B = $84 (E-0193, C1)
+; KeyWorldLayout_NumberCellsAndPlaceEntrances.read_key_world_area_count and PlaceObjectInAreaC read
+; the layout's first byte or a block byte through ReadByteInBank with B = $84 (E-0193, C1)
 ; record: area layout in bank $84
 KeyWorldAreaLayoutTable_Bank60::
     dw KeyWorldAreaLayout00 ; id 0

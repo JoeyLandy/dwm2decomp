@@ -55,9 +55,70 @@ Untraced banks (second pass, 2026-10-09): the 66 non-empty banks with no traced 
 
 Known limits: code reached only through other banked-call forms, computed `jp hl`, or pointer tables is still opaque; `rst` fall-through may decode inline data as code.
 
-## Current handoff (2026-10-14, E-0367)
+## Readability campaign (goal.md, from 2026-10-14)
 
-E-0366 was committed after suite580 (OK). This round renames the steps of the
+The user's goal (goal.md in the main checkout; re-read after any compaction) is to finish pokered-style
+readability in batches of read-only sub-agent drafts with one integrator. Completion needs: a hand-written reading
+note on every code label and no instruction-named label; no label over 60 characters except documented ones; a
+content note on every data label; every unidentified asset identified or documented; every probe-checkable C1
+reading probed or listed with why not; ROADMAP marked complete; final commit with identity PASS and full suite.
+
+**Decisions (D-011, 2026-10-14).**
+- Work happens in this worktree (branch `claude/pokered-readability-dwm2-d761c7`); the reference ROM and RGBDS
+  were copied into its ignored `local/roms/` and `tools/rgbds/` (ROM SHA-256 checked: approved). The main checkout
+  held an uncommitted continuation of E-0367 at the same base commit; it was applied here from its config/ diff
+  and finished as E-0368. The main checkout itself is left untouched.
+- Queue definitions (tools/readability_queue.py): **instruction** = a global code label whose name is not given
+  by config/names.json, except per-bank copies of a given name (`_BankNN`, `_BNN`), names made from the message a
+  step shows (`_Show...`, `Msg....`, `TalkMsg....`) and table-index names (`ScriptCommandEE`); **long** = over 50
+  characters; **unread** = a code label whose comment has no hand-written whole-routine reading (an evidence id in
+  tools/present.py HAND_EVIDENCE, as "(C1, E-0369)"); older notes from earlier rule passes (E-0038 "runs one frame
+  of script command type 9E", E-0268 "starts message ...") count as unread; **data** = a data label whose only
+  description is "data read by X (N bytes)" or "data block"; **asset** = an INCBIN that only the catch-all rule put
+  in gfx/misc/. Local `.labels` belong to their routine and are covered by its note.
+- Each batch gets one evidence id (E-0369, E-0370, ...), added to HAND_EVIDENCE; notes are written by
+  tools/apply_drafts.py as "<note> (C1, E-03xx)" in config/annotations.json; names go to config/names.json (data
+  labels with "data": true, or their config/tables.json layout).
+- Count floors that only guarded against a vacuous test of generated names (tests/test_step_names.py's 150) are
+  replaced by an upper-bound ratchet on instruction-named, over-60 and `Etc` labels (tests/test_doc_coverage.py),
+  since the batches remove generated names by design.
+- The parallel runner (tools/run_tests.py) is used for the scoped and intermediate runs; the serial
+  `python -I -m unittest discover -s tests` stays the final check before every commit until the two have agreed on
+  three separate trees.
+
+**Cycle timing (E-0368 tree).** Regenerate 3m50s-3m58s (`python -I -u tools/disasm_all.py`); build and identity
+12.8s; full serial suite 25m54s (377 tests); parallel suite 8m04s wall (32 processes; bounded by
+test_generated_source.py). The serial suite is about 86% of a cycle (25m54s of 30m00s), hence the parallel runner. Ten
+slowest test files (wall time of each file's own process in the parallel run, which includes class set-up that
+unittest's --durations leaves out): test_generated_source 476s, test_act_check 272s, test_play_chain 234s,
+test_story_flags 136s, test_ai_check 121s, test_effect_check 118s, test_talk_check 117s, test_text_check 112s,
+test_world_map 109s, test_boot_trace 63s. By summed test durations (serial --durations 0, no set-up):
+test_generated_source 467s, test_story_flags 45s, test_act_check 41s, test_text_check 19s, test_present 12s,
+test_note_grounding 6s, test_routine_behaviour 4s, test_doc_coverage 4s, test_build_assets 2s, test_name_claims 1s.
+Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok, 3 skipped): agreement 1 of 3.
+
+**Batch log.**
+
+| Batch | Evidence | Drafted | Accepted | Rejected (reason) | Identity | Suite |
+| --- | --- | --- | --- | --- | --- | --- |
+| E-0368 (finish E-0367 continuation, tools) | E-0368 | - | 591 names | - | PASS build/run604 | suite604 OK (377, 3 skipped); par604 identical |
+
+**Measures after E-0368.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN
+(all named asset files). doc_coverage.py: 9,822 code labels (5,246 with a hand reading), 23,489 data labels, all
+commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
+reader-only data 524; unidentified assets 155.
+
+## Current handoff (2026-10-14, E-0368)
+
+E-0368 finished the uncommitted continuation of E-0367 (588 routines named after the RAM they touch, now named
+from their E-0357 notes) and added the batch tools: tools/run_tests.py, tools/readability_queue.py,
+tools/label_map.py, tools/apply_drafts.py. Binary identity: **PASS**, `build/run604/report.json`; full serial
+suite `build/logs/suite604.log` OK, parallel `build/logs/par604.log` identical. Next: batch E-0369, the first six
+slices of the instruction-named queue (529 labels, banks $00-$0F), drafted by read-only workers.
+
+## Prior handoff (2026-10-14, E-0367)
+
+E-0366 was committed after suite580 (OK). This round renamed the steps of the
 game's state machines: the jumptable entries that the step-naming pass had
 named after their first callee (`KeyAppraisalMenu_CopyBytesDEToHL_Bank0D`)
 are named from their hand notes in the pokered manner

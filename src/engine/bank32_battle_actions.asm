@@ -1876,7 +1876,7 @@ ShowActorStatusRecoveryMessage::
 .skip:
     bit 7, [hl]
     jr z, .skip2
-    call ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget
+    call RollSleepWakeUp
     jr c, .call_show_battle_text_category0
     jr .call_clear_actor_status3_bits0_to5
 
@@ -2214,7 +2214,7 @@ ResetEffectStateForAction::
 ; otherwise wakes: clears the sleep bits, marks the level-up gain bit 2, clears status 3 bits 6-7 or
 ; 4 bits 2-3, sets the action to $BF and shows battle text $82 ('<name> woke up!') with the actor as
 ; target. (C1, E-0357)
-ShowActorStatusRecoveryMessage_WriteLoadSlotAndBattleTarget::
+RollSleepWakeUp::
     ld a, [hl]
     and $0c
     jr z, .check_random_lo
@@ -3628,7 +3628,7 @@ LoadActorChosenActionRecord::
 RunBattleStep4_ResolveSkill::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleStep4_WriteFollowUpActionAndMultiHitCountEtc
+    dw RunBattleStep4_SaveAndStart
     dw RunBattleStep4_ResolveSkill_CheckMP
     dw RunBattleStep4_ResolveSkill_ShowActionText
     dw RunBattleStep4_ResolveSkill_SelectEffect
@@ -3640,7 +3640,7 @@ RunBattleStep4_ResolveSkill::
 ; Fight step 4, resolve step 0: saves the actor, target, hits, both choices and the target's mark,
 ; then makes the target act in turn (a follow-up, mark 2) with the same action and chooses its
 ; target. (C1, E-0357)
-RunBattleStep4_WriteFollowUpActionAndMultiHitCountEtc::
+RunBattleStep4_SaveAndStart::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wSavedActorTarget
@@ -4311,7 +4311,7 @@ RecomputeTargetMaxHPAndMP::
     and $30
     ret z
     and $20
-    call nz, RecomputeTargetMaxHPAndMP_ReadBattleTargetAndLinkMode
+    call nz, RecomputeTargetMaxHPAndMP_TargetSlot
     ld a, $01
     ld [wBattleArg0], a
     ld a, [wBattleTarget]
@@ -4507,7 +4507,7 @@ RecomputeTargetMaxHPAndMP::
     ret
 
 ; C = the target slot (into the name-byte reset below). (C1, E-0357)
-RecomputeTargetMaxHPAndMP_ReadBattleTargetAndLinkMode::
+RecomputeTargetMaxHPAndMP_TargetSlot::
     ld a, [wBattleTarget]
     ld c, a
 
@@ -4535,7 +4535,7 @@ ActionEffect_BeDragon_ReadLinkMode::
 ; Clears both sides' flags and, for slots 0 and 1, restores transformed stats
 ; (RecomputeTargetMaxHPAndMP), clears status 6 bits 6-7 with AGL and DEF back to base, and clears
 ; all status bytes; then marks slot 3 absent with its status cleared. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty::
+RestoreTransformedStats::
     xor a
     ld [wSideFlags0], a
     ld [wSideFlags1], a
@@ -4604,18 +4604,17 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; resolve step $0E runs this through wBattleSubStep (wBattleSubStep): ten cases, 0-9. Case 0
-; branches on wBattleActionId: $15 and $20 to
-; ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.check_battle_screen_flags, $3B to
-; ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.call_resolve_step0_e_effect_advance_random,
-; $5F to ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.read_battle_target, $60 to
-; ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.read_battle_target2, $61 to
-; ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.read_battle_target3, $6D to
-; ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc.set_battle_sub_step_to_09; the other
-; actions and cases 1-9 are not yet read (E-0051)
+; branches on wBattleActionId: $15 and $20 to ResolveStep0EEffect_Start.check_battle_screen_flags,
+; $3B to ResolveStep0EEffect_Start.call_resolve_step0_e_effect_advance_random, $5F to
+; ResolveStep0EEffect_Start.read_battle_target, $60 to
+; ResolveStep0EEffect_Start.read_battle_target2, $61 to
+; ResolveStep0EEffect_Start.read_battle_target3, $6D to
+; ResolveStep0EEffect_Start.set_battle_sub_step_to_09; the other actions and cases 1-9 are not yet
+; read (E-0051)
 ResolveStep0EEffect::
     ld a, [wBattleSubStep]
     jumptable
-    dw ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc
+    dw ResolveStep0EEffect_Start
     dw ResolveStep0EEffect_ShowMessage
     dw ResolveStep0EEffect_SetBattleSubStep
     dw ResolveStep0EEffect_Recoil
@@ -4631,7 +4630,7 @@ ResolveStep0EEffect::
 ; roll and restart the action (action $DC for the formation partner too); PoisonHit, Paralyze and
 ; NapAttack add their status; TwinSlash goes to sub-step 9, Ramming to 3, Kamikaze to 4; others on.
 ; (C1, E-0357)
-ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
+ResolveStep0EEffect_Start::
     xor a
     ld [wBattleSubStep2], a
     xor a
@@ -4642,7 +4641,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     cp SKILL_FAREWELL
     jr z, .check_battle_screen_flags
     cp SKILL_BEDRAGON
-    jr z, .call_resolve_step0_e_effect_advance_random
+    jr z, .call_resolve_step0_e_effect_start_advance
     cp SKILL_POISONHIT
     jp z, .read_battle_target
     cp SKILL_PARALYZE
@@ -4658,7 +4657,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     cp SKILL_LIFEDANCE
     jr z, .check_battle_screen_flags
     cp ACTION_B8
-    jr z, .call_resolve_step0_e_effect_advance_random
+    jr z, .call_resolve_step0_e_effect_start_advance
     cp ACTION_D6
     jr z, .read_battle_actor
     cp ACTION_DC
@@ -4701,8 +4700,8 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     ld [wBattleSubStep], a
     ret
 
-.call_resolve_step0_e_effect_advance_random:
-    call ResolveStep0EEffect_AdvanceRandom
+.call_resolve_step0_e_effect_start_advance:
+    call ResolveStep0EEffect_Start_AdvanceRandom
     xor a
     ld [wBattleSubPhase], a
     xor a
@@ -4717,10 +4716,10 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
     farcall ActorFormationSlotToTemp0
     ldh a, [hTemp0]
     ld [wBattleActor], a
-    call ResolveStep0EEffect_AdvanceRandom
+    call ResolveStep0EEffect_Start_AdvanceRandom
     pop af
     ld [wBattleActor], a
-    jr .call_resolve_step0_e_effect_advance_random
+    jr .call_resolve_step0_e_effect_start_advance
 
 .read_battle_target:
     ld a, [wBattleTarget]
@@ -4817,7 +4816,7 @@ ResolveStep0EEffect_WriteBattleSubStep2AndEffectSubStepEtc::
 ; Picks a random follow-up action from ResolveStep0EEffect_AdvanceRandom_Data for the actor; for
 ; action 0 aims it at a random present slot of the other side (searching downward, wrapping within
 ; the side). (C1, E-0357)
-ResolveStep0EEffect_AdvanceRandom::
+ResolveStep0EEffect_Start_AdvanceRandom::
     call AdvanceRandom
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
@@ -4825,7 +4824,7 @@ ResolveStep0EEffect_AdvanceRandom::
     push hl
     ld a, [wRandomLo]
     and $03
-    ld hl, ResolveStep0EEffect_AdvanceRandom_Data
+    ld hl, ResolveStep0EEffect_Start_AdvanceRandom_Data
     add_a_to_hl
     ld a, [hl]
     pop hl
@@ -4866,7 +4865,7 @@ ResolveStep0EEffect_AdvanceRandom::
     ret
 
 ; data read by ResolveStep0EEffect (5 bytes) (E-0347)
-ResolveStep0EEffect_AdvanceRandom_Data::
+ResolveStep0EEffect_Start_AdvanceRandom_Data::
     db $00, $00, $00, $00, $00
 
 ; Resolve step $0E, sub-step 1: shows the effect's message (wEffectSubStep) when there is one, then
@@ -5984,7 +5983,7 @@ RunBattleSubStep2_2_ShowDefeatText::
 
 ; Applies and clears the target's damage modifiers in status 7 bits 0-3: bit 0 doubles the damage,
 ; bit 1 multiplies it by 10, bit 2 doubles it. (C1, E-0357)
-ResolveStepDamageMessage_AddAx9ToHL::
+ApplyDamageModifiers::
     ld a, [wBattleTarget]
     ld hl, wBattleStatus7
     call AddAx9ToHL

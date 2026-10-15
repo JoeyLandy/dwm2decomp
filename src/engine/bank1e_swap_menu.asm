@@ -74,7 +74,7 @@ SwapMonstersMenu::
     jumptable
     dw SwapMonstersMenu_Init
     dw SwapMonstersMenu_SetupPartyList
-    dw SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
+    dw SwapMonstersMenu_OptionCursor
     dw SwapMonstersMenu_ListParty
     dw SwapMonstersMenu_MoveRecords
     dw SwapMonstersMenu_ChooseFromFarm
@@ -135,7 +135,7 @@ SwapMonstersMenu_SetupPartyList::
     ld a, [wScreenStep]
     jumptable
     dw SwapMonstersMenu_SetupPartyList_ToSetupTileMapAtBGMap1
-    dw SwapMonstersMenu_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_SetupPartyList_CopyGlyphs
     dw SwapMonstersMenu_ToListPartyRecordsWithState2ToListEntriesAndStep
     dw SwapMonstersMenu_SetupPartyList_DrawOptions
 
@@ -145,7 +145,7 @@ SwapMonstersMenu_SetupPartyList_ToSetupTileMapAtBGMap1::
     ret
 
 ; Swap menu party list, step 1: copies the menu's glyph tiles (GlyphCopySrcList0). (C1, E-0357)
-SwapMonstersMenu_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
+SwapMonstersMenu_SetupPartyList_CopyGlyphs::
     ld hl, GlyphCopyDestList0
     ld de, GlyphCopySrcList0
     call SwapMonstersMenu_WriteGlyphListPos
@@ -182,28 +182,28 @@ SwapMonstersMenu_SetupPartyList_DrawOptions::
 
 ; Swap menu, state 2: the option cursor over five options (Up/Down with wrap, blinking); A passes
 ; the option to the script in wTwoChoiceCursor (Exit or B gives 4). (C1, E-0357)
-SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
+SwapMonstersMenu_OptionCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_swap_monsters_menu_read_grid_cursor_x_2
+    jr nz, .call_swap_monsters_menu_option_cursor_read
     bit 7, a
-    jr nz, .call_swap_monsters_menu_read_grid_cursor_x_22
+    jr nz, .call_swap_monsters_menu_option_cursor_read2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .set_two_choice_cursor_to_04
-    call SwapMonstersMenu_WriteGridCursorY
+    call SwapMonstersMenu_OptionCursor_WriteGridCursorY
     ret
 
-.call_swap_monsters_menu_read_grid_cursor_x_2:
-    call SwapMonstersMenu_ReadGridCursorX_2
+.call_swap_monsters_menu_option_cursor_read:
+    call SwapMonstersMenu_OptionCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
     ld a, $04
     ld [wGridCursorX], a
-    call SwapMonstersMenu_WriteGridCursorY
+    call SwapMonstersMenu_OptionCursor_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -217,19 +217,19 @@ SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wListCursor], a
     ld [wChoiceCursor], a
     ld [wListPageIndex], a
-    call SwapMonstersMenu_ReadGridCursorX
+    call SwapMonstersMenu_OptionCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_swap_monsters_menu_read_grid_cursor_x_22:
-    call SwapMonstersMenu_ReadGridCursorX_2
+.call_swap_monsters_menu_option_cursor_read2:
+    call SwapMonstersMenu_OptionCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     cp $04
     jr c, .skip
     xor a
     ld [wGridCursorX], a
-    call SwapMonstersMenu_WriteGridCursorY
+    call SwapMonstersMenu_OptionCursor_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -241,7 +241,7 @@ SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_2
+    call SwapMonstersMenu_OptionCursor_StepBGMapAddressBackOnScrollWrap
     ld c, $00
 
 .loop:
@@ -285,41 +285,40 @@ SwapMonstersMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 
 ; Blinks the option cursor: after $14 frames of the repeat timer, shown for 16 counts and hidden for
 ; 8. (C1, E-0357)
-SwapMonstersMenu_WriteGridCursorY::
+SwapMonstersMenu_OptionCursor_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, SwapMonstersMenu_ReadGridCursorX
+    jr c, SwapMonstersMenu_OptionCursor_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, SwapMonstersMenu_ReadGridCursorX
+    jr c, SwapMonstersMenu_OptionCursor_ReadGridCursorX
     cp $18
-    jr c, SwapMonstersMenu_ReadGridCursorX_2
+    jr c, SwapMonstersMenu_OptionCursor_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
 ; Draws the cursor tile ($BB) at the current option. (C1, E-0357)
-SwapMonstersMenu_ReadGridCursorX::
+SwapMonstersMenu_OptionCursor_ReadGridCursorX::
     ld b, $bb
-    jr SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
+    jr SwapMonstersMenu_OptionCursor_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
 
 ; Draws the blank tile ($C3) at the current option. (C1, E-0357)
-SwapMonstersMenu_ReadGridCursorX_2::
+SwapMonstersMenu_OptionCursor_ReadGridCursorX_2::
     ld b, $c3
-    jr SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
+    jr SwapMonstersMenu_OptionCursor_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX
 
 ; Draws the chosen tile ($BC) at the current option. (C1, E-0357)
-SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_2::
+SwapMonstersMenu_OptionCursor_StepBGMapAddressBackOnScrollWrap::
     ld b, $bc
 
-; Writes tile B at the current option's place
-; (SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data_2), stepping back on a scroll wrap,
-; waiting for VRAM access. (C1, E-0357)
-SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX::
+; Writes tile B at the current option's place (SwapMonstersMenu_OptionCursor_Data), stepping back on
+; a scroll wrap, waiting for VRAM access. (C1, E-0357)
+SwapMonstersMenu_OptionCursor_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
-    ld hl, SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data_2
+    ld hl, SwapMonstersMenu_OptionCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -336,8 +335,8 @@ SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX::
     ei
     ret
 
-; data read by SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_ReadGridCursorX (10 bytes) (E-0347)
-SwapMonstersMenu_StepBGMapAddressBackOnScrollWrap_Data_2::
+; data read by SwapMonstersMenu (10 bytes) (E-0347)
+SwapMonstersMenu_OptionCursor_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
 ; Swap menu, state 3: lists the party
@@ -351,7 +350,7 @@ SwapMonstersMenu_ListParty::
 SwapMonstersMenu_MoveRecords::
     ld a, [wScreenStep]
     jumptable
-    dw SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc
+    dw SwapMonstersMenu_MoveRecords_DrawParty
     dw SwapMonstersMenu_MoveRecords_DrawMemberStats
     dw SwapMonstersMenu_MoveRecords_BlankNameTiles
     dw SwapMonstersMenu_MoveRecords_DrawMemberName
@@ -359,9 +358,9 @@ SwapMonstersMenu_MoveRecords::
     dw SwapMonstersMenu_MoveRecords_PartyCursor
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_SetScreenStep
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep_1E
@@ -381,12 +380,12 @@ SwapMonstersMenu_MoveRecords::
     dw SwapMonstersMenu_MoveRecords_ListCursor
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_RedrawOptions
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep_1E
@@ -395,25 +394,25 @@ SwapMonstersMenu_MoveRecords::
     dw SwapMonstersMenu_MoveRecords_Swap
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_BackToOptions
 
 ; Moving records, step 0: in three sub-steps draws the party box, the party's names and the list
 ; marks. (C1, E-0357)
-SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc::
+SwapMonstersMenu_MoveRecords_DrawParty::
     ld a, [wScreenSubStep]
     and a
-    jp z, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip
+    jp z, SwapMonstersMenu_MoveRecords_DrawPartyBox
     cp $01
     jp z, CopyPartyNamesToTiles
     jp CopyPartyNamesToTiles_CallListPartyRecordsWithState2ToListEntries
 
 ; Draws the party box and blanks the name tiles (sub-step 0). (C1, E-0357)
-SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip::
-    ld de, SwapMonstersMenu_MoveRecords_TileRect
+SwapMonstersMenu_MoveRecords_DrawPartyBox::
+    ld de, SwapMonstersMenu_MoveRecords_DrawPartyBox_TileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $07
     call CopyRectTo20ByteRows_Bank1E
@@ -487,7 +486,7 @@ CopyPartyNamesToTiles_CallListPartyRecordsWithState2ToListEntries::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 7 tiles, one row per line
-SwapMonstersMenu_MoveRecords_TileRect::
+SwapMonstersMenu_MoveRecords_DrawPartyBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -654,7 +653,7 @@ SwapMonstersMenu_MoveRecords_RedrawScreen::
     ret
 
 ; Moving records, step 8: copies the box glyph tiles (GlyphCopySrcList1). (C1, E-0357)
-SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
+SwapMonstersMenu_MoveRecords_CopyBoxGlyphs::
     ld hl, GlyphCopyDestList1
     ld de, GlyphCopySrcList1
     call SwapMonstersMenu_WriteGlyphListPos
@@ -675,7 +674,7 @@ SwapMonstersMenu_MoveRecords_SetScreenStep::
     ret
 
 ; Moving records, step 10: copies the yes/no glyph tiles (GlyphCopySrcList3). (C1, E-0357)
-SwapMonstersMenu_MoveRecords_AdvanceScreenStep::
+SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs::
     ld hl, GlyphCopyDestList3
     ld de, GlyphCopySrcList3
     call SwapMonstersMenu_WriteGlyphListPos
@@ -1502,7 +1501,7 @@ SwapMonstersMenu_MoveRecords_ListCursor::
     ret
 
 ; Moving records, step 32: copies the list glyph tiles (GlyphCopySrcList2). (C1, E-0357)
-SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep::
+SwapMonstersMenu_MoveRecords_CopyListGlyphs::
     ld hl, GlyphCopyDestList2
     ld de, GlyphCopySrcList2
     call SwapMonstersMenu_WriteGlyphListPos
@@ -1736,12 +1735,12 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_MoveRecords_ListCursor
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_BackToOptions
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep_1E
@@ -1750,14 +1749,14 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_ChooseFromFarm_PickUp
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_BackToOptions
     dw SwapMonstersMenu_MoveRecords_DrawYesNo
     dw SwapMonstersMenu_MoveRecords_ReadAnswer
-    dw SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc
+    dw SwapMonstersMenu_MoveRecords_DrawParty
     dw SwapMonstersMenu_MoveRecords_DrawMemberStats
     dw SwapMonstersMenu_MoveRecords_BlankNameTiles
     dw SwapMonstersMenu_MoveRecords_DrawMemberName
@@ -1765,9 +1764,9 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_ChooseFromFarm_PartyCursor
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_ChooseFromFarm_BackToOptions
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep_1E
@@ -1784,14 +1783,14 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_MoveRecords_ShowCursorMark
     dw SwapMonstersMenu_ChooseFromFarm_ListCursor
     dw SwapMonstersMenu_ChooseFromFarm_DrawListBox
-    dw SwapMonstersMenu_ChooseFromFarm_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_ChooseFromFarm_CopyListGlyphs
     dw SwapMonstersMenu_ChooseFromFarm_DrawPartyBox
-    dw SwapMonstersMenu_WriteScreenSubStepAndScreenStepEtc
+    dw SwapMonstersMenu_ChooseFromFarm_DrawParty
     dw SwapMonstersMenu_MoveRecords_DrawMemberStats
     dw SwapMonstersMenu_MoveRecords_BlankNameTiles
     dw SwapMonstersMenu_MoveRecords_DrawMemberName
     dw SwapMonstersMenu_ChooseFromFarm_BackToParty
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw DrawBoxAndMenuAndStep_1E
@@ -1800,9 +1799,9 @@ SwapMonstersMenu_ChooseFromFarm::
     dw SwapMonstersMenu_ChooseFromFarm_Swap
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_BackToOptions
 
@@ -2014,7 +2013,7 @@ SwapMonstersMenu_ChooseFromFarm_DrawListBox::
     ret
 
 ; Choosing from the farm, step 59: copies the list glyph tiles. (C1, E-0357)
-SwapMonstersMenu_ChooseFromFarm_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
+SwapMonstersMenu_ChooseFromFarm_CopyListGlyphs::
     ld hl, GlyphCopyDestList2
     ld de, GlyphCopySrcList2
     call SwapMonstersMenu_WriteGlyphListPos
@@ -2142,10 +2141,10 @@ SwapMonstersMenu_ChooseFromFarm_RedrawMenu::
 
 ; Choosing from the farm, step 61: the party box, names and marks in three sub-steps (as moving
 ; records' step 0). (C1, E-0357)
-SwapMonstersMenu_WriteScreenSubStepAndScreenStepEtc::
+SwapMonstersMenu_ChooseFromFarm_DrawParty::
     ld a, [wScreenSubStep]
     and a
-    jp z, SwapMonstersMenu_MoveRecords_WriteScreenSubStepAndScreenStepEtc_Skip
+    jp z, SwapMonstersMenu_MoveRecords_DrawPartyBox
     cp $01
     jp z, CopyPartyNamesToTiles
     jp CopyPartyNamesToTiles_CallListPartyRecordsWithState2ToListEntries
@@ -2240,7 +2239,7 @@ SwapMonstersMenu_ChooseFromFarm_Swap::
 SwapMonstersMenu_Check::
     ld a, [wScreenStep]
     jumptable
-    dw SwapMonstersMenu_Check_WriteScreenStepAndMenuChoice
+    dw SwapMonstersMenu_Check_CopyGlyphs
     dw SwapMonstersMenu_Check_DrawCounts
     dw SwapMonstersMenu_Check_ChoiceCursor
     dw SwapMonstersMenu_Check_BackToOptions
@@ -2255,9 +2254,9 @@ SwapMonstersMenu_Check::
     dw SwapMonstersMenu_Check_ListCursor
     dw SwapMonstersMenu_Check_DrawCountBox
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_Check_RedrawCounts
     dw SwapMonstersMenu_Check_OpenStats
@@ -2273,7 +2272,7 @@ SwapMonstersMenu_Check::
     dw SwapMonstersMenu_Check_ReloadTiles
 
 ; Checking, step 0: copies the view menu's glyph tiles (GlyphCopySrcList5). (C1, E-0357)
-SwapMonstersMenu_Check_WriteScreenStepAndMenuChoice::
+SwapMonstersMenu_Check_CopyGlyphs::
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
     call SwapMonstersMenu_WriteGlyphListPos
@@ -2951,7 +2950,7 @@ SwapMonstersMenu_Check_ReloadTiles::
 SwapMonstersMenu_Release::
     ld a, [wScreenStep]
     jumptable
-    dw SwapMonstersMenu_Check_WriteScreenStepAndMenuChoice
+    dw SwapMonstersMenu_Check_CopyGlyphs
     dw SwapMonstersMenu_Check_DrawCounts
     dw SwapMonstersMenu_Release_ChoiceCursor
     dw SwapMonstersMenu_Check_BackToOptions
@@ -2966,12 +2965,12 @@ SwapMonstersMenu_Release::
     dw SwapMonstersMenu_Check_ListCursor
     dw SwapMonstersMenu_Check_DrawCountBox
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_Check_RedrawCounts
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw SwapMonstersMenu_Release_DrawCounts
@@ -2980,9 +2979,9 @@ SwapMonstersMenu_Release::
     dw SwapMonstersMenu_Release_DeleteMonster
     dw SwapMonstersMenu_MoveRecords_SaveScreenArea
     dw SwapMonstersMenu_MoveRecords_RedrawScreen
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawListBox
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep_SetScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyListGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_MoveRecords_BackToOptions
     dw SwapMonstersMenu_Check_ToLoadTileListSixPerFrame
@@ -2995,7 +2994,7 @@ SwapMonstersMenu_Release::
     dw SwapMonstersMenu_Check_DrawCountBox
     dw SwapMonstersMenu_Check_DrawSmallBox
     dw SwapMonstersMenu_Check_ReloadTiles
-    dw SwapMonstersMenu_MoveRecords_AdvanceScreenStep
+    dw SwapMonstersMenu_MoveRecords_CopyYesNoGlyphs
     dw SwapMonstersMenu_MoveRecords_DrawYesNoAgain
     dw SwapMonstersMenu_MoveRecords_YesNoCursor
     dw SwapMonstersMenu_Release_DrawCountsAgain
@@ -3007,7 +3006,7 @@ SwapMonstersMenu_Release::
     dw SwapMonstersMenu_Release_DrawBoxes
     dw SwapMonstersMenu_Release_ReloadTiles
     dw SwapMonstersMenu_Release_ReloadFrameTiles
-    dw SwapMonstersMenu_MoveRecords_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_MoveRecords_CopyBoxGlyphs
     dw SwapMonstersMenu_MoveRecords_RedrawPartyList
     dw SwapMonstersMenu_Release_BackToOptions
 
@@ -4565,7 +4564,7 @@ SwapMonstersMenu_ShowParents2::
     dw SwapMonstersMenu_ShowMonsterDetails3_DrawPartyNames
     dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
-    dw SwapMonstersMenu_ShowParents2_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_ShowParents2_CopyListGlyphs
     dw SwapMonstersMenu_Check_BlankTiles
     dw SwapMonstersMenu_ShowParents2_DrawEggBox
     dw SwapMonstersMenu_Check_DrawEggNames
@@ -4600,7 +4599,7 @@ SwapMonstersMenu_ShowParents::
     dw ClearBGMapAtScrollAndResetScroll
     dw SwapMonstersMenu_ShowMonsterDetails_ReloadAreaGraphics
     dw SwapMonstersMenu_ShowMonsterDetails_MarkEntry
-    dw SwapMonstersMenu_ShowParents2_ToSwapMonstersMenu_WriteGlyphListPosAndStep
+    dw SwapMonstersMenu_ShowParents2_CopyListGlyphs
     dw SwapMonstersMenu_Check_BlankTiles
     dw SwapMonstersMenu_ShowParents2_DrawEggBox
     dw SwapMonstersMenu_Check_DrawEggNames
@@ -4871,7 +4870,7 @@ SwapMonstersMenu_ShowParents2_BlankTiles::
     ret
 
 ; Pedigree screen, step 12: copies the list glyph tiles. (C1, E-0357)
-SwapMonstersMenu_ShowParents2_ToSwapMonstersMenu_WriteGlyphListPosAndStep::
+SwapMonstersMenu_ShowParents2_CopyListGlyphs::
     ld hl, GlyphCopyDestList5
     ld de, GlyphCopySrcList5
     call SwapMonstersMenu_WriteGlyphListPos

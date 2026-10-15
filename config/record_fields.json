@@ -50,7 +50,7 @@
     "callees": ["BattlerRecordFieldAddress"],
     "buffers": ["wBattlerRecords", "wBattlerRecordSlot1", "wBattlerRecordSlot2", "wBattlerRecordSlot3", "wBattlerRecordSlot4", "wBattlerRecordSlot5", "wBattlerRecordSlot6"],
     "fields": {
-      "00": {"size": 10, "text": true, "const": "BATTLER_NAME", "note": "name, 10 bytes ($FF-filled by LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData for a wild monster) (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C)", "evidence": "E-0298, E-0320"},
+      "00": {"size": 10, "text": true, "const": "BATTLER_NAME", "note": "name, 10 bytes ($FF-filled by FillBattlerRecordFromMonster for a wild monster) (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C)", "evidence": "E-0298, E-0320"},
       "0A": {"size": 2, "const": "BATTLER_SPECIES", "note": "species word (MonsterTable bytes 0-1, also wSpeciesIdLo/Hi)", "evidence": "E-0298"},
       "0C": {"const": "BATTLER_FAMILY", "note": "family (species byte 0, written by GameMode4_Init_Sub01_Sub07)", "evidence": "E-0310"},
       "0E": {"size": 4, "const": "BATTLER_SKILLS", "note": "four skills (MonsterTable bytes 2-5)", "evidence": "E-0298"},

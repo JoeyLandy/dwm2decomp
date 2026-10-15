@@ -11,8 +11,8 @@ BeginStringDisplay_Bank1D::
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd
 
-; data read by DrawNameGlyphBufGlyphsOverlaying8DAnd8E (6 bytes) (E-0347)
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Data::
+; data read by DrawNameGlyph (6 bytes) (E-0347)
+DrawNameGlyph_Bank1D_Data::
     db $01, $40, $cd, $11, $26, $c9
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
@@ -474,7 +474,7 @@ LoadThreeTilesAndDrawRows_TileRect_3::
 ; answers 0, with a full bag (24) answers 1, otherwise 4 and on two steps; Gold with none banked
 ; answers 3, with more than 99,899 gold in hand 2, otherwise 5; each answer resumes the script. (C1,
 ; E-0357)
-VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
+VaultMenu_TakeOut_ItemsGoldExit::
     call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
     ret z
@@ -495,7 +495,7 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
 .check_vault_mode:
     ld a, [wVaultMode]
     and a
-    jr z, .call_vault_menu_write_saved_sprite_clip_mode
+    jr z, .call_vault_menu_count_items
     cp $01
     jr z, .check_banked_gold_hi
     ld a, $06
@@ -511,8 +511,8 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
     ld [wScriptStartRequest], a
     ret
 
-.call_vault_menu_write_saved_sprite_clip_mode:
-    call VaultMenu_WriteSavedSpriteClipModeAndListPages
+.call_vault_menu_count_items:
+    call VaultMenu_CountItems
     ld a, [wSavedSpriteClipMode]
     and a
     jr z, .clear_two_choice_cursor
@@ -593,7 +593,7 @@ VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2::
 ; answers 0, with no room in storage (VaultMenu_Store_FindStorageSlots) 1, otherwise 4 and on two
 ; steps; Gold with under 100 in hand answers 2, with 999,900 or more banked 3, otherwise 5; each
 ; answer resumes the script. (C1, E-0357)
-VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
+VaultMenu_Store_ItemsGoldExit::
     call VaultMenu_BlinkCursorBlinkEF_Bank1D
     and a
     ret z
@@ -856,7 +856,7 @@ DrawRect0140AtBGMap13E0AndStep::
 VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D::
     ld a, $01
     ld [wArg1], a
-    call VaultMenu_Store_CountNonZeroItemGridBytes
+    call VaultMenu_Store_VaultMenu_CountItems
     ld a, [wSavedSpriteSlotCount]
     cp $02
     jr c, .call_bg_map_address_at_scroll_bank1_d
@@ -961,7 +961,7 @@ VaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D_2::
 VaultMenu_Store_HLToDecimalDigits::
     xor a
     ld [wArg1], a
-    call VaultMenu_Store_CountNonZeroItemGridBytes
+    call VaultMenu_Store_VaultMenu_CountItems
     call HLToDecimalDigits
     ld a, [wDigits + $1]
     and a
@@ -1047,7 +1047,7 @@ CountNonZeroItemGridBytes::
 
 ; Counts the stored items (100 two-byte slots) into wSavedSpriteClipMode and the bag's items into
 ; wListPages. (C1, E-0357)
-VaultMenu_WriteSavedSpriteClipModeAndListPages::
+VaultMenu_CountItems::
     ld hl, wItemStorage
     ld c, $00
     ld b, $00
@@ -1141,8 +1141,8 @@ VaultMenu_Store_ReadItemGridX_Data::
 
 ; Storing, step 10: draws the count beside the chosen item: in the bag the number of copies held, in
 ; storage the stored count of that item. (C1, E-0357)
-VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
-    ld hl, VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data
+VaultMenu_Store_DrawCount::
+    ld hl, VaultMenu_Store_DrawCount_Data
     ld de, wScreenList
     ld c, $00
 
@@ -1307,7 +1307,7 @@ VaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
     ret
 
 ; data read by VaultMenu (21 bytes) (E-0347)
-VaultMenu_Store_WriteDigitsAndDigitWorkAEtc_Data::
+VaultMenu_Store_DrawCount_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
 
@@ -1445,7 +1445,7 @@ VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2::
     ld a, [wScreenState]
     cp $04
     jr z, .check_screen_step
-    call VaultMenu_Store_ReadItemGridYAndItemGridX
+    call VaultMenu_Store_CheckRoom
     and a
     jr z, .check_screen_step
     cp $fe
@@ -1556,7 +1556,7 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data::
 
 ; For the chosen bag item: 0 when storage has room for it (a slot with fewer than 99, or a free
 ; slot), $FE when its slot is full (99), $FF when all 100 slots hold other items. (C1, E-0357)
-VaultMenu_Store_ReadItemGridYAndItemGridX::
+VaultMenu_Store_CheckRoom::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -1854,14 +1854,14 @@ VaultMenu_Store_BlinkCursorBlinkCD_Bank1D::
     call QueueSoundEffect
     ld a, [wScreenState]
     cp $03
-    jr z, .call_vault_menu_store_write_text_counter1_and
+    jr z, .call_vault_menu_store_add_to_storage
     call CheckListPagesPlusNumberAtMost18
     and a
     jr z, .clear_two_choice_cursor
     jr .set_two_choice_cursor_to_01
 
-.call_vault_menu_store_write_text_counter1_and:
-    call VaultMenu_Store_WriteTextCounter1AndTextCounter3
+.call_vault_menu_store_add_to_storage:
+    call VaultMenu_Store_AddToStorage
     and a
     jr z, .clear_two_choice_cursor
 
@@ -1991,7 +1991,7 @@ CheckListPagesPlusNumberAtMost18::
 
 ; Adds the quantity of the chosen bag item to storage: to its slot, or a new slot after the used
 ; ones; $FF (nothing changed) when the slot would reach 100 or more. (C1, E-0357)
-VaultMenu_Store_WriteTextCounter1AndTextCounter3::
+VaultMenu_Store_AddToStorage::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -2114,19 +2114,19 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     inc c
     ld a, e
     and a
-    jr z, .call_vault_menu_write_saved_sprite_clip_mode
+    jr z, .call_vault_menu_count_items
     ld a, c
     cp $18
     jr c, .loop
 
-.call_vault_menu_write_saved_sprite_clip_mode:
-    call VaultMenu_WriteSavedSpriteClipModeAndListPages
+.call_vault_menu_count_items:
+    call VaultMenu_CountItems
     ld a, [wListPages]
     cp $18
     jr c, .check_saved_sprite_clip_mode
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
 
 .check_saved_sprite_clip_mode:
     ld a, [wSavedSpriteClipMode]
@@ -2134,16 +2134,16 @@ VaultMenu_Store_TenTimesNumberTensPlusNumberOnes::
     jr nz, .set_two_choice_cursor_to_02
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
 
 .set_two_choice_cursor_to_02:
     ld a, $02
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
 
 ; After storing: answers 0 when the bag is empty, 1 when storage holds 9,900 or more items in all,
 ; otherwise 2; then the next step. (C1, E-0357)
-VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
+VaultMenu_Store_AfterStoring::
     ld hl, wInventory
     ld c, $00
 
@@ -2163,7 +2163,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .loop
     xor a
     ld [wTwoChoiceCursor], a
-    jp VaultMenu_Store_ClearTextCounter1
+    jp VaultMenu_Store_AfterStoring_ClearTextCounter1
 
 .skip:
     ld hl, wItemStorage
@@ -2192,7 +2192,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
     jr c, .skip2
     ld a, $01
     ld [wTwoChoiceCursor], a
-    jr VaultMenu_Store_ClearTextCounter1
+    jr VaultMenu_Store_AfterStoring_ClearTextCounter1
 
 .skip2:
     ld hl, wItemStorage
@@ -2225,7 +2225,7 @@ VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc::
 
 ; Clears the counters, toggles wCounterPtr0Lo, refreshes the lists (RunUnlessScreenStateIs3) and
 ; goes on. (C1, E-0357)
-VaultMenu_Store_ClearTextCounter1::
+VaultMenu_Store_AfterStoring_ClearTextCounter1::
     xor a
     ld [wTextCounter1], a
     ld [wTextCounter3], a
@@ -2270,7 +2270,7 @@ ClearVRAM9700Block_Unreferenced:: ; configured code entry (E-0227); C0
 
 ; Storing, step 15: with answer 2 (more to do) returns to the item list (step 7) with the cursor
 ; reset and the count cleared; otherwise goes on; the script resumes. (C1, E-0357)
-VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc::
+VaultMenu_Store_BackToList::
     ld a, [wTwoChoiceCursor]
     cp $02
     jr z, .set_screen_step_to_07
@@ -2582,12 +2582,11 @@ VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3::
 VaultMenu_Store_BGMapAddressAtScroll_Bank1D_Data_3::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
-; Storing gold, step 21: the amount entry (VaultMenu_WriteNumberEditPosAndThreeDigitsEtc); B goes on
-; with answer 2; on A with a non-zero amount, turns the three digits into gold (x 10,000, 1,000 and
-; 100) and adds the banked gold: a total of 999,901 or more is refused (wTwoChoiceCursor = 1). (C1,
-; E-0357)
-VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
-    call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
+; Storing gold, step 21: the amount entry (VaultMenu_EnterThreeDigits); B goes on with answer 2; on
+; A with a non-zero amount, turns the three digits into gold (x 10,000, 1,000 and 100) and adds the
+; banked gold: a total of 999,901 or more is refused (wTwoChoiceCursor = 1). (C1, E-0357)
+VaultMenu_Store_EnterGold::
+    call VaultMenu_EnterThreeDigits
     and a
     ret z
     cp $01
@@ -2724,8 +2723,8 @@ VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
 
 ; Taking out gold, step 21: as storing, but the amount is added to the gold in hand, and a total
 ; over 99,999 is refused (wTwoChoiceCursor = 1). (C1, E-0357)
-VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
-    call VaultMenu_WriteNumberEditPosAndThreeDigitsEtc
+VaultMenu_TakeOut_EnterGold::
+    call VaultMenu_EnterThreeDigits
     and a
     ret z
     cp $01
@@ -2864,7 +2863,7 @@ VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2::
 ; The three-digit amount entry: A answers 1, B 2; Up/Down raise or lower the digit at wNumberEditPos
 ; (wrapping 9 to 0), keeping the amount within the limit digits wCountTens / wCountOnes / wItemGrid;
 ; Right/Left move between the digits; otherwise the cursor blinks; 0 while editing. (C1, E-0357)
-VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
+VaultMenu_EnterThreeDigits::
     ld a, [wJoypadPressed]
     bit 0, a
     jr nz, .call_queue_sound_effect
@@ -2879,7 +2878,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jp nz, .call_queue_sound_effect4
     bit 5, a
     jp nz, .call_queue_sound_effect5
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     ret
 
 .call_queue_sound_effect:
@@ -2946,8 +2945,8 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
 .set_three_digits:
     inc a
     ld [wThreeDigits], a
-    call VaultMenu_WriteThreeDigits
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteThreeDigits
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -2962,15 +2961,15 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .loop
     xor a
     ld [wThreeDigits + $1], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
 .loop:
     inc a
     ld [wThreeDigits + $1], a
-    call VaultMenu_WriteThreeDigits
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteThreeDigits
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3006,7 +3005,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .set_three_digits2
     ld a, b
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3016,14 +3015,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr c, .set_three_digits2
     xor a
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits2:
     inc a
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3054,7 +3053,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
 .set_three_digits3:
     dec a
     ld [wThreeDigits], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3089,14 +3088,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits4
     ld a, $09
     ld [wThreeDigits + $1], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits4:
     dec a
     ld [wThreeDigits + $1], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3116,7 +3115,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits5
     ld a, [wItemGrid]
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3126,14 +3125,14 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
     jr nz, .set_three_digits5
     ld a, $09
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
 .set_three_digits5:
     dec a
     ld [wThreeDigits + $2], a
-    call VaultMenu_WriteCursorBlinkCD
+    call VaultMenu_EnterThreeDigits_WriteCursorBlinkCD
     xor a
     ret
 
@@ -3186,7 +3185,7 @@ VaultMenu_WriteNumberEditPosAndThreeDigitsEtc::
 
 ; Blinks the amount cursor once the pad has been still for 20 frames: the digit for 16 counts, the
 ; cursor tile $CB for 8; drawn at digit place wNumberEditPos. (C1, E-0357)
-VaultMenu_WriteCursorBlinkCD::
+VaultMenu_EnterThreeDigits_WriteCursorBlinkCD::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .read_number_edit_pos
@@ -3215,7 +3214,7 @@ VaultMenu_WriteCursorBlinkCD::
 .read_number_edit_pos3:
     ld a, [wNumberEditPos]
     add a
-    ld hl, VaultMenu_WriteCursorBlinkCD_Data
+    ld hl, VaultMenu_EnterThreeDigits_WriteCursorBlinkCD_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -3232,7 +3231,7 @@ VaultMenu_WriteCursorBlinkCD::
     ret
 
 ; data read by VaultMenu (6 bytes) (E-0347)
-VaultMenu_WriteCursorBlinkCD_Data::
+VaultMenu_EnterThreeDigits_WriteCursorBlinkCD_Data::
     db $6e, $00, $6f, $00, $70, $00
 
 ; writes the three bytes at wThreeDigits as digit tiles ($E0 + digit) at the BG map entry
@@ -3597,7 +3596,7 @@ TenTimesNumberTensPlusNumberOnes::
 
 ; Caps the three-digit amount at the limit digits (wCountTens, wCountOnes, wItemGrid) and redraws it
 ; when it was over. (C1, E-0357)
-VaultMenu_WriteThreeDigits::
+VaultMenu_EnterThreeDigits_WriteThreeDigits::
     ld a, [wCountTens]
     ld b, a
     ld a, [wThreeDigits]
@@ -3633,17 +3632,17 @@ VaultMenu_WriteThreeDigits::
 ; After a change to the item lists: counts the entries (the bag's, or storage's in state 3) into
 ; rows of four, sets the row count, and pulls the item cursor back within the last row when it is
 ; past the end. (C1, E-0357)
-VaultMenu_Store_CountNonZeroItemGridBytes::
+VaultMenu_Store_VaultMenu_CountItems::
     ld a, [wScreenState]
     cp $03
-    jr z, .call_vault_menu_write_saved_sprite_clip_mode
-    call VaultMenu_WriteSavedSpriteClipModeAndListPages
+    jr z, .call_vault_menu_count_items
+    call VaultMenu_CountItems
     call CountNonZeroItemGridBytes
     ld a, [wSavedSpriteClipMode]
     jr .skip
 
-.call_vault_menu_write_saved_sprite_clip_mode:
-    call VaultMenu_WriteSavedSpriteClipModeAndListPages
+.call_vault_menu_count_items:
+    call VaultMenu_CountItems
     call CountNonZeroItemGridBytes
     ld a, c
 
@@ -4721,7 +4720,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D::
     cp $8e
     jr z, .check_glyph_list_start
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
+    call DrawNameGlyph_Bank1D
     call CopyFromBankWaitVRAM
     pop bc
     jr .check_glyph_list_start2
@@ -4733,7 +4732,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D::
     ld [wGlyphListStart], a
     pop af
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart
+    call DrawNameGlyph_Bank1D
     call OrFromBankWaitVRAM
     pop bc
 
@@ -4757,7 +4756,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D::
 ; For the glyph being drawn: DE = its 16-byte pattern in the font (glyph x 16), HL = its VRAM tile
 ; from the destination table for layout wArg5 (0-4) at wGlyphListStart; B = $1F, C = $10. (C1,
 ; E-0357)
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
+DrawNameGlyph_Bank1D::
     swap a
     ld d, a
     and $f0
@@ -4765,7 +4764,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
     ld a, d
     and $0f
     ld d, a
-    ld hl, DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_Data
+    ld hl, DrawNameGlyph_Bank1D_Data
     add hl, de
     ld e, l
     ld d, h
@@ -4824,10 +4823,10 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart::
     ld c, $10
     ret
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
-; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
-; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
-; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299),
+; reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL
+; (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy
+; (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_0::
     dw GlyphTileDests_1D_0_0 ; id 0
@@ -4856,10 +4855,10 @@ GlyphTileDests_1D_0_3::
     dw vTiles1 + $470, vTiles1 + $480, vTiles1 + $490, vTiles1 + $4a0, vTiles1 + $4b0, vTiles1 + $6a0 ; entry 0
     dw vTiles1 + $6b0, vTiles1 + $6c0, vTiles1 + $6d0
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
-; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
-; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
-; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299),
+; reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL
+; (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy
+; (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_1::
     dw GlyphTileDests_1D_1_0 ; id 0
@@ -4888,10 +4887,10 @@ GlyphTileDests_1D_1_3::
     dw vTiles1 + $400, vTiles1 + $410, vTiles1 + $420, vTiles1 + $470, vTiles1 + $480, vTiles1 + $490 ; entry 0
     dw vTiles1 + $4a0, vTiles1 + $4b0, vTiles1 + $7c0
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
-; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
-; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
-; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299),
+; reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL
+; (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy
+; (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_2::
     dw GlyphTileDests_1D_2_0 ; id 0
@@ -4909,10 +4908,10 @@ GlyphTileDests_1D_3_0::
     dw vTiles2 + $770, vTiles2 + $780, vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730 ; entry 0
     dw vTiles2 + $740, vTiles2 + $750, vTiles2 + $760
 
-; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1D_ReadArg5AndGlyphListStart picks the table by wArg5
-; (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299), reads the word at 2 * C, then the word at 2 *
-; wGlyphListStart of that list, and returns it as HL (a VRAM tile address) with DE = $4010 + 16 *
-; glyph, B = $1F and C = $10, as the bank $0D copy (E-0235) (E-0239, C1)
+; DrawNameGlyph_Bank1D picks the table by wArg5 (0 $61D9, 1 $6229, 2 $6279, 3 $6285, else $6299),
+; reads the word at 2 * C, then the word at 2 * wGlyphListStart of that list, and returns it as HL
+; (a VRAM tile address) with DE = $4010 + 16 * glyph, B = $1F and C = $10, as the bank $0D copy
+; (E-0235) (E-0239, C1)
 ; record: list of VRAM tile addresses
 GlyphTileDestTable_1D_4::
     dw GlyphTileDests_1D_4_0 ; id 0
@@ -5638,9 +5637,9 @@ UpdatePagedListCursor::
     jr nz, .check_list_page_index
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jp nz, .call_update_paged_list_cursor_read_menu_input
+    jp nz, .call_update_paged_list_cursor_draw_blank_tile
     bit 7, a
-    jp nz, .call_update_paged_list_cursor_read_menu_input2
+    jp nz, .call_update_paged_list_cursor_draw_blank_tile2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_update_paged_list_cursor_bg_map_address
@@ -5673,7 +5672,7 @@ UpdatePagedListCursor::
     ld [wListPageIndex], a
     xor a
     ld [wListCursorAux], a
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor
+    call UpdatePagedListCursor_DrawCursorTile
     ld a, $69
     call QueueSoundEffect
     ld a, $fb
@@ -5700,8 +5699,8 @@ UpdatePagedListCursor::
     dec a
     jp .set_list_page_index
 
-.call_update_paged_list_cursor_read_menu_input:
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
+.call_update_paged_list_cursor_draw_blank_tile:
+    call UpdatePagedListCursor_DrawBlankTile
     ld a, [wListCursor]
     and a
     jr nz, .set_list_cursor2
@@ -5722,8 +5721,8 @@ UpdatePagedListCursor::
     ld [wListCursor], a
     jr .clear_list_cursor_aux
 
-.call_update_paged_list_cursor_read_menu_input2:
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
+.call_update_paged_list_cursor_draw_blank_tile2:
+    call UpdatePagedListCursor_DrawBlankTile
     ld a, [wListLastRow]
     ld b, a
     ld a, [wListCursor]
@@ -5749,7 +5748,7 @@ UpdatePagedListCursor::
 .clear_list_cursor_aux:
     xor a
     ld [wListCursorAux], a
-    call UpdatePagedListCursor_ReadMenuInputResultAndListCursor
+    call UpdatePagedListCursor_DrawCursorTile
     ld a, $69
     call QueueSoundEffect
     ld a, $fd
@@ -5774,24 +5773,24 @@ UpdatePagedListCursor::
 UpdatePagedListCursor_WriteListCursorAux::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor
+    jr c, UpdatePagedListCursor_DrawCursorTile
     ld a, [wListCursorAux]
     inc a
     ld [wListCursorAux], a
     cp $10
-    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor
+    jr c, UpdatePagedListCursor_DrawCursorTile
     cp $18
-    jr c, UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2
+    jr c, UpdatePagedListCursor_DrawBlankTile
     xor a
     ld [wListCursorAux], a
 
 ; B = the cursor tile ($BB), then the draw. (C1, E-0357)
-UpdatePagedListCursor_ReadMenuInputResultAndListCursor::
+UpdatePagedListCursor_DrawCursorTile::
     ld b, $bb
     jr UpdatePagedListCursor_ReadMenuInputResult
 
 ; B = the blank tile ($C3), then the draw. (C1, E-0357)
-UpdatePagedListCursor_ReadMenuInputResultAndListCursor_2::
+UpdatePagedListCursor_DrawBlankTile::
     ld b, $c3
     jr UpdatePagedListCursor_ReadMenuInputResult
 
@@ -6202,21 +6201,21 @@ DrawSpeciesMetaSpriteAtScrollOffset::
     ret
 
 ; Sets the sprite attribute bits from wArg6 and draws the meta-sprite
-; (DrawSpritePart9000At88_28_ReadArg3). (C1, E-0357)
-DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc::
+; (DrawSpritePart9000At88_28_SetAttrs_ReadArg3). (C1, E-0357)
+DrawThreeMetaSpritePartsAtGridCursor_SetAttrs::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
-    jr DrawSpritePart9000At88_28_ReadArg3
+    jr DrawSpritePart9000At88_28_SetAttrs_ReadArg3
 
-; C = 0, then falls into the sprite part draw
-; (DrawThreeMetaSpritePartsAtGridCursor_WriteSpriteAttrXorAndSpriteTileOffsetEtc body) (E-0122)
+; C = 0, then falls into the sprite part draw (DrawThreeMetaSpritePartsAtGridCursor_SetAttrs body)
+; (E-0122)
 DrawMetaSpritePartC0::
     ld c, $00
 
 ; Sets the attribute bits from wArg6; with C = 0 the frame alternates every 16 frames
-; (wFrameCounterLo bit 4), otherwise frame 0; then draws (DrawSpritePart9000At88_28_ReadArg3). (C1,
-; E-0357)
-DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
+; (wFrameCounterLo bit 4), otherwise frame 0; then draws
+; (DrawSpritePart9000At88_28_SetAttrs_ReadArg3). (C1, E-0357)
+DrawSpritePart9000At88_28_SetAttrs::
     ld a, [wArg6]
     ldh [hSpriteAttrXor], a
     ld a, c
@@ -6228,7 +6227,7 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
     and $01
     add c
     ldh [hSpriteSubIndex], a
-    jr DrawSpritePart9000At88_28_ReadArg3
+    jr DrawSpritePart9000At88_28_SetAttrs_ReadArg3
 
 .clear_sprite_sub_index:
     xor a
@@ -6236,7 +6235,7 @@ DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc::
 
 ; Draws meta-sprite set wArg1 (bit 7 chooses bank $26 over $25; a non-zero wArg2 chooses bank $27)
 ; with tile offset wArg3 at screen position (wArg4, wArg5) plus the scroll. (C1, E-0357)
-DrawSpritePart9000At88_28_ReadArg3::
+DrawSpritePart9000At88_28_SetAttrs_ReadArg3::
     ld a, [wArg3]
     ldh [hSpriteTileOffset], a
     ld a, [wArg4]

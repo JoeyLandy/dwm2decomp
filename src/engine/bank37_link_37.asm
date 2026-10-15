@@ -3855,14 +3855,14 @@ Copy26BytesThenLastSpeciesResistance::
     inc de
     ret
 
-; far-calls CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc, preserving all registers (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was CallInBank81KeepRegs)
+; far-calls CheckBreedingRecipes, preserving all registers (E-0122) (E-0344: the address in its name
+; dropped or read as the label there; was CallInBank81KeepRegs)
 CallInBank81KeepRegs::
     push af
     push bc
     push de
     push hl
-    farcall CallInBank81KeepRegs_WriteAIWeightsAndSpeciesIdLoEtc
+    farcall CheckBreedingRecipes
     pop hl
     pop de
     pop bc

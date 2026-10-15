@@ -1590,7 +1590,7 @@ ScriptCommand09::
     ld a, [wScriptStep]
     jumptable
     dw ScriptCommand09_OpenWindow
-    dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
+    dw ScriptCommand09_ShowText
     dw ScriptCommand09_CloseWindow
     dw ScriptCommand09_Finish
 
@@ -1614,7 +1614,7 @@ ScriptCommand01::
     ld a, [wScriptStep]
     jumptable
     dw ScriptCommand09_OpenWindow
-    dw ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc
+    dw ScriptCommand09_ShowText
     dw ScriptCommand09_CloseWindow
     dw ScriptCommand01_CloseWindow
 
@@ -1652,9 +1652,8 @@ ScriptCommand09_OpenWindow::
     ret
 
 ; Command 09, step 1: once the window has opened (or at once with bit 7), starts message
-; wScriptParam0 of group wScriptParam1 (ScriptCommand09_WriteStringIndexAndStringCategory); next
-; step. (C1, E-0357)
-ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
+; wScriptParam0 of group wScriptParam1 (StartMessageForGroup); next step. (C1, E-0357)
+ScriptCommand09_ShowText::
     ld a, [wScriptParam1]
     bit 7, a
     jr nz, .read_script_param0
@@ -1667,7 +1666,7 @@ ScriptCommand09_ReadScriptParam1AndTextWindowStateEtc::
     ld l, a
     ld a, [wScriptParam1]
     ld h, a
-    call ScriptCommand09_WriteStringIndexAndStringCategory
+    call StartMessageForGroup
     ld hl, wScriptStep
     inc [hl]
     ret
@@ -1720,21 +1719,21 @@ ScriptCommand01_CloseWindow::
     ret
 
 ; Starts message L of group H (bits 0-5): with a message mode set (wMessageMode) through that mode's
-; far routine from the table (rst $10), otherwise by group (ScriptCommand09_CheckMapType). (C1,
-; E-0357)
-ScriptCommand09_WriteStringIndexAndStringCategory::
+; far routine from the table (rst $10), otherwise by group (StartMessageForGroup_Data_CheckMapType).
+; (C1, E-0357)
+StartMessageForGroup::
     ld a, h
     and $3f
     ld h, a
     push hl
     ld a, [wMessageMode]
     and a
-    jr z, ScriptCommand09_CheckMapType
+    jr z, StartMessageForGroup_Data_CheckMapType
     dec a
     ld c, a
     sla a
     add c
-    ld de, ScriptCommand09_WriteStringIndexAndStringCategory_Data
+    ld de, StartMessageForGroup_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1760,22 +1759,22 @@ ScriptCommand09_WriteStringIndexAndStringCategory::
     rst $10
     ret
 
-; data read by ScriptCommand09 (33 bytes) (E-0347)
-ScriptCommand09_WriteStringIndexAndStringCategory_Data::
+; data read by StartMessageForGroup (33 bytes) (E-0347)
+StartMessageForGroup_Data::
     db $01, $40, $f0, $01, $40, $f0, $0e, $52, $1f, $01, $40, $1d, $86, $4c, $1b, $d0
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d
     db $24
 
 ; Starts message L by group H: groups 0-13 use banks $28, $29, $2A, $2B, $2C, $2D, $2E, $2E, $7C,
 ; $80, $80, $82, $86 and $89; in a key world (wMapType bit 7, but not exactly $80)
-; ScriptCommand09_ToBeginStringDisplay_Bank89_Skip decides instead. (C1, E-0357)
-ScriptCommand09_CheckMapType::
+; StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip decides instead. (C1, E-0357)
+StartMessageForGroup_Data_CheckMapType::
     pop hl
     ld a, [wMapType]
     cp $80
     jr z, .set_string_index
     bit 7, a
-    jp nz, ScriptCommand09_ToBeginStringDisplay_Bank89_Skip
+    jp nz, StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip
 
 .set_string_index:
     ld a, l
@@ -1784,84 +1783,84 @@ ScriptCommand09_CheckMapType::
     ld [wStringCategory], a
     ld a, h
     jumptable
-    dw ScriptCommand09_ToBeginStringDisplay_Bank28
-    dw ScriptCommand09_ToBeginStringDisplay_Bank29
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2A
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2B
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2C
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2D
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2E
-    dw ScriptCommand09_ToBeginStringDisplay_Bank2E
-    dw ScriptCommand09_ToBeginStringDisplay_Bank7C
-    dw ScriptCommand09_ToBeginStringDisplay_Bank80
-    dw ScriptCommand09_ToBeginStringDisplay_Bank80
-    dw ScriptCommand09_ToBeginStringDisplay_Bank82
-    dw ScriptCommand09_ToBeginStringDisplay_Bank86
-    dw ScriptCommand09_ToBeginStringDisplay_Bank89
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank28
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank29
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2A
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2B
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2C
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2D
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2E
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank2E
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank7C
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank80
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank80
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank82
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank86
+    dw StartMessageForGroup_ToBeginStringDisplay_Bank89
 
 ; Group 0: bank $28's strings (BeginStringDisplay_Bank28). (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank28::
+StartMessageForGroup_ToBeginStringDisplay_Bank28::
     farcall BeginStringDisplay_Bank28
     ret
 
 ; Group 1: bank $29's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank29::
+StartMessageForGroup_ToBeginStringDisplay_Bank29::
     farcall BeginStringDisplay_Bank29
     ret
 
 ; Group 2: bank $2A's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank2A::
+StartMessageForGroup_ToBeginStringDisplay_Bank2A::
     farcall BeginStringDisplay_Bank2A
     ret
 
 ; Group 3: bank $2B's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank2B::
+StartMessageForGroup_ToBeginStringDisplay_Bank2B::
     farcall BeginStringDisplay_Bank2B
     ret
 
 ; Group 4: bank $2C's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank2C::
+StartMessageForGroup_ToBeginStringDisplay_Bank2C::
     farcall BeginStringDisplay_Bank2C
     ret
 
 ; Group 5: bank $2D's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank2D::
+StartMessageForGroup_ToBeginStringDisplay_Bank2D::
     farcall BeginStringDisplay_Bank2D
     ret
 
 ; Groups 6 and 7: bank $2E's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank2E::
+StartMessageForGroup_ToBeginStringDisplay_Bank2E::
     farcall BeginStringDisplay_Bank2E
     ret
 
 ; Group 8: bank $7C's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank7C::
+StartMessageForGroup_ToBeginStringDisplay_Bank7C::
     farcall BeginStringDisplay_Bank7C
     ret
 
 ; Groups 9 and 10: bank $80's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank80::
+StartMessageForGroup_ToBeginStringDisplay_Bank80::
     farcall BeginStringDisplay_Bank80
     ret
 
 ; Group 11: bank $82's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank82::
+StartMessageForGroup_ToBeginStringDisplay_Bank82::
     farcall BeginStringDisplay_Bank82
     ret
 
 ; Group 12: bank $86's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank86::
+StartMessageForGroup_ToBeginStringDisplay_Bank86::
     farcall BeginStringDisplay_Bank86
     ret
 
 ; Group 13: bank $89's strings. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank89::
+StartMessageForGroup_ToBeginStringDisplay_Bank89::
     farcall BeginStringDisplay_Bank89
     ret
 
 ; Key-world messages: group 0 with an index of $20 or more uses bank $83; other messages use bank
 ; $8A. (C1, E-0357)
-ScriptCommand09_ToBeginStringDisplay_Bank89_Skip::
+StartMessageForGroup_ToBeginStringDisplay_Bank89_Skip::
     ld a, h
     or a
     jr nz, .set_string_index

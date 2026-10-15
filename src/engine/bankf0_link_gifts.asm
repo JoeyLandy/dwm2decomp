@@ -603,9 +603,9 @@ RunLinkSession8Exchange_Receive_WriteTitleScreenState::
 .read_screen_state:
     ld a, [wScreenState]
     jumptable
-    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc
-    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_SetScreenStep
-    dw RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_2
+    dw DreamEggs_State0
+    dw DreamEggs_State1
+    dw DreamEggs_State2
     dw RunLinkSession8Exchange_Receive_ToLinkRecordScreen
     dw RunLinkSession8Exchange_ShowMessage
     dw RunLinkSession8Exchange_Saving
@@ -619,7 +619,7 @@ RunLinkSession8Exchange_Receive_WriteTitleScreenState::
 
 ; Dream eggs, state 0: when the partner sends $BD (cancel) goes to the message state 4 answering
 ; $BB; otherwise the opening steps. (C1, E-0357)
-RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc::
+DreamEggs_State0::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -855,7 +855,7 @@ RunLinkSession8Exchange_ReadSaveAnswer::
 
 ; Dream eggs, state 1: the partner's cancel as in state 0; otherwise the egg list's steps
 ; (LinkEggList). (C1, E-0357)
-RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_SetScreenStep::
+DreamEggs_State1::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .call_link_egg_list
@@ -874,7 +874,7 @@ RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_SetScreenStep
 
 ; Dream eggs, state 2 (the chosen egg): the partner's cancel as in state 0; otherwise its six steps.
 ; (C1, E-0357)
-RunLinkSession8Exchange_Receive_WriteScreenStepAndScreenSubStepEtc_2::
+DreamEggs_State2::
     ld a, [wLinkMessage]
     cp $bd
     jr nz, .read_screen_step
@@ -1862,17 +1862,17 @@ RunLinkSession8Exchange_Receive_SetArg5::
 RunLinkSession8Exchange_GivingScene::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_MoveSprite
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_GivingScene_SetScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1Off
     dw RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg
     dw RunLinkSession8Exchange_GivingScene_Save
 
@@ -1895,7 +1895,7 @@ RunLinkSession8Exchange_GivingScene_Save::
 
 ; Giving scene, step 1: moves the sprite at wSpriteSlots + $B right on three counts of four until
 ; $38, then sets its flag bit 1. (C1, E-0357)
-RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep::
+RunLinkSession8Exchange_GivingScene_MoveSprite::
     ld a, [wSpriteSlots + $9]
     and $03
     and a
@@ -1915,7 +1915,7 @@ RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep::
 
 ; Giving scene, step 4: walks object 1 left on three counts of four until X $58, then sets its flag
 ; bit 1. (C1, E-0357)
-RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep::
+RunLinkSession8Exchange_GivingScene_WalkObject1::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
     and a
@@ -1936,7 +1936,7 @@ RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep::
     ret
 
 ; Giving scene, step 0: a 16-frame wait. (C1, E-0357)
-RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep::
+RunLinkSession8Exchange_GivingScene_Wait::
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
@@ -1971,7 +1971,7 @@ RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5::
     ret
 
 ; Giving scene, step 10: turns object 1 right and walks it off the screen (X $E0). (C1, E-0357)
-RunLinkSession8Exchange_GivingScene_SetScreenSubStep::
+RunLinkSession8Exchange_GivingScene_WalkObject1Off::
     ld a, [wObject1 + OBJ_FLAGS]
     res 1, a
     ld [wObject1 + OBJ_FLAGS], a
@@ -2012,23 +2012,23 @@ RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg::
 RunLinkSession8Exchange_ObtainedEgg::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_MoveSprite
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff
     dw RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Obtaining scene, step 10: turns the sprite at wSpriteSlots + $B left and moves it off the screen
 ; ($E0). (C1, E-0357)
-RunLinkSession8Exchange_ObtainedEgg_WriteSpriteSlotsAndScreenSubStep::
+RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -2069,19 +2069,19 @@ RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom::
 RunLinkSession8Exchange_EggsTraded::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_MoveSprite
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5_SetObject5
     dw RunLinkSession8Exchange_EggsTraded_MoveOff
     dw RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith
@@ -2163,36 +2163,36 @@ RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith::
 HatchingScene::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_MoveSprite
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_ShowEgg
     dw HatchingScene_SetSpriteSlotsPlus7
     dw HatchingScene_Hatch
     dw HatchingScene_Bob
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw HatchingScene_WriteObject2AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw HatchingScene_WriteObject2AndSpriteSlotsEtc
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw HatchingScene_WalkObject2Left
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw HatchingScene_WalkOff
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_ShowGHatchedFromThe
     dw HatchingScene_DrawFrame
     dw HatchingScene_RunText
@@ -2355,7 +2355,7 @@ HatchingScene_SetObject2Plus7::
     ret
 
 ; Hatching scene, step 26: walks object 2 left until X $30. (C1, E-0357)
-HatchingScene_WriteObject2AndScreenSubStep::
+HatchingScene_WalkObject2Left::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2450,7 +2450,7 @@ HatchingScene_Bob::
     ret
 
 ; Hatching scene, step 28: walks object 2 and the sprite left off the screen. (C1, E-0357)
-HatchingScene_WriteObject2AndSpriteSlotsEtc::
+HatchingScene_WalkOff::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2501,36 +2501,36 @@ HatchingScene_ShowGHatchedFromThe::
 RunLinkSession8Exchange_EggHatched::
     ld a, [wScreenSubStep]
     jumptable
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_GivingScene_WriteObject1AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_WalkObject1
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_SetObject5
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_MoveSprite
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_EggHatched_ShowEgg
     dw RunLinkSession8Exchange_EggHatched_SetObject1Plus7
     dw HatchingScene_Hatch
     dw RunLinkSession8Exchange_ToStepScreenStepOffsetTableEvery4Frames
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7_SetScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw HatchingScene_SetObject2Plus7
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteObject2AndScreenSubStep
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
-    dw RunLinkSession8Exchange_WriteSpriteSlotsAndObject1Etc
-    dw RunLinkSession8Exchange_WriteScreenCounterAndScreenSubStep
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_EggHatched_WalkObject2
+    dw RunLinkSession8Exchange_GivingScene_Wait
+    dw RunLinkSession8Exchange_EggHatched_WalkOff
+    dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe
     dw RunLinkSession8Exchange_GivingScene_Save
 
@@ -2580,7 +2580,7 @@ RunLinkSession8Exchange_EggHatched_SetObject1Plus7::
     ret
 
 ; Hatched scene, step 26: walks object 2 right until X $60. (C1, E-0357)
-RunLinkSession8Exchange_WriteObject2AndScreenSubStep::
+RunLinkSession8Exchange_EggHatched_WalkObject2::
     ld a, [wObject2 + OBJ_FLAGS]
     res 1, a
     ld [wObject2 + OBJ_FLAGS], a
@@ -2643,7 +2643,7 @@ RunLinkSession8Exchange_ToStepScreenStepOffsetTableEvery4Frames::
     ret
 
 ; Hatched scene, step 28: walks objects 1 and 2 right off the screen. (C1, E-0357)
-RunLinkSession8Exchange_WriteSpriteSlotsAndObject1Etc::
+RunLinkSession8Exchange_EggHatched_WalkOff::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a

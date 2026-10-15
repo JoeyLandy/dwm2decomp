@@ -11,10 +11,10 @@ RunDebugSubState_E0::
     ld a, [wDebugSubState]
     jumptable
     dw RunDebugSubState_E0_ShowHeading
-    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor
-    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0
-    dw RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1
-    dw RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag
+    dw RunDebugSubState_E0_SideField
+    dw RunDebugSubState_E0_SkillField
+    dw RunDebugSubState_E0_CountField
+    dw RunDebugSubState_E0_BattleEndField
     dw RunDebugSubState_E0_SetDebugSubState
 
 ; Debug skill editor, sub-state 0: shows its heading strings, draws its 20 x 18 layout
@@ -69,7 +69,7 @@ RunDebugSubState_E0_ShowHeading::
 
 ; Debug skill editor, sub-state 1 (the side field): Select leaves (sub-state 5); Up/Down move to the
 ; last or next field; Left/Right toggle wDebugCursor bit 0 (which side). (C1, E-0357)
-RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
+RunDebugSubState_E0_SideField::
     ld a, [wJoypadPressed]
     bit 2, a
     jr z, .check_joypad_pressed_repeat
@@ -114,7 +114,7 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugCursor::
 ; Debug skill editor, sub-state 2 (the skill field): Select leaves; A sets skill 0; Up/Down move
 ; between fields; Left/Right step the skill number through 0-$E3 with wrap, redrawing its name. (C1,
 ; E-0357)
-RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
+RunDebugSubState_E0_SkillField::
     ld a, [wJoypadPressed]
     and $04
     jr z, .check_joypad_pressed
@@ -186,7 +186,7 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue0::
 
 ; Debug skill editor, sub-state 3 (the count field): Select leaves; Up/Down move between fields;
 ; Left/Right change wDebugValue1 by one and redraw it. (C1, E-0357)
-RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
+RunDebugSubState_E0_CountField::
     ld a, [wJoypadPressed]
     and $04
     jr z, .check_joypad_pressed_repeat
@@ -239,7 +239,7 @@ RunDebugSubState_E0_WriteDebugSubStateAndDebugValue1::
 
 ; Debug skill editor, sub-state 4 (the battle-end flag field): Select leaves; Up/Down move between
 ; fields; Left/Right toggle wBattleEndFlag bit 0. (C1, E-0357)
-RunDebugSubState_E0_WriteDebugSubStateAndBattleEndFlag::
+RunDebugSubState_E0_BattleEndField::
     ld a, [wJoypadPressed]
     bit 2, a
     jr z, .check_joypad_pressed_repeat
@@ -1694,8 +1694,8 @@ RunDebugState_E0_ChooseActionTargets::
     dw RunDebugState_E0_ChooseActionTargets_Start
     dw RunDebugState_E0_ChooseActionTargets_AIChoice
     dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState
-    dw RunDebugState_E0_WriteDebugSubStateAndBattleActor
-    dw RunDebugState_E0_WriteBattleActorAndDebugSubStateEtc
+    dw RunDebugState_E0_ChooseActionTargets_Input
+    dw RunDebugState_E0_ChooseActionTargets_End
     dw RunDebugState_E0_ChooseActionTargets_WriteDebugSubState_2
 
 ; Choosing actions, sub-state 0: shows the headings, draws the layout and starts with actor 0. (C1,
@@ -1742,12 +1742,12 @@ RunDebugState_E0_ChooseActionTargets_Start::
     ret
 
 ; Choosing actions, sub-state 1: works out the actor's personality and its AI choice
-; (RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc). (C1, E-0357)
+; (RunDebugState_E0_RunAIChoice). (C1, E-0357)
 RunDebugState_E0_ChooseActionTargets_AIChoice::
     ld a, [wBattleActor]
     call PersonalityIndexOfSlot_BankE0
     ld [wPersonalityIndex], a
-    farcall RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc
+    farcall RunDebugState_E0_RunAIChoice
     ld a, $02
     ld [wDebugSubState], a
     ret
@@ -1762,7 +1762,7 @@ RunDebugState_E0_ChooseActionTargets_WriteDebugSubState::
 ; Choosing actions, sub-state 3: B ends (sub-state 4, clearing the battle phase); A chooses again;
 ; Left/Right step to the previous or next occupied slot; Select runs the AI's choice (sub-state 5).
 ; (C1, E-0357)
-RunDebugState_E0_WriteDebugSubStateAndBattleActor::
+RunDebugState_E0_ChooseActionTargets_Input::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_joypad_pressed_repeat
@@ -1824,7 +1824,7 @@ RunDebugState_E0_WriteDebugSubStateAndBattleActor::
 
 ; Choosing actions, sub-state 4: clears the actor and the 16 action choices ($FF) and returns to the
 ; viewer's state 3. (C1, E-0357)
-RunDebugState_E0_WriteBattleActorAndDebugSubStateEtc::
+RunDebugState_E0_ChooseActionTargets_End::
     xor a
     ld [wBattleActor], a
     ld [wDebugSubState], a
@@ -2006,13 +2006,12 @@ DrawFourTileStripForA_Data_Entry07::
     db $f8, $f9, $e3, $c3
 
 ; DrawSkillRecordFirstByteDigits, DrawSkillDebugDigitsAndRecord_LoadSkillRecord, then far-calls
-; DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc (E-0122) (E-0345: draws the skill's
-; debug digits, loads the skill record and far-calls the battle-argument writer; was
-; DrawSkillDebugDigitsAndRecord)
+; DrawSkillDebugPage (E-0122) (E-0345: draws the skill's debug digits, loads the skill record and
+; far-calls the battle-argument writer; was DrawSkillDebugDigitsAndRecord)
 DrawSkillDebugDigitsAndRecord::
     call DrawSkillRecordFirstByteDigits
     call DrawSkillDebugDigitsAndRecord_LoadSkillRecord
-    farcall DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc
+    farcall DrawSkillDebugPage
     ret
 
 ; loads skill wDebugValue0's first record byte (LoadSkillRecordPart) and writes it as three digit
@@ -2412,7 +2411,7 @@ EffectTestEntries::
 ; Clears the actor's action choice and runs the AI's choice for it (AIChooseActionResolveStep,
 ; ChooseTargetIfUnset); in a link session the random seeds are saved and restored around it. (C1,
 ; E-0357)
-RunDebugState_E0_ChooseActionTargets_AIChoice_WriteRandomLoAndRandomHiEtc::
+RunDebugState_E0_RunAIChoice::
     ld a, [wBattleActor]
     ld hl, wBattleActionChoice
     add a
@@ -5974,7 +5973,7 @@ DebugStaffRoll_Credits::
     ld a, [wWorkBuf + $1]
     jumptable
     dw DebugStaffRoll_Credits_ShowLines
-    dw DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc
+    dw DebugStaffRoll_Credits_Caption
     dw DebugStaffRoll_Credits_WaitFadeState
 
 .read_work_buf:
@@ -6379,7 +6378,7 @@ DebugStaffRoll_Credits_ShowLines::
 ; sound channel has finished, then fades, puts the player on map 0 at (0, 0), keeps the party count,
 ; sets EVENT_STAFF_ROLL_PARTY_SAVED and switches game mode; otherwise when the time runs out fades
 ; and goes on. (C1, E-0357)
-DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc::
+DebugStaffRoll_Credits_Caption::
     ld hl, wWorkBuf + $5
     ld a, [hli]
     and [hl]

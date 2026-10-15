@@ -101,6 +101,18 @@ class Coverage(unittest.TestCase):
         self.assertIn("    jumptable\n    dw KeyAppraisalMenu_Init\n    dw KeyAppraisalMenu_DrawGoldBox\n", text)
         self.assertIn("RunLoadGameSteps::", text)
 
+    def test_instruction_named_and_long_labels_only_shrink(self):
+        """E-0368 (D-011): the labels the generator named after their instructions or a callee, and the labels over
+        60 characters, never grow; lower the bounds as the readability batches name them from their readings."""
+        import readability_queue
+        INSTRUCTION_AT_MOST, LONG60_AT_MOST, ETC_AT_MOST = 1751, 209, 1
+        q = readability_queue.queues(FILES)
+        self.assertLessEqual(len(q["instruction"]), INSTRUCTION_AT_MOST, q["instruction"][:10])
+        names = [name for f in FILES for name, *_ in doc_coverage.scan(f)]
+        self.assertLessEqual(sum(len(n) > 60 for n in names), LONG60_AT_MOST)
+        import re
+        self.assertLessEqual(sum(bool(re.search(r"Etc(?:_|$)", n)) for n in names), ETC_AT_MOST)
+
     def test_hand_notes_answer_gap_notes(self):
         """E-0365: a routine read by hand gets no generated '; code:' restatement under an older gap note."""
         both = [f"{f.name}:{line} {name}" for f in FILES for name, kind, comment, line, _ in doc_coverage.scan(f)

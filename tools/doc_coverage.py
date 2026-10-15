@@ -18,8 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import present  # noqa: E402
 DATA_FIRST = re.compile(r"^\s+(?:(?:db|dw|dl|dfar|ds|INCBIN|dbw|dwb|bigdw|dn|d24)\b|(?:script|objsel|text|sound|snd)_\w+)")
-HAND_EVIDENCE = ("E-0357", "E-0358", "E-0359", "E-0360", "E-0361", "E-0362")  # whole-routine readings in config/annotations.json
-HAND_NOTE = re.compile(r"\(C\d,(?: ;)? (?:" + "|".join(HAND_EVIDENCE) + r")\)")
+HAND_EVIDENCE = present.HAND_EVIDENCE  # whole-routine readings in config/annotations.json
+HAND_NOTE = present.HAND_NOTE
 RESTATED = "(E-0347)"  # the generated list of a routine's effects (tools/describe.py)
 GAP = re.compile(r"not read|not interpreted|\bunknown\b|not decoded|purpose unclear")  # in code notes
 

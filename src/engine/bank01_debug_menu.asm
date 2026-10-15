@@ -1181,7 +1181,7 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     and $10
     jr z, .check_joypad_pressed_repeat2
     inc [hl]
-    call DebugMessageTest_Update_WriteTemp1AndMenuRowCount
+    call DebugMessageTest_ClearDependentNumbers
     jr .call_queue_sound_effect
 
 .check_joypad_pressed_repeat2:
@@ -1189,7 +1189,7 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     and $20
     jr z, .check_joypad_pressed
     dec [hl]
-    call DebugMessageTest_Update_WriteTemp1AndMenuRowCount
+    call DebugMessageTest_ClearDependentNumbers
     jr .call_queue_sound_effect
 
 .check_joypad_pressed:
@@ -1205,7 +1205,7 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     ld a, [wMenuState]
     ld b, $21
     cp $00
-    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_WrapNumber
     ld a, [wTemp0]
     add a
     ld hl, DebugMessageTestTable
@@ -1225,7 +1225,7 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     ld b, a
     ld a, [wMenuState]
     cp $01
-    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_WrapNumber
     ld a, [wTemp0]
     add a
     ld hl, DebugMessageTestTable
@@ -1254,7 +1254,7 @@ DebugMessageTest_Update_CheckJoypadPressedRepeat::
     ld b, a
     ld a, [wMenuState]
     cp $02
-    call z, DebugMessageTest_Update_ReadMenuStateAndTemp0Etc
+    call z, DebugMessageTest_WrapNumber
 
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
@@ -1361,7 +1361,7 @@ DebugMessageTest_Update_WriteHexByteTilesAtDE_3_CheckMenuState::
 
 ; Wraps the selected message-test number to its limit B: a value of B + 1 becomes 0 and $FF becomes
 ; B (unless B is $FF, meaning no limit), then redraws it. (C1, E-0357)
-DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
+DebugMessageTest_WrapNumber::
     push af
     ld a, [wMenuState]
     ld hl, wTemp0
@@ -1411,7 +1411,7 @@ DebugMessageTest_Update_ReadMenuStateAndTemp0Etc::
 
 ; Clears the message numbers that depend on the one just changed: changing the library clears both,
 ; changing the first clears the second. (C1, E-0357)
-DebugMessageTest_Update_WriteTemp1AndMenuRowCount::
+DebugMessageTest_ClearDependentNumbers::
     ld a, [wMenuState]
     cp $00
     jr nz, .cp_01
@@ -2242,9 +2242,9 @@ DebugStaffRoll_Update::
 DebugResultsDisplay_Update::
     ld a, [wScreenState]
     and a
-    jp z, DebugResultsDisplay_Update_CheckJoypadPressedRepeat
+    jp z, DebugResultsDisplay_ResistanceAddress_CheckJoypadPressedRepeat
     cp $01
-    jp z, DebugResultsDisplay_Update_CheckArg1
+    jp z, DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -2353,7 +2353,7 @@ DebugResultsDisplay_Update_WriteDebugCounter::
     cp $10
     jr c, DebugResultsDisplay_Update_HLToDecimalDigits
     cp $18
-    jr c, DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs
+    jr c, DebugResultsDisplay_Update_CallDebugResultsDisplay_ResistanceAddress
     xor a
     ld [wDebugCounter], a
 
@@ -2377,7 +2377,7 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
     ld l, a
     ld h, $00
     call HLToDecimalDigits
-    call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
+    call DebugResultsDisplay_ResistanceAddress
     ld a, [wDigits + $2]
     add $10
     ld c, a
@@ -2390,8 +2390,8 @@ DebugResultsDisplay_Update_HLToDecimalDigits::
 
 ; Blanks the selected resistance digit on the debug breeding screen (the off phase of its blink).
 ; (C1, E-0357)
-DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs::
-    call DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork
+DebugResultsDisplay_Update_CallDebugResultsDisplay_ResistanceAddress::
+    call DebugResultsDisplay_ResistanceAddress
     di
     call WaitForVRAMAccess
     xor a
@@ -2401,16 +2401,16 @@ DebugResultsDisplay_Update_CallDebugResultsDisplay_Update_ReadDebugCurs::
 
 ; HL = the screen address of resistance wSharedMenuWork on the debug breeding screen: a row for
 ; parent A (wDebugCursor = 4) or B, from the two address words in
-; DebugResultsDisplay_Update_Data1/2; indices from 14 use the second row. (C1, E-0357)
-DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
+; DebugResultsDisplay_ResistanceAddress_Data1/2; indices from 14 use the second row. (C1, E-0357)
+DebugResultsDisplay_ResistanceAddress::
     ld a, [wDebugCursor]
     cp $04
     jr nz, .check_shared_menu_work
-    ld de, DebugResultsDisplay_Update_Data1
+    ld de, DebugResultsDisplay_ResistanceAddress_Data1
     jr .check_shared_menu_work2
 
 .check_shared_menu_work:
-    ld de, DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2
+    ld de, DebugResultsDisplay_ResistanceAddress_Data2
 
 .check_shared_menu_work2:
     ld a, [wSharedMenuWork]
@@ -2431,20 +2431,20 @@ DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork::
     add_a_to_hl
     ret
 
-; data read by DebugResultsDisplay_Update (4 bytes) (E-0347)
-DebugResultsDisplay_Update_Data1::
+; data read by DebugResultsDisplay_ResistanceAddress (4 bytes) (E-0347)
+DebugResultsDisplay_ResistanceAddress_Data1::
     db $86, $99, $a6, $99
 
-DebugResultsDisplay_Update_ReadDebugCursorAndSharedMenuWork_Data2::
+DebugResultsDisplay_ResistanceAddress_Data2::
     db $e6, $99, $06, $9a
 
 ; Computes and shows the child on the debug breeding screen. Runs ComputeBreedingChild on the two
 ; parent records built from the entered values; when the result is a valid species it checks the
-; child's species against the field at DebugResultsDisplay_Update_Data3 (TestBitInFieldAtArg3) and
-; draws its name, or the unknown-name placeholder when that bit is clear; then draws the child's
-; species number, sex mark, plus value, level, maximum level and its 27 resistance digits. With no
-; valid child it shows the placeholder and number 0. (C1, E-0357)
-DebugResultsDisplay_Update_CheckArg1::
+; child's species against the field at DebugResultsDisplay_ResistanceAddress_Data3
+; (TestBitInFieldAtArg3) and draws its name, or the unknown-name placeholder when that bit is clear;
+; then draws the child's species number, sex mark, plus value, level, maximum level and its 27
+; resistance digits. With no valid child it shows the placeholder and number 0. (C1, E-0357)
+DebugResultsDisplay_ResistanceAddress_Data2_CheckArg1::
     ld a, [wArg1]
     and a
     jr z, .call_compute_breeding_child
@@ -2472,7 +2472,7 @@ DebugResultsDisplay_Update_CheckArg1::
     ld [wArg1], a
     ld a, [wArg7]
     ld [wArg2], a
-    ld de, DebugResultsDisplay_Update_Data3
+    ld de, DebugResultsDisplay_ResistanceAddress_Data3
     ld a, e
     ld [wArg3], a
     ld a, d
@@ -2573,19 +2573,19 @@ DebugResultsDisplay_Update_CheckArg1::
     ld c, a
     ld de, vBGMap0 + $2
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_WaitForVRAMAccess
+    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
     ld hl, wChildRecord + MON_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $22
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_WaitForVRAMAccess
+    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
     ld hl, wChildRecord + MON_MAX_LEVEL
     ld a, [hl]
     ld c, a
     ld de, vBGMap0 + $42
     call PackTwoDigitsOfCAsBCD
-    call DebugResultsDisplay_Update_WaitForVRAMAccess
+    call DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess
     ld hl, wChildRecord + MON_RESISTANCES
     ld de, vBGMap0 + $6
     ld c, $00
@@ -2626,7 +2626,7 @@ DebugResultsDisplay_Update_CheckArg1::
 
 ; Writes C as two hex-digit tiles ($10 + each nibble) at DE, waiting for VRAM access before each.
 ; (C1, E-0357)
-DebugResultsDisplay_Update_WaitForVRAMAccess::
+DebugResultsDisplay_ResistanceAddress_WaitForVRAMAccess::
     ld a, c
     and $f0
     swap a
@@ -2655,7 +2655,7 @@ DebugResultsDisplay_Update_WaitForVRAMAccess::
 ; loads both parents' default resistances from their species records (LoadSpeciesRecord,
 ; CopySpeciesResistancesFromIndexCToDE) into wGridCursorY (parent A) and wDebugResultsBuf (parent
 ; B). With no button it blinks the selected field. (C1, E-0357)
-DebugResultsDisplay_Update_CheckJoypadPressedRepeat::
+DebugResultsDisplay_ResistanceAddress_CheckJoypadPressedRepeat::
     ld a, [wJoypadPressedRepeat]
     bit 0, a
     jp nz, DebugToggleArg1Marker_CheckScreenCounter
@@ -3784,7 +3784,7 @@ DebugAutomap_Update_RollKeyContentsForLevelTemp0::
     ldh a, [hTemp3]
     ld [hl], a
     ld [wPartyStrength], a
-    farcall DebugAutomap_Update_DebugAutomap_Update_MergeKeyWorldAreas
+    farcall DebugAutomap_Update_KeyWorldLayout_Start
     farcall SaveKeyWorldFlagsRecordToSRAMSlotKeyWorldSlot
     ld a, [wKeyWorldWidth]
     ld [wMapWidthScreens], a
@@ -3974,7 +3974,7 @@ DebugMapEditor_Update::
     jr z, .check_joypad_pressed_repeat
     ld a, [wDebugValue0]
     ldh [hTemp0], a
-    call DebugMapEditor_Update_WriteROMB0AndTemp0
+    call DebugMapEditor_CheckPosition
     or a
     jr z, .read_debug_value0
     ld b, $08
@@ -4762,10 +4762,10 @@ DebugSoundTest_Update::
     ld a, [wMenuState]
     ld b, $20
     cp $00
-    call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
+    call z, DebugSoundTest_WrapAndDrawId
     ld b, $54
     cp $01
-    call z, DebugSoundTest_Update_ReadMenuStateAndTemp0Etc
+    call z, DebugSoundTest_WrapAndDrawId
 
 .check_joypad_pressed2:
     ld a, [wJoypadPressed]
@@ -4822,7 +4822,7 @@ DebugSoundTest_Update_WriteHexByteTilesAtDE_2_Return::
 ; Wraps the selected sound-test number to its count B (B wraps to 0, $FF to B - 1) and draws the
 ; sound id it selects: the byte of DebugSoundTestMusic (row 7, column 12) or DebugSoundTestEffects
 ; (row 8, column 12) at that index. (C1, E-0357)
-DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
+DebugSoundTest_WrapAndDrawId::
     push af
     ld a, [wMenuState]
     ld hl, wTemp0
@@ -4861,7 +4861,7 @@ DebugSoundTest_Update_ReadMenuStateAndTemp0Etc::
     ret
 
 ; DebugSoundTest_Update passes the byte at $65DE + wTemp0 to QueueMusic after InitSoundHardware, and
-; DebugSoundTest_Update_ReadMenuStateAndTemp0Etc draws it in hex; 32 entries (E-0238, C1)
+; DebugSoundTest_WrapAndDrawId draws it in hex; 32 entries (E-0238, C1)
 ; record: music number
 DebugSoundTestMusic::
     db $02 ; id 0
@@ -4898,8 +4898,8 @@ DebugSoundTestMusic::
     db $d6 ; id 31
 
 ; DebugSoundTest_Update passes the byte at $65FE + wTemp1 to QueueSoundEffect, and the code at
-; DebugSoundTest_Update_ReadMenuStateAndTemp0Etc.read_temp1 draws it in hex at vBGMap0 + $10C; 84
-; entries up to the next routine (E-0238, C1)
+; DebugSoundTest_WrapAndDrawId.read_temp1 draws it in hex at vBGMap0 + $10C; 84 entries up to the
+; next routine (E-0238, C1)
 ; record: sound effect number
 DebugSoundTestEffects::
     db $00 ; id 0
@@ -5018,12 +5018,12 @@ DebugBattleSetup_Update_ClearMenuState::
     ld [wDebugValue1], a
     ld a, [wWorkBuf + $8]
     or a
-    jr nz, .call_debug_battle_setup_update_write_map_id
+    jr nz, .call_debug_battle_setup_create_default_game
     call DebugBattleSetup_Update_SRAMRecordAddressMapped
     jr .set_game_mode_to_04
 
-.call_debug_battle_setup_update_write_map_id:
-    call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
+.call_debug_battle_setup_create_default_game:
+    call DebugBattleSetup_CreateDefaultGame
 
 .set_game_mode_to_04:
     ld a, $04
@@ -5361,8 +5361,7 @@ ClampDebugValueToTableLimit::
 ; Makes sure the debug battle has usable party data: when the party has 1-3 members, the farm level
 ; is below 3 and each member's record index is below 10, 20 or 30 (by farm level) and its record
 ; state is 2, nothing is done. Otherwise it loads the save (CheckSaveData, RunLoadGameSteps) or,
-; with no save, creates the default debug game (DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc).
-; (C1, E-0357)
+; with no save, creates the default debug game (DebugBattleSetup_CreateDefaultGame). (C1, E-0357)
 DebugBattleSetup_Update_SRAMRecordAddressMapped::
     ld a, [wPartyCount]
     or a
@@ -5400,12 +5399,12 @@ DebugBattleSetup_Update_SRAMRecordAddressMapped::
     farcall CheckSaveData
     ldh a, [hTemp0]
     or a
-    jr nz, .call_debug_battle_setup_update_write_map_id
+    jr nz, .call_debug_battle_setup_create_default_game
     farcall RunLoadGameSteps
     ret
 
-.call_debug_battle_setup_update_write_map_id:
-    call DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc
+.call_debug_battle_setup_create_default_game:
+    call DebugBattleSetup_CreateDefaultGame
     ret
 
 ; Returns Z when party record A has state 2 (MON_STATE). (C1, E-0357)
@@ -5669,8 +5668,9 @@ WriteThreeHexDigitsAtDE::
 ; Creates the default debug game: the player at map 0, screen (2, 0), position ($40, $40) with the
 ; followers on the same spot, a fixed six-glyph player name, 99,999 gold ($01869F), three party
 ; members (records 0-2), 24 inventory items, 80 tiny medals (wTinyMedals), an empty key list, and 30
-; random monster records (DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82). (C1, E-0357)
-DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
+; random monster records (DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82). (C1,
+; E-0357)
+DebugBattleSetup_CreateDefaultGame::
     ld a, $00
     ldh [hMapId], a
     ld a, $02
@@ -5786,13 +5786,13 @@ DebugBattleSetup_Update_WriteMapIdAndMapScreenXEtc::
     xor a
     ld [wTinyMedalsHi], a
     call DebugBattleSetup_ClearKeyList
-    call DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82
+    call DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82
     ret
 
 ; Fills the debug save with 30 random monsters (PickRandomMonsterSkipping7ETo82 for records 0 to
 ; $1D), then marks records 0-2 with state 2 (in the party) and the next 27 with state 1. (C1,
 ; E-0357)
-DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82::
+DebugBattleSetup_CreateDefaultGame_PickRandomMonsterSkipping7ETo82::
     ld b, $1e
     xor a
     ld [wBattleArg0], a
@@ -5834,7 +5834,7 @@ DebugBattleSetup_Update_PickRandomMonsterSkipping7ETo82::
     ret
 
 ; draws random ids until one is non-zero and not $7E-$82, then creates that record
-; (PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc) (E-0124)
+; (PickRandomMonsterSkipping7ETo82_CreateRecord) (E-0124)
 PickRandomMonsterSkipping7ETo82::
     call NextTableByte
     ld a, [wRandomLo]
@@ -5855,7 +5855,7 @@ PickRandomMonsterSkipping7ETo82::
     cp $82
     jr z, PickRandomMonsterSkipping7ETo82
     ld d, $00
-    call PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc
+    call PickRandomMonsterSkipping7ETo82_CreateRecord
     ret
 
 ; Builds monster record wBattleArg0 in SRAM from MonsterTable entry DE (LoadMonsterRecord): state
@@ -6201,7 +6201,7 @@ CreateMonsterRecordOfKindTemp1::
 
 ; The record creation of PickRandomMonsterSkipping7ETo82 for a random monster: wBattleArg1 and
 ; wBattleArg2 = $FF (random sex and personality), state 1. (C1, E-0357)
-PickRandomMonsterSkipping7ETo82_WriteBattleArg1AndBattleArg2Etc::
+PickRandomMonsterSkipping7ETo82_CreateRecord::
     ld a, $ff
     ld [wBattleArg1], a
     ld [wBattleArg2], a
@@ -6314,5 +6314,5 @@ CreateMonsterRecordOfKindTemp1_LoadMonsterRecord_Entry08::
     db $0b, $35, $24, $25, $32, $f0, $f0, $f0, $f0, $f0
     ds $4a6, $00
 
-DebugResultsDisplay_Update_Data3::
+DebugResultsDisplay_ResistanceAddress_Data3::
     ds $a3b, $00

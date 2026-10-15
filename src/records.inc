@@ -38,7 +38,7 @@ DEF MON_PARENT2_PLUS EQU $A3 ; plus value of the second parent (E-0297)
 DEF MON_ITEM EQU $A4 ; equipped item (E-0125)
 
 ; Offsets into the $4E-byte battler record (wBattlerRecords; config/record_fields.json "battler", E-0298).
-DEF BATTLER_NAME EQU $00 ; name, 10 bytes ($FF-filled by LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData for a wild monster) (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C) (E-0298, E-0320)
+DEF BATTLER_NAME EQU $00 ; name, 10 bytes ($FF-filled by FillBattlerRecordFromMonster for a wild monster) (C2 from E-0320: during that battle battler record 0 holds the same values as SRAM record 0 at $17 and $1B-$2C) (E-0298, E-0320)
 DEF BATTLER_SPECIES EQU $0A ; species word (MonsterTable bytes 0-1, also wSpeciesIdLo/Hi) (E-0298)
 DEF BATTLER_FAMILY EQU $0C ; family (species byte 0, written by GameMode4_Init_Sub01_Sub07) (E-0310)
 DEF BATTLER_SKILLS EQU $0E ; four skills (MonsterTable bytes 2-5) (E-0298)

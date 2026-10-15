@@ -1192,7 +1192,7 @@ ResolveStepDamageMessage::
     inc [hl]
     ld a, [wResolveMsgFlags]
     bit 7, a
-    jr z, .call_resolve_step_damage_message_set_sub
+    jr z, .call_resolve_step_damage_message_restart_for
     bit 4, a
     jr z, .read_resolve_msg_target
     ld a, [wResolveMsgActor]
@@ -1212,18 +1212,18 @@ ResolveStepDamageMessage::
 .check_battle_action_id:
     ld a, [wBattleActionId]
     cp ACTION_DC
-    jr z, .call_resolve_step_damage_message_set_sub
+    jr z, .call_resolve_step_damage_message_restart_for
     cp ACTION_D7
     jr nz, .read_temp0
-    farcall ResolveStepDamageMessage_AddAx9ToHL
+    farcall ApplyDamageModifiers
 
 .read_temp0:
     ld a, [wTemp0]
     ld d, a
     farcall ShowBattleText
 
-.call_resolve_step_damage_message_set_sub:
-    call ResolveStepDamageMessage_SetSubPhase3AndRestartResolve
+.call_resolve_step_damage_message_restart_for:
+    call ResolveStepDamageMessage_RestartForTarget
     ld a, [wResolveMsgFlags]
     bit 4, a
     jr nz, .check_battle_action_id2
@@ -1414,7 +1414,7 @@ ResolveStepComputeDamage_RandomInRange::
 
 ; When the message was the target's and there is no follow-up, restarts the resolve at sub-phase 3
 ; and puts back a redirected target (wOriginalTarget) as the target and choice. (C1, E-0357)
-ResolveStepDamageMessage_SetSubPhase3AndRestartResolve::
+ResolveStepDamageMessage_RestartForTarget::
     ld a, [wResolveMsgFlags]
     bit 4, a
     ret nz
@@ -1653,13 +1653,13 @@ ResolveStepDamageMessage_ReadSoundChannelSlots::
     ld d, a
     ld a, [wResolveMsgFlags]
     bit 4, a
-    jr z, .call_resolve_step_damage_message_set_sub
+    jr z, .call_resolve_step_damage_message_restart_for
     ld a, [wResolveMsgActor]
     ld d, a
     farcall ShowBattleText
 
-.call_resolve_step_damage_message_set_sub:
-    call ResolveStepDamageMessage_SetSubPhase3AndRestartResolve
+.call_resolve_step_damage_message_restart_for:
+    call ResolveStepDamageMessage_RestartForTarget
     ret
 
 .call_resolve_step_damage_message_set_slot:
@@ -1698,7 +1698,7 @@ ResolveStepDamageMessage_ReadBattleSubStep::
     dw ResolveStepDamageMessage_ReloadPicture
     dw ResolveStepDamageMessage_ShowHeroWentAway
     dw ResolveStepDamageMessage_BreakSealPray
-    dw ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc
+    dw ResolveStepDamageMessage_NextSubPhase
 
 ; Aftermath, step 0: a target with BSTAT2_WIND_GUARD loses it with battle text $80. (C1, E-0357)
 ResolveStepDamageMessage_ShowTheWindAroundHero::
@@ -2041,7 +2041,7 @@ ResolveStepDamageMessage_BreakSealPray::
 
 ; Aftermath, step 5: the next sub-phase; clears the side flags except bits 0, 1, 4 and 7 and, unless
 ; the skill was DeMagic, sets bit 3 on both sides. (C1, E-0357)
-ResolveStepDamageMessage_WriteBattleResolveStepAndBattleSubStepEtc::
+ResolveStepDamageMessage_NextSubPhase::
     ld hl, wBattleSubPhase
     inc [hl]
     xor a
@@ -2603,7 +2603,7 @@ ActionEffect_ActionD8_ComputeAttackDamage::
 ; Action $D9's damage: from the MP spent (wAllMPSpent x 2) and twice the level of slot E, for the
 ; actor and then for its formation partner (the partner's part doubled), cut to 40% by MegaMagic's
 ; tail. (C1, E-0357)
-ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc::
+ActionEffect_ActionD9_Damage::
     ld a, [wBattleActor]
     push af
     ld a, [wAllMPSpentLo]
@@ -2665,7 +2665,7 @@ ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc::
     ld [wBattleDamageHi], a
     pop af
     ld [wBattleActor], a
-    jp ActionEffect_MegaMagic_CallScaleHLTo40Percent
+    jp ActionEffect_MegaMagic_Damage_CallScaleHLTo40Percent
     db $c9
 
 ; Blaze's damage: the rolled damage scaled by the target's resistance in bits 4-5 of resistance byte
@@ -2845,7 +2845,7 @@ HealTargetHP::
 
 ; MPass: gives the target 15 MP (MPass), 30 (MPassMore) or 80 (MPassMost), at most up to its max,
 ; with the amount in wBattleDamage; returns carry. (C1, E-0357)
-ActionEffect_MPass_AddDoubleAToHL_Bank36::
+ActionEffect_MPass_GiveMP::
     ld a, [wBattleActionId]
     cp SKILL_MPASS
     jr z, .skip
@@ -3804,7 +3804,7 @@ ActionEffect_Transform_SlotSpeciesNibblesD00AD00B::
     ret
 
 ; MegaMagic's damage: twice the MP spent plus twice the actor's level, then cut to 40%. (C1, E-0357)
-ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
+ActionEffect_MegaMagic_Damage::
     ld a, [wAllMPSpentLo]
     ld l, a
     ld a, [wAllMPSpentHi]
@@ -3833,7 +3833,7 @@ ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi::
 ; MegaMagic and action $D9's spread: cuts the damage to 40%, adds a random amount within plus or
 ; minus a quarter of that (10% of the base), then scales by bits 6-7 of resistance byte 4
 ; (alternative table). (C1, E-0357)
-ActionEffect_MegaMagic_CallScaleHLTo40Percent::
+ActionEffect_MegaMagic_Damage_CallScaleHLTo40Percent::
     call ScaleHLTo40Percent
     call ShiftHLRight2
     ld a, l
@@ -4355,7 +4355,7 @@ ActionEffect_UltraDown_ReadBattleTarget::
 ; TatsuCall: puts the side's special monster (wSpecialSlotMonsters, by the side of wLoadSlot) into
 ; slot wLoadSlot: clears its status, marks it in and fills its species, level, HP, MP, ATK, DEF, AGL
 ; and INT from its monster record (INT from record bytes $12-$13) and the rest. (C1, E-0357)
-ActionEffect_TatsuCall_AddAx9ToHL::
+ActionEffect_TatsuCall_PutMonsterIn::
     ld a, [wLoadSlot]
     ld hl, wBattleStatus
     call AddAx9ToHL
@@ -4395,7 +4395,7 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld a, [wRecordBufferData + $7]
     ld c, a
     ld hl, wBattleLevel
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld a, [wRecordBufferData + $8]
     ld c, a
     ld a, [wRecordBufferData + $9]
@@ -4450,25 +4450,25 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld a, [wRecordBufferData + $14]
     ld c, a
     ld hl, wSlotPersonalityHi
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld a, [wRecordBufferData + $15]
     ld c, a
     ld hl, wSlotPersonalityLo
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld a, [wRecordBufferData + $16]
     ld c, a
     ld hl, wSlotPersonalityMid
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld a, [wRecordBufferData + $17]
     ld c, a
     ld hl, wSlotTrait
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld c, $00
     ld hl, wSlotBodyFlags
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld c, $00
     ld hl, wSlotNameSuffix
-    call ActionEffect_TatsuCall_ReadLoadSlot
+    call ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot
     ld a, [wLoadSlot]
     ld c, a
     farcall SetSlotAIModeFromINT
@@ -4509,12 +4509,12 @@ ActionEffect_TatsuCall_AddAx9ToHL::
     ld bc, $0004
     call CopyBytes
     ld hl, wTemp0
-    call ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc
+    call ActionEffect_TatsuCall_CopySkills
     ret
 
 ; Copies up to four skills from HL into slot wLoadSlot's skill list, each with the high nibble of
 ; its record byte 3, stopping at $FF. (C1, E-0357)
-ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc::
+ActionEffect_TatsuCall_CopySkills::
     ld b, $04
     ld a, [wLoadSlot]
     ld de, wBattleSkills
@@ -4563,7 +4563,7 @@ ActionEffect_TatsuCall_WriteRecordBufferAndBattleArg0Etc::
     ret
 
 ; Stores C at entry wLoadSlot of the byte table at HL. (C1, E-0357)
-ActionEffect_TatsuCall_ReadLoadSlot::
+ActionEffect_TatsuCall_PutMonsterIn_ReadLoadSlot::
     ld a, [wLoadSlot]
     add_a_to_hl
     ld [hl], c
@@ -4623,7 +4623,7 @@ ActionEffect_MouthShut_HLToBattleStatus8EntryOfBattleTarget_Bank36::
 
 ; CallHelp's damage: twice the actor's level (a foe outside link mode 1: 1.5 times), scaled by bits
 ; 4-5 of resistance byte 6. (C1, E-0357)
-ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi::
+ActionEffect_CallHelp_Damage::
     ld a, [wBattleActor]
     ld hl, wBattleLevel
     add_a_to_hl
@@ -4732,7 +4732,7 @@ ActionEffect_BiAttack_ShiftHLRight1::
     ret
 
 ; Meditate: heals the actor 500 HP, at most to its max; NC when its HP is already full. (C1, E-0357)
-ActionEffect_Meditate_AddDoubleAToHL_Bank36::
+ActionEffect_Meditate_Heal::
     ld a, [wBattleActor]
     ld hl, wBattleMaxHP
     call AddDoubleAToHL_Bank36
@@ -6706,7 +6706,7 @@ ActionEffect_ActionD8::
 ; for action(s) 217; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_ActionD9::
-    call ActionEffect_ActionD9_WriteBattleDamageLoAndBattleDamageHiEtc
+    call ActionEffect_ActionD9_Damage
     farcall RunA3ActorFormationSlotToTemp0AndMarkSlotMarks3
     jp StoreHitMessage_Bank36
 
@@ -7209,8 +7209,8 @@ ActionEffect_Heal::
     jp SetSubPhase2AndResetResolveStep_CheckOriginalTarget
 
 ; MPass (MPassMore, MPassMost): an absent target ends the sub-phase or has no effect; at full MP
-; 'But nothing happened!'; otherwise restores MP (ActionEffect_MPass_AddDoubleAToHL_Bank36) with
-; '<name>'s MP was restored!' ($C3). (C1, E-0357)
+; 'But nothing happened!'; otherwise restores MP (ActionEffect_MPass_GiveMP) with '<name>'s MP was
+; restored!' ($C3). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 27 MPass, 28 MPassmore, 29 MPassmost; ids below 175 are skills
 ; named from StringTable_SkillNames (E-0084)
@@ -7234,7 +7234,7 @@ ActionEffect_MPass::
     deref_hl
     call CompareHLToBC
     jr z, .skip
-    call ActionEffect_MPass_AddDoubleAToHL_Bank36
+    call ActionEffect_MPass_GiveMP
     jr nc, .skip
     ld l, $c3
     lb bc, $40, $90
@@ -7282,7 +7282,7 @@ ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
     ld [hli], a
     ld [hl], d
     call TargetOnLocalSide_Bank36
-    jr c, .call_action_effect_vivify_add_ax9_to_hl
+    jr c, .call_bring_target_back
     ld a, [wBattleTarget]
     ld b, a
     add a
@@ -7294,10 +7294,10 @@ ActionEffect_Vivify_CallAddDoubleAToHL_Bank36::
 
 .call_load_battle_monster_picture_for_slot_b:
     call LoadBattleMonsterPictureForSlotB
-    jr .call_action_effect_vivify_add_ax9_to_hl
+    jr .call_bring_target_back
 
-.call_action_effect_vivify_add_ax9_to_hl:
-    call ActionEffect_Vivify_AddAx9ToHL
+.call_bring_target_back:
+    call BringTargetBack
     ld l, $50
     lb bc, $40, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -7831,7 +7831,7 @@ ActionEffect_PanicAll::
 
 ; Ironize: turns to iron (status 5 | $C0, the Ironize field at 3) only the target when it is a foe
 ; outside link mode 1, otherwise every present slot of the target's side; message $46 or $47 by
-; ActionEffect_Ironize_ReadLinkModeAndBattleTarget. (C1, E-0357)
+; ActionEffect_Ironize_Text. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 53 Ironize, 174 Ironize; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -7871,7 +7871,7 @@ ActionEffect_Ironize::
     inc c
     dec b
     jr nz, .loop
-    farcall ActionEffect_Ironize_ReadLinkModeAndBattleTarget
+    farcall ActionEffect_Ironize_Text
     ld l, d
     lb bc, $00, $90
     jp ClearDamageAndStoreResolveMsgFlags_Bank36
@@ -8104,7 +8104,7 @@ ActionEffect_MegaMagic::
     ld a, l
     or h
     jp z, ClearDamageAndStoreResolveMsgFlags_Bank36_Skip2
-    call ActionEffect_MegaMagic_WriteBattleDamageLoAndBattleDamageHi
+    call ActionEffect_MegaMagic_Damage
     jp ActionEffect_ActionCF_Skip
 
 ; BigBang: skill damage scaled by Blaze resistance with the alternative table; the damage message.
@@ -8181,8 +8181,8 @@ ActionEffect_Watershot::
 
 ; CallHelp: the first time, on a roll of $80 or more sets BSTAT6_CALLED_HELP and shows 'Help arrived
 ; from seemingly nowhere!' at once (sub-phase 3, step 0), otherwise 'But the call went unheard!'
-; ($69); once help has come, deals the helpers' damage
-; (ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi) with the hit message. (C1, E-0357)
+; ($69); once help has come, deals the helpers' damage (ActionEffect_CallHelp_Damage) with the hit
+; message. (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 78 CallHelp, 79 YellHelp; ids below 175 are skills named from
 ; StringTable_SkillNames (E-0084)
@@ -8191,7 +8191,7 @@ ActionEffect_CallHelp::
     ld hl, wBattleStatus6
     call AddAx9ToHL
     bit BSTAT6_CALLED_HELP, [hl]
-    jr nz, .call_action_effect_call_help_write_battle
+    jr nz, .call_action_effect_call_help_damage
     push hl
     call AdvanceRandom
     pop hl
@@ -8212,8 +8212,8 @@ ActionEffect_CallHelp::
     lb bc, $00, $80
     jp ClearDamageAndStoreResolveMsgFlags_Bank36_SetResolveMsgTarget
 
-.call_action_effect_call_help_write_battle:
-    call ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi
+.call_action_effect_call_help_damage:
+    call ActionEffect_CallHelp_Damage
     jp StoreHitMessage_Bank36
 
 ; effect routine reached through ActionEffectTable (ActionEffectTable, indexed by wBattleActionId)
@@ -8917,7 +8917,7 @@ ActionEffect_DeMagic::
 ; TatsuCall (DiagoCall, SamsiCall, BazooCall): once per side (side flag bit 2; later calls 'But
 ; nothing happened!'); always with personality act bit 2, otherwise on a roll below $C0; monster
 ; action - 7 joins in the side's fourth slot (wSpecialSlotMonsters,
-; ActionEffect_TatsuCall_AddAx9ToHL), becomes the target, and '<name> joined the battle!' ($61); a
+; ActionEffect_TatsuCall_PutMonsterIn), becomes the target, and '<name> joined the battle!' ($61); a
 ; failed roll gives 'But the prayer went unanswered!' ($72). (C1, E-0357)
 ; effect routine reached through DispatchActionEffectTable (ActionEffectTable, indexed by
 ; wBattleActionId) for action(s) 133 TatsuCall, 134 DiagoCall, 135 SamsiCall, 136 BazooCall; ids
@@ -8967,7 +8967,7 @@ ActionEffect_TatsuCall::
     ld [hl], c
     inc hl
     ld [hl], b
-    call ActionEffect_TatsuCall_AddAx9ToHL
+    call ActionEffect_TatsuCall_PutMonsterIn
     ld a, [wLoadSlot]
     ld [wBattleTarget], a
     ld l, $61
@@ -9508,7 +9508,7 @@ ActionEffect_Imitate::
 ; for action(s) 159 Meditate; the misaligned decoding before E-0126 hid this entry; the body is not
 ; interpreted (E-0126)
 ActionEffect_Meditate::
-    call ActionEffect_Meditate_AddDoubleAToHL_Bank36
+    call ActionEffect_Meditate_Heal
     jr nc, .skip
     ld l, $37
     lb bc, $40, $90
@@ -10268,7 +10268,7 @@ ClearTargetStatus5Bits23And7Bits012::
 
 ; Brings the target back: marks it in, clears its nine status bytes and marks it done (3). (C1,
 ; E-0357)
-ActionEffect_Vivify_AddAx9ToHL::
+BringTargetBack::
     ld a, [wBattleTarget]
     ld b, a
     ld hl, wBattleSlotOut
@@ -10352,8 +10352,8 @@ EffectHandlerTable::
     dw ActionEffect_RockThrow_RollSkillDamageFromRecord ; entry 4
     dw ActionEffect_Watershot_RollSkillDamageFromRecord ; entry 5
     dw ActionEffect_Watershot_RollSkillDamageFromRecord ; entry 6
-    dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 7
-    dw ActionEffect_CallHelp_WriteBattleDamageLoAndBattleDamageHi ; entry 8
+    dw ActionEffect_CallHelp_Damage ; entry 7
+    dw ActionEffect_CallHelp_Damage ; entry 8
     dw AttackDamageScaledByBlazeResistance ; entry 9
     dw AttackDamageScaledByVacuumResistance ; entry 10
     dw AttackDamageScaledByBoltResistance ; entry 11

@@ -1984,7 +1984,7 @@ RenameMenu::
     dw RenameMenu_DrawFrame
     dw RenameMenu_ReadAnswer
     dw RenameMenu_DrawNameList
-    dw RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc
+    dw RenameMenu_PartyCursorStep
     dw RenameMenu_EnterName
     dw RenameMenu_PickMonster
 
@@ -2152,10 +2152,9 @@ RenameMenu_DrawNameList_DrawList::
     ld [wScreenState], a
     ret
 
-; Renaming, state 4: the party cursor (RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc). (C1,
-; E-0357)
-RenameMenu_ToRenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
-    call RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc
+; Renaming, state 4: the party cursor (RenameMenu_PartyCursor). (C1, E-0357)
+RenameMenu_PartyCursorStep::
+    call RenameMenu_PartyCursor
     ret
 
 ; Renaming, state 5: runs the name entry for the chosen party member (mode 3, with its sex, family
@@ -2348,22 +2347,22 @@ RenameMenu_PickMonster_ReloadSprites::
 
 ; The renaming party cursor: Up/Down move over the party (wrapping), A picks the member, B cancels;
 ; the cursor blinks. (C1, E-0357)
-RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
+RenameMenu_PartyCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_rename_menu_read_grid_cursor_x_2
+    jr nz, .call_rename_menu_party_cursor_read_grid
     bit 7, a
-    jr nz, .call_rename_menu_read_grid_cursor_x_22
+    jr nz, .call_rename_menu_party_cursor_read_grid2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .set_two_choice_cursor_to_01
-    call RenameMenu_WriteGridCursorY
+    call RenameMenu_PartyCursor_WriteGridCursorY
     ret
 
-.call_rename_menu_read_grid_cursor_x_2:
-    call RenameMenu_ReadGridCursorX_2
+.call_rename_menu_party_cursor_read_grid:
+    call RenameMenu_PartyCursor_ReadGridCursorX_2
     ld a, [wPartyCount]
     cp $02
     jr c, .check_party_count
@@ -2375,7 +2374,7 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld a, [wPartyCount]
     dec a
     ld [wGridCursorX], a
-    call RenameMenu_WriteGridCursorY
+    call RenameMenu_PartyCursor_WriteGridCursorY
     ret
 
 .set_grid_cursor_x:
@@ -2387,13 +2386,13 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ld [wListCursor], a
     ld [wChoiceCursor], a
     ld [wListPageIndex], a
-    call RenameMenu_ReadGridCursorX
+    call RenameMenu_PartyCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_rename_menu_read_grid_cursor_x_22:
-    call RenameMenu_ReadGridCursorX_2
+.call_rename_menu_party_cursor_read_grid2:
+    call RenameMenu_PartyCursor_ReadGridCursorX_2
     ld a, [wPartyCount]
     dec a
     ld b, a
@@ -2402,7 +2401,7 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     jr c, .skip
     xor a
     ld [wGridCursorX], a
-    call RenameMenu_WriteGridCursorY
+    call RenameMenu_PartyCursor_WriteGridCursorY
     ret
 
 .skip:
@@ -2412,7 +2411,7 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call RenameMenu_BGMapAddressAtScroll_Bank0D
+    call RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenState]
@@ -2444,40 +2443,40 @@ RenameMenu_WriteTwoChoiceCursorAndScreenStateEtc::
     ret
 
 ; Blinks the renaming cursor: 16 frames shown, 8 hidden. (C1, E-0357)
-RenameMenu_WriteGridCursorY::
+RenameMenu_PartyCursor_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, RenameMenu_ReadGridCursorX
+    jr c, RenameMenu_PartyCursor_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, RenameMenu_ReadGridCursorX
+    jr c, RenameMenu_PartyCursor_ReadGridCursorX
     cp $18
-    jr c, RenameMenu_ReadGridCursorX_2
+    jr c, RenameMenu_PartyCursor_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
 ; Draws the renaming cursor (tile $BB). (C1, E-0357)
-RenameMenu_ReadGridCursorX::
+RenameMenu_PartyCursor_ReadGridCursorX::
     ld b, $bb
-    jr RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
+    jr RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 
 ; Hides the renaming cursor (tile $C3). (C1, E-0357)
-RenameMenu_ReadGridCursorX_2::
+RenameMenu_PartyCursor_ReadGridCursorX_2::
     ld b, $c3
-    jr RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
+    jr RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_ReadGridCursorX
 
 ; Marks the chosen party member on the renaming list (tile $BC). (C1, E-0357)
-RenameMenu_BGMapAddressAtScroll_Bank0D::
+RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D::
     ld b, $bc
 
-; Writes tile B at the renaming cursor position (RenameMenu_BGMapAddressAtScroll_Bank0D_Data by
-; wGridCursorX). (C1, E-0357)
-RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX::
+; Writes tile B at the renaming cursor position
+; (RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_Data by wGridCursorX). (C1, E-0357)
+RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_ReadGridCursorX::
     ld a, [wGridCursorX]
     sla a
-    ld hl, RenameMenu_BGMapAddressAtScroll_Bank0D_Data
+    ld hl, RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -2495,7 +2494,7 @@ RenameMenu_BGMapAddressAtScroll_Bank0D_ReadGridCursorX::
     ret
 
 ; data read by RenameMenu (6 bytes) (E-0347)
-RenameMenu_BGMapAddressAtScroll_Bank0D_Data::
+RenameMenu_PartyCursor_BGMapAddressAtScroll_Bank0D_Data::
     db $61, $00, $a1, $00, $e1, $00
 
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
@@ -2920,8 +2919,8 @@ KeyAppraisalMenu_ChooseKey_RedrawScreen::
     ret
 
 ; Choosing a key, step 5: the paged key cursor: Select copies a key list back
-; (KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList); page changes redraw; A picks the
-; key and asks to confirm the price; B cancels. (C1, E-0357)
+; (KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList); page changes redraw; A picks the key and
+; asks to confirm the price; B cancels. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_ListCursor::
     ld a, [wJoypadPressedRepeat]
     bit 2, a
@@ -2943,7 +2942,7 @@ KeyAppraisalMenu_ChooseKey_ListCursor::
     ret
 
 .call_key_appraisal_menu_choose_key_list:
-    farcall KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList
+    farcall KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList
     ret
 
 .read_screen_step:
@@ -3006,7 +3005,7 @@ KeyAppraisalMenu_ChooseKey_ListCursor::
     call StoreBAtWordTableEntry_Bank0D
     ld de, wTextBuf0
     ld a, $01
-    call KeyAppraisalMenu_ChooseKey_WriteDigits
+    call KeyAppraisalMenu_ChooseKey_KeyAppraisalMenu_KeyPrice
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -3070,7 +3069,7 @@ KeyAppraisalMenu_ChooseKey_ConfirmPrice::
     cp $01
     jr z, .loop
     xor a
-    call KeyAppraisalMenu_ChooseKey_WriteDigits
+    call KeyAppraisalMenu_ChooseKey_KeyAppraisalMenu_KeyPrice
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -3162,7 +3161,7 @@ KeyAppraisalMenu_ChooseKey_ShowSaveInfo::
 ; Choosing a key, step 11: in link mode draws the bottom box; then shows message $0B and, after it,
 ; moves on. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_ShowLinkMessage::
-    call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
+    call KeyAppraisalMenu_DrawCompletionMark
     ld a, [wScreenSubStep]
     cp $02
     jr z, .set_string_index_to_0B
@@ -3207,7 +3206,7 @@ KeyAppraisalMenu_ChooseKey_ShowLinkMessage::
 
 ; Choosing a key, step 6: draws the yes/no box (sound $6C) and moves on. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_DrawYesNo::
-    call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
+    call KeyAppraisalMenu_DrawCompletionMark
     ld de, KeyAppraisalMenu_DrawGoldBox_DrawYesNo_TileRect
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
@@ -3252,7 +3251,7 @@ KeyAppraisalMenu_ChooseKey_AskSave::
     jr z, .loop
     cp $ff
     jr z, .check_two_choice_cursor
-    call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
+    call KeyAppraisalMenu_DrawCompletionMark
     ret
 
 .loop:
@@ -3266,7 +3265,7 @@ KeyAppraisalMenu_ChooseKey_AskSave::
     ld a, [wTwoChoiceCursor]
     cp $01
     jr z, .loop
-    call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
+    call KeyAppraisalMenu_DrawCompletionMark
     xor a
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -3284,7 +3283,7 @@ KeyAppraisalMenu_ChooseKey_AskSave::
 ; it appraised, as read here) and pays the price (10 * (level + 1)); on later calls saves the game
 ; in stages (RunSaveGameSteps_2); when done sets wGreatLogEventFlag and moves on. (C1, E-0357)
 KeyAppraisalMenu_ChooseKey_PayAndAppraise::
-    call KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB
+    call KeyAppraisalMenu_DrawCompletionMark
     ld a, [wScreenSubStep]
     and a
     jr z, .clear_save_step
@@ -3329,7 +3328,7 @@ KeyAppraisalMenu_ChooseKey_PayAndAppraise::
     xor a
     ld [hl], a
     xor a
-    call KeyAppraisalMenu_ChooseKey_WriteDigits
+    call KeyAppraisalMenu_ChooseKey_KeyAppraisalMenu_KeyPrice
     ld a, l
     ld [wArg1], a
     ld a, h
@@ -3885,7 +3884,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E::
     cp $8e
     jr z, .check_glyph_list_start
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart
+    call DrawNameGlyph
     call CopyFromBankWaitVRAM
     pop bc
     jr .check_glyph_list_start2
@@ -3897,7 +3896,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E::
     ld [wGlyphListStart], a
     pop af
     push bc
-    call DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart
+    call DrawNameGlyph
     call OrFromBankWaitVRAM
     pop bc
 
@@ -3920,7 +3919,7 @@ DrawNameGlyphBufGlyphsOverlaying8DAnd8E::
 
 ; Draws one glyph of wNameGlyphBuf: copies its font tile (GlyphFont + 16 * glyph) to the destination
 ; for position C from one of four tables (GlyphTileDestTable0-3, by wArg5). (C1, E-0357)
-DrawNameGlyphBufGlyphsOverlaying8DAnd8E_ReadArg5AndGlyphListStart::
+DrawNameGlyph::
     ld e, a
     ld d, $00
     sla e
@@ -4138,7 +4137,7 @@ BuildKeyListIndexListEntries::
     ret
 
 ; The appraisal price of the key under the cursor: 10 * (its level byte + 1). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor::
+KeyAppraisalMenu_KeyPrice::
     ld hl, wListEntries
     ld a, [wListPageIndex]
     add a
@@ -4162,14 +4161,14 @@ KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor::
 
 ; With A = 0 returns the price in HL; otherwise also writes it as digits (without leading zeros) to
 ; DE, ending with $F0. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteDigits::
+KeyAppraisalMenu_ChooseKey_KeyAppraisalMenu_KeyPrice::
     and a
-    jr nz, .call_key_appraisal_menu_choose_key_read_list
-    call KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor
+    jr nz, .call_key_appraisal_menu_key_price
+    call KeyAppraisalMenu_KeyPrice
     ret
 
-.call_key_appraisal_menu_choose_key_read_list:
-    call KeyAppraisalMenu_ChooseKey_ReadListPageIndexAndListCursor
+.call_key_appraisal_menu_key_price:
+    call KeyAppraisalMenu_KeyPrice
     push de
     ld a, l
     ld [wDigits], a
@@ -4209,7 +4208,7 @@ KeyAppraisalMenu_ChooseKey_WriteDigits::
 
 ; Draws the save's completion mark during the key appraisal (sprite part $90 at ($88, $28)) when the
 ; saved game has the flag at sSavedPlayerName + $22B and the step is past $0A. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_WriteRAMG2AndRAMB::
+KeyAppraisalMenu_DrawCompletionMark::
     ld a, $0a
     ld [rRAMG2], a
     ld a, $01
@@ -4342,14 +4341,14 @@ MedalPrizeMenu::
     jumptable
     dw MedalPrizeMenu_Init
     dw MedalPrizeMenu_CountItem2C_2
-    dw MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc
+    dw MedalPrizeMenu_CheckMedals
     dw MedalPrizeMenu_DrawCountBox
     dw MedalPrizeMenu_ReadAnswer
     dw MedalPrizeMenu_ChoosePrize
 
 ; Medal prizes, state 2: with fewer than 3 tiny medals ends with the refusal; otherwise writes the
 ; medal count as digits (leading zeros dropped) to the text buffer for the message. (C1, E-0357)
-MedalPrizeMenu_WriteScreenStateAndTwoChoiceCursorEtc::
+MedalPrizeMenu_CheckMedals::
     ld a, [wTinyMedalsHi]
     and a
     jr nz, .read_tiny_medals_lo
@@ -4767,15 +4766,15 @@ MedalPrizeMenu_ChoosePrize::
     dw MedalPrizeMenu_ChoosePrize_DrawFrame
     dw MedalPrizeMenu_ChoosePrize_ClearTiles
     dw MedalPrizeMenu_ChoosePrize_DrawListBox
-    dw MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep
+    dw MedalPrizeMenu_ChoosePrize_DrawPage
     dw MedalPrizeMenu_ChoosePrize_RedrawScreen
     dw MedalPrizeMenu_ChoosePrize_ShowDescription
     dw MedalPrizeMenu_ChoosePrize_WaitDescription
-    dw MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc
+    dw MedalPrizeMenu_ChoosePrize_ReplayDirection
     dw MedalPrizeMenu_ChoosePrize_DrawYesNo
     dw MedalPrizeMenu_ChoosePrize_ConfirmPrice
     dw MedalPrizeMenu_ChoosePrize_EraseMarks
-    dw MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc
+    dw MedalPrizeMenu_RedrawListBox
     dw MedalPrizeMenu_ChoosePrize_CheckRoom
     dw MedalPrizeMenu_ChoosePrize_PayMedals
     dw MedalPrizeMenu_ChoosePrize_GivePrize
@@ -4865,7 +4864,7 @@ MedalPrizeMenu_ChoosePrize_DrawListBox::
     ld a, [wListPages]
     cp $02
     jr c, .read_list_cursor
-    call MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D
+    call MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D
 
 .read_list_cursor:
     ld a, [wListCursor]
@@ -4882,11 +4881,11 @@ MedalPrizeMenu_ChoosePrize_DrawListBox::
     ret
 
 ; Choosing a prize, step 3: draws the prize names and their prices for the page. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteArg5AndScreenStep::
+MedalPrizeMenu_ChoosePrize_DrawPage::
     ld a, $01
     ld [wArg5], a
-    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc
-    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc
+    call MedalPrizeMenu_DrawPrizeNames
+    call MedalPrizeMenu_DrawPrices
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -5067,7 +5066,7 @@ MedalPrizeMenu_ChoosePrize_WaitDescription::
 ; Choosing a prize, step 7: replays the remembered direction into the paged list cursor
 ; (UpdatePagedListCursor) and acts on the result: page or row changes redraw, A asks to confirm, B
 ; ends. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
+MedalPrizeMenu_ChoosePrize_ReplayDirection::
     ld a, [wSharedMenuWork]
     and a
     jr z, .set_menu_input_result_to_04
@@ -5171,7 +5170,7 @@ MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc::
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
+    ld de, MedalPrizeMenu_ChoosePrize_ReplayDirection_Data
     add e
     ld e, a
     jr nc, .skip
@@ -5231,8 +5230,8 @@ MedalPrizeMenu_ChoosePrize_DrawYesNo::
     ret
 
 ; Choosing a prize, step 9: the confirmation: yes checks the medals against the prize's price
-; (MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data) and trades them;
-; no redraws the list. (C1, E-0357)
+; (MedalPrizeMenu_ChoosePrize_ReplayDirection_Data) and trades them; no redraws the list. (C1,
+; E-0357)
 MedalPrizeMenu_ChoosePrize_ConfirmPrice::
     farcall UpdateTwoChoiceCursor_Bank1D
     ld a, [wMenuInputResult]
@@ -5245,7 +5244,7 @@ MedalPrizeMenu_ChoosePrize_ConfirmPrice::
     ret
 
 .loop:
-    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D
+    call MedalPrizeMenu_DrawPrices_2
     ld a, $01
     ld [wTwoChoiceCursor], a
     ld a, [wScreenStep]
@@ -5267,7 +5266,7 @@ MedalPrizeMenu_ChoosePrize_ConfirmPrice::
     ld a, [wArg6]
     ld l, a
     ld a, [hl]
-    ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
+    ld de, MedalPrizeMenu_ChoosePrize_ReplayDirection_Data
     add e
     ld e, a
     jr nc, .check_tiny_medals_hi
@@ -5310,29 +5309,29 @@ MedalPrizeMenu_ChoosePrize_ConfirmPrice::
 
 ; Redraws the prize list box (by page and game completion), the prices and the page indicator. (C1,
 ; E-0357)
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D::
+MedalPrizeMenu_DrawPrices_2::
     ld a, [wListPageIndex]
     and a
     jr nz, .check_game_completed
-    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Data1
+    ld de, MedalPrizeMenu_DrawPrices_Data1
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .loop:
-    ld de, MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Data2
+    ld de, MedalPrizeMenu_DrawPrices_Data2
     jr .call_copy_rect_to20_byte_rows_bank0_d
 
 .check_game_completed:
     ld a, [wGameCompleted]
     and a
     jr nz, .loop
-    ld de, MedalPrizeMenu_ChoosePrize_TileRect
+    ld de, MedalPrizeMenu_DrawPrices_2_TileRect
 
 .call_copy_rect_to20_byte_rows_bank0_d:
     ld hl, wWindowTileBuffer + $112
     lb bc, $06, $05
     call CopyRectTo20ByteRows_Bank0D
-    call MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc
-    call MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D
+    call MedalPrizeMenu_DrawPrices
+    call MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D
     call BGMapAddressAtScroll_Bank0D
     lb bc, $14, $0d
     ld de, $01cc
@@ -5358,8 +5357,8 @@ MedalPrizeMenu_ChoosePrize_EraseMarks::
     ret
 
 ; Choosing a prize, step 11: redraws the list box and steps back one step. (C1, E-0357)
-MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc::
-    call MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D
+MedalPrizeMenu_RedrawListBox::
+    call MedalPrizeMenu_DrawPrices_2
     ld a, [wScreenStep]
     dec a
     ld [wScreenStep], a
@@ -5370,9 +5369,8 @@ MedalPrizeMenu_WriteScreenStepAndScriptCommandTypeEtc::
     ret
 
 ; Choosing a prize, step 12: checks there is room for the prize: an item prize (entry 0) needs a
-; free inventory slot, a monster prize a free SRAM record slot
-; (MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB); without room it steps back with the matching
-; refusal (1 or 3). (C1, E-0357)
+; free inventory slot, a monster prize a free SRAM record slot (MedalPrizeMenu_FindFreeRecord);
+; without room it steps back with the matching refusal (1 or 3). (C1, E-0357)
 MedalPrizeMenu_ChoosePrize_CheckRoom::
     farcall SetArg5ToListEntriesCell4
     ld a, [wArg5]
@@ -5382,7 +5380,7 @@ MedalPrizeMenu_ChoosePrize_CheckRoom::
     ld a, [hl]
     and a
     jr z, MedalPrizeMenu_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
-    call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
+    call MedalPrizeMenu_FindFreeRecord
     cp $ff
     jr nz, MedalPrizeMenu_ChoosePrize_CheckRoom_Loop
     ld a, $03
@@ -5457,7 +5455,7 @@ MedalPrizeMenu_ChoosePrize_PayMedals::
     ld l, a
     ld a, [hl]
     push hl
-    ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
+    ld de, MedalPrizeMenu_ChoosePrize_ReplayDirection_Data
     add e
     ld e, a
     jr nc, .read_tiny_medals_lo
@@ -5510,7 +5508,7 @@ MedalPrizeMenu_ChoosePrize_GivePrize::
     push af
     and a
     jr z, .call_medal_prize_menu_choose_prize_inventory
-    call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
+    call MedalPrizeMenu_FindFreeRecord
     call MedalPrizeMenu_ChoosePrize_GivePrize_SetArg5ToListEntriesCell4
     jr .restore
 
@@ -5525,7 +5523,7 @@ MedalPrizeMenu_ChoosePrize_GivePrize::
     pop af
     and a
     jr z, MedalPrizeMenu_ChoosePrize_CallMedalPrizeMenu_ChoosePrize_InventoryHasF
-    call MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB
+    call MedalPrizeMenu_FindFreeRecord
     cp $ff
     jr nz, MedalPrizeMenu_ChoosePrize_GivePrize_Loop
     ld a, $03
@@ -5803,10 +5801,9 @@ WriteUnknownNamePlaceholder_Bank0D_Loop::
     jr nz, WriteUnknownNamePlaceholder_Bank0D_Loop
     ret
 
-; Finds a free SRAM record slot within the farm's capacity
-; (MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Data by wFarmLevel): returns A = 0 with HL at it, or
-; $FF when every slot is in use. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
+; Finds a free SRAM record slot within the farm's capacity (MedalPrizeMenu_FindFreeRecord_Data by
+; wFarmLevel): returns A = 0 with HL at it, or $FF when every slot is in use. (C1, E-0357)
+MedalPrizeMenu_FindFreeRecord::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -5814,7 +5811,7 @@ MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
     ld hl, sRecords
     ld c, $00
     ld a, [wFarmLevel]
-    ld de, MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Data
+    ld de, MedalPrizeMenu_FindFreeRecord_Data
     add e
     ld e, a
     jr nc, .skip
@@ -5848,7 +5845,7 @@ MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB::
     ret
 
 ; data read by MedalPrizeMenu (3 bytes) (E-0347)
-MedalPrizeMenu_ChoosePrize_WriteRAMG2AndRAMB_Data::
+MedalPrizeMenu_FindFreeRecord_Data::
     db $0a, $14, $1e
 
 ; A = 0 when one of the 24 inventory slots is empty, else $FF (E-0305)
@@ -5898,11 +5895,11 @@ KeyListHasFreeSlot::
 
 ; Draws the medal prices of the prizes on the current page: four on the first page, three or fewer
 ; on the second (by game completion), each as up to three digits. (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
+MedalPrizeMenu_DrawPrices::
     ld a, [wListPageIndex]
     add a
     add a
-    ld de, MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data
+    ld de, MedalPrizeMenu_ChoosePrize_ReplayDirection_Data
     add e
     ld e, a
     jr nc, .check_list_page_index
@@ -5940,7 +5937,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
     ld h, $00
     call HLToDecimalDigits
     farcall BlankLeadingZeroDigits_F_Bank15
-    ld de, MedalPrizeMenu_ChoosePrize_Data
+    ld de, MedalPrizeMenu_DrawPrices_Data
     pop bc
     push bc
     ld a, c
@@ -5972,7 +5969,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndGameCompletedEtc::
     ret
 
 ; data read by MedalPrizeMenu (8 bytes) (E-0347)
-MedalPrizeMenu_ChoosePrize_Data::
+MedalPrizeMenu_DrawPrices_Data::
     db $d7, $c3, $ff, $c3, $27, $c4, $4f, $c4
 
 ; writes B at BGMapAddressAtScroll_Bank0D + the offset from
@@ -6065,7 +6062,7 @@ MedalPrizeMenu_ChoosePrize_DrawFrame_WriteListCount::
 
 ; Draws the names of the prizes on the current page from their strings (category from
 ; BeginStringDisplay_Bank0D_StringCategories, index $28 + entry). (C1, E-0357)
-MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc::
+MedalPrizeMenu_DrawPrizeNames::
     ld hl, wListEntries
     ld a, [wListPageIndex]
     sla a
@@ -6151,7 +6148,7 @@ MedalPrizeMenu_ChoosePrize_ReadListPageIndexAndListLastRowEtc::
 
 ; Draws the prize list's page indicator ('page/pages' on screen and in the window buffer). (C1,
 ; E-0357)
-MedalPrizeMenu_ChoosePrize_DrawC5BEC6AtScrollOffsetDE_Bank0D::
+MedalPrizeMenu_DrawC5BEC6AtScrollOffsetDE_Bank0D::
     ld de, $018e
     call DrawC5BEC6AtScrollOffsetDE_Bank0D
     ld hl, wWindowTileBuffer + $162
@@ -6218,16 +6215,16 @@ MedalPrizeMenu_ChoosePrize_DrawListBox_Data2::
     ds $14, $c3
     db $d9, $da, $db, $dc, $dd, $de, $f9, $fa, $fb, $c3, $c3, $c3, $c3, $c3
 
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Data1::
+MedalPrizeMenu_DrawPrices_Data1::
     db $c3, $c3, $c3, $c3, $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3
     db $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $b4, $b4, $b4, $b4, $b4, $b5
 
-MedalPrizeMenu_ChoosePrize_CopyRectTo20ByteRows_Bank0D_Data2::
+MedalPrizeMenu_DrawPrices_Data2::
     db $c3, $c3, $c3, $c3, $c3, $b7, $fd, $c3, $c3, $c3, $c3, $b7, $c3, $c3, $c3, $c3
     db $c3, $b7, $c3, $c3, $c3, $c3, $c3, $b7, $b4, $b4, $b4, $b4, $b4, $b5
 
 ; record: 6 x 5 tiles, one row per line
-MedalPrizeMenu_ChoosePrize_TileRect::
+MedalPrizeMenu_DrawPrices_2_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 2
@@ -6237,7 +6234,7 @@ MedalPrizeMenu_ChoosePrize_TileRect::
 MedalPrizeMenu_ChoosePrize_DrawListBox_Data3::
     db $cc, $c3, $f4, $c3, $1c, $c4, $44, $c4
 
-MedalPrizeMenu_ChoosePrize_WriteJoypadPressedRepeatAndMenuInputResultEtc_Data::
+MedalPrizeMenu_ChoosePrize_ReplayDirection_Data::
     db $03, $03, $04, $04, $05, $05, $0a
 
 ; far-calls CloseMenuE9 (E-0119)
@@ -6313,7 +6310,7 @@ NpcBreedMenu_ChooseAndBreed::
     dw NpcBreedMenu_ChooseAndBreed_ComputeChild
     dw NpcBreedMenu_ChooseAndBreed_DrawYesNo
     dw NpcBreedMenu_ChooseAndBreed_ReadAnswer
-    dw NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc
+    dw NpcBreedMenu_ChooseAndBreed_ReplaceParent
     dw NpcBreedMenu_ToRedrawFullScreenBoxes_0CAndStep
     dw NpcBreedMenu_ChooseAndBreed_StartResultTalk
     dw NpcBreedMenu_ToRestorePlayerPositionState_Bank0DAndStep
@@ -6646,7 +6643,7 @@ NpcBreedMenu_ChooseAndBreed_ReadAnswer::
 
 ; Breeding, step 23: deletes the parent's record (DeleteSRAMRecordAndCompact), writes the child's
 ; record in its place and saves; the next call moves on. (C1, E-0357)
-NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc::
+NpcBreedMenu_ChooseAndBreed_ReplaceParent::
     ld a, [wScreenSubStep]
     and a
     jr z, .read_selected_record
@@ -6714,7 +6711,7 @@ NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc::
     jr nz, .loop2
     ld a, [wScreenTableIndex]
     sla a
-    ld hl, NpcBreedMenu_ChooseAndBreed_Data
+    ld hl, NpcBreedMenu_ChooseAndBreed_ReplaceParent_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -6728,7 +6725,7 @@ NpcBreedMenu_ChooseAndBreed_WriteTwoChoiceCursorAndScreenSubStepEtc::
     ret
 
 ; data read by NpcBreedMenu (20 bytes) (E-0347)
-NpcBreedMenu_ChooseAndBreed_Data::
+NpcBreedMenu_ChooseAndBreed_ReplaceParent_Data::
     db $0e, $01, $18, $01, $1a, $01, $25, $01, $29, $01, $32, $00, $33, $00, $34, $00
     db $35, $00, $36, $00
 

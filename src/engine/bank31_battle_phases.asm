@@ -154,7 +154,7 @@ BattlePhase0_Step2::
     jumptable
     dw BattlePhase0_Step2_SetArg1
     dw BattlePhase0_Step2_WaitLinkMessage
-    dw BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc
+    dw BattlePhase0_Step2_ExchangeNames
     dw BattlePhase0_Step2_CopyPartnerName
 
 ; Battle start, step 2, part 0 (link): sends $D2; next part. (C1, E-0357)
@@ -180,7 +180,7 @@ BattlePhase0_Step2_WaitLinkMessage::
 
 ; Part 2: starts exchanging names: sends wPlayerName (10 bytes) and receives the partner's into
 ; wBattleTextWork (link buffer, ready); next part. (C1, E-0357)
-BattlePhase0_Step2_WriteArg1AndLinkTimeoutLoEtc::
+BattlePhase0_Step2_ExchangeNames::
     ld a, [wArg1]
     inc a
     ld [wArg1], a
@@ -404,7 +404,7 @@ BattlePhase0_Step3::
     jr nz, .loop
     ld a, $00
     ld [wStringCategory], a
-    call BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc
+    call BattlePhase0_Step3_FoeName
     farcall BeginStringDisplay_Bank2F
     ld hl, wBattlePhase
     dec [hl]
@@ -420,16 +420,16 @@ BattlePhase0_Step3::
     ret
 
 ; The foes' name for the next message in wTextBuf0: one foe's own name, 'Monsters' when all are the
-; same species, otherwise a fixed text (BattlePhase0_Step3_Data1, or Data2 for strings $0B-$0E, 9 or
-; 13 bytes). (C1, E-0357)
-BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
+; same species, otherwise a fixed text (BattlePhase0_Step3_FoeName_Data1, or Data2 for strings
+; $0B-$0E, 9 or 13 bytes). (C1, E-0357)
+BattlePhase0_Step3_FoeName::
     ld a, [wBattlePictureIds]
     ld e, a
     ld a, [wBattlePictureIds + $1]
     ld d, a
     ld a, [wBattleFoeCount]
     cp $01
-    jr z, .call_battle_phase0_step3_copy_string_hl_to_de
+    jr z, .call_battle_phase0_step3_foe_name_copy_string
     ld a, [wBattlePictureIds + $2]
     cp e
     jr nz, .skip2
@@ -447,8 +447,8 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
     jr nz, .skip2
     jr .skip
 
-.call_battle_phase0_step3_copy_string_hl_to_de:
-    call BattlePhase0_Step3_CopyStringHLToDE
+.call_battle_phase0_step3_foe_name_copy_string:
+    call BattlePhase0_Step3_FoeName_CopyStringHLToDE
     jr .return
 
 .skip:
@@ -474,26 +474,26 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
 
 .skip2:
     ld hl, wTextBuf0
-    ld de, BattlePhase0_Step3_Data1
+    ld de, BattlePhase0_Step3_FoeName_Data1
     ld b, $09
     ld a, [wStringIndex]
     cp $0b
     jr nz, .cp_0C
-    ld de, BattlePhase0_Step3_Data2
+    ld de, BattlePhase0_Step3_FoeName_Data2
     ld b, $09
     jr .loop
 
 .cp_0C:
     cp $0c
     jr nz, .cp_0D
-    ld de, BattlePhase0_Step3_Data2
+    ld de, BattlePhase0_Step3_FoeName_Data2
     ld b, $0d
     jr .loop
 
 .cp_0D:
     cp $0d
     jr nz, .cp_0E
-    ld de, BattlePhase0_Step3_Data2
+    ld de, BattlePhase0_Step3_FoeName_Data2
     ld b, $0d
     jr .loop
 
@@ -501,7 +501,7 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
     cp $0e
     jr nz, .loop
     ld b, $09
-    ld de, BattlePhase0_Step3_Data2
+    ld de, BattlePhase0_Step3_FoeName_Data2
 
 .loop:
     ld a, [de]
@@ -515,7 +515,7 @@ BattlePhase0_Step3_ReadBattlePictureIdsAndBattleFoeCountEtc::
 
 ; Copies the foe's name (monster id DE: categories 2 and 3 of the strings) to wTextBuf0, keeping
 ; wStringCategory and wStringIndex. (C1, E-0357)
-BattlePhase0_Step3_CopyStringHLToDE::
+BattlePhase0_Step3_FoeName_CopyStringHLToDE::
     ld a, [wStringCategory]
     ld l, a
     ld a, [wStringIndex]
@@ -544,11 +544,11 @@ BattlePhase0_Step3_CopyStringHLToDE::
     ld [wStringIndex], a
     ret
 
-; data read by BattlePhase0_Step3 (9 bytes) (E-0347)
-BattlePhase0_Step3_Data1::
+; data read by BattlePhase0_Step3_FoeName (9 bytes) (E-0347)
+BattlePhase0_Step3_FoeName_Data1::
     db $30, $32, $31, $36, $37, $28, $35, $36, $f0
 
-BattlePhase0_Step3_Data2::
+BattlePhase0_Step3_FoeName_Data2::
     db $16, $32, $31, $36, $37, $28, $35, $36, $f0
 
 ; wBattlePhase 0, wBattleStep 4 (E-0044)
@@ -636,7 +636,7 @@ BattleEnd_Step0::
 BattleEnd_Step1::
     ld a, $01
     ld [wTextSpeed], a
-    call BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL
+    call BattleEnd_Step1_SetResult
     ld a, [wBattleScene]
     and $01
     jr z, .call_battle_end_step1_write_battle_arg0
@@ -720,11 +720,11 @@ BattleEnd_Step2_WriteBattleEndTimer::
     ret nz
     ret
 
-; battle end, step 3: settles the battle MP (BattleEnd_Step3_SubtractBattleMP_2) and moves on,
+; battle end, step 3: settles the battle MP (BattleEnd_Step3_RecordStatusAfterBattle) and moves on,
 ; skipping the next steps for link battles and for battle scenes 2 and 3 (E-0354; was: wBattlePhase
 ; 2, wBattleStep 3 (E-0044))
 BattleEnd_Step3::
-    call BattleEnd_Step3_SubtractBattleMP_2
+    call BattleEnd_Step3_RecordStatusAfterBattle
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -1099,7 +1099,7 @@ BattleEnd_Step4_WriteBattleEndTimer::
 BattleEnd_Step5::
     ld a, [wBattleSubPhase]
     jumptable
-    dw BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc
+    dw BattleEnd_Step5_Start
     dw BattleEnd_Step5_DrawThenAskToJoin
     dw BattleEnd_Step5_RunSwapMenu
     dw BattleEnd_Step5_RedrawBattleScreen
@@ -1108,8 +1108,8 @@ BattleEnd_Step5::
 ; Join offer, part 0: decides whether a defeated foe offers to join; none ($FF) goes to the next
 ; battle step; otherwise shows its picture, redraws the party panels, plays sound $6C and goes on.
 ; (C1, E-0357)
-BattleEnd_Step5_WriteBattleSubPhaseAndBattlePictureIdsEtc::
-    farcall BattleEnd_Step5_WriteBattleFoeCountAndSpeciesIdLoEtc
+BattleEnd_Step5_Start::
+    farcall BattleEnd_Step5_DecideJoinOffer
     ld a, [wDisplaySlot]
     cp $ff
     jr nz, .read_species_id_lo
@@ -1778,11 +1778,11 @@ RunBattleSetup::
     dw RunBattleSetup_MarkSlotsToAct
     dw RunBattleSetup_ShowSelectingHeroSMove
     dw RunBattleSetup_WriteLinkSendByte
-    dw RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc
-    dw RunBattleSetup_WriteLinkSendByteAndLinkReady
-    dw RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc
-    dw RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo
-    dw RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte
+    dw RunBattleSetup_SendLinkChoices
+    dw RunBattleSetup_StartLinkExchange
+    dw RunBattleSetup_UnpackPartnerChoices
+    dw RunBattleSetup_CompareSeeds
+    dw RunBattleSetup_WaitPartnerSeed
     dw RunBattleSetup_WriteBattleSubPhase
     dw RunBattleSetup_ClearWindow
 
@@ -1793,13 +1793,13 @@ RunBattleSetup::
 RunBattleSetup_MainMenu::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleSetup_MainMenu_ReadLinkModeAndLinkRole
+    dw RunBattleSetup_MainMenu_SaveTactics
     dw RunBattleSetup_MainMenu_Draw
     dw RunBattleSetup_MainMenu_AdvanceBattleResolveStep
     dw RunBattleSetup_MainMenu_Cursor
     dw RunBattleSetup_MainMenu_ToCopyRect32StrideToVRAMAndStep
-    dw RunBattleSetup_MainMenu_WriteBattleSetupDBAndStringIndexEtc
-    dw RunBattleSetup_MainMenu_ClearWindowAndCopyRectFarAndStep
+    dw RunBattleSetup_MainMenu_Choose
+    dw RunBattleSetup_MainMenu_ShowMessage
     dw RunBattleSetup_MainMenu_RedrawWindow
     dw RunBattleSetup_MainMenu_ShowFled
     dw RunBattleSetup_MainMenu_TryFlee
@@ -1813,7 +1813,7 @@ RunBattleSetup_MainMenu::
 
 ; Main menu, step 0: saves the player's three slots' tactics and last tactics into wFleeWork; next
 ; step. (C1, E-0357)
-RunBattleSetup_MainMenu_ReadLinkModeAndLinkRole::
+RunBattleSetup_MainMenu_SaveTactics::
     ld a, [wLinkMode]
     or a
     jr nz, .check_link_role
@@ -1942,21 +1942,21 @@ RunBattleSetup_MainMenu_ToCopyRect32StrideToVRAMAndStep::
 ; ($1F) with none, otherwise the item menu (sub-phase 2); RUN (3) 'No fleeing from this battle!'
 ; ($20) in link battles, otherwise the flee attempt (step 8) in battle kinds 0 and 1, the refusal
 ; (step $0F) in kinds 2, 3, 5, 6 and 7, and 'Retire now?' (step $0B) in the others. (C1, E-0357)
-RunBattleSetup_MainMenu_WriteBattleSetupDBAndStringIndexEtc::
+RunBattleSetup_MainMenu_Choose::
     ld a, [wMenuState]
     and $03
     ld [wBattleSetupDB], a
     or a
-    jr z, .call_run_battle_setup_main_menu_read_link
+    jr z, .call_run_battle_setup_main_menu_choose_read
     cp $01
     jr z, .read_link_role
     cp $02
     jr z, .check_link_mode
     jp .check_link_mode2
 
-.call_run_battle_setup_main_menu_read_link:
-    call RunBattleSetup_MainMenu_ReadLinkRole
-    call RunBattleSetup_MainMenu_ReadLinkModeAndLinkRole_2
+.call_run_battle_setup_main_menu_choose_read:
+    call RunBattleSetup_MainMenu_Choose_ReadLinkRole
+    call RunBattleSetup_MainMenu_RestoreTactics
     ld a, $03
     ld [wBattleSubPhase], a
     xor a
@@ -2006,8 +2006,8 @@ RunBattleSetup_MainMenu_WriteBattleSetupDBAndStringIndexEtc::
     jr z, .set_string_index_to_1D
     cp $05
     jr z, .set_string_index_to_1D
-    call RunBattleSetup_MainMenu_ReadLinkRole
-    call RunBattleSetup_MainMenu_WriteCommandPageCountAndCommandCursorMaxEtc
+    call RunBattleSetup_MainMenu_Choose_ReadLinkRole
+    call CountUsableItems
     ld a, e
     or a
     jr nz, .set_battle_sub_phase_to_02
@@ -2035,12 +2035,12 @@ RunBattleSetup_MainMenu_WriteBattleSetupDBAndStringIndexEtc::
 .check_link_mode2:
     ld a, [wLinkMode]
     or a
-    jr z, .call_run_battle_setup_main_menu_read_link2
+    jr z, .call_run_battle_setup_main_menu_choose_read2
     ld a, $20
     jr .set_string_index
 
-.call_run_battle_setup_main_menu_read_link2:
-    call RunBattleSetup_MainMenu_ReadLinkRole
+.call_run_battle_setup_main_menu_choose_read2:
+    call RunBattleSetup_MainMenu_Choose_ReadLinkRole
     ld hl, wBattleResolveStep
     ld [hl], $08
     ld a, [wBattleKind]
@@ -2063,7 +2063,7 @@ RunBattleSetup_MainMenu_WriteBattleSetupDBAndStringIndexEtc::
     ret
 
 ; Clears the action choices of the player's three slots ($FF). (C1, E-0357)
-RunBattleSetup_MainMenu_ReadLinkRole::
+RunBattleSetup_MainMenu_Choose_ReadLinkRole::
     ld a, [wLinkRole]
     and $02
     ld hl, wBattleActionChoice
@@ -2080,7 +2080,7 @@ RunBattleSetup_MainMenu_ReadLinkRole::
     ret
 
 ; Restores the player's three slots' tactics and last tactics from wFleeWork. (C1, E-0357)
-RunBattleSetup_MainMenu_ReadLinkModeAndLinkRole_2::
+RunBattleSetup_MainMenu_RestoreTactics::
     ld a, [wLinkMode]
     or a
     jr nz, .check_link_role
@@ -2120,7 +2120,7 @@ RunBattleSetup_MainMenu_ReadLinkModeAndLinkRole_2::
     ret
 
 ; Main menu, step 6: shows the chosen message (BeginStringDisplay_Bank2F); next step. (C1, E-0357)
-RunBattleSetup_MainMenu_ClearWindowAndCopyRectFarAndStep::
+RunBattleSetup_MainMenu_ShowMessage::
     call ClearWindowAndCopyRectFar
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13
     farcall BeginStringDisplay_Bank2F
@@ -2171,8 +2171,8 @@ RunBattleSetup_MainMenu_ShowFled::
 ; Main menu, step 9, the flee attempt: it works on the first turn, when the party's highest level is
 ; more than 5 above the foes', with a chance of turn / 8 (7 in 8 from turn 4), or when no foe can
 ; act; otherwise 'But the escape route was cut' ($2C) and the next step. On success (outside link
-; battles the personalities drop, RunBattleSetup_MainMenu_TryFlee_CarryUnlessBattleSlotOutSlotEmpty)
-; the battle ends as fled (wBattleScene 2). (C1, E-0357)
+; battles the personalities drop, LowerPersonalityAfterFleeing) the battle ends as fled
+; (wBattleScene 2). (C1, E-0357)
 RunBattleSetup_MainMenu_TryFlee::
     ld a, [wTextFlags]
     or a
@@ -2257,7 +2257,7 @@ RunBattleSetup_MainMenu_TryFlee::
     ld a, [wLinkMode]
     or a
     jr nz, .set_battle_scene_to_02
-    call RunBattleSetup_MainMenu_TryFlee_CarryUnlessBattleSlotOutSlotEmpty
+    call LowerPersonalityAfterFleeing
 
 .set_battle_scene_to_02:
     ld a, $02
@@ -2299,7 +2299,7 @@ RunBattleSetup_MainMenu_TryFlee_CheckSlotStatusBlockWide_Bank31::
 ; After fleeing, lowers each present party monster's personality Hi, Mid, Lo and trait (not below 0)
 ; by its row of the table: by level band (below 10, 20, 30, or 30 and over) and trait ($97 or more
 ; uses the second table). (C1, E-0357)
-RunBattleSetup_MainMenu_TryFlee_CarryUnlessBattleSlotOutSlotEmpty::
+LowerPersonalityAfterFleeing::
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -2328,9 +2328,9 @@ RunBattleSetup_MainMenu_TryFlee_CarryUnlessBattleSlotOutSlotEmpty::
     add_a_to_hl
     ld a, [hl]
     cp $97
-    ld hl, RunBattleSetup_MainMenu_TryFlee_Data1
+    ld hl, LowerPersonalityAfterFleeing_Data1
     jr c, .skip2
-    ld hl, RunBattleSetup_MainMenu_TryFlee_Data2
+    ld hl, LowerPersonalityAfterFleeing_Data2
 
 .skip2:
     ld a, e
@@ -2372,11 +2372,11 @@ RunBattleSetup_MainMenu_SubtractFloor0::
     ld [de], a
     ret
 
-; data read by RunBattleSetup_MainMenu_TryFlee (16 bytes) (E-0347)
-RunBattleSetup_MainMenu_TryFlee_Data1::
+; data read by LowerPersonalityAfterFleeing (16 bytes) (E-0347)
+LowerPersonalityAfterFleeing_Data1::
     db $04, $00, $00, $0a, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
-RunBattleSetup_MainMenu_TryFlee_Data2::
+LowerPersonalityAfterFleeing_Data2::
     db $08, $00, $00, $0f, $06, $00, $00, $0a, $04, $00, $00, $05, $02, $00, $00, $03
 
 ; Main menu, step 10: after the text, marks the player's present slots 3 (empty $FF) and goes to the
@@ -2553,7 +2553,7 @@ RunBattleSetup_PlanMenu::
     dw RunBattleSetup_PlanMenu_DrawSkillList
     dw RunBattleSetup_PlanMenu_WriteListLastPageSize
     dw RunBattleSetup_PlanMenu_ChooseSkill
-    dw RunBattleSetup_PlanMenu_WriteBattleResolveStepAndBattleArg1
+    dw RunBattleSetup_PlanMenu_ReturnToStep
     dw RunBattleSetup_FillScreenTileBufferRow11Col4WithC3_Bank31AndStep
     dw RunBattleSetup_DrawWindowTileBufferRow2Col16RowsToBGMapRow13AndStep
     dw RunBattleSetup_PlanMenu_RedrawFoesAgain
@@ -2566,7 +2566,7 @@ RunBattleSetup_PlanMenu::
     dw RunBattleSetup_PlanMenu_ShowSkillFoeCursor
     dw RunBattleSetup_PlanMenu_ChooseSkillFoe
     dw RunBattleSetup_PlanMenu_ReturnFromFoeList
-    dw RunBattleSetup_WriteCommandMonsterAndBattleResolveStepEtc
+    dw RunBattleSetup_PlanMenu_NextMonster
     dw RunBattleSetup_PlanMenu_ShowMessage
     dw RunBattleSetup_PlanMenu_RedrawFoesAgain
     dw RunBattleSetup_PlanMenu_BackToAllyList
@@ -2803,7 +2803,7 @@ RunBattleSetup_PlanMenu_ShowActionCursor::
 RunBattleSetup_PlanMenu_ChooseAction::
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     ld hl, wMenuSelectedMember
-    call RunBattleSetup_PlanMenu_ChooseAction_SetBit6AndBlankEntryTile_Bank31
+    call ThreeEntryListCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -2836,7 +2836,7 @@ RunBattleSetup_PlanMenu_ChooseAction::
     or a
     jr z, .call_count_present_foes_of_link_role_side
     cp $01
-    jr z, .call_run_battle_setup_plan_menu_choose_action
+    jr z, .call_count_usable_skills
     jr .read_command_monster
 
 .call_count_present_foes_of_link_role_side:
@@ -2862,8 +2862,8 @@ RunBattleSetup_PlanMenu_ChooseAction::
     ld [wSubMenuCursor2], a
     jr .return
 
-.call_run_battle_setup_plan_menu_choose_action:
-    call RunBattleSetup_PlanMenu_ChooseAction_WriteBattleArg2AndBattleArg3Etc
+.call_count_usable_skills:
+    call CountUsableSkills
     ld a, d
     or a
     jr nz, .call_fill_screen_tile_buffer_row11_col4_with2
@@ -2960,7 +2960,7 @@ RunBattleSetup_PlanMenu_2::
     call CopyRectRecordToScreenBufferFar_6
     xor a
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2
+    farcall ListFarSideSlots
     xor a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -2980,7 +2980,7 @@ RunBattleSetup_PlanMenu_ShowFoeCursor::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     and $03
     add a
@@ -3006,7 +3006,7 @@ RunBattleSetup_PlanMenu_ChooseFoe::
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
-    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
+    call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -3091,7 +3091,7 @@ RunBattleSetup_PlanMenu_DrawSkillList::
     res 7, [hl]
     ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
     call ShowSkillPageNames
-    call RunBattleSetup_PlanMenu_ClearBit6AndCursorEntryTile_Bank31
+    call RunBattleSetup_PlanMenu_RedrawSkillList
     call CopyRectRecordsAndToScreenBufferFar
     ld a, $09
     ld [wStringCategory], a
@@ -3306,7 +3306,7 @@ RunBattleSetup_PlanMenu_ChooseSkill::
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, .call_run_battle_setup_plan_menu_clear_bit6
+    jr z, .call_run_battle_setup_plan_menu_redraw_skill
     call FillScreenTileBufferRow11Col4WithC3_Bank31
     call LayoutTileBlocksForBattleFoeCount
     ld a, $04
@@ -3315,8 +3315,8 @@ RunBattleSetup_PlanMenu_ChooseSkill::
     inc [hl]
     jr .return
 
-.call_run_battle_setup_plan_menu_clear_bit6:
-    call RunBattleSetup_PlanMenu_ClearBit6AndCursorEntryTile_Bank31
+.call_run_battle_setup_plan_menu_redraw_skill:
+    call RunBattleSetup_PlanMenu_RedrawSkillList
     call DrawInventoryPageIndicator
 
 .return:
@@ -3345,7 +3345,7 @@ RunBattleSetup_PlanMenu_ChooseSkill::
     jr .return
 
 ; PLAN menu, step 19: redraws and goes to the step kept in wBattleArg1. (C1, E-0357)
-RunBattleSetup_PlanMenu_WriteBattleResolveStepAndBattleArg1::
+RunBattleSetup_PlanMenu_ReturnToStep::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects
     ld a, [wBattleArg1]
     ld [wBattleResolveStep], a
@@ -3400,7 +3400,7 @@ RunBattleSetup_ShowStringBank09AtTilesHL_Bank31AndStep::
     ld a, $03
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call RunBattleSetup_PlanMenu_ReadRecordBufferAndLinkRoleEtc
+    call RunBattleSetup_PlanMenu_AllyListForSkill
     xor a
     ld [wSubMenuCursor2], a
     ld hl, wBattleResolveStep
@@ -3427,7 +3427,7 @@ RunBattleSetup_PlanMenu_ShowAllyCursor::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     and $03
     add a
@@ -3453,7 +3453,7 @@ RunBattleSetup_PlanMenu_ChooseAlly::
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
-    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
+    call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -3540,7 +3540,7 @@ RunBattleSetup_PlanMenu_DrawFoeList::
 
 .set_battle_arg1:
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2
+    farcall ListFarSideSlots
     xor a
     ld [wBattleArg1], a
     xor a
@@ -3569,7 +3569,7 @@ RunBattleSetup_PlanMenu_ShowSkillFoeCursor::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     and $03
     add a
@@ -3595,7 +3595,7 @@ RunBattleSetup_PlanMenu_ChooseSkillFoe::
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
-    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
+    call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -3646,7 +3646,7 @@ RunBattleSetup_PlanMenu_ReturnFromFoeList::
 
 ; PLAN menu, step 32: on to the next able monster of the side (back to step 0 for it); after the
 ; third, to the fight (sub-phase 3). (C1, E-0357)
-RunBattleSetup_WriteCommandMonsterAndBattleResolveStepEtc::
+RunBattleSetup_PlanMenu_NextMonster::
     ld a, [wCommandMonster]
     and $04
     or $03
@@ -3729,7 +3729,7 @@ RunBattleSetup_ItemMenu_DrawBagPage::
     res 7, [hl]
     ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
     call ShowInventoryPageItemNames
-    call RunBattleSetup_ItemMenu_ClearBit6AndCursorEntryTile_Bank31
+    call RunBattleSetup_ItemMenu_RedrawItemList
     call CopyRectRecordToScreenBufferFar_3
     ld a, $06
     ld [wStringCategory], a
@@ -3887,14 +3887,14 @@ RunBattleSetup_ItemMenu_ChooseItem::
 
 .check_bit2:
     bit 2, a
-    jr z, .call_run_battle_setup_item_menu_clear_bit6
+    jr z, .call_run_battle_setup_item_menu_redraw_item
     farcall SortInventory
     ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
     ld hl, wCommandCursor
     set 7, [hl]
 
-.call_run_battle_setup_item_menu_clear_bit6:
-    call RunBattleSetup_ItemMenu_ClearBit6AndCursorEntryTile_Bank31
+.call_run_battle_setup_item_menu_redraw_item:
+    call RunBattleSetup_ItemMenu_RedrawItemList
     call DrawInventoryPageIndicator
     jr .return
 
@@ -4056,7 +4056,7 @@ RunBattleSetup_ItemMenu_ShowStringBank09AtTilesHL_Bank31AndStep::
     ld a, $03
     ld [wStringIndex], a
     call ShowStringBank09AtTilesHL_Bank31
-    call RunBattleSetup_ItemMenu_ReadItemIdAndLinkRoleEtc
+    call RunBattleSetup_ItemMenu_AllyListForItem
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -4079,7 +4079,7 @@ RunBattleSetup_ItemMenu_ShowAllyCursor::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     and $03
     add a
@@ -4104,7 +4104,7 @@ RunBattleSetup_ItemMenu_ChooseAlly::
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
-    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
+    call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -4180,7 +4180,7 @@ RunBattleSetup_ItemMenu_DrawFoeList::
 
 .set_battle_arg1:
     ld [wBattleArg1], a
-    farcall RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2
+    farcall ListFarSideSlots
     xor a
     ld [wBattleArg1], a
     ld hl, wBattleResolveStep
@@ -4205,7 +4205,7 @@ RunBattleSetup_ItemMenu_ShowFoeCursor::
     ld hl, wSubMenuCursor2
     ld e, $01
     ld a, $00
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
     and $03
     add a
@@ -4231,7 +4231,7 @@ RunBattleSetup_ItemMenu_ChooseFoe::
     ld b, a
     ld hl, wSubMenuCursor2
     ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
-    call RunBattleSetup_SetBit6AndBlankEntryTile_Bank31
+    call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -4399,7 +4399,7 @@ RunBattleSetup_WriteLinkSendByte::
 ; tactics, the random seed, the menu state (twice), the six action bytes, the three slot marks and
 ; the three side-control bytes (19 bytes) into wLinkRecvBuffer for the exchange; next sub-phase.
 ; (C1, E-0357)
-RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc::
+RunBattleSetup_SendLinkChoices::
     ld a, [wLinkMode]
     or a
     jp z, .done
@@ -4508,7 +4508,7 @@ RunBattleSetup_WriteLinkSendByteAndLinkBufferCountLoEtc::
 
 ; Battle setup, sub-phase 7: in link battles starts the exchange (sends $FF, ready); next sub-phase.
 ; (C1, E-0357)
-RunBattleSetup_WriteLinkSendByteAndLinkReady::
+RunBattleSetup_StartLinkExchange::
     ld hl, wBattleSubPhase
     inc [hl]
     ld a, [wLinkMode]
@@ -4527,7 +4527,7 @@ RunBattleSetup_WriteLinkSendByteAndLinkReady::
 ; copies its random state into the second stream (wRandomSeed2Lo/Hi), the follower loads its random
 ; state from it; the partner side's tactics other than Command (3) become their last tactics; next
 ; sub-phase. (C1, E-0357)
-RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc::
+RunBattleSetup_UnpackPartnerChoices::
     ld a, [wLinkMode]
     or a
     jp z, .done
@@ -4664,7 +4664,7 @@ RunBattleSetup_WriteLinkSendByteAndLinkReadyEtc::
 ; Battle setup, sub-phase 9: in link battles compares the partner's seed (wBattleSetupFlagsLo/Hi)
 ; with wRandomSeed2Lo/Hi (the compares with wRandomLo/Hi before them are overwritten) and sends $22
 ; when they agree, $33 when not, also kept in wCounterPtr0Lo; next sub-phase. (C1, E-0357)
-RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo::
+RunBattleSetup_CompareSeeds::
     ld a, [wLinkMode]
     and a
     jr nz, .skip
@@ -4703,7 +4703,7 @@ RunBattleSetup_WriteLinkSendByteAndCounterPtr0Lo::
 
 ; Battle setup, sub-phase 10: in link battles waits for the partner's $22 or $33 and keeps it in
 ; wCounterPtr0Hi; next sub-phase. (C1, E-0357)
-RunBattleSetup_WriteCounterPtr0HiAndLinkSendByte::
+RunBattleSetup_WaitPartnerSeed::
     ld a, [wLinkMode]
     and a
     jr z, .done
@@ -4808,7 +4808,7 @@ ToggleEntryBitsByJoypadAndBlink::
 
 ; The cursor of a three-entry list ([HL], positions at DE): Up and Down move it with wrap among 0-2
 ; (sound $69); otherwise it blinks every 16 frames. (C1, E-0357)
-RunBattleSetup_PlanMenu_ChooseAction_SetBit6AndBlankEntryTile_Bank31::
+ThreeEntryListCursor::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -5115,7 +5115,7 @@ WriteFiveTilesFromTable_Data::
 ; Counts the command monster's skills (up to eight, stopping at $FF or 0) into C and those usable in
 ; battle (not $A2-$A9) into D; one page, or two for more than four; the last row of the page; cursor
 ; 0. (C1, E-0357)
-RunBattleSetup_PlanMenu_ChooseAction_WriteBattleArg2AndBattleArg3Etc::
+CountUsableSkills::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
     swap a
@@ -5218,7 +5218,7 @@ ReturnZero::
 
 ; Skill list redraw: a page change redraws the cursor and the page's names; a new entry shows its
 ; description (category 9) and MP cost. (C1, E-0357)
-RunBattleSetup_PlanMenu_ClearBit6AndCursorEntryTile_Bank31::
+RunBattleSetup_PlanMenu_RedrawSkillList::
     ld a, [wCommandCursor]
     bit 7, a
     jr z, .check_menu_cursor
@@ -5268,7 +5268,7 @@ RunBattleSetup_PlanMenu_ClearBit6AndCursorEntryTile_Bank31::
 
 ; Counts the bag's items (24 places, stopping at $FF or 0) into C and those usable in battle (below
 ; $0D, $19-$1F, $22-$27) into E; the page count and last row from C. (C1, E-0357)
-RunBattleSetup_MainMenu_WriteCommandPageCountAndCommandCursorMaxEtc::
+CountUsableItems::
     ld hl, wInventory
     ld bc, $1800
     ld e, $00
@@ -5308,7 +5308,7 @@ RunBattleSetup_MainMenu_WriteCommandPageCountAndCommandCursorMaxEtc::
     or a
     jr z, .set_command_cursor_max
     and $03
-    call z, RunBattleSetup_MainMenu_WriteCommandPageCount
+    call z, CountUsableItems_WriteCommandPageCount
     dec a
     and $03
 
@@ -5319,7 +5319,7 @@ RunBattleSetup_MainMenu_WriteCommandPageCountAndCommandCursorMaxEtc::
     ret
 
 ; One page fewer when the items fill the last page exactly. (C1, E-0357)
-RunBattleSetup_MainMenu_WriteCommandPageCount::
+CountUsableItems_WriteCommandPageCount::
     push af
     ld a, [wCommandPageCount]
     dec a
@@ -5363,7 +5363,7 @@ ReturnZero_2::
 
 ; Item list redraw: a page change redraws the cursor and the page's names; a new entry shows its
 ; description (category 6). (C1, E-0357)
-RunBattleSetup_ItemMenu_ClearBit6AndCursorEntryTile_Bank31::
+RunBattleSetup_ItemMenu_RedrawItemList::
     ld a, [wCommandCursor]
     bit 7, a
     jr z, .check_menu_option
@@ -5627,26 +5627,27 @@ CountPresentSlotsOfLinkRoleSide_Bank31::
     ret
 
 ; The ally list may include fallen allies for SKILL_VIVIFY and SKILL_REVIVE
-; (RunBattleSetup_ItemMenu_ReadLinkRole), otherwise only present ones
-; (RunBattleSetup_ItemMenu_ReadLinkRole2). (C1, E-0357)
-RunBattleSetup_PlanMenu_ReadRecordBufferAndLinkRoleEtc::
+; (RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole), otherwise only present ones
+; (RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole2). (C1, E-0357)
+RunBattleSetup_PlanMenu_AllyListForSkill::
     ld a, [wRecordBuffer]
     cp $1e
-    jr z, RunBattleSetup_ItemMenu_ReadLinkRole
+    jr z, RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole
     cp $1f
-    jr z, RunBattleSetup_ItemMenu_ReadLinkRole
-    jr RunBattleSetup_ItemMenu_ReadLinkRole2
+    jr z, RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole
+    jr RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole2
 
-; The ally list may include fallen allies for ITEM_WORLDLEAF (RunBattleSetup_ItemMenu_ReadLinkRole),
-; otherwise only present ones (RunBattleSetup_ItemMenu_ReadLinkRole2). (C1, E-0357)
-RunBattleSetup_ItemMenu_ReadItemIdAndLinkRoleEtc::
+; The ally list may include fallen allies for ITEM_WORLDLEAF
+; (RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole), otherwise only present ones
+; (RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole2). (C1, E-0357)
+RunBattleSetup_ItemMenu_AllyListForItem::
     ld a, [wItemId]
     cp ITEM_WORLDLEAF
-    jr nz, RunBattleSetup_ItemMenu_ReadLinkRole2
+    jr nz, RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole2
 
 ; Marks each of the side's three slots choosable (0) unless it is empty ($FF), fallen ones included,
 ; then draws the list. (C1, E-0357)
-RunBattleSetup_ItemMenu_ReadLinkRole::
+RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole::
     ld a, [wLinkRole]
     sla a
     and $04
@@ -5675,7 +5676,7 @@ RunBattleSetup_ItemMenu_ReadLinkRole::
 
 ; Marks the side's three slots choosable only when present (copies wBattleSlotOut), then draws the
 ; list. (C1, E-0357)
-RunBattleSetup_ItemMenu_ReadLinkRole2::
+RunBattleSetup_ItemMenu_AllyListForItem_ReadLinkRole2::
     ld a, [wLinkRole]
     sla a
     and $04
@@ -5740,7 +5741,7 @@ FillFiveC3AtHL::
 ; Moves the target cursor [HL] by E (wrapping within the three slots of side B) to the next slot
 ; that can be chosen (present, or fallen when wNameSlot is set), at most four tries; A = 0 starts
 ; from the current slot. (C1, E-0357)
-RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty::
+MoveTargetCursor::
     or a
     jr nz, .skip2
     ld a, [wNameSlot]
@@ -5796,7 +5797,7 @@ RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; The target cursor: Up and Down step to the previous or next choosable slot; otherwise it blinks
 ; every 16 frames. (C1, E-0357)
-RunBattleSetup_SetBit6AndBlankEntryTile_Bank31::
+TargetCursor::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -5804,7 +5805,7 @@ RunBattleSetup_SetBit6AndBlankEntryTile_Bank31::
     push de
     ld e, $ff
     ld a, $01
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     pop de
     call ClearBit6AndCursorEntryTile_Bank31
     jr .check_frame_counter_lo2
@@ -5817,7 +5818,7 @@ RunBattleSetup_SetBit6AndBlankEntryTile_Bank31::
     push de
     ld e, $01
     ld a, $01
-    call RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty
+    call MoveTargetCursor
     pop de
     call ClearBit6AndCursorEntryTile_Bank31
     jr .check_frame_counter_lo2
@@ -5852,7 +5853,7 @@ CallRunDebugState_E0InBankE0::
 ; can act (present and not paralysed) or a foe is still present; with no foe left, 0 when one fell
 ; and 2 when none did. In link battles (kinds 8 and up), unless a result is already set: 4 when only
 ; this side can still act, 5 when only the other side can, $80 (a draw) otherwise. (C1, E-0357)
-BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
+BattleEnd_Step1_SetResult::
     ld a, [wDataBankSave]
     ld [wDataBank], a
     xor a
@@ -5862,7 +5863,7 @@ BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
     jr nc, .check_battle_scene
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
+    call CountSlotsAbleToAct
     jr c, .skip2
     ld bc, $0304
     ld de, $0000
@@ -5888,39 +5889,39 @@ BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
     jr nz, .set_battle_scene
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, .call_battle_end_step1_add_ax9_to_hl2
+    jr nz, .call_count_slots_able_to_act2
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
-    jr nc, .call_battle_end_step1_add_ax9_to_hl
+    call CountSlotsAbleToAct
+    jr nc, .call_count_slots_able_to_act
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
+    call CountSlotsAbleToAct
     jr c, .set_battle_scene_to_80
     jr .skip4
 
-.call_battle_end_step1_add_ax9_to_hl:
+.call_count_slots_able_to_act:
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
+    call CountSlotsAbleToAct
     jr c, .skip3
     jr .set_battle_scene_to_80
 
-.call_battle_end_step1_add_ax9_to_hl2:
+.call_count_slots_able_to_act2:
     ld bc, $0304
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
-    jr nc, .call_battle_end_step1_add_ax9_to_hl3
+    call CountSlotsAbleToAct
+    jr nc, .call_count_slots_able_to_act3
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
+    call CountSlotsAbleToAct
     jr c, .set_battle_scene_to_80
     jr .skip4
 
-.call_battle_end_step1_add_ax9_to_hl3:
+.call_count_slots_able_to_act3:
     ld bc, $0300
     ld e, $00
-    call BattleEnd_Step1_AddAx9ToHL
+    call CountSlotsAbleToAct
     jr c, .skip3
     jr .set_battle_scene_to_80
 
@@ -5940,7 +5941,7 @@ BattleEnd_Step1_CountSlots_BattleEnd_Step1_AddAx9ToHL::
     ret
 
 ; E = how many of B slots from C are present and not paralysed; carry when none. (C1, E-0357)
-BattleEnd_Step1_AddAx9ToHL::
+CountSlotsAbleToAct::
     ld a, c
     ld hl, wBattleSlotOut
     add_a_to_hl
@@ -5957,7 +5958,7 @@ BattleEnd_Step1_AddAx9ToHL::
 .next:
     inc c
     dec b
-    jr nz, BattleEnd_Step1_AddAx9ToHL
+    jr nz, CountSlotsAbleToAct
     ld a, e
     cp $01
     ret
@@ -5990,7 +5991,7 @@ BattleEnd_Step1_CountSlots::
 ; Battle end, step 3: outside link battles, for each party member stores its tactics into its record
 ; and settles the record's status, HP, MP, wBattleExtraStat and personality from the battle (SRAM
 ; enabled around it). (C1, E-0357)
-BattleEnd_Step3_SubtractBattleMP_2::
+BattleEnd_Step3_RecordStatusAfterBattle::
     ld a, [wLinkMode]
     or a
     jr nz, .return
@@ -6010,7 +6011,7 @@ BattleEnd_Step3_SubtractBattleMP_2::
     ld c, MON_STATUS
     call SRAMRecordAddressMapped
     pop bc
-    call BattleEnd_Step3_AddAx9ToHL
+    call RecordStatusAfterBattle
     call BattleEnd_Step3_WriteBattleArg0
     call BattleEnd_Step3_SubtractBattleMP
     call BattleEnd_Step3_ReadBattleArg0
@@ -6061,7 +6062,7 @@ BattleEnd_Step3_WriteBattleResultByte::
 
 ; The record's status after battle: cleared, then bit 7 when the slot fell; otherwise (not in battle
 ; kind 4) bit 0 for battle status bit 5 and bit 2 for battle status bits 0-1. (C1, E-0357)
-BattleEnd_Step3_AddAx9ToHL::
+RecordStatusAfterBattle::
     ld [hl], $00
     ld a, c
     ld de, wBattleSlotOut
@@ -6084,9 +6085,9 @@ BattleEnd_Step3_AddAx9ToHL::
     ld a, [hl]
     pop hl
     bit 5, a
-    call nz, BattleEnd_Step3_ReturnAfterSetup
+    call nz, RecordStatusAfterBattle_ReturnAfterSetup
     and $03
-    call nz, BattleEnd_Step3_ReturnAfterSetup_2
+    call nz, RecordStatusAfterBattle_ReturnAfterSetup_2
     ret
 
 .done:
@@ -6094,12 +6095,12 @@ BattleEnd_Step3_AddAx9ToHL::
     ret
 
 ; Sets status bit 0. (C1, E-0357)
-BattleEnd_Step3_ReturnAfterSetup::
+RecordStatusAfterBattle_ReturnAfterSetup::
     set 0, [hl]
     ret
 
 ; Sets status bit 2. (C1, E-0357)
-BattleEnd_Step3_ReturnAfterSetup_2::
+RecordStatusAfterBattle_ReturnAfterSetup_2::
     set 2, [hl]
     ret
 
@@ -6289,7 +6290,7 @@ BattleEnd_Step3_ReadBattleArg0_2::
 BattleEnd_GainExperience::
     ld a, [wBattleSubPhase]
     jumptable
-    dw BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc
+    dw BattleEnd_GainExperience_Start
     dw BattleEnd_GainExperience_AwardParty
     dw BattleEnd_GainExperience_CheckLevelUp
     dw BattleEnd_GainExperience_RunNewSkillSteps
@@ -6303,7 +6304,7 @@ BattleEnd_GainExperience::
 ; Experience, part 0: no experience in battle kinds 4, 5 and 8 and up (straight to part 9, or 8 in
 ; link battles); otherwise the award is divided by the number of party monsters still standing and
 ; shown ('<player>'s party got <n> EX points!'); next part. (C1, E-0357)
-BattleEnd_GainExperience_WriteBattleResolveStepAndBattleSubPhaseEtc::
+BattleEnd_GainExperience_Start::
     ld a, [wBattleKind]
     cp $04
     jr c, .skip
@@ -7074,22 +7075,22 @@ BattleEnd_GainExperience_SetBattleStep::
 BattleEnd_GainExperience_LearnSkill::
     ld a, [wBattleResolveStep]
     jumptable
-    dw BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc
+    dw BattleEnd_GainExperience_LearnSkill_Start
     dw BattleEnd_GainExperience_LearnSkill_CopySkills
     dw BattleEnd_GainExperience_LearnSkill_WaitTextFlags
 
 ; Learned skill, step 0: only from arena rank 5, with one party monster and a skill in
 ; wLearnSkillState ($AA becomes $8F); otherwise next battle step. (C1, E-0357)
-BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc::
+BattleEnd_GainExperience_LearnSkill_Start::
     ld a, [wArenaRank]
     cp $05
-    jr c, BattleEnd_GainExperience_LearnSkill_Skip
+    jr c, BattleEnd_GainExperience_LearnSkill_Start_Skip
     ld a, [wBattlePartyCount]
     cp $01
-    jr nz, BattleEnd_GainExperience_LearnSkill_Skip
+    jr nz, BattleEnd_GainExperience_LearnSkill_Start_Skip
     ld a, [wLearnSkillState]
     or a
-    jr z, BattleEnd_GainExperience_LearnSkill_Skip
+    jr z, BattleEnd_GainExperience_LearnSkill_Start_Skip
     cp $aa
     jr nz, .done
     ld a, $8f
@@ -7101,7 +7102,7 @@ BattleEnd_GainExperience_LearnSkill_WriteLearnSkillStateAndBattleSubPhaseEtc::
     ret
 
 ; Next battle step, clearing the sub-phase and step. (C1, E-0357)
-BattleEnd_GainExperience_LearnSkill_Skip::
+BattleEnd_GainExperience_LearnSkill_Start_Skip::
     ld hl, wBattleStep
     inc [hl]
     xor a
@@ -7138,7 +7139,7 @@ BattleEnd_GainExperience_LearnSkill_CopySkills::
     jr nz, .skip
     xor a
     ld [rRAMG], a
-    jr BattleEnd_GainExperience_LearnSkill_Skip
+    jr BattleEnd_GainExperience_LearnSkill_Start_Skip
 
 .skip:
     ld l, a
@@ -7180,7 +7181,7 @@ BattleEnd_GainExperience_LearnSkill_WaitTextFlags::
     ld a, [wTextFlags]
     or a
     ret nz
-    jp BattleEnd_GainExperience_LearnSkill_Skip
+    jp BattleEnd_GainExperience_LearnSkill_Start_Skip
 
 ; HL += A * $4E (the battler-record size, Multiply8); clobbers BC (E-0115)
 AddAx4EToHL::
@@ -7516,7 +7517,7 @@ ForgetSkillMenu_DrawList::
     ret nz
     call FillScreenTileBufferRow11Col4WithC3_Bank31
     call DrawScreenTileBufferRow11Col4RowsToBGMapRow7
-    call ForgetSkillMenu_WriteTextWindowRowsAndTextWindowWidthEtc
+    call ForgetSkillMenu_WriteSkillNames
     farcall CopyRectRecordsAndPlaySound6C
     ld a, $0a
     ld [rRAMG], a
@@ -7591,7 +7592,7 @@ ForgetSkillMenu_Cursor::
     ret z
     ld hl, wCommandCursor
     res 7, [hl]
-    call ForgetSkillMenu_WriteTextWindowRowsAndTextWindowWidthEtc
+    call ForgetSkillMenu_WriteSkillNames
     call DrawWindowTileBufferRow7Col18ThreeTilesAtBGMap206
     call DrawCommandCursorPageNumber
     ret
@@ -7730,7 +7731,7 @@ ForgetSkillMenu_Start_FillBytes::
 
 ; Writes the four skill names of the current page (category 4) into the list window, a blank for
 ; $FF. (C1, E-0357)
-ForgetSkillMenu_WriteTextWindowRowsAndTextWindowWidthEtc::
+ForgetSkillMenu_WriteSkillNames::
     ld hl, $0901
     ld a, l
     ld [wTextWindowRows], a
@@ -7748,7 +7749,7 @@ ForgetSkillMenu_WriteTextWindowRowsAndTextWindowWidthEtc::
     push bc
     push hl
     ld a, c
-    ld hl, ForgetSkillMenu_Data
+    ld hl, ForgetSkillMenu_WriteSkillNames_Data
     add a
     add_a_to_hl
     deref_hl
@@ -7786,7 +7787,7 @@ ForgetSkillMenu_WriteTextWindowRowsAndTextWindowWidthEtc::
     ret
 
 ; data read by ForgetSkillMenu (8 bytes) (E-0347)
-ForgetSkillMenu_Data::
+ForgetSkillMenu_WriteSkillNames_Data::
     db $c0, $95, $50, $96, $e0, $96, $70, $97
 
 ; shows the name (category 9) of skill wWorkBuf[4 * page + row] at vTiles2 + $260, loads its record
@@ -7985,7 +7986,7 @@ FillScreenTileBufferRow11Col4WithC3_Bank31::
 
 ; Loads the battle's name tiles: three blank names, then the party's battler names (from slot 3 for
 ; the link follower) into their tiles. (C1, E-0357)
-GameMode4_Init_CopyGlyphTilesToVRAM::
+GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM::
     ld a, $90
     ld [wNameGlyphBuf], a
     ld [wNameGlyphBuf + $1], a
@@ -8031,7 +8032,7 @@ GameMode4_Init_CopyGlyphTilesToVRAM::
     pop bc
     push bc
     ld b, $00
-    ld hl, GameMode4_Init_CopyGlyphTilesToVRAM_Data
+    ld hl, GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM_Data
     add hl, bc
     add hl, bc
     ld e, [hl]
@@ -8044,8 +8045,8 @@ GameMode4_Init_CopyGlyphTilesToVRAM::
     jr nz, .loop
     ret
 
-; data read by GameMode4_Init_CopyGlyphTilesToVRAM (12 bytes) (E-0347)
-GameMode4_Init_CopyGlyphTilesToVRAM_Data::
+; data read by GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM (12 bytes) (E-0347)
+GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8d, $50, $8d, $a0, $8d
 
 ; picks record wBattlePartyCount - 1 from PartyCountRects and copies it into wScreenTileBuffer
