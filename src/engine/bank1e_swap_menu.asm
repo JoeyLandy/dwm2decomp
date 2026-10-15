@@ -52,11 +52,11 @@ CloseMenuE9_RestoreGlyphs::
     farcall CloseBreedMenu
     ret
 
-; Closing the menu session, step 2: decompresses Tiles1Gfx (bank $46) into VRAM $8800 and blanks the
-; name tiles. (C1, E-0357)
+; Closing the menu session, step 2: decompresses LetterFrameIconDigitTiles (bank $46) into VRAM
+; $8800 and blanks the name tiles. (C1, E-0357)
 CloseMenuE9_LoadTiles::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles1 + $500

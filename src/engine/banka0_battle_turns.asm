@@ -2353,11 +2353,11 @@ GameMode7_Init::
     ld a, h
     ld [wTextCursorHi], a
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     call GameMode7_Init_Start

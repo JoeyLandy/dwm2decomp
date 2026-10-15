@@ -4307,8 +4307,8 @@ PlaySound83AndAdvanceScriptStep::
     ret
 
 ; Script step (RandomGoldOrItem step 0, and far-called by SceneStrongestMaster_SetUpSprite): sets DE
-; = $5994 and B = $7E, the compressed graphics Gfx7E_7 (the source spells the address as the
-; bank-$12 label KeyWorldBossBattle_ShowMessage), and goes on at
+; = $5994 and B = $7E, the compressed graphics StarBurstDebrisSpriteTiles (the source spells the
+; address as the bank-$12 label KeyWorldBossBattle_ShowMessage), and goes on at
 ; SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace, which decompresses them to vTiles0 + $700, places
 ; the sprite 16 pixels in front of the player and advances wScriptStep. It computes A =
 ; wMapSpriteKind >> 4 but nothing uses A, so the graphics do not depend on wMapSpriteKind. (C1,
@@ -4324,10 +4324,10 @@ SetupScriptSpriteInFrontOfPlayer::
     jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
 
 ; A picks compressed graphics in bank $7E: 1 gives SpawnScriptSpriteInFrontOfPlayer_Data, any other
-; value Tiles0Plus700Gfx_4; then it goes on at SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
-; (decompress to vTiles0 + $700, place the sprite 16 pixels in front of the player, turn the
-; followers the same way, clear wScriptParam0, advance wScriptStep). No caller in src/ or in the
-; listing. (C1, E-0376)
+; value SparkleAndCurvedStreakTiles; then it goes on at
+; SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace (decompress to vTiles0 + $700, place the sprite 16
+; pixels in front of the player, turn the followers the same way, clear wScriptParam0, advance
+; wScriptStep). No caller in src/ or in the listing. (C1, E-0376)
 ; decompresses sprite graphics from bank $7E to vTiles0 + $700 (with a CGB palette), places it 16
 ; pixels in front of the player and advances wScriptStep (E-0129)
 SpawnScriptSpriteInFrontOfPlayer::
@@ -4338,7 +4338,7 @@ SpawnScriptSpriteInFrontOfPlayer::
     jr SpawnScriptSpriteInFrontOfPlayer_LoadAndPlace
 
 .skip:
-    ld de, Tiles0Plus700Gfx_4
+    ld de, SparkleAndCurvedStreakTiles
     ld b, $7e
 
 ; DE = compressed sprite graphics, B = their bank: decompresses them to vTiles0 + $700; on the GBC
@@ -4694,11 +4694,11 @@ FieldScene01_DrawSprite::
 FieldScene01_DrawSprite_Data::
     db $30, $ff
 
-; Field scene 1, variant 1, step 3: decompresses the sprite (Tiles0Plus700Gfx_2) to VRAM $8700 with
-; its palette from bank $7E, puts it 16 pixels in front of the player (wMessageIndex/wMessageGroup)
-; and turns the followers the player's way. (C1, E-0357)
+; Field scene 1, variant 1, step 3: decompresses the sprite (ScallopShellSpriteTiles) to VRAM $8700
+; with its palette from bank $7E, puts it 16 pixels in front of the player
+; (wMessageIndex/wMessageGroup) and turns the followers the player's way. (C1, E-0357)
 FieldScene01_LoadSprite::
-    ld de, Tiles0Plus700Gfx_2
+    ld de, ScallopShellSpriteTiles
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -5177,11 +5177,11 @@ DrawScriptMetaSprite21AtScrollOffset::
     farcall DrawMetaSprite
     ret
 
-; Field scene 1, variant 2, step 3: as variant 1's step 3 with the sprite Tiles0Plus700Gfx_3:
+; Field scene 1, variant 2, step 3: as variant 1's step 3 with the sprite LumpyBlobSpriteTiles:
 ; decompresses it to VRAM $8700 with its palette from bank $7E, puts it 16 pixels in front of the
 ; player and turns the followers the player's way. (C1, E-0357)
 FieldScene01_LoadSprite2::
-    ld de, Tiles0Plus700Gfx_3
+    ld de, LumpyBlobSpriteTiles
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM
@@ -6911,15 +6911,15 @@ PlaceSpecialMapObjectsOnEntry::
     ld [wObject5], a
     ret
 
-; Loads the floating scene sprite drawn by DrawAnimatedMetaSprite1B: decompresses Tiles0Plus700Gfx
-; (bank $7E) to vTiles0 + $300 when hTemp0 is 0, or to vTiles0 + $700 otherwise, and sets
-; wSpriteFloatY = $30. On CGB it copies the 8 palette bytes at SharedOBJPalettes + $D8 (bank $7E) to
-; wOBJPaletteBuffer + $18 (OBJ palette 3) or + $38 (palette 7) and sets wOBJPaletteUploadRequest =
-; $7F. BossWinScene_LoadSprites (bank $5F) far-calls it with hTemp0 = 1 and a scene in bank $73 with
-; hTemp0 = 0. (C1, E-0377)
-; decompresses Tiles0Plus700Gfx to vTiles0 + $300 (or + $700 when hTemp0 is set), wSpriteFloatY =
-; $30, and on CGB copies an 8-byte palette from bank $7E (E-0125) (E-0344: the address in its name
-; dropped or read as the label there; was LoadSpriteGraphics7EToTiles0)
+; Loads the floating scene sprite drawn by DrawAnimatedMetaSprite1B: decompresses
+; FloatingOrbSpriteTiles (bank $7E) to vTiles0 + $300 when hTemp0 is 0, or to vTiles0 + $700
+; otherwise, and sets wSpriteFloatY = $30. On CGB it copies the 8 palette bytes at SharedOBJPalettes
+; + $D8 (bank $7E) to wOBJPaletteBuffer + $18 (OBJ palette 3) or + $38 (palette 7) and sets
+; wOBJPaletteUploadRequest = $7F. BossWinScene_LoadSprites (bank $5F) far-calls it with hTemp0 = 1
+; and a scene in bank $73 with hTemp0 = 0. (C1, E-0377)
+; decompresses FloatingOrbSpriteTiles to vTiles0 + $300 (or + $700 when hTemp0 is set),
+; wSpriteFloatY = $30, and on CGB copies an 8-byte palette from bank $7E (E-0125) (E-0344: the
+; address in its name dropped or read as the label there; was LoadSpriteGraphics7EToTiles0)
 LoadSpriteGraphics7EToTiles0::
     ldh a, [hTemp0]
     or a
@@ -6931,7 +6931,7 @@ LoadSpriteGraphics7EToTiles0::
     ld hl, vTiles0 + $700
 
 .call_decompress_to_vram:
-    ld de, Tiles0Plus700Gfx
+    ld de, FloatingOrbSpriteTiles
     ld b, $7e
     call DecompressToVRAM
     ld a, $30
@@ -7889,21 +7889,21 @@ DrawFieldSprites_AnimateSubIndex_Data8::
 ; byte changes (E-0360, E-0238, C1)
 ; record: bank-$7E graphics pointer; sprite-set/palette selector; trailing byte
 FieldCommandSpriteTable::
-    dw Tiles0Plus300Gfx ; id 0
+    dw FacetedGrayLumpSpriteTiles ; id 0
     db $0a, $00
-    dw Tiles0Plus300Gfx ; id 1
+    dw FacetedGrayLumpSpriteTiles ; id 1
     db $0a, $00
     dw Tiles0Gfx ; id 2
     db $00, $00
-    dw Gfx_FieldCommandSpriteTable_3 ; id 3
+    dw TidalBellSpriteTiles ; id 3
     db $1d, $00
     dw Tiles0Gfx ; id 4
     db $00, $00
     dw Tiles0Plus600Gfx ; id 5
     db $15, $00
-    dw Gfx_FieldCommandSpriteTable_6 ; id 6
+    dw FlameTuftSpriteTiles ; id 6
     db $93, $00
-    dw Gfx_FieldCommandSpriteTable_7 ; id 7
+    dw DarkCrackedBallSpriteTiles ; id 7
     db $16, $00
     dw Gfx_FieldCommandSpriteTable_8 ; id 8
     db $0d, $00
@@ -7911,27 +7911,27 @@ FieldCommandSpriteTable::
     db $11, $00
     dw Gfx_FieldCommandSpriteTable_10 ; id 10
     db $0e, $00
-    dw Gfx_FieldCommandSpriteTable_11 ; id 11
+    dw FlameSpriteTiles ; id 11
     db $9a, $00
-    dw Gfx_FieldCommandSpriteTable_12 ; id 12
+    dw SmokePuffSpriteTiles ; id 12
     db $97, $00
-    dw Gfx_FieldCommandSpriteTable_13 ; id 13
+    dw EggHatchSpriteTiles ; id 13
     db $1f, $00
-    dw Gfx_FieldCommandSpriteTable_13 ; id 14
+    dw EggHatchSpriteTiles ; id 14
     db $9f, $00
-    dw Gfx_FieldCommandSpriteTable_15 ; id 15
+    dw MagicPlugSpriteTiles ; id 15
     db $0b, $00
     dw Gfx_FieldCommandSpriteTable_16 ; id 16
     db $09, $00
-    dw Tiles0Plus100Gfx ; id 17
+    dw SparkleSpriteTiles ; id 17
     db $9e, $00
-    dw Gfx_FieldCommandSpriteTable_18 ; id 18
+    dw SwirlSpriteTiles ; id 18
     db $98, $00
     dw Tiles0Gfx ; id 19
     db $00, $00
-    dw Gfx_FieldCommandSpriteTable_20 ; id 20
+    dw GiftEggSpriteTiles ; id 20
     db $20, $00
-    dw Gfx_FieldCommandSpriteTable_20 ; id 21
+    dw GiftEggSpriteTiles ; id 21
     db $a0, $00
 
 ; Sets up the trigger of the current screen on map load: wTriggerKind = $FF (none); then, on the
@@ -8185,7 +8185,7 @@ TriggerSpriteTable::
     dfar Gfx_TriggerSpriteTable_4 ; id 4: compressed sprite graphics
     db $10 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
-    dfar Gfx_TriggerSpriteTable_5 ; id 5: compressed sprite graphics
+    dfar FoundItemBottleSpriteTiles ; id 5: compressed sprite graphics
     db $18 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_6 ; id 6: compressed sprite graphics
@@ -8194,7 +8194,7 @@ TriggerSpriteTable::
     dfar Gfx_TriggerSpriteTable_7 ; id 7: compressed sprite graphics
     db $28 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
-    dfar Gfx_TriggerSpriteTable_8 ; id 8: compressed sprite graphics
+    dfar FoundItemMeatSpriteTiles ; id 8: compressed sprite graphics
     db $30 ; palette byte offset from 7E:$4BBD (SharedOBJPalettes)
     db $00, $00 ; not read here
     dfar Gfx_TriggerSpriteTable_9 ; id 9: compressed sprite graphics

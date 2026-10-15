@@ -515,6 +515,10 @@ KeyWorld01_0_Y1X1_Tiles::
     db $01, $00, $01, $11, $12, $13, $35, $36, $36, $37, $52, $53, $50, $51, $02, $20
     db $02, $02, $06, $02, $02, $2c, $02, $02, $0c, $05, $11, $02, $1c, $00, $02, $40
 
+; Not an asset. $5F7A lies $30 bytes inside KeyWorld01_0_Y1X1_Tiles (bank $65, $5F4A-$5FE5, 155
+; bytes that expand to 360), so a decompression from there reads the middle of a key world screen
+; stream as a header. It yields 514 bytes (not a whole number of tiles) and reads on to $615F past
+; the end of that stream. Rendered as tiles: noise. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 485 bytes that expand to 514 (E-0016, E-0017)
 Gfx65_1::
     INCBIN "gfx/misc/gfx65_1.lz"
@@ -543,7 +547,7 @@ KeyWorld29_0_Y1X2_Header::
     db $07
 
 ; LZSS-compressed: 1253 bytes that expand to 1281 (E-0016, E-0017)
-Gfx65_2::
+Gfx65_1_::
     db $01, $05, $0b, $0e, $00, $a0, $00
 
 ; LZSS-compressed: 176 bytes that expand to 360 (E-0016, E-0017)
@@ -638,10 +642,16 @@ KeyWorld04_0_Y0X2_Header::
 KeyWorld04_0_Y0X2_Tiles::
     INCBIN "maps/key_worlds/04_0_y0_x2_tiles.lz"
 
+; Not an asset. $6644 lies $52 bytes inside KeyWorld04_0_Y0X2_Tiles (bank $65, $65F2-$6693, 161
+; bytes that expand to 360). A decompression from there gives exactly 512 bytes and happens to end
+; at $6844, where Gfx65_4 begins, because both are interior starts of other streams. Rendered as 32
+; tiles: noise. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 512 bytes that expand to 512 (E-0016, E-0017)
 Gfx65_3::
     INCBIN "gfx/misc/gfx65_3.lz"
 
+; the 8-byte header of the screen stream that follows (E-0222)
+; record: screen header
 KeyWorldScreenHeader_65_35::
 ; another name for the data at KeyWorldScreenHeader_65_35, whose note is above (E-0381)
 KeyWorld04_0_Y0X1_Header::
@@ -651,8 +661,6 @@ KeyWorld04_0_Y0X1_Header::
 KeyWorld04_0_Y0X1_Tiles::
     INCBIN "maps/key_worlds/04_0_y0_x1_tiles.lz"
 
-; the 8-byte header of the screen stream that follows (E-0222)
-; record: screen header
 KeyWorldScreenHeader_65_36::
 ; another name for the data at KeyWorldScreenHeader_65_36, whose note is above (E-0381)
 KeyWorld00_0_Y0X2_Header::
@@ -674,6 +682,9 @@ KeyWorld06_0_Y0X1_Tiles::
     db $0d, $06, $11, $36, $37, $52, $53, $02, $42, $00, $18, $02, $21, $06, $07, $02
     db $2e, $02, $20, $21
 
+; Not an asset. $6844 lies $34 bytes inside KeyWorld06_0_Y0X1_Tiles (bank $65, $6810-$68B7, 167
+; bytes that expand to 360). A decompression from there yields 526 bytes (not a whole number of
+; tiles) and reads on to $6A41. Rendered as tiles: noise. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 509 bytes that expand to 526 (E-0016, E-0017)
 Gfx65_4::
     INCBIN "gfx/misc/gfx65_4.lz"
@@ -699,7 +710,7 @@ KeyWorld27_0_Y0X2_Tiles::
     INCBIN "maps/key_worlds/27_0_y0_x2_tiles.lz"
 
 ; LZSS-compressed: 517 bytes that expand to 514 (E-0016, E-0017)
-Gfx65_5::
+Gfx65_2::
     db $02, $02, $b6, $00, $02, $ee, $02, $02, $f2, $00, $02, $a8, $02, $02, $18, $12
     db $02, $b8, $00, $02, $06, $10, $02, $bc, $02, $02, $2c, $12, $02, $18, $12, $02
     db $7c, $00, $02, $40, $14, $02, $2a, $14, $02, $90, $00, $02, $54, $14, $50, $51
@@ -753,7 +764,7 @@ KeyWorld27_0_Y0X2_Attrs::
     db $03
 
 ; LZSS-compressed: 97 bytes that expand to 380 (E-0016, E-0017)
-Gfx65_6::
+Gfx65_3_::
     db $7c, $01, $04, $04, $03, $58, $02, $03, $76, $0f, $03, $03, $7c, $02, $03, $a0
     db $04, $03, $58, $00, $03, $a0, $0a, $03, $ac, $0f, $01, $04, $04, $03, $b2, $0c
     db $03, $d2, $0a, $03, $56, $00, $03, $ae, $0c, $03, $f4, $0f, $01, $03, $f2, $00

@@ -3231,11 +3231,11 @@ BreedMenu_ReturnToMap::
     dw BreedMenu_ReturnToMap_MarkOption
     dw BreedMenu_ChooseParents_BackToOptions
 
-; Returning to the map, step 0: decompresses Tiles1Gfx (bank $46) into VRAM $8800 and restores the
-; player's position. (C1, E-0357)
+; Returning to the map, step 0: decompresses LetterFrameIconDigitTiles (bank $46) into VRAM $8800
+; and restores the player's position. (C1, E-0357)
 BreedMenu_ReturnToMap_LoadTiles::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld a, [wScreenStep]

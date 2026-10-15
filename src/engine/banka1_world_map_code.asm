@@ -908,7 +908,7 @@ RunWorldMapState_DrawCloseUp::
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_3
+    ld de, Tiles0Plus100Gfx_2
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
@@ -916,7 +916,7 @@ RunWorldMapState_DrawCloseUp::
     ld b, $7e
     ld hl, vTiles0 + $200
     call DecompressToVRAM
-    ld de, Tiles2Gfx_3
+    ld de, WorldMapCloseUpTerrainTiles
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
@@ -2664,15 +2664,15 @@ RunWorldMapState_DrawOverview::
     ld b, $7e
     ld hl, vTiles0
     call DecompressToVRAM
-    ld de, Tiles0Plus100Gfx_2
+    ld de, Tiles0Plus100Gfx
     ld b, $7e
     ld hl, vTiles0 + $100
     call DecompressToVRAM
-    ld de, Tiles2Gfx_2
+    ld de, WorldMapOverviewLandTiles
     ld b, $5d
     ld hl, vTiles2
     call DecompressToVRAM
-    ld de, Tiles2Plus500Gfx
+    ld de, WorldMapOverviewFrameTiles
     ld b, $5e
     ld hl, vTiles2 + $500
     call DecompressToVRAM

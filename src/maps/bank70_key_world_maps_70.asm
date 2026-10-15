@@ -10,9 +10,17 @@ SECTION "Bank 70", ROMX[$4000], BANK[$70]
 MapType5Tiles8::
     INCBIN "gfx/map_types/5_tiles8.lz"
 
+; Not an independent asset: the last $13B bytes of the 716-byte compressed stream MapType5Tiles8
+; (entry 8 of MapType5TilesetTable, 2048 bytes = 128 BG tiles for vTiles2 of the key-world floors).
+; Decompressing MapType5Tiles8 from bank $70 address $4001 consumes exactly 716 bytes, ending where
+; MapType5Palettes8 begins, and the stream here starts $191 bytes in (the generator split it at a
+; point where the bytes happen to parse as a header). Decoding from this point gives 1478 bytes of
+; noise that run past the real end: its output contains the 64-byte palette table and the start of
+; the following attribute streams as literals, and the picture is not tiles. Nothing loads it on its
+; own; LoadMapType5TilesetAndHeader decompresses the whole stream from MapType5Tiles8. (C1, E-0383)
 ; LZSS-compressed: 1418 bytes that expand to 1478 (E-0016, E-0017)
-Gfx70_1::
-    INCBIN "gfx/misc/gfx70_1.lz"
+MapType5Tiles8StreamTail::
+    INCBIN "gfx/map_types/5_tiles8_stream_tail.lz"
 
 ; entry 8 of MapType5TilesetTable; copied to wBGPaletteBuffer (E-0140, C1)
 ; record: one CGB palette: 4 BGR555 colours
@@ -58,25 +66,71 @@ KeyWorldRoom03_Y2X1_Tiles::
 KeyWorldRoom03_Y3X0_Tiles::
     INCBIN "maps/key_worlds/room03_y3_x0_tiles.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$51) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $70 and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen70_1. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; vertical corridor at the top with a stair-step dark patch. The numbering is shared with the listed
+; key-world screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 138 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_1::
-    INCBIN "gfx/misc/screen_map70_1.lz"
+KeyWorldUnlistedScreen70_A_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen70_a_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$53) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $70 and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen70_2. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a large
+; open area with dark stair-steps at the left. The numbering is shared with the listed key-world
+; screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 204 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_2::
-    INCBIN "gfx/misc/screen_map70_2.lz"
+KeyWorldUnlistedScreen70_B_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen70_b_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $70 and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen70_3. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): rubble
+; and a dark patch in the lower half of a room. The numbering is shared with the listed key-world
+; screens, so the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_3::
-    INCBIN "gfx/misc/screen_map70_3.lz"
+KeyWorldUnlistedScreen70_C_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen70_c_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $00-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $70 and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen70_4. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a room
+; with dark patches along a diagonal. The numbering is shared with the listed key-world screens, so
+; the tile set cannot be fixed from this stream. (C1, E-0383)
 ; LZSS-compressed: 245 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_4::
-    INCBIN "gfx/misc/screen_map70_4.lz"
+KeyWorldUnlistedScreen70_D_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen70_d_tilemap.lz"
 
+; Tile map, 360 bytes (20 x 18 tile numbers, tile ids $02-$55) of one key-world floor screen. It has
+; the shape of the records LoadMapScreen_Type5 decompresses into wScreenTileBuffer (the far pointers
+; in KeyWorldRooms), but none of the 336 distinct stream pointers in the 160 KeyWorldRooms records
+; points at it, and no other pointer to it exists in the ROM, so no loader reaches it; its use as a
+; screen is from its shape only. It sits in the run of tile maps of bank $70 and its attribute map
+; is the stream in the same position of the next run, KeyWorldScreen70_5. Rendered with the paired
+; attributes and a MapType5 tile set (tile set 4 shown; the real set depends on the floor): a
+; vertical corridor at the left with three boulder-like objects at the upper right. The numbering is
+; shared with the listed key-world screens, so the tile set cannot be fixed from this stream. (C1,
+; E-0383)
 ; LZSS-compressed: 146 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_5::
-    INCBIN "gfx/misc/screen_map70_5.lz"
+KeyWorldUnlistedScreen70_E_Tilemap::
+    INCBIN "maps/key_worlds/unlisted_screen70_e_tilemap.lz"
 
 ; LZSS-compressed: 200 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom1B_Y2X1_Tiles::
@@ -215,37 +269,136 @@ KeyWorldRoom08_Y1X3_Tiles::
 KeyWorldRoom08_Y3X3_Tiles::
     INCBIN "maps/key_worlds/room08_y3_x3_tiles.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows an open room
+; with five single dark pit blocks scattered over the floor and a small striped patch at the lower
+; right; a row of fluted pillars on the left edge; openings at the top and bottom centre. Its
+; attribute map is, by position in the attribute run, KeyWorldScreen70_6. The same layout looks
+; different under each of the 12 tile sets, so the name describes the layout, not a theme. (C1,
+; E-0383)
 ; LZSS-compressed: 162 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_6::
-    INCBIN "gfx/misc/screen_map70_6.lz"
+KeyWorldFloorScreenFiveScatteredPitsTilemap::
+    INCBIN "maps/key_worlds/floor_screen_five_scattered_pits_tilemap.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a large
+; block of dark pit tiles (about 3 blocks wide, 4 high) at the upper left beside a big striped pool
+; (stairs-shaped, about 17 blocks); openings at the top and bottom centre. Its attribute map is, by
+; position in the attribute run, KeyWorldScreen70_7. The same layout looks different under each of
+; the 12 tile sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 199 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_7::
-    INCBIN "gfx/misc/screen_map70_7.lz"
+KeyWorldFloorScreenBigPitBlockAndPoolTilemap::
+    INCBIN "maps/key_worlds/floor_screen_big_pit_block_and_pool_tilemap.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a diagonal
+; cluster of six dark pit blocks at the upper left with two striped patches below and to the right
+; and a few cracked floor blocks; walls fill the lower left. Its attribute map is, by position in
+; the attribute run, KeyWorldScreen70_8. The same layout looks different under each of the 12 tile
+; sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 224 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_8::
-    INCBIN "gfx/misc/screen_map70_8.lz"
+KeyWorldFloorScreenPitClusterStripePatchTilemap::
+    INCBIN "maps/key_worlds/floor_screen_pit_cluster_stripe_patch_tilemap.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a vertical
+; line of pits turning into a horizontal line of pits (an L, seven pit blocks) with striped patches
+; beside it; walls fill the lower left. Its attribute map is, by position in the attribute run,
+; KeyWorldScreen70_9. The same layout looks different under each of the 12 tile sets, so the name
+; describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 216 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_9::
-    INCBIN "gfx/misc/screen_map70_9.lz"
+KeyWorldFloorScreenLongLShapedPitLineTilemap::
+    INCBIN "maps/key_worlds/floor_screen_long_lshaped_pit_line_tilemap.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows six boulder
+; blocks in a diagonal band with striped tiles beside them; no pits. Its attribute map uses palette
+; 5 (the brown boulder colour in this render). Its attribute map is, by position in the attribute
+; run, KeyWorldScreen70_10. The same layout looks different under each of the 12 tile sets, so the
+; name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 149 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_10::
-    INCBIN "gfx/misc/screen_map70_10.lz"
+KeyWorldFloorScreenSixBouldersDiagonalTilemap::
+    INCBIN "maps/key_worlds/floor_screen_six_boulders_diagonal_tilemap.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows six boulder
+; blocks in two rows of three, a striped strip under them and a patch of cracked floor at the lower
+; right; no pits. Its attribute map uses palette 5 for the boulders. Its attribute map is, by
+; position in the attribute run, KeyWorldScreen70_11. The same layout looks different under each of
+; the 12 tile sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 214 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_11::
-    INCBIN "gfx/misc/screen_map70_11.lz"
+KeyWorldFloorScreenSixBouldersTwoRowsTilemap::
+    INCBIN "maps/key_worlds/floor_screen_six_boulders_two_rows_tilemap.lz"
 
 ; LZSS-compressed: 218 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom29_Y2X3_Tiles::
     INCBIN "maps/key_worlds/room29_y2_x3_tiles.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows two boulder
+; blocks at the upper left, a walled block in the middle right and a long striped strip along the
+; bottom; no pits. Its attribute map uses palette 5 for the boulders. Its attribute map is, by
+; position in the attribute run, KeyWorldScreen70_12. The same layout looks different under each of
+; the 12 tile sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 215 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_12::
-    INCBIN "gfx/misc/screen_map70_12.lz"
+KeyWorldFloorScreenTwoBouldersLongStripeTilemap::
+    INCBIN "maps/key_worlds/floor_screen_two_boulders_long_stripe_tilemap.lz"
 
 ; LZSS-compressed: 53 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom01_Y3X3_Attrs::
@@ -286,7 +439,7 @@ KeyWorldRoom08_Y3X3_Attrs::
     INCBIN "maps/key_worlds/room08_y3_x3_attrs.lz"
 
 ; LZSS-compressed: 3295 bytes that expand to 3359 (E-0016, E-0017)
-Gfx70_2::
+Gfx70_1::
     db $1f, $0d
 
 ; LZSS-compressed: 81 bytes that expand to 360 (E-0016, E-0017)
@@ -391,9 +544,24 @@ KeyWorldScreen70_14::
 KeyWorldScreen70_15::
     INCBIN "maps/key_worlds/screen70_15.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows a winding
+; corridor (down from the top, across, then down again) with a striped column on the left and
+; another on the right, two pit blocks beside the left one and a row of cracked floor across the
+; middle. Its attribute map is, by position in the attribute run, KeyWorldScreen70_19. The same
+; layout looks different under each of the 12 tile sets, so the name describes the layout, not a
+; theme. (C1, E-0383)
 ; LZSS-compressed: 201 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_13::
-    INCBIN "gfx/misc/screen_map70_13.lz"
+KeyWorldFloorScreenWindingCorridorStripesTilemap::
+    INCBIN "maps/key_worlds/floor_screen_winding_corridor_stripes_tilemap.lz"
 
 ; LZSS-compressed: 189 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom0D_Y1X0_Tiles::
@@ -403,9 +571,23 @@ KeyWorldRoom0D_Y1X0_Tiles::
 KeyWorldRoom3E_Y1X2_Tiles::
     INCBIN "maps/key_worlds/room3_e_y1_x2_tiles.lz"
 
+; Tile map, 360 bytes after decompression: 20 x 18 tile numbers, one 160 x 144 pixel screen of a
+; key-world floor. The numbers (all below 86) index the 128-tile BG set that
+; LoadMapType5TilesetAndHeader puts in vTiles2; each thing on the map is a 2 x 2 block of tiles n,
+; n+1, n+16, n+17. LoadMapScreen_Type5 (map type 5, the key-world floor screens) decompresses the
+; screen picked by hMapScreenX and hMapScreenY from a room record in KeyWorldRooms (bank $72) into
+; wScreenTileBuffer and, on CGB, the attribute map whose far pointer lies $30 bytes later in the
+; record into wScreenAttrBuffer. No far pointer to this stream exists in the ROM (the three bytes of
+; its address and bank were searched in every bank, and none of the KeyWorldRooms records reaches
+; it), so no routine is known to load it; what it is comes from its content and from sitting among
+; the room screens. Rendered with the MapType5Tiles9 set and MapType5Palettes9 it shows five boulder
+; blocks (three in a row, two in a column) on a winding path with striped and cracked floor blocks
+; beside them; no pits. Its attribute map uses palette 5 for the boulders. Its attribute map is, by
+; position in the attribute run, KeyWorldScreen70_20. The same layout looks different under each of
+; the 12 tile sets, so the name describes the layout, not a theme. (C1, E-0383)
 ; LZSS-compressed: 185 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap70_14::
-    INCBIN "gfx/misc/screen_map70_14.lz"
+KeyWorldFloorScreenFiveBouldersWindingPathTilemap::
+    INCBIN "maps/key_worlds/floor_screen_five_boulders_winding_path_tilemap.lz"
 
 ; LZSS-compressed: 221 bytes that expand to 360 (E-0016, E-0017)
 KeyWorldRoom37_Y2X0_Tiles::

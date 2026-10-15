@@ -2885,7 +2885,7 @@ MapRecord67::
 
 ; map record that no MapTable entry points to, 1 x 1 screens, 3 decoded variant(s) (E-0142, E-0201)
 MapRecordX59E4::
-    dfar MapX59E4Tileset ; entry 0: tileset
+    dfar IceDoorRoomTileset ; entry 0: tileset
     dfar MapX59E4Palettes ; palettes
     db $01, $01, $1f, $1c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $63 ; variant flag byte
@@ -3679,7 +3679,7 @@ MapRecord9B::
 
 ; map record that no MapTable entry points to, 1 x 1 screens, 5 decoded variant(s) (E-0142, E-0201)
 MapRecordX6248::
-    dfar MapX6248Tileset ; entry 0: tileset
+    dfar StoneDoorRoomTileset ; entry 0: tileset
     dfar MapX6248Palettes ; palettes
     db $01, $01, $1f, $1c, $00, $00, $00, $02, $06, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $64 ; variant flag byte
@@ -3743,7 +3743,7 @@ MapRecordA3::
 
 ; map record that no MapTable entry points to, 1 x 1 screens, 2 decoded variant(s) (E-0142, E-0201)
 MapRecordX62F0::
-    dfar MapX62F0Tileset ; entry 0: tileset
+    dfar SandDoorRoomTileset ; entry 0: tileset
     dfar MapX62F0Palettes ; palettes
     db $01, $01, $1f, $1c, $00, $00, $00, $00, $00, $00 ; width, height, wMaxBlockingTile, wMapHeaderByte7, wFieldEventKind, encounter rate, wMapMoveType, wMapSpriteKind, 2 bytes
     dw wStoryFlags + $65 ; variant flag byte

@@ -2153,9 +2153,9 @@ ScreenAnimationTable::
     dw Map2FScreens0_Y1X0 ; id 0: frame 0 tile map (bank $93)
     dw Map2FAttrs0_Y1X0 ; frame 0 attribute map
     dw ScreenMap_ScreenAnimationTable_2 ; frame 1 tile map
-    dw ScriptScreenAttrMap_ScreenAnimationTable_3 ; frame 1 attribute map
+    dw SandShoreWaterAttrMap ; frame 1 attribute map
     dw ScreenMap_ScreenAnimationTable_2 ; id 1: frame 0 tile map (bank $93)
-    dw ScriptScreenAttrMap_ScreenAnimationTable_3 ; frame 0 attribute map
+    dw SandShoreWaterAttrMap ; frame 0 attribute map
     dw ScreenMap_ScreenAnimationTable_6 ; frame 1 tile map
     dw ScriptScreenAttrMap_ScreenAnimationTable_7 ; frame 1 attribute map
     dw ScreenMap_ScreenAnimationTable_6 ; id 2: frame 0 tile map (bank $93)

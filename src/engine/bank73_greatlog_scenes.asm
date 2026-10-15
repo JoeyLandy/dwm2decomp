@@ -227,7 +227,7 @@ TravelerEvents_CasinoShip_PayOut::
     farcall RestoreScreenBufferFromBGMap1
     farcall DrawFullScreenBufferAtScroll
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     call LoadRecordListNameTiles
@@ -6519,11 +6519,12 @@ SceneKamehaEscape_AnimateScreen::
     ret
 
 ; Six 4-byte frames: two ROM addresses in bank $58, the screen tile map and its attribute map. The
-; frame is the frame counter modulo 6: ScreenMap58_1 with ScreenMap58_3, ScreenMap58_2 with
-; ScreenMap58_4, Map40Screens2_Y0X0 with Map40Attrs2_Y0X0, ScreenMap58_2 with ScreenMap58_4 again,
-; ScreenMap58_1 with ScreenMap58_3 again, and Map40Screens0_Y0X0 with Map40Attrs0_Y0X0.
-; SceneKamehaEscape_AnimateScreen draws one frame per call for nine frames with
-; SceneKamehaEscape_DrawScreen and SceneKamehaEscape_LoadScreenAttrs. (C1, E-0381)
+; frame is the frame counter modulo 6: Map40ScreenMostRocks with Map40AttrsMostRocks,
+; Map40ScreenFewRocks with Map40AttrsFewRocks, Map40Screens2_Y0X0 with Map40Attrs2_Y0X0,
+; Map40ScreenFewRocks with Map40AttrsFewRocks again, Map40ScreenMostRocks with Map40AttrsMostRocks
+; again, and Map40Screens0_Y0X0 with Map40Attrs0_Y0X0. SceneKamehaEscape_AnimateScreen draws one
+; frame per call for nine frames with SceneKamehaEscape_DrawScreen and
+; SceneKamehaEscape_LoadScreenAttrs. (C1, E-0381)
 SceneKamehaEscape_AnimateScreen_Data::
     db $06, $47, $42, $4c, $fb, $47, $cb, $4c, $ee, $48, $3c, $4d, $fb, $47, $cb, $4c
     db $06, $47, $42, $4c, $ff, $45, $b3, $4b

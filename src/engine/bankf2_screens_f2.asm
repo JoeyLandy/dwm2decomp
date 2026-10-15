@@ -25,7 +25,7 @@ GameMode8_Init::
     bit 7, a
     jr z, .loop2
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1

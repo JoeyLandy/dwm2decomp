@@ -1078,11 +1078,11 @@ WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data::
 ; Start-up for game mode 1, the field (RunGameModeInit_Field far-calls it): clears the STAT
 ; interrupt sources and rIF; resets the sound hardware on map $38 at screen (0, 0) and when
 ; wSaveStateFlag is set; loads the Super Game Boy border set returned by
-; GameMode1_Init_PickSGBBorderSet (LoadSGBBorderForSetA), decompresses Tiles1Gfx to vTiles1, sends
-; the SGB palette set and attribute file from GameMode1_Init_Data1/Data2 (both 0) and builds the
-; field (InitFieldScreen). It clears wFieldTransitionStep; when wFieldInitStage is 0 it also resets
-; the sound and restarts the map music. Then it clears wFieldInitStage, sets wLCDCShadow = 3 and
-; finishes with ResumeAfterModeChange (A = 3). (C1, E-0374)
+; GameMode1_Init_PickSGBBorderSet (LoadSGBBorderForSetA), decompresses LetterFrameIconDigitTiles to
+; vTiles1, sends the SGB palette set and attribute file from GameMode1_Init_Data1/Data2 (both 0) and
+; builds the field (InitFieldScreen). It clears wFieldTransitionStep; when wFieldInitStage is 0 it
+; also resets the sound and restarts the map music. Then it clears wFieldInitStage, sets wLCDCShadow
+; = 3 and finishes with ResumeAfterModeChange (A = 3). (C1, E-0374)
 ; start-up for wGameMode = 1; forcing this mode on the emulator shows: water map with the player
 ; sprite (E-0029)
 GameMode1_Init::
@@ -1105,7 +1105,7 @@ GameMode1_Init::
     call GameMode1_Init_PickSGBBorderSet
     call LoadSGBBorderForSetA
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, GameMode1_Init_Data1

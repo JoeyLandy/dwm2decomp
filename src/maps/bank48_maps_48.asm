@@ -301,9 +301,16 @@ Map19Screens6_Y0X0::
 Map19Screens0_Y1X0::
     INCBIN "maps/map19/screens0_y1_x0.lz"
 
+; Tile map: 360 bytes = one 20 x 18 screen of tile numbers, stored between Map19Screens0_Y1X0 and
+; Map19Screens0_Y1X1 in bank $48. It differs from Map19Screens0_Y1X0 in 8 bytes: two 2 x 2 blocks at
+; columns 6-7 and 12-13, rows 0-1, hold tiles $4C-$4F and $52-$55 instead of $60 (the tile of the
+; stair strips). No table (Map19Screens0 and Map19Screens6 included) points to it and no load of
+; $5F34 was found. Rendered with Map19Tileset: a walkway with two columns of pillars, a studded
+; floor and a stair at the bottom; the two top stair strips of the normal screen are replaced by
+; pillar tops. (C1, E-0383)
 ; LZSS-compressed: 226 bytes that expand to 360 (E-0016, E-0017)
-ScreenMap48_1::
-    INCBIN "gfx/misc/screen_map48_1.lz"
+Map19ScreenY1X0AltBlocks::
+    INCBIN "maps/map19/screen_y1_x0_alt_blocks.lz"
 
 ; LZSS-compressed: 201 bytes that expand to 360 (E-0016, E-0017)
 Map19Screens0_Y1X1::
@@ -462,9 +469,16 @@ Map04Attrs0_Y0X2::
 Map14Tileset::
     INCBIN "maps/map14/tileset.lz"
 
+; Tiles: 2048 bytes = 128 tiles of 2bpp filling vTiles2 ($9000-$97FF). LoadMapHeader, for map $14
+; only, first expands the record tileset Map14Tileset into vTiles1 and then this stream into
+; vTiles2, and clears wMenuState and wMenuSubState. Map $14 is the one-screen map that
+; MonsterScene_EnterMap14 enters for the breeding and monster scenes (docs/LINK_BREEDING_SCENES.md).
+; Rendered together with Map14Tileset through Map14Screens0_Y0X0: a dark chamber, white flame-like
+; strokes around a gray hooded shape, a ribcage-like pattern and a vertical gray bar running down
+; from it. Alone the tile sheet looks like noisy texture in four grays. (C1, E-0383)
 ; LZSS-compressed: 1494 bytes that expand to 2048 (E-0016, E-0017)
-Tiles2Gfx::
-    INCBIN "gfx/misc/tiles2_gfx.lz"
+MonsterSceneBackdropTiles::
+    INCBIN "gfx/misc/monster_scene_backdrop_tiles.lz"
 
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours

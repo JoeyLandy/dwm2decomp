@@ -2104,20 +2104,20 @@ LoadPlayerSpriteGraphics::
     call DecompressGraphicsTemp0ToTemp4
     ret
 
-; When hPlayerStateFlags bit 3 is set: decompresses Tiles0Plus700Gfx_2 from bank $7E to vTiles0 +
-; $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at
+; When hPlayerStateFlags bit 3 is set: decompresses ScallopShellSpriteTiles from bank $7E to vTiles0
+; + $700 (DecompressToVRAM) and copies 8 bytes from bank $7E at
 ; LoadPlayerAndFollowerSpriteGraphics_OBJPaletteBufferData + $108 into OBJ palette 7 of
 ; wOBJPaletteBuffer (+ $38), then sets wOBJPaletteUploadRequest = $7F. Only
 ; LoadPlayerAndFollowerSpriteGraphics calls it, in sprite mode 2; DrawPlayerOverlaySprite21Or22 then
 ; draws with tile offset $70 and palette 7. (C1, E-0374)
-; when hPlayerStateFlags bit 3 is set: decompresses Tiles0Plus700Gfx_2 (bank $7E) to vTiles0 + $700
-; and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer
+; when hPlayerStateFlags bit 3 is set: decompresses ScallopShellSpriteTiles (bank $7E) to vTiles0 +
+; $700 and copies an 8-byte palette from bank $7E into OBJ palette 7 of wOBJPaletteBuffer
 ; (wOBJPaletteUploadRequest = $7F) (E-0120)
 LoadAltObjectGraphicsIfPlayerStateFlagsBit3::
     ldh a, [hPlayerStateFlags]
     bit 3, a
     ret z
-    ld de, Tiles0Plus700Gfx_2
+    ld de, ScallopShellSpriteTiles
     ld b, $7e
     ld hl, vTiles0 + $700
     call DecompressToVRAM

@@ -1723,14 +1723,14 @@ LoadBlankedBlocks00_09_0AWithCursor::
     call DrawMenuCursorTileInBuffer
     ret
 
-; Expands Tiles1Plus6E0Gfx (bank $16) into vTiles1 + $6E0 with DecompressToVRAM, then loads the
-; picture of the selected member (DrawRecordMonsterPictureForMenuSelectedMember). Only
+; Expands LatinKanaLabelGlyphTiles (bank $16) into vTiles1 + $6E0 with DecompressToVRAM, then loads
+; the picture of the selected member (DrawRecordMonsterPictureForMenuSelectedMember). Only
 ; PauseMenu_State4_BuildInfoPage calls it, when the Info page is opened. (C1, E-0374)
-; decompresses Tiles1Plus6E0Gfx (bank $16) to vTiles1 + $6E0, then runs
+; decompresses LatinKanaLabelGlyphTiles (bank $16) to vTiles1 + $6E0, then runs
 ; DrawRecordMonsterPictureForMenuSelectedMember (E-0122)
 DecompressMenuTilesTo16E0::
     ld b, $16
-    ld de, Tiles1Plus6E0Gfx
+    ld de, LatinKanaLabelGlyphTiles
     ld hl, vTiles1 + $6e0
     call DecompressToVRAM
     call DrawRecordMonsterPictureForMenuSelectedMember

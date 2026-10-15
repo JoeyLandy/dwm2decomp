@@ -9,6 +9,11 @@ SECTION "Bank 54", ROMX[$4000], BANK[$54]
 Map81Tileset::
     INCBIN "maps/map81/tileset.lz"
 
+; Not an asset. $4078 lies 119 bytes inside Map81Tileset (bank $54, $4001-$432C, 811 bytes that
+; expand to 1280); the label splits that one stream into a 119-byte and a 692-byte part.
+; Decompressing from $4078 as a stream yields 1239 bytes of garbage (not a whole number of tiles)
+; and reads on to $4499, past Map81Palettes. Rendered as tiles: noise. Map81Tileset is the tileset
+; of MapRecord81 and is whole; Gfx54_1 is only its tail. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 1057 bytes that expand to 1239 (E-0016, E-0017)
 Gfx54_1::
     INCBIN "gfx/misc/gfx54_1.lz"

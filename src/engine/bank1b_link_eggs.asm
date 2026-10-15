@@ -1880,10 +1880,10 @@ RejectedNameListCopy_1B::
     db "Suck@" ; word 82
     db "SUCK@" ; word 83
 
-; Zeroes $6F bytes from wScreenState, decompresses Tiles1Gfx from ROM bank $46 to vTiles1, far-calls
-; ClearScreenBufferAndAttributes_BankF1, calls LoadPalette0FromData_3, zeroes hScrollX and hScrollY,
-; starts a palette fade (A = $FC), sets wTextWindowState = 1, wTextWindowStep = 0 and
-; hSpriteWindowClipMode = 2, and runs StepTextWindowOpenClose until the low two bits of
+; Zeroes $6F bytes from wScreenState, decompresses LetterFrameIconDigitTiles from ROM bank $46 to
+; vTiles1, far-calls ClearScreenBufferAndAttributes_BankF1, calls LoadPalette0FromData_3, zeroes
+; hScrollX and hScrollY, starts a palette fade (A = $FC), sets wTextWindowState = 1, wTextWindowStep
+; = 0 and hSpriteWindowClipMode = 2, and runs StepTextWindowOpenClose until the low two bits of
 ; wTextWindowState are clear. It then requests tile fills with FillTilesRequest (HL = vTiles1, DE =
 ; $1202), sets hSpriteWindowClipMode = 2 and wLCDCShadow = 3, and ends by jumping to
 ; ResumeAfterModeChange with A = 1. No call, jump or pointer to it was found in src/. (C1, E-0379)
@@ -1901,7 +1901,7 @@ UnreferencedScreenInitFromBank46:: ; configured code entry (E-0197); C0
     or c
     jr nz, .loop
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToRAMLocked
     farcall ClearScreenBufferAndAttributes_BankF1
@@ -4857,9 +4857,9 @@ LinkKeyTrade_SwapKeys_Data::
     db $a0, $a1, $a2
 
 ; Link session 4's screen set-up before LinkBattleSetupMenu: clears 256 bytes from wScreenState (B
-; starts at 0, so the $6F loaded into C is unused), decompresses Tiles1Gfx (bank $46) into vTiles1,
-; clears the screen buffer (ClearScreenBufferAndAttributes_BankF1), opens a text window at vTiles1
-; (wTextWindowRows = $02, wTextWindowWidth = $12) and waits until it is open
+; starts at 0, so the $6F loaded into C is unused), decompresses LetterFrameIconDigitTiles (bank
+; $46) into vTiles1, clears the screen buffer (ClearScreenBufferAndAttributes_BankF1), opens a text
+; window at vTiles1 (wTextWindowRows = $02, wTextWindowWidth = $12) and waits until it is open
 ; (StepTextWindowOpenClose). (C1, E-0369)
 RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     ld hl, wScreenState
@@ -4871,7 +4871,7 @@ RunLinkSession4ScreenState_PrepareSetupMenu_Run::
     dec b
     jr nz, .loop
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ClearScreenBufferAndAttributes_BankF1

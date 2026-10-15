@@ -1484,3 +1484,214 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `BattleTextPrep4D` (3A:747B): The text String_2F_01_4D contains no name buffer, so which message this prep serves was not followed.
 - `BattleTextPrep92` (3A:74D6): Whether wSealPrayState holds a skill number in the case that reaches this text was not followed.
 - `ShowActionRefusedMessage` (3A:7508): What reasons 3 to 6 of CheckSkillMPCost each mean in play (which seal) was not followed.
+
+## E-0383
+
+- `LatinKanaLabelGlyphTiles` (16:7B7D): which exact labels (HP, MP, level, experience) each glyph builds on the Info page was not checked tile by tile
+- `Gfx16_1` (16:7D12): is this a leftover picture (two small sprite halves or a top edge) from an earlier build of the Info page?
+- `LetterFrameIconTiles` (31:7C1E): what each icon stands for (skull, circle, Z) was not tied to a status or screen element
+- `DigitLvHpMpTiles` (31:7DFB): the meaning of the small tile after 9 (read as an L and v pair) is by looks only
+- `LetterFrameIconDigitTiles` (46:4001): tiles 71-73 are blank here; the text glyph tiles ($15-$A3) come from elsewhere
+- `Map0DScreenY1X0AltBlock` (47:69D1): why an unreferenced altered copy exists (an unused story variant?)
+- `Map19ScreenY1X0AltBlocks` (48:5F34): whether a script patches those tiles at run time instead of switching screens
+- `MonsterSceneBackdropTiles` (48:7861): what the picture depicts is by looks only; palette and tile bank attributes were ignored in the render
+- `Gfx4C_5` (4C:725A): the generator should fold this label back into the Map48Screens0_Y8X6 bytes
+- `Gfx54_1` (54:4078): the generator should merge the 119-byte and 692-byte INCBIN parts back into one Map81Tileset stream
+- `Map40ScreenMostRocks` (58:4706): the story reason for the rocks vanishing in the Kameha escape scene
+- `WorldMapOverviewLandTiles` (5D:4001): the names of the regions the four silhouettes show were not matched to wWorldMapRegion values
+- `WorldMapCloseUpTerrainTiles` (5D:43AE): what the hex digit row is used for was not traced
+- `Gfx65_1` (65:5F7A): the generator should fold this label back into the KeyWorld01_0_Y1X1_Tiles bytes
+- `Gfx65_3` (65:6644): the generator should fold this label back into the KeyWorld04_0_Y0X2_Tiles bytes
+- `Gfx65_4` (65:6844): the generator should fold this label back into the KeyWorld06_0_Y0X1_Tiles bytes
+- `Gfx66_6` (66:59C0): the generator should fold this label back into the KeyWorld07_0_Y0X0_Tiles bytes
+- `UnusedStoneHallScreenMap` (68:7E04): none of the tile numbers drawn is above $2D, so only the vTiles2 half (MapX62F0Tileset) is shown; the picture needs no vTiles1 tile
+- `ScreenMap6D_1` (6D:4A8F): which MapType5Tiles entry fits (the render used entry 0 only)
+- `ScreenMap6D_1` (6D:4A8F): whether ScreenMap6D_1 to ScreenMap6D_9 are unused key world room screens
+- `KeyWorldGrassCrossSmallPondTilemap` (6D:4B80): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassCrossSmallPondTilemap` (6D:4B80): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandClearingBigPondTilemap` (6D:4C20): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandClearingBigPondTilemap` (6D:4C20): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandGrassPondUpperRightTilemap` (6D:4CF3): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandGrassPondUpperRightTilemap` (6D:4CF3): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldGrassDirtThreeBoulderTilemap` (6D:4DF8): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassDirtThreeBoulderTilemap` (6D:4DF8): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldGrassClearingBoulderTilemap` (6D:4EB6): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldGrassClearingBoulderTilemap` (6D:4EB6): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCorridorBlockPitTilemap` (6D:6128): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCorridorBlockPitTilemap` (6D:6128): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandZigzagPitTilemap` (6D:61C0): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandZigzagPitTilemap` (6D:61C0): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandRightPitDirtStripTilemap` (6D:629E): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandRightPitDirtStripTilemap` (6D:629E): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandTShapedPitTilemap` (6D:639F): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandTShapedPitTilemap` (6D:639F): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBoulderGroupDirtTilemap` (6D:6481): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBoulderGroupDirtTilemap` (6D:6481): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBoulderGroupLowerTilemap` (6D:6558): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBoulderGroupLowerTilemap` (6D:6558): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `Gfx6D_1` (6D:6D4C): the generator should not split MapType5Tiles2 at $6D4C; the label and gfx/misc/gfx6_d_1.lz are a split artifact (the INCBIN bytes are identical either way)
+- `KeyWorldSandCrossPitUnderLedgeTilemap` (6D:77CF): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrossPitUnderLedgeTilemap` (6D:77CF): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandPlusPitRightTilemap` (6D:7881): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandPlusPitRightTilemap` (6D:7881): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandStairPitDirtTilemap` (6D:796D): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandStairPitDirtTilemap` (6D:796D): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandBlobPitTilemap` (6D:7A60): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandBlobPitTilemap` (6D:7A60): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCrystalsTopDirtTilemap` (6D:7C13): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrystalsTopDirtTilemap` (6D:7C13): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldSandCrystalTrailTilemap` (6D:7CE8): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldSandCrystalTrailTilemap` (6D:7CE8): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCenterPitTilemap` (6E:52BA): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCenterPitTilemap` (6E:52BA): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceLowerPitTilemap` (6E:533F): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceLowerPitTilemap` (6E:533F): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceUpperRightPitTilemap` (6E:53FD): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceUpperRightPitTilemap` (6E:53FD): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceDiagonalPitTilemap` (6E:54DE): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceDiagonalPitTilemap` (6E:54DE): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceScatteredCrystalsTilemap` (6E:55D3): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceScatteredCrystalsTilemap` (6E:55D3): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalColumnTilemap` (6E:56B9): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalColumnTilemap` (6E:56B9): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalClustersTilemap` (6E:579B): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalClustersTilemap` (6E:579B): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldIceCrystalPairsTilemap` (6E:5881): which MapType5TilesetTable entry a floor would use with this screen is shown by no record; the tile set above is taken from the position in the bank and the coherence of the picture
+- `KeyWorldIceCrystalPairsTilemap` (6E:5881): whether the screen is leftover content cut from the game or reached some way other than the 160 room records
+- `KeyWorldUnlistedScreen6E_A_Tilemap` (6E:6945): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_A_Tilemap` (6E:6945): The attribute map KeyWorldScreen6E_15 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_B_Tilemap` (6E:69E7): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_B_Tilemap` (6E:69E7): The attribute map KeyWorldScreen6E_16 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_C_Tilemap` (6E:6AAC): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_C_Tilemap` (6E:6AAC): The attribute map KeyWorldScreen6E_17 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_D_Tilemap` (6E:6B9C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_D_Tilemap` (6E:6B9C): The attribute map KeyWorldScreen6E_18 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6E_E_Tilemap` (6E:6E08): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6E_E_Tilemap` (6E:6E08): The attribute map KeyWorldScreen6E_19 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_A_Tilemap` (6F:45D5): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_A_Tilemap` (6F:45D5): The attribute map KeyWorldScreen6F_1 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_B_Tilemap` (6F:4640): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_B_Tilemap` (6F:4640): The attribute map KeyWorldScreen6F_2 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_C_Tilemap` (6F:4727): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_C_Tilemap` (6F:4727): The attribute map KeyWorldScreen6F_3 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_D_Tilemap` (6F:4813): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_D_Tilemap` (6F:4813): The attribute map KeyWorldScreen6F_4 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_E_Tilemap` (6F:58E4): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_E_Tilemap` (6F:58E4): The attribute map KeyWorldScreen6F_5 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_F_Tilemap` (6F:596F): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_F_Tilemap` (6F:596F): The attribute map KeyWorldScreen6F_6 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_G_Tilemap` (6F:5A6B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_G_Tilemap` (6F:5A6B): The attribute map KeyWorldScreen6F_7 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_H_Tilemap` (6F:5B29): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_H_Tilemap` (6F:5B29): The attribute map KeyWorldScreen6F_8 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_I_Tilemap` (6F:5BEE): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_I_Tilemap` (6F:5BEE): The attribute map KeyWorldScreen6F_9 is presumably its partner and is likely to need the matching name.
+- `MapType5Tiles7StreamTail` (6F:6475): The split of one stream into MapType5Tiles7 and Gfx6F_1 comes from the asset generator (assets.txt lists 5_tiles7.lz and the misc file as two ranges); merging them into one asset is a generator change for the integrator, not decided here.
+- `KeyWorldUnlistedScreen6F_J_Tilemap` (6F:6C9B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_J_Tilemap` (6F:6C9B): The attribute map KeyWorldScreen6F_10 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_K_Tilemap` (6F:6D34): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_K_Tilemap` (6F:6D34): The attribute map KeyWorldScreen6F_11 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_L_Tilemap` (6F:6E0C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_L_Tilemap` (6F:6E0C): The attribute map KeyWorldScreen6F_12 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_M_Tilemap` (6F:6EED): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_M_Tilemap` (6F:6EED): The attribute map KeyWorldScreen6F_13 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen6F_N_Tilemap` (6F:6FC3): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen6F_N_Tilemap` (6F:6FC3): The attribute map KeyWorldScreen6F_14 is presumably its partner and is likely to need the matching name.
+- `MapType5Tiles8StreamTail` (70:4192): The split of one stream into MapType5Tiles8 and Gfx70_1 comes from the asset generator (assets.txt lists 5_tiles8.lz and the misc file as two ranges); merging them into one asset is a generator change for the integrator, not decided here.
+- `KeyWorldUnlistedScreen70_A_Tilemap` (70:48E1): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_A_Tilemap` (70:48E1): The attribute map KeyWorldScreen70_1 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_B_Tilemap` (70:496B): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_B_Tilemap` (70:496B): The attribute map KeyWorldScreen70_2 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_C_Tilemap` (70:4A37): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_C_Tilemap` (70:4A37): The attribute map KeyWorldScreen70_3 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_D_Tilemap` (70:4B17): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_D_Tilemap` (70:4B17): The attribute map KeyWorldScreen70_4 is presumably its partner and is likely to need the matching name.
+- `KeyWorldUnlistedScreen70_E_Tilemap` (70:4C0C): Which tile set a floor would draw this with is unknown because no record uses it; whether it is unused data or reached some way not seen is open.
+- `KeyWorldUnlistedScreen70_E_Tilemap` (70:4C0C): The attribute map KeyWorldScreen70_5 is presumably its partner and is likely to need the matching name.
+- `KeyWorldFloorScreenFiveScatteredPitsTilemap` (70:5CE4): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFiveScatteredPitsTilemap` (70:5CE4): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenBigPitBlockAndPoolTilemap` (70:5D86): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenBigPitBlockAndPoolTilemap` (70:5D86): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitClusterStripePatchTilemap` (70:5E4D): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitClusterStripePatchTilemap` (70:5E4D): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenLongLShapedPitLineTilemap` (70:5F2D): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenLongLShapedPitLineTilemap` (70:5F2D): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSixBouldersDiagonalTilemap` (70:6005): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSixBouldersDiagonalTilemap` (70:6005): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSixBouldersTwoRowsTilemap` (70:609A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSixBouldersTwoRowsTilemap` (70:609A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoBouldersLongStripeTilemap` (70:624A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoBouldersLongStripeTilemap` (70:624A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenWindingCorridorStripesTilemap` (70:7235): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenWindingCorridorStripesTilemap` (70:7235): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenFiveBouldersWindingPathTilemap` (70:74BC): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFiveBouldersWindingPathTilemap` (70:74BC): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorNarrowCorridorStripesPitsTilemap` (71:45D1): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorNarrowCorridorStripesPitsTilemap` (71:45D1): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoPitColumnsStripeTilemap` (71:463A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoPitColumnsStripeTilemap` (71:463A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenUShapedPitWallTilemap` (71:46F8): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenUShapedPitWallTilemap` (71:46F8): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap` (71:47D2): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenFourPitsTwoWallColumnsTilemap` (71:47D2): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `Gfx71_1` (71:4E34): the generator that finds streams by trial decoding accepted a start that lies inside an already decoded stream; the true run starts at 71:4E22
+- `KeyWorldFloorNarrowCorridorSinglePitBarTilemap` (71:56B3): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorNarrowCorridorSinglePitBarTilemap` (71:56B3): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenTwoLongPitBarsTilemap` (71:56FB): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenTwoLongPitBarsTilemap` (71:56FB): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitsAroundWallBlockTilemap` (71:579C): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitsAroundWallBlockTilemap` (71:579C): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenDiagonalPillarBandTilemap` (71:5868): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenDiagonalPillarBandTilemap` (71:5868): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenSmallLShapedPitTilemap` (71:62DF): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenSmallLShapedPitTilemap` (71:62DF): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenDiagonalPitLineTilemap` (71:6338): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenDiagonalPitLineTilemap` (71:6338): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitsAboveStripeBarTilemap` (71:63ED): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitsAboveStripeBarTilemap` (71:63ED): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenLayeredLanesStripeTilemap` (71:64BE): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenLayeredLanesStripeTilemap` (71:64BE): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenVerticalPitBarRoomTilemap` (71:7293): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenVerticalPitBarRoomTilemap` (71:7293): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenPitRingTilemap` (71:72E6): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenPitRingTilemap` (71:72E6): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenStripeLaneAndPitRowTilemap` (71:737A): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenStripeLaneAndPitRowTilemap` (71:737A): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `KeyWorldFloorScreenStripeBorderPitSlotTilemap` (71:7456): which floor or tile set (if any) uses this screen; nothing in the ROM points to it
+- `KeyWorldFloorScreenStripeBorderPitSlotTilemap` (71:7456): what the dark pit blocks, striped blocks and boulder blocks do in play (their meaning is from the picture only)
+- `UnreferencedKeyWorldRoomTilemap17` (71:76FE): Which key world kind or room would use it, if any, is unknown; the render alone does not show which tileset it was authored for
+- `UnreferencedKeyWorldRoomTilemap18` (71:77EC): Which key world kind or room would use it, if any, is unknown
+- `FoundItemBottleSpriteTiles` (7E:4D8A): Whether kind 5 also marks other things for map object entries (FindTriggerEntryForCurrentScreen_StoreTrigger_Data has the same bytes) is not checked
+- `FoundItemMeatSpriteTiles` (7E:4E37): Whether kind 8 is used for anything but the meat finds
+- `FacetedGrayLumpSpriteTiles` (7E:4F22): What object the scenes mean (a package, a stone, food) is not established
+- `MagicPlugSpriteTiles` (7E:4F63): The prop pairing for command $0F rests on the message set; the picture alone does not show a plug
+- `BandedPotSpriteTiles` (7E:4FA6): Unreferenced; whether it is an earlier version of the MagicPlug prop or an unused prop is not shown
+- `RoundDiscSpriteTiles` (7E:5066): Unreferenced; what it was meant to be (it sits next to the HarMirror and SkyShield props Gfx_FieldCommandSpriteTable_8 and _10) is not shown
+- `HornedFigureSpriteTiles` (7E:50A9): Unreferenced; the figure may be a statue, doll or monster silhouette, which the picture does not decide
+- `ShatteredPiecesSpriteTiles` (7E:5128): Unreferenced; which object it would break (a pot such as Gfx7E_1, a mirror) is not shown
+- `FlameTuftSpriteTiles` (7E:51A8): Which scene, if any, runs field command 6 is not found
+- `FlameTuftSpriteTiles` (7E:51A8): Flame is read from the palette and shape; no scene text confirms it
+- `DarkCrackedBallSpriteTiles` (7E:52F9): What the ball is in the story (a thrown bomb, a stone) is not stated in the code
+- `SwirlSpriteTiles` (7E:541A): What maps $7F and $92 and the map type $82 place (a portal, a whirlpool) is not read here
+- `FlameSpriteTiles` (7E:5513): The scene meaning (a campfire, a spirit flame) is not established
+- `FloatingOrbSpriteTiles` (7E:5595): What the orb is in the story (a soul, a light, food) is not stated
+- `CarvedDiscsSpriteTiles` (7E:5640): Unreferenced; the stippling is too abstract to say what it was meant to be
+- `TidalBellSpriteTiles` (7E:56C3): The pairing of command 3 with the TidalBell is by order in the Limbo scene, not by a direct item id
+- `GiftEggSpriteTiles` (7E:5870): A plain oval rather than the cracked egg of Gfx_FieldCommandSpriteTable_13; both use yellow palettes
+- `ScallopShellSpriteTiles` (7E:58FF): Whether the shell is a boat, a mount or a vehicle in the story is not shown
+- `ScallopShellSpriteTiles` (7E:58FF): Why 256 bytes are loaded when set $21 draws 4 tiles
+- `LumpyBlobSpriteTiles` (7E:594A): What the blob stands for (rock, cloud, island) is not decided by the picture
+- `SpawnScriptSpriteInFrontOfPlayer_Data` (7E:5A15): Which meta-sprite set it was authored for; it is probably an alternate or unused version of the burst sprite Gfx7E_7 and Tiles0Plus700Gfx_4
+- `SparkleAndCurvedStreakTiles` (7E:5A9A): which scene draws these sprites, since the only loader is unreachable
+- `SparkleAndCurvedStreakTiles` (7E:5A9A): whether the streaks are a sword slash, a wind effect or a tail
+- `Tiles0Gfx_3` (7E:5B63): what the two shapes are
+- `Tiles0Gfx_3` (7E:5B63): whether anything ever reaches DrawTitleSaveSummaryScreen (the note on it does not mention that it has no caller)
+- `IceDoorRoomTileset` (90:58E9): whether any code reaches map record X59E4
+- `IceDoorRoomTilemap` (90:5B6E): whether any code reaches map record X59E4
+- `SandDoorRoomTileset` (90:6FB4): why the tileset has 128 tiles when the screen needs 46
+- `Map2FTilesetTail` (93:56F3): the generator should treat 24D33D-24D760 as one 1059-byte stream (merge Gfx93_1 into Map2FTileset) so the slot sizes agree with the decompressor
+- `SandShoreWaterAttrMap` (93:6153): the scene is named ScenePoorChurch but the frames render as a sand shore with water, palms, bones and a skull on the Map2F tileset; that name or reading is worth a second look
+- `StoneDoorRoomTileset` (93:7745): whether any code reaches map record X6248
+- `TitleKeyAndTarasAdventureTiles` (E1:49DA): whether any other screen uses the TARAS ADVENTURE tiles
+- `Tiles0Gfx_4` (E1:577C): which sprites use tiles 0-15 on the title screen with music
+- `Tiles0Gfx_4` (E1:577C): whether they are a falling-sparkle or glint effect

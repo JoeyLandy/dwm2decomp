@@ -4,9 +4,16 @@
 SECTION "Bank 5E", ROMX[$4000], BANK[$5E]
     db $5e
 
+; Tiles: 768 bytes = 48 tiles of 2bpp for vTiles2 + $500 (tile numbers $50-$7F).
+; RunWorldMapState_DrawOverview expands it right after WorldMapOverviewLandTiles and copies the 20 x
+; 18 tile map RunWorldMapState_DrawOverview_TileRect (bank $5E) that uses exactly these tile
+; numbers: rendered together they show a gray parchment-like border with ragged edges, a double
+; white beaded frame around a black 12 x 12 inner area (tile $50, the placeholder the map picture
+; covers), a ribbon banner under the frame for the place name and a compass rose in the upper right
+; corner. The world map overview. (C1, E-0383)
 ; LZSS-compressed: 558 bytes that expand to 768 (E-0016, E-0017)
-Tiles2Plus500Gfx::
-    INCBIN "gfx/misc/tiles2_plus500_gfx.lz"
+WorldMapOverviewFrameTiles::
+    INCBIN "gfx/misc/world_map_overview_frame_tiles.lz"
 
 ; 8 bytes copied into a palette buffer by CopyFromBank, CopyBytesDEToHL_Bank00 or
 ; LoadBGPaletteBufferFromBank (E-0164)

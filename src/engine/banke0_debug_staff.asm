@@ -3264,7 +3264,7 @@ DebugStaffRoll_Scene00_Load::
     ld hl, vTiles0 + $200
     call DecompressToVRAM
     ld b, $7e
-    ld de, Tiles0Plus300Gfx
+    ld de, FacetedGrayLumpSpriteTiles
     ld hl, vTiles0 + $300
     call DecompressToVRAM
     ld b, $93

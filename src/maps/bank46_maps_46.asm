@@ -4,9 +4,18 @@
 SECTION "Bank 46", ROMX[$4000], BANK[$46]
     db $46
 
+; Tiles: 2048 bytes = 128 tiles of 2bpp that fill vTiles1 ($8800-$8FFF); only 56 tiles are drawn,
+; the rest are blank. Rendered: tiles 36-79 are the same letter, frame, icon, arrow and sign tiles
+; as LetterFrameIconTiles (INFOTESKLPA, rounded window frame, skull and arrows, male and female
+; signs, Ye), tiles 95-109 the digits 0-9, the level mark, H, M and a colon. It is the base tile set
+; that the game mode initialisers expand into vTiles1: GameMode1_Init (field), GameMode5_Init_Boot,
+; GameMode5_Init_TitleMenu, GameMode5_Init_ReturnToTitle, GameMode5_Init_ReloadTitle,
+; GameMode5_Init_AfterLinkBattle, GameMode6_Init, GameMode8_Init, BreedMenu_ReturnToMap_LoadTiles,
+; LibraryMenu_ShowMonsterEntry_Close, CloseShopMenu_ReloadTextTiles, CloseMenuE9_LoadTiles and
+; others. (C1, E-0383)
 ; LZSS-compressed: 644 bytes that expand to 2048 (E-0016, E-0017)
-Tiles1Gfx::
-    INCBIN "gfx/misc/tiles1_gfx.lz"
+LetterFrameIconDigitTiles::
+    INCBIN "gfx/misc/letter_frame_icon_digit_tiles.lz"
 
 ; 12 screen far pointers, row by row (E-0142)
 ; record: compressed 20 x 18 screen; its ROM bank

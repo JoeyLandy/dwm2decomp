@@ -7,10 +7,10 @@ SECTION "Bank 31", ROMX[$4000], BANK[$31]
 ; Start-up of game mode 4, the battle (RunGameModeInit_Battle far-calls it). Starts music 2, sends
 ; the SGB palette packet when wSGBActive is set, clears the scroll registers, fills vBGMap0 with
 ; tile $C3 (and, on a Color Game Boy, the attribute map in VRAM bank 1 with 0), puts the text cursor
-; at vBGMap0 + $1C1 and far-calls GameMode4_Init_SetUpBattle. It then decompresses Tiles1Plus240Gfx
-; to vTiles1 + $240 and Tiles1Plus5F0Gfx to vTiles1 + $5F0, fills 18 x 2 tiles at vTiles1
-; (FillTilesRequest), starts palette fade $FC, sets hWindowX = 7, hWindowY = $FF and wLCDCShadow =
-; 3, and ends by jumping to ResumeAfterModeChange with A = $0B. (C1, E-0378)
+; at vBGMap0 + $1C1 and far-calls GameMode4_Init_SetUpBattle. It then decompresses
+; LetterFrameIconTiles to vTiles1 + $240 and DigitLvHpMpTiles to vTiles1 + $5F0, fills 18 x 2 tiles
+; at vTiles1 (FillTilesRequest), starts palette fade $FC, sets hWindowX = 7, hWindowY = $FF and
+; wLCDCShadow = 3, and ends by jumping to ResumeAfterModeChange with A = $0B. (C1, E-0378)
 ; start-up for wGameMode = 4, the battle: starts music 2, clears the BG map and builds the battle
 ; screen; reached from the debug battle setup (Start) and from encounters (E-0042)
 GameMode4_Init::
@@ -57,11 +57,11 @@ GameMode4_Init::
     ld [wTextCursorHi], a
     farcall GameMode4_Init_SetUpBattle
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToRAMLocked
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
     ld hl, vTiles1
@@ -1320,11 +1320,11 @@ BattleEnd_OfferJoin_RunSwapMenu::
     ld [wSpriteSlotCount], a
     call BuildBattleScreenBuffer
     ld b, $31
-    ld de, Tiles1Plus240Gfx
+    ld de, LetterFrameIconTiles
     ld hl, vTiles1 + $240
     call DecompressToVRAM
     ld b, $31
-    ld de, Tiles1Plus5F0Gfx
+    ld de, DigitLvHpMpTiles
     ld hl, vTiles1 + $5f0
     call DecompressToVRAM
     ld hl, wBattleSubPhase
@@ -1510,7 +1510,7 @@ BattleEnd_ReturnToField_PlayTransitionMusic::
     ld [wNewRecordFamily], a
     ld [wScreenState], a
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     farcall ExitPauseMenuToField
@@ -10438,11 +10438,27 @@ SlotHasStatus3Or4Bits_Bank31::
     pop hl
     ret
 
+; Tiles: 704 bytes = 44 tiles of 2bpp for vTiles1 + $240 (tile numbers $A4-$CF). Rendered: Latin
+; capital letters I N F O T E S K L P A and a colon, rounded window frame pieces and a vertical bar,
+; a play-arrow, a D-shaped box and a slash, circle and skull and arrow icons, left and right arrows,
+; percent, a Z sleep mark, a question mark, male and female signs and the letters Y e. These are the
+; fixed interface tiles that are not text glyphs. GameMode4_Init (battle start) expands it with
+; DecompressToRAMLocked, and the battle code reloads it with DecompressToVRAM after screens that
+; overwrite vTiles1: BattleEnd_OfferJoin_RunSwapMenu, BattleEnd_AddJoinedMonster_RunStatsScreen and
+; RunBattleEndStep5SubSteps_EnterName; GameMode7_Init and GameMode5_Init_LinkBattleSetup load it
+; too. 40 of the 44 tiles equal the same tile positions of LetterFrameIconDigitTiles; tile 11 and
+; tiles 35-39 of the set differ. (C1, E-0383)
 ; LZSS-compressed: 477 bytes that expand to 704 (E-0016, E-0017)
-Tiles1Plus240Gfx::
-    INCBIN "gfx/misc/tiles1_plus240_gfx.lz"
+LetterFrameIconTiles::
+    INCBIN "gfx/misc/letter_frame_icon_tiles.lz"
 
+; Tiles: 224 bytes = 14 tiles of 2bpp for vTiles1 + $5F0 (tile numbers $DF-$EC). Rendered: the
+; digits 0-9, a small level-mark tile (an L and v style pair), then H and M. It follows
+; LetterFrameIconTiles in every loader: GameMode4_Init, BattleEnd_OfferJoin_RunSwapMenu,
+; BattleEnd_AddJoinedMonster_RunStatsScreen, RunBattleEndStep5SubSteps_EnterName, GameMode7_Init and
+; GameMode5_Init_LinkBattleSetup. The 14 tiles equal tiles 95-108 of LetterFrameIconDigitTiles byte
+; for byte; the colon after M in LetterFrameIconDigitTiles is not in this set. (C1, E-0383)
 ; LZSS-compressed: 151 bytes that expand to 224 (E-0016, E-0017)
-Tiles1Plus5F0Gfx::
-    INCBIN "gfx/misc/tiles1_plus5_f0_gfx.lz"
+DigitLvHpMpTiles::
+    INCBIN "gfx/misc/digit_lv_hp_mp_tiles.lz"
     ds $16e, $00

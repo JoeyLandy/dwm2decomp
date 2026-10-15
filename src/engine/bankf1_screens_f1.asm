@@ -4166,19 +4166,29 @@ LoadBGPalettesFromData::
     jr nz, .loop
     ret
 
+; Tiles, 544 bytes decompressed (34 tiles). LibraryMenu_ShowMonsterEntry_LoadScreen decompresses it
+; to vTiles1 (BG tiles $80-$A1) when it builds a monster library entry page. Render: a book page:
+; the dithered page edge and page-curl corners, a pill-shaped name bar, a bracket, the labels Size :
+; and Rare : in the game font, and a framed box with corner studs and dashed rules. (C1, E-0383)
 ; LZSS-compressed: 304 bytes that expand to 544 (E-0016, E-0017)
-Tiles1Gfx_3::
-    INCBIN "gfx/misc/tiles1_gfx_3.lz"
+LibraryEntryPageTiles::
+    INCBIN "gfx/misc/library_entry_page_tiles.lz"
 
+; Tile map, 260 bytes decompressed (13 rows of 20 cells, tile numbers $80-$A1 from Tiles1Gfx_3).
+; LibraryMenu_ShowMonsterEntry_LoadScreen decompresses it to wWindowTileBuffer + $64 (the rows below
+; the first five, which LibraryEntryBottomBoxTileMap supplies) with WindowAttrBufferPlus64Gfx as its
+; attribute map; the page text, icon and class blocks are then copied over it. Rendered with
+; LibraryEntryPageTiles and the five bottom rows: the library entry page, Size and Rare labels, a
+; name bar near the top and a framed box on the right. (C1, E-0383)
 ; LZSS-compressed: 88 bytes that expand to 260 (E-0016, E-0017)
-WindowTileBufferPlus64Gfx::
-    INCBIN "gfx/misc/window_tile_buffer_plus64_gfx.lz"
+LibraryEntryPageTilemap::
+    INCBIN "gfx/misc/library_entry_page_tilemap.lz"
 
 ; LZSS-compressed: 32 bytes that expand to 100, the first five 20-byte rows of wWindowTileBuffer for
 ; the library entry screen: a 20 x 5 box with tile $80 inside, side tiles $9C and $9D, bottom row
 ; $9E $9F $A0 ... $A1 and a top row of $9C, seven $80, then $90, nine $91, $92 and $9D.
 ; LibraryMenu_ShowMonsterEntry_LoadScreen decompresses it to wWindowTileBuffer after
-; WindowTileBufferPlus64Gfx fills the rows from + $64, and draws these five rows at BG rows 13-17
+; LibraryEntryPageTilemap fills the rows from + $64, and draws these five rows at BG rows 13-17
 ; (DrawScreenBufferRect_Bank0C from offset $0168, the scroll origin + $1A0). (C1, E-0373)
 ; LZSS-compressed: 32 bytes that expand to 100 (E-0016, E-0017)
 LibraryEntryBottomBoxTileMap::

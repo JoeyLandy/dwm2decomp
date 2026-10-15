@@ -1117,11 +1117,11 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld a, h
     ld [wTextWindowWidth], a
     call FillTilesFromRequest
-    ld de, Tiles1Gfx_3
+    ld de, LibraryEntryPageTiles
     ld hl, vTiles1
     ld b, $f1
     call DecompressToVRAM
-    ld de, WindowTileBufferPlus64Gfx
+    ld de, LibraryEntryPageTilemap
     ld hl, wWindowTileBuffer + $64
     ld b, $f1
     call DecompressToVRAM
@@ -1782,7 +1782,7 @@ LibraryMenu_ShowMonsterEntry_BrowseFamily::
 LibraryMenu_ShowMonsterEntry_Close::
     call LibraryMenu_ClearBGMap
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     call LibraryMenu_BlankWindowBuffer

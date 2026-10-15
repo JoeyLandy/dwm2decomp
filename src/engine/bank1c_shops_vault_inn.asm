@@ -1093,7 +1093,7 @@ CloseShopMenu_ResumeScript::
 ; text window. (C1, E-0357)
 CloseShopMenu_ReloadTextTiles::
     ld b, $46
-    ld de, Tiles1Gfx
+    ld de, LetterFrameIconDigitTiles
     ld hl, vTiles1
     call DecompressToVRAM
     ld hl, vTiles1 + $500

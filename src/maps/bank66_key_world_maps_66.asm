@@ -398,6 +398,9 @@ KeyWorld07_0_Y0X0_Header::
 KeyWorld07_0_Y0X0_Tiles::
     INCBIN "maps/key_worlds/07_0_y0_x0_tiles.lz"
 
+; Not an asset. $59C0 lies $4D bytes inside KeyWorld07_0_Y0X0_Tiles (bank $66, $5973-$5A3B, 200
+; bytes that expand to 360). A decompression from there yields 536 bytes (not a whole number of
+; tiles) and reads on to $5BDB. Rendered as tiles: noise. No loader exists to read. (C1, E-0383)
 ; LZSS-compressed: 539 bytes that expand to 536 (E-0016, E-0017)
 Gfx66_6::
     INCBIN "gfx/misc/gfx66_6.lz"
