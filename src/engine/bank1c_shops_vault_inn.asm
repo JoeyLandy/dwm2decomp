@@ -4,6 +4,14 @@
 SECTION "Bank 1C", ROMX[$4000], BANK[$1C]
     db $1c
 
+; Script command E1 (SCRIPT_INN_CLOSE), run every frame by ScriptCommandE1: ends the inn session. It
+; restores the top eight rows that InnMenu_Init saved: the first $A0 bytes of wScreenTileBuffer and
+; of wWindowTileBuffer are overwritten from wWindowTileBuffer + $A0 (on the GBC their attribute
+; bytes too, low 3 bits), so the gold panel disappears, and it redraws those rows on the BG map
+; (DrawScreenBufferRectToBGMap_1C with B = $14, C = 8, DE = $0168). Then it clears the $1A bytes
+; from wScreenState, refills wTextBuf0 with the name of the player
+; (WritePlayerNameWithFlag0SuffixToTextBuf0), sets wMessageMode = 0, wMenuState = 0 and wFadeMode =
+; 7, and ends the script command (wScriptCommandType = 0, wScriptStartRequest = $80). (C1, E-0379)
 ; implements script command type E1 (SCRIPT_INN_CLOSE): ends the inn session and clears
 ; wMessageMode; reached through ScriptCommandE1 in bank $10 (E-0038, E-0244)
 CloseInnMenu::
@@ -60,6 +68,14 @@ CloseInnMenu::
     ld [wScriptStartRequest], a
     ret
 
+; Script command E0 (SCRIPT_INN), run every frame by ScriptCommandE0, by a jump table on
+; wScreenState (9 states): 0 InnMenu_Init, 1 InnMenu_ShowPrice, 2 InnMenu_Pay, 3 InnMenu_FadeOut, 4
+; InnMenu_WaitFade, 5 InnMenu_PassOneFrame, 6 InnMenu_RestoreParty, 7 InnMenu_Morning and 8
+; InnMenu_RestartMusic. States 0, 1, 2 and 8 end by handing control back to the event script
+; (wScriptCommandType = 0, wScriptStartRequest = $80), which asks the question, shows the 'Good
+; morning and farewell!' message and calls the command again (Script_It_3, Script_SorryButYouLack,
+; Script_WellThenHaveA); states 3-7 run on consecutive frames. After state 8 wScreenState is 9, past
+; the table, until CloseInnMenu clears it. (C1, E-0379)
 ; implements script command type E0 (SCRIPT_INN): the inn: 'It's 0G a night. Will you...', 'Good
 ; morning and farewell!' (mode 1, bank $F0 strings); reached through ScriptCommandE0 in bank $10
 ; (E-0038, E-0244) (C2 from E-0327: the Kalka inn's stay costs 10G and runs it)
@@ -76,6 +92,11 @@ InnMenu::
     dw InnMenu_Morning
     dw InnMenu_RestartMusic
 
+; State 0 of InnMenu: clears the $1A bytes from wScreenState, saves the top eight rows of the screen
+; by copying the first $A0 bytes of wScreenTileBuffer to wWindowTileBuffer and again to
+; wWindowTileBuffer + $A0 (on the GBC the attribute bytes too, low 3 bits), sets the price with
+; InnMenu_Init_SetPrice, wMessageMode = 1, wScreenState += 1 (so it is 1) and ends the script
+; command (wScriptCommandType = 0, wScriptStartRequest = $80). (C2, E-0379)
 ; state 0 of InnMenu: clears the screen state (E-0276)
 InnMenu_Init::
     ld bc, $001a
@@ -125,6 +146,13 @@ InnMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+; State 1 of InnMenu: draws the gold panel for the price message. It copies the 24-byte 8 x 3 frame
+; InnMenu_ShowPrice_Data to wScreenSubStep, writes the gold as digit tiles into the frame at
+; wScreenArea (row 1, DrawGoldDigitsAtHLWrapped_1C), copies the frame into wWindowTileBuffer and
+; wScreenTileBuffer at offset $0C (row 0, column 12), or at $70 (row 5) when bit 7 of
+; wTextWindowState is set, redraws 8 rows on the BG map (DrawScreenBufferRectToBGMap_1C, DE =
+; $0168), clears wMenuState, wScreenState += 1 and ends the script command (wScriptCommandType = 0,
+; wScriptStartRequest = $80). (C1, E-0379)
 ; draws the gold window (DrawGoldDigitsAtHLWrapped_1C) for 'It's 0G a night' (E-0276)
 InnMenu_ShowPrice::
     ld hl, wScreenSubStep
@@ -184,6 +212,15 @@ InnMenu_ShowPrice_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
+; State 2 of InnMenu, after the player answered the price question: copies the price
+; wArg7:wArg8:wMenuInputResult (24 bits, wArg7 high) into wArg3:wArg2:wArg1 and asks
+; IsAmountInArg1AboveGold. If the price is above the gold, wTextYesNoResult = 1, and the script
+; command script_skip_if_no jumps ahead only when wTextYesNoResult is 0, so with 1 the script falls
+; through to 'Sorry, but you lack the' (Script_SorryButYouLack). Otherwise wTextYesNoResult = 0,
+; InnMenu_Pay_TakeGold takes the price from the gold, InnMenu_Pay_RestoreWindowTop and
+; InnMenu_Pay_DrawGoldPanel redraw the gold panel. Both paths clear wMenuState, add 1 to
+; wScreenState and end the script command (wScriptCommandType = 0, wScriptStartRequest = $80). (C1,
+; E-0379)
 ; checks the price against the gold (IsAmountInArg1AboveGold) and redraws the gold (E-0276)
 InnMenu_Pay::
     ld a, [wArg7]
@@ -235,6 +272,8 @@ InnMenu_Pay::
     ld [wScriptStartRequest], a
     ret
 
+; State 3 of InnMenu: sets wFadeMode = $87 and starts a palette fade (StartPaletteFade with A = 4)
+; for the night; wScreenState += 1. InnMenu_WaitFade follows. (C1, E-0379)
 ; starts a palette fade (StartPaletteFade) for the night (E-0276)
 InnMenu_FadeOut::
     ld a, $87
@@ -245,6 +284,8 @@ InnMenu_FadeOut::
     inc [hl]
     ret
 
+; State 4 of InnMenu: returns while wFadeState is not 0 (the fade started by InnMenu_FadeOut is
+; still running); once it is 0, wScreenState += 1. (C2, E-0379)
 ; waits until wFadeState is 0, then advances wScreenState (E-0276)
 InnMenu_WaitFade::
     ld a, [wFadeState]
@@ -254,12 +295,17 @@ InnMenu_WaitFade::
     inc [hl]
     ret
 
-; The inn, state 5: goes to the next state. (C1, E-0357)
+; The inn, state 5: goes to the next state. (C2, E-0357; probed E-0379)
 InnMenu_PassOneFrame::
     ld hl, wScreenState
     inc [hl]
     ret
 
+; State 6 of InnMenu: with SRAM bank 0 on, for each of the wPartyCount records in wPartyList whose
+; MON_STATUS bit 7 is clear, copies MON_MAX_HP (2 bytes) to MON_HP and MON_MAX_MP (2 bytes) to
+; MON_MP, so a stay refills HP and MP; records with bit 7 set are skipped. SRAM is switched off,
+; wScreenState += 1 and music $40 is queued (QueueMusic). With an empty party it goes straight to
+; the last two of these. (C1, E-0379)
 ; for each wPartyList record whose byte $55 bit 7 is clear, copies max HP ($5D) to HP ($5B) and max
 ; MP ($61) to MP ($5F) (E-0276) (C2 from E-0327: a stay turns HP 5/21 and MP 7/35 into 21/21 and
 ; 35/35)
@@ -332,6 +378,12 @@ InnMenu_RestoreParty::
     call QueueMusic
     ret
 
+; State 7 of InnMenu: adds 1 to wScreenStep each call (once per frame) and returns until it reaches
+; $90. Then it resets wScreenStep, sends the SGB palette set (SendSGBPaletteSetForSGBPaletteSet),
+; sets wFadeMode = $87 and starts the next palette fade (StartPaletteFade with A = $F8; the fade in
+; InnMenu_FadeOut used A = 4), wScreenState += 1, wWorldMapByFieldSkill = 0 and wKeyWorldRefresh =
+; $80, and refreshes the objects: RefreshKeyWorldObjectsOnEntry when bit 7 of wMapType is set, else
+; SetupTownObjectsForMap. (C1, E-0379)
 ; after $90 frames sends the SGB palette set, fades back in and refreshes the town/key-world objects
 ; (E-0276)
 InnMenu_Morning::
@@ -363,6 +415,10 @@ InnMenu_Morning::
     farcall RefreshKeyWorldObjectsOnEntry
     ret
 
+; State 8 of InnMenu: returns until wFadeState is 0; then far-calls RestartMapMusic, sets wFadeMode
+; = 7, wScreenState += 1 (to 9, past the table) and ends the script command (wScriptCommandType = 0,
+; wScriptStartRequest = $80), so the script shows 'Good morning and farewell!' and calls
+; CloseInnMenu. (C1, E-0379)
 ; restarts the map music (RestartMapMusic) (E-0276)
 InnMenu_RestartMusic::
     ld a, [wFadeState]
@@ -379,6 +435,12 @@ InnMenu_RestartMusic::
     ld [wScriptStartRequest], a
     ret
 
+; Does nothing when wSGBActive is 0. Otherwise stores the four 16-bit palette numbers 4 *
+; wSGBPaletteSet + 0, 1, 2 and 3 in wSGBPaletteNum0Lo ... wSGBPaletteNum3Hi, builds a PAL_SET packet
+; in wSGBPacketBuffer ($B1, then wSGBAttrFile), sets wSGBPacketIndex = $FF so the packet in the
+; buffer is the one sent (SendSGBPacketSet through farcall_b), waits (SpinDelay) and loads the
+; object palettes (LoadSGBObjectPalettesFromPointers). Called by InnMenu_Morning,
+; BreedMenu_RestoreScreen_DrawGoldBox and ExchangeJoypadAndDrawSprites. (C2, E-0379)
 ; when the Super Game Boy is active, sets the four palette numbers 4 * wSGBPaletteSet + 0-3, sends a
 ; PAL_SET ($B1) packet with attribute file wSGBAttrFile, waits, and loads the object palettes
 ; (E-0121)
@@ -421,8 +483,13 @@ SendSGBPaletteSetForSGBPaletteSet::
     farcall LoadSGBObjectPalettesFromPointers
     ret
 
+; Sets rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07, then sets rSVBK = 0 (not
+; the bank it found). DE and HL end past the copy, BC = 0; BC = 0 copies 65536 bytes. Addresses in
+; $D000-$DFFF mean WRAM bank 2 during the copy, which is where the CGB attribute buffers
+; (wScreenAttrBuffer, wWindowAttrBuffer) live; the callers pass them as the copy of the tile buffer
+; they just moved. (C2, E-0379)
 ; With rSVBK = 2, copies BC bytes from [DE] to [HL], each ANDed with $07; then rSVBK = 0 (the same
-; 19 bytes appear in 5 banks) (E-0353)
+; 19 bytes appear in 5 banks)
 CopyLow3BitsToWRAMBank2_Bank1C::
     ld a, $02
     ldh [rSVBK], a
@@ -440,6 +507,8 @@ CopyLow3BitsToWRAMBank2_Bank1C::
     ldh [rSVBK], a
     ret
 
+; DE = source, HL = destination, BC = count: copies BC bytes, DE and HL end past the copy and BC =
+; 0. The count is tested after the first byte, so BC = 0 copies 65536 bytes. (C2, E-0379)
 ; DE = source, HL = destination, BC = count: copies BC bytes (BC = 0 copies 65536); DE and HL end
 ; past the copy; clobbers A, BC = 0 (E-0064) (the same 9 bytes appear in 13 banks)
 CopyBytesDEToHL_Bank1C::
@@ -452,6 +521,12 @@ CopyBytesDEToHL_Bank1C::
     jr nz, CopyBytesDEToHL_Bank1C
     ret
 
+; Copies a rectangle of B bytes by C rows from [DE] to [HL], rows 20 bytes apart (the layout of the
+; screen and window tile buffers). On the GBC (wIsCGB non-zero) it then zero-fills the same-shaped
+; rectangle at HL + $0E68 with rSVBK = 2 (the attribute bytes that belong to a tile buffer at HL,
+; for example wWindowAttrBuffer for wWindowTileBuffer) and sets rSVBK = 0. Without the GBC it
+; returns with BC and HL as given and DE B * C bytes on; on the GBC BC ends with C = 0 and HL after
+; the last filled row. (C2, E-0379)
 ; the same instructions as CopyRectTo20ByteRowsJp_Bank24: copies a B x C rectangle from DE to HL
 ; with rows 20 bytes apart; on CGB zero-fills the same rectangle at HL + $0E68 with rSVBK = 2
 ; (E-0073)
@@ -516,6 +591,12 @@ CopyRectTo20ByteRowsJp_Bank1C::
     ldh [rSVBK], a
     ret
 
+; Returns A = $FF after freezing the field when all of these hold: story flag 2
+; (EVENT_SCENE_LONG_FACES_002) is set, wTextWindowState bits 0-1 are clear, bit 7 of
+; wFieldActionRequest is clear, wPartyCount is not 0 and bit 0 of hPlayerStateFlags is clear. Then
+; it sets hSpriteWindowClipMode = 3 and runs FreezeFieldAnimation (bit 1 of hPlayerStateFlags and of
+; the flag byte of the player slot and wObject1-wObject4). Otherwise it returns A = 0 and changes
+; nothing. (C2, E-0379)
 ; with story flag 2, no text, wFieldActionRequest bit 7 clear, a non-empty party and
 ; hPlayerStateFlags bit 0 clear: hSpriteWindowClipMode = 3, sets bit 1 of the player and object
 ; flags and returns A = $FF; otherwise 0 (E-0124)
@@ -545,6 +626,13 @@ TryStartFieldMenu::
     xor a
     ret
 
+; HL = destination: writes the gold wGoldHi:wGoldMid:wGoldLo as up to five digit tiles ($E0 + digit)
+; starting at HL. It copies the gold to wDigits, runs Number24ToPackedBCD and walks the digits from
+; the ten-thousands (the low nibble of hTemp2) down to the ones; leading zeros are skipped (their
+; places are left as they were) but the ones digit is always written. Each tile is stored with
+; WriteVRAMByte, and HL moves one place on after every digit, wrapping back $20 when it passes the
+; end of a 32-entry row. The callers pass HL in WRAM frames (wScreenArea for the inn gold panel,
+; wGoldDigits for the shop and vault lists), not in VRAM. (C1, E-0379)
 ; writes the gold as up to five decimal digit tiles without leading zeros at HL in VRAM, wrapping at
 ; the row end (E-0128)
 DrawGoldDigitsAtHLWrapped_1C::
@@ -630,6 +718,12 @@ DrawGoldDigitsAtHLWrapped_1C::
     jr nz, .loop
     ret
 
+; Compares the 24-bit amount wArg3:wArg2:wArg1 (wArg3 is the high byte) with the gold
+; wGoldHi:wGoldMid:wGoldLo and returns the result in wArg1: $FF when the amount is greater than the
+; gold, 0 when it is less or equal (so the low byte of the amount is overwritten; wArg2 and wArg3
+; are kept). Used by InnMenu_Pay and ShopMenu_Buy_YesNoCursor, and far-called by the arena, egg
+; service, key appraisal, breeding and priest menus (for example ArenaMenu_AskEnterClass,
+; BreedMenu_ChooseEgg_CheckFee, PriestMenu_PayForService_ReadAnswer). (C2, E-0379)
 ; compares the 24-bit value wArg3:wArg2:wArg1 (wArg3 most significant) with
 ; wGoldHi:wGoldMid:wGoldLo: wArg1 = $FF when it is greater, 0 when it is less or equal (the low byte
 ; is overwritten with the result) (E-0073)
@@ -669,8 +763,11 @@ IsAmountInArg1AboveGold::
     ld [wArg1], a
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8: the BG map entry at the top-left corner of the
+; visible screen (hScrollY / 8 rows of 32 entries, hScrollX / 8 columns); clobbers A and DE. Used by
+; CloseInnMenu, InnMenu_ShowPrice and InnMenu_Pay_DrawGoldPanel. (C1, E-0379)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_Bank1C::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -690,7 +787,7 @@ BGMapAddressAtScroll_Bank1C::
     ret
 
 ; The inn's price: 10 gold (wDigits 0, 1, 0; the 24-bit amount wArg7:wArg8:wMenuInputResult = 10),
-; its digits without leading zeros in wTextBuf0. (C1, E-0357)
+; its digits without leading zeros in wTextBuf0. (C2, E-0357; probed E-0379)
 InnMenu_Init_SetPrice::
     ld hl, wDigits
     xor a
@@ -736,6 +833,11 @@ InnMenu_Init_SetPrice::
     ld [de], a
     ret
 
+; B = width, C = rows, DE = offset into wScreenTileBuffer, HL = BG map address: copies the rectangle
+; to the BG map with CopyRectToBGMapWrapped, sets wTextCursorLo/Hi to HL + $1C1, and on the GBC
+; (wIsCGB non-zero) also switches to VRAM bank 1 and WRAM bank 2 to copy the matching attribute
+; rectangle from wScreenAttrBuffer + DE the same way, then switches both back to 0. Without the GBC
+; BC, DE and HL come back unchanged. (C1, E-0379)
 ; copies a rectangle of the screen buffer (offset DE) to the BG map at HL, sets wTextCursorLo = HL +
 ; $1C1, and on CGB copies its attributes (E-0127)
 DrawScreenBufferRectToBGMap_1C::
@@ -796,7 +898,8 @@ DrawScreenBufferRectToBGMap_1C::
     ldh [c], a
     ret
 
-; Takes the price (wArg7:wArg8:wMenuInputResult, 24 bits) from the gold, with no floor. (C1, E-0357)
+; Takes the price (wArg7:wArg8:wMenuInputResult, 24 bits) from the gold, with no floor. (C2, E-0357;
+; probed E-0379)
 InnMenu_Pay_TakeGold::
     ld a, [wArg7]
     ld e, a
@@ -824,7 +927,7 @@ InnMenu_Pay_TakeGold::
     ret
 
 ; Moves the window buffer's second eight rows ($A0 bytes) up to the top, with their GBC attributes.
-; (C1, E-0357)
+; (C2, E-0357; probed E-0379)
 InnMenu_Pay_RestoreWindowTop::
     ld hl, wWindowTileBuffer
     ld de, wWindowTileBuffer + $a0
@@ -892,6 +995,11 @@ InnMenu_Pay_DrawGoldPanel_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
+; Adds the 24-bit amount wArg3:wArg2:wArg1 (wArg3 high) to the gold wGoldHi:wGoldMid:wGoldLo. A sum
+; of 100,000 ($0186A0) or more is replaced by 99,999 ($01869F); a smaller sum is stored as it is.
+; The sum is formed in 24 bits before the test, so a sum that passes $FFFFFF wraps to a small value
+; and is stored uncapped. Used by ShopMenu_Sell_Pay and, far-called, by
+; ArenaMenu_PickPrize_GiveGold. (C2, E-0379)
 ; adds the 24-bit wArg1-wArg3 to the gold, capped at 99,999 ($01869F) (E-0127) (C2 from E-0327:
 ; selling a Herb at 99,999 gold leaves 99,999)
 AddArg1ToGoldCapped99999::
@@ -945,6 +1053,13 @@ AddArg1ToGoldCapped99999::
     ld [wGoldLo], a
     ret
 
+; Script command E3 (SCRIPT_SHOP_CLOSE), run every frame by ScriptCommandE3, and also called by
+; CloseVaultMenu: ends the shop session by a jump table on wGridCursorY (4 steps; steps 0-2 each add
+; 1 to it, step 3 clears it): 0 CloseShopMenu_RestoreScreen (puts the saved screen back), 1
+; CloseShopMenu_ResumeScript (ends the script command so the script shows 'Thank you! Please come
+; again.', Script_ThankYouPleaseCome), 2 CloseShopMenu_ReloadTextTiles and 3
+; CloseShopMenu_RedrawNamesAndFinish, which clears wMessageMode and the screen state and ends the
+; script command again. (C1, E-0379)
 ; implements script command type E3 (SCRIPT_SHOP_CLOSE): ends the shop session ('Thank you! Please
 ; come again.' between its two calls) and clears wMessageMode; reached through ScriptCommandE3 in
 ; bank $10 (E-0038, E-0244)
@@ -961,7 +1076,7 @@ CloseShopMenu_RestoreScreen::
     call CloseShopMenu_RestoreSavedScreen
     ret
 
-; Closing the shop, step 1 (CloseShopMenu_ClearStateAndResume). (C1, E-0357)
+; Closing the shop, step 1 (CloseShopMenu_ClearStateAndResume). (C2, E-0357; probed E-0379)
 CloseShopMenu_ResumeScript::
     call CloseShopMenu_ClearStateAndResume
     ret
@@ -1033,6 +1148,12 @@ CloseShopMenu_RedrawNamesAndFinish::
     ld [wScriptStartRequest], a
     ret
 
+; Script command E2 (SCRIPT_SHOP), run every frame by ScriptCommandE2, by a jump table on
+; wScreenState (5 states): 0 ShopMenu_Init, 1 ShopMenu_Setup, 2 ShopMenu_ChooseAction, 3
+; ShopMenu_Buy and 4 ShopMenu_Sell. Script_Shop runs states 0 and 1, then state 2 and branches on
+; wTwoChoiceCursor with script_choice_jump: 0 Script_WhatWouldYouLike, 1
+; Script_ToWhatWouldYouLike_2, 2 Script_ThankYouPleaseCome, 3 Script_YouHaveNoMore_4 and 4
+; Script_YouHaveNoItems. (C1, E-0379)
 ; implements script command type E2 (SCRIPT_SHOP): the shop: 'What would you like to buy?', 'That
 ; comes to 0G. OK?'; reads ShopItemListTable and ItemValueTable (mode 2); reached through
 ; ScriptCommandE2 in bank $10 (E-0038, E-0244) (C2 from E-0327: GreatLog's merchant opens it with
@@ -1046,6 +1167,11 @@ ShopMenu::
     dw ShopMenu_Buy
     dw ShopMenu_Sell
 
+; State 0 of ShopMenu: clears the $70 bytes from wScreenState, copies the first $104 bytes (13 rows)
+; of wScreenTileBuffer to wWindowTileBuffer + $64 (row 5), the area the shop draws its boxes into
+; (on the GBC the attribute bytes too), sets wMessageMode = 2, wGlyphListPos = 0, wScreenCounter =
+; 0, wNumberTens = 0, wNumberOnes = 1 and wNumberEditPos = 1, adds 1 to wScreenState and ends the
+; script command (wScriptCommandType = 0, wScriptStartRequest = $80). (C2, E-0379)
 ; clears $70 bytes from wScreenState (state 0 of ShopMenu) (E-0276)
 ShopMenu_Init::
     ld bc, $0070
@@ -1088,6 +1214,11 @@ ShopMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+; State 1 of ShopMenu, by wScreenStep (5 entries): 0 ShopMenu_Setup_AdvanceScreenStep, 1
+; ShopMenu_Setup_LoadTiles, 2 ShopMenu_Setup_InitItemList, 3 ShopMenu_Setup_DrawBoxes, 4
+; ShopMenu_Setup_Finish. In the normal run wScreenStep goes 0, 2, 3: step 0 falls through into the
+; code of step 1, which adds a second 1, and step 3 sets wScreenStep to 0 itself before moving to
+; the next state, so steps 1 and 4 are not entered by the table. (C1, E-0379)
 ; screen setup steps (tile lists, item list screen) (E-0276)
 ShopMenu_Setup::
     ld a, [wScreenStep]
@@ -1098,7 +1229,10 @@ ShopMenu_Setup::
     dw ShopMenu_Setup_DrawBoxes
     dw ShopMenu_Setup_Finish
 
-; increments wScreenStep (E-0305)
+; Shop setup, step 0: wScreenStep += 1 and then falls straight into ShopMenu_Setup_LoadTiles, which
+; copies the shop tile list (CopyTileListFromBank1F_1C) and adds another 1 to wScreenStep when the
+; list ends. One call therefore does the tile copy and moves wScreenStep from 0 to 2. (C1, E-0379)
+; increments wScreenStep
 ShopMenu_Setup_AdvanceScreenStep::
     ld hl, wScreenStep
     inc [hl]
@@ -1148,7 +1282,7 @@ ShopMenu_Setup_DrawBoxes_TileRect::
 
 ; Shop setup, step 4: clears wScreenStep and wTwoChoiceCursor, moves to the next state and resumes
 ; the script, the same ending as step 3 without its drawing. Step 3 sets wScreenStep to 0 itself,
-; and no path to step 4 was found in this reading. (C1, E-0370)
+; and no path to step 4 was found in this reading. (C2, E-0370; probed E-0379)
 ShopMenu_Setup_Finish::
     xor a
     ld [wScreenStep], a
@@ -1161,6 +1295,17 @@ ShopMenu_Setup_Finish::
     ld [wScriptStartRequest], a
     ret
 
+; State 2 of ShopMenu, the Buy / Sell / Exit menu; the row is wListLastRow (0-2). Up (bit 6 of
+; wJoypadPressedRepeat) or Down (bit 7) wraps the row, hides the old cursor (tile $C3) and shows the
+; new one (tile $BB) at BG map scroll offset $0021 + $40 * row, resets the blink counter
+; wReturnScreenStep and queues sound $69. A (bit 0 of wJoypadPressed) draws the chosen tile $BC,
+; queues sound $69, copies the row to wTwoChoiceCursor, resets wItemGridX and wItemGridY when the
+; row differs from wReturnScreenState and stores the row there; row 0 then does wScreenState += 1
+; (ShopMenu_Buy) and wTextTimer = 0, row 1 does wScreenState += 2 (ShopMenu_Sell) and wTextTimer = 0
+; unless wListPages is 0 (no items), when it sets wTwoChoiceCursor = 4, and row 2 changes nothing
+; more. Every A press ends the script command (wScriptCommandType = 0, wScriptStartRequest = $80). B
+; (bit 1) sets wTwoChoiceCursor = 2 and ends the script command. With no press the cursor blinks
+; (ShopMenu_ChooseAction_BlinkCursor). (C1, E-0379)
 ; the shop's choice menu: Up/Down move the cursor, A selects, B leaves (E-0276)
 ShopMenu_ChooseAction::
     ld a, [wJoypadPressedRepeat]
@@ -1330,6 +1475,15 @@ ShopMenu_ChooseAction_DrawCursorTile::
 ShopMenu_ChooseAction_DrawCursorTile_Data::
     db $21, $00, $61, $00, $a1, $00
 
+; State 3 of ShopMenu, buying, by wScreenStep (17 steps): 0 ShopMenu_Buy_WriteWindowMap, 1
+; ShopMenu_Buy_DrawWindow, 2 ShopMenu_Buy_CountItems, 3 ShopMenu_Buy_DrawItemNames, 4
+; ShopMenu_Buy_PassOneFrame, 5 ShopMenu_Buy_DrawPrices, 6 ShopMenu_Buy_ItemCursor, 7
+; ShopMenu_Buy_CheckRoom, 8 ShopMenu_Buy_StartQuantity, 9 ShopMenu_Buy_EnterQuantity, 10
+; ShopMenu_Buy_WriteTotal, 11 ShopMenu_Buy_DrawYesNo, 12 ShopMenu_Buy_YesNoCursor (checks the gold
+; with IsAmountInArg1AboveGold), 13 DrawTwoBoxesAndRequestScript80, 14 ShopMenu_Buy_Pay (takes the
+; gold with SubtractArg1AmountFromGold), 15 ShopMenu_Buy_ClearBoxes and 16
+; ShopMenu_Buy_BlankCursors. The items listed are those of ShopItemListTable entry wScreenTableIndex
+; (LoadArg1PointerForScreenTableIndex). (C1, E-0379)
 ; buying: items from ShopItemListTable for wScreenTableIndex, a gold check (IsAmountInArg1AboveGold)
 ; and SubtractArg1AmountFromGold (E-0276)
 ShopMenu_Buy::
@@ -1494,7 +1648,7 @@ ShopMenu_Buy_CountItems::
     ld a, [wSavedFieldDrawFlags]
     cp $02
     jr c, .check_screen_step
-    call DrawC5BEC6AtScroll18E_Bank1C
+    call ShopMenu_DrawPageIndicatorTiles
     call HLToDecimalDigits
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0191
@@ -1693,7 +1847,7 @@ ShopMenu_Buy_DrawItemNames::
 
 ; Buying, step 4: only advances wScreenStep to step 5 (ShopMenu_Buy_DrawPrices).
 ; ShopMenu_Buy_DrawItemNames advances by two past it, and no path to step 4 was found in this
-; reading. (C1, E-0370)
+; reading. (C2, E-0370; probed E-0379)
 ShopMenu_Buy_PassOneFrame::
     ld a, [wScreenStep]
     inc a
@@ -1739,7 +1893,7 @@ ShopMenu_Buy_DrawPrices::
     add hl, de
     ld e, l
     ld d, h
-    call ReadF2FarPointerForScreenTableIndex
+    call LoadScreenNumberListPointer
     add hl, de
     call ShopMenu_Buy_ApplyGoldPass
     ld e, l
@@ -1959,6 +2113,11 @@ ShopMenu_Buy_ItemCursor::
     ld [wScreenStep], a
     ret
 
+; Blinks the item cursor of the Buying and Selling lists. Adds 1 to wSelectedRecord; below $10 it
+; draws the cursor tile $BB at item place wItemGridX (DrawItemGridXCursor), from $10 to $17 the
+; blank tile $C3 (EraseItemGridXCursor), and at $18 it resets the count to 0 and draws $BB again.
+; ShopMenu_Buy_ItemCursor and ShopMenu_Sell_ItemCursor call it when no direction key or A is
+; pressed. (C1, E-0379)
 ; cycles wSelectedRecord through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (cursor drawn by DrawItemGridXCursor / EraseItemGridXCursor) (E-0122)
 BlinkCursorSelectedRecord_Bank1C::
@@ -1972,6 +2131,10 @@ BlinkCursorSelectedRecord_Bank1C::
     xor a
     ld [wSelectedRecord], a
 
+; Sets B = $BB, the cursor tile, and continues in DrawItemGridXCursorTile, which writes it at item
+; place wItemGridX (0-3) of the Buying or Selling list: the BG map entry at the scroll origin + $A2,
+; $E2, $122 or $162 (column 2 of rows 5, 7, 9 and 11). Called after the cursor has moved, by the
+; item cursor steps of both lists, and by BlinkCursorSelectedRecord_Bank1C. (C1, E-0379)
 ; writes the cursor tile $BB at the position for wItemGridX (0-3; BG map offsets $00A2, $00E2,
 ; $0122, $0162 from the scroll origin, DrawItemGridXCursorTile_Data), via
 ; StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
@@ -1979,6 +2142,10 @@ DrawItemGridXCursor::
     ld b, $bb
     jr DrawItemGridXCursorTile
 
+; Sets B = $C3, the blank tile, and continues in DrawItemGridXCursorTile: removes the cursor from
+; item place wItemGridX. Called before the cursor moves to another place or page
+; (ShopMenu_Buy_CountItems, the item cursor steps and ShopMenu_Sell_ListItems) and by
+; BlinkCursorSelectedRecord_Bank1C for the hidden part of the blink. (C1, E-0379)
 ; writes the blank tile $C3 at the position for wItemGridX (0-3; BG map offsets $00A2, $00E2, $0122,
 ; $0162 from the scroll origin, DrawItemGridXCursorTile_Data), via StepBGMapAddressBackOnScrollWrap
 ; and WaitForVRAMAccess (E-0074)
@@ -1986,6 +2153,9 @@ EraseItemGridXCursor::
     ld b, $c3
     jr DrawItemGridXCursorTile
 
+; Sets B = $BC, the confirmed-cursor tile, and continues in DrawItemGridXCursorTile at item place
+; wItemGridX. Called when A picks an item in ShopMenu_Buy_ItemCursor and ShopMenu_Sell_ItemCursor.
+; (C1, E-0379)
 ; writes the confirmed-cursor tile $BC at the position for wItemGridX (0-3; BG map offsets $00A2,
 ; $00E2, $0122, $0162 from the scroll origin, DrawItemGridXCursorTile_Data), via
 ; StepBGMapAddressBackOnScrollWrap and WaitForVRAMAccess (E-0074)
@@ -2019,7 +2189,7 @@ DrawItemGridXCursorTile_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
 ; Buying, step 7: with 24 items already held (wListPages $18 or more) answers 2 (no room) and
-; resumes the script; otherwise starts the quantity entry at 1. (C1, E-0357)
+; resumes the script; otherwise starts the quantity entry at 1. (C2, E-0357; probed E-0379)
 ShopMenu_Buy_CheckRoom::
     call ResetTextCounter0Counters
     ld a, [wListPages]
@@ -2209,7 +2379,7 @@ ShopMenu_Buy_EnterQuantity::
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .clear_text_timer
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .call_bg_map_address_at_scroll_bank1_c_2:
@@ -2244,7 +2414,7 @@ ShopMenu_Buy_EnterQuantity::
 
 .set_number_edit_pos2:
     ld [wNumberEditPos], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ld a, $69
     call QueueSoundEffect
     ret
@@ -2274,20 +2444,20 @@ ShopMenu_Buy_EnterQuantity::
     ld [wNumberTens], a
     ld a, $04
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
 .loop:
     ld a, [wNumberOnes]
     cp $04
-    jr c, .call_draw_number_tens_ones_at_table_offsets
+    jr c, .call_shop_menu_buy_enter_quantity_draw_number
     ld a, $04
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
-.call_draw_number_tens_ones_at_table_offsets:
-    call DrawNumberTensOnesAtTableOffsets
+.call_shop_menu_buy_enter_quantity_draw_number:
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
 .set_number_tens:
@@ -2295,7 +2465,7 @@ ShopMenu_Buy_EnterQuantity::
     ld [wNumberTens], a
     cp $02
     jp nc, .loop
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens:
@@ -2315,7 +2485,7 @@ ShopMenu_Buy_EnterQuantity::
     ld a, b
     cp $04
     jr nz, .check_number_tens2
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens2:
@@ -2330,13 +2500,13 @@ ShopMenu_Buy_EnterQuantity::
 
 .set_number_ones:
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .set_number_ones2:
     inc a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .call_queue_sound_effect2:
@@ -2355,13 +2525,13 @@ ShopMenu_Buy_EnterQuantity::
     ld [wNumberTens], a
     ld a, $04
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
 .set_number_tens_to_02:
     ld a, $02
     ld [wNumberTens], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .set_number_tens2:
@@ -2371,14 +2541,14 @@ ShopMenu_Buy_EnterQuantity::
     ld b, a
     ld a, [wNumberOnes]
     or b
-    jr nz, .call_blink_cursor_blink_cd_bank1_c
+    jr nz, .call_shop_menu_buy_enter_quantity_blink_digit
     ld a, $01
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
-.call_blink_cursor_blink_cd_bank1_c:
-    call BlinkCursorBlinkCD_Bank1C
+.call_shop_menu_buy_enter_quantity_blink_digit:
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens3:
@@ -2403,19 +2573,19 @@ ShopMenu_Buy_EnterQuantity::
     ld [wNumberTens], a
     ld a, $04
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets
+    call ShopMenu_Buy_EnterQuantity_DrawNumber
     ret
 
 .set_number_ones_to_09:
     ld a, $09
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .set_number_ones3:
     dec a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .clear_text_timer:
@@ -2427,7 +2597,7 @@ ShopMenu_Buy_EnterQuantity::
     ld a, [wNumberOnes]
     and a
     jr nz, .call_queue_sound_effect3
-    call BlinkCursorBlinkCD_Bank1C
+    call ShopMenu_Buy_EnterQuantity_BlinkDigit
     ret
 
 .call_queue_sound_effect3:
@@ -2446,10 +2616,16 @@ ShopMenu_Buy_EnterQuantity::
     ld [wScriptStartRequest], a
     ret
 
+; Blinks the digit being edited in the Buying quantity box. Adds 1 to wCursorBlinkCD; below $10 it
+; draws the digit itself ($E0 + wNumberTens or wNumberOnes, chosen by wNumberEditPos) through
+; ShopMenu_Buy_EnterQuantity_ShowDigit, from $10 to $17 the digit cursor tile $CB through
+; ShopMenu_Buy_EnterQuantity_ShowEditCursor, and at $18 it resets the count to 0 and draws the
+; digit. ShopMenu_Buy_EnterQuantity calls it when no key is pressed and after each move between
+; digits or change of a digit. (C1, E-0379)
 ; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
 ; $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; BlinkCursorBlinkCD_Bank1C)
-BlinkCursorBlinkCD_Bank1C::
+; ShopMenu_Buy_EnterQuantity_BlinkDigit)
+ShopMenu_Buy_EnterQuantity_BlinkDigit::
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
@@ -2502,12 +2678,18 @@ ShopMenu_Buy_EnterQuantity_DrawDigitTile::
     ei
     ret
 
+; Draws the whole quantity of the Buying quantity box: the tile $E0 + wNumberTens at the scroll
+; origin + $0161 (row 11, column 1) and $E0 + wNumberOnes at + $0162, each address stepped back a
+; row if the view has wrapped (StepBGMapAddressBackOnScrollWrap) and written after
+; WaitForVRAMAccess. The two offsets are the words of ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data
+; and ShopMenu_Buy_EnterQuantity_DrawNumber_Data. Called by ShopMenu_Buy_EnterQuantity when Up or
+; Down has changed the quantity. (C1, E-0379)
 ; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in
-; ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data and DrawNumberTensOnesAtTableOffsets_Data (E-0121)
-; (E-0344: the address in its name dropped or read as the label there; was
-; DrawNumberTensOnesAtTableOffsets; shortened from
+; ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data and ShopMenu_Buy_EnterQuantity_DrawNumber_Data
+; (E-0121) (E-0344: the address in its name dropped or read as the label there; was
+; ShopMenu_Buy_EnterQuantity_DrawNumber; shortened from
 ; DrawNumberTensNumberOnesDigitsAtTableShopMenu_Buy_BGMapAddressAtScroll_Bank1C_Data)
-DrawNumberTensOnesAtTableOffsets::
+ShopMenu_Buy_EnterQuantity_DrawNumber::
     ld hl, ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data
     ld e, [hl]
     inc hl
@@ -2525,7 +2707,7 @@ DrawNumberTensOnesAtTableOffsets::
     ld a, b
     ld [hl], a
     ei
-    ld hl, DrawNumberTensOnesAtTableOffsets_Data
+    ld hl, ShopMenu_Buy_EnterQuantity_DrawNumber_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -2548,12 +2730,12 @@ DrawNumberTensOnesAtTableOffsets::
 ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data::
     db $61, $01
 
-DrawNumberTensOnesAtTableOffsets_Data::
+ShopMenu_Buy_EnterQuantity_DrawNumber_Data::
     db $62, $01
 
 ; wThreeDigits (24 bits) = the quantity (wNumberTens x 10 + wNumberOnes) times the chosen item's
 ; price from the bank-$F2 price tables, after the ITEM_GOLDPASS discount
-; (ShopMenu_Buy_ApplyGoldPass). (C1, E-0370)
+; (ShopMenu_Buy_ApplyGoldPass). (C2, E-0370; probed E-0379)
 ShopMenu_Buy_EnterQuantity_ComputeTotal::
     ld a, [wNumberTens]
     ld e, a
@@ -2602,7 +2784,7 @@ ShopMenu_Buy_EnterQuantity_ComputeTotal::
     add hl, de
     ld e, l
     ld d, h
-    call ReadF2FarPointerForScreenTableIndex
+    call LoadScreenNumberListPointer
     add hl, de
     call ShopMenu_Buy_ApplyGoldPass
     ld e, l
@@ -2621,8 +2803,12 @@ ShopMenu_Buy_EnterQuantity_ComputeTotal::
     ld [wThreeDigits], a
     ret
 
-; Buying, step 10: keeps the chosen item and writes the total cost's decimal digits (leading zeros
-; as $90) into wTextBuf0 for the message. (C1, E-0357)
+; Buying, step 10: turns the 24-bit total in wThreeDigits into decimal digits (Number24ToPackedBCD)
+; in the seven bytes wScreenList to wScreenCountPlusOne, replaces the leading zeros (all but the
+; last digit) by $90 there, and copies the remaining digits, each as a number 0-9, to wTextBuf0
+; followed by $F0 for the message. Also keeps the chosen item (the byte of the shop list at 4 *
+; wItemGridY + wItemGridX) in wListCursorBlink, clears wShopCursorToggle, adds 1 to wScreenStep and
+; requests script $80. (C2, E-0379)
 ShopMenu_Buy_WriteTotal::
     call LoadArg1PointerForScreenTableIndex
     ld a, [wItemGridY]
@@ -2793,19 +2979,19 @@ ShopMenu_Buy_DrawYesNo::
 ShopMenu_Buy_YesNoCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_draw_blank_tile_c3_bank1_c
+    jr nz, .call_shop_menu_buy_yes_no_cursor_hide
     bit 7, a
-    jr nz, .call_draw_blank_tile_c3_bank1_c2
+    jr nz, .call_shop_menu_buy_yes_no_cursor_hide2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .call_bg_map_address_at_scroll_bank1_c_2
-    call BlinkCursorBlinkD2_Bank1C
+    call ShopMenu_Buy_YesNoCursor_Blink
     ret
 
-.call_draw_blank_tile_c3_bank1_c:
-    call DrawBlankTileC3_Bank1C
+.call_shop_menu_buy_yes_no_cursor_hide:
+    call ShopMenu_Buy_YesNoCursor_Hide
     ld a, [wShopCursorToggle]
     and a
     jr nz, .set_shop_cursor_toggle
@@ -2817,13 +3003,13 @@ ShopMenu_Buy_YesNoCursor::
 
 .set_shop_cursor_toggle2:
     ld [wShopCursorToggle], a
-    call BlinkCursorBlinkD2_Bank1C
+    call ShopMenu_Buy_YesNoCursor_Blink
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_draw_blank_tile_c3_bank1_c2:
-    call DrawBlankTileC3_Bank1C
+.call_shop_menu_buy_yes_no_cursor_hide2:
+    call ShopMenu_Buy_YesNoCursor_Hide
     ld a, [wShopCursorToggle]
     cp $01
     jr c, .skip
@@ -2929,10 +3115,15 @@ ShopMenu_Buy_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+; Blinks the yes/no cursor of the Buying confirmation. While wJoypadRepeatTimer is below $14 it only
+; draws the cursor tile $BB at yes/no place wShopCursorToggle; from $14 on it adds 1 to
+; wShopCursorBlink and draws $BB below $10, the blank tile $C3 from $10 to $17
+; (ShopMenu_Buy_YesNoCursor_Hide), and at $18 resets the count to 0 and draws $BB.
+; ShopMenu_Buy_YesNoCursor calls it when no key is pressed and after toggling. (C1, E-0379)
 ; cycles wShopCursorBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorBlinkD2_Bank1C)
-BlinkCursorBlinkD2_Bank1C::
+; dropped or read as the label there; was ShopMenu_Buy_YesNoCursor_Blink)
+ShopMenu_Buy_YesNoCursor_Blink::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .skip
@@ -2942,7 +3133,7 @@ BlinkCursorBlinkD2_Bank1C::
     cp $10
     jr c, .skip
     cp $18
-    jr c, DrawBlankTileC3_Bank1C
+    jr c, ShopMenu_Buy_YesNoCursor_Hide
     xor a
     ld [wShopCursorBlink], a
 
@@ -2950,9 +3141,13 @@ BlinkCursorBlinkD2_Bank1C::
     ld b, $bb
     jr ShopMenu_Buy_YesNoCursor_DrawTile
 
+; Sets B = $C3, the blank tile, and continues in ShopMenu_Buy_YesNoCursor_DrawTile, which writes B
+; at yes/no place wShopCursorToggle (scroll origin + $012F or $016F). ShopMenu_Buy_YesNoCursor calls
+; it to hide the cursor before moving it, and ShopMenu_Buy_YesNoCursor_Blink for the hidden part of
+; the blink. (C1, E-0379)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_Bank1C)
-DrawBlankTileC3_Bank1C::
+; or read as the label there; was ShopMenu_Buy_YesNoCursor_Hide)
+ShopMenu_Buy_YesNoCursor_Hide::
     ld b, $c3
     jr ShopMenu_Buy_YesNoCursor_DrawTile
 
@@ -2985,6 +3180,12 @@ ShopMenu_Buy_YesNoCursor_DrawTile::
 ShopMenu_Buy_YesNoCursor_DrawTile_Data::
     db $2f, $01, $6f, $01
 
+; Buying, step 13 (also called by ShopMenu_Buy_ClearBoxes): puts back the two areas the buy screen
+; covered. It copies the 6 x 5 area saved at BG map 1 + $3D0 to the screen at the scroll origin +
+; $010E (row 8, column 14, the yes/no box) and the 4 x 3 area saved at BG map 1 + $3B0 to + $0140
+; (row 10, column 0, the quantity box) with attributes, sets wScreenStep to 6 (the item cursor), and
+; requests script $80. wTwoChoiceCursor, set by ShopMenu_Buy_YesNoCursor to 0 (too little gold) or 1
+; (no room), is left for the script. (C1, E-0379)
 ; clears two rectangles at scroll + $10E and + $140, wScreenStep = 6, clears wScriptCommandType and
 ; requests script $80 (E-0124)
 DrawTwoBoxesAndRequestScript80::
@@ -3222,6 +3423,14 @@ ShopMenu_Buy_Pay::
     ld [wScriptStartRequest], a
     ret
 
+; Runner for wScreenState 4, the Selling screens of the shop (ShopMenu_ChooseAction moves to it when
+; the second choice is picked and the bag holds items). It jumps through wScreenStep: 0
+; ShopMenu_Buy_WriteWindowMap, 1 ShopMenu_Buy_DrawWindow, 2 ShopMenu_Sell_ListItems, 3
+; ShopMenu_Sell_DrawItemNames, 4 ShopMenu_Sell_DrawPrices, 5 ShopMenu_Sell_ItemCursor, 6
+; ShopMenu_Sell_CheckSellable, 7 ShopMenu_Sell_StartQuantity, 8 ShopMenu_Sell_EnterQuantity, 9
+; ShopMenu_Sell_WriteTotal, 10 ShopMenu_Buy_DrawYesNo, 11 ShopMenu_Sell_YesNoCursor, 12
+; ShopMenu_Sell_ClearYesNo, 13 ShopMenu_Sell_Pay. Steps 0, 1 and 10 are shared with ShopMenu_Buy.
+; (C1, E-0379)
 ; selling: items from the inventory, priced by ComputeSellPrice, paid with AddArg1ToGoldCapped99999
 ; (E-0276)
 ShopMenu_Sell::
@@ -3340,7 +3549,7 @@ ShopMenu_Sell_ListItems::
     ld a, [wSavedSpriteSlotCount]
     cp $02
     jr c, .check_screen_step
-    call DrawC5BEC6AtScroll18E_Bank1C
+    call ShopMenu_DrawPageIndicatorTiles
     call HLToDecimalDigits
     ld a, [wDigits + $1]
     and a
@@ -3818,7 +4027,7 @@ ShopMenu_Sell_ItemCursor::
     ret
 
 ; Selling, step 6: an item worth nothing answers 1 (it cannot be sold) and stays; otherwise starts
-; the quantity entry at 1 and goes on. (C1, E-0357)
+; the quantity entry at 1 and goes on. (C2, E-0357; probed E-0379)
 ShopMenu_Sell_CheckSellable::
     call ResetTextCounter0Counters
     ld hl, wItemGrid
@@ -4045,7 +4254,7 @@ ShopMenu_Sell_EnterQuantity::
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .check_number_tens3
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .call_bg_map_address_at_scroll_bank1_c_2:
@@ -4080,7 +4289,7 @@ ShopMenu_Sell_EnterQuantity::
 
 .set_number_edit_pos2:
     ld [wNumberEditPos], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .call_shop_menu_sell_enter_quantity_show_digit2:
@@ -4110,7 +4319,7 @@ ShopMenu_Sell_EnterQuantity::
     ld [wNumberTens], a
     ld a, [wCountOnes]
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets_2
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
 .loop:
@@ -4118,14 +4327,14 @@ ShopMenu_Sell_EnterQuantity::
     ld b, a
     ld a, [wNumberOnes]
     cp b
-    jr c, .call_draw_number_tens_ones_at_table_offsets_2
+    jr c, .call_shop_menu_sell_enter_quantity_draw
     ld a, b
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets_2
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
-.call_draw_number_tens_ones_at_table_offsets_2:
-    call DrawNumberTensOnesAtTableOffsets_2
+.call_shop_menu_sell_enter_quantity_draw:
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
 .set_number_tens:
@@ -4137,7 +4346,7 @@ ShopMenu_Sell_EnterQuantity::
     pop af
     cp b
     jp nc, .loop
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .read_count_tens:
@@ -4160,7 +4369,7 @@ ShopMenu_Sell_EnterQuantity::
     ld a, [wCountOnes]
     cp b
     jr nz, .check_number_tens
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens:
@@ -4175,13 +4384,13 @@ ShopMenu_Sell_EnterQuantity::
 
 .set_number_ones:
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .set_number_ones2:
     inc a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .call_queue_sound_effect2:
@@ -4202,13 +4411,13 @@ ShopMenu_Sell_EnterQuantity::
     ld [wNumberTens], a
     ld a, [wCountOnes]
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets_2
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
 .read_count_tens2:
     ld a, [wCountTens]
     ld [wNumberTens], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .set_number_tens2:
@@ -4218,14 +4427,14 @@ ShopMenu_Sell_EnterQuantity::
     ld b, a
     ld a, [wNumberOnes]
     or b
-    jr nz, .call_blink_cursor_blink_cd_bank1_c_2
+    jr nz, .call_shop_menu_sell_enter_quantity_blink
     ld a, $01
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets_2
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
-.call_blink_cursor_blink_cd_bank1_c_2:
-    call BlinkCursorBlinkCD_Bank1C_2
+.call_shop_menu_sell_enter_quantity_blink:
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens2:
@@ -4252,19 +4461,19 @@ ShopMenu_Sell_EnterQuantity::
     ld [wNumberTens], a
     ld a, [wCountOnes]
     ld [wNumberOnes], a
-    call DrawNumberTensOnesAtTableOffsets_2
+    call ShopMenu_Sell_EnterQuantity_DrawNumber
     ret
 
 .set_number_ones_to_09:
     ld a, $09
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .set_number_ones3:
     dec a
     ld [wNumberOnes], a
-    call BlinkCursorBlinkCD_Bank1C_2
+    call ShopMenu_Sell_EnterQuantity_BlinkDigit
     ret
 
 .check_number_tens3:
@@ -4291,10 +4500,16 @@ ShopMenu_Sell_EnterQuantity::
     ld [wScreenStep], a
     ret
 
+; Blinks the digit being edited in the Selling quantity box, the same as
+; ShopMenu_Buy_EnterQuantity_BlinkDigit. Adds 1 to wCursorBlinkCD; below $10 it draws the digit ($E0
+; + wNumberTens or wNumberOnes by wNumberEditPos) through ShopMenu_Sell_EnterQuantity_ShowDigit,
+; from $10 to $17 the digit cursor tile $CB through ShopMenu_Sell_EnterQuantity_ShowEditCursor, and
+; at $18 resets the count to 0 and draws the digit. ShopMenu_Sell_EnterQuantity calls it when no key
+; is pressed and after each digit move or change. (C1, E-0379)
 ; cycles wCursorBlinkCD through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3) for
 ; $10-$17 (E-0122) (E-0344: the address in its name dropped or read as the label there; was
-; BlinkCursorBlinkCD_Bank1C_2)
-BlinkCursorBlinkCD_Bank1C_2::
+; ShopMenu_Sell_EnterQuantity_BlinkDigit)
+ShopMenu_Sell_EnterQuantity_BlinkDigit::
     ld a, [wCursorBlinkCD]
     inc a
     ld [wCursorBlinkCD], a
@@ -4346,12 +4561,18 @@ ShopMenu_Sell_EnterQuantity_DrawDigitTile::
     ei
     ret
 
+; Draws the whole quantity of the Selling quantity box, the same as
+; ShopMenu_Buy_EnterQuantity_DrawNumber: $E0 + wNumberTens at the scroll origin + $0161 (offset from
+; ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data) and $E0 + wNumberOnes at + $0162
+; (ShopMenu_Sell_EnterQuantity_DrawNumber_Data), each stepped back a row if the view has wrapped.
+; Called by ShopMenu_Sell_EnterQuantity after Up or Down changes the quantity. The 2 bytes $61 $01
+; after its ret are not read by anything. (C1, E-0379)
 ; writes wNumberTens and wNumberOnes as digit tiles at the scroll offsets in
-; ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data and DrawNumberTensOnesAtTableOffsets_2_Data (E-0121)
-; (E-0344: the address in its name dropped or read as the label there; was
-; DrawNumberTensOnesAtTableOffsets_2; shortened from
+; ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data and ShopMenu_Sell_EnterQuantity_DrawNumber_Data
+; (E-0121) (E-0344: the address in its name dropped or read as the label there; was
+; ShopMenu_Sell_EnterQuantity_DrawNumber; shortened from
 ; DrawNumberTensNumberOnesDigitsAtTableShopMenu_Buy_BGMapAddressAtScroll_Bank1C_Data_2)
-DrawNumberTensOnesAtTableOffsets_2::
+ShopMenu_Sell_EnterQuantity_DrawNumber::
     ld hl, ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data
     ld e, [hl]
     inc hl
@@ -4369,7 +4590,7 @@ DrawNumberTensOnesAtTableOffsets_2::
     ld a, b
     ld [hl], a
     ei
-    ld hl, DrawNumberTensOnesAtTableOffsets_2_Data
+    ld hl, ShopMenu_Sell_EnterQuantity_DrawNumber_Data
     ld e, [hl]
     inc hl
     ld d, [hl]
@@ -4389,11 +4610,11 @@ DrawNumberTensOnesAtTableOffsets_2::
     ret
     db $61, $01
 
-; data read by DrawNumberTensOnesAtTableOffsets (2 bytes) (E-0347)
-DrawNumberTensOnesAtTableOffsets_2_Data::
+; data read by ShopMenu (2 bytes) (E-0347)
+ShopMenu_Sell_EnterQuantity_DrawNumber_Data::
     db $62, $01
 
-; wThreeDigits = the quantity times the item's sell price, 24 bits. (C1, E-0357)
+; wThreeDigits = the quantity times the item's sell price, 24 bits. (C2, E-0357; probed E-0379)
 ShopMenu_Sell_EnterQuantity_ComputeTotal::
     ld a, [wNumberTens]
     ld e, a
@@ -4452,7 +4673,7 @@ ShopMenu_Sell_EnterQuantity_ComputeTotal::
     ret
 
 ; Selling, step 9: keeps the chosen item and writes the total's decimal digits (leading zeros
-; dropped) into wTextBuf0 for the message. (C1, E-0357)
+; dropped) into wTextBuf0 for the message. (C2, E-0357; probed E-0379)
 ShopMenu_Sell_WriteTotal::
     ld hl, wItemGrid
     ld a, [wItemGridY]
@@ -4565,19 +4786,19 @@ ShopMenu_Sell_WriteTotal::
 ShopMenu_Sell_YesNoCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_draw_blank_tile_c3_bank1_c_2
+    jr nz, .call_shop_menu_sell_yes_no_cursor_hide
     bit 7, a
-    jr nz, .call_draw_blank_tile_c3_bank1_c_22
+    jr nz, .call_shop_menu_sell_yes_no_cursor_hide2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .call_bg_map_address_at_scroll_bank1_c_2
-    call BlinkCursorBlinkD2_Bank1C_2
+    call ShopMenu_Sell_YesNoCursor_Blink
     ret
 
-.call_draw_blank_tile_c3_bank1_c_2:
-    call DrawBlankTileC3_Bank1C_2
+.call_shop_menu_sell_yes_no_cursor_hide:
+    call ShopMenu_Sell_YesNoCursor_Hide
     ld a, [wShopCursorToggle]
     and a
     jr nz, .set_shop_cursor_toggle
@@ -4589,13 +4810,13 @@ ShopMenu_Sell_YesNoCursor::
 
 .set_shop_cursor_toggle2:
     ld [wShopCursorToggle], a
-    call BlinkCursorBlinkD2_Bank1C_2
+    call ShopMenu_Sell_YesNoCursor_Blink
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_draw_blank_tile_c3_bank1_c_22:
-    call DrawBlankTileC3_Bank1C_2
+.call_shop_menu_sell_yes_no_cursor_hide2:
+    call ShopMenu_Sell_YesNoCursor_Hide
     ld a, [wShopCursorToggle]
     cp $01
     jr c, .skip
@@ -4643,10 +4864,15 @@ ShopMenu_Sell_YesNoCursor::
     ld [wScriptStartRequest], a
     ret
 
+; Blinks the yes/no cursor of the Selling confirmation, the same as ShopMenu_Buy_YesNoCursor_Blink.
+; While wJoypadRepeatTimer is below $14 it only draws the cursor tile $BB at yes/no place
+; wShopCursorToggle; from $14 on it adds 1 to wShopCursorBlink and draws $BB below $10, the blank
+; tile $C3 from $10 to $17, and at $18 resets the count to 0 and draws $BB (through
+; ShopMenu_Sell_YesNoCursor_DrawTile). ShopMenu_Sell_YesNoCursor calls it. (C1, E-0379)
 ; cycles wShopCursorBlink through 0-$17 and draws the cursor tile ($BB) for 0-$0F or a blank ($C3)
 ; for $10-$17 (after the joypad repeat timer reaches $14) (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was BlinkCursorBlinkD2_Bank1C_2)
-BlinkCursorBlinkD2_Bank1C_2::
+; dropped or read as the label there; was ShopMenu_Sell_YesNoCursor_Blink)
+ShopMenu_Sell_YesNoCursor_Blink::
     ld a, [wJoypadRepeatTimer]
     cp $14
     jr c, .skip
@@ -4656,7 +4882,7 @@ BlinkCursorBlinkD2_Bank1C_2::
     cp $10
     jr c, .skip
     cp $18
-    jr c, DrawBlankTileC3_Bank1C_2
+    jr c, ShopMenu_Sell_YesNoCursor_Hide
     xor a
     ld [wShopCursorBlink], a
 
@@ -4664,9 +4890,12 @@ BlinkCursorBlinkD2_Bank1C_2::
     ld b, $bb
     jr ShopMenu_Sell_YesNoCursor_DrawTile
 
+; Sets B = $C3, the blank tile, and continues in ShopMenu_Sell_YesNoCursor_DrawTile, which writes B
+; at yes/no place wShopCursorToggle. ShopMenu_Sell_YesNoCursor calls it to hide the cursor before
+; moving it, and ShopMenu_Sell_YesNoCursor_Blink for the hidden part of the blink. (C1, E-0379)
 ; B = $C3 (blank tile) and joins the cursor draw (E-0122) (E-0344: the address in its name dropped
-; or read as the label there; was DrawBlankTileC3_Bank1C_2)
-DrawBlankTileC3_Bank1C_2::
+; or read as the label there; was ShopMenu_Sell_YesNoCursor_Hide)
+ShopMenu_Sell_YesNoCursor_Hide::
     ld b, $c3
     jr ShopMenu_Sell_YesNoCursor_DrawTile
 
@@ -4842,7 +5071,7 @@ ShopMenu_Sell_Pay::
 ; HL = the address of a 3-byte price in bank $F2. With ITEM_GOLDPASS in any of the 24 wInventory
 ; places, reads that price, writes 90% of it (times 9, then divided by 10, 24 bits) to wArg1-wArg3
 ; and returns HL = wArg1, so the caller's ReadFarPointerAtDEInBankB reads the discounted price;
-; without it HL is returned unchanged. (C1, E-0370)
+; without it HL is returned unchanged. (C2, E-0370; probed E-0379)
 ShopMenu_Buy_ApplyGoldPass::
     push hl
     ld hl, wInventory
@@ -4890,9 +5119,15 @@ ShopMenu_Buy_ApplyGoldPass::
     pop hl
     ret
 
+; HL = the word at ScreenNumberListTable + 2 * wScreenTableIndex, read with ROM bank $F2 mapped; B =
+; the byte after that word, which is the low byte of the next table entry (not a bank). DE is kept.
+; The word is the start of a list of 24-bit numbers, three bytes per item id:
+; ShopMenu_Buy_DrawPrices and ShopMenu_Buy_EnterQuantity_ComputeTotal add 3 * the item id to HL,
+; pass it through ShopMenu_Buy_ApplyGoldPass and read the number with ReadFarPointerAtDEInBankB.
+; (C2, E-0379)
 ; HL and B = the 3-byte far pointer entry wScreenTableIndex of ScreenNumberListTable in bank $F2
 ; (ReadFarPointerAtDEInBankB); DE kept (E-0118)
-ReadF2FarPointerForScreenTableIndex::
+LoadScreenNumberListPointer::
     push de
     ld a, [wScreenTableIndex]
     ld e, a
@@ -4908,6 +5143,11 @@ ReadF2FarPointerForScreenTableIndex::
     pop de
     ret
 
+; E:HL = the ItemValueTable word at DE (DE = 2 * item id) times ShopPercentTable[wScreenTableIndex],
+; divided by 100: a 24-bit quotient with E the high byte. A = the remainder, D = 0; BC is kept. The
+; result is 0 for item 0 and for the shop whose ShopPercentTable entry is 0 (entry 5); the others
+; buy at 75 or 80 percent, so value 10 at 75 percent gives 7. Called by ShopMenu_Sell_DrawPrices,
+; ShopMenu_Sell_CheckSellable and ShopMenu_Sell_EnterQuantity_ComputeTotal. (C2, E-0379)
 ; BC = the ItemValueTable word at DE (DE = 2 * item) times ShopPercentTable[wScreenTableIndex],
 ; divided by 100 (E-0237, E-0276) (C2 from E-0327: the sell list shows Herb 7G, LoveWater 37G,
 ; WorldDew 375G and Potion 150G for values 10, 50, 500 and 200 at 75%)
@@ -5671,9 +5911,13 @@ ItemName1C_Cleric::
 ItemName1C_62::
     db $f0
 
+; Copies 16 bytes (one tile) from [HL] to [DE]. For each byte it disables interrupts, waits until
+; bit 1 of rSTAT is clear (VRAM can be written), copies it and enables interrupts. HL and DE end 16
+; bytes further, C = 0, A is clobbered. Used for tile copies inside VRAM by
+; ShopMenu_Description_Clear, VaultMenu_Setup_CopyTiles (three times), VaultMenu_Store_CopyTile and
+; VaultMenu_Store_RestoreGoldArea. (C1, E-0379)
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
 ; rSTAT bit 1 to clear; clobbers A, C; HL and DE advance (the same 17 bytes appear in 7 banks)
-; (E-0353)
 CopyTileBytesToVRAM_Bank1C::
     ld c, $10
 
@@ -5692,8 +5936,11 @@ CopyTileBytesToVRAM_Bank1C::
     jr nz, .loop
     ret
 
+; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry at the top left of the view;
+; clobbers A and DE. Every box and cursor routine of the shop and vault adds an offset to this to
+; place its tiles. (C1, E-0379)
 ; HL = vBGMap0 + (hScrollY & $F8) * 4 + hScrollX / 8, the BG map entry for pixel (hScrollX,
-; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks) (E-0353)
+; hScrollY); clobbers A, DE (the same 33 bytes appear in 18 banks)
 BGMapAddressAtScroll_Bank1C_2::
     ld hl, vBGMap0
     ldh a, [hScrollY]
@@ -5712,6 +5959,11 @@ BGMapAddressAtScroll_Bank1C_2::
     add_a_to_hl
     ret
 
+; Copies the rectangle at DE (B = width in tiles, C = rows) to the BG map at HL with
+; CopyRectToBGMapWrapped_1C, then sets wTextCursorLo/wTextCursorHi to HL + $01C1. When wIsCGB is
+; non-zero it repeats the copy with VRAM bank 1 and WRAM bank 2 selected (the attribute bytes), then
+; selects bank 0 again. Used to put back areas saved in BG map 1 and to draw the shop and vault
+; windows; the A = 0 it passes on is not read. (C1, E-0379)
 ; copies the B x C rectangle at DE to the BG map at HL (CopyRectToBGMapWrapped_1C with A = 0) and
 ; sets wTextCursorLo = HL + $1C1; on CGB copies it again with VRAM bank 1 selected and WRAM bank 2
 ; switched in (E-0121; a copy, not a clear: E-0226)
@@ -5751,6 +6003,11 @@ DrawRectBothBanksSetTextCursorLoPlus1C1::
     ldh [rVBK], a
     ret
 
+; Copies the rectangle at DE (B = width in tiles, C = rows) to the BG map at HL with
+; CopyRectToBGMapWrapped_1C and sets wTextCursorLo/wTextCursorHi to HL + $01C1; the same as
+; DrawRectBothBanksSetTextCursorLoPlus1C1 without the second copy for the Game Boy Color attributes.
+; Despite the name it copies the data at DE (saved areas, wScreenList or tile lists), it does not
+; fill with blanks; the A = 0 it passes on is not read. (C1, E-0379)
 ; clears a rectangle (CopyRectToBGMapWrapped_1C with A = 0) and sets wTextCursorLo = HL + $1C1
 ; (E-0124)
 ClearRectSetTextCursorLoPlus1C1_Bank1C::
@@ -5776,6 +6033,11 @@ ClearRectSetTextCursorLoPlus1C1_Bank1C::
     pop de
     ret
 
+; Copies a B x C rectangle (B = tiles per row, C = rows) from DE to the BG map at HL, one tile at a
+; time with interrupts off while it waits for rSTAT bit 1 to clear. A start address that the scroll
+; has pushed into the next row is stepped back a row as in StepBGMapAddressBackOnScrollWrap; a row
+; that reaches column 32 continues at column 0 of the same row, and after each row HL moves down 32
+; with H ANDed with $9B so the rows wrap inside BG map 0. (C1, E-0379)
 ; copies a B x C rectangle from DE to the BG map at HL, wrapping at the screen and map edges
 ; (E-0129)
 CopyRectToBGMapWrapped_1C::
@@ -5881,6 +6143,11 @@ CopyRectToBGMapWrapped_1C::
 .return:
     ret
 
+; Lists the kinds of item in the bag: clears the $18 bytes of wItemGrid, then for each item id 1 to
+; $62 in turn adds it to the grid once if any of the 24 wInventory places holds it, so wItemGrid
+; ends as the distinct ids in ascending order followed by zeros. wGlyphListStart = how many ids were
+; listed, wGridCursorX = 0. Ids above $62 and $FF are not listed. AF, BC, DE and HL are kept. Called
+; by ShopMenu_Sell_ListItems and VaultMenu_SaveQuantityAreaToBGMap1. (C2, E-0379)
 ; clears wItemGrid ($18 bytes) and lists each item id 1-$62 present in the inventory, counting them
 ; in wGlyphListStart (E-0127)
 ListDistinctInventoryItemsToItemGrid::
@@ -5940,6 +6207,11 @@ ListDistinctInventoryItemsToItemGrid::
     ld [wGlyphListStart], a
     jr .next
 
+; HL = wArg1/wArg2 = the word at ShopItemListTable + 2 * wScreenTableIndex, the start of the list of
+; item ids (ended by $FF) that this shop sells; E = its low byte. Callers (ShopMenu_Buy_CountItems,
+; ShopMenu_Buy_DrawItemNames, ShopMenu_Buy_DrawPrices, the quantity and total steps,
+; ShopMenu_Buy_Pay and LoadArg1ByteForItemGridXItemGridY) add 4 * wItemGridY + wItemGridX to find
+; the item at the cursor. (C2, E-0379)
 ; HL = wArg1/wArg2 = the word at ShopItemListTable + 2 * wScreenTableIndex (E-0118)
 LoadArg1PointerForScreenTableIndex::
     ld hl, ShopItemListTable
@@ -5959,6 +6231,10 @@ LoadArg1PointerForScreenTableIndex::
     ld [wArg1], a
     ret
 
+; Finds the item under the Buying cursor: calls LoadArg1PointerForScreenTableIndex, adds 4 *
+; wItemGridY + wItemGridX, and leaves HL = that address and wArg1 = the item id there (wArg2 keeps
+; the high byte of the list pointer). Far-called by StepItemDescriptionText, which uses it for the
+; description of the item under the cursor when wScreenState is not 4. (C2, E-0379)
 ; LoadArg1PointerForScreenTableIndex, then wArg1 = the byte at that pointer + 4 * wItemGridY +
 ; wItemGridX (E-0119)
 LoadArg1ByteForItemGridXItemGridY::
@@ -5977,6 +6253,11 @@ LoadArg1ByteForItemGridXItemGridY::
     ld [wArg1], a
     ret
 
+; Removes copies of the chosen item from the bag: the item is wItemGrid[4 * wItemGridY + wItemGridX]
+; (kept in wListCursorBlink), the count 10 * wNumberTens + wNumberOnes. It rewrites the 24
+; wInventory places in order, dropping the first count places that hold the item (fewer if the bag
+; has fewer) and closing the gap, and fills the end with zeros. Used by ShopMenu_Sell_Pay and
+; VaultMenu_Store_MoveItems. (C2, E-0379)
 ; removes 10 * wNumberTens + wNumberOnes copies of the selected item (wItemGrid[4 * wItemGridY +
 ; wItemGridX]) from the inventory and compacts it (E-0128) (C2 from E-0325: depositing one item at
 ; the Vault removes it and closes up the bag, a 0 at its end)
@@ -6063,6 +6344,10 @@ RemoveItemCountFromInventory::
     jr c, .loop2
     ret
 
+; Counts the wInventory places (of 24) holding the item wItemGrid[4 * wItemGridY + wItemGridX], then
+; splits the count into wCountTens (count / 10) and wCountOnes (count mod 10) with DivideHLByA.
+; Called by ShopMenu_Sell_StartQuantity, which shows the number held and limits the quantity to it,
+; and (far call) by VaultMenu_Store_ItemCursor. (C2, E-0379)
 ; counts the inventory slots holding the item at wItemGrid[4 * wItemGridY + wItemGridX]; wCountTens
 ; = count / 10, wCountOnes = count mod 10 (E-0125)
 CountItemInInventoryToDigits::
@@ -6102,6 +6387,11 @@ CountItemInInventoryToDigits::
     ld [wCountTens], a
     ret
 
+; Copies a list of 16-byte tiles from bank $1F into VRAM in one call. HL = list of destination
+; addresses (words), DE = list of source addresses (words in bank $1F); starting at entry
+; wScreenCounter it copies one tile per entry with CopyFromBankWaitVRAM until a destination word
+; whose low byte is $FF. It then clears wScreenCounter and wGlyphListPos and adds 1 to wScreenStep.
+; Used by ShopMenu_Setup_LoadTiles and VaultMenu_Setup_LoadTiles. (C1, E-0379)
 ; for each entry from wScreenCounter of the destination list at HL and the source list at DE copies
 ; a 16-byte tile from bank $1F, until $FF; then wScreenStep += 1 (E-0127)
 CopyTileListFromBank1F_1C::
@@ -6160,6 +6450,13 @@ CopyTileListFromBank1F_1C::
     inc [hl]
     ret
 
+; Sets up the 8 x 5 gold and item count box in RAM: copies the $28 bytes of ShopMenu_Buy_Pay_Data
+; (the frame tiles) to wScreenList, writes the digits of the gold held into the box at wGoldDigits
+; (DrawGoldDigitsAtHLWrapped_1C), counts the wInventory places holding neither 0 nor $FF into
+; wListPages, writes its tens digit ($E0 + digit, only if the digit is not 0) to wItemCountTens and
+; its ones digit to wItemCountOnes, and adds 1 to wScreenStep. Nothing is drawn yet:
+; ShopMenu_Setup_DrawBoxes and VaultMenu_Setup_DrawBoxes copy the box to the screen next. (C1,
+; E-0379)
 ; copies $28 bytes from ShopMenu_Buy_Pay_Data to wScreenList, runs DrawGoldDigitsAtHLWrapped_1C,
 ; counts the inventory items into wListPages and its digits into wItemCountTens/6, wScreenStep += 1
 ; (E-0125)
@@ -6234,7 +6531,8 @@ DrawGoldBoxFromScreenList::
     inc [hl]
     ret
 
-; Closing the shop, step 1: clears the list and screen state and resumes the script. (C1, E-0357)
+; Closing the shop, step 1: clears the list and screen state and resumes the script. (C2, E-0357;
+; probed E-0379)
 CloseShopMenu_ClearStateAndResume::
     xor a
     ld [wGlyphListPos], a
@@ -6274,6 +6572,10 @@ CloseShopMenu_RestoreSavedScreen::
     inc [hl]
     ret
 
+; Clears wTextCounter0, wTextCounter1, wTextCounter2, wTextCounter3, wTextCounter4, wTextCounter5
+; and wTextCounter6 and sets wTextTimer = $3C (60), the full value ShopMenu_Description waits for,
+; so the item description line restarts at its first step (ShopMenu_Description_Clear). Called by
+; the shop item cursor steps, ShopMenu_Buy_CheckRoom and ShopMenu_Sell_CheckSellable. (C2, E-0379)
 ; clears wTextCounter0-wTextCounter4, wTextCounter5 and wTextCounter6, and sets wTextTimer = $3C
 ; (60) (E-0072)
 ResetTextCounter0Counters::
@@ -6415,12 +6717,17 @@ ShopMenu_Description_DrawGlyph::
     farcall StepItemDescriptionText
     ret
 
-; Item description, step 3: done (a bare ret). (C1, E-0357)
+; Item description, step 3: done (a bare ret). (C2, E-0357; probed E-0379)
 ShopMenu_Description_Done::
     ret
 
+; Draws the page indicator frame of the shop lists: the tiles $C5, $BE and $C6 at the scroll origin
+; + $018E, + $0190 and + $0192 (row 12, columns 14, 16 and 18), each stepped back a row if the view
+; has wrapped. HL is kept; A, B and DE are clobbered. ShopMenu_Buy_CountItems and
+; ShopMenu_Sell_ListItems call it when the list has two or more pages and then draw the page number
+; ($E1 + page index) and the page count ($E0 + count) at + $018F and + $0191. (C1, E-0379)
 ; draws tiles $C5, $BE, $C6 at BGMapAddressAtScroll_Bank1C + $18E, two entries apart (E-0121)
-DrawC5BEC6AtScroll18E_Bank1C::
+ShopMenu_DrawPageIndicatorTiles::
     push hl
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $018e
@@ -6454,6 +6761,11 @@ DrawC5BEC6AtScroll18E_Bank1C::
     pop hl
     ret
 
+; DEHL = A * EHL: multiplies the 24-bit number in E:H:L (E the high byte) by the 8-bit A, giving a
+; product of up to 32 bits with D the top byte. It does three Multiply8 calls (A * L, A * H, A * E)
+; and adds them with the right byte shifts; wArg1 to wArg4 and BC are clobbered. Callers:
+; ShopMenu_Buy_ApplyGoldPass (times 9) and ShopMenu_Buy_EnterQuantity_ComputeTotal (times the
+; quantity), which keep only E:H:L of the result. (C2, E-0379)
 ; DEHL = A * EHL (24-bit by 8-bit multiply through wArg1-wArg4) (E-0121)
 Multiply24By8_Bank1C::
     push af
@@ -6498,12 +6810,20 @@ Multiply24By8_Bank1C::
     ld d, a
     ret
 
+; Script command SCRIPT_VAULT_CLOSE (ScriptCommandE6 calls it once per frame): calls CloseShopMenu,
+; which runs one of four closing steps picked by wGridCursorY (restore the saved screen,
+; CloseShopMenu_ClearStateAndResume, reload the text tiles, redraw the names). The vault shares the
+; closing code of the shop. (C1, E-0379)
 ; implements script command type E6 (SCRIPT_VAULT_CLOSE): ends the Vault session (runs
 ; CloseShopMenu's code); reached through ScriptCommandE6 in bank $10 (E-0038, E-0244)
 CloseVaultMenu::
     call CloseShopMenu
     ret
 
+; Script command SCRIPT_VAULT (ScriptCommandE5 calls it once per frame): jumps through wScreenState:
+; 0 VaultMenu_Init, 1 VaultMenu_Setup, 2 VaultMenu_ChooseAction, 3 VaultMenu_Store, 4
+; VaultMenu_TakeOut. VaultMenu_ChooseAction picks state 3 or 4 from the first two choices of the
+; vault menu; ShopMenu uses the same state numbers. (C1, E-0379)
 ; implements script command type E5 (SCRIPT_VAULT): the item Vault: 'What item should I store
 ; for...', 'What will you be taking out?' (mode 2); reached through ScriptCommandE5 in bank $10
 ; (E-0038, E-0244) (C2 from E-0325: talking to the Vault clerk runs it with 'Deposit: Item / Gold /
@@ -6517,6 +6837,11 @@ VaultMenu::
     dw VaultMenu_Store
     dw VaultMenu_TakeOut
 
+; State 0 of VaultMenu, the same code as ShopMenu_Init: clears $70 bytes from wScreenState, copies
+; the $104 bytes of the saved screen wScreenTileBuffer to wWindowTileBuffer + $64 (and, when wIsCGB
+; is non-zero, the attribute bytes of wScreenAttrBuffer, low 3 bits only, to wWindowAttrBuffer + $64
+; in WRAM bank 2), sets wMessageMode = 2 and the quantity wNumberTens = 0, wNumberOnes = 1 with
+; wNumberEditPos = 1, adds 1 to wScreenState and requests script $80. (C2, E-0379)
 ; state 0 of VaultMenu: clears the screen state (E-0276)
 VaultMenu_Init::
     ld bc, $0070
@@ -6559,6 +6884,11 @@ VaultMenu_Init::
     ld [wScriptStartRequest], a
     ret
 
+; State 1 of VaultMenu: jumps through wScreenStep: 0 VaultMenu_Setup_CopyTiles (which continues into
+; step 1), 1 VaultMenu_Setup_LoadTiles, 2 VaultMenu_Setup_CountItems, 3
+; VaultMenu_Setup_LoadFrameTiles, 4 VaultMenu_Setup_InitItemList, 5 VaultMenu_Setup_DrawBoxes. The
+; last step sets wScreenStep to 0 and wScreenState to 2 (VaultMenu_ChooseAction).
+; VaultMenu_Store_BackToChoice re-enters it at step 2. (C1, E-0379)
 ; screen setup: tile lists, the item list screen and its box (E-0276)
 VaultMenu_Setup::
     ld a, [wScreenStep]
@@ -6588,7 +6918,7 @@ VaultMenu_Setup_LoadTiles::
     call CopyTileListFromBank1F_1C
     ret
 
-; Vault setup, step 2: counts the stored items (VaultMenu_CountItems). (C1, E-0357)
+; Vault setup, step 2: counts the stored items (VaultMenu_CountItems). (C2, E-0357; probed E-0379)
 VaultMenu_Setup_CountItems::
     farcall VaultMenu_CountItems
     ld a, [wScreenStep]
@@ -6659,6 +6989,13 @@ VaultMenu_Setup_DrawBoxes_TileRect::
     db $b6, $c3, $a9, $a4, $eb, $ad, $c3, $c3, $c3, $c3, $b7 ; id 5
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 6
 
+; State 2 of VaultMenu, the first vault menu. Up and Down (wJoypadPressedRepeat bits 6 and 7) hide
+; the cursor, move wListLastRow over 0-2 with wrap, redraw it and play sound $69; with no key it
+; calls VaultMenu_ChooseAction_BlinkCursor. A plays sound $69, shows the chosen tile, stores
+; wListLastRow in wReturnScreenState (clearing wItemGridX and wItemGridY if it changed) and requests
+; script $80; choice 0 adds 1 to wScreenState (VaultMenu_Store) and sets wTwoChoiceCursor = 0,
+; choice 1 adds 2 (VaultMenu_TakeOut) and sets wTwoChoiceCursor = 1, choice 2 only sets
+; wTwoChoiceCursor = 2. B sets wTwoChoiceCursor = 2 and requests script $80. (C1, E-0379)
 ; the Vault's choice menu: Up/Down move the cursor, A selects, B leaves (E-0276)
 VaultMenu_ChooseAction::
     ld a, [wJoypadPressedRepeat]
@@ -6812,6 +7149,18 @@ VaultMenu_ChooseAction_DrawCursorTile::
 VaultMenu_ChooseAction_DrawCursorTile_Data::
     db $21, $00, $61, $00, $a1, $00
 
+; State 3 of VaultMenu, putting items into the vault (the items move from wInventory to
+; wItemStorage). It jumps through wScreenStep: 0 VaultMenu_Store_WriteWindowMapStep, 1
+; VaultMenu_Store_DrawWindow, 2 VaultMenu_Store_DrawRows, 3 VaultMenu_Store_Choice, 4
+; VaultMenu_Store_BackToChoice, 5 VaultMenu_Store_SaveListArea, 6 VaultMenu_Store_SaveArea, 7
+; VaultMenu_Store_DrawListWindowStep, 8 VaultMenu_Store_DrawPageNumbersStep, 9
+; VaultMenu_Store_DrawItemNames, 10 VaultMenu_Store_DrawCountStep, 11
+; VaultMenu_Store_ItemCursorStep, 12 VaultMenu_Store_RestoreAreas, 13
+; VaultMenu_Store_EnterQuantityStep, 14 VaultMenu_Store_MoveItems, 15 VaultMenu_Store_RedrawList, 16
+; VaultMenu_Store_RestoreAreasAgain, 17 VaultMenu_Store_SaveGoldArea, 18 VaultMenu_Store_CopyTile,
+; 19 VaultMenu_Store_DrawBankedGoldStep, 20 VaultMenu_Store_DrawAmountBoxStep, 21
+; VaultMenu_Store_GoldEntry, 22 VaultMenu_Store_RestoreGoldArea, 23 VaultMenu_Store_RedrawGold, 24
+; VaultMenu_Store_AskAgain. VaultMenu_TakeOut shares all but steps 3 and 21. (C1, E-0379)
 ; storing: moves items from wInventory into wItemStorage (RemoveItemCountFromInventory) (E-0276)
 VaultMenu_Store::
     ld a, [wScreenStep]
@@ -6838,7 +7187,7 @@ VaultMenu_Store::
     dw VaultMenu_Store_DrawBankedGoldStep
     dw VaultMenu_Store_DrawAmountBoxStep
     dw VaultMenu_Store_GoldEntry
-    dw ClearRect147AndAskTwoChoice
+    dw VaultMenu_Store_RestoreGoldArea
     dw VaultMenu_Store_RedrawGold
     dw VaultMenu_Store_AskAgain
 
@@ -6878,8 +7227,8 @@ VaultMenu_Store_Choice::
     farcall VaultMenu_Store_ItemsGoldExit
     ret
 
-; Storing, step 4: back to the vault's choice (state 1, step 2) with the script resuming. (C1,
-; E-0357)
+; Storing, step 4: back to the vault's choice (state 1, step 2) with the script resuming. (C2,
+; E-0357; probed E-0379)
 VaultMenu_Store_BackToChoice::
     ld a, $01
     ld [wScreenState], a
@@ -6895,13 +7244,13 @@ VaultMenu_Store_BackToChoice::
     ret
 
 ; Storing, step 5: saves the 9 x 12 area at the screen's row 4 to BG map 1
-; (DrawRect0088AtBGMap1370AndStep). (C1, E-0357)
+; (VaultMenu_SaveListAreaToBGMap1). (C1, E-0357)
 VaultMenu_Store_SaveListArea::
-    farcall DrawRect0088AtBGMap1370AndStep
+    farcall VaultMenu_SaveListAreaToBGMap1
     ret
 
 ; Storing, step 6: copies the blank tiles for the four name places, then saves the 3 x 7 area
-; (DrawRect0140AtBGMap13E0AndStep). (C1, E-0357)
+; (VaultMenu_SaveQuantityAreaToBGMap1). (C1, E-0357)
 VaultMenu_Store_SaveArea::
     call VaultMenu_Store_BlankNameTiles
     ld a, [wScreenCounter]
@@ -6911,7 +7260,7 @@ VaultMenu_Store_SaveArea::
     jr c, VaultMenu_Store_SaveArea
     xor a
     ld [wScreenCounter], a
-    farcall DrawRect0140AtBGMap13E0AndStep
+    farcall VaultMenu_SaveQuantityAreaToBGMap1
     ret
 
 ; Storing, step 9: draws the page's item names glyph by glyph, from the bag's distinct items (state
@@ -7109,7 +7458,8 @@ VaultMenu_Store_EnterQuantityStep::
 ; from the bag (RemoveItemCountFromInventory; the storage slot was already filled on A at step 13 by
 ; VaultMenu_Store_AddToStorage), sets the answer and the next step (VaultMenu_Store_AfterStoring)
 ; and rebuilds the bag-place map (VaultMenu_Store_MoveItems_RebuildBagGrid); in other states takes
-; the count out of storage into the bag (VaultMenu_Store_MoveItems_TakeOut). (C1, E-0370)
+; the count out of storage into the bag (VaultMenu_Store_MoveItems_TakeOut). (C2, E-0370; probed
+; E-0379)
 VaultMenu_Store_MoveItems::
     ld a, [wScreenState]
     cp $03
@@ -7151,9 +7501,9 @@ VaultMenu_Store_RestoreAreasAgain::
     ret
 
 ; Storing, step 17: saves the 3 x 13 area and resets the quantity entry
-; (DrawRect0147AndResetNumberEditPos). (C1, E-0357)
+; (VaultMenu_SaveGoldAreaToBGMap1). (C1, E-0357)
 VaultMenu_Store_SaveGoldArea::
-    farcall DrawRect0147AndResetNumberEditPos
+    farcall VaultMenu_SaveGoldAreaToBGMap1
     ret
 
 ; Storing, step 19 (VaultMenu_Store_DrawBankedGold). (C1, E-0357)
@@ -7186,9 +7536,15 @@ VaultMenu_Store_GoldEntry::
     farcall VaultMenu_Store_EnterGold
     ret
 
+; Step 22 of VaultMenu_Store and VaultMenu_TakeOut, also called by VaultMenu_Store_AskAgain: copies
+; the 13 x 3 area saved at BG map 1 + $370 (by VaultMenu_SaveGoldAreaToBGMap1) back to the screen at
+; the scroll origin + $0147 (row 10, column 7) in both VRAM banks, copies the tile at $9700 back to
+; $8CC0, redraws the item count and gold box (InitItemListScreenListAndDraw), sets wScreenStep = 3
+; and wTwoChoiceCursor = 2 and requests script $80. It restores the area saved earlier; it does not
+; clear it. (C1, E-0379)
 ; clears the rectangle at scroll + $147, copies a tile, runs InitItemListScreenListAndDraw,
 ; wScreenStep = 3, wTwoChoiceCursor = 2 and requests script $80 (E-0124)
-ClearRect147AndAskTwoChoice::
+VaultMenu_Store_RestoreGoldArea::
     call BGMapAddressAtScroll_Bank1C_2
     ld de, $0147
     add hl, de
@@ -7241,13 +7597,18 @@ VaultMenu_Store_RedrawGold::
 ; Storing, step 24: clears the area, asks the two-way choice again and returns to the vault's choice
 ; (state 1, step 2). (C1, E-0357)
 VaultMenu_Store_AskAgain::
-    call ClearRect147AndAskTwoChoice
+    call VaultMenu_Store_RestoreGoldArea
     ld a, $01
     ld [wScreenState], a
     ld a, $02
     ld [wScreenStep], a
     ret
 
+; State 4 of VaultMenu, taking items out of the vault (the items move from wItemStorage to
+; wInventory). It jumps through the same 25 wScreenStep entries as VaultMenu_Store except step 3,
+; which is VaultMenu_TakeOut_Choice, and step 21, VaultMenu_TakeOut_GoldEntry; the item steps then
+; read the stored items (eight bytes per page row) and VaultMenu_Store_MoveItems moves the entered
+; count into the bag. (C1, E-0379)
 ; taking out: lists wItemStorage and moves items back into wInventory (E-0276)
 VaultMenu_TakeOut::
     ld a, [wScreenStep]
@@ -7274,7 +7635,7 @@ VaultMenu_TakeOut::
     dw VaultMenu_Store_DrawBankedGoldStep
     dw VaultMenu_Store_DrawAmountBoxStep
     dw VaultMenu_TakeOut_GoldEntry
-    dw ClearRect147AndAskTwoChoice
+    dw VaultMenu_Store_RestoreGoldArea
     dw VaultMenu_Store_RedrawGold
     dw VaultMenu_Store_AskAgain
 
@@ -7288,6 +7649,13 @@ VaultMenu_TakeOut_GoldEntry::
     farcall VaultMenu_TakeOut_EnterGold
     ret
 
+; Like InitItemListScreenListAndCount but for a redraw: copies the first $20 bytes of
+; ShopMenu_Buy_Pay_Data (four rows of the 8-wide box) to wScreenList, writes the gold digits at
+; wGoldDigits (DrawGoldDigitsAtHLWrapped_1C), counts the wInventory places holding neither 0 nor $FF
+; into wListPages, writes the tens digit ($E0 + digit, only if not 0) to wItemCountTens and the ones
+; digit to wItemCountOnes, then draws the 8 x 4 box at the scroll origin + $0C
+; (ClearRectSetTextCursorLoPlus1C1_Bank1C). wScreenStep is not changed. Called by
+; VaultMenu_Store_RedrawList and VaultMenu_Store_RestoreGoldArea. (C1, E-0379)
 ; copies $20 bytes from ShopMenu_Buy_Pay_Data to wScreenList, counts the inventory items into
 ; wListPages and its digits, and draws the 8 x 4 list at scroll + $0C (E-0127)
 InitItemListScreenListAndDraw::

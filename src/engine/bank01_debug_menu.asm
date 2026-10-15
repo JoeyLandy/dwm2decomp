@@ -276,7 +276,7 @@ DebugStaffRoll_Init::
 
 ; Builds debug screen 7 ('7:HAIGOU' in the debug menu), titled 'RESULTS DISPLAY' with 'Species' and
 ; 'Gender': loads palette 0, prints '0123456789ABCDEF' to vTiles2 + $100 and the title string
-; (category 0, index $27, ShowString_Bank1B_2) to vTiles1, lays tile sequences on vBGMap0
+; (category 0, index $27, ShowBreedingString) to vTiles1, lays tile sequences on vBGMap0
 ; (FillRectWithTileSequence), puts tiles $FB-$FD in column 1, copies six tiles from bank $1F (one
 ; ORed with CopyGlyphTilesToVRAM_Data2), fills four 9-tile blocks at vTiles2 + $200, $300, $400 and
 ; $500 with the plain tile (FillTilesFromRequest) and shows them in four 9-wide rows. It sets wArg1
@@ -314,8 +314,8 @@ DebugResultsDisplay_Init::
     xor a
     ld [wStringCategory], a
     ld a, $27
-    ld [wStringIndex], a ; 'RESULTS DISPLAY Species Gender'
-    farcall ShowString_Bank1B_2
+    ld [wStringIndex], a
+    farcall ShowBreedingString
     ld hl, vBGMap0 + $60
     lb bc, $10, $01
     ld a, $80
@@ -1144,7 +1144,7 @@ DebugMessageTest_Update_ShowBankF0::
 ; Message test, library 22 ($16): shows the chosen message from the message table of bank $1B by
 ; far-calling its BeginStringDisplay routine. (C1, E-0357)
 DebugMessageTest_Update_ShowBank1BSecond::
-    farcall BeginStringDisplay_Bank1B_2
+    farcall BeginBreedingStringDisplay
     ret
 
 ; Message test, library 23 ($17): shows the chosen message from the message table of bank $1F by

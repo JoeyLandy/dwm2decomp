@@ -4044,7 +4044,7 @@ DrawLinkScreenSprites::
 .set_sprite_window_clip_mode_to_01:
     ld a, $01
     ldh [hSpriteWindowClipMode], a
-    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
+    farcall DrawListEntriesCell5PedigreeSprites
     ret
 
 .check_link_scene_family2:
@@ -4062,7 +4062,7 @@ DrawLinkScreenSprites::
     ld [wArg2], a
     ld a, $01
     ldh [hSpriteWindowClipMode], a
-    farcall DrawPartySpeciesSprites
+    farcall DrawPedigreeSpeciesSprites
     ret
 
 ; Draws the sprite slots and, with wArg1 set, the field sprites. (C1, E-0357)

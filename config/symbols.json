@@ -7,7 +7,7 @@
   },
   "D7FE": {
     "name": "wDataBank",
-    "note": "ROM bank used by Func_000_0B6C when reading a word through HL",
+    "note": "ROM bank used by ReadWordFromDataBank when reading a word through HL",
     "evidence": "E-0014"
   },
   "D067": {
@@ -88,12 +88,12 @@
   },
   "FFA1": {
     "name": "hScrollX",
-    "note": "copied to rSCX by Func_000_07E0 and by the LCD handler",
+    "note": "copied to rSCX by CopyScrollToHardware and by the LCD handler",
     "evidence": "reading"
   },
   "FFA5": {
     "name": "hScrollY",
-    "note": "copied to rSCY by Func_000_07E0 and by the LCD handler",
+    "note": "copied to rSCY by CopyScrollToHardware and by the LCD handler",
     "evidence": "reading"
   },
   "FFB1": {
@@ -189,7 +189,7 @@
   },
   "C198": {
     "name": "wScreenTileBuffer",
-    "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (Func_002_59CD) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)",
+    "note": "screen tile buffer: the $240 bytes are cleared with $C3; CopyTileBufferToBGMap and CopyBlockToTileBuffer use rows of 32 bytes, while field mode (TileBlockedAtPixel) indexes it with rows of 20 and 260 of its 360 visible entries equal the BG map on the emulator (E-0030)",
     "evidence": "reading",
     "size": "240"
   },
@@ -501,7 +501,7 @@
   },
   "C573": {
     "name": "wFadeDelay",
-    "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_Sub01 and reloaded by StepCGBFade (E-0077)",
+    "note": "frames between CGB fade steps minus 1, set from wFadeState / 4 by StartPaletteFade_SetUpTiming and reloaded by StepCGBFade (E-0077)",
     "evidence": "reading (E-0077)"
   },
   "C574": {
@@ -572,7 +572,7 @@
   },
   "CFC8": {
     "name": "wBattlePhase",
-    "note": "battle phase, a 3-entry dispatch in Func_031_40CC: 1 = the fight, 2 = after the fight (victory message, rewards, recruiting); 0 at start (E-0044)",
+    "note": "battle phase, a 3-entry dispatch in RunBattlePhase: 1 = the fight, 2 = after the fight (victory message, rewards, recruiting); 0 at start (E-0044)",
     "evidence": "execution (E-0042)"
   },
   "CFC9": {
@@ -620,7 +620,7 @@
   },
   "D7FA": {
     "name": "wTwoChoiceCursor",
-    "note": "0 or 1, the selected entry of UpdateTwoChoiceCursor (E-0068)",
+    "note": "0 or 1, the selected entry of UpdateTwoChoiceCursor_Bank1D and UpdateTwoChoiceCursor_Bank1B (E-0068)",
     "evidence": "reading (E-0068)"
   },
   "D006": {
@@ -662,12 +662,12 @@
   },
   "C92C": {
     "name": "wStepArrived",
-    "note": "1 when the last StepObjectTowardCoord or StepPlayer*TowardWC928 step reached the target coordinate in wC928, else 0 (E-0071)",
+    "note": "1 when the last StepObjectTowardCoord or StepPlayerUpTowardStepPtrLo (or Down, Left, Right) step reached the target coordinate in wStepPtrLo, else 0 (E-0071)",
     "evidence": "reading (E-0071)"
   },
   "DAAC": {
     "name": "wQueuedActionId",
-    "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (ResolveStepDamageMessage_Sub04_Case04); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)",
+    "note": "queued action id. One writer read so far stores $FF when a target's pending bit 4 (wD814 + 9 * target) is consumed (ResolveStepDamageMessage_BreakSealPray); banks $19 and $A0 also write it and are not read yet; read by QueuedActionMatches (E-0049)",
     "evidence": "reading (E-0049)"
   },
   "D80C": {
@@ -703,12 +703,12 @@
   },
   "CFCC": {
     "name": "wBattleSubStep",
-    "note": "nested step used by Func_032_5EAB (10 cases) and cleared by ApplyDamageToTarget",
+    "note": "nested step used by ResolveStep0EEffect (10 cases) and cleared by ApplyDamageToTarget",
     "evidence": "reading (E-0043)"
   },
   "CFCD": {
     "name": "wBattleSubStep2",
-    "note": "nested step used by Func_032_5A3A (3 cases)",
+    "note": "nested step used by RunDefeatSequence (3 cases)",
     "evidence": "reading (E-0043)"
   },
   "D8FF": {
@@ -719,13 +719,13 @@
   },
   "D90F": {
     "name": "wBattleDEF",
-    "note": "defence of the 8 battle slots; RecomputeBattler (Func_032_5BE8) fills it from GetBaseDEF",
+    "note": "defence of the 8 battle slots; ResetTargetAGLAndDEFToBase fills it from GetBaseDEF",
     "evidence": "reading (E-0043)",
     "size": "10"
   },
   "D91F": {
     "name": "wBattleAGL",
-    "note": "agility of the 8 battle slots; Func_032_5BE8 fills it from GetBaseAGL",
+    "note": "agility of the 8 battle slots; ResetTargetAGLAndDEFToBase fills it from GetBaseAGL",
     "evidence": "reading (E-0043)",
     "size": "10"
   },
@@ -1129,7 +1129,7 @@
   "C17E": {
     "name": "wTextNumber",
     "size": "8",
-    "note": "digit string of a number shown in a message (DeductGoldPenaltyAndFormatLoss writes the gold lost here as packed BCD through Func_000_23CA)",
+    "note": "digit string of a number shown in a message (DeductGoldPenaltyAndFormatLoss writes the gold lost here as packed BCD through WritePackedBCDNoLeadingZeros)",
     "evidence": "E-0132"
   },
   "C0A0": {
@@ -1209,7 +1209,7 @@
   },
   "C195": {
     "name": "wMapSpriteKind",
-    "note": "map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetMapSpriteKindAndMapHeaderByte11ForSpecialMaps",
+    "note": "map header byte: high nibble picks the script sprite set ($23 + n - 1), low nibble 1 selects the follower-style sprite; set for special maps by SetMapSpriteKindAndEventTileForSpecialMaps",
     "evidence": "E-0133"
   },
   "C196": {
@@ -1748,7 +1748,7 @@
   },
   "C5C6": {
     "name": "wLinkTradeByte",
-    "note": "link trade byte (RunWD06AState_6C12_Shared04)",
+    "note": "link fight-info byte: RunLinkSession6Exchange_FightInfo_DrawWindow copies it to wLinkFightInfo (LinkRulesEditor_DrawTurnLimitValue only uses its address  as two tile ids)",
     "evidence": "E-0133"
   },
   "C5C7": {
@@ -1798,7 +1798,7 @@
   },
   "C5E2": {
     "name": "wSoundFadeLevel",
-    "note": "sound volume fade level (StepFade_Sub02 shifts it and writes rNR50)",
+    "note": "sound volume fade level: StepMusicVolumeFade counts it down and writes rNR50; UnreferencedStartSoundFadeA (no caller) sets it, halved with sra when wSGBActive is 0",
     "evidence": "E-0133"
   },
   "C5E3": {
@@ -1973,7 +1973,7 @@
   },
   "C7C7": {
     "name": "wFarmLevel",
-    "note": "storage level: Data_016_75EB[it] is how many SRAM records the farm holds",
+    "note": "storage level: BattleEnd_AskToJoin_CheckFarmRoom_Data[it] is how many SRAM records the farm holds",
     "evidence": "E-0133"
   },
   "C7C9": {
@@ -2023,7 +2023,7 @@
   },
   "C836": {
     "name": "wInventorySortFlags",
-    "note": "inventory sort state: bit 0 picks the sort key table (InventorySortKeysA or B) and SortInventory toggles it; bit 7 makes the next sort keep the order (key events, the plan list); bit 6 is set when an item is added (AppendItemWC928ToInventory and the treasure events); bit 1 is toggled by the plan list (E-0128, E-0340; was wGameFlags836)",
+    "note": "inventory sort state: bit 0 picks the sort key table (InventorySortKeysA or B) and SortInventory toggles it; bit 7 makes the next sort keep the order (key events, the plan list); bit 6 is set when an item is added (AppendItemStepPtrLoToInventory and the treasure events); bit 1 is toggled by the plan list (E-0128, E-0340; was wGameFlags836)",
     "evidence": "E-0133; E-0340"
   },
   "C837": {
@@ -2308,7 +2308,7 @@
   },
   "C902": {
     "name": "wEncounterCountdown",
-    "note": "steps left before a random encounter (PickRandomEncounterCountdownFromTable478F)",
+    "note": "steps left before a random encounter (PickRandomEncounterCountdownFromTable)",
     "evidence": "E-0134"
   },
   "C903": {
@@ -2404,7 +2404,7 @@
   },
   "C918": {
     "name": "wStepTriggerFlag",
-    "note": "set when a step ends on a trigger (UpdatePlayerMovement_Sub01)",
+    "note": "set once the step triggers have been scanned for the current step (FieldState_WalkATalks_RunStepTriggers); cleared by UpdatePlayerMovement_AdvanceStep when the step finishes",
     "evidence": "E-0134"
   },
   "C91C": {
@@ -2449,7 +2449,7 @@
   },
   "C92E": {
     "name": "wScriptMsgSelect",
-    "note": "selector for script messages (StartMessageFromTable7787)",
+    "note": "selector for script messages (StartMessageFromTable)",
     "evidence": "E-0134"
   },
   "C92F": {
@@ -2978,7 +2978,7 @@
   },
   "CDCC": {
     "name": "wNameBufAlt",
-    "note": "alternative name buffer (PickNameBufferForFirstByte)",
+    "note": "alternative name buffer (DrawRecordFamilyEntries_PickMarkTile)",
     "evidence": "E-0135",
     "size": "10"
   },
@@ -3013,7 +3013,7 @@
   },
   "CE9B": {
     "name": "wGM2TimerFrames",
-    "note": "first byte of the $D8-byte block saved to SRAM bank 1 by SaveGM2TimerFramesBlockToSRAMBank1; a timer byte (CallF072B4WhenGM2TimerMinutesIs59)",
+    "note": "first byte of the $D8-byte block saved to SRAM bank 1 by SaveGM2TimerFramesBlockToSRAMBank1; a timer byte (FarClearRollCounterWhenGM2TimerMinutesIs59)",
     "evidence": "E-0135"
   },
   "CE9C": {
@@ -3023,7 +3023,7 @@
   },
   "CE9D": {
     "name": "wGM2TimerMinutes",
-    "note": "timer byte of that block (59 triggers Func_0F0_72B4)",
+    "note": "timer byte of that block (59 triggers ClearRollCounterWhenGM2TimerMinutesIs59)",
     "evidence": "E-0135"
   },
   "CE9E": {
@@ -3209,7 +3209,7 @@
   },
   "CFCE": {
     "name": "wEffectSubStep",
-    "note": "sub-step of the effect resolution (RunWCFCEStep, ResolveStep0EEffect)",
+    "note": "sub-step of the effect resolution (RunEffectSubStep, ResolveStep0EEffect)",
     "evidence": "E-0135"
   },
   "CFCF": {
@@ -3362,7 +3362,7 @@
   },
   "D043": {
     "name": "wLinkRules",
-    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckWD044Bit6, UnpackLinkRecordToWorkBuf)",
+    "note": "link battle rule bytes (CheckLinkRuleViolation, LinkRuleCheckLinkRules1Bit6, UnpackLinkRecordToWorkBuf)",
     "evidence": "E-0136",
     "size": "A"
   },
@@ -3373,13 +3373,13 @@
   },
   "D04D": {
     "name": "wLinkRulesCopy",
-    "note": "second copy of the 10 rule bytes (GameMode5_Init_Case04_Sub01)",
+    "note": "second copy of the 10 rule bytes (filled by CopyLinkRulesToLinkRulesCopy; GameMode5_Init_LinkBattleSetup_LoadRules reads it back)",
     "evidence": "E-0136",
     "size": "A"
   },
   "D057": {
     "name": "wLinkRuleFlags",
-    "note": "link rule bits tested by the CheckLinkRules1Rule* routines (E-0345, C1: named from its users; was wLinkRuleWork57)",
+    "note": "link rule bits tested by CheckLinkRules1RuleBit1 to CheckLinkRules1RuleBit5 and LinkRuleCheckLinkRules1Bit6 (E-0345, C1: named from its users; was wLinkRuleWork57)",
     "evidence": "E-0136; E-0345"
   },
   "D058": {
@@ -3389,12 +3389,12 @@
   },
   "D059": {
     "name": "wLinkSetupMode",
-    "note": "link set-up mode written by the link screen states; GameMode5_Init_Case04_Sub01 compares it with 2",
+    "note": "link set-up mode written by the link screen states; GameMode5_Init_LinkBattleSetup_LoadRules compares it with 2",
     "evidence": "E-0136"
   },
   "D05A": {
     "name": "wLinkSeedCopy",
-    "note": "11 bytes copied from wRandomSeed2Hi onward at the start of a link exchange (RunLinkSession6Exchange_Case01_Sub01_Table2_Case05_Case0D)",
+    "note": "11 bytes copied from wRandomSeed2Hi onward when the partner message 5 arrives in the fight-info exchange (RunLinkSession6Exchange_FightInfo_KeepPartner); used as the partner name",
     "evidence": "E-0136",
     "size": "B"
   },
@@ -3450,7 +3450,7 @@
   },
   "D08D": {
     "name": "wItemMessage",
-    "note": "item record byte 9: message selector; SetWD08D12IfItemRefused / SetWD08D14IfItemRefused store $12 or $14 when the target refuses",
+    "note": "item record byte 9: message selector; SetItemMessage12IfItemRefused / SetItemMessage14IfItemRefused store $12 or $14 when the target refuses",
     "evidence": "E-0136"
   },
   "D08E": {
@@ -3491,7 +3491,7 @@
   },
   "D09B": {
     "name": "wGrowthTemp0",
-    "note": "growth calculation work byte (ComputeLevelUpStatGainsForWD869_Sub01, AddGrowthTemp1IfGrowthTemp0MatchesB)",
+    "note": "growth calculation work byte (ComputeLevelUpStatGainsForBattleArg1_ItemBonus, AddGrowthTemp1IfGrowthTemp0MatchesB)",
     "evidence": "E-0136"
   },
   "D09C": {
@@ -3507,7 +3507,7 @@
   },
   "D0C7": {
     "name": "wPauseListCount",
-    "note": "number of entries in the pause-menu list (PauseMenu_Plan; BuildScreenBlocks21To23_Sub01)",
+    "note": "number of entries in the pause-menu list (PauseMenu_Plan; BuildScreenBlocks21To23_BuildKeyList)",
     "evidence": "E-0136"
   },
   "D0D6": {
@@ -3547,7 +3547,7 @@
   },
   "D0E8": {
     "name": "wLinkMenuEntry",
-    "note": "entry number for table $555D (LoadTable555DEntryForWD0A6ToLinkMenuEntryBytes)",
+    "note": "entry number for table $555D (LoadTableEntryForWorkBuf9ToLinkMenuEntryBytes)",
     "evidence": "E-0136"
   },
   "D0EA": {
@@ -3654,7 +3654,7 @@
   },
   "D2C8": {
     "name": "wBattleCommandArgs",
-    "note": "four bytes stored by RunBattleCommandEntry_Case06",
+    "note": "four bytes stored by RunBattleCommandEntry_TotalHP",
     "evidence": "E-0136",
     "size": "4"
   },
@@ -3751,7 +3751,7 @@
   },
   "D789": {
     "name": "wListEntries",
-    "note": "entries of the current list (record or key indexes; BuildKeyListIndexListEntries, ListRecordsInUseWithByte6EClear)",
+    "note": "entries of the current list (record or key indexes; BuildKeyListIndexListEntries, ListRecordsInUseNotEggs)",
     "evidence": "E-0136",
     "size": "20"
   },
@@ -3892,7 +3892,7 @@
   },
   "D7B4": {
     "name": "wSelectedRecord",
-    "note": "SRAM record index chosen on a screen (LoadRecordSelectedRecordByte0EBit0); also a blink counter in BlinkCursorSelectedRecord_Bank1C",
+    "note": "SRAM record index chosen on a screen (LoadSelectedRecordSex); also a blink counter in BlinkCursorSelectedRecord_Bank1C",
     "evidence": "E-0136"
   },
   "D7B5": {
@@ -3917,7 +3917,7 @@
   },
   "D7B9": {
     "name": "wRecordsFlagged",
-    "note": "in-use records whose byte $6E is set (ListRecordsInUseWithByte6EClear)",
+    "note": "in-use records whose byte $6E is set (ListRecordsInUseNotEggs)",
     "evidence": "E-0136"
   },
   "D7BA": {
@@ -3942,7 +3942,7 @@
   },
   "D7BE": {
     "name": "wListEntries2",
-    "note": "second 30-byte list cleared by ListRecordsInUseWithByte6EClear; script commands $E2, $E5 and $EB use its first bytes",
+    "note": "second 30-byte list cleared by ListRecordsInUseNotEggs; script commands $E2, $E5 and $EB use its first bytes",
     "evidence": "E-0136"
   },
   "D7BF": {
@@ -4012,7 +4012,7 @@
   },
   "D7CC": {
     "name": "wNumberEditPos",
-    "note": "position of the number editor (DrawRect0147AndResetNumberEditPos sets 2)",
+    "note": "position of the number editor (VaultMenu_SaveGoldAreaToBGMap1 sets 2)",
     "evidence": "E-0136"
   },
   "D7CD": {
@@ -4121,7 +4121,7 @@
   },
   "D7EF": {
     "name": "wCursorBlinkEF",
-    "note": "cursor blink counter (BlinkCursorBlinkEF_Bank1D_4801)",
+    "note": "cursor blink counter (VaultMenu_ItemsGoldExit_BlinkCursor)",
     "evidence": "E-0136"
   },
   "D7F0": {
@@ -4171,7 +4171,7 @@
   },
   "D7FB": {
     "name": "wScreenTableIndex",
-    "note": "index into per-screen pointer tables (Data_0F2_5643, Data_01C_6158)",
+    "note": "index into per-screen pointer tables (ScreenNumberListTable, ShopItemListTable)",
     "evidence": "E-0136"
   },
   "D7FC": {
@@ -4281,12 +4281,12 @@
   },
   "D854": {
     "name": "wPersonalityActs",
-    "note": "a word per battle slot, cleared each turn; the low byte's bits are the personality acts the trait rolls set (RollPersonality*, RollSlotTrait*): 0 struck at full power, 1 tucked in fear, 2 concentrated, 3 (none seen), 4 light fell softly, 5 ducked behind an ally, 6 pumped up, 7 rolled out of the way (C2 from E-0337: each forced bit but 3 shows its battle text; was wSlotFlags854)",
+    "note": "a word per battle slot, cleared each turn; the low byte's bits are the personality acts the trait rolls set (the handlers of FlagBitHandlerTable, such as RollSlotTraitHighFlag40 and RollSlotTraitLowFlag80): 0 struck at full power, 1 tucked in fear, 2 concentrated, 3 (none seen), 4 light fell softly, 5 ducked behind an ally, 6 pumped up, 7 rolled out of the way (C2 from E-0337: each forced bit but 3 shows its battle text; was wSlotFlags854)",
     "evidence": "E-0137; E-0337"
   },
   "D864": {
     "name": "wSlotPairBytes",
-    "note": "bytes indexed by the actor (ActionEffect_SuckAll, RunBattleActions_Case09_Case00)",
+    "note": "bytes indexed by the actor (ActionEffect_SuckAll, RunBattleActions_EndOfTurn)",
     "evidence": "E-0137"
   },
   "D866": {
@@ -4395,7 +4395,7 @@
   },
   "D88F": {
     "name": "wBattlePartyCount",
-    "note": "number of party monsters in the battle (RemovePartyMemberMarkedFF; CopyRectRecordForWD88F)",
+    "note": "number of party monsters in the battle (RemovePartyMemberMarkedFF; CopyRectRecordForBattlePartyCount_Bank31)",
     "evidence": "E-0137"
   },
   "D890": {
@@ -4442,17 +4442,17 @@
   },
   "D8A1": {
     "name": "wFoeJoinClass1",
-    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 1, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA1)",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 1, set by GameMode4_Init_SetUpBattle; 7 stops it joining after the battle (C1; was wBattleInitA1)",
     "evidence": "E-0137, E-0306"
   },
   "D8A2": {
     "name": "wFoeJoinClass2",
-    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 2, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA2)",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 2, set by GameMode4_Init_SetUpBattle; 7 stops it joining after the battle (C1; was wBattleInitA2)",
     "evidence": "E-0137, E-0306"
   },
   "D8A3": {
     "name": "wFoeJoinClass3",
-    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 3, set by GameMode4_Init_Sub01; 7 stops it joining after the battle (C1; was wBattleInitA3)",
+    "note": "the join-chance class (battler byte $4D, MonsterTable byte 8) of foe 3, set by GameMode4_Init_SetUpBattle; 7 stops it joining after the battle (C1; was wBattleInitA3)",
     "evidence": "E-0137, E-0306"
   },
   "D8A7": {
@@ -4665,7 +4665,7 @@
   },
   "DAC9": {
     "name": "wSavedActorTarget",
-    "note": "actor and target saved by RunBattleStep4_Case00_Sub01_Case00",
+    "note": "actor and target saved by RunBattleStep4_SaveAndStart",
     "evidence": "E-0137"
   },
   "DAD1": {
@@ -4970,12 +4970,12 @@
   },
   "CCCD": {
     "name": "wNameBufPlaceholder",
-    "note": "name buffer picked when a name starts with the $98 placeholder (PickNameBufferForFirstByte) (E-0345, C1: named from its users; was wNameBufUnknown)",
+    "note": "name buffer picked when a name starts with the $98 placeholder (DrawRecordFamilyEntries_PickMarkTile) (E-0345, C1: named from its users; was wNameBufUnknown)",
     "evidence": "E-0137; E-0345"
   },
   "D00F": {
     "name": "wSpeciesExpCurve",
-    "note": "species record byte 7: the ExpTable row (EXP curve) of the species (LoadTable4E60EntryForWC991ToWC9DE)",
+    "note": "species record byte 7: the ExpTable row (EXP curve) of the species (LoadTableEntryForRecordBufASpeciesToRecordBufAExp)",
     "evidence": "E-0148"
   },
   "FF80": {

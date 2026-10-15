@@ -1818,7 +1818,7 @@ IncrementPlayTime_Bank31::
 ; counts the wSlotMarks still 0 from before and, when there are none, advances wBattleStep so the
 ; command menu (RunBattleSetup) is skipped; finally it marks each of those slots: 3 empty, 1 blocked
 ; by status (CheckSlotStatusBlock) or by wBattleStatus3 byte 0 bits 6-7, byte 1 bits 2-3, byte 2
-; bits 4-5 or byte 5 bits 0-1, otherwise 0. (C1, E-0370)
+; bits 4-5 or byte 5 bits 0-1, otherwise 0. (C2, E-0370; probed E-0379)
 BattleFight_BeginRound_StartRound::
     ld hl, wSideControl
     ld b, $08
@@ -1921,8 +1921,16 @@ BattleFight_BeginRound_StartRound::
     jr nz, .loop3
     ret
 
+; The command phase of a fight round, called every frame by BattleFight_ChooseCommands:
+; wBattleSubPhase picks one of 13 parts. 0 is the main menu (RunBattleSetup_MainMenu: FIGHT, PLAN,
+; ITEM, RUN), which sets the sub-phase to 3 for FIGHT, 1 for PLAN (RunBattleSetup_PlanMenu) or 2 for
+; ITEM (RunBattleSetup_ItemMenu). 3 marks every slot still at 0 with 1
+; (RunBattleSetup_MarkSlotsToAct) and the sub-phases 4-11 only act in link battles (wLinkMode
+; non-zero: the partner message, then the exchange of the choices and of the random seeds, back to 5
+; when the seeds differ), so in a single battle they just step on; 12 (RunBattleSetup_ClearWindow)
+; clears the window, adds 1 to wBattleStep and resets wBattleSubPhase to 0. (C1, E-0379)
 ; battle fight step 1: one sub-step per wBattleSubPhase (13 cases, 0-12 observed in the first
-; battle) that builds the battle screen and loads the combatants (E-0044)
+; battle) that builds the battle screen and loads the combatants
 RunBattleSetup::
     ld a, [wBattleSubPhase]
     jumptable
@@ -1940,6 +1948,14 @@ RunBattleSetup::
     dw RunBattleSetup_RetryOnSeedMismatch
     dw RunBattleSetup_ClearWindow
 
+; The main menu of the command phase (sub-phase 0 of RunBattleSetup): wBattleResolveStep picks one
+; of 17 steps. 0 saves the tactics of the player slots, 1 draws the menu, 2 the cursor, 3 moves it
+; in the 2 x 2 menu (A goes on), 4 copies the menu window and 5 handles the choice
+; (RunBattleSetup_MainMenu_Choose: FIGHT, PLAN and ITEM leave this sub-phase, a refusal message goes
+; to step 6 and back to 2 at 7). RUN goes to the flee attempt at 8-9 ('<player> fled!', or 'But the
+; escape route was cut' which goes on to 10 and the fight), to 15-16 ('No fleeing from this
+; battle!', back to step 1) or to 11-14 ('Retire now?', yes/no, 'You threw in the towel!' and the
+; end of the battle at 14). (C1, E-0379)
 ; by wBattleResolveStep: the battle's main menu (FIGHT, PLAN, ITEM and RUN, wMenuState bits 0-1) and
 ; the RUN choices: the flee attempt ('<player> fled!', 'But the escape route was cut'), 'No fleeing
 ; from this battle!' and retiring ('Retire now?', 'You threw in the towel!') (E-0364; was named for
@@ -1966,7 +1982,7 @@ RunBattleSetup_MainMenu::
     dw RunBattleSetup_MainMenu_BackToMenu
 
 ; Main menu, step 0: saves the player's three slots' tactics and last tactics into wFleeWork; next
-; step. (C1, E-0357)
+; step. (C2, E-0357; probed E-0379)
 RunBattleSetup_MainMenu_SaveTactics::
     ld a, [wLinkMode]
     or a
@@ -2097,7 +2113,8 @@ RunBattleSetup_MainMenu_CopyMenuWindow::
 ; in this battle!' ($1D) in link battles and battle kinds 4 and 5, 'There are no usable items!'
 ; ($1F) with none, otherwise the item menu (sub-phase 2); RUN (3) 'No fleeing from this battle!'
 ; ($20) in link battles, otherwise the flee attempt (step 8) in battle kinds 0 and 1, the refusal
-; (step $0F) in kinds 2, 3, 5, 6 and 7, and 'Retire now?' (step $0B) in the others. (C1, E-0357)
+; (step $0F) in kinds 2, 3, 5, 6 and 7, and 'Retire now?' (step $0B) in the others. (C2, E-0357;
+; probed E-0379)
 RunBattleSetup_MainMenu_Choose::
     ld a, [wMenuState]
     and $03
@@ -2218,7 +2235,7 @@ RunBattleSetup_MainMenu_Choose::
 .return:
     ret
 
-; Clears the action choices of the player's three slots ($FF). (C1, E-0357)
+; Clears the action choices of the player's three slots ($FF). (C2, E-0357; probed E-0379)
 RunBattleSetup_MainMenu_Choose_ClearActions::
     ld a, [wLinkRole]
     and $02
@@ -2235,7 +2252,8 @@ RunBattleSetup_MainMenu_Choose_ClearActions::
     ld [hli], a
     ret
 
-; Restores the player's three slots' tactics and last tactics from wFleeWork. (C1, E-0357)
+; Restores the player's three slots' tactics and last tactics from wFleeWork. (C2, E-0357; probed
+; E-0379)
 RunBattleSetup_MainMenu_RestoreTactics::
     ld a, [wLinkMode]
     or a
@@ -2430,8 +2448,8 @@ RunBattleSetup_MainMenu_TryFlee::
     ld [wDataBankSave], a
     ret
 
-; Counts the foes that can act (not blocked by CheckSlotStatusBlockWide_Bank31); Z when none. (C1,
-; E-0357)
+; Counts the foes that can act (not blocked by CheckSlotStatusBlockWide_Bank31); Z when none. (C2,
+; E-0357; probed E-0379)
 RunBattleSetup_MainMenu_TryFlee_CountAbleFoes::
     ld a, [wBattleFoeCount]
     ld b, a

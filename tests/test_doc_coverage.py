@@ -39,6 +39,11 @@ class Coverage(unittest.TestCase):
     def test_comments_name_only_labels_symbols_and_constants(self):
         self.assertEqual(dict(doc_coverage.stale_names(FILES).most_common(10)), {})
 
+    def test_include_and_ram_comments_name_only_current_labels(self):
+        """E-0379: the RAM, record, constant, macro and charmap comments cite routines by their current names too."""
+        top = sorted(p for p in (ROOT / "src").glob("*.*") if p.suffix in (".inc", ".asm"))
+        self.assertEqual(dict(doc_coverage.stale_names(top).most_common(10)), {})
+
     def test_every_routine_comment_and_table_header_cites_evidence(self):
         """E-0350: a routine's comment and the header comment of each table cite an evidence or decision id."""
         import re
@@ -71,7 +76,7 @@ class Coverage(unittest.TestCase):
         RESTATED_AT_MOST = 0
         hand, restated = doc_coverage.note_counts(FILES)
         self.assertLessEqual(restated, RESTATED_AT_MOST, f"{restated} restated routines (was at most {RESTATED_AT_MOST})")
-        self.assertGreaterEqual(hand, 7936)  # E-0378: raised as the readability batches add readings
+        self.assertGreaterEqual(hand, 8289)  # E-0379: raised as the readability batches add readings
         import json
         ann = json.loads((ROOT / "config/annotations.json").read_text(encoding="utf-8"))
         hand_keys = [k for k, v in ann.items() if not k.startswith("_") and doc_coverage.HAND_NOTE.search(v)]

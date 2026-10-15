@@ -2160,7 +2160,7 @@
           "reason": "skill prerequisite list"
         }
       ],
-      "note": "E-0159 (C1: TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists).",
+      "note": "E-0159 (C1: TryAddSkillUnlessBetterKnown reads the word $5BEC + 2 * skill and adds the skill only when every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists).",
       "target_names": {
         "by": "skill",
         "prefix": "SkillPrerequisites_"
@@ -12769,7 +12769,7 @@
         ],
         "record": "24-bit number"
       },
-      "note": "E-0208 (C1: ReadF2FarPointerForScreenTableIndex (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Buy_ApplyGoldPass) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
+      "note": "E-0208 (C1: LoadScreenNumberListPointer (bank $1C) reads the word at $5643 + 2 * wScreenTableIndex; Jump_01C_4AFA adds 3 * entry (after ShopMenu_Buy_ApplyGoldPass) and shows the 24-bit number there in digits (wDigits, Number24ToPackedBCD); the lists run contiguously to ReturnStub_6333; read as prices, which is not confirmed)."
     },
     {
       "bank": "00",

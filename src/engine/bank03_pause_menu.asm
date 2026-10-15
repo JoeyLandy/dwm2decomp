@@ -1544,7 +1544,7 @@ PauseMenu_Info_Page4_Cursor::
     ld [wArg1], a
     ld a, h
     ld [wArg2], a
-    farcall DrawPartySpeciesSprites
+    farcall DrawPedigreeSpeciesSprites
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit2
@@ -2655,7 +2655,7 @@ DecompressRecordSpeciesGraphicsToTiles0::
     ret
 
 ; Loads the sprite graphics of the party starting at the selected member
-; (LoadPartySpeciesSpriteGraphics with wArg1 = that entry of wPartyList), with SRAM enabled. (C1,
+; (LoadPedigreeSpeciesSpriteGraphics with wArg1 = that entry of wPartyList), with SRAM enabled. (C1,
 ; E-0357)
 PauseMenu_Info_Page4_Draw_LoadPartySprites::
     ld a, $0a
@@ -2673,7 +2673,7 @@ PauseMenu_Info_Page4_Draw_LoadPartySprites::
     ld [wWorkBuf], a
     ld a, h
     ld [wWorkBuf + $1], a
-    farcall LoadPartySpeciesSpriteGraphics
+    farcall LoadPedigreeSpeciesSpriteGraphics
     xor a
     ld [rRAMG], a
     xor a

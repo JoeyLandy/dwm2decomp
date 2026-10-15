@@ -1127,6 +1127,12 @@ GameMode4_Init_CopyPartyToBattlers_Member::
     inc de
     ret
 
+; A = a MON_ITEM value copied into a battler record, DE = the address of that item byte (the byte
+; just after the 27 BATTLER_RESISTANCES bytes). Returns at once, changing nothing, when A is 0 or
+; outside $0D-$13. Otherwise it reads row A - $0D of IncrementOffsetRows_19, a list of offsets ended
+; by $80, and for each offset adds one to the byte at DE + $FF00 + offset (that is DE minus up to
+; 27, one of the resistance bytes) unless that byte is already 3 or more. DE is restored and AF and
+; HL are changed. Only GameMode4_Init_CopyPartyToBattlers_Member calls it. (C2, E-0379)
 ; for A in $0D-$13 increments (capped at 3) each byte listed in IncrementOffsetRows_19 row A - $0D,
 ; relative to DE (E-0125)
 ApplyIncrementOffsetRows19ForA0DTo13::
@@ -1165,6 +1171,10 @@ ApplyIncrementOffsetRows19ForA0DTo13::
     inc de
     jr .skip
 
+; HL = a 16-bit offset, hTemp0/hTemp1 = a base address (low, high). Adds the two to make the
+; address, leaves it in HL, and adds one to the byte there unless it is already 3 or more. Carry is
+; clear when the byte was 3 or more and left alone. Only ApplyIncrementOffsetRows19ForA0DTo13 calls
+; it, once for each offset of a row. (C2, E-0379)
 ; increments the byte at HL + the word hTemp0/hTemp1 unless it is already 3 or more (E-0118)
 IncrementTableByteCappedAt3::
     ldh a, [hTemp0]
@@ -1198,7 +1208,7 @@ IncrementOffsetRows_19::
 ; wEncounterMonsters entry (LoadMonsterAndSpeciesForListEntryC with C = 0 or 1), keeping the
 ; record's byte $0D (after BATTLER_FAMILY, copied from MON_SEX). BattleEnd_Records_ReplaceSpecialFoe
 ; reaches it through BattleEnd_Records_ReplaceSpecialFoe_SetMonster after writing the next form's
-; monster id into that entry. (C1, E-0370)
+; monster id into that entry. (C2, E-0370; probed E-0379)
 BattleEnd_Records_ReloadFoeBattler::
     ld de, wBattlerRecordSlot5
     ld a, [wDisplaySlot]
@@ -1234,7 +1244,7 @@ BattleEnd_Records_ReloadFoeBattler::
 
 ; Loads the foes: in battle kind 5 or an even kind from their monster records
 ; (LoadMonsterAndSpeciesForListEntryC); in odd kinds other than 5 builds each from its species
-; (GameMode4_Init_BuildFoeRecord), $4E bytes apart. (C1, E-0357)
+; (GameMode4_Init_BuildFoeRecord), $4E bytes apart. (C2, E-0357; probed E-0379)
 GameMode4_Init_LoadFoes::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1271,6 +1281,14 @@ GameMode4_Init_LoadFoes::
     jr nz, .loop2
     ret
 
+; C = index 0-2 into wEncounterMonsters (monster ids, words), DE = the battler record to fill. Reads
+; the 26-byte monster record of that id (LoadMonsterRecord), writes it into the battler record with
+; FillBattlerRecordFromMonster, loads the species record named by the first word of the monster
+; record (LoadSpeciesRecord), and finishes with SetBattlerFamilyAndSex, which adds the family, the
+; sex roll and the 27 resistances. SetBattlerFamilyAndSex ends with a pop bc that discards the
+; return address, so this routine never reaches its own last pop bc and ret: it returns straight to
+; its caller with BC = $4750 and DE = the start of the next battler record ($4E bytes on). Callers:
+; GameMode4_Init_LoadFoes and BattleEnd_Records_ReloadFoeBattler. (C2, E-0379)
 ; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs FillBattlerRecordFromMonster, loads
 ; the species named in wRecordBuffer, then runs SetBattlerFamilyAndSex (E-0121)
 LoadMonsterAndSpeciesForListEntryC::
@@ -1310,7 +1328,7 @@ LoadMonsterAndSpeciesForListEntryC::
 
 ; Builds foe C's battler record from its species (wEncounterMonsters): species, family, sex ratio
 ; and three skills, level wWildLevel[C] (at least 1), experience, and the stats from the species'
-; growth rows scaled by the battle kind (ScaleStatAndCapByBattleKind). (C1, E-0357)
+; growth rows scaled by the battle kind (ScaleStatAndCapByBattleKind). (C2, E-0357; probed E-0379)
 GameMode4_Init_BuildFoeRecord::
     push bc
     ld a, e
@@ -1458,6 +1476,10 @@ GameMode4_Init_BuildFoeRecord::
     pop bc
     ret
 
+; HL = where to store. Steps the table random number once (NextTableByte, so wRandomHi goes up by
+; one and wRandomLo changes), stores wRandomLo at [HL] and adds 1 to HL. A = the byte stored; BC and
+; DE are kept. GameMode4_Init_BuildFoeRecord calls it three times to fill three personality bytes of
+; a new foe record. (C2, E-0379)
 ; advances the random table (NextTableByte) and stores the new wRandomLo at HL; HL += 1; AF, BC, DE
 ; kept apart from A = the byte (E-0067) (the same 16 bytes appear in 2 banks)
 StoreRandomByteAtHL_Bank19::
@@ -1474,6 +1496,10 @@ StoreRandomByteAtHL_Bank19::
     ld [hli], a
     ret
 
+; HL = where to store. Steps the table random number once (NextTableByte), stores (wRandomLo AND
+; $7F) + $80 at [HL], so the byte is always $80-$FF, and adds 1 to HL. A = the byte stored; BC and
+; DE are kept. GameMode4_Init_BuildFoeRecord calls it once for the first personality byte of a new
+; foe record. (C2, E-0379)
 ; NextTableByte, then stores (wRandomLo & $7F) + $80 at HL; HL += 1 (E-0118) (E-0345: was
 ; StoreRandom80ToFFAtHL)
 StoreRandom80ToFFAtHL::
@@ -1492,6 +1518,17 @@ StoreRandom80ToFFAtHL::
     ld [hli], a
     ret
 
+; Scales one stat of a new foe record and stores it. hTemp2/hTemp3 = the stat (a word), HL = where
+; to store it, wBattleArg0 = which stat it is, wBattleKind = the kind of battle. The value is first
+; made 101 percent of itself (rounded down). Special case: in battle kind 3 with wBattleArg0 = 1
+; (the first growth stat, which GameMode4_Init_BuildFoeRecord stores as HP and maximum HP) the 101
+; percent value is multiplied by 5 when wBattleIntroFlag or wBattleArg1 is 1, otherwise by 2, and a
+; product over 65535 becomes 10000 (ScaleStatAndCapByBattleKind_ApplyMultiplier). Otherwise it is
+; capped: 999, except wBattleArg0 = 2 gives 600 (700 in battle kind 3) and wBattleArg0 = 3 gives 700
+; (999 in battle kind 3 when SPECIES_METAL of wSpeciesRecord is not 0). The word is written at [HL]
+; and again in hTemp2/hTemp3, HL goes up by 2 and A ends as its high byte; BC and DE are kept. The
+; cap test is a 16-bit signed difference, so a value more than 32767 above its cap would not be
+; capped. (C2, E-0379)
 ; scales the word hTemp2 by 101 percent and caps it at 999, 600 or 700 depending on wBattleArg0 and
 ; the battle kind wBattleKind, then stores it (E-0128)
 ScaleStatAndCapByBattleKind::
@@ -1571,9 +1608,15 @@ ScaleStatAndCapByBattleKind::
     pop bc
     jr ScaleStatAndCapByBattleKind_Store
 
+; No caller was found. It sets A to 6, or to 12 when wBattleArg1 is 1, and falls into
+; ScaleStatAndCapByBattleKind_ApplyMultiplier, so it expects the state of that branch: E:H:L = a
+; 24-bit value and the caller AF, BC, DE and HL pushed on the stack. The product A * E:H:L is a word
+; that ScaleStatAndCapByBattleKind_Store writes at [HL] (the HL popped from the stack), after
+; popping the four registers, and HL goes up by 2. A product above 65535 becomes 10000; a smaller
+; product, even above 10000, is stored as it is, so the cap in the old name is wrong. (C2, E-0379)
 ; multiplies by 6 (or 12 when wBattleArg1 = 1) and caps the result at 10000, then stores the word at
 ; [HL+] (E-0127)
-ScaleWordBy6Or12Capped10000::
+ScaleWordBy6Or12_OverflowToTenThousand::
     ld a, [wBattleArg1]
     cp $01
     ld a, $06
@@ -1583,8 +1626,8 @@ ScaleWordBy6Or12Capped10000::
 ; A = multiplier, E:H:L = value: multiplies (Multiply24By8); a product above 65,535 becomes HL =
 ; 10,000; then stores HL (ScaleStatAndCapByBattleKind_Store). ScaleStatAndCapByBattleKind jumps here
 ; in battle kind 3 for wBattleArg0 = 1 (the first growth stat, stored as HP and max HP) with A = 5
-; when wBattleIntroFlag or wBattleArg1 is 1, else 2; ScaleWordBy6Or12Capped10000 falls in with A = 6
-; or 12. (C1, E-0370)
+; when wBattleIntroFlag or wBattleArg1 is 1, else 2; ScaleWordBy6Or12_OverflowToTenThousand falls in
+; with A = 6 or 12. (C2, E-0370; probed E-0379)
 ScaleStatAndCapByBattleKind_ApplyMultiplier::
     call Multiply24By8
     ld a, d
@@ -1597,14 +1640,14 @@ ScaleStatAndCapByBattleKind_ApplyMultiplier::
 ; 101% value was above it), so the stat becomes the cap; then stores it
 ; (ScaleStatAndCapByBattleKind_Store). The other jump here, taken when the 101% value does not fit
 ; in 16 bits (E non-zero), has pushed nothing, so it would pop the caller's saved HL instead and
-; unbalance the stack. (C1, E-0370)
+; unbalance the stack. (C2, E-0370; probed E-0379)
 ScaleStatAndCapByBattleKind_UseCap::
     pop bc
     ld l, c
     ld h, b
 
 ; Stores HL in hTemp2/hTemp3, pops the HL, DE, BC and AF that ScaleStatAndCapByBattleKind pushed,
-; then writes the word to [HL] and advances HL by 2. (C1, E-0370)
+; then writes the word to [HL] and advances HL by 2. (C2, E-0370; probed E-0379)
 ScaleStatAndCapByBattleKind_Store::
     ld a, l
     ldh [hTemp2], a
@@ -1620,6 +1663,10 @@ ScaleStatAndCapByBattleKind_Store::
     ld [hli], a
     ret
 
+; HL = destination. Stores hTemp2 then hTemp3 (a word, low byte first) at [HL], adds 2 to HL; A ends
+; as hTemp3. GameMode4_Init_BuildFoeRecord uses it right after ScaleStatAndCapByBattleKind to store
+; the same scaled value a second time, as the maximum HP and maximum MP next to the current ones.
+; (C2, E-0379)
 ; stores hTemp2 then hTemp3 at HL; HL += 2; clobbers A (E-0065) (the same 7 bytes appear in 2 banks)
 StoreTemp2WordAtHL_Bank19::
     ldh a, [hTemp2]
@@ -1628,6 +1675,11 @@ StoreTemp2WordAtHL_Bank19::
     ld [hli], a
     ret
 
+; HL = destination. Copies the 27 bytes of wSpeciesRecord + SPECIES_RESISTANCES (the species
+; resistance levels) to [HL]; HL ends 27 bytes on, DE ends just past the source, B = 0 and A = the
+; last byte copied. GameMode4_Init_BuildFoeRecord uses it to fill BATTLER_RESISTANCES of a new foe
+; record. The name is the shared name of the identical copies in two banks and does not describe
+; what it copies. (C2, E-0379)
 ; copies the 27 ($1B) bytes at wSpeciesRecord + $12 to HL; HL ends past the copy; clobbers A, B, DE
 ; (E-0065) (the same 12 bytes appear in 2 banks)
 CopySpeciesExpCurveBRecordToHL_Bank19::
@@ -1642,6 +1694,12 @@ CopySpeciesExpCurveBRecordToHL_Bank19::
     jr nz, .loop
     ret
 
+; wBattleArg2/wBattleArg3 = the address of a battler record whose byte $0D holds a sex-ratio class
+; from the species. 0 stays 0 without using the random number. For 1, 2 and any other value it steps
+; the table random number once (NextTableByte) and the byte becomes 1 when wRandomLo is below 2
+; (class 1), $80 (class 2) or $E6 (other classes), otherwise 0. Afterwards, if wNewRecordFamily is
+; not 0, byte $0D is replaced by wNewRecordFamily with bit 4 cleared. Only
+; GameMode4_Init_BuildFoeRecord calls it. (C2, E-0379)
 ; field $0D of record wBattleArg2: values 1, 2 and others roll with thresholds 2, $80 and $E6 and
 ; become 1 or 0; with wNewRecordFamily set bit 4 is cleared (E-0125)
 RollRecordField0DState::
@@ -1696,6 +1754,16 @@ RollRecordField0DState::
     ld [hl], a
     ret
 
+; Sets the experience of a new foe record. wBattleArg2/wBattleArg3 = the record, hTemp1 = its level,
+; and the word at BATTLER_EXP of the record = the species base experience
+; (GameMode4_Init_BuildFoeRecord stored SPECIES_EXP there). With X the base word and L the level, it
+; first builds a 24-bit sum S over c = 1 to L: outside battle kind 3 each term is c * X / 20 rounded
+; down, plus the remainders added up in one byte (they wrap at 256) and divided by 20; in battle
+; kind 3 each term is c * X, undivided. The result is S / 3 (rounded down), divided by 4 again by
+; two arithmetic shifts in battle kind 3; a result of 0 becomes 1 and one of 65536 or more becomes
+; 65535. It is stored as three bytes (low, high, 0) over BATTLER_EXP; hTemp4-hTemp6 hold the 24-bit
+; result before the cap; hTemp7-hTemp9 are work bytes; DE is kept. A level of 0 would run the loop
+; 256 times. (C2, E-0379)
 ; sums the stat word at record + $18 times each level 1..hTemp1 (with a /20 rounding term outside
 ; battle kind 3) into the 24-bit hTemp4-hTemp6 (E-0130)
 AccumulateGrowthForLevelsTemp1::
@@ -1827,6 +1895,10 @@ AccumulateGrowthForLevelsTemp1::
     pop de
     ret
 
+; A = the multiplier, E:H:L = a 24-bit number (E the high byte). Returns the 32-bit product D:E:H:L
+; = A * E:H:L, from three 8-bit multiplies (Multiply8) added with carries. A, B and C are changed.
+; ScaleStatAndCapByBattleKind_ApplyMultiplier and AccumulateGrowthForLevelsTemp1 are the callers.
+; (C2, E-0379)
 ; DEHL = A * EHL (a 24-bit by 8-bit multiply from three Multiply8 calls) (E-0121)
 Multiply24By8::
     push af
@@ -1861,7 +1933,7 @@ Multiply24By8::
     ret
 
 ; Fills a battler record at DE from the loaded monster record: $FF for the name, the monster id, and
-; the record's fields in battler order. (C1, E-0357)
+; the record's fields in battler order. (C2, E-0357; probed E-0379)
 FillBattlerRecordFromMonster::
     push bc
     ld b, $0a
@@ -1991,9 +2063,15 @@ FillBattlerRecordFromMonster::
     pop bc
     ret
 
-; The battler record's family and sex from the species: sex ratio 0 gives 0, otherwise 1 when a
-; random byte is below 2 (ratio 1), 128 (ratio 2) or 230 (others); a non-zero wNewRecordFamily is
-; stored there instead (bit 4 cleared); then the 27 resistance bytes. (C1, E-0357)
+; DE = the start of a battler record, wSpeciesRecord = the species record of its monster. Writes the
+; family (species byte 0) at BATTLER_FAMILY and the sex byte at the next byte, then the 27
+; resistance bytes of wSpeciesRecord + SPECIES_RESISTANCES at BATTLER_RESISTANCES. The sex byte is 0
+; for sex ratio class 0; for class 1, 2 and any other it steps the table random number
+; (NextTableByte) and is 1 when wRandomLo is below 2, $80 or $E6, otherwise 0. A non-zero
+; wNewRecordFamily replaces it, with bit 4 cleared. DE ends 2 bytes past the record resistances
+; (record + $4E). It ends with pop bc and ret, which discard its own return address: it returns to
+; the caller of LoadMonsterAndSpeciesForListEntryC, its only caller, with BC = $4750, so that
+; routine never reaches its final pop bc. (C2, E-0379)
 SetBattlerFamilyAndSex::
     ld a, $0c
     add e
@@ -2073,25 +2151,42 @@ SetBattlerFamilyAndSex::
 
 ; Loads battle slot C from its battler record: in link battles it goes straight to
 ; LoadBattleSlotFromBattlerRecord; otherwise slots below 4 use LoadBattleSlotFromBattlerRecord and
-; foe slots LoadBattleSlotFromBattlerRecord_2, and then the species record buffer is cleared
-; (ClearSpeciesRecordBuffer_Bank19). (C1, E-0370)
+; foe slots LoadBattleSlotFromBattlerRecord_UnlinkedFoe, and then the species record buffer is
+; cleared (ClearSpeciesRecordBuffer_Bank19). (C2, E-0370; probed E-0379)
 GameMode4_Init_LoadBattleSlots_LoadSlot::
     ld a, [wLinkMode]
     or a
     jr nz, LoadBattleSlotFromBattlerRecord
     ld a, c
     cp $04
-    jr nc, .call_load_battle_slot_from_battler_record_2
+    jr nc, .call_load_battle_slot_from_battler_record
     call LoadBattleSlotFromBattlerRecord
     jr .call_clear_species_record_buffer_bank19
 
-.call_load_battle_slot_from_battler_record_2:
-    call LoadBattleSlotFromBattlerRecord_2
+.call_load_battle_slot_from_battler_record:
+    call LoadBattleSlotFromBattlerRecord_UnlinkedFoe
 
 .call_clear_species_record_buffer_bank19:
     call ClearSpeciesRecordBuffer_Bank19
     ret
 
+; C = battle slot (0-2 or 4-6). Copies that slot battler record (BattlerRecordAddress_Bank19) into
+; the per-slot battle arrays: the species word to wBattleMonsterId; the low nibble of record byte
+; $0D to wSlotNameSuffix; the high nibble of byte $0D as the tactics, bits 4-5 to wSlotTactic and
+; bits 6-7 to wSlotLastTactic (both 0 in a link battle), with wSlotTactic also saved in
+; wBattleLoadWork for slots below 4; the skills (LoadSlotSkillsFromBattlerRecord, or
+; LoadSlotSkillsForBattleArg0 when wBattleArg0 is not 0); the level to wBattleLevel; the maximum HP,
+; maximum MP, ATK, DEF, AGL, INT and extra stat (WLD) words; the 27 resistance bytes packed into
+; wSlotResistances (PackResistanceFieldsToDE); and finally wSlotAIMode from the INT word
+; (SetSlotAIModeFromINT). When wLoadSlot is 0 it also sets wBattleSlotOut and wBattleStatus from the
+; status byte of the record (byte $16, just before BATTLER_LEVEL;
+; InitSlotOutAndStatusFromRecordFlags), and copies the current HP and MP words and the four
+; personality bytes (to wSlotPersonalityHi, Lo, Trait and Mid). When wLoadSlot is not 0 the current
+; HP and MP and the slot flags are left alone, and the personality bytes are copied only if the
+; first status byte of slot wBattleArg0 has bit 4 or 5 set. GameMode4_Init_SetUpBattle clears
+; wLoadSlot, so the wLoadSlot branches are not reached at battle set-up. It is the loader for slots
+; below 4, and for every slot in a link battle (GameMode4_Init_LoadBattleSlots_LoadSlot). (C2,
+; E-0379)
 ; slot C: copies species, family, AI settings (wSlotTactic/wSlotLastTactic outside link battles) and
 ; stats from its battler record into the battle arrays (E-0131) (E-0344: the address in its name
 ; dropped or read as the label there; was LoadBattleSlotFromBattlerRecord)
@@ -2326,10 +2421,20 @@ LoadBattleSlotFromBattlerRecord::
     call SetSlotAIModeFromINT
     ret
 
+; A = C = battle slot (4-6): the routine passes A to BattlerRecordAddress_Bank19 without loading it,
+; so the caller must have A = C. It is the foe variant of LoadBattleSlotFromBattlerRecord used
+; outside link battles. Differences: wSlotNameSuffix gets the whole of record byte $0D, wSlotTactic
+; is set to 0, and wSlotLastTactic and wBattleLoadWork are not written. With wLoadSlot 0 the current
+; HP is stored and then replaced in place by RandomizeWordBetween80And100Percent unless wBattleKind
+; is 2, 3 or 5 (in a link battle this routine is not used): with w = 80 percent of the HP (16-bit,
+; HP * 8 / 10) the HP becomes w plus a 16-bit random value (wRandomHi, wRandomLo after one
+; NextTableByte step) modulo HP - w, which is a value from w up to HP - 1; an HP of 0 would loop
+; forever. The maximum HP is stored unchanged. The skills, level, other stat words, personality
+; bytes, resistances and wSlotAIMode are loaded as in LoadBattleSlotFromBattlerRecord. (C2, E-0379)
 ; slot C: copies species, family, wSlotTactic and stats from its battler record into the battle
 ; arrays and loads its skills (E-0131) (E-0344: the address in its name dropped or read as the label
-; there; was LoadBattleSlotFromBattlerRecord_2)
-LoadBattleSlotFromBattlerRecord_2::
+; there; was LoadBattleSlotFromBattlerRecord_UnlinkedFoe)
+LoadBattleSlotFromBattlerRecord_UnlinkedFoe::
     push bc
     call BattlerRecordAddress_Bank19
     pop bc
@@ -2499,6 +2604,11 @@ LoadBattleSlotFromBattlerRecord_2::
     call SetSlotAIModeFromINT
     ret
 
+; A = battle slot. For slots 3 and 7 it returns at once with Z set and HL unchanged (they have no
+; battler record). Otherwise HL = wBattlerRecords + $4E * n, where n = A for slots 0-2 and A - 1 for
+; slots 4-6, the address of the battler record of that slot (so the records of slots 4-6 are the
+; fourth to sixth). B and C are changed. Both LoadBattleSlotFromBattlerRecord and
+; LoadBattleSlotFromBattlerRecord_UnlinkedFoe call it. (C2, E-0379)
 ; A = battle slot: for slots 3 and 7 returns at once with Z set and HL unchanged; otherwise HL =
 ; wBattlerRecords + $4E * A' with A' = A - 1 for slots 4-6 (as BattlerRecordFieldAddress without the
 ; field offset) (E-0067) (the same 23 bytes appear in 2 banks)
@@ -2521,9 +2631,11 @@ BattlerRecordAddress_Bank19::
     ld h, a
     ret
 
-; Sets the slot marks: outside link battles foe slots 4-7 get $01 when present and $FF when empty,
-; then slots 0-3 (all eight in link battles) $FF when empty, $01 when a status blocks them,
-; otherwise $00. (C1, E-0357)
+; Sets wSlotMarks from wBattleSlotOut. Outside link battles the foe slots 4-7 are done first: $FF
+; for a slot whose wBattleSlotOut is $FF (no monster), $01 for any other. Then slots 0-3 (all eight
+; slots in a link battle): $FF when wBattleSlotOut is $FF; otherwise $01 when CheckSlotStatusBlock
+; says the slot is blocked, which includes a defeated monster (wBattleSlotOut 1) as well as asleep,
+; paralyzed, confused, frozen and the other statuses it tests, and $00 when it is not. (C2, E-0379)
 GameMode4_Init_SetSlotMarks::
     ld a, [wLinkMode]
     or a
@@ -2874,6 +2986,13 @@ ExpTable::
     d24 5111999, 5210632, 5309332, 5408100, 5506937, 5605844, 5704822, 5803872, 5902995, 6002192, 6101464
     d24 6200812, 6300237, 6399740, 6499322, 6598984, 6698727, 6798552, 6898460, 6998452, 7098529, 7198692
 
+; hTemp0 = an EXP curve (the row of ExpTable, SPECIES_EXP_CURVE of a species; wSpeciesExpCurve after
+; LoadSpeciesRecord), hTemp1 = an index into the 99 entries of that row. Copies the 3-byte entry
+; (low byte first) to hTemp2, hTemp3 and hTemp4. Entry 0 is level 1, so with hTemp1 = the current
+; level of a monster the entry is the experience needed for the next level; the pause-menu status
+; page does that with MON_LEVEL. A, BC, E and HL are changed. Callers:
+; PauseMenu_Info_Page2_DrawDetails, DrawRecordExperience, RecordReachedNextLevelExp and
+; DrawRecordBufBExpExpAndToNextLevel. (C2, E-0379)
 ; copies the 3 bytes at $4E60 + $129 * hTemp0 + 3 * hTemp1 into hTemp2-hTemp4 (E-0120)
 LoadExpTableEntryToTemp2::
     ld bc, $0129
@@ -2899,6 +3018,12 @@ LoadExpTableEntryToTemp2::
     ldh [hTemp4], a
     ret
 
+; Sets the experience of the monster record in wRecordBufA to the least experience of its level. It
+; loads the species record of the species word at MON_SPECIES of wRecordBufA (LoadSpeciesRecord,
+; which also leaves wSpeciesIdLo/Hi and wSpeciesRecord set), then copies the 3-byte entry number
+; MON_LEVEL - 1 of ExpTable row wSpeciesExpCurve to MON_EXP of wRecordBufA (low byte first).
+; Callers: CreateMonsterRecordInSlot_Build and BattleEnd_Records, after the record has its species
+; and level. (C2, E-0379)
 ; loads species record [wRecordBufA + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufA + $56] - 1)) to wRecordBufA + $58 (E-0121) (E-0340:
 ; the address in its name read as its RAM name; was
@@ -2941,6 +3066,10 @@ LoadTableEntryForRecordBufASpeciesToRecordBufAExp::
     ld [de], a
     ret
 
+; The same as LoadTableEntryForRecordBufASpeciesToRecordBufAExp for the record in wRecordBufB: loads
+; the species record of its MON_SPECIES word and copies the 3-byte entry number MON_LEVEL - 1 of
+; ExpTable row wSpeciesExpCurve to MON_EXP of wRecordBufB. Its only caller is
+; UnpackLinkRecordToRecordBufB. (C2, E-0379)
 ; loads species record [wRecordBufB + $B] and copies three bytes of table $4E60 entry
 ; (wSpeciesExpCurve * $129 + 3 * ([wRecordBufB + $56] - 1)) to wRecordBufB + $58 (E-0121) (E-0340:
 ; the address in its name read as its RAM name; was

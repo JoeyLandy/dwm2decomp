@@ -12,8 +12,8 @@ Observed table (C2; decoded passages read as ordinary sentences):
     $A3 ":"  $45 "*:"  (C2 from E-0320: the debug menu pictures "1:GOTO PROGRAM" for "1", $A3, "GOTO PROGRAM";
              $45 is one character cell holding an asterisk and a colon, the mark before an unnamed
              speaker's words: $EA, $45, " GreatLog's King" is drawn "*: GreatLog's King")
-Bytes $E0-$FF are the text printer's commands (E-0336): StepStringDisplayUntilDone hands each to
-the 32-entry code table of StepStringDisplayUntilDone_Sub01_WriteTextLastChar. TOKENS names them;
+Bytes $E0-$FF are the text printer's commands (E-0336): PrintTextStep hands each to
+the 32-entry code table of RunTextCommand. TOKENS names them;
 `render` writes them as charmap tokens (`<LINE>`, `<PROMPT>`, `@` for the $F0 terminator, ...) and
 an argument byte after its code as `$XX`. Other bytes ($A4, $8D, $8E, ...) stay raw. `render` never
 changes a byte: every string character and token maps back to the bytes it came from.
@@ -51,7 +51,7 @@ TOKENS: list[tuple[bytes, str, int, str]] = [
     (b"\xE3", "<SFX_WAIT_E3>", 1, "the same as $E0"),
     (b"\xE4", "<SFX_WAIT>", 1, "the same as $E0 (the one the text uses)"),
     (b"\xE5", "<MUSIC_WAIT>", 1, "play music $XX and wait until every sound channel is idle"),
-    (b"\xE6", "<CHOICE_E6>", 0, "yes/no choice (AcknowledgeTextPrompt), no sound on confirming yes; the answer is "
+    (b"\xE6", "<CHOICE_E6>", 0, "yes/no choice (TextCmd_ChoiceE6), no sound on confirming yes; the answer is "
                                 "wTextYesNoResult (0 yes, 1 no)"),
     (b"\xE7", "<CHOICE_NO>", 0, "yes/no choice with the cursor starting on no"),
     (b"\xE8", "<CURSOR>", 2, "move the glyph cursor to column $XX, row $YY of the text window"),
@@ -251,8 +251,8 @@ def write_charmap_inc(path) -> None:
              "; the font in bank $1F (E-0336); icon glyphs such as the house ($57) and globe ($5C) stay $XX.", ""]
     for text, code in sorted(CHARMAP.items(), key=lambda kv: kv[1]):
         lines.append(f'CHARMAP "{text}", ${code:02X}')
-    lines += ["", "; Text printer commands, bytes $E0-$FF (E-0336): StepStringDisplayUntilDone runs entry",
-              "; byte - $E0 of the table in StepStringDisplayUntilDone_Sub01_WriteTextLastChar. A command",
+    lines += ["", "; Text printer commands, bytes $E0-$FF (E-0336): PrintTextStep runs entry",
+              "; byte - $E0 of the table in RunTextCommand. A command",
               "; with an argument takes the byte(s) after it, written as $XX after the string. (C2) marks",
               "; what tools/text_check.py observed; the rest is a reading of the handler (C1).", ""]
     for seq, tok, n, desc in TOKENS:

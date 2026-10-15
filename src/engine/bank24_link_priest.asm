@@ -853,9 +853,9 @@ GameMode6_Update_ChooseMonster_BuildList::
     ret
 
 ; Choosing the monster to switch, steps 4, 5 and 9: far-calls LinkBattleSetupMenu, which with
-; wScreenState = 4 runs EggServiceMenu_Bank1B_PickRecords at the same wScreenStep:
+; wScreenState = 4 runs LinkBattleSetupMenu_PickRecords at the same wScreenStep:
 ; DrawListEntriesCell5RecordPanel (step 4), ClearAndDrawListEntriesCell5NameAtTiles1780 (step 5) and
-; EggServiceMenu_Bank1B_PickRecords_ShowInfoOKYesN (step 9, the 'Info / OK' choice). (C1, E-0370)
+; LinkBattleSetupMenu_PickRecords_ShowInfoOKYesN (step 9, the 'Info / OK' choice). (C1, E-0370)
 GameMode6_Update_ChooseMonster_RunPickStep::
     farcall LinkBattleSetupMenu
     ret
@@ -1843,7 +1843,7 @@ GameMode6_Update_SwitchMonster_DrawNames::
     ret
 
 ; Back to the monster list, steps 3, 4 and 6: far-calls LinkBattleSetupMenu, which with wScreenState
-; = $0F runs EggServiceMenu_Bank1B_ListAvailableRecords2 at the same wScreenStep:
+; = $0F runs LinkBattleSetupMenu_ListAfterInfoScreen at the same wScreenStep:
 ; LinkBattleSetupMenu_DrawCursorPanel (3), LinkBattleSetupMenu_DrawCursorName (4) and
 ; EggServiceMenu_ShowInfoOKChoice (6). (C1, E-0370)
 GameMode6_Update_SwitchMonster_RunListStep::
@@ -1851,7 +1851,7 @@ GameMode6_Update_SwitchMonster_RunListStep::
     ret
 
 ; Back to the monster list, step 5: only advances wScreenStep, in place of step 5 of
-; EggServiceMenu_Bank1B_ListAvailableRecords2 (LinkBattleSetupMenu_DrawPicksBox, the rule box). (C2,
+; LinkBattleSetupMenu_ListAfterInfoScreen (LinkBattleSetupMenu_DrawPicksBox, the rule box). (C2,
 ; E-0370; probed E-0378)
 GameMode6_Update_SwitchMonster_NoRuleBox::
     ld a, [wScreenStep]

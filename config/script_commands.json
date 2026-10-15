@@ -196,7 +196,7 @@
     "32": {
       "const": "SCRIPT_GIVE_ITEM_BLINK",
       "routine": "GiveItemBlink",
-      "note": "adds item wC928 to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'",
+      "note": "adds item wC928 to the inventory (AppendItemStepPtrLoToInventory) and blinks object hTemp0; '0 obtained YunaSoul.'",
       "evidence": "E-0245"
     },
     "33": {
@@ -250,7 +250,7 @@
     "3C": {
       "const": "SCRIPT_REWARD_ITEM_OR_KEY",
       "routine": "RewardItemOrKey",
-      "note": "gives an item or a key entry (AppendItemWC928ToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.'",
+      "note": "gives an item or a key entry (AppendItemStepPtrLoToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.'",
       "evidence": "E-0245"
     },
     "3D": {
@@ -423,8 +423,8 @@
     },
     "5A": {
       "const": "SCRIPT_SCENE_KAMEHA_BACK",
-      "routine": "SceneKamehaBack",
-      "note": "a cutscene step named after the scene its only script shows: runs SceneSawKameha's code: '... Prince Kameha came back!'",
+      "routine": "ScriptCommand5A",
+      "note": "runs SceneSawKameha (bank $73), the scene whose script shows '... Prince Kameha came back!'",
       "evidence": "E-0245"
     },
     "5B": {
@@ -640,13 +640,13 @@
     "80": {
       "const": "SCRIPT_STEP_TRIGGER_REWARD",
       "routine": "StepTriggerReward",
-      "note": "a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemWC928ToInventory) or starts a battle with intro 5); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemStepPtrLoToInventory) or starts a battle with intro 5); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "81": {
       "const": "SCRIPT_AREA_ITEM",
       "routine": "AreaItemEvent",
-      "note": "a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemWC928ToInventory) after CheckTwoWCDB0EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemStepPtrLoToInventory) after CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "82": {
@@ -664,7 +664,7 @@
     "84": {
       "const": "SCRIPT_RANDOM_GOLD_OR_ITEM",
       "routine": "RandomGoldOrItem",
-      "note": "a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemWC928ToInventory)); named from its trigger and calls",
+      "note": "a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemStepPtrLoToInventory)); named from its trigger and calls",
       "evidence": "E-0286"
     },
     "85": {

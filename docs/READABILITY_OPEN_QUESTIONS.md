@@ -1171,3 +1171,72 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `TryAddSkillIfPrerequisitesKnown` (1A:631F): its E-0126 note says the skill is added when every listed skill is known; a rejected draft's probes showed the reverse. Re-queued with its slice.
 - `RunLinkSession` (1B:4001): the E-0259 comment names RunLinkSession1Exchange to 8Exchange; the jump table names RunLinkSession_Battle and the others. Re-queued with its slice.
 - src/ram.asm and src/records.inc comments are not covered by the stale-name check; wFarmLevel, wLinkTimeoutLo/Hi and hSpriteHideTile comments were reported inaccurate.
+
+## E-0379
+
+- `BattleEnd_Records_ReloadFoeBattler` (19:46B1): With wDisplaySlot 6 (C = 2) it would load wEncounterMonsters entry 2 into the slot 4 record: the caller only reaches it for slots 4 and 5, so this is unobserved
+- `LoadMonsterAndSpeciesForListEntryC` (19:470F): The pop bc / ret at 19:4750 can never run; whether the original source meant SetBattlerFamilyAndSex to be a tail call is unknown
+- `GameMode4_Init_BuildFoeRecord` (19:4752): wEncounterMonsters holds species ids here but monster-table ids in LoadMonsterAndSpeciesForListEntryC
+- `ScaleWordBy6Or12_OverflowToTenThousand` (19:4931): No code found jumps or calls here; what it was meant for is unknown
+- `LoadBattleSlotFromBattlerRecord` (19:4BA8): wLoadSlot is cleared at battle set-up and its only caller does not set it, so what a non-zero wLoadSlot (a reload that keeps HP, MP and the slot state) is used for is unobserved
+- `LoadBattleSlotFromBattlerRecord_UnlinkedFoe` (19:4CF8): HP of a foe record is never 0 in the set-up; a zero HP hangs the 80 to 100 percent loop
+- `LoadSkillRecordPart` (1A:4022): wBattleArg1 = 0 would copy or clear 256 bytes (dec b wraps); callers pass the count 1 or more
+- `CheckSkillsLearnableAtLevel` (1A:5FA7): wNameSlot = 4 is stored here and never used by this routine; why is unknown
+- `BattleEnd_Records_FindSkillInTable` (1A:62D0): The result of the search is not used by anything: A is restored on every path, so what it was meant to find is unknown
+- `TryAddSkillUnlessBetterKnown` (1A:631F): The SkillPrerequisitePointers lists are read as the later stages of a skill from their contents (each list is the chain after the skill); no caller shows the intent
+- `ReadStatGrowthGainToTemp2` (1A:63D8): No code calls it; ReadStatGrowthGain does the same read for the level-up code
+- `CopyRectRecordToScreenBuffer_2` (1A:727D): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_3` (1A:7284): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_4` (1A:728B): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_5` (1A:7292): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_6` (1A:7299): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_7` (1A:72A0): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_8` (1A:72A7): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_9` (1A:72AE): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordToScreenBuffer_10` (1A:72C2): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `LoadCursorTileAndRect` (1A:72DB): Which tile of Tiles1Plus6F0Tiles is loaded as $ED and what it shows (the callers are yes/no boxes, so a cursor is likely) is not established
+- `CopyRectRecordToScreenBuffer_11` (1A:72F4): what each of these numbered boxes is called in the game is not established; the geometry and tiles come from the table, the callers are menu-drawing routines
+- `CopyRectRecordAndPlaySound6C` (1A:72FB): The tile ids of the box interior are not decoded here, so the exact option wording the box shows is not stated.
+- `CopyRectRecordToScreenBuffer_12` (1A:7307): What the four inner tile rows show is not decoded here.
+- `CopyRectRecordToScreenBuffer_13` (1A:730E): The meaning of the $E1-$E3 edge tiles is not decoded here.
+- `RunLinkSession` (1B:4001): The jumptable does no range check on wLinkSession; values above 8 are not examined here.
+- `ClearSoundChannelSlots` (1B:4362): What the first two bytes of a channel slot hold is not documented in ram.asm, so why the link start clears them is not stated.
+- `SendLinkByteForMenuOption_Bank1B` (1B:43CF): Nothing was found that calls it; it may be dead code or reached through a pointer that was not traced.
+- `LinkExchangeJoypadByte` (1B:45A1): It has no caller in src/; the live exchange uses LinkSendStepWithBuffer.
+- `LinkReceiveJoypadByte` (1B:45EF): It has no caller in src/; the live exchange uses LinkReceiveStepWithBuffer.
+- `WaitSerialTransferWithTimeout` (1B:47EE): It has no caller in src/.
+- `BeginBreedingStringDisplay` (1B:4C86): Table ids 39-41 are not breeding texts (a results-display title and two others), so the proposed name covers ids 0-38 only.
+- `ShowBreedingString` (1B:4C94): Table ids 39-41 are not breeding texts, so the proposed name covers ids 0-38 only.
+- `UnreferencedScreenInitFromBank46` (1B:5352): Which screen it was meant to start is unknown; nothing in src/ reaches it.
+- `ShowTwoChoiceBoxWhenTextIdle` (1B:5C3B): It has no caller in src/.
+- `ClearLinkExchangeBuffer1Bit7AndFourSlots` (1B:5FD4): What the record buffer fields at + $178 hold is not documented, so the purpose of clearing them is not stated.
+- `CopyLow3BitsToWRAMBank2_Bank1B` (1B:62F5): The probe checked the copy, the AND with $07 and the final rSVBK = 0 with source and destination in fixed work RAM; the work RAM bank 2 selection itself could not be observed by the probe runner.
+- `CopyTileBytesToVRAM_Bank1B` (1B:635D): No caller of this copy was found in src/; the same routine in other banks may be the one used.
+- `LinkBattleSetupMenu` (1B:665E): States 6-12 all run LinkBattleSetupMenu_RunStatsScreen; only state 12 (set by the Info choice of EggServiceMenu_Bank1B_PickRecords_InfoOrOK) was followed to a place that sets it, and state 13 (set by the Prize choice of EggServiceMenu_Bank1B_StartLinkBattle_ReadChoice) to LinkBattleSetupMenu_RunScreen.
+- `InnMenu_Init` (1C:408B): The GBC branch that writes the attribute bytes in WRAM bank 2 cannot be observed by the probe runner (rSVBK is 0 on return, so bank 2 reads back as bank 1); only the non-GBC path was probed.
+- `CopyLow3BitsToWRAMBank2_Bank1C` (1C:4303): The bank 2 side was probed only through a source read that sees bank 2 empty; bytes stored in bank 2 could not be written by the probe runner without moving its stack.
+- `CopyRectTo20ByteRowsJp_Bank1C` (1C:431F): The zero-fill was probed with HL chosen so that HL + $0E68 lands in plain WRAM ($C000-$CFFF); the real attribute addresses are in WRAM bank 2 and were not read back.
+- `TryStartFieldMenu` (1C:4364): No call to it was found in src/ (no jump table, farcall or pointer names it). Who calls it, and what story flag 2 means for it, is open.
+- `InnMenu_Pay_RestoreWindowTop` (1C:451D): The GBC branch that writes the attribute bytes in WRAM bank 2 cannot be observed by the probe runner (rSVBK is 0 on return, so bank 2 reads back as bank 1); only the non-GBC path was probed.
+- `ShopMenu_Init` (1C:46A4): The GBC branch that writes the attribute bytes in WRAM bank 2 cannot be observed by the probe runner (rSVBK is 0 on return, so bank 2 reads back as bank 1); only the non-GBC path was probed.
+- `ShopMenu_ChooseAction` (1C:4785): This routine writes wTwoChoiceCursor = 0, 1, 2 and 4; which routine, if any, sets 3 for Script_YouHaveNoMore_4 in the choice jump of Script_Shop_2 was not found.
+- `ShopMenu_Buy_WriteTotal` (1C:507C): The millions digit is the low nibble of hTemp3, which Number24ToPackedBCD stores as a binary count; a total of 10,000,000 or more would not give a digit 0-9 (not reachable with the prices read).
+- `LoadScreenNumberListPointer` (1C:5F26): The numbers are shown in the buy list with the gold mark and multiplied by the quantity, so they act as prices (C1); the table is still named ScreenNumberListTable.
+- `VaultMenu_Init` (1C:6CFD): The wIsCGB branch (attribute copy into WRAM bank 2) was read but not probed: the probe runner cannot read WRAM bank 2 after the routine switches back.
+- `BlinkCursorSelectedRecord_Bank1D` (1D:4A9A): No caller in src/ (not even through a table); only VaultMenu_Store_ItemCursor uses the variant BlinkCursorSelectedRecord_Bank1D_2. C0 whether anything reaches it.
+- `ClearVRAM9700Block_Unreferenced` (1D:5246): No caller in src/ (configured code entry). C0 whether anything reaches it.
+- `ItemStorageHasNonZeroEntry` (1D:59B9): No call to ItemStorageHasNonZeroEntry is named in src/; whether it is reached only through a computed jump or is unused is not known.
+- `DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D` (1D:59F0): No call to DrawRectBothBanksSetTextCursorLoPlus1C1_Bank1D is named in src/; the Vault restore step is in bank $1C, which has its own copy.
+- `DrawListEntriesCell5PedigreeSprites` (1D:5BF2): Which screens show the three sprites together (the callers are link session steps and the swap menu detail cursor) was not traced beyond the callers.
+- `LoadListEntriesCell5RecordAndContinue` (1D:5C94): No call or jump to LoadListEntriesCell5RecordAndContinue is named in src/.
+- `ListPartyRecordsWithState2ToListEntries` (1D:5E79): The loop compares wPartyCount with the number of records listed, so a party member whose state is not 2 would make it read past the end of wPartyList; whether that can happen was not checked.
+- `DrawNameGlyph_Bank1D` (1D:617F): The routine uses the list index C passed by the caller to pick one of up to four tile lists of the layout table; the existing note does not mention C.
+- `LoadPedigreeSpeciesSpriteGraphics` (1D:682A): The bytes after LoadPartySpeciesSpriteGraphics_Data3 (the 3-byte order table used when bit 4 of MON_FAMILY is set) look like a list of nine VRAM tile addresses ending in $FF $FF; no label covers them and no reader of that list was found.
+- `LoadSpeciesSpriteGraphicsAndPalette` (1D:6915): The comment above the routine still reads species hTemp0/7; the species word is hTemp0 and hTemp1.
+- `SwapMonstersMenu_Init` (1E:408B): The CGB branch (attribute copy through CopyLow3BitsToWRAMBank2_Bank1E) is not probed.
+- `SwapMonstersMenu_MoveRecords` (1E:4234): Which stretches of the 49-entry table belong to which flow (drop off alone, or drop off followed by choosing a farm monster to swap with) was not traced.
+- `SwapMonstersMenu_ChooseFromFarm` (1E:4C78): What the two box entries are called on screen was not read from the tile data; their effect (first entry opens a stats screen, second continues, B cancels) is from SwapMonstersMenu_MoveRecords_YesNoCursor.
+- `DrawRecordMasterNameTiles` (1E:6EE2): The tile pattern copied from $2940 (bank 0) is the plain pattern FillTilesBxC also uses; what it looks like on screen was not checked.
+- `DrawRecordFamilyEntries` (1E:6FEB): Whether tile $CC / $CD, the marks it writes, are the male and female marks (DrawRecordListPageMarks uses $CC + sex bit) was inferred from that use only.
+- `DrawScreenBufferRect_Bank1E` (1E:74C8): Registers on return on CGB follow CopyRectToBGMapWrapped (DE past the source, HL at the last row start, C = 0), not checked by a probe (VRAM).
+- `DrawC5BEC6AtScrollOffsetDE_Bank1E` (1E:7530): Which of the tiles $C5, $BE, $C6 is a bracket, arrow or separator was not looked up in the tile data.

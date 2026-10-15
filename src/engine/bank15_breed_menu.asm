@@ -1719,7 +1719,7 @@ BreedMenu_ChooseParents_ShowLinkPrompt::
     jr z, .check_screen_sub_step
     ld a, $0d
     ld [wStringIndex], a
-    farcall BeginStringDisplay_Bank1B_2
+    farcall BeginBreedingStringDisplay
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -2012,7 +2012,7 @@ BreedMenu_ChooseParents_Breed::
     jr z, .check_screen_sub_step
     ld a, $0e
     ld [wStringIndex], a
-    farcall BeginStringDisplay_Bank1B_2
+    farcall BeginBreedingStringDisplay
 
 .check_screen_sub_step:
     ld a, [wScreenSubStep]
@@ -4622,7 +4622,7 @@ BreedMenu_RedrawListScreen_ShowEggFee::
     ld [wTextWindowRows], a
     ld a, h
     ld [wTextWindowWidth], a
-    farcall ShowString_Bank1B_2
+    farcall ShowBreedingString
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -6438,8 +6438,8 @@ ShowSaveFileInfoWindow::
     xor a
     ld [wStringCategory], a
     ld a, $28
-    ld [wStringIndex], a ; 'Unused.'
-    farcall ShowString_Bank1B_2
+    ld [wStringIndex], a
+    farcall ShowBreedingString
     ld hl, wTextWindowTileLo
     xor a
     ld [hli], a

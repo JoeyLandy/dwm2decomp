@@ -103,7 +103,9 @@ interrupt timing, or jumps through a computed address. A passing probe raises th
 appropriate. Drafting workers run on Sonnet or Haiku instead of the session model; E-0378 splits them three and three
 (Sonnet slices 1, 5, 6; Haiku slices 2, 3, 4) to compare rejection rates. The gates do not change: every draft is
 validated and spot-checked by the integrator (session model), and a wrong spot-checked entry rejects the whole draft.
-A model whose drafts are rejected at more than 20% is dropped for the rest of the goal.
+A model whose drafts are rejected at more than 20% is dropped for the rest of the goal. Outcome (E-0378): all three
+Haiku drafts were rejected (partial reads, line-number citations, a wrong input) and all three Sonnet drafts accepted,
+so drafting continues on Sonnet only.
 
 **Cycle timing (E-0368 tree).** Regenerate 3m50s-3m58s (`python -I -u tools/disasm_all.py`); build and identity
 12.8s; full serial suite 25m54s (377 tests); parallel suite 8m04s wall (32 processes; bounded by
@@ -131,6 +133,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 8: unread + probe scope, banks $0A-$12 (6 slices of 150) | E-0376 | 912 | 912 (727 probed, 1,266 probes) | 0 (90 spot checks, all correct) | PASS build/run626 | par626 OK (393, 3 skipped) |
 | 9: unread + probe scope, banks $10-$16 (6 slices of 150-152) | E-0377 | 904 | 904 (808 probed, 1,639 probes; 14 names) | 0 (91 spot checks, all correct) | PASS build/run_E-0377 | par627 OK (394, 3 skipped) |
 | 10: unread + probe scope, banks $16-$31 (6 slices of 150-153; 3 Sonnet, 3 Haiku) | E-0378 | 903 | 452 (330 probed, 1,152 probes; 29 names + 65 children) | 451 (all three Haiku drafts: partial reads, line-number citations, a wrong input; 50%: slices halved to 75, Haiku dropped) | PASS build/run629 | par629 OK (394, 3 skipped) |
+| 11: unread + probe scope, banks $19-$31 (6 slices of 75-80, Sonnet) | E-0379 | 459 | 459 (233 probed, 823 probes; 49 names + 4 derived) | 0 (48 spot checks, all correct) | PASS build/run631 | par631 OK (395, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -144,7 +147,17 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0378)
+## Current handoff (2026-10-15, E-0379)
+
+Batch 11 (E-0379): 459 entries (364 notes, 233 probed, 823 probes; 7,669 in all), 0% rejection with Sonnet workers
+on slices of 75. Also cleaned the stale names out of the include files and RAM comments (58 names) with a new test.
+Phases: drafting 37 min (slowest worker), validation and spot checks about 20 min, apply + regeneration + build 3m55s
+(twice more for the derived names and the generator strings), parallel suite 5m01s. Measures: 33,381 labels, 0
+mechanical, 8,289 hand readings, no stale name in src/. Over 50: 2; over 60: 0; `Etc`: 1. Queue: unread 1,533,
+reader-only data 491, assets 155. Next: E-0380, the combined queue in six slices of 75 (one more batch under 5%
+grows them to 112).
+
+## Prior handoff (2026-10-15, E-0378)
 
 Batch 10 (E-0378) accepted the three Sonnet drafts (452 entries: 307 notes, 330 probed, 1,152 probes; 6,846 in all)
 and rejected the three Haiku drafts (451 labels re-queued). Phases: drafting 32 min (slowest worker), validation and

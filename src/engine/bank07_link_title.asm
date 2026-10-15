@@ -4658,15 +4658,15 @@ GameMode5_Update_LinkSession::
     cp $15
     jr z, .call_draw_list_entries_cell5_species_sprite
     cp $20
-    jr z, .call_call_draw_party_species_sprites
+    jr z, .call_draw_list_entries_cell5_pedigree_sprites
     ret
 
 .call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-.call_call_draw_party_species_sprites:
-    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
+.call_draw_list_entries_cell5_pedigree_sprites:
+    farcall DrawListEntriesCell5PedigreeSprites
     ret
 
 .check_screen_step:
@@ -4720,7 +4720,7 @@ GameMode5_Update_ExchangeJoypadOnRecords::
     ret nz
     ld a, [wScreenStep]
     cp $20
-    jr z, .call_call_draw_party_species_sprites
+    jr z, .call_draw_list_entries_cell5_pedigree_sprites
     cp $15
     jr z, .call_draw_list_entries_cell5_species_sprite
     ret
@@ -4729,8 +4729,8 @@ GameMode5_Update_ExchangeJoypadOnRecords::
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-.call_call_draw_party_species_sprites:
-    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
+.call_draw_list_entries_cell5_pedigree_sprites:
+    farcall DrawListEntriesCell5PedigreeSprites
     ret
 
 .check_screen_step:
@@ -7658,15 +7658,15 @@ GameMode5_Update_LinkSession_Breeding::
     cp $15
     jr z, .call_draw_list_entries_cell5_species_sprite
     cp $20
-    jr z, .call_call_draw_party_species_sprites
+    jr z, .call_draw_list_entries_cell5_pedigree_sprites
     ret
 
 .call_draw_list_entries_cell5_species_sprite:
     farcall DrawListEntriesCell5SpeciesSprite
     ret
 
-.call_call_draw_party_species_sprites:
-    farcall CallDrawPartySpeciesSpritesPreservingArg1AndTemp0
+.call_draw_list_entries_cell5_pedigree_sprites:
+    farcall DrawListEntriesCell5PedigreeSprites
     ret
 
 .check_screen_step:

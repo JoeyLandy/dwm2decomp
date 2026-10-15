@@ -2813,9 +2813,10 @@ LinkEggList::
     dw LinkEggList_RedrawScreen
     dw LinkEggList_ShowChooseTheKindOf
 
-; The egg list, step 0: loads the list's tiles six per call (LoadTileListSixPerFrame). (C1, E-0357)
+; The egg list, step 0: loads the list's tiles six per call (SaveTilesToBGMap1BottomHalf). (C1,
+; E-0357)
 LinkEggList_LoadTiles::
-    farcall LoadTileListSixPerFrame
+    farcall SaveTilesToBGMap1BottomHalf
     ret
 
 ; The egg list, step 1: draws the 13 x 9 list box with the Ally / Store choice marked and lists the
@@ -3057,7 +3058,7 @@ LinkEggList_ShowChooseTheKindOf::
     ld [wArg1], a
     xor a
     ld [wArg2], a
-    ld de, LoadTileListSixPerFrame_Data
+    ld de, SaveTilesToBGMap1BottomHalf_Data
     ld a, d
     ld [wArg3], a
     ld a, e
@@ -3251,7 +3252,7 @@ LinkRecordScreen_DrawPedigreeFrame::
     ld [wArg1], a
     ld a, h
     ld [wArg2], a
-    farcall LoadPartySpeciesSpriteGraphics
+    farcall LoadPedigreeSpeciesSpriteGraphics
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a

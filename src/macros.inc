@@ -2,7 +2,7 @@
 ; the instructions the ROM contains, so the bytes do not change.
 
 ; A far call: `rst $10` calls the code at HL with ROM bank B mapped, then restores the caller's
-; bank (Func_000_0010). The ROM loads the two registers in either order, hence two macros.
+; bank (CallInBank). The ROM loads the two registers in either order, hence two macros.
 MACRO farcall
     ld hl, \1
     ld b, BANK(\1)
@@ -230,7 +230,7 @@ DEF SCRIPT_WARP_MAP41 EQU $2E ; WarpMap41: warps to map $41 (WarpToMap41); used 
 DEF SCRIPT_SCENE_TENTACLES EQU $2F ; SceneTentacles: a cutscene step named after the scene its only script shows: 'Close your eyes for a little...' ... 'Thick, suction-cupped tentacles snaked out' (E-0245)
 DEF SCRIPT_SCENE_SAILOR_RING EQU $30 ; SceneSailorRing: a cutscene step named after the scene its only script shows: after '0 received the Sailor Ring.' (E-0245)
 DEF SCRIPT_SCENE_PIRATE_GHOSTS EQU $31 ; ScenePirateGhosts: a cutscene step named after the scene its only script shows: 'How could we die before enjoying...' ... 'The treasures are ours' (E-0245)
-DEF SCRIPT_GIVE_ITEM_BLINK EQU $32 ; GiveItemBlink: adds item wC928 to the inventory (AppendItemWC928ToInventory) and blinks object hTemp0; '0 obtained YunaSoul.' (E-0245)
+DEF SCRIPT_GIVE_ITEM_BLINK EQU $32 ; GiveItemBlink: adds item wC928 to the inventory (AppendItemStepPtrLoToInventory) and blinks object hTemp0; '0 obtained YunaSoul.' (E-0245)
 DEF SCRIPT_SCENE_CRATE EQU $33 ; SceneCrate: a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... '0 checked the crate.' (E-0245)
 DEF SCRIPT_SET_TILES_FLAG_310 EQU $34 ; SetTilesFlag310: writes tiles $58-$5B into a 2 x 2 block of wScreenTileBuffer ($AA, $AB, $BE, $BF), redraws the screen and sets story flag $310 (E-0245)
 DEF SCRIPT_SCENE_KAMEHA_ESCAPE EQU $35 ; SceneKamehaEscape: a cutscene step named after the scene its only script shows: '0 checked the crate.' ... 'Kameha Wahahahah! Thanks for guiding me' (E-0245)
@@ -239,7 +239,7 @@ DEF SCRIPT_SCENE_CREW_FOLLOWS EQU $37 ; SceneCrewFollows: a cutscene step named 
 DEF SCRIPT_SCENE_KAMEHA_FLEES EQU $38 ; SceneKamehaFlees: a cutscene step named after the scene its only script shows: 'Kameha Arrrrh, clear the way!' ... 'Kameha Aiyeeeeeh' (E-0245)
 DEF SCRIPT_SCENE_MERMAID_KINGDOM EQU $39 ; SceneMermaidKingdom: a cutscene step named after the scene its only script shows: 'Kameha Aiyeeeeeh' ... 'This is the mermaid kingdom.' (E-0245)
 DEF SCRIPT_SCENE_MASTER_THANKS EQU $3A ; SceneMasterThanks: a cutscene step named after the scene its only script shows: 'R Really? Wow! Thank you!' ... 'I became a master because I...' (E-0245)
-DEF SCRIPT_REWARD_ITEM_OR_KEY EQU $3C ; RewardItemOrKey: gives an item or a key entry (AppendItemWC928ToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.' (E-0245)
+DEF SCRIPT_REWARD_ITEM_OR_KEY EQU $3C ; RewardItemOrKey: gives an item or a key entry (AppendItemStepPtrLoToInventory, WriteKeyEntryTemp0); 'Great, 0! Thanks a lot!' ... 'Here, 0! You hold onto it.' (E-0245)
 DEF SCRIPT_REWARD_ITEM_OR_KEY_2 EQU $3D ; RewardItemOrKey2: the same rewards as SCRIPT_REWARD_ITEM_OR_KEY in another scene: 'Fantastic! I can open my shop' ... 'I like you to have this.' (E-0245)
 DEF SCRIPT_SCENE_STRONGEST_MASTER EQU $3E ; SceneStrongestMaster: a cutscene step named after the scene its only script shows: 'The strongest master I've ever...' (E-0245)
 DEF SCRIPT_BLINK_SPRITES EQU $3F ; BlinkSprites: shows the first sprite slot only on alternate groups of four frames (wSpriteSlotCount by wFrameCounterLo bit 2) (E-0245)
@@ -268,7 +268,7 @@ DEF SCRIPT_SCENE_BEATEN_FAIRLY EQU $56 ; SceneBeatenFairly: a cutscene step name
 DEF SCRIPT_SCENE_THREE_ITEMS_BATTLE EQU $57 ; SceneThreeItemsBattle: a cutscene step named after the scene its only script shows: 'Good. You have brought the three...' ... 'Don't you ever give up?' (encounter) (E-0245)
 DEF SCRIPT_SCENE_THREE_ITEMS EQU $58 ; SceneThreeItems: a cutscene step named after the scene its only script shows: 'Kameha If the three items that...' (E-0245)
 DEF SCRIPT_SCENE_SAW_KAMEHA EQU $59 ; SceneSawKameha: a cutscene step named after the scene its only script shows: 'What's that? You saw Prince Kameha' ... 'Sire, this child claims to know' (E-0245)
-DEF SCRIPT_SCENE_KAMEHA_BACK EQU $5A ; SceneKamehaBack: a cutscene step named after the scene its only script shows: runs SceneSawKameha's code: '... Prince Kameha came back!' (E-0245)
+DEF SCRIPT_SCENE_KAMEHA_BACK EQU $5A ; ScriptCommand5A: runs SceneSawKameha (bank $73), the scene whose script shows '... Prince Kameha came back!' (E-0245)
 DEF SCRIPT_SCENE_LIMBO EQU $5B ; SceneLimbo: a cutscene step named after the scene its only script shows: 'Warubou Wa-hey! Take the treasures that...' ... 'Limbo is the King's domain!' (E-0245)
 DEF SCRIPT_TAKE_ITEM EQU $5C ; TakeItem: removes item hTemp0 from the inventory (FindTemp0InInventoryList, RemoveInventorySlotShiftDown); '0 handed over the TidalBell.' (E-0245)
 DEF SCRIPT_SCENE_DARCK_TAUNT EQU $5D ; SceneDarckTaunt: a cutscene step named after the scene its only script shows: 'N No How could my monsters' ... 'Darck Fawahahah!' (E-0245)
@@ -304,11 +304,11 @@ DEF SCRIPT_SCENE_TERRY_BATTLE EQU $7C ; SceneTerryBattle: a cutscene step named 
 DEF SCRIPT_SCENE_THIS_WAY EQU $7D ; SceneThisWay: a cutscene step named after the scene its only script shows: 'This way Here Here' ... 'I heard from Lord Darck, but...' (E-0245)
 DEF SCRIPT_SCENE_GOT_TO EQU $7E ; SceneGotTo: a cutscene step named after the scene its only script shows: 'That's true I've got to...' (E-0245)
 DEF SCRIPT_SCENE_CHEST_SERVANT EQU $7F ; SceneChestServant: a cutscene step named after the scene its only script shows: '0 checked the treasure chest.' ... 'How may we serve your mortal...' (E-0245)
-DEF SCRIPT_STEP_TRIGGER_REWARD EQU $80 ; StepTriggerReward: a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemWC928ToInventory) or starts a battle with intro 5); named from its trigger and calls (E-0286)
-DEF SCRIPT_AREA_ITEM EQU $81 ; AreaItemEvent: a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemWC928ToInventory) after CheckTwoWCDB0EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls (E-0286)
+DEF SCRIPT_STEP_TRIGGER_REWARD EQU $80 ; StepTriggerReward: a key-world/field talk event (group $0F, dispatched by CheckStepTriggerAndDispatchTalk: gives gold (a byte * 10, AddGoldCapped), an item (AppendItemStepPtrLoToInventory) or starts a battle with intro 5); named from its trigger and calls (E-0286)
+DEF SCRIPT_AREA_ITEM EQU $81 ; AreaItemEvent: a key-world/field talk event (group $0E, dispatched from FieldModeStateDispatch: gives an item (AppendItemStepPtrLoToInventory) after CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea, redrawing the screen); named from its trigger and calls (E-0286)
 DEF SCRIPT_TRAVELER_EVENT EQU $82 ; TravelerEvents: talk category 8: jumps by wPendingFieldEvent & $0F to 13 traveler encounters (healers, merchants, masters to battle, a card game, a map seller, the casino ship, a thief); their lines are category 5 of bank $09 (E-0364; corrects E-0293, which read them from the wrong message table) (E-0364)
 DEF SCRIPT_FIELD_SCENE_01 EQU $83 ; FieldScene01: a key-world/field talk event (group $01, dispatched from FieldModeStateDispatch: draws script meta-sprite 21, moves objects, changes the music); named from its trigger and calls (E-0286)
-DEF SCRIPT_RANDOM_GOLD_OR_ITEM EQU $84 ; RandomGoldOrItem: a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemWC928ToInventory)); named from its trigger and calls (E-0286)
+DEF SCRIPT_RANDOM_GOLD_OR_ITEM EQU $84 ; RandomGoldOrItem: a key-world/field talk event (group $02, dispatched from FieldModeStateDispatch: random gold (AddGoldCapped) or item (AppendItemStepPtrLoToInventory)); named from its trigger and calls (E-0286)
 DEF SCRIPT_KEY_WORLD_BOSS_BATTLE EQU $85 ; KeyWorldBossBattle: talk category 9, group 0: a random message ($00D0 + 0..F), a battle against wKeyWorldEncounter (one or three monsters), then after the 'Warubou' message sets wKeyWorldFlags bit 7, marks every floor entry of wKeyWorldEncounterTable done and sets bit 6 of the current key entry byte 7; a C1 name from its calls and writes (E-0286)
 DEF SCRIPT_KEY_WORLD_DOOR_ITEM EQU $86 ; KeyWorldDoorItem: a key-world/field talk event (group $0B: random item or key entry (GenerateNewKeyEntry) and door tiles for the key-world floor (DrawDoorTilesForKeyWorldFloor)); named from its trigger and calls (E-0286)
 DEF SCRIPT_PARTY_DEFEATED_RETURN EQU $87 ; PartyDefeatedReturn: a key-world/field talk event (group $04, dispatched from FieldState_StepChecks: moves incapacitated members back (MoveIncapacitatedPartyMembersBack) and starts the return warp (StartReturnWarpByFlag25)); named from its trigger and calls (E-0286)

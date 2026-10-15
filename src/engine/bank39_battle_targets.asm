@@ -7448,7 +7448,7 @@ AnySlotStatusMaskSet::
     ret
 
 ; fills the damage for wBattleActionId: the effect handler for 0 or ids from $48 (except $66),
-; ComputeDamageEstimateForAction_Multiply8By16 for low ids and $66, or the actor's ATK for $6B and
+; ComputeDamageEstimateForAction_FromSkillRecord for low ids and $66, or the actor's ATK for $6B and
 ; $6C (E-0124)
 ComputeDamageEstimateForAction::
     push bc
@@ -7456,9 +7456,9 @@ ComputeDamageEstimateForAction::
     cp ACTION_FIGHT
     jr z, .call_run_effect_handler_for_action_id
     cp SKILL_WINDBEAST
-    jr c, .call_compute_damage_estimate_for_action
+    jr c, .call_compute_damage_estimate_for_action_from
     cp SKILL_MULTICUT
-    jr z, .call_compute_damage_estimate_for_action
+    jr z, .call_compute_damage_estimate_for_action_from
     cp SKILL_EVILSLASH
     jr z, .read_battle_actor
     cp SKILL_MASSACRE
@@ -7468,8 +7468,8 @@ ComputeDamageEstimateForAction::
     farcall RunEffectHandlerForActionId
     jr .done
 
-.call_compute_damage_estimate_for_action:
-    farcall ComputeDamageEstimateForAction_Multiply8By16
+.call_compute_damage_estimate_for_action_from:
+    farcall ComputeDamageEstimateForAction_FromSkillRecord
     jr .done
 
 .read_battle_actor:

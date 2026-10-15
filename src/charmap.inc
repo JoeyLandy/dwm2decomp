@@ -88,8 +88,8 @@ CHARMAP "★", $AC
 CHARMAP ".", $B5
 CHARMAP "©", $B8
 
-; Text printer commands, bytes $E0-$FF (E-0336): StepStringDisplayUntilDone runs entry
-; byte - $E0 of the table in StepStringDisplayUntilDone_Sub01_WriteTextLastChar. A command
+; Text printer commands, bytes $E0-$FF (E-0336): PrintTextStep runs entry
+; byte - $E0 of the table in RunTextCommand. A command
 ; with an argument takes the byte(s) after it, written as $XX after the string. (C2) marks
 ; what tools/text_check.py observed; the rest is a reading of the handler (C1).
 
@@ -106,7 +106,7 @@ CHARMAP "<SFX_WAIT_E2>", $E2 ; the same as $E0
 CHARMAP "<SFX_WAIT_E3>", $E3 ; the same as $E0
 CHARMAP "<SFX_WAIT>", $E4 ; the same as $E0 (the one the text uses)
 CHARMAP "<MUSIC_WAIT>", $E5 ; play music $XX and wait until every sound channel is idle
-CHARMAP "<CHOICE_E6>", $E6 ; yes/no choice (AcknowledgeTextPrompt), no sound on confirming yes; the answer is wTextYesNoResult (0 yes, 1 no)
+CHARMAP "<CHOICE_E6>", $E6 ; yes/no choice (TextCmd_ChoiceE6), no sound on confirming yes; the answer is wTextYesNoResult (0 yes, 1 no)
 CHARMAP "<CHOICE_NO>", $E7 ; yes/no choice with the cursor starting on no
 CHARMAP "<CURSOR>", $E8 ; move the glyph cursor to column $XX, row $YY of the text window
 CHARMAP "<SOUND>", $E9 ; play sound $XX (music for ids below $60 and $CC, $CF, $D6), without waiting

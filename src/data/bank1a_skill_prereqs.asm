@@ -4,8 +4,12 @@
 SECTION "Bank 1A", ROMX[$4000], BANK[$1A]
     db $1a
 
+; wRecordBuffer (a word) = a skill number. Copies the 17-byte record of that skill from SkillTable
+; (the table at $40D4 of bank $1A) to wRecordBufferData. A, B, C, D, E and HL are changed. The
+; battle menus, the battle effects and the AI, the pause menu skill page and the debug skill viewer
+; call it with farcall, then read the fields they need from wRecordBufferData. (C2, E-0379)
 ; wRecordBuffer/wRecordBuffer + $1 (the first word of the record buffer) = skill number: copies the
-; 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wRecordBufferData (E-0032)
+; 17-byte record at SkillTable + 17 * number (bank $1A, $40D4) to wRecordBufferData
 LoadSkillRecord::
     ld a, [wRecordBuffer]
     ld c, a
@@ -30,9 +34,16 @@ LoadSkillRecord::
     jr nz, .loop
     ret
 
+; wRecordBuffer (a word) = a skill number, wBattleArg0 = an offset into the record, wBattleArg1 = a
+; byte count, wBattleArg2/wBattleArg3 = a destination address. Copies that many bytes of the 17-byte
+; SkillTable record of the skill, starting at the offset, to the destination. When the low byte of
+; wRecordBuffer is $FF it ignores the record and writes wBattleArg1 zero bytes at the destination
+; instead. A count of 0 would copy or clear 256 bytes. It is the partial version of LoadSkillRecord,
+; called when a routine needs one field of a skill record: LoadSlotSkillsFromBattlerRecord uses it
+; to copy byte 3 of each skill into the prefix byte before the skill in wBattleSkills. (C2, E-0379)
 ; like LoadSkillRecord, but copies wBattleArg1 bytes starting wBattleArg0 bytes into the record to
 ; the address in wBattleArg2/wBattleArg3; with wRecordBuffer = $FF it zero-fills that destination
-; instead (E-0353)
+; instead
 LoadSkillRecordPart::
     ld a, [wRecordBuffer]
     ld c, a
@@ -86,8 +97,8 @@ LoadSkillRecordPart::
 
 ; The damage estimate for wBattleActionId from its 17-byte record (the table at $40D4): the word at
 ; offset 9 for the player's side (and in link mode 1), 13 for foes, two bytes further when the
-; actor's AI mode is 4. (C1, E-0357)
-ComputeDamageEstimateForAction_Multiply8By16::
+; actor's AI mode is 4. (C2, E-0357; probed E-0379)
+ComputeDamageEstimateForAction_FromSkillRecord::
     ld a, [wBattleActionId]
     ld c, a
     ld b, $00
@@ -894,9 +905,9 @@ BattleEnd_Records_FindSkillInTable_Data::
     dw 0, 40, 0, 0, 0, 62
     db $ff, $ff, $ff, $ff, $ff
 
-; TryAddSkillIfPrerequisitesKnown reads the word $5BEC + 2 * skill and adds the skill only when
-; every skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record;
-; lists share tails, so they are laid out byte by byte in SkillPrerequisiteLists (E-0159, C1)
+; TryAddSkillUnlessBetterKnown reads the word $5BEC + 2 * skill and adds the skill only when every
+; skill of that $FF-terminated list is known; 170 words, one per SkillRequirementTable record; lists
+; share tails, so they are laid out byte by byte in SkillPrerequisiteLists (E-0159, C1)
 ; record: $FF-terminated list of skills needed before this one
 SkillPrerequisitePointers::
     dw SkillPrerequisiteLists ; id 0
@@ -1195,7 +1206,7 @@ SkillPrerequisites_TailWind::
     db SKILL_STORMWIND ; entry 73
     db $ff ; entry 74
 
-AddSkillCToFreeSlotUnlessExcluded_Data::
+AddSkillCToFreeOrWeakerSlot_Data::
     db $df, $5e
     dw PointerRun_Entry00_2
     db $5e, $5f, $5d, $5f
@@ -1550,6 +1561,19 @@ PointerRun_Entry0A_3::
 PointerRun_Entry00_46::
     db $86, $85, $ff, $8b, $ff, $8d, $ff, $97, $ff, $99, $ff
 
+; wBattleArg2/wBattleArg3 = a battler record (GameMode4_Init_BuildFoeRecord and
+; ApplyLevelScaledStatsToSlots_BuildWildRecord call it). It rebuilds the 8 skills at BATTLER_SKILLS
+; for the level and stats of the record. The 8 skills are copied to wWorkBuf (which is first filled
+; with $FF, $38 bytes) and set to $FF in the record; then the 170 rows of SkillRequirementTable are
+; tried in skill number order (C = the skill). A row is passed over if BATTLER_LEVEL is below its
+; level or any of the words at BATTLER_MAX_HP, BATTLER_MAX_MP, BATTLER_ATK, BATTLER_DEF, BATTLER_AGL
+; and BATTLER_INT is below the matching required word (16-bit, unsigned). A skill that was in the
+; old list and passes goes back into the first free ($FF) slot of the record. Any other skill that
+; passes is added only when the first prerequisite byte of its row is not $FF, that skill is in the
+; record at that moment, and the second prerequisite byte is $FF: the new skill then replaces that
+; prerequisite in its slot (so a chain of rows can upgrade one skill several times in one call). A
+; skill of the old list that is numbered 170 or more, or that fails its row, is dropped. wNameSlot
+; is set to 4. (C2, E-0379)
 ; copies the record's eight skills to wWorkBuf and, for each skill in SkillRequirementTable, checks
 ; the level and stat requirements; learnable skills go into the list (E-0131)
 CheckSkillsLearnableAtLevel::
@@ -1790,6 +1814,10 @@ CheckSkillsLearnableAtLevel::
 .return:
     ret
 
+; Searches the 8 bytes at DE for the byte at HL (FindByteAtHLInEightAtDE_Bank1A), then restores DE
+; and adds 1 to HL. Z is set when the byte was found, as that routine leaves it.
+; CheckSkillsLearnableAtLevel uses it to test whether the first prerequisite of a skill is among the
+; skills already in the record and to step HL on to the second prerequisite byte. (C2, E-0379)
 ; FindByteAtHLInEightAtDE_Bank1A with DE kept, then HL += 1 (E-0119)
 FindByteAtHLInEightAtDEAndStepHL::
     push de
@@ -1798,6 +1826,10 @@ FindByteAtHLInEightAtDEAndStepHL::
     inc hl
     ret
 
+; DE = a list of 8 bytes, HL = the address of the byte to look for. Compares each of the 8 bytes
+; with [HL]: when one matches it returns at once with Z set and DE on the matching byte. When none
+; matches it returns with Z clear, B = 1 and DE = the start + 8. A, B and DE are changed. It is the
+; bank $1A copy of a small helper that the ROM repeats in two banks. (C2, E-0379)
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B
 ; = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
 FindByteAtHLInEightAtDE_Bank1A::
@@ -1813,6 +1845,20 @@ FindByteAtHLInEightAtDE_Bank1A::
     inc b
     ret
 
+; Called by BattleEnd_GainExperience_ShowNewSkills once for each new skill after a level-up.
+; wBattleArg0 = the party slot of the monster (mapped to its SRAM record). It tries the 170 rows of
+; SkillRequirementTable in skill number order (C = the skill) and stops at the first row that gives
+; a result. A row is passed over when the skill is already in wWorkBuf (the $38 byte working list of
+; skills, which the caller fills with the skills of the monster and keeps up to date), when
+; MON_LEVEL + 1 is below the row level, or when any of MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF,
+; MON_AGL and MON_INT is below the matching required word. A row that passes gives: result 0 if the
+; skill is in the 25 byte MON_SKILL_LIST (that entry is set to $FF); result 1 (an upgrade) if the
+; first prerequisite byte of the row is not $FF and that skill is among MON_SKILLS (not for skill
+; $3D, which needs the next rule); result 2 (devised from the skills it knows) if the further
+; prerequisite bytes of the row, up to a $FF, are all among MON_SKILLS and there is at least one of
+; them (skill $3D needs its first prerequisite as well). Result: hTemp3 = the skill and hTemp4 = 0,
+; 1 or 2; for an upgrade hTemp5 = the old skill (the first prerequisite). When no row gives a result
+; hTemp3 = hTemp4 = $FF. AF, BC, DE and HL are changed. (C2, E-0379)
 ; for record wBattleArg0 finds the skills of SkillRequirementTable not yet known whose level and
 ; stat requirements its stats now meet (E-0131)
 FindNewlyLearnableSkills::
@@ -1952,14 +1998,14 @@ FindNewlyLearnableSkills::
     ldh [hTemp6], a
     ld a, c
     cp $3d
-    jr nz, .call_find_byte_then_continue
+    jr nz, .call_find_newly_learnable_skills_is
     ld a, [hl]
-    call FindByteThenContinue
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     jr .next
 
-.call_find_byte_then_continue:
-    call FindByteThenContinue
+.call_find_newly_learnable_skills_is:
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     jr FindNewlyLearnableSkills_Upgrade
 
@@ -1968,25 +2014,25 @@ FindNewlyLearnableSkills::
     ld a, [hl]
     cp $ff
     jr z, .restore
-    call FindByteThenContinue
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Devised
-    call FindByteThenContinue
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Devised
-    call FindByteThenContinue
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     inc hl
     ld a, [hl]
     cp $ff
     jr z, FindNewlyLearnableSkills_Devised
-    call FindByteThenContinue
+    call FindNewlyLearnableSkills_IsPrerequisiteKnown
     jr nz, .restore
     jr FindNewlyLearnableSkills_Devised
 
@@ -2010,14 +2056,14 @@ FindNewlyLearnableSkills::
     ldh [hTemp4], a
 
 ; The shared exit of FindNewlyLearnableSkills: it ends here after all 170 skills with hTemp3 =
-; hTemp4 = $FF (nothing new), and its three result paths and FindByteThenContinue jump here to
-; return. (C1, E-0370)
+; hTemp4 = $FF (nothing new), and its three result paths and
+; FindNewlyLearnableSkills_IsPrerequisiteKnown jump here to return. (C2, E-0370; probed E-0379)
 FindNewlyLearnableSkills_Done::
     ret
 
 ; Result 0: skill C meets the level and stat requirements and is in the record's 25-byte
 ; MON_SKILL_LIST; that entry is overwritten with $FF, hTemp3 = C and hTemp4 = 0 ('At Lv<n>, <name>
-; learned <skill>!'). (C1, E-0370)
+; learned <skill>!'). (C2, E-0370; probed E-0379)
 FindNewlyLearnableSkills_FromSkillList::
     ld a, $ff
     ld [de], a
@@ -2033,7 +2079,7 @@ FindNewlyLearnableSkills_FromSkillList::
 
 ; Result 1: skill C (not $3D) meets the requirements, is not in MON_SKILL_LIST, and the first
 ; prerequisite byte of its row is among the record's MON_SKILLS: hTemp5 = that skill (from hTemp6),
-; hTemp3 = C and hTemp4 = 1 ('<name>'s <old skill> became <skill>!'). (C1, E-0370)
+; hTemp3 = C and hTemp4 = 1 ('<name>'s <old skill> became <skill>!'). (C2, E-0370; probed E-0379)
 FindNewlyLearnableSkills_Upgrade::
     ldh a, [hTemp6]
     ldh [hTemp5], a
@@ -2049,7 +2095,7 @@ FindNewlyLearnableSkills_Upgrade::
 ; Result 2: skill C meets the requirements, its row's first prerequisite byte is $FF (or, for skill
 ; $3D, a known skill), and the further prerequisite bytes up to a $FF (at least one) are all among
 ; the record's MON_SKILLS: hTemp3 = C and hTemp4 = 2 ('<name> devised <skill> from the skills it
-; knows!'). (C1, E-0370)
+; knows!'). (C2, E-0370; probed E-0379)
 FindNewlyLearnableSkills_Devised::
     pop bc
     pop hl
@@ -2060,15 +2106,22 @@ FindNewlyLearnableSkills_Devised::
     ldh [hTemp4], a
     jr FindNewlyLearnableSkills_Done
 
+; DE = the 8 skills of a monster (MON_SKILLS), HL = the address of one prerequisite byte. Z is set
+; when that skill is among the 8 (FindByteAtHLInEightAtDE_Bank1A_2); DE and HL are kept and B is
+; changed. It then jumps to FindNewlyLearnableSkills_Done, which is a ret, so it simply returns to
+; FindNewlyLearnableSkills with the answer in Z. (C2, E-0379)
 ; runs FindByteAtHLInEightAtDE_Bank1A_2 (DE preserved) and continues at
 ; FindNewlyLearnableSkills_Done (E-0126) (E-0344: the address in its name dropped or read as the
-; label there; was FindByteThenContinue)
-FindByteThenContinue::
+; label there; was FindNewlyLearnableSkills_IsPrerequisiteKnown)
+FindNewlyLearnableSkills_IsPrerequisiteKnown::
     push de
     call FindByteAtHLInEightAtDE_Bank1A_2
     pop de
     jr FindNewlyLearnableSkills_Done
 
+; An identical copy of FindByteAtHLInEightAtDE_Bank1A inside bank $1A: DE = a list of 8 bytes, HL =
+; the address of the byte to look for; Z set with DE on the match, else Z clear, B = 1 and DE = the
+; start + 8. FindNewlyLearnableSkills_IsPrerequisiteKnown is its only caller. (C2, E-0379)
 ; searches the 8 bytes from DE for the byte at HL: Z set and DE on the match when found; otherwise B
 ; = 1, Z clear and DE 8 past the start (E-0065) (the same 11 bytes appear in 2 banks)
 FindByteAtHLInEightAtDE_Bank1A_2::
@@ -2084,6 +2137,10 @@ FindByteAtHLInEightAtDE_Bank1A_2::
     inc b
     ret
 
+; C = a skill number. Searches the $38 bytes at wWorkBuf for C: Z is set when it is found, and when
+; it is not B = 1, DE = wWorkBuf + $38 and Z is clear. A, B and DE are changed.
+; FindNewlyLearnableSkills uses it to skip the skills that are already in the working list. (C2,
+; E-0379)
 ; searches the $38 bytes at wWorkBuf for C: Z when found, else B = 1 and NZ (E-0122) (E-0340: the
 ; address in its name read as its RAM name; was FindCInWorkBuf38)
 FindCInWorkBuf38::
@@ -2104,7 +2161,7 @@ FindCInWorkBuf38::
 ; when BattleEnd_Records_BuildSkillList_SkillIsNew returns Z (neither it nor any skill of its
 ; SkillPrerequisitePointers list is among the record's MON_SKILLS), otherwise its entry is $FF
 ; (BattleEnd_Records_FindSkillInTable is called then but returns A unchanged); the 25-byte list is
-; filled with $FF and the kept skills are packed into it. (C1, E-0370)
+; filled with $FF and the kept skills are packed into it. (C2, E-0370; probed E-0379)
 BattleEnd_Records_BuildSkillList::
     ld hl, wWorkBuf
     ld bc, $0019
@@ -2161,7 +2218,7 @@ BattleEnd_Records_BuildSkillList::
 ; A = a species skill: $C8 gives A = $FF with NZ; a skill already among wRecordBufA's MON_SKILLS
 ; (BattleEnd_Records_RecordKnowsSkill), or one whose $FF-terminated SkillPrerequisitePointers list
 ; holds a known skill, also gives A = $FF with NZ; otherwise Z with A = the skill. HL and BC are
-; kept. (C1, E-0370)
+; kept. (C2, E-0370; probed E-0379)
 BattleEnd_Records_BuildSkillList_SkillIsNew::
     push hl
     push bc
@@ -2202,8 +2259,14 @@ BattleEnd_Records_BuildSkillList_SkillIsNew::
     pop hl
     ret
 
+; A = a skill. Walks the 170 rows of SkillRequirementTable looking at the five prerequisite bytes of
+; each (BattleEnd_Records_FindSkillInTable_Data); for a row holding A it calls
+; BattleEnd_Records_RecordKnowsSkill with the row number, and stops walking if the record in
+; wRecordBufA knows that skill. It writes nothing and A, BC, DE and HL are the same on return, so
+; the call in BattleEnd_Records_BuildSkillList has no effect; only the flags are left over. (C2,
+; E-0379)
 ; searches 170 18-byte records of its table for A among their first five bytes; on a match checks
-; the record's skills (BattleEnd_Records_RecordKnowsSkill) (E-0305)
+; the record's skills (BattleEnd_Records_RecordKnowsSkill)
 BattleEnd_Records_FindSkillInTable::
     push hl
     push de
@@ -2252,7 +2315,12 @@ BattleEnd_Records_FindSkillInTable::
     pop hl
     jr .restore
 
-; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS) (E-0305)
+; A = a skill number. Looks for it among the 8 bytes at wRecordBufA + MON_SKILLS. Found: A = $FF and
+; NZ. Not found: A unchanged and Z. BC is kept; HL is changed.
+; BattleEnd_Records_BuildSkillList_SkillIsNew and BattleEnd_Records_FindSkillInTable call it.
+; Because an empty slot is $FF, A = $FF is also found whenever the record has a free slot. (C2,
+; E-0379)
+; A = $FF when skill A is one of record buffer A's eight skills (MON_SKILLS)
 BattleEnd_Records_RecordKnowsSkill::
     push bc
     ld hl, wRecordBufA + MON_SKILLS
@@ -2274,6 +2342,11 @@ BattleEnd_Records_RecordKnowsSkill::
     pop bc
     ret
 
+; Sets hTemp0 to 0 and A to 0 (Z set). Its only caller,
+; BattleEnd_GainExperience_LearnSkill_CopySkills, reads hTemp0 right after it and, finding 0, ends
+; the step, so the rest of that step (adding the skill hTemp0 and showing its text) never runs.
+; TryAddSkillUnlessBetterKnown, which has no caller, looks like what was meant to run in its place.
+; (C2, E-0379)
 ; hTemp0 = 0 and A = 0 (E-0114)
 ClearTemp0AndA::
     xor a
@@ -2281,10 +2354,19 @@ ClearTemp0AndA::
     xor a
     ret
 
+; hTemp0 = a skill number. No caller was found. The word at SkillPrerequisitePointers + 2 * hTemp0
+; points at a $FF-terminated list of skills that come after it in its family (for skill 1 the list
+; is 2, 3). If no skill of the list is equal to hTemp0 or among the 8 bytes at wWorkBuf, and hTemp0
+; itself is not among the 8 either, the skill is added with AddSkillCToFreeOrWeakerSlot (into a free
+; slot of wWorkBuf or over one of the lower skills it supersedes). Otherwise hTemp0 is set to 0. The
+; old name and comment said the opposite, that every skill of the list must be known; the code
+; leaves the skill out as soon as one of its later stages is known. The wWorkBuf eight are only
+; changed when the skill is added; AddSkillCToFreeOrWeakerSlot also clears hTemp0 when no slot fits.
+; (C2, E-0379)
 ; skill hTemp0: when every skill in its $FF-terminated list SkillPrerequisitePointers[hTemp0] is
-; already among the eight at wWorkBuf (or equal to C), adds it (AddSkillCToFreeSlotUnlessExcluded);
+; already among the eight at wWorkBuf (or equal to C), adds it (AddSkillCToFreeOrWeakerSlot);
 ; otherwise hTemp0 = 0 (E-0126)
-TryAddSkillIfPrerequisitesKnown::
+TryAddSkillUnlessBetterKnown::
     ldh a, [hTemp0]
     ld c, a
     ld b, $00
@@ -2305,19 +2387,22 @@ TryAddSkillIfPrerequisitesKnown::
 
 .call_find_c_in_work_buf8:
     call FindCInWorkBuf8
-    jr c, .call_add_skill_c_to_free_slot_unless_excluded
+    jr c, .call_add_skill_c_to_free_or_weaker_slot
 
 .clear_temp0:
     xor a
     ldh [hTemp0], a
     jr .return
 
-.call_add_skill_c_to_free_slot_unless_excluded:
-    call AddSkillCToFreeSlotUnlessExcluded
+.call_add_skill_c_to_free_or_weaker_slot:
+    call AddSkillCToFreeOrWeakerSlot
 
 .return:
     ret
 
+; A = a skill, C = another skill. Returns A = 0 with carry clear when A equals C or is one of the 8
+; bytes at wWorkBuf; otherwise carry set and A unchanged. B and HL are changed.
+; TryAddSkillUnlessBetterKnown (no caller found) calls it for each skill of a list. (C2, E-0379)
 ; A = 0 and NC if A equals C or one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340:
 ; the address in its name read as its RAM name; was AIsCOrInWorkBuf8)
 AIsCOrInWorkBuf8::
@@ -2339,6 +2424,9 @@ AIsCOrInWorkBuf8::
     xor a
     ret
 
+; C = a skill. Returns A = 0 with carry clear when C is one of the 8 bytes at wWorkBuf; otherwise
+; carry set and A = C. B and HL are changed. TryAddSkillUnlessBetterKnown (no caller found) calls it
+; at the end of a list. (C2, E-0379)
 ; A = 0 and NC if C is one of the 8 bytes at wWorkBuf; otherwise carry (E-0122) (E-0340: the address
 ; in its name read as its RAM name; was FindCInWorkBuf8)
 FindCInWorkBuf8::
@@ -2359,11 +2447,18 @@ FindCInWorkBuf8::
     xor a
     ret
 
+; C = a skill. The word at AddSkillCToFreeOrWeakerSlot_Data + 2 * C points at a $FF-terminated list;
+; for skill 3 it is 2, 1, the skills it supersedes. It goes through the 8 bytes at wWorkBuf and
+; writes C into the first slot that is empty (0 or $FF) or holds a skill of that list
+; (IsHLByteInFFListAtDE); a slot holding any other skill is skipped. When none of the eight fits,
+; nothing is written and hTemp0 = 0. hTemp1 is cleared. A, B, DE and HL are changed.
+; TryAddSkillUnlessBetterKnown (no caller found) is its only caller. The old name suggested the
+; opposite: slots with skills outside the list are skipped. (C2, E-0379)
 ; stores C in the first empty slot of the eight at wWorkBuf, skipping slots whose skill is not in
-; the exclusion list AddSkillCToFreeSlotUnlessExcluded_Data[C]; hTemp0 = 0 when none (E-0126)
-AddSkillCToFreeSlotUnlessExcluded::
+; the exclusion list AddSkillCToFreeOrWeakerSlot_Data[C]; hTemp0 = 0 when none (E-0126)
+AddSkillCToFreeOrWeakerSlot::
     ld b, $00
-    ld hl, AddSkillCToFreeSlotUnlessExcluded_Data
+    ld hl, AddSkillCToFreeOrWeakerSlot_Data
     add hl, bc
     add hl, bc
     ld a, [hli]
@@ -2393,6 +2488,9 @@ AddSkillCToFreeSlotUnlessExcluded::
     ld [hl], c
     ret
 
+; DE = a list of bytes ended by $FF, HL = the address of a byte. Returns A = 0 with carry clear when
+; [HL] is in the list, otherwise carry set and A = $FF. DE and HL are kept.
+; AddSkillCToFreeOrWeakerSlot uses it on each slot of wWorkBuf. (C2, E-0379)
 ; carry when [HL] is not in the $FF-terminated list at DE, A = 0 and NC when it is (E-0124)
 IsHLByteInFFListAtDE::
     push de
@@ -2416,6 +2514,12 @@ IsHLByteInFFListAtDE::
     xor a
     ret
 
+; hTemp0 = a growth row (0-31) and hTemp1 = a level. Returns in hTemp2 (low) and hTemp3 (high) the
+; 16-bit value StatGrowthBase[hTemp0] plus the first hTemp1 bytes of row hTemp0 of StatGrowthTable
+; (99 bytes per row, one per level). So it is the stat of that growth row at that level. A level of
+; 0 would add 256 bytes. HL, DE, BC and A are changed. Callers: GameMode4_Init_BuildFoeRecord (once
+; for each of the six SPECIES_GROWTH rows) and ApplyLevelScaledStatsToSlots_BuildWildRecord. (C2,
+; E-0379)
 ; hTemp2/9 = StatGrowthBase[hTemp0] + the sum of the first hTemp1 gains of StatGrowthTable row
 ; hTemp0: the stat value of growth row hTemp0 at level hTemp1 (E-0125, E-0158)
 StatFromGrowthRow::
@@ -2457,6 +2561,9 @@ StatFromGrowthRow::
     ldh [hTemp3], a
     ret
 
+; hTemp0 = a growth row (0-31) and hTemp1 = a level index. Returns in hTemp2 the byte
+; StatGrowthTable[hTemp0][hTemp1] (the gain at that index) and in hTemp3 the value 0. No caller was
+; found. HL, DE, BC and A are changed. (C2, E-0379)
 ; hTemp2/9 = the byte StatGrowthTable[hTemp0][hTemp1] (high byte 0); no traced caller (E-0175)
 ReadStatGrowthGainToTemp2:: ; configured code entry (E-0175); C0
     ldh a, [hTemp0]
@@ -2514,6 +2621,18 @@ StatGrowthBase::
     db $0e ; id 30
     db $10 ; id 31
 
+; wBattleArg1 = a record number of the SRAM monster records (used as it is, not mapped through the
+; party list). Clears the 8 bytes of wLevelUpGains and returns with them cleared when MON_LEVEL is
+; not below MON_MAX_LEVEL. Otherwise it finds the gains for the next level:
+; ComputeLevelUpStatGainsForBattleArg1_ItemBonus runs first (its result is wGrowthTemp0 and
+; wGrowthTemp1, which are the bytes wLevelUpGains + 6 and + 7); then for each of the six
+; SPECIES_GROWTH rows of the species of the record, in the order HP, MP, ATK, DEF, AGL, INT, the
+; gain is StatGrowthTable[row][MON_LEVEL] (ReadStatGrowthGain), plus wGrowthTemp1 for the one stat
+; that wGrowthTemp0 names, stored in wLevelUpGains + 0 to + 5 (8-bit). Last ClampLevelUpGainsTo999
+; limits each gain to what fits under 999. The caller ApplyLevelUpToRecordBattleArg0 adds the gains
+; to MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL and MON_INT. Callers:
+; BattleEnd_GainExperience_CheckLevelUp_ShowGains and BattleEnd_GainExperience_LevelUpFarmRecord.
+; (C2, E-0379)
 ; for record wBattleArg1 below its level cap: computes the stat gains from its species growth rows
 ; (table $6616) into wLevelUpGains-wLevelUpGains + $5 (E-0127)
 ComputeLevelUpStatGainsForBattleArg1::
@@ -2582,7 +2701,7 @@ ComputeLevelUpStatGainsForBattleArg1::
 ; caller) + half the count of values whose bit 0 matches bit 0 of MON_PLUS: MON_LEVEL, the low bytes
 ; of MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL, MON_INT and MON_WLD, and the name's length
 ; (MON_NAME bytes before $F0, marks $8D/$8E not counted). Otherwise wGrowthTemp0 = $FF and
-; wGrowthTemp1 = 0. DE is kept. (C1, E-0370)
+; wGrowthTemp1 = 0. DE is kept. (C2, E-0370; probed E-0379)
 ComputeLevelUpStatGainsForBattleArg1_ItemBonus::
     push de
     ld a, [wBattleArg1]
@@ -2706,6 +2825,10 @@ ComputeLevelUpStatGainsForBattleArg1_ItemBonus::
     pop de
     ret
 
+; E = a byte whose bit 0 says which parity to count, HL = the address of a value. If bit 0 of E is
+; set, C goes up by 1 when bit 0 of [HL] is set; if bit 0 of E is clear, B goes up by 1 when bit 0
+; of [HL] is clear. Other bits are ignored; HL is kept.
+; ComputeLevelUpStatGainsForBattleArg1_ItemBonus calls it for eight record values. (C2, E-0379)
 ; if bit 0 of E is set, C += 1 when bit 0 of [HL] is set; otherwise B += 1 when bit 0 of [HL] is
 ; clear (E-0122)
 CountBit0MatchOfEAndHL::
@@ -2724,6 +2847,9 @@ CountBit0MatchOfEAndHL::
 .return:
     ret
 
+; A = a growth row (0-31), D = an index into its 99 gain bytes. Returns C = StatGrowthTable[A][D].
+; DE is kept; A, B and HL are changed. ComputeLevelUpStatGainsForBattleArg1 calls it with D =
+; MON_LEVEL for each of the six SPECIES_GROWTH bytes. (C2, E-0379)
 ; C = StatGrowthTable[A][D] (row A of 99 per-level gains, entry D); DE kept (E-0119, E-0158)
 ReadStatGrowthGain::
     push de
@@ -2741,6 +2867,9 @@ ReadStatGrowthGain::
     ld c, [hl]
     ret
 
+; B = a stat number 0-5, C = a gain. Returns A = C plus wGrowthTemp1 when wGrowthTemp0 equals B,
+; otherwise A = C (8-bit sum). ComputeLevelUpStatGainsForBattleArg1 calls it once per stat to add
+; the item bonus to the one stat it applies to. (C2, E-0379)
 ; A = C + (wGrowthTemp1 when wGrowthTemp0 = B, else 0) (E-0078)
 AddGrowthTemp1IfGrowthTemp0MatchesB::
     ld a, [wGrowthTemp0]
@@ -2756,6 +2885,10 @@ AddGrowthTemp1IfGrowthTemp0MatchesB::
     add c
     ret
 
+; wBattleArg1 = a record number of the SRAM monster records. For each of the six bytes of
+; wLevelUpGains it replaces the gain by the amount that still fits under 999 for the matching word
+; of the record, in the order MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL, MON_INT
+; (ClampDeltaTo999). wLevelUpGains + 6 and + 7 are not changed. (C2, E-0379)
 ; limits each gain in wLevelUpGains-wLevelUpGains + $5 so the record's stat words from field $5D
 ; stay at or below 999 (E-0127)
 ClampLevelUpGainsTo999::
@@ -2818,6 +2951,11 @@ ClampLevelUpGainsTo999::
     ld [wLevelUpGains + $5], a
     ret
 
+; HL = the address of a stat word, C = a gain. Returns A = C and C = the amount that still fits when
+; the word is below 999: C itself when word + C is at most 999, otherwise 999 - word, which is 0
+; when the word is already 999. HL is kept; B is cleared and DE changed. A word above 999 gives a
+; meaningless result (the low byte of 256 - (word - 999)), which is not handled.
+; ClampLevelUpGainsTo999 calls it for each of the six stats. (C2, E-0379)
 ; C = the amount that still fits under 999 for the word at HL plus C (0 when the word is already
 ; 999) (E-0126)
 ClampDeltaTo999::
@@ -3145,6 +3283,15 @@ StatGrowthTable::
     db $0d, $11, $14, $0f, $0a, $0b, $0c, $0d, $0e, $14, $13 ; gains for levels 78-88
     db $12, $14, $11, $0a, $0c, $12, $13, $10, $14, $0e, $0e ; gains for levels 89-99
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_TileRect (20 x 5 tiles at screen row 13,
+; column 0 (offset $01A0)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include BuildBattleMenuScreen,
+; ForgetSkillMenu_Start, ForgetSkillMenu_AskForget, ClearWindowAndCopyRectFar,
+; GameMode7_Init_DrawScreen and RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame,
+; RunBattleSetup_BankA0_CommandMenu_PrepareMessage,
+; RunBattleSetup_BankA0_CommandMenu_DrawRecordFrame and RunBattleSetup_BankA0_MarkSlotsToAct. The
+; number in the name only tells it apart from the other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_TileRect (E-0079)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer)
@@ -3153,6 +3300,13 @@ CopyRectRecordToScreenBuffer::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_2_TileRect (14 x 5 tiles at screen row 13,
+; column 0 (offset $01A0)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; RunBattleSetup_MainMenu_BuildMenuWindow, RunBattleSetup_BankA0_EntrySelect_ShowChoices and
+; RunBattleSetup_BankA0_EntrySelect_Redraw. The number in the name only tells it apart from the
+; other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_2_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_2)
@@ -3161,6 +3315,12 @@ CopyRectRecordToScreenBuffer_2::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_3_TileRect (12 x 11 tiles at screen row 7,
+; column 0 (offset $00E0)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_3_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_3)
@@ -3169,6 +3329,12 @@ CopyRectRecordToScreenBuffer_3::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_4_TileRect (20 x 11 tiles at screen row 7,
+; column 0 (offset $00E0)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; RunBattleSetup_BankA0_CommandMenu_DrawLists. The number in the name only tells it apart from the
+; other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_4_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_4)
@@ -3177,6 +3343,12 @@ CopyRectRecordToScreenBuffer_4::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_5_TileRect (8 x 9 tiles at screen row 9,
+; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar_2. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_5_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_5)
@@ -3185,6 +3357,12 @@ CopyRectRecordToScreenBuffer_5::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_6_TileRect (9 x 9 tiles at screen row 9,
+; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; RunBattleSetup_BankA0_CommandMenu_ShowCommands. The number in the name only tells it apart from
+; the other rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_6_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_6)
@@ -3193,6 +3371,12 @@ CopyRectRecordToScreenBuffer_6::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_7_TileRect (12 x 9 tiles at screen row 9,
+; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar_3. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_7_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_7)
@@ -3201,6 +3385,12 @@ CopyRectRecordToScreenBuffer_7::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_8_TileRect (8 x 9 tiles at screen row 9,
+; column 0 (offset $0120)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar_4. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_8_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_8)
@@ -3209,6 +3399,12 @@ CopyRectRecordToScreenBuffer_8::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_9_TileRect (8 x 7 tiles at screen row 11,
+; column 0 (offset $0160)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar_5. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_9_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_9)
@@ -3217,6 +3413,12 @@ CopyRectRecordToScreenBuffer_9::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies two tile rectangles into wScreenTileBuffer in this order, each by calling
+; CopyRecordRectToScreenBuffer_Bank1A: CopyRectRecordToScreenBuffer_7_TileRect (12 x 9 tiles at
+; screen row 9, column 0 (offset $0120)), then CopyRectRecordsAndToScreenBuffer_TileRect (8 x 3
+; tiles at screen row 14, column 12 (offset $01CC)). Each is a bordered box (corner tiles $B0, $B2,
+; $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordsAndToScreenBufferFar and RunBattleSetup_BankA0_CommandMenu_ShowSkills. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordToScreenBuffer_7_TileRect, then with
 ; CopyRectRecordsAndToScreenBuffer_TileRect (E-0114) (E-0344: the address in its name dropped or
 ; read as the label there; was CopyRectRecordsAndToScreenBuffer)
@@ -3227,6 +3429,12 @@ CopyRectRecordsAndToScreenBuffer::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_10_TileRect (14 x 7 tiles at screen row 11,
+; column 0 (offset $0160)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; CopyRectRecordToScreenBufferFar_6. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_10_TileRect (E-0114)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_10)
@@ -3235,6 +3443,13 @@ CopyRectRecordToScreenBuffer_10::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies two tile rectangles into wScreenTileBuffer in this order, each by calling
+; CopyRecordRectToScreenBuffer_Bank1A: CopyRectRecordsAndPlaySound6C_TileRect (12 x 9 tiles at
+; screen row 0, column 8 (offset $0008)), then CopyRectRecordsAndPlaySound6C_TileRect_2 (20 x 9
+; tiles at screen row 9, column 0 (offset $0120)) and finally sets wSoundEffectRequest to $6C
+; (QueueSoundEffect), the request for sound effect $6C. Each is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include ForgetSkillMenu_DrawList.
+; (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with CopyRectRecordsAndPlaySound6C_TileRect and
 ; CopyRectRecordsAndPlaySound6C_TileRect_2, then QueueSoundEffect $6C (E-0115) (E-0344: the address
 ; in its name dropped or read as the label there; was CopyRectRecordsAndPlaySound6C)
@@ -3247,6 +3462,14 @@ CopyRectRecordsAndPlaySound6C::
     call QueueSoundEffect
     ret
 
+; Copies the 16 bytes at Tiles1Plus6F0Tiles in bank $1F to VRAM at vTiles1 + $6D0, which is tile $ED
+; (CopyFromBankWaitVRAM, so it waits for a VRAM-writable moment), then copies the 6 x 5 tile box
+; LoadCursorTileAndRect_TileRect (screen row 8, column 14; its row 3 holds tiles $A5 and $ED) to
+; wScreenTileBuffer with CopyRecordRectToScreenBuffer_Bank1A, and sets wSoundEffectRequest to $6C
+; (QueueSoundEffect). A, B, C, D, E and HL are changed. Callers: BattleEnd_AskToJoin_DrawYesNo,
+; BattleEnd_AddJoinedMonster_AskTakeAlong, BattleEnd_AddJoinedMonster_PickOption,
+; BattleEnd_AddJoinedMonster_ShowWillYouTakeHero, BattleEnd_AddJoinedMonster_AskAgain,
+; RunBattleSetup_MainMenu_DrawYesNo and ForgetSkillMenu_DrawYesNo. (C1, E-0379)
 ; copies a tile from bank $1F to vTiles1 + $6D0, copies rectangle LoadCursorTileAndRect_TileRect to
 ; the screen buffer and plays sound $6C (E-0122) (E-0344: the address in its name dropped or read as
 ; the label there; was LoadCursorTileAndRect)
@@ -3262,6 +3485,13 @@ LoadCursorTileAndRect::
     call QueueSoundEffect
     ret
 
+; Copies the tile rectangle CopyRectRecordToScreenBuffer_11_TileRect (10 x 5 tiles at screen row 8,
+; column 10 (offset $010A)) into wScreenTileBuffer, rows 32 bytes apart, by loading HL with it and
+; calling CopyRecordRectToScreenBuffer_Bank1A. The rectangle is a bordered box (corner tiles $B0,
+; $B2, $B3 and $B5). A, B, C, D, E and HL are changed. Callers include
+; BattleEnd_AskToJoin_DrawReleaseChoice, BattleEnd_AskToJoin_PickOption and
+; BattleEnd_AskToJoin_ShowChooseAnEggTo. The number in the name only tells it apart from the other
+; rectangle wrappers of bank $1A. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_11_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_11)
@@ -3270,6 +3500,14 @@ CopyRectRecordToScreenBuffer_11::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the 8 x 5 box CopyRectRecordAndPlaySound6C_TileRect (a border around two short rows of
+; inner tiles, ids $A4, $EE-$F0 and $F1-$F2) into wScreenTileBuffer at offset $010C (row 8, column
+; 12) through CopyRecordRectToScreenBuffer_Bank1A, then queues sound effect $6C (A = $6C on return).
+; Far-called by BattleEnd_AskToJoin_MarkPick, BattleEnd_AskToJoin_RedrawAfterStats,
+; BattleEnd_AskToJoin_MarkEgg, BattleEnd_AskToJoin_RedrawEggsAfterStats,
+; BattleEnd_AddJoinedMonster_ListCursor and BattleEnd_AddJoinedMonster_RedrawPickOptions, of which
+; BattleEnd_AskToJoin_MarkPick is described as drawing the two options of the pick. It only fills
+; the tile buffer; those callers copy the rectangle to the BG map. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordAndPlaySound6C_TileRect, then
 ; QueueSoundEffect $6C (E-0079) (E-0344: the address in its name dropped or read as the label there;
 ; was CopyRectRecordAndPlaySound6C)
@@ -3280,6 +3518,12 @@ CopyRectRecordAndPlaySound6C::
     call QueueSoundEffect
     ret
 
+; Copies the 13 x 9 box CopyRectRecordToScreenBuffer_12_TileRect (a border around four rows of inner
+; tiles, $40-$48, $50-$58, $60-$68 and $70-$78) into wScreenTileBuffer at offset $0080 (row 4,
+; column 0) through CopyRecordRectToScreenBuffer_Bank1A. It queues no sound. Far-called by
+; BattleEnd_AskToJoin_ShowChooseAnEggTo ('Choose an egg to abandon.') and by the egg-list redraws
+; BattleEnd_AskToJoin_MarkEgg and BattleEnd_AskToJoin_RedrawEggsAfterStats, which copy the buffer to
+; the BG map afterwards. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_12_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_12)
@@ -3288,6 +3532,11 @@ CopyRectRecordToScreenBuffer_12::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the 8 x 9 box CopyRectRecordToScreenBuffer_13_TileRect (a border around four short tile
+; rows: $3B-$3F, $4B-$4F, $5B-$5F, $6B-$6F, with $E1-$E3 at the left edge of three rows) into
+; wScreenTileBuffer at offset $0000 (row 0, column 0) through CopyRecordRectToScreenBuffer_Bank1A.
+; It queues no sound. Its only caller is CopyRectAndDrawBattleArg0Values, which then draws the names
+; of the four records numbered in wBattleArg0. (C2, E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = CopyRectRecordToScreenBuffer_13_TileRect (E-0115)
 ; (E-0344: the address in its name dropped or read as the label there; was
 ; CopyRectRecordToScreenBuffer_13)
@@ -3296,6 +3545,12 @@ CopyRectRecordToScreenBuffer_13::
     call CopyRecordRectToScreenBuffer_Bank1A
     ret
 
+; Copies the 8 x 11 box BattleEnd_AskToJoin_ListBoxTileRect (a border around five rows of tiles
+; $3B-$3F, $4B-$4F, $5B-$5F, $6B-$6F, $7B-$7F) into wScreenTileBuffer at offset $0000 (row 0, column
+; 0) through CopyRecordRectToScreenBuffer_Bank1A, then queues sound effect $6C (A = $6C on return).
+; Far-called by BattleEnd_AskToJoin_ShowChooseAMonsterTo ('Choose a monster to release.') and
+; BattleEnd_AskToJoin_RedrawAfterStats, which draw the party and farm list into this box. (C2,
+; E-0379)
 ; CopyRecordRectToScreenBuffer_Bank1A with HL = BattleEnd_AskToJoin_ListBoxTileRect, then
 ; QueueSoundEffect $6C (E-0115) (E-0344: the address in its name dropped or read as the label there;
 ; was CopyRectRecordToScreenBufferAndPlaySound6C)
@@ -3306,6 +3561,12 @@ CopyRectRecordToScreenBufferAndPlaySound6C::
     call QueueSoundEffect
     ret
 
+; HL = a record: word offset, width, rows, then width x rows tile bytes. Copies the rectangle into
+; wScreenTileBuffer + offset (the low offset byte is added to $98 and carries into the high byte),
+; one row of width bytes at a time with rows 32 bytes apart. On return B = width and C = 0; HL, DE
+; and A are clobbered. Called by CopyRectRecordAndPlaySound6C, CopyRectRecordToScreenBuffer_12,
+; CopyRectRecordToScreenBuffer_13, CopyRectRecordToScreenBufferAndPlaySound6C and the other box
+; wrappers of this bank, and by LoadCursorTileAndRect. (C2, E-0379)
 ; HL = header (word offset, width, rows) followed by tile bytes: copies the rectangle to
 ; wScreenTileBuffer ($C198) + offset with rows 32 bytes apart (the same effect as
 ; CopyRecordRectToScreenBuffer_Bank1A) (E-0079)

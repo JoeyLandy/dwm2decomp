@@ -203,10 +203,10 @@ HibernateMenu_SetupPartyList::
     dw HibernateMenu_SetupPartyList_ListParty
     dw HibernateMenu_SetupPartyList_DrawOptions
 
-; Hibernation party list, step 0: sets up the tile map in BG map 1 (SetupTileMapAtBGMap1). (C1,
+; Hibernation party list, step 0: sets up the tile map in BG map 1 (SaveTilesToBGMap1TopHalf). (C1,
 ; E-0357)
 HibernateMenu_SetupPartyList_LoadTileMap::
-    farcall SetupTileMapAtBGMap1
+    farcall SaveTilesToBGMap1TopHalf
     ret
 
 ; Hibernation party list, step 1: copies the glyph tiles of the menu
