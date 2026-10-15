@@ -1104,7 +1104,7 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld hl, wWindowTileBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_WindowTileBufferGfx
+    ld de, LibraryEntryBottomBoxTileMap
     ld hl, wWindowTileBuffer
     ld b, $f1
     call DecompressToVRAM
@@ -1117,7 +1117,7 @@ LibraryMenu_ShowMonsterEntry_LoadScreen::
     ld hl, wWindowAttrBuffer + $64
     ld b, $f1
     call DecompressToVRAM
-    ld de, LibraryMenu_ShowMonsterEntry_LoadScreen_WindowAttrBufferGfx
+    ld de, LibraryEntryBottomBoxAttrMap
     ld hl, wWindowAttrBuffer
     ld b, $f1
     call DecompressToVRAM

@@ -6127,7 +6127,7 @@ RunNameEntryStateWhenNotFading_CheckName_Message::
     jr .call_begin_string_display2
 
 .call_begin_string_display:
-    ld de, RunNameEntryStateWhenNotFading_CheckName_StringCategories
+    ld de, RunNameEntryStateWhenNotFading_RenameMessages
 
 .call_begin_string_display2:
     call BeginStringDisplay
@@ -6536,12 +6536,12 @@ Text_SorryThatNameCant::
     db "can't be used.<WAIT>"
     db "@"
 
-RunNameEntryStateWhenNotFading_CheckName_StringCategories::
-    dw StringList_CheckName_Message_StringCategories_0 ; id 0
+StringCategories_14_2::
+RunNameEntryStateWhenNotFading_RenameMessages::
+    dw StringList_RenameMessages_0 ; id 0
 
-; category list of RunNameEntryStateWhenNotFading_CheckName_StringCategories; one pointer per
-; wStringIndex (E-0217)
-StringList_CheckName_Message_StringCategories_0::
+; category list of StringCategories_14_2; one pointer per wStringIndex (E-0217)
+StringList_RenameMessages_0::
     dw Text_IsOK ; id 0
     dw Text_IsOK_2 ; id 1
     dw Text_ThatNameIsAlready ; id 2

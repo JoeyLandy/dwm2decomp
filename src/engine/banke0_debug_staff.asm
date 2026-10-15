@@ -1750,7 +1750,7 @@ RunDebugState_E0_ChooseActionTargets_Start::
     ld a, $00
     ld [wStringIndex], a
     call ShowStringBank08AtTilesHLThenDefault_BankE0
-    ld de, RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout
+    ld de, DebugActionTargetsScreenLayout
     ld bc, $1412
     ld hl, vBGMap0
 
@@ -1881,10 +1881,17 @@ RunDebugState_E0_ChooseActionTargets_RerunAI::
     ld [wDebugSubState], a
     ret
 
-; a debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with
-; WriteVRAMByteInc (E-0213, C1)
+; A 20 x 18 tile map (360 bytes, one screen row per line) for the debug battle viewer: a frame
+; around the whole screen ($B0-$B7) with heading tiles ($80-$82 and $01, $9B-$A2, $8B $8C, $ED-$F3,
+; $85-$87, $88-$8A), a column of $AF tiles in column 3, short labels ($02-$04 with $AF, $01 $01, $0B
+; $0D) and tiles $92-$9A in row 16. RunDebugState_E0_ChooseActionTargets_Start copies it to vBGMap0
+; row by row (BC = $1412, WriteVRAMByteInc) after drawing category 0 string 0 at vTiles2 + $10 and
+; category $0E string 0 at vTiles1, then starts actor 0 at sub-state 1. (C1, E-0373); E-0213 (C1: a
+; debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with
+; WriteVRAMByteInc). (named from its reading, E-0373; was
+; RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout)
 ; record: 20 x 18 tiles, one row per line
-RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout::
+DebugActionTargetsScreenLayout::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
     db $b6, $c3, $c3, $80, $81, $82, $01, $c3, $c3, $9b, $9c, $9d, $9e, $9f, $a0, $a1, $a2, $c3, $c3, $b7 ; row 1
     db $b6, $c3, $c3, $8b, $8c, $c3, $c3, $c3, $c3, $ed, $ee, $ef, $f0, $f1, $f2, $f3, $c3, $c3, $c3, $b7 ; row 2
@@ -2521,7 +2528,7 @@ ChooseTargetIfUnset::
 ; and the three wAIChoiceOrder entries. (C1, E-0371)
 RunDebugState_E0_ChooseActionTargets_DrawDetails::
     call DisplayedSlotOfActor
-    ld hl, RunDebugState_E0_ChooseActionTargets_DrawDetails_Data
+    ld hl, DebugSlotLabels
     call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
@@ -2813,7 +2820,7 @@ RunDebugState_E0_ChooseActionTargets_DrawDetails::
     call WriteVRAMByteInc
     ei
     call DisplayedTargetChoiceOfActor
-    ld hl, RunDebugState_E0_ChooseActionTargets_DrawDetails_Data
+    ld hl, DebugSlotLabels
     call ReadWordTableEntry_Bank00
     ld d, h
     ld e, l
@@ -2988,39 +2995,70 @@ WriteLowHexDigitTilesOfTemp1Temp0::
     ei
     ret
 
-; data read by RunDebugState_E0_ChooseActionTargets_DrawDetails (8 words) (E-0347)
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Data::
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry00
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry01
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry02
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry03
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry04
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry05
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry06
-    dw RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry07
+; Eight words, one per displayed battle slot 0-7, pointing at the 4-tile labels DebugSlotLabel_Slot0
+; to DebugSlotLabel_Slot7: slots 0-3 are tiles $80 $81 $82 and then $01-$04, slots 4-7 tiles $83
+; $84, then $01-$04 and the blank $C3. RunDebugState_E0_ChooseActionTargets_DrawDetails reads entry
+; DisplayedSlotOfActor and writes its four tiles at vBGMap0 + $23 (row 1, column 3), and entry
+; DisplayedTargetChoiceOfActor at vBGMap0 + $20F (row 16, column 15), with
+; ReadWordTableEntry_Bank00. Tiles $80-$84 come from category $0E string 0 drawn at vTiles1 and
+; $01-$04 from category 0 string 0 ('0123456789ABCDEF') drawn at vTiles2 + $10 by
+; RunDebugState_E0_ChooseActionTargets_Start. (C1, E-0373)
+DebugSlotLabels::
+    dw DebugSlotLabel_Slot0
+    dw DebugSlotLabel_Slot1
+    dw DebugSlotLabel_Slot2
+    dw DebugSlotLabel_Slot3
+    dw DebugSlotLabel_Slot4
+    dw DebugSlotLabel_Slot5
+    dw DebugSlotLabel_Slot6
+    dw DebugSlotLabel_Slot7
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry00::
+; Four tile ids, $80 $81 $82 $01: the label of displayed battle slot 0, entry 0 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot0::
     db $80, $81, $82, $01
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry01::
+; Four tile ids, $80 $81 $82 $02: the label of displayed battle slot 1, entry 1 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot1::
     db $80, $81, $82, $02
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry02::
+; Four tile ids, $80 $81 $82 $03: the label of displayed battle slot 2, entry 2 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot2::
     db $80, $81, $82, $03
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry03::
+; Four tile ids, $80 $81 $82 $04: the label of displayed battle slot 3, entry 3 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot3::
     db $80, $81, $82, $04
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry04::
+; Four tile ids, $83 $84 $01 $C3: the label of displayed battle slot 4, entry 4 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot4::
     db $83, $84, $01, $c3
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry05::
+; Four tile ids, $83 $84 $02 $C3: the label of displayed battle slot 5, entry 5 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot5::
     db $83, $84, $02, $c3
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry06::
+; Four tile ids, $83 $84 $03 $C3: the label of displayed battle slot 6, entry 6 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot6::
     db $83, $84, $03, $c3
 
-RunDebugState_E0_ChooseActionTargets_DrawDetails_Entry07::
+; Four tile ids, $83 $84 $04 $C3: the label of displayed battle slot 7, entry 7 of DebugSlotLabels,
+; written to vBGMap0 by RunDebugState_E0_ChooseActionTargets_DrawDetails for the actor (row 1,
+; column 3) or its target choice (row 16, column 15). (C1, E-0373)
+DebugSlotLabel_Slot7::
     db $83, $84, $04, $c3
 
 ; Runs the AI's full choice for the actor (AIChooseActionForActor, ChooseActionTarget), keeping the

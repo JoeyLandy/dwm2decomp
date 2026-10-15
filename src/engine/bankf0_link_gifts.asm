@@ -1085,12 +1085,12 @@ RunLinkSession8Exchange_ShowMessage::
     ld a, [wScreenStep]
     jumptable
     dw RunLinkSession8Exchange_ShowMessage_ShowStopReason
-    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte
-    dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags_2
+    dw RunLinkSession8Exchange_ShowMessage_SendReady
+    dw RunLinkSession8Exchange_ShowMessage_PartnerReady
     dw RunLinkSession8Exchange_ShowMessage_WaitTextFlags
 
 ; The message, step 1: after the text sends 1. (C1, E-0357)
-RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte::
+RunLinkSession8Exchange_ShowMessage_SendReady::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1102,7 +1102,7 @@ RunLinkSession8Exchange_ShowMessage_WaitTextFlags_SetLinkSendByte::
     ret
 
 ; The message, step 2: after the text, on the partner's 1 goes on. (C1, E-0357)
-RunLinkSession8Exchange_ShowMessage_WaitTextFlags_2::
+RunLinkSession8Exchange_ShowMessage_PartnerReady::
     ld a, [wTextFlags]
     bit 0, a
     ret nz
@@ -1885,7 +1885,7 @@ RunLinkSession8Exchange_GivingScene::
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_WalkObject1Off
-    dw RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg
+    dw RunLinkSession8Exchange_GivingScene_EggReceived
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Giving scene, step 12: after the text saves (RunSaveGameSteps), then the waiting state $0C. (C1,
@@ -2008,7 +2008,7 @@ RunLinkSession8Exchange_GivingScene_WalkObject1Off::
 
 ; Giving scene, step 11: '<name> received your egg.' (string 9) and resets the save steps. (C1,
 ; E-0357)
-RunLinkSession8Exchange_GivingScene_ShowHeroReceivedYourEgg::
+RunLinkSession8Exchange_GivingScene_EggReceived::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
     ld de, wTextBuf0
@@ -2038,7 +2038,7 @@ RunLinkSession8Exchange_ObtainedEgg::
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff
-    dw RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom
+    dw RunLinkSession8Exchange_ObtainedEgg_ShowObtained
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Obtaining scene, step 10: turns the sprite at wSpriteSlots + $B left and moves it off the screen
@@ -2065,7 +2065,7 @@ RunLinkSession8Exchange_ObtainedEgg_MoveSpriteOff::
 
 ; Obtaining scene, step 11: 'Obtained an egg from <name>.' (string $0A) and resets the save steps.
 ; (C1, E-0357)
-RunLinkSession8Exchange_ObtainedEgg_ShowObtainedAnEggFrom::
+RunLinkSession8Exchange_ObtainedEgg_ShowObtained::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
     ld de, wTextBuf0
@@ -2099,7 +2099,7 @@ RunLinkSession8Exchange_EggsTraded::
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_GivingScene_HideEgg
     dw RunLinkSession8Exchange_EggsTraded_MoveOff
-    dw RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith
+    dw RunLinkSession8Exchange_EggsTraded_ShowTraded
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Trading scene, step 14: moves object 1 right and the sprite left until both leave the screen. (C1,
@@ -2158,7 +2158,7 @@ StepObjectCB9AUpToE0::
 
 ; Trading scene, step 15: 'Eggs were traded with <name>.' (string $0B) and resets the save steps.
 ; (C1, E-0357)
-RunLinkSession8Exchange_EggsTraded_ShowEggsWereTradedWith::
+RunLinkSession8Exchange_EggsTraded_ShowTraded::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
     ld de, wTextBuf0
@@ -2548,7 +2548,7 @@ RunLinkSession8Exchange_EggHatched::
     dw RunLinkSession8Exchange_GivingScene_Wait
     dw RunLinkSession8Exchange_EggHatched_WalkOff
     dw RunLinkSession8Exchange_GivingScene_Wait
-    dw RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe
+    dw RunLinkSession8Exchange_EggHatched_ShowHatched
     dw RunLinkSession8Exchange_GivingScene_Save
 
 ; Hatched scene, step 8: walks object 1 right to X $70, then starts field command $0E (the egg at
@@ -2687,7 +2687,7 @@ RunLinkSession8Exchange_EggHatched_WalkOff::
 
 ; Hatched scene, step 30: '<species> hatched from the egg that <name> ...' (string $0D, the hatched
 ; species) and resets the save steps. (C1, E-0357)
-RunLinkSession8Exchange_EggHatched_ShowGHatchedFromThe::
+RunLinkSession8Exchange_EggHatched_ShowHatched::
     call RunTextUntilTextWindowStateDone_BankF0
     ld hl, wLinkEggMessageBlock
     ld de, wTextBuf0
@@ -4420,7 +4420,7 @@ RunWithArg1ForF0ScreenKind_SetUpScene::
     jr .call_copy_bytes_de_from_hl_bank_f0
 
 .skip:
-    ld hl, RunWithArg1ForF0ScreenKind_SetUpScene_SpriteSlotsInit
+    ld hl, EggSceneAltSpriteSlots
 
 .call_copy_bytes_de_from_hl_bank_f0:
     ld de, wSpriteSlots
@@ -4580,7 +4580,8 @@ RunWithArg1ForF0ScreenKind_SetUpScene_Data6::
 
 ; CopyBytesDEFromHL_BankF0 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
-RunWithArg1ForF0ScreenKind_SetUpScene_SpriteSlotsInit::
+SpriteSlotsInit_F0::
+EggSceneAltSpriteSlots::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
 RunWithArg1ForF0ScreenKind_SetUpScene_Data7::

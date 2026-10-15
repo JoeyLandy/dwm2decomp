@@ -932,7 +932,7 @@
   },
   "FFCC": {
     "name": "hTemp6",
-    "note": "general argument/result byte (divisor for Divide24ByHFFCCDE)",
+    "note": "general argument/result byte (divisor for Divide24ByTemp6DE)",
     "evidence": "E-0132"
   },
   "FFCD": {
@@ -1134,7 +1134,7 @@
   },
   "C0A0": {
     "name": "wTemp0",
-    "note": "general scratch byte used by many menus and helpers (for example Quotient24ByHFFCCDE, menu cursor work, list counts)",
+    "note": "general scratch byte used by many menus and helpers (for example Quotient24ByTemp6DE, menu cursor work, list counts)",
     "evidence": "E-0133"
   },
   "C0A1": {
@@ -1414,7 +1414,7 @@
   },
   "C554": {
     "name": "wTextCursorLo",
-    "note": "BG map address where the next text row starts, low byte (AddHLToTextCursorTextCursorLo)",
+    "note": "BG map address where the next text row starts, low byte (AddTextCursorToHL)",
     "evidence": "E-0133"
   },
   "C555": {
@@ -2183,12 +2183,12 @@
   },
   "C89E": {
     "name": "wScriptTileBuf0",
-    "note": "16-byte tile uploaded by UploadTwoTilesFromScriptTileBuf0 (filled by script fetch 6)",
+    "note": "16-byte tile uploaded by SaveTwoTilesToScriptTileBuf (filled by script fetch 6)",
     "evidence": "E-0133"
   },
   "C8AE": {
     "name": "wScriptTileBuf1",
-    "note": "second 16-byte tile uploaded by UploadTwoTilesFromScriptTileBuf0",
+    "note": "second 16-byte tile uploaded by SaveTwoTilesToScriptTileBuf",
     "evidence": "E-0133"
   },
   "C8BF": {

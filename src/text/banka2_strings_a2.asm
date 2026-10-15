@@ -1768,7 +1768,7 @@ MonsterTableA2::
 ; bank (DE) with BeginStringDisplay. The 7 bytes after its ret (call to itself, call $2611, ret)
 ; have no read caller. (C1, E-0371)
 BeginStringDisplay_BankE0_FromBankA2Table::
-    ld de, BeginStringDisplay_BankE0_FromBankA2Table_StringCategories
+    ld de, StaffRollStringCategories
     ld a, [wStringCategory]
     sub $01
     ld [wStringCategory], a
@@ -1779,14 +1779,16 @@ BeginStringDisplay_BankE0_FromBankA2Table::
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
-BeginStringDisplay_BankE0_FromBankA2Table_StringCategories::
-    dw StringList_BankE0_FromBankA2Table_StringCategories_0 ; id 0
-    dw StringList_BankE0_FromBankA2Table_StringCategories_1 ; id 1
+StringCategories_A2::
+; data read by BeginStringDisplay_BankE0_FromBankA2Table (2 words) (E-0347)
+StaffRollStringCategories::
+    dw StringList_A2 ; id 0
+    dw StringList_A2_2 ; id 1
 
-; category list of BeginStringDisplay_BankE0_FromBankA2Table_StringCategories; one pointer per
-; wStringIndex (E-0217)
+; category list of StringCategories_A2; one pointer per wStringIndex (E-0217)
 ; record: string
-StringList_BankE0_FromBankA2Table_StringCategories_0::
+StringList_A2::
+StaffRollNameStrings::
     dw String_A2_00_00 ; id 0
     dw String_A2_00_01 ; id 1
     dw String_A2_00_02 ; id 2
@@ -1821,7 +1823,8 @@ StringList_BankE0_FromBankA2Table_StringCategories_0::
     dw String_A2_00_1F ; id 31
     dw String_A2_00_20 ; id 32
 
-StringList_BankE0_FromBankA2Table_StringCategories_1::
+StringList_A2_2::
+StaffRollTitleStrings::
     dw String_A2_01_00 ; id 0
 
 String_A2_00_00::

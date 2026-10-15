@@ -163,8 +163,6 @@ gfx/map_types/5_tiles7.lz	$1BE397	$DE
 gfx/map_types/5_tiles8.lz	$1C0001	$191
 gfx/map_types/5_tiles9.lz	$1C13D9	$28D
 gfx/misc/bgmap0_gfx.lz	$385987	$70
-gfx/misc/game_mode5_update_load_screens_screen1_screen_tile_buffer_gfx.lz	$3845A7	$55
-gfx/misc/game_mode5_update_load_screens_screen2_screen_tile_buffer_gfx.lz	$384946	$78
 gfx/misc/game_mode5_update_load_screens_screen_attr_buffer_gfx.lz	$3858C3	$4C
 gfx/misc/game_mode5_update_load_screens_screen_tile_buffer_gfx.lz	$38582B	$98
 gfx/misc/game_mode6_init_data1.lz	$092CE4	$12F
@@ -198,6 +196,8 @@ gfx/misc/gfx_field_command_sprite_table_6.lz	$1F91A8	$DD
 gfx/misc/gfx_field_command_sprite_table_7.lz	$1F92F9	$77
 gfx/misc/gfx_trigger_sprite_table_5.lz	$1F8D8A	$42
 gfx/misc/gfx_trigger_sprite_table_8.lz	$1F8E37	$42
+gfx/misc/intro_screen1_tile_map.lz	$3845A7	$55
+gfx/misc/intro_screen2_tile_map.lz	$384946	$78
 gfx/misc/load_player_and_follower_sprite_graphics_followers_data.lz	$1F945E	$B5
 gfx/misc/map_x59_e4_screens0_y0_x0.lz	$241B6E	$A4
 gfx/misc/map_x59_e4_tileset.lz	$2418E9	$23F

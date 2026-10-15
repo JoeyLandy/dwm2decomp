@@ -4,6 +4,13 @@
 SECTION "Bank 01", ROMX[$4000], BANK[$01]
     db $01
 
+; Start-up of game mode 0, the debug menu (far-called by RunGameModeInit_DebugMenu): fills 112 tiles
+; at vTiles1 and 112 at vTiles2 with the plain tile of FillTilesRequest (DE = $1007), clears
+; wDebugCursor, wDebugValue0 to wDebugValue3, wDebugState, wDebugSubState, wDebugCounter,
+; wDebugUnusedA and wDebugUnusedB, and builds the screen picked by wModeState
+; (DebugMode_InitByModeState). It then starts a palette fade with A = $FC (StartPaletteFade), sets
+; wLCDCShadow = $03 and jumps to ResumeAfterModeChange with A = 1 for SetInterruptEnable.
+; GameMode0_Update runs the matching update. (C1, E-0373)
 ; start-up for wGameMode = 0; forcing this mode on the emulator shows: debug menu (E-0029)
 GameMode0_Init::
     ld hl, vTiles1
@@ -32,9 +39,15 @@ GameMode0_Init::
     ld a, $01
     jp ResumeAfterModeChange
 
+; Builds the debug screen picked by wModeState through its jump table (GameMode0_Update keeps the
+; same order for the updates): 0 and 1 DebugMainMenu_Init, 2 DebugMapEditor_Init, 3
+; DebugAutomap_Init, 4 DebugMonsterPictureViewer_Init, 5 DebugSoundTest_Init, 6
+; DebugBattleSetup_Init, 7 DebugResultsDisplay_Init, 8 DebugStaffRoll_Init, 9 DebugSkillViewer_Init,
+; 10 DebugMonsterRecordViewer_Init, 11 DebugMessageTest_Init. States 1-11 follow the items of the
+; debug menu text, '1:GOTO PROGRAM' to 'B:MESSAGE CHK' (2 is '2:EDIT', 7 '7:HAIGOU', 9 '9:TOKUGI
+; CHECK', 10 'A:ENEMY TBL CHK'). Only caller: GameMode0_Init. (C1, E-0373)
 ; jumps by wModeState to the init routine of each debug screen (menu, map editor, automap, picture
 ; viewer, sound test, battle setup, results, staff roll, skill viewer, record viewer, message test)
-; (E-0293)
 DebugMode_InitByModeState::
     ld a, [wModeState]
     jumptable
@@ -51,6 +64,13 @@ DebugMode_InitByModeState::
     dw DebugMonsterRecordViewer_Init
     dw DebugMessageTest_Init
 
+; Builds debug screen 11 ('B:MESSAGE CHK' in the debug menu), whose tile map shows 'LIBNO / MESNO':
+; loads palette 0 (LoadPalette0FromData), prints string 0/0 '0123456789ABCDEF' into a 16 x 1 tile
+; window at vTiles2 + $100 (ShowString_Bank08), then sets the window to vTiles2 + $300 (18 wide, 7
+; rows) with wTextCursorLo/Hi at vBGMap0 + $1C1 for the message under test. It copies six tiles from
+; bank $1F to vTiles2 + $200-$250, clears the debug work bytes, copies the 20 x 18
+; DebugMessageTest_Init_TileRect to vBGMap0 and clears wMenuState, wTemp0, wTemp1 and wMenuRowCount.
+; (C1, E-0373)
 ; init for debug-mode state 11: the screen shows 'LIBNO / MESNO' message test (E-0041)
 DebugMessageTest_Init::
     call LoadPalette0FromData
@@ -160,6 +180,10 @@ DebugMessageTest_Init_TileRect::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
+; Builds debug screen 10 ('A:ENEMY TBL CHK' in the debug menu), the monster record viewer: shows
+; string category $0F, index 1 (ShowString_Bank08; that is String_95_06_00, an empty string), copies
+; the 20 x 18 DebugMonsterRecordViewer_Init_TileRect from bank $01 to vBGMap0 and draws monster 0
+; with DebugShowMonsterRecord (HL = 0). (C1, E-0373)
 ; init for debug-mode state 10: the screen shows the monster record viewer (E-0041)
 DebugMonsterRecordViewer_Init::
     ld a, $0f
@@ -199,6 +223,10 @@ DebugMonsterRecordViewer_Init_TileRect::
     db $00, $30, $35, $2b, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 16
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00 ; id 17
 
+; Builds debug screen 9 ('9:TOKUGI CHECK' in the debug menu), the skill viewer: shows string $0F/0
+; (String_95_06_00, empty), copies the 20 x 18 DebugSkillViewer_Init_TileRect to vBGMap0, and on CGB
+; clears the $400 attribute bytes of vBGMap0 in VRAM bank 1. Then wDebugCursor = 0 and wDebugValue0
+; = $FF. (C1, E-0373)
 ; init for debug-mode state 9: the screen shows the skill viewer (E-0041)
 DebugSkillViewer_Init::
     ld a, $0f
@@ -231,6 +259,10 @@ DebugSkillViewer_Init::
     ld [hl], a
     ret
 
+; Builds debug screen 8 ('8:STAFF ROLL' in the debug menu), shown as the staff roll ('SCENARIO &
+; GAME DESIGNERS' ...): queues music $31 (QueueMusic, wMusicRequest) and clears the 56 bytes at
+; wWorkBuf. DebugStaffRoll_Update then far-calls DebugStaffRoll_Update_RunScene, which runs
+; DebugStaffRoll_Credits while wWorkBuf is 0. (C2, E-0373)
 ; init for debug-mode state 8: the screen shows the staff roll (SCENARIO & GAME DESIGNERS, YUJI
 ; HORII, ENIX, TOSE, FUMINORI ISHIKAWA) (E-0041)
 DebugStaffRoll_Init::
@@ -242,6 +274,15 @@ DebugStaffRoll_Init::
     call FillBytes
     ret
 
+; Builds debug screen 7 ('7:HAIGOU' in the debug menu), titled 'RESULTS DISPLAY' with 'Species' and
+; 'Gender': loads palette 0, prints '0123456789ABCDEF' to vTiles2 + $100 and the title string
+; (category 0, index $27, ShowString_Bank1B_2) to vTiles1, lays tile sequences on vBGMap0
+; (FillRectWithTileSequence), puts tiles $FB-$FD in column 1, copies six tiles from bank $1F (one
+; ORed with CopyGlyphTilesToVRAM_Data2), fills four 9-tile blocks at vTiles2 + $200, $300, $400 and
+; $500 with the plain tile (FillTilesFromRequest) and shows them in four 9-wide rows. It sets wArg1
+; = 0, tile $10 at vBGMap0 + $81 and clears the debug work bytes. Its last loop loads HL =
+; wScreenState and B = $60 but stores 0 to wScreenState itself 96 times, so only that one byte is
+; cleared. (C1, E-0373)
 ; init for debug-mode state 7: the screen shows 'RESULTS DISPLAY' (species, gender) (E-0041)
 DebugResultsDisplay_Init::
     call LoadPalette0FromData
@@ -396,6 +437,10 @@ DebugResultsDisplay_Init::
     jr nz, .loop
     ret
 
+; Builds debug screens 0 and 1, the debug menu: loads palette 0, prints string 0/1 ('DEBUG MODE',
+; 'SELECT' and the items '1:GOTO PROGRAM' to 'B:MESSAGE CHK') into a 16-wide, 8-row window at
+; vTiles1, and lays tile numbers from $80 in a 16 x 2 rectangle at vBGMap0 + $A3
+; (FillRectWithTileSequence). (C1, E-0373)
 ; init for debug-mode state 0: the screen shows the debug menu (E-0041)
 DebugMainMenu_Init::
     call LoadPalette0FromData
@@ -420,6 +465,12 @@ DebugMainMenu_Init::
     call FillRectWithTileSequence
     ret
 
+; Builds debug screen 2 ('2:EDIT'), titled '? EDIT ?' with WORLD, MAP X/Y and POS X/Y: prints
+; '0123456789ABCDEF' to vTiles2 + $100 and string 0/2 into a 16 x 8 window at vTiles1, lays tile
+; numbers from $80 in a 16 x 7 rectangle at vBGMap0 + $A3 and the 16 tiles of
+; DebugMapEditor_Init_TileRect at vBGMap0 + $EA. Then wDebugCursor = 0, wDebugValue0 = hMapId,
+; wDebugValue1 = hMapScreenX, wDebugValue2 = hPlayerX, wDebugValue3 = hMapScreenY, wDebugState =
+; hPlayerY and wDebugSubState = 1. (C1, E-0373)
 ; init for debug-mode state 2: the screen shows '? EDIT ?' (world, map number, position) (E-0041)
 DebugMapEditor_Init::
     ld hl, vTiles2 + $100
@@ -483,6 +534,12 @@ DebugMapEditor_Init::
 DebugMapEditor_Init_TileRect::
     db $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $2f ; id 0
 
+; Builds debug screen 3 ('3:AUTOMAP CHECK'), titled '? AUTOMAP ?' with KEY, KEYID, LEVEL and POS
+; X/Y: prints '0123456789ABCDEF' to vTiles2 + $100 and string 0/4 into a 16 x 8 window at vTiles1,
+; lays tile numbers from $80 in a 16 x 7 rectangle at vBGMap0 + $A3 and DebugAutomap_Init_TileRect
+; at vBGMap0 + $EA. Then wDebugCursor = 0, LoadKeyEntryFieldsToDebugState loads the entry of
+; wCurrentKeyIndex (wDebugState, wDebugSubState, wDebugValue1), and wDebugValue0 = wCurrentKeyIndex
+; | $80, wDebugValue2 = hMapScreenX, wDebugValue3 = hMapScreenY. (C1, E-0373)
 ; init for debug-mode state 3: the screen shows '? AUTOMAP ?' (key, level, position) (E-0041)
 DebugAutomap_Init::
     ld hl, vTiles2 + $100

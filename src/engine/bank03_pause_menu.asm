@@ -2047,7 +2047,7 @@ PauseMenu_Info_Page2_DrawDetails::
     push de
     call Number24ToPackedBCD
     ld de, wWindowTileBuffer + $24
-    call WithSRAMDraw_WriteDigitTilesNoLeadingZeros
+    call WritePackedBCDAsSevenDigitTiles
     ld c, $0b
     ld a, [wMenuSelectedMember]
     and $0f
@@ -2095,7 +2095,7 @@ PauseMenu_Info_Page2_DrawDetails::
 .call_number24_to_packed_bcd:
     call Number24ToPackedBCD
     ld de, wWindowTileBuffer + $a4
-    call WithSRAMDraw_WriteDigitTilesNoLeadingZeros
+    call WritePackedBCDAsSevenDigitTiles
     ret
 
 ; for SRAM record wMenuSelectedMember & $0F: shows the species category $0D string at vTiles2 + $2C0

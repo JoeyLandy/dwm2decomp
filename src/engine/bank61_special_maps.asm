@@ -740,7 +740,7 @@ LoadMapScreen_SpecialMap::
 LoadMapScreen_Type7::
     ld a, $66
     ldh [hTemp0], a
-    call LoadMapScreenFromChunk
+    call LoadSpecialMapScreen
     ret
 
 ; Map type 6's screen: from special map $50 or $51 (bit 0 of floor info byte 1), the variant from
@@ -778,7 +778,7 @@ LoadMapScreen_Type6::
     ldh a, [hTemp0]
     add $50
     ldh [hTemp0], a
-    call LoadMapScreenFromChunk
+    call LoadSpecialMapScreen
     pop hl
     ld a, [hl]
     cp $ff
@@ -1585,12 +1585,12 @@ LoadMapScreen_Type2::
     ldh [hTemp0], a
     ld a, [wKeyWorldFloor]
     bit 7, a
-    jr z, .call_load_map_screen_from_chunk
+    jr z, .call_load_special_map_screen
     ld hl, hTemp0
     inc [hl]
 
-.call_load_map_screen_from_chunk:
-    call LoadMapScreenFromChunk
+.call_load_special_map_screen:
+    call LoadSpecialMapScreen
     ret
 
 ; Map types 3 and 4's screen: from the special map numbered by floor state byte 0 (without bit 7).
@@ -1603,7 +1603,7 @@ LoadMapScreen_Type3::
     ld a, [hl]
     and $7f
     ldh [hTemp0], a
-    call LoadMapScreenFromChunk
+    call LoadSpecialMapScreen
     ret
 
 ; Map type 0's screen (the key world's overworld): finds the chunk for the screen in wKeyWorldChunks
@@ -3675,7 +3675,7 @@ KeyWorldAreaEncounterIndex::
     pop hl
     ret
 
-; LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hTemp0;
+; LoadSpecialMapHeader and LoadSpecialMapScreen map bank $61 and read the word $60D8 + 2 * hTemp0;
 ; every non-zero word is $61D8 + 26 * n (E-0144, C1)
 ; record: special map record ($0000 = none)
 SpecialMapTable::
@@ -3809,7 +3809,7 @@ SpecialMapTable::
     dw $0000 ; id 127
 
 ; LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with
-; LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far
+; LoadBGPaletteBufferFromBank and stores the five header bytes; LoadSpecialMapScreen takes the far
 ; pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one
 ; at +$17 as the attribute array; every array decodes to 360-byte screens (E-0144, C1)
 ; record: tileset; its ROM bank; palettes; its ROM bank; width, height, wMaxBlockingTile,

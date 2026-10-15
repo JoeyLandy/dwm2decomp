@@ -1461,13 +1461,14 @@ BGFillTile::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 3 tiles, one row per line
-SwapMonstersMenu_ShowMonsterDetails_StatsFrames_TileRect::
+TileRect_1F::
+MonsterDetailsPanelTopTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $b9, $ba ; id 2
 
 ; record: 20 x 18 tiles, one row per line
-TileRect_1F::
+TileRect_1F_2::
 PartyMemberDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1488,8 +1489,8 @@ PartyMemberDetailsScreenTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-; the same box layout as TileRect_1F, which SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame draws
-; as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found
+; the same box layout as TileRect_1F_2, which SwapMonstersMenu_ShowPartyMemberDetails_DrawFrame
+; draws as 20 x 18; the four screens are contiguous, 360 bytes each; no reader of this one was found
 ; (E-0187, C1)
 TileScreen1F_1::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; entry 0: row 0
@@ -1552,7 +1553,7 @@ TileScreen1F_3::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 17
 
 ; record: 12 x 18 tiles, one row per line
-TileRect_1F_2::
+TileRect_1F_3::
 MonsterDetailsPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
@@ -1576,7 +1577,7 @@ MonsterDetailsPedigreeTileRect::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
-TileRect_1F_3::
+TileRect_1F_4::
 MonsterDetailsPictureTileRect::
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2a, $2b ; id 1
@@ -1601,7 +1602,7 @@ SwapMonstersMenu_ShowParents2_LoadPicture_TileRect::
     db $60, $61, $62, $63, $64, $65 ; id 4
     db $66, $67, $68, $69, $6a, $6b ; id 5
 
-TileRect_1F_4::
+TileRect_1F_5::
 BlankPictureTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1611,7 +1612,7 @@ BlankPictureTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
 
 ; record: 8 x 7 tiles, one row per line
-TileRect_1F_5::
+TileRect_1F_6::
 MonsterDetailsStatsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1622,7 +1623,7 @@ MonsterDetailsStatsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
 ; record: 12 x 15 tiles, one row per line
-TileRect_1F_6::
+TileRect_1F_7::
 MonsterDetailsPage2TileRect::
     db $b6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1640,7 +1641,7 @@ MonsterDetailsPage2TileRect::
     db $b6, $ff, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 13
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-TileRect_1F_7::
+TileRect_1F_8::
 MonsterDetailsStatsTileRect::
     db $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1658,7 +1659,7 @@ MonsterDetailsStatsTileRect::
     db $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 13
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
-TileRect_1F_8::
+TileRect_1F_9::
 MonsterDetailsItemBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 1
@@ -1669,7 +1670,7 @@ MonsterDetailsItemBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
 ; record: 20 x 18 tiles, one row per line
-TileRect_1F_9::
+TileRect_1F_10::
 MonsterDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1712,7 +1713,7 @@ PartnerStats_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $f6, $f7, $ed, $c3, $c3, $c3, $be, $c3, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_10::
+TileRect_1F_11::
 MonsterDetails3ScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1734,7 +1735,7 @@ MonsterDetails3ScreenTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 ; record: 12 x 18 tiles, one row per line
-TileRect_1F_11::
+TileRect_1F_12::
 MonsterDetailsBlankPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1756,7 +1757,7 @@ MonsterDetailsBlankPageTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 ; record: 8 x 7 tiles, one row per line
-TileRect_1F_12::
+TileRect_1F_13::
 MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1766,7 +1767,7 @@ MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-TileRect_1F_13::
+TileRect_1F_14::
 MonsterDetailsSkillsPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
@@ -1787,7 +1788,7 @@ MonsterDetailsSkillsPageTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_14::
+TileRect_1F_15::
 MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1797,7 +1798,7 @@ MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 5
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
-TileRect_1F_15::
+TileRect_1F_16::
 MonsterDetailsEmptyPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1818,7 +1819,7 @@ MonsterDetailsEmptyPedigreeTileRect::
     db $b6, $0d, $0d, $ed, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 16
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_16::
+TileRect_1F_17::
 MonsterDetailsPedigreeLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3 ; id 1
@@ -1848,7 +1849,7 @@ SwapMonstersMenu_ShowParents2_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b6, $0d, $0d, $ed, $43, $44, $45, $46, $47, $c3, $c3, $b7 ; id 16
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
-TileRect_1F_17::
+TileRect_1F_18::
 NameEntryKeyboardTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $00, $00, $c3, $c3, $b6, $c3, $50, $51, $52, $53, $54, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1871,7 +1872,7 @@ RunNameEntryStateWhenNotFading_RedrawKeyboard_Data::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 ; record: 20 x 5 tiles, one row per line
-TileRect_1F_18::
+TileRect_1F_19::
 NameEntryTwoRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
@@ -1881,7 +1882,7 @@ RunNameEntryStateWhenNotFading_DrawFrameRow_Data::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 20 x 3 tiles, one row per line
-TileRect_1F_19::
+TileRect_1F_20::
 NameEntryOneRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
@@ -2438,9 +2439,9 @@ DrawSummaryFrames::
     ld [wTextWindowWidth], a
     ret
 
-; draws the tile rectangles SwapMonstersMenu_ShowMonsterDetails_StatsFrames_TileRect (12 x 3 at
-; scroll + 8) and MonsterDetailsItemBoxTileRect (8 x 7 at scroll + $160) (E-0121) (E-0344: the
-; address in its name dropped or read as the label there; was DrawRects_3)
+; draws the tile rectangles MonsterDetailsPanelTopTileRect (12 x 3 at scroll + 8) and
+; MonsterDetailsItemBoxTileRect (8 x 7 at scroll + $160) (E-0121) (E-0344: the address in its name
+; dropped or read as the label there; was DrawRects_3)
 DrawRects_3::
     call BGMapAddressAtScroll_Bank1F
     ld de, $0008
@@ -2449,7 +2450,7 @@ DrawRects_3::
     ld [wArg5], a
     ld a, l
     ld [wArg6], a
-    ld de, SwapMonstersMenu_ShowMonsterDetails_StatsFrames_TileRect
+    ld de, MonsterDetailsPanelTopTileRect
     ld a, d
     ld [wArg1], a
     ld a, e

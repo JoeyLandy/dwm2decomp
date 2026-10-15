@@ -1490,7 +1490,7 @@
           "reason": "special map record"
         }
       ],
-      "note": "E-0144 (C1: LoadSpecialMapHeader and LoadMapScreenFromChunk map bank $61 and read the word $60D8 + 2 * hFFC6; every non-zero word is $61D8 + 26 * n)."
+      "note": "E-0144 (C1: LoadSpecialMapHeader and LoadSpecialMapScreen map bank $61 and read the word $60D8 + 2 * hFFC6; every non-zero word is $61D8 + 26 * n)."
     },
     {
       "bank": "61",
@@ -1555,7 +1555,7 @@
           "name": "its ROM bank"
         }
       ],
-      "note": "E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadMapScreenFromChunk takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens)."
+      "note": "E-0144 (C1: LoadSpecialMapHeader decompresses the tileset to vTiles2, loads the palettes with LoadBGPaletteBufferFromBank and stores the five header bytes; LoadSpecialMapScreen takes the far pointer at +$14 as the screen array (3 * (hMapScreenY * width + hMapScreenX)) and, on CGB, the one at +$17 as the attribute array; every array decodes to 360-byte screens)."
     },
     {
       "bank": "3A",
@@ -13209,7 +13209,7 @@
     {
       "bank": "E0",
       "addr": "4D95",
-      "label": "RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout",
+      "label": "DebugActionTargetsScreenLayout",
       "count": 1,
       "fields": [
         {
@@ -13322,7 +13322,7 @@
         }
       ],
       "record": "20 x 18 tiles, one row per line",
-      "note": "E-0213 (C1: a debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with WriteVRAMByteInc)."
+      "note": "A 20 x 18 tile map (360 bytes, one screen row per line) for the debug battle viewer: a frame around the whole screen ($B0-$B7) with heading tiles ($80-$82 and $01, $9B-$A2, $8B $8C, $ED-$F3, $85-$87, $88-$8A), a column of $AF tiles in column 3, short labels ($02-$04 with $AF, $01 $01, $0B $0D) and tiles $92-$9A in row 16. RunDebugState_E0_ChooseActionTargets_Start copies it to vBGMap0 row by row (BC = $1412, WriteVRAMByteInc) after drawing category 0 string 0 at vTiles2 + $10 and category $0E string 0 at vTiles1, then starts actor 0 at sub-state 1. (C1, E-0373); E-0213 (C1: a debug screen routine copies 20 x 18 bytes (BC = $1412) from $4D95 to vBGMap0 row by row with WriteVRAMByteInc). (named from its reading, E-0373; was RunDebugState_E0_ChooseActionTargets_ShowStringBank08AtTilesHLThenDefault_BankE0_DebugScreenLayout)"
     },
     {
       "bank": "E0",

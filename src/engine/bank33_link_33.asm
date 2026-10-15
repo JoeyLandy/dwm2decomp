@@ -2569,7 +2569,7 @@ RunLinkSession6Exchange_BackFromOwnStats::
 ; cursor mark and the name and heading. (C1, E-0357)
 RunLinkSession6Exchange_BackFromOwnStats_DrawBox::
     farcall ClearRecordPanelTiles
-    ld de, RunLinkSession6Exchange_BackFromOwnStats_DrawBox_TileRect
+    ld de, RunLinkSession6Exchange_ListBoxTileRect
     ld hl, wWindowTileBuffer + $64
     lb bc, $08, $0b
     call CopyRectTo20ByteRowsJp_Bank33
@@ -3359,7 +3359,8 @@ FightInfoExitBox_TileRect::
 ; a packed tile rectangle given to a rectangle copier, as DE with B = width and C = rows, or as
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
-RunLinkSession6Exchange_BackFromOwnStats_DrawBox_TileRect::
+TileRect_33_7::
+RunLinkSession6Exchange_ListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2

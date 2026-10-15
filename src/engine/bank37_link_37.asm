@@ -2400,7 +2400,7 @@ PartnerStats_PedigreeKeys::
     ld [wScreenStep], a
     ret
 
-; as RunScreenStateWhenNotFading_F1_ResetListAndShowString (E-0304)
+; as RunScreenStateWhenNotFading_F1_RedrawBreedScreen (E-0304)
 RunLinkSession5Exchange_ResetListAndShowString::
     ld a, [wScreenStep]
     jumptable

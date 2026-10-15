@@ -4886,7 +4886,7 @@ RunBattleSetup_BankA0_CommandMenu::
     dw RunBattleSetup_BankA0_CommandMenu_StoreCommand
     dw RunBattleSetup_BankA0_CommandMenu_AfterCommand
     dw RunBattleSetup_BankA0_CommandMenu_PrepareMessage
-    dw RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable
+    dw RunBattleSetup_BankA0_CommandMenu_NoUsableSkills
     dw RunBattleSetup_BankA0_CommandMenu_LayOut
     dw RunBattleSetup_BankA0_CommandMenu_BackToList
     dw RunBattleSetup_BankA0_CommandMenu_ShowSkills
@@ -4940,7 +4940,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor::
     ld a, [hl]
     ld [wMenuSubState], a
     call DrawRows7To17ToBGMap_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
+    ld hl, RunBattleSetup_BankA0_ListCursorOffsets
     ld a, [wMenuSubState]
     and $03
     add a
@@ -4962,7 +4962,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor::
 ; commands, the others clear the action, set side control bit 7 and fight (sub-phase 3); B goes
 ; back. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SetTactic::
-    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
+    ld de, RunBattleSetup_BankA0_ListCursorOffsets
     ld hl, wMenuSubState
     call SkillListCursor_BankA0
     ld a, [wJoypadPressed]
@@ -4976,7 +4976,7 @@ RunBattleSetup_BankA0_CommandMenu_SetTactic::
     ld a, [wMenuSubState]
     and $03
     ld [hl], a
-    call SetSlotTacticAndSlotLastTacticForCommandMonster_BankA0
+    call SetCommandMonsterTactic_BankA0
     cp $03
     jr nz, .read_command_monster
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
@@ -5064,7 +5064,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowCommands::
 ; The command menu, step 5: draws the cursor ($BB) at the command. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_CursorOnCommand::
     call DrawRect11x9AtRow9ToBGMap_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_CursorOnCommand_Data
+    ld hl, RunBattleSetup_BankA0_CommandCursorOffsets
     ld a, [wMenuSelectedMember]
     and $03
     add a
@@ -5084,7 +5084,7 @@ RunBattleSetup_BankA0_CommandMenu_CursorOnCommand::
 ; 0 picks action $C0 aimed at the partner slot (step $15 when absent), 1 the skills (step 8 when
 ; none can be used, otherwise step $0C), 2 action $AC on itself. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_StoreCommand::
-    ld de, RunBattleSetup_BankA0_CommandMenu_CursorOnCommand_Data
+    ld de, RunBattleSetup_BankA0_CommandCursorOffsets
     ld hl, wMenuSelectedMember
     call ThreeEntryCursor_BankA0
     ld a, [wJoypadPressed]
@@ -5203,7 +5203,7 @@ RunBattleSetup_BankA0_CommandMenu_PrepareMessage::
     ret
 
 ; The command menu, step 9: 'It has no usable battle skills!' (string $29). (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable::
+RunBattleSetup_BankA0_CommandMenu_NoUsableSkills::
     call DrawRows13To17ToBGMap_BankA0
     ld a, $00
     ld [wStringCategory], a
@@ -5266,7 +5266,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowSkills::
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
+    ld de, RunBattleSetup_BankA0_ListCursorOffsets
     call ShowSkillPageNames_BankA0
     call RedrawSkillList_BankA0
     farcall CopyRectRecordsAndToScreenBuffer
@@ -5295,7 +5295,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowSkills::
 ; a page). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor::
     call DrawRow8AndRows9To17ToBGMap_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
+    ld hl, RunBattleSetup_BankA0_ListCursorOffsets
     ld a, [wMenuCursor]
     and $03
     add a
@@ -5319,7 +5319,7 @@ RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor::
 ; string $26, both returning here through step 16; otherwise stores the page and entry in side
 ; control and the skill as the action and goes on; B returns to the commands. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SkillCursor::
-    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
+    ld de, RunBattleSetup_BankA0_ListCursorOffsets
     ld hl, wMenuCursor
     call SkillListCursor_BankA0
     ld a, [wJoypadPressed]
@@ -6379,16 +6379,36 @@ DrawInventoryPageIndicator_BankA0::
 RunBattleSetup_BankA0_EntrySelect_ShowCursor_Data::
     db $c1, $01, $01, $02, $c7, $01, $07, $02
 
-RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data::
+; Four little-endian words, $0141, $0181, $01C1 and $0201: offsets from vBGMap0 of rows 10, 12, 14
+; and 16 at column 1, the cursor places of a four-row list. The bank-$A0 command menu indexes it by
+; wMenuSubState & 3 for the tactic list (RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor draws
+; tile $BB there; RunBattleSetup_BankA0_CommandMenu_SetTactic passes it to SkillListCursor_BankA0)
+; and by wMenuCursor & 3 for the skill list (RunBattleSetup_BankA0_CommandMenu_ShowSkills,
+; RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor and
+; RunBattleSetup_BankA0_CommandMenu_SkillCursor). The bytes match
+; RunBattleSetup_PlanMenu_ShowTacticCursor_Data in bank $31. (C1, E-0373)
+RunBattleSetup_BankA0_ListCursorOffsets::
     db $41, $01, $81, $01, $c1, $01, $01, $02
 
-RunBattleSetup_BankA0_CommandMenu_CursorOnCommand_Data::
+; Thirteen little-endian words, of which only the first three are read: $0181, $01C1 and $0201,
+; offsets from vBGMap0 of rows 12, 14 and 16 at column 1, the places of the three commands.
+; RunBattleSetup_BankA0_CommandMenu_CursorOnCommand draws tile $BB at entry wMenuSelectedMember & 3
+; and RunBattleSetup_BankA0_CommandMenu_StoreCommand passes the table to ThreeEntryCursor_BankA0,
+; which keeps the index in 0-2. The ten words after them ($01C1, $0201, $01C1, $0201, $0029, $0069,
+; $00A9, $00E9, $012F, $016F) equal the bank-$31 tables RunBattleSetup_ItemMenu_ChooseSide_Data and
+; ForgetSkillMenu_Cursor_Data and the first four bytes of RunBattleSetup_MainMenu_YesNoCursor_Data2;
+; no reader of them in bank $A0 was found. (C1, E-0373)
+RunBattleSetup_BankA0_CommandCursorOffsets::
     db $81, $01, $c1, $01, $01, $02, $c1, $01, $01, $02, $c1, $01, $01, $02, $29, $00
     db $69, $00, $a9, $00, $e9, $00, $2f, $01, $6f, $01
 
+; A = tactic: stores A in the wSlotTactic byte of wCommandMonster and, unless A is 3 (manual
+; command), also in its wSlotLastTactic byte; returns with A unchanged (Z set when it was 3). Called
+; by RunBattleSetup_BankA0_CommandMenu_SetTactic; the same instructions as
+; SetSlotTacticAndSlotLastTacticForCommandMonster in bank $31. (C1, E-0373)
 ; A = value: stores A in wSlotTactic[wCommandMonster], and also in wSlotLastTactic[wCommandMonster]
 ; unless A is 3 (E-0118)
-SetSlotTacticAndSlotLastTacticForCommandMonster_BankA0::
+SetCommandMonsterTactic_BankA0::
     push af
     ld a, [wCommandMonster]
     ld hl, wSlotTactic

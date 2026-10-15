@@ -8,49 +8,81 @@ SECTION "Bank E1", ROMX[$4000], BANK[$E1]
 Tiles2Gfx_4::
     INCBIN "gfx/misc/tiles2_gfx_4.lz"
 
+; LZSS-compressed (37 inline bytes) 20 x 18 tile map that expands to 360 bytes.
+; GameMode5_Update_LoadScreens_Screen0_Load (intro screen 0, wTitleScreenState = 0) decompresses it
+; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_4 goes to vTiles2, and draws it
+; with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 37 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen0_ScreenTileBufferGfx::
+IntroScreen0TileMap::
     db $68, $01, $13, $13, $a0, $ff, $4d, $13, $41, $0f, $2e, $01, $02, $03, $04, $05
     db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13, $41, $0f
     db $4d, $13, $12, $1f, $42
 
+; LZSS-compressed (19 bytes) CGB attribute map that expands to 360 bytes, one attribute byte per
+; tile of IntroScreen0TileMap. On CGB only, GameMode5_Update_LoadScreens_Screen0_Load decompresses
+; it to wScreenAttrBuffer with WRAM bank 2 selected (rSVBK = 2). (C1, E-0373)
 ; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen0_ScreenAttrBufferGfx::
+IntroScreen0AttrMap::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
-GameMode5_Update_LoadScreens_Screen0_BGPaletteBufferData::
+; One CGB BG palette, four BGR555 colours (8 bytes): $56B5, $7FFF, $56D7, $0000. On CGB,
+; GameMode5_Update_LoadScreens_Screen0_Load copies it to wBGPaletteBuffer (palette 0) with
+; CopyFromBankWaitVRAM, C = 8. (C1, E-0373)
+IntroScreen0Palette::
     db $b5, $56, $ff, $7f, $d7, $56, $00, $00
 
 ; LZSS-compressed: 1169 bytes that expand to 1600 (E-0016, E-0017)
 Tiles2Gfx_5::
     INCBIN "gfx/misc/tiles2_gfx_5.lz"
 
+; LZSS-compressed (85 bytes, an asset file) 20 x 18 tile map that expands to 360 bytes.
+; GameMode5_Update_LoadScreens_Screen1_Load (intro screen 1, wTitleScreenState = 1) decompresses it
+; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_5 goes to vTiles2, and draws it
+; with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 85 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen1_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen1_screen_tile_buffer_gfx.lz"
+IntroScreen1TileMap::
+    INCBIN "gfx/misc/intro_screen1_tile_map.lz"
 
-GameMode5_Update_LoadScreens_Screen1_ScreenAttrBufferGfx::
+; LZSS-compressed (19 bytes, the same bytes as IntroScreen0AttrMap) CGB attribute map that expands
+; to 360 bytes, one attribute byte per tile of IntroScreen1TileMap. On CGB only,
+; GameMode5_Update_LoadScreens_Screen1_Load decompresses it to wScreenAttrBuffer with WRAM bank 2
+; selected (rSVBK = 2). (C1, E-0373)
+; LZSS-compressed: 19 bytes that expand to 360 (E-0016, E-0017)
+IntroScreen1AttrMap::
     db $68, $01, $01, $01, $a0, $ff, $4d, $01, $5f, $0f, $4d, $01, $bf, $0f, $4d, $01
     db $1f, $1f, $35
 
-GameMode5_Update_LoadScreens_Screen1_BGPaletteBufferData::
+; One CGB BG palette, four BGR555 colours (8 bytes): $3160, $56B5, $62E8, $0000. On CGB,
+; GameMode5_Update_LoadScreens_Screen1_Load copies it to wBGPaletteBuffer (palette 0) with
+; CopyFromBankWaitVRAM, C = 8. (C1, E-0373)
+IntroScreen1Palette::
     db $60, $31, $b5, $56, $e8, $62, $00, $00
 
 ; LZSS-compressed: 815 bytes that expand to 1552 (E-0016, E-0017)
 Tiles2Gfx_6::
     INCBIN "gfx/misc/tiles2_gfx_6.lz"
 
+; LZSS-compressed (120 bytes, an asset file) 20 x 18 tile map that expands to 360 bytes.
+; GameMode5_Update_LoadScreens_Screen2_Load (intro screen 2, wTitleScreenState = 2) decompresses it
+; to wScreenTileBuffer with DecompressToRAMLocked after Tiles2Gfx_6 goes to vTiles2, and draws it
+; with DrawFullScreenBufferToBGMap. (C1, E-0373)
 ; LZSS-compressed: 120 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen2_ScreenTileBufferGfx::
-    INCBIN "gfx/misc/game_mode5_update_load_screens_screen2_screen_tile_buffer_gfx.lz"
+IntroScreen2TileMap::
+    INCBIN "gfx/misc/intro_screen2_tile_map.lz"
 
+; LZSS-compressed (20 bytes) CGB attribute map that expands to 360 bytes, one attribute byte per
+; tile of IntroScreen2TileMap. On CGB only, GameMode5_Update_LoadScreens_Screen2_Load decompresses
+; it to wScreenAttrBuffer with WRAM bank 2 selected (rSVBK = 2). (C1, E-0373)
 ; LZSS-compressed: 20 bytes that expand to 360 (E-0016, E-0017)
-GameMode5_Update_LoadScreens_Screen2_ScreenAttrBufferGfx::
+IntroScreen2AttrMap::
     db $68, $01, $00, $08, $00, $00, $0f, $4d, $00, $60, $0f, $4d, $00, $c0, $0f, $4d
     db $00, $08, $1f, $34
 
-GameMode5_Update_LoadScreens_Screen2_BGPaletteBufferData::
+; One CGB BG palette, four BGR555 colours (8 bytes): $3E0F, $73BF, $56D7, $0000. On CGB,
+; GameMode5_Update_LoadScreens_Screen2_Load copies it to wBGPaletteBuffer (palette 0) with
+; CopyFromBankWaitVRAM, C = 8. (C1, E-0373)
+IntroScreen2Palette::
     db $0f, $3e, $bf, $73, $d7, $56, $00, $00
 
 ; LZSS-compressed: 1165 bytes that expand to 2048 (E-0016, E-0017)

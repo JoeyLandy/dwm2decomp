@@ -5731,7 +5731,7 @@ EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox::
     farcall ShowString_Bank1B
     ld a, $6c
     call QueueSoundEffect
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect
+    ld de, EggServiceMenu_BattlePrizeExitBoxTileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -6025,7 +6025,7 @@ EggServiceMenu_ShowBattlePrizeExit::
     ld a, $1f
     ld [wStringIndex], a ; 'BattlePrizeExit'
     farcall ShowString_Bank1B
-    ld de, EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect
+    ld de, EggServiceMenu_BattlePrizeExitBoxTileRect
     ld hl, wWindowTileBuffer + $e7
     lb bc, $09, $07
     call CopyRectTo20ByteRows
@@ -7252,7 +7252,8 @@ LinkBattleSetupMenu_DrawYesNo_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 ; record: 9 x 7 tiles, one row per line
-EggServiceMenu_Bank1B_StartLinkBattle_ChoiceBox_TileRect::
+TileRect_1B_2::
+EggServiceMenu_BattlePrizeExitBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 2

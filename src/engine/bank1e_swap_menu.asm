@@ -5936,7 +5936,7 @@ SwapMonstersMenu_ShowMonsterDetails_StatsFrames::
     call BGMapAddressAtScroll_Bank1E
     ld de, $0008
     add hl, de
-    ld de, SwapMonstersMenu_ShowMonsterDetails_StatsFrames_TileRect
+    ld de, MonsterDetailsPanelTopTileRect
     ld a, $0c
     ld [wArg3], a
     ld a, $03

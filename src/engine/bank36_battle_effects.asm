@@ -1720,9 +1720,9 @@ ResolveStepBranchOnAction_RemoveEffects::
     ld a, [wBattleSubStep]
     jumptable
     dw ResolveStepBranchOnAction_ShowTheWindAroundHero
-    dw ResolveStepBranchOnAction_RemoveEffects_ShowHeroTurnedBackTo
+    dw ResolveStepBranchOnAction_RemoveEffects_RevertForm
     dw ResolveStepDamageMessage_ReloadPicture
-    dw ResolveStepBranchOnAction_RemoveEffects_ShowHeroWentAway
+    dw ResolveStepBranchOnAction_RemoveEffects_Leave
     dw ResolveStepDamageMessage_BreakSealPray
     dw ResolveStepDamageMessage_NextSubPhase
 
@@ -1740,10 +1740,18 @@ ResolveStepBranchOnAction_ShowTheWindAroundHero::
     farcall ShowBattleText
     ret
 
-; Aftermath, step 1: a transformed target (status 1 bits 4-5) turns back: clears them, shows text
-; $5F, cancels its action, clears its side control's low bits, reloads its skills from its record
-; and recomputes its stats, capping HP and MP at the restored maximums. (C1, E-0357)
-ResolveStepBranchOnAction_RemoveEffects_ShowHeroTurnedBackTo::
+; Aftermath, step 1 (entry 1 of ResolveStepBranchOnAction_RemoveEffects): adds 2 to wBattleSubStep.
+; When the target has BSTAT1_DRAGON_FORM or BSTAT1_TRANSFORMED it clears both bits, steps
+; wBattleSubStep back to 2 (so ResolveStepDamageMessage_ReloadPicture runs next; otherwise step 3
+; follows), shows battle text $5F ('0 turned back to normal!'), cancels its action
+; (CancelTargetActionUnlessSpecial), clears the low three bits of its wSideControl byte, reloads its
+; skills (LoadSlotSkillsFromBattlerRecord with wBattleArg0 = 1), runs RecomputeTargetStatsFromRecord
+; and stores the base values of max HP and max MP (lowering wBattleHP and wBattleMP to them when
+; they are not below, with SetBit0OfLevelUpGainsIndexed_Bank36 and
+; SetBit1OfLevelUpGainsIndexed_Bank36), ATK and INT, then runs SetSlotAIModeFromINT and stores
+; wBattleLevel, the three personality bytes and wSlotTrait from the record. In every case it then
+; stores the base AGL and DEF of the target in wBattleAGL and wBattleDEF. (C1, E-0373)
+ResolveStepBranchOnAction_RemoveEffects_RevertForm::
     ld hl, wBattleSubStep
     inc [hl]
     ld hl, wBattleSubStep
@@ -2003,9 +2011,13 @@ ResolveStepDamageMessage_ReloadPicture::
     ld [hl], $ff
     ret
 
-; Aftermath, step 3: a slot 3 or 7 target that is present leaves: '<name> went away' (text $7F),
-; marks it absent, clears its nine status bytes and its side's flag bit 2. (C1, E-0357)
-ResolveStepBranchOnAction_RemoveEffects_ShowHeroWentAway::
+; Aftermath, step 3: advances wBattleSubStep to 4, then acts only on a target in slot 3 or 7
+; (wBattleTarget & 3 = 3) whose wBattleSlotOut byte is 0 (CarryUnlessBattleSlotOutSlotEmpty returns
+; carry clear): shows battle text $7F ('0 went away!'), sets its wBattleSlotOut and wSlotMarks bytes
+; to $FF, clears its nine wBattleStatus bytes and clears bit 2 of wSideFlags0. It works out the side
+; from wBattleTarget bit 2 but never adds it to the address, so the bit is cleared in wSideFlags0
+; for a target on either side. (C1, E-0373)
+ResolveStepBranchOnAction_RemoveEffects_Leave::
     ld hl, wBattleSubStep
     inc [hl]
     ld a, [wBattleTarget]

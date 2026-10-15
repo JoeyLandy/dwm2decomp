@@ -4225,7 +4225,7 @@ YoldTalkEvents_MermaidPast::
     call CopyBytes
     ldh a, [hTemp2]
     ld de, wTextBuf2 + $2
-    call ReadBank08TableWordForA
+    call CopySkillNameToDE
     ld de, EVENT_THE_PIRATES
     call TestFlagBit
     jr c, .call_start_script_at_hl_b04

@@ -1823,7 +1823,7 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen0_ScreenTileBufferGfx
+    ld de, IntroScreen0TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -1832,13 +1832,13 @@ GameMode5_Update_LoadScreens_Screen0_Load::
     ld a, $02
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen0_ScreenAttrBufferGfx
+    ld de, IntroScreen0AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen0_BGPaletteBufferData
+    ld de, IntroScreen0Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -1921,7 +1921,7 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen1_ScreenTileBufferGfx
+    ld de, IntroScreen1TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -1930,13 +1930,13 @@ GameMode5_Update_LoadScreens_Screen1_Load::
     ld a, $02
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen1_ScreenAttrBufferGfx
+    ld de, IntroScreen1AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen1_BGPaletteBufferData
+    ld de, IntroScreen1Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
@@ -2019,7 +2019,7 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     ld hl, vTiles2
     call DecompressToVRAM
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen2_ScreenTileBufferGfx
+    ld de, IntroScreen2TileMap
     ld hl, wScreenTileBuffer
     call DecompressToRAMLocked
     ld a, [wIsCGB]
@@ -2028,13 +2028,13 @@ GameMode5_Update_LoadScreens_Screen2_Load::
     ld a, $02
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen2_ScreenAttrBufferGfx
+    ld de, IntroScreen2AttrMap
     ld hl, wScreenAttrBuffer
     call DecompressToRAMLocked
     ld a, $00
     ldh [rSVBK], a
     ld b, $e1
-    ld de, GameMode5_Update_LoadScreens_Screen2_BGPaletteBufferData
+    ld de, IntroScreen2Palette
     ld hl, wBGPaletteBuffer
     ld c, $08
     call CopyFromBankWaitVRAM
