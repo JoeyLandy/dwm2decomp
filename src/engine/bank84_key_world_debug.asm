@@ -310,16 +310,33 @@ RunDebugAutomapCaseTemp0_Entrance5::
     call RunDebugAutomapCaseTemp0_GenerateRooms
     ret
 
-; data read by RunDebugAutomapCaseTemp0 (10 bytes) (E-0347)
+; Ten bytes indexed by wKeyWorldGoalKind (0-9): $00, $00, $03, $01, $00, $00, $04, $05, $02, $00.
+; RunDebugAutomapCaseTemp0_Entrance1 (entrance kind 1) stores the byte as byte 0 of the 16-byte
+; wKeyWorldFloorState entry for the floor; CheckWarpsByMapType_FloorEntrances later masks that byte
+; with $7F and uses it to index a table of 2-byte pointers in bank $61. (C1, E-0381)
 RunDebugAutomapCaseTemp0_Entrance1_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
+; Ten bytes indexed by wKeyWorldGoalKind (0-9): $00, $06, $03, $01, $07, $08, $04, $05, $02, $09.
+; RunDebugAutomapCaseTemp0_Entrance2 adds $20 and RunDebugAutomapCaseTemp0_Entrance3 adds $40, sets
+; bit 7 half the time at random, and stores the result as byte 0 of the 16-byte wKeyWorldFloorState
+; entry; the low seven bits later index a 2-byte pointer table in bank $61 in
+; CheckWarpsByMapType_FloorEntrances. (C1, E-0381)
 RunDebugAutomapCaseTemp0_Entrance2_Data::
     db $00, $06, $03, $01, $07, $08, $04, $05, $02, $09
 
+; Eight bytes indexed by wKeyRandomHi AND 7: $05, $06, $07, $08, $09, $05, $07, $09.
+; RunDebugAutomapCaseTemp0_Entrance5 (entrance kind 5, rooms) stores the picked byte as byte 2 of
+; the 16-byte wKeyWorldFloorState entry, which LoadMapType5TilesetAndHeader uses as the index into
+; MapType5TilesetTable. (C1, E-0381)
 RunDebugAutomapCaseTemp0_Entrance5_Data::
     db $05, $06, $07, $08, $09, $05, $07, $09
 
+; Ten rows of four bytes (40 bytes), one row per wKeyWorldGoalKind (0-9), each pick made with
+; wKeyRandomHi AND 3: (0,$0B,0,$0B), (0,2,0,2), (2,3,$0B,2), (2,4,2,4), (1,1,1,1), (1,3,1,3),
+; (0,4,0,4), (1,4,1,4), (1,3,$0B,1) and (0,$0B,0,$0B). RunDebugAutomapCaseTemp0_Entrance4 (entrance
+; kind 4, rooms) stores the picked byte as byte 2 of the 16-byte wKeyWorldFloorState entry, which
+; LoadMapType5TilesetAndHeader uses as the index into MapType5TilesetTable. (C1, E-0381)
 RunDebugAutomapCaseTemp0_Entrance4_Data::
     db $00, $0b, $00, $0b, $00, $02, $00, $02, $02, $03, $0b, $02, $02, $04, $02, $04
     db $01, $01, $01, $01, $01, $03, $01, $03, $00, $04, $00, $04, $01, $04, $01, $04
@@ -1193,7 +1210,13 @@ ItemUsable_LogTwig_Check::
     ldh [hTempA], a
     ret
 
-; data read by ItemUsable_LogTwig_Check (34 bytes) (E-0347)
+; Eleven 3-byte records ended by $FF (34 bytes): map id, position in the screen ($44 in every
+; record, x nibble then y nibble), and screen (x nibble then y nibble). The maps are $20, $30, $48,
+; $70, $A0, $A8, $B0, $B8, $C8, $D1 and $DA, with screens $00, $76, $B4, $B4, $10, $00, $01, $44,
+; $01, $00 and $00. ItemUsable_LogTwig_Check finds the record for hMapId (same 34 bytes as
+; RunFieldReturnPhase_AfterLogTwig_Data) and, when the goal is not yet recorded, stores the position
+; and screen in wKeyWorldGoal and wKeyWorldGoalCell and the record number plus 1 in wKeyWorldKey.
+; (C1, E-0381)
 ItemUsable_LogTwig_Check_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
@@ -1507,7 +1530,11 @@ RunFieldReturnPhase_AfterLogTwig::
     call RunFieldReturnPhase_AfterLogTwig_DrawMarker
     jr RunFieldReturnPhase_AfterLogTwig_DrawGoal
 
-; data read by RunFieldReturnPhase (34 bytes) (E-0347)
+; The same eleven 3-byte records and $FF end as ItemUsable_LogTwig_Check_Data (34 bytes): map id,
+; position in the screen ($44 in every record) and screen. RunFieldReturnPhase_AfterLogTwig searches
+; it for hMapId (it has no check for the $FF end), keeps the record number in hTemp0 and b, and when
+; the packed current screen equals byte 2 draws the 2 x 2 marker at byte 1 with
+; RunFieldReturnPhase_AfterLogTwig_DrawMarker. (C1, E-0381)
 RunFieldReturnPhase_AfterLogTwig_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
@@ -1753,7 +1780,11 @@ RunFieldReturnPhase_AfterLogTwig_DrawMarker::
     ldh [rSVBK], a
     ret
 
-; data read by RunFieldReturnPhase (5 bytes) (E-0347)
+; Five CGB palette numbers, $01, $01, $03, $02, $02, indexed by b, the record number that
+; RunFieldReturnPhase_AfterLogTwig found for the map in RunFieldReturnPhase_AfterLogTwig_Data.
+; RunFieldReturnPhase_AfterLogTwig_DrawMarker writes the number as the background attribute of the
+; four marker tiles on a CGB when the map is not a key world (a key world uses palette 1). (C1,
+; E-0381)
 RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data::
     db $01, $01, $03, $02, $02
 

@@ -13,6 +13,7 @@ Tiles2Gfx_2::
 ; every other palette is $7C00 fill, read by nothing found (E-0185, C1)
 ; record: one CGB palette: 4 BGR555 colours
 RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData::
+; another name for the data at RunWorldMapState_CopyScrollToHardware_BGPaletteBufferData, whose note is above (E-0381)
 RunWorldMapState_DrawOverview_BGPaletteBufferData::
     dw $318c, $7fff, $5294, $0000 ; id 0
     dw $7c00, $7c00, $7c00, $7c00 ; id 1
@@ -141,6 +142,7 @@ Tiles2Gfx_3::
 ; LoadBGPaletteBufferFromBank (E-0164)
 ; record: one CGB palette: 4 BGR555 colours
 Palettes_5D::
+; another name for the data at Palettes_5D, whose note is above (E-0381)
 RunWorldMapState_DrawCloseUp_BGPaletteBufferData::
     dw $014d, $6bff, $2a55, $0000 ; id 0
     dw $294a, $7fff, $4a52, $0000 ; id 1

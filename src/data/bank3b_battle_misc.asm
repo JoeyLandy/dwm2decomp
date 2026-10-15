@@ -1501,7 +1501,12 @@ AddActionAmountToBattleMeter::
     call AddHLToBattleMeterCappedAt1800
     ret
 
-; data read by AddActionAmountToBattleMeter (10 bytes) (E-0347)
+; Five little-endian words, indexed by wBattleActionId - $19 (the item ids ITEM_BEEFJERKY,
+; ITEM_PORKCHOP, ITEM_RIB, ITEM_SIRLOIN and ITEM_BADMEAT): 10, 30, 100, 999 and 5.
+; AddActionAmountToBattleMeter loads the word and adds it to wBattleMeter through
+; AddHLToBattleMeterCappedAt1800; the callers are the local-side branches of
+; ApplyTargetBattleWordArray3FReduction and InflictStatus0Bit0WithBattleWordArray3FReduction. (C1,
+; E-0381)
 AddActionAmountToBattleMeter_Data::
     db $0a, $00, $1e, $00, $64, $00, $e7, $03, $05, $00
 
@@ -1651,7 +1656,11 @@ RollTableDamageScaledByResistance::
     ld [wBattleDamageHi], a
     ret
 
-; data read by RollTableDamageScaledByResistance (16 bytes) (E-0347)
+; Four 4-byte entries, one per item id ITEM_WIND, ITEM_BOLT, ITEM_SNOW and ITEM_FIRE (index
+; wBattleActionId - $24); each is two little-endian words, the low and high ends of a damage range:
+; 8-24, 35-50, 120-140 and 180-200. RollTableDamageScaledByResistance passes them in HL and BC to
+; SetDamageRandomInRange, then scales the roll by the target resistance level for that element. (C1,
+; E-0381)
 RollTableDamageScaledByResistance_Data::
     db $08, $00, $18, $00, $23, $00, $32, $00, $78, $00, $8c, $00, $b4, $00, $c8, $00
 
@@ -2567,7 +2576,12 @@ ClearBattleStatusBitsWithMaskD_Bank3B::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank3B (7 bytes) (E-0347)
+; Seven AND masks for status byte 0 of a battle slot, selected by register D (0-6):
+; ClearBattleStatusBitsWithMaskD_Bank3B ANDs the byte of slot E with entry D. $DF clears
+; BSTAT0_CURSED, $FE BSTAT0_POISONED, $00 the whole byte, $FD BSTAT0_BADLY_POISONED, $73 the
+; sleep-counter bits and BSTAT0_ASLEEP (bits 2, 3, 7), $EF BSTAT0_CONFUSED and $BF BSTAT0_PARALYZED.
+; This bank copy has no direct caller; the same 7 bytes are in several other battle banks. (C1,
+; E-0381)
 ClearBattleStatusBitsWithMaskD_Bank3B_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

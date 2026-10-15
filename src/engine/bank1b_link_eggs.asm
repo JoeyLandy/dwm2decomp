@@ -558,7 +558,10 @@ SendLinkByteForMenuOption_Bank1B::
     call SerialSendByte
     ret
 
-; data read by SendLinkByteForMenuOption (8 bytes) (E-0347)
+; Eight bytes $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3: the link byte sent for menu option 0 to 7.
+; SendLinkByteForMenuOption_Bank1B sends the entry numbered wMenuOption AND $0F with SerialSendByte;
+; the mask also allows indexes 8 to 15, which fall past the table. The bytes equal
+; SendLinkByteForMenuOption_Data in the title code, and no call to this copy was found. (C1, E-0381)
 SendLinkByteForMenuOption_Bank1B_Data::
     db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
@@ -1556,6 +1559,7 @@ BeginBreedingStringDisplay_StringCategories::
 ; (E-0217)
 ; record: string
 StringList_1B::
+; another name for the data at StringList_1B, whose note is above (E-0381)
 BreedingStrings_Category0::
     dw Text_WelcomeWhatWouldYou ; id 0
     dw Text_WelcomeWhatWouldYou ; id 1
@@ -1782,6 +1786,7 @@ Text_UnusedNoSaveData::
 ; control bytes, then text up to $F0 (E-0197, C1)
 ; record: $EA, $45 (window control bytes, as at the other entries of this pointer table); message
 Text_AccessoriesWillBeIn_2::
+; another name for the data at Text_AccessoriesWillBeIn_2, whose note is above (E-0381)
 Text_AccessoriesWillBeIn_3::
     db $ea, $45 ; entry 0
     db " Accessories will<LINE>", "be in the Vault.<WAIT>", "@"
@@ -1947,7 +1952,10 @@ LoadPalette0FromData_3::
     ld [wBGPaletteUploadRequest], a
     ret
 
-; data read by LoadPalette0FromData (8 bytes) (E-0347)
+; Four CGB colours as RGB555 words, low byte first: $5E4D, $7FFF, $66F2, $0000 (a blue, white, a
+; paler blue, black). LoadPalette0FromData_3 copies the 8 bytes to the start of wBGPaletteBuffer,
+; which is background palette 0, when wIsCGB is set and sets wBGPaletteUploadRequest to $7F. (C1,
+; E-0381)
 LoadPalette0FromData_3_Data::
     db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
@@ -4770,7 +4778,10 @@ UpdateTwoChoiceCursor_Bank1B_DrawTile::
     ei
     ret
 
-; data read by UpdateTwoChoiceCursor_Bank1B_DrawTile (4 bytes) (E-0347)
+; Two words that are offsets from the BG map entry at the top left of the visible screen
+; (BGMapAddressAtScroll_Bank1B): $012D and $016D, which are rows 9 and 11 of column 13.
+; UpdateTwoChoiceCursor_Bank1B_DrawTile indexes them with wTwoChoiceCursor (0 or 1) and writes tile
+; B at that entry, stepping back a row when the view has wrapped. (C1, E-0381)
 UpdateTwoChoiceCursor_Bank1B_DrawTile_Data::
     db $2d, $01, $6d, $01
 
@@ -7351,10 +7362,17 @@ DrawPickedRecordsRecordNamesAndIcons::
 .return:
     ret
 
-; data read by DrawPickedRecordsRecordNamesAndIcons (8 bytes) (E-0347)
+; Four words, VRAM addresses $9110, $9170, $91D0, $9230 (vTiles2 + $110, + $170, + $1D0, + $230, six
+; tiles apart). DrawPickedRecordsRecordNamesAndIcons draws the name of picked record c (c = 0 to 3,
+; up to wPickCount) with CopyGlyphTilesToVRAM at word c; the family icon goes to the tile before it
+; (DrawPickedRecordsRecordNamesAndIcons_Data2). (C1, E-0381)
 DrawPickedRecordsRecordNamesAndIcons_Data1::
     db $10, $91, $70, $91, $d0, $91, $30, $92
 
+; Four tile numbers $10, $16, $1C, $22 (six apart, in the $9000 area): for picked record c,
+; DrawPickedRecordsRecordNamesAndIcons puts the value in wArg1 and
+; LoadFamilyIconTileForRecordB_Bank1B writes the family icon of that record to the tile; the name
+; tiles of DrawPickedRecordsRecordNamesAndIcons_Data1 begin at the next tile. (C1, E-0381)
 DrawPickedRecordsRecordNamesAndIcons_Data2::
     db $10, $16, $1c, $22
 
@@ -7660,6 +7678,7 @@ LinkBattleSetupMenu_EraseInfoOKBox_TileRect_2::
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
 TileRect_1B::
+; another name for the data at TileRect_1B, whose note is above (E-0381)
 EggServiceMenu_InfoOKBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -7698,6 +7717,7 @@ LinkBattleSetupMenu_DrawYesNo_TileRect::
 
 ; record: 9 x 7 tiles, one row per line
 TileRect_1B_2::
+; another name for the data at TileRect_1B_2, whose note is above (E-0381)
 EggServiceMenu_BattlePrizeExitBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $35, $b7 ; id 1

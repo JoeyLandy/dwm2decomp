@@ -4505,7 +4505,12 @@ ClearBattleStatusBitsWithMaskD_Bank30::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank30 (7 bytes) (E-0347)
+; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
+; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
+; bits 2, 3 and 7 (the sleep counter and BSTAT0_ASLEEP), $EF bit 4 (BSTAT0_CONFUSED) and $BF bit 6
+; (BSTAT0_PARALYZED). ClearBattleStatusBitsWithMaskD_Bank30 indexes it by D (0 to 6) and ANDs the
+; mask into the wBattleStatus byte of slot E (9 bytes per slot). The same 7 bytes are in several
+; battle banks. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_Bank30_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

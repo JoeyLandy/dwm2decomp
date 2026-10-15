@@ -405,7 +405,10 @@ HibernateMenu_OptionCursor_DrawTile::
     ei
     ret
 
-; data read by HibernateMenu (10 bytes) (E-0347)
+; Five little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank14): $0021, $0061, $00A1, $00E1 and $0121, which are rows 1, 3, 5, 7 and
+; 9 at column 1. HibernateMenu_OptionCursor_DrawTile indexes it with wGridCursorX times 2 and writes
+; the tile B there, the cursor beside an option. (C1, E-0381)
 HibernateMenu_OptionCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
@@ -810,7 +813,11 @@ HibernateMenu_ChooseRecords_MarkAndRedraw::
     ld [wScriptStartRequest], a
     ret
 
-; data read by HibernateMenu (10 bytes) (E-0347)
+; Five little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank14): $0021, $0061, $00A1, $00E1 and $0121, which are rows 1, 3, 5, 7 and
+; 9 at column 1; the same values as HibernateMenu_OptionCursor_DrawTile_Data.
+; HibernateMenu_ChooseRecords_MarkAndRedraw indexes it with wListCursor times 2 and writes the mark
+; tile $BC at the chosen entry. (C1, E-0381)
 HibernateMenu_ChooseRecords_MarkAndRedraw_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
@@ -1108,7 +1115,7 @@ HibernateMenu_ChooseRecords_DrawYesNoAgain::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
 TileRect_14::
-; data read by HibernateMenu_ChooseRecords_DrawYesNoAgain (40 bytes) (E-0347)
+; another name for the data at TileRect_14, whose note is above (E-0381)
 HibernateMenu_YesNoAgainTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -1399,7 +1406,7 @@ HibernateMenu_ChooseRecords_DrawOptionYesNo::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
 TileRect_14_2::
-; data read by HibernateMenu_ChooseRecords_DrawOptionYesNo (30 bytes) (E-0347)
+; another name for the data at TileRect_14_2, whose note is above (E-0381)
 HibernateMenu_OptionYesNoTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
@@ -2059,10 +2066,17 @@ HibernateMenu_RestoreYesNoBox::
     call CopyFromBankWaitVRAM
     ret
 
-; data read by HibernateMenu_RestoreYesNoBox (6 bytes) (E-0347)
+; Six tile ids, $B4 five times then $B5: a row of box border (five edge tiles and the right corner).
+; HibernateMenu_RestoreYesNoBox copies it with HibernateMenu_CopyBoxRows (C = 4, one row) onto the
+; first row of the yes/no box area at wWindowTileBuffer + $112, restoring the border of the box that
+; lay under the yes/no box. (C1, E-0381)
 HibernateMenu_RestoreYesNoBox_Data1::
     db $b4, $b4, $b4, $b4, $b4, $b5
 
+; Six zero bytes: the CGB attribute bytes (palette 0, no flip) for the same six tiles as
+; HibernateMenu_RestoreYesNoBox_Data1. On a CGB HibernateMenu_RestoreYesNoBox copies them with
+; HibernateMenu_CopyBoxRows onto the first row of wWindowAttrBuffer + $112, with WRAM bank 2 mapped.
+; (C1, E-0381)
 HibernateMenu_RestoreYesNoBox_Data2::
     db $00, $00, $00, $00, $00, $00
 
@@ -3780,6 +3794,7 @@ NamingScreenTileDestListB::
 ; low byte of $FF (E-0225)
 ; record: bank-$1F tile sources
 TileCopySrcList_14::
+; another name for the data at TileCopySrcList_14, whose note is above (E-0381)
 HibernateMenu_PartyGlyphSrcList::
     dw $41d0, $4300, $4290, $4340, $4210, $4250, $42f0, $41c0 ; entry 0
     dw $4370, $40f0, $43c0, $42d0, $4380, $4180, $4910, $4910
@@ -3820,6 +3835,7 @@ ClearTilesAndDrawRectAndStep_TileRect::
 
 ; record: 12 x 9 tiles, one row per line
 TileRect_14_3::
+; another name for the data at TileRect_14_3, whose note is above (E-0381)
 HibernateMenu_RecordStatsTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -3839,12 +3855,14 @@ HibernateMenu_RecordStatsTileRect::
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
 TileCopyDestList_14::
+; another name for the data at TileCopyDestList_14, whose note is above (E-0381)
 HibernateMenu_ListGlyphDestList::
     dw vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0, vTiles1 + $2c0, vTiles1 + $2d0, vTiles1 + $2e0 ; entry 0
     dw vTiles1 + $2f0, rIE
 
 ; record: bank-$1F tile sources
 TileCopySrcList_14_2::
+; another name for the data at TileCopySrcList_14_2, whose note is above (E-0381)
 HibernateMenu_ListGlyphSrcList::
     dw $4340, $4210, $4250, $42f0, $41c0, $4370, $40f0, $43c0 ; entry 0
     dw $42d0, $ffff
@@ -3858,10 +3876,12 @@ HibernateMenu_ChooseRecords_TileCopySrcList::
     dw $4230, $4290, $ffff
 
 TileCopyDestList_14_2::
+; another name for the data at TileCopyDestList_14_2, whose note is above (E-0381)
 HibernateMenu_YesNoGlyphDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 TileCopySrcList_14_3::
+; another name for the data at TileCopySrcList_14_3, whose note is above (E-0381)
 HibernateMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
@@ -4190,6 +4210,7 @@ RunNameEntryStateWhenNotFading_Sprite0Slot::
 ; CopyBytesDEFromHL_Bank14 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
 SpriteSlotsInit_14::
+; another name for the data at SpriteSlotsInit_14, whose note is above (E-0381)
 RunNameEntryStateWhenNotFading_Sprite1Slot::
     db $00, $01, $01, $00, $08, $08, $01, $00, $00, $00, $00, $08, $08, $04, $00, $00 ; entry 0
 
@@ -4432,7 +4453,10 @@ RunNameEntryStateWhenNotFading_KeyCursor::
     ld [wArg5], a
     ret
 
-; data read by RunNameEntryStateWhenNotFading (5 bytes) (E-0347)
+; Five bytes, $10, $10, $10, $0D, $0D: the last key column of each key row of the name entry
+; keyboard, indexed by wNameEntryCursorY (rows 0-4). The left and right moves of the keyboard cursor
+; wrap at it: Left from column 0 goes to this column, and Right at this column goes back to column
+; 0. (C1, E-0381)
 RunNameEntryStateWhenNotFading_KeyCursor_Data::
     db $10, $10, $10, $0d, $0d
 
@@ -5729,7 +5753,9 @@ IsHLByteInList::
     ld a, $ff
     ret
 
-; data read by IsHLByteInList (43 bytes) (E-0347)
+; A $FF-terminated list of 42 glyph codes: $3E-$42, $29-$35, $37, $38, $75-$79, $60-$6C, $6E, $6F,
+; $26 and $5A. IsHLByteInList returns A = 0 when the byte at HL is in it; the name entry uses that
+; to decide that a glyph may take the mark $8D after it. (C1, E-0381)
 IsHLByteInList_Data::
     db $3e, $3f, $40, $41, $42, $29, $2a, $2b, $2c, $2d, $2e, $2f, $30, $31, $32, $33
     db $34, $35, $37, $38, $75, $76, $77, $78, $79, $60, $61, $62, $63, $64, $65, $66
@@ -5762,7 +5788,9 @@ IsHLByteInList_2::
     ld a, $ff
     ret
 
-; data read by IsHLByteInList (11 bytes) (E-0347)
+; A $FF-terminated list of ten glyph codes: $3E-$42 and $75-$79, a subset of IsHLByteInList_Data.
+; IsHLByteInList_2 returns A = 0 when the byte at HL is in it; the name entry uses that to decide
+; that a glyph that already has the mark $8D may change it to $8E. (C1, E-0381)
 IsHLByteInList_2_Data::
     db $3e, $3f, $40, $41, $42, $75, $76, $77, $78, $79, $ff
 
@@ -5888,7 +5916,10 @@ RunNameEntryStateWhenNotFading_DrawYesNoTile::
     ei
     ret
 
-; data read by RunNameEntryStateWhenNotFading (4 bytes) (E-0347)
+; Two little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank14_2): $012F and $016F, which are row 9 and row 11 at column 15.
+; RunNameEntryStateWhenNotFading_DrawYesNoTile indexes it with wNameEntryMenuCursor times 2 and
+; writes the tile B there, the cursor beside yes or no. (C1, E-0381)
 RunNameEntryStateWhenNotFading_DrawYesNoTile_Data::
     db $2f, $01, $6f, $01
 
@@ -6449,10 +6480,16 @@ CopyTileForNameEntryLength::
     call CopyTileBytesToVRAM_Bank14
     ret
 
-; data read by CopyTileForNameEntryLength (10 bytes) (E-0347)
+; Five little-endian VRAM addresses, $9500, $9510, $9520, $9530 and $9540: the tiles of the five
+; name places. CopyTileForNameEntryLength indexes it with wNameEntryLength times 2 and copies the
+; plain tile CopyTileForNameEntryLength_Data2 to that address. (C1, E-0381)
 CopyTileForNameEntryLength_Data1::
     db $00, $95, $10, $95, $20, $95, $30, $95, $40, $95
 
+; One 16-byte tile: $FF, $00 repeated eight times, which is a solid tile of colour 1 in the
+; 2-bits-per-pixel format (low bit plane $FF, high plane $00). CopyTileForNameEntryLength copies it
+; with CopyTileBytesToVRAM_Bank14 to the address picked from CopyTileForNameEntryLength_Data1. (C1,
+; E-0381)
 CopyTileForNameEntryLength_Data2::
     db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
 
@@ -6712,6 +6749,7 @@ NameEntryKeyboard::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_14::
+; another name for the data at StringCategories_14, whose note is above (E-0381)
 RunNameEntryStateWhenNotFading_CheckMessages::
     dw StringList_CheckMessages_0 ; id 0
 
@@ -6740,6 +6778,7 @@ Text_SorryThatNameCant::
     db "@"
 
 StringCategories_14_2::
+; another name for the data at StringCategories_14_2, whose note is above (E-0381)
 RunNameEntryStateWhenNotFading_RenameMessages::
     dw StringList_RenameMessages_0 ; id 0
 

@@ -50,7 +50,7 @@ CopyStringToBuffer_Bank2A::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_2A::
-; data read by BeginStringDisplay_Bank2A (1 word) (E-0347)
+; another name for the data at StringCategories_2A, whose note is above (E-0381)
 MessageStrings_Bank2A::
     dw StringList_Bank2A_0 ; id 0
 

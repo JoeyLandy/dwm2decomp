@@ -761,7 +761,11 @@ AddStepDeltaToPointedByte::
     ld [de], a
     ret
 
-; data read by AddStepDeltaToPointedByte (16 bytes) (E-0347)
+; Sixteen signed bytes, one per two script frames (index wScriptParam0 / 2): -2, -1, -1, 0, -1, 0,
+; -1, 0, then 0, 1, 0, 1, 0, 1, 1, 2, which sum to zero. AddStepDeltaToPointedByte adds the entry to
+; the byte at the address in wStepPtrLo/wStepPtrHi; the callers in the Homecoming scene point it at
+; an OBJ_Y or hPlayerY, so the objects rise 6 pixels and fall back in a hop of 32 frames. (C1,
+; E-0381)
 AddStepDeltaToPointedByte_Data::
     db $fe, $ff, $ff, $00, $ff, $00, $ff, $00, $00, $01, $00, $01, $00, $01, $01, $02
 
@@ -1034,7 +1038,12 @@ ClearArg5IfAtOrAboveLimitForFarmLevel::
     ld [wArg5], a
     ret
 
-; data read by ClearArg5IfAtOrAboveLimitForFarmLevel (4 bytes) (E-0347)
+; Four limit bytes, 10, 20, 30 and 30, indexed by wFarmLevel and 3.
+; ClearArg5IfAtOrAboveLimitForFarmLevel asks DeleteSRAMRecordAndCompact about record $FF in bank 1,
+; and if wArg5 is then at or above the limit for the farm level it sets wArg5 to $FF; the talk
+; handlers GreatLogTalkEvents_ShowTheFarmIsFull and Talk08D1_TheEvaluatorSaidI take wArg5 = $FF as
+; the farm is full. The first three values match BattleEnd_AskToJoin_CheckFarmRoom_Data. (C1,
+; E-0381)
 ClearArg5IfAtOrAboveLimitForFarmLevel_Data::
     db $0a, $14, $1e, $1e
 
@@ -1523,7 +1532,12 @@ ScriptStepMoveTwoObjectsByTable::
     inc [hl]
     ret
 
-; data read by SceneMermaidSong2 (64 bytes) (E-0347)
+; Thirty-two pairs of signed bytes (dx, dy), 64 bytes, forming a closed loop: the deltas sum to zero
+; on both axes, starting (-2, 0), (-1, 0), (-2, -1) and ending (-1, 0), (-2, 0). One pair is applied
+; every fourth frame (index wScriptParam0 / 4): ScriptStepMoveTwoObjectsByTable reads it forward and
+; adds the pair to the X and Y of the second follower record in wFollowerRecords (offsets +6, +7)
+; while subtracting it from the third (+$B, +$C); SceneMermaidSong2_MoveSteps_StepPairBack reads it
+; from the last pair backwards with the signs swapped. (C1, E-0381)
 SceneMermaidSong2_MoveSteps_StepPairBack_Data::
     db $fe, $00, $ff, $00, $fe, $ff, $ff, $ff, $ff, $ff, $ff, $fe, $00, $ff, $00, $fe
     db $00, $fe, $00, $ff, $01, $fe, $01, $ff, $01, $ff, $02, $ff, $01, $00, $02, $00
@@ -1774,7 +1788,11 @@ RunScriptSubStep_FollowersRunRound::
     jp nz, .loop
     ret
 
-; data read by RunScriptSubStep (30 bytes) (E-0347)
+; A 64-byte height profile for the arc of a follower passing over the player: 17 zeros, a hump of 30
+; values rising from 1 to $11 (17) and back to 1, then 17 more zeros. In the last leg of
+; RunScriptSubStep_FollowersRunRound (moving left along the player) the index is the follower X
+; minus (hPlayerX - $20), and the follower Y becomes hPlayerY minus the table byte, so the follower
+; hops over the player. The earlier legs (down, right, up) do not read it. (C1, E-0381)
 RunScriptSubStep_FollowersRunRound_Data::
     ds $11, $00
     db $01, $05, $08, $0a, $0c, $0d, $0e, $0e, $0f, $0f, $10, $10, $10, $11, $11, $11
@@ -2513,7 +2531,11 @@ StartMessageFromTable::
     ld [wMessageState], a
     ret
 
-; data read by StartMessageFromTable (64 bytes) (E-0347)
+; Four rows of eight message words (16 bytes per row), little-endian: the low byte goes to
+; wMessageIndex and the high byte to wMessageGroup. The row is chosen by wScriptMsgSelect (0-3) and
+; the column by register A (0-7) when StartMessageFromTable is called. Row 0 holds $0126-$012A, row
+; 1 $02A8-$02AC, row 2 $02A8, $02E9, $02AA, $02AB, $02EC and row 3 $0534-$0536; unused columns are
+; $0000. (C1, E-0381)
 StartMessageFromTable_Data::
     db $26, $01, $27, $01, $28, $01, $29, $01, $2a, $01, $00, $00, $00, $00, $00, $00
     db $a8, $02, $a9, $02, $aa, $02, $ab, $02, $ac, $02, $00, $00, $00, $00, $00, $00
@@ -2800,7 +2822,11 @@ ScriptSlideObjectY::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ScriptSlideObjectY (16 bytes) (E-0347)
+; Sixteen signed bytes, one per two frames (index wScriptParam0 / 2): -2, -1, -1, 0, -1, 0, -1, 0,
+; 0, 1, 0, 1, 0, 1, 1, 2, summing to zero (the same 16 bytes as AddStepDeltaToPointedByte_Data).
+; ScriptSlideObjectY adds the entry to the Y coordinate of the player, a follower record or a sprite
+; slot chosen by wScriptParam1, and ends the script command after $20 frames, so the object rises 6
+; pixels and returns. (C1, E-0381)
 ScriptSlideObjectY_Data::
     db $fe, $ff, $ff, $00, $ff, $00, $ff, $00, $00, $01, $00, $01, $00, $01, $01, $02
 

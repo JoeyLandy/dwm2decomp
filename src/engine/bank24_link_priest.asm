@@ -2671,13 +2671,24 @@ GameMode6_Init_PicturePosition::
     pop hl
     ret
 
-; data read by GameMode6_Init_PicturePosition (6 bytes) (E-0347)
+; Three little-endian words, $00E7, $0000, $0000: BG map offsets from the top-left screen tile
+; (BGMapAddressAtScroll_Bank24) of the battler pictures when wSharedMenuWork is 1.
+; GameMode6_Init_PicturePosition picks the word by the byte offset A = 0, 2 or 4 (battler 1 to 3);
+; only the first word, $E7 (row 7, column 7), is used with one battler and the other two are zero.
+; (C1, E-0381)
 GameMode6_Init_PicturePosition_Data1::
     db $e7, $00, $00, $00, $00, $00
 
+; Three little-endian words, $00E4, $00EA, $0000: BG map offsets from the top-left screen tile of
+; the battler pictures when wSharedMenuWork is 2, row 7 at columns 4 and 10.
+; GameMode6_Init_PicturePosition picks the word by the byte offset A = 0, 2 or 4; the third word is
+; zero and not used with two battlers. (C1, E-0381)
 GameMode6_Init_PicturePosition_Data2::
     db $e4, $00, $ea, $00, $00, $00
 
+; Three little-endian words, $00E1, $00E7, $00ED: BG map offsets from the top-left screen tile of
+; the battler pictures when wSharedMenuWork is 3, row 7 at columns 1, 7 and 13.
+; GameMode6_Init_PicturePosition picks the word by the byte offset A = 0, 2 or 4. (C1, E-0381)
 GameMode6_Init_PicturePosition_Data3::
     db $e1, $00, $e7, $00, $ed, $00
 
@@ -2732,7 +2743,10 @@ CopyAttributeBlockToBattlerRecordSlot64::
     ldh [rSVBK], a
     ret
 
-; data read by CopyAttributeBlockToBattlerRecordSlot64 (E-0347)
+; Thirty-six bytes, all $01: a 6 by 6 block of CGB background attribute bytes (palette 1).
+; CopyAttributeBlockToBattlerRecordSlot64 copies it row by row (6 bytes per row, 20-byte row stride)
+; into the attribute buffer at wWindowAttrBuffer + $F7 in WRAM bank 2, the cells that match the 6 by
+; 6 tile block GameMode6_Init_DrawEggPicture writes at wWindowTileBuffer + $F7. (C1, E-0381)
 CopyAttributeBlockToBattlerRecordSlot64_Data::
     ds $24, $01
 
@@ -3674,6 +3688,7 @@ GameMode6_Update_TakePrize_DrawYesNo_TileRect::
 
 ; record: 8 x 5 tiles, one row per line
 TileRect_24::
+; another name for the data at TileRect_24, whose note is above (E-0381)
 GameMode6_ChooseMonsterChoiceBoxTileRect::
     db $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3683,6 +3698,7 @@ GameMode6_ChooseMonsterChoiceBoxTileRect::
 
 ; record: 10 x 5 tiles, one row per line
 TileRect_24_2::
+; another name for the data at TileRect_24_2, whose note is above (E-0381)
 GameMode6_MonsterEggChoiceTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3691,6 +3707,7 @@ GameMode6_MonsterEggChoiceTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 4
 
 TileRect_24_3::
+; another name for the data at TileRect_24_3, whose note is above (E-0381)
 GameMode6_ChooseEggChoiceBoxTileRect::
     db $b5, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $76, $77, $78, $79, $7a, $7b, $7c, $b7 ; id 1
@@ -3706,6 +3723,7 @@ GameMode6_Update_ChooseMonster_ShowCursorMark_Data::
 
 ; record: 8 x 11 tiles, one row per line
 TileRect_24_4::
+; another name for the data at TileRect_24_4, whose note is above (E-0381)
 GameMode6_MonsterListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1
@@ -5065,7 +5083,10 @@ PriestMenu_PayForService_CureMember::
     ld [wScriptStartRequest], a
     ret
 
-; data read by PriestMenu (3 bytes) (E-0347)
+; Three AND masks for the MON_STATUS byte of the chosen party record: $00 (clears every status bit),
+; $FB (clears bit 2) and $FE (clears bit 0). PriestMenu_PayForService_CureMember indexes it by
+; wListCursor, the service chosen, and ANDs the mask into the status; index 0 also restores HP and
+; MP to their maximums. (C1, E-0381)
 PriestMenu_PayForService_CureMember_Data::
     db $00, $fb, $fe
 
@@ -5475,13 +5496,24 @@ PriestMenu_PayForService_WriteMarkC2::
     pop de
     ret
 
-; data read by PriestMenu (6 bytes) (E-0347)
+; Three little-endian window tile buffer addresses, $C3F7, $C41F and $C447: column 7 in rows 12, 14
+; and 16 of wWindowTileBuffer, one per party slot 0 to 2. PriestMenu_PayForService_WriteMarkC0
+; indexes it by E (the slot) and writes tile $C0, the mark for status bit 0, at that address. (C1,
+; E-0381)
 PriestMenu_PayForService_WriteMarkC0_Data::
     db $f7, $c3, $1f, $c4, $47, $c4
 
+; Three little-endian window tile buffer addresses, $C3F8, $C420 and $C448: column 8 in rows 12, 14
+; and 16 of wWindowTileBuffer, one per party slot 0 to 2. PriestMenu_PayForService_WriteMarkC1
+; indexes it by E (the slot) and writes tile $C1, the mark for status bit 2, at that address. (C1,
+; E-0381)
 PriestMenu_PayForService_WriteMarkC1_Data::
     db $f8, $c3, $20, $c4, $48, $c4
 
+; Three little-endian window tile buffer addresses, $C3F9, $C421 and $C449: column 9 in rows 12, 14
+; and 16 of wWindowTileBuffer, one per party slot 0 to 2. PriestMenu_PayForService_WriteMarkC2
+; indexes it by E (the slot) and writes tile $C2, the mark for status bit 7, at that address. (C1,
+; E-0381)
 PriestMenu_PayForService_WriteMarkC2_Data::
     db $f9, $c3, $21, $c4, $49, $c4
 
@@ -5611,7 +5643,10 @@ PriestMenu_PartyCursor_DrawTile::
     ei
     ret
 
-; data read by PriestMenu (6 bytes) (E-0347)
+; Three little-endian words, $00E1, $0121 and $0161: BG map offsets of column 1 in rows 7, 9 and 11
+; (32 tiles per BG row) from the top-left screen tile, the cursor places beside the three party
+; slots. PriestMenu_PartyCursor_DrawTile indexes it by wChoiceCursor and writes tile B there. (C1,
+; E-0381)
 PriestMenu_PartyCursor_DrawTile_Data::
     db $e1, $00, $21, $01, $61, $01
 

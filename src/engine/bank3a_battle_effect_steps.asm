@@ -1333,7 +1333,12 @@ SelectEffectByEffectFlags_StartAnimation::
     call LoadEffectOBJPaletteC
     ret
 
-; data read by SelectEffectByEffectFlags (60 bytes) (E-0347)
+; Sixty bytes, one per battle effect number $00 to $3B, each a target mode for wEffectTargetMode: 0
+; for $00-$02, $12-$19, $1D-$26, $2C-$2D, $2F-$31 and $34-$37 (one target slot, wBattleArg0); 1 for
+; $03-$05, $08, $0A-$0C, $0E, $11, $1A, $1C, $27, $29-$2B, $2E, $32-$33 and $38-$3B (the effect
+; sprite sits at X $50); 2 for $06-$07, $09, $0D, $0F-$10, $1B and $28 (every target on the side).
+; SelectEffectByEffectFlags_StartAnimation indexes it by the effect number, except for the cases it
+; forces itself. (C1, E-0381)
 SelectEffectByEffectFlags_StartAnimation_Data::
     db $00, $00, $00, $01, $01, $01, $02, $02, $01, $02, $01, $01, $01, $02, $01, $02
     db $02, $01, $00, $00, $00, $00, $00, $00, $00, $00, $01, $02, $01, $00, $00, $00
@@ -1500,7 +1505,11 @@ SetEffectSpriteXForTargets::
     ld [wEffectSpriteX], a
     ret
 
-; data read by SetEffectSpriteXForTargets (6 bytes) (E-0347)
+; Six screen X coordinates, $20, $50, $80, $38, $68 and $50: the effect sprite X for a target by foe
+; count. Entries 0 to 2 are used with three foes (slot 0, 1, 2), entries 3 and 4 with two foes, and
+; entry 5 with one foe. SetEffectSpriteXForTargets adds wBattleArg0 masked with 3 to the base 0, 3
+; or 5 (picked by wBattleFoeCount) and stores the byte in wEffectSpriteX; for target mode 2 it fills
+; the wEffectStep bytes with the X of each present slot the same way. (C1, E-0381)
 SetEffectSpriteXForTargets_Data::
     db $20, $50, $80, $38, $68, $50
 
@@ -1652,7 +1661,11 @@ RunBattleEffectAnimation::
     call LoadEffectOBJPaletteC
     ret
 
-; data read by RunBattleEffectAnimation (2 bytes) (E-0347)
+; One entry of two bytes: $22 (the effect number, stored in wEffectTileOffset and wEffectAnimArg)
+; and $00 (the target mode, stored in wEffectTargetMode). RunBattleEffectAnimation indexes it by 2 *
+; (wBattleActionId - $D7) when an effect ends while wEffectAnimFlags is set, which
+; SelectEffectByEffectFlags_StartAnimation does only for ACTION_D7, and starts a second effect with
+; these values. (C1, E-0381)
 RunBattleEffectAnimation_Data::
     db $22, $00
 
@@ -3554,7 +3567,11 @@ UploadOBJPaletteByDMGShades::
 UploadPalettes_Return::
     ret
 
-; data read by UploadBGPaletteByDMGShades (4 bytes) (E-0347)
+; Four byte offsets, $02, $04, $00 and $06: for a DMG shade 0 to 3 the offset of the matching colour
+; (2 bytes each) inside a 4-colour CGB palette. UploadBGPaletteByDMGShades and
+; UploadOBJPaletteByDMGShades read the four 2-bit shades of wDMGPaletteBGP or wDMGPaletteOBP0 in
+; turn, add the offset for each shade to the palette address in HL and write those 2 bytes to the
+; palette data port in C. (C1, E-0381)
 UploadBGPaletteByDMGShades_Data::
     db $02, $04, $00, $06
 
@@ -8268,19 +8285,38 @@ BuildActionMessageNames::
     jr nz, .loop
     ret
 
-; data read by BuildActionMessageNames (20 bytes) (E-0347)
+; Twenty string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), one per action id
+; $D0 to $E3 (index wBattleActionId - $D0); $FF means no message. For example $6C, $6E, $FF, $FF,
+; $FF, $FF, $70, $FF, $80, $72, ..., $81. BuildActionMessageNames uses it when D is 3 and
+; wBattleActionId is $D0 or more (wSavedActorSlot bit 0 set); Data3 is the parallel list for D = 4
+; and Data2 for D = 6. (C1, E-0381)
 BuildActionMessageNames_Data1::
     db $6c, $6e, $ff, $ff, $ff, $ff, $70, $ff, $80, $72, $ff, $ff, $76, $ff, $ff, $78
     db $ff, $81, $ff, $ff
 
+; Twenty string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), one per action id
+; $D0 to $E3 (index wBattleActionId - $D0): $FF everywhere except $74, $75 (ids $DA and $DB), $82,
+; $83 (ids $DE and $DF) and $7A (id $E1). BuildActionMessageNames uses it when D is 6 and
+; wSavedActorSlot bit 0 is set; $FF means no message. (C1, E-0381)
 BuildActionMessageNames_Data2::
     db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $74, $75, $ff, $ff, $82, $83
     db $ff, $7a, $ff, $ff
 
+; Twenty string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), one per action id
+; $D0 to $E3 (index wBattleActionId - $D0): $6D, $6F, $FF, $FF, $FF, $FF, $71, $FF, $84, $73, $FF,
+; $FF, $77, $FF, $FF, $79, $FF, $85, $FF, $FF. It pairs entry by entry with
+; BuildActionMessageNames_Data1, which is used when D is 3; BuildActionMessageNames uses this one
+; when D is 4 and wSavedActorSlot bit 0 is set. $FF means no message. (C1, E-0381)
 BuildActionMessageNames_Data3::
     db $6d, $6f, $ff, $ff, $ff, $ff, $71, $ff, $84, $73, $ff, $ff, $77, $ff, $ff, $79
     db $ff, $85, $ff, $ff
 
+; 228 bytes, one per action id $00 to $E3, each a message kind $00 to $16 used as the index into
+; BuildActionMessageNames_Data5 or BuildActionMessageNames_Data6. Kind 0 for ids $00-$3C and
+; $A2-$CF; kind 4 for $3D-$3F, $48-$49, $7E-$84, $91, $99-$9A; kind 1 for $40-$47 and $71-$74; kind
+; 2 for $76-$7D; kind 3 for most of $50-$98; single ids with their own kinds ($4A, $4C, $4D, $4E,
+; $4F, $68, $69, $6A, $75, $89, $93, $9B, $9C, $9D, $A0, $A1); $14 for $D0, $D1 and $DC; $15 for
+; most of $D2-$E3; $16 for $D9. (C1, E-0381)
 BuildActionMessageNames_Data4::
     ds $3d, $00
     db $04, $04, $04, $01, $01, $01, $01, $01, $01, $01, $01, $04, $04, $11, $03, $10
@@ -8294,10 +8330,18 @@ BuildActionMessageNames_Data4::
     db $14, $14, $15, $15, $15, $15, $15, $15, $15, $16, $15, $15, $14, $15, $15, $15
     db $15, $15, $15, $15
 
+; Twenty-three string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), indexed by
+; the message kind from BuildActionMessageNames_Data4: $36 $37 $38 $46 $47 $39 $3A $3B $3C $3D $3E
+; $3F $40 $41 $42 $43 $44 $45 $48 $FF $69 $6A $6B ($FF means no message). BuildActionMessageNames
+; uses this list when D is 1. (C1, E-0381)
 BuildActionMessageNames_Data5::
     db $36, $37, $38, $46, $47, $39, $3a, $3b, $3c, $3d, $3e, $3f, $40, $41, $42, $43
     db $44, $45, $48, $ff, $69, $6a, $6b
 
+; Twenty-three string ids for battle text ids (category 0 of BeginStringDisplay_Bank2F), indexed by
+; the message kind from BuildActionMessageNames_Data4: $4D $4F $56 $4E $50 $55 $51 $52 $54 $5F $5A
+; $58 $5B $59 $5C $FF $4D $4E $57 $53 $FF $FF $FF ($FF means no message). BuildActionMessageNames
+; uses this list when D is not 1 and not 3 to 6. (C1, E-0381)
 BuildActionMessageNames_Data6::
     db $4d, $4f, $56, $4e, $50, $55, $51, $52, $54, $5f, $5a, $58, $5b, $59, $5c, $ff
     db $4d, $4e, $57, $53, $ff, $ff, $ff
@@ -8319,7 +8363,11 @@ ShowSpecialActionMessage::
     farcall BeginStringDisplay_Bank2F
     ret
 
-; data read by ShowSpecialActionMessage (20 bytes) (E-0347)
+; Twenty one-byte string indexes, one per special battle action $D0-$E3 (index wBattleActionId -
+; $D0), in string category 0 of bank $2F: $66 (entries 0, 1 and 12) is "<BUF0> and <BUF1> tried
+; casting a spell! But it failed!", $67 (most entries) says "using a skill" instead and $68 (entry
+; 9) "to use magic". ShowSpecialActionMessage copies the actor and mapped-slot names into wTextBuf0
+; and wTextBuf1, loads the byte into wStringIndex and shows it. (C1, E-0381)
 ShowSpecialActionMessage_Data::
     db $66, $66, $67, $67, $67, $67, $67, $67, $67, $68, $67, $67, $66, $67, $67, $67
     db $67, $67, $67, $67
@@ -9387,7 +9435,12 @@ ClearBattleStatusBitsWithMaskD_Bank3A::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank3A (7 bytes) (E-0347)
+; Seven AND masks for status byte 0 of a battle slot, selected by register D (0-6).
+; ClearBattleStatusBitsWithMaskD_Bank3A ANDs the byte of slot E with entry D: $DF clears
+; BSTAT0_CURSED, $FE BSTAT0_POISONED, $00 the whole byte, $FD BSTAT0_BADLY_POISONED, $73 the two
+; sleep-counter bits and BSTAT0_ASLEEP (bits 2, 3 and 7), $EF BSTAT0_CONFUSED and $BF
+; BSTAT0_PARALYZED. This bank copy has no direct caller; identical tables exist in several other
+; battle banks. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_Bank3A_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

@@ -154,7 +154,10 @@ PersonalityMessage_PickMessage::
     inc [hl]
     ret
 
-; data read by PersonalityMessage (11 bytes) (E-0347)
+; Eleven message numbers, one per family 0-10 (the low nibble of MON_FAMILY): $94, $AF, $CA, $AF,
+; $94, $CA, $AF, $94, $CA, $CA and $E5. PersonalityMessage_PickMessage adds the personality index of
+; the follower (PersonalityIndexOfRecord, 0-26) to the byte and starts the result as a message of
+; group 5, so each value is the first of 27 consecutive messages. (C1, E-0381)
 PersonalityMessage_PickMessage_Data::
     db $94, $af, $ca, $af, $94, $ca, $af, $94, $ca, $ca, $e5
 
@@ -499,7 +502,11 @@ SceneHomecoming_AddToX::
     inc [hl]
     ret
 
-; data read by SceneHomecoming (64 bytes) (E-0347)
+; 64 signed bytes ($00, $01 or $FF for -1): the X step added each frame to object 2, the player and
+; the scene object, indexed by wScriptParam0 (the frame count 0-$3F). Step 28
+; (SceneHomecoming_MoveTogether) adds them as they are and step 29 (SceneHomecoming_MoveBack) adds
+; the negated value, so the group returns to its start X: the 64 values sum to 0, and the running
+; total in step 28 stays between 0 and +7 (step 29 mirrors it). (C1, E-0381)
 SceneHomecoming_MoveBack_Data::
     db $01, $00, $01, $00, $01, $01, $00, $ff, $01, $00, $00, $ff, $00, $ff, $ff, $00
     db $01, $00, $00, $00, $01, $01, $ff, $00, $00, $ff, $00, $00, $00, $ff, $01, $00
@@ -6663,7 +6670,9 @@ SceneKamehaFlees_BobObjectRight::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SceneKamehaFlees (8 bytes) (E-0347)
+; Eight Y positions for the scene object (SCRIPTOBJ_Y): 64, 63, 64, 63, 64, 62, 64, 65 ($40, $3F,
+; $40, $3F, $40, $3E, $40, $41). SceneKamehaFlees_BobObjectRight advances wScriptParam0 by 1 each
+; frame modulo 8, so the object bobs about the row of $40 while it moves right. (C1, E-0381)
 SceneKamehaFlees_BobObjectRight_Data::
     db $40, $3f, $40, $3f, $40, $3e, $40, $41
 

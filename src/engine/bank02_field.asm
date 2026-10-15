@@ -7,8 +7,8 @@ SECTION "Bank 02", ROMX[$4000], BANK[$02]
 ; Sets up the fade timing after StartPaletteFade stored wFadeState. Fading out (bit 7 clear):
 ; wFadeLevel = 0 and the delay per step = wFadeState / 4. Fading in (bit 7 set): wFadeLevel = $20,
 ; the delay = (~wFadeState) / 4, and all 32 colours of the BG and OBJ palettes are set to one
-; starting colour (the word at StartPaletteFade_SetUpTiming_Data, or 0 when wFadeMode bit 7 is set)
-; so the fade in starts from a flat screen. (C1, E-0357)
+; starting colour (the word at StartPaletteFade_WhiteColourAddress, or 0 when wFadeMode bit 7 is
+; set) so the fade in starts from a flat screen. (C1, E-0357)
 StartPaletteFade_SetUpTiming::
     ld a, [wFadeState]
     ld b, a
@@ -29,7 +29,7 @@ StartPaletteFade_SetUpTiming::
     ld a, [wFadeMode]
     bit 7, a
     jr nz, .read_fade_state
-    ld de, StartPaletteFade_SetUpTiming_Data
+    ld de, StartPaletteFade_WhiteColourAddress
     jr .read_fade_state2
 
 .read_fade_state:
@@ -583,7 +583,10 @@ LoadPalette0FromData_Bank02::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; data read by LoadPalette0FromData (8 bytes) (E-0347)
+; Four little-endian RGB555 colours, $7C00 (pure blue), $7FFF (white), $01E0 (a mid green) and $0000
+; (black): one CGB palette. LoadPalette0FromData_Bank02 copies it to wBGPaletteBuffer and to
+; wOBJPaletteBuffer and sets wBGPaletteUploadRequest and wOBJPaletteUploadRequest to $7F, only when
+; wIsCGB is non-zero. (C1, E-0381)
 LoadPalette0FromData_Bank02_Data::
     db $00, $7c, $ff, $7f, $e0, $01, $00, $00
 
@@ -940,7 +943,10 @@ BrightenFieldMenuColors::
     ld [wScreenSubStep], a
     ret
 
-; data read by BrightenFieldMenuColors (9 bytes) (E-0347)
+; Nine amounts, $04, $08, ... $24 in steps of 4, indexed by the frame number wScreenCounter.
+; BrightenFieldMenuColors adds the amount to each 5-bit blue, green and red part of the colours of
+; the warp effect palette and caps each part at 31. wScreenCounter wraps to 0 after 7 in the caller,
+; so this reader uses only $04-$20 and never reaches the last byte $24. (C1, E-0381)
 BrightenFieldMenuColors_Data::
     db $04, $08, $0c, $10, $14, $18, $1c, $20, $24
 
@@ -1061,7 +1067,11 @@ WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0::
 WarpEffect_FadePalette_SyncCGB_Done::
     ret
 
-; data read by WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0 (4 bytes) (E-0347)
+; Four byte offsets, $02, $04, $00, $06, indexed by a 2-bit DMG shade (0-3): the byte offset of the
+; colour in the four-colour source palette at HL that stands for that shade (shade 0 takes colour 1,
+; shade 1 colour 2, shade 2 colour 0, shade 3 colour 3).
+; WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0 takes each of the four 2-bit fields of
+; wDMGPaletteOBP0 in turn, adds the offset to HL and writes that colour word to rOBPD. (C1, E-0381)
 WriteCGBObjPaletteFromDMGShadesDMGPaletteOBP0_Data::
     db $02, $04, $00, $06
 
@@ -1780,10 +1790,13 @@ GameMode1_Init_PickSGBBorderSet::
     ld a, $04
     ret
 
-; data read by GameMode1_Init (1 byte) (E-0347)
+; One byte, $00: the Super Game Boy palette set number. GameMode1_Init copies it to wSGBPaletteSet
+; before it calls SendSGBPaletteSetPacket. (C1, E-0381)
 GameMode1_Init_Data1::
     db $00
 
+; One byte, $00: the Super Game Boy attribute file number. GameMode1_Init copies it to wSGBAttrFile
+; before it calls SendSGBPaletteSetPacket. (C1, E-0381)
 GameMode1_Init_Data2::
     db $00
 
@@ -2994,7 +3007,11 @@ RunFieldEventFieldEventKind_SwapTilePairs::
     ld l, c
     jp RunFieldEventFieldEventKind_ExchangeTiles
 
-; data read by RunFieldEventFieldEventKind (48 bytes) (E-0347)
+; Twelve four-byte entries, each two little-endian VRAM tile addresses (vTiles2 + 16 * tile number):
+; tiles $1C/$1E, $1D/$1F, $22/$26, $23/$27, $32/$34, $33/$35, $38/$3A, $39/$3B, $42/$44, $43/$45,
+; $48/$4A, $49/$4B. RunFieldEventFieldEventKind_SwapTilePairs picks entry (wFrameCounterLo & $1F)
+; while that is below 12, and RunFieldEventFieldEventKind_ExchangeTiles swaps the 16 bytes of the
+; two tiles; the routine does nothing once EVENT_SCENE_MONSTER_INSPECTION is set. (C1, E-0381)
 RunFieldEventFieldEventKind_SwapTilePairs_Data::
     db $c0, $91, $e0, $91, $d0, $91, $f0, $91, $20, $92, $60, $92, $30, $92, $70, $92
     db $20, $93, $40, $93, $30, $93, $50, $93, $80, $93, $a0, $93, $90, $93, $b0, $93
@@ -3022,7 +3039,11 @@ RunFieldEventFieldEventKind_SwapTilePairs7::
     ld l, c
     jr RunFieldEventFieldEventKind_ExchangeTiles
 
-; data read by RunFieldEventFieldEventKind (48 bytes) (E-0347)
+; Twelve four-byte entries of two little-endian VRAM tile addresses (vTiles2 + 16 * tile number):
+; tiles $33/$35, $34/$36, $42/$44, $43/$45, $4C/$4E, $4D/$4F, $56/$58, $57/$59, $62/$66, $63/$67,
+; $6A/$6E, $6B/$6F. RunFieldEventFieldEventKind_SwapTilePairs7 picks entry (wFrameCounterLo & $1F)
+; while that is below 12 and jumps to RunFieldEventFieldEventKind_ExchangeTiles to swap the two
+; tiles. (C1, E-0381)
 RunFieldEventFieldEventKind_SwapTilePairs7_Data::
     db $30, $93, $50, $93, $40, $93, $60, $93, $20, $94, $40, $94, $30, $94, $50, $94
     db $c0, $94, $e0, $94, $d0, $94, $f0, $94, $60, $95, $80, $95, $70, $95, $90, $95
@@ -3053,7 +3074,10 @@ RunFieldEventFieldEventKind_SwapTilePairsRow0::
     ld l, c
     jp RunFieldEventFieldEventKind_ExchangeTiles
 
-; data read by RunFieldEventFieldEventKind (16 bytes) (E-0347)
+; Four four-byte entries of two little-endian VRAM tile addresses (vTiles2 + 16 * tile number):
+; tiles $4E/$50, $4F/$51, $54/$56, $55/$57. RunFieldEventFieldEventKind_SwapTilePairsRow0 picks
+; entry (wFrameCounterLo & $3F) while that is below 4, and only while hMapScreenY is 0, then
+; RunFieldEventFieldEventKind_ExchangeTiles swaps the two tiles. (C1, E-0381)
 RunFieldEventFieldEventKind_SwapTilePairsRow0_Data::
     db $e0, $94, $00, $95, $f0, $94, $10, $95, $40, $95, $60, $95, $50, $95, $70, $95
 
@@ -3235,7 +3259,11 @@ RunFieldEventFieldEventKind_ShiftColourPair::
     inc de
     ret
 
-; data read by RunFieldEventFieldEventKind (16 bytes) (E-0347)
+; Sixteen signed bytes in two halves of eight: 0, -4, -8, -12, -16, -20, -24, -28, then -28, -24,
+; -20, -16, -12, -8, -4, 0. RunFieldEventFieldEventKind_ShiftColourPair adds entry hTemp0 (0-7),
+; plus 8 when bit 0 of wMenuSubState is set, to each 5-bit blue, green and red part of a colour word
+; and floors each part at 0, so the palette cycle of field event 8 darkens the colours and then
+; restores them. (C1, E-0381)
 RunFieldEventFieldEventKind_ShiftColourPair_Data::
     db $00, $fc, $f8, $f4, $f0, $ec, $e8, $e4, $e4, $e8, $ec, $f0, $f4, $f8, $fc, $00
 
@@ -4405,7 +4433,11 @@ UpdatePlayerMovement_IsTriggerAtCell::
     pop bc
     ret
 
-; data read by UpdatePlayerMovement (32 bytes) (E-0347)
+; Sixteen (X, Y) byte pairs of 16-pixel cell coordinates, sorted by X: (1,2), (1,7), (2,1), (2,4),
+; (2,6), (3,3), (4,5), (4,7), (5,1), (5,3), (6,5), (7,2), (7,4), (7,7), (8,1), (8,6).
+; UpdatePlayerMovement_IsTriggerAtCell indexes it by wTriggerCell (times 2) on key-world maps other
+; than map type $85, and returns 1 when the pair equals the cell (B / 16, C / 16) it is asked about
+; and wTriggerKind is 2 or 3. (C1, E-0381)
 UpdatePlayerMovement_IsTriggerAtCell_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06
@@ -4479,7 +4511,11 @@ FieldState_WalkATalks_TalkAtSpotOnDown::
     inc b
     jr .skip
 
-; data read by FieldState_WalkATalks_TalkAtSpotOnDown (21 bytes) (E-0347)
+; Five four-byte entries then an $FF end marker: hMapId, a screen byte (hMapScreenX * 16 +
+; hMapScreenY), hPlayerX and hPlayerY of the spot. They are $01/$11/$70/$70, $01/$11/$70/$20,
+; $01/$10/$70/$50, $1A/$10/$70/$70 and $85/$10/$50/$60. FieldState_WalkATalks_TalkAtSpotOnDown walks
+; the list while Down is held and, on a full match, sets wTalkEventGroup to $10 plus the entry index
+; and runs DispatchTalkEvent. (C1, E-0381)
 FieldState_WalkATalks_TalkAtSpotOnDown_Data::
     db $01, $11, $70, $70, $01, $11, $70, $20, $01, $10, $70, $50, $1a, $10, $70, $70
     db $85, $10, $50, $60, $ff
@@ -5939,7 +5975,10 @@ FieldState_Still_ChoosePage_DrawCursor::
     jr nz, .loop
     ret
 
-; data read by FieldState_Still_ChoosePage_DrawCursor (8 bytes) (E-0347)
+; Four (column, row) byte pairs in tiles, (1,1), (6,1), (1,3) and (6,3), indexed by the cursor
+; position 0-3 (wMenuState): a 2 by 2 arrangement. FieldState_Still_ChoosePage_DrawCursor adds them
+; to the BG map 0 address of the current scroll position and writes cursor tile $BB (blinking to
+; $C3) at the selected position and tile $C3 at the other three. (C1, E-0381)
 FieldState_Still_ChoosePage_DrawCursor_Data::
     db $01, $01, $06, $01, $01, $03, $06, $03
 
@@ -6539,7 +6578,11 @@ BuildPartyStatusWindowRows::
     ld [rRAMG], a
     ret
 
-; data read by BuildPartyStatusWindowRows (12 bytes) (E-0347)
+; Three groups of four byte offsets into wWindowTileBuffer + $64 (rows of 20 tiles), one group per
+; party member: level, HP, MP and status mark. Member 0 uses $54, $2B, $3F, $51, member 1 uses $5A,
+; $31, $45, $57 and member 2 uses $60, $37, $4B, $5D, which puts the three members in columns 1, 7
+; and 13 and the HP, MP and level on rows 2, 3 and 4. BuildPartyStatusWindowRows reads the group of
+; each of the first (wPartyWindowFlags & 3) + 1 entries of wPartyList. (C1, E-0381)
 BuildPartyStatusWindowRows_Data::
     db $54, $2b, $3f, $51, $5a, $31, $45, $57, $60, $37, $4b, $5d
 
@@ -7031,12 +7074,21 @@ CopyRowsToScreenBufferAndClearAttributes::
     ldh [rSVBK], a
     ret
 
-; data read by StepTextWindowOpenClose_CopyRow (2 bytes) (E-0347)
+; One 20-tile window row: $B6, eighteen tiles $C3, $B7 (left edge, blank inside, right edge).
+; StepTextWindowOpenClose_CopyRow (opening) and StepTextWindowOpenClose_CopyRows (closing) copy it
+; with CopyRowsToScreenBufferAndClearAttributes into row 2 of wWindowTileBuffer (+ $28), the middle
+; row of the 20 by 5 text window; it is the first frame of the opening animation and the last of the
+; closing one. (C1, E-0381)
 StepTextWindowOpenClose_CopyRow_Data1::
     db $b6
     ds $12, $c3
     db $b7
 
+; Three 20-tile rows of the text window: $B0, eighteen $B1, $B2; then $B6, eighteen $C3, $B7; then
+; $B3, eighteen $B4, $B5 (a box with corner and edge tiles around a blank inside).
+; StepTextWindowOpenClose_CopyRows (opening) and StepTextWindowOpenClose_CopyRow (closing) copy them
+; into rows 1-3 of wWindowTileBuffer (+ $14) with CopyRowsToScreenBufferAndClearAttributes. (C1,
+; E-0381)
 StepTextWindowOpenClose_CopyRow_Data2::
     db $b0
     ds $12, $b1
@@ -7046,6 +7098,11 @@ StepTextWindowOpenClose_CopyRow_Data2::
     ds $12, $b4
     db $b5
 
+; The five 20-tile rows of the finished text window: a top edge ($B0, eighteen $B1, $B2); a text row
+; ($B6, tiles $80-$91, $B7); a blank row ($B6, eighteen $C3, $B7); a second text row ($B6, tiles
+; $92-$A3, $B7); a bottom edge ($B3, eighteen $B4, $B5). StepTextWindowOpenClose_CopyAllRows copies
+; them to the start of wWindowTileBuffer when the window opens, then redraws the 20 by 5 area. (C1,
+; E-0381)
 StepTextWindowOpenClose_CopyAllRows_Data::
     db $b0
     ds $12, $b1
@@ -7338,7 +7395,12 @@ WarpEffect_FillScrollTable::
     jr nz, .loop
     ret
 
-; data read by WarpEffect (16 bytes) (E-0347)
+; Sixteen unsigned wave magnitudes, $00, $60, $B6, $EC, $FF, $EC, $B6, $60 repeated twice (the shape
+; of a sine half-wave scaled to $FF), indexed by e, which starts at (wFrameCounterLo / 4) & $0F and
+; advances by 1 (mod 16) before each pair of lines. WarpEffect_FillScrollTable multiplies the entry
+; by wMenuCursor with Multiply8 and adds the high byte of the product to hScrollX when bit 3 of e is
+; clear, or subtracts it when it is set, for each pair of lines it writes to the line scroll table.
+; (C1, E-0381)
 WarpEffect_FillScrollTable_Data::
     db $00, $60, $b6, $ec, $ff, $ec, $b6, $60, $00, $60, $b6, $ec, $ff, $ec, $b6, $60
 
@@ -7369,7 +7431,10 @@ WarpEffect_FadePalette::
     call WarpEffect_FadePalette_SyncCGB
     jp WarpEffect_FillScrollTable
 
-; data read by WarpEffect (5 bytes) (E-0347)
+; Five DMG palette bytes, $D2, $81, $40, $00, $00, indexed by wSubMenuCursor (0-4).
+; WarpEffect_FadePalette stores the entry in wDMGPaletteBGP every frame, so wDMGPaletteBGP steps
+; through those values and ends at $00 (all four colours on shade 0); wSubMenuCursor goes up by 1
+; every 16 frames and the warp effect moves to its next step when it reaches 4. (C1, E-0381)
 WarpEffect_FadePalette_Data::
     db $d2, $81, $40, $00, $00
 
@@ -8824,7 +8889,12 @@ CopySaveBlocksToSRAMWithSum::
     add_a_to_hl
     jr .set_temp0
 
-; data read by LoadSaveBlocksFromSRAM (20 bytes) (E-0347)
+; Five four-byte entries (address word, length word, both little-endian): $FF8A length $000E (14
+; bytes of high RAM), $C60C length $0291 (starting at wPlayerName), $CBD7 length $006B (starting at
+; wStoryFlags), $CC42 length $00B5 (starting at wKeyWorldSlot) and an all-zero end entry.
+; LoadSaveBlocksFromSRAM copies each block in turn from sSaveData onward (SRAM bank 1) into RAM, and
+; CopySaveBlocksToSRAMWithSum walks the same list the other way while adding up the bytes. (C1,
+; E-0381)
 LoadSaveBlocksFromSRAM_Data::
     db $8a, $ff, $0e, $00, $0c, $c6, $91, $02, $d7, $cb, $6b, $00, $42, $cc, $b5, $00
     db $00, $00, $00, $00
@@ -9052,6 +9122,9 @@ RunBackupAndSaveSteps::
     ret
     ds $8b9, $00
 
-; data read by StartPaletteFade (1 byte) (E-0347)
-StartPaletteFade_SetUpTiming_Data::
+; The byte stored here, $00, is never read. StartPaletteFade_SetUpTiming loads the ADDRESS of this
+; label into DE (the label sits at $7FFF, the last address of the bank) and writes DE as the colour
+; word to all 32 BG and 32 OBJ palette entries, so the address itself serves as the RGB555 colour
+; $7FFF (white) for a fade in; when bit 7 of wFadeMode is set DE is 0 (black) instead. (C1, E-0381)
+StartPaletteFade_WhiteColourAddress::
     db $00

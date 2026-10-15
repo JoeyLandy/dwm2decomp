@@ -2264,10 +2264,17 @@ PickRandomActionWhenUncontrolled::
     ld [wBattleTarget], a
     ret
 
-; data read by PickRandomActionWhenUncontrolled (4 bytes) (E-0347)
+; A count byte 3 followed by three action ids, $C2, $C3 and $C5. PickRandomActionWhenUncontrolled
+; uses it when wLinkMode is 1 or the actor slot is below 4 (and wRandomLo is $C0 or more): it
+; divides wRandomHi by the count, takes the remainder as the index and uses that action. (C1,
+; E-0381)
 PickRandomActionWhenUncontrolled_Data1::
     db $03, $c2, $c3, $c5
 
+; A count byte 8 followed by eight action ids, $C2, $C3, $C4, $C5, $C6, $C7, $C8 and $C6.
+; PickRandomActionWhenUncontrolled uses it for actor slots 4 and up when wLinkMode is not 1 (and
+; wRandomLo is $C0 or more): wRandomHi divided by the count gives the index by its remainder. A pick
+; of $C8 becomes $C7 when wBattleKind is 2 or more. (C1, E-0381)
 PickRandomActionWhenUncontrolled_Data2::
     db $08, $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c6
 
@@ -2450,7 +2457,12 @@ RunBattleActions_StatusChecks_CheckAction::
     dw RunBattleActions_StatusChecks_CheckAction_SealPray
     dw RunBattleActions_StatusChecks_CheckAction_MPAgain
 
-; data read by RunBattleActions_StatusChecks_CheckAction_CheckMP (5 words) (E-0347)
+; Not a table: these ten bytes are SM83 code (CD 4C 51 38 49 7A FE 07 CA 4E), written as five dw by
+; the generator. They decode to call $514C (CheckFormationPartnersCanAct), jr c to $4F4E (the ld hl,
+; wBattleSubStep / inc [hl] / ret tail), ld a, d, cp $07 and jp z to $4F4E, whose last operand byte
+; $4F is the first byte of ApplyActionResultAndMarkFormation.
+; RunBattleActions_StatusChecks_CheckAction_CheckMP reaches it with jr nz when ActorActionIsD0ToE3
+; returns non-zero. (C1, E-0381)
 RunBattleActions_StatusChecks_CheckAction_Skip::
     dw $4ccd
     dw $3851
@@ -3681,7 +3693,12 @@ CheckLinkRuleViolation::
     ld [wDataBankSave], a
     ret
 
-; data read by CheckLinkRuleViolation (89 bytes) (E-0347)
+; A table of 232 ($E8) rule-mask bytes, one per battle action id $00 to $E7. A value is a bit mask
+; of link-battle rule groups, 0 meaning no rule applies: $00 for id 0; $40 for ids $01-$15; $10 for
+; $16-$24; $20 for $25-$3C; $01 for $3D; $02 for $3E-$3F; $08 for $40-$47; $02 for $48-$70; $08 for
+; $71-$74; $04 for $76-$7D; and mostly $20, $10, $08 or $04 up to $A1, then 0 except $02 at $AA and
+; $20 at $AD-$AE. CheckLinkRuleViolation indexes it by wBattleActionId and ANDs the byte with
+; wLinkRules + 1 and then wLinkRules + 2 to decide whether the action breaks the rules. (C1, E-0381)
 CheckLinkRuleViolation_Data::
     db $00
     ds $15, $40
@@ -5152,7 +5169,10 @@ ResolveStep0EEffect_Start_PickRandomAttack::
     ld [hl], a
     ret
 
-; data read by ResolveStep0EEffect (5 bytes) (E-0347)
+; Five bytes, all $00 (ACTION_FIGHT). ResolveStep0EEffect_Start_PickRandomAttack indexes it by
+; wRandomLo masked with 3 (entries 0 to 3) to pick the action id it stores in wBattleActionChoice
+; for wBattleActor, so every pick is the plain attack; the fifth byte is not reached by that index.
+; (C1, E-0381)
 ResolveStep0EEffect_Start_PickRandomAttack_Data::
     db $00, $00, $00, $00, $00
 
@@ -6514,7 +6534,12 @@ ClearBattleStatusBitsWithMaskD_Bank32::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank32 (7 bytes) (E-0347)
+; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
+; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
+; bits 2, 3 and 7 (the sleep counter and BSTAT0_ASLEEP), $EF bit 4 (BSTAT0_CONFUSED) and $BF bit 6
+; (BSTAT0_PARALYZED). ClearBattleStatusBitsWithMaskD_Bank32 indexes it by D (0 to 6) and ANDs the
+; mask into the wBattleStatus byte of slot E (9 bytes per slot). The same 7 bytes are in several
+; battle banks. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_Bank32_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

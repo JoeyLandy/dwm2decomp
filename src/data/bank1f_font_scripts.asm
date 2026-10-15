@@ -417,6 +417,7 @@ SGBPacketSetTable::
 ; (E-0179, C1)
 ; record: SGB packet (byte 0 = command * 8 + packet count)
 SGBPackets::
+; another name for the data at SGBPackets, whose note is above (E-0381)
 SgbDataSnd1F_1::
     db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00 ; id 0
 SgbDataSnd_SGBPacketSetTable_3::
@@ -1191,7 +1192,11 @@ DrawRecordListPageNames::
     ld [wScreenStep], a
     ret
 
-; data read by DrawRecordListPageNames (10 bytes) (E-0347)
+; Five little-endian words, $8D00, $8D50, $8DA0, $8F00 and $8A40: VRAM addresses for the names of
+; the five cells of a record list page. DrawRecordListPageNames indexes it by the cell number 0 to 3
+; and draws that cell name with CopyGlyphTilesToVRAM; cell 4 is drawn by
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F, which takes its addresses from
+; GlyphCopyArgsForA_Data, so the fifth word is not read. (C1, E-0381)
 DrawRecordListPageNames_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
@@ -1285,7 +1290,10 @@ GlyphCopyArgsForA::
     ld c, $10
     ret
 
-; data read by GlyphCopyArgsForA (10 bytes) (E-0347)
+; Five little-endian VRAM addresses of 16-byte tiles: $8A40, $8A50, $8A60, $8CE0 and $8CF0.
+; GlyphCopyArgsForA indexes it by wGlyphListStart (the destination tile counter of
+; DrawNameGlyphBufGlyphsOverlaying8DAnd8E_Bank1F) and returns the word in HL as the place for the
+; next glyph of the fifth name of a record list page. (C1, E-0381)
 GlyphCopyArgsForA_Data::
     db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
@@ -1505,6 +1513,7 @@ BGFillTile::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 3 tiles, one row per line
 TileRect_1F::
+; another name for the data at TileRect_1F, whose note is above (E-0381)
 MonsterDetailsPanelTopTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1512,6 +1521,7 @@ MonsterDetailsPanelTopTileRect::
 
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_2::
+; another name for the data at TileRect_1F_2, whose note is above (E-0381)
 PartyMemberDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1597,6 +1607,7 @@ TileScreen1F_3::
 
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_3::
+; another name for the data at TileRect_1F_3, whose note is above (E-0381)
 MonsterDetailsPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $20, $21, $22, $23, $24, $b7 ; id 1
@@ -1621,6 +1632,7 @@ MonsterDetailsPedigreeTileRect::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 6 tiles, one row per line
 TileRect_1F_4::
+; another name for the data at TileRect_1F_4, whose note is above (E-0381)
 MonsterDetailsPictureTileRect::
     db $20, $21, $22, $23, $24, $25 ; id 0
     db $26, $27, $28, $29, $2a, $2b ; id 1
@@ -1646,6 +1658,7 @@ SwapMonstersMenu_ShowParents2_LoadPicture_TileRect::
     db $66, $67, $68, $69, $6a, $6b ; id 5
 
 TileRect_1F_5::
+; another name for the data at TileRect_1F_5, whose note is above (E-0381)
 BlankPictureTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1656,6 +1669,7 @@ BlankPictureTileRect::
 
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_6::
+; another name for the data at TileRect_1F_6, whose note is above (E-0381)
 MonsterDetailsStatsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1667,6 +1681,7 @@ MonsterDetailsStatsLowerLeftTileRect::
 
 ; record: 12 x 15 tiles, one row per line
 TileRect_1F_7::
+; another name for the data at TileRect_1F_7, whose note is above (E-0381)
 MonsterDetailsPage2TileRect::
     db $b6, $20, $21, $22, $23, $24, $25, $26, $27, $28, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1685,6 +1700,7 @@ MonsterDetailsPage2TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
 TileRect_1F_8::
+; another name for the data at TileRect_1F_8, whose note is above (E-0381)
 MonsterDetailsStatsTileRect::
     db $b6, $c3, $02, $03, $04, $c3, $c3, $ed, $c3, $c3, $c3, $b7 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1703,6 +1719,7 @@ MonsterDetailsStatsTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 14
 
 TileRect_1F_9::
+; another name for the data at TileRect_1F_9, whose note is above (E-0381)
 MonsterDetailsItemBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 1
@@ -1714,6 +1731,7 @@ MonsterDetailsItemBoxTileRect::
 
 ; record: 20 x 18 tiles, one row per line
 TileRect_1F_10::
+; another name for the data at TileRect_1F_10, whose note is above (E-0381)
 MonsterDetailsScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1757,6 +1775,7 @@ PartnerStats_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 TileRect_1F_11::
+; another name for the data at TileRect_1F_11, whose note is above (E-0381)
 MonsterDetails3ScreenTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7, $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1779,6 +1798,7 @@ MonsterDetails3ScreenTileRect::
 
 ; record: 12 x 18 tiles, one row per line
 TileRect_1F_12::
+; another name for the data at TileRect_1F_12, whose note is above (E-0381)
 MonsterDetailsBlankPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1801,6 +1821,7 @@ MonsterDetailsBlankPageTileRect::
 
 ; record: 8 x 7 tiles, one row per line
 TileRect_1F_13::
+; another name for the data at TileRect_1F_13, whose note is above (E-0381)
 MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1811,6 +1832,7 @@ MonsterDetailsBlankPageLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
 TileRect_1F_14::
+; another name for the data at TileRect_1F_14, whose note is above (E-0381)
 MonsterDetailsSkillsPageTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $20, $21, $22, $23, $24, $25, $26, $27, $28, $b7 ; id 1
@@ -1832,6 +1854,7 @@ MonsterDetailsSkillsPageTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 TileRect_1F_15::
+; another name for the data at TileRect_1F_15, whose note is above (E-0381)
 MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1842,6 +1865,7 @@ MonsterDetailsSkillsLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 6
 
 TileRect_1F_16::
+; another name for the data at TileRect_1F_16, whose note is above (E-0381)
 MonsterDetailsEmptyPedigreeTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $13, $14, $15, $0e, $ed, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -1863,6 +1887,7 @@ MonsterDetailsEmptyPedigreeTileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 TileRect_1F_17::
+; another name for the data at TileRect_1F_17, whose note is above (E-0381)
 MonsterDetailsPedigreeLowerLeftTileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $c3, $c3, $c3, $7c, $c3, $c3, $c3 ; id 1
@@ -1893,6 +1918,7 @@ SwapMonstersMenu_ShowParents2_DrawFrame_TileRect::
     db $c3, $c3, $c3, $c3, $c3, $c3, $c3, $c3, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 17
 
 TileRect_1F_18::
+; another name for the data at TileRect_1F_18, whose note is above (E-0381)
 NameEntryKeyboardTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $c3, $c3, $c3, $c3, $c3, $c3 ; id 0
     db $c3, $00, $00, $c3, $c3, $b6, $c3, $50, $51, $52, $53, $54, $c3, $b7, $c3, $c3, $c3, $c3, $c3, $c3 ; id 1
@@ -1916,6 +1942,7 @@ RunNameEntryStateWhenNotFading_RedrawKeyboard_Data::
 
 ; record: 20 x 5 tiles, one row per line
 TileRect_1F_19::
+; another name for the data at TileRect_1F_19, whose note is above (E-0381)
 NameEntryTwoRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
@@ -1926,6 +1953,7 @@ RunNameEntryStateWhenNotFading_DrawFrameRow_Data::
 
 ; record: 20 x 3 tiles, one row per line
 TileRect_1F_20::
+; another name for the data at TileRect_1F_20, whose note is above (E-0381)
 NameEntryOneRowWindowTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $5c, $5d, $5e, $5f, $60, $61, $62, $63, $64, $65, $66, $67, $68, $69, $6a, $6b, $6c, $6d, $b7 ; id 1
@@ -2033,10 +2061,18 @@ LoadSixteenGlyphTilesFromTable::
     jr c, .loop
     ret
 
-; data read by LoadSixteenGlyphTilesFromTable (16 bytes) (E-0347)
+; Sixteen glyph numbers, $A3 $54 $44 $11 $16 $19 $48 $24 $A6 $12 $31 $29 $32 $18 $14 $25 (in the
+; text charmap: colon, H, M, P, a, I, n, f, o, O, K, b, and four numbers the charmap does not list).
+; Same list as SwapMonstersMenu_CopySixteenTiles_Data1 except the last byte.
+; LoadSixteenGlyphTilesFromTable takes byte n as the glyph to copy from GlyphFont (bank $1F, 16
+; bytes each) to the VRAM address in word n of LoadSixteenGlyphTilesFromTable_Data2. (C1, E-0381)
 LoadSixteenGlyphTilesFromTable_Data1::
     db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
+; Sixteen little-endian VRAM addresses: $8ED0, $8EE0, $8EF0, $8F50, $8F60, $8F70, $8FD0, $8FE0,
+; $8FF0, then $9700 to $9760 in steps of $10. The same words as
+; SwapMonstersMenu_CopySixteenTiles_Data2. LoadSixteenGlyphTilesFromTable copies the glyph given by
+; byte n of LoadSixteenGlyphTilesFromTable_Data1 to word n. (C1, E-0381)
 LoadSixteenGlyphTilesFromTable_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97

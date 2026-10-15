@@ -2086,7 +2086,13 @@ StartMessageForGroup::
     rst $10
     ret
 
-; data read by StartMessageForGroup (33 bytes) (E-0347)
+; Eleven 3-byte far pointers (address low, address high, bank), indexed by wMessageMode - 1: the
+; per-mode begin-message routines BeginStringDisplay_BankF0 (modes 1 and 2),
+; BeginStringDisplay_Bank1F, BeginStringDisplay_Bank1D, BeginBreedingStringDisplay,
+; BeginStringDisplay_BankF2, BeginStringDisplay_Bank0D, BeginMessageDisplay_Bank0E,
+; BeginStringDisplay_Bank0B, BeginStringDisplay_Bank33 and BeginStringDisplay_Bank24.
+; StartMessageForGroup calls the chosen one through rst $10 with wStringCategory 0 and wStringIndex
+; = the message L. (C1, E-0381)
 StartMessageForGroup_Data::
     db $01, $40, $f0, $01, $40, $f0, $0e, $52, $1f, $01, $40, $1d, $86, $4c, $1b, $d0
     db $43, $f2, $01, $40, $0d, $01, $40, $0e, $01, $40, $0b, $90, $64, $33, $10, $5d

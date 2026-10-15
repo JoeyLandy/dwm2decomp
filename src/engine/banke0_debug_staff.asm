@@ -314,7 +314,12 @@ RunDebugSubState_E0_DrawSideMarks::
     call WriteVRAMByte
     ret
 
-; data read by RunDebugSubState_E0_DrawSideMarks (3 bytes) (E-0347)
+; Three bytes: $BB, $C3, $BB, where $BB is the cursor tile and $C3 a blank. Two overlapping pairs
+; are read: the pair at index 0 puts the cursor on the left place and a blank on the right, the pair
+; at index 1 does the opposite. The index is (wDebugCursor & 1) xor 1 in
+; RunDebugSubState_E0_DrawSideMarks, drawing at vBGMap0 + $69 and + $6D (row 3, columns 9 and 13),
+; and (wBattleEndFlag & 1) xor 1 in RunDebugSubState_E0_DrawBattleEndMarks, drawing at vBGMap0 +
+; $1A9 and + $1AD (row 13, columns 9 and 13). (C1, E-0381)
 RunDebugSubState_E0_DrawSideMarks_Data::
     db $bb, $c3, $bb
 
@@ -456,7 +461,11 @@ ShowStringBank09AtHLSizeDEThenDefault::
     ld [wTextWindowWidth], a
     ret
 
-; data read by RunDebugSubState_E0_ShowHeading (198 bytes) (E-0347)
+; A 20 by 18 tile screen image, 360 bytes in row order, which RunDebugSubState_E0_ShowHeading writes
+; to vBGMap0 starting at row 0 (b = 20 columns, c = 18 rows, 32 bytes between rows). It is a frame
+; of tiles $B0-$B7 around a field of blank tile $C3, with label glyph tiles in a few rows (for
+; example $ED-$F2, $F3-$F7, $80-$88, $FD-$FF and $00) that the reader does not interpret. (C1,
+; E-0381)
 RunDebugSubState_E0_ShowHeading_Data::
     db $b0
     ds $12, $b1
@@ -531,7 +540,9 @@ RunDebugState_E0_ShowHeading::
     inc [hl]
     ret
 
-; data read by RunDebugState_E0_ShowHeading (4 bytes) (E-0347)
+; Two BG map addresses, $9824 and $982A (vBGMap0 row 1, columns 4 and 10).
+; RunDebugState_E0_ShowHeading indexes it with wDebugSubState and writes the cursor tile $BB at the
+; chosen place. (C1, E-0381)
 RunDebugState_E0_ShowHeading_Data::
     db $24, $98, $2a, $98
 
@@ -840,16 +851,28 @@ DrawSlotHPMPStats_BankE0_DrawSuffixMark::
     call WriteVRAMByte
     ret
 
-; data read by DrawSlotHPMPStats_BankE0_DrawSuffixMark (6 bytes) (E-0347)
+; Three BG map addresses, $98C6, $98CC and $98D2 (vBGMap0 row 6, columns 6, 12 and 18), one per slot
+; column. DrawSlotHPMPStats_BankE0_DrawSuffixMark indexes it with slot C & 3 and writes tile $CC
+; plus bit 0 of wSlotNameSuffix[C] there. (C1, E-0381)
 DrawSlotHPMPStats_BankE0_DrawSuffixMark_Data::
     db $c6, $98, $cc, $98, $d2, $98
 
+; Three BG map addresses, $9842, $9848 and $984E (vBGMap0 row 2, columns 2, 8 and 14), the top of
+; each slot column of numbers. DrawSlotHPMPStats_BankE0 indexes it with slot C & 3 and draws HP, max
+; HP, MP and max MP as four-digit numbers going down one row each, then level, the stats and the
+; extra stat below. (C1, E-0381)
 DrawSlotHPMPStats_BankE0_Data::
     db $42, $98, $48, $98, $4e, $98
 
+; Three BG map addresses, $9946, $994C and $9952 (vBGMap0 row 10, columns 6, 12 and 18), one per
+; slot column. DrawSlotHPMPStats_BankE0_DrawAIModeGlyph indexes it with slot C & 3 and writes the AI
+; mode tile from DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2 there. (C1, E-0381)
 DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data1::
     db $46, $99, $4c, $99, $52, $99
 
+; Five tile numbers: $0B, $0A, $09, $08, $EF, indexed by wSlotAIMode[C], the AI mode of the slot
+; (value 0 gives $0B, value 4 gives $EF). DrawSlotHPMPStats_BankE0_DrawAIModeGlyph writes the chosen
+; tile at the address from DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data1. (C1, E-0381)
 DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2::
     db $0b, $0a, $09, $08, $ef
 
@@ -1326,7 +1349,10 @@ RunForThreeBattlerRecords_Number24ToPackedBCD::
     pop hl
     ret
 
-; data read by RunForThreeBattlerRecords (6 bytes) (E-0347)
+; Three BG map addresses, $99E2, $99E8 and $99EE (vBGMap0 row 15, columns 2, 8 and 14).
+; RunForThreeBattlerRecords_Number24ToPackedBCD indexes it with B = 0, 1, 2 (the three records
+; RunForThreeBattlerRecords visits at BATTLER_EXP) and draws the 24-bit experience as digit tiles
+; $E0 + digit there, leaving leading zeros blank. (C1, E-0381)
 RunForThreeBattlerRecords_Number24ToPackedBCD_Data::
     db $e2, $99, $e8, $99, $ee, $99
 
@@ -1339,7 +1365,10 @@ RunDebugState_E0_ReturnOnB::
     ld [wDebugState], a
     ret
 
-; data read by DrawTileMapAndStep (68 bytes) (E-0347)
+; A 20 by 16 tile screen image, 320 bytes in row order, which DrawTileMapAndStep copies once to
+; vBGMap0 starting at row 1 (vBGMap0 + $20, 32 bytes between rows) before it advances wDebugState.
+; It is a frame of tiles $B0-$B7 around blank tile $C3, with glyph tiles $F5-$F7 in row 1 and $F8
+; and $F9 in row 8. (C1, E-0381)
 DrawTileMapAndStep_Data::
     db $b0
     ds $12, $b1
@@ -1692,10 +1721,17 @@ RunDebugState_E0_EditStatusBits::
 .to_run_debug_state_e0_restore_battle_on_b:
     jp RunDebugState_E0_RestoreBattleOnB
 
-; data read by RunDebugState_E0_EditStatusBits (8 bytes) (E-0347)
+; Eight AND masks, $FE, $FD, $FB, $F7, $EF, $DF, $BF, $7F: each clears one bit, bit 0 to bit 7.
+; RunDebugState_E0_EditStatusBits indexes it with the low nibble of wDebugCounter (the bit cursor,
+; 0-7) when the toggled mark is cleared, and ANDs it into the status byte at wBattleStatus + 9 *
+; wDebugSubState plus the high nibble of wDebugCounter. (C1, E-0381)
 RunDebugState_E0_EditStatusBits_Data1::
     db $fe, $fd, $fb, $f7, $ef, $df, $bf, $7f
 
+; Eight OR masks, $01, $02, $04, $08, $10, $20, $40, $80: each sets one bit, bit 0 to bit 7.
+; RunDebugState_E0_EditStatusBits indexes it with the low nibble of wDebugCounter (0-7) when the
+; toggled mark is set, and ORs it into the status byte at wBattleStatus + 9 * wDebugSubState plus
+; the high nibble of wDebugCounter. (C1, E-0381)
 RunDebugState_E0_EditStatusBits_Data2::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
@@ -2016,7 +2052,10 @@ DrawFourTileStripForA::
     call CopyRectFromBankToVRAM
     ret
 
-; data read by DrawFourTileStripForA (8 words) (E-0347)
+; Eight words, the pointers DrawFourTileStripForA_Data_Entry00 to
+; DrawFourTileStripForA_Data_Entry07. DrawFourTileStripForA is called with A = wDebugSubState (0-7,
+; which wraps at 8) and copies the four tiles at the chosen pointer from bank $E0 to vBGMap0 + $27
+; (row 1, columns 7-10). (C1, E-0381)
 DrawFourTileStripForA_Data::
     dw DrawFourTileStripForA_Data_Entry00
     dw DrawFourTileStripForA_Data_Entry01
@@ -2027,27 +2066,51 @@ DrawFourTileStripForA_Data::
     dw DrawFourTileStripForA_Data_Entry06
     dw DrawFourTileStripForA_Data_Entry07
 
+; Four tile numbers, $F5, $F6, $F7, $E0: three glyph tiles and the digit tile for 0.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 0,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry00::
     db $f5, $f6, $f7, $e0
 
+; Four tile numbers, $F5, $F6, $F7, $E1: three glyph tiles and the digit tile for 1.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 1,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry01::
     db $f5, $f6, $f7, $e1
 
+; Four tile numbers, $F5, $F6, $F7, $E2: three glyph tiles and the digit tile for 2.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 2,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry02::
     db $f5, $f6, $f7, $e2
 
+; Four tile numbers, $F5, $F6, $F7, $E3: three glyph tiles and the digit tile for 3.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 3,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry03::
     db $f5, $f6, $f7, $e3
 
+; Four tile numbers, $F8, $F9, $E0, $C3: two glyph tiles, the digit tile for 0 and a blank.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 4,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry04::
     db $f8, $f9, $e0, $c3
 
+; Four tile numbers, $F8, $F9, $E1, $C3: two glyph tiles, the digit tile for 1 and a blank.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 5,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry05::
     db $f8, $f9, $e1, $c3
 
+; Four tile numbers, $F8, $F9, $E2, $C3: two glyph tiles, the digit tile for 2 and a blank.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 6,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry06::
     db $f8, $f9, $e2, $c3
 
+; Four tile numbers, $F8, $F9, $E3, $C3: two glyph tiles, the digit tile for 3 and a blank.
+; DrawFourTileStripForA copies them to vBGMap0 + $27 (row 1, columns 7-10) when wDebugSubState is 7,
+; drawn by DrawSlotStatusBitsDebug above the nine status byte rows of that slot. (C1, E-0381)
 DrawFourTileStripForA_Data_Entry07::
     db $f8, $f9, $e3, $c3
 
@@ -3834,10 +3897,17 @@ DebugStaffRoll_Scene01_TurnSprites::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene01_TurnSprites (5 bytes) (E-0347)
+; Five facing codes for sprite slot 0: $03, $02, $03, $00, $03. DebugStaffRoll_Scene01_TurnSprites
+; picks one by wWorkBuf + $6 >> 5 (0-4, a new entry every 32 frames until the counter reaches $9F)
+; and stores it as byte 5 of slot 0, which DrawSpriteSlots turns into the meta-sprite sub-index
+; (code 3 is drawn as code 1 with the horizontal flip bit added to hSpriteAttrXor). (C1, E-0381)
 DebugStaffRoll_Scene01_TurnSprites_Data1::
     db $03, $02, $03, $00, $03
 
+; Five facing codes for sprite slot 1: $01, $00, $01, $02, $01. DebugStaffRoll_Scene01_TurnSprites
+; picks one by wWorkBuf + $6 >> 5 (0-4, every 32 frames) at the same time as the slot 0 code from
+; DebugStaffRoll_Scene01_TurnSprites_Data1 and stores it as byte 5 of slot 1 (the facing code
+; DrawSpriteSlots turns into a sub-index). (C1, E-0381)
 DebugStaffRoll_Scene01_TurnSprites_Data2::
     db $01, $00, $01, $02, $01
 
@@ -3853,7 +3923,7 @@ DebugStaffRoll_Scene01_Wait::
     ret
 
 ; Staff roll scene 1, step 4: sprite 2 walks to X $60 with a hop (its Y plus
-; DebugStaffRoll_Scene01_HopSprite2_Data), then a wait and a turn. (C1, E-0357)
+; DebugStaffRoll_HopYOffsets), then a wait and a turn. (C1, E-0357)
 DebugStaffRoll_Scene01_HopSprite2::
     call DrawSpriteSlots
     ld d, $60
@@ -3879,15 +3949,22 @@ DebugStaffRoll_Scene01_HopSprite2::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
     ld [wObject1 + OBJ_SPRITE_ID + 1], a
     ret
 
-; data read by DebugStaffRoll_Scene01_HopSprite2 (16 bytes) (E-0347)
-DebugStaffRoll_Scene01_HopSprite2_Data::
+; Sixteen signed vertical steps for a hop, $FE x3, $FF x3, $00 x4, $01 x3, $02 x3 (-2, -1, 0, +1,
+; +2: up then down, net zero). Many staff roll steps add entry [frame] to byte 3 of a sprite slot
+; (the Y that DrawSpriteSlots hands to hSpriteOriginY), with the frame taken from wWorkBuf + $6,
+; sometimes masked with $0F; the scene 1 hops of slot 2, the scene 2 hops and the scene 3 hops of
+; other slots all share it. Two scene 2 steps (DebugStaffRoll_Scene02_WalkPairToPoint and
+; DebugStaffRoll_Scene02_WalkPairToPoint2) also load the address of its ninth byte as an immediate,
+; which gives D = $60, E = $40 as a target X and Y for StepSpriteSlotToward; the byte values there
+; are not read. (C1, E-0381)
+DebugStaffRoll_HopYOffsets::
     db $fe, $fe, $fe, $ff, $ff, $ff, $00, $00, $00, $00, $01, $01, $01, $02, $02, $02
 
 ; Staff roll scene 1, step 5: sprite 2 walks to ($60, $50), then a 30-frame wait. (C1, E-0357)
@@ -3915,7 +3992,7 @@ DebugStaffRoll_Scene01_HopSprite2Turn::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4071,7 +4148,7 @@ DebugStaffRoll_Scene01_HopTo50::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4099,7 +4176,7 @@ DebugStaffRoll_Scene01_HopTo60::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4127,7 +4204,7 @@ DebugStaffRoll_Scene01_HopTo40::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4155,7 +4232,7 @@ DebugStaffRoll_Scene01_HopBackTo50::
     ld b, $00
     inc a
     ld [wWorkBuf + $6], a
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject1 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4197,7 +4274,9 @@ DebugStaffRoll_Scene01_HopTogether::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene01_HopTogether (8 bytes) (E-0347)
+; Eight signed vertical steps: $FD, $FE, $FF, $00, $00, $01, $02, $03 (-3 to +3, net zero).
+; DebugStaffRoll_Scene01_HopTogether reads entry (wWorkBuf + $6) & 7 for 16 frames and adds it to
+; byte 3 (the Y) of sprite slots 0 and 1, so the two sprites hop together. (C1, E-0381)
 DebugStaffRoll_Scene01_HopTogether_Data::
     db $fd, $fe, $ff, $00, $00, $01, $02, $03
 
@@ -4486,10 +4565,17 @@ DebugStaffRoll_Scene02_TurnSprites::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene02_TurnSprites (5 bytes) (E-0347)
+; Five facing codes for sprite slot 0: $03, $02, $01, $02, $03. DebugStaffRoll_Scene02_TurnSprites
+; and DebugStaffRoll_Scene03_TurnSprites pick one by wWorkBuf + $6 >> 5 (0-4, every 32 frames) and
+; store it as byte 5 of slot 0, the facing code that DrawSpriteSlots turns into a sub-index. (C1,
+; E-0381)
 DebugStaffRoll_Scene02_TurnSprites_Data1::
     db $03, $02, $01, $02, $03
 
+; Five facing codes for sprite slot 1: $01, $00, $03, $00, $01. DebugStaffRoll_Scene02_TurnSprites
+; and DebugStaffRoll_Scene03_TurnSprites pick one by wWorkBuf + $6 >> 5 (0-4, every 32 frames) at
+; the same time as the slot 0 code from DebugStaffRoll_Scene02_TurnSprites_Data1 and store it as
+; byte 5 of slot 1. (C1, E-0381)
 DebugStaffRoll_Scene02_TurnSprites_Data2::
     db $01, $00, $03, $00, $01
 
@@ -4571,7 +4657,7 @@ DebugStaffRoll_Scene02_HopTogether::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wSpriteSlots + $3]
     add [hl]
@@ -4606,7 +4692,7 @@ DebugStaffRoll_Scene02_HopMoving::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -4829,12 +4915,12 @@ DebugStaffRoll_Scene02_WalkPairBack::
     inc [hl]
     ret
 
-; Staff roll scene 2, step 13: two sprites walk (one to the point in
-; DebugStaffRoll_Scene01_HopSprite2_Data + 8, one to ($60, $30)); then a turn. (C1, E-0357)
+; Staff roll scene 2, step 13: two sprites walk (one to the point in DebugStaffRoll_HopYOffsets + 8,
+; one to ($60, $30)); then a turn. (C1, E-0357)
 DebugStaffRoll_Scene02_WalkPairToPoint::
     call DrawSpriteSlots
     ld a, $04
-    ld de, DebugStaffRoll_Scene01_HopSprite2_Data + $8
+    ld de, DebugStaffRoll_HopYOffsets + $8
     call StepSpriteSlotToward
     ld a, $05
     lb de, $60, $30
@@ -4855,7 +4941,7 @@ DebugStaffRoll_Scene02_WalkPairToPoint2::
     lb de, $60, $50
     call StepSpriteSlotToward
     ld a, $05
-    ld de, DebugStaffRoll_Scene01_HopSprite2_Data + $8
+    ld de, DebugStaffRoll_HopYOffsets + $8
     call StepSpriteSlotToward
     ret nz
     ld a, $04
@@ -4935,7 +5021,7 @@ DebugStaffRoll_Scene02_HopSideways::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject2 + OBJ_X]
     add [hl]
@@ -5348,7 +5434,7 @@ DebugStaffRoll_Scene03_HopSideways::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject2 + OBJ_X]
     add [hl]
@@ -5377,7 +5463,11 @@ DebugStaffRoll_Scene03_HopSideways::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene03_HopSideways (4 bytes) (E-0347)
+; Four bytes, $03, $02, $01, $00: a descending facing-code sequence.
+; DebugStaffRoll_Scene03_HopSideways loads the address into HL but no instruction indexes it: during
+; the 16 hop frames it stores wWorkBuf + $6 >> 2 (0-3) as byte 5 of a sprite slot, and after the hop
+; it adds the byte at the HL that DrawSpriteSlots left behind, not a byte of this table. (C1,
+; E-0381)
 DebugStaffRoll_Scene03_HopSideways_Data::
     db $03, $02, $01, $00
 
@@ -5391,7 +5481,7 @@ DebugStaffRoll_Scene03_Hop::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wObject2 + OBJ_SPRITE_ID + 1]
     add [hl]
@@ -5420,7 +5510,10 @@ DebugStaffRoll_Scene03_Hop::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene03_Hop (4 bytes) (E-0347)
+; Four bytes, $02, $01, $00, $03: a facing-code sequence. DebugStaffRoll_Scene03_Hop loads the
+; address into HL but no instruction indexes it: during the 16 hop frames it stores wWorkBuf + $6 >>
+; 2 (0-3) as byte 5 of a sprite slot, and after the hop it adds the byte at the HL that
+; DrawSpriteSlots left behind, not a byte of this table. (C1, E-0381)
 DebugStaffRoll_Scene03_Hop_Data::
     db $02, $01, $00, $03
 
@@ -5855,7 +5948,10 @@ DebugStaffRoll_Scene04_HopInTurn::
     inc [hl]
     ret
 
-; data read by DebugStaffRoll_Scene04_HopInTurn (32 bytes) (E-0347)
+; Thirty-two signed vertical steps for a longer hop: $FD x4, $FE x4, $FF x4, $00 x8, $01 x4, $02 x4,
+; $03 x4 (net zero). DebugStaffRoll_Scene04_HopInTurn adds entry [wWorkBuf + $6] (frames 0-31) to
+; byte 3 of sprite slot 2, then entry [wWorkBuf + $6 - $10] (frames 16-47) to byte 3 of slot 3, so
+; the second sprite starts hopping half a hop later. (C1, E-0381)
 DebugStaffRoll_Scene04_HopInTurn_Data::
     db $fd, $fd, $fd, $fd, $fe, $fe, $fe, $fe, $ff, $ff, $ff, $ff, $00, $00, $00, $00
     db $00, $00, $00, $00, $01, $01, $01, $01, $02, $02, $02, $02, $03, $03, $03, $03
@@ -5870,7 +5966,7 @@ DebugStaffRoll_Scene04_HopTogether::
     and $0f
     ld c, a
     ld b, $00
-    ld hl, DebugStaffRoll_Scene01_HopSprite2_Data
+    ld hl, DebugStaffRoll_HopYOffsets
     add hl, bc
     ld a, [wSpriteSlots + $3]
     add [hl]
@@ -6748,7 +6844,10 @@ DrawSpriteSlots::
     jr nz, .loop
     ret
 
-; data read by DrawSpriteSlots (9 bytes) (E-0347)
+; Three 3-byte far-call entries, a code address word then a ROM bank: $4001 in bank $25
+; (DrawMetaSpriteSet_Bank25), $4001 in bank $7F (DrawMetaSprite_2) and $700A in bank $7F
+; (DrawMetaSprite). DrawSpriteSlots indexes it with byte 0 of each 8-byte slot in wSpriteSlots (0, 1
+; or 2), loads HL and B from the entry and calls it with rst $10 to draw the slot. (C1, E-0381)
 DrawSpriteSlots_Data::
     db $01, $40, $25, $01, $40, $7f, $0a, $70, $7f
 
@@ -6897,10 +6996,17 @@ StepSpriteSlotTowardDE::
     or a
     ret
 
-; data read by StepSpriteSlotTowardDE (13 bytes) (E-0347)
+; Thirteen step sizes in pixels: $01 x8, $02 x4, then $00. StepSpriteSlotTowardDE moves byte 2 of
+; the sprite slot (its X) toward D by the entry at wWorkBuf + $A on each call where X differs, so
+; the walk speeds up from 1 to 2 pixels per call; wWorkBuf + $A is advanced only by the Y step. (C1,
+; E-0381)
 StepSpriteSlotTowardDE_Data1::
     db $01, $01, $01, $01, $01, $01, $01, $01, $02, $02, $02, $02, $00
 
+; Thirteen step sizes in pixels: $02 x4, $01 x8, then $00. StepSpriteSlotTowardDE subtracts the
+; entry at wWorkBuf + $A from byte 3 of the sprite slot (its Y) while Y differs from E, then
+; increments wWorkBuf + $A, so the move slows from 2 to 1 pixel per call. The Y step only subtracts,
+; it never adds. (C1, E-0381)
 StepSpriteSlotTowardDE_Data2::
     db $02, $02, $02, $02, $01, $01, $01, $01, $01, $01, $01, $01, $00
 
@@ -7381,7 +7487,10 @@ ClearBattleStatusBitsWithMaskD_BankE0::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_BankE0 (7 bytes) (E-0347)
+; Seven AND masks indexed by D: $DF (clears bit 5), $FE (bit 0), $00 (all bits), $FD (bit 1), $73
+; (bits 7, 3 and 2), $EF (bit 4) and $BF (bit 6). ClearBattleStatusBitsWithMaskD_BankE0 ANDs the
+; chosen mask into the first byte of the 9-byte status record of slot E (wBattleStatus + 9 * E), the
+; byte that holds the bits BSTAT0_POISONED to BSTAT0_ASLEEP. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_BankE0_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

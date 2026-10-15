@@ -525,7 +525,10 @@ LibraryMenu_FamilyCursor_DrawTile::
     ei
     ret
 
-; data read by LibraryMenu (12 bytes) (E-0347)
+; Six little-endian offsets, $0021, $0061, $00A1, $00E1, $0121, $0161 (BG map row 1, 3, 5, 7, 9, 11
+; at column 1), indexed by wGridCursorX (0-5). LibraryMenu_FamilyCursor_DrawTile adds the entry to
+; the BG map 0 address of the scroll position (BGMapAddressAtScroll_Bank0C) and writes the tile in B
+; there, which draws or erases the family cursor. (C1, E-0381)
 LibraryMenu_FamilyCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $61, $01
 
@@ -935,7 +938,10 @@ LibraryMenu_MonsterCursor_DrawTile::
     ei
     ret
 
-; data read by LibraryMenu (12 bytes) (E-0347)
+; Six little-endian offsets, $0029, $0069, $00A9, $00E9, $0129, $0169 (BG map row 1, 3, 5, 7, 9, 11
+; at column 9), indexed by wGrid2CursorX (0-5). LibraryMenu_MonsterCursor_DrawTile adds the entry to
+; the BG map 0 address of the scroll position (BGMapAddressAtScroll_Bank0C) and writes the tile in B
+; there, which draws or erases the monster cursor. (C1, E-0381)
 LibraryMenu_MonsterCursor_DrawTile_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00, $29, $01, $69, $01
 
@@ -1449,7 +1455,10 @@ LibraryMenu_ShowMonsterEntry_DrawEntry::
     ld [wScreenStep], a
     ret
 
-; data read by LibraryMenu (6 bytes) (E-0347)
+; Three VRAM glyph-tile addresses, vTiles2 + $440, + $4D0 and + $560 ($9440, $94D0, $9560), indexed
+; by the skill row c (0-2). LibraryMenu_ShowMonsterEntry_DrawEntry uses each as the 9 by 1 text
+; window where ShowString_Bank08 draws the skill name (category 4) of the skill number at wArg5 + c
+; after LoadSpeciesBytes8To10ToArg5 and PermuteArg5To7ByMonster. (C1, E-0381)
 LibraryMenu_ShowMonsterEntry_DrawEntry_Data::
     db $40, $94, $d0, $94, $60, $95
 
@@ -2136,7 +2145,11 @@ LibraryMenu_DrawSeenNames::
     jp c, .loop
     ret
 
-; data read by LibraryMenu (12 bytes) (E-0347)
+; Six VRAM glyph-tile addresses, vTiles2 + $200, + $290, + $320, + $3B0, + $440 and + $4D0 (steps of
+; $90 = 9 tiles), indexed by the row c (0-5) of the page of the monster list.
+; LibraryMenu_DrawSeenNames uses each as the 9 by 1 text window where it draws the name of a seen
+; monster (ShowString_Bank08) or the placeholder string 0 of bank $0B (ShowString_Bank0B). (C1,
+; E-0381)
 LibraryMenu_DrawSeenNames_Data::
     db $00, $92, $90, $92, $20, $93, $b0, $93, $40, $94, $d0, $94
 
@@ -2183,7 +2196,12 @@ LibraryMenu_LoadFamilyIcons::
     jr c, .loop
     ret
 
-; data read by LibraryMenu (24 bytes) (E-0347)
+; The first 12 bytes are two rows of six family numbers for the family grid, indexed by 6 *
+; wGridCursorY + c: row 0 holds families $00-$05 and row 1 holds $06-$0A and $FF (no family).
+; LibraryMenu_LoadFamilyIcons skips $FF and, for the others, calls LoadFamilyIconTileForWorkBuf with
+; the family number in wWorkBuf and the tile number (family mod 6) + 2 in wWorkBuf + 1. The last 12
+; bytes are six words, vTiles2 + $20, + $70, + $C0, + $110, + $160 and + $1B0, that this reader
+; never indexes. (C1, E-0381)
 LibraryMenu_LoadFamilyIcons_Data::
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $ff, $20, $90, $70, $90
     db $c0, $90, $10, $91, $60, $91, $b0, $91
@@ -2423,10 +2441,17 @@ LibraryMenu_DrawSeenCounts::
     jr c, .loop
     ret
 
-; data read by LibraryMenu_DrawSeenCounts (12 bytes) (E-0347)
+; Six little-endian offsets, $0026, $0066, $00A6, $00E6, $0126, $0166 (BG map row 1, 3, 5, 7, 9, 11
+; at column 6), indexed by the row c of the family row. LibraryMenu_DrawSeenCounts adds the entry to
+; the BG map 0 address of the scroll position to place the two digit tiles of the seen count when
+; wArg1 is 0. (C1, E-0381)
 LibraryMenu_DrawSeenCounts_Data1::
     db $26, $00, $66, $00, $a6, $00, $e6, $00, $26, $01, $66, $01
 
+; Six wWindowTileBuffer addresses, $C37E, $C3A6, $C3CE, $C3F6, $C41E, $C446 (rows 6, 8, 10, 12, 14,
+; 16 at column 6 of the 20-tile-wide buffer), indexed by the row c. LibraryMenu_DrawSeenCounts
+; writes the two digit tiles of the seen count there instead of to the BG map when wArg1 is
+; non-zero. (C1, E-0381)
 LibraryMenu_DrawSeenCounts_Data2::
     db $7e, $c3, $a6, $c3, $ce, $c3, $f6, $c3, $1e, $c4, $46, $c4
 
@@ -3345,7 +3370,10 @@ LibraryMenu_ShowMonsterEntry_LoadClassBlock::
     jr nz, .loop
     ret
 
-; data read by LibraryMenu (8 words) (E-0347)
+; Eight pointers, one per class 0-7, to the eight 4-byte tile rows LibraryClassBlock_Class0 to
+; LibraryClassBlock_Class7. LibraryMenu_ShowMonsterEntry_LoadClassBlock takes the class byte of the
+; shown monster from LibraryMonsterClasses, doubles it to pick the word, and copies the 4 tiles it
+; points at to wLibraryEntryBlock. (C1, E-0381)
 LibraryMenu_ShowMonsterEntry_LoadClassBlock_Data::
     dw LibraryClassBlock_Class0
     dw LibraryClassBlock_Class1
@@ -3427,7 +3455,9 @@ WriteBGPalette0FromData::
     jr nz, .loop
     ret
 
-; data read by WriteBGPalette0FromData (6 bytes) (E-0347)
+; Three CGB colours as little-endian BGR555 words: $7D86, $7FFF (white) and $7FE1.
+; WriteBGPalette0FromData writes the six bytes in order through rBGPD starting at palette index 0,
+; so they become colours 0 to 2 of background palette 0 (colour 3 is not written). (C1, E-0381)
 WriteBGPalette0FromData_Data::
     db $86, $7d, $ff, $7f, $e1, $7f
 
@@ -5977,7 +6007,7 @@ ArenaMenu_ClassCursor::
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_ClassCursor_Data2
+    ld hl, ArenaMenu_ClassCursor_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -5995,7 +6025,10 @@ ArenaMenu_ClassCursor::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ArenaMenu_ClassCursor (4 bytes) (E-0347)
+; Four text characters, "C", "B", "A" and "S" in the charmap ($0C, $0B, $0A, $1C): the arena class
+; letters. ArenaMenu_ClassCursor indexes it with wGridCursorX (0-3, the class under the cursor) and
+; stores the letter in wTextBuf0, followed by the $F0 terminator, so the next message can show it
+; with <BUF0>. (C1, E-0381)
 ArenaMenu_ClassCursor_Data1::
     db $0c, $0b, $0a, $1c
 
@@ -6050,7 +6083,10 @@ ArenaMenu_ClassCursor_DrawTile::
     ei
     ret
 
-; data read by ArenaMenu (8 bytes) (E-0347)
+; Four little-endian word offsets into the BG map, counted from the BG map address of the screen
+; scroll position (BGMapAddressAtScroll_Bank0C): $00A2, $00E2, $0122 and $0162, which are rows 5, 7,
+; 9 and 11 at column 2. ArenaMenu_ClassCursor_DrawTile indexes it with wGridCursorX (0-3) to put the
+; cursor tile B beside the class row. (C1, E-0381)
 ArenaMenu_ClassCursor_DrawTile_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
@@ -6185,7 +6221,7 @@ ArenaMenu_CloseYesNoBox::
 ArenaMenu_CancelClass::
     call ArenaMenu_CloseYesNoBox
     ld c, $04
-    ld hl, ArenaMenu_ClassCursor_Data2
+    ld hl, ArenaMenu_ClassCursor_Data
     call ArenaMenu_CancelClass_BlankMarks
     call BGMapAddressAtScroll_Bank0C
     lb bc, $14, $0d
@@ -6518,7 +6554,7 @@ ArenaMenu_ClassCursor2::
     ld a, $f0
     ld [wTextBuf0 + $1], a
     ld a, [wGridCursorX]
-    ld hl, ArenaMenu_ClassCursor2_Data2
+    ld hl, ArenaMenu_ClassCursor2_Data
     ld b, $bc
     call StoreBAtWordTableEntry_Bank0C
     call BGMapAddressAtScroll_Bank0C
@@ -6537,7 +6573,10 @@ ArenaMenu_ClassCursor2::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ArenaMenu_ClassCursor2 (4 bytes) (E-0347)
+; Four text characters, "C", "B", "A" and "S" ($0C, $0B, $0A, $1C): the arena class letters for the
+; second class panel, the same bytes as ArenaMenu_ClassCursor_Data1. ArenaMenu_ClassCursor2 indexes
+; it with wGridCursorX (0-3) and stores the letter in wTextBuf0 with the $F0 terminator, for <BUF0>
+; in the next message. (C1, E-0381)
 ArenaMenu_ClassCursor2_Data1::
     db $0c, $0b, $0a, $1c
 
@@ -6590,7 +6629,11 @@ ArenaMenu_ClassCursor2_DrawTile::
     ei
     ret
 
-; data read by ArenaMenu (8 bytes) (E-0347)
+; Four little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank0C): $00A1, $00E1, $0121 and $0161, which are rows 5, 7, 9 and 11 at
+; column 1. ArenaMenu_ClassCursor2_DrawTile indexes it with wGridCursorX (0-3) to draw the cursor
+; tile B for the second class panel; the values are those of ArenaMenu_ClassCursor_DrawTile_Data one
+; column to the left. (C1, E-0381)
 ArenaMenu_ClassCursor2_DrawTile_Data::
     db $a1, $00, $e1, $00, $21, $01, $61, $01
 
@@ -6657,7 +6700,9 @@ ArenaMenu_SetClassFee::
     ld [wScriptStartRequest], a
     ret
 
-; data read by ArenaMenu (8 bytes) (E-0347)
+; Four little-endian 16-bit amounts: 1000, 2000, 3000 and 5000 ($03E8, $07D0, $0BB8, $1388).
+; ArenaMenu_SetClassFee indexes it with wGridCursorX (the class chosen, 0-3) times 2 and stores the
+; word in wArenaFeeLo and wArenaFeeHi, the entry fee that is later taken from the gold. (C1, E-0381)
 ArenaMenu_SetClassFee_Data::
     db $e8, $03, $d0, $07, $b8, $0b, $88, $13
 
@@ -7077,7 +7122,10 @@ ArenaMenu_PrepareResultName_ClassLetter::
     ld [wTextBuf0 + $1], a
     ret
 
-; data read by ArenaMenu (6 bytes) (E-0347)
+; Six text characters, "C", "C", "C", "B", "A", "S" ($0C, $0C, $0C, $0B, $0A, $1C), one per
+; wAreaGraphicsIndex 0-5. ArenaMenu_PrepareResultName_ClassLetter stores the letter in wTextBuf0
+; with a $F0 terminator after it. Areas 0-2 share the letter C; 3, 4 and 5 give B, A and S. (C1,
+; E-0381)
 ArenaMenu_PrepareResultName_ClassLetter_Data::
     db $0c, $0c, $0c, $0b, $0a, $1c
 
@@ -7536,7 +7584,10 @@ PickTableEntryByPartyLevelTotal::
     ld h, a
     ret
 
-; data read by PickTableEntryByPartyLevelTotal (12 bytes) (E-0347)
+; Six little-endian words: 400, 600, 800, 1200, 1400 and 1400 ($0190, $0258, $0320, $04B0, $0578,
+; $0578). PickTableEntryByPartyLevelTotal adds the MON_LEVEL of every party member and picks the
+; word by the total: entry 0 below 49, 1 below 91, 2 below 139, 3 below 181, 4 below 220 and 5 from
+; 220 up (also for totals of 256 or more); it returns the word in HL. (C1, E-0381)
 PickTableEntryByPartyLevelTotal_Data::
     db $90, $01, $58, $02, $20, $03, $b0, $04, $78, $05, $78, $05
 
@@ -8004,7 +8055,10 @@ ArenaMenu_PickPrize_RandomItem::
     ld [wArg1], a
     ret
 
-; data read by ArenaMenu (36 bytes) (E-0347)
+; Four word pointers (8 bytes) followed by four lists of 7 item ids each: $40-$46, $47-$4D, $4E-$53
+; with $5A, and $5B-$61. ArenaMenu_PickPrize_RandomItem takes the roll from RandomModulo52, uses its
+; low two bits to choose the list, then the roll modulo 7 to choose an item id, which it leaves in
+; wArg1 for ArenaMenu_PickPrize_GiveItem. (C1, E-0381)
 ArenaMenu_PickPrize_RandomItem_Data::
     db $40, $75, $47, $75, $4e, $75, $55, $75, $40, $41, $42, $43, $44, $45, $46, $47
     db $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $5a, $5b, $5c, $5d
@@ -8045,7 +8099,7 @@ ArenaMenu_PickPrize_GiveItem::
 ; Copies the name of item wArg1 (through the far pointer table in bank $08) to wTextBuf1. (C2,
 ; E-0357; probed E-0376)
 ArenaMenu_PickPrize_GiveItem_CopyName::
-    ld de, ArenaMenu_PickPrize_GiveItem_CopyName_Data
+    ld de, StringDatabase_ItemNames
     ld b, $08
     call ReadFarPointerAtDEInBankB
     ld c, l
@@ -8093,12 +8147,23 @@ ArenaMenu_PickPrize_GiveGold::
     farcall AddArg1ToGoldCapped99999
     ret
 
-; data read by ArenaMenu_PickPrize (48 bytes) (E-0347)
+; Six word pointers (areas 0-2 share the first list, wAreaGraphicsIndex selects the word) followed
+; by four lists of 9 bytes: eight ascending thresholds ending in $64, then an $FF end mark; the
+; first list is 25, 35, 45, 55, 65, 75, 95, 100. ArenaMenu_PickPrize rolls 0-96 with RandomModulo52
+; and walks the list to the first threshold that is at least the roll; that position (0-7) indexes
+; the matching list of ArenaMenu_PickPrize_Data2, and reaching the $FF would give gold instead. (C1,
+; E-0381)
 ArenaMenu_PickPrize_Data1::
     db $de, $75, $de, $75, $de, $75, $e7, $75, $f0, $75, $f9, $75, $19, $23, $2d, $37
     db $41, $4b, $5f, $64, $ff, $14, $1f, $2a, $35, $40, $4b, $5a, $64, $ff, $0f, $17
     db $1f, $27, $2f, $37, $50, $64, $ff, $0a, $15, $20, $2b, $36, $41, $50, $64, $ff
 
+; Six word pointers (areas 0-2 share the first list) followed by four lists of 8 outcome bytes,
+; indexed by the position ArenaMenu_PickPrize found in ArenaMenu_PickPrize_Data1. $FE tries
+; GenerateNewKeyEntry (6000 gold is given instead when it makes no key), $FD draws an item through
+; ArenaMenu_PickPrize_RandomItem, and any other byte is an item id in wArg1 handed to
+; ArenaMenu_PickPrize_GiveItem; the first list is ITEM_HERB, ITEM_DSCALE, ITEM_ELFWATER,
+; ITEM_WORLDLEAF, ITEM_WIND, ITEM_SAGEROCK, ITEM_SIRLOIN, ITEM_STONEFANG. (C1, E-0381)
 ArenaMenu_PickPrize_Data2::
     db $0e, $76, $0e, $76, $0e, $76, $16, $76, $1e, $76, $26, $76, $01, $53, $05, $0c
     db $24, $0b, $1c, $44, $02, $18, $0f, $10, $13, $15, $45, $fe, $03, $0d, $11, $12
@@ -8180,6 +8245,7 @@ TileRect0C_3::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 6 x 5 tiles, one row per line
 TileRect_0C::
+; another name for the data at TileRect_0C, whose note is above (E-0381)
 TwoChoiceBoxRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $ce, $cf, $df, $b7 ; id 1
@@ -8187,10 +8253,10 @@ TwoChoiceBoxRect::
     db $b6, $c3, $ae, $af, $c3, $b7 ; id 3
     db $b3, $b4, $b4, $b4, $b4, $b5 ; id 4
 
-ArenaMenu_ClassCursor_Data2::
+ArenaMenu_ClassCursor_Data::
     db $ca, $c3, $f2, $c3, $1a, $c4, $42, $c4
 
-ArenaMenu_ClassCursor2_Data2::
+ArenaMenu_ClassCursor2_Data::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4, $8d, $c3, $8f, $c3, $91, $c3, $8d, $c3
     db $8f, $c3, $91, $c3, $b5, $c3, $b7, $c3, $b9, $c3
 

@@ -40,7 +40,7 @@ CopyStringToBuffer_Bank82::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_82::
-; data read by BeginStringDisplay_Bank82 (1 word) (E-0347)
+; another name for the data at StringCategories_82, whose note is above (E-0381)
 MessageStrings_Bank82::
     dw StringList_Bank82_0 ; id 0
 

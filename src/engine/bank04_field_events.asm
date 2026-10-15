@@ -1582,12 +1582,19 @@ UpdateSpriteSlots_StepFrameLoop::
     ld [hl], a
     jp UpdateSpriteSlots_NextSlot
 
-; data read by UpdateSpriteSlots (36 bytes) (E-0347)
+; Seventeen (frame, hold count) byte pairs and an $FF, $FF end marker: frames 0, 3, 4, 5 held $0E,
+; $0A, $0E, $0A frames, repeated once; then frames 0, 1, 2, 1, 2, 0, 6, 7, 6 held $10, $0E, $0E,
+; $0E, $0E, $20, $0E, $20, $0E frames. UpdateSpriteSlots_StepFrameLoop plays the list in a loop for
+; a type 4 sprite slot, storing the current frame in OBJ_SUBINDEX; the object does not move. (C1,
+; E-0381)
 UpdateSpriteSlots_FrameLoopType4_Data::
     db $00, $0e, $03, $0a, $04, $0e, $05, $0a, $00, $0e, $03, $0a, $04, $0e, $05, $0a
     db $00, $10, $01, $0e, $02, $0e, $01, $0e, $02, $0e, $00, $20, $06, $0e, $07, $20
     db $06, $0e, $ff, $ff
 
+; Four (frame, hold count) byte pairs and an $FF, $FF end marker: frames 0, 1, 2, 1, each held $0E
+; frames. UpdateSpriteSlots_StepFrameLoop plays the list in a loop for a type 5 sprite slot, storing
+; the current frame in OBJ_SUBINDEX; the object does not move. (C1, E-0381)
 UpdateSpriteSlots_FrameLoopType5_Data::
     db $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
 

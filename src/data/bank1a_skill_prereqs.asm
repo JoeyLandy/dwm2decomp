@@ -1085,6 +1085,7 @@ SkillPrerequisitePointers::
 ; several lists end in the same bytes (E-0159, C1)
 ; record: skill number, or $FF ending a list
 SkillPrerequisiteLists::
+; another name for the data at SkillPrerequisiteLists, whose note is above (E-0381)
 SkillPrerequisites_Blazemost::
     db $ff ; entry 0
 SkillPrerequisites_Blaze::
@@ -1208,139 +1209,142 @@ SkillPrerequisites_TailWind::
 
 AddSkillCToFreeOrWeakerSlot_Data::
     db $df, $5e
-    dw PointerRun_Entry00_2
+    dw PointerRun_Entry00
     db $5e, $5f, $5d, $5f
-    dw PointerRun_Entry00_3
+    dw PointerRun_Entry00_2
     db $61, $5f, $60, $5f
-    dw PointerRun_Entry00_4
+    dw PointerRun_Entry00_3
     db $64, $5f, $63, $5f
-    dw PointerRun_Entry00_5
+    dw PointerRun_Entry00_4
     db $67, $5f, $66, $5f
-    dw PointerRun_Entry00_6
+    dw PointerRun_Entry00_5
     db $6a, $5f, $69, $5f
-    dw PointerRun_Entry00_7
+    dw PointerRun_Entry00_6
     db $6d, $5f, $6c, $5f
-    dw PointerRun_Entry00_8
+    dw PointerRun_Entry00_7
     db $6f, $5f, $e7, $5e
-    dw PointerRun_Entry00_9
+    dw PointerRun_Entry00_8
     db $72, $5f, $71, $5f
-    dw PointerRun_Entry00_10
+    dw PointerRun_Entry00_9
     db $74, $5f, $ea, $5e
-    dw PointerRun_Entry00_11
+    dw PointerRun_Entry00_10
     db $76, $5f, $eb, $5e
-    dw PointerRun_Entry00_12
+    dw PointerRun_Entry00_11
     db $ec, $5e
-    dw PointerRun_Entry00_13
+    dw PointerRun_Entry00_12
     db $ee, $5e
-    dw PointerRun_Entry00_14
+    dw PointerRun_Entry00_13
     db $f0, $5e
-    dw PointerRun_Entry00_15
+    dw PointerRun_Entry00_14
     db $7b, $5f
-    dw PointerRun_Entry00_16
+    dw PointerRun_Entry00_15
     db $7d, $5f
-    dw PointerRun_Entry00_17
+    dw PointerRun_Entry00_16
     db $7f, $5f
-    dw PointerRun_Entry00_18
+    dw PointerRun_Entry00_17
     db $81, $5f
-    dw PointerRun_Entry00_19
+    dw PointerRun_Entry00_18
     db $f6, $5e
-    dw PointerRun_Entry00_20
+    dw PointerRun_Entry00_19
     db $83, $5f
-    dw PointerRun_Entry00_21
+    dw PointerRun_Entry00_20
     db $f9, $5e
-    dw PointerRun_Entry00_22
+    dw PointerRun_Entry00_21
     db $fb, $5e
-    dw PointerRun_Entry00_23
+    dw PointerRun_Entry00_22
     db $fd, $5e
-    dw PointerRun_Entry00_24
-    dw PointerRun_Entry01_2
-    dw PointerRun_Entry02_2
-    dw PointerRun_Entry03_3
-    dw PointerRun_Entry04_3
-    dw PointerRun_Entry05_2
-    dw PointerRun_Entry06_3
-    dw PointerRun_Entry07_3
-    dw PointerRun_Entry08_3
-    dw PointerRun_Entry09_3
-    dw PointerRun_Entry0A_3
+    dw PointerRun_Entry00_23
+    dw PointerRun_Entry01
+    dw PointerRun_Entry02
+    dw PointerRun_Entry03_2
+    dw PointerRun_Entry04_2
+    dw PointerRun_Entry05
+    dw PointerRun_Entry06_2
+    dw PointerRun_Entry07_2
+    dw PointerRun_Entry08_2
+    dw PointerRun_Entry09_2
+    dw PointerRun_Entry0A_2
     db $88, $5f, $87, $5f, $07, $5f, $8d, $5f, $8c, $5f, $8b, $5f
-    dw PointerRun_Entry00_25
+    dw PointerRun_Entry00_24
     db $8f, $5f, $09, $5f
-    dw PointerRun_Entry00_26
+    dw PointerRun_Entry00_25
     db $0b, $5f, $91, $5f
-    dw PointerRun_Entry00_27
+    dw PointerRun_Entry00_26
     db $93, $5f, $0d, $5f
-    dw PointerRun_Entry00_28
+    dw PointerRun_Entry00_27
     db $0f, $5f, $10, $5f
-    dw PointerRun_Entry00_29
+    dw PointerRun_Entry00_28
     db $12, $5f, $13, $5f
-    dw PointerRun_Entry00_30
+    dw PointerRun_Entry00_29
     db $15, $5f, $16, $5f
-    dw PointerRun_Entry00_31
+    dw PointerRun_Entry00_30
     db $18, $5f, $19, $5f
-    dw PointerRun_Entry00_32
+    dw PointerRun_Entry00_31
     db $1b, $5f, $1c, $5f
-    dw PointerRun_Entry00_33
+    dw PointerRun_Entry00_32
     db $1e, $5f, $1f, $5f
-    dw PointerRun_Entry00_34
+    dw PointerRun_Entry00_33
     db $95, $5f, $21, $5f
-    dw PointerRun_Entry00_35
+    dw PointerRun_Entry00_34
     db $23, $5f, $24, $5f
-    dw PointerRun_Entry00_36
+    dw PointerRun_Entry00_35
     db $26, $5f, $27, $5f
-    dw PointerRun_Entry00_37
+    dw PointerRun_Entry00_36
     db $29, $5f, $2a, $5f
-    dw PointerRun_Entry00_38
+    dw PointerRun_Entry00_37
     db $2c, $5f, $2d, $5f
-    dw PointerRun_Entry00_39
+    dw PointerRun_Entry00_38
     db $2f, $5f, $97, $5f
-    dw PointerRun_Entry00_40
+    dw PointerRun_Entry00_39
     db $31, $5f, $99, $5f
-    dw PointerRun_Entry00_41
+    dw PointerRun_Entry00_40
     db $33, $5f, $34, $5f
-    dw PointerRun_Entry00_42
+    dw PointerRun_Entry00_41
     db $36, $5f, $37, $5f
-    dw PointerRun_Entry00_43
+    dw PointerRun_Entry00_42
     db $39, $5f, $3a, $5f
-    dw PointerRun_Entry00_44
+    dw PointerRun_Entry00_43
     db $3c, $5f, $3d, $5f
-    dw PointerRun_Entry00_45
+    dw PointerRun_Entry00_44
     db $3f, $5f, $9d, $5f
-    dw PointerRun_Entry00_46
+    dw PointerRun_Entry00_45
     db $9b, $5f
-    dw PointerRun_Entry00_47
+    dw PointerRun_Entry00_46
     db $41, $5f
-    dw PointerRun_Entry00_48
+    dw PointerRun_Entry00_47
     db $9f, $5f
-    dw PointerRun_Entry00_49
+    dw PointerRun_Entry00_48
     db $a1, $5f
-    dw PointerRun_Entry00_50
+    dw PointerRun_Entry00_49
     db $45, $5f
-    dw PointerRun_Entry00_51
+    dw PointerRun_Entry00_50
     db $47, $5f
-    dw PointerRun_Entry00_52
+    dw PointerRun_Entry00_51
     db $49, $5f
-    dw PointerRun_Entry00_53
+    dw PointerRun_Entry00_52
     db $4b, $5f
-    dw PointerRun_Entry00_54
+    dw PointerRun_Entry00_53
     db $a3, $5f
-    dw PointerRun_Entry00_55
+    dw PointerRun_Entry00_54
     db $a5, $5f
-    dw PointerRun_Entry00_56
+    dw PointerRun_Entry00_55
     db $4f, $5f
-    dw PointerRun_Entry00_57
+    dw PointerRun_Entry00_56
     db $51, $5f
-    dw PointerRun_Entry00_58
+    dw PointerRun_Entry00_57
     db $53, $5f
-    dw PointerRun_Entry00_59
+    dw PointerRun_Entry00_58
     db $55, $5f
-    dw PointerRun_Entry00_60
+    dw PointerRun_Entry00_59
     db $57, $5f
-    dw PointerRun_Entry00_61
+    dw PointerRun_Entry00_60
     db $59, $5f
-    dw PointerRun_Entry00_62
+    dw PointerRun_Entry00_61
     db $5b, $5f
-    dw PointerRun_Entry00_63
+    dw PointerRun_Entry00_62
+    db $ff
+
+PointerRun_Entry00::
     db $ff
 
 PointerRun_Entry00_2::
@@ -1359,22 +1363,22 @@ PointerRun_Entry00_6::
     db $ff
 
 PointerRun_Entry00_7::
-    db $ff
-
-PointerRun_Entry00_8::
     db $ff, $ff
 
-PointerRun_Entry00_9::
+PointerRun_Entry00_8::
     db $ff
 
-PointerRun_Entry00_10::
+PointerRun_Entry00_9::
     db $ff, $ff, $ff, $ff
+
+PointerRun_Entry00_12::
+    db $ff, $ff
 
 PointerRun_Entry00_13::
     db $ff, $ff
 
 PointerRun_Entry00_14::
-    db $ff, $ff
+    db $ff
 
 PointerRun_Entry00_15::
     db $ff
@@ -1386,13 +1390,13 @@ PointerRun_Entry00_17::
     db $ff
 
 PointerRun_Entry00_18::
-    db $ff
-
-PointerRun_Entry00_19::
     db $ff, $ff
 
-PointerRun_Entry00_20::
+PointerRun_Entry00_19::
     db $ff
+
+PointerRun_Entry00_20::
+    db $ff, $ff
 
 PointerRun_Entry00_21::
     db $ff, $ff
@@ -1400,34 +1404,34 @@ PointerRun_Entry00_21::
 PointerRun_Entry00_22::
     db $ff, $ff
 
-PointerRun_Entry00_23::
+PointerRun_Entry01::
+    db $ff
+
+PointerRun_Entry02::
+    db $ff
+
+PointerRun_Entry03_2::
+    db $ff
+
+PointerRun_Entry04_2::
+    db $ff
+
+PointerRun_Entry05::
+    db $ff
+
+PointerRun_Entry06_2::
+    db $ff
+
+PointerRun_Entry07_2::
+    db $ff
+
+PointerRun_Entry08_2::
+    db $ff
+
+PointerRun_Entry09_2::
     db $ff, $ff
 
-PointerRun_Entry01_2::
-    db $ff
-
-PointerRun_Entry02_2::
-    db $ff
-
-PointerRun_Entry03_3::
-    db $ff
-
-PointerRun_Entry04_3::
-    db $ff
-
-PointerRun_Entry05_2::
-    db $ff
-
-PointerRun_Entry06_3::
-    db $ff
-
-PointerRun_Entry07_3::
-    db $ff
-
-PointerRun_Entry08_3::
-    db $ff
-
-PointerRun_Entry09_3::
+PointerRun_Entry00_24::
     db $ff, $ff
 
 PointerRun_Entry00_25::
@@ -1437,7 +1441,7 @@ PointerRun_Entry00_26::
     db $ff, $ff
 
 PointerRun_Entry00_27::
-    db $ff, $ff
+    db $ff, $ff, $ff
 
 PointerRun_Entry00_28::
     db $ff, $ff, $ff
@@ -1455,10 +1459,10 @@ PointerRun_Entry00_32::
     db $ff, $ff, $ff
 
 PointerRun_Entry00_33::
-    db $ff, $ff, $ff
+    db $ff, $ff
 
 PointerRun_Entry00_34::
-    db $ff, $ff
+    db $ff, $ff, $ff
 
 PointerRun_Entry00_35::
     db $ff, $ff, $ff
@@ -1470,13 +1474,13 @@ PointerRun_Entry00_37::
     db $ff, $ff, $ff
 
 PointerRun_Entry00_38::
-    db $ff, $ff, $ff
+    db $ff, $ff
 
 PointerRun_Entry00_39::
     db $ff, $ff
 
 PointerRun_Entry00_40::
-    db $ff, $ff
+    db $ff, $ff, $ff
 
 PointerRun_Entry00_41::
     db $ff, $ff, $ff
@@ -1488,19 +1492,19 @@ PointerRun_Entry00_43::
     db $ff, $ff, $ff
 
 PointerRun_Entry00_44::
-    db $ff, $ff, $ff
+    db $ff, $ff
 
-PointerRun_Entry00_45::
+PointerRun_Entry00_46::
     db $ff, $ff
 
 PointerRun_Entry00_47::
-    db $ff, $ff
+    db $ff
 
 PointerRun_Entry00_48::
     db $ff
 
 PointerRun_Entry00_49::
-    db $ff
+    db $ff, $ff
 
 PointerRun_Entry00_50::
     db $ff, $ff
@@ -1512,13 +1516,13 @@ PointerRun_Entry00_52::
     db $ff, $ff
 
 PointerRun_Entry00_53::
-    db $ff, $ff
+    db $ff
 
 PointerRun_Entry00_54::
     db $ff
 
 PointerRun_Entry00_55::
-    db $ff
+    db $ff, $ff
 
 PointerRun_Entry00_56::
     db $ff, $ff
@@ -1539,26 +1543,23 @@ PointerRun_Entry00_61::
     db $ff, $ff
 
 PointerRun_Entry00_62::
-    db $ff, $ff
-
-PointerRun_Entry00_63::
     db $ff, $02, $01, $ff, $05, $04, $ff, $08, $07, $ff, $0b, $0a, $ff, $0e, $0d, $ff
     db $11, $10, $ff, $13, $ff, $17, $16, $ff, $19, $ff, $1c
 
-PointerRun_Entry00_11::
+PointerRun_Entry00_10::
     db $1b, $ff
 
-PointerRun_Entry00_12::
+PointerRun_Entry00_11::
     db $1e, $ff, $25, $ff, $27, $ff, $29, $ff, $2b, $ff, $2f, $ff
 
-PointerRun_Entry00_24::
+PointerRun_Entry00_23::
     db $36, $ff, $42, $41
 
-PointerRun_Entry0A_3::
+PointerRun_Entry0A_2::
     db $40, $ff, $46, $45, $44, $ff, $48, $ff, $4c, $ff, $4e, $ff, $63, $ff, $73, $ff
     db $76, $ff, $87
 
-PointerRun_Entry00_46::
+PointerRun_Entry00_45::
     db $86, $85, $ff, $8b, $ff, $8d, $ff, $97, $ff, $99, $ff
 
 ; wBattleArg2/wBattleArg3 = a battler record (GameMode4_Init_BuildFoeRecord and
@@ -3829,6 +3830,7 @@ CopyRectRecordToScreenBuffer_13_TileRect::
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank1A (E-0161)
 ; record: offset $0000 (row 0, column 0); 8 x 11 tiles
 TileRect_1A::
+; another name for the data at TileRect_1A, whose note is above (E-0381)
 BattleEnd_AskToJoin_ListBoxTileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $08, $0b ; width, rows

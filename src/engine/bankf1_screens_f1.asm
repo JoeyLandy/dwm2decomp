@@ -909,7 +909,11 @@ SetScreenTileBufferRow16Col6TileC0_BankF1::
     ld [wScreenTileBuffer + $146], a
     ret
 
-; data read by BuildItemScreen_DrawEffect (27 bytes) (E-0347)
+; Twenty-seven bytes, each the number of tiles (3 to 9) used by the category 7 string for one
+; personality index. BuildItemScreen_DrawEffect indexes it with the personality index of the
+; selected record (PersonalityIndexOfRecord, also the string index in category 7), writes that many
+; consecutive tile numbers starting at $1A into wWindowTileBuffer + $19 and fills the rest of the
+; nine places with blank $C3. (C1, E-0381)
 BuildItemScreen_DrawEffect_Data::
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
@@ -1438,7 +1442,10 @@ ShowStringBank08AtTilesHL_BankF1::
     ld [wTextWindowTileHi], a
     ret
 
-; data read by BuildItemScreenWithRecordCursor (12 bytes) (E-0347)
+; Six BG map addresses, $9861, $98A1, $98E1, $9921, $9961, $99A1 (vBGMap0 rows 3, 5, 7, 9, 11 and 13
+; at column 1), the item list cursor places. BuildItemScreenWithRecordCursor_BankF1 passes the table
+; with wMenuSelectedMember & 3 to WriteBCTileToScreenBufferAtTableEntry_BankF1, which adds $2998 to
+; the address to reach wScreenTileBuffer and writes tile $BC there. (C1, E-0381)
 BuildItemScreenWithRecordCursor_BankF1_Data::
     db $61, $98, $a1, $98, $e1, $98, $21, $99, $61, $99, $a1, $99
 
@@ -3661,7 +3668,9 @@ DrawTileBAtTwoChoiceEntry_BankF1::
     ei
     ret
 
-; data read by DrawTileBAtTwoChoiceEntry_BankF1 (6 bytes) (E-0347)
+; Three offsets, $00EC, $012C and $016C (rows 7, 9 and 11 at column 12).
+; DrawTileBAtTwoChoiceEntry_BankF1 indexes them with wTwoChoiceCursor, adds the offset to the BG map
+; address of the scroll position (BGMapAddressAtScroll_BankF1) and writes tile B there. (C1, E-0381)
 DrawTileBAtTwoChoiceEntry_BankF1_Data::
     db $ec, $00, $2c, $01, $6c, $01
 
@@ -3916,7 +3925,7 @@ StoreBAtWordTableEntry_BankF1::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
 TileRect_F1::
-; data read by RunScreenStateWhenNotFading_F1_LinkBreed_DrawPanel (60 bytes) (E-0347)
+; another name for the data at TileRect_F1, whose note is above (E-0381)
 BreedRecordPanelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -3926,6 +3935,7 @@ BreedRecordPanelTileRect::
 
 ; record: 6 x 5 tiles, one row per line
 TileRect_F1_2::
+; another name for the data at TileRect_F1_2, whose note is above (E-0381)
 BreedYesNoBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $b7 ; id 1
@@ -3935,6 +3945,7 @@ BreedYesNoBoxTileRect::
 
 ; record: 9 x 7 tiles, one row per line
 TileRect_F1_3::
+; another name for the data at TileRect_F1_3, whose note is above (E-0381)
 BreedChoiceBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $c3, $60, $61, $62, $62, $63, $b7 ; id 1

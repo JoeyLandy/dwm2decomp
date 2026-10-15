@@ -1147,7 +1147,12 @@ GameMode5_Init_LinkBattleSetup_LoadRules::
     jr nz, .loop
     ret
 
-; data read by GameMode5_Init_LinkBattleSetup_LoadRules (10 bytes) (E-0347)
+; The ten default link rule bytes $01, $00, $00, $63, $29, $01, $00, $00, $63, $80, copied to
+; wLinkRules (which has the single-level limit in +3 = 99, the total level word $0129 = 297 in
+; +4/+5, the family exclusion bits in +6/+7 and wLinkRuleTurnLimit in +8) by
+; GameMode5_Init_LinkBattleSetup_LoadRules unless wLinkSetupMode is 2, in which case wLinkRulesCopy
+; is used. They match the values InitLinkRulesPresetA writes except for the first byte ($01 here, 0
+; there). (C1, E-0381)
 GameMode5_Init_LinkBattleSetup_LoadRules_Data::
     db $01, $00, $00, $63, $29, $01, $00, $00, $63, $80
 
@@ -2811,11 +2816,19 @@ TitleOpening_InitSparkle::
     ld [hli], a
     ret
 
-; data read by TitleOpening (24 bytes) (E-0347)
+; Twelve WRAM addresses $D09F, $D0A5, $D0AB, ... $D0E1 (wWorkBuf + 2 + 6 * n), indexed by the
+; sparkle number n kept in wLinkMenuCounter: the start of each six-byte sparkle record.
+; TitleOpening_StartSparkles and TitleOpening_ScrollWithSparkles fetch the word with
+; ReadWordTableEntry_Bank00 and call TitleOpening_InitSparkle on it. wLinkMenuCounter stops at 10,
+; so the last two entries are not reached by these readers. (C1, E-0381)
 TitleOpening_StartSparkles_Data::
     db $9f, $d0, $a5, $d0, $ab, $d0, $b1, $d0, $b7, $d0, $bd, $d0, $c3, $d0, $c9, $d0
     db $cf, $d0, $d5, $d0, $db, $d0, $e1, $d0
 
+; Four hold times, 4, 7, 7 and 4 frames, indexed by the animation frame (byte 1 of the sparkle
+; record, & 3). TitleOpening_MoveSparkles counts byte 0 of the record up and, once it reaches the
+; hold time, resets it and moves to the next frame; TitleOpening_MoveSparkles_DrawSparkle draws that
+; frame of meta-sprite set $1E at the X (byte 2) and Y (byte 3) of the record. (C1, E-0381)
 TitleOpening_MoveSparkles_Data::
     db $04, $07, $07, $04
 
@@ -3807,7 +3820,10 @@ WriteTileSound69ThenTitleScreenState4::
     ld [wSubMenuCursor2], a
     ret
 
-; data read by SendLinkByteForMenuOption (8 bytes) (E-0347)
+; Eight bytes, $F4, $F4, $FA, $FB, $FC, $DD, $E1, $F3, indexed by the title menu entry wMenuOption &
+; $0F (0-7). SendLinkByteForMenuOption copies the entry to wScreenSubStep and sends it with
+; SerialSendByte, so a linked partner sees which entry is highlighted; entries 0 and 1 (continue and
+; new game) send the same byte $F4. (C1, E-0381)
 SendLinkByteForMenuOption_Data::
     db $f4, $f4, $fa, $fb, $fc, $dd, $e1, $f3
 
@@ -5481,7 +5497,11 @@ LinkRulesEditor_RuleCursor::
     ld [wLinkScreenFlag], a
     ret
 
-; data read by LinkRulesEditor (6 bytes) (E-0347)
+; Six step numbers of LinkRulesEditor, $03, $0B, $15, $18, $1B, $1E, indexed by the rule row
+; wMenuSubState & 7. When A is pressed LinkRulesEditor_RuleCursor stores the entry in
+; wTitleScreenSubState, which selects the steps LinkRulesEditor_DecideRule,
+; LinkRulesEditor_YesNoRule, LinkRulesEditor_YesNoRule2, LinkRulesEditor_YesNoRule3,
+; LinkRulesEditor_YesNoRule4 and LinkRulesEditor_FifthRule in turn. (C1, E-0381)
 LinkRulesEditor_RuleCursor_Data::
     db $03, $0b, $15, $18, $1b, $1e
 
@@ -6531,7 +6551,10 @@ LinkRulesEditor_ToggleFamily_MoveCursor::
     call WriteBBTileAtWordTableEntryC_Bank07
     ret
 
-; data read by LinkRulesEditor (22 bytes) (E-0347)
+; Eleven BG map addresses, $9943, $9945, ... $994D (vBGMap0 row 10, columns 3, 5, 7, 9, 11, 13) and
+; $9983, $9985, ... $998B (row 12, columns 3-11), indexed by the family cursor wMenuCursor (0-10).
+; LinkRulesEditor_ToggleFamily_MoveCursor blinks the cursor tile at the address of the selected
+; family; Up and Down move between the two rows. (C1, E-0381)
 LinkRulesEditor_ToggleFamily_MoveCursor_Data::
     db $43, $99, $45, $99, $47, $99, $49, $99, $4b, $99, $4d, $99, $83, $99, $85, $99
     db $87, $99, $89, $99, $8b, $99
@@ -6580,7 +6603,11 @@ LinkRulesEditor_DrawFamilyMark::
     call WriteVRAMByte
     ret
 
-; data read by LinkRulesEditor (22 bytes) (E-0347)
+; Eleven (byte offset, bit mask) pairs, indexed by the family number 0-10: families 0-6 are bits
+; $40, $20, $10, $08, $04, $02, $01 of wLinkRules + 6 and families 7-10 are bits $80, $40, $20, $10
+; of wLinkRules + 7. LinkRulesEditor_ToggleFamily_FlipExclusion flips the bit for the family under
+; the cursor, and LinkRulesEditor_DrawFamilyMark tests it (set = family excluded, blank tile $C3
+; drawn instead of the family tile). (C1, E-0381)
 LinkRulesEditor_ToggleFamily_FlipExclusion_Data::
     db $00, $40, $00, $20, $00, $10, $00, $08, $00, $04, $00, $02, $00, $01, $01, $80
     db $01, $40, $01, $20, $01, $10
@@ -7346,10 +7373,17 @@ DrawWorkBufSelectionTilesAndPanels_LevelRule::
     ld [hl], a
     ret
 
-; data read by DrawWorkBufSelectionTilesAndPanels_LevelRule (5 bytes) (E-0347)
+; Five tile numbers, $15, $12, $15, $0B, $10: the label of the total-level rule on the rules
+; summary. DrawWorkBufSelectionTilesAndPanels_LevelRule copies them to wScreenTileBuffer + $126 when
+; bit 6 of wLinkRules + 5 is clear, followed by the number (wLinkRules + 5 bit 0) * 256 + wLinkRules
+; + 4. (C1, E-0381)
 DrawWorkBufSelectionTilesAndPanels_LevelRule_Data1::
     db $15, $12, $15, $0b, $10
 
+; Five tile numbers, $29, $0B, $16, $C3, $C3 (two blank tiles at the end): the label of the
+; single-level limit rule on the rules summary. DrawWorkBufSelectionTilesAndPanels_LevelRule copies
+; them to wScreenTileBuffer + $126 when bit 6 of wLinkRules + 5 is set, followed by the number
+; wLinkRules + 3. (C1, E-0381)
 DrawWorkBufSelectionTilesAndPanels_LevelRule_Data2::
     db $29, $0b, $16, $c3, $c3
 

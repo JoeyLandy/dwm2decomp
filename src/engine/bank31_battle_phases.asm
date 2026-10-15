@@ -592,10 +592,16 @@ BattlePhase0_RollSurpriseRound_FoeName_OneFoe::
     ld [wStringIndex], a
     ret
 
-; data read by BattlePhase0_RollSurpriseRound_FoeName (9 bytes) (E-0347)
+; The text "monsters" ending in $F0 (9 bytes, lower case m: $30 $32 $31 $36 $37 $28 $35 $36 $F0).
+; BattlePhase0_RollSurpriseRound_FoeName copies it to wTextBuf0 as the generic name of a group of
+; foes of different species, for every wStringIndex except $0B to $0E. (C1, E-0381)
 BattlePhase0_RollSurpriseRound_FoeName_Data1::
     db $30, $32, $31, $36, $37, $28, $35, $36, $f0
 
+; The text "Monsters" ending in $F0 (9 bytes, capital M: $16 $32 $31 $36 $37 $28 $35 $36 $F0), used
+; for wStringIndex $0B to $0E. BattlePhase0_RollSurpriseRound_FoeName copies it to wTextBuf0 as the
+; generic name of a group of foes of different species; for $0C and $0D it copies 13 bytes, so the 4
+; bytes after the terminator are copied too. (C1, E-0381)
 BattlePhase0_RollSurpriseRound_FoeName_Data2::
     db $16, $32, $31, $36, $37, $28, $35, $36, $f0
 
@@ -1050,7 +1056,10 @@ BattleEnd_Records_SumExpAward::
     jr nz, .loop
     ret
 
-; data read by BattleEnd_Records_SumExpAward (6 bytes) (E-0347)
+; Three little-endian pointers, $D1D7, $D225 and $D273: the BATTLER_EXP field (24-bit experience) of
+; wBattlerRecordSlot4, wBattlerRecordSlot5 and wBattlerRecordSlot6. BattleEnd_Records_SumExpAward
+; indexes it by the foe slot (4 to 6, masked with 3) and adds the 3 bytes at the pointer into
+; wBattleExpAward for every foe slot whose wBattleSlotOut byte is 1. (C1, E-0381)
 BattleEnd_Records_SumExpAward_Data::
     db $d7, $d1, $25, $d2, $73, $d2
 
@@ -2551,10 +2560,19 @@ LowerPersonalityAfterFleeing_LowerByte::
     ld [de], a
     ret
 
-; data read by LowerPersonalityAfterFleeing (16 bytes) (E-0347)
+; Four rows of four bytes, one row per level band (below 10, below 20, below 30, 30 and over): the
+; amounts subtracted from wSlotPersonalityHi, wSlotPersonalityMid, wSlotPersonalityLo and wSlotTrait
+; of a party slot after fleeing: 4, 0, 0, 10 / 3, 0, 0, 5 / 2, 0, 0, 3 / 1, 0, 0, 2.
+; LowerPersonalityAfterFleeing uses this table when the slot wSlotTrait is below $97 and the level
+; comes from wBattleLevel; no value goes below 0. (C1, E-0381)
 LowerPersonalityAfterFleeing_Data1::
     db $04, $00, $00, $0a, $03, $00, $00, $05, $02, $00, $00, $03, $01, $00, $00, $02
 
+; Four rows of four bytes, one row per level band (below 10, below 20, below 30, 30 and over), same
+; layout as LowerPersonalityAfterFleeing_Data1 but with larger amounts: 8, 0, 0, 15 / 6, 0, 0, 10 /
+; 4, 0, 0, 5 / 2, 0, 0, 3 to subtract from wSlotPersonalityHi, wSlotPersonalityMid,
+; wSlotPersonalityLo and wSlotTrait. LowerPersonalityAfterFleeing uses it when the slot wSlotTrait
+; is $97 or more. (C1, E-0381)
 LowerPersonalityAfterFleeing_Data2::
     db $08, $00, $00, $0f, $06, $00, $00, $0a, $04, $00, $00, $05, $02, $00, $00, $03
 
@@ -2661,7 +2679,9 @@ RunBattleSetup_MainMenu_YesNoCursor::
     inc [hl]
     ret
 
-; data read by RunBattleSetup_MainMenu_YesNoCursor (4 bytes) (E-0347)
+; Two little-endian BG map addresses, $992F and $996F: vBGMap0 row 9, column 15 and row 11, column
+; 15, the places of the two answers. RunBattleSetup_MainMenu_YesNoCursor indexes it by wMenuSubState
+; bit 0 when A is pressed and writes the fixed cursor tile $BC there. (C1, E-0381)
 RunBattleSetup_MainMenu_YesNoCursor_Data1::
     db $2f, $99, $6f, $99
 
@@ -2804,7 +2824,7 @@ RunBattleSetup_PlanMenu_ShowTacticCursor::
     ld a, [hl]
     ld [wMenuSubState], a
     call CopyScreenBufferRect12x11ToBGMapRow7
-    ld hl, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld hl, BattleMenu_FourRowCursorOffsets
     ld a, [wMenuSubState]
     and $03
     add a
@@ -2828,7 +2848,7 @@ RunBattleSetup_PlanMenu_ShowTacticCursor::
 ; to act on the tactic (step $20); B goes back to the previous able monster, or to the main menu
 ; from the first. (C1, E-0357)
 RunBattleSetup_PlanMenu_TacticCursor::
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     ld hl, wMenuSubState
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -2967,7 +2987,7 @@ RunBattleSetup_PlanMenu_DrawActions::
 ; PLAN menu, step 5: draws the window and the cursor ($BB) at that choice; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowActionCursor::
     call RunBattleSetup_PlanMenu_CopyLeftBoxToBGMap
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     ld a, [wMenuSelectedMember]
     and $03
     add a
@@ -2988,7 +3008,7 @@ RunBattleSetup_PlanMenu_ShowActionCursor::
 ; shows 'It has no usable battle skills!' (step 8) or the skill list (step $10); Guard (action
 ; SKILL_GUARD at itself) is done. (C1, E-0357)
 RunBattleSetup_PlanMenu_ChooseAction::
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     ld hl, wMenuSelectedMember
     call ThreeEntryListCursor
     ld a, [wJoypadPressed]
@@ -3168,7 +3188,7 @@ RunBattleSetup_PlanMenu_ShowFoeCursor::
     ld e, $01
     ld a, $00
     call MoveTargetCursor
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     and $03
     add a
     add_a_to_hl
@@ -3192,7 +3212,7 @@ RunBattleSetup_PlanMenu_ChooseFoe::
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -3276,7 +3296,7 @@ RunBattleSetup_PlanMenu_DrawSkillList::
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     call ShowSkillPageNames
     call RunBattleSetup_PlanMenu_RedrawSkillList
     call RunBattleSetup_PlanMenu_DrawSkillList_BuildBoxes
@@ -3304,7 +3324,7 @@ RunBattleSetup_PlanMenu_DrawSkillList::
 ; PLAN menu, step 17: draws the list, the cursor and the page indicator; next step. (C1, E-0357)
 RunBattleSetup_PlanMenu_ShowSkillCursor::
     call RunBattleSetup_PlanMenu_RedrawLowerRows
-    ld hl, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld hl, BattleMenu_FourRowCursorOffsets
     ld a, [wMenuCursor]
     and $03
     add a
@@ -3331,7 +3351,7 @@ RunBattleSetup_PlanMenu_ShowSkillCursor::
 ; itself when alone (not for SKILL_VIVIFY and SKILL_REVIVE) or a chosen ally (step $18), $40 itself.
 ; (C1, E-0357)
 RunBattleSetup_PlanMenu_ChooseSkill::
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     ld hl, wMenuCursor
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -3615,7 +3635,7 @@ RunBattleSetup_PlanMenu_ShowAllyCursor::
     ld e, $01
     ld a, $00
     call MoveTargetCursor
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     and $03
     add a
     add_a_to_hl
@@ -3639,7 +3659,7 @@ RunBattleSetup_PlanMenu_ChooseAlly::
     and $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -3757,7 +3777,7 @@ RunBattleSetup_PlanMenu_ShowSkillFoeCursor::
     ld e, $01
     ld a, $00
     call MoveTargetCursor
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     and $03
     add a
     add_a_to_hl
@@ -3781,7 +3801,7 @@ RunBattleSetup_PlanMenu_ChooseSkillFoe::
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -3920,7 +3940,7 @@ RunBattleSetup_ItemMenu_DrawBagPage::
     call CopyScreenBufferRect20x11ToBGMapRow7
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     call ShowInventoryPageItemNames
     call RunBattleSetup_ItemMenu_RedrawItemList
     call RunBattleSetup_ItemMenu_DrawBagPage_BuildBox
@@ -3954,7 +3974,7 @@ RunBattleSetup_ItemMenu_DrawList::
     ret z
     xor a
     ld [wBattleArg0], a
-    ld hl, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld hl, BattleMenu_FourRowCursorOffsets
     ld a, [wMenuOption]
     and $03
     add a
@@ -3979,7 +3999,7 @@ RunBattleSetup_ItemMenu_DrawList::
 ; side first (step 4), 6 at once with no target; B clears the item and goes back (step 3). (C1,
 ; E-0357)
 RunBattleSetup_ItemMenu_ChooseItem::
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     ld hl, wMenuOption
     call MoveBattleCommandCursor
     ld a, [wJoypadPressed]
@@ -4082,7 +4102,7 @@ RunBattleSetup_ItemMenu_ChooseItem::
     bit 2, a
     jr z, .call_run_battle_setup_item_menu_redraw_item
     farcall SortInventory
-    ld de, RunBattleSetup_PlanMenu_ShowTacticCursor_Data
+    ld de, BattleMenu_FourRowCursorOffsets
     ld hl, wCommandCursor
     set 7, [hl]
 
@@ -4273,7 +4293,7 @@ RunBattleSetup_ItemMenu_ShowAllyCursor::
     ld e, $01
     ld a, $00
     call MoveTargetCursor
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     and $03
     add a
     add_a_to_hl
@@ -4296,7 +4316,7 @@ RunBattleSetup_ItemMenu_ChooseAlly::
     and $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -4399,7 +4419,7 @@ RunBattleSetup_ItemMenu_ShowFoeCursor::
     ld e, $01
     ld a, $00
     call MoveTargetCursor
-    ld hl, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld hl, BattleMenu_ThreeRowCursorOffsets
     and $03
     add a
     add_a_to_hl
@@ -4423,7 +4443,7 @@ RunBattleSetup_ItemMenu_ChooseFoe::
     xor $04
     ld b, a
     ld hl, wSubMenuCursor2
-    ld de, RunBattleSetup_PlanMenu_ShowActionCursor_Data
+    ld de, BattleMenu_ThreeRowCursorOffsets
     call TargetCursor
     ld a, [wJoypadPressed]
     bit 1, a
@@ -5339,7 +5359,10 @@ WriteFiveTilesFromTable::
     jr nz, .loop
     ret
 
-; data read by WriteFiveTilesFromTable (3 bytes) (E-0347)
+; Three bytes, $D0, $D5 and $DA: the first of five consecutive tile ids ($D0-$D4, $D5-$D9, $DA-$DE)
+; for party slot 0, 1 and 2, the name cells that appear in the battle menu window rectangles.
+; WriteFiveTilesFromTable indexes it by A (wCommandMonster masked with 3), clears wMenuSubState and
+; writes the five ids in sequence at HL. (C1, E-0381)
 WriteFiveTilesFromTable_Data::
     db $d0, $d5, $da
 
@@ -5781,22 +5804,48 @@ DrawInventoryPageIndicator::
     call WriteVRAMByte
     ret
 
-; data read by RunBattleSetup (8 bytes) (E-0347)
+; Four little-endian BG map offsets from vBGMap0, $01C1, $0201, $01C8 and $0208: row 14 column 1,
+; row 16 column 1, row 14 column 8 and row 16 column 8, the four places of the 2 by 2 battle main
+; menu. The entry is wMenuState masked with 3 (Up/Down flip bit 0, Left/Right bit 1);
+; RunBattleSetup_MainMenu_DrawCursor writes the cursor tile $BB there,
+; RunBattleSetup_MainMenu_Cursor and RunBattleSetup_ItemMenu_ShowSideCursor pass it to the blinking
+; cursor routine. (C1, E-0381)
 RunBattleSetup_MainMenu_DrawCursor_Data::
     db $c1, $01, $01, $02, $c8, $01, $08, $02
 
-RunBattleSetup_PlanMenu_ShowTacticCursor_Data::
+; Four little-endian BG map offsets from vBGMap0, $0141, $0181, $01C1 and $0201: column 1 of rows
+; 10, 12, 14 and 16, the four cursor places of a four-row battle menu. The entry is the menu byte
+; masked with 3 (wMenuSubState for the tactics; the skill and item lists pass it as well), and the
+; routine writes cursor tile $BB at vBGMap0 plus the offset. Eight routines of the PLAN and ITEM
+; menus read it, not only the tactic ones. (C1, E-0381)
+BattleMenu_FourRowCursorOffsets::
     db $41, $01, $81, $01, $c1, $01, $01, $02
 
-RunBattleSetup_PlanMenu_ShowActionCursor_Data::
+; Three little-endian BG map offsets from vBGMap0, $0181, $01C1 and $0201: column 1 of rows 12, 14
+; and 16, the cursor places of a three-row battle menu. The entry is the menu byte masked with 3,
+; and the routine writes cursor tile $BB at vBGMap0 plus the offset. Twelve routines of the PLAN and
+; ITEM menus read it (action, foe, ally and skill-target cursors), not only the action one. (C1,
+; E-0381)
+BattleMenu_ThreeRowCursorOffsets::
     db $81, $01, $c1, $01, $01, $02
 
+; Four little-endian BG map offsets from vBGMap0, $01C1, $0201, $01C1 and $0201: column 1 of rows 14
+; and 16, twice, so that the two-answer ally/foe side choice can use the same 4-entry cursor
+; routine. RunBattleSetup_ItemMenu_ChooseSide passes it to the blinking cursor routine. (C1, E-0381)
 RunBattleSetup_ItemMenu_ChooseSide_Data::
     db $c1, $01, $01, $02, $c1, $01, $01, $02
 
+; Four little-endian BG map offsets from vBGMap0, $0029, $0069, $00A9 and $00E9: column 9 of rows 1,
+; 3, 5 and 7, the cursor places beside the four skills of a page. ForgetSkillMenu_Cursor passes it
+; to MoveBattleCommandCursor, and ForgetSkillMenu_AskForget indexes it by wMenuState (low nibble) to
+; write the chosen mark tile $BC. (C1, E-0381)
 ForgetSkillMenu_Cursor_Data::
     db $29, $00, $69, $00, $a9, $00, $e9, $00
 
+; Four little-endian BG map offsets from vBGMap0, $012F, $016F, $012F and $016F: column 15 of rows 9
+; and 11 (the Yes and No places), repeated so the 4-entry cursor routine can use it.
+; RunBattleSetup_MainMenu_YesNoCursor and ForgetSkillMenu_ReadAnswer pass it to the blinking cursor
+; routine. (C1, E-0381)
 RunBattleSetup_MainMenu_YesNoCursor_Data2::
     db $2f, $01, $6f, $01, $2f, $01, $6f, $01
 
@@ -8225,7 +8274,10 @@ ForgetSkillMenu_WriteSkillNames::
     ld [wTextWindowTileHi], a
     ret
 
-; data read by ForgetSkillMenu (8 bytes) (E-0347)
+; Four little-endian VRAM addresses, $95C0, $9650, $96E0 and $9770, $90 bytes (9 tiles) apart: where
+; the four skill names of the current page are drawn. ForgetSkillMenu_WriteSkillNames indexes it by
+; the row 0 to 3 and loads the word into wTextWindowTileLo/Hi before showing the name (string
+; category 4, wStringIndex = the skill id from wWorkBuf). (C1, E-0381)
 ForgetSkillMenu_WriteSkillNames_Data::
     db $c0, $95, $50, $96, $e0, $96, $70, $97
 
@@ -8632,10 +8684,17 @@ LayoutTileBlocksForBattleFoeCount_WriteBlock::
 LayoutTileBlocksForBattleFoeCount_Done::
     ret
 
-; data read by LayoutTileBlocksForBattleFoeCount (6 bytes) (E-0347)
+; Three little-endian pointers, $C27F, $C27C and $C279: addresses in wScreenTileBuffer ($E7, $E4 and
+; $E1 bytes in; row 0 of the 32-byte-wide picture area, columns 7, 4 and 1) where the first 6 by 6
+; foe picture block is written. LayoutTileBlocksForBattleFoeCount indexes it by wBattleFoeCount - 1
+; (1 to 3 foes) and writes consecutive tile ids starting at $14 there. (C1, E-0381)
 LayoutTileBlocksForBattleFoeCount_Data1::
     db $7f, $c2, $7c, $c2, $79, $c2
 
+; Two little-endian pointers, $C282 and $C27F: addresses in wScreenTileBuffer ($EA and $E7 bytes in;
+; columns 10 and 7) where the second 6 by 6 foe picture block is written for two and for three foes.
+; LayoutTileBlocksForBattleFoeCount indexes it by wBattleFoeCount - 2; a third block, for three
+; foes, goes to wScreenTileBuffer + $ED. (C1, E-0381)
 LayoutTileBlocksForBattleFoeCount_Data2::
     db $82, $c2, $7f, $c2
 
@@ -10026,13 +10085,27 @@ UnreferencedShowFiveGlyphsAtTilesHL_Bank31:: ; configured code entry (E-0238); C
     ld [wTextWindowWidth], a
     ret
 
-; data read by DrawSlotHPDigits (6 bytes) (E-0347)
+; Three little-endian offsets, $0062, $0068 and $006E: row 3, columns 2, 8 and 14 of the
+; 32-byte-wide screen tile buffer and of vBGMap0, the HP digit places of battle slots 0 to 2.
+; DrawSlotHPDigits indexes it by the slot masked with 3 and writes three digit tiles of wBattleHP at
+; wScreenTileBuffer plus the offset; CopySlotHPDigitsPanelToVRAM copies those three tiles to vBGMap0
+; plus the offset. (C1, E-0381)
 DrawSlotHPDigits_Data::
     db $62, $00, $68, $00, $6e, $00
 
+; Three little-endian offsets, $0082, $0088 and $008E: row 4, columns 2, 8 and 14 of the
+; 32-byte-wide screen tile buffer and of vBGMap0, the MP digit places of battle slots 0 to 2.
+; DrawSlotMPDigits indexes it by the slot masked with 3 and writes three digit tiles of wBattleMP at
+; wScreenTileBuffer plus the offset; CopySlotMPDigitsPanelToVRAM copies those three tiles to vBGMap0
+; plus the offset. (C1, E-0381)
 DrawSlotMPDigits_Data::
     db $82, $00, $88, $00, $8e, $00
 
+; Three little-endian offsets, $00A1, $00A7 and $00AD: row 5, columns 1, 7 and 13 of the
+; 32-byte-wide screen tile buffer and of vBGMap0, the level places of battle slots 0 to 2.
+; DrawSlotStatusMarks_DrawLevel indexes it by the slot masked with 3 and writes the label tiles $EA
+; and $AF followed by two digit tiles of wBattleLevel; CopySlotLevelPanelToVRAM copies two tiles to
+; vBGMap0 plus the offset. (C1, E-0381)
 DrawSlotStatusMarks_DrawLevel_Data::
     db $a1, $00, $a7, $00, $ad, $00
 

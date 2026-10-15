@@ -1066,10 +1066,17 @@ SceneThisWay::
     inc de
     jr .skip2
 
-; data read by SceneThisWay (12 bytes) (E-0347)
+; Three rows of four bytes, chosen by hMapScreenX times 4 and used when hMapScreenY is 0: ($00, $00,
+; $01, $FF), ($00, $FF, ...) and ($03, $01, $00, $FF). SceneThisWay writes the bytes one after
+; another to wSpriteSlots + 7, then +$17, +$27 and so on (byte 7 of each 16-byte sprite slot, the
+; facing) until it reaches $FF. (C1, E-0381)
 SceneThisWay_Data1::
     db $00, $00, $01, $ff, $00, $ff, $ff, $ff, $03, $01, $00, $ff
 
+; Three rows of four bytes, chosen by hMapScreenX times 4 and used when hMapScreenY is 1: ($01, $03,
+; $02, $FF), ($01, $FF, ...) and ($02, $02, $01, $FF). SceneThisWay writes the bytes one after
+; another to byte 7 (the facing) of consecutive 16-byte sprite slots in wSpriteSlots until it
+; reaches $FF; when hMapScreenY is 2 it does nothing. (C1, E-0381)
 SceneThisWay_Data2::
     db $01, $03, $02, $ff, $01, $ff, $ff, $ff, $02, $02, $01, $ff
 
@@ -1251,7 +1258,10 @@ SetFlagRedraw::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SetFlagRedraw (4 bytes) (E-0347)
+; Four X positions, $20, $40, $50 and $80, of treasure chests on the map. SetFlagRedraw takes
+; hPlayerX, adds $10 when the player faces right or subtracts $10 when facing left, searches the
+; list for that value (there is no end check) and sets the story flag $01CF plus the position in the
+; list before redrawing the screen. (C1, E-0381)
 SetFlagRedraw_Data::
     db $20, $40, $50, $80
 
@@ -1760,7 +1770,10 @@ SceneLimboMonster2_ShowWarubouWaheyGoodGood::
     ld [wScriptStep], a
     ret
 
-; data read by SceneLimboMonster2 (8 bytes) (E-0347)
+; Four (X, Y) pairs in sprite coordinates, ($D0, $10), ($C0, $20), ($D0, $30) and ($E0, $20), a
+; diamond around ($D0, $20), indexed by wObject1 + OBJ_STATE (0-3) times 2. After a yes answer
+; SceneLimboMonster2_ShowWarubouWaheyGoodGood copies the pair into wObject2 + OBJ_X and wObject2 +
+; OBJ_Y. The same 8 bytes are SceneLimboMonster_ShowWarubouWaheyGoodGood_Data. (C1, E-0381)
 SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
@@ -1961,7 +1974,10 @@ SceneLimboMonster_ShowWarubouWaheyGoodGood::
     ld [wScriptStep], a
     ret
 
-; data read by SceneLimboMonster (8 bytes) (E-0347)
+; Four (X, Y) pairs in sprite coordinates, ($D0, $10), ($C0, $20), ($D0, $30) and ($E0, $20), a
+; diamond around ($D0, $20), indexed by wObject1 + OBJ_STATE (0-3) times 2. After a yes answer
+; SceneLimboMonster_ShowWarubouWaheyGoodGood copies the pair into wObject2 + OBJ_X and wObject2 +
+; OBJ_Y. The same 8 bytes are SceneLimboMonster2_ShowWarubouWaheyGoodGood_Data. (C1, E-0381)
 SceneLimboMonster_ShowWarubouWaheyGoodGood_Data::
     db $d0, $10, $c0, $20, $d0, $30, $e0, $20
 
@@ -2411,7 +2427,10 @@ SceneYouDidIt_ShowMessage::
     call StartMessageHL_B85
     ret
 
-; data read by SceneYouDidIt (25 bytes) (E-0347)
+; Twelve (map id, message index) byte pairs ended by $FF: maps $CA, $CB, $CC, $CD, $D3, $D4, $D5,
+; $D6, $DC, $DD, $DE and $DF get the consecutive indexes $4A-$55. SceneYouDidIt_ShowMessage searches
+; for hMapId, puts the index in L with group $0C in H and starts that message with
+; StartMessageHL_B85; a map that is not listed shows nothing. (C1, E-0381)
 SceneYouDidIt_ShowMessage_Data::
     db $ca, $4a, $cb, $4b, $cc, $4c, $cd, $4d, $d3, $4e, $d4, $4f, $d5, $50, $d6, $51
     db $dc, $52, $dd, $53, $de, $54, $df, $55, $ff
@@ -2692,7 +2711,9 @@ SceneBarrel_StartBattle::
     inc [hl]
     ret
 
-; data read by SceneBarrel (4 bytes) (E-0347)
+; Four ScriptedEncounterTable record numbers, $0D, $0E, $0F and $10, one per barrel (index
+; wScriptParam1 AND 3). SceneBarrel_StartBattle puts the byte in hTemp0 and calls
+; StartScriptedEncounterTemp0. (C1, E-0381)
 SceneBarrel_StartBattle_Data::
     db $0d, $0e, $0f, $10
 
@@ -2718,7 +2739,9 @@ SceneBarrel_ShowMessage::
     inc [hl]
     ret
 
-; data read by SceneBarrel (8 bytes) (E-0347)
+; Four little-endian message words, $076C, $076F, $0772 and $0775 (index $6C, $6F, $72 and $75 in
+; message group 7), one per barrel (index wScriptParam1 AND 3). SceneBarrel_ShowMessage loads the
+; word into HL and starts it with StartMessageHL_B85. (C1, E-0381)
 SceneBarrel_ShowMessage_Data::
     db $6c, $07, $6f, $07, $72, $07, $75, $07
 
@@ -2887,7 +2910,9 @@ SceneLimbo_PlaceItem::
     inc [hl]
     ret
 
-; data read by SceneLimbo (3 bytes) (E-0347)
+; Three field command numbers, $03, $08 and $0A, indexed by wScriptParam1 (0-2).
+; SceneLimbo_PlaceItem puts the byte in hTemp0, calls RunFieldCommandTemp0 and then sets wObject5 to
+; X $40, Y $30, hidden. (C1, E-0381)
 SceneLimbo_PlaceItem_Data::
     db $03, $08, $0a
 
@@ -3462,7 +3487,10 @@ SceneGreatlogKey_FlyOff::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SceneGreatlogKey (32 bytes) (E-0347)
+; Thirty-two X positions for wObject5 (SCRIPTOBJ_X), one per frame (index wScriptParam0, 0-31),
+; rising from $42 to $90 in steps of alternately 3 and 2 pixels. SceneGreatlogKey_FlyOff uses them
+; only when wScriptParam1 is nonzero (the key thrown the other way); otherwise the key moves left 2
+; pixels a frame. The Y position falls along AddStepDeltaToPointedByte_Data. (C1, E-0381)
 SceneGreatlogKey_FlyOff_Data::
     db $42, $45, $47, $4a, $4c, $4f, $51, $54, $56, $59, $5b, $5e, $60, $63, $65, $68
     db $6a, $6d, $6f, $72, $74, $77, $79, $7c, $7e, $81, $83, $86, $88, $8b, $8d, $90
@@ -4076,7 +4104,11 @@ Talk04CB_ThatKeyIUsed_CheckPartySpecies::
     ldh [hTemp0], a
     ret
 
-; data read by Talk04CB_ThatKeyIUsed_CheckPartySpecies (12 bytes) (E-0347)
+; A list of five species words ended by a zero word: $0161, $0164, $0167, $0169 and $0174
+; (MONSTER_LORDDRACO, MONSTER_GENOSIDOH, MONSTER_ASURAZOMA, MONSTER_PSYCHOPIZ and MONSTER_DARCK).
+; Talk04CB_ThatKeyIUsed_CheckPartySpecies compares the MON_SPECIES word of each party member that is
+; not marked dead (MON_STATUS bit 7 clear) with the list and sets hTemp0 to 1 when one matches,
+; otherwise 0. (C1, E-0381)
 Talk04CB_ThatKeyIUsed_CheckPartySpecies_Data::
     db $61, $01, $64, $01, $67, $01, $69, $01, $74, $01, $00, $00
 
@@ -4285,11 +4317,19 @@ SetupMap0BMonsterObjects::
     jr nz, .loop
     ret
 
-; data read by SetupMap0BMonsterObjects (20 bytes) (E-0347)
+; Five rows of four bytes (20 bytes), indexed by wArenaRank * 4 + wRecordCapacity (rank 0-4, column
+; 0-3): $06 $19 $18 $00, $15 $09 $16 $00, $14 $1E $2A $00, $0D $2B $12 $00, $28 $11 $20 $00.
+; SetupMap0BMonsterObjects uses it when bit 7 of wArenaFlags is clear and stores the byte in
+; wSpriteSlots + 2 and in hTemp0 as the field sprite graphics id, which
+; DecompressGraphicsTemp0ToTemp4 loads to vTiles0 + $400. Column 3 is $00 in every row. (C1, E-0381)
 SetupMap0BMonsterObjects_Data1::
     db $06, $19, $18, $00, $15, $09, $16, $00, $14, $1e, $2a, $00, $0d, $2b, $12, $00
     db $28, $11, $20, $00
 
+; Thirty-two field sprite graphics ids in ascending order ($06-$0D, $10-$16, $1A-$1D, $21, $24-$26,
+; $28-$2A, $2E, $2F, $33, $38, $39, $3D), picked with wKeyRandomHi AND $1F. SetupMap0BMonsterObjects
+; uses it when bit 7 of wArenaFlags is set: the byte goes to wSpriteSlots + 2 and hTemp0 and is
+; loaded as graphics id to vTiles0 + $400 by DecompressGraphicsTemp0ToTemp4. (C1, E-0381)
 SetupMap0BMonsterObjects_Data2::
     db $06, $07, $08, $09, $0a, $0b, $0c, $0d, $10, $11, $12, $13, $14, $15, $16, $1a
     db $1b, $1c, $1d, $21, $24, $25, $26, $28, $29, $2a, $2e, $2f, $33, $38, $39, $3d
@@ -4451,10 +4491,20 @@ RandomGoldOrItem_PickFind_RollFind_RandomUnder99::
     jr nc, RandomGoldOrItem_PickFind_RollFind_RandomUnder99
     ret
 
-; data read by RandomGoldOrItem_PickFind_RollFind (16 bytes) (E-0347)
+; Two rows of eight bytes (the last two of each row unused), one row for each parity of the map
+; sprite kind high nibble minus 2, six item ids per row picked by a roll tier 0-5 (a 0-98 roll below
+; 50, 70, 80, 90, 95, or higher). Row 0 is ITEM_BEEFJERKY, ITEM_PORKCHOP, ITEM_RIB, ITEM_RIB,
+; ITEM_SIRLOIN, ITEM_TINYMEDAL; row 1 is ITEM_HERB, ITEM_MOONHERB, ITEM_WARP, ITEM_MIST,
+; ITEM_WORLDLEAF, ITEM_TINYMEDAL. RandomGoldOrItem_PickFind_RollFind stores the id in wScriptParam1
+; and uses it to index RandomGoldOrItem_PickFind_RollFind_Data2. (C1, E-0381)
 RandomGoldOrItem_PickFind_RollFind_Data1::
     db $19, $1a, $1b, $1b, $1c, $2c, $00, $00, $01, $07, $28, $22, $0c, $2c, $00, $00
 
+; Forty-five bytes indexed by item id (0-$2C): the trigger kind that
+; RandomGoldOrItem_PickFind_RollFind stores in wTriggerKind for the find, or 0 for no find. The ids
+; the finds can give map to kind 8 for the four meats ($19-$1C), 4 for ITEM_HERB, ITEM_MOONHERB and
+; ITEM_WORLDLEAF, 9 for ITEM_WARP and ITEM_MIST, and 1 for ITEM_TINYMEDAL ($2C); other entries hold
+; 4-10 or 0. LoadTriggerMarkerGraphics then loads the marker sprite for the kind. (C1, E-0381)
 RandomGoldOrItem_PickFind_RollFind_Data2::
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
@@ -4531,16 +4581,31 @@ LoadSpeciesFlagsPresetC::
     jr nz, .loop
     ret
 
-; data read by LoadSpeciesFlagsPresetC (15 bytes) (E-0347)
+; A 48-byte bit set for wSpeciesFlags (one bit per monster id, id / 8 byte, id AND 7 bit), the
+; preset chosen when register C is 0; 15 data bytes followed by zeros. 101 ids are set, in the runs
+; 1-26, 36-66, 71-102 and 106-117, and the set is contained in the sets of the other two presets.
+; LoadSpeciesFlagsPresetC copies 48 bytes from it into wSpeciesFlags;
+; GreatLogTalkEvents_SpeciesPreset selects it when the player stands at X $30. (C1, E-0381)
 LoadSpeciesFlagsPresetC_Data1::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $3f
     ds $21, $00
 
+; A 48-byte bit set for wSpeciesFlags (one bit per monster id, id / 8 byte, id AND 7 bit), the
+; preset chosen when register C is 1; 31 data bytes followed by zeros. 201 ids are set (runs 1-26,
+; 36-66, 71-102, 106-132, 141-167, 176-201, 211-240 and 246-247); it contains preset 0 and is
+; contained in preset 2. LoadSpeciesFlagsPresetC copies 48 bytes from it into wSpeciesFlags;
+; GreatLogTalkEvents_SpeciesPreset selects it when the player stands at X $40. (C1, E-0381)
 LoadSpeciesFlagsPresetC_Data2::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $ff, $ff
     db $1f, $e0, $ff, $ff, $ff, $00, $ff, $ff, $ff, $03, $f8, $ff, $ff, $ff, $c1
     ds $11, $00
 
+; A 48-byte bit set for wSpeciesFlags (one bit per monster id, id / 8 byte, id AND 7 bit), the
+; preset chosen when register C is 2 or more; 47 data bytes, after which the bank is zero filled.
+; 312 ids are set (runs 1-26, 36-66, 71-102, 106-132, 141-167, 176-201, 211-240, 246-272, 281-312,
+; 316-347 and 351-372), a superset of the other two presets. LoadSpeciesFlagsPresetC copies the
+; first 48 bytes into wSpeciesFlags; GreatLogTalkEvents_SpeciesPreset selects it for any other
+; player X. (C1, E-0381)
 LoadSpeciesFlagsPresetC_Data3::
     db $fe, $ff, $ff, $07, $f0, $ff, $ff, $ff, $87, $ff, $ff, $ff, $7f, $fc, $ff, $ff
     db $1f, $e0, $ff, $ff, $ff, $00, $ff, $ff, $ff, $03, $f8, $ff, $ff, $ff, $c1, $ff

@@ -5,11 +5,11 @@ SECTION "Bank 17", ROMX[$4000], BANK[$17]
     db $17
 
 ; When wSGBActive is set, sends a packet set through rP1 (ldh [c] with C = 0): wSGBPacketBuffer when
-; wSGBPacketIndex is $FF, else the pointer in SendSGBPaletteSetPacket_SendPacketSet_Data; the first
-; byte's low three bits give the number of 16-byte packets, each sent as a reset pulse, 128 bits
-; ($10 for 1, $20 for 0, each followed by $30) and a stop bit, with SpinDelay between packets. The
-; same instructions as SendSGBPacketSet in bank $1F with this bank's own table; its only caller,
-; SendSGBPaletteSetPacket, sets wSGBPacketIndex to $FF first. (C2, E-0370; probed E-0378)
+; wSGBPacketIndex is $FF, else the pointer in SGBPacketSetTable_Bank17; the first byte's low three
+; bits give the number of 16-byte packets, each sent as a reset pulse, 128 bits ($10 for 1, $20 for
+; 0, each followed by $30) and a stop bit, with SpinDelay between packets. The same instructions as
+; SendSGBPacketSet in bank $1F with this bank's own table; its only caller, SendSGBPaletteSetPacket,
+; sets wSGBPacketIndex to $FF first. (C2, E-0370; probed E-0378)
 SendSGBPaletteSetPacket_SendPacketSet::
     ld a, [wSGBActive]
     or a
@@ -24,7 +24,7 @@ SendSGBPaletteSetPacket_SendPacketSet::
     ld l, a
     ld h, $00
     add hl, hl
-    ld de, SendSGBPaletteSetPacket_SendPacketSet_Data
+    ld de, SGBPacketSetTable_Bank17
     add hl, de
     ld e, [hl]
     inc hl
@@ -77,86 +77,192 @@ SendSGBPaletteSetPacket_SendPacketSet::
     call SpinDelay
     jr .skip3
 
-; data read by SendSGBPaletteSetPacket (4 bytes, 19 words) (E-0347)
-SendSGBPaletteSetPacket_SendPacketSet_Data::
+; A table of 21 words (the first two written as the bytes $FF $40 $0F $41, that is $40FF and $410F),
+; indexed by wSGBPacketIndex: each word points to a Super Game Boy packet set whose first byte is
+; command * 8 + packet count. Entries 0 and 1 point into the unlabeled packets after
+; SgbDataSnd_Bank17_Id9 (MASK_EN 1 and MASK_EN 0), 2 to 9 are the eight DATA_SND packets, 10 and 11
+; MLT_REQ, 12 PAL_TRN, 13 ATTR_TRN, 14 PAL_SET, 15 PCT_TRN, 16 and 17 CHR_TRN, 18 PAL_PRI, 19
+; ICON_EN, 20 MASK_EN 2. The bank $1F table SGBPacketSetTable has the same 21 entries; here the
+; pointer branch is not taken because the only caller, SendSGBPaletteSetPacket, sets wSGBPacketIndex
+; to $FF so that the packet in wSGBPacketBuffer is sent instead. (C1, E-0381)
+SGBPacketSetTable_Bank17::
     db $ff, $40, $0f, $41
-    dw PointerRun_Entry00
-    dw PointerRun_Entry01
-    dw PointerRun_Entry02
-    dw PointerRun_Entry03_2
-    dw PointerRun_Entry04_2
-    dw PointerRun_Entry05
-    dw PointerRun_Entry06_2
-    dw PointerRun_Entry07_2
-    dw PointerRun_Entry08_2
-    dw PointerRun_Entry09_2
-    dw PointerRun_Entry0A_2
-    dw PointerRun_Entry0B
-    dw PointerRun_Entry0C
-    dw PointerRun_Entry0D
-    dw PointerRun_Entry0E
-    dw PointerRun_Entry0F
-    dw PointerRun_Entry10
-    dw PointerRun_Entry11
-    dw PointerRun_Entry12
+    dw SgbDataSnd_Bank17_Id2
+    dw SgbDataSnd_Bank17_Id3
+    dw SgbDataSnd_Bank17_Id4
+    dw SgbDataSnd_Bank17_Id5
+    dw SgbDataSnd_Bank17_Id6
+    dw SgbDataSnd_Bank17_Id7
+    dw SgbDataSnd_Bank17_Id8
+    dw SgbDataSnd_Bank17_Id9
+    dw SgbMltReq_Bank17_Id10
+    dw SgbMltReq_Bank17_Id11
+    dw SgbPalTrn_Bank17_Id12
+    dw SgbAttrTrn_Bank17_Id13
+    dw SgbPalSet_Bank17_Id14
+    dw SgbPctTrn_Bank17_Id15
+    dw SgbChrTrn_Bank17_Id16
+    dw SgbChrTrn_Bank17_Id17
+    dw SgbPalPri_Bank17_Id18
+    dw SgbIconEn_Bank17_Id19
+    dw SgbMaskEn_Bank17_Id20
 
-PointerRun_Entry00::
+; A 16-byte Super Game Boy packet, table entry 2 of SGBPacketSetTable_Bank17. DATA_SND ($79: command
+; $0F, one packet): SNES address $00:085D, 11 data bytes $8C $D0 $F4 $60 and seven zeros. It is one
+; of eight DATA_SND packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to
+; $0867 in descending chunks; the bytes look like machine code for the SNES CPU (opcodes such as
+; $EA, $4C and $60 appear), but what the code does is not established here. The packet is not a
+; pointer run: the label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id2::
     db $79, $5d, $08, $00, $0b, $8c, $d0, $f4, $60, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry01::
+; A 16-byte Super Game Boy packet, table entry 3 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:0852, 11 data bytes $A9 $E7 $9F $01 $C0 $7E $E8 $E8 $E8 $E8 $E0. It is one of eight DATA_SND
+; packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending
+; chunks; the bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60
+; appear), but what the code does is not established here. The packet is not a pointer run: the
+; label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id3::
     db $79, $52, $08, $00, $0b, $a9, $e7, $9f, $01, $c0, $7e, $e8, $e8, $e8, $e8, $e0
 
-PointerRun_Entry02::
+; A 16-byte Super Game Boy packet, table entry 4 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:0847, 11 data bytes $C4 $D0 $16 $A5 $CB $C9 $05 $D0 $10 $A2 $28. It is one of eight DATA_SND
+; packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending
+; chunks; the bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60
+; appear), but what the code does is not established here. The packet is not a pointer run: the
+; label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id4::
     db $79, $47, $08, $00, $0b, $c4, $d0, $16, $a5, $cb, $c9, $05, $d0, $10, $a2, $28
 
-PointerRun_Entry03_2::
+; A 16-byte Super Game Boy packet, table entry 5 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:083C, 11 data bytes $F0 $12 $A5 $C9 $C9 $C8 $D0 $1C $A5 $CA $C9. It is one of eight DATA_SND
+; packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending
+; chunks; the bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60
+; appear), but what the code does is not established here. The packet is not a pointer run: the
+; label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id5::
     db $79, $3c, $08, $00, $0b, $f0, $12, $a5, $c9, $c9, $c8, $d0, $1c, $a5, $ca, $c9
 
-PointerRun_Entry04_2::
+; A 16-byte Super Game Boy packet, table entry 6 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:0831, 11 data bytes $0C $A5 $CA $C9 $7E $D0 $06 $A5 $CB $C9 $7E. It is one of eight DATA_SND
+; packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending
+; chunks; the bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60
+; appear), but what the code does is not established here. The packet is not a pointer run: the
+; label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id6::
     db $79, $31, $08, $00, $0b, $0c, $a5, $ca, $c9, $7e, $d0, $06, $a5, $cb, $c9, $7e
 
-PointerRun_Entry05::
+; A 16-byte Super Game Boy packet, table entry 7 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:0826, 11 data bytes $39 $CD $48 $0C $D0 $34 $A5 $C9 $C9 $80 $D0. It is one of eight DATA_SND
+; packets (table entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending
+; chunks; the bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60
+; appear), but what the code does is not established here. The packet is not a pointer run: the
+; label comes from the dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id7::
     db $79, $26, $08, $00, $0b, $39, $cd, $48, $0c, $d0, $34, $a5, $c9, $c9, $80, $d0
 
-PointerRun_Entry06_2::
+; A 16-byte Super Game Boy packet, table entry 8 of SGBPacketSetTable_Bank17. DATA_SND: SNES address
+; $00:081B, 11 data bytes $EA x5 $A9 $01 $CD $4F $0C $D0. It is one of eight DATA_SND packets (table
+; entries 2 to 9) that write 88 bytes to SNES addresses $0810 to $0867 in descending chunks; the
+; bytes look like machine code for the SNES CPU (opcodes such as $EA, $4C and $60 appear), but what
+; the code does is not established here. The packet is not a pointer run: the label comes from the
+; dw list in SGBPacketSetTable_Bank17. (C1, E-0381)
+SgbDataSnd_Bank17_Id8::
     db $79, $1b, $08, $00, $0b, $ea, $ea, $ea, $ea, $ea, $a9, $01, $cd, $4f, $0c, $d0
 
-PointerRun_Entry07_2::
+; Three 16-byte Super Game Boy packets. The first is table entry 9 of SGBPacketSetTable_Bank17, the
+; last DATA_SND packet: SNES address $00:0810, 11 data bytes $4C $20 $08 $EA x5 $60 $EA $EA (the
+; first bytes read like a jump to $0820, then no-ops and a return). The next 16 bytes ($B9 $01, at
+; $40FF) and the 16 after them ($B9 $00, at $410F) are MASK_EN packets with mode 1 (freeze the
+; screen) and mode 0 (cancel the mask); they are table entries 0 and 1 and have no label of their
+; own. (C1, E-0381)
+SgbDataSnd_Bank17_Id9::
     db $79, $10, $08, $00, $0b, $4c, $20, $08, $ea, $ea, $ea, $ea, $ea, $60, $ea, $ea
     db $b9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
     db $b9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry08_2::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 10 of
+; SGBPacketSetTable_Bank17: MLT_REQ ($89: command $11, one packet) with parameter 0, which selects
+; one-player mode. It has the same bytes as the packet of the same table entry in bank $1F
+; (SGBPacketSetTable). The label comes from the dw list, the data is a packet and not a run of
+; pointers. (C1, E-0381)
+SgbMltReq_Bank17_Id10::
     db $89, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry09_2::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 11 of
+; SGBPacketSetTable_Bank17: MLT_REQ with parameter 1, which selects two-player mode. It has the same
+; bytes as the packet of the same table entry in bank $1F (SGBPacketSetTable). The label comes from
+; the dw list, the data is a packet and not a run of pointers. (C1, E-0381)
+SgbMltReq_Bank17_Id11::
     db $89, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0A_2::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 12 of
+; SGBPacketSetTable_Bank17: PAL_TRN ($59: command $0B), whose parameters are all zero: the SNES
+; takes palette data from the screen transfer sent next. It has the same bytes as the packet of the
+; same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw list, the data is a
+; packet and not a run of pointers. (C1, E-0381)
+SgbPalTrn_Bank17_Id12::
     db $59, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0B::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 13 of
+; SGBPacketSetTable_Bank17: ATTR_TRN ($A9: command $15), whose parameters are all zero: the SNES
+; takes attribute files from the screen transfer sent next. It has the same bytes as the packet of
+; the same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw list, the data
+; is a packet and not a run of pointers. (C1, E-0381)
+SgbAttrTrn_Bank17_Id13::
     db $a9, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0C::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 14 of
+; SGBPacketSetTable_Bank17: PAL_SET ($51: command $0A) with palette numbers 0, 1, 2, 3 in bytes 1 to
+; 8 and $C0 in byte 9 (apply attribute file 0, cancel the screen mask). It has the same bytes as the
+; packet of the same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw list,
+; the data is a packet and not a run of pointers. (C1, E-0381)
+SgbPalSet_Bank17_Id14::
     db $51, $00, $00, $01, $00, $02, $00, $03, $00, $c0, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0D::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 15 of
+; SGBPacketSetTable_Bank17: PCT_TRN ($A1: command $14), whose parameters are all zero: the SNES
+; takes the border picture from the screen transfer sent next. It has the same bytes as the packet
+; of the same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw list, the
+; data is a packet and not a run of pointers. (C1, E-0381)
+SgbPctTrn_Bank17_Id15::
     db $a1, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0E::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 16 of
+; SGBPacketSetTable_Bank17: CHR_TRN ($99: command $13) with parameter 0, the transfer of border
+; tiles $00 to $7F. It has the same bytes as the packet of the same table entry in bank $1F
+; (SGBPacketSetTable). The label comes from the dw list, the data is a packet and not a run of
+; pointers. (C1, E-0381)
+SgbChrTrn_Bank17_Id16::
     db $99, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry0F::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 17 of
+; SGBPacketSetTable_Bank17: CHR_TRN with parameter 1, the transfer of border tiles $80 to $FF. It
+; has the same bytes as the packet of the same table entry in bank $1F (SGBPacketSetTable). The
+; label comes from the dw list, the data is a packet and not a run of pointers. (C1, E-0381)
+SgbChrTrn_Bank17_Id17::
     db $99, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry10::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 18 of
+; SGBPacketSetTable_Bank17: PAL_PRI ($C9: command $19) with parameter 1. It has the same bytes as
+; the packet of the same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw
+; list, the data is a packet and not a run of pointers. (C1, E-0381)
+SgbPalPri_Bank17_Id18::
     db $c9, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry11::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 19 of
+; SGBPacketSetTable_Bank17: ICON_EN ($71: command $0E) with parameter 1. It has the same bytes as
+; the packet of the same table entry in bank $1F (SGBPacketSetTable). The label comes from the dw
+; list, the data is a packet and not a run of pointers. (C1, E-0381)
+SgbIconEn_Bank17_Id19::
     db $71, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-PointerRun_Entry12::
+; A 16-byte Super Game Boy packet (command * 8 + packet count in byte 0), table entry 20 of
+; SGBPacketSetTable_Bank17: MASK_EN ($B9: command $17) with mode 2, which blanks the screen to
+; black. It has the same bytes as the packet of the same table entry in bank $1F
+; (SGBPacketSetTable). The label comes from the dw list, the data is a packet and not a run of
+; pointers. (C1, E-0381)
+SgbMaskEn_Bank17_Id20::
     db $b9, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; Does nothing unless wSGBActive is non-zero. Then it clears wSGBPacketBuffer and builds a PAL_SET

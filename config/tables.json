@@ -1634,7 +1634,7 @@
           "name": "one CGB palette: 4 BGR555 colours"
         }
       ],
-      "note": "E-0145 (C1: entry 0 of AreaPaletteTable)."
+      "note": "Eight background palettes of four little-endian BGR555 colors each ($40 bytes), the palette set of map 0; the same bytes are AreaPalettes0 (entry 0 of AreaPaletteTable), a label at the same address, so this name is an alias taken from the staff-roll reader. Palette 7 is all black. DebugStaffRoll_Scene00_Load copies all $40 bytes into wBGPaletteBuffer, and DebugStaffRoll_Credits_TitleCard copies only the first palette ($08 bytes). (C1, E-0381); E-0145 (C1: entry 0 of AreaPaletteTable)."
     },
     {
       "bank": "47",

@@ -7355,7 +7355,12 @@ ActionEffect_ActionDB::
     lb bc, $40, $90
     jp StoreActorMessage_Bank36
 
-; data read by ActionEffect_ActionDB (16 bytes) (E-0347)
+; Four entries of four bytes: status bit, effect action id, message id and a zero that is not read.
+; $02, $2F, $77; $20, $34, $D9; $40, $2F, $76; $10, $34, $42. ActionEffect_ActionDB picks the entry
+; with bits 2 and 3 of wRandomLo, ORs byte 0 into the target status byte (badly poisoned, cursed,
+; paralyzed or confused: BSTAT0_BADLY_POISONED, BSTAT0_CURSED, BSTAT0_PARALYZED, BSTAT0_CONFUSED),
+; plays the effect action in byte 1 (unless it is $FF) and stores the message in byte 2 with
+; StoreActorMessage_Bank36. (C1, E-0381)
 ActionEffect_ActionDB_Data::
     db $02, $2f, $77, $00, $20, $34, $d9, $00, $40, $2f, $76, $00, $10, $34, $42, $00
 
@@ -10128,7 +10133,9 @@ ActionEffect_LoveRain_HealIfFlagSet::
 .to_set_sub_phase7_and_reset_resolve_step:
     jp SetSubPhase7AndResetResolveStep
 
-; data read by ActionEffect_LoveRain (16 bytes) (E-0347)
+; Sixteen bytes: 0 seven times, 1 five times and 2 four times. ActionEffect_LoveRain indexes it by
+; the low nibble of wRandomLo and stores the byte (the heal kind 0, 1 or 2) in the actor wHealFlags
+; entry, so the three kinds have odds 7, 5 and 4 in 16. (C1, E-0381)
 ActionEffect_LoveRain_Data::
     db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $02, $02, $02, $02
 
@@ -11022,7 +11029,12 @@ ClearBattleStatusBitsWithMaskD_Bank36::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_Bank36 (7 bytes) (E-0347)
+; Seven AND masks for the first status byte of a battler (BSTAT0_*): $DF clears bit 5
+; (BSTAT0_CURSED), $FE bit 0 (BSTAT0_POISONED), $00 all bits, $FD bit 1 (BSTAT0_BADLY_POISONED), $73
+; bits 2, 3 and 7 (the sleep counter and BSTAT0_ASLEEP), $EF bit 4 (BSTAT0_CONFUSED) and $BF bit 6
+; (BSTAT0_PARALYZED). ClearBattleStatusBitsWithMaskD_Bank36 indexes it by D (0 to 6) and ANDs the
+; mask into the wBattleStatus byte of slot E (9 bytes per slot). The same 7 bytes are in several
+; battle banks. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_Bank36_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

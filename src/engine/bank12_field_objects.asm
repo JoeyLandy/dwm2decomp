@@ -4688,7 +4688,9 @@ FieldScene01_DrawSprite::
     call QueueMusic
     ret
 
-; data read by FieldScene01 (2 bytes) (E-0347)
+; A $FF-terminated list of map ids holding one id, $30 (then $FF). FieldScene01_DrawSprite searches
+; it for hMapId on a map that is not a special map; on a match, or in a key world of map type $80,
+; it queues music $2B with QueueMusic. (C1, E-0381)
 FieldScene01_DrawSprite_Data::
     db $30, $ff
 
@@ -7025,7 +7027,10 @@ DrawAnimatedMetaSprite1B::
     farcall DrawMetaSprite
     ret
 
-; data read by DrawAnimatedMetaSprite1B (30 bytes) (E-0347)
+; 30 bytes of sprite sub-index for the animated meta-sprite set $1B: ten $00, ten $01 and ten $02.
+; DrawAnimatedMetaSprite1B indexes it with the frame counter (wFrameCounterLo and wFrameCounterHi)
+; modulo 30 and stores the byte in hSpriteSubIndex, so the sprite cycles through three sub-sprites,
+; each shown for 10 frames. (C1, E-0381)
 DrawAnimatedMetaSprite1B_Data::
     db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01
     db $01, $01, $01, $01, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02
@@ -7818,28 +7823,60 @@ DrawFieldSprites_StepFramePairs::
     ld a, [hl]
     ret
 
-; data read by DrawFieldSprites_AnimateSubIndex (5 bytes) (E-0347)
+; A list of frame durations in frames, 8, 8, 8, 8, ended by $FF: four frames of 8 frames each, for
+; sprite set $13. DrawFieldSprites_StepFrameLoop counts wObject5 + $6 up to the duration of frame
+; wObject5 + $7, then advances the frame, wrapping to 0 when the next entry is $FF; the frame number
+; is the sub-index (hSpriteSubIndex). (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data1::
     db $08, $08, $08, $08, $ff
 
+; A list of frame durations, 8, 8, ended by $FF: two frames of 8 frames each, for sprite set $1A.
+; DrawFieldSprites_StepFrameLoop advances the frame in wObject5 + $7 when the counter wObject5 + $6
+; reaches the current duration and wraps to frame 0 at the $FF; the frame number is the sub-index.
+; (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data2::
     db $08, $08, $ff
 
+; A list of frame durations, 7, 7, 9, ended by $FF: three frames for sprite set $17.
+; DrawFieldSprites_StepFrameLoop advances the frame in wObject5 + $7 when the counter wObject5 + $6
+; reaches the current duration and wraps to frame 0 at the $FF; the frame number is the sub-index.
+; (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data3::
     db $07, $07, $09, $ff
 
+; Twelve frame durations in frames (14 for frames 0-6, 54, 14, 14, 14, then 64) followed by four $FF
+; bytes, for sprite set $1F. DrawFieldSprites_StepFrameLoop steps the frame in wObject5 + $7 through
+; them and wraps to 0 at the $FF; the sub-index is not the frame number but the byte of
+; DrawFieldSprites_AnimateSubIndex_Data5 for it. (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data4::
     db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $36, $0e, $0e, $0e, $40, $ff, $ff, $ff, $ff
 
+; Twelve sub-index values, 0, 1, 2, 1, 2, 1, 2, 0, 3, 4, 5, 6, followed by four $FF padding bytes,
+; indexed by the frame number wObject5 + $7 (0-11) of sprite set $1F.
+; DrawFieldSprites_AnimateSubIndex stores the byte in hSpriteSubIndex; the durations of the same
+; frames are in DrawFieldSprites_AnimateSubIndex_Data4. (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data5::
     db $00, $01, $02, $01, $02, $01, $02, $00, $03, $04, $05, $06, $ff, $ff, $ff, $ff
 
+; A list of frame durations, 4, 7, 7, 4, ended by $FF: four frames for sprite set $1E.
+; DrawFieldSprites_StepFrameLoop advances the frame in wObject5 + $7 when the counter wObject5 + $6
+; reaches the current duration and wraps to frame 0 at the $FF; the frame number is the sub-index.
+; (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data6::
     db $04, $07, $07, $04, $ff
 
+; A list of frame durations, $20, $20, ended by $FF: two frames of 32 frames each, for sprite set
+; $18. DrawFieldSprites_StepFrameLoop advances the frame in wObject5 + $7 when the counter wObject5
+; + $6 reaches the current duration and wraps to frame 0 at the $FF; the frame number is the
+; sub-index. (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data7::
     db $20, $20, $ff
 
+; Eighteen (sub-index, duration) byte pairs and an $FF, $FF end mark, for sprite set $20: (0,30),
+; (0,5), (1,4), (2,5), (1,4), (0,5), (1,4), (2,5), (3,4), (4,5), (3,4), (2,5), (5,4), (6,5), (5,4),
+; (2,5), (1,4), (0,5). DrawFieldSprites_StepFramePairs steps pair wObject5 + $7 when the counter
+; wObject5 + $6 reaches its duration and returns its sub-index for hSpriteSubIndex; at the end mark
+; it stays on the last pair instead of wrapping. (C1, E-0381)
 DrawFieldSprites_AnimateSubIndex_Data8::
     db $00, $1e, $00, $05, $01, $04, $02, $05, $01, $04, $00, $05, $01, $04, $02, $05
     db $03, $04, $04, $05, $03, $04, $02, $05, $05, $04, $06, $05, $05, $04, $02, $05
@@ -8113,7 +8150,12 @@ LoadTriggerMarkerGraphics::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; data read by FindTriggerEntryForCurrentScreen (45 bytes) (E-0347)
+; 45 bytes, each a trigger kind 0-10 (0 means none), indexed by the second byte of the map object
+; entry (wMapObjects) or screen trigger entry (wScreenTriggers) that was found for the screen.
+; FindTriggerEntryForCurrentScreen_StoreTrigger uses it only when the low two bits of the entry
+; first byte are 0 (otherwise those bits are the kind) and stores a non-zero result in wTriggerKind,
+; which selects the marker graphics (TriggerSpriteTable) and sprite set
+; (DrawTriggerMarkerSprite_Data1). (C1, E-0381)
 FindTriggerEntryForCurrentScreen_StoreTrigger_Data::
     db $00, $04, $05, $05, $05, $05, $04, $04, $04, $04, $06, $00, $04, $07, $07, $07
     db $07, $07, $07, $00, $00, $00, $00, $00, $00, $08, $08, $08, $08, $08, $00, $00
@@ -8315,10 +8357,17 @@ DrawTriggerMarkerSprite::
     farcall DrawMetaSprite
     ret
 
-; data read by DrawTriggerMarkerSprite (11 bytes) (E-0347)
+; Eleven meta-sprite set numbers, indexed by wTriggerKind (0-10): $00, $09, $01, $01, $02, $03, $04,
+; $05, $06, $07, $08. DrawTriggerMarkerSprite stores the byte in hSpriteSetIndex and draws that set
+; (sub-index 0, tile offset $40) with DrawMetaSprite. (C1, E-0381)
 DrawTriggerMarkerSprite_Data1::
     db $00, $09, $01, $01, $02, $03, $04, $05, $06, $07, $08
 
+; Sixteen (X, Y) pixel pairs, indexed by wTriggerCell times 2: ($10,$20), ($10,$70), ($20,$10),
+; ($20,$40), ($20,$60), ($30,$30), ($40,$50), ($40,$70), ($50,$10), ($50,$30), ($60,$50), ($70,$20),
+; ($70,$40), ($70,$70), ($80,$10), ($80,$60). DrawTriggerMarkerSprite uses them on special map types
+; (wMapType bit 7) with no screen triggers, adding 8 to X and $10 to Y and the scroll for the marker
+; origin; they are the cells of IsPlayerOnTriggerCell_Data multiplied by 16. (C1, E-0381)
 DrawTriggerMarkerSprite_Data2::
     db $10, $20, $10, $70, $20, $10, $20, $40, $20, $60, $30, $30, $40, $50, $40, $70
     db $50, $10, $50, $30, $60, $50, $70, $20, $70, $40, $70, $70, $80, $10, $80, $60
@@ -8655,7 +8704,11 @@ FieldState_WalkAMenu_CheckKeyWorldItemOnA::
     ld [wJoypadPressed], a
     ret
 
-; data read by FieldState_WalkAMenu_CheckKeyWorldItemOnA (8 bytes) (E-0347)
+; Eight packed screen coordinates, $01, $10, $12, $13, $20, $21, $23 and $32 (high nibble the screen
+; X, low nibble the screen Y). FieldState_WalkAMenu_CheckKeyWorldItemOnA indexes it with a byte of
+; the current floor entry in wKeyWorldFloorState, compares the result with the screen the player is
+; on (hMapScreenX high, hMapScreenY low) and, when equal, starts talk event group $0E with the
+; address of that floor entry in wScriptParam0 and wScriptParam1. (C1, E-0381)
 FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 
@@ -8719,7 +8772,11 @@ IsPlayerOnTriggerCell::
     pop bc
     ret
 
-; data read by IsPlayerOnTriggerCell (32 bytes) (E-0347)
+; Sixteen (X, Y) cell pairs, indexed by wTriggerCell times 2: (1,2), (1,7), (2,1), (2,4), (2,6),
+; (3,3), (4,5), (4,7), (5,1), (5,3), (6,5), (7,2), (7,4), (7,7), (8,1), (8,6) (cells of 16 pixels).
+; IsPlayerOnTriggerCell uses them on special map types other than $85; the player is on the trigger
+; cell when its pixel X and Y divided by 16 equal the pair. DrawTriggerMarkerSprite_Data2 holds the
+; same cells in pixels. (C1, E-0381)
 IsPlayerOnTriggerCell_Data::
     db $01, $02, $01, $07, $02, $01, $02, $04, $02, $06, $03, $03, $04, $05, $04, $07
     db $05, $01, $05, $03, $06, $05, $07, $02, $07, $04, $07, $07, $08, $01, $08, $06

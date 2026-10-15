@@ -71,7 +71,7 @@ CopyStringToBuffer_Bank7C_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_99::
-; data read by BeginStringDisplay_Bank2D_Overflow (1 word) (E-0347)
+; another name for the data at StringCategories_99, whose note is above (E-0381)
 MessageStrings_Bank2D_Overflow::
     dw StringList_Bank2D_Overflow_0 ; id 0
 
@@ -410,6 +410,7 @@ Text_ICantBeBothered::
     db "@"
 
 StringCategories_99_2::
+; another name for the data at StringCategories_99_2, whose note is above (E-0381)
 MessageStrings_Bank2E_Overflow::
     dw StringList_Bank2E_Overflow_0 ; id 0
 
@@ -1040,6 +1041,7 @@ Text_Empty_8::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_99_3::
+; another name for the data at StringCategories_99_3, whose note is above (E-0381)
 MessageStrings_Bank7C_Overflow::
     dw StringList_Bank7C_Overflow_0 ; id 0
 

@@ -100,7 +100,11 @@ TravelerEvents_Thief_ShowTheFugitiveMasterWas::
     ld [wScriptStep], a
     ret
 
-; data read by TravelerEvents (8 bytes) (E-0347)
+; Four little-endian story flag numbers, $0193, $0196, $0199 and $019C (EVENT_KING_IF_YOU_SEE,
+; EVENT_KING_IF_YOU_SEE_196, EVENT_KING_IF_YOU_SEE_199 and EVENT_KING_IF_YOU_SEE_19C), one per
+; traveler thief event $0C-$0F (index wPendingFieldEvent AND $0F, minus $0C, times 2). After the
+; player wins the battle, TravelerEvents_Thief_ShowTheFugitiveMasterWas loads the word into DE and
+; calls SetFlagBit to set that flag. (C1, E-0381)
 TravelerEvents_Thief_ShowTheFugitiveMasterWas_Data::
     db $93, $01, $96, $01, $99, $01, $9c, $01
 
@@ -556,7 +560,10 @@ TravelerEvents_CasinoShip_SpinReels::
     inc [hl]
     ret
 
-; data read by TravelerEvents (15 bytes) (E-0347)
+; Fifteen tile ids forming a slot machine frame of three rows of five tiles: $B0 $B1 $B1 $B1 $B2
+; (top edge), $B6 $A4 $A5 $A6 $B7 (middle, where $A4-$A6 are the three reel windows) and $B3 $B4 $B4
+; $B4 $B5 (bottom edge). TravelerEvents_CasinoShip_SpinReels copies the rows into wScreenTileBuffer,
+; one row every $14 tiles, then draws the buffer with DrawFullScreenBufferAtScroll. (C1, E-0381)
 TravelerEvents_CasinoShip_SpinReels_Data::
     db $b0, $b1, $b1, $b1, $b2, $b6, $a4, $a5, $a6, $b7, $b3, $b4, $b4, $b4, $b5
 
@@ -1252,11 +1259,21 @@ TravelerEvents_CardGame_OfferPrize::
     inc [hl]
     ret
 
-; data read by TravelerEvents_CardGame_ShowIPickedOhSame (20 bytes) (E-0347)
+; Five rows of four item ids (20 bytes), the possible prizes of the card game, one row per win count
+; (wScriptParam1 0-4): ITEM_WORLDDEW, ITEM_MIST, ITEM_WARP, ITEM_EXITBELL; ITEM_SAGEROCK, ITEM_BOLT,
+; ITEM_ELFWATER, ITEM_BOOKMARK; ITEM_WORLDLEAF, ITEM_FRIEND, ITEM_FIRE, ITEM_TINYMEDAL;
+; ITEM_LIFEACORN, ITEM_MYSTICNUT, ITEM_SNOW, ITEM_METEORB; ITEM_ATKSEED, ITEM_DEFSEED, ITEM_AGLSEED,
+; ITEM_INTSEED. The column is wKeyRandomLo AND 3; the chosen id goes to wScriptParam0 and its name
+; to the message text. TravelerEvents_CardGame_OfferPrize reads row 0 and
+; TravelerEvents_CardGame_ShowIPickedOhSame the row of the next win count. (C1, E-0381)
 TravelerEvents_CardGame_ShowIPickedOhSame_Data1::
     db $03, $22, $28, $2a, $0b, $25, $05, $2b, $0c, $23, $27, $2c, $11, $12, $26, $1e
     db $0d, $0e, $0f, $10
 
+; Five little-endian words, 100, 300, 600, 1000 and 1500, one per win count (wScriptParam1 0-4): the
+; gold stake of the card game at that level. TravelerEvents_CardGame_ShowIPickedOhSame loads the
+; word into wDigits, converts it with Number24ToPackedBCD and writes it into wTextNumber for the
+; message "I will take <n>G and any prize" on a loss, or the next stake on a win. (C1, E-0381)
 TravelerEvents_CardGame_ShowIPickedOhSame_Data2::
     db $64, $00, $2c, $01, $58, $02, $e8, $03, $dc, $05
 
@@ -1601,7 +1618,11 @@ TravelerEvents_MedicineMaster_BoostStat::
     call WritePackedBCDNoLeadingZeros
     ret
 
-; data read by TravelerEvents (6 bytes) (E-0347)
+; Six record field offsets of a monster, $5D, $61, $63, $65, $67 and $69 (MON_MAX_HP, MON_MAX_MP,
+; MON_ATK, MON_DEF, MON_AGL, MON_INT), indexed by wScriptParam0 (0-5).
+; TravelerEvents_MedicineMaster_BoostStat reads the 16-bit stat at that offset in the SRAM record of
+; the chosen party member, adds 20 (at most 999) and writes it back, and shows the gain as a number
+; in the message. (C1, E-0381)
 TravelerEvents_MedicineMaster_BoostStat_Data::
     db $5d, $61, $63, $65, $67, $69
 
@@ -2823,7 +2844,11 @@ SceneChestBattle_SetChestFlag::
     ld [wScriptStartRequest], a
     ret
 
-; data read by SceneChestBattle (54 bytes) (E-0347)
+; Twenty-seven little-endian story flag numbers (54 bytes), one per map id $C8-$E2 (index hMapId -
+; $C8). Fifteen are the object-removed story flag of the same map, such as
+; EVENT_MAP_CA_OBJECT_REMOVED for map $CA (maps $CA-$CE, $D3-$D7 and $DC-$E0); the rest are $0000
+; (EVENT_NEVER_SET). SceneChestBattle_SetChestFlag loads the word into DE and calls SetFlagBit after
+; a chest battle. (C1, E-0381)
 SceneChestBattle_SetChestFlag_Data::
     db $00, $00, $00, $00, $d4, $01, $d9, $01, $dd, $01, $6a, $01, $6e, $01, $00, $00
     db $00, $00, $00, $00, $00, $00, $74, $01, $78, $01, $7c, $01, $d5, $00, $d9, $00
@@ -2916,7 +2941,10 @@ SceneChestBattle_StartBattle::
     inc [hl]
     ret
 
-; data read by SceneChestBattle (27 bytes) (E-0347)
+; Twenty-seven record numbers of ScriptedEncounterTable, one per map id $C8-$E2 (index hMapId -
+; $C8): $20-$24 for maps $CA-$CE, $25-$29 for maps $D3-$D7 and $2A-$2E for maps $DC-$E0, and $00 for
+; the other maps. SceneChestBattle_StartBattle puts the byte in hTemp0 and calls
+; StartScriptedEncounterTemp0 to start the chest monster battle. (C1, E-0381)
 SceneChestBattle_StartBattle_Data::
     db $00, $00, $20, $21, $22, $23, $24, $00, $00, $00, $00, $25, $26, $27, $28, $29
     db $00, $00, $00, $00, $2a, $2b, $2c, $2d, $2e, $00, $00
@@ -4383,7 +4411,12 @@ SceneGravestone_StartPush::
     inc [hl]
     ret
 
-; data read by SceneGravestone (16 bytes) (E-0347)
+; Four 4-byte entries chosen by the player column: ((hPlayerX high nibble) - 5) AND 3. Byte 0 is a
+; facing for wScriptParam1 and the sprite slot (3 left, 2 up, 0 down, 1 right), byte 1 goes to
+; wMessageIndex and byte 2 to wMessageGroup as the X and Y step ($F0 is -16, $10 is +16); byte 3 is
+; $00 and is not read. The four entries are (3, -16, 0), (2, 0, -16), (0, 0, +16) and (1, +16, 0),
+; so the gravestone is pushed left, up, down or right depending on where the player stands. (C1,
+; E-0381)
 SceneGravestone_StartPush_Data::
     db $03, $f0, $00, $00, $02, $00, $f0, $00, $00, $00, $10, $00, $01, $10, $00, $00
 
@@ -4967,10 +5000,19 @@ ScriptCommand4C_Run_PlaceObject::
     inc hl
     jr .skip
 
-; data read by ScriptCommand4C_Run_PlaceObject (12 bytes) (E-0347)
+; Six (map id, position) byte pairs, used before EVENT_SCENE_DARCK_DEFEATED is set: maps $06, $12,
+; $00, $02, $16 and $1A with positions $31, $44, $63, $24, $53 and $43.
+; ScriptCommand4C_Run_PlaceObject searches the list for hMapId (there is no end marker, so the map
+; must be listed) and places wObject5 at X = the high nibble times 16 and Y = the low nibble times
+; 16 minus 8. (C1, E-0381)
 ScriptCommand4C_Run_PlaceObject_Data1::
     db $06, $31, $12, $44, $00, $63, $02, $24, $16, $53, $1a, $43
 
+; The same six (map id, position) pairs as ScriptCommand4C_Run_PlaceObject_Data1, used once
+; EVENT_SCENE_DARCK_DEFEATED is set, with two positions changed: map $00 is $53 instead of $63 and
+; map $16 is $42 instead of $53. ScriptCommand4C_Run_PlaceObject finds the pair for hMapId and
+; places wObject5 at X = the high nibble times 16 and Y = the low nibble times 16 minus 8. (C1,
+; E-0381)
 ScriptCommand4C_Run_PlaceObject_Data2::
     db $06, $31, $12, $44, $00, $53, $02, $24, $16, $42, $1a, $43
 
@@ -6476,7 +6518,12 @@ SceneKamehaEscape_AnimateScreen::
     inc [hl]
     ret
 
-; data read by SceneKamehaEscape (24 bytes) (E-0347)
+; Six 4-byte frames: two ROM addresses in bank $58, the screen tile map and its attribute map. The
+; frame is the frame counter modulo 6: ScreenMap58_1 with ScreenMap58_3, ScreenMap58_2 with
+; ScreenMap58_4, Map40Screens2_Y0X0 with Map40Attrs2_Y0X0, ScreenMap58_2 with ScreenMap58_4 again,
+; ScreenMap58_1 with ScreenMap58_3 again, and Map40Screens0_Y0X0 with Map40Attrs0_Y0X0.
+; SceneKamehaEscape_AnimateScreen draws one frame per call for nine frames with
+; SceneKamehaEscape_DrawScreen and SceneKamehaEscape_LoadScreenAttrs. (C1, E-0381)
 SceneKamehaEscape_AnimateScreen_Data::
     db $06, $47, $42, $4c, $fb, $47, $cb, $4c, $ee, $48, $3c, $4d, $fb, $47, $cb, $4c
     db $06, $47, $42, $4c, $ff, $45, $b3, $4b
@@ -8042,7 +8089,7 @@ ScriptStepSetObjectBit2AndWait::
 ShiftObjectsYByTable::
     ld a, [wScriptParam0]
     and $3f
-    ld hl, ShiftObjectsYByTable_Data
+    ld hl, SceneWarubouFood_StepsX_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -8198,7 +8245,11 @@ SceneWarubouFood_FlyObject5::
     ld [wScriptParam1], a
     ret
 
-; data read by SceneWarubouFood (64 bytes) (E-0347)
+; Sixty-four X positions for wObject5 (SCRIPTOBJ_X), one per frame (index wScriptParam0, 0-63),
+; rising from $21 to $50 and never decreasing, most frames by one pixel and every third or fourth
+; frame by none. SceneWarubouFood_FlyObject5 writes the byte into wObject5 + SCRIPTOBJ_X each frame,
+; while AddStepDeltaToPointedByte_Data supplies the Y hop; at frame 64 the object is hidden at ($68,
+; $30). (C1, E-0381)
 SceneWarubouFood_FlyObject5_Data::
     db $21, $22, $23, $23, $24, $25, $26, $27, $28, $29, $2a, $2a, $2b, $2c, $2d, $2e
     db $2f, $30, $30, $31, $32, $33, $34, $35, $35, $36, $37, $38, $39, $39, $3a, $3b
@@ -8209,7 +8260,7 @@ SceneWarubouFood_FlyObject5_Data::
 ; table for 64 frames (SceneWarubouFood_AddToX); next step. (C1, E-0357)
 SceneWarubouFood_MoveLeft::
     ld a, [wScriptParam0]
-    ld hl, ShiftObjectsYByTable_Data
+    ld hl, SceneWarubouFood_StepsX_Data
     add_a_to_hl
     ld a, [hl]
     xor $ff
@@ -8221,7 +8272,7 @@ SceneWarubouFood_MoveLeft::
 ; step. (C1, E-0357)
 SceneWarubouFood_MoveRight::
     ld a, [wScriptParam0]
-    ld hl, ShiftObjectsYByTable_Data
+    ld hl, SceneWarubouFood_StepsX_Data
     add_a_to_hl
     ld a, [hl]
     ld c, a
@@ -8252,8 +8303,13 @@ SceneWarubouFood_AddToX::
     ld [wScriptParam0], a
     ret
 
-; data read by ShiftObjectsYByTable (64 bytes) (E-0347)
-ShiftObjectsYByTable_Data::
+; Sixty-four signed per-frame steps, each -1, 0 or +1 (32 zeros, 16 of each sign), which sum to
+; zero. Despite the name the steps are added to the X coordinate: ShiftObjectsYByTable adds entry
+; (wScriptParam0 AND $3F), negated when bit 6 is set, to wObject1, wObject2 and wObject5;
+; SceneWarubouFood_MoveRight and SceneWarubouFood_MoveLeft add or subtract it for the player,
+; wObject2, the first follower and wObject5 over 64 frames. The objects end where they began, so it
+; is a back-and-forth wobble rather than a walk. (C1, E-0381)
+SceneWarubouFood_StepsX_Data::
     db $01, $00, $01, $00, $01, $01, $00, $ff, $01, $00, $00, $ff, $00, $ff, $ff, $00
     db $01, $00, $00, $00, $01, $01, $ff, $00, $00, $ff, $00, $00, $00, $ff, $01, $00
     db $01, $00, $01, $00, $00, $01, $01, $01, $00, $00, $ff, $00, $00, $00, $ff, $01
@@ -8919,7 +8975,10 @@ SceneLearnQuick_FaceSprite0ByLeg::
     ld [wSpriteSlots + $7], a
     ret
 
-; data read by SceneLearnQuick (4 bytes) (E-0347)
+; Four facing bytes indexed by wMessageGroup AND 3 (the leg of object 2): 1, 0, 3, 2.
+; SceneLearnQuick_FaceSprite0ByLeg stores the byte in wSpriteSlots + 7 as the facing of sprite 0.
+; With the facing values seen in the Homecoming and Gravestone scenes (3 left, 2 up, 0 down, 1
+; right) the four legs make sprite 0 face right, down, left and up in turn. (C1, E-0381)
 SceneLearnQuick_FaceSprite0ByLeg_Data::
     db $01, $00, $03, $02
 

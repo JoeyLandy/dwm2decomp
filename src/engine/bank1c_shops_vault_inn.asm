@@ -207,7 +207,12 @@ InnMenu_ShowPrice::
     ld [wScriptStartRequest], a
     ret
 
-; data read by InnMenu (24 bytes) (E-0347)
+; An 8 by 3 tile picture of the gold panel, three rows of tile ids: top border $B0 $B1 x6 $B2,
+; middle $B6 $BF $C3 x5 $B7, bottom $B3 $B4 x6 $B5. InnMenu_ShowPrice copies the 24 bytes to
+; wScreenSubStep (so the first $C3 cell is wScreenArea), DrawGoldDigitsAtHLWrapped_1C writes the
+; gold digits over the five $C3 cells, and the rectangle is then copied into wWindowTileBuffer and
+; wScreenTileBuffer and drawn. The bytes are identical to InnMenu_Pay_DrawGoldPanel_Data. (C1,
+; E-0381)
 InnMenu_ShowPrice_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
@@ -990,7 +995,10 @@ InnMenu_Pay_DrawGoldPanel::
     call DrawScreenBufferRectToBGMap_1C
     ret
 
-; data read by InnMenu (24 bytes) (E-0347)
+; The same 8 by 3 tile picture of the gold panel as InnMenu_ShowPrice_Data: top border $B0 $B1 x6
+; $B2, middle $B6 $BF $C3 x5 $B7, bottom $B3 $B4 x6 $B5. InnMenu_Pay_DrawGoldPanel copies it to
+; wScreenSubStep, lets DrawGoldDigitsAtHLWrapped_1C write the gold digits over the five $C3 cells
+; (starting at wScreenArea), and draws the rectangle. (C1, E-0381)
 InnMenu_Pay_DrawGoldPanel_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
@@ -1471,7 +1479,10 @@ ShopMenu_ChooseAction_DrawCursorTile::
     ei
     ret
 
-; data read by ShopMenu (6 bytes) (E-0347)
+; Three words that are offsets from the BG map entry at the top left of the visible screen
+; (BGMapAddressAtScroll_Bank1C_2): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
+; ShopMenu_ChooseAction_DrawCursorTile indexes them with wListLastRow and writes tile B (cursor or
+; blank) at that entry. (C1, E-0381)
 ShopMenu_ChooseAction_DrawCursorTile_Data::
     db $21, $00, $61, $00, $a1, $00
 
@@ -2184,7 +2195,10 @@ DrawItemGridXCursorTile::
     ei
     ret
 
-; data read by DrawItemGridXCursorTile (8 bytes) (E-0347)
+; Four words that are offsets from the top left BG map entry of the visible screen: $00A2, $00E2,
+; $0122, $0162, which are rows 5, 7, 9 and 11 of column 2. DrawItemGridXCursorTile indexes them with
+; wItemGridX (0 to 3) and writes tile B at that entry, stepping back a row when the view has
+; wrapped. (C1, E-0381)
 DrawItemGridXCursorTile_Data::
     db $a2, $00, $e2, $00, $22, $01, $62, $01
 
@@ -2726,10 +2740,20 @@ ShopMenu_Buy_EnterQuantity_DrawNumber::
     ei
     ret
 
-; data read by ShopMenu (2 bytes) (E-0347)
+; One word, the offset $0161 from the top left BG map entry of the visible screen (row 11, column
+; 1): the place of the tens digit of the quantity. ShopMenu_Buy_EnterQuantity_DrawNumber and
+; ShopMenu_Sell_EnterQuantity_DrawNumber read it as the tens position;
+; ShopMenu_Buy_EnterQuantity_DrawDigitTile and ShopMenu_Sell_EnterQuantity_DrawDigitTile index it
+; with wNumberEditPos, so position 1 would read the word of the label that follows ($0162, the ones
+; digit). (C1, E-0381)
 ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data::
     db $61, $01
 
+; One word, the offset $0162 from the top left BG map entry of the visible screen (row 11, column
+; 2): the place of the ones digit of the quantity. ShopMenu_Buy_EnterQuantity_DrawNumber writes $E0
+; + wNumberOnes there; because it directly follows ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data,
+; ShopMenu_Buy_EnterQuantity_DrawDigitTile reads it as entry 1 when wNumberEditPos is 1. (C1,
+; E-0381)
 ShopMenu_Buy_EnterQuantity_DrawNumber_Data::
     db $62, $01
 
@@ -3176,7 +3200,9 @@ ShopMenu_Buy_YesNoCursor_DrawTile::
     ei
     ret
 
-; data read by ShopMenu (4 bytes) (E-0347)
+; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
+; which are rows 9 and 11 of column 15. ShopMenu_Buy_YesNoCursor_DrawTile indexes them with
+; wShopCursorToggle (0 or 1) and writes tile B at that entry. (C1, E-0381)
 ShopMenu_Buy_YesNoCursor_DrawTile_Data::
     db $2f, $01, $6f, $01
 
@@ -4610,7 +4636,10 @@ ShopMenu_Sell_EnterQuantity_DrawNumber::
     ret
     db $61, $01
 
-; data read by ShopMenu (2 bytes) (E-0347)
+; One word, the offset $0162 from the top left BG map entry of the visible screen (row 11, column
+; 2): the place of the ones digit of the quantity. ShopMenu_Sell_EnterQuantity_DrawNumber writes $E0
+; + wNumberOnes there (the tens digit uses ShopMenu_Buy_EnterQuantity_DrawDigitTile_Data). The two
+; bytes $61 $01 before this label, after the ret, are not read. (C1, E-0381)
 ShopMenu_Sell_EnterQuantity_DrawNumber_Data::
     db $62, $01
 
@@ -4925,7 +4954,10 @@ ShopMenu_Sell_YesNoCursor_DrawTile::
     ei
     ret
 
-; data read by ShopMenu (4 bytes) (E-0347)
+; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
+; which are rows 9 and 11 of column 15, the same as ShopMenu_Buy_YesNoCursor_DrawTile_Data.
+; ShopMenu_Sell_YesNoCursor_DrawTile indexes them with wShopCursorToggle (0 or 1) and writes tile B
+; at that entry. (C1, E-0381)
 ShopMenu_Sell_YesNoCursor_DrawTile_Data::
     db $2f, $01, $6f, $01
 
@@ -5170,7 +5202,13 @@ ComputeSellPrice::
     pop bc
     ret
 
-; data read by ShopMenu (40 bytes) (E-0347)
+; An 8 by 5 tile picture of the gold and item count box (five rows of 8 tile ids): top border $B0
+; $B1 x6 $B2; gold row $B6 $BF $C3 x5 $B7; divider $B8 $B9 x6 $BA; count row $B6 $AE $AD $EC $AF $C3
+; $C3 $B7; bottom border $B3 $B4 x6 $B5. It is copied to wScreenList: all $28 bytes by
+; InitItemListScreenListAndCount, the first $20 (four rows) by ShopMenu_Buy_Pay, ShopMenu_Sell_Pay,
+; VaultMenu_Store_RedrawGold and InitItemListScreenListAndDraw. The gold digits then go to
+; wGoldDigits (row 1, column 2) and the item count digits to wItemCountTens and wItemCountOnes (row
+; 3, columns 5 and 6). (C1, E-0381)
 ShopMenu_Buy_Pay_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7
     db $b8, $b9, $b9, $b9, $b9, $b9, $b9, $ba, $b6, $ae, $ad, $ec, $af, $c3, $c3, $b7
@@ -7145,7 +7183,10 @@ VaultMenu_ChooseAction_DrawCursorTile::
     ei
     ret
 
-; data read by VaultMenu (6 bytes) (E-0347)
+; Three words that are offsets from the top left BG map entry of the visible screen
+; (BGMapAddressAtScroll_Bank1C_2): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
+; VaultMenu_ChooseAction_DrawCursorTile indexes them with wListLastRow and writes tile B at that
+; entry (without the wrap step-back the shop version has). (C1, E-0381)
 VaultMenu_ChooseAction_DrawCursorTile_Data::
     db $21, $00, $61, $00, $a1, $00
 

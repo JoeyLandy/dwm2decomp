@@ -96,7 +96,7 @@ CopyStringToBuffer_Bank08_Overflow::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_95::
-; data read by BeginStringDisplay_Bank08_Overflow (12 words) (E-0347)
+; another name for the data at StringCategories_95, whose note is above (E-0381)
 StringCategories_Bank95::
     dw StringList_95 ; id 0
     dw StringList_95_2 ; id 1
@@ -114,6 +114,7 @@ StringCategories_Bank95::
 ; category list of StringCategories_95; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_95::
+; another name for the data at StringList_95, whose note is above (E-0381)
 StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_00 ; id 0
     dw String_95_00_00 ; id 1
@@ -293,10 +294,12 @@ StringTable95_Cat09_SkillDescriptions::
     dw String_95_00_AB ; id 175
 
 StringList_95_2::
+; another name for the data at StringList_95_2, whose note is above (E-0381)
 StringTable95_Cat0A::
     dw String_95_01_00 ; id 0
 
 StringList_95_3::
+; another name for the data at StringList_95_3, whose note is above (E-0381)
 StringTable95_Cat0B::
     dw String_95_02_00 ; id 0
     dw String_95_02_01 ; id 1
@@ -336,10 +339,12 @@ StringTable95_Cat0B::
     dw String_95_02_23 ; id 35
 
 StringList_95_4::
+; another name for the data at StringList_95_4, whose note is above (E-0381)
 StringTable95_Cat0C_FieldActions::
     dw String_95_03_00 ; id 0
 
 StringList_95_5::
+; another name for the data at StringList_95_5, whose note is above (E-0381)
 StringTable_FieldAbilities::
     dw String_95_04_00 ; id 0
     dw String_95_04_01 ; id 1
@@ -350,6 +355,7 @@ StringTable_FieldAbilities::
     dw String_95_04_06 ; id 6
 
 StringList_95_6::
+; another name for the data at StringList_95_6, whose note is above (E-0381)
 StringTable95_Cat0E_Tactics::
     dw String_95_05_00 ; id 0
     dw String_95_05_00 ; id 1
@@ -359,11 +365,13 @@ StringTable95_Cat0E_Tactics::
     dw String_95_05_05 ; id 5
 
 StringList_95_7::
+; another name for the data at StringList_95_7, whose note is above (E-0381)
 StringTable95_Cat0F::
     dw String_95_06_00 ; id 0
     dw String_95_06_00 ; id 1
 
 StringList_95_8::
+; another name for the data at StringList_95_8, whose note is above (E-0381)
 StringTable95_Cat10::
     dw String_95_06_00 ; id 0
     dw String_95_07_01 ; id 1
@@ -376,6 +384,7 @@ StringTable95_Cat10::
     dw String_95_07_08 ; id 8
 
 StringList_95_9::
+; another name for the data at StringList_95_9, whose note is above (E-0381)
 StringTable95_Cat11_Targets::
     dw String_95_08_00 ; id 0
     dw String_95_08_01 ; id 1
@@ -390,6 +399,7 @@ StringTable95_Cat11_Targets::
     dw String_95_08_0A ; id 10
 
 StringList_95_10::
+; another name for the data at StringList_95_10, whose note is above (E-0381)
 StringTable95_Cat12_SkillFamilies::
     dw String_95_09_00 ; id 0
     dw String_95_09_01 ; id 1
@@ -421,6 +431,7 @@ StringTable95_Cat12_SkillFamilies::
     dw String_95_09_1B ; id 27
 
 StringList_95_11::
+; another name for the data at StringList_95_11, whose note is above (E-0381)
 StringTable95_Cat13_SkillTypes::
     dw String_95_0A_00 ; id 0
     dw String_95_0A_01 ; id 1
@@ -432,6 +443,7 @@ StringTable95_Cat13_SkillTypes::
     dw String_95_0A_07 ; id 7
 
 StringList_95_12::
+; another name for the data at StringList_95_12, whose note is above (E-0381)
 StringTable95_Cat14_Usable::
     dw String_95_0B_00 ; id 0
     dw String_95_0B_01 ; id 1

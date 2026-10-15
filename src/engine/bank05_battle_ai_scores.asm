@@ -6772,7 +6772,11 @@ TestSlotStatus1Bit6::
     bit BSTAT1_DANCE_SEALED, [hl]
     ret
 
-; data read by SlotCHasCastableHealSkill (8 bytes) (E-0347)
+; Eight bytes, $02, $05, $07, $12, $24, $01, $0C, $1C, read as MP costs. SlotCHasCastableHealSkill
+; takes the cost at index 5, 6 or 7 for SKILL_LIFEDANCE, SKILL_HUSTLE and SKILL_LOVERAIN ($01, $0C,
+; $1C), but for the five heal skills $16-$1A it computes id - $1B, which wraps to $FB-$FF and reads
+; bytes after the table, so entries 0-4 are never indexed by this reader; they look like the costs
+; of the five heal skills ($02, $05, $07, $12, $24). (C1, E-0381)
 SlotCHasCastableHealSkill_Data::
     db $02, $05, $07, $12, $24, $01, $0c, $1c
 
@@ -9567,7 +9571,13 @@ ReadByteAtHLPlus4APlus3C_Bank05::
     ld a, [hl]
     ret
 
-; data read by AnyFoeNotFullyResistant (54 bytes) (E-0347)
+; Twenty-seven (byte offset, field) pairs, indexed by the resistance number RESIST_* (the resistance
+; class minus 1): the byte offset 0-6 inside the seven-byte record of a battle slot in
+; wSlotResistances and the 2-bit field 0-3 in it (field 0 is bits 1-0 ... field 3 is bits 7-6). For
+; example RESIST_BLAZE gives (0, 2), RESIST_VACUUM gives (1, 3) and RESIST_WATERSHOT gives (0, 3).
+; AnyFoeNotFullyResistant, PassIfFoesAverageResistanceAtLeast2, FailIfSkillHasResistanceClass and
+; AIScore_Ramming_LastFoeHPAndResist read the pair and then the field with Get2BitFieldEOfHL. (C1,
+; E-0381)
 AnyFoeNotFullyResistant_Data::
     db $00, $02, $00, $01, $00, $00, $01, $03, $01, $02, $01, $01, $01, $00, $02, $03
     db $02, $02, $02, $01, $02, $00, $03, $03, $03, $02, $03, $01, $03, $00, $04, $03

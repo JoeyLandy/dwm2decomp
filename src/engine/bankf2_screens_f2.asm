@@ -358,7 +358,7 @@ GameMode8_Update_SetUpScene::
     ld a, [wLinkHatchData]
     and a
     jr nz, .skip2
-    ld hl, GameMode8_Update_SetUpScene_Data6
+    ld hl, GameMode8_Update_SetUpScene_Data
     jr .call_copy_bytes_de_from_hl_bank_f22
 
 .skip2:
@@ -425,19 +425,43 @@ CopyBytesDEFromHL_BankF2::
     jr nz, CopyBytesDEFromHL_BankF2
     ret
 
-; data read by GameMode8_Update_SetUpScene (6 bytes) (E-0347)
+; Six bytes copied into hTemp0-hTemp5 for DecompressGraphicsTemp0ToTemp4: graphics id word (hTemp0,
+; hTemp1), hTemp2 (0 = monster sprite table, non-zero = field sprite table), hTemp3 (object palette
+; slot) and the VRAM destination word (hTemp4, hTemp5). This copy is $0000, 1, 4, destination $8000:
+; field sprite graphics 0 with palette slot 4 at $8000. GameMode8_Update_SetUpScene copies it when
+; TestFlagBit on EVENT_NEVER_SET leaves carry clear. (C1, E-0381)
 GameMode8_Update_SetUpScene_Data1::
     db $00, $00, $01, $04, $00, $80
 
+; Six bytes copied into hTemp0-hTemp5 for DecompressGraphicsTemp0ToTemp4: graphics id word (hTemp0,
+; hTemp1), hTemp2 (0 = monster sprite table, non-zero = field sprite table), hTemp3 (object palette
+; slot) and the VRAM destination word (hTemp4, hTemp5). This copy is $0001, 1, 1, destination $8000:
+; field sprite graphics 1 with palette slot 1 at $8000. GameMode8_Update_SetUpScene copies it
+; instead of GameMode8_Update_SetUpScene_Data1 when TestFlagBit on EVENT_NEVER_SET sets carry. (C1,
+; E-0381)
 GameMode8_Update_SetUpScene_Data2::
     db $01, $00, $01, $01, $00, $80
 
+; Six bytes copied into hTemp0-hTemp5 for DecompressGraphicsTemp0ToTemp4: graphics id word (hTemp0,
+; hTemp1), hTemp2 (0 = monster sprite table, non-zero = field sprite table), hTemp3 (object palette
+; slot) and the VRAM destination word (hTemp4, hTemp5). This copy is $000C, 1, 5, destination $8100:
+; field sprite graphics $0C with palette slot 5 at $8100. GameMode8_Update_SetUpScene copies it for
+; the second graphics load when wLinkHatchData is zero. (C1, E-0381)
 GameMode8_Update_SetUpScene_Data3::
     db $0c, $00, $01, $05, $00, $81
 
+; Twelve bytes, two 6-byte graphics argument records. GameMode8_Update_SetUpScene copies only the
+; first six bytes ($000C, table 1, palette slot 5, destination $8100, the same as
+; GameMode8_Update_SetUpScene_Data3) when wLinkHatchData is non-zero. The second record ($0000,
+; table 0 = monster sprites, palette slot 2, destination $8200) is not copied by this reader. (C1,
+; E-0381)
 GameMode8_Update_SetUpScene_Data4::
     db $0c, $00, $01, $05, $00, $81, $00, $00, $00, $02, $00, $82
 
+; One 16-byte field object record, copied by CopyBytesDEFromHL_BankF2 to wSpriteSlots when
+; TestFlagBit on EVENT_NEVER_SET leaves carry clear (GameMode8_Update_SetUpScene_SpriteSlotsInit is
+; used otherwise). Read with the OBJ_* offsets it holds behaviour type 0, OBJ_SET_MODE 1, sprite id
+; 0, OBJ_ATTR 4, OBJ_STATE 1, OBJ_X $F0, OBJ_Y $40 and OBJ_FLAGS 4. (C1, E-0381)
 GameMode8_Update_SetUpScene_Data5::
     db $00, $01, $00, $00, $f0, $40, $04, $01, $00, $00, $00, $f0, $40, $04, $00, $00
 
@@ -446,7 +470,7 @@ GameMode8_Update_SetUpScene_Data5::
 GameMode8_Update_SetUpScene_SpriteSlotsInit::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
-GameMode8_Update_SetUpScene_Data6::
+GameMode8_Update_SetUpScene_Data::
     db $00, $01, $0c, $00, $f0, $40, $05, $03, $10, $00, $00, $f0, $40, $04, $00, $00
 
 ; CopyBytesDEFromHL_BankF2 copies these 16 bytes to wObject1 (E-0264)
@@ -1267,10 +1291,19 @@ ShowRecordBufBEntryStringAtArg1::
     farcall ShowString_Bank08
     ret
 
-; data read by RunF2_DrawParentNames (8 bytes) (E-0347)
+; Eight bytes, two 4-byte records, one per parent, in the order parent 1 then parent 2: each is the
+; wRecordBufB offsets of the species word, the name, the species word again (the species string
+; source) and the master name. The bytes are $1A, $8E, $1A, $1E (MON_PARENT1_SPECIES,
+; MON_PARENT1_NAME, MON_PARENT1_SPECIES, MON_PARENT1_MASTER) and $1C, $99, $1C, $29 (the same fields
+; of parent 2). RunF2_DrawParentNames uses this order when bit 4 of MON_FAMILY is clear. (C1,
+; E-0381)
 RunF2_DrawParentNames_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
+; Eight bytes, the same two 4-byte parent records as RunF2_DrawParentNames_Data1 in the opposite
+; order: $1C, $99, $1C, $29 (parent 2: MON_PARENT2_SPECIES, MON_PARENT2_NAME, MON_PARENT2_SPECIES,
+; MON_PARENT2_MASTER) then $1A, $8E, $1A, $1E (parent 1). RunF2_DrawParentNames uses this order when
+; bit 4 of MON_FAMILY is set. (C1, E-0381)
 RunF2_DrawParentNames_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
@@ -1404,10 +1437,17 @@ PickNameBufferForFirstByte_BankF2::
 .return:
     ret
 
-; data read by RunF2_DrawParentIcons (6 bytes) (E-0347)
+; Six bytes, two 3-byte records, parent 1 then parent 2: the wRecordBufB offset of the species word,
+; of the plus value, and of the species word again for DrawSpeciesIconForRecordBufBEntry (wArg5).
+; The bytes are $1A, $98, $1A (MON_PARENT1_SPECIES, MON_PARENT1_PLUS, MON_PARENT1_SPECIES) and $1C,
+; $A3, $1C (MON_PARENT2_SPECIES, MON_PARENT2_PLUS, MON_PARENT2_SPECIES). RunF2_DrawParentIcons uses
+; this order when bit 4 of MON_FAMILY is clear. (C1, E-0381)
 RunF2_DrawParentIcons_Data1::
     db $1a, $98, $1a, $1c, $a3, $1c
 
+; Six bytes, the same two 3-byte parent records as RunF2_DrawParentIcons_Data1 in the opposite
+; order: $1C, $A3, $1C (parent 2) then $1A, $98, $1A (parent 1). RunF2_DrawParentIcons uses this
+; order when bit 4 of MON_FAMILY is set. (C1, E-0381)
 RunF2_DrawParentIcons_Data2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
@@ -1537,7 +1577,10 @@ DecompressRecordBufBSpeciesGraphics::
     jr c, .loop
     ret
 
-; data read by DecompressRecordBufBSpeciesGraphics (9 bytes) (E-0347)
+; Three 3-byte records for the three species pictures of record B: $00, $00, $80; $08, $00, $81;
+; $10, $00, $82. DecompressRecordBufBSpeciesGraphics copies record c (c = 0-2) to wArg3-wArg5 for
+; DecompressGraphicsArg1ToArg4: wArg3 is the offset into wOBJPaletteBuffer ($00, $08, $10, palette
+; slots 0 to 2) and wArg4 and wArg5 the VRAM destination ($8000, $8100, $8200). (C1, E-0381)
 DecompressRecordBufBSpeciesGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -1609,13 +1652,23 @@ DrawRecordBufBSpeciesSprites::
     jr c, .loop
     ret
 
-; data read by DrawRecordBufBSpeciesSprites (12 bytes) (E-0347)
+; Three 4-byte records, one per species picture of record B: $00, $10, $78, $00; $10, $30, $68, $01;
+; $20, $30, $88, $02. DrawRecordBufBSpeciesSprites copies record c (c = 0-2) to wArg3-wArg6 for
+; DrawMetaSpritePartC0: tile offset ($00, $10, $20), X on screen ($10, $30, $30), Y on screen ($78,
+; $68, $88) and the attribute bits (palette 0, 1, 2). (C1, E-0381)
 DrawRecordBufBSpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
+; Three wRecordBufB offsets of species words: $0B (MON_SPECIES), $1A (MON_PARENT1_SPECIES) and $1C
+; (MON_PARENT2_SPECIES), indexed by the picture number c = 0-2. DecompressRecordBufBSpeciesGraphics
+; and DrawRecordBufBSpeciesSprites use this order when bit 4 of MON_FAMILY is clear. (C1, E-0381)
 DecompressRecordBufBSpeciesGraphics_Data2::
     db $0b, $1a, $1c
 
+; Three wRecordBufB offsets of species words: $0B (MON_SPECIES), $1C (MON_PARENT2_SPECIES) and $1A
+; (MON_PARENT1_SPECIES), the parents swapped relative to DecompressRecordBufBSpeciesGraphics_Data2.
+; DecompressRecordBufBSpeciesGraphics and DrawRecordBufBSpeciesSprites use this order when bit 4 of
+; MON_FAMILY is set. (C1, E-0381)
 DecompressRecordBufBSpeciesGraphics_Data3::
     db $0b, $1c, $1a
 
@@ -1805,10 +1858,17 @@ DrawFourRecordBufBStatsDigits::
     jr c, .loop
     ret
 
-; data read by DrawFourRecordBufBStatsDigits (4 bytes) (E-0347)
+; Four wRecordBufB offsets of words: $5B (MON_HP), $5D (MON_MAX_HP), $5F (MON_MP) and $61
+; (MON_MAX_MP). DrawFourRecordBufBStatsDigits reads word c (c = 0-3), converts it to digits
+; (HLToDecimalDigits) and writes three digit tiles at the place from
+; DrawFourRecordBufBStatsDigits_Data2[c]. (C1, E-0381)
 DrawFourRecordBufBStatsDigits_Data1::
     db $5b, $5d, $5f, $61
 
+; Four little-endian offsets, $01CC, $01D0, $020C and $0210 (rows 14 and 16, columns 12 and 16),
+; added to the BG map address of the scroll position (BGMapAddressAtScroll_BankF2_2).
+; DrawFourRecordBufBStatsDigits writes the three digit tiles of HP, max HP, MP and max MP
+; (DrawFourRecordBufBStatsDigits_Data1 order) at them. (C1, E-0381)
 DrawFourRecordBufBStatsDigits_Data2::
     db $cc, $01, $d0, $01, $0c, $02, $10, $02
 
@@ -1855,7 +1915,10 @@ DrawFiveRecordBufBStatsColumn::
     jr c, .loop
     ret
 
-; data read by DrawFiveRecordBufBStatsColumn (5 bytes) (E-0347)
+; Five wRecordBufB offsets of word stats: $63 (MON_ATK), $65 (MON_DEF), $67 (MON_AGL), $69 (MON_INT)
+; and $6B (MON_WLD). DrawFiveRecordBufBStatsColumn reads word c (c = 0-4) and writes its three digit
+; tiles in a column that starts at the scroll position plus $70 and goes down two BG map rows ($40)
+; per stat. (C1, E-0381)
 DrawFiveRecordBufBStatsColumn_Data::
     db $63, $65, $67, $69, $6b
 

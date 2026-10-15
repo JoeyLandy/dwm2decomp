@@ -45,6 +45,7 @@ Map0ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map0APalettes::
+; another name for the data at Map0APalettes, whose note is above (E-0381)
 EggServicePalettes::
     dw $7d00, $7fff, $7fe1, $0000 ; entry 0
     dw $7d00, $031d, $01d8, $0000 ; entry 1
@@ -82,6 +83,7 @@ Map13Tileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map13Palettes::
+; another name for the data at Map13Palettes, whose note is above (E-0381)
 RenameMenuPalettes::
     dw $7d86, $7fff, $7fe1, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1
@@ -116,6 +118,7 @@ Map1ATileset::
 ; the $40 bytes LoadBGPaletteBufferFromBank copies for a map record (E-0142)
 ; record: one CGB palette: 4 BGR555 colours
 Map1APalettes::
+; another name for the data at Map1APalettes, whose note is above (E-0381)
 DebugStaffRoll_Scene04_Load_BGPaletteBufferData::
     dw $7d86, $7fff, $7f26, $0000 ; entry 0
     dw $012f, $031d, $01d8, $0000 ; entry 1

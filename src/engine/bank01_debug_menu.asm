@@ -916,7 +916,11 @@ LoadPalette0FromData::
     ld [wOBJPaletteUploadRequest], a
     ret
 
-; data read by LoadPalette0FromData (8 bytes) (E-0347)
+; Four little-endian RGB555 colours, $5E4D, $7FFF, $66F2 and $0000: one CGB palette of four colours.
+; LoadPalette0FromData copies it to wBGPaletteBuffer, sets wBGPaletteUploadRequest to $7F, copies it
+; to wBGPaletteBuffer a second time and sets wOBJPaletteUploadRequest to $7F, all only when wIsCGB
+; is non-zero. The bank $02 copy of the routine (LoadPalette0FromData_Bank02) sends its second copy
+; to wOBJPaletteBuffer instead. (C1, E-0381)
 LoadPalette0FromData_Data::
     db $4d, $5e, $ff, $7f, $f2, $66, $00, $00
 
@@ -2180,7 +2184,10 @@ DebugSkillViewer_Update_DrawFlagBits::
     jr nz, .loop
     ret
 
-; data read by DebugSkillViewer_Update_DrawFlagBits (8 bytes) (E-0347)
+; Eight single-bit masks $80, $40, $20, $10, $08, $04, $02, $01, indexed by the tile number 0-7
+; counted from the left. DebugSkillViewer_Update_DrawFlagBits tests the flag byte in D against each
+; mask, most significant bit first, and writes tile C + 1 for a set bit and tile C for a clear bit
+; to B consecutive VRAM cells starting at HL. (C1, E-0381)
 DebugSkillViewer_Update_DrawFlagBits_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
@@ -2588,10 +2595,18 @@ DebugResultsDisplay_ResistanceAddress::
     add_a_to_hl
     ret
 
-; data read by DebugResultsDisplay_ResistanceAddress (4 bytes) (E-0347)
+; Two BG map addresses, $9986 and $99A6 (vBGMap0 row 12, column 6 and row 13, column 6).
+; DebugResultsDisplay_ResistanceAddress uses this pair when wDebugCursor is 4 (the first parent):
+; the first word for a resistance number wSharedMenuWork below 14, the second word for 14 and above
+; (number minus 14), and it adds the remaining number to the address as a column offset. The 27
+; resistance digits are therefore a row of 14 and a row of 13. (C1, E-0381)
 DebugResultsDisplay_ResistanceAddress_Data1::
     db $86, $99, $a6, $99
 
+; Two BG map addresses, $99E6 and $9A06 (vBGMap0 row 15, column 6 and row 16, column 6): the same
+; two-row layout of the 27 resistance digits for the other parent, used by
+; DebugResultsDisplay_ResistanceAddress when wDebugCursor is not 4. The index is wSharedMenuWork as
+; for DebugResultsDisplay_ResistanceAddress_Data1. (C1, E-0381)
 DebugResultsDisplay_ResistanceAddress_Data2::
     db $e6, $99, $06, $9a
 
@@ -3603,11 +3618,20 @@ StepDebugCursorDebugCounter_BlankField::
     ei
     ret
 
-; data read by DebugResultsDisplay_DrawSelectedField (20 bytes) (E-0347)
+; Ten words, indexed by the field number wDebugCursor (0-9): each is the address of the RAM value
+; that field shows. They are wDebugValue0, wDebugValue2, wDebugValue3, wDebugSubState, wScreenStep,
+; wScreenCounter, wGlyphListStart, wScreenSubStep, wGlyphListPos and wGridCursorX.
+; DebugResultsDisplay_DrawSelectedField loads the word stored there into BC and draws it as hex
+; digits, a one-tile value or two decimal digits depending on the field. (C1, E-0381)
 DebugResultsDisplay_DrawSelectedField_Data1::
     db $f9, $c5, $fb, $c5, $fc, $c5, $fe, $c5, $81, $d7, $83, $d7, $85, $d7, $82, $d7
     db $84, $d7, $86, $d7
 
+; Ten BG map addresses, indexed by the field number wDebugCursor (0-9), where the breeding debug
+; screen draws that field: fields 0-3 at vBGMap0 rows 7-10, column 6 ($98E6, $9906, $9926, $9946)
+; and fields 4-9 at rows 12-17, column 2 ($9982, $99A2, ... $9A22).
+; DebugResultsDisplay_DrawSelectedField draws the value there and
+; StepDebugCursorDebugCounter_BlankField blanks three cells from it during the blink. (C1, E-0381)
 DebugResultsDisplay_DrawSelectedField_Data2::
     db $e6, $98, $06, $99, $26, $99, $46, $99, $82, $99, $a2, $99, $c2, $99, $e2, $99
     db $02, $9a, $22, $9a
@@ -3956,7 +3980,11 @@ DebugAutomap_Update::
     jr nz, .loop
     ret
 
-; data read by DebugAutomap_Update (13 bytes) (E-0347)
+; Thirteen map ids: $00, $05, $20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA. When bit 7 of
+; wDebugSubState is set, DebugAutomap_Update (B pressed) stores the entry at index wDebugState & $1F
+; into hMapId and enters the field (game mode 1, wMapType 0). wDebugState is byte 0 of the chosen
+; wKeyList entry, and the index is masked to 0-31, so the reader does not stop at the thirteenth
+; entry. (C1, E-0381)
 DebugAutomap_Update_Data::
     db $00, $05, $20, $30, $48, $70, $a0, $a8, $b0, $b8, $c8, $d1, $da
 
@@ -5708,11 +5736,20 @@ DebugBattleSetup_Update_EnsureSave_InParty::
     cp $02
     ret
 
-; data read by DebugBattleSetup_Update_HandleInput (24 bytes) (E-0347)
+; Twelve BG map addresses, $9887, $98A7, ... $99E7 (vBGMap0 rows 4 to 15, column 7, one per row),
+; indexed by the field number wMenuState (0-11) of the debug battle set-up screen.
+; DebugBattleSetup_Update_HandleInput blinks the selected value there and
+; DrawDebugValueHexForMenuState redraws the field value (the word of wWorkBuf + 2 * wMenuState)
+; there as three hex digits. (C1, E-0381)
 DebugBattleSetup_Update_HandleInput_Data::
     db $87, $98, $a7, $98, $c7, $98, $e7, $98, $07, $99, $27, $99, $47, $99, $67, $99
     db $87, $99, $a7, $99, $c7, $99, $e7, $99
 
+; Twelve little-endian words, indexed by the field number wMenuState (0-11): the largest value each
+; battle set-up field may take, $0002, $02AB, $02AB, $02AB, $0001, $0000, $0140, $0063, $0140,
+; $0063, $0140, $0063. DebugBattleSetup_WrapValueAfterStep and
+; DebugBattleSetup_WrapValueAfterBigStep wrap a value stepped below 0 to this limit and a value
+; above the limit to 0. (C1, E-0381)
 DebugBattleSetup_WrapValueAfterStep_Data::
     db $02, $00, $ab, $02, $ab, $02, $ab, $02, $01, $00, $00, $00, $40, $01, $63, $00
     db $40, $01, $63, $00, $40, $01, $63, $00
@@ -5906,13 +5943,23 @@ DebugBattleSetupShowFieldString::
     call WriteVRAMByte
     ret
 
-; data read by DebugBattleSetupShowFieldString (6 bytes) (E-0347)
+; Three VRAM glyph-tile addresses, vTiles2 + $200, + $2A0 and + $330 ($9200, $92A0, $9330), indexed
+; by wMenuState - 1 for fields 1-3 (the three monsters). DebugBattleSetupShowFieldString puts one in
+; wTextWindowTileLo/Hi with a window of 9 tiles by 1 row ($0901) before ShowString_Bank88 draws the
+; name of the monster there. (C1, E-0381)
 DebugBattleSetupShowFieldString_Data1::
     db $00, $92, $a0, $92, $30, $93
 
+; Three VRAM glyph-tile addresses, vTiles2 + $4E0, + $570 and + $600 ($94E0, $9570, $9600), indexed
+; by (wMenuState - 6) / 2 for fields 6, 8 and 10. DebugBattleSetupShowFieldString uses each as the 9
+; by 1 text window where ShowString_Bank08 draws the string whose index is the low byte of that
+; field and whose category is the high byte + 2. (C1, E-0381)
 DebugBattleSetupShowFieldString_Data2::
     db $e0, $94, $70, $95, $00, $96
 
+; Three BG map addresses, $996B, $99AB and $99EB (vBGMap0 rows 11, 13 and 15, column 11), indexed by
+; (wMenuState - 7) / 2 for fields 7, 9 and 11. DebugBattleSetupShowFieldString writes the low byte
+; of that field there as two decimal digit tiles ($10 + tens digit, $10 + ones digit). (C1, E-0381)
 DebugBattleSetupShowFieldString_Data3::
     db $6b, $99, $ab, $99, $eb, $99
 
@@ -6576,7 +6623,9 @@ DebugBattleSetup_ClearKeyList::
     jr nz, .loop
     ret
 
-; data read by DebugBattleSetup_ClearKeyList (E-0347)
+; A block of $80 bytes all $FF: 32 four-byte wKeyList entries filled with the end marker $FF.
+; DebugBattleSetup_ClearKeyList copies all of it over wKeyList (32 times 4 bytes) to empty the key
+; list. (C1, E-0381)
 DebugBattleSetup_ClearKeyList_Data::
     ds $80, $ff
 

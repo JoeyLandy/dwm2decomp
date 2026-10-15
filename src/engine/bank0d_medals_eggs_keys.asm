@@ -952,7 +952,11 @@ EggServiceMenu_Appraise_StoreResult::
     call EndScriptCommandAndIncScreenSubStep
     ret
 
-; data read by EggServiceMenu (6 bytes) (E-0347)
+; Six MON record offsets, each a word: $5D MON_MAX_HP, $61 MON_MAX_MP, $63 MON_ATK, $65 MON_DEF, $67
+; MON_AGL and $69 MON_INT. EggServiceMenu_Appraise_RateStats loads each word from the egg record,
+; adds them, divides by 6 and rates the average: under 51 gives 0, under 101 gives 1, under 201
+; gives 2 and 201 or more gives 3, stored in wTwoChoiceCursor to pick the appraisal message. (C1,
+; E-0381)
 EggServiceMenu_Appraise_RateStats_Data::
     db $5d, $61, $63, $65, $67, $69
 
@@ -1582,7 +1586,10 @@ DrawTileAtChoiceCursor::
     ei
     ret
 
-; data read by DrawTileAtChoiceCursor (4 bytes) (E-0347)
+; Two little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank0D): $012D and $016D, which are row 9 and row 11 at column 13.
+; DrawTileAtChoiceCursor indexes it with wChoiceCursor times 2 and writes the tile B there, the
+; marker beside the choice. (C1, E-0381)
 DrawTileAtChoiceCursor_Data::
     db $2d, $01, $6d, $01
 
@@ -1991,13 +1998,14 @@ CopyGlyphTileListFromBank1F::
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
 TileCopyDestList_0D::
-; data read by EggServiceMenu_DrawPrice_LoadTiles (15 words) (E-0347)
+; another name for the data at TileCopyDestList_0D, whose note is above (E-0381)
 EggPriceGlyphDestList::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0 ; entry 0
     dw vTiles1 + $2c0, vTiles1 + $2d0, vTiles1 + $2e0, vTiles1 + $2f0, vTiles1 + $6e0, vTiles1 + $6f0, rIE
 
 ; record: bank-$1F tile sources
 TileCopySrcList_0D::
+; another name for the data at TileCopySrcList_0D, whose note is above (E-0381)
 EggPriceGlyphSrcList::
     dw $40f0, $43a0, $4250, $4300, $4390, $4380, $4290, $40c0 ; entry 0
     dw $4370, $43c0, $42d0, $4910, $4910, $4910, $ffff
@@ -2039,11 +2047,13 @@ EggServiceMenu_ChooseAndPay_ListCursor_Data::
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
 TileCopyDestList_0D_2::
+; another name for the data at TileCopyDestList_0D_2, whose note is above (E-0381)
 EggListGlyphTileDests::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
 TileCopySrcList_0D_2::
+; another name for the data at TileCopySrcList_0D_2, whose note is above (E-0381)
 EggListGlyphTileSources::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 
@@ -2670,7 +2680,10 @@ RenameMenu_PartyCursor_DrawTile::
     ei
     ret
 
-; data read by RenameMenu (6 bytes) (E-0347)
+; Three little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank0D): $0061, $00A1 and $00E1, which are rows 3, 5 and 7 at column 1.
+; RenameMenu_PartyCursor_DrawTile indexes it with wGridCursorX times 2 and writes the tile B there,
+; the renaming cursor. (C1, E-0381)
 RenameMenu_PartyCursor_DrawTile_Data::
     db $61, $00, $a1, $00, $e1, $00
 
@@ -3793,13 +3806,23 @@ EraseCursorForArg5Layout::
     ei
     ret
 
-; data read by EraseCursorForArg5Layout (8 bytes) (E-0347)
+; Four little-endian word offsets into the BG map from the scroll position: $00A6, $00C6, $00E6 and
+; $0106, rows 5 to 8 at column 6. EraseCursorForArg5Layout uses this layout when wArg5 is 0 and
+; indexes it with wListCursor times 2, to write the blank tile $C3 over the cursor of that list row.
+; (C1, E-0381)
 EraseCursorForArg5Layout_Data1::
     db $a6, $00, $c6, $00, $e6, $00, $06, $01
 
+; Four little-endian word offsets into the BG map from the scroll position: $00A4, $00C4, $00E4 and
+; $0104, rows 5 to 8 at column 4. EraseCursorForArg5Layout uses this layout when wArg5 is 1 and
+; indexes it with wListCursor times 2 to write the blank tile $C3 over the list cursor. (C1, E-0381)
 EraseCursorForArg5Layout_Data2::
     db $a4, $00, $c4, $00, $e4, $00, $04, $01
 
+; Four little-endian word offsets into the BG map from the scroll position: $00A2, $00C2, $00E2 and
+; $0102, rows 5 to 8 at column 2. EraseCursorForArg5Layout uses this layout when wArg5 is neither 0
+; nor 1 and indexes it with wListCursor times 2 to write the blank tile $C3 over the list cursor.
+; (C1, E-0381)
 EraseCursorForArg5Layout_Data3::
     db $a2, $00, $c2, $00, $e2, $00, $02, $01
 
@@ -3943,10 +3966,17 @@ DrawKeyListPageMarks::
 .return:
     ret
 
-; data read by DrawKeyListPageMarks (8 bytes) (E-0347)
+; Four little-endian addresses inside wWindowTileBuffer (20 tiles per row): $C3CD, $C3F5, $C41D and
+; $C445, which are rows 10, 12, 14 and 16 at column 5, one per key slot on a page.
+; DrawKeyListPageMarks uses them when wArg5 is 0: it first writes the blank tile $C3 to all four,
+; then for key slot c of the page writes $CA (a key with bit 6 set) or $C3 at entry c. (C1, E-0381)
 DrawKeyListPageMarks_Data1::
     db $cd, $c3, $f5, $c3, $1d, $c4, $45, $c4
 
+; Four little-endian addresses inside wWindowTileBuffer (20 tiles per row): $C3C9, $C3F1, $C419 and
+; $C441, rows 10, 12, 14 and 16 at column 1. DrawKeyListPageMarks uses this set when wArg5 is
+; non-zero: it blanks all four with $C3, then for key slot c of the page writes $70 (a key with bit
+; 6 set) or $C3 at entry c. (C1, E-0381)
 DrawKeyListPageMarks_Data2::
     db $c9, $c3, $f1, $c3, $19, $c4, $41, $c4
 
@@ -4523,6 +4553,7 @@ KeyAppraisalMenu_ChooseKey_DrawListBox_TileRect::
     db $c3, $ad, $ae, $af, $fd, $fe, $ff, $70, $71, $72, $73, $74, $75 ; id 6
 
 TileRect_0D::
+; another name for the data at TileRect_0D, whose note is above (E-0381)
 KeyAppraisalMenu_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $ab, $ac, $ee, $ef, $fc, $b7 ; id 1
@@ -6160,7 +6191,10 @@ MedalPrizeMenu_FindFreeRecord::
     ld [rRAMG2], a
     ret
 
-; data read by MedalPrizeMenu (3 bytes) (E-0347)
+; Three bytes, 10, 20 and 30: the number of SRAM monster record slots (sRecords, $A5 bytes each)
+; MedalPrizeMenu_FindFreeRecord looks through, picked by wFarmLevel. The routine stops at the first
+; slot whose first byte is 0 or $FF and returns $FF when none of that many slots is free. (C1,
+; E-0381)
 MedalPrizeMenu_FindFreeRecord_Data::
     db $0a, $14, $1e
 
@@ -6295,7 +6329,10 @@ MedalPrizeMenu_DrawPrices::
     jr c, .loop
     ret
 
-; data read by MedalPrizeMenu (8 bytes) (E-0347)
+; Four little-endian addresses inside wWindowTileBuffer: $C3D7, $C3FF, $C427 and $C44F, which are
+; rows 10, 12, 14 and 16 at column 15. MedalPrizeMenu_DrawPrices writes the two digit tiles (tens,
+; ones) of the medal price of prize c of the page at the address of entry c, for up to four prizes a
+; page. (C1, E-0381)
 MedalPrizeMenu_DrawPrices_Data::
     db $d7, $c3, $ff, $c3, $27, $c4, $4f, $c4
 
@@ -6329,7 +6366,10 @@ WriteTileBAtCursorListCursor::
     ei
     ret
 
-; data read by WriteTileBAtCursorListCursor (8 bytes) (E-0347)
+; Four little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank0D): $00A4, $00E4, $0124 and $0164, which are rows 5, 7, 9 and 11 at
+; column 4. WriteTileBAtCursorListCursor indexes it with wListCursor times 2 and writes the tile B
+; at that position. (C1, E-0381)
 WriteTileBAtCursorListCursor_Data::
     db $a4, $00, $e4, $00, $24, $01, $64, $01
 
@@ -7086,7 +7126,13 @@ NpcBreedMenu_ChooseAndBreed_ReplaceParent::
     ld [wScreenSubStep], a
     ret
 
-; data read by NpcBreedMenu (20 bytes) (E-0347)
+; Ten little-endian word story flag numbers: $010E, $0118, $011A, $0125 and $0129
+; (EVENT_WHEN_YOU_BREED_THE_OFFSPRING, EVENT_BREEDING_COULD_RESULT_IN, EVENT_IF_YOU_GET_AN,
+; EVENT_BREEDING_COULD_RESULT_IN_125, EVENT_ALL_RIGHTY_WELL_DO), then $0032 to $0036
+; (EVENT_WHEN_YOU_BREED_MONSTERS, EVENT_WHEN_YOU_BREED_MONSTERS_033,
+; EVENT_WHEN_YOU_BREED_MONSTERS_034, EVENT_BREEDING_FIRE_AND_ICE, EVENT_BREEDING_FIRE_AND_ICE_036).
+; NpcBreedMenu_ChooseAndBreed_ReplaceParent indexes it with wScreenTableIndex times 2 and sets that
+; flag with SetFlagBit after it stores the child record. (C1, E-0381)
 NpcBreedMenu_ChooseAndBreed_ReplaceParent_Data::
     db $0e, $01, $18, $01, $1a, $01, $25, $01, $29, $01, $32, $00, $33, $00, $34, $00
     db $35, $00, $36, $00
@@ -7251,12 +7297,20 @@ NpcBreedMenu_RedrawListScreen_LoadTiles::
     ld [wScreenStep], a
     ret
 
-; data read by NpcBreedMenu_RedrawListScreen_LoadTiles (48 bytes) (E-0347)
+; Sixteen 3-byte far pointers (address low, address high, bank), indexed by wScreenTableIndex times
+; 3. Each points at a compressed map tile set in bank $48: Map04Tileset ($6B82) for indexes 0, 2, 4
+; and 8-15, and Map17Tileset ($49A9) for 1, 3, 5, 6 and 7. NpcBreedMenu_RedrawListScreen_LoadTiles
+; decompresses the chosen one to vTiles2 with DecompressToVRAM. (C1, E-0381)
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data1::
     db $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9, $49, $48, $82, $6b, $48, $a9
     db $49, $48, $a9, $49, $48, $a9, $49, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b
     db $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48, $82, $6b, $48
 
+; Sixteen 3-byte far pointers (address low, address high, bank), indexed by wScreenTableIndex times
+; 3, to 64-byte palettes in bank $48: Map04Palettes ($6F34) for indexes 0, 2, 4 and 8-15, and
+; Map17Palettes ($4C87) for 1, 3, 5, 6 and 7. It pairs entry for entry with
+; NpcBreedMenu_RedrawListScreen_LoadTiles_Data1; NpcBreedMenu_RedrawListScreen_LoadTiles copies the
+; 64 bytes to wBGPaletteBuffer with CopyFromBankWaitVRAM. (C1, E-0381)
 NpcBreedMenu_RedrawListScreen_LoadTiles_Data2::
     db $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87, $4c, $48, $34, $6f, $48, $87
     db $4c, $48, $87, $4c, $48, $87, $4c, $48, $34, $6f, $48, $34, $6f, $48, $34, $6f
@@ -7568,7 +7622,7 @@ NpcBreedMenu_ChooseAndBreed_LoadChosenRecord::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 12 x 5 tiles, one row per line
 TileRect_0D_2::
-; data read by NpcBreedMenu_ChooseAndBreed_DrawFamilySexLevel (60 bytes) (E-0347)
+; another name for the data at TileRect_0D_2, whose note is above (E-0381)
 NpcBreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -7580,11 +7634,13 @@ NpcBreedMenu_FamilySexLevelTileRect::
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
 TileCopyDestList_0D_3::
+; another name for the data at TileCopyDestList_0D_3, whose note is above (E-0381)
 NpcBreedMenu_YesNoGlyphDestList::
     dw vTiles2 + $700, vTiles2 + $710, vTiles2 + $720, vTiles2 + $730, vTiles2 + $740, vTiles2 + $750, vTiles2 + $760, rIE ; entry 0
 
 ; record: bank-$1F tile sources
 TileCopySrcList_0D_3::
+; another name for the data at TileCopySrcList_0D_3, whose note is above (E-0381)
 NpcBreedMenu_YesNoGlyphSrcList::
     dw $4130, $4320, $42a0, $4330, $4190, $4150, $ffff ; entry 0
 

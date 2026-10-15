@@ -2478,7 +2478,7 @@ RunLinkSession6Exchange_BackFromStats_DrawPanel::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 13 x 2 tiles, one row per line
 TileRect_33::
-; data read by RunLinkSession6Exchange_BackFromStats_DrawPanel (26 bytes) (E-0347)
+; another name for the data at TileRect_33, whose note is above (E-0381)
 RunLinkSession6Exchange_PickedPanelTileRect::
     db $b6, $ea, $ed, $c3, $c3, $f8, $f9, $fa, $fb, $fc, $c3, $c7, $b7 ; id 0
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 1
@@ -3410,7 +3410,7 @@ StoreC5BEC6AtHLStride2_Bank33::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 3 tiles, one row per line
 TileRect_33_2::
-; data read by TeamMode_Screen_DrawFrameAndName (24 bytes) (E-0347)
+; another name for the data at TileRect_33_2, whose note is above (E-0381)
 TeamModeGoldBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $bf, $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -3418,6 +3418,7 @@ TeamModeGoldBox_TileRect::
 
 ; record: 10 x 11 tiles, one row per line
 TileRect_33_3::
+; another name for the data at TileRect_33_3, whose note is above (E-0381)
 PlayerWinLossWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $00, $01, $02, $03, $04, $c3, $c3, $c3, $b7 ; id 1
@@ -3432,6 +3433,7 @@ PlayerWinLossWindow_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 TileRect_33_4::
+; another name for the data at TileRect_33_4, whose note is above (E-0381)
 PartnerWinLossWindow_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $05, $06, $07, $08, $09, $c3, $c3, $c3, $b7 ; id 1
@@ -3454,6 +3456,7 @@ DrawBoxAndKeyRows_TileRect::
     db $b5, $c3, $c3, $c3, $c3, $c3, $c3, $c3 ; id 4
 
 TileRect_33_5::
+; another name for the data at TileRect_33_5, whose note is above (E-0381)
 InfoOKBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -3466,6 +3469,7 @@ RunLinkSession6Exchange_Pick_MarkCursor_Data::
 
 ; record: 9 x 7 tiles, one row per line
 TileRect_33_6::
+; another name for the data at TileRect_33_6, whose note is above (E-0381)
 FightInfoExitBox_TileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $30, $31, $32, $33, $34, $c3, $b7 ; id 1
@@ -3479,6 +3483,7 @@ FightInfoExitBox_TileRect::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 11 tiles, one row per line
 TileRect_33_7::
+; another name for the data at TileRect_33_7, whose note is above (E-0381)
 RunLinkSession6Exchange_ListBoxTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $d0, $d1, $d2, $d3, $d4, $b7 ; id 1

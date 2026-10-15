@@ -1344,7 +1344,10 @@ KeyWorldLayout_Start::
     db $44, $44, $44, $44, $44, $44, $44, $44, $44, $44
     ds $5a, $88
 
-; data read by KeyWorldLayout_Start (20 bytes) (E-0347)
+; Ten (base, mask) byte pairs, one per tens of the party strength (wPartyStrength / 10, 0-9): (0,
+; $0F), (8, $0F), (8, $0F), then (16, $1F) for the rest. KeyWorldLayout_Start rolls wKeyRandomHi AND
+; mask, adds the base and stores the result in wKeyWorldAreaCount, so the area count is 0-15 at
+; strength below 10, 8-23 at 10-29 and 16-47 from 30 up. (C1, E-0381)
 KeyWorldLayout_Start_Data::
     db $00, $0f, $08, $0f, $08, $0f, $10, $1f, $10, $1f, $10, $1f, $10, $1f, $10, $1f
     db $10, $1f, $10, $1f
@@ -2188,7 +2191,11 @@ KeyWorldLayout_SetEntranceFlags::
 .skip3:
     jp .skip
 
-; data read by KeyWorldLayout_SetEntranceFlags (64 bytes) (E-0347)
+; Sixty-four flag bytes, indexed by wKeyRandomLo AND $3F: $40-$53, $5A-$61, repeated, with the first
+; eight values ($40-$47) again at the end, so every flag value has about the same chance.
+; KeyWorldLayout_SetEntranceFlags stores the chosen byte in the matching slot of wKeyWorldMenuFlag
+; for a floor entrance of kind 4 or 5 whose random roll (0-99) did not give the fixed flags $80 or
+; $81. (C1, E-0381)
 KeyWorldLayout_SetEntranceFlags_Data::
     db $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f
     db $50, $51, $52, $53, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $40, $41, $42, $43
@@ -2569,7 +2576,10 @@ GenerateKeyWorld_PlaceObjects::
     jr z, .loop
     ret
 
-; data read by GenerateKeyWorld (16 bytes) (E-0347)
+; Sixteen bytes, one per key world band (wKeyWorldBand 0-15, set from wPartyStrength by
+; SetKeyWorldBandForA): the number of map objects to place. Bands 0-7 give 10, bands 8-11 give 15
+; and bands 12-15 give 20. GenerateKeyWorld_PlaceObjects stores the value in wMapObjectCount and
+; places that many objects. (C1, E-0381)
 GenerateKeyWorld_PlaceObjects_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
@@ -2856,7 +2866,13 @@ RollKeyWorldObjectKind::
     ld [de], a
     ret
 
-; data read by RollKeyWorldObjectKind (716 bytes) (E-0347)
+; A 1040-byte table: 16 zero bytes, then 16 rows of 64 bytes, one per key world band (row start =
+; label + $10 + 64 * wKeyWorldBand). A row is a list of cumulative chances: RollKeyWorldObjectKind
+; rolls 0-99 and takes the first nonzero byte at or above the roll, and the byte position in the row
+; is the result: position 0 makes a gold object (kind 1, amount scaled by the band), position 1
+; would make kind 3 (always 0 here), and position p from 2 up makes kind 0 with contents p - 2, an
+; item id (position 3 is ITEM_HERB, $25 is ITEM_FRIEND). Each row ends in the chance $64 so a roll
+; always matches, and the 16 leading bytes are never read. (C1, E-0381)
 RollKeyWorldObjectKind_Data::
     ds $13, $00
     db $5e
@@ -3052,7 +3068,13 @@ FieldState_MapTransition_RollTriggerContents::
     ld [de], a
     ret
 
-; data read by FieldState_MapTransition_RollTriggerContents (530 bytes) (E-0347)
+; A 1040-byte table plus a 25-byte tail: 16 zero bytes, then 16 rows of 64 bytes, one per key world
+; band (row start = label + $10 + 64 * wKeyWorldBand). Each row is a list of cumulative chances in
+; the same format as RollKeyWorldObjectKind_Data: position 0 gives gold (kind 1), position 1 kind 3,
+; position p from 2 gives contents p - 2 (an item id; the rows hold $0F-$14 at position 0 and end in
+; $64). FieldState_MapTransition_RollTriggerContents also reads the leading byte for the band (all
+; zeros here) as a percent chance to write kind 2 instead of kind 0, so kind 2 only happens on a
+; roll of 0. (C1, E-0381)
 FieldState_MapTransition_RollTriggerContents_Data::
     ds $13, $00
     db $55
@@ -3213,7 +3235,11 @@ KeyWorldLayout_PlaceGoal::
     ld [wKeyWorldGoalPos2], a
     ret
 
-; data read by KeyWorldLayout_PlaceGoal (16 bytes) (E-0347)
+; Eight pairs of position bytes (16 bytes), indexed by the first byte of the goal screen record read
+; through ReadByteInBank (0-7). KeyWorldLayout_PlaceGoal copies the pair into wKeyWorldGoalPos and
+; wKeyWorldGoalPos2; the marker drawing code in bank $84 uses only the high nibble of each:
+; ($10,$10), ($10,$60), ($40,$20), ($40,$60), ($50,$20), ($50,$60), ($70,$30), ($80,$70). (C1,
+; E-0381)
 KeyWorldLayout_PlaceGoal_Data::
     db $10, $10, $10, $60, $40, $20, $40, $60, $50, $20, $50, $60, $70, $30, $80, $70
 
@@ -3860,7 +3886,9 @@ RefreshKeyWorldObjectsOnEntry::
     jr nz, .loop2
     ret
 
-; data read by RefreshKeyWorldObjectsOnEntry (16 bytes) (E-0347)
+; Sixteen bytes indexed by wKeyWorldBand AND $0F: the number of map objects to place, 10 for bands
+; 0-7, 15 for bands 8-11 and 20 for bands 12-15. RefreshKeyWorldObjectsOnEntry stores the value in
+; wMapObjectCount; it repeats GenerateKeyWorld_PlaceObjects_Data byte for byte. (C1, E-0381)
 RefreshKeyWorldObjectsOnEntry_Data::
     db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0f, $0f, $0f, $0f, $14, $14, $14, $14
 
@@ -4297,10 +4325,17 @@ FieldState_MapTransition_AfterWarp::
     jr nz, .loop2
     ret
 
-; data read by FieldState_MapTransition_AfterWarp (11 bytes) (E-0347)
+; Eleven bytes, parallel to FieldState_MapTransition_AfterWarp_Data2: the entry at the same index as
+; the current map id in that list is the key world band, 0, 3, 3, 3, 3, 6, 6, 9, 9, 12, 12 (the last
+; entry matches the $FF end marker, so no map reaches it). FieldState_MapTransition_AfterWarp stores
+; it in wKeyWorldBand before rolling the three screen triggers. (C1, E-0381)
 FieldState_MapTransition_AfterWarp_Data1::
     db $00, $03, $03, $03, $03, $06, $06, $09, $09, $0c, $0c
 
+; A list of ten map ids ($2B, $38, $39, $3A, $53, $5D, $82, $83, $AD, $AE) ended by $FF.
+; FieldState_MapTransition_AfterWarp searches it for hMapId; the position found is the index into
+; FieldState_MapTransition_AfterWarp_Data1 and is kept in hTemp2 for the trigger rows; a map not in
+; the list gets wScreenTriggerCount = 0. (C1, E-0381)
 FieldState_MapTransition_AfterWarp_Data2::
     db $2b, $38, $39, $3a, $53, $5d, $82, $83, $ad, $ae, $ff
 
@@ -4486,7 +4521,10 @@ WriteRandomEntryFromTable::
     ld [de], a
     ret
 
-; data read by WriteRandomEntryFromTable (8 bytes) (E-0347)
+; Eight bytes, each a pair of nibbles: $01, $10, $12, $13, $20, $21, $23, $32.
+; WriteRandomEntryFromTable picks the entry with wKeyRandomHi AND 7 and writes it at byte 2 of a
+; 4-byte screen trigger entry (DE + 2); byte 3 is then the nibble pair
+; LookupKeyWorldScreenSpotRecordsNibblePairForTemp0 gives for the same random index. (C1, E-0381)
 WriteRandomEntryFromTable_Data::
     db $01, $10, $12, $13, $20, $21, $23, $32
 

@@ -495,6 +495,9 @@ def document(lines: list[str], dropped_at: dict[str, list[str]], names: "Names")
                         out.extend(wrap("", "; code: " + text[:1].lower() + text[1:] + " (E-0347)"))
             elif documented or re.match(r'^\s+db "', first):
                 header = header or documented
+            elif out and re.match(r"^[A-Za-z_]\w*::", out[-1]):  # E-0381: a second name for the same bytes
+                out.append(f"; another name for the data at {out[-1].split('::')[0]}, whose note is above (E-0381)")
+                header = True
             elif not header:
                 out.extend(wrap("", "; " + describe.data_note(label, body, labels, names.referrer.get(label))
                                 + " (E-0347)"))

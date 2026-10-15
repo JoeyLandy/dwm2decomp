@@ -4812,7 +4812,9 @@ TestSpeciesFlag::
     ld c, a
     ret
 
-; data read by TestSpeciesFlag (8 bytes) (E-0347)
+; Eight single-bit masks $01, $02, $04, $08, $10, $20, $40, $80. TestSpeciesFlag ANDs the byte
+; wSpeciesFlags + species id / 8 with entry (species id AND 7) and returns the result in C, so
+; species n owns bit (n AND 7), counted from the least significant bit, of byte n / 8. (C1, E-0381)
 TestSpeciesFlag_Data::
     db $01, $02, $04, $08, $10, $20, $40, $80
 
@@ -6562,22 +6564,49 @@ DrawCursorTileAtTableEntryDE::
     pop hl
     ret
 
-; data read by BattleEnd_AskToJoin_RedrawAfterStats (10 bytes) (E-0347)
+; Five words, addresses in wScreenTileBuffer (rows of 32 bytes): $C1B9, $C1F9, $C239, $C279, $C2B9,
+; which are rows 1, 3, 5, 7 and 9 of column 1; they are the same cells as the BG map addresses in
+; BattleEnd_AskToJoin_MonsterListCursor_Data. BattleEnd_AskToJoin_RedrawAfterStats and
+; BattleEnd_AddJoinedMonster_RedrawPickOptions index it with wListCursor and store the mark tile $BC
+; in the chosen cell. (C1, E-0381)
 BattleEnd_AskToJoin_RedrawAfterStats_Data::
     db $b9, $c1, $f9, $c1, $39, $c2, $79, $c2, $b9, $c2
 
+; Two words, BG map addresses $992F and $996F (vBGMap0 + $12F and + $16F), which are rows 9 and 11
+; of column 15: the cursor cells of a two-entry choice. BattleEnd_AskToJoin_ShowHeroDepartedSadly
+; (through SetDEFlagOnBButton) and BattleEnd_AddJoinedMonster_ReadAnswer pass the table to
+; MovePagedListCursor, which draws or blanks the cursor tile at the word picked by the cursor byte
+; wMenuState. (C1, E-0381)
 BattleEnd_AskToJoin_ShowHeroDepartedSadly_Data::
     db $2f, $99, $6f, $99
 
+; Two words, BG map addresses $992D and $996D, which are rows 9 and 11 of column 13: the cursor
+; cells of the two-entry option box. BattleEnd_AskToJoin_PickOption,
+; BattleEnd_AskToJoin_PickEggOption and BattleEnd_AddJoinedMonster_PickOption pass the table to
+; MovePagedListCursor with the cursor byte wMenuSubState or wMenuSelectedMember. (C1, E-0381)
 BattleEnd_AskToJoin_PickOption_Data::
     db $2d, $99, $6d, $99
 
+; Four words, BG map addresses $98A1, $98E1, $9921, $9961, which are rows 5, 7, 9 and 11 of column
+; 1: the cursor cells of the four egg entries on a page. BattleEnd_AskToJoin_EggListCursor passes
+; the table to MovePagedListCursor with cursor byte wMenuState; BattleEnd_AskToJoin_MarkEgg and
+; BattleEnd_AskToJoin_RedrawEggsAfterStats add $2998 to a word to get the matching cell in
+; wScreenTileBuffer, where they store the mark tile $BC. (C1, E-0381)
 BattleEnd_AskToJoin_EggListCursor_Data::
     db $a1, $98, $e1, $98, $21, $99, $61, $99
 
+; Five words, BG map addresses $9821, $9861, $98A1, $98E1, $9921, which are rows 1, 3, 5, 7 and 9 of
+; column 1: the cursor cells of the five names on a page of the monster list.
+; BattleEnd_AskToJoin_MonsterListCursor and BattleEnd_AddJoinedMonster_ListCursor pass the table to
+; MovePagedListCursor (cursor byte wMenuState or wMenuSubState); BattleEnd_AskToJoin_MarkPick,
+; BattleEnd_AddJoinedMonster_SetUpList and BattleEnd_AddJoinedMonster_DrawOptions write the mark
+; tile $BC or the cursor tile $BB at the word picked by that byte. (C1, E-0381)
 BattleEnd_AskToJoin_MonsterListCursor_Data::
     db $21, $98, $61, $98, $a1, $98, $e1, $98, $21, $99
 
+; Two words, BG map addresses $992B and $996B, which are rows 9 and 11 of column 11: the cursor
+; cells of a two-entry choice. BattleEnd_AskToJoin_ShowYouHaveNoEggs passes the table through
+; SetDEFlagOnBButton to MovePagedListCursor with cursor byte wMenuState. (C1, E-0381)
 BattleEnd_AskToJoin_ShowYouHaveNoEggs_Data::
     db $2b, $99, $6b, $99
 
@@ -6910,7 +6939,10 @@ ShowStringBCAtTileRowBattleArg0::
     farcall ShowString_Bank08
     ret
 
-; data read by DrawFourListEntriesForPageListPage (8 bytes) (E-0347)
+; Four words, addresses in wScreenTileBuffer: $C243, $C283, $C2C3, $C303, which are rows 5, 7, 9 and
+; 11 of column 11. DrawFourListEntriesForPageListPage_DrawEgg indexes them with wBattleArg0 (the
+; entry on the page) and stores the entry mark there: $CC plus the sex bit for an appraised egg
+; (MON_EGG = 2), $C9 for an unappraised one, or the blank tile $C3 for an empty entry. (C1, E-0381)
 DrawFourListEntriesForPageListPage_DrawEgg_Data::
     db $43, $c2, $83, $c2, $c3, $c2, $03, $c3
 
@@ -9080,7 +9112,12 @@ ShowStrings6To8Bank09InRows::
     ld [wTextWindowWidth], a
     ret
 
-; data read by BattleEnd_AskToJoin_CheckFarmRoom (3 bytes) (E-0347)
+; Three bytes $0A, $14, $1E (10, 20, 30): how many SRAM records of sRecords (each MON_ record is $A5
+; bytes) the farm holds at farm level wFarmLevel 0, 1 and 2. CountFarmMonstersAndEggs,
+; ListPartyAndStoredRecordsForPage, ListFarmEggsToListEntries and
+; RunBattleEndStep5SubSteps_StoreOnFarm scan that many records, and
+; BattleEnd_AskToJoin_CheckFarmRoom compares the count of monsters plus eggs with the entry. (C1,
+; E-0381)
 BattleEnd_AskToJoin_CheckFarmRoom_Data::
     db $0a, $14, $1e
 
@@ -9796,16 +9833,30 @@ ShowKeyNameOrStringForTitleKeyFlag_KeyEntryName::
     farcall ShowString_Bank09
     ret
 
-; data read by DrawSaveSummaryPartyEntryC (3 bytes) (E-0347)
+; Three bytes $25, $2B, $31: for party entry c (0 to 2) the VRAM tile number (in the $9000 area)
+; that LoadFamilyIconTileForWorkBuf writes the family icon to; DrawSaveSummaryPartyEntryC draws the
+; 10-byte name with ShowTenByteNameAtDE at the tile after it (VRAM $9000 + 16 * (value + 1)). Used
+; when wGameMode is not 5; the game mode 5 values are DrawSaveSummaryPartyEntryC_Data2. (C1, E-0381)
 DrawSaveSummaryPartyEntryC_Data1::
     db $25, $2b, $31
 
+; Three bytes $45, $4B, $51: the same use as DrawSaveSummaryPartyEntryC_Data1 (family icon tile
+; number of party entry c, name tiles starting at the next tile) but selected when wGameMode is 5,
+; with all three entries 32 tiles further on. (C1, E-0381)
 DrawSaveSummaryPartyEntryC_Data2::
     db $45, $4b, $51
 
+; Three words, addresses in wScreenTileBuffer (rows of 32): $C222, $C262, $C2A2, which are rows 4, 6
+; and 8 of column 10. DrawSaveSummaryPartyEntryC writes the two level digit tiles of party entry c
+; there with WriteTwoDigitTilesDigits1NoBlank_Bank16; for an entry beyond the count it blanks 11
+; tiles with $C3 starting 9 cells before the word. Used when wGameMode is not 5. (C1, E-0381)
 DrawSaveSummaryPartyEntryC_Data3::
     db $22, $c2, $62, $c2, $a2, $c2
 
+; Three words, addresses in wScreenTileBuffer: $C262, $C2A2, $C2E2, which are rows 6, 8 and 10 of
+; column 10, two rows lower than DrawSaveSummaryPartyEntryC_Data3. DrawSaveSummaryPartyEntryC uses
+; them the same way (level digits of party entry c, or the blanked row for a missing entry) when
+; wGameMode is 5. (C1, E-0381)
 DrawSaveSummaryPartyEntryC_Data4::
     db $62, $c2, $a2, $c2, $e2, $c2
 

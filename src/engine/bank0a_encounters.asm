@@ -650,7 +650,12 @@ ToggleStatusStepFlagsLowBitOnce::
     ld [wStatusStepFlags], a
     ret
 
-; data read by EnterStatusEffectFieldState (43 bytes, 11 words) (E-0347)
+; A list of 64 map ids in ascending order apart from $B2, $B1, then an $FF end marker: $21-$26,
+; $29-$2B, $2D, $2E, $31-$34, $3C, $3D, $41, $45, $49-$4D, $4F-$52, $58-$61, $68, $71, $72, $78,
+; $79, $7C-$7F, $89, $92, $9D, $A4, $A9, $AB, $AF, $B2, $B1, $B6, $B9, $BA, $BC, $C5, $D0, $D9, $E2.
+; EnterStatusEffectFieldState compares hMapId with each byte (outside key worlds, on maps $20 and
+; above) and returns at once on a match, so none of the poison and MP-drain field steps run on those
+; maps. (C1, E-0381)
 EnterStatusEffectFieldState_Data::
     db $21, $22, $23, $24, $25, $26, $29, $2a, $2b, $2d, $2e, $31, $32, $33, $34, $3c
     db $3d, $41, $45, $49, $4a, $4b, $4c, $4d, $4f
@@ -1092,12 +1097,20 @@ RunBattleIntroKindCase_KeyWorldStrength::
     jr nz, .loop2
     jr .set_encounter_kind_to_02
 
-; data read by RunBattleIntroKindCase_KeyWorldStrength (40 bytes) (E-0347)
+; Twenty little-endian words, indexed by party strength / 5 (wPartyStrength, quotient from
+; DivideBByA): base monster numbers $00AC, $00BC, $00CC, $00DC, $00EC, $00FC, $010C, $011C, $012C,
+; $013C, then $021E, $0223, $0228, $022D, $0232, $0237, $023C, $0241, $0246, $0248.
+; RunBattleIntroKindCase_KeyWorldStrength stores the word in hTemp0/hTemp1 and gives each of the
+; three foes in wEncounterMonsters that number plus a random 0-9. (C1, E-0381)
 RunBattleIntroKindCase_KeyWorldStrength_Data1::
     db $ac, $00, $bc, $00, $cc, $00, $dc, $00, $ec, $00, $fc, $00, $0c, $01, $1c, $01
     db $2c, $01, $3c, $01, $1e, $02, $23, $02, $28, $02, $2d, $02, $32, $02, $37, $02
     db $3c, $02, $41, $02, $46, $02, $48, $02
 
+; Twelve little-endian monster numbers in four groups of three, one group per field event $0C-$0F:
+; $020B, $020C, $020D; $020E, $020F, $020E; $0210, $0211, $0212; $0213, $0214, $0215.
+; RunBattleIntroKindCase_KeyWorldStrength copies the group 6 * (wPendingFieldEvent & $0F - $0C)
+; bytes in to wEncounterMonsters as the three fixed foes of that event. (C1, E-0381)
 RunBattleIntroKindCase_KeyWorldStrength_Data2::
     db $0b, $02, $0c, $02, $0d, $02, $0e, $02, $0f, $02, $0e, $02, $10, $02, $11, $02
     db $12, $02, $13, $02, $14, $02, $15, $02
@@ -1166,7 +1179,10 @@ PickRandomEncounterCountdownFromTable::
     ld [wEncounterCountdown], a
     ret
 
-; data read by PickRandomEncounterCountdownFromTable (21 bytes) (E-0347)
+; Twenty-one counts in ascending order: $0A, $14, $19, $1E, $23, $28, $2A, $2C, $2D, $2E, $30, $32,
+; $34, $36, $38, $3A, $3C, $41, $46, $50, $50. PickRandomEncounterCountdownFromTable indexes it by
+; (wKeyRandomHi & $3F) / 5, which is at most 12, and stores twice the entry in wEncounterCountdown,
+; so only the first 13 entries are reached. (C1, E-0381)
 PickRandomEncounterCountdownFromTable_Data::
     db $0a, $14, $19, $1e, $23, $28, $2a, $2c, $2d, $2e, $30, $32, $34, $36, $38, $3a
     db $3c, $41, $46, $50, $50
@@ -2644,10 +2660,16 @@ RunBattleIntroKindCase_KeyWorldEncounter::
     ld [wBattleKind], a
     ret
 
-; data read by FillEncounterFromEntry (4 bytes) (E-0347)
+; Four encounter kind values, 0, 2, 1, 2, indexed by wRandomLo & 3 after NextTableByte.
+; FillEncounterFromEntry replaces an encounter kind of 2 or more with the entry, and
+; RunBattleIntroKindCase_KeyWorldEncounter picks wEncounterKind from it at random (kind 2 twice as
+; often as 0 or 1). (C1, E-0381)
 FillEncounterFromEntry_Data1::
     db $00, $02, $01, $02
 
+; Four encounter kind values, 0, 1, 0, 1, indexed by wRandomLo & 3 after NextTableByte.
+; FillEncounterFromEntry replaces an encounter kind of exactly 1 with the entry, so such an entry
+; becomes kind 0 or 1 at random. (C1, E-0381)
 FillEncounterFromEntry_Data2::
     db $00, $01, $00, $01
 
@@ -3566,10 +3588,17 @@ TransitionRowStep08::
     ld h, d
     ret
 
-; data read by StripeTransition_BlankStripes (9 bytes) (E-0347)
+; Nine widths in tiles, 20, 18, 16, 14, 12, 10, 8, 6, 4, indexed by the stage wTransitionStage
+; (0-8). StripeTransition_BlankStripes blanks one rectangular ring of tiles per stage, outermost
+; first, with this width for the top and bottom edges (StripeTransition_BlankStripes_Data2 gives the
+; height); the first ring is the whole 20 tile wide screen. (C1, E-0381)
 StripeTransition_BlankStripes_Data1::
     db $14, $12, $10, $0e, $0c, $0a, $08, $06, $04
 
+; Nine heights in tiles, 18, 16, 14, 12, 10, 8, 6, 4, 2, indexed by the stage wTransitionStage
+; (0-8). StripeTransition_BlankStripes blanks the left and right edges of the ring of that stage
+; with this height, in steps of one BG map row ($20); with StripeTransition_BlankStripes_Data1 the
+; rings shrink by 2 tiles in each direction per stage. (C1, E-0381)
 StripeTransition_BlankStripes_Data2::
     db $12, $10, $0e, $0c, $0a, $08, $06, $04, $02
 

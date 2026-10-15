@@ -53,15 +53,15 @@ ShowString_Bank08::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_08::
-; data read by CopyMonsterNameToBuffer_B01 (3 words) (E-0347)
+; another name for the data at StringCategories_08, whose note is above (E-0381)
 StringDatabase::
     dw StringList_08 ; id 0
     dw StringList_08_2 ; id 1
     dw StringList_08_3 ; id 2
-CopyNameStringFromBank08Database_Data1::
+StringDatabase_MonsterNames2::
     dw StringList_08_4 ; id 3
     dw StringList_08_5 ; id 4
-ArenaMenu_PickPrize_GiveItem_CopyName_Data::
+StringDatabase_ItemNames::
     dw StringList_08_6 ; id 5
     dw StringList_08_7 ; id 6
     dw StringList_08_8 ; id 7
@@ -70,6 +70,7 @@ ArenaMenu_PickPrize_GiveItem_CopyName_Data::
 ; category list of StringCategories_08; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_08::
+; another name for the data at StringList_08, whose note is above (E-0381)
 StringTable_System::
     dw String_08_00_00 ; id 0
     dw String_08_00_01 ; id 1
@@ -328,6 +329,7 @@ StringTable_System::
     dw String_08_00_ED ; id 254
 
 StringList_08_2::
+; another name for the data at StringList_08_2, whose note is above (E-0381)
 StringTable_MonsterFamilies::
     dw String_08_01_00 ; id 0
     dw String_08_01_01 ; id 1
@@ -342,6 +344,7 @@ StringTable_MonsterFamilies::
     dw String_08_01_0A ; id 10
 
 StringList_08_3::
+; another name for the data at StringList_08_3, whose note is above (E-0381)
 StringTable_MonsterNames::
     dw String_08_02_00 ; id 0
     dw String_08_02_01 ; id 1
@@ -601,6 +604,7 @@ StringTable_MonsterNames::
     dw String_08_02_FF ; id 255
 
 StringList_08_4::
+; another name for the data at StringList_08_4, whose note is above (E-0381)
 StringTable_MonsterNames2::
     dw String_08_03_00 ; id 0
     dw String_08_03_01 ; id 1
@@ -732,6 +736,7 @@ StringTable_MonsterNames2::
     dw String_08_03_7F ; id 127
 
 StringList_08_5::
+; another name for the data at StringList_08_5, whose note is above (E-0381)
 StringTable_SkillNames::
     dw String_08_04_00 ; id 0
     dw String_08_04_01 ; id 1
@@ -958,6 +963,7 @@ StringTable_SkillNames::
     dw String_08_04_D0 ; id 222
 
 StringList_08_6::
+; another name for the data at StringList_08_6, whose note is above (E-0381)
 StringTable_ItemNames::
     dw String_08_05_00 ; id 0
     dw String_08_05_01 ; id 1
@@ -1073,6 +1079,7 @@ StringTable_ItemNames::
     dw String_08_05_62 ; id 111
 
 StringList_08_7::
+; another name for the data at StringList_08_7, whose note is above (E-0381)
 StringTable_ItemDescriptions::
     dw String_08_06_00 ; id 0
     dw String_08_06_00 ; id 1
@@ -1188,6 +1195,7 @@ StringTable_ItemDescriptions::
     dw String_08_06_6F ; id 111
 
 StringList_08_8::
+; another name for the data at StringList_08_8, whose note is above (E-0381)
 StringTable_PersonalityNames::
     dw String_08_07_00 ; id 0
     dw String_08_07_01 ; id 1
@@ -1218,6 +1226,7 @@ StringTable_PersonalityNames::
     dw String_08_07_1A ; id 26
 
 StringList_08_9::
+; another name for the data at StringList_08_9, whose note is above (E-0381)
 StringTable_ItemMenuMessages::
     dw String_08_08_00 ; id 0
     dw String_08_08_01 ; id 1

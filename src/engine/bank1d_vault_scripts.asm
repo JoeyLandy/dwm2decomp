@@ -16,8 +16,13 @@ BeginStringDisplay_Bank1D::
     ret
     db $11, $16, $40, $cd, $fe, $25, $c9, $cd
 
-; data read by DrawNameGlyph (6 bytes) (E-0347)
-DrawNameGlyph_Bank1D_Data::
+; Not a table: DrawNameGlyph_Bank1D uses the address of this label ($4010) only as the base of
+; GlyphFont, adding 16 * glyph to it, and returns the result in DE for a copy from ROM bank $1F,
+; where GlyphFont lies at $4010; the six bytes here in bank $1D are never read as data. They are the
+; tail of a code sequence that starts one byte earlier, at $400F: call $4001
+; (BeginStringDisplay_Bank1D), call $2611 (RunStringDisplayToEnd), ret; the label sits on the
+; operand of the first call. (C1, E-0381)
+DrawNameGlyph_Bank1D_GlyphFontAddr::
     db $01, $40, $cd, $11, $26, $c9
 
 ; string table passed in DE to BeginStringDisplay or CopyStringToBuffer; LookupString reads word
@@ -842,7 +847,10 @@ VaultMenu_DrawChoiceCursorTile::
     ei
     ret
 
-; data read by VaultMenu (6 bytes) (E-0347)
+; Three words that are offsets from the top left BG map entry of the visible screen
+; (BGMapAddressAtScroll_Bank1D): $0061, $00A1, $00E1, which are rows 3, 5 and 7 of column 1.
+; VaultMenu_DrawChoiceCursorTile indexes them with wVaultMode and writes tile B at that entry. (C1,
+; E-0381)
 VaultMenu_DrawChoiceCursorTile_Data::
     db $61, $00, $a1, $00, $e1, $00
 
@@ -1182,7 +1190,10 @@ VaultMenu_Store_PutItemCursorTile::
     ei
     ret
 
-; data read by VaultMenu (8 bytes) (E-0347)
+; Four words that are offsets from the top left BG map entry of the visible screen: $00A9, $00E9,
+; $0129, $0169, which are rows 5, 7, 9 and 11 of column 9. VaultMenu_Store_PutItemCursorTile indexes
+; them with wItemGridX (0 to 3) and writes tile B at that entry. The bytes are identical to
+; VaultMenu_Store_ItemCursor_DrawTile_Data. (C1, E-0381)
 VaultMenu_Store_PutItemCursorTile_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
@@ -1353,7 +1364,11 @@ VaultMenu_Store_DrawCount::
     ld [wScreenStep], a
     ret
 
-; data read by VaultMenu (21 bytes) (E-0347)
+; A 7 by 3 tile picture of the count box (three rows of 7 tile ids): top border $B0 $B1 x5 $B2,
+; middle $B6 $C3 $C3 $BE $C3 $C3 $B7, bottom $B3 $B4 x5 $B5. VaultMenu_Store_DrawCount copies it to
+; wScreenList, then the tens and ones digits of the count of the chosen item are stored in
+; wDigitWorkA and wDigitWorkB, which are the two $C3 cells after $BE (row 1, columns 4 and 5), and
+; the rectangle is drawn at the scroll origin + $0140. (C1, E-0381)
 VaultMenu_Store_DrawCount_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $c3, $c3, $be, $c3, $c3, $b7, $b3, $b4
     db $b4, $b4, $b4, $b4, $b5
@@ -1610,7 +1625,10 @@ VaultMenu_Store_ItemCursor_DrawTile::
     ei
     ret
 
-; data read by VaultMenu (8 bytes) (E-0347)
+; Four words that are offsets from the top left BG map entry of the visible screen: $00A9, $00E9,
+; $0129, $0169, which are rows 5, 7, 9 and 11 of column 9, identical to
+; VaultMenu_Store_PutItemCursorTile_Data. VaultMenu_Store_ItemCursor_DrawTile indexes them with
+; wItemGridX (0 to 3) and writes tile B at that entry. (C1, E-0381)
 VaultMenu_Store_ItemCursor_DrawTile_Data::
     db $a9, $00, $e9, $00, $29, $01, $69, $01
 
@@ -2011,7 +2029,10 @@ VaultMenu_Store_EnterQuantity_DrawDigitTile::
     ei
     ret
 
-; data read by VaultMenu (4 bytes) (E-0347)
+; Two words that are offsets from the top left BG map entry of the visible screen: $0161 and $0162,
+; which are row 11 columns 1 and 2: the tens and ones places of the quantity.
+; VaultMenu_Store_EnterQuantity_DrawDigitTile indexes them with wNumberEditPos (0 or 1) and writes
+; tile B at that entry. (C1, E-0381)
 VaultMenu_Store_EnterQuantity_DrawDigitTile_Data::
     db $61, $01, $62, $01
 
@@ -2555,7 +2576,12 @@ VaultMenu_Store_DrawBankedGold::
     ld [wScreenStep], a
     ret
 
-; data read by VaultMenu (27 bytes) (E-0347)
+; A 9 by 3 tile picture of the banked gold box (three rows of 9 tile ids): top border $B0 $B1 x7
+; $B2, middle $B6 $BF $C3 x6 $B7, bottom $B3 $B4 x7 $B5. VaultMenu_Store_DrawBankedGold copies it to
+; wScreenList, then writes the six digit tiles of wBankedGold* into wDigitWorkA onward (row 1,
+; columns 2 to 7) and draws the rectangle at the scroll origin + $014B. The copy loop runs 39 ($27)
+; times, so the 12 bytes after the table (the start of VaultMenu_Store_DrawAmountBox) are copied to
+; wScreenList as well and the rectangle draw does not use them. (C1, E-0381)
 VaultMenu_Store_DrawBankedGold_Data::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2, $b6, $bf, $c3, $c3, $c3, $c3, $c3
     db $c3, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5
@@ -2665,7 +2691,11 @@ VaultMenu_Store_DrawAmountBox::
     ld [wItemGrid], a
     jp .check_screen_step
 
-; data read by VaultMenu (16 bytes) (E-0347)
+; An 8 by 2 tile picture of the amount box (two rows of 8 tile ids): $B6 $BF $C3 $C3 $C3 $E0 $E0
+; $B7, then the bottom border $B3 $B4 x6 $B5. VaultMenu_Store_DrawAmountBox copies it to wScreenList
+; and replaces the three $C3 cells (wGrid2CursorX, wGrid2CursorY, wScreenArea: columns 2 to 4 of row
+; 0) with $E0 + each digit of wThreeDigits; the two $E0 tiles at columns 5 and 6 are fixed zero
+; digits, and the rectangle is drawn at the scroll origin + $006C. (C1, E-0381)
 VaultMenu_Store_DrawAmountBox_Data::
     db $b6, $bf, $c3, $c3, $c3, $e0, $e0, $b7, $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5
 
@@ -3317,7 +3347,11 @@ VaultMenu_EnterThreeDigits_BlinkCursor::
     ei
     ret
 
-; data read by VaultMenu (6 bytes) (E-0347)
+; Three words that are offsets from the top left BG map entry of the visible screen: $006E, $006F,
+; $0070, which are row 3 columns 14, 15 and 16: the three digit places of the number editor.
+; VaultMenu_EnterThreeDigits_BlinkCursor indexes them with wNumberEditPos (0 to 2) and writes either
+; the digit tile ($E0 + wThreeDigits[wNumberEditPos]) or the blank-cursor tile $CB there, to make
+; the edited digit blink. (C1, E-0381)
 VaultMenu_EnterThreeDigits_BlinkCursor_Data::
     db $6e, $00, $6f, $00, $70, $00
 
@@ -3944,10 +3978,18 @@ DrawRecordStatsBoxForArg1::
     ld [rRAMG2], a
     ret
 
-; data read by DrawRecordStatsBoxForArg1 (4 bytes) (E-0347)
+; Four bytes $5B, $5D, $5F, $61: the record offsets of the four word fields MON_HP, MON_MAX_HP,
+; MON_MP and MON_MAX_MP. DrawRecordStatsBoxForArg1 loops c = 0 to 3, reads field c of SRAM record
+; wArg1 with LoadSRAMRecordWord, converts it with HLToDecimalDigits and draws the three digits at
+; word c of DrawRecordStatsBoxForArg1_Data2. (C1, E-0381)
 DrawRecordStatsBoxForArg1_Data1::
     db $5b, $5d, $5f, $61
 
+; Four words, addresses of cells in wWindowTileBuffer (rows of 20 bytes): $C3D4, $C3D8, $C3FC,
+; $C400, which are row 10 column 12, row 10 column 16, row 12 column 12 and row 12 column 16.
+; DrawRecordStatsBoxForArg1 writes the three digit tiles ($E0 + digit) of field c of
+; DrawRecordStatsBoxForArg1_Data1 (current HP, maximum HP, current MP, maximum MP) starting at word
+; c. (C1, E-0381)
 DrawRecordStatsBoxForArg1_Data2::
     db $d4, $c3, $d8, $c3, $fc, $c3, $00, $c4
 
@@ -5018,7 +5060,7 @@ DrawNameGlyph_Bank1D::
     ld a, d
     and $0f
     ld d, a
-    ld hl, DrawNameGlyph_Bank1D_Data
+    ld hl, DrawNameGlyph_Bank1D_GlyphFontAddr
     add hl, de
     ld e, l
     ld d, h
@@ -5230,7 +5272,10 @@ DrawRecordListNameTiles_Bank1D::
     ld [hl], $12
     ret
 
-; data read by DrawRecordListNameTiles_Bank1D (6 bytes) (E-0347)
+; Three words, VRAM tile addresses $8D00, $8D50, $8DA0 (vTiles1 + $500, + $550, + $5A0).
+; DrawRecordListNameTiles_Bank1D copies the name of party member c (from wPartyList, c below
+; wPartyCount) to wNameGlyphBuf and has CopyGlyphTilesToVRAM draw its glyph tiles at word c. (C1,
+; E-0381)
 DrawRecordListNameTiles_Bank1D_Data::
     db $00, $8d, $50, $8d, $a0, $8d
 
@@ -5423,22 +5468,45 @@ DrawRecordListPageMarks::
     ld [rRAMG2], a
     ret
 
-; data read by DrawRecordListPageMarks (8 bytes) (E-0347)
+; Four words that are offsets from the top left BG map entry of the visible screen: $0032, $0072,
+; $00B2, $00F2, which are rows 1, 3, 5 and 7 of column 18. The BG map write (only when wArg1 is 0)
+; uses this table when wArg2 is 0. DrawRecordListPageMarks writes the mark of list entry c (c = 0 to
+; 3 of the page) at word c: the sex mark $CC plus the sex bit for an appraised egg (MON_EGG = 2),
+; otherwise $CE. (C1, E-0381)
 DrawRecordListPageMarks_Data1::
     db $32, $00, $72, $00, $b2, $00, $f2, $00
 
+; Four words that are offsets from the top left BG map entry of the visible screen: $00B2, $00F2,
+; $0132, $0172, which are rows 5, 7, 9 and 11 of column 18. The BG map write (only when wArg1 is 0)
+; uses this table when wArg2 is 1. DrawRecordListPageMarks writes the mark of list entry c (c = 0 to
+; 3 of the page) at word c: the sex mark $CC plus the sex bit for an appraised egg (MON_EGG = 2),
+; otherwise $CE. (C1, E-0381)
 DrawRecordListPageMarks_Data2::
     db $b2, $00, $f2, $00, $32, $01, $72, $01
 
+; Four words that are offsets from the top left BG map entry of the visible screen: $002B, $006B,
+; $00AB, $00EB, which are rows 1, 3, 5 and 7 of column 11. The BG map write (only when wArg1 is 0)
+; uses this table when wArg2 is 2 or more. DrawRecordListPageMarks writes the mark of list entry c
+; (c = 0 to 3 of the page) at word c: the sex mark $CC plus the sex bit for an appraised egg
+; (MON_EGG = 2), otherwise $CE. (C1, E-0381)
 DrawRecordListPageMarks_Data3::
     db $2b, $00, $6b, $00, $ab, $00, $eb, $00
 
+; Four words, addresses in wWindowTileBuffer (rows of 20 bytes): $C38A, $C3B2, $C3DA, $C402, which
+; are rows 6, 8, 10 and 12 of column 18. The mark of list entry c is always stored at word c when
+; wArg2 is 0 (a store that does not depend on wArg1). (C1, E-0381)
 DrawRecordListPageMarks_Data4::
     db $8a, $c3, $b2, $c3, $da, $c3, $02, $c4
 
+; Four words, addresses in wWindowTileBuffer (rows of 20 bytes): $C3DA, $C402, $C42A, $C452, which
+; are rows 10, 12, 14 and 16 of column 18. The mark of list entry c is always stored at word c when
+; wArg2 is 1. (C1, E-0381)
 DrawRecordListPageMarks_Data5::
     db $da, $c3, $02, $c4, $2a, $c4, $52, $c4
 
+; Four words, addresses in wWindowTileBuffer (rows of 20 bytes): $C383, $C3AB, $C3D3, $C3FB, which
+; are rows 6, 8, 10 and 12 of column 11. The mark of list entry c is always stored at word c when
+; wArg2 is 2 or more. (C1, E-0381)
 DrawRecordListPageMarks_Data6::
     db $83, $c3, $ab, $c3, $d3, $c3, $fb, $c3
 
@@ -5581,7 +5649,10 @@ SwapMonstersMenu_DrawMonstersOrEggsTile::
     ei
     ret
 
-; data read by SwapMonstersMenu (4 bytes) (E-0347)
+; Two words that are offsets from the top left BG map entry of the visible screen: $0128 and $0168,
+; which are rows 9 and 11 of column 8. SwapMonstersMenu_DrawMonstersOrEggsTile indexes them with
+; wMenuChoice (0 or 1) and writes tile B at that entry, stepping back a row when the view has
+; wrapped. (C1, E-0381)
 SwapMonstersMenu_DrawMonstersOrEggsTile_Data::
     db $28, $01, $68, $01
 
@@ -5811,7 +5882,9 @@ DrawTileAtTwoChoiceCursor::
     ei
     ret
 
-; data read by DrawTileAtTwoChoiceCursor (4 bytes) (E-0347)
+; Two words that are offsets from the top left BG map entry of the visible screen: $012F and $016F,
+; which are rows 9 and 11 of column 15. DrawTileAtTwoChoiceCursor indexes them with wTwoChoiceCursor
+; (0 or 1) and writes tile B at that entry. (C1, E-0381)
 DrawTileAtTwoChoiceCursor_Data::
     db $2f, $01, $6f, $01
 
@@ -5949,7 +6022,9 @@ UpdateListCursorListCursor_DrawTile::
     ei
     ret
 
-; data read by UpdateListCursorListCursor (8 bytes) (E-0347)
+; Four words that are offsets from the top left BG map entry of the visible screen: $0021, $0061,
+; $00A1, $00E1, which are rows 1, 3, 5 and 7 of column 1. UpdateListCursorListCursor_DrawTile
+; indexes them with wListCursor and writes tile B at that entry. (C1, E-0381)
 UpdateListCursorListCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00
 
@@ -6169,7 +6244,11 @@ UpdatePagedListCursor_DrawTile::
     ei
     ret
 
-; data read by UpdatePagedListCursor (60 bytes) (E-0347)
+; Six layouts of five words (60 bytes), all offsets from the top left BG map entry of the visible
+; screen. Layout 0: rows 1, 3, 5, 7, 9 of column 1; layout 1: the same rows of column 8; layouts 2
+; to 5: rows 5, 7, 9, 11, 13 of column 8, 6, 4 and 2. UpdatePagedListCursor_DrawTile picks the
+; layout with wMenuInputResult (its callers store 0 to 5 there first) and the row with wListCursor,
+; and writes tile B ($BB cursor, $C3 blank or $BC chosen) at that entry. (C1, E-0381)
 UpdatePagedListCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01, $28, $00, $68, $00, $a8, $00
     db $e8, $00, $28, $01, $a8, $00, $e8, $00, $28, $01, $68, $01, $a8, $01, $a6, $00
@@ -6265,7 +6344,11 @@ LoadPedigreeSpeciesSpriteGraphics::
     ld [rRAMG], a
     ret
 
-; data read by LoadPedigreeSpeciesSpriteGraphics (9 bytes) (E-0347)
+; Three 3-byte entries for pedigree slot c (0 to 2): $00 $00 $80, $08 $00 $81, $10 $00 $82.
+; LoadPedigreeSpeciesSpriteGraphics copies entry c to wArg3, wArg4 and wArg5 for
+; LoadSpeciesSpriteGraphicsAndPalette: wArg3 is the offset in wOBJPaletteBuffer (0, 8, $10) where
+; the species 8-byte palette goes, and wArg5:wArg4 the VRAM address the sprite graphics are
+; decompressed to ($8000, $8100, $8200). (C1, E-0381)
 LoadPedigreeSpeciesSpriteGraphics_Data1::
     db $00, $00, $80, $08, $00, $81, $10, $00, $82
 
@@ -6358,7 +6441,10 @@ DrawPedigreeSpeciesSprites::
     ld [rRAMG2], a
     ret
 
-; data read by DrawPedigreeSpeciesSprites (12 bytes) (E-0347)
+; Three 4-byte entries for pedigree slot c (0 to 2): $00 $10 $78 $00, $10 $30 $68 $01, $20 $30 $88
+; $02. DrawPedigreeSpeciesSprites loads the bytes as H (tile offset $00, $10, $20), L (X offset $10,
+; $30, $30), D (Y offset $78, $68, $88) and E (attribute XOR 0, 1, 2) and calls
+; DrawSpeciesMetaSpriteAtScrollOffset for the species of that slot. (C1, E-0381)
 DrawPedigreeSpeciesSprites_Data::
     db $00, $10, $78, $00, $10, $30, $68, $01, $20, $30, $88, $02
 
@@ -6745,10 +6831,19 @@ MarkPartyMembersInRecordListPage::
     ei
     jp .check_party_count
 
-; data read by MarkPartyMembersInRecordListPage (10 bytes) (E-0347)
+; Five little-endian words, $C378, $C3A0, $C3C8, $C3F0 and $C418: positions in the window tile
+; buffer (wWindowTileBuffer, 20 tiles per row) of column 0 in rows 6, 8, 10, 12 and 14, two buffer
+; rows apart. MarkPartyMembersInRecordListPage indexes it by the row c of the matching list cell
+; within the page (word c) when wArg1 is 0, and writes the party digit tile ($E1 plus the party
+; index) at that address. (C1, E-0381)
 MarkPartyMembersInRecordListPage_Data1::
     db $78, $c3, $a0, $c3, $c8, $c3, $f0, $c3, $18, $c4
 
+; Five little-endian words, $0020, $0060, $00A0, $00E0 and $0120: BG map offsets of 1, 3, 5, 7 and 9
+; BG rows (32 tiles each) below the top-left screen tile. When wArg1 is not 0,
+; MarkPartyMembersInRecordListPage indexes it by the row c of the matching list cell within the
+; page, adds the word to the BGMapAddressAtScroll_Bank1D_2 result and writes the party digit tile
+; there. (C1, E-0381)
 MarkPartyMembersInRecordListPage_Data2::
     db $20, $00, $60, $00, $a0, $00, $e0, $00, $20, $01
 
@@ -7131,23 +7226,45 @@ LoadRecordCapacityFromFarmLevelTable::
     ld [wRecordCapacity], a
     ret
 
-; data read by LoadRecordCapacityFromFarmLevelTable (3 bytes) (E-0347)
+; Three bytes, 10, 20 and 30: the number of records for farm levels 0, 1 and 2.
+; LoadRecordCapacityFromFarmLevelTable indexes it by wFarmLevel and stores the byte in
+; wRecordCapacity and register C; a wFarmLevel above 2 would read into the table that follows. (C1,
+; E-0381)
 LoadRecordCapacityFromFarmLevelTable_Data::
     db $0a, $14, $1e
 
+; A list of 31 little-endian VRAM addresses of 16-byte tiles ($8A40 to $8AF0 in steps of $10, $8EE0,
+; $8EF0, $8F00 to $8FF0 in steps of $10, then $8EB0), ended by $FFFF (only the first byte is
+; tested). SaveTilesToBGMap1TopHalf has the shared copier save tile n to vBGMap1 + 16 * n, and
+; CloseHibernateMenu_RestoreGlyphs copies them back with LoadTileListSixPerCall, six per call. (C1,
+; E-0381)
 CloseHibernateMenu_RestoreGlyphs_Data::
     db $40, $8a, $50, $8a, $60, $8a, $70, $8a, $80, $8a, $90, $8a, $a0, $8a, $b0, $8a
     db $c0, $8a, $d0, $8a, $e0, $8a, $f0, $8a, $e0, $8e, $f0, $8e, $00, $8f, $10, $8f
     db $20, $8f, $30, $8f, $40, $8f, $50, $8f, $60, $8f, $70, $8f, $80, $8f, $90, $8f
     db $a0, $8f, $b0, $8f, $c0, $8f, $d0, $8f, $e0, $8f, $f0, $8f, $b0, $8e, $ff, $ff
 
+; A list of 13 little-endian VRAM addresses of 16-byte tiles ($8C00, $8C10, $8C20, $8C70 to $8CB0 in
+; steps of $10, $8BF0, $8EA0, $8EB0, $8EC0, $8ED0), ended by $FFFF. SaveTilesToBGMap1BottomHalf has
+; the shared copier save tile n to vBGMap1 + $200 + 16 * n; SwapMonstersMenu_Check_ReloadTiles,
+; SwapMonstersMenu_Release_ReloadTiles and LinkEggList_ShowChooseTheKindOf copy them back with
+; LoadTileListSixPerCall. (C1, E-0381)
 SaveTilesToBGMap1BottomHalf_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
     db $f0, $8b, $a0, $8e, $b0, $8e, $c0, $8e, $d0, $8e, $ff, $ff
 
+; Three record field offsets, $0B (MON_SPECIES), $1A (MON_PARENT1_SPECIES) and $1C
+; (MON_PARENT2_SPECIES): the order in which LoadPedigreeSpeciesSpriteGraphics and
+; DrawPedigreeSpeciesSprites read the three species words of a record when bit 4 of its MON_FAMILY
+; byte is clear. The loop counter (0 to 2) is the index. (C1, E-0381)
 LoadPedigreeSpeciesSpriteGraphics_Data2::
     db $0b, $1a, $1c
 
+; The first three bytes are $0B (MON_SPECIES), $1C (MON_PARENT2_SPECIES) and $1A
+; (MON_PARENT1_SPECIES): the same offsets as the Data2 table with the parents swapped, used by
+; LoadPedigreeSpeciesSpriteGraphics and DrawPedigreeSpeciesSprites when bit 4 of MON_FAMILY is set.
+; The 18 bytes after them (VRAM tile addresses $8C00, $8C10, $8C20, $8C70 to $8CB0, then $FFFF) are
+; not reached by that index. (C1, E-0381)
 LoadPedigreeSpeciesSpriteGraphics_Data3::
     db $0b, $1c, $1a, $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0
     db $8c, $b0, $8c, $ff, $ff
@@ -7465,7 +7582,10 @@ PackRecordFieldsToBank1Slot_PackName::
     jp z, PackRecordFieldsToBank1Slot_Parent1NameMarks
     jp PackRecordFieldsToBank1Slot_Parent2NameMarks
 
-; data read by PackRecordFieldsToBank1Slot (6 bytes) (E-0347)
+; Six record field offsets, $01 (MON_NAME), $0F (MON_MASTER_NAME), $1E (MON_PARENT1_MASTER), $29
+; (MON_PARENT2_MASTER), $8E (MON_PARENT1_NAME) and $99 (MON_PARENT2_NAME).
+; PackRecordFieldsToBank1Slot_PackName indexes it by wPackFieldIndex (0 to 5) to find the name to
+; pack. (C1, E-0381)
 PackRecordFieldsToBank1Slot_PackName_Data::
     db $01, $0f, $1e, $29, $8e, $99
 

@@ -151,7 +151,9 @@ RunBankE1Routine::
     call RunBankE1Routine_BuildOam
     ret
 
-; data read by RunBankE1Routine (2 bytes) (E-0347)
+; One word, $5D3C: the address in bank $E1 of UnreferencedMetaSpriteSet_E1, which RunBankE1Routine
+; passes in DE to RunBankE1Routine_BuildOam as the table of meta-sprite sets (a table of one set
+; pointer; the set holds two frame pointers). (C1, E-0381)
 RunBankE1Routine_Data::
     db $3c, $5d
 

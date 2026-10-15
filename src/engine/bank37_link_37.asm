@@ -2771,7 +2771,9 @@ DrawTileBAtTwoChoiceEntry_Bank37::
     ei
     ret
 
-; data read by DrawTileBAtTwoChoiceEntry_Bank37 (6 bytes) (E-0347)
+; Three little-endian BG map offsets from the top-left screen tile, $00EC, $012C and $016C: column
+; 12 of rows 7, 9 and 11 (32 tiles per BG row). DrawTileBAtTwoChoiceEntry_Bank37 indexes it by
+; wTwoChoiceCursor and writes tile B there, the cursor mark beside the chosen entry. (C1, E-0381)
 DrawTileBAtTwoChoiceEntry_Bank37_Data::
     db $ec, $00, $2c, $01, $6c, $01
 

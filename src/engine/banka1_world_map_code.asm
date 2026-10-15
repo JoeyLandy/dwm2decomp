@@ -2259,7 +2259,11 @@ RunWorldMapState_DrawObjectMarkers::
     jp nz, .loop2
     ret
 
-; data read by RunWorldMapState (16 bytes) (E-0347)
+; Sixteen bytes, each a packed position inside a map screen: the high nibble feeds the marker X and
+; the low nibble the marker Y, each as (nibble >> 1) * 8 pixels before the cursor-cell offset is
+; subtracted. In a key world (wMapType bit 7 set) RunWorldMapState_DrawObjectMarkers uses byte 5 of
+; each 8-byte wMapObjects entry as the index into this table; in other worlds it takes that byte
+; itself as the packed position. The marker is drawn with DrawMetaSprite. (C1, E-0381)
 RunWorldMapState_DrawObjectMarkers_Data::
     db $12, $17, $21, $24, $26, $33, $45, $47, $51, $53, $65, $72, $74, $77, $81, $86
 

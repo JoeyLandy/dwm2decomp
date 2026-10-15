@@ -45,7 +45,7 @@ CopyStringToBuffer_Bank0E::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_0E::
-; data read by BeginMessageDisplay_Bank0E (1 word) (E-0347)
+; another name for the data at StringCategories_0E, whose note is above (E-0381)
 MessageStrings_Bank0E::
     dw StringList_Bank0E_0 ; id 0
 
@@ -1579,7 +1579,11 @@ AdjustStatForRecordBufAAndBItems::
     pop de
     ret
 
-; data read by AdjustStatForRecordBufAAndBItems (8 words) (E-0347)
+; Eight word pointers, one per stat index c = 0-7 in the order of the child record stat words from
+; MON_HP: HP, max HP, MP, max MP, ATK, DEF, AGL and INT. Each points at a list of MON_ITEM values
+; ending in $FF (the _Entry00 to _Entry07 labels below; stats 0-1 share one list and stats 2-3 share
+; another). AdjustStatForRecordBufAAndBItems searches the list of stat c for the MON_ITEM of each
+; parent record. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1::
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry00
@@ -1590,24 +1594,48 @@ AdjustStatForRecordBufAAndBItems_Data1::
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry06
     dw AdjustStatForRecordBufAAndBItems_Data1_Entry07
 
+; The $FF-terminated list of MON_ITEM values $01 and $02, the items that matter for stat indexes 0
+; and 1 (HP and max HP). When a parent record MON_ITEM is in the list,
+; AdjustStatForRecordBufAAndBItems subtracts the amount AdjustStatForRecordBufAAndBItems_Data2 gives
+; for that item from the parent stat word. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry00::
     db $01, $02, $ff
 
+; The $FF-terminated list of MON_ITEM values $03 and $04, the items that matter for stat indexes 2
+; and 3 (MP and max MP). A parent MON_ITEM in the list makes AdjustStatForRecordBufAAndBItems
+; subtract that item amount from AdjustStatForRecordBufAAndBItems_Data2 from the parent stat word.
+; (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry02::
     db $03, $04, $ff
 
+; The $FF-terminated list of MON_ITEM values $05 and $06, the items that matter for stat index 4
+; (ATK). A parent MON_ITEM in the list makes AdjustStatForRecordBufAAndBItems subtract that item
+; amount from AdjustStatForRecordBufAAndBItems_Data2 from the parent ATK word. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry04::
     db $05, $06, $ff
 
+; The $FF-terminated list of MON_ITEM values $07, $08 and $14, the items that matter for stat index
+; 5 (DEF). A parent MON_ITEM in the list makes AdjustStatForRecordBufAAndBItems subtract that item
+; amount from AdjustStatForRecordBufAAndBItems_Data2 from the parent DEF word. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry05::
     db $07, $08, $14, $ff
 
+; The $FF-terminated list of MON_ITEM values $09 and $0A, the items that matter for stat index 6
+; (AGL). A parent MON_ITEM in the list makes AdjustStatForRecordBufAAndBItems subtract that item
+; amount from AdjustStatForRecordBufAAndBItems_Data2 from the parent AGL word. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry06::
     db $09, $0a, $ff
 
+; The $FF-terminated list of MON_ITEM values $0B and $0C, the items that matter for stat index 7
+; (INT). A parent MON_ITEM in the list makes AdjustStatForRecordBufAAndBItems subtract that item
+; amount from AdjustStatForRecordBufAAndBItems_Data2 from the parent INT word. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data1_Entry07::
     db $0b, $0c, $ff
 
+; Twenty-two bytes indexed by a MON_ITEM value (0-$15): the amount subtracted from a parent stat
+; word. Non-zero entries are item 1 = 30, 2 = 80, 3 = 30, 4 = 80, 5 = 10, 6 = 50, 7 = 10, 8 = 50, 9
+; = 10, $A = 50, $B = 50, $C = 100 and $14 = 5; all others are 0. AdjustStatForRecordBufAAndBItems
+; subtracts it (16-bit, no floor at 0) unless the stat is already 999 or more. (C1, E-0381)
 AdjustStatForRecordBufAAndBItems_Data2::
     db $00, $1e, $50, $1e, $50, $0a, $32, $0a, $32, $0a, $32, $32, $64, $00, $00, $00
     db $00, $00, $00, $00, $05, $00
@@ -2201,7 +2229,11 @@ TestResistanceEntry::
     pop af
     jr .done
 
-; data read by TestResistanceEntry (27 bytes) (E-0347)
+; 27 bytes indexed by MON_ITEM - 1 (items 1 to $1B): each is a resistance index 0-$1A, and together
+; they use every index once (the order starts 0-6, then $0E, $0F, 7, $10-$14, 8-$B and so on).
+; TestResistanceEntry returns $FF instead of level 2 for resistance C when the record MON_ITEM is
+; 1-$1B and this table byte equals C; SumRecordBufAAndBResistanceTests uses it for both parents.
+; (C1, E-0381)
 TestResistanceEntry_Data::
     db $00, $01, $02, $03, $04, $05, $06, $0e, $0f, $07, $10, $11, $12, $13, $14, $08
     db $09, $0a, $0b, $15, $16, $17, $18, $19, $1a, $0c, $0d
@@ -2270,13 +2302,25 @@ CopySixBytesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
-; data read by CopySixBytesByChildRecordFamilyBit4Table (12 bytes) (E-0347)
+; Six little-endian addresses in the breeding record buffers, the sources used when bit 4 of the
+; child MON_FAMILY is clear: wRecordBufA + MON_SPECIES (two bytes, $C991 and $C992), wRecordBufB +
+; MON_SPECIES ($CA36, $CA37), then the MON_PLUS bytes of wRecordBufA ($C9F3) and of wRecordBufB
+; ($CA98). CopySixBytesByChildRecordFamilyBit4Table copies byte i from these to the destination in
+; CopySixBytesByChildRecordFamilyBit4Table_Data3. (C1, E-0381)
 CopySixBytesByChildRecordFamilyBit4Table_Data1::
     db $91, $c9, $92, $c9, $36, $ca, $37, $ca, $f3, $c9, $98, $ca
 
+; The same six source addresses as CopySixBytesByChildRecordFamilyBit4Table_Data1 with parent A and
+; parent B swapped ($CA36, $CA37, $C991, $C992, then the MON_PLUS bytes $CA98 and $C9F3), used when
+; bit 4 of the child MON_FAMILY is set. CopySixBytesByChildRecordFamilyBit4Table copies byte i from
+; these to the destination in CopySixBytesByChildRecordFamilyBit4Table_Data3. (C1, E-0381)
 CopySixBytesByChildRecordFamilyBit4Table_Data2::
     db $36, $ca, $37, $ca, $91, $c9, $92, $c9, $98, $ca, $f3, $c9
 
+; Six little-endian destination addresses in wChildRecord: $CAEA to $CAED (MON_PARENT1_SPECIES and
+; MON_PARENT2_SPECIES, two bytes each), $CB68 (MON_PARENT1_PLUS) and $CB73 (MON_PARENT2_PLUS).
+; CopySixBytesByChildRecordFamilyBit4Table stores source byte i to entry i whichever source table it
+; used. (C1, E-0381)
 CopySixBytesByChildRecordFamilyBit4Table_Data3::
     db $ea, $ca, $eb, $ca, $ec, $ca, $ed, $ca, $68, $cb, $73, $cb
 
@@ -2355,13 +2399,25 @@ CopyFourNamesByChildRecordFamilyBit4Table::
     jr nz, .loop
     ret
 
-; data read by CopyFourNamesByChildRecordFamilyBit4Table (8 bytes) (E-0347)
+; Four little-endian source addresses used when bit 4 of the child MON_FAMILY is clear: wRecordBufA
+; + MON_NAME ($C987), wRecordBufB + MON_NAME ($CA2C), wRecordBufA + MON_MASTER_NAME ($C995) and
+; wRecordBufB + MON_MASTER_NAME ($CA3A). CopyFourNamesByChildRecordFamilyBit4Table copies 10 bytes
+; from entry i to the destination of entry i in CopyFourNamesByChildRecordFamilyBit4Table_Data3.
+; (C1, E-0381)
 CopyFourNamesByChildRecordFamilyBit4Table_Data1::
     db $87, $c9, $2c, $ca, $95, $c9, $3a, $ca
 
+; The same four source addresses as CopyFourNamesByChildRecordFamilyBit4Table_Data1 with parent A
+; and B swapped ($CA2C, $C987, $CA3A, $C995), used when bit 4 of the child MON_FAMILY is set.
+; CopyFourNamesByChildRecordFamilyBit4Table copies 10 bytes from entry i to the destination of entry
+; i in CopyFourNamesByChildRecordFamilyBit4Table_Data3. (C1, E-0381)
 CopyFourNamesByChildRecordFamilyBit4Table_Data2::
     db $2c, $ca, $87, $c9, $3a, $ca, $95, $c9
 
+; Four little-endian destination addresses in wChildRecord: $CB5E (MON_PARENT1_NAME), $CB69
+; (MON_PARENT2_NAME), $CAEE (MON_PARENT1_MASTER) and $CAF9 (MON_PARENT2_MASTER).
+; CopyFourNamesByChildRecordFamilyBit4Table copies a 10-byte name from the source of entry i to
+; entry i whichever source table it used. (C1, E-0381)
 CopyFourNamesByChildRecordFamilyBit4Table_Data3::
     db $5e, $cb, $69, $cb, $ee, $ca, $f9, $ca
 
@@ -2499,7 +2555,10 @@ ApplyBreedingBonusToChildStats::
     jr nz, .loop
     ret
 
-; data read by ApplyBreedingBonusToChildStats (8 bytes) (E-0347)
+; Eight MON record offsets, each a stat word of wChildRecord: $5B MON_HP, $5D MON_MAX_HP, $5F
+; MON_MP, $61 MON_MAX_MP, $63 MON_ATK, $65 MON_DEF, $67 MON_AGL and $69 MON_INT.
+; ApplyBreedingBonusToChildStats walks the list and adds word * bonus / 100 (rounded up, capped at
+; 999) to each. (C1, E-0381)
 ApplyBreedingBonusToChildStats_Data::
     db $5b, $5d, $5f, $61, $63, $65, $67, $69
 

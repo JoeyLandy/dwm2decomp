@@ -1780,7 +1780,7 @@ BeginStringDisplay_BankE0_FromBankA2Table::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_A2::
-; data read by BeginStringDisplay_BankE0_FromBankA2Table (2 words) (E-0347)
+; another name for the data at StringCategories_A2, whose note is above (E-0381)
 StaffRollStringCategories::
     dw StringList_A2 ; id 0
     dw StringList_A2_2 ; id 1
@@ -1788,6 +1788,7 @@ StaffRollStringCategories::
 ; category list of StringCategories_A2; one pointer per wStringIndex (E-0217)
 ; record: string
 StringList_A2::
+; another name for the data at StringList_A2, whose note is above (E-0381)
 StaffRollNameStrings::
     dw String_A2_00_00 ; id 0
     dw String_A2_00_01 ; id 1
@@ -1824,6 +1825,7 @@ StaffRollNameStrings::
     dw String_A2_00_20 ; id 32
 
 StringList_A2_2::
+; another name for the data at StringList_A2_2, whose note is above (E-0381)
 StaffRollTitleStrings::
     dw String_A2_01_00 ; id 0
 

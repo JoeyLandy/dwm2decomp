@@ -2932,7 +2932,10 @@ BreedMenu_ChooseParents_YesNoCursor_DrawTile::
     ei
     ret
 
-; data read by BreedMenu (4 bytes) (E-0347)
+; Two little-endian word offsets into the BG map from the scroll position
+; (BGMapAddressAtScroll_Bank15): $012D and $016D, which are row 9 and row 11 at column 13.
+; BreedMenu_ChooseParents_YesNoCursor_DrawTile indexes it with wChoiceCursor times 2 and writes the
+; tile B there, stepping back if the address wrapped. (C1, E-0381)
 BreedMenu_ChooseParents_YesNoCursor_DrawTile_Data::
     db $2d, $01, $6d, $01
 
@@ -3699,10 +3702,20 @@ BreedMenu_ReturnToMap_CopySixteenTiles::
     jr nz, .loop
     ret
 
-; data read by BreedMenu_ReturnToMap_CopySixteenTiles (16 bytes) (E-0347)
+; Sixteen glyph ids ($A3, $50, $44, $11, $16, $19, $48, $24, $A6, $12, $31, $29, $32, $18, $14,
+; $25). BreedMenu_ReturnToMap_CopySixteenTiles counts C from 16 down to 1 and reads the byte at
+; offset C, so the byte at offset 0 is never read and for C = 16 it reads the byte after the table
+; (the first byte of BreedMenu_ReturnToMap_CopySixteenTiles_Data2, $D0). The glyph tile is taken
+; from GlyphFont in bank $1F (16 bytes each) and copied to word C of
+; BreedMenu_ReturnToMap_CopySixteenTiles_Data2. (C1, E-0381)
 BreedMenu_ReturnToMap_CopySixteenTiles_Data1::
     db $a3, $50, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $25
 
+; Sixteen words (32 bytes), each a VRAM tile address: $8ED0, $8EE0, $8EF0, $8F50, $8F60, $8F70,
+; $8FD0, $8FE0, $8FF0, then $9700 to $9760 in steps of $10. BreedMenu_ReturnToMap_CopySixteenTiles
+; counts C from 16 down to 1 and uses word C as the destination of the 16-byte tile it copies from
+; GlyphFont for glyph BreedMenu_ReturnToMap_CopySixteenTiles_Data1[C], so word 0 is never used and
+; the pass with C = 16 reads the two bytes after the table. (C1, E-0381)
 BreedMenu_ReturnToMap_CopySixteenTiles_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
@@ -5285,7 +5298,10 @@ DrawThreeOptionCursorTile::
     ei
     ret
 
-; data read by DrawThreeOptionCursorTile (6 bytes) (E-0347)
+; Three words that are offsets from the BG map entry at the top left of the visible screen
+; (BGMapAddressAtScroll_Bank15): $0021, $0061, $00A1, which are rows 1, 3 and 5 of column 1.
+; DrawThreeOptionCursorTile indexes them with wGridCursorX and writes tile B (the cursor or blank
+; tile its caller chose) at that entry. (C1, E-0381)
 DrawThreeOptionCursorTile_Data::
     db $21, $00, $61, $00, $a1, $00
 
@@ -6085,7 +6101,10 @@ TestBitInFieldAtArg3::
     ld [wArg5], a
     ret
 
-; data read by TestBitInFieldAtArg3 (8 bytes) (E-0347)
+; Eight single-bit masks $80, $40, $20, $10, $08, $04, $02, $01. TestBitInFieldAtArg3 takes the bit
+; number in wArg1:wArg2, finds the byte at wArg3:wArg4 plus bit number / 8, ANDs it with entry (bit
+; number AND 7) and sets wArg5 to $FF when the bit is set, else 0; bit 0 of the field is therefore
+; the top bit of its first byte. (C1, E-0381)
 TestBitInFieldAtArg3_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
@@ -6786,7 +6805,10 @@ ShowSaveFileInfoWindow::
     ld [wScreenSubStep], a
     ret
 
-; data read by ShowSaveFileInfoWindow (6 bytes) (E-0347)
+; Three words, addresses of cells in wWindowTileBuffer (rows of 20 bytes): $C3A8, $C3D0, $C3F8,
+; which are rows 8, 10 and 12 of column 8. ShowSaveFileInfoWindow indexes them with the entry number
+; (0 up to the count byte read at sSavedPlayerName + $F1) and stores tile $EA in the cell and tile
+; $ED in the cell after it. (C1, E-0381)
 ShowSaveFileInfoWindow_Data1::
     db $a8, $c3, $d0, $c3, $f8, $c3
 
@@ -6831,10 +6853,17 @@ SRAMBank1RecordAddress::
     ld [rRAMG2], a
     ret
 
-; data read by ShowSaveFileInfoWindow (6 bytes) (E-0347)
+; Three words, addresses in wWindowTileBuffer: $C3AA, $C3D2, $C3FA, which are rows 8, 10 and 12 of
+; column 10. For each saved entry ShowSaveFileInfoWindow takes the number in byte $62 of its record
+; (masked with $7F), makes digit tiles ($E0 + digit) with HLToDecimalDigits and writes the tens
+; digit (only when it is not 0) at the word picked by the entry number and the ones digit in the
+; next cell. (C1, E-0381)
 ShowSaveFileInfoWindow_Data2::
     db $aa, $c3, $d2, $c3, $fa, $c3
 
+; Three words, VRAM tile addresses $8D00, $8D50, $8DA0 (vTiles1 + $500, + $550, + $5A0).
+; ShowSaveFileInfoWindow loads the name of saved entry c with LoadRecordNameEntry0 and
+; CopyGlyphTilesToVRAM draws its glyph tiles at word c, c being the entry number. (C1, E-0381)
 ShowSaveFileInfoWindow_Data3::
     db $00, $8d, $50, $8d, $a0, $8d
 
@@ -7280,6 +7309,7 @@ BreedMenu_ChooseParents_ClearList_TileRect::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 10
 
 TileRect_15::
+; another name for the data at TileRect_15, whose note is above (E-0381)
 BreedMenu_FamilySexLevelTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $f8, $f9, $fa, $fb, $fc, $c3, $ea, $ed, $c3, $c3, $b7 ; id 1
@@ -7336,6 +7366,7 @@ BreedMenu_ChooseParents_RedrawPair_TileRect::
 
 ; record: 6 x 5 tiles, one row per line
 TileRect_15_2::
+; another name for the data at TileRect_15_2, whose note is above (E-0381)
 BreedMenu_ChooseParents_CloseBoxTileRect::
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 0
     db $c3, $c3, $c3, $c3, $c3, $b7 ; id 1
@@ -7746,7 +7777,11 @@ HibernateMenu_DrawSleeperPage::
     ld [wScreenStep], a
     ret
 
-; data read by HibernateMenu (10 bytes) (E-0347)
+; Five words, VRAM tile addresses $8D00, $8D50, $8DA0, $8F00 and $8A40 (vTiles1 + $500, $550, $5A0,
+; $700, $240). HibernateMenu_DrawSleeperPage draws the name of sleeper c of the page with
+; CopyGlyphTilesToVRAM at word c for c = 0 to 3; the fifth sleeper goes to
+; HibernateMenu_DrawSleeperPage_FifthNameGlyphs, which does not read this table, so the last word is
+; not reached from here. (C1, E-0381)
 HibernateMenu_DrawSleeperPage_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
@@ -7838,7 +7873,11 @@ GlyphCopyArgsForA_Bank15::
     ld c, $10
     ret
 
-; data read by GlyphCopyArgsForA (10 bytes) (E-0347)
+; Five words, VRAM tile addresses $8A40, $8A50, $8A60, $8CE0, $8CF0 (vTiles1 + $240, $250, $260,
+; $4E0, $4F0). GlyphCopyArgsForA_Bank15 returns the word numbered wGlyphListStart as the destination
+; of the glyph tile it is asked to copy; HibernateMenu_DrawSleeperPage_FifthNameGlyphs advances
+; wGlyphListStart for each ordinary glyph and not for the mark glyphs $8D and $8E, so the first five
+; tiles of the fifth sleeper name land at these addresses. (C1, E-0381)
 GlyphCopyArgsForA_Bank15_Data::
     db $40, $8a, $50, $8a, $60, $8a, $e0, $8c, $f0, $8c
 
@@ -7975,7 +8014,12 @@ HibernateMenu_DrawSleeperStatsBox::
     ld [rRAMG2], a
     ret
 
-; data read by HibernateMenu (8 bytes) (E-0347)
+; Four words, addresses of cells in wWindowTileBuffer (rows of 20 bytes): $C3D4, $C3D8, $C3FC,
+; $C400, which are row 10 column 12, row 10 column 16, row 12 column 12 and row 12 column 16.
+; HibernateMenu_DrawSleeperStatsBox unpacks four values of the record from
+; RecordAddressWithBank1Slot1D (low bytes at offsets $57 to $5A, two high bits each in $5B) and
+; draws value c as three digit tiles ($E0 + digit, leading zeros blanked) starting at word c. (C1,
+; E-0381)
 HibernateMenu_DrawSleeperStatsBox_Data::
     db $d4, $c3, $d8, $c3, $fc, $c3, $00, $c4
 

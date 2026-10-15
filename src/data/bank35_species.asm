@@ -465,6 +465,7 @@ SpeciesRecordPointers::
 ; record: family; bytes 1-5; base level cap; EXP curve; natural skills; bytes 11-15; growth row;
 ; byte 17; resistances; bytes 45-46
 SpeciesRecords::
+; another name for the data at SpeciesRecords, whose note is above (E-0381)
 SpeciesRecord_000::
     db $ff ; id 0: family (StringTable_MonsterFamilies index; $FF unused)
     db $00 ; sex-ratio class (C1, E-0307)

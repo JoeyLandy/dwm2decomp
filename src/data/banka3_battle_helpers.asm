@@ -299,7 +299,11 @@ ActorFormationSlotToTemp0::
     pop bc
     ret
 
-; data read by ActorFormationSlotToTemp0 (6 bytes) (E-0347)
+; Three pairs of slot numbers, one pair per formation 0-2: (0,1), (0,2) and (1,2).
+; ActorFormationSlotToTemp0 indexes it with 2 * the side formation byte (wFormationSlot0 for side 0
+; and the next byte for side 1, chosen by bit 2 of wBattleActor); if the first slot of the pair
+; equals the actor slot (wBattleActor & 3) it takes the second, otherwise the first, adds 4 for the
+; second side and leaves the result in hTemp0. (C1, E-0381)
 ActorFormationSlotToTemp0_Data::
     db $00, $01, $00, $02, $01, $02
 
@@ -1172,7 +1176,10 @@ ActionEffect_Chance_PickEffect::
     jr z, ActionEffect_Chance_PickEffect
     ret
 
-; data read by ActionEffect_Chance_PickEffect (14 bytes) (E-0347)
+; Fourteen bytes, the battle action ids ACTION_B0 to ACTION_BD in order ($B0-$BD).
+; ActionEffect_Chance_PickEffect takes wRandomLo mod 14 (the remainder of DivideBByA) as the index
+; and returns the chosen action in C, rolling again on $B0 and $B2 for foe actors, link battles and
+; battle kinds 2, 3 and 5, and also on $B3, $B4, $B6 and $BD in kinds 2, 3 and 5. (C1, E-0381)
 ActionEffect_Chance_PickEffect_Data::
     db $b0, $b1, $b2, $b3, $b4, $b5, $b6, $b7, $b8, $b9, $ba, $bb, $bc, $bd
 

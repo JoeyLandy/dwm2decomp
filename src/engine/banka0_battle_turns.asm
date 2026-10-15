@@ -1520,7 +1520,11 @@ PickRandomBand0To10::
     ld a, c
     ret
 
-; data read by PickRandomBand0To10 (11 bytes) (E-0347)
+; Eleven byte thresholds in steps of 25: $19, $32, $4B, $64, $7D, $96, $AF, $C8, $E1, $FA, $FF.
+; PickRandomBand0To10 compares wRandomLo with them in order and the band is the number of thresholds
+; that are not above it, so a value below $19 gives band 0, below $32 band 1, and so on up to band 9
+; below $FA; $FA and above give band 10. Band 10 is drawn again while wWildBand is below 6. (C1,
+; E-0381)
 PickRandomBand0To10_Data::
     db $19, $32, $4b, $64, $7d, $96, $af, $c8, $e1, $fa, $ff
 
@@ -1859,7 +1863,11 @@ Multiply24By8_BankA0::
     ld d, a
     ret
 
-; data read by ApplyLevelScaledStatsToSlots (6 bytes) (E-0347)
+; Three little-endian RAM addresses, $D1BF, $D20D and $D25B, which are wBattlerRecordSlot4,
+; wBattlerRecordSlot5 and wBattlerRecordSlot6 ($4E bytes apart), indexed by the slot counter from C
+; (entry c times 2). ApplyLevelScaledStatsToSlots copies the address into wBattleArg2 and
+; wBattleArg3 as the destination record for ApplyLevelScaledStatsToSlots_BuildWildRecord, which
+; builds a wild monster record there. (C1, E-0381)
 ApplyLevelScaledStatsToSlots_Data::
     db $bf, $d1, $0d, $d2, $5b, $d2
 
@@ -4041,7 +4049,11 @@ CopyF0StringFromTableToTextBuf1::
     ld [de], a
     ret
 
-; data read by CopyF0StringFromTableToTextBuf1 (34 bytes) (E-0347)
+; Six little-endian in-bank pointers (12 bytes) followed by the six strings they point at, each
+; ending in $F0 (22 bytes): "HP", "MP", "ATK", "DEF", "AGL" and "INT", the six stat names in charmap
+; glyphs. CopyF0StringFromTableToTextBuf1 takes the pointer at index A (wWorkBuf + 9 or
+; wBattleSubPhase in the battle results, 0-5) and copies its string with the $F0 into wTextBuf1 for
+; the message "<name> rose by <n>" or "fell by <n>". (C1, E-0381)
 CopyF0StringFromTableToTextBuf1_Data::
     db $56, $5a, $59, $5a, $5c, $5a, $60, $5a, $64, $5a, $68, $5a, $11, $19, $f0, $16
     db $19, $f0, $0a, $1d, $14, $f0, $0d, $0e, $0f, $f0, $0a, $10, $15, $f0, $12, $17
@@ -4546,7 +4558,12 @@ RollChance80Of256::
     cp $80
     ret
 
-; data read by OffsetByIndexOfMinOfFiveWords (6 bytes) (E-0347)
+; Six bytes, one per candidate word: $00, $04, $06, $08, $0A, $0C. They are the byte offsets from
+; the start of a record stat block (HL, which ApplyBattleResultStatChanges points at MON_MAX_HP) to
+; the six words the search compares: MON_MAX_HP, MON_MAX_MP, MON_ATK, MON_DEF, MON_AGL and MON_INT
+; (the word at +2, MON_MP, is skipped). Both OffsetByIndexOfMinOfFiveWords and
+; OffsetByIndexOfMaxOfFiveWords index it with the winning word number 0-5 (also stored in wWorkBuf +
+; $9) and return HL plus the byte. (C1, E-0381)
 OffsetByIndexOfMinOfFiveWords_Data::
     db $00, $04, $06, $08, $0a, $0c
 
@@ -6119,7 +6136,10 @@ WriteFiveTilesFromTable_2::
     jr nz, .loop
     ret
 
-; data read by WriteFiveTilesFromTable (2 bytes) (E-0347)
+; Two bytes, $D0 and $D5: the first of five consecutive tile numbers for a command monster.
+; WriteFiveTilesFromTable_2 indexes it with wCommandMonster (its second caller masks it with $03)
+; and writes the five tiles starting at that value ($D0-$D4 for monster 0, $D5-$D9 for monster 1) to
+; the buffer at HL. (C1, E-0381)
 WriteFiveTilesFromTable_2_Data::
     db $d0, $d5
 
@@ -6373,7 +6393,12 @@ DrawInventoryPageIndicator_BankA0::
     call WriteVRAMByte
     ret
 
-; data read by RunBattleSetup (8 bytes) (E-0347)
+; Four little-endian words, $01C1, $0201, $01C7 and $0207: offsets from vBGMap0 of a two-by-two
+; cursor grid (rows 14 and 16, columns 1 and 7). The entry is picked by the low two bits of
+; wMenuState (bit 0 = Up/Down row, bit 1 = Left/Right column):
+; RunBattleSetup_BankA0_EntrySelect_ShowCursor draws tile $BB at the chosen place, and
+; RunBattleSetup_BankA0_EntrySelect_Cursor passes the table to TwoByTwoCursor, which blanks the
+; place with tile $C3 and redraws it with $BB. (C1, E-0381)
 RunBattleSetup_BankA0_EntrySelect_ShowCursor_Data::
     db $c1, $01, $01, $02, $c7, $01, $07, $02
 
@@ -6383,8 +6408,8 @@ RunBattleSetup_BankA0_EntrySelect_ShowCursor_Data::
 ; tile $BB there; RunBattleSetup_BankA0_CommandMenu_SetTactic passes it to SkillListCursor_BankA0)
 ; and by wMenuCursor & 3 for the skill list (RunBattleSetup_BankA0_CommandMenu_ShowSkills,
 ; RunBattleSetup_BankA0_CommandMenu_ShowSkillCursor and
-; RunBattleSetup_BankA0_CommandMenu_SkillCursor). The bytes match
-; RunBattleSetup_PlanMenu_ShowTacticCursor_Data in bank $31. (C1, E-0373)
+; RunBattleSetup_BankA0_CommandMenu_SkillCursor). The bytes match BattleMenu_FourRowCursorOffsets in
+; bank $31. (C1, E-0373)
 RunBattleSetup_BankA0_ListCursorOffsets::
     db $41, $01, $81, $01, $c1, $01, $01, $02
 
@@ -6665,19 +6690,42 @@ DerefHL_BankA0::
     deref_hl
     ret
 
-; data read by DrawSlotStatusMarks (4 bytes) (E-0347)
+; Two little-endian words, $C239 and $C246: absolute addresses in wScreenTileBuffer (offsets $A1 and
+; $AE, so row 5 column 1 and row 5 column 14 of its 32-wide rows) of the first of five status mark
+; tiles for slot 0 and slot 1. DrawSlotStatusMarks_BankA0_BlankMarks fills the five tiles with $C3,
+; and DrawSlotStatusMarks_BankA0_CurseMark writes the curse tile $C0 at the first one; the other
+; mark tables are this one moved right by 1 to 4 tiles. The word is picked by slot C & 3 through
+; ReadWordTableEntryForSlotC_BankA0. (C1, E-0381)
 DrawSlotStatusMarks_BankA0_BlankMarks_Data::
     db $39, $c2, $46, $c2
 
+; Two little-endian words, $C23A and $C247: the screen buffer places (wScreenTileBuffer offsets $A2
+; and $AF, row 5 columns 2 and 15) where DrawSlotStatusMarks_BankA0_ConfusionMark writes the
+; confusion tile $C9 for slot 0 and slot 1. The word is picked by slot C & 3 through
+; ReadWordTableEntryForSlotC_BankA0. (C1, E-0381)
 DrawSlotStatusMarks_BankA0_ConfusionMark_Data::
     db $3a, $c2, $47, $c2
 
+; Two little-endian words, $C23B and $C248: the screen buffer places (wScreenTileBuffer offsets $A3
+; and $B0, row 5 columns 3 and 16) of the poison mark for slot 0 and slot 1.
+; DrawSlotStatusMarks_BankA0_PoisonMark writes tile $C1 there and
+; DrawSlotStatusMarks_BankA0_BadPoisonMark writes $C7 at the same place; the word is picked by slot
+; C & 3. (C1, E-0381)
 DrawSlotStatusMarks_BankA0_PoisonMark_Data::
     db $3b, $c2, $48, $c2
 
+; Two little-endian words, $C23C and $C249: the screen buffer places (wScreenTileBuffer offsets $A4
+; and $B1, row 5 columns 4 and 17) of the sleep mark for slot 0 and slot 1.
+; DrawSlotStatusMarks_BankA0_SleepMark writes tile $C8 there; the word is picked by slot C & 3. (C1,
+; E-0381)
 DrawSlotStatusMarks_BankA0_SleepMark_Data::
     db $3c, $c2, $49, $c2
 
+; Two little-endian words, $C23D and $C24A: the last mark place of the status strip for slot 0 and
+; slot 1 (wScreenTileBuffer offsets $A5 and $B2, row 5 columns 5 and 18).
+; DrawSlotStatusMarks_BankA0_ParalysisMark writes the paralysis tile $CA there, and
+; DrawSlotStatusMarks_BankA0 itself writes $C3 or $C2 there for a slot with no status or no monster;
+; the word is picked by slot C & 3. (C1, E-0381)
 DrawSlotStatusMarks_BankA0_Data::
     db $3d, $c2, $4a, $c2
 
@@ -7032,16 +7080,31 @@ UnreferencedShowFiveGlyphsAtTilesHL_BankA0:: ; configured code entry (E-0238); C
     ld [wTextWindowWidth], a
     ret
 
-; data read by DrawSlotHPDigits (4 bytes) (E-0347)
+; Two little-endian words, $0062 and $006F: offsets into wScreenTileBuffer (row 3, columns 2 and 15
+; of its 32-wide rows) where DrawSlotHPDigits_BankA0 writes the HP digit tiles of slot 0 and slot 1.
+; CopySlotHPDigitsPanelToVRAM_BankA0 uses the same offsets to copy three tiles from the buffer to
+; vBGMap0. (C1, E-0381)
 DrawSlotHPDigits_BankA0_Data::
     db $62, $00, $6f, $00
 
+; Two little-endian words, $0082 and $008F: offsets into wScreenTileBuffer (row 4, columns 2 and 15)
+; where DrawSlotMPDigits_BankA0 writes the MP digit tiles of slot 0 and slot 1;
+; CopySlotMPDigitsPanelToVRAM_BankA0 copies three tiles from the same offsets to vBGMap0. The entry
+; is picked by slot C & 3. (C1, E-0381)
 DrawSlotMPDigits_BankA0_Data::
     db $82, $00, $8f, $00
 
+; Two little-endian words, $00A1 and $00AE: offsets into wScreenTileBuffer (row 5, columns 1 and 14)
+; of the level display for slot 0 and slot 1. DrawSlotLevel_BankA0 writes the tiles $EA, $AF and the
+; two level digits there, and CopySlotLevelPanelToVRAM_BankA0 copies two tiles from the same place
+; to vBGMap0. (C1, E-0381)
 DrawSlotLevel_BankA0_Data::
     db $a1, $00, $ae, $00
 
+; Two little-endian words, $00A1 and $00AE (the same bytes as DrawSlotLevel_BankA0_Data): offsets of
+; row 5, column 1 and column 14. CopySlotPanelRowToVRAM_BankA0 copies five tiles from
+; wScreenTileBuffer plus the offset to vBGMap0 plus the offset, for slot C = 0 or 1 (it returns when
+; C >= 3). (C1, E-0381)
 CopySlotPanelRowToVRAM_BankA0_Data::
     db $a1, $00, $ae, $00
 

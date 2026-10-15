@@ -493,10 +493,20 @@ WarpToLinkedMapForCurrentMap::
     ld c, $01
     ret
 
-; data read by WarpToLinkedMapForCurrentMap (12 bytes) (E-0347)
+; Eleven map ids in ascending order, $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9 and $E2, ended
+; by $FF: the maps WarpToLinkedMapForCurrentMap looks hMapId up in. The position N where hMapId is
+; found indexes the 3-byte records of WarpToLinkedMapForCurrentMap_Data2. The ids are the same as
+; CheckMapExitEntry_Data. (C1, E-0381)
 WarpToLinkedMapForCurrentMap_Data1::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2, $ff
 
+; Eleven 3-byte records, entry N for the N-th map of WarpToLinkedMapForCurrentMap_Data1: the new
+; hMapId ($20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8, $D1, $DA), a position byte (always $44; high
+; nibble the destination X, low nibble Y, each times 16) and a screen byte (high nibble hMapScreenX,
+; low nibble hMapScreenY: $00, $76, $B4, $B4, $10, $00, $01, $44, $01, $00, $00).
+; WarpToLinkedMapForCurrentMap_StartWarp reads the last two bytes; a key world with wKeyWorldKey - 1
+; = N uses wKeyWorldGoal for them. The same records, with a link number added, make
+; CheckMapExitTable_Data. (C1, E-0381)
 WarpToLinkedMapForCurrentMap_Data2::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
@@ -778,12 +788,22 @@ CheckMapExitEntry::
     ld c, $01
     ret
 
-; data read by CheckMapExitTable (45 bytes) (E-0347)
+; Eleven 4-byte records and an $FF end mark: map id ($20, $30, $48, $70, $A0, $A8, $B0, $B8, $C8,
+; $D1, $DA, ascending), a position byte (always $44: the player X cell in the high nibble, the Y
+; cell in the low, cells of 16 pixels), a screen byte (hMapScreenX in the high nibble, hMapScreenY
+; in the low: $00, $76, $B4, $B4, $10, $00, $01, $44, $01, $00, $00) and a link number 1-11.
+; CheckMapExitTable finds the record of hMapId and CheckMapExitEntry warps when the player stands on
+; that position and screen, to the map CheckMapExitEntry_Data gives for link number - 1. (C1,
+; E-0381)
 CheckMapExitTable_Data::
     db $20, $44, $00, $01, $30, $44, $76, $02, $48, $44, $b4, $03, $70, $44, $b4, $04
     db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08
     db $c8, $44, $01, $09, $d1, $44, $00, $0a, $da, $44, $00, $0b, $ff
 
+; Eleven destination map ids, $29, $45, $68, $9D, $A4, $AF, $B2, $C5, $D0, $D9 and $E2, indexed by
+; the link number (1-11) of a CheckMapExitTable_Data record minus 1. CheckMapExitEntry loads the
+; chosen id into hMapId and warps to screen (0,0) at ($40,$80). The values are the same as
+; WarpToLinkedMapForCurrentMap_Data1, the maps that link back. (C1, E-0381)
 CheckMapExitEntry_Data::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2
 

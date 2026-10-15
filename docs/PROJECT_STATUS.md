@@ -140,6 +140,7 @@ Parallel and serial runs agreed test by test on the E-0368 tree (377 run, 374 ok
 | 10: unread + probe scope, banks $16-$31 (6 slices of 150-153; 3 Sonnet, 3 Haiku) | E-0378 | 903 | 452 (330 probed, 1,152 probes; 29 names + 65 children) | 451 (all three Haiku drafts: partial reads, line-number citations, a wrong input; 50%: slices halved to 75, Haiku dropped) | PASS build/run629 | par629 OK (394, 3 skipped) |
 | 11: unread + probe scope, banks $19-$31 (6 slices of 75-80, Sonnet) | E-0379 | 459 | 459 (233 probed, 823 probes; 49 names + 4 derived) | 0 (48 spot checks, all correct) | PASS build/run631 | par631 OK (395, 3 skipped) |
 | 12: unread + probe scope, banks $31-$36 (6 slices of 75-80, Sonnet) | E-0380 | 457 | 457 (352 probed, 1,519 probes; 46 names + 14 child steps) | 0 (48 spot checks, all correct) | PASS build/run633 | par633 OK (396, 3 skipped) |
+| 13: data labels described only by their reader (6 slices of 81-82, Sonnet, drafted with batch 12) | E-0381 | 491 | 491 notes (30 names; 35 second names point at their table) | 0 (54 spot checks, all correct) | PASS build/run636 | par636 OK (396, 3 skipped) |
 
 **Measures after E-0369.** readability.py: 33,311 labels, 0 mechanical, 0 raw pointer operands, 3,550 INCBIN.
 doc_coverage.py: 9,822 code labels (5,274 with a hand reading), 23,489 data labels, all commented, no stale name.
@@ -153,7 +154,24 @@ derived labels); validation and spot checks about 20 min; regeneration 3m50s; bu
 commented, no stale name. Queue: instruction 1,751; long (over 50) 939; over 60: 209; `Etc`: 1; unread 4,576;
 reader-only data 524; unidentified assets 155.
 
-## Current handoff (2026-10-15, E-0379)
+## Current handoff (2026-10-15, E-0381)
+
+Batches 12 (E-0380, code: 457 entries, 352 probed, 1,519 probes) and 13 (E-0381, all 491 reader-only data labels)
+were drafted together (D-014, 12 Sonnet workers) and integrated one after the other, both at 0% rejection. Phases:
+drafting about 35 min, validation and spot checks about 40 min for both, four regenerations (child renames, the
+32:$4F00 note, the second-name comment), parallel suite about 5 min each. Measures: readability.py 33,381 labels, 0
+mechanical; doc_coverage.py 8,573 hand readings, all labels commented, no stale name in any src file. Over 50: 2 (the
+referrer aliases); over 60: 0; `Etc`: 1; 9,188 probes. Queue: unread 1,249, combined (unread + probe scope without a
+probe) about 2,460, reader-only data 0, assets 153.
+
+Stopped here at the user's request (usage limit); no workers are running. Next, when resumed: E-0382, the combined
+queue in six slices of 112 (0% rejection two batches in a row grows them by half), Sonnet workers; then the asset
+batch (scratchpad assetsl.py and brief_assets.md, six slices of about 26; identified assets get a content name and a
+hand note, unidentified ones a hand note saying what was tried); then docs/PROBE_SCOPE.md (tools/probe_scope.py --doc),
+the long-label exceptions, ROADMAP completion, the final serial suite and identity check. Follow-up recorded: bank $32
+$4F00 is code that the generator prints as `dw` (open question for the disassembly, not readability).
+
+## Prior handoff (2026-10-15, E-0379)
 
 Batch 11 (E-0379): 459 entries (364 notes, 233 probed, 823 probes; 7,669 in all), 0% rejection with Sonnet workers
 on slices of 75. Also cleaned the stale names out of the include files and RAM comments (58 names) with a new test.

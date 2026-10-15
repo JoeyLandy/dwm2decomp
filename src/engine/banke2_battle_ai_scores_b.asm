@@ -6201,10 +6201,19 @@ AIScore_HealUs_ScoreHPBands_WeighSlot::
     call AddAIWeight
     ret
 
-; data read by AIScore_HealUs_ScoreHPBands_WeighSlot (6 bytes) (E-0347)
+; Six weight row ids, $1E, $1F, $20, $21, $22, $22, indexed by the HP band 0-5 of the slot
+; (HPBandOfSlotTemp0). AIScore_HealUs_ScoreHPBands_WeighSlot uses this row set when the slot being
+; weighed is the actor (wBattleActor equals C) and the table after it for other slots. The entry is
+; the weight row id given to AddAIWeight in C (B = 0), which reads the word of that row for the
+; actor personality (ReadBank6TableWord). (C1, E-0381)
 AIScore_HealUs_ScoreHPBands_WeighSlot_Data1::
     db $1e, $1f, $20, $21, $22, $22
 
+; Six weight row ids, $AB, $AC, $AD, $AE, $AF, $AF, indexed by the HP band 0-5 of the slot
+; (HPBandOfSlotTemp0). AIScore_HealUs_ScoreHPBands_WeighSlot uses this row set when the slot being
+; weighed is not the actor (wBattleActor differs from C). The entry is the weight row id given to
+; AddAIWeight in C (B = 0), which reads the word of that row for the actor personality
+; (ReadBank6TableWord). (C1, E-0381)
 AIScore_HealUs_ScoreHPBands_WeighSlot_Data2::
     db $ab, $ac, $ad, $ae, $af, $af
 
@@ -6255,10 +6264,18 @@ ForEachPresentSlotOfSideRun_WeighSlot::
     call AddAIWeight
     ret
 
-; data read by ForEachPresentSlotOfSideRun_WeighSlot (6 bytes) (E-0347)
+; Six weight row ids, $1D to $22 in order, indexed by the HP band 0-5 of the slot
+; (HPBandOfSlotTemp0). ForEachPresentSlotOfSideRun_WeighSlot, called for each present slot of a side
+; by ForEachPresentSlotOfSideRun, uses this row set when the slot is the actor (wBattleActor equals
+; C). The entry is the weight row id given to AddAIWeight in C (B = 0), which reads the word of that
+; row for the actor personality (ReadBank6TableWord). (C1, E-0381)
 ForEachPresentSlotOfSideRun_WeighSlot_Data1::
     db $1d, $1e, $1f, $20, $21, $22
 
+; Six weight row ids, $AA to $AF in order, indexed by the HP band 0-5 of the slot
+; (HPBandOfSlotTemp0). ForEachPresentSlotOfSideRun_WeighSlot uses this row set for slots other than
+; the actor. The entry is the weight row id given to AddAIWeight in C (B = 0), which reads the word
+; of that row for the actor personality (ReadBank6TableWord). (C1, E-0381)
 ForEachPresentSlotOfSideRun_WeighSlot_Data2::
     db $aa, $ab, $ac, $ad, $ae, $af
 
@@ -6280,7 +6297,10 @@ AIScore_Ramming_WeighHPBand::
     call AddAIWeight
     ret
 
-; data read by AIScore_Ramming_WeighHPBand (6 bytes) (E-0347)
+; Six weight row ids, $1D to $22 in order, indexed by the HP band 0-5 (HPBandOfSlotTemp0) of the
+; slot passed in A. AIScore_Ramming_WeighHPBand adds that row with AddAIWeight with no own-slot or
+; other-slot split. The entry is the weight row id given to AddAIWeight in C (B = 0), which reads
+; the word of that row for the actor personality (ReadBank6TableWord). (C1, E-0381)
 AIScore_Ramming_WeighHPBand_Data::
     db $1d, $1e, $1f, $20, $21, $22
 
@@ -6329,10 +6349,17 @@ AIScore_Cover_ScoreHPBands_WeighSlot::
     call AddAIWeight
     ret
 
-; data read by AIScore_Cover_ScoreHPBands_WeighSlot (6 bytes) (E-0347)
+; Six weight row ids, $21, $20, $1F, $1E, $1D, $1D (descending), indexed by the HP band 0-5 of the
+; slot (HPBandOfSlotTemp0). AIScore_Cover_ScoreHPBands_WeighSlot uses this row set when the slot is
+; the actor (wBattleActor equals C). The entry is the weight row id given to AddAIWeight in C (B =
+; 0), which reads the word of that row for the actor personality (ReadBank6TableWord). (C1, E-0381)
 AIScore_Cover_ScoreHPBands_WeighSlot_Data1::
     db $21, $20, $1f, $1e, $1d, $1d
 
+; Six weight row ids, $AA, $AA, $AB, $AC, $AD, $AE, indexed by the HP band 0-5 of the slot
+; (HPBandOfSlotTemp0). AIScore_Cover_ScoreHPBands_WeighSlot uses this row set for slots other than
+; the actor. The entry is the weight row id given to AddAIWeight in C (B = 0), which reads the word
+; of that row for the actor personality (ReadBank6TableWord). (C1, E-0381)
 AIScore_Cover_ScoreHPBands_WeighSlot_Data2::
     db $aa, $aa, $ab, $ac, $ad, $ae
 
@@ -6667,7 +6694,10 @@ ClearBattleStatusBitsWithMaskD_BankE2::
     ld [hl], a
     ret
 
-; data read by ClearBattleStatusBitsWithMaskD_BankE2 (7 bytes) (E-0347)
+; Seven AND masks indexed by D: $DF (clears bit 5), $FE (bit 0), $00 (all bits), $FD (bit 1), $73
+; (bits 7, 3 and 2), $EF (bit 4) and $BF (bit 6). ClearBattleStatusBitsWithMaskD_BankE2 ANDs the
+; chosen mask into the first byte of the 9-byte status record of slot E (wBattleStatus + 9 * E), the
+; byte that holds the bits BSTAT0_POISONED to BSTAT0_ASLEEP. (C1, E-0381)
 ClearBattleStatusBitsWithMaskD_BankE2_Data::
     db $df, $fe, $00, $fd, $73, $ef, $bf
 

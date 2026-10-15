@@ -716,7 +716,11 @@ LoadKeyWorldTilesetAndHeader::
 .return:
     ret
 
-; data read by LoadKeyWorldTilesetAndHeader (10 bytes) (E-0347)
+; Ten bytes indexed by wKeyWorldGoalKind (0-9), each stored in wMapSpriteKind: $11, $11, $21, $11,
+; $12, $12, $11, $11, $11, $31. LoadKeyWorldTilesetAndHeader also sets wMapTallTileMin to $29 when
+; the low nibble is nonzero and wMapEventTile to $2C when the high nibble is nonzero, which every
+; entry here does; the high nibble (1-3) picks the script sprite set and the low nibble (1 or 2) is
+; the other map-header field. (C1, E-0381)
 LoadKeyWorldTilesetAndHeader_Data::
     db $11, $11, $21, $11, $12, $12, $11, $11, $11, $31
 
@@ -1358,7 +1362,12 @@ DrawKeyWorldExitTile::
     ldh [rSVBK], a
     ret
 
-; data read by DrawKeyWorldExitTile (6 bytes) (E-0347)
+; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00
+; (0,0), $30 (3,0), $11 (1,1), $22 (2,2), $03 (0,3) and $33 (3,3). DrawKeyWorldExitTile uses a
+; nibble of the room table entry (the low nibble, $F for none, or the high nibble) as the index and
+; draws the exit or stairs tile block only when the position equals the current
+; hMapScreenX/hMapScreenY packed the same way. The same six bytes are
+; CheckWarpsByMapType_BackOneArea_Data. (C1, E-0381)
 DrawKeyWorldExitTile_Data::
     db $00, $30, $11, $22, $03, $33
 
@@ -2651,7 +2660,11 @@ CheckWarpsByMapType_BackOneArea::
     ld c, $01
     ret
 
-; data read by CheckWarpsByMapType (6 bytes) (E-0347)
+; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00,
+; $30, $11, $22, $03, $33. CheckWarpsByMapType_BackOneArea indexes it with the high nibble of the
+; room table entry of the previous area (wKeyWorldArea - 1) and loads the screen into hMapScreenX
+; and hMapScreenY before the warp to ($40, $40) as map type $85. The same six bytes are
+; DrawKeyWorldExitTile_Data. (C1, E-0381)
 CheckWarpsByMapType_BackOneArea_Data::
     db $00, $30, $11, $22, $03, $33
 
@@ -2871,7 +2884,12 @@ CheckWarpsByMapType_RoomExits::
     ld c, $01
     ret
 
-; data read by CheckWarpsByMapType (6 bytes) (E-0347)
+; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00
+; (0,0), $30 (3,0), $11 (1,1), $22 (2,2), $03 (0,3) and $33 (3,3), the same six bytes as
+; DrawKeyWorldExitTile_Data. CheckWarpsByMapType_RoomExits indexes it with the low nibble ($F means
+; none) and the high nibble of the room table entry of the current area, compares the position with
+; the current screen packed the same way, and on a match indexes it again to load hMapScreenX and
+; hMapScreenY for the warp. (C1, E-0381)
 CheckWarpsByMapType_RoomExits_Data::
     db $00, $30, $11, $22, $03, $33
 
@@ -3306,7 +3324,11 @@ CheckWarpsByMapType_FloorEntrances::
     ldh [hTemp1], a
     jp .skip
 
-; data read by CheckWarpsByMapType (6 bytes) (E-0347)
+; Six screen positions packed as screen X in the high nibble and screen Y in the low nibble: $00,
+; $30, $11, $22, $03, $33 (the same six bytes as DrawKeyWorldExitTile_Data). The only index in
+; CheckWarpsByMapType_FloorEntrances is the low nibble of the room table entry of area 0 of the
+; floor, used when a kind 4 floor entrance is taken: the position is split into hMapScreenX and
+; hMapScreenY for the warp. (C1, E-0381)
 CheckWarpsByMapType_FloorEntrances_Data::
     db $00, $30, $11, $22, $03, $33
 
@@ -3816,6 +3838,7 @@ SpecialMapTable::
 ; wMapHeaderByte7, wFieldEventKind; 9 bytes not read by these routines; screen tile-map array; its
 ; ROM bank; screen attribute-map array; its ROM bank
 SpecialMapRecords::
+; another name for the data at SpecialMapRecords, whose note is above (E-0381)
 SpecialMapRecord00::
     dfar SpecialMap00Tileset ; id 0
     dfar SpecialMap00Palettes

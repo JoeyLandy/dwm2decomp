@@ -58,7 +58,7 @@ ShowString_Bank28::
 ; wStringCategory, then word wStringIndex of that list (E-0217)
 ; record: string list
 StringCategories_28::
-; data read by BeginStringDisplay_Bank28 (1 word) (E-0347)
+; another name for the data at StringCategories_28, whose note is above (E-0381)
 MessageStrings_Bank28::
     dw StringList_Bank28_0 ; id 0
 

@@ -1275,3 +1275,125 @@ Reported by batch-9 workers, not verified by the integrator yet, and queued for 
 - `SetSubPhase3AndRestartResolve_Bank36` (36:4F0E): Nothing calls this copy; it may be dead code left by the original build.
 - `PickShuntSlot` (36:4F18): Whether the other side can have no present slot here (E = 0, then the random pick reads past wSlotChoices) was not checked.
 - `ActionEffect_ActionD9_Damage` (36:5152): E is not set by this routine: which slot E holds when ActionEffect_ActionD9 runs (it is left by the resolve step runner) is not known; it may be an unintended stale register.
+
+## E-0381
+
+- `LoadPalette0FromData_Data` (01:4ACC): The second copy goes to wBGPaletteBuffer again while the OBJ upload request is set: original quirk or a bug of the ROM? (bytes must stay as they are either way)
+- `DebugAutomap_Update_Data` (01:5DAD): Which wKeyList entries (those with bit 7 of byte 3 set) have byte 0 values above 12, and what a reader would then fetch from past the table
+- `DebugBattleSetup_WrapValueAfterStep_Data` (01:68EB): What fields 4 (limit 1) and 5 (limit 0) mean beyond the strings the screen shows for them
+- `UpdatePlayerMovement_IsTriggerAtCell_Data` (02:5B0A): Which key-world maps use trigger cell numbers 0-15 and what the trigger at each cell is
+- `FieldState_WalkATalks_TalkAtSpotOnDown_Data` (02:5B89): What the five talk events (groups $10-$14) are
+- `BuildPartyStatusWindowRows_Data` (02:6835): A wPartyWindowFlags value with both low bits set would read a fourth group past the 12 bytes: is that value ever used?
+- `PauseMenu_Info_PartyOverview_Close_LoadTile_Data` (03:5264): Why closing the party overview leaves this figure in the first tile of the first picture
+- `FieldSkillNumberBySkillId` (03:6700): Whether the high byte of the skill number in wRecordBuffer can matter (the reader ignores it)
+- `SkillTargetBoxRects` (03:6921): Whether any skill number above $CF is ever looked up (the byte table before this one has no label and ends at $CF)
+- `PauseMenu_Plan_Tactics_ShowCurrent_Data` (03:6FBB): What the three five-tile pictures show (the glyphs were not decoded here)
+- `PauseMenu_Plan_Keys_DrawKeyNames_Data` (03:78B9): The fifth address ($9740) is not reached by this reader: is it used by another routine or unused?
+- `SlotCHasCastableHealSkill_Data` (05:614B): The costs of the heal skills in the skill records (to confirm that entries 0-4 are their MP costs), and the bytes that the wrapped index $FB-$FF really reaches
+- `GameMode5_Init_LinkBattleSetup_LoadRules_Data` (07:4E07): The meaning of bytes +0 and +9 (bit 7 of +9 is $80 here)
+- `SendLinkByteForMenuOption_Data` (07:65BD): What the partner does with $FA, $FB, $FC, $DD, $E1 and $F3 when it receives them
+- `DrawWorkBufSelectionTilesAndPanels_LevelRule_Data1` (07:7BFD): Which letters the tile numbers draw (not decoded here)
+- `DrawWorkBufSelectionTilesAndPanels_LevelRule_Data2` (07:7C02): Which letters the tile numbers draw (not decoded here)
+- `EnterStatusEffectFieldState_Data` (0A:4374): Which maps these ids are (towns, shops, indoor maps?) to say what they have in common
+- `RunBattleIntroKindCase_KeyWorldStrength_Data1` (0A:46EE): wPartyStrength / 5 above 19 would read into RunBattleIntroKindCase_KeyWorldStrength_Data2: is the strength capped?
+- `FillEncounterFromEntry_Data1` (0A:514C): What encounter kinds 0, 1 and 2 mean for the battle
+- `FillEncounterFromEntry_Data2` (0A:5150): What encounter kinds 0 and 1 mean for the battle
+- `LibraryMenu_LoadFamilyIcons_Data` (0C:4FAA): Which routine, if any, reads the six addresses at offsets 12-23 (no label points there)
+- `PickTableEntryByPartyLevelTotal_Data` (0C:72C0): no caller of PickTableEntryByPartyLevelTotal was found in src/, so what the returned amount is used for is not known
+- `NpcBreedMenu_ChooseAndBreed_ReplaceParent_Data` (0D:7499): which townsperson each wScreenTableIndex value stands for is not read from these routines
+- `NpcBreedMenu_FamilySexLevelTileRect` (0D:785E): the meaning of the interior tiles $A7-$AF, $F8-$FC, $EA and $ED is not decoded here
+- `MessageStrings_Bank0E` (0E:4032): wStringCategory is not checked against the one word, so a non-zero category would read past the table
+- `AdjustStatForRecordBufAAndBItems_Data1` (0E:5A6B): which items the MON_ITEM values 1-$14 are is not settled here; the same byte is used as a resistance index in TestResistanceEntry
+- `TestResistanceEntry_Data` (0E:5E02): what MON_ITEM values 1-$1B are in the game (the table pairs each with one resistance) is not read here
+- `StartMessageForGroup_Data` (10:4AFF): the routine does not check wMessageMode against 11, so a larger mode would read past the table
+- `FindTriggerEntryForCurrentScreen_StoreTrigger_Data` (12:71BB): what the second byte of a map object entry means (the index 0-44 of this table) is not read here
+- `FieldState_WalkAMenu_CheckKeyWorldItemOnA_Data` (12:752E): what the floor state byte that indexes this table is (and so which item screen each entry stands for) is not read here
+- `HibernateMenu_YesNoAgainTileRect` (14:47C0): which letters the glyph tiles $70-$75 show is not decoded here
+- `HibernateMenu_OptionYesNoTileRect` (14:49AE): which letters the interior glyph tiles show is not decoded here
+- `IsHLByteInList_Data` (14:688A): in the US charmap several of these codes are Latin letters, so whether the list is a leftover of the Japanese kana set (where a mark $8D follows a glyph) is not settled
+- `BreedMenu_ReturnToMap_CopySixteenTiles_Data1` (15:5A67): what text the 15 glyphs spell is not decoded here
+- `BreedMenu_ReturnToMap_CopySixteenTiles_Data2` (15:5A77): The pass with C = 16 reads the word after the table (the first two bytes of BreedMenu_ReturnToMap_ClearPartyBox, $21 $00) as a destination for CopyFromBankWaitVRAM; whether the table was meant to be read from index 0 is not known.
+- `ShowSaveFileInfoWindow_Data1` (15:6DD0): What the two tiles $EA and $ED show was not identified from the reader.
+- `ShowSaveFileInfoWindow_Data2` (15:6E08): The reader does not name the number taken from record byte $62; HibernateMenu_DrawSleeperStatsBox draws the same byte into the cells where DrawRecordStatsBoxForArg1 draws the level, which suggests a level, but this is not confirmed.
+- `HibernateMenu_DrawSleeperStatsBox_Data` (15:7A3B): The same four cells hold current HP, maximum HP, current MP and maximum MP in DrawRecordStatsBoxForArg1_Data2; which four stats that record packs at offsets $57 to $5B is not named by this reader.
+- `SGBPacketSetTable_Bank17` (17:4055): No code path was found that sends a packet set from this table; it looks like a copy of the bank $1F table kept with the copied sender routine.
+- `SgbDataSnd_Bank17_Id2` (17:407F): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id3` (17:408F): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id4` (17:409F): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id5` (17:40AF): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id6` (17:40BF): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id7` (17:40CF): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id8` (17:40DF): What the SNES code uploaded by the eight DATA_SND packets does is not established.
+- `SgbDataSnd_Bank17_Id9` (17:40EF): The block holds the table entry 9 packet followed by the unlabeled packets of entries 0 and 1; a rename may want to split them with labels for $40FF and $410F.
+- `DrawNameGlyph_Bank1D_GlyphFontAddr` (1D:4010): The reference in DrawNameGlyph_Bank1D could name GlyphFont directly (the same value $4010, as other banks do); the six bytes at $4010 are the tail of a code wrapper (call BeginStringDisplay_Bank1D, call RunStringDisplayToEnd, ret) that begins at $400F and has no label of its own.
+- `VaultMenu_DrawChoiceCursorTile_Data` (1D:4842): src/ram.asm describes wVaultMode as 0 or 1, so the third word may not be reachable.
+- `LoadPedigreeSpeciesSpriteGraphics_Data3` (1D:6DE3): Which routine, if any, reads the 18 bytes at $6DE6 (a tile address list ended by $FFFF); nothing in src/ loads that address.
+- `SwapMonstersMenu_YesNoAgainTileRect` (1E:44EF): What text tiles $70-$75 spell (the rectangle is a yes/no box, but the glyph shapes were not decoded).
+- `SwapMonstersMenu_CopySixteenTiles_Data1` (1E:60B1): What glyphs $54, $44, $48 and $A6 draw (they have no entry in src/charmap.inc).
+- `LoadSixteenGlyphTilesFromTable_Data1` (1F:73BC): What glyphs $54, $44, $48 and $A6 draw (no entry in src/charmap.inc).
+- `RunBattleActions_StatusChecks_CheckAction_Skip` (32:4F00): The ten bytes are executed as code, so this label should be code (a routine start) and ApplyActionResultAndMarkFormation, which begins on the last byte of the jp z, probably belongs to the same routine; no entry other than the jr nz was found for 32:4F0A.
+- `CheckLinkRuleViolation_Data` (32:5688): What each of the seven rule bits ($01 to $40) stands for in the link-battle rules menu.
+- `RunLinkSession6Exchange_PickedPanelTileRect` (33:5D5F): Whether the five tiles $F8 to $FC are the name tiles drawn by the following step (the reader does not write them).
+- `SelectEffectByEffectFlags_StartAnimation_Data` (3A:49AF): What the 60 effect numbers are (the table is indexed by the number passed in A, which the reader also stores in wEffectTileOffset and wEffectAnimArg).
+- `BuildActionMessageNames_Data4` (3A:7603): What each of the 23 message kinds means as an action message pattern.
+- `ClearBattleStatusBitsWithMaskD_Bank3A_Data` (3A:7CE5): Which values of D the callers of the other bank copies pass is not read here; the meaning of entries 2 ($00) and 4 ($73) as named status clears is by mask arithmetic only.
+- `ClearBattleStatusBitsWithMaskD_Bank3B_Data` (3B:4FA4): Callers of the other bank copies were not traced, so the values of D in use are unknown.
+- `ClearArg5IfAtOrAboveLimitForFarmLevel_Data` (5F:6DA8): What wArg5 holds after DeleteSRAMRecordAndCompact (a record count or a slot index) was not traced.
+- `SceneMermaidSong2_MoveSteps_StepPairBack_Data` (5F:7092): Which followers records +6/+7 and +$B/+$C are in terms of the party order is not confirmed.
+- `StartMessageFromTable_Data` (5F:7787): The text of these messages and which scenes use each row were not matched here.
+- `KeyWorldLayout_SetEntranceFlags_Data` (60:5177): What the individual flag values $40-$53 and $5A-$61 mean to the menu check and the debug automap is not known.
+- `RollKeyWorldObjectKind_Data` (60:555F): What kind 0, 1 and 3 of a map object are called in the game, and what the gold amount formula scales to, was not traced.
+- `RollKeyWorldObjectKind_Data` (60:555F): The comment says 716 bytes but the block is 1040 bytes (16 + 16 * 64) up to the next label.
+- `FieldState_MapTransition_RollTriggerContents_Data` (60:5A19): The last 25 bytes ($06 $08 $0E $34 $1E $00 $F5 $CD $80 $1F ...) are not part of the rows and decode as a small routine fragment; their use is unknown.
+- `FieldState_MapTransition_RollTriggerContents_Data` (60:5A19): The comment says 530 bytes; the rows alone are 1040.
+- `KeyWorldLayout_PlaceGoal_Data` (60:5ED1): Which byte of a pair is the horizontal and which the vertical cell was not decided.
+- `WriteRandomEntryFromTable_Data` (60:690E): What the two nibbles of an entry mean (they look like small row and column values, never 0,0) was not traced into the trigger users.
+- `LoadKeyWorldTilesetAndHeader_Data` (61:4468): The exact meaning of low nibble 2 (kinds 4 and 5) versus 1 was not traced through the field code.
+- `KeyWorld01_0_Y2X1_Header` (62:4001): What header bytes 0-5 mean (they look like exit or connection bytes) is unknown.
+- `TravelerEvents_Thief_ShowTheFugitiveMasterWas_Data` (73:4090): The constants comment says no setter found for these four flags; this table is the setter that was missed.
+- `TravelerEvents_CasinoShip_SpinReels_Data` (73:4378): The role of $A4-$A6 as reel windows is inferred from their position in the middle row; the tile graphics were not viewed.
+- `SceneGravestone_StartPush_Data` (73:5C4F): Which facing number is which direction rests on the Homecoming scene (facing 3 is left) and the entry offsets; a later Gravestone step that uses wMessageIndex and wMessageGroup as the step amounts was not read.
+- `SceneWarubouFood_StepsX_Data` (73:7526): Whether the wobble is meant as trembling or as a walking sway was not decided; the routine ShiftObjectsYByTable keeps a Y name though it changes X.
+- `RunDebugAutomapCaseTemp0_Entrance1_Data` (84:41AE): What the pointer table at bank $61 holds for each value (a warp list per the existing note) was not decoded here.
+- `RunFieldReturnPhase_AfterLogTwig_DrawMarker_Data` (84:4C7F): The record list has eleven entries but this table five bytes; record numbers 5-10 would read the first bytes of the routine that follows ClearKeyWorldActiveForMatchingKeyEntry. Whether those maps can reach the marker was not checked.
+- `SceneThisWay_Data1` (85:4783): Which sprites the slots are and what the facings look like on screen were not checked.
+- `SetFlagRedraw_Data` (85:489C): The flags $01CF-$01D2 have no EVENT_ constants yet.
+- `SceneLimbo_PlaceItem_Data` (85:5329): What field commands $03, $08 and $0A draw (the existing note calls the result the item) was not decoded.
+- `SetupMap0BMonsterObjects_Data1` (85:5C5E): Which monsters the graphics ids stand for, and why wRecordCapacity (the farm record count elsewhere) is a column 0-3 here, were not traced.
+- `RandomGoldOrItem_PickFind_RollFind_Data2` (85:5D8C): Which marker picture each kind (1, 4, 8, 9) is was not looked up in TriggerSpriteRecord0.
+- `LoadSpeciesFlagsPresetC_Data3` (85:5E71): What the bit means for a species (the RAM note says it is not checked) and which family each run of ids is were not read.
+- `DebugStaffRoll_Scene03_Load_BGPaletteBufferData` (94:4001): Whether the first copy is dead code or the second is meant for a different condition was not tested by running the scene.
+- `OffsetByIndexOfMinOfFiveWords_Data` (A0:5D54): Both searches compare the word at HL plus five following ones (six candidates, index 0-5), so the name and comments that say five words undercount by one.
+- `WriteFiveTilesFromTable_2_Data` (A0:67D2): The table has entries for monsters 0 and 1 only; the reader accepts any wCommandMonster value, so monster 2 would read the byte after the table.
+- `DrawSlotStatusMarks_BankA0_BlankMarks_Data` (A0:6B0A): The readers accept slot 2 (cp $03) but each mark table holds two words, so slot 2 would read the first word of the next table.
+- `DrawSlotStatusMarks_BankA0_ConfusionMark_Data` (A0:6B0E): Slot 2 would read past the two words, as in the other mark tables.
+- `DrawSlotStatusMarks_BankA0_PoisonMark_Data` (A0:6B12): Slot 2 would read past the two words.
+- `DrawSlotStatusMarks_BankA0_SleepMark_Data` (A0:6B16): Slot 2 would read past the two words.
+- `DrawSlotStatusMarks_BankA0_Data` (A0:6B1A): Slot 2 would read the word after the table.
+- `DrawSlotHPDigits_BankA0_Data` (A0:6D47): The readers accept slots 0-2 but the table holds two words.
+- `DrawSlotMPDigits_BankA0_Data` (A0:6D4B): The readers accept slots 0-2 but the table holds two words.
+- `DrawSlotLevel_BankA0_Data` (A0:6D4F): The readers accept slots 0-2 but the table holds two words.
+- `CopySlotPanelRowToVRAM_BankA0_Data` (A0:6D53): The reader accepts slot 2 but the table holds two words.
+- `RunWorldMapState_DrawObjectMarkers_Data` (A1:4D94): The reader does not bound the index, so only object byte values $00-$0F stay inside the table; which key world object uses which entry is not decided by the reader.
+- `ActorFormationSlotToTemp0_Data` (A3:4181): What a formation of two slots out of three means in play is not decided by this reader.
+- `RunDebugSubState_E0_ShowHeading_Data` (E0:42D3): The text spelled by the glyph tiles inside the frame is not decided by the reader.
+- `RunDebugState_E0_ShowHeading_Data` (E0:448A): The reader does not mask wDebugSubState; only values 0 and 1 stay inside the table.
+- `DrawSlotHPMPStats_BankE0_DrawAIModeGlyph_Data2` (E0:465E): The reader does not bound wSlotAIMode; which glyph shapes the tiles hold is not decided here.
+- `DrawTileMapAndStep_Data` (E0:4946): The text spelled by the glyph tiles is not decided by the reader.
+- `DrawFourTileStripForA_Data_Entry00` (E0:4FAE): What the glyph tiles $F5-$F9 spell is not decided by the reader.
+- `DrawFourTileStripForA_Data_Entry04` (E0:4FBE): What the glyph tiles $F5-$F9 spell is not decided by the reader.
+- `DebugStaffRoll_HopYOffsets` (E0:6038): The two walk steps use the address of the ninth byte ($6040) as a coordinate pair; the label address would change that target if the bank layout changed.
+- `DebugStaffRoll_Scene03_HopSideways_Data` (E0:6B06): The table is loaded into HL but never dereferenced by its only reader; the bytes may be a leftover of a different indexing.
+- `DebugStaffRoll_Scene03_Hop_Data` (E0:6B52): The table is loaded into HL but never dereferenced by its only reader; the bytes may be a leftover of a different indexing.
+- `DrawSpriteSlots_Data` (E0:7477): The reader does not bound the slot type byte, so a type above 2 would read the bytes after the table.
+- `StepSpriteSlotTowardDE_Data1` (E0:7535): The last entry is $00 and the index is not capped by the reader; what happens once wWorkBuf + $A passes 12 is not decided here.
+- `StepSpriteSlotTowardDE_Data2` (E0:7542): The last entry is $00 and the index is not capped by the reader; what happens once wWorkBuf + $A passes 12 is not decided here.
+- `ClearBattleStatusBitsWithMaskD_BankE0_Data` (E0:7A52): The reader does not bound D; which caller passes which of the seven masks is not read here.
+- `ClearBattleStatusBitsWithMaskD_BankE2_Data` (E2:6932): The reader does not bound D; which caller passes which of the seven masks is not read here.
+- `StepScreenStepOffsetTableEvery4Frames_Data` (F0:5B39): Which byte DE points at (the thing that bounces) is set by the callers, not by this reader.
+- `DrawTileBAtArg2Entry_F0_Data` (F0:67C0): wArg2 and wMenuChoice are not bounded by the reader; only 0-2 and 0-1 stay inside the block.
+- `BuildItemScreen_DrawEffect_Data` (F1:45B0): Why string category 7 holds personality names is taken from the reader only (it stores the personality index as wStringIndex).
+- `BuildItemScreenWithRecordCursor_BankF1_Data` (F1:4A5E): The index is masked with 3, so only the first four addresses (rows 3 to 9) are reachable by this reader.
+- `DrawTileBAtTwoChoiceEntry_BankF1_Data` (F1:58F4): wTwoChoiceCursor is not bounded by the reader.
+- `BreedRecordPanelTileRect` (F1:5A36): What the glyph tiles of rows 1 and 3 spell is not decided by the reader.
+- `GameMode8_Update_SetUpScene_Data4` (F2:42F2): The second six bytes have no reader found; they may be a record for a monster sprite load that is never issued.

@@ -2357,7 +2357,10 @@ ShowSkillNameAtSlotB_Skip::
     pop hl
     ret
 
-; data read by ShowSkillNameAtSlotB (16 bytes) (E-0347)
+; Eight VRAM glyph-tile addresses, vTiles2 + $380, + $410, + $4A0, + $530, + $5C0, + $650, + $6E0
+; and + $770 (steps of $90 = 9 tiles), indexed by the skill slot B (0-7). ShowSkillNameAtSlotB_Skip
+; passes the address with a 9 by 1 window ($0901) to ShowStringBank08AtTilesHL_Bank03, which draws
+; the skill name (category 4) there. (C1, E-0381)
 ShowSkillNameAtSlotB_Data::
     db $80, $93, $10, $94, $a0, $94, $30, $95, $c0, $95, $50, $96, $e0, $96, $70, $97
 
@@ -2585,10 +2588,16 @@ WithSRAMDrawMemberRecordFamily_ShowParentName::
     pop hl
     ret
 
-; data read by ShowSpeciesNameAndIconForSlotB (4 bytes) (E-0347)
+; Two VRAM glyph-tile addresses, vTiles2 + $5E0 and vTiles2 + $720 ($95E0, $9720), indexed by the
+; parent slot B (0 or 1). ShowSpeciesNameAndIconForSlotB draws the species name there in a 9 by 1
+; window (category = species high byte + 2). (C1, E-0381)
 ShowSpeciesNameAndIconForSlotB_Data1::
     db $e0, $95, $20, $97
 
+; Two VRAM tile numbers, $5D and $71, indexed by the parent slot B (0 or 1).
+; ShowSpeciesNameAndIconForSlotB stores the entry in wWorkBuf + 1 as the tile
+; LoadFamilyIconTileForWorkBuf writes the 16-byte family icon to (the family is in wWorkBuf). (C1,
+; E-0381)
 ShowSpeciesNameAndIconForSlotB_Data2::
     db $5d, $71
 
@@ -2955,22 +2964,41 @@ DrawRecordSexMarkTile::
     pop bc
     ret
 
-; data read by PauseMenu_Info_PartyOverview_Build (3 bytes) (E-0347)
+; Three palette numbers, 1, 3 and 5, indexed by the party slot 0-2.
+; PauseMenu_Info_PartyOverview_Build passes the entry in C to LoadMonsterPicture as the CGB palette
+; slot of that member (two palettes, C and C + 1) and again in hTemp0 as the palette number for
+; LoadMonsterPictureAttributeBlock. (C1, E-0381)
 PauseMenu_Info_PartyOverview_Build_Data1::
     db $01, $03, $05
 
+; Three VRAM destinations, vTiles2 + $140, + $380 and + $5C0 ($9140, $9380, $95C0), indexed by the
+; party slot 0-2. PauseMenu_Info_PartyOverview_Build passes the entry in HL to LoadMonsterPicture,
+; which decompresses the 6 by 6 tile picture of that party member there. (C1, E-0381)
 PauseMenu_Info_PartyOverview_Build_Data2::
     db $40, $91, $80, $93, $c0, $95
 
+; Three offsets, $0000, $0080 and $0100, indexed by the party slot 0-2. On CGB
+; PauseMenu_Info_PartyOverview_Build adds $D000 (wScreenAttrBuffer) to the entry and passes it to
+; LoadMonsterPictureAttributeBlock as the place in WRAM bank 2 for the 6 by 6 attribute bytes of
+; that member. (C1, E-0381)
 PauseMenu_Info_PartyOverview_Build_Data3::
     db $00, $00, $80, $00, $00, $01
 
+; Three wScreenTileBuffer addresses, $C1FA, $C200 and $C206, indexed by the party slot 0-2 (one
+; column per member). DrawRecordHPMPAndLevelForRowC writes HP as three digit tiles there, MP at +$20
+; and the level as two digit tiles at +$41. (C1, E-0381)
 DrawRecordHPMPAndLevelForRowC_Data::
     db $fa, $c1, $00, $c2, $06, $c2
 
+; Three VRAM glyph-tile addresses, $8800, $8890 and $8920 (vTiles1 + 0, + $90, + $120), indexed by
+; the party slot 0-2. ShowRecordSpeciesNameForRowC uses the entry as the destination of a 9 by 1
+; text window and draws the species name of that member there. (C1, E-0381)
 ShowRecordSpeciesNameForRowC_Data::
     db $00, $88, $90, $88, $20, $89
 
+; Three wScreenTileBuffer addresses, $C366, $C386 and $C3A6, indexed by the party slot 0-2.
+; DrawRecordSexMarkTile writes tile $CC + bit 0 of MON_SEX of that member to the address. (C1,
+; E-0381)
 DrawRecordSexMarkTile_Data::
     db $66, $c3, $86, $c3, $a6, $c3
 
@@ -3096,7 +3124,11 @@ PauseMenu_Info_PartyOverview_Close_LoadTile::
     jr nz, .loop
     ret
 
-; data read by PauseMenu_Info_PartyOverview_Close_LoadTile (16 bytes) (E-0347)
+; One 8 by 8 tile of 16 bytes in 2-bit graphics format (row pairs): plane 0 is $FF in every row and
+; plane 1 reads $00, $10, $10, $FE, $7C, $38, $7C, $C6, a small star-like figure.
+; PauseMenu_Info_PartyOverview_Close_LoadTile writes it to VRAM tile $14 (vTiles2 + $140), the first
+; tile of the picture area of party member 0 (PauseMenu_Info_PartyOverview_Build_Data2). (C1,
+; E-0381)
 PauseMenu_Info_PartyOverview_Close_LoadTile_Data::
     db $ff, $00, $ff, $10, $ff, $10, $ff, $fe, $ff, $7c, $ff, $38, $ff, $7c, $ff, $c6
 
@@ -4434,9 +4466,9 @@ SetupInventoryMenuPages_Bank03::
 ; MON_ATK, 5 MON_DEF, 6 MON_AGL, 7 MON_INT (one value at wWindowTileBuffer + $1D); these blank
 ; wScreenTileBuffer + $146/$147 and redraw the MON_STATUS marks there (bits 7, 2, 0 through the
 ; _Bank03_2 setters). Kind 2 shows the personality name (PersonalityIndexOfRecord, category 7) at
-; vTiles2 + $1A0 with DrawItemTargetStatPreview_Data[index] tiles from $1A at wWindowTileBuffer +
-; $19, pads to 9 with $C3, sets the text window to vTiles1 with 2 rows of 18, and draws the status
-; marks. Any other kind (8) shows the equipped item MON_ITEM (category 5, id + $3F when non-zero) at
+; vTiles2 + $1A0 with PersonalityNameTileCounts[index] tiles from $1A at wWindowTileBuffer + $19,
+; pads to 9 with $C3, sets the text window to vTiles1 with 2 rows of 18, and draws the status marks.
+; Any other kind (8) shows the equipped item MON_ITEM (category 5, id + $3F when non-zero) at
 ; vTiles2 + $1A0 with the tile counts of RecordA4StringTileCounts_03 at wScreenTileBuffer + $141 and
 ; wWindowTileBuffer + $19. Called by PauseMenu_Items_UseItem_TargetCursor and
 ; BuildItemScreenForWItemId. (C1, E-0374)
@@ -4540,7 +4572,7 @@ DrawItemTargetStatPreview::
     ld [wStringIndex], a
     ld a, $07
     ld [wStringCategory], a
-    ld hl, DrawItemTargetStatPreview_Data
+    ld hl, PersonalityNameTileCounts
     ld b, $00
     add hl, bc
     ld a, [hl]
@@ -4715,8 +4747,11 @@ SetScreenTileBufferRow16Col6TileC0_Bank03_2::
     ld [wScreenTileBuffer + $146], a
     ret
 
-; data read by DrawItemTargetStatPreview (27 bytes) (E-0347)
-DrawItemTargetStatPreview_Data::
+; Twenty-seven tile counts, 3 to 9, indexed by the personality number 0-26 of the target monster
+; (PersonalityIndexOfRecord). For an item of kind 2 DrawItemTargetStatPreview shows the personality
+; name (category 7) at vTiles2 + $1A0, then writes that many consecutive tiles from $1A at
+; wWindowTileBuffer + $19 and pads the rest of 9 with the blank tile $C3. (C1, E-0381)
+PersonalityNameTileCounts::
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
@@ -6116,23 +6151,27 @@ PauseMenu_Skills_ChooseSkill_Cursor_CheckMP::
     ret
 
 ; Maps the skill in wRecordBuffer to its field skill number: wInventorySlot =
-; LookupInventorySlotForRecordBuffer_Data[wRecordBuffer] and Z set when that is $FF (no field use).
-; SKILL_HEAL ($16) to SKILL_REVIVE ($1F) give 0-9, $21 gives $0A, $24 gives $0B and SKILL_WHISTLE
-; ($A2) to SKILL_MAPMAGIC ($A9) give $0C-$13. PauseMenu_Skills_ChooseSkill_Cursor refuses a skill
-; with Z set (message $1B). (C2, E-0374)
-; wInventorySlot = LookupInventorySlotForRecordBuffer_Data[wRecordBuffer]; Z set when it is $FF
-; (E-0119)
+; FieldSkillNumberBySkillId[wRecordBuffer] and Z set when that is $FF (no field use). SKILL_HEAL
+; ($16) to SKILL_REVIVE ($1F) give 0-9, $21 gives $0A, $24 gives $0B and SKILL_WHISTLE ($A2) to
+; SKILL_MAPMAGIC ($A9) give $0C-$13. PauseMenu_Skills_ChooseSkill_Cursor refuses a skill with Z set
+; (message $1B). (C2, E-0374)
+; wInventorySlot = FieldSkillNumberBySkillId[wRecordBuffer]; Z set when it is $FF (E-0119)
 LookupInventorySlotForRecordBuffer::
     ld a, [wRecordBuffer]
-    ld hl, LookupInventorySlotForRecordBuffer_Data
+    ld hl, FieldSkillNumberBySkillId
     add_a_to_hl
     ld a, [hl]
     ld [wInventorySlot], a
     cp $ff
     ret
 
-; data read by LookupInventorySlotForRecordBuffer (29 bytes) (E-0347)
-LookupInventorySlotForRecordBuffer_Data::
+; A table of $B0 bytes, one per skill number, that gives the field skill number or $FF for a skill
+; that cannot be used in the field. SKILL_HEAL to SKILL_REVIVE ($16-$1F, except $20) give 0-9,
+; SKILL_ANTIDOTE ($21) gives $0A, SKILL_CURSEOFF ($24) gives $0B, SKILL_WHISTLE to SKILL_MAPMAGIC
+; ($A2-$A9) give $0C-$13 and every other skill number gives $FF. LookupInventorySlotForRecordBuffer
+; indexes it with the low byte of wRecordBuffer, stores the result in wInventorySlot and returns
+; with Z set when it is $FF. (C1, E-0381)
+FieldSkillNumberBySkillId::
     ds $16, $ff
     db $00, $01, $02, $03, $04, $05, $06, $07, $08, $09, $ff, $0a, $ff, $ff, $0b
     ds $7d, $ff
@@ -6251,7 +6290,7 @@ ShowRecordSkillPageNames_Bank03::
 ; (E-0221)
 ; record: rectangle record
 TileRectTable_03::
-; data read by PauseMenu_Skills_ChooseTarget_Draw_BuildScreen (2 words) (E-0347)
+; another name for the data at TileRectTable_03, whose note is above (E-0381)
 SkillTargetBoxRects::
     dw TileRect_03 ; id 0
     dw TileRect_03_2 ; id 1
@@ -6259,6 +6298,7 @@ SkillTargetBoxRects::
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer_Bank03 (E-0161)
 ; record: offset $0120 (row 9, column 0); 9 x 5 tiles
 TileRect_03::
+; another name for the data at TileRect_03, whose note is above (E-0381)
 SkillTargetBoxRect_Default::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
@@ -6269,6 +6309,7 @@ SkillTargetBoxRect_Default::
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; row 4
 
 TileRect_03_2::
+; another name for the data at TileRect_03_2, whose note is above (E-0381)
 SkillTargetBoxRect_MPass::
     dw $0120 ; entry 0: offset into wScreenTileBuffer
     db $09, $05 ; width, rows
@@ -7277,7 +7318,10 @@ PauseMenu_Plan_Tactics_Cursor::
     dec [hl]
     ret
 
-; data read by PauseMenu_Plan_Tactics_ShowCurrent (3 bytes) (E-0347)
+; Three first tile numbers, $D0, $D5 and $DA, indexed by wPauseMenuStep (0-2).
+; PauseMenu_Plan_Tactics_ShowCurrent writes five consecutive tile numbers from the entry to
+; wScreenTileBuffer + $EE and redraws the rectangle at vBGMap0 + $EA. The three runs are $D0-$D4,
+; $D5-$D9 and $DA-$DE. (C1, E-0381)
 PauseMenu_Plan_Tactics_ShowCurrent_Data::
     db $d0, $d5, $da
 
@@ -7912,7 +7956,11 @@ PauseMenu_Plan_PartyOrder_SortUnplaced::
 .return:
     ret
 
-; data read by PauseMenu_Plan_PagedMenu_WriteFiveTileRun (3 bytes) (E-0347)
+; Three first tile numbers, $D0, $D5 and $DA (the same bytes as
+; PauseMenu_Plan_Tactics_ShowCurrent_Data), indexed by the party member 0-2 in A.
+; PauseMenu_Plan_PagedMenu_WriteFiveTileRun writes five consecutive tile numbers from the entry at
+; DE; PauseMenu_Plan_PartyOrder_ShowMemberDetails and PauseMenu_Plan_PartyOrder_DrawMemberTiles use
+; it to draw a party member on the party-order screen. (C1, E-0381)
 PauseMenu_Plan_PagedMenu_WriteFiveTileRun_Data::
     db $d0, $d5, $da
 
@@ -8699,7 +8747,10 @@ PauseMenu_Plan_Keys_DrawKeyEntryMark::
     pop af
     ret
 
-; data read by PauseMenu_Plan_Keys_DrawKeyNames (10 bytes) (E-0347)
+; Five VRAM glyph-tile addresses, vTiles2 + $440, + $500, + $5C0, + $680 and + $740 (steps of $C0 =
+; 12 tiles), indexed by the visible key row c. PauseMenu_Plan_Keys_DrawKeyNames draws the name of
+; each of the four keys of the page in a 12 by 1 text window at the entry for its row; the loop runs
+; rows 0-3 only (rows 1-3 when the list is empty). (C1, E-0381)
 PauseMenu_Plan_Keys_DrawKeyNames_Data::
     db $40, $94, $00, $95, $c0, $95, $80, $96, $40, $97
 
@@ -9207,12 +9258,13 @@ PauseMenu_Plan_Build_BlankTiles::
 ; low byte of $FF (E-0225)
 ; record: VRAM destinations, then $FFxx
 TileCopyDestList_03::
-; data read by PauseMenu_Plan_Tactics_Build_DrawScreen (8 words) (E-0347)
+; another name for the data at TileCopyDestList_03, whose note is above (E-0381)
 TacticsGlyphTileDests::
     dw vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90, vTiles2 + $a0, vTiles2 + $b0, rIE ; entry 0
 
 ; record: bank-$1F tile sources
 TileCopySrcList_03::
+; another name for the data at TileCopySrcList_03, whose note is above (E-0381)
 TacticsGlyphTileSources::
     dw $40e0, $4370, $42b0, $42d0, $4310, $42c0, $43b0, $ffff ; entry 0
 
@@ -9266,7 +9318,11 @@ CopyTileListFromBank1F_Bank03::
     pop bc
     ret
 
-; data read by GameMode2_Update_OpenPage (6 bytes) (E-0347)
+; Eight bytes read as four RGB555 colours of CGB background palette 1: $2011, $7FFF, $3D7D and
+; $0000. The first six come from the db line and the last two are the first bytes of the zero fill
+; ($00, $00) that follows the label to the end of the bank. GameMode2_Update_OpenPage writes palette
+; 0 inline ($0139, $7FFF, $033F, $0000), then copies these 8 bytes after it, sets
+; wBGPaletteUploadRequest to $7F and calls UploadBGPalettes, only on CGB. (C1, E-0381)
 GameMode2_Update_OpenPage_Data::
     db $11, $20, $ff, $7f, $7d, $3d
     ds $405, $00

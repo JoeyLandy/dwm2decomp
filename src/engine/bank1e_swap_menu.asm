@@ -364,7 +364,11 @@ SwapMonstersMenu_OptionCursor_DrawTile::
     ei
     ret
 
-; data read by SwapMonstersMenu (10 bytes) (E-0347)
+; Five little-endian words, $0021, $0061, $00A1, $00E1 and $0121: BG map offsets of 1, 3, 5, 7 and 9
+; BG rows (32 tiles each) below the top-left screen tile, plus one column.
+; SwapMonstersMenu_OptionCursor_DrawTile indexes it by wGridCursorX, adds the word to the
+; BGMapAddressAtScroll_Bank1E result and writes tile B there (the cursor mark beside the option).
+; (C1, E-0381)
 SwapMonstersMenu_OptionCursor_DrawTile_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
@@ -745,7 +749,7 @@ SwapMonstersMenu_MoveRecords_DrawYesNoAgain::
 ; wArg1/wArg2 with wArg3 = width and wArg4 = rows (E-0161, E-0177, E-0187)
 ; record: 8 x 5 tiles, one row per line
 TileRect_1E::
-; data read by SwapMonstersMenu_MoveRecords_DrawYesNoAgain (40 bytes) (E-0347)
+; another name for the data at TileRect_1E, whose note is above (E-0381)
 SwapMonstersMenu_YesNoAgainTileRect::
     db $b0, $b1, $b1, $b1, $b1, $b1, $b1, $b2 ; id 0
     db $b6, $c3, $70, $71, $72, $73, $c3, $b7 ; id 1
@@ -4553,10 +4557,17 @@ SwapMonstersMenu_CopySixteenTiles::
     jr nz, .loop
     ret
 
-; data read by SwapMonstersMenu_CopySixteenTiles (16 bytes) (E-0347)
+; Sixteen glyph numbers, $A3 $54 $44 $11 $16 $19 $48 $24 $A6 $12 $31 $29 $32 $18 $14 $A3 (in the
+; text charmap: colon, H, M, P, a, I, n, f, o, O, K, colon, and four numbers the charmap does not
+; list). SwapMonstersMenu_CopySixteenTiles takes byte n as the glyph to copy from GlyphFont (bank
+; $1F, 16 bytes per glyph) to the VRAM address in word n of SwapMonstersMenu_CopySixteenTiles_Data2.
+; (C1, E-0381)
 SwapMonstersMenu_CopySixteenTiles_Data1::
     db $a3, $54, $44, $11, $16, $19, $48, $24, $a6, $12, $31, $29, $32, $18, $14, $a3
 
+; Sixteen little-endian VRAM addresses: $8ED0, $8EE0, $8EF0, $8F50, $8F60, $8F70, $8FD0, $8FE0,
+; $8FF0, then $9700 to $9760 in steps of $10. SwapMonstersMenu_CopySixteenTiles copies the glyph
+; given by byte n of SwapMonstersMenu_CopySixteenTiles_Data1 to word n. (C1, E-0381)
 SwapMonstersMenu_CopySixteenTiles_Data2::
     db $d0, $8e, $e0, $8e, $f0, $8e, $50, $8f, $60, $8f, $70, $8f, $d0, $8f, $e0, $8f
     db $f0, $8f, $00, $97, $10, $97, $20, $97, $30, $97, $40, $97, $50, $97, $60, $97
@@ -6613,10 +6624,18 @@ DrawMonsterNameOfRecordField::
     pop bc
     ret
 
-; data read by DrawRecordParentNames (8 bytes) (E-0347)
+; Eight record field offsets in two groups of four, one group per parent: $1A (MON_PARENT1_SPECIES),
+; $8E (MON_PARENT1_NAME), $1A again, $1E (MON_PARENT1_MASTER), then $1C (MON_PARENT2_SPECIES), $99
+; (MON_PARENT2_NAME), $1C, $29 (MON_PARENT2_MASTER). DrawRecordParentNames walks it in order when
+; bit 4 of the record MON_FAMILY byte is clear: the first byte of a group is tested for an unknown
+; parent, the second is the name to draw, the third the species word whose name is drawn, the fourth
+; the master name. (C1, E-0381)
 DrawRecordParentNames_Data1::
     db $1a, $8e, $1a, $1e, $1c, $99, $1c, $29
 
+; The same eight field offsets as DrawRecordParentNames_Data1 with the two groups swapped: $1C, $99,
+; $1C, $29 (parent 2), then $1A, $8E, $1A, $1E (parent 1). DrawRecordParentNames walks it in order
+; when bit 4 of the record MON_FAMILY byte is set, so the second parent is drawn first. (C1, E-0381)
 DrawRecordParentNames_Data2::
     db $1c, $99, $1c, $29, $1a, $8e, $1a, $1e
 
@@ -6952,10 +6971,18 @@ DrawRecordFamilyEntries_PickMarkTile::
 .return:
     ret
 
-; data read by DrawRecordFamilyEntries (6 bytes) (E-0347)
+; Six record field offsets in two groups of three, one group per parent: $1A (MON_PARENT1_SPECIES),
+; $98 (MON_PARENT1_PLUS), $1A, then $1C (MON_PARENT2_SPECIES), $A3 (MON_PARENT2_PLUS), $1C.
+; DrawRecordFamilyEntries walks it in order when bit 4 of the record MON_FAMILY byte is clear: the
+; first byte tests whether the parent is known, the second is the plus value field, the third the
+; species word given to LoadRecordWordFieldAndContinue. DrawRecordFamilyEntries_PickMarkTile tests
+; the plus offset ($98 or not). (C1, E-0381)
 DrawRecordFamilyEntries_Data1::
     db $1a, $98, $1a, $1c, $a3, $1c
 
+; The same six field offsets as DrawRecordFamilyEntries_Data1 with the two groups swapped: $1C
+; (MON_PARENT2_SPECIES), $A3 (MON_PARENT2_PLUS), $1C, then $1A, $98, $1A. DrawRecordFamilyEntries
+; walks it in order when bit 4 of the record MON_FAMILY byte is set. (C1, E-0381)
 DrawRecordFamilyEntries_Data2::
     db $1c, $a3, $1c, $1a, $98, $1a
 
@@ -7152,7 +7179,10 @@ ClampRecordListPageCursor5_EraseCursor::
     ei
     ret
 
-; data read by ClampRecordListPageCursor5 (10 bytes) (E-0347)
+; Five little-endian words, $0021, $0061, $00A1, $00E1 and $0121: BG map offsets of column 1 in rows
+; 1, 3, 5, 7 and 9 (32 tiles per BG row) from the top-left screen tile, the cursor mark places of a
+; five-entry list. ClampRecordListPageCursor5_EraseCursor indexes it by wListCursor and writes the
+; blank tile $C3 there. (C1, E-0381)
 ClampRecordListPageCursor5_EraseCursor_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
@@ -7251,7 +7281,10 @@ ClampRecordListPageCursor4_EraseCursor::
     ei
     ret
 
-; data read by ClampRecordListPageCursor4 (8 bytes) (E-0347)
+; Four little-endian words, $0028, $0068, $00A8 and $00E8: BG map offsets of column 8 in rows 1, 3,
+; 5 and 7 (32 tiles per BG row) from the top-left screen tile, the cursor mark places of a
+; four-entry list. ClampRecordListPageCursor4_EraseCursor indexes it by wListCursor and writes the
+; blank tile $C3 there. (C1, E-0381)
 ClampRecordListPageCursor4_EraseCursor_Data::
     db $28, $00, $68, $00, $a8, $00, $e8, $00
 
@@ -7507,7 +7540,10 @@ DrawListEntriesCell5RecordDetails_DrawStats::
     jr c, .loop
     ret
 
-; data read by DrawListEntriesCell5RecordDetails (5 bytes) (E-0347)
+; Five record field offsets, $63 (MON_ATK), $65 (MON_DEF), $67 (MON_AGL), $69 (MON_INT) and $6B
+; (MON_WLD), each a word. DrawListEntriesCell5RecordDetails_DrawStats loops over index 0 to 4, reads
+; that word of the record, and draws it as three digit tiles two BG rows below the previous value,
+; starting at BG offset $70 from the screen origin. (C1, E-0381)
 DrawListEntriesCell5RecordDetails_DrawStats_Data::
     db $63, $65, $67, $69, $6b
 

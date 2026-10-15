@@ -36,7 +36,7 @@ StringList_BankF0_StringCategories_0::
     dw Text_OhYoureShortSome ; id 12
     dw Text_YouCantCarryAny ; id 13
     dw Text_WhatWouldYouLike_2 ; id 14
-CopyNameStringFromBank08Database_Data2::
+CopyNameStringFromBank08Database_Data::
     dw Text_YouHaveNoItems ; id 15
     dw Text_SorryButICant ; id 16
     dw Text_HowManyWillYou ; id 17
@@ -2778,7 +2778,10 @@ StepScreenStepOffsetTableEvery4Frames::
     ld [wScreenCounter], a
     ret
 
-; data read by StepScreenStepOffsetTableEvery4Frames (9 bytes) (E-0347)
+; Nine bytes: signed steps $FD, $FD, $FE, $00, $01, $01, $03, $03 (net zero), then the end mark $80.
+; Every fourth call StepScreenStepOffsetTableEvery4Frames adds entry [wScreenStep] to the byte at DE
+; and increments wScreenStep; at the $80 it increments wScreenSubStep and clears wScreenStep and
+; wScreenCounter. (C1, E-0381)
 StepScreenStepOffsetTableEvery4Frames_Data::
     db $fd, $fd, $fe, $00, $01, $01, $03, $03, $80
 
@@ -4384,7 +4387,11 @@ DrawTileBAtArg2Entry_F0::
     ei
     ret
 
-; data read by DrawTileBAtArg2Entry_F0 (18 bytes) (E-0347)
+; Nine words in two layers: three pointers ($67C6, $67CA, $67CE, into this block) followed by three
+; pairs of offsets ($012D and $016D, $012E and $016E, $012F and $016F). DrawTileBAtArg2Entry_F0
+; picks a pair with wArg2 (0-2) and an offset in it with wMenuChoice; the offset (row 9 or row 11,
+; column 13, 14 or 15) is added to the BG map address of the scroll position
+; (BGMapAddressAtScroll_BankF0) and tile B is written there. (C1, E-0381)
 DrawTileBAtArg2Entry_F0_Data::
     db $c6, $67, $ca, $67, $ce, $67, $2d, $01, $6d, $01, $2e, $01, $6e, $01, $2f, $01
     db $6f, $01
@@ -4582,6 +4589,7 @@ RunWithArg1ForF0ScreenKind_SetUpScene_Data6::
 ; CopyBytesDEFromHL_BankF0 copies these 16 bytes to wSpriteSlots (E-0264)
 ; record: 16 bytes copied to wSpriteSlots
 SpriteSlotsInit_F0::
+; another name for the data at SpriteSlotsInit_F0, whose note is above (E-0381)
 EggSceneAltSpriteSlots::
     db $00, $01, $01, $00, $f0, $40, $01, $01, $00, $00, $00, $f0, $40, $04, $00, $00 ; entry 0
 
@@ -7222,19 +7230,18 @@ CompareHLWithDE::
     ret
 
 ; copies the $F0-terminated string [HL] of the category chosen by [HL + 1]
-; (CopyNameStringFromBank08Database_Data2 or CopyNameStringFromBank08Database_Data1) from bank 8 to
-; HL (E-0125)
+; (CopyNameStringFromBank08Database_Data or StringDatabase_MonsterNames2) from bank 8 to HL (E-0125)
 CopyNameStringFromBank08Database::
     push de
     inc hl
     ld a, [hld]
     and a
     jr nz, .skip
-    ld de, CopyNameStringFromBank08Database_Data2
+    ld de, CopyNameStringFromBank08Database_Data
     jr .call_read_far_pointer_at_de_in_bank_b
 
 .skip:
-    ld de, CopyNameStringFromBank08Database_Data1
+    ld de, StringDatabase_MonsterNames2
 
 .call_read_far_pointer_at_de_in_bank_b:
     push hl
@@ -7304,7 +7311,10 @@ TestBitDEOfBitArrayHL::
     ld a, $ff
     ret
 
-; data read by TestBitDEOfBitArrayHL (8 bytes) (E-0347)
+; Eight single-bit masks, $80, $40, $20, $10, $08, $04, $02, $01. TestBitDEOfBitArrayHL adds DE / 8
+; to HL, indexes the table with DE & 7 and ANDs the mask with that byte, returning $FF in A when the
+; bit is set and 0 when it is clear, so bit 0 of the array is the high bit of its first byte. (C1,
+; E-0381)
 TestBitDEOfBitArrayHL_Data::
     db $80, $40, $20, $10, $08, $04, $02, $01
 
