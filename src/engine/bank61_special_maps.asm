@@ -730,7 +730,7 @@ LoadMapScreen_ReadMapType::
     dw LoadMapScreen_Type2
     dw LoadMapScreen_Type3
     dw LoadMapScreen_Type3
-    dw LoadMapScreen_WriteTemp0AndSVBK
+    dw LoadMapScreen_Type5
     dw LoadMapScreen_WriteTemp0_2
     dw LoadMapScreen_Type7
 
@@ -852,7 +852,7 @@ DrawDoorTilesForKeyWorldFloor::
 ; Map type 5's screen: the room for the floor and area from wKeyWorldRoomTable picks a room record
 ; in bank $72; decompresses the screen (hMapScreenX, hMapScreenY) into wScreenTileBuffer and, on
 ; CGB, its attributes, then the exit tile. (C1, E-0357)
-LoadMapScreen_WriteTemp0AndSVBK::
+LoadMapScreen_Type5::
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState + $1
@@ -2520,11 +2520,11 @@ CheckWarpsByMapType::
     jumptable
     dw CheckWarpsByMapType_RunThreeWarpChecks
     dw CheckWarpsByMapType_ToReturnStub_2
-    dw CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc
-    dw CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc
+    dw CheckWarpsByMapType_Type2
+    dw CheckWarpsByMapType_Type3
     dw CheckWarpsByMapType_Return
-    dw CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc
-    dw CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc
+    dw CheckWarpsByMapType_Type5
+    dw CheckWarpsByMapType_Type6
     dw CheckWarpsByMapType_Return
 
 ; Key-world warps, map type 4: nothing. (C1, E-0357)
@@ -2538,10 +2538,10 @@ CheckWarpsByMapType_RunThreeWarpChecks::
     call CheckWarpsByMapType_KeyWorldGoalWarp
     or a
     ret nz
-    call CheckWarpsByMapType_RunThreeWarpChecks_WriteWarpDestXAndWarpDestYEtc
+    call CheckWarpsByMapType_KeyWorldObjects
     or a
     ret nz
-    call CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc
+    call CheckWarpsByMapType_FloorEntrances
     or a
     ret nz
     ret
@@ -2551,34 +2551,31 @@ CheckWarpsByMapType_ToReturnStub_2::
     call ReturnStub_2
     ret
 
-; Key-world warps, map type 2: the floor toggle
-; (CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2). (C1, E-0357)
-CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc::
-    call CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2
+; Key-world warps, map type 2: the floor toggle (CheckWarpsByMapType_FloorToggle). (C1, E-0357)
+CheckWarpsByMapType_Type2::
+    call CheckWarpsByMapType_FloorToggle
     ret
 
-; Key-world warps, map type 3: the floor's warp list
-; (CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2). (C1, E-0357)
-CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc::
-    call CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2
+; Key-world warps, map type 3: the floor's warp list (CheckWarpsByMapType_FloorWarpList). (C1,
+; E-0357)
+CheckWarpsByMapType_Type3::
+    call CheckWarpsByMapType_FloorWarpList
     ret
 
-; Key-world warps, map type 5: the room exits
-; (CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2). (C1, E-0357)
-CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc::
-    call CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2
+; Key-world warps, map type 5: the room exits (CheckWarpsByMapType_RoomExits). (C1, E-0357)
+CheckWarpsByMapType_Type5::
+    call CheckWarpsByMapType_RoomExits
     ret
 
-; Key-world warps, map type 6: back to the rooms
-; (CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2). (C1, E-0357)
-CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc::
-    call CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2
+; Key-world warps, map type 6: back to the rooms (CheckWarpsByMapType_BackOneArea). (C1, E-0357)
+CheckWarpsByMapType_Type6::
+    call CheckWarpsByMapType_BackOneArea
     ret
 
 ; Standing at ($40, $40): goes back one area (wKeyWorldArea - 1) to the room screen that the room
 ; table entry's high nibble gives through the position table; warps to ($40, $40) facing down as map
 ; type $85, with sound $60, a fade and the field transition (C = 1); otherwise C = 0. (C1, E-0357)
-CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
+CheckWarpsByMapType_BackOneArea::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2617,7 +2614,7 @@ CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
     ld a, [de]
     swap a
     and $0f
-    ld hl, CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data
+    ld hl, CheckWarpsByMapType_BackOneArea_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2652,14 +2649,14 @@ CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_2::
     ret
 
 ; data read by CheckWarpsByMapType (6 bytes) (E-0347)
-CheckWarpsByMapType_WriteKeyWorldAreaAndMapScreenXEtc_Data::
+CheckWarpsByMapType_BackOneArea_Data::
     db $00, $30, $11, $22, $03, $33
 
 ; Standing at ($40, $40) on the room's screen: compares the screen with the room table entry's two
 ; exits (low and high nibble, $F for none, through the position table) and warps through the
 ; matching one (area 0 with floor info byte 1 = 4 leaves for the floor's own screen); otherwise
 ; clears the warping bit (hPlayerStateFlags bit 7) and returns C = 0. (C1, E-0357)
-CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
+CheckWarpsByMapType_RoomExits::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2719,7 +2716,7 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     and $0f
     cp $0f
     jp z, .skip
-    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_RoomExits_Data
     add_a_to_hl
     ld a, [hl]
     cp b
@@ -2729,7 +2726,7 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     ld a, [de]
     swap a
     and $0f
-    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_RoomExits_Data
     add_a_to_hl
     ld a, [hl]
     cp b
@@ -2837,7 +2834,7 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     and $0f
 
 .skip2:
-    ld hl, CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data
+    ld hl, CheckWarpsByMapType_RoomExits_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -2872,13 +2869,13 @@ CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_2::
     ret
 
 ; data read by CheckWarpsByMapType (6 bytes) (E-0347)
-CheckWarpsByMapType_WritePlayerStateFlagsAndTemp0Etc_Data::
+CheckWarpsByMapType_RoomExits_Data::
     db $00, $30, $11, $22, $03, $33
 
 ; Standing at ($40, $30) with a floor toggle requested (wMapToggleRequest): switches to the floor's
 ; other half (wKeyWorldFloor + $80) at ($40, $30), keeping the facing, and starts the field
 ; transition (mode state 6). (C1, E-0357)
-CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2::
+CheckWarpsByMapType_FloorToggle::
     ldh a, [hPlayerX]
     cp $40
     jr z, .check_player_y
@@ -2923,7 +2920,7 @@ CheckWarpsByMapType_WriteMapToggleRequestAndKeyWorldFloorEtc_2::
 ; ends): an entry whose screen and position match the player (and no warp is running, bit 7) warps;
 ; a destination of $F2 goes to screen (0, 0) at ($40, $80); with no match clears bit 7 and returns C
 ; = 0. (C1, E-0357)
-CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2::
+CheckWarpsByMapType_FloorWarpList::
     ld a, [wKeyWorldFloor]
     swap a
     ld hl, wKeyWorldFloorState
@@ -3063,7 +3060,7 @@ ReturnStub_2::
 ; screen at tile (4 or 5, 4), or (4, 4) for kinds 4 and 5, and no warp is running, kinds 4 and 5
 ; have their own exits, and others enter that floor as map type $83 through its warp list; with none
 ; clears bits 5 and 7 of hPlayerStateFlags. (C1, E-0357)
-CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
+CheckWarpsByMapType_FloorEntrances::
     ld hl, wKeyWorldFloorInfo + $3
     xor a
     ldh [hTemp1], a
@@ -3253,7 +3250,7 @@ CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     add_a_to_hl
     ld a, [hl]
     and $0f
-    ld hl, CheckWarpsByMapType_RunThreeWarpChecks_Data
+    ld hl, CheckWarpsByMapType_FloorEntrances_Data
     add_a_to_hl
     ld a, [hl]
     swap a
@@ -3307,7 +3304,7 @@ CheckWarpsByMapType_RunThreeWarpChecks_WriteTemp1AndPlayerStateFlagsEtc::
     jp .skip
 
 ; data read by CheckWarpsByMapType (6 bytes) (E-0347)
-CheckWarpsByMapType_RunThreeWarpChecks_Data::
+CheckWarpsByMapType_FloorEntrances_Data::
     db $00, $30, $11, $22, $03, $33
 
 ; when a key world is active (wKeyWorldActive) and the key in wKeyWorldKey bit 7 is for
@@ -3416,7 +3413,7 @@ CheckWarpsByMapType_KeyWorldGoalWarp::
 ; and no warp is running, warps to ($40, $40) with sound $60, a fade and the field transition; an
 ; object whose byte is 0 enters its floor (numbered by its place in wKeyWorldObjects) as map type
 ; $82 at screen (0, 0), ($40, $80). (C1, E-0357)
-CheckWarpsByMapType_RunThreeWarpChecks_WriteWarpDestXAndWarpDestYEtc::
+CheckWarpsByMapType_KeyWorldObjects::
     ldh a, [hPlayerX]
     ld c, a
     ldh a, [hPlayerY]
@@ -4027,11 +4024,10 @@ SpecialMapRecord22::
     dfar Map29Screens0
     dfar Map29Attrs0
 
-; CheckKeyWorldWarpTable and CheckWarpsByMapType_WritePlayerStateFlagsAndWarpDestFacingEtc_2 read
-; the word at $6566 + 2 * (floor state byte 0 & $7F) and walk 9-byte entries until $80; an entry of
-; kind $FE or $FF whose bytes 2-3 equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte
-; 8) on the floor's start screen; 128 words, then the lists up to TownObjectSpotGrid0 at $6705
-; (E-0195, C1)
+; CheckKeyWorldWarpTable and CheckWarpsByMapType_FloorWarpList read the word at $6566 + 2 * (floor
+; state byte 0 & $7F) and walk 9-byte entries until $80; an entry of kind $FE or $FF whose bytes 2-3
+; equal hMapScreenX/Y and whose byte 4 is $FF warps to (byte 7, byte 8) on the floor's start screen;
+; 128 words, then the lists up to TownObjectSpotGrid0 at $6705 (E-0195, C1)
 ; record: warp list for this floor-state value
 KeyWorldWarpListTable::
     dw KeyWorldWarps00 ; id 0

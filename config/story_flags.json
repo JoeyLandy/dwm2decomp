@@ -11,6 +11,6 @@
     "0C4": {"name": "EVENT_MAP_7A_OBJECT_ADDED", "note": "set by a script that plays sound $65 and walks; ObjSelector_Map7A_0 lists MapObjects_Map7A_0_1 only when it is set"},
     "10E": {"name": "EVENT_WHEN_YOU_BREED_THE_OFFSPRING", "note": "tested by GreatLogTalkEvents_Breeder: when set the talker says '*: When you breed, the offspring', otherwise 'I lost again'; no setter found"},
     "188": {"name": "EVENT_ARENA_RANK1_KEY_GIVEN", "note": "ArenaMenu_GiveRankReward sets it when wArenaRank is 1 and gives a key (WriteKeyEntryTemp0)"},
-    "19F": {"name": "EVENT_STAFF_ROLL_PARTY_SAVED", "note": "DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc saves wPartyCount in wScriptTemp4 and sets it; the pause menu restores the party count and sets flag $025 when it is set and $025 is clear; LoadPlayerAndFollowerSpriteGraphics reads it for the sprite mode"}
+    "19F": {"name": "EVENT_STAFF_ROLL_PARTY_SAVED", "note": "DebugStaffRoll_Credits_Caption saves wPartyCount in wScriptTemp4 and sets it; the pause menu restores the party count and sets flag $025 when it is set and $025 is clear; LoadPlayerAndFollowerSpriteGraphics reads it for the sprite mode"}
   }
 }

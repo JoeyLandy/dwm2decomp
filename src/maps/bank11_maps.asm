@@ -591,9 +591,9 @@ StartWarpTransition::
     ret
 
 ; for maps from $20 looks hMapId up in the 4-byte table CheckMapExitTable_Data and runs
-; CheckMapExitTable_WriteWarpPendingAndMapIdEtc with its entry (or wKeyWorldGoal); unlisted maps
-; clear bit 5 of hPlayerStateFlags and return C = 0 (E-0125) (E-0344: the address in its name
-; dropped or read as the label there; was CheckMapExitTable)
+; CheckMapExitEntry with its entry (or wKeyWorldGoal); unlisted maps clear bit 5 of
+; hPlayerStateFlags and return C = 0 (E-0125) (E-0344: the address in its name dropped or read as
+; the label there; was CheckMapExitTable)
 CheckMapExitTable::
     ldh a, [hMapId]
     cp $20
@@ -633,21 +633,21 @@ CheckMapExitTable::
     cp b
     jr nz, .skip3
     ld de, wKeyWorldGoal
-    call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
+    call CheckMapExitEntry
     ret
 
 .skip3:
     ld e, l
     ld d, h
     inc de
-    call CheckMapExitTable_WriteWarpPendingAndMapIdEtc
+    call CheckMapExitEntry
     ret
 
 ; The exit-table entry at DE: when the player stands on its position and screen and is not already
 ; leaving (hPlayerStateFlags bit 5), warps (sound $60) to the entry's map from the table, screen (0,
 ; 0) at ($40, $80), with a fade and field transition kind 3, and sets bit 5 (C = 1); elsewhere
 ; clears bit 5 (C = 0). (C1, E-0357)
-CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
+CheckMapExitEntry::
     ldh a, [hPlayerX]
     and $f0
     ld c, a
@@ -690,7 +690,7 @@ CheckMapExitTable_WriteWarpPendingAndMapIdEtc::
     inc de
     ld a, [de]
     dec a
-    ld hl, CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data
+    ld hl, CheckMapExitEntry_Data
     add_a_to_hl
     ld a, [hl]
     ldh [hMapId], a
@@ -728,7 +728,7 @@ CheckMapExitTable_Data::
     db $a0, $44, $10, $05, $a8, $44, $00, $06, $b0, $44, $01, $07, $b8, $44, $44, $08
     db $c8, $44, $01, $09, $d1, $44, $00, $0a, $da, $44, $00, $0b, $ff
 
-CheckMapExitTable_WriteWarpPendingAndMapIdEtc_Data::
+CheckMapExitEntry_Data::
     db $29, $45, $68, $9d, $a4, $af, $b2, $c5, $d0, $d9, $e2
 
 ; E-0036 (C1: the pointer for map 56 is the record whose tileset stream (Map38Tileset) the game

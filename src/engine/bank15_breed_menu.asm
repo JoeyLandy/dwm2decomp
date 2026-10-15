@@ -148,7 +148,7 @@ BreedMenu::
     dw BreedMenu_Init
     dw BreedMenu_Setup
     dw BreedMenu_ToHandleThreeOptionMenuInput_15
-    dw BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc
+    dw BreedMenu_DoOption
     dw BreedMenu_ChooseParents
     dw BreedMenu_ChooseEgg
     dw BreedMenu_NameEntry
@@ -287,7 +287,7 @@ BreedMenu_ToHandleThreeOptionMenuInput_15::
 ; Breeding menu, state 3: acts on the option: lists the eggs (ListRecordsInUseEggs); with
 ; wRecordsFlagged 0 gives the script answer 1 and returns to the options; otherwise answer 0 and
 ; moves on two states (three for option 0). (C1, E-0357)
-BreedMenu_WriteTwoChoiceCursorAndScreenStateEtc::
+BreedMenu_DoOption::
     ld a, [wGridCursorX]
     and a
     jr z, .check_screen_state
@@ -351,7 +351,7 @@ BreedMenu_ChooseParents::
     dw BreedMenu_ChooseParents_BlankCursors
     dw BreedMenu_ChooseParents_CheckBase
     dw BreedMenu_ChooseParents_DrawBaseFrame
-    dw BreedMenu_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc
+    dw BreedMenu_ChooseParents_CopyListGlyphs
     dw BreedMenu_ChooseParents_ClearBoxes
     dw BreedMenu_ChooseParents_ClearMateList
     dw BreedMenu_ChooseParents_ListPartners
@@ -359,7 +359,7 @@ BreedMenu_ChooseParents::
     dw DrawListEntriesCell5IconAndLevelAndStep
     dw BreedMenu_ChooseParents_ToClearThreeTileRowsAndStep
     dw DrawListEntriesCell5RecordNamesAndStep
-    dw BreedMenu_WriteNameEntryStateAndNameEntrySubStateEtc
+    dw BreedMenu_ChooseParents_KeepMate
     dw BreedMenu_ChooseParents_ComputeChild
     dw DrawScreenBufferAtScrollAndIncScreenStep
     dw BreedMenu_ChooseParents_MateCursor
@@ -378,7 +378,7 @@ BreedMenu_ChooseParents::
     dw BreedMenu_ChooseParents_ShowLinkSaveInfo
     dw BreedMenu_ChooseParents_ShowLinkPrompt
     dw BreedMenu_ChooseParents_WriteScreenStep
-    dw BreedMenu_ChooseParents_WriteScreenStepAndTwoChoiceCursor
+    dw BreedMenu_ChooseParents_LinkYesNoBox
     dw BreedMenu_ChooseParents_LinkYesNo
     dw BreedMenu_ChooseParents_DrawLinkBoxAndSprites
     dw BreedMenu_ChooseParents_SaveScreenArea
@@ -386,7 +386,7 @@ BreedMenu_ChooseParents::
     dw BreedMenu_ChooseParents_RedrawPairAndOptions
     dw BreedMenu_ChooseParents_MarkOption
     dw BreedMenu_ChooseParents_BackToOptions
-    dw BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc
+    dw BreedMenu_ChooseParents_Breed
     dw BreedMenu_ChooseParents_DrawLinkBoxAndSprites
     dw BreedMenu_ChooseParents_SaveScreenArea
     dw BreedMenu_ChooseParents_ReloadTilesAgain
@@ -938,9 +938,9 @@ BreedMenu_ChooseParents_DrawBaseFrame::
     ld [wScreenStep], a
     ret
 
-; Choosing parents, step 19: BreedMenu_ChooseParents_WriteArg1AndArg2Etc. (C1, E-0357)
-BreedMenu_ToBreedMenu_ChooseParents_WriteArg1AndArg2Etc::
-    call BreedMenu_ChooseParents_WriteArg1AndArg2Etc
+; Choosing parents, step 19: BreedMenu_CopyParentListGlyphs. (C1, E-0357)
+BreedMenu_ChooseParents_CopyListGlyphs::
+    call BreedMenu_CopyParentListGlyphs
     ret
 
 ; Choosing parents, step 20: clears three tile rows and draws two empty boxes. (C1, E-0357)
@@ -980,10 +980,10 @@ BreedMenu_ChooseParents_ClearMateList::
     ret
 
 ; Choosing parents, step 22: notes the base's sex, lists the monsters of the other sex
-; (BreedMenu_WriteListCountAndRAMG2Etc) and clamps the page. (C1, E-0357)
+; (BreedMenu_ListMates) and clamps the page. (C1, E-0357)
 BreedMenu_ChooseParents_ListPartners::
     call LoadSelectedRecordSex
-    call BreedMenu_WriteListCountAndRAMG2Etc
+    call BreedMenu_ListMates
     jp BreedMenu_ChooseParents_CallClampRecordListPageCursor5
 
 ; for the record at wListEntries cell 5 loads its family icon tile and draws its mark and level at
@@ -1038,7 +1038,7 @@ DrawListEntriesCell5RecordNamesAndStep::
     ret
 
 ; Choosing parents, step 27: keeps the chosen mate and resets the name entry's state. (C1, E-0357)
-BreedMenu_WriteNameEntryStateAndNameEntrySubStateEtc::
+BreedMenu_ChooseParents_KeepMate::
     call BreedMenu_SetArg5ToListEntriesCell5
     xor a
     ld [wNameEntryState], a
@@ -1922,7 +1922,7 @@ BreedMenu_ChooseParents_WriteFee::
 ; Choosing parents, step 54: the breeding: in a link session shows string $0E and saves; then
 ; deletes both parents' records (the second index adjusted for the first) and writes the child's
 ; record (wChildRecord, $A5 bytes) into the freed slot. (C1, E-0357)
-BreedMenu_ChooseParents_WriteScreenSubStepAndScreenStepEtc::
+BreedMenu_ChooseParents_Breed::
     ld a, [wScreenSubStep]
     and a
     jr z, .call_breed_menu_choose_parents_wait_link_mode3
@@ -2302,7 +2302,7 @@ BreedMenu_ChooseParents_PayAndMakeEgg::
 BreedMenu_ChooseEgg::
     ld a, [wScreenStep]
     jumptable
-    dw BreedMenu_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc
+    dw BreedMenu_ChooseEgg_CopyListGlyphs
     dw BreedMenu_ChooseEgg_DrawEggList
     dw ClearTileRowsAndResetWindowAndStep
     dw BreedMenu_ChooseEgg_DrawPageFrame
@@ -2320,9 +2320,9 @@ BreedMenu_ChooseEgg::
     dw BreedMenu_ChooseEgg_CheckFee
     dw BreedMenu_ChooseEgg_Hatch
 
-; Choosing an egg, step 0: BreedMenu_ChooseEgg_WriteArg1AndArg2Etc. (C1, E-0357)
-BreedMenu_ToBreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
-    call BreedMenu_ChooseEgg_WriteArg1AndArg2Etc
+; Choosing an egg, step 0: BreedMenu_CopyEggListGlyphs. (C1, E-0357)
+BreedMenu_ChooseEgg_CopyListGlyphs::
+    call BreedMenu_CopyEggListGlyphs
     ret
 
 ; Choosing an egg, step 1: draws the egg list box, marks the option and lists the eggs. (C1, E-0357)
@@ -3097,7 +3097,7 @@ BreedMenu_ReturnToMap::
     dw DrawPairAndStep_2_2
     dw BreedMenu_ReturnToMap_LoadMap
     dw BreedMenu_ReturnToMap_RestoreScreen
-    dw BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc
+    dw BreedMenu_ReturnToMap_CopyName
     dw BreedMenu_ChooseParents_DrawPayYesNo
     dw BreedMenu_ReturnToMap_YesNo
     dw DrawGoldBoxAndStep_Bank15
@@ -3214,7 +3214,7 @@ BreedMenu_ReturnToMap_RestoreScreen::
 
 ; Returning to the map, step 4: copies the name glyph buffer (up to 10 glyphs) into wTextBuf0 for
 ; the script's message. (C1, E-0357)
-BreedMenu_ReturnToMap_WriteScreenStepAndScriptCommandTypeEtc::
+BreedMenu_ReturnToMap_CopyName::
     ld hl, wNameGlyphBuf
     ld de, wTextBuf0
     ld c, $0a
@@ -3274,7 +3274,7 @@ BreedMenu_ChooseParents_DrawPayYesNo::
 
 ; Choosing parents, step 46: in a link session draws the yes/no box (as step 62); otherwise moves on
 ; with the answer cleared. (C1, E-0357)
-BreedMenu_ChooseParents_WriteScreenStepAndTwoChoiceCursor::
+BreedMenu_ChooseParents_LinkYesNoBox::
     ld a, [wLinkMode]
     and a
     jr nz, BreedMenu_ChooseParents_DrawPayYesNo
@@ -4173,7 +4173,7 @@ BreedMenu_RestoreScreen::
     dw BreedMenu_ReturnToMap_RestoreScreen
     dw BreedMenu_RestoreScreen_DrawGoldBox
     dw BreedMenu_RestoreScreen_CopyChildName
-    dw BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc
+    dw BreedMenu_RestoreScreen_Finish
 
 ; Restoring the screen, step 5: draws the gold box; on the SGB sends the palette set and starts
 ; palette fade $FC. (C1, E-0357)
@@ -4270,7 +4270,7 @@ BreedMenu_RestoreScreen_CopyChildName::
 
 ; Restoring the screen, step 7: returns to the breeding menu's state 1 with the text window reset.
 ; (C1, E-0357)
-BreedMenu_RestoreScreen_WriteScreenStepAndScreenSubStepEtc::
+BreedMenu_RestoreScreen_Finish::
     xor a
     ld [wScreenStep], a
     ld [wScreenSubStep], a
@@ -4685,7 +4685,7 @@ BreedMenu_ShowSelectedRecord_DrawIcons::
 ; clamps the page. (C1, E-0357)
 BreedMenu_ShowSelectedRecord_ListMates::
     call LoadSelectedRecordSex
-    call BreedMenu_WriteListCountAndRAMG2Etc
+    call BreedMenu_ListMates
     jp BreedMenu_ListMonsters_CallClampRecordListPageCursor5
 
 ; Showing the chosen record, step 4: clears three tile rows and draws the pair's names. (C1, E-0357)
@@ -4875,8 +4875,8 @@ BreedMenu_ChooseParents_WaitLinkMode::
     cp $37
     jr nc, .loop
 
-; with SRAM disabled draws sprite part $0090 at ($88, $28)
-; (DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc, C = 1) (E-0124)
+; with SRAM disabled draws sprite part $0090 at ($88, $28) (DrawSpritePart9000At88_28_SetAttrs, C =
+; 1) (E-0124)
 DrawSpritePart9000At88_28::
     xor a
     ld [rRAMB], a
@@ -4893,7 +4893,7 @@ DrawSpritePart9000At88_28::
     xor a
     ld [wArg6], a
     ld c, $01
-    farcall DrawSpritePart9000At88_28_WriteSpriteAttrXorAndSpriteSubIndexEtc
+    farcall DrawSpritePart9000At88_28_SetAttrs
     ret
 
 ; outside link battles only sets wScreenSubStep = 2; otherwise copies the row
@@ -5381,19 +5381,19 @@ StoreBAtWordTableEntry_Bank15::
     ret
 
 ; Copies the list's glyph tiles (list $9D) six per call (below). (C1, E-0357)
-BreedMenu_ChooseParents_WriteArg1AndArg2Etc::
-    ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
+BreedMenu_CopyParentListGlyphs::
+    ld hl, BreedMenu_CopyParentListGlyphs_Data
     ld a, $9d
-    jr BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1
+    jr BreedMenu_CopyGlyphsSixPerCall
 
 ; Copies the egg list's glyph tiles (list $9C) six per call (below). (C1, E-0357)
-BreedMenu_ChooseEgg_WriteArg1AndArg2Etc::
-    ld hl, BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data
+BreedMenu_CopyEggListGlyphs::
+    ld hl, BreedMenu_CopyParentListGlyphs_Data
     ld a, $9c
 
 ; Copies six glyph tiles per call from the tile list at HL to VRAM (the source offset from
 ; wArg1/wArg2), then moves on a step when the list ends. (C1, E-0357)
-BreedMenu_ChooseEgg_WriteArg1AndArg2Etc_SetArg1::
+BreedMenu_CopyGlyphsSixPerCall::
     ld [wArg1], a
     xor a
     ld [wArg2], a
@@ -5826,7 +5826,7 @@ TestBitInFieldAtArg3_Data::
 ; Lists the possible mates: clears both lists, then lists every farm or party record that is not an
 ; egg and whose sex differs from wArg1 (counting the eggs in wRecordsFlagged), and moves the party
 ; members to the front. (C1, E-0357)
-BreedMenu_WriteListCountAndRAMG2Etc::
+BreedMenu_ListMates::
     ld hl, wListEntries
     ld b, $1e
 
@@ -6616,10 +6616,9 @@ IncrementTwoCountersCappedAt99::
     ld [hl], a
     ret
 
-; clears wCounterPtr0Lo-wCounterArg1, fills them through
-; PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1 for wRecordBufA + $A4 and (outside
-; link battles) wRecordBufB + $A4, wTwoChoiceCursor = wArg1, wScreenSubStep += 1 and requests script
-; $80 (E-0125) (E-0340: the address in its name read as its RAM name; was
+; clears wCounterPtr0Lo-wCounterArg1, fills them through PrepareCounterEntry for wRecordBufA + $A4
+; and (outside link battles) wRecordBufB + $A4, wTwoChoiceCursor = wArg1, wScreenSubStep += 1 and
+; requests script $80 (E-0125) (E-0340: the address in its name read as its RAM name; was
 ; PrepareCounterPtr0LoCountersAndRequestScript)
 PrepareCounterPtr0LoCountersAndRequestScript::
     xor a
@@ -6638,14 +6637,14 @@ PrepareCounterPtr0LoCountersAndRequestScript::
     ld de, wCounterPtr0Lo
     ld a, [wRecordBufA + MON_ITEM]
     and a
-    call nz, PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1
+    call nz, PrepareCounterEntry
     ld a, [wLinkMode]
     and a
     jr nz, .skip
     ld de, wCounterPtr1Lo
     ld a, [wRecordBufB + MON_ITEM]
     and a
-    call nz, PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1
+    call nz, PrepareCounterEntry
 
 .skip:
     xor a
@@ -6665,7 +6664,7 @@ PrepareCounterPtr0LoCountersAndRequestScript::
 ; Prepares one counting entry: finds item hTemp0 = A + $3F in the item storage (wItemStorage, 100
 ; two-byte entries) with fewer than 99, or the first free entry, and writes its address and the item
 ; at DE; $FFFF ends the list. (C1, E-0357)
-PrepareCounterPtr0LoCountersAndRequestScript_WriteTemp0AndArg1::
+PrepareCounterEntry::
     add $3f
     ldh [hTemp0], a
     ld c, a
@@ -6862,7 +6861,7 @@ CloseBreedMenu_RestoreGlyphs_TileCopySrcList::
     dw $4130, $4180, $4100, $4190, $41e0, $40f0, $41d0, $4150 ; entry 0
     dw $4160, $41a0, $40b0, $4910, $4910, $ffff
 
-BreedMenu_ChooseParents_WriteArg1AndArg2Etc_Data::
+BreedMenu_CopyParentListGlyphs_Data::
     db $00, $8c, $10, $8c, $20, $8c, $70, $8c, $80, $8c, $90, $8c, $a0, $8c, $b0, $8c
     db $ff, $ff
 
@@ -7238,7 +7237,7 @@ Script_HeroIsGoingTo::
 
 ; Counts the sleepers: the compact records with byte 0 bit 7 set (29 in bank 0, one in bank 1) into
 ; wListCount, after clearing wListEntries. (C1, E-0357)
-HibernateMenu_WriteListCountAndRAMG2Etc::
+HibernateMenu_CountSleepers::
     ld hl, wListEntries
     ld b, $1e
 
@@ -7297,7 +7296,7 @@ HibernateMenu_WriteListCountAndRAMG2Etc::
 
 ; Draws the sleeper list's page: for each entry on the page loads its name from the compact record
 ; (LoadRecordNameEntry0) and copies its glyphs to the row's tiles. (C1, E-0357)
-HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
+HibernateMenu_DrawSleeperPage::
     ld a, $0a
     ld [rRAMG2], a
     xor a
@@ -7380,13 +7379,13 @@ HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
     ld a, c
     cp $04
     jr nz, .skip
-    call HibernateMenu_ChooseRecords_GlyphCopyArgsForA_Bank15
+    call HibernateMenu_DrawSleeperPage_GlyphCopyArgsForA_Bank15
     jr .restore
 
 .skip:
     ld a, c
     sla a
-    ld hl, HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_Data
+    ld hl, HibernateMenu_DrawSleeperPage_Data
     add_a_to_hl
     ld a, [hli]
     ld e, a
@@ -7415,12 +7414,12 @@ HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2::
     ret
 
 ; data read by HibernateMenu (10 bytes) (E-0347)
-HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_Data::
+HibernateMenu_DrawSleeperPage_Data::
     db $00, $8d, $50, $8d, $a0, $8d, $00, $8f, $40, $8a
 
 ; Copies the name glyph buffer's glyphs to VRAM one by one, ORing a voicing mark ($8D/$8E) onto the
 ; glyph before it. (C1, E-0357)
-HibernateMenu_ChooseRecords_GlyphCopyArgsForA_Bank15::
+HibernateMenu_DrawSleeperPage_GlyphCopyArgsForA_Bank15::
     xor a
     ld [wGlyphListPos], a
     ld [wGlyphListStart], a

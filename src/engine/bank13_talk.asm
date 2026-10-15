@@ -480,7 +480,7 @@ FhuntTalkEvents_ShowBeGoneIfYour::
     ld a, [wScreenTileBuffer + $d2]
     cp $68
     ret z
-    farcall FhuntTalkEvents_WriteRAMGAndTemp0
+    farcall FhuntTalkEvents_PartyIsTame
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_script_at_hl_b13
@@ -820,13 +820,13 @@ Talk_WelcomeToTheTravelersInn::
     ret
 
 ; Fhunt talk 41, the giant bird: after EVENT_SCENE_MADCONDOR, 'Kweeeeeh!' when the player is
-; disguised as a monster listed in TalkEvent29WordList
-; (FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG), otherwise nothing. (C1, E-0357)
+; disguised as a monster listed in TalkEvent29WordList (FhuntTalkEvents_GiantBird_IsBirdPresent),
+; otherwise nothing. (C1, E-0357)
 FhuntTalkEvents_GiantBird::
     ld de, EVENT_SCENE_MADCONDOR
     call TestFlagBit
     ret nc
-    farcall FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG
+    farcall FhuntTalkEvents_GiantBird_IsBirdPresent
     ldh a, [hTemp0]
     or a
     ret z
@@ -1344,11 +1344,10 @@ ChestItem_Heaven_Flag00AF::
     call StartTreasureFlagDE_B13
     ret
 
-; Fhunt talk 76: 'Let the power of justice ...' unless
-; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise (by the player's disguise), then
-; 'Step once on each of ...' ($0461). (C1, E-0357)
+; Fhunt talk 76: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
+; says otherwise (by the player's disguise), then 'Step once on each of ...' ($0461). (C1, E-0357)
 FhuntTalkEvents_PowerOfJustice::
-    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
+    farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
@@ -1778,11 +1777,10 @@ TalkMsg04A5_SeveralAncientRuinsRemain::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 110: 'Let the power of justice ...' unless
-; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise, then 'The castle's lord summons
-; monsters...' ($04A0). (C1, E-0357)
+; Fhunt talk 110: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
+; says otherwise, then 'The castle's lord summons monsters...' ($04A0). (C1, E-0357)
 FhuntTalkEvents_PowerOfJustice2::
-    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
+    farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13
@@ -1795,11 +1793,10 @@ FhuntTalkEvents_PowerOfJustice2::
     call StartMessageCommand09HL_B13
     ret
 
-; Fhunt talk 111: 'Let the power of justice ...' unless
-; FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1 says otherwise, then 'A button hides behind a
-; ...' ($04A1). (C1, E-0357)
+; Fhunt talk 111: 'Let the power of justice ...' unless FhuntTalkEvents_PowerOfJustice_IsDisguised
+; says otherwise, then 'A button hides behind a ...' ($04A1). (C1, E-0357)
 FhuntTalkEvents_PowerOfJustice3::
-    farcall FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1
+    farcall FhuntTalkEvents_PowerOfJustice_IsDisguised
     ldh a, [hTemp0]
     or a
     jr nz, .call_start_message_command09_hl_b13

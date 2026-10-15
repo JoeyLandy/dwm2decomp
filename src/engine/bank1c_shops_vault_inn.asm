@@ -107,14 +107,14 @@ InnMenu_Init::
     call CopyBytesDEToHL_Bank1C
     ld a, [wIsCGB]
     and a
-    jr z, .call_inn_menu_init_write_arg7_and_arg8_etc
+    jr z, .call_inn_menu_init_set_price
     ld hl, wWindowAttrBuffer + $a0
     ld de, wScreenAttrBuffer
     ld bc, $00a0
     call CopyLow3BitsToWRAMBank2_Bank1C
 
-.call_inn_menu_init_write_arg7_and_arg8_etc:
-    call InnMenu_Init_WriteArg7AndArg8Etc
+.call_inn_menu_init_set_price:
+    call InnMenu_Init_SetPrice
     ld a, $01
     ld [wMessageMode], a
     ld hl, wScreenState
@@ -209,7 +209,7 @@ InnMenu_Pay::
     xor a
     ld [wTextYesNoResult], a
     ld [wMenuState], a
-    call InnMenu_Pay_WriteGoldHiAndGoldMidEtc
+    call InnMenu_Pay_TakeGold
     call InnMenu_Pay_CopyBytesDEToHL_Bank1C
     call InnMenu_Pay_DrawGoldDigitsAtHLWrapped_1C
     ld hl, wScreenState
@@ -691,7 +691,7 @@ BGMapAddressAtScroll_Bank1C::
 
 ; The inn's price: 10 gold (wDigits 0, 1, 0; the 24-bit amount wArg7:wArg8:wMenuInputResult = 10),
 ; its digits without leading zeros in wTextBuf0. (C1, E-0357)
-InnMenu_Init_WriteArg7AndArg8Etc::
+InnMenu_Init_SetPrice::
     ld hl, wDigits
     xor a
     ld [hli], a
@@ -797,7 +797,7 @@ DrawScreenBufferRectToBGMap_1C::
     ret
 
 ; Takes the price (wArg7:wArg8:wMenuInputResult, 24 bits) from the gold, with no floor. (C1, E-0357)
-InnMenu_Pay_WriteGoldHiAndGoldMidEtc::
+InnMenu_Pay_TakeGold::
     ld a, [wArg7]
     ld e, a
     ld a, [wArg8]
@@ -1333,10 +1333,10 @@ ShopMenu_ChooseAction_StepBGMapAddressBackOnScrollWrap_Data::
 ShopMenu_Buy::
     ld a, [wScreenStep]
     jumptable
-    dw ShopMenu_Buy_WriteVBKAndScreenStep
+    dw ShopMenu_Buy_WriteWindowMap
     dw ShopMenu_Buy_DrawWindow
     dw ShopMenu_Buy_CountItems
-    dw ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc
+    dw ShopMenu_Buy_DrawItemNames
     dw ShopMenu_Buy_AdvanceScreenStep
     dw ShopMenu_Buy_DrawPrices
     dw ShopMenu_Buy_ItemCursor
@@ -1353,8 +1353,8 @@ ShopMenu_Buy::
 
 ; Buying, step 0: writes the item window's tile map into BG map 1 at $9F00 (to the $7F end) and on
 ; the GBC clears its attributes. (C1, E-0357)
-ShopMenu_Buy_WriteVBKAndScreenStep::
-    ld hl, ShopMenu_Buy_WriteVBKAndScreenStep_Data
+ShopMenu_Buy_WriteWindowMap::
+    ld hl, ShopMenu_Buy_WriteWindowMap_Data
     ld de, vBGMap1 + $300
 
 .skip:
@@ -1530,7 +1530,7 @@ ShopMenu_Buy_CountItems::
 
 ; Buying, step 3: clears nine name places, then draws the page's item names glyph by glyph
 ; (ItemNamesCopy_1C) into tile places. (C1, E-0357)
-ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc::
+ShopMenu_Buy_DrawItemNames::
     ld a, [wScreenCounter]
     add a
     ld hl, ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable
@@ -3221,16 +3221,16 @@ ShopMenu_Buy_Pay::
 ShopMenu_Sell::
     ld a, [wScreenStep]
     jumptable
-    dw ShopMenu_Buy_WriteVBKAndScreenStep
+    dw ShopMenu_Buy_WriteWindowMap
     dw ShopMenu_Buy_DrawWindow
     dw ShopMenu_Sell_ListItems
-    dw ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc
+    dw ShopMenu_Sell_DrawItemNames
     dw ShopMenu_Sell_DrawPrices
     dw ShopMenu_Sell_ItemCursor
     dw ShopMenu_Sell_CheckSellable
     dw ShopMenu_Sell_StartQuantity
     dw ShopMenu_Sell_EnterQuantity
-    dw ShopMenu_Sell_WriteListCursorBlinkAndDigitsEtc
+    dw ShopMenu_Sell_WriteTotal
     dw ShopMenu_Buy_DrawYesNo
     dw ShopMenu_Sell_YesNoCursor
     dw ShopMenu_Sell_ClearYesNo
@@ -3379,7 +3379,7 @@ ShopMenu_Sell_ListItems::
 
 ; Selling, step 3: clears nine name places, then draws the page's held item names glyph by glyph
 ; (ItemNamesCopy_1C). (C1, E-0357)
-ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc::
+ShopMenu_Sell_DrawItemNames::
     ld a, [wScreenCounter]
     add a
     ld hl, ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable
@@ -4447,7 +4447,7 @@ ShopMenu_Sell_EnterQuantity_WriteThreeDigits::
 
 ; Selling, step 9: keeps the chosen item and writes the total's decimal digits (leading zeros
 ; dropped) into wTextBuf0 for the message. (C1, E-0357)
-ShopMenu_Sell_WriteListCursorBlinkAndDigitsEtc::
+ShopMenu_Sell_WriteTotal::
     ld hl, wItemGrid
     ld a, [wItemGridY]
     ld e, a
@@ -4959,7 +4959,7 @@ VaultMenu_Setup_ToCopyTileListFromBank1F_1C_TileCopySrcList::
     dw $4380, $41b0, $4a40, $4910, $4910, $4910, $4910, $4a00
     dw $ffff
 
-ShopMenu_Buy_WriteVBKAndScreenStep_Data::
+ShopMenu_Buy_WriteWindowMap_Data::
     db $b0
     ds $11, $b1
     db $b2, $b6, $c3, $f0, $f1, $f2, $f3, $f4, $f5, $f6, $f7, $c7, $c3, $c3, $c3, $c3
@@ -5096,9 +5096,9 @@ ShopItems013::
 ShopItems017::
     db $01, $02, $03, $04, $05, $06, $07, $08, $09, $0a, $0b, $0c, $0d, $0e, $0f, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $1a, $1b, $1c, $1d, $1e, $1f, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $2a, $2b, $2c, $2d, $2e, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $4a, $4b, $4c, $4d, $4e, $4f, $50, $51, $52, $53, $5a, $5b, $5c, $5d, $5e, $5f, $60, $61, $ff, $ff ; id 0
 
-; ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc and four other sites read the word at $6289 +
-; 2 * wScreenCounter, then the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at
-; $4910 there (CopyFromBankWaitVRAM, 16 bytes) (E-0238, C1)
+; ShopMenu_Buy_DrawItemNames and four other sites read the word at $6289 + 2 * wScreenCounter, then
+; the word at 2 * wGlyphListPos of that list, and copy the bank-$1F tile at $4910 there
+; (CopyFromBankWaitVRAM, 16 bytes) (E-0238, C1)
 ; record: list of VRAM tile addresses
 ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc_TileDestTable::
     dw TileDests_1C_0 ; id 0
@@ -5285,11 +5285,9 @@ ItemValueTable::
     dw $07d0 ; id 97
     dw $0000 ; id 98
 
-; ShopMenu_Buy_WriteGlyphListPosAndListCursorBlinkEtc,
-; ShopMenu_Sell_WriteGlyphListPosAndListCursorBlinkEtc and
-; VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc read the word at $63FE + 2 * item number
-; and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 + 16 * character); the names equal
-; StringTable_ItemNames (08:$4716) for the 99 items (E-0261, C1)
+; ShopMenu_Buy_DrawItemNames, ShopMenu_Sell_DrawItemNames and VaultMenu_Store_DrawItemNames read the
+; word at $63FE + 2 * item number and draw the $F0-terminated name as bank-$1F glyph tiles ($4010 +
+; 16 * character); the names equal StringTable_ItemNames (08:$4716) for the 99 items (E-0261, C1)
 ; record: item name
 ItemNamesCopy_1C::
     dw ItemName1C_00 ; id 0
@@ -6554,7 +6552,7 @@ VaultMenu_Setup::
     jumptable
     dw VaultMenu_Setup_CopyTiles
     dw VaultMenu_Setup_ToCopyTileListFromBank1F_1C
-    dw VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep
+    dw VaultMenu_Setup_CountItems
     dw VaultMenu_Setup_LoadFrameTiles
     dw VaultMenu_Setup_ToInitItemListScreenListAndCount
     dw VaultMenu_Setup_DrawBoxes
@@ -6577,10 +6575,9 @@ VaultMenu_Setup_ToCopyTileListFromBank1F_1C::
     call CopyTileListFromBank1F_1C
     ret
 
-; Vault setup, step 2: counts the stored items (VaultMenu_WriteSavedSpriteClipModeAndListPages).
-; (C1, E-0357)
-VaultMenu_ToVaultMenu_WriteSavedSpriteClipModeAndListPagesAndStep::
-    farcall VaultMenu_WriteSavedSpriteClipModeAndListPages
+; Vault setup, step 2: counts the stored items (VaultMenu_CountItems). (C1, E-0357)
+VaultMenu_Setup_CountItems::
+    farcall VaultMenu_CountItems
     ld a, [wScreenStep]
     inc a
     ld [wScreenStep], a
@@ -6809,14 +6806,14 @@ VaultMenu_Store::
     dw VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess
     dw VaultMenu_Store_DrawWindow
     dw VaultMenu_Store_DrawRows
-    dw VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
+    dw VaultMenu_Store_Choice
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_SaveArea
     dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
-    dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
-    dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
+    dw VaultMenu_Store_DrawItemNames
+    dw VaultMenu_Store_DrawCountStep
     dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
     dw VaultMenu_Store_RestoreAreas
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
@@ -6827,7 +6824,7 @@ VaultMenu_Store::
     dw VaultMenu_Store_CopyTile
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
     dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
-    dw VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
+    dw VaultMenu_Store_GoldEntry
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_RedrawGold
     dw VaultMenu_Store_AskAgain
@@ -6863,9 +6860,9 @@ VaultMenu_Store_DrawRows::
     ld [wScriptStartRequest], a
     ret
 
-; Storing, step 3: the choice (VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc). (C1, E-0357)
-VaultMenu_ToVaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc::
-    farcall VaultMenu_Store_WriteTwoChoiceCursorAndScreenStepEtc
+; Storing, step 3: the choice (VaultMenu_Store_ItemsGoldExit). (C1, E-0357)
+VaultMenu_Store_Choice::
+    farcall VaultMenu_Store_ItemsGoldExit
     ret
 
 ; Storing, step 4: back to the vault's choice (state 1, step 2) with the script resuming. (C1,
@@ -6906,7 +6903,7 @@ VaultMenu_Store_SaveArea::
 
 ; Storing, step 9: draws the page's item names glyph by glyph, from the bag's distinct items (state
 ; 3) or the stored items (eight a row). (C1, E-0357)
-VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc::
+VaultMenu_Store_DrawItemNames::
     call VaultMenu_Store_WriteGlyphListPos
     ld a, [wScreenState]
     cp $03
@@ -7057,9 +7054,9 @@ VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits::
     farcall VaultMenu_Store_HLToDecimalDigits
     ret
 
-; Storing, step 10 (VaultMenu_Store_WriteDigitsAndDigitWorkAEtc). (C1, E-0357)
-VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc::
-    farcall VaultMenu_Store_WriteDigitsAndDigitWorkAEtc
+; Storing, step 10 (VaultMenu_Store_DrawCount). (C1, E-0357)
+VaultMenu_Store_DrawCountStep::
+    farcall VaultMenu_Store_DrawCount
     ret
 
 ; Storing, step 11: the item cursor (VaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2). (C1,
@@ -7108,15 +7105,15 @@ VaultMenu_Store_ReadScreenState::
 
 .call_remove_item_count_from_inventory:
     call RemoveItemCountFromInventory
-    farcall VaultMenu_Store_WriteTwoChoiceCursorAndTextCounter1Etc
+    farcall VaultMenu_Store_AfterStoring
     farcall VaultMenu_Store_VaultMenu_Store_MapItemsToInventory
     ret
 
-; Storing, step 15: redraws the item list screen and goes on
-; (VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc). (C1, E-0357)
+; Storing, step 15: redraws the item list screen and goes on (VaultMenu_Store_BackToList). (C1,
+; E-0357)
 VaultMenu_Store_RedrawList::
     call InitItemListScreenListAndDraw
-    farcall VaultMenu_Store_RedrawList_WriteScreenStepAndScriptCommandTypeEtc
+    farcall VaultMenu_Store_BackToList
     ret
 
 ; Storing, step 16: restores the two saved areas and returns to step 4. (C1, E-0357)
@@ -7170,9 +7167,9 @@ VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D::
     farcall VaultMenu_Store_BGMapAddressAtScroll_Bank1D_3
     ret
 
-; Storing, step 21 (VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc). (C1, E-0357)
-VaultMenu_ToVaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc::
-    farcall VaultMenu_Store_WriteScreenStepAndTwoChoiceCursorEtc
+; Storing, step 21 (VaultMenu_Store_EnterGold). (C1, E-0357)
+VaultMenu_Store_GoldEntry::
+    farcall VaultMenu_Store_EnterGold
     ret
 
 ; clears the rectangle at scroll + $147, copies a tile, runs InitItemListScreenListAndDraw,
@@ -7244,14 +7241,14 @@ VaultMenu_TakeOut::
     dw VaultMenu_Store_ToVaultMenu_Store_WaitForVRAMAccess
     dw VaultMenu_Store_DrawWindow
     dw VaultMenu_Store_DrawRows
-    dw VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc
+    dw VaultMenu_TakeOut_Choice
     dw VaultMenu_Store_SetScreenState
     dw VaultMenu_Store_ToDrawRect0088AtBGMap1370AndStep
     dw VaultMenu_Store_SaveArea
     dw VaultMenu_ToVaultMenu_Store_DrawRectSetTextCursorLoPlus21_Bank1D
     dw VaultMenu_Store_ToVaultMenu_Store_HLToDecimalDigits
-    dw VaultMenu_Store_WriteListCursorBlinkAndGlyphListPosEtc
-    dw VaultMenu_ToVaultMenu_Store_WriteDigitsAndDigitWorkAEtc
+    dw VaultMenu_Store_DrawItemNames
+    dw VaultMenu_Store_DrawCountStep
     dw VaultMenu_ToVaultMenu_Store_BlinkCursorSelectedRecord_Bank1D_2
     dw VaultMenu_Store_RestoreAreas
     dw VaultMenu_Store_ToVaultMenu_Store_BlinkCursorBlinkCD_Bank1D
@@ -7262,19 +7259,19 @@ VaultMenu_TakeOut::
     dw VaultMenu_Store_CopyTile
     dw VaultMenu_Store_ToVaultMenu_Store_Number24ToPackedBCD
     dw VaultMenu_ToVaultMenu_Store_BGMapAddressAtScroll_Bank1D
-    dw VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc
+    dw VaultMenu_TakeOut_GoldEntry
     dw ClearRect147AndAskTwoChoice
     dw VaultMenu_Store_RedrawGold
     dw VaultMenu_Store_AskAgain
 
-; Taking out, step 3 (VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2). (C1, E-0357)
-VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc::
-    farcall VaultMenu_TakeOut_WriteTwoChoiceCursorAndScreenStepEtc_2
+; Taking out, step 3 (VaultMenu_TakeOut_ItemsGoldExit). (C1, E-0357)
+VaultMenu_TakeOut_Choice::
+    farcall VaultMenu_TakeOut_ItemsGoldExit
     ret
 
-; Taking out, step 21 (VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2). (C1, E-0357)
-VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc::
-    farcall VaultMenu_TakeOut_WriteScreenStepAndTwoChoiceCursorEtc_2
+; Taking out, step 21 (VaultMenu_TakeOut_EnterGold). (C1, E-0357)
+VaultMenu_TakeOut_GoldEntry::
+    farcall VaultMenu_TakeOut_EnterGold
     ret
 
 ; copies $20 bytes from ShopMenu_Buy_Pay_Data to wScreenList, counts the inventory items into

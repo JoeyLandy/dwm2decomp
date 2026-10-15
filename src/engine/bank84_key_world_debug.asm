@@ -7,7 +7,7 @@ SECTION "Bank 84", ROMX[$4000], BANK[$84]
 ; Fills each floor entrance's 16-byte wKeyWorldFloorState entry ($FF ends the entrance list) by the
 ; entrance's kind (RunDebugAutomapCaseTemp0), reading 16 bytes per entrance from the area count's
 ; KeyWorldAreaLayoutTable entry; the room counter starts at 0. (C1, E-0357)
-DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc::
+KeyWorldLayout_FillEntrances::
     xor a
     ld [wKeyWorldGenRoom], a
     ld a, [wKeyWorldAreaCount]
@@ -66,7 +66,7 @@ RunDebugAutomapCaseTemp0::
     ldh a, [hTemp0]
     jumptable
     dw RunDebugAutomapCaseTemp0_Return
-    dw RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc
+    dw RunDebugAutomapCaseTemp0_Entrance1
     dw RunDebugAutomapCaseTemp0_Entrance2
     dw RunDebugAutomapCaseTemp0_Entrance3
     dw RunDebugAutomapCaseTemp0_Entrance4
@@ -85,8 +85,8 @@ RunDebugAutomapCaseTemp0_ReturnAfterSetup::
 
 ; Entrance kind 1: byte 0 from the goal kind's entry of the table; bytes 2-15 from the layout data.
 ; (C1, E-0357)
-RunDebugAutomapCaseTemp0_ReadKeyWorldGoalKindAndTemp8Etc::
-    ld hl, RunDebugAutomapCaseTemp0_Data
+RunDebugAutomapCaseTemp0_Entrance1::
+    ld hl, RunDebugAutomapCaseTemp0_Entrance1_Data
     ld a, [wKeyWorldGoalKind]
     add_a_to_hl
     ld a, [hl]
@@ -311,7 +311,7 @@ RunDebugAutomapCaseTemp0_Entrance5::
     ret
 
 ; data read by RunDebugAutomapCaseTemp0 (10 bytes) (E-0347)
-RunDebugAutomapCaseTemp0_Data::
+RunDebugAutomapCaseTemp0_Entrance1_Data::
     db $00, $00, $03, $01, $00, $00, $04, $05, $02, $00
 
 RunDebugAutomapCaseTemp0_Entrance2_Data::
@@ -1050,10 +1050,10 @@ MapScreenFlagTiles::
 
 ; Whether the LogTwig can be used: not while hPlayerStateFlags bit 3 is set, not on maps below $20,
 ; not on a trigger cell, not on a spot listed in LogTwigSpotList (map, screen, two positions); key
-; worlds are checked by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80. Otherwise it
-; records the active key world's goal (wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell,
-; wLogTwigKeyWorldKey) for the map's region. (C1, E-0357)
-ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
+; worlds are checked by ItemUsable_LogTwig_KeyWorld. Otherwise it records the active key world's
+; goal (wLogTwigKeyWorldGoal, wLogTwigKeyWorldGoalCell, wLogTwigKeyWorldKey) for the map's region.
+; (C1, E-0357)
+ItemUsable_LogTwig_Check::
     xor a
     ldh [hTempA], a
     ldh a, [hPlayerStateFlags]
@@ -1061,12 +1061,12 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     ret nz
     ld a, [wMapType]
     bit 7, a
-    jp nz, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80
+    jp nz, ItemUsable_LogTwig_KeyWorld
     ldh a, [hMapId]
     cp $20
     ret c
     push af
-    call ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc
+    call IsPlayerOnTriggerCell_Bank84
     or a
     jr z, .restore
     pop af
@@ -1127,7 +1127,7 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     ldh a, [hMapId]
     ld d, a
     ld e, $00
-    ld hl, ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data
+    ld hl, ItemUsable_LogTwig_Check_Data
 
 .skip2:
     ld a, [hl]
@@ -1189,19 +1189,19 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc::
     ldh [hTempA], a
     ret
 
-; data read by ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc (34 bytes) (E-0347)
-ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data::
+; data read by ItemUsable_LogTwig_Check (34 bytes) (E-0347)
+ItemUsable_LogTwig_Check_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
 ; The LogTwig in a key world (map type $80): not on a trigger cell, nor at ($40, $40) on a key-world
 ; object's screen, nor on a floor entrance ($40 across, or $50 except kinds 4 and 5); otherwise
-; records the goal as ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc. (C1, E-0357)
-ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
+; records the goal as ItemUsable_LogTwig_Check. (C1, E-0357)
+ItemUsable_LogTwig_KeyWorld::
     cp $80
     ret nz
-    call ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc
+    call IsPlayerOnTriggerCell_Bank84
     or a
     ret nz
     ldh a, [hMapScreenX]
@@ -1360,11 +1360,10 @@ ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data_Cp80::
     pop hl
     ret
 
-; ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc, on maps from $20, walks 4-byte records from
-; $49A1 until $FF and returns at the first whose map id equals hMapId, whose screen byte equals
-; hMapScreenX/Y and whose third or fourth byte equals the player's tile position; on no match it
-; goes on to ItemUsable_LogTwig_WriteTempAAndSpriteSnapshotEtc_Data; 50 records then $FF (E-0193,
-; C1)
+; ItemUsable_LogTwig_Check, on maps from $20, walks 4-byte records from $49A1 until $FF and returns
+; at the first whose map id equals hMapId, whose screen byte equals hMapScreenX/Y and whose third or
+; fourth byte equals the player's tile position; on no match it goes on to
+; ItemUsable_LogTwig_Check_Data; 50 records then $FF (E-0193, C1)
 ; record: map id; screen XY; two tile positions ($FF = none)
 LogTwigSpotList::
     db $20, $21, $44, $54 ; id 0
@@ -1421,7 +1420,7 @@ LogTwigSpotList::
 
 ; A = 1 when the player stands on the trigger cell (wTriggerCell, with wTriggerKind not $FF),
 ; otherwise 0. (C1, E-0357)
-ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
+IsPlayerOnTriggerCell_Bank84::
     ld a, [wTriggerKind]
     cp $ff
     jr z, .return_0
@@ -1445,18 +1444,18 @@ ItemUsable_LogTwig_ReadTriggerKindAndPlayerXEtc::
 
 ; Back in the field after the LogTwig, on a region map: finds the map's region; with a recorded key
 ; world for this region whose goal cell is this screen, marks the goal there
-; (RunFieldReturnPhase_RunReturnAction_WriteSVBK), otherwise marks the table's spot when the screen
-; matches; then the key-world goal (RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal). (C1,
+; (RunFieldReturnPhase_AfterLogTwig_WriteSVBK), otherwise marks the table's spot when the screen
+; matches; then the key-world goal (RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal). (C1,
 ; E-0357)
-RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc::
+RunFieldReturnPhase_AfterLogTwig::
     xor a
     ldh [hSpriteWindowClipMode], a
     ld a, [wMapType]
     bit 7, a
-    jr nz, RunFieldReturnPhase_RunReturnAction_ReadMapScreenX
+    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX
     ldh a, [hMapId]
     ld c, a
-    ld hl, RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc_Data
+    ld hl, RunFieldReturnPhase_AfterLogTwig_Data
     ld b, $00
 
 .skip:
@@ -1487,33 +1486,33 @@ RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc::
     jr nz, .next
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jp nz, RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    jp nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_RunReturnAction_WriteSVBK
-    jr RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
+    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
 
 .next:
     inc hl
     inc hl
     ld a, [hl]
     cp c
-    jr nz, RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
     dec hl
     ld a, [hl]
     ld c, a
-    call RunFieldReturnPhase_RunReturnAction_WriteSVBK
-    jr RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
+    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
 
 ; data read by RunFieldReturnPhase (34 bytes) (E-0347)
-RunFieldReturnPhase_RunReturnAction_WriteSpriteWindowClipModeAndTemp0Etc_Data::
+RunFieldReturnPhase_AfterLogTwig_Data::
     db $20, $44, $00, $30, $44, $76, $48, $44, $b4, $70, $44, $b4, $a0, $44, $10, $a8
     db $44, $00, $b0, $44, $01, $b8, $44, $44, $c8, $44, $01, $d1, $44, $00, $da, $44
     db $00, $ff
 
 ; The same in a key world: the recorded goal when the key's slot matches and the screen is its cell,
 ; otherwise wKeyWorldGoalPos on wKeyWorldGoalScreen. (C1, E-0357)
-RunFieldReturnPhase_RunReturnAction_ReadMapScreenX::
+RunFieldReturnPhase_AfterLogTwig_Data_ReadMapScreenX::
     ldh a, [hMapScreenX]
     swap a
     ld c, a
@@ -1533,16 +1532,16 @@ RunFieldReturnPhase_RunReturnAction_ReadMapScreenX::
     jr nz, .check_key_world_goal_screen
     ld a, [wLogTwigKeyWorldGoalCell]
     cp c
-    jr nz, RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
     ld a, [wLogTwigKeyWorldGoal]
     ld c, a
-    call RunFieldReturnPhase_RunReturnAction_WriteSVBK
-    jr RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
+    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
 
 .check_key_world_goal_screen:
     ld a, [wKeyWorldGoalScreen]
     cp c
-    jr nz, RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    jr nz, RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
     ld a, [wKeyWorldGoalPos]
     and $f0
     ld c, a
@@ -1551,13 +1550,13 @@ RunFieldReturnPhase_RunReturnAction_ReadMapScreenX::
     swap a
     or c
     ld c, a
-    call RunFieldReturnPhase_RunReturnAction_WriteSVBK
-    jr RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal
+    call RunFieldReturnPhase_AfterLogTwig_WriteSVBK
+    jr RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal
 
 ; Draws the key-world goal tiles ($46/$47 over $56/$57) at wKeyWorldGoal in wScreenTileBuffer with
 ; the CGB palette (5 in key worlds, 3 for regions 4 and $0A, 5 for 5-7, otherwise 1), then copies
 ; them to the BG map at the scroll. (C1, E-0357)
-RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal::
+RunFieldReturnPhase_AfterLogTwig_Data_CheckKeyWorldGoal::
     ld a, [wKeyWorldGoal]
     and $0f
     ld l, a
@@ -1673,7 +1672,7 @@ RunFieldReturnPhase_RunReturnAction_CheckKeyWorldGoal::
 
 ; Draws the 2 x 2 marker ($40/$41 over $50/$51) at position C (x high nibble, y low) in
 ; wScreenTileBuffer, with the region's CGB palette from the table (1 in key worlds). (C1, E-0357)
-RunFieldReturnPhase_RunReturnAction_WriteSVBK::
+RunFieldReturnPhase_AfterLogTwig_WriteSVBK::
     ld a, c
     and $0f
     ld l, a
@@ -1720,7 +1719,7 @@ RunFieldReturnPhase_RunReturnAction_WriteSVBK::
     bit 7, a
     jr nz, .skip2
     ld a, b
-    ld de, RunFieldReturnPhase_RunReturnAction_WriteSVBK_Data
+    ld de, RunFieldReturnPhase_AfterLogTwig_WriteSVBK_Data
     add e
     ld e, a
     jr nc, .skip
@@ -1752,7 +1751,7 @@ RunFieldReturnPhase_RunReturnAction_WriteSVBK::
     ret
 
 ; data read by RunFieldReturnPhase (5 bytes) (E-0347)
-RunFieldReturnPhase_RunReturnAction_WriteSVBK_Data::
+RunFieldReturnPhase_AfterLogTwig_WriteSVBK_Data::
     db $01, $01, $03, $02, $02
 
 ; when wKeyWorldActive is set and key entry hTemp0 matches wKeyWorldKey, clears wKeyWorldActive
@@ -1808,10 +1807,9 @@ ClearKeyWorldActiveForMatchingKeyEntry::
     ld [wKeyWorldActive], a
     ret
 
-; DebugAutomap_Update_WriteKeyWorldGenRoomAndTemp8Etc reads the word at $4CCB + 2 *
-; wKeyWorldAreaCount, skips the layout's first byte, and passes one 16-byte block per
-; wKeyWorldFloorInfo entry (until $FF) to RunDebugAutomapCaseTemp0 with DE stepping through
-; wKeyWorldFloorState by 16 (E-0193, C1)
+; KeyWorldLayout_FillEntrances reads the word at $4CCB + 2 * wKeyWorldAreaCount, skips the layout's
+; first byte, and passes one 16-byte block per wKeyWorldFloorInfo entry (until $FF) to
+; RunDebugAutomapCaseTemp0 with DE stepping through wKeyWorldFloorState by 16 (E-0193, C1)
 ; record: area layout
 KeyWorldAreaLayoutTable::
     dw KeyWorldAreaLayout00 ; id 0

@@ -847,7 +847,7 @@ AnyFoeHasDEFAtLeast2::
     ret
 
 ; SquallHit AI condition: passes when some present foe has an AGL of 2 or more. (C1, E-0357)
-AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_SquallHit_Conditions_AnyFoeAGL2::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1167,7 +1167,7 @@ AnyFoeNotBlocked::
 
 ; LegSweep AI condition: passes when some present foe can be tripped: not marked in wSlotBodyFlags
 ; bit 4, no status 3 bits 6-7, and status 3 bits 2-3 clear. (C1, E-0357)
-AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_LegSweep_Conditions_AnyFoeTrippable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1383,7 +1383,7 @@ ActorLacksStatus1Bit3::
     ret
 
 ; TakeMagic AI condition: fails when the actor already has BSTAT2_TAKE_MAGIC. (C1, E-0357)
-AIScore_TakeMagic_Conditions_AddAx9ToHL::
+AIScore_TakeMagic_Conditions_NotYetSet::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -1397,7 +1397,7 @@ AIScore_TakeMagic_Conditions_AddAx9ToHL::
     ret
 
 ; TailWind AI condition: fails when the actor already has BSTAT2_WIND_GUARD. (C1, E-0357)
-AIScore_TailWind_Conditions_AddAx9ToHL::
+AIScore_TailWind_Conditions_NotYetSet::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -1611,7 +1611,7 @@ AIScore_AquaCut_Conditions_ToFoeOfFamilyEPresent::
 
 ; MetalCut AI condition: passes unless a present foe is marked metal (wSlotBodyFlags bit 0); fails
 ; when one is. (C1, E-0357)
-AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_MetalCut_Conditions_NoMetalFoe::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1643,7 +1643,7 @@ AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; UltraDown AI condition: passes when some present foe that is not fully resistant (resistance byte
 ; 2 & $30 not $30) still has DEF or AGL of 2 or more, or is not blinded. (C1, E-0357)
-AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_UltraDown_Conditions_AnyFoeLowerable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1737,7 +1737,7 @@ AnyFoeOpenToSlotResistances1Field0::
 
 ; StopSpell AI condition: passes when some present foe is not spell-sealed, knows a spell (skill
 ; flag $40) and is not fully resistant (resistance byte 2 & $03 not $03). (C1, E-0357)
-AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_StopSpell_Conditions_AnyFoeSealable::
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -1819,7 +1819,7 @@ AnyFoeWithMPOpenToSlotResistances2Field1::
 
 ; Sap AI condition: passes when some present foe with DEF of 2 or more is not fully resistant to it
 ; (resistance byte 3 & $30 not $30). (C1, E-0357)
-AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_Sap_Conditions_AnyFoeSappable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1859,7 +1859,7 @@ AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; Slow AI condition: passes when some present foe with AGL of 2 or more is not fully resistant to it
 ; (resistance byte 3 & $0C not $0C). (C1, E-0357)
-AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_Slow_Conditions_AnyFoeSlowable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -1975,7 +1975,7 @@ AnyFoeOpenToSlotResistances5Field3::
 
 ; Curse AI condition: passes when some present foe that is not cursed (status 0 bit 5) is not fully
 ; resistant (resistance byte 5 & $30 not $30). (C1, E-0357)
-AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_Curse_Conditions_AnyFoeCursable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2012,7 +2012,7 @@ AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; DanceShut AI condition: passes when some present foe that is not dance-sealed knows a dance (flag
 ; $20) and is not fully resistant (resistance byte 5 & $03 not $03). (C1, E-0357)
-AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_DanceShut_Conditions_AnyFoeSealable::
     ld a, [wRecordBuffer]
     push af
     ld a, [wBattleActor]
@@ -2331,8 +2331,8 @@ AnyAllyMPAtMostThreeQuarters::
     ret
 
 ; Upper AI condition: passes when some present ally's DEF can still be raised
-; (AIScore_Upper_Conditions_GetBattleDEF_Bank05). (C1, E-0357)
-AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+; (AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05). (C1, E-0357)
+AIScore_Upper_Conditions_AnyAllyRaisable::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2342,7 +2342,7 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    call AIScore_Upper_Conditions_GetBattleDEF_Bank05
+    call AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05
     jr c, .done
 
 .next:
@@ -2357,8 +2357,8 @@ AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ret
 
 ; Speed AI condition: passes when some present ally's AGL can still be raised
-; (AIScore_Speed_Conditions_GetBattleAGL_Bank05). (C1, E-0357)
-AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+; (AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05). (C1, E-0357)
+AIScore_Speed_Conditions_AnyAllyRaisable::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2368,7 +2368,7 @@ AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
-    call AIScore_Speed_Conditions_GetBattleAGL_Bank05
+    call AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05
     jr c, .done
 
 .next:
@@ -2567,7 +2567,7 @@ AIScore_MagicWall_Conditions_AnySlotLacksStatusMask::
     ret
 
 ; SideStep AI condition: fails when the actor already has status 5 bits 2-3 set. (C1, E-0357)
-AIScore_SideStep_Conditions_AddAx9ToHL::
+AIScore_SideStep_Conditions_NotYetSet::
     ld a, [wBattleActor]
     ld hl, wBattleStatus5
     call AddAx9ToHL
@@ -2583,7 +2583,7 @@ AIScore_SideStep_Conditions_AddAx9ToHL::
 
 ; Surge AI condition: passes when some present ally has a status to cure: any bit of status 0,
 ; status 1 & $C3, status 5 & $03, status 6 bit 7 or status 8 bit 7. (C1, E-0357)
-AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_Surge_Conditions_AnyAllyToCure::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -2630,7 +2630,7 @@ AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
 ; DeMagic AI condition: passes when some present foe carries an effect it removes (status 1 & $3C,
 ; status 2 & $6F, status 5 & $CC, status 6 bit 6 or status 8 bit 6), or when the foes' fourth slot
 ; is taken. (C1, E-0357)
-AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_DeMagic_Conditions_AnyFoeToClear::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -2746,9 +2746,8 @@ AIScore_SealPray_ReadQueuedActionId::
     ld c, $ff
     ret
 
-; C = $00 when an occupied foe's wAIDamageEstimates word is at least
-; FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc for it, else $FF
-; (E-0125)
+; C = $00 when an occupied foe's wAIDamageEstimates word is at least EstimateSkillDamage for it,
+; else $FF (E-0125)
 FailIfFoeAIDamageEstimatesAtLeastEstimate::
     ld a, [wBattleActor]
     and $04
@@ -2763,7 +2762,7 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
     jr c, .next
     push hl
     push bc
-    call FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc
+    call EstimateSkillDamage
     pop bc
     ld d, h
     ld e, l
@@ -2796,7 +2795,7 @@ FailIfFoeAIDamageEstimatesAtLeastEstimate::
 ; (bytes 9-10 and 11-12); skills $48-$4A, $4E and $4F compute it from the actor's level and stats
 ; (with link-battle differences), skills $50-$53 another way. Used by
 ; FailIfFoeAIDamageEstimatesAtLeastEstimate. (C1, E-0357)
-FailIfFoeAIDamageEstimatesAtLeastEstimate_ReadRecordBufferAndRecordBufferDataEtc::
+EstimateSkillDamage::
     ld a, [wRecordBuffer]
     cp $48
     jr z, .read_battle_actor
@@ -3372,14 +3371,13 @@ PassIfTwiceATKAboveLowestFoeDEF::
     ret
 
 ; TwinHits AI check: passes when the actor's ATK is more than twice, or less than half, the lowest
-; foe DEF found by AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty; fails when it lies between; C
-; = 1 below AI mode 2. (C1, E-0357)
+; foe DEF found by FindLowestFoeDEF; fails when it lies between; C = 1 below AI mode 2. (C1, E-0357)
 AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done3
-    call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
+    call FindLowestFoeDEF
     ld a, [wBattleActor]
     call GetBattleATK_Bank05
     ldh a, [hTemp0]
@@ -3416,12 +3414,12 @@ AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05::
 
 ; TwinHits AI check for the allies: passes unless some present ally's ATK lies between half and
 ; twice the lowest foe DEF; C = 1 below AI mode 2. (C1, E-0357)
-AIScore_TwinHits_ReadSlotAIModeIndexed_Bank05_AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_TwinHits_CheckAllyATK::
     ld a, [wBattleActor]
     call ReadSlotAIModeIndexed_Bank05
     cp $02
     jr c, .done3
-    call AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty
+    call FindLowestFoeDEF
     ld a, [wBattleActor]
     and $04
     ld e, a
@@ -4046,7 +4044,7 @@ ActorMPBelowThreeQuarters::
     ret
 
 ; MagicBack AI condition: fails when the actor already has status 2 bits 1 or 5. (C1, E-0357)
-AIScore_MagicBack_Conditions_AddAx9ToHL::
+AIScore_MagicBack_Conditions_NotYetSet::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -4272,7 +4270,7 @@ CheckLinkRules1RuleBit1::
 ; MegaMagic link rule: in a link battle whose rules (wLinkRules + 1 bit 7 and bit 0) restrict it,
 ; fails when the next rule byte forbids it outright or the side's rule flag (wLinkRuleFlags) is set;
 ; passes otherwise and in normal battles. (C1, E-0357)
-AIScore_MegaMagic_ReadLinkModeAndBattleActor::
+AIScore_MegaMagic_LinkRule::
     ld a, [wLinkMode]
     and a
     jr z, .done2
@@ -5610,7 +5608,7 @@ AnyFoeVulnerableBySlotResistances5Bits23::
 
 ; EerieLite AI condition: passes when some present foe is not under BSTAT8_EERIE_LITE and is not
 ; fully resistant (resistance byte 2 & $30 not $30). (C1, E-0357)
-AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_EerieLite_Conditions_AnyFoeAffectable::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -5730,7 +5728,7 @@ AnyFoeVulnerableBySlotResistances3Bits67::
 
 ; EvilSlash AI condition: fails when a present foe has status 0 bits 6-7 or status 2 & $3F set;
 ; passes otherwise. (C1, E-0357)
-AIScore_EvilSlash_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_EvilSlash_CheckFoes::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -6311,7 +6309,7 @@ CheckAIFlagSetModeGated::
     ret
 
 ; AquaWall AI condition: fails when the actor already has BSTAT2_AQUA_WALL. (C1, E-0357)
-AIScore_AquaWall_Conditions_AddAx9ToHL::
+AIScore_AquaWall_Conditions_NotYetSet::
     ld a, [wBattleActor]
     ld hl, wBattleStatus2
     call AddAx9ToHL
@@ -6541,7 +6539,7 @@ AnyAllyHPBelow_GetBattleMaxHP_Bank05::
 
 ; MPass AI condition: passes when some present ally other than the actor has MP below its max. (C1,
 ; E-0357)
-AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_MPass_AnyAllyLowMP::
     ld a, [wBattleActor]
     ld e, a
     and $04
@@ -7083,7 +7081,7 @@ SkillListHas19Or1AOr7COrA1::
 ; Sap AI check: compares the allies' average ATK with twice the foes' average DEF, and the excess
 ; with half the foes' average HP; passes when the attack would not already be enough, fails
 ; otherwise. (C1, E-0357)
-AIScore_Sap_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_Sap_CompareATKWithDEF::
     ld a, [wBattleActor]
     and $04
     ld c, a
@@ -7380,7 +7378,7 @@ AddSlotStatSumToTemp0::
 
 ; BiAttack AI check: fails when a present foe's HP is below 120% of its damage estimate
 ; (wAIDamageEstimates), i.e. a normal attack would already finish it. (C1, E-0357)
-AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty::
+AIScore_BiAttack_FoeHPCheck::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -7738,7 +7736,7 @@ ActorStatus4CheckReadsAddress::
 
 ; BiAttack AI check: passes when 5/4 of the actor's ATK is at least the foes' average DEF, fails
 ; otherwise. (C1, E-0357)
-AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2::
+AIScore_BiAttack_ATKCheck::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -8021,7 +8019,7 @@ ReadSlotAIModeIndexed_Bank05::
 ; Whether slot C's DEF can still be raised: no when it is 999 or more; otherwise yes (carry) while
 ; it is below its base DEF (GetBaseDEF) times 2, or times 4 for an AI slot in a normal battle. (C1,
 ; E-0357)
-AIScore_Upper_Conditions_GetBattleDEF_Bank05::
+AIScore_Upper_Conditions_AnyAllyRaisable_GetBattleDEF_Bank05::
     call GetBattleDEF_Bank05
     ld a, l
     sub $e7
@@ -8072,7 +8070,7 @@ AIScore_Upper_Conditions_GetBattleDEF_Bank05::
 
 ; Whether slot C's AGL can still be raised: no when it is 999 or more; otherwise yes (carry) while
 ; it is below its base AGL times 2, or times 4 for an AI slot in a normal battle. (C1, E-0357)
-AIScore_Speed_Conditions_GetBattleAGL_Bank05::
+AIScore_Speed_Conditions_AnyAllyRaisable_GetBattleAGL_Bank05::
     call GetBattleAGL_Bank05
     ld a, l
     sub $e7
@@ -8349,7 +8347,7 @@ GetSlotSpeciesFamily::
     ret
 
 ; Finds the lowest DEF among the present foes, in hTemp0/hTemp1. (C1, E-0357)
-AIScore_TwinHits_CarryUnlessBattleSlotOutSlotEmpty::
+FindLowestFoeDEF::
     ld a, [wBattleActor]
     and $04
     xor $04
@@ -9234,7 +9232,7 @@ AIScore_MPass_ActorLacksStatus4Bits67::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_MPass_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_MPass_AnyAllyLowMP
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9380,7 +9378,7 @@ AIScore_Upper_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Upper_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Upper_Conditions_AnyAllyRaisable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9398,7 +9396,7 @@ AIScore_Sap_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_Sap_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Sap_Conditions_AnyFoeSappable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9441,7 +9439,7 @@ AIScore_Speed_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Speed_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Speed_Conditions_AnyAllyRaisable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9463,7 +9461,7 @@ AIScore_Slow_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Slow_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Slow_Conditions_AnyFoeSlowable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9562,7 +9560,7 @@ AIScore_TakeMagic_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_TakeMagic_Conditions_AddAx9ToHL
+    call AIScore_TakeMagic_Conditions_NotYetSet
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9622,7 +9620,7 @@ AIScore_StopSpell_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_StopSpell_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_StopSpell_Conditions_AnyFoeSealable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -9735,7 +9733,7 @@ AIScore_MagicBack_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_MagicBack_Conditions_AddAx9ToHL
+    call AIScore_MagicBack_Conditions_NotYetSet
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10174,7 +10172,7 @@ AIScore_MetalCut_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_MetalCut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_MetalCut_Conditions_NoMetalFoe
     ld a, c
     and a
     jr nz, .call_reset_ai_skill_score
@@ -10310,7 +10308,7 @@ AIScore_SquallHit_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_SquallHit_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_SquallHit_Conditions_AnyFoeAGL2
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10336,15 +10334,14 @@ AIScore_SquallHit_Conditions::
     call ResetAISkillScore
     ret
 
-; BiAttack AI conditions: usable, and the DEF check
-; (AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2); otherwise the score is reset and C = 0.
-; (C1, E-0357)
+; BiAttack AI conditions: usable, and the DEF check (AIScore_BiAttack_ATKCheck); otherwise the score
+; is reset and C = 0. (C1, E-0357)
 AIScore_BiAttack_CheckSkillUsableElseResetAISkillScore::
     call CheckSkillUsableElseResetAISkillScore
     ld a, c
     and a
     ret z
-    call AIScore_BiAttack_CarryUnlessBattleSlotOutSlotEmpty_2
+    call AIScore_BiAttack_ATKCheck
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10718,7 +10715,7 @@ AIScore_Curse_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Curse_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Curse_Conditions_AnyFoeCursable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -10942,7 +10939,7 @@ AIScore_SideStep_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_SideStep_Conditions_AddAx9ToHL
+    call AIScore_SideStep_Conditions_NotYetSet
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11020,7 +11017,7 @@ AIScore_EerieLite_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_EerieLite_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_EerieLite_Conditions_AnyFoeAffectable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11038,7 +11035,7 @@ AIScore_Surge_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_Surge_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_Surge_Conditions_AnyAllyToCure
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11058,7 +11055,7 @@ AIScore_UltraDown_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_UltraDown_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_UltraDown_Conditions_AnyFoeLowerable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11078,7 +11075,7 @@ AIScore_DeMagic_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_DeMagic_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_DeMagic_Conditions_AnyFoeToClear
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11263,7 +11260,7 @@ AIScore_LegSweep_Conditions::
     ld a, c
     and a
     ret z
-    call AIScore_LegSweep_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_LegSweep_Conditions_AnyFoeTrippable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11339,7 +11336,7 @@ AIScore_DanceShut_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_DanceShut_Conditions_CarryUnlessBattleSlotOutSlotEmpty
+    call AIScore_DanceShut_Conditions_AnyFoeSealable
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11527,7 +11524,7 @@ AIScore_TailWind_Conditions::
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
-    call AIScore_TailWind_Conditions_AddAx9ToHL
+    call AIScore_TailWind_Conditions_NotYetSet
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score
@@ -11582,12 +11579,12 @@ AIScore_AquaWall_Conditions::
     call AIScore_AquaWall_Conditions_ReadSlotAIModeIndexed_Bank05
     ld a, c
     cp $01
-    jr z, .call_ai_score_aqua_wall_conditions_add_ax9_to
+    jr z, .call_ai_score_aqua_wall_conditions_not_yet
     and a
     jr z, .call_reset_ai_skill_score
 
-.call_ai_score_aqua_wall_conditions_add_ax9_to:
-    call AIScore_AquaWall_Conditions_AddAx9ToHL
+.call_ai_score_aqua_wall_conditions_not_yet:
+    call AIScore_AquaWall_Conditions_NotYetSet
     ld a, c
     and a
     jr z, .call_reset_ai_skill_score

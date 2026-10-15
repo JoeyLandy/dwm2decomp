@@ -140,9 +140,8 @@ SelectEffectByEffectFlags::
 ; SelectEffectByEffectFlags uses this table for wEffectFlags bit 7, indexed by wBattleActionId: byte
 ; 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags, TargetOnLocalSide_Bank3A) says
 ; near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values
-; go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug viewer
-; DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 228
-; entries (E-0209, C1)
+; go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug viewer DrawSkillDebugPage shows the
+; first three tables; 228 entries (E-0209, C1)
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag7::
     db $ff, $ff ; id 0
@@ -378,8 +377,7 @@ ActionEffectTable_Flag7::
 ; wBattleActionId: byte 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags,
 ; TargetOnLocalSide_Bank3A) says near side, else byte 0; $FF returns, bit 7 set starts effect
 ; routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug
-; viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables;
-; 228 entries (E-0209, C1)
+; viewer DrawSkillDebugPage shows the first three tables; 228 entries (E-0209, C1)
 ActionEffectTable_Flag6::
     db $83, $82 ; id 0
     db $83, $82 ; id 1
@@ -613,9 +611,8 @@ ActionEffectTable_Flag6::
 ; SelectEffectByEffectFlags uses this table for wEffectFlags bit 5, indexed by wBattleActionId: byte
 ; 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags, TargetOnLocalSide_Bank3A) says
 ; near side, else byte 0; $FF returns, bit 7 set starts effect routine (value & $7F), other values
-; go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug viewer
-; DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables; 228
-; entries (E-0209, C1)
+; go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug viewer DrawSkillDebugPage shows the
+; first three tables; 228 entries (E-0209, C1)
 ActionEffectTable_Flag5::
     db $ff, $ff ; id 0
     db $ff, $ff ; id 1
@@ -1082,8 +1079,7 @@ ActionEffectTable_Unused::
 ; wBattleActionId: byte 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags,
 ; TargetOnLocalSide_Bank3A) says near side, else byte 0; $FF returns, bit 7 set starts effect
 ; routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug
-; viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables;
-; 64 entries (E-0209, C1)
+; viewer DrawSkillDebugPage shows the first three tables; 64 entries (E-0209, C1)
 ; record: effect byte for a far-side actor, for a near-side actor ($FF = none)
 ActionEffectTable_Flag2::
     db $ff, $ff ; id 0
@@ -1155,8 +1151,7 @@ ActionEffectTable_Flag2::
 ; wBattleActionId: byte 1 when ActorOnLocalSide_Bank3A (or, for action $6C and some flags,
 ; TargetOnLocalSide_Bank3A) says near side, else byte 0; $FF returns, bit 7 set starts effect
 ; routine (value & $7F), other values go to ActionEffectTable_Flag3_ClearEffectAnimFlags; the debug
-; viewer DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc shows the first three tables;
-; 64 entries (E-0209, C1)
+; viewer DrawSkillDebugPage shows the first three tables; 64 entries (E-0209, C1)
 ActionEffectTable_Flag3::
     db $ff, $ff ; id 0
     db $ff, $ff ; id 1
@@ -1247,7 +1242,7 @@ ActionEffectTable_Flag3_ClearEffectAnimFlags::
     pop af
     ld b, a
     call SelectEffectByEffectFlags_WriteBattleArg0
-    call SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc
+    call IsEffectSlotNearSide
     ld a, b
     jr nc, .set_effect_tile_offset
     cp $2b
@@ -1347,7 +1342,7 @@ SelectEffectByEffectFlags_Data::
 
 ; Carry when the effect's slot (wBattleArg0) is below 4; for the link follower (link mode 1, role
 ; bit 1) the carry is inverted. (C1, E-0357)
-SelectEffectByEffectFlags_ReadLinkModeAndLinkRoleEtc::
+IsEffectSlotNearSide::
     ld a, [wLinkMode]
     cp $01
     jr nz, .check_battle_arg0
@@ -1928,13 +1923,13 @@ EffectTileBlock3::
 RunEffectRoutineEffectEvery5Frames_ScrollShake::
     ld a, [wEffectSpriteX]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc
+    dw ScrollShake_Start
+    dw ScrollShake_Back
+    dw ScrollShake_Start
+    dw ScrollShake_End
 
 ; The scroll shake, step 0: moves the screen 2 pixels (hScrollY 2). (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ScrollShake_WriteScrollYAndScrollX::
+ScrollShake_Start::
     ld a, $02
     ldh [hScrollY], a
     ld a, $00
@@ -1954,7 +1949,7 @@ SetScroll0_1AndIncEffectSpriteX::
     ret
 
 ; The scroll shake, step 1: back to 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY::
+ScrollShake_Back::
     xor a
     ldh [hScrollY], a
     xor a
@@ -1964,7 +1959,7 @@ RunEffectRoutineEffectEvery5Frames_ScrollShake_SetScrollY::
     ret
 
 ; The scroll shake, step 3: resets the scroll and ends the effect. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_WriteEffectIdAndScrollYEtc::
+ScrollShake_End::
     ld a, $ff
     ld [wEffectId], a
     xor a
@@ -2259,36 +2254,36 @@ RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WaitEffectSpriteX::
     ret nz
     ld a, [wEffectStep]
     jumptable
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Down
+    dw ShakeAndFlash_Reset
+    dw ShakeAndFlash_Right
     dw RunEffectRoutineEffectEvery5Frames_SetEffectSpriteXTo01
 
 ; Routine 8's shake: hScrollY 4, hScrollX 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX::
+ShakeAndFlash_Down::
     ld a, $04
     ldh [hScrollY], a
     ld a, $00
@@ -2298,7 +2293,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX::
     ret
 
 ; Routine 8's shake: hScrollY 0, hScrollX 3. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY::
+ShakeAndFlash_Right::
     ld a, $00
     ldh [hScrollY], a
     ld a, $03
@@ -2308,7 +2303,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_SetScrollY::
     ret
 
 ; Routine 8's shake: hScrollY and hScrollX 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeAndFlash_WriteScrollYAndScrollX_SetScrollY::
+ShakeAndFlash_Reset::
     xor a
     ldh [hScrollY], a
     xor a
@@ -2534,36 +2529,36 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen::
     ld a, [wEffectSpriteX]
     jumptable
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left4
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right4
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Left8
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
+    dw ScreenShake_LeftDown
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
+    dw ScreenShake_LeftDown
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
+    dw ScreenShake_LeftDown
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX
-    dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY
+    dw ScreenShake_Reset
+    dw ScreenShake_LeftDown
+    dw ScreenShake_Reset
     dw RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown
-    dw RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc
+    dw ScreenShake_End
 
 ; The screen shake, step 1: scroll back to 0. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY::
+ScreenShake_Reset::
     xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -2620,7 +2615,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_Right8::
     ret
 
 ; The screen shake, step 12: hScrollX -8 and hScrollY 2. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_ShakeScreen_WriteScrollXAndScrollY_SetScrollX::
+ScreenShake_LeftDown::
     ld a, $f8
     ldh [hScrollX], a
     ld a, $02
@@ -2640,7 +2635,7 @@ RunEffectRoutineEffectEvery5Frames_ShakeScreen_RightDown::
     ret
 
 ; The screen shake, step 27: resets the scroll and ends the effect. (C1, E-0357)
-RunEffectRoutineEffectEvery5Frames_WriteScrollXAndScrollYEtc::
+ScreenShake_End::
     xor a
     ldh [hScrollX], a
     ldh [hScrollY], a
@@ -2879,9 +2874,9 @@ DrawEffectSpriteForEffectTileOffsetRange::
     cp $0e
     jr c, .call_draw_effect_sprite_at_effect_sprite_x
     cp $20
-    jr c, .call_draw_effect_sprite_for_effect_tile
+    jr c, .call_draw_effect_sprite_over_targets_bank3_f
     cp $2d
-    jr c, .call_draw_effect_sprite_for_effect_tile2
+    jr c, .call_draw_effect_sprite_over_targets
     cp $33
     jr c, .call_draw_effect_sprite_at_effect_sprite_x2
     farcall DrawEffectSpriteAtEffectSpriteX_Bank92
@@ -2891,12 +2886,12 @@ DrawEffectSpriteForEffectTileOffsetRange::
     farcall DrawEffectSpriteAtEffectSpriteX_Bank3E
     ret
 
-.call_draw_effect_sprite_for_effect_tile:
-    farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty_SetLoadSlot
+.call_draw_effect_sprite_over_targets_bank3_f:
+    farcall DrawEffectSpriteOverTargets_Bank3F
     ret
 
-.call_draw_effect_sprite_for_effect_tile2:
-    farcall DrawEffectSpriteForEffectTileOffsetRange_CarryUnlessBattleSlotOutSlotEmpty
+.call_draw_effect_sprite_over_targets:
+    farcall DrawEffectSpriteOverTargets
     ret
 
 .call_draw_effect_sprite_at_effect_sprite_x2:
@@ -2905,7 +2900,7 @@ DrawEffectSpriteForEffectTileOffsetRange::
 
 ; The debug skill page: draws the entries of the skill wDebugValue0 in ActionEffectTable_Flag7,
 ; Flag6, Flag5 and the rest as hex digits, each at two BG map places a row apart. (C1, E-0357)
-DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
+DrawSkillDebugPage::
     ld hl, vBGMap0 + $1ce
     ld a, l
     ld [wBattleArg0], a
@@ -2917,7 +2912,7 @@ DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
     ld a, h
     ld [wBattleArg3], a
     ld hl, ActionEffectTable_Flag7
-    call DrawSkillDebugDigitsAndRecord_WriteVRAMByte
+    call DrawSkillDebugPage_WriteVRAMByte
     ld hl, vBGMap0 + $1ee
     ld a, l
     ld [wBattleArg0], a
@@ -2929,7 +2924,7 @@ DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
     ld a, h
     ld [wBattleArg3], a
     ld hl, ActionEffectTable_Flag6
-    call DrawSkillDebugDigitsAndRecord_WriteVRAMByte
+    call DrawSkillDebugPage_WriteVRAMByte
     ld hl, vBGMap0 + $20e
     ld a, l
     ld [wBattleArg0], a
@@ -2944,7 +2939,7 @@ DrawSkillDebugDigitsAndRecord_WriteBattleArg0AndBattleArg1Etc::
 
 ; Draws the two bytes of entry wDebugValue0 of table HL as hex digits ($E0 + 0-9, n - 2 for A-F):
 ; the second at wBattleArg0/1, the first at wBattleArg2/3; a byte $FF is left out. (C1, E-0357)
-DrawSkillDebugDigitsAndRecord_WriteVRAMByte::
+DrawSkillDebugPage_WriteVRAMByte::
     ld a, [wDebugValue0]
     ld c, a
     ld b, $00
@@ -3136,7 +3131,7 @@ LoadEffectOBJPaletteC::
     ret
 
 ; on CGB, when wDMGPaletteBGP changed, writes the eight background palettes through
-; UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT (rBGPI $80-$B8) (E-0128)
+; UploadBGPaletteByDMGShades (rBGPI $80-$B8) (E-0128)
 UploadBGPalettesWithFade::
     ld a, [wIsCGB]
     or a
@@ -3144,7 +3139,7 @@ UploadBGPalettesWithFade::
     ld hl, wDMGPaletteBytes
     ld a, [wDMGPaletteBGP]
     cp [hl]
-    jp z, UploadBGPalettesWithFade_CheckDMGPaletteOBP0
+    jp z, UploadBGPaletteByDMGShades_CheckDMGPaletteOBP0
     ld c, $69
 
 .loop:
@@ -3154,7 +3149,7 @@ UploadBGPalettesWithFade::
     ld a, $80
     ldh [rBGPI], a
     ld hl, wBGPaletteBuffer
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop2:
     ldh a, [rSTAT]
@@ -3162,7 +3157,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop2
     ld a, $88
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop3:
     ldh a, [rSTAT]
@@ -3170,7 +3165,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop3
     ld a, $90
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop4:
     ldh a, [rSTAT]
@@ -3178,7 +3173,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop4
     ld a, $98
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop5:
     ldh a, [rSTAT]
@@ -3186,7 +3181,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop5
     ld a, $a0
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop6:
     ldh a, [rSTAT]
@@ -3194,7 +3189,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop6
     ld a, $a8
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop7:
     ldh a, [rSTAT]
@@ -3202,7 +3197,7 @@ UploadBGPalettesWithFade::
     jr nz, .loop7
     ld a, $b0
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
 
 .loop8:
     ldh a, [rSTAT]
@@ -3210,19 +3205,18 @@ UploadBGPalettesWithFade::
     jr nz, .loop8
     ld a, $b8
     ldh [rBGPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT
+    call UploadBGPaletteByDMGShades
     ld a, [wDMGPaletteBGP]
     ld [wDMGPaletteBytes], a
-    jp UploadBGPalettesWithFade_CheckDMGPaletteOBP0
+    jp UploadBGPaletteByDMGShades_CheckDMGPaletteOBP0
 
 ; Writes one background palette to port C with its four colours picked by the DMG BGP shades
-; (UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data), waiting for VRAM access before each
-; colour. (C1, E-0357)
-UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
+; (UploadBGPaletteByDMGShades_Data), waiting for VRAM access before each colour. (C1, E-0357)
+UploadBGPaletteByDMGShades::
     push hl
     ld a, [wDMGPaletteBGP]
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip
@@ -3249,7 +3243,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
     srl a
     srl a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip2
@@ -3275,7 +3269,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
     ld a, [wDMGPaletteBGP]
     swap a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip3
@@ -3303,7 +3297,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
     srl a
     srl a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip4
@@ -3335,11 +3329,11 @@ UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT::
 
 ; When wDMGPaletteOBP0 has changed, writes the eight object palettes the same way by its shades and
 ; remembers it. (C1, E-0357)
-UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
+UploadBGPaletteByDMGShades_CheckDMGPaletteOBP0::
     ld hl, wDMGPaletteBytes + $1
     ld a, [wDMGPaletteOBP0]
     cp [hl]
-    jp z, UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return
+    jp z, UploadPalettes_Return
     ld c, $6b
 
 .loop:
@@ -3349,7 +3343,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     ld a, $80
     ldh [rOBPI], a
     ld hl, wOBJPaletteBuffer
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop2:
     ldh a, [rSTAT]
@@ -3357,7 +3351,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop2
     ld a, $88
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop3:
     ldh a, [rSTAT]
@@ -3365,7 +3359,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop3
     ld a, $90
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop4:
     ldh a, [rSTAT]
@@ -3373,7 +3367,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop4
     ld a, $98
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop5:
     ldh a, [rSTAT]
@@ -3381,7 +3375,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop5
     ld a, $a0
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop6:
     ldh a, [rSTAT]
@@ -3389,7 +3383,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop6
     ld a, $a8
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop7:
     ldh a, [rSTAT]
@@ -3397,7 +3391,7 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop7
     ld a, $b0
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
 
 .loop8:
     ldh a, [rSTAT]
@@ -3405,17 +3399,17 @@ UploadBGPalettesWithFade_CheckDMGPaletteOBP0::
     jr nz, .loop8
     ld a, $b8
     ldh [rOBPI], a
-    call UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT
+    call UploadOBJPaletteByDMGShades
     ld a, [wDMGPaletteOBP0]
     ld [wDMGPaletteBytes + $1], a
-    jp UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return
+    jp UploadPalettes_Return
 
 ; Writes one object palette to port C with its four colours picked by the OBP0 shades. (C1, E-0357)
-UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
+UploadOBJPaletteByDMGShades::
     push hl
     ld a, [wDMGPaletteOBP0]
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip
@@ -3442,7 +3436,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     srl a
     srl a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip2
@@ -3468,7 +3462,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     ld a, [wDMGPaletteOBP0]
     swap a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip3
@@ -3496,7 +3490,7 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     srl a
     srl a
     and $03
-    ld de, UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data
+    ld de, UploadBGPaletteByDMGShades_Data
     add e
     ld e, a
     jr nc, .skip4
@@ -3527,18 +3521,17 @@ UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT::
     ret
 
 ; A bare ret, the shared exit. (C1, E-0357)
-UploadBGPalettesWithFade_ReadDMGPaletteOBP0AndSTAT_Return::
+UploadPalettes_Return::
     ret
 
-; data read by UploadBGPalettesWithFade (4 bytes) (E-0347)
-UploadBGPalettesWithFade_ReadDMGPaletteBGPAndSTAT_Data::
+; data read by UploadBGPaletteByDMGShades (4 bytes) (E-0347)
+UploadBGPaletteByDMGShades_Data::
     db $02, $04, $00, $06
 
 ; Plays the action's sound from wEffectFlags2: the first set bit of 7, 6, 5, 3, 2 or 0 picks
 ; ActionSoundTable_Flag7/6/5A-5B/3/2/0 (bits 2 and 0 make the target the actor; bit 5 only when
-; SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags gives Z, 5A with bit 4); the
-; entry for wBattleActionId by the actor's side; $FF plays nothing, otherwise QueueSoundEffect. (C1,
-; E-0357)
+; SelectEffectByEffectFlags2Flags_SacrificeSound gives Z, 5A with bit 4); the entry for
+; wBattleActionId by the actor's side; $FF plays nothing, otherwise QueueSoundEffect. (C1, E-0357)
 SelectEffectByEffectFlags2Flags::
     ld a, [wEffectFlags2]
     or a
@@ -3579,7 +3572,7 @@ SelectEffectByEffectFlags2Flags::
 
 .call_select_effect_by_effect_flags2_flags:
     ld b, a
-    call SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags
+    call SelectEffectByEffectFlags2Flags_SacrificeSound
     ret nz
     ld hl, ActionSoundTable_Flag5A
     bit 4, b
@@ -3610,7 +3603,7 @@ SelectEffectByEffectFlags2Flags::
 ; With wEffectFlags2 bit 4: for Sacrifice or ACTION_D6 plays sound $81 and returns the carry of
 ; wBattleDamage minus 1000; for Farewell or LifeDance returns wResolveMsgFlags bit 6 (in Z);
 ; otherwise A = 0. (C1, E-0357)
-SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags::
+SelectEffectByEffectFlags2Flags_SacrificeSound::
     bit 4, a
     ret z
     ld a, [wBattleActionId]
@@ -4108,9 +4101,9 @@ ActionSoundTable_Flag6::
     db $cb, $ff ; id 227
 
 ; SelectEffectByEffectFlags2Flags uses this table for wEffectFlags2 bit 5 with bit 4 (after
-; SelectEffectByEffectFlags2Flags_ReadBattleActionIdAndResolveMsgFlags), indexed by wBattleActionId:
-; byte 1 for a near-side actor (ActorOnLocalSide_Bank3A), else byte 0; a value other than $FF goes
-; to QueueSoundEffect; 228 entries, up to the next table (E-0210, C1)
+; SelectEffectByEffectFlags2Flags_SacrificeSound), indexed by wBattleActionId: byte 1 for a
+; near-side actor (ActorOnLocalSide_Bank3A), else byte 0; a value other than $FF goes to
+; QueueSoundEffect; 228 entries, up to the next table (E-0210, C1)
 ActionSoundTable_Flag5A::
     db $81, $81 ; id 0
     db $81, $81 ; id 1
@@ -4901,7 +4894,7 @@ RunBattleActions::
     dw RunBattleActions_ToRunBattleActions_StatusChecks
     dw RunBattleActions_ToRunBattleResolveStep
     dw RunBattleActions_ResolveAction
-    dw RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc
+    dw RunBattleActions_AfterAction
     dw RunActionSpecificPostStep
     dw RunBattleActions_ShowHeroBlewBackG
     dw RunBattleActions_FocusFollowUp
@@ -4936,7 +4929,7 @@ RunBattleActions_ResolveAction::
 ; ($80 or kind 2) moves to the next target unless an attack was inhaled; kind 4 runs QuadHits' hits
 ; or, when the actor called help, rolls the repeat count; BiAttack runs its hits; otherwise goes on.
 ; (C1, E-0357)
-RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
+RunBattleActions_AfterAction::
     ld a, [wRecordBufferData + $4]
     cp $80
     jr z, .check_attack_inhaled
@@ -4955,7 +4948,7 @@ RunBattleActions_WriteBattleTargetAndBattleSubPhaseEtc::
 .check_attack_inhaled:
     ld a, [wAttackInhaled]
     or a
-    jp z, RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc
+    jp z, RunBattleStep4_NextTarget
     ld hl, wBattleSubPhase
     inc [hl]
     ret
@@ -5209,9 +5202,8 @@ RunBattleActions_MarkActorDone::
     ret
 
 ; returns A = 0 for action $BD while wMultiHitCount & $7F is non-zero; otherwise runs
-; CheckActionBDOrRun_SlotPresentWithStatus0Bit6 and, without carry,
-; CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty (E-0122) (E-0344: the address in its name
-; dropped or read as the label there; was CheckActionBDOrRun)
+; CheckActionBDOrRun_SlotPresentWithStatus0Bit6 and, without carry, CheckOtherSideOut (E-0122)
+; (E-0344: the address in its name dropped or read as the label there; was CheckActionBDOrRun)
 CheckActionBDOrRun::
     ld a, [wBattleActionId]
     cp ACTION_BD
@@ -5225,7 +5217,7 @@ CheckActionBDOrRun::
 .call_check_action_bd_or_run_slot_present_with:
     call CheckActionBDOrRun_SlotPresentWithStatus0Bit6
     ret c
-    call CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty
+    call CheckOtherSideOut
     ret
 
 ; Carry only when slots 0-2 (4-6 for the link follower) all pass SlotPresentWithStatus0Bit6. (C1,
@@ -5253,7 +5245,7 @@ CheckActionBDOrRun_CallSlotPresentWithStatus0Bit6::
 
 ; The other side's check: outside a link carry only when slots 4-6 are all out or empty; in a link
 ; the status test on slots 4-6 (0-2 for the follower). (C1, E-0357)
-CheckActionBDOrRun_CarryUnlessBattleSlotOutSlotEmpty::
+CheckOtherSideOut::
     ld c, $04
     ld a, [wLinkMode]
     cp $01
@@ -5300,7 +5292,7 @@ RunBattleActions_ToRunBattleActions_UseItem::
 RunBattleActions_WearOffAndDefeat::
     ld a, [wBattleResolveStep]
     jumptable
-    dw RunBattleActions_WriteBattleActorAndBattleResolveStep
+    dw RunBattleActions_EndOfTurn
     dw RunBattleActions_WearOffAndDefeat_ShowHeroSIronizeWore
     dw RunBattleActions_WearOffAndDefeat_Poison
     dw RunBattleActions_WearOffAndDefeat_ShowHeroDroppedDead
@@ -5312,7 +5304,7 @@ RunBattleActions_WearOffAndDefeat::
 ; 9-byte status rows counts down the two-bit timers (byte 4 all four, byte 5 bits 4-5, byte 8 bits
 ; 0-1: the high bit moves down, the low one drops), keeps byte 6 bits 6-7 and clears byte 7; then
 ; starts with slot 0 (step 4 when it is absent). (C1, E-0357)
-RunBattleActions_WriteBattleActorAndBattleResolveStep::
+RunBattleActions_EndOfTurn::
     ld hl, wBattleResolveStep
     inc [hl]
     ld hl, wSideFlags0
@@ -5447,7 +5439,7 @@ RunBattleActions_WearOffAndDefeat_Poison::
     ld a, [wBattleActor]
     ld [wBattleTarget], a
     call RunBattleActions_WearOffAndDefeat_Poison_GetBattleMaxHP_Bank3A
-    call RunBattleActions_WearOffAndDefeat_Poison_AddDoubleAToHL_Bank3A
+    call ApplyPoisonDamage
     ld a, [wBattleArg0]
     ld d, a
     farcall ShowBattleText
@@ -5507,7 +5499,7 @@ RunBattleActions_WearOffAndDefeat_Poison_GetBattleMaxHP_Bank3A::
 
 ; Takes the poison damage from the slot's HP; at zero clears it, marks the slot's level-up gains
 ; (bit 2) and defeats it (DefeatTarget, wLoadSlot 1); marks bit 0 either way. (C1, E-0357)
-RunBattleActions_WearOffAndDefeat_Poison_AddDoubleAToHL_Bank3A::
+ApplyPoisonDamage::
     xor a
     ld [wLoadSlot], a
     ld a, [wBattleActor]
@@ -5797,8 +5789,8 @@ RedrawChangedSlotPanels::
 
 ; When the group action has another target, makes it the target (and the actor's target choice) and
 ; resolves again (sub-phase 1). (C1, E-0357)
-RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc::
-    call RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc
+RunBattleStep4_NextTarget::
+    call RunBattleStep4_NextGroupTarget
     ret z
     ld a, c
     ld [wBattleTarget], a
@@ -5817,17 +5809,17 @@ RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc::
 ; it), then steps on; with none left, Sacrifice, Farewell and LifeDance (and ACTION_D6, saving the
 ; actor) go to resolve step $0E with screen flag bit 0, other actions to the next sub-phase; returns
 ; Z then. (C1, E-0357)
-RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc::
+RunBattleStep4_NextGroupTarget::
     ld a, [wMultiHitCount]
     bit 7, a
-    jr nz, .call_run_battle_step4_back_multi_hit_count
-    call RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty
+    jr nz, .call_next_group_target
+    call RunBattleStep4_CountTargets
     ld a, [wMultiHitCount]
     or $80
     ld [wMultiHitCount], a
 
-.call_run_battle_step4_back_multi_hit_count:
-    call RunBattleStep4_BackMultiHitCount
+.call_next_group_target:
+    call NextGroupTarget
     ld a, [wMultiHitCount]
     and $7f
     ret nz
@@ -5867,7 +5859,7 @@ RunBattleStep4_WriteMultiHitCountAndSavedActorSlotEtc::
 ; Counts a group action's targets into wMultiHitCount: the target and the present slots of its side
 ; (both sides when record byte 4 is $80); Farewell, LifeDance, LoveRain and HighJump also count
 ; fallen slots. (C1, E-0357)
-RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty::
+RunBattleStep4_CountTargets::
     ld b, $04
     ld a, [wRecordBufferData + $4]
     cp $80
@@ -5924,7 +5916,7 @@ RunBattleStep4_CarryUnlessBattleSlotOutSlotEmpty::
 
 ; Moves C to the group action's next target after the current one (present, or fallen for those four
 ; skills), crossing to the other side for record byte 4 $80; counts one down. (C1, E-0357)
-RunBattleStep4_BackMultiHitCount::
+NextGroupTarget::
     ld a, [wBattleTarget]
     inc a
     ld c, a
@@ -6099,9 +6091,9 @@ RunBattleStep4::
     dw RunBattleStep4_ToRunBattleStep4_ResolveSkill
     dw RunBattleStep4_ToRunBattleResolveStep
     dw RunBattleStep4_ToRunActionResolveStep
-    dw RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc
+    dw RunBattleStep4_AfterAction
     dw RunBattleStep4_ToRunActionSpecificPostStep
-    dw RunBattleStep4_WriteBattleActorAndBattleTargetEtc
+    dw RunBattleStep4_RestoreSaved
 
 ; Battle fight step 4, sub-phase 0: resolves the skill (RunBattleStep4_ResolveSkill). (C1, E-0357)
 RunBattleStep4_ToRunBattleStep4_ResolveSkill::
@@ -6121,11 +6113,11 @@ RunBattleStep4_ToRunActionResolveStep::
 ; Battle fight step 4, sub-phase 3: after the action, by record byte 4: kind 2 moves to the next
 ; target; kind 4 runs QuadHits' hits or rolls the called-help repeats; BiAttack runs its hits;
 ; otherwise goes on. (C1, E-0357)
-RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
+RunBattleStep4_AfterAction::
     ld a, [wRecordBufferData + $4]
     and $0f
     cp $02
-    jr z, .call_run_battle_step4_write_battle_target_and
+    jr z, .call_run_battle_step4_next_target
     cp $04
     jr z, .check_battle_action_id
     ld a, [wBattleActionId]
@@ -6135,8 +6127,8 @@ RunBattleStep4_ReadRecordBufferDataAndBattleActionIdEtc::
     inc [hl]
     ret
 
-.call_run_battle_step4_write_battle_target_and:
-    call RunBattleStep4_WriteBattleTargetAndBattleSubPhaseEtc
+.call_run_battle_step4_next_target:
+    call RunBattleStep4_NextTarget
     ret
 
 .check_battle_action_id:
@@ -6169,7 +6161,7 @@ RunBattleStep4_ToRunActionSpecificPostStep::
 ; Battle fight step 4, sub-phase 5: restores the saved actor, target, hit count, both action choices
 ; and the target's slot mark, steps the battle back one step and resumes at sub-phase 3 (6 when the
 ; repeat flag was set, clearing it). (C1, E-0357)
-RunBattleStep4_WriteBattleActorAndBattleTargetEtc::
+RunBattleStep4_RestoreSaved::
     ld hl, wSavedActorTarget
     ld a, [hli]
     ld [wBattleActor], a
@@ -9115,7 +9107,7 @@ ListSideMonsterIdsToTemp0::
 
 ; Ironize's text: D = $47 for a foe outside link mode 1 or a side of one species, otherwise $46.
 ; (C1, E-0357)
-ActionEffect_Ironize_ReadLinkModeAndBattleTarget::
+ActionEffect_Ironize_Text::
     ld a, [wLinkMode]
     cp $01
     jr z, .call_list_side_monster_ids_to_temp0
@@ -9160,7 +9152,7 @@ WriteMonstersWordToTextBuf0::
 ; Lists the far side's three slots (4-6, or 0-2 for the link follower) that are present (or fallen,
 ; with wBattleArg1 set) in wSlotChoices and shows their names in three windows at VRAM $96D0, $9770
 ; and $8810. (C1, E-0357)
-RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2::
+ListFarSideSlots::
     ld a, $ff
     ld hl, wSlotChoices
     ld bc, $0003
@@ -9204,16 +9196,16 @@ RunBattleSetup_CarryUnlessBattleSlotOutSlotEmpty_2::
     jr nz, .loop
     ld a, [wSlotChoices]
     ld hl, vTiles1 + $6d0
-    call RunBattleSetup_CopySlotNameToHL
+    call ListFarSideSlots_CopySlotNameToHL
     ld hl, vTiles1 + $770
     ld a, [wSlotChoices + $1]
-    call RunBattleSetup_CopySlotNameToHL
+    call ListFarSideSlots_CopySlotNameToHL
     ld hl, vTiles2 + $10
     ld a, [wSlotChoices + $2]
 
 ; Shows slot A's name (string 5 of category 8 through wTextBuf0) or, for $FF, string 0 of category
 ; 2, in a 10 x 1 window at HL, keeping the text window. (C1, E-0357)
-RunBattleSetup_CopySlotNameToHL::
+ListFarSideSlots_CopySlotNameToHL::
     cp $ff
     jr z, .set_string_category_to_02
     push hl

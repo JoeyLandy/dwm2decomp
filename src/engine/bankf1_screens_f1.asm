@@ -194,7 +194,7 @@ PauseMenu_State4_GiftMenu_ChooseGift_YesNoCursor::
 PauseMenu_State4_GiftMenu_GiveGift::
     ld a, [wTemp1]
     jumptable
-    dw PauseMenu_State4_GiftMenu_WriteArg1AndCounterPtr0LoEtc
+    dw PauseMenu_State4_GiftMenu_GiveGift_Check
     dw PauseMenu_State4_GiftMenu_GiveGift_RedrawYesNo
     dw PauseMenu_State4_GiftMenu_BeginStringDisplay_BankF0_2AndStep
     dw PauseMenu_State4_GiftMenu_GiveGift_WaitTextFlags
@@ -203,7 +203,7 @@ PauseMenu_State4_GiftMenu_GiveGift::
 ; given to ...' (string $22); any other is recorded as the gift (RecordGiftAndMaybeApplyPrevious),
 ; removed from the bag, and the pause menu closes. (A third range, $54-$59, is set up in B and C but
 ; never compared, so those items can be given.) (C1, E-0357)
-PauseMenu_State4_GiftMenu_WriteArg1AndCounterPtr0LoEtc::
+PauseMenu_State4_GiftMenu_GiveGift_Check::
     ld a, [wItemId]
     cp ITEM_BEASTTAIL
     jr z, .skip3
@@ -334,7 +334,7 @@ BuildScreenBlock32WithCursor_BankF1::
     ret
 
 ; builds block $32 with the cursor, blocks $11 and $1B and the rectangle chosen by wItemId, then
-; runs BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc (E-0122)
+; runs BuildItemScreen_DrawEffect (E-0122)
 BuildItemScreenForWItemId_BankF1::
     call BuildScreenBlock32WithCursor_BankF1
     ld e, $11
@@ -350,7 +350,7 @@ BuildItemScreenForWItemId_BankF1::
     add_a_to_hl
     deref_hl
     call CopyRecordRectToScreenBuffer_BankF1
-    call BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc
+    call BuildItemScreen_DrawEffect
     ret
 
 ; fills tiles, builds the item screen, copies block $10 and draws the cursor for wMenuSelectedMember
@@ -640,7 +640,7 @@ SetupInventoryMenuPages_BankF1::
 ; (BuildItemScreenForWItemId_BankF1_Data1) the record's current and new values of the stat it
 ; changes (fields $5B, $5F, $6B, $63, $65, $67, $69) as digits, or its personality and the rest.
 ; (C1, E-0357)
-BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc::
+BuildItemScreen_DrawEffect::
     ld a, [wMenuSelectedMember]
     ld c, a
     ld a, [wItemId]
@@ -738,7 +738,7 @@ BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc::
     ld [wStringIndex], a
     ld a, $07
     ld [wStringCategory], a
-    ld hl, BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc_Data
+    ld hl, BuildItemScreen_DrawEffect_Data
     ld b, $00
     add hl, bc
     ld a, [hl]
@@ -906,8 +906,8 @@ SetScreenTileBufferRow16Col6TileC0_BankF1::
     ld [wScreenTileBuffer + $146], a
     ret
 
-; data read by BuildItemScreenForWItemId (27 bytes) (E-0347)
-BuildItemScreenForWItemId_BankF1_WriteRAMGAndRAMBEtc_Data::
+; data read by BuildItemScreen_DrawEffect (27 bytes) (E-0347)
+BuildItemScreen_DrawEffect_Data::
     db $08, $05, $04, $07, $05, $06, $08, $06, $09, $09, $07, $07, $06, $08, $08, $05
     db $06, $07, $05, $03, $05, $03, $07, $05, $08, $08, $04
 
@@ -2681,8 +2681,8 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats::
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Clear
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_2
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Frame
-    dw RunScreenStateWhenNotFading_F1_WriteScreenStepAndArg1Etc
-    dw RunScreenStateWhenNotFading_F1_WriteArg1AndArg2Etc
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowPersonality
+    dw RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIcon
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Sprite
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Keys
     dw RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2LevelRow
@@ -2886,7 +2886,7 @@ RunScreenStateWhenNotFading_F1_ShowRecordStats_Page2Frame::
     ret
 
 ; The second page, step 18: shows its personality name and master's name. (C1, E-0357)
-RunScreenStateWhenNotFading_F1_WriteScreenStepAndArg1Etc::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_ShowPersonality::
     farcall ShowPersonalityNameAndRecordBufBMasterNameName
     ld a, [wScreenStep]
     inc a
@@ -2894,7 +2894,7 @@ RunScreenStateWhenNotFading_F1_WriteScreenStepAndArg1Etc::
 
 ; The second page, step 19: draws the family icon with its count and the experience still needed.
 ; (C1, E-0357)
-RunScreenStateWhenNotFading_F1_WriteArg1AndArg2Etc::
+RunScreenStateWhenNotFading_F1_ShowRecordStats_DrawFamilyIcon::
     ld a, $6d
     ld [wArg1], a
     xor a
@@ -3834,7 +3834,7 @@ GameMode5_Update_LinkExchangeJoypadPerFrame_2::
     cp $07
     ret c
     call GameMode5_Update_UpdateAndDrawSpriteSlots
-    call GameMode5_Update_WriteArg1AndArg2Etc
+    call DrawLinkScreenSprites
     ld a, [wMenuCounter]
     and a
     ret z
@@ -3869,7 +3869,7 @@ GameMode5_Update_WaitPickCount::
 ; Draws the link screens' monster sprites: in hatch state $0C the list entry's sprite (step $15) or
 ; the party sprites (step $20); in state $0D step 7 the party sprites of the list's page. (C1,
 ; E-0357)
-GameMode5_Update_WriteArg1AndArg2Etc::
+DrawLinkScreenSprites::
     ld a, [wLinkSceneSpeciesLo]
     cp $0c
     jr z, .check_link_scene_family

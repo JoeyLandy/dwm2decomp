@@ -94,19 +94,19 @@ GameMode8_Update::
     ld a, [wScreenSubStep]
     jumptable
     dw GameMode8_Update_WriteScreenSubStep
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteObject1AndScreenSubStep
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_Wait
+    dw GameMode8_Update_WalkObject1
+    dw GameMode8_Update_Wait
     dw GameMode8_Update_SetObject5
-    dw GameMode8_Update_WriteSpriteSlotsAndScreenSubStep
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
+    dw GameMode8_Update_WalkSprite0
+    dw GameMode8_Update_Wait
+    dw GameMode8_Update_Wait
     dw GameMode8_Update_SetObject5_SetObject5
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_WriteScreenCounterAndScreenSubStep
-    dw GameMode8_Update_SetScreenSubStep
+    dw GameMode8_Update_Wait
+    dw GameMode8_Update_Wait
+    dw GameMode8_Update_WalkSprite0Off
     dw GameMode8_Update_ShowHeroReceivedGsEgg
-    dw GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc
+    dw GameMode8_Update_BackToField
 
 ; Egg hand-over, step 0: sets up the figures and graphics (GameMode8_Update_TestFlagBit); next step.
 ; (C1, E-0357)
@@ -118,7 +118,7 @@ GameMode8_Update_WriteScreenSubStep::
     ret
 
 ; Egg hand-over, step 1: waits 16 frames; next step. (C1, E-0357)
-GameMode8_Update_WriteScreenCounterAndScreenSubStep::
+GameMode8_Update_Wait::
     ld a, [wScreenCounter]
     inc a
     ld [wScreenCounter], a
@@ -133,7 +133,7 @@ GameMode8_Update_WriteScreenCounterAndScreenSubStep::
 
 ; Egg hand-over, step 2: object 1 walks left, on three counts of every four, to X $58, where it
 ; stops (flag bit 1); next step. (C1, E-0357)
-GameMode8_Update_WriteObject1AndScreenSubStep::
+GameMode8_Update_WalkObject1::
     ld a, [wObject1 + OBJ_ANIM_COUNTER]
     and $03
     and a
@@ -166,7 +166,7 @@ GameMode8_Update_SetObject5::
 
 ; Egg hand-over, step 5: sprite 0 walks right, on three counts of four, to X $38, where it stops;
 ; next step. (C1, E-0357)
-GameMode8_Update_WriteSpriteSlotsAndScreenSubStep::
+GameMode8_Update_WalkSprite0::
     ld a, [wSpriteSlots + $9]
     and $03
     and a
@@ -196,7 +196,7 @@ GameMode8_Update_SetObject5_SetObject5::
 
 ; Egg hand-over, step 11: sprite 0 turns left and walks off, on three counts of four, until X $E0;
 ; next step. (C1, E-0357)
-GameMode8_Update_SetScreenSubStep::
+GameMode8_Update_WalkSprite0Off::
     ld a, [wSpriteSlots + $d]
     res 1, a
     ld [wSpriteSlots + $d], a
@@ -258,10 +258,9 @@ GameMode8_Update_CopyStringMaxC::
     ld [de], a
     ret
 
-; Egg hand-over, step 13: back to the field (GameMode8_Update_WriteLinkSceneAndGameModeEtc). (C1,
-; E-0357)
-GameMode8_Update_ToGameMode8_Update_WriteLinkSceneAndGameModeEtc::
-    call GameMode8_Update_WriteLinkSceneAndGameModeEtc
+; Egg hand-over, step 13: back to the field (GameMode8_Update_EndMode). (C1, E-0357)
+GameMode8_Update_BackToField::
+    call GameMode8_Update_EndMode
     ret
 
 ; HL = string number; copies 16 bytes of that string of StringTable_MonsterNames (bank $08, via
@@ -318,7 +317,7 @@ RunTextUntilTextWindowStateDone_BankF2::
 
 ; Clears the screen variables ($6F bytes from wScreenState) and wLinkScene and requests game mode 5,
 ; mode state 1. (C1, E-0357)
-GameMode8_Update_WriteLinkSceneAndGameModeEtc::
+GameMode8_Update_EndMode::
     ld hl, wScreenState
     ld bc, $006f
 
@@ -3625,11 +3624,10 @@ ReturnStub_3::
     ret
     db $cd, $55, $63, $cd, $46, $63, $c9
 
-; Choosing a key, Select: reorders the key list
-; (KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys), copies it back (CopyWorkBuf1ToKeyList)
-; and returns to step 0. (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ListCursor_CopyWorkBuf1ToKeyList::
-    call KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys
+; Choosing a key, Select: reorders the key list (ReorderKeyList), copies it back
+; (CopyWorkBuf1ToKeyList) and returns to step 0. (C1, E-0357)
+KeyAppraisalMenu_ChooseKey_ListCursor_ReorderKeyList::
+    call ReorderKeyList
     call CopyWorkBuf1ToKeyList
     xor a
     ld [wScreenStep], a
@@ -3653,7 +3651,7 @@ CopyWorkBuf1ToKeyList::
 ; Reorders the 32 keys (4 bytes each) into wWorkBuf + 1, alternating with each press (wWorkBuf 0 or
 ; 1): the keys whose byte 3 has bit 7 set and kind below 7 first, then the others, or the other way
 ; round; each moved key's seed goes to wKeyGenList (count wKeyGenCount). (C1, E-0357)
-KeyAppraisalMenu_ChooseKey_ListCursor_CopyFlaggedKeys::
+ReorderKeyList::
     ld hl, wWorkBuf + $1
     ld c, $c0
 

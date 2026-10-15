@@ -912,12 +912,12 @@ ArenaGridBattle_AfterSecondBattle::
     or a
     jr nz, .call_setup_screen_count_plus_one_from_record
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind
+    farcall ArenaGridBattle_SetUp
     ret
 
 .call_setup_screen_count_plus_one_from_record:
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind
+    farcall ArenaGridBattle_SetUpFromGrid
     ret
 
 ; Show column 4 of ArenaRankMessageTable, then advance to the shared message wait before the second
@@ -1108,12 +1108,12 @@ ArenaGridBattle_AfterFirstBattle::
     or a
     jr nz, .call_setup_screen_count_plus_one_from_record
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind
+    farcall ArenaGridBattle_SetUp
     ret
 
 .call_setup_screen_count_plus_one_from_record:
     farcall SetupScreenCountPlusOneFromRecordCapacity
-    farcall ArenaGridBattle_WriteBattleIntroKindAndEncounterKind_SetBattleIntroKind
+    farcall ArenaGridBattle_SetUpFromGrid
     ret
 
 ; Move all three follower X bytes right and all three opposing monster X bytes left, one pixel per
@@ -3270,13 +3270,13 @@ StartReturnWarpByFlag25::
     farcall ScriptStartFadeAndAdvanceStep
     ret
 
-; Return message, step 0: sets the gold (ReturnMessage_SetGoldAndShow_WriteGoldHiAndGoldMidEtc);
-; before EVENT_THANKS_FOR_COMING_BY_025 message $0C with object 0 facing right; after it object 1
-; faces down and message $14 (after EVENT_SCENE_LIMBO_MONSTER2) or $13. (C1, E-0357)
+; Return message, step 0: sets the gold (HalveGold); before EVENT_THANKS_FOR_COMING_BY_025 message
+; $0C with object 0 facing right; after it object 1 faces down and message $14 (after
+; EVENT_SCENE_LIMBO_MONSTER2) or $13. (C1, E-0357)
 ReturnMessage_SetGoldAndShow::
     ld hl, wScriptStep
     inc [hl]
-    farcall ReturnMessage_SetGoldAndShow_WriteGoldHiAndGoldMidEtc
+    farcall HalveGold
     ld de, EVENT_THANKS_FOR_COMING_BY_025
     call TestFlagBit
     jr c, .clear_object1
@@ -3426,11 +3426,11 @@ HealPartyEvent_WaitAndResume::
 PartyDefeatedReturn::
     ld a, [wScriptStep]
     jumptable
-    dw PartyDefeatedReturn_WriteScriptParam0AndScriptParam1
-    dw PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc
+    dw PartyDefeatedReturn_CountMarked
+    dw PartyDefeatedReturn_ShowFallenName
     dw PartyDefeatedReturn_CheckMarkedMembers
-    dw PartyDefeatedReturn_BackScriptStep
-    dw PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc
+    dw PartyDefeatedReturn_ShowNextFallenName
+    dw PartyDefeatedReturn_MoveFallenBack
     dw PartyDefeatedReturn_CheckAllFallen
     dw PartyDefeatedReturn_Wait
     dw PartyDefeatedReturn_StartWarp
@@ -3498,7 +3498,7 @@ PartyDefeatedReturn_CheckAllFallen::
 
 ; Party defeated return, step 3: shows message $000B with the next marked member's name in the open
 ; box (kept open unless it is the last) and goes back to step 2. (C1, E-0357)
-PartyDefeatedReturn_BackScriptStep::
+PartyDefeatedReturn_ShowNextFallenName::
     ld hl, wScriptStep
     dec [hl]
     ld de, MSG_KEEP_OPEN | MSG_ALREADY_OPEN | $000b
@@ -3506,9 +3506,9 @@ PartyDefeatedReturn_BackScriptStep::
     dec a
     ld [wScriptParam0], a
     or a
-    jr nz, PartyDefeatedReturn_SetMessageIndex
+    jr nz, PartyDefeatedReturn_ShowFallenName_SetMessageIndex
     ld de, MSG_ALREADY_OPEN | $000b
-    jr PartyDefeatedReturn_SetMessageIndex
+    jr PartyDefeatedReturn_ShowFallenName_SetMessageIndex
 
 ; Party defeated return, step 2: after the box closes, goes to step 4 when no marked member is left,
 ; otherwise to step 3. (C1, E-0357)
@@ -3532,7 +3532,7 @@ PartyDefeatedReturn_CheckMarkedMembers::
 
 ; Party defeated return, step 1: shows message $000A with the first marked member's name (kept open
 ; when more follow). (C1, E-0357)
-PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
+PartyDefeatedReturn_ShowFallenName::
     ld hl, wScriptStep
     inc [hl]
     ld de, MSG_KEEP_OPEN | $000a
@@ -3540,12 +3540,12 @@ PartyDefeatedReturn_WriteScriptParam0AndMessageIndexEtc::
     dec a
     ld [wScriptParam0], a
     or a
-    jr nz, PartyDefeatedReturn_SetMessageIndex
+    jr nz, PartyDefeatedReturn_ShowFallenName_SetMessageIndex
     ld de, $000a
 
 ; Starts the message word in DE and copies the name of the next marked party member (the lowest bit
 ; left in wScriptParam1, which is cleared) into wTextBuf1 + 7. (C1, E-0357)
-PartyDefeatedReturn_SetMessageIndex::
+PartyDefeatedReturn_ShowFallenName_SetMessageIndex::
     ld a, e
     ld [wMessageIndex], a
     ld a, d
@@ -3593,7 +3593,7 @@ PartyDefeatedReturn_SetMessageIndex::
 
 ; Party defeated return, step 0: counts the party members marked in wStatusFieldStep (one bit each)
 ; into wScriptParam0 and keeps the bits in wScriptParam1. (C1, E-0357)
-PartyDefeatedReturn_WriteScriptParam0AndScriptParam1::
+PartyDefeatedReturn_CountMarked::
     ld a, [wPartyCount]
     ld b, a
     ld c, $00
@@ -3629,13 +3629,13 @@ KeyWorldBossBattle::
     dw KeyWorldBossBattle_ToScriptStepFlashScreenNegative
     dw KeyWorldBossBattle_ShowWarubouWaheyNoGood
     dw KeyWorldBossBattle_WriteScriptParam0
-    dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
-    dw KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest
+    dw KeyWorldBossBattle_FlickerBoss
+    dw KeyWorldBossBattle_MarkCleared
 
 ; Key world boss battle, step 7: sets wKeyWorldFlags bit 7, marks all four floor entries of
 ; wKeyWorldEncounterTable done, sets bit 6 of the current key entry's byte 7 and resumes the script.
 ; (C1, E-0357)
-KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
+KeyWorldBossBattle_MarkCleared::
     ld a, [wKeyWorldFlags]
     or $80
     ld [wKeyWorldFlags], a
@@ -3668,7 +3668,7 @@ KeyWorldBossBattle_WriteKeyWorldFlagsAndScriptStartRequest::
 
 ; Key world boss battle, step 6: the boss sprite flickers (one sprite slot or none; every 8 frames,
 ; then 4 from frame $1E, 2 from $3C) for $78 frames. (C1, E-0357)
-KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0::
+KeyWorldBossBattle_FlickerBoss::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -3841,7 +3841,7 @@ KeyWorldFloorBattle::
     dw KeyWorldFloorBattle_StartBattle
     dw KeyWorldFloorBattle_ShowWarubouWaheyThatWas
     dw KeyWorldBossBattle_WriteScriptParam0
-    dw KeyWorldBossBattle_WriteSpriteSlotCountAndScriptParam0
+    dw KeyWorldBossBattle_FlickerBoss
     dw KeyWorldFloorBattle_WriteScriptStartRequest
 
 ; Key world floor battle, step 5: marks the floor's entry of wKeyWorldEncounterTable done (byte 3 =
@@ -3925,7 +3925,7 @@ RandomGoldOrItem::
     dw SetupScriptSpriteFromMapSpriteKind
     dw PlaySound83AndAdvanceScriptStep
     dw ScriptStepAnimateSpriteBySteps
-    dw RandomGoldOrItem_WriteSVBKAndFieldDrawFlags
+    dw RandomGoldOrItem_ReplaceTiles
     dw RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed
     dw RandomGoldOrItem_HopMarker
     dw RandomGoldOrItem_ShowMessage
@@ -4029,7 +4029,7 @@ RandomGoldOrItem_ToRandomGoldOrItem_NextRandomSeed::
 ; Random gold or item, step 3: replaces the 2x2 tiles at the trigger's spot (wMessageGroup and
 ; wMessageIndex high nibbles) with tiles $40 $41 / $50 $51; on the GBC their palette becomes 1 (3 on
 ; maps $53-$57 and $63-$66); redraws the screen and shows the field sprites. (C1, E-0357)
-RandomGoldOrItem_WriteSVBKAndFieldDrawFlags::
+RandomGoldOrItem_ReplaceTiles::
     ld a, [wMessageGroup]
     swap a
     and $0f
@@ -4344,33 +4344,33 @@ FieldScene01::
     ld a, [wScriptParam1]
     dec a
     jr nz, .skip
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed
+    call FieldScene01_Variant1
     ret
 
 .skip:
     dec a
-    jr nz, .call_field_scene01_write_joypad_held_and
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2
+    jr nz, .call_field_scene01_get_off
+    call FieldScene01_Variant2
     ret
 
-.call_field_scene01_write_joypad_held_and:
-    call FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld
+.call_field_scene01_get_off:
+    call FieldScene01_GetOff
     ret
 
 ; Field scene 1, the getting-off variant (wScriptParam1 not 1 or 2): clears the joypad and runs its
 ; two steps by wScriptStep. (C1, E-0357)
-FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld::
+FieldScene01_GetOff::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
     ld a, [wScriptStep]
     jumptable
-    dw FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc
+    dw FieldScene01_GetOff_Start
     dw FieldScene01_HopForward
 
 ; Field scene 1, getting off, step 0: clears hPlayerStateFlags bit 3, hides the followers, player
 ; sprite mode 0, and lifts the player 8 pixels. (C1, E-0357)
-FieldScene01_WritePlayerStateFlagsAndFieldDrawFlagsEtc::
+FieldScene01_GetOff_Start::
     ldh a, [hPlayerStateFlags]
     and $f7
     ldh [hPlayerStateFlags], a
@@ -4472,7 +4472,7 @@ FieldScene01_HopForward::
 
 ; Field scene 1, variant 1 (wScriptParam1 = 1): clears the joypad and runs its steps by wScriptStep:
 ; gather the followers, load the sprite, wait, spin, flicker, show it, and climb on. (C1, E-0357)
-FieldScene01_WriteJoypadHeldAndJoypadPressed::
+FieldScene01_Variant1::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4669,7 +4669,7 @@ FieldScene01_LoadSprite::
 
 ; Field scene 1, variant 2 (wScriptParam1 = 2): clears the joypad and runs its steps by wScriptStep:
 ; as variant 1 up to the climb, then travel until land and get off. (C1, E-0357)
-FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2::
+FieldScene01_Variant2::
     xor a
     ld [wJoypadHeld], a
     ld [wJoypadPressed], a
@@ -4683,7 +4683,7 @@ FieldScene01_WriteJoypadHeldAndJoypadPressed_SetJoypadHeld_2::
     dw FieldScene01_HopAndSpin
     dw FieldScene01_FlickerSprite
     dw FieldScene01_HopOnSprite2
-    dw FieldScene01_WaitFieldActionRequest
+    dw FieldScene01_Variant2_WaitFieldActionRequest
     dw FieldScene01_EnableTriggers
 
 ; Field scene 1, step 4: waits $1E frames. (C1, E-0357)
@@ -4797,7 +4797,7 @@ FieldScene01_EnableTriggers::
 ; tile on, within the screen); when the tiles there are above wMaxBlockingTile the player gets off
 ; (sprite mode 0, lifted 8 pixels, next step); when they block, or object 0 stands there, the player
 ; turns around; tiles at or below wMapTallTileMin let it go on. (C1, E-0357)
-FieldScene01_WaitFieldActionRequest::
+FieldScene01_Variant2_WaitFieldActionRequest::
     ld a, [wFieldActionRequest]
     bit 7, a
     ret nz
@@ -5172,7 +5172,7 @@ KeyWorldDoorItem::
     jumptable
     dw KeyWorldDoorItem_ShowItemMessage
     dw KeyWorldDoorItem_WaitForMessage
-    dw KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo
+    dw KeyWorldDoorItem_GiveItem
     dw KeyWorldDoorItem_WaitForMessage
     dw KeyWorldDoorItem_OpenDoor
 
@@ -5196,7 +5196,7 @@ KeyWorldDoorItem_OpenDoor::
 ; Key world door item, step 2: with no item resumes at once; otherwise marks the door opened, adds
 ; item wScriptParam0 to the inventory unless its bit 7 is set, redraws the door tiles and the screen
 ; and resumes the script. (C1, E-0357)
-KeyWorldDoorItem_WriteScriptStartRequestAndStepPtrLo::
+KeyWorldDoorItem_GiveItem::
     ld a, [wScriptParam0]
     ld l, a
     ld a, [wScriptParam1]
@@ -5321,12 +5321,12 @@ AreaItemEvent::
     jumptable
     dw AreaItemEvent_ShowItemMessage
     dw AreaItemEvent_WaitForMessage
-    dw AreaItemEvent_WriteScriptStartRequestAndStepPtrLo
+    dw AreaItemEvent_GiveItem
 
 ; Area item, step 2: with no item resumes at once; otherwise gives the item (record byte 1), marks
 ; the record taken (byte 3 = 1), updates the floor's item state
 ; (CheckTwoKeyWorldFloorState4EntriesForKeyWorldArea), redraws and resumes the script. (C1, E-0357)
-AreaItemEvent_WriteScriptStartRequestAndStepPtrLo::
+AreaItemEvent_GiveItem::
     ld a, [wScriptParam0]
     ld l, a
     ld a, [wScriptParam1]
@@ -5438,7 +5438,7 @@ StepTriggerReward_StartBattle::
     ld a, $01
     ld [wBattleTransitionSubStep], a
     farcall SetModeState3AndSaveScreen
-    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
+    call ActiveTriggerRecord
     ld a, [hl]
     or $80
     ld [hl], a
@@ -5449,7 +5449,7 @@ StepTriggerReward_StartBattle::
 ; Step trigger reward, step 3: gives the trigger's item, marks it used and sets the trigger kind to
 ; $FF. (C1, E-0357)
 StepTriggerReward_GiveItem::
-    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
+    call ActiveTriggerRecord
     inc hl
     ld a, [hl]
     ld [wStepPtrLo], a
@@ -5467,7 +5467,7 @@ StepTriggerReward_GiveItem::
 ; Step trigger reward, step 2: gives ten times the trigger's value in gold (AddGoldCapped), marks it
 ; used and sets the trigger kind to $FF. (C1, E-0357)
 StepTriggerReward_GiveGold::
-    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
+    call ActiveTriggerRecord
     inc hl
     ld a, [hl]
     push hl
@@ -5512,7 +5512,7 @@ StepTriggerReward_WaitMessage::
 StepTriggerReward_ShowMessage::
     ld hl, wScriptStep
     inc [hl]
-    call StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex
+    call ActiveTriggerRecord
     ld a, [hl]
     or a
     jr nz, .skip
@@ -5612,7 +5612,7 @@ StepTriggerReward_ShowMessage::
 
 ; Points HL at the active trigger's record: wScreenTriggers + 4 x wTriggerIndex when the screen has
 ; triggers, otherwise wMapObjects + 8 x wTriggerIndex. (C1, E-0357)
-StepTriggerReward_ReadScreenTriggerCountAndTriggerIndex::
+ActiveTriggerRecord::
     ld a, [wScreenTriggerCount]
     or a
     jr nz, .read_trigger_index
@@ -5767,7 +5767,7 @@ StepScriptParam0Counter_Bank12::
 
 ; Party defeated return, step 4: the first call hides the followers; the next moves the fallen
 ; members to the back, reloads the names and sprites and shows the followers again. (C1, E-0357)
-PartyDefeatedReturn_WriteScriptParam0AndFieldDrawFlagsEtc::
+PartyDefeatedReturn_MoveFallenBack::
     ld a, [wScriptParam0]
     or a
     jr nz, .call_move_incapacitated_party_members_back
@@ -5851,7 +5851,7 @@ RunMessageBox_Bank12::
     jumptable
     dw RunMessageBox_Bank12_Open
     dw RunMessageBox_Bank12_ShowText
-    dw RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc
+    dw RunMessageBox_Bank12_Close
     dw RunMessageBox_Bank12_WriteMessageState
 
 ; Bank-$12 message box, state 0: unless the flag on the stack is set, freezes the player's and
@@ -5916,7 +5916,7 @@ RunMessageBox_Bank12_ShowText::
 
 ; Bank-$12 message box, state 2: when the text has finished, goes idle at once if wMessageGroup bit
 ; 6 keeps the box open; otherwise plays sound $69 and closes the window. (C1, E-0357)
-RunMessageBox_Bank12_WriteMessageStateAndTextWindowStateEtc::
+RunMessageBox_Bank12_Close::
     pop af
     ld a, [wTextFlags]
     bit 0, a
@@ -5982,7 +5982,7 @@ RunMessageBoxStateIfActive_Bank12::
     jumptable
     dw RunMessageBoxStateIfActive_Bank12_Open
     dw RunMessageBoxStateIfActive_Bank12_ShowText
-    dw RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc
+    dw RunMessageBoxStateIfActive_Bank12_Close
     dw RunMessageBox_Bank12_WriteMessageState
 
 ; Bank-$12 short message box, state 0: as the message box's state 0, with the box-open flag in
@@ -6041,7 +6041,7 @@ RunMessageBoxStateIfActive_Bank12_ShowText::
 
 ; Bank-$12 short message box, state 2: when the text has finished, goes idle if wMessageIndex bit 6
 ; keeps the box open; otherwise sound $69 and closes the window. (C1, E-0357)
-RunMessageBoxStateIfActive_Bank12_WriteMessageStateAndTextWindowStateEtc::
+RunMessageBoxStateIfActive_Bank12_Close::
     pop af
     ld a, [wTextFlags]
     bit 0, a
@@ -6087,7 +6087,7 @@ KeyWorldBossBattle_ReadMessageState::
     jumptable
     dw KeyWorldBossBattle_OpenMessageBox
     dw KeyWorldBossBattle_StartMessageText
-    dw KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc
+    dw KeyWorldBossBattle_CloseMessageBox
     dw RunMessageBox_Bank12_WriteMessageState
 
 ; Key world message box, state 0: freezes the animation unless the flag is set, clears the box tiles
@@ -6140,7 +6140,7 @@ KeyWorldBossBattle_StartMessageText::
 
 ; Key world message box, state 2: when the text has finished, closes the window (no sound). (C1,
 ; E-0357)
-KeyWorldBossBattle_WriteTextWindowStateAndTextWindowStepEtc::
+KeyWorldBossBattle_CloseMessageBox::
     pop af
     ld a, [wTextFlags]
     bit 0, a
@@ -8528,7 +8528,7 @@ RunPeriodicFieldEventChecks::
     ret c
     call TriggerEventC7IfGold1000AndNoItems19To1C
     ret c
-    call RunPeriodicFieldEventChecks_WriteRAMGAndPendingFieldEvent
+    call RunPeriodicFieldEventChecks_LowHPTownEvent
     ret c
     call TriggerEventC9IfExpDigitsRepeat
     ret c
@@ -8922,7 +8922,7 @@ TriggerEventForStatusedMemberHP::
 ; The low-HP town event: when wEventItemSlot is free and the gold is at least 1,000, sets pending
 ; field event $C8 (carry) if the party's total HP is under 30% of its total maximum HP (total / 100
 ; x 30). (C1, E-0357)
-RunPeriodicFieldEventChecks_WriteRAMGAndPendingFieldEvent::
+RunPeriodicFieldEventChecks_LowHPTownEvent::
     ld a, [wEventItemSlot]
     cp $ff
     jr z, .check_gold_hi
@@ -9999,7 +9999,7 @@ AddGoldCapped::
 
 ; Halves the gold (the 24-bit wGoldHi/Mid/Lo shifted right): the return message's penalty. (C1,
 ; E-0357)
-ReturnMessage_SetGoldAndShow_WriteGoldHiAndGoldMidEtc::
+HalveGold::
     ld a, [wGoldHi]
     srl a
     ld [wGoldHi], a

@@ -7,7 +7,7 @@ SECTION "Bank A0", ROMX[$4000], BANK[$A0]
 ; Game mode 7's start: clears the effect and battle state, keeps the data bank, sets wBattleKind
 ; $0A, resets the battle variables, copies the two linked monsters into battlers 0 and 1, sets up
 ; slots 0 and 1, draws the screen, starts the music and marks the slots. (C1, E-0357)
-GameMode7_Init_FillBytes::
+GameMode7_Init_Start::
     ld hl, wEffectAnimState
     ld bc, $0303
     xor a
@@ -24,16 +24,16 @@ GameMode7_Init_FillBytes::
     call FillBytes
     ld a, $0a
     ld [wBattleKind], a
-    call GameMode7_Init_FillBytes_2
+    call GameMode7_Init_Start_FillBytes
     ld hl, wWorkBuf
     ld bc, $0200
     xor a
     call FillBytes
-    call GameMode7_Init_ReadLinkRole
-    call GameMode7_Init_RunA0OrBySlotC
-    call GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31
-    call GameMode7_Init_QueueMusic
-    call GameMode7_Init_CarryUnlessBattleSlotOutSlotEmpty
+    call GameMode7_Init_Start_ReadLinkRole
+    call GameMode7_Init_Start_RunA0OrBySlotC
+    call GameMode7_Init_DrawScreen
+    call GameMode7_Init_Start_QueueMusic
+    call GameMode7_Init_MarkSlots
     ret
 
 ; clears the slot-out bytes of slots 4-7, marking the last one absent ($FF) unless
@@ -121,7 +121,7 @@ InitBattleSlotsForFoeCount::
 ; 0, 0, $FF, $FF, 0, 0, 0, $FF; side control $80; every slot out and no species ($FF); skill and
 ; name tables $FF; meter 10; an empty action queue; turn 0; two party slots and three foes; text
 ; speed 3. (C1, E-0357)
-GameMode7_Init_FillBytes_2::
+GameMode7_Init_Start_FillBytes::
     ld a, $ff
     ld [wEffectId], a
     ld [wQueuedActionId], a
@@ -201,11 +201,11 @@ GameMode7_Init_FillBytes_2::
 ; Draws game mode 7's screen: clears the attributes and buffer, loads the name tiles, the frame,
 ; both slots' HP, MP and marks, clears the text tiles, draws the record rectangle and copies the
 ; buffer to the BG map, then requests the palettes. (C1, E-0357)
-GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31::
+GameMode7_Init_DrawScreen::
     farcall ClearAttributesAndScreenBuffer_Bank31
-    call GameMode7_Init_CopyGlyphTilesToVRAM
-    call GameMode7_Init_ReadScreenBufferRectHeader_BankA0
-    call GameMode7_Init_DrawSlotPanelValues_BankA0
+    call GameMode7_Init_DrawScreen_CopyGlyphTilesToVRAM
+    call GameMode7_Init_DrawScreen_ReadScreenBufferRectHeader_BankA0
+    call GameMode7_Init_DrawScreen_DrawSlotPanelValues_BankA0
     call FillTilesFromRequest
     farcall CopyRectRecordToScreenBuffer
     ld hl, vBGMap0
@@ -215,7 +215,7 @@ GameMode7_Init_ClearAttributesAndScreenBuffer_Bank31::
     ret
 
 ; Sets up battle slots 0 and 1 (RunA0OrBySlotC). (C1, E-0357)
-GameMode7_Init_RunA0OrBySlotC::
+GameMode7_Init_Start_RunA0OrBySlotC::
     ld bc, $0200
 
 .loop:
@@ -508,7 +508,7 @@ CopyScreenTileBufferToVRAM_A0::
     ret
 
 ; Starts the battle music: $0F for wBattleKind 0, otherwise $13. (C1, E-0357)
-GameMode7_Init_QueueMusic::
+GameMode7_Init_Start_QueueMusic::
     ld a, [wBattleKind]
     or a
     jr nz, .call_queue_music
@@ -524,25 +524,25 @@ GameMode7_Init_QueueMusic::
 
 ; Copies the two linked records into battler records 0 and 1: wRecordBufA first and wRecordBufB
 ; second, the other way round for link role bit 1. (C1, E-0357)
-GameMode7_Init_ReadLinkRole::
+GameMode7_Init_Start_ReadLinkRole::
     ld de, wBattlerRecords
     ld a, [wLinkRole]
     bit 1, a
-    jr nz, .call_game_mode7_init_copy_bytes_de_from_hl
+    jr nz, .call_game_mode7_init_start_copy_bytes_de_from
     ld hl, wRecordBufA
-    call GameMode7_Init_CopyBytesDEFromHL_BankA0
+    call GameMode7_Init_Start_CopyBytesDEFromHL_BankA0
     ld hl, wRecordBufB
-    jr GameMode7_Init_CopyBytesDEFromHL_BankA0
+    jr GameMode7_Init_Start_CopyBytesDEFromHL_BankA0
 
-.call_game_mode7_init_copy_bytes_de_from_hl:
+.call_game_mode7_init_start_copy_bytes_de_from:
     ld hl, wRecordBufB
-    call GameMode7_Init_CopyBytesDEFromHL_BankA0
+    call GameMode7_Init_Start_CopyBytesDEFromHL_BankA0
     ld hl, wRecordBufA
 
 ; Packs record HL into the battler record at DE: its name (14 bytes), skills (8) and a zero, one
 ; byte, $15 bytes of stats, $1F bytes from the personality and the item byte, applies the stat
 ; increments (ApplyIncrementOffsetRowsA0ForA0DTo13) and ends with $FF. (C1, E-0357)
-GameMode7_Init_CopyBytesDEFromHL_BankA0::
+GameMode7_Init_Start_CopyBytesDEFromHL_BankA0::
     inc hl
     ld b, $0e
     call CopyBytesDEFromHL_BankA0
@@ -1108,7 +1108,7 @@ BattlerRecordAddress_BankA0::
 
 ; Marks slots 0 and 1: $FF when absent, 1 when it cannot act (CheckSlotStatusBlock), otherwise 0.
 ; (C1, E-0357)
-GameMode7_Init_CarryUnlessBattleSlotOutSlotEmpty::
+GameMode7_Init_MarkSlots::
     ld bc, $0200
     ld hl, wSlotMarks
 
@@ -1861,7 +1861,7 @@ ApplyLevelScaledStatsToSlots_Data::
 ; Loads the name tiles: blanks three name areas, then battler 0's and 1's names and the player's and
 ; partner's names (by link role) at VRAM $9500, $9550 and $95A0, and a short form of the first name
 ; (two glyphs plus marks $8D/$8E) at $9240. (C1, E-0357)
-GameMode7_Init_CopyGlyphTilesToVRAM::
+GameMode7_Init_DrawScreen_CopyGlyphTilesToVRAM::
     ld a, $90
     ld [wNameGlyphBuf], a
     ld [wNameGlyphBuf + $1], a
@@ -2015,8 +2015,8 @@ FillScreenTileBufferRow11Col4WithC3_BankA0::
     ret
 
 ; Copies game mode 7's frame rectangle into the screen buffer. (C1, E-0357)
-GameMode7_Init_ReadScreenBufferRectHeader_BankA0::
-    ld hl, GameMode7_Init_ReadScreenBufferRectHeader_BankA0_TileRect
+GameMode7_Init_DrawScreen_ReadScreenBufferRectHeader_BankA0::
+    ld hl, GameMode7_Init_DrawScreen_TileRect
     call ReadScreenBufferRectHeader_BankA0
     call CopyRectToStride32_BankA0
     ret
@@ -2043,7 +2043,7 @@ DrawRectAndWriteDATiles::
     ret
 
 ; Draws slots 0 and 1's HP, MP and status marks. (C1, E-0357)
-GameMode7_Init_DrawSlotPanelValues_BankA0::
+GameMode7_Init_DrawScreen_DrawSlotPanelValues_BankA0::
     ld c, $00
     call DrawSlotPanelValues_BankA0
     ld c, $01
@@ -2232,7 +2232,7 @@ CopyRectToStride32_BankA0::
 
 ; a tile-rectangle record for CopyRecordRectToScreenBuffer (E-0161)
 ; record: offset $0000 (row 0, column 0); 20 x 7 tiles
-GameMode7_Init_ReadScreenBufferRectHeader_BankA0_TileRect::
+GameMode7_Init_DrawScreen_TileRect::
     dw $0000 ; entry 0: offset into wScreenTileBuffer
     db $14, $07 ; width, rows
     db $b0, $b1, $b1, $b1, $b1, $b1, $b2, $b1, $b1, $b1, $b1, $b1, $b2, $b0, $b1, $b1, $b1, $b1, $b1, $b2 ; row 0
@@ -2313,7 +2313,7 @@ GameMode7_Init::
     ld de, Tiles1Plus5F0Gfx
     ld hl, vTiles1 + $5f0
     call DecompressToRAMLocked
-    call GameMode7_Init_FillBytes
+    call GameMode7_Init_Start
     ld hl, vTiles1
     ld de, $1202
     call FillTilesRequest
@@ -2383,7 +2383,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters::
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawPicture
     dw RunBattlePhaseWhenTextIdle_A0_ShowTheSecondMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep
-    dw RunBattlePhaseWhenTextIdle_A0_WriteBattleStepAndTemp0
+    dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawSecondPicture
     dw RunBattlePhaseWhenTextIdle_A0_ShowTheThirdMonsterIs
     dw RunBattlePhaseWhenTextIdle_A0_SetBGPaletteUploadRequest
     dw RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawThirdPicture
@@ -2660,7 +2660,7 @@ RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_LoadMonsterPictureAndStep::
 
 ; Introduction, step 13: draws the second picture (column 7, or 10 with two foes, then skipping the
 ; third). (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_WriteBattleStepAndTemp0::
+RunBattlePhaseWhenTextIdle_A0_IntroduceMonsters_DrawSecondPicture::
     ld hl, vBGMap0 + $e7
     ld a, [wScreenCountPlusOne]
     cp $02
@@ -2850,7 +2850,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink::
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WaitLinkMessage_2
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_CountTurns
-    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait
+    dw RunBattlePhaseWhenTextIdle_A0_SyncLink_RestoreStats
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_ReadSTAT
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_WriteVBK
     dw RunBattlePhaseWhenTextIdle_A0_SyncLink_SetBattleStep
@@ -2972,7 +2972,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_CountTurns::
 
 ; Round end, step 4: after the text, after round 2 goes to the next phase; otherwise counts the
 ; round up, refreshes slots 0 and 1 (marks, HP, MP), shows 'Please wait.' and goes on. (C1, E-0357)
-RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
+RunBattlePhaseWhenTextIdle_A0_SyncLink_RestoreStats::
     ld a, [wTextFlags]
     or a
     ret nz
@@ -2981,7 +2981,7 @@ RunBattlePhaseWhenTextIdle_A0_SyncLink_PleaseWait::
     jp z, .skip
     inc a
     ld [wScreenCountPlusOne], a
-    farcall RunBattlePhaseWhenTextIdle_A0_SyncLink_CarryUnlessBattleSlotOutSlotEmpty
+    farcall RestoreTransformedStats
     ld c, $00
     farcall DrawSlotStatusMarks
     farcall CopySlotPanelRowToVRAM
@@ -4598,9 +4598,9 @@ RunBattleSetup_BankA0::
     dw RunBattleSetup_BankA0_WaitLinkMessage
     dw RunBattleSetup_BankA0_SetBattleSubPhase
     dw RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte
-    dw RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo
-    dw RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte
-    dw RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase
+    dw RunBattleSetup_BankA0_CompareSeeds
+    dw RunBattleSetup_BankA0_WaitPartnerSeed
+    dw RunBattleSetup_BankA0_ConfirmSeeds
     dw RunBattleSetup_BankA0_ClearWindow
 
 ; by wBattleResolveStep: lays out the tile blocks for the foe count and moves a selection over
@@ -4613,8 +4613,8 @@ RunBattleSetup_BankA0_EntrySelect::
     dw RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep
     dw RunBattleSetup_BankA0_EntrySelect_Cursor
     dw RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0AndStep
-    dw RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc
-    dw RunBattleSetup_BankA0_CopyRectRecordToScreenBufferAndStep
+    dw RunBattleSetup_BankA0_EntrySelect_Choose
+    dw RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame
     dw RunBattleSetup_BankA0_ToBeginStringDisplay_Bank2FAndStep
     dw RunBattleSetup_BankA0_EntrySelect_Redraw
 
@@ -4668,7 +4668,7 @@ RunBattleSetup_BankA0_EntrySelect_AdvanceBattleResolveStep::
 RunBattleSetup_BankA0_EntrySelect_Cursor::
     ld de, RunBattleSetup_BankA0_EntrySelect_Data
     ld hl, wMenuState
-    call RunBattleSetup_BankA0_EntrySelect_Cursor_SetBit6AndBlankEntryTile_BankA0
+    call TwoByTwoCursor
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .return
@@ -4695,7 +4695,7 @@ RunBattleSetup_BankA0_ToCopyRect32StrideToVRAM_BankA0AndStep::
 ; Choosing what to do, step 4: by the choice (wBattleSetupDB): 0 clears this side's action and
 ; fights (sub-phase 3); 1 commands this side's monster (wCommandMonster, sub-phase 1) when it can
 ; act, otherwise string $2D; 2 string $1D; 3 string $20. (C1, E-0357)
-RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc::
+RunBattleSetup_BankA0_EntrySelect_Choose::
     ld a, [wMenuState]
     and $03
     ld [wBattleSetupDB], a
@@ -4708,7 +4708,7 @@ RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc::
     jr .set_string_index_to_20
 
 .call_run_battle_setup_bank_a0_entry_select:
-    call RunBattleSetup_BankA0_EntrySelect_ReadLinkRole
+    call RunBattleSetup_BankA0_EntrySelect_Choose_ReadLinkRole
     ld a, $03
     ld [wBattleSubPhase], a
     xor a
@@ -4760,7 +4760,7 @@ RunBattleSetup_BankA0_WriteBattleSetupDBAndStringIndexEtc::
     ret
 
 ; Clears this side's action choice (slot 0, or 1 for link role bit 1). (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_ReadLinkRole::
+RunBattleSetup_BankA0_EntrySelect_Choose_ReadLinkRole::
     ld a, [wLinkRole]
     and $02
     ld hl, wBattleActionChoice
@@ -4771,7 +4771,7 @@ RunBattleSetup_BankA0_EntrySelect_ReadLinkRole::
     ret
 
 ; Choosing what to do, step 5: redraws, draws the record frame and the bottom rows. (C1, E-0357)
-RunBattleSetup_BankA0_CopyRectRecordToScreenBufferAndStep::
+RunBattleSetup_BankA0_EntrySelect_DrawRecordFrame::
     call RunBattleSetup_BankA0_ReadSTAT
     farcall CopyRectRecordToScreenBuffer
     call DrawWindowTileBufferRow2Col16RowsToBGMapRow13_BankA0
@@ -4804,10 +4804,10 @@ RunBattleSetup_BankA0_CommandMenu::
     ld a, [wBattleResolveStep]
     jumptable
     dw RunBattleSetup_BankA0_CommandMenu_DrawLists
-    dw RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize
-    dw RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc
-    dw RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase
-    dw RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc
+    dw RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor
+    dw RunBattleSetup_BankA0_CommandMenu_SetTactic
+    dw RunBattleSetup_BankA0_CommandMenu_BackToChoosing
+    dw RunBattleSetup_BankA0_CommandMenu_ShowCommands
     dw RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember
     dw RunBattleSetup_BankA0_CommandMenu_StoreCommand
     dw RunBattleSetup_BankA0_CommandMenu_WriteBattleResolveStep
@@ -4815,10 +4815,10 @@ RunBattleSetup_BankA0_CommandMenu::
     dw RunBattleSetup_BankA0_CommandMenu_ShowItHasNoUsable
     dw RunBattleSetup_BankA0_CommandMenu_LayOut
     dw RunBattleSetup_BankA0_CommandMenu_BackToList
-    dw RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc
+    dw RunBattleSetup_BankA0_CommandMenu_ShowSkills
     dw RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize
     dw RunBattleSetup_BankA0_CommandMenu_SkillCursor
-    dw RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1
+    dw RunBattleSetup_BankA0_CommandMenu_ReturnToStep
     dw RunBattleSetup_BankA0_CommandMenu_DrawRecordFrame
     dw RunBattleSetup_BankA0_CommandMenu_WriteStringCategory
     dw RunBattleSetup_BankA0_CommandMenu_LayOutAfterText
@@ -4859,14 +4859,14 @@ RunBattleSetup_BankA0_CommandMenu_DrawLists::
 
 ; The command menu, step 1: puts the cursor on the monster's tactic (wBattleLoadWork) and draws it.
 ; (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize::
+RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor::
     ld a, [wCommandMonster]
     ld hl, wBattleLoadWork
     add_a_to_hl
     ld a, [hl]
     ld [wMenuSubState], a
     call DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_Data
+    ld hl, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
     ld a, [wMenuSubState]
     and $03
     add a
@@ -4887,10 +4887,10 @@ RunBattleSetup_BankA0_CommandMenu_WriteMenuSubStateAndListLastPageSize::
 ; The command menu, step 2: A (sound $69) sets the tactic; tactic 3 goes on two steps to the
 ; commands, the others clear the action, set side control bit 7 and fight (sub-phase 3); B goes
 ; back. (C1, E-0357)
-RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc::
-    ld de, RunBattleSetup_BankA0_CommandMenu_Data
+RunBattleSetup_BankA0_CommandMenu_SetTactic::
+    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
     ld hl, wMenuSubState
-    call RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0
+    call SkillListCursor_BankA0
     ld a, [wJoypadPressed]
     bit 0, a
     jr z, .check_bit1
@@ -4948,7 +4948,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndBattleResolveStepEtc::
     ret
 
 ; The command menu, step 3: redraws and returns to choosing (sub-phase 0). (C1, E-0357)
-RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase::
+RunBattleSetup_BankA0_CommandMenu_BackToChoosing::
     call DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0
     xor a
     ld [wBattleResolveStep], a
@@ -4958,7 +4958,7 @@ RunBattleSetup_WriteBattleResolveStepAndBattleSubPhase::
 
 ; The command menu, step 4: shows the command list (string 9 of category 2, 8 x 3), draws its frame
 ; and puts the cursor at side control bits 4-5. (C1, E-0357)
-RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc::
+RunBattleSetup_BankA0_CommandMenu_ShowCommands::
     ld a, [wBattleArg1]
     or a
     call z, DrawScreenTileBufferRow11Col4Rect20x11ToBGMapRow7_BankA0
@@ -4990,7 +4990,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndStringCategoryEtc::
 ; The command menu, step 5: draws the cursor ($BB) at the command. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
     call DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
+    ld hl, RunBattleSetup_BankA0_CommandMenu_Data
     ld a, [wMenuSelectedMember]
     and $03
     add a
@@ -5010,9 +5010,9 @@ RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember::
 ; 0 picks action $C0 aimed at the partner slot (step $15 when absent), 1 the skills (step 8 when
 ; none can be used, otherwise step $0C), 2 action $AC on itself. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_StoreCommand::
-    ld de, RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data
+    ld de, RunBattleSetup_BankA0_CommandMenu_Data
     ld hl, wMenuSelectedMember
-    call RunBattleSetup_BankA0_CommandMenu_StoreCommand_SetBit6AndBlankEntryTile_BankA0
+    call ThreeEntryCursor_BankA0
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -5044,7 +5044,7 @@ RunBattleSetup_BankA0_CommandMenu_StoreCommand::
     or a
     jr z, .read_command_monster
     cp $01
-    jr z, .call_run_battle_setup_bank_a0_command_menu
+    jr z, .call_count_skills_for_list_bank_a0
     jr .read_command_monster2
 
 .read_command_monster:
@@ -5069,8 +5069,8 @@ RunBattleSetup_BankA0_CommandMenu_StoreCommand::
     ld [wBattleResolveStep], a
     jr .return
 
-.call_run_battle_setup_bank_a0_command_menu:
-    call RunBattleSetup_BankA0_CommandMenu_StoreCommand_WriteBattleArg2AndBattleArg3Etc
+.call_count_skills_for_list_bank_a0:
+    call CountSkillsForList_BankA0
     ld a, d
     or a
     jr nz, .call_clear_and_layout_tile_blocks_for_battle2
@@ -5173,7 +5173,7 @@ RunBattleSetup_BankA0_CommandMenu_BackToList::
 ; The command menu, step 12 (the skills): takes the cursor from side control (bits 0-1 the entry,
 ; bit 2 the page), shows the page's skill names, the cursor and frame, and the chosen skill's name
 ; and MP cost. (C1, E-0357)
-RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
+RunBattleSetup_BankA0_CommandMenu_ShowSkills::
     ld a, [wBattleArg1]
     or a
     call z, DrawScreenTileBufferRow14Col8Rect11x9ToBGMapRow9_BankA0
@@ -5192,9 +5192,9 @@ RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
     ld [wCommandCursor], a
     ld hl, wCommandCursor
     res 7, [hl]
-    ld de, RunBattleSetup_BankA0_CommandMenu_Data
+    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
     call ShowSkillPageNames_BankA0
-    call RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0
+    call RedrawSkillList_BankA0
     farcall CopyRectRecordsAndToScreenBuffer
     ld a, $09
     ld [wStringCategory], a
@@ -5212,7 +5212,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
     add a
     add_a_to_hl
     ld a, [hl]
-    call RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0
+    call ShowSkillNameAndCost
     ld hl, wBattleResolveStep
     inc [hl]
     ret
@@ -5221,7 +5221,7 @@ RunBattleSetup_BankA0_WriteBattleArg1AndMenuCursorEtc::
 ; a page). (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
-    ld hl, RunBattleSetup_BankA0_CommandMenu_Data
+    ld hl, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
     ld a, [wMenuCursor]
     and $03
     add a
@@ -5245,9 +5245,9 @@ RunBattleSetup_BankA0_CommandMenu_WriteListLastPageSize::
 ; string $26, both returning here through step 16; otherwise stores the page and entry in side
 ; control and the skill as the action and goes on; B returns to the commands. (C1, E-0357)
 RunBattleSetup_BankA0_CommandMenu_SkillCursor::
-    ld de, RunBattleSetup_BankA0_CommandMenu_Data
+    ld de, RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data
     ld hl, wMenuCursor
-    call RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0
+    call SkillListCursor_BankA0
     ld a, [wJoypadPressed]
     bit 0, a
     jp z, .check_joypad_pressed
@@ -5311,7 +5311,7 @@ RunBattleSetup_BankA0_CommandMenu_SkillCursor::
 .check_joypad_pressed:
     ld a, [wJoypadPressed]
     bit 1, a
-    jr z, .call_run_battle_setup_bank_a0_command_menu
+    jr z, .call_redraw_skill_list_bank_a0
     farcall ClearAndLayoutTileBlocksForBattleFoeCount
     ld a, $04
     ld [wBattleArg1], a
@@ -5319,8 +5319,8 @@ RunBattleSetup_BankA0_CommandMenu_SkillCursor::
     inc [hl]
     jr .return
 
-.call_run_battle_setup_bank_a0_command_menu:
-    call RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0
+.call_redraw_skill_list_bank_a0:
+    call RedrawSkillList_BankA0
     call DrawInventoryPageIndicator_BankA0
 
 .return:
@@ -5349,7 +5349,7 @@ RunBattleSetup_BankA0_CommandMenu_SkillCursor::
     jr .return
 
 ; The command menu, step 15: redraws and goes to the return step in wBattleArg1. (C1, E-0357)
-RunBattleSetup_BankA0_WriteBattleResolveStepAndBattleArg1::
+RunBattleSetup_BankA0_CommandMenu_ReturnToStep::
     call DrawScreenTileBufferRow13Col8AndScreenTileBufferRow14Col8Rects_BankA0
     ld a, [wBattleArg1]
     ld [wBattleResolveStep], a
@@ -5610,7 +5610,7 @@ RunBattleSetup_BankA0_WaitLinkMessage_SetLinkSendByte::
 ; Turn setup, sub-phase 9: compares the second random seed with the exchanged one
 ; (wBattleSetupFlags) and sends $22 when they match, $33 when not (kept in wCounterPtr0Lo). (C1,
 ; E-0357)
-RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo::
+RunBattleSetup_BankA0_CompareSeeds::
     ld hl, wBattleSetupFlagsLo
     ld a, [hli]
     ld b, a
@@ -5643,7 +5643,7 @@ RunBattleSetup_BankA0_WriteLinkSendByteAndCounterPtr0Lo::
 
 ; Turn setup, sub-phase 10: waits for the partner's $22 or $33 (kept in wCounterPtr0Hi). (C1,
 ; E-0357)
-RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte::
+RunBattleSetup_BankA0_WaitPartnerSeed::
     ld a, [wLinkMessage]
     cp $22
     jr z, .set_counter_ptr0_hi
@@ -5661,7 +5661,7 @@ RunBattleSetup_BankA0_WriteCounterPtr0HiAndLinkSendByte::
 
 ; Turn setup, sub-phase 11: when both sides sent $22 sends 2 and goes on; otherwise exchanges again
 ; from sub-phase 5. (C1, E-0357)
-RunBattleSetup_BankA0_WriteLinkSendByteAndBattleSubPhase::
+RunBattleSetup_BankA0_ConfirmSeeds::
     ld a, [wCounterPtr0Lo]
     cp $22
     jr nz, .set_battle_sub_phase_to_05
@@ -5697,7 +5697,7 @@ RunBattleSetup_BankA0_ClearWindow::
 
 ; A 2 x 2 cursor (entry byte HL, BG map offsets DE): Up/Down toggle bit 0, Left/Right bit 1 (sound
 ; $69); otherwise blinks the cursor every 16 frames. (C1, E-0357)
-RunBattleSetup_BankA0_EntrySelect_Cursor_SetBit6AndBlankEntryTile_BankA0::
+TwoByTwoCursor::
     ld a, [wJoypadPressedRepeat]
     and $c0
     jr z, .check_joypad_pressed_repeat
@@ -5745,7 +5745,7 @@ RunBattleSetup_BankA0_EntrySelect_Cursor_SetBit6AndBlankEntryTile_BankA0::
 
 ; A three-entry cursor: Up/Down move with wrap (sound $69); otherwise blinks the cursor every 16
 ; frames. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_StoreCommand_SetBit6AndBlankEntryTile_BankA0::
+ThreeEntryCursor_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -5800,7 +5800,7 @@ RunBattleSetup_BankA0_CommandMenu_StoreCommand_SetBit6AndBlankEntryTile_BankA0::
 ; The skill list cursor: Up/Down move within the page (the last page up to wCommandCursorMax, others
 ; up to wListLastPageSize) with wrap, Left/Right turn the page when there are two; marks a change
 ; (bit 7) for redrawing. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_SetBit6AndBlankEntryTile_BankA0::
+SkillListCursor_BankA0::
     ld a, [wJoypadPressedRepeat]
     and $40
     jr z, .check_joypad_pressed_repeat
@@ -6053,7 +6053,7 @@ WriteFiveTilesFromTable_2_Data::
 
 ; Counts the command monster's skills (up to eight, stopping at $FF or 0) for the skill list: two
 ; pages from five on, the last page's size, and returns D = the skills outside $A2-$A9. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_StoreCommand_WriteBattleArg2AndBattleArg3Etc::
+CountSkillsForList_BankA0::
     ld a, [wCommandMonster]
     ld hl, wBattleSkills
     swap a
@@ -6156,7 +6156,7 @@ ReturnZero_3::
 
 ; Redraws after a cursor change: a new page shows its skill names; a new entry shows the skill's
 ; name and its MP cost at row 15. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0::
+RedrawSkillList_BankA0::
     ld a, [wCommandCursor]
     bit 7, a
     jr z, .check_menu_cursor
@@ -6191,7 +6191,7 @@ RunBattleSetup_BankA0_CommandMenu_ClearBit6AndCursorEntryTile_BankA0::
     add a
     add_a_to_hl
     ld a, [hl]
-    call RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0
+    call ShowSkillNameAndCost
     ld de, wWindowTileBuffer + $88
     ld hl, vBGMap0 + $1f0
     ld a, [de]
@@ -6245,7 +6245,7 @@ ShowStringAAtTiles2080_BankA0::
 
 ; Shows skill A's name in a 6 x 3 window at VRAM $8800 and its MP cost (record byte 0; $FF shows the
 ; monster's own MP) as three digits at wWindowTileBuffer + $88. (C1, E-0357)
-RunBattleSetup_BankA0_CommandMenu_ShowStringBank08AtTilesHL_BankA0::
+ShowSkillNameAndCost::
     push af
     ld [wStringIndex], a
     ld hl, vTiles1
@@ -6305,10 +6305,10 @@ DrawInventoryPageIndicator_BankA0::
 RunBattleSetup_BankA0_EntrySelect_Data::
     db $c1, $01, $01, $02, $c7, $01, $07, $02
 
-RunBattleSetup_BankA0_CommandMenu_Data::
+RunBattleSetup_BankA0_CommandMenu_ShowTacticCursor_Data::
     db $41, $01, $81, $01, $c1, $01, $01, $02
 
-RunBattleSetup_BankA0_CommandMenu_ReadMenuSelectedMember_Data::
+RunBattleSetup_BankA0_CommandMenu_Data::
     db $81, $01, $c1, $01, $01, $02, $c1, $01, $01, $02, $c1, $01, $01, $02, $29, $00
     db $69, $00, $a9, $00, $e9, $00, $2f, $01, $6f, $01
 

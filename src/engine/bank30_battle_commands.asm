@@ -13,7 +13,7 @@ RunBattleCommandEntry::
     ret nz
     ld a, [wBattleSubPhase]
     jumptable
-    dw RunBattleCommandEntry_WriteCommandEntryMonster
+    dw RunBattleCommandEntry_Start
     dw RunBattleCommandEntry_NextActor
     dw RunBattleCommandEntry_ToRunCommandEntryResolveStep
     dw RunBattleCommandEntry_ChooseTarget
@@ -24,7 +24,7 @@ RunBattleCommandEntry::
 ; Turn order, step 0: next step; outside link battles, sets wCommandEntryMonster to whichever of the
 ; party's summed personality bytes is largest (0 Hi, 1 Mid, 2 Lo, 3 trait; an earlier one wins
 ; ties). (C1, E-0357)
-RunBattleCommandEntry_WriteCommandEntryMonster::
+RunBattleCommandEntry_Start::
     ld hl, wBattleSubPhase
     inc [hl]
     ld a, [wLinkMode]
@@ -37,14 +37,14 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotPersonalityHi
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    call SumPresentSlotBytes
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
     ld hl, wSlotPersonalityMid
     push de
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    call SumPresentSlotBytes
     pop hl
     ld a, l
     sub e
@@ -63,7 +63,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotPersonalityLo
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    call SumPresentSlotBytes
     pop hl
     ld a, l
     sub e
@@ -82,7 +82,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
     ld c, $00
     ld hl, wSlotTrait
     ld de, $0000
-    call RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    call SumPresentSlotBytes
     pop hl
     ld a, l
     sub e
@@ -97,7 +97,7 @@ RunBattleCommandEntry_WriteCommandEntryMonster::
 
 ; DE += the byte at HL for each of B slots from slot C that is present (HL steps per slot). (C1,
 ; E-0357)
-RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
+SumPresentSlotBytes::
     ld a, c
     call CarryUnlessBattleSlotOutSlotEmpty
     jr c, .next
@@ -112,7 +112,7 @@ RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty::
     inc hl
     inc c
     dec b
-    jr nz, RunBattleCommandEntry_CarryUnlessBattleSlotOutSlotEmpty
+    jr nz, SumPresentSlotBytes
     ret
 
 ; Turn order, step 1: advances the second random stream in link battles; walks wBattleActor to the
@@ -234,8 +234,8 @@ ChooseTargetForActor::
 
 ; Turn order, step 4: clears the action queue and the speed list, lists every present slot marked 2
 ; with a speed (RunBattleCommandEntry_ListSpeeds_AdvanceRandom plus the action's bonus,
-; RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc), adds the item entry
-; (RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget); next step. (C1, E-0357)
+; AddActionSpeedBonus), adds the item entry (RunBattleCommandEntry_ListSpeeds_WaitBattleItemTarget);
+; next step. (C1, E-0357)
 RunBattleCommandEntry_ListSpeeds::
     ld hl, wActionQueue
     ld bc, $0009
@@ -271,7 +271,7 @@ RunBattleCommandEntry_ListSpeeds::
     jr nz, .next
     ld a, e
     call RunBattleCommandEntry_ListSpeeds_AdvanceRandom
-    call RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc
+    call AddActionSpeedBonus
     ld hl, wBattleTempPtrLo
     deref_hl
     ld a, c
@@ -323,7 +323,7 @@ RunBattleCommandEntry_ListSpeeds_AdvanceRandom::
 ; Adds the action's speed bonus to BC: actions $62 and $D8 add 3,000 (they go first); a skill whose
 ; record byte 5 has bit 2 set adds 1,000, others 10; action $69 instead gives a random speed of 1 to
 ; 9 (random mod 9 + 1). Bank $A1's copy adds 2,000 for the bit-2 skills. (C1, E-0357)
-RunBattleCommandEntry_ListSpeeds_WriteRecordBufferAndBattleArg0Etc::
+AddActionSpeedBonus::
     push de
     ld a, e
     ld hl, wBattleActionChoice
@@ -528,8 +528,7 @@ RunBattleCommandEntry_SortBySpeed::
 
 ; Turn order, step 6: totals the HP and the max HP of slots 0-2 into wBattleCommandArgs, clears the
 ; resolve counters, saves the action choices (SaveActionChoicesAndPickFormations) and marks berserk
-; actors (RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty); next battle step. (C1,
-; E-0357)
+; actors (SetBerserkForAction6E); next battle step. (C1, E-0357)
 RunBattleCommandEntry_TotalHP::
     ld hl, wBattleHP
     ld bc, $0000
@@ -558,7 +557,7 @@ RunBattleCommandEntry_TotalHP::
     ld bc, $0005
     call FillBytes
     farcall SaveActionChoicesAndPickFormations
-    call RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty
+    call SetBerserkForAction6E
     ret
 
 ; BC += the word at [HL]; HL += 2; clobbers A (the same 7 bytes appear in 2 banks) (E-0353)
@@ -572,7 +571,7 @@ AddWordAtHLToBC_Bank30::
     ret
 
 ; Sets BSTAT6_BERSERK for every present slot whose chosen action is $6E. (C1, E-0357)
-RunBattleCommandEntry_TotalHP_CarryUnlessBattleSlotOutSlotEmpty::
+SetBerserkForAction6E::
     ld c, $00
     ld b, $08
 
@@ -1346,9 +1345,8 @@ SortThreeAIWeightsRandomTies::
     ld d, a
     ld e, $19
 
-; for each of the actor's skills equal to D adds weight through
-; AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc to wAIWeights[index]; for D other than 2 also to
-; wAIWeights + $10[D - 1] (E-0125)
+; for each of the actor's skills equal to D adds weight through ScaleSkillWeightByCommand to
+; wAIWeights[index]; for D other than 2 also to wAIWeights + $10[D - 1] (E-0125)
 AddWeightsForSkillD::
     ld bc, $0800
     ld hl, wBattleSkillsPrefix
@@ -1369,7 +1367,7 @@ AddWeightsForSkillD::
     ld hl, wAIWeights
     add a
     add_a_to_hl
-    call AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc
+    call ScaleSkillWeightByCommand
     pop hl
 
 .restore:
@@ -1385,7 +1383,7 @@ AddWeightsForSkillD::
     dec a
     ld hl, wAIWeights + $10
     add_a_to_hl
-    call AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc
+    call ScaleSkillWeightByCommand
 
 .return:
     ret
@@ -1393,7 +1391,7 @@ AddWeightsForSkillD::
 ; Scales skill weight E by the battle command (wMenuState, or the link's wSlotCommands): command 1
 ; doubles it (0 when the tactic is 3), command 3 keeps it, 0 and 2 clear it; then adds it to the
 ; word at HL. (C1, E-0357)
-AddWeightsForSkillD_ReadLinkModeAndBattleActorEtc::
+ScaleSkillWeightByCommand::
     push de
     push hl
     ld a, [wLinkMode]
@@ -2633,7 +2631,7 @@ RunCommandEntryResolveStep_CheckObeys_IncBIfActorEntryBelow40::
     ld bc, $0008
     ld a, $ff
     call FillBytes
-    call RunCommandEntryResolveStep_CheckObeys_WriteRecordBufferAndBattleArg0Etc
+    call ListActorSkills
     ld a, [wBattleActor]
     ld hl, wSlotPersonalityHi
     add_a_to_hl
@@ -2703,7 +2701,7 @@ CountIfActorPersonalityHiAtLeastHLEntry::
 
 ; Lists the actor's skills into wTemp0, leaving out those whose record byte 3 has kind 2. (C1,
 ; E-0357)
-RunCommandEntryResolveStep_CheckObeys_WriteRecordBufferAndBattleArg0Etc::
+ListActorSkills::
     ld a, [wBattleActor]
     swap a
     ld hl, wBattleSkills

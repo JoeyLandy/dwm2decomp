@@ -32,7 +32,7 @@ GameMode4_Init_FillBytes::
     call GameMode4_Init_FillBytes_2
     ld a, [wLinkMode]
     or a
-    jr nz, .call_game_mode4_init_write_species_id_lo_and
+    jr nz, .call_game_mode4_init_load_battle_slots
     ld hl, wWorkBuf
     ld bc, $0200
     xor a
@@ -51,14 +51,14 @@ GameMode4_Init_FillBytes::
     ld [wFoeJoinClass3], a
     ld a, $00
     ld [rRAMG], a
-    jr .call_game_mode4_init_write_species_id_lo_and
+    jr .call_game_mode4_init_load_battle_slots
 
-.call_game_mode4_init_write_species_id_lo_and:
-    call GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi
-    call GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31
+.call_game_mode4_init_load_battle_slots:
+    call GameMode4_Init_LoadBattleSlots
+    call GameMode4_Init_BuildBattleScreen
     call GameMode4_Init_LoadMonsterPicture
     call GameMode4_Init_QueueMusic
-    call GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty
+    call GameMode4_Init_SetSlotMarks
     ret
 
 ; Resets the battle arrays: command menu state 1 for battle kinds 4, 5 and 9 (else 0); no effect,
@@ -206,8 +206,8 @@ GameMode4_Init_CountBattlerRecords::
 ; Builds the battle screen: the glyph tiles, cleared attributes, the party's layout, the foes'
 ; picture blocks, the status panels and the picture attributes, copied to the BG map with a palette
 ; upload. (C1, E-0357)
-GameMode4_Init_ClearAttributesAndScreenBuffer_Bank31::
-    farcall GameMode4_Init_CopyGlyphTilesToVRAM
+GameMode4_Init_BuildBattleScreen::
+    farcall GameMode4_Init_BuildBattleScreen_CopyGlyphTilesToVRAM
     farcall ClearAttributesAndScreenBuffer_Bank31
     farcall CopyRectRecordForBattlePartyCount_Bank31
     farcall LayoutTileBlocksForBattleFoeCount
@@ -278,7 +278,7 @@ GameMode4_Init_LoadMonsterPicture_2::
 ; slot 4, the counts swapped for the link follower), adjusts the skills, and sets each present
 ; slot's body flags from its species (metal in the low nibble, untrippable in the high). (C1,
 ; E-0357)
-GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
+GameMode4_Init_LoadBattleSlots::
     ld a, [wBattlePartyCount]
     ld b, a
     ld c, $00
@@ -289,7 +289,7 @@ GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld b, a
 
 .loop:
-    call GameMode4_Init_LoadBattleSlotFromBattlerRecord
+    call GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord
     inc c
     dec b
     jr nz, .loop
@@ -303,7 +303,7 @@ GameMode4_Init_WriteSpeciesIdLoAndSpeciesIdHi::
     ld b, a
 
 .loop2:
-    call GameMode4_Init_LoadBattleSlotFromBattlerRecord
+    call GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord
     inc c
     dec b
     jr nz, .loop2
@@ -1175,7 +1175,7 @@ BattleEnd_Step3_LoadMonsterAndSpeciesForListEntryC::
 
 ; Loads the foes: in battle kind 5 or an even kind from their monster records
 ; (LoadMonsterAndSpeciesForListEntryC); in odd kinds other than 5 builds each from its species
-; (GameMode4_Init_WriteBattleArg2AndBattleArg3Etc), $4E bytes apart. (C1, E-0357)
+; (GameMode4_Init_BuildFoeRecord), $4E bytes apart. (C1, E-0357)
 GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     ld a, [wBattleFoeCount]
     ld b, a
@@ -1199,7 +1199,7 @@ GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
 
 .loop2:
     push bc
-    call GameMode4_Init_WriteBattleArg2AndBattleArg3Etc
+    call GameMode4_Init_BuildFoeRecord
     pop bc
     inc c
     ld a, e
@@ -1212,10 +1212,8 @@ GameMode4_Init_LoadMonsterAndSpeciesForListEntryC::
     jr nz, .loop2
     ret
 
-; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs
-; LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData, loads the species named in
-; wRecordBuffer, then runs LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc
-; (E-0121)
+; loads monster wEncounterMonsters[C] (LoadMonsterRecord), runs FillBattlerRecordFromMonster, loads
+; the species named in wRecordBuffer, then runs SetBattlerFamilyAndSex (E-0121)
 LoadMonsterAndSpeciesForListEntryC::
     push bc
     ld a, c
@@ -1232,7 +1230,7 @@ LoadMonsterAndSpeciesForListEntryC::
     pop de
     pop bc
     push de
-    call LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData
+    call FillBattlerRecordFromMonster
     pop de
     ld a, [wRecordBuffer]
     ld l, a
@@ -1247,14 +1245,14 @@ LoadMonsterAndSpeciesForListEntryC::
     farcall LoadSpeciesRecord
     pop de
     pop bc
-    call LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc
+    call SetBattlerFamilyAndSex
     pop bc
     ret
 
 ; Builds foe C's battler record from its species (wEncounterMonsters): species, family, sex ratio
 ; and three skills, level wWildLevel[C] (at least 1), experience, and the stats from the species'
 ; growth rows scaled by the battle kind (ScaleStatAndCapByBattleKind). (C1, E-0357)
-GameMode4_Init_WriteBattleArg2AndBattleArg3Etc::
+GameMode4_Init_BuildFoeRecord::
     push bc
     ld a, e
     ld [wBattleArg2], a
@@ -1796,7 +1794,7 @@ Multiply24By8::
 
 ; Fills a battler record at DE from the loaded monster record: $FF for the name, the monster id, and
 ; the record's fields in battler order. (C1, E-0357)
-LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
+FillBattlerRecordFromMonster::
     push bc
     ld b, $0a
     ld a, $ff
@@ -1928,7 +1926,7 @@ LoadMonsterAndSpeciesForListEntryC_ReadRecordBufferAndRecordBufferData::
 ; The battler record's family and sex from the species: sex ratio 0 gives 0, otherwise 1 when a
 ; random byte is below 2 (ratio 1), 128 (ratio 2) or 230 (others); a non-zero wNewRecordFamily is
 ; stored there instead (bit 4 cleared); then the 27 resistance bytes. (C1, E-0357)
-LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
+SetBattlerFamilyAndSex::
     ld a, $0c
     add e
     ld e, a
@@ -2007,7 +2005,7 @@ LoadMonsterAndSpeciesForListEntryC_ReadSpeciesRecordAndRandomLoEtc::
 
 ; Loads battle slot C from its battler record (foe slots outside link battles through
 ; LoadBattleSlotFromBattlerRecord_2) and clears the species record buffer. (C1, E-0357)
-GameMode4_Init_LoadBattleSlotFromBattlerRecord::
+GameMode4_Init_LoadBattleSlots_LoadBattleSlotFromBattlerRecord::
     ld a, [wLinkMode]
     or a
     jr nz, LoadBattleSlotFromBattlerRecord
@@ -2456,7 +2454,7 @@ BattlerRecordAddress_Bank19::
 ; Sets the slot marks: outside link battles foe slots 4-7 get $01 when present and $FF when empty,
 ; then slots 0-3 (all eight in link battles) $FF when empty, $01 when a status blocks them,
 ; otherwise $00. (C1, E-0357)
-GameMode4_Init_CarryUnlessBattleSlotOutSlotEmpty::
+GameMode4_Init_SetSlotMarks::
     ld a, [wLinkMode]
     or a
     jr nz, .skip2
@@ -2915,10 +2913,9 @@ LoadTableEntryForRecordBufBSpeciesToRecordBufBExp::
     ld [de], a
     ret
 
-; while GameMode4_Init_WriteBattleArg2AndBattleArg3Etc builds a new monster record, the code reads
-; the byte at $741C + wSpeciesId and stores it at the next record byte, right after the zero that
-; follows the copied name; 384 bytes, one per species, values 1-7; what the field means is not read
-; (E-0208, C1)
+; while GameMode4_Init_BuildFoeRecord builds a new monster record, the code reads the byte at $741C
+; + wSpeciesId and stores it at the next record byte, right after the zero that follows the copied
+; name; 384 bytes, one per species, values 1-7; what the field means is not read (E-0208, C1)
 ; record: value 1-7 stored in a new monster record
 SpeciesNewRecordByteTable::
     db $07 ; id 0

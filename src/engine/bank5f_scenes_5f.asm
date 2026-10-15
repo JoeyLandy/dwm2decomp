@@ -1183,16 +1183,16 @@ SceneDancing_DanceSteps::
     jumptable
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc
+    dw SceneDancing_DanceSteps_FaceLeft
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_3
+    dw SceneDancing_DanceSteps_FaceRight
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_2
+    dw SceneDancing_DanceSteps_FaceUp
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords
+    dw SceneDancing_DanceSteps_FaceDown
     dw SceneDancing_DanceSteps_HopAll
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
@@ -1200,7 +1200,7 @@ SceneDancing_DanceSteps::
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
 
 ; Dance step 11: the player and the three followers face down; next step. (C1, E-0357)
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
+SceneDancing_DanceSteps_FaceDown::
     xor a
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
@@ -1211,22 +1211,22 @@ SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecords::
     ret
 
 ; Dance step 8: everyone faces up (6E99). (C1, E-0357)
-SceneDancing_DanceSteps_2::
+SceneDancing_DanceSteps_FaceUp::
     ld a, $02
-    jr SceneDancing_DanceSteps_SetPlayerFacing
+    jr SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing
 
 ; Dance step 5: everyone faces right (6E99). (C1, E-0357)
-SceneDancing_DanceSteps_3::
+SceneDancing_DanceSteps_FaceRight::
     ld a, $01
-    jr SceneDancing_DanceSteps_SetPlayerFacing
+    jr SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing
 
 ; Dance step 2: everyone faces left (6E99). (C1, E-0357)
-SceneDancing_DanceSteps_WritePlayerFacingAndFollowerRecordsEtc::
+SceneDancing_DanceSteps_FaceLeft::
     ld a, $03
 
 ; Turns the player and the three followers to facing A, standing still (bit 1 clear), for 64 frames;
 ; then freezes them again (bit 1) and goes to the next step. (C1, E-0357)
-SceneDancing_DanceSteps_SetPlayerFacing::
+SceneDancing_DanceSteps_FaceLeft_SetPlayerFacing::
     ldh [hPlayerFacing], a
     ld [wFollowerRecords], a
     ld [wFollowerRecords + $5], a
@@ -1257,13 +1257,13 @@ SceneMermaidSong2_MoveSteps::
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneMermaidSong2_MoveSteps_StepPair
     dw SceneMermaidSong2_MoveSteps_HopFollowers
-    dw SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc
+    dw SceneMermaidSong2_MoveSteps_StepPairBack
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
-    dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneMermaidSong2_TurnAround
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_HopAll
-    dw SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc
+    dw SceneMermaidSong2_TurnAround
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WriteScriptParam0
     dw SceneDancing_DanceSteps_WritePlayerStateFlags
@@ -1319,7 +1319,7 @@ SceneDancing_DanceSteps_HopAll::
 
 ; Mermaid song, step 7: turns the player and followers a quarter-turn every four frames until they
 ; face down again; next step. (C1, E-0357)
-SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc::
+SceneMermaidSong2_TurnAround::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -1343,7 +1343,7 @@ SceneMermaidSong2_WriteScriptParam0AndPlayerFacingEtc::
 ; Mermaid song, step 4: every eight frames turns the player and the first follower the other way and
 ; steps them one pixel apart; every four frames moves the other two followers by the table,
 ; backwards, until it is used up (32 entries); next step. (C1, E-0357)
-SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
+SceneMermaidSong2_MoveSteps_StepPairBack::
     ld a, [wScriptParam0]
     and $07
     jr nz, .check_script_param0
@@ -1375,7 +1375,7 @@ SceneMermaidSong2_MoveSteps_WritePlayerFacingAndFollowerRecordsEtc::
     ld a, $1f
     sub c
     sla a
-    ld hl, SceneMermaidSong2_MoveSteps_Data
+    ld hl, SceneMermaidSong2_MoveSteps_StepPairBack_Data
     add_a_to_hl
     ld a, [hli]
     ld c, a
@@ -1466,7 +1466,7 @@ SceneMermaidSong2_MoveSteps_StepPair::
     dec [hl]
 
 .call_script_step_move_two_objects_by_table:
-    ld hl, SceneMermaidSong2_MoveSteps_Data
+    ld hl, SceneMermaidSong2_MoveSteps_StepPairBack_Data
     call ScriptStepMoveTwoObjectsByTable
     ret
 
@@ -1515,7 +1515,7 @@ ScriptStepMoveTwoObjectsByTable::
     ret
 
 ; data read by SceneMermaidSong2 (64 bytes) (E-0347)
-SceneMermaidSong2_MoveSteps_Data::
+SceneMermaidSong2_MoveSteps_StepPairBack_Data::
     db $fe, $00, $ff, $00, $fe, $ff, $ff, $ff, $ff, $ff, $ff, $fe, $00, $ff, $00, $fe
     db $00, $fe, $00, $ff, $01, $fe, $01, $ff, $01, $ff, $02, $ff, $01, $00, $02, $00
     db $02, $00, $01, $00, $02, $01, $01, $01, $01, $01, $01, $02, $00, $01, $00, $02
@@ -1528,18 +1528,18 @@ RunScriptSubStep::
     ld a, [wScriptSubStep]
     jumptable
     dw RunScriptSubStep_FollowersCatchUp
-    dw RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc
+    dw RunScriptSubStep_FollowersSpread
     dw RunScriptSubStep_HopObject5
-    dw RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc
-    dw RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc
-    dw RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc
+    dw RunScriptSubStep_SetUpRunning
+    dw RunScriptSubStep_FollowersRunRound
+    dw RunScriptSubStep_FaceDownAndStand
     dw RunScriptSubStep_SinkObject5
-    dw RunScriptSubStep_SetFollowerRecords
+    dw RunScriptSubStep_FollowersReturn
 
 ; Walking step 7: the first follower walks right, the second down every other frame, and the third
 ; left until it reaches the player's column; then all face down, the player is released (bit 2
 ; clear), and the scene goes on. (C1, E-0357)
-RunScriptSubStep_SetFollowerRecords::
+RunScriptSubStep_FollowersReturn::
     ld a, $01
     ld [wFollowerRecords], a
     ld a, [wFollowerRecords + $1]
@@ -1613,7 +1613,7 @@ RunScriptSubStep_SinkObject5::
     ret
 
 ; Walking step 5: everyone faces down and stands for 60 frames; next step. (C1, E-0357)
-RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
+RunScriptSubStep_FaceDownAndStand::
     ldh a, [hPlayerStateFlags]
     or $02
     ldh [hPlayerStateFlags], a
@@ -1635,7 +1635,7 @@ RunScriptSubStep_WritePlayerStateFlagsAndFollowerRecordsEtc::
 ; Walking step 4: for 800 frames each follower runs round the player in a loop (down to 16 below,
 ; right to 32 beside while spinning, up level, left to 32 on the other side), its leg kept in
 ; wScriptMsgSelect; then the next step. (C1, E-0357)
-RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc::
+RunScriptSubStep_FollowersRunRound::
     ld a, [wScriptTemp2]
     ld l, a
     ld a, [wScriptTemp3]
@@ -1741,7 +1741,7 @@ RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc::
     ld c, a
     ld a, [hl]
     sub c
-    ld de, RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data
+    ld de, RunScriptSubStep_FollowersRunRound_Data
     add e
     ld e, a
     jr nc, .read_player_y
@@ -1766,7 +1766,7 @@ RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc::
     ret
 
 ; data read by RunScriptSubStep (30 bytes) (E-0347)
-RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data::
+RunScriptSubStep_FollowersRunRound_Data::
     ds $11, $00
     db $01, $05, $08, $0a, $0c, $0d, $0e, $0e, $0f, $0f, $10, $10, $10, $11, $11, $11
     db $11, $10, $10, $10, $0f, $0f, $0e, $0e, $0d, $0c, $0a, $08, $05, $01
@@ -1774,7 +1774,7 @@ RunScriptSubStep_WriteScriptTemp2AndScriptTemp3Etc_Data::
 
 ; Walking step 3: waits 120 frames, then holds the player (bit 2) and sets up the running loop (800
 ; frames); next step. (C1, E-0357)
-RunScriptSubStep_WriteScriptParam0AndPlayerStateFlagsEtc::
+RunScriptSubStep_SetUpRunning::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -1829,7 +1829,7 @@ RunScriptSubStep_HopObject5::
 ; Walking step 1: the first follower walks left, the second up every other frame, and the third
 ; right until 32 pixels past the player; then they face down, right and left, field command $0B
 ; runs, and the player is frozen (bit 1); next step. (C1, E-0357)
-RunScriptSubStep_WriteFollowerRecordsAndPlayerFacingEtc::
+RunScriptSubStep_FollowersSpread::
     ld a, $03
     ld [wFollowerRecords], a
     ld a, [wFollowerRecords + $1]

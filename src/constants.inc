@@ -748,7 +748,7 @@ DEF EVENT_IM_PRINCE_KAMEHA_OF EQU $008 ; set by GreatLogTalkEvents_ShowImPrinceK
 DEF EVENT_IM_WARUBOU_GREAT_LOGS_SPIRIT EQU $009 ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit
 DEF EVENT_SCENE_WARUBOU_SMELLS EQU $00A ; set by GreatLogTalkEvents_ShowImWarubouGreatLogsSpirit, Script_WarubouWhaISmell
 DEF EVENT_SCENE_WARUBOU_FOOD2 EQU $00B ; set by SceneWarubouFood2_SinkObject2
-DEF EVENT_SCENE_WARUBOU_FOOD2_00C EQU $00C ; set by SceneWarubouFood2_WriteScriptParam0AndStepPtrLoEtc
+DEF EVENT_SCENE_WARUBOU_FOOD2_00C EQU $00C ; set by SceneWarubouFood2_WalkPlayerLeft
 DEF EVENT_DID_YOU_GET_THE_PACKAGE EQU $00D ; set by GreatLogTalkEvents_Mama
 DEF EVENT_LOOK_AN_ISLAND_JUST_DOESN EQU $00E ; set by Script_HahTheIsland, Script_HahTheIsland_2
 DEF EVENT_YOURE_THE_KIDS_FROM_THE EQU $00F ; set by TalkMsg003C_YoureTheKidsFromTheNew
@@ -787,7 +787,7 @@ DEF EVENT_WHEN_YOU_BREED_MONSTERS_033 EQU $033 ; no setter found; tested by SetF
 DEF EVENT_WHEN_YOU_BREED_MONSTERS_034 EQU $034 ; no setter found; tested by Talk0B56_WhenYouBreedMonsters
 DEF EVENT_BREEDING_FIRE_AND_ICE EQU $035 ; no setter found; tested by SetFlagsCBAndCCFrom35And36, Talk0B6D_BreedingFireAndIce
 DEF EVENT_BREEDING_FIRE_AND_ICE_036 EQU $036 ; no setter found; tested by SetFlagsCBAndCCFrom35And36, Talk0B6D_BreedingFireAndIce
-DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_SetFlagBitAndStep
+DEF EVENT_SCENE_TERRY_BATTLE EQU $037 ; set by SceneTerryBattle_Start
 DEF EVENT_SCENE_TERRY_BATTLE_038 EQU $038 ; set by SceneTerryBattle_ShowTerryWellThisProves
 DEF EVENT_SCENE_KAMEHA_KEY_BATTLE EQU $039 ; set by SceneKamehaKeyBattle_AfterBattle
 DEF EVENT_HERO_RECEIVED_THE_ELF_KEY EQU $03A ; set by SceneKamehaKeyBattle_AfterBattle, Script_KamehaWhatOhIt and 1 more
@@ -1028,7 +1028,7 @@ DEF EVENT_KING_YOU_WILL_I_KNEW_19B EQU $19B ; set by Script_KingYouWillI_4
 DEF EVENT_KING_IF_YOU_SEE_19C EQU $19C ; no setter found; tested by TalkMsg0A3C_KingIfYouSee, TalkMsg0A3E_YoureFreeToGo and 1 more
 DEF EVENT_HERO_RECEIVED_40_000_G EQU $19D ; set by Script_KingAhYou_4
 DEF EVENT_WELCOME_TO_THE_LIBRARY_19E EQU $19E ; set by Script_WelcomeToTheLibrary_3
-DEF EVENT_STAFF_ROLL_PARTY_SAVED EQU $19F ; named by reading (config/story_flags.json); used by DebugStaffRoll_Credits_WriteWorkBufAndMapIdEtc
+DEF EVENT_STAFF_ROLL_PARTY_SAVED EQU $19F ; named by reading (config/story_flags.json); used by DebugStaffRoll_Credits_Caption
 DEF EVENT_WARUBOU_WA_HEY_HERO_YOURE EQU $1A0 ; set by GreatLogTalkEvents_WarubouInCastle
 DEF EVENT_WARUBOU_WA_HEY_HERO_TOO EQU $1A1 ; set by GreatLogTalkEvents_WarubouInCastle
 DEF EVENT_WARUBOU_WA_HEY_HERO_YOU EQU $1A2 ; set by GreatLogTalkEvents_WarubouInCastle
@@ -1079,9 +1079,9 @@ DEF EVENT_OUR_CHURCH_IS_IMPOVERISHED_SO_202 EQU $202 ; set by YoldTalkEvents_Chu
 DEF EVENT_KEY_BOSS_BEATEN_203 EQU $203 ; set by Script_TheHumanInThe, Script_WhatYouAgainRude
 DEF EVENT_SCENE_WIZSTONE_204 EQU $204 ; set by Script_KiralAhBackIs
 DEF EVENT_KEY_BOSS_BEATEN_2_205 EQU $205 ; set by Script_WhatIsItYou, Script_WhatIsItYou_2
-DEF EVENT_SCENE_CHEST_BATTLE EQU $206 ; set by SceneChestBattle_WriteTemp0AndScriptStep
-DEF EVENT_SCENE_CHEST_BATTLE_207 EQU $207 ; set by SceneChestBattle_WriteTemp0AndScriptStep
-DEF EVENT_SCENE_CHEST_BATTLE_208 EQU $208 ; set by SceneChestBattle_WriteTemp0AndScriptStep
+DEF EVENT_SCENE_CHEST_BATTLE EQU $206 ; set by SceneChestBattle_MarkKeyUsed
+DEF EVENT_SCENE_CHEST_BATTLE_207 EQU $207 ; set by SceneChestBattle_MarkKeyUsed
+DEF EVENT_SCENE_CHEST_BATTLE_208 EQU $208 ; set by SceneChestBattle_MarkKeyUsed
 DEF EVENT_HM_YOURE_FROM_THE_VILLAGE EQU $209 ; set by FhuntTalkEvents_Sleeper
 
 ; Bits of a battle slot's status bytes wBattleStatus ... wBattleStatus8 (config/battle_status.json, D-009):

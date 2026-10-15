@@ -4,8 +4,8 @@
 SECTION "Bank 72", ROMX[$4000], BANK[$72]
     db $72
 
-; LoadMapScreen_WriteTemp0AndSVBK reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72
-; with ReadByteInBank; every non-zero word is $4181 + $63 * n (E-0141, C1)
+; LoadMapScreen_Type5 reads the word at $4001 + 2 * wKeyWorldRoomTable[...] in bank $72 with
+; ReadByteInBank; every non-zero word is $4181 + $63 * n (E-0141, C1)
 ; record: room record in KeyWorldRooms ($0000 = none)
 KeyWorldRoomPointers::
     dw KeyWorldRoom05 ; id 0
@@ -201,10 +201,10 @@ KeyWorldRoomPointers::
     dw $0000 ; id 190
     dw $0000 ; id 191
 
-; LoadMapScreen_WriteTemp0AndSVBK skips the 3-byte header, takes the far pointer at 3 + 12 *
-; hMapScreenY + 3 * hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer
-; $30 bytes later is decompressed as the attribute map. All 5,056 non-zero pointers of the 160
-; records decode to 360 bytes (E-0141, C1)
+; LoadMapScreen_Type5 skips the 3-byte header, takes the far pointer at 3 + 12 * hMapScreenY + 3 *
+; hMapScreenX and decompresses it into wScreenTileBuffer; on CGB the far pointer $30 bytes later is
+; decompressed as the attribute map. All 5,056 non-zero pointers of the 160 records decode to 360
+; bytes (E-0141, C1)
 ; record: 3-byte header; 16 far pointers to compressed screen tile maps (4 x 4 grid, row by row); 16
 ; far pointers to their attribute maps
 KeyWorldRooms::

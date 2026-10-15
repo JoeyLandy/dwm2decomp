@@ -66,8 +66,8 @@ SceneWatchOut::
     dw SceneWatchOut_WaitMessage
     dw SceneWatchOut_Msg_PickTheMonsterTo
     dw SceneWatchOut_WaitMessage
-    dw SceneWatchOut_CopyGlyphTilesToVRAMAndStep
-    dw SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo
+    dw SceneWatchOut_OpenPartyBox
+    dw SceneWatchOut_BoxCursorStep
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_ReadScriptMsgSelect
     dw SceneWatchOut_ReadScriptMsgSelect
@@ -191,7 +191,7 @@ SceneWatchOut_RestoreScreen::
 
 ; Watch Out scene, step 7: draws the names, opens the party box (ShowBoxFromTable) with the cursor
 ; on the first and freezes the player and objects. (C1, E-0357)
-SceneWatchOut_CopyGlyphTilesToVRAMAndStep::
+SceneWatchOut_OpenPartyBox::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
     xor a
@@ -291,8 +291,8 @@ SceneWaterReward::
     dw SceneWatchOut_WaitMessage
     dw SceneWatchOut_Msg_PickTheMonsterTo
     dw SceneWatchOut_WaitMessage
-    dw SceneWaterReward_CopyGlyphTilesToVRAMAndStep
-    dw SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo
+    dw SceneWaterReward_OpenPartyBox
+    dw SceneWatchOut_BoxCursorStep
     dw SceneWatchOut_ShowLetMeJoinYour
     dw SceneWatchOut_ReadScriptMsgSelect
     dw SceneWatchOut_ReadScriptMsgSelect
@@ -511,13 +511,13 @@ SceneWatchOut_ShowLetMeJoinYour::
     ret
 
 ; Watch Out scene, step 8: the box cursor (below). (C1, E-0357)
-SceneWatchOut_ToSceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
-    call SceneWatchOut_ReadJoypadPressedAndFrameCounterLo
+SceneWatchOut_BoxCursorStep::
+    call PartyBoxCursor
     ret
 
 ; Water reward scene, step 7: draws the names, opens the party box and freezes the player and
 ; objects. (C1, E-0357)
-SceneWaterReward_CopyGlyphTilesToVRAMAndStep::
+SceneWaterReward_OpenPartyBox::
     ld de, vTiles1 + $6e0
     call CopyGlyphTilesToVRAM
     xor a
@@ -616,7 +616,7 @@ SceneWaterReward_ShowCoohIHeardFrom::
 
 ; The party box cursor: B goes on one step; A marks the choice ($BC, sound $69) and goes on two;
 ; Up/Down move it (sound $69); the cursor blinks every 8 frames. (C1, E-0357)
-SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
+PartyBoxCursor::
     ld a, [wJoypadPressed]
     bit 1, a
     jr z, .check_bit0
@@ -627,7 +627,7 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
 .check_bit0:
     bit 0, a
     jr z, .check_bit6
-    call SceneWatchOut_WriteScriptMsgSelect
+    call PartyBoxCursor_WriteScriptMsgSelect
     ld a, $bc
     call WriteVRAMByte
     ld a, $69
@@ -641,19 +641,19 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
 .check_bit6:
     bit 6, a
     jr z, .check_bit7
-    call SceneWatchOut_WriteScriptMsgSelect
+    call PartyBoxCursor_WriteScriptMsgSelect
     ld a, $c3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
     dec [hl]
     ld a, $69
     call QueueSoundEffect
-    jr .call_scene_watch_out_write_script_msg_select
+    jr .call_party_box_cursor_write_script_msg_select
 
 .check_bit7:
     bit 7, a
-    jr z, .call_scene_watch_out_write_script_msg_select
-    call SceneWatchOut_WriteScriptMsgSelect
+    jr z, .call_party_box_cursor_write_script_msg_select
+    call PartyBoxCursor_WriteScriptMsgSelect
     ld a, $c3
     call WriteVRAMByte
     ld hl, wScriptMsgSelect
@@ -661,8 +661,8 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
     ld a, $69
     call QueueSoundEffect
 
-.call_scene_watch_out_write_script_msg_select:
-    call SceneWatchOut_WriteScriptMsgSelect
+.call_party_box_cursor_write_script_msg_select:
+    call PartyBoxCursor_WriteScriptMsgSelect
     ld c, $bb
     ld a, [wFrameCounterLo]
     bit 3, a
@@ -676,7 +676,7 @@ SceneWatchOut_ReadJoypadPressedAndFrameCounterLo::
 
 ; HL = the BG map place of box row wScriptMsgSelect (0-3, 16 pixels apart) at the scroll position.
 ; (C1, E-0357)
-SceneWatchOut_WriteScriptMsgSelect::
+PartyBoxCursor_WriteScriptMsgSelect::
     ld a, [wScriptMsgSelect]
     and $03
     ld [wScriptMsgSelect], a
@@ -1494,7 +1494,7 @@ SceneArenaChallenge_StartScriptedEncounterTemp0AndStep::
 SceneTerryBattle::
     ld a, [wScriptStep]
     jumptable
-    dw SceneTerryBattle_SetFlagBitAndStep
+    dw SceneTerryBattle_Start
     dw SceneTerryBattle_ShowTerryWellThisProves
     dw SceneWatchOut_Resume
 
@@ -1522,7 +1522,7 @@ SceneTerryBattle_ShowTerryWellThisProves::
 
 ; Terry's battle, step 0: sets EVENT_SCENE_TERRY_BATTLE and starts scripted encounter $14. (C1,
 ; E-0357)
-SceneTerryBattle_SetFlagBitAndStep::
+SceneTerryBattle_Start::
     ld de, EVENT_SCENE_TERRY_BATTLE
     call SetFlagBit
     ld a, $14
@@ -1991,8 +1991,8 @@ ScenePoorChurch::
     ld a, [wScriptStep]
     jumptable
     dw ScenePoorChurch_WalkUp
-    dw ScenePoorChurch_WriteSVBKAndScriptParam0
-    dw ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc
+    dw ScenePoorChurch_LoadFrame
+    dw ScenePoorChurch_StepFrames
     dw ScenePoorChurch_TurnRandomly
 
 ; Poor church scene, step 3: every eight frames turns a random one of four objects a random way (1
@@ -2029,7 +2029,7 @@ ScenePoorChurch_TurnRandomly::
 ; Poor church scene, step 2: steps through screen animation frames 0-5 (back to step 1 each time);
 ; after the last sets story flag byte $61 bit 3 and, unless EVENT_SCENE_TREASURE_THEFT is set,
 ; resumes the script. (C1, E-0357)
-ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
+ScenePoorChurch_StepFrames::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -2062,7 +2062,7 @@ ScenePoorChurch_WriteScriptParam0AndScriptParam1Etc::
 ; Poor church scene, step 1: decompresses animation frame wScriptParam1's screen (and on the GBC its
 ; attributes) from ScreenAnimationTable into the screen buffer and draws it, four times, then goes
 ; on. (C1, E-0357)
-ScenePoorChurch_WriteSVBKAndScriptParam0::
+ScenePoorChurch_LoadFrame::
     ld a, [wScriptParam1]
     add a
     add a
@@ -2111,10 +2111,10 @@ ScenePoorChurch_WriteSVBKAndScriptParam0::
     inc [hl]
     ret
 
-; ScenePoorChurch_WriteSVBKAndScriptParam0 indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 &
-; 1) and decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB,
-; wScreenAttrBuffer; it runs four steps, alternating the two frames; entries 0-5 decode to 360-byte
-; screens, the bytes after them do not (E-0145, C1)
+; ScenePoorChurch_LoadFrame indexes it with 8 * wScriptParam1 + 4 * (wScriptParam0 & 1) and
+; decompresses the two words from bank $93 into wScreenTileBuffer and, on CGB, wScreenAttrBuffer; it
+; runs four steps, alternating the two frames; entries 0-5 decode to 360-byte screens, the bytes
+; after them do not (E-0145, C1)
 ; record: frame 0 tile map (bank $93); frame 0 attribute map; frame 1 tile map; frame 1 attribute
 ; map
 ScreenAnimationTable::
@@ -2204,7 +2204,7 @@ SceneGiveBackCyal::
     dw SceneWatchOut_WaitMessage
     dw SceneGiveBackCyal_TurnAndMove
     dw SceneGiveBackCyal_MoveRight
-    dw SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
+    dw SceneGiveBackCyal_Shake
     dw SceneGiveBackCyal_SetScriptStartRequestTo80
 
 ; Cyal's return, step 10: the script resumes. (C1, E-0357)
@@ -2214,9 +2214,9 @@ SceneGiveBackCyal_SetScriptStartRequestTo80::
     ret
 
 ; Cyal's return, step 9: shakes the screen sideways for 30 frames. (C1, E-0357)
-SceneGiveBackCyal_ToSceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
+SceneGiveBackCyal_Shake::
     ld b, $1e
-    call SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc
+    call ShakeScreenSideways
     ret
 
 ; Cyal's return, step 8: object 2 moves right four pixels a frame to X $60, then stops animating.
@@ -2314,7 +2314,7 @@ SceneGiveBackCyal_DropObject::
 
 ; Shakes the screen sideways (hScrollX by +2 / -2 on alternate even frames) for B frames, then
 ; resets the scroll. (C1, E-0357)
-SceneGiveBackCyal_WriteScrollXAndScrollXHiEtc::
+ShakeScreenSideways::
     ld a, [wFrameCounterLo]
     and $03
     bit 0, a
@@ -2417,11 +2417,11 @@ GrowthLimitInfo::
     jumptable
     dw GrowthLimitInfo_ShowGrowthLimit
     dw SceneWatchOut_WaitMessage
-    dw GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc
+    dw GrowthLimitInfo_NextMember
 
 ; Growth limit info, step 2: moves to the next party member; after the last the script resumes. (C1,
 ; E-0357)
-GrowthLimitInfo_WriteScriptStepAndScriptParam1Etc::
+GrowthLimitInfo_NextMember::
     xor a
     ld [wScriptStep], a
     ld a, [wScriptParam1]
@@ -2514,7 +2514,7 @@ SceneBarrel::
     dw SceneBarrel_SetBarrelFlag
     dw SceneBarrel_WriteScriptParam0
     dw SceneWatchOut_WaitMessage
-    dw SceneBarrel_WriteSpriteSlotsAndObject1Etc
+    dw SceneBarrel_Flicker
     dw SceneBarrel_ShowRobosterStoppedMoving
     dw SceneWatchOut_Resume
 
@@ -2535,7 +2535,7 @@ SceneBarrel_ShowRobosterStoppedMoving::
 
 ; Barrel scene, step 7: flickers between two sprites for $78 frames, switching every 2, then 4, then
 ; 8 frames (the flicker slows down). (C1, E-0357)
-SceneBarrel_WriteSpriteSlotsAndObject1Etc::
+SceneBarrel_Flicker::
     ld a, [wScriptParam0]
     cp $1e
     jr nc, .cp_3C
@@ -2748,11 +2748,11 @@ SceneLimbo::
     dw SceneLimbo_ShowMessage
     dw SceneLimbo_DropItem
     dw SceneWatchOut_WaitMessage
-    dw SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest
+    dw SceneLimbo_AddItems
 
 ; The Limbo scene, step 15: adds items $36, $37 and $38 at the end of the inventory, sets inventory
 ; sort flag bit 6 and resumes the script. (C1, E-0357)
-SceneLimbo_WriteInventorySortFlagsAndScriptStartRequest::
+SceneLimbo_AddItems::
     ld hl, wInventory
 
 .skip:
@@ -2880,7 +2880,7 @@ SceneFoundMeBattle::
     jumptable
     dw SceneFoundMeBattle_ShowMessage
     dw SceneWatchOut_WaitMessage
-    dw SceneFoundMeBattle_WriteScriptStepAndTemp0
+    dw SceneFoundMeBattle_StartBattle
     dw SceneFoundMeBattle_BlinkGuard
     dw SceneFoundMeBattle_WalkOff
     dw SceneFoundMeBattle_SetGuardFlag
@@ -2971,7 +2971,7 @@ SceneFoundMeBattle_BlinkGuard::
 
 ; Found me battle, step 2: in disguise (wScriptParam1 1) skips to step 4; otherwise starts scripted
 ; encounter $1B. (C1, E-0357)
-SceneFoundMeBattle_WriteScriptStepAndTemp0::
+SceneFoundMeBattle_StartBattle::
     ld a, [wScriptParam1]
     cp $01
     jr nz, .set_temp0_to_1B
@@ -3307,7 +3307,7 @@ SceneCanalGate::
     dw SceneCanalGate_Hop
     dw SceneCanalGate_Msg0172_KingArrghIKnow
     dw SceneWatchOut_WaitMessage
-    dw SceneCanalGate_WriteScriptParam0AndSpriteSlots
+    dw SceneCanalGate_LowerObject0
     dw SceneCanalGate_WalkUp
     dw SceneCanalGate_RaiseGate
 
@@ -3348,7 +3348,7 @@ SceneCanalGate_WalkUp::
     ret
 
 ; Canal gate, step 4: object 0 moves down a pixel every other frame to Y $60. (C1, E-0357)
-SceneCanalGate_WriteScriptParam0AndSpriteSlots::
+SceneCanalGate_LowerObject0::
     ld a, [wScriptParam0]
     inc a
     ld [wScriptParam0], a
@@ -3679,7 +3679,7 @@ PartyHasField6FAtLeastC0Without55Bit7::
 
 ; hTemp0 = 1 when every living party member has a wildness (MON_WLD) of 0, otherwise 0; 0 with no
 ; party. (C1, E-0357)
-FhuntTalkEvents_WriteRAMGAndTemp0::
+FhuntTalkEvents_PartyIsTame::
     ld a, [wPartyCount]
     or a
     jr nz, .skip
@@ -3729,7 +3729,7 @@ FhuntTalkEvents_WriteRAMGAndTemp0::
 
 ; hTemp0 = 1 when the player is disguised as a monster in TalkEvent29WordList or a living party
 ; member's species is in it. (C1, E-0357)
-FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG::
+FhuntTalkEvents_GiantBird_IsBirdPresent::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, .check_party_count2
@@ -3849,7 +3849,7 @@ FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG::
     ldh [hTemp0], a
     ret
 
-; FhuntTalkEvents_GiantBird_WriteTemp0AndRAMG compares the words of this list, up to $0000, with
+; FhuntTalkEvents_GiantBird_IsBirdPresent compares the words of this list, up to $0000, with
 ; hPlayerSpriteStreamLo/Hi when hPlayerSpriteOverride bit 7 is set and bit 0 clear, and otherwise
 ; with the word at byte $0B of each party record whose byte $55 bit 7 is clear (LoadSRAMRecordWord);
 ; a match sets hTemp0 to 1 or to the party position; 29 words; what the words identify is not read
@@ -3945,7 +3945,7 @@ TalkEvent47WordList::
 ; hTemp1 = 1 when the player's monster disguise is sprite $00F6-$00FF or any $01xx sprite (the
 ; second test compares the decremented high byte, always 0, with $11), otherwise hTemp0 = 0. (C1,
 ; E-0357)
-FhuntTalkEvents_PowerOfJustice_WriteTemp0AndTemp1::
+FhuntTalkEvents_PowerOfJustice_IsDisguised::
     ldh a, [hPlayerSpriteOverride]
     bit 7, a
     jr z, .loop

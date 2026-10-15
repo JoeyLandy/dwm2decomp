@@ -852,10 +852,10 @@ UpdateSpriteSlots_Loop::
     jumptable
     dw UpdateSpriteSlots_RestoreRegisters
     dw UpdateSpriteSlots_Return
-    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo
-    dw UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2
-    dw UpdateSpriteSlots_WriteTemp0AndTemp1
-    dw UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0
+    dw UpdateSpriteSlots_Wander
+    dw UpdateSpriteSlots_FixedMoves
+    dw UpdateSpriteSlots_FollowPath4
+    dw UpdateSpriteSlots_FollowPath5
 
 ; Moves to the next sprite slot (16 bytes on) and continues the loop. (C1, E-0357)
 UpdateSpriteSlots_Restore::
@@ -960,7 +960,7 @@ UpdateSpriteSlots_RestoreRegisters_Skip::
 ; script runs, it may start a new move in a random direction (wRandomLo), checking that the target
 ; cell is neither a blocking tile (IsTileUnderCellBlocking) nor taken by the player or a follower.
 ; (C1, E-0357)
-UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
+UpdateSpriteSlots_Wander::
     pop hl
     push hl
     ld a, $0d
@@ -1075,7 +1075,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     call IsTileUnderCellBlocking
     cp $01
     jr z, .restore
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jr nz, .restore
     pop hl
@@ -1117,7 +1117,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo::
     call IsTileUnderCellBlocking
     cp $01
     jr z, .restore
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jr nz, .restore
     pop hl
@@ -1147,7 +1147,7 @@ UpdateSpriteSlots_Return::
 
 ; Sprite slot type 3, an object that moves along fixed directions: like type 2, but the direction of
 ; each move comes from bits 5-6 of its move byte instead of chance. (C1, E-0357)
-UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
+UpdateSpriteSlots_FixedMoves::
     pop hl
     push hl
     ld a, $0d
@@ -1282,7 +1282,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     call RunPendingFieldEventType0AOrOther
     cp $01
     jp z, .restore2
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jp nz, .restore2
     pop hl
@@ -1310,7 +1310,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     call RunPendingFieldEventType0AOrOther
     cp $01
     jr z, .restore2
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jr nz, .restore2
     pop hl
@@ -1340,7 +1340,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     call RunPendingFieldEventType0AOrOther
     cp $01
     jr z, .restore2
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jr nz, .restore2
     pop hl
@@ -1370,7 +1370,7 @@ UpdateSpriteSlots_ReadScriptRunningAndRandomLo_2::
     call RunPendingFieldEventType0AOrOther
     cp $01
     jr z, .restore2
-    call UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2
+    call IsCellOccupiedByParty
     or a
     jr nz, .restore2
     pop hl
@@ -1408,20 +1408,20 @@ RunPendingFieldEventType0AOrOther::
     call RunPendingFieldEventType0AOrOther_ReadMapTallTileMin
     ret
 
-; Sprite slot type 4, an object that follows the path at UpdateSpriteSlots_WriteTemp0AndTemp1_Data.
-; (C1, E-0357)
-UpdateSpriteSlots_WriteTemp0AndTemp1::
-    ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data
+; Sprite slot type 4, an object that follows the path at UpdateSpriteSlots_FollowPath4_Data. (C1,
+; E-0357)
+UpdateSpriteSlots_FollowPath4::
+    ld hl, UpdateSpriteSlots_FollowPath4_Data
     ld a, l
     ldh [hTemp0], a
     ld a, h
     ldh [hTemp1], a
-    jr UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore
+    jr UpdateSpriteSlots_StepPath
 
-; Sprite slot type 5, an object that follows the path at
-; UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2. (C1, E-0357)
-UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
-    ld hl, UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2
+; Sprite slot type 5, an object that follows the path at UpdateSpriteSlots_FollowPath5_Data. (C1,
+; E-0357)
+UpdateSpriteSlots_FollowPath5::
+    ld hl, UpdateSpriteSlots_FollowPath5_Data
     ld a, l
     ldh [hTemp0], a
     ld a, h
@@ -1430,7 +1430,7 @@ UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0::
 ; Steps a path-following sprite slot: counts its timer, and when it reaches the length of the
 ; current path entry (path at hTemp0/hTemp1), moves to the next entry and its direction; the object
 ; then moves one pixel that way. (C1, E-0357)
-UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
+UpdateSpriteSlots_StepPath::
     pop hl
     ld a, $0d
     add_a_to_hl
@@ -1510,12 +1510,12 @@ UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_Restore::
     jp UpdateSpriteSlots_Restore
 
 ; data read by UpdateSpriteSlots (36 bytes) (E-0347)
-UpdateSpriteSlots_WriteTemp0AndTemp1_Data::
+UpdateSpriteSlots_FollowPath4_Data::
     db $00, $0e, $03, $0a, $04, $0e, $05, $0a, $00, $0e, $03, $0a, $04, $0e, $05, $0a
     db $00, $10, $01, $0e, $02, $0e, $01, $0e, $02, $0e, $00, $20, $06, $0e, $07, $20
     db $06, $0e, $ff, $ff
 
-UpdateSpriteSlots_WriteTemp0AndTemp1_Data_2::
+UpdateSpriteSlots_FollowPath5_Data::
     db $00, $0e, $01, $0e, $02, $0e, $01, $0e, $ff, $ff
 
 ; reads the 2 x 2 screen-buffer tiles at pixel (B, C) into wTilesUnderPoint-wTilesUnderPoint + $3; A
@@ -1652,7 +1652,7 @@ RunPendingFieldEventType0AOrOther_ReadMapTallTileMin::
 ; Returns A = 1 when the metatile cell at pixel (B, C) is occupied by the player or by any party
 ; follower (each checked at its position and the position 15 pixels on), otherwise 0. Used before an
 ; object moves into a cell. (C1, E-0357)
-UpdateSpriteSlots_WriteTemp0AndTemp1_SetTemp0_2::
+IsCellOccupiedByParty::
     push bc
     ld a, c
     swap a
@@ -5451,7 +5451,7 @@ KalkaTalkEvents::
     dw TalkMsg0137_HeroCheckedTheOvenASharp
     dw VaseItem_Herb
     dw TalkMsg0138_TheUndergroundCanalIsAhead
-    dw KalkaTalkEvents_WriteSpriteSlotsAndDataBank
+    dw KalkaTalkEvents_Inn
     dw TalkMsg0139_TheKingCalledACircusTroupe
     dw TalkMsg013A_ThisIsAsiyaTheDesertFlower
     dw TalkMsg013B_OurKingCameIntoAnEnormous
@@ -5671,7 +5671,7 @@ TalkMsg0138_TheUndergroundCanalIsAhead::
 
 ; Kalka talk 10, the inn: turns the innkeeper toward the player (slot byte 7 = 2 at X $30, else 1)
 ; and starts 'Welcome to our inn' with script data in bank $10. (C1, E-0357)
-KalkaTalkEvents_WriteSpriteSlotsAndDataBank::
+KalkaTalkEvents_Inn::
     ldh a, [hPlayerX]
     cp $30
     jr nz, .set_sprite_slots_to_01

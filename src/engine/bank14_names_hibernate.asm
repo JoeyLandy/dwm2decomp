@@ -124,8 +124,8 @@ HibernateMenu::
     jumptable
     dw HibernateMenu_Init
     dw HibernateMenu_SetupPartyList
-    dw HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc
-    dw HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc
+    dw HibernateMenu_OptionCursor
+    dw HibernateMenu_DoOption
     dw HibernateMenu_ChooseToHibernate
     dw HibernateMenu_ChooseRecords
     dw HibernateMenu_ChooseWithStats
@@ -194,7 +194,7 @@ HibernateMenu_SetupPartyList_ToSetupTileMapAtBGMap1::
 HibernateMenu_SetupPartyList_CopyGlyphs::
     ld hl, NamingScreenTileDestListA
     ld de, HibernateMenu_SetupPartyList_CopyGlyphs_TileCopySrcList
-    call HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    call CopyGlyphTilesFromLists_Bank14
     cp $ff
     ret nz
     ld hl, wScreenStep
@@ -233,28 +233,28 @@ HibernateMenu_SetupPartyList_DrawOptions::
 ; Hibernation menu, state 2: the option cursor over four options (Up/Down with wrap, blinking); A
 ; chooses an option, B or the fourth option quits (wTwoChoiceCursor 3); a chosen option is passed to
 ; the script in wTwoChoiceCursor. (C1, E-0357)
-HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
+HibernateMenu_OptionCursor::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
-    jr nz, .call_hibernate_menu_read_grid_cursor_x_2
+    jr nz, .call_hibernate_menu_option_cursor_read_grid
     bit 7, a
-    jr nz, .call_hibernate_menu_read_grid_cursor_x_22
+    jr nz, .call_hibernate_menu_option_cursor_read_grid2
     ld a, [wJoypadPressed]
     bit 0, a
     jp nz, .call_queue_sound_effect
     bit 1, a
     jp nz, .set_two_choice_cursor_to_03
-    call HibernateMenu_WriteGridCursorY
+    call HibernateMenu_OptionCursor_WriteGridCursorY
     ret
 
-.call_hibernate_menu_read_grid_cursor_x_2:
-    call HibernateMenu_ReadGridCursorX_2
+.call_hibernate_menu_option_cursor_read_grid:
+    call HibernateMenu_OptionCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     and a
     jr nz, .set_grid_cursor_x
     ld a, $03
     ld [wGridCursorX], a
-    call HibernateMenu_WriteGridCursorY
+    call HibernateMenu_OptionCursor_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -268,19 +268,19 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
     ld [wListCursor], a
     ld [wChoiceCursor], a
     ld [wListPageIndex], a
-    call HibernateMenu_ReadGridCursorX
+    call HibernateMenu_OptionCursor_ReadGridCursorX
     ld a, $69
     call QueueSoundEffect
     ret
 
-.call_hibernate_menu_read_grid_cursor_x_22:
-    call HibernateMenu_ReadGridCursorX_2
+.call_hibernate_menu_option_cursor_read_grid2:
+    call HibernateMenu_OptionCursor_ReadGridCursorX_2
     ld a, [wGridCursorX]
     cp $03
     jr c, .skip
     xor a
     ld [wGridCursorX], a
-    call HibernateMenu_WriteGridCursorY
+    call HibernateMenu_OptionCursor_WriteGridCursorY
     ld a, $69
     call QueueSoundEffect
     ret
@@ -292,13 +292,13 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call HibernateMenu_BGMapAddressAtScroll_Bank14
+    call HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14
     ld c, $00
 
 .loop:
     ld a, c
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     push bc
     push hl
     call StoreBAtWordTableEntry_Bank14
@@ -336,41 +336,41 @@ HibernateMenu_WriteTwoChoiceCursorAndScriptCommandTypeEtc::
 
 ; Blinks the option cursor: after $14 frames of the repeat timer, the cursor tile shows for 16
 ; counts and hides for 8. (C1, E-0357)
-HibernateMenu_WriteGridCursorY::
+HibernateMenu_OptionCursor_WriteGridCursorY::
     ld a, [wJoypadRepeatTimer]
     cp $14
-    jr c, HibernateMenu_ReadGridCursorX
+    jr c, HibernateMenu_OptionCursor_ReadGridCursorX
     ld a, [wGridCursorY]
     inc a
     ld [wGridCursorY], a
     cp $10
-    jr c, HibernateMenu_ReadGridCursorX
+    jr c, HibernateMenu_OptionCursor_ReadGridCursorX
     cp $18
-    jr c, HibernateMenu_ReadGridCursorX_2
+    jr c, HibernateMenu_OptionCursor_ReadGridCursorX_2
     xor a
     ld [wGridCursorY], a
 
 ; Draws the cursor tile ($BB) at the current option. (C1, E-0357)
-HibernateMenu_ReadGridCursorX::
+HibernateMenu_OptionCursor_ReadGridCursorX::
     ld b, $bb
-    jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
+    jr HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
 ; Draws the blank tile ($C3) at the current option. (C1, E-0357)
-HibernateMenu_ReadGridCursorX_2::
+HibernateMenu_OptionCursor_ReadGridCursorX_2::
     ld b, $c3
-    jr HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX
+    jr HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_ReadGridCursorX
 
 ; Draws the chosen-option tile ($BC) at the current option. (C1, E-0357)
-HibernateMenu_BGMapAddressAtScroll_Bank14::
+HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14::
     ld b, $bc
 
 ; Writes tile B at the current option's place on the BG map
-; (HibernateMenu_BGMapAddressAtScroll_Bank14_Data by wGridCursorX), waiting for VRAM access. (C1,
-; E-0357)
-HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
+; (HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_Data by wGridCursorX), waiting for VRAM
+; access. (C1, E-0357)
+HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
     ld a, [wGridCursorX]
     add a
-    ld hl, HibernateMenu_BGMapAddressAtScroll_Bank14_Data
+    ld hl, HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -387,7 +387,7 @@ HibernateMenu_BGMapAddressAtScroll_Bank14_ReadGridCursorX::
     ret
 
 ; data read by HibernateMenu (10 bytes) (E-0347)
-HibernateMenu_BGMapAddressAtScroll_Bank14_Data::
+HibernateMenu_OptionCursor_BGMapAddressAtScroll_Bank14_Data::
     db $21, $00, $61, $00, $a1, $00, $e1, $00, $21, $01
 
 ; Hibernation menu, state 3: acts on the option: 0, hibernate: lists the farm monsters that are not
@@ -396,7 +396,7 @@ HibernateMenu_BGMapAddressAtScroll_Bank14_Data::
 ; otherwise answer 2 and the choice; 1, wake: answer 3 with no sleepers, otherwise checks the farm's
 ; room for the sleeper against the farm level's capacity and the party, choosing the answer and the
 ; next screen; 2: lists the sleepers (or none). (C1, E-0357)
-HibernateMenu_WriteTwoChoiceCursorAndScreenStateEtc::
+HibernateMenu_DoOption::
     ld a, [wGridCursorX]
     and a
     jr z, .call_list_records_state1_not_eggs
@@ -626,8 +626,8 @@ HibernateMenu_ChooseRecords::
     jumptable
     dw HibernateMenu_ChooseRecords_DrawBoxes
     dw ClearTilesAndDrawRectAndStep
-    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
-    dw HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc
+    dw HibernateMenu_ChooseRecords_ListSleepers
+    dw HibernateMenu_ChooseRecords_DrawSleeperPage
     dw HibernateMenu_ChooseRecords_DrawSleeperStats
     dw HibernateMenu_ChooseRecords_BlankNameTiles
     dw HibernateMenu_ChooseRecords_DrawSleeperName
@@ -637,7 +637,7 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseRecords_DrawYesNo
@@ -648,7 +648,7 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseRecords_DrawOptionYesNo
@@ -666,7 +666,7 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptionMenu
     dw HibernateMenu_ChooseRecords_CopyListGlyphs2
@@ -677,8 +677,8 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_NoteChosenRecord
     dw HibernateMenu_ChooseRecords_DrawBoxes
     dw ClearTilesAndDrawRectAndStep
-    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
-    dw HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc
+    dw HibernateMenu_ChooseRecords_ListSleepers
+    dw HibernateMenu_ChooseRecords_DrawSleeperPage
     dw HibernateMenu_ChooseRecords_DrawSleeperStats
     dw HibernateMenu_ChooseRecords_BlankNameTiles
     dw HibernateMenu_ChooseRecords_DrawSleeperName
@@ -693,7 +693,7 @@ HibernateMenu_ChooseRecords::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
 
@@ -806,7 +806,7 @@ HibernateMenu_ChooseRecords_ReadSwapAnswer::
     call HibernateMenu_WriteSVBK
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -984,7 +984,7 @@ HibernateMenu_ChooseRecords_BlankNameTiles::
 HibernateMenu_ChooseRecords_ShowCursorMark::
     ld a, [wListCursor]
     ld b, $bb
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0b
@@ -992,7 +992,7 @@ HibernateMenu_ChooseRecords_ShowCursorMark::
     call DrawScreenBufferRect_Bank14
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, [wScreenStep]
     inc a
@@ -1032,7 +1032,7 @@ HibernateMenu_ChooseRecords_RedrawScreen::
 HibernateMenu_ChooseRecords_CopyListGlyphs::
     ld hl, HibernateMenu_ChooseRecords_CopyListGlyphs_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_CopyListGlyphs_TileCopySrcList
-    call HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    call CopyGlyphTilesFromLists_Bank14
     cp $ff
     ret nz
     ld hl, wScreenStep
@@ -1044,7 +1044,7 @@ HibernateMenu_ChooseRecords_CopyListGlyphs::
 HibernateMenu_ChooseRecords_CopyListGlyphs2::
     ld hl, HibernateMenu_ChooseRecords_CopyListGlyphs2_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_CopyListGlyphs2_TileCopySrcList
-    call HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    call CopyGlyphTilesFromLists_Bank14
     cp $ff
     ret nz
     ld hl, wScreenStep
@@ -1281,9 +1281,9 @@ HibernateMenu_ChooseRecords_YesNoCursor_Data::
     db $2d, $01, $6d, $01
 
 ; copies box DrawBoxAndMenuAndStep_TileRect to wWindowTileBuffer + $110, runs
-; CopyScreenBufferRectWithAttrs_Bank14, blanks the cursor entry wListCursor of HibernateMenu_Data
-; and wScreenStep += 1 (E-0124) (E-0344: the address in its name dropped or read as the label there;
-; was DrawBoxAndMenuAndStep)
+; CopyScreenBufferRectWithAttrs_Bank14, blanks the cursor entry wListCursor of
+; HibernateMenu_OptionCursor_Data and wScreenStep += 1 (E-0124) (E-0344: the address in its name
+; dropped or read as the label there; was DrawBoxAndMenuAndStep)
 DrawBoxAndMenuAndStep::
     ld de, DrawBoxAndMenuAndStep_TileRect
     ld hl, wWindowTileBuffer + $110
@@ -1299,7 +1299,7 @@ DrawBoxAndMenuAndStep::
     call CopyScreenBufferRectWithAttrs_Bank14
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, [wScreenStep]
     inc a
@@ -1328,7 +1328,7 @@ HibernateMenu_ChooseRecords_DrawOptionYesNo::
     call CopyRectTo20ByteRows_Bank14
     ld a, [wGridCursorX]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0d
@@ -1649,7 +1649,7 @@ HibernateMenu_ChooseRecords_FarmListCursor::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a
@@ -1672,10 +1672,10 @@ HibernateMenu_ChooseRecords_FarmListCursor::
     ret
 
 ; Choosing records: copies the list glyph tiles a few per call until done. (C1, E-0357)
-HibernateMenu_ChooseRecords_WriteScreenStep::
-    ld hl, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopyDestList
-    ld de, HibernateMenu_ChooseRecords_WriteScreenStep_TileCopySrcList
-    call HibernateMenu_WriteGlyphListPosAndGlyphListStart
+HibernateMenu_ChooseRecords_CopyListGlyphsStep::
+    ld hl, HibernateMenu_ChooseRecords_TileCopyDestList
+    ld de, HibernateMenu_ChooseRecords_TileCopySrcList
+    call CopyGlyphTilesFromLists_Bank14
     cp $ff
     ret nz
     ld a, [wScreenStep]
@@ -1702,7 +1702,7 @@ HibernateMenu_ChooseRecords_BackToOptionMenu::
     call CopyScreenBufferRectAt0280_Bank14
     ld a, [wGridCursorX]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0b
@@ -1777,7 +1777,7 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseRecords_CopyListGlyphs2
@@ -1791,15 +1791,15 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseRecords_DrawOptionYesNo
     dw HibernateMenu_ChooseRecords_ReadOptionAnswer
     dw HibernateMenu_ChooseRecords_DrawBoxes
     dw ClearTilesAndDrawRectAndStep
-    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
-    dw HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc
+    dw HibernateMenu_ChooseRecords_ListSleepers
+    dw HibernateMenu_ChooseRecords_DrawSleeperPage
     dw HibernateMenu_ChooseRecords_DrawSleeperStats
     dw HibernateMenu_ChooseRecords_BlankNameTiles
     dw HibernateMenu_ChooseRecords_DrawSleeperName
@@ -1809,7 +1809,7 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseToHibernate_BackToOptions
     dw HibernateMenu_ChooseRecords_DrawYesNo
@@ -1824,7 +1824,7 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_DrawNameAndSpecies
     dw HibernateMenu_ChooseRecords_ShowCursorMark
     dw HibernateMenu_ChooseRecords_HibernateCursor
-    dw HibernateMenu_WriteListCursorAndListPageIndexEtc
+    dw HibernateMenu_RestoreSleeperList
     dw HibernateMenu_ChooseRecords_CopyListGlyphs2
     dw HibernateMenu_ChooseRecords_DrawYesNoAgain
     dw HibernateMenu_ChooseRecords_YesNoCursor
@@ -1836,20 +1836,19 @@ HibernateMenu_ChooseToHibernate::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
 
-; Choosing records: lists the sleepers (HibernateMenu_WriteListCountAndRAMG2Etc) and clamps the page
-; cursor. (C1, E-0357)
-HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc::
-    farcall HibernateMenu_WriteListCountAndRAMG2Etc
+; Choosing records: lists the sleepers (HibernateMenu_CountSleepers) and clamps the page cursor.
+; (C1, E-0357)
+HibernateMenu_ChooseRecords_ListSleepers::
+    farcall HibernateMenu_CountSleepers
     jp HibernateMenu_ClampRecordListPageCursor5
 
-; Choosing records: HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2 (in another bank). (C1,
-; E-0357)
-HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc::
-    farcall HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc_2
+; Choosing records: HibernateMenu_DrawSleeperPage (in another bank). (C1, E-0357)
+HibernateMenu_ChooseRecords_DrawSleeperPage::
+    farcall HibernateMenu_DrawSleeperPage
     ret
 
 ; Choosing records: for the sleeper under the cursor draws its family icon, the stats box frame and
@@ -1909,7 +1908,7 @@ HibernateMenu_ChooseToHibernate_ReadAnswer::
 .loop:
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     call HibernateMenu_WriteSVBK
     ld a, $01
@@ -2073,12 +2072,12 @@ HibernateMenu_ChooseRecords_DrawYesNo_TileRect::
 
 ; Restores the sleeper list's position, relists the sleepers and clamps the page; answer 1, step
 ; $20, the text window back in place. (C1, E-0357)
-HibernateMenu_WriteListCursorAndListPageIndexEtc::
+HibernateMenu_RestoreSleeperList::
     ld a, [wItemGridX]
     ld [wListCursor], a
     ld a, [wItemGridY]
     ld [wListPageIndex], a
-    farcall HibernateMenu_WriteListCountAndRAMG2Etc
+    farcall HibernateMenu_CountSleepers
     call HibernateMenu_ClampRecordListPageCursor5
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -2244,9 +2243,8 @@ HibernateMenu_ChooseToHibernate_RedrawScreen::
     ld [wScriptStartRequest], a
     ret
 
-; Choosing to hibernate: checks the chosen farm record
-; (HibernateMenu_ChooseToHibernate_CheckRecord_WriteRAMBAndArg6Etc); when that returns $FF skips a
-; step; then redraws the box and menu with the party list. (C1, E-0357)
+; Choosing to hibernate: checks the chosen farm record (FindFreeHibernationSlot); when that returns
+; $FF skips a step; then redraws the box and menu with the party list. (C1, E-0357)
 HibernateMenu_ChooseToHibernate_CheckRecord::
     ld a, $0a
     ld [rRAMG2], a
@@ -2258,7 +2256,7 @@ HibernateMenu_ChooseToHibernate_CheckRecord::
     ld a, [wArg6]
     ld l, a
     push hl
-    call HibernateMenu_ChooseToHibernate_CheckRecord_WriteRAMBAndArg6Etc
+    call FindFreeHibernationSlot
     pop hl
     cp $ff
     jr z, .check_screen_step
@@ -2387,7 +2385,7 @@ HibernateMenu_ChooseRecords_ListCursor::
     call EraseFiveTableEntries
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     xor a
     ld [wTwoChoiceCursor], a
@@ -2410,7 +2408,7 @@ HibernateMenu_ChooseToHibernate_BackToOptions::
     call CopyScreenBufferRectAt0280_Bank14
     ld a, [wGridCursorX]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     call BGMapAddressAtScroll_Bank14
     lb bc, $14, $0b
@@ -2503,7 +2501,7 @@ HibernateMenu_ChooseRecords_HibernateCursor::
 .read_list_cursor:
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ret
 
@@ -2516,7 +2514,7 @@ HibernateMenu_ChooseRecords_HibernateCursor::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a
@@ -2704,7 +2702,7 @@ HibernateMenu_ChooseWithStats::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseWithStats_OpenStatsScreen
@@ -2782,7 +2780,7 @@ HibernateMenu_ChooseWithStats_ListCursor::
     ld [wTwoChoiceCursor], a
     ld a, [wListCursor]
     ld b, $bc
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld hl, wTextWindowTileLo
     xor a
@@ -2838,7 +2836,7 @@ DrawBox1D4AndCopyRect_TileRect::
 HibernateMenu_ChooseWithStats_OpenStatsScreen::
     ld hl, HibernateMenu_ChooseRecords_CopyListGlyphs2_TileCopyDestList
     ld de, HibernateMenu_ChooseRecords_CopyListGlyphs2_TileCopySrcList
-    call HibernateMenu_WriteGlyphListPosAndGlyphListStart
+    call CopyGlyphTilesFromLists_Bank14
     cp $ff
     ret nz
     ld a, $06
@@ -2860,8 +2858,8 @@ HibernateMenu_IndexListEntry::
     jumptable
     dw HibernateMenu_ChooseRecords_DrawBoxes
     dw ClearTilesAndDrawRectAndStep
-    dw HibernateMenu_ChooseRecords_WriteArg1AndArg2Etc
-    dw HibernateMenu_ChooseRecords_WriteRAMG2AndRAMBEtc
+    dw HibernateMenu_ChooseRecords_ListSleepers
+    dw HibernateMenu_ChooseRecords_DrawSleeperPage
     dw HibernateMenu_ChooseRecords_DrawSleeperStats
     dw HibernateMenu_ChooseRecords_BlankNameTiles
     dw HibernateMenu_ChooseRecords_DrawSleeperName
@@ -2871,7 +2869,7 @@ HibernateMenu_IndexListEntry::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
     dw HibernateMenu_ChooseRecords_DrawYesNo
@@ -2881,7 +2879,7 @@ HibernateMenu_IndexListEntry::
     dw HibernateMenu_ChooseRecords_RedrawScreen
     dw HibernateMenu_ChooseRecords_CopyListGlyphs
     dw HibernateMenu_ChooseRecords_DrawBoxes
-    dw HibernateMenu_ChooseRecords_WriteScreenStep
+    dw HibernateMenu_ChooseRecords_CopyListGlyphsStep
     dw HibernateMenu_ChooseRecords_RedrawPartyList
     dw HibernateMenu_ChooseRecords_BackToOptions
 
@@ -2910,7 +2908,7 @@ HibernateMenu_ChooseRecords_ReadWakeAnswer::
     call HibernateMenu_WriteSVBK
     ld a, [wListCursor]
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     ld a, $01
     ld [wTwoChoiceCursor], a
@@ -3334,7 +3332,7 @@ DrawScreenBufferRect_Bank14::
 ; Copies up to eight glyph tiles per call from a pair of tile lists (destinations at HL, sources at
 ; DE, from bank $1F) to VRAM; returns $FF when the lists end ($FF), resetting the position. (C1,
 ; E-0357)
-HibernateMenu_WriteGlyphListPosAndGlyphListStart::
+CopyGlyphTilesFromLists_Bank14::
     xor a
     ld [wGlyphListPos], a
 
@@ -3395,9 +3393,9 @@ HibernateMenu_WriteGlyphListPosAndGlyphListStart::
     ld a, $ff
     ret
 
-; stores tile $C3 at the addresses of entries 0-4 of the word table HibernateMenu_Data (E-0122)
-; (E-0344: the address in its name dropped or read as the label there; was EraseFiveTableEntries; a
-; trailing preposition left by the dropped address removed)
+; stores tile $C3 at the addresses of entries 0-4 of the word table HibernateMenu_OptionCursor_Data
+; (E-0122) (E-0344: the address in its name dropped or read as the label there; was
+; EraseFiveTableEntries; a trailing preposition left by the dropped address removed)
 EraseFiveTableEntries::
     ld c, $00
 
@@ -3405,7 +3403,7 @@ EraseFiveTableEntries::
     push bc
     ld a, c
     ld b, $c3
-    ld hl, HibernateMenu_Data
+    ld hl, HibernateMenu_OptionCursor_Data
     call StoreBAtWordTableEntry_Bank14
     pop bc
     inc c
@@ -3569,7 +3567,7 @@ StoreC5BEC6AtHLStride2_Bank14::
 ; Finds the first free hibernation slot (compact record byte 0 bit 7 clear) among the 29 in bank 0,
 ; then slot $1D in bank 1's sRecords; returns its address in wArg6/wArg7 and its bank in wArg5, or A
 ; = $FF when all are used. (C1, E-0357)
-HibernateMenu_ChooseToHibernate_CheckRecord_WriteRAMBAndArg6Etc::
+FindFreeHibernationSlot::
     ld hl, sCompactRecords
     ld c, $00
 
@@ -3624,9 +3622,8 @@ HibernateMenu_ChooseToHibernate_CheckRecord_WriteRAMBAndArg6Etc::
     ret
 
 ; HibernateMenu_SetupPartyList_CopyGlyphs passes $5A28 with sources
-; HibernateMenu_SetupPartyList_CopyGlyphs_TileCopySrcList to
-; HibernateMenu_WriteGlyphListPosAndGlyphListStart, which copies one tile per destination until
-; $FFFF (E-0224, C1)
+; HibernateMenu_SetupPartyList_CopyGlyphs_TileCopySrcList to CopyGlyphTilesFromLists_Bank14, which
+; copies one tile per destination until $FFFF (E-0224, C1)
 ; record: 27 VRAM destinations, then $FFFF
 NamingScreenTileDestListA::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $270, vTiles1 + $280, vTiles1 + $290, vTiles1 + $2a0, vTiles1 + $2b0 ; entry 0
@@ -3665,7 +3662,7 @@ HibernateMenu_SetupPartyList_DrawOptions_TileRect::
     db $b6, $c3, $ad, $ae, $af, $ee, $c3, $c3, $c3, $b7 ; id 7
     db $b3, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b4, $b5 ; id 8
 
-HibernateMenu_Data::
+HibernateMenu_OptionCursor_Data::
     db $79, $c3, $a1, $c3, $c9, $c3, $f1, $c3, $19, $c4, $22, $c4, $4a, $c4, $80, $c3
     db $a8, $c3, $d0, $c3, $f8, $c3, $20, $c4
 
@@ -3711,11 +3708,11 @@ HibernateMenu_ChooseRecords_CopyListGlyphs_TileCopySrcList::
     dw $4340, $4210, $4250, $42f0, $41c0, $4370, $40f0, $43c0 ; entry 0
     dw $42d0, $ffff
 
-HibernateMenu_ChooseRecords_WriteScreenStep_TileCopyDestList::
+HibernateMenu_ChooseRecords_TileCopyDestList::
     dw vTiles1 + $240, vTiles1 + $250, vTiles1 + $260, vTiles1 + $700, vTiles1 + $710, vTiles1 + $720, vTiles1 + $730, vTiles1 + $740 ; entry 0
     dw vTiles1 + $4e0, vTiles1 + $4f0, rIE
 
-HibernateMenu_ChooseRecords_WriteScreenStep_TileCopySrcList::
+HibernateMenu_ChooseRecords_TileCopySrcList::
     dw $41d0, $4300, $4290, $4910, $4910, $4910, $4910, $4910 ; entry 0
     dw $4230, $4290, $ffff
 
@@ -3737,11 +3734,11 @@ RunNameEntryStateWhenNotFading::
     ld a, [wNameEntryState]
     jumptable
     dw RunNameEntryStateWhenNotFading_Setup
-    dw RunNameEntryStateWhenNotFading_ReadNameEntrySubState
-    dw RunNameEntryStateWhenNotFading_ReadNameEntryStep
+    dw RunNameEntryStateWhenNotFading_DrawSprites_2
+    dw RunNameEntryStateWhenNotFading_DrawSprites_3
     dw RunNameEntryStateWhenNotFading_CheckName
     dw RunNameEntryStateWhenNotFading_DrawYesNo
-    dw RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc
+    dw RunNameEntryStateWhenNotFading_YesNoCursor
     dw RunNameEntryStateWhenNotFading_Finish
     dw RunNameEntryStateWhenNotFading_RedrawKeyboard
 
@@ -3751,10 +3748,10 @@ RunNameEntryStateWhenNotFading_Setup::
     ld a, [wNameEntrySubState]
     jumptable
     dw RunNameEntryStateWhenNotFading_Setup_Clear
-    dw RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5
+    dw RunNameEntryStateWhenNotFading_Setup_CopyGlyphs
     dw RunNameEntryStateWhenNotFading_Setup_DrawKeyboard
     dw RunNameEntryStateWhenNotFading_Setup_CopyArgs
-    dw RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc
+    dw RunNameEntryStateWhenNotFading_Setup_StartName
 
 ; Name entry set-up, step 0: clears the name-entry state, fills the BG map, resets the scroll, saves
 ; the sprite clip mode (hide tile 1, clip mode 2) and loads the keyboard's frame tiles. (C1, E-0357)
@@ -3834,10 +3831,10 @@ RunNameEntryStateWhenNotFading_Setup_Clear::
 
 ; Name entry set-up, step 1: copies the keyboard glyph tiles (NameEntryTileSrcListA) a few per call
 ; until done. (C1, E-0357)
-RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5::
+RunNameEntryStateWhenNotFading_Setup_CopyGlyphs::
     ld hl, NameEntryTileDestList
     ld de, NameEntryTileSrcListA
-    call RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2
+    call CopyGlyphTilesFromListsAtOnce
     cp $ff
     jr nz, .clear_arg5
     ld a, [wNameEntrySubState]
@@ -4026,7 +4023,7 @@ RunNameEntryStateWhenNotFading_Setup_SpriteSlotsInit::
 ; Name entry set-up, step 4: starts the name: for the player's name (wArg1 0) 'Cobi' ('Tara' behind
 ; EVENT_NEVER_SET), length 4; for kinds 1 and 2 an empty name; otherwise the current name of party
 ; monster wGridCursorX; then draws it and goes to the keyboard. (C1, E-0357)
-RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
+RunNameEntryStateWhenNotFading_Setup_StartName::
     call RunNameEntryStateWhenNotFading_ClearNameEntryText
     ld a, [wArg1]
     and a
@@ -4105,7 +4102,7 @@ RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
     ld [wNameEntryLength], a
 
 .call_run_name_entry_state_when_not_fading:
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+    call RunNameEntryStateWhenNotFading_DrawSprites
     xor a
     ld [wNameEntrySubState], a
     ld a, [wNameEntryState]
@@ -4117,20 +4114,20 @@ RunNameEntryStateWhenNotFading_Setup_WriteRAMG2AndRAMBEtc::
 
 ; Name entry, state 1, the keyboard: draws the name's sprites and runs its sub-state (two halves of
 ; five sub-states: cursor, delete, choose, finish, glyph swap). (C1, E-0357)
-RunNameEntryStateWhenNotFading_ReadNameEntrySubState::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+RunNameEntryStateWhenNotFading_DrawSprites_2::
+    call RunNameEntryStateWhenNotFading_DrawSprites
     ld a, [wNameEntrySubState]
     jumptable
     dw RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag
-    dw RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc
+    dw RunNameEntryStateWhenNotFading_KeyDelete
     dw RunNameEntryStateWhenNotFading_ReadNameEntryCursorY
-    dw RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5
+    dw RunNameEntryStateWhenNotFading_KeyEnd
     dw RunNameEntryStateWhenNotFading_SwapGlyphs
     dw RunNameEntryStateWhenNotFading_CallWriteNameEntryFlag
-    dw RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc
+    dw RunNameEntryStateWhenNotFading_KeyDelete
     dw RunNameEntryStateWhenNotFading_ReadNameEntryCursorY
-    dw RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5
-    dw RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5
+    dw RunNameEntryStateWhenNotFading_KeyEnd
+    dw RunNameEntryStateWhenNotFading_SwapGlyphsBack
 
 ; Keyboard cursor: Up/Down/Left/Right move over the keys (rows of different lengths, the last row's
 ; 'end' key spanning several columns, with wrap), A types the key (two sub-states on), B deletes
@@ -4553,7 +4550,7 @@ NameEntryKeyPositions::
 ; Keyboard delete: with an empty name, clears it and returns; otherwise removes the last glyph (and
 ; a voicing mark $8D/$8E after it), redraws and shortens the length, unless a mark was only pending.
 ; (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5Etc::
+RunNameEntryStateWhenNotFading_KeyDelete::
     ld b, $55
     call WriteTileBAtScrollOffset47PlusNameEntryLength
     ld a, [wNameEntryLength]
@@ -4894,10 +4891,10 @@ RunNameEntryStateWhenNotFading_Setup_ApplyChosenCharacter::
     ret
 
 ; Keyboard end: fills in a default or suggested name when empty
-; (RunNameEntryStateWhenNotFading_CheckArg1), redraws the name and goes to the checks (state 2).
-; (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
-    call RunNameEntryStateWhenNotFading_CheckArg1
+; (RunNameEntryStateWhenNotFading_KeyEnd_CheckArg1), redraws the name and goes to the checks (state
+; 2). (C1, E-0357)
+RunNameEntryStateWhenNotFading_KeyEnd::
+    call RunNameEntryStateWhenNotFading_KeyEnd_CheckArg1
     call RunNameEntryStateWhenNotFading_WriteNameEntryFlag
     ld a, [wNameEntryState]
     inc a
@@ -4911,7 +4908,7 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndArg5::
 RunNameEntryStateWhenNotFading_SwapGlyphs::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListB
-    call RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2
+    call CopyGlyphTilesFromListsAtOnce
     cp $ff
     jr nz, .clear_arg5
     ld a, [wNameEntrySubState]
@@ -4930,10 +4927,10 @@ RunNameEntryStateWhenNotFading_SwapGlyphs::
 
 ; Keyboard glyph swap back: copies the first glyph set's tiles a few per call, then returns to
 ; sub-state 0. (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
+RunNameEntryStateWhenNotFading_SwapGlyphsBack::
     ld hl, NameEntryTileDestListEmpty
     ld de, NameEntryTileSrcListA
-    call RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2
+    call CopyGlyphTilesFromListsAtOnce
     cp $ff
     jr nz, .clear_arg5
     xor a
@@ -4945,8 +4942,8 @@ RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5::
     ret
 
 ; Name entry, state 2: draws the message window area in four steps. (C1, E-0357)
-RunNameEntryStateWhenNotFading_ReadNameEntryStep::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+RunNameEntryStateWhenNotFading_DrawSprites_3::
+    call RunNameEntryStateWhenNotFading_DrawSprites
     ld a, [wNameEntryStep]
     jumptable
     dw RunNameEntryStateWhenNotFading_ClearTextTiles
@@ -5064,19 +5061,19 @@ RunNameEntryStateWhenNotFading_DrawFrameBottom::
 ; Name entry, state 3: checks the name and shows the matching message in up to six steps. (C1,
 ; E-0357)
 RunNameEntryStateWhenNotFading_CheckName::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+    call RunNameEntryStateWhenNotFading_DrawSprites
     ld a, [wNameEntryStep]
     jumptable
-    dw RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5
-    dw RunNameEntryStateWhenNotFading_CheckName_WriteStringCategoryAndStringIndexEtc
-    dw RunNameEntryStateWhenNotFading_CheckName_SetNameEntryStep
-    dw RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5_2
-    dw RunNameEntryStateWhenNotFading_CheckName_3
-    dw RunNameEntryStateWhenNotFading_CheckName_2
+    dw RunNameEntryStateWhenNotFading_CheckName_CheckRejected
+    dw RunNameEntryStateWhenNotFading_CheckName_ShowInUse
+    dw RunNameEntryStateWhenNotFading_CheckName_CopyNameStep
+    dw RunNameEntryStateWhenNotFading_CheckName_CopyName
+    dw RunNameEntryStateWhenNotFading_CheckName_ShowConfirm
+    dw RunNameEntryStateWhenNotFading_CheckName_ShowRefused
 
 ; Name entry checks, step 5: shows message 3 (the name refused) and skips four states, back to the
 ; keyboard. (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckName_2::
+RunNameEntryStateWhenNotFading_CheckName_ShowRefused::
     xor a
     ld [wStringCategory], a
     ld a, $03
@@ -5096,19 +5093,19 @@ RunNameEntryStateWhenNotFading_CheckName_2::
 ; RunNameEntryStateWhenNotFading_ScanNameEntryText goes to step 5; for a monster's name a name
 ; already used by another farm record goes to step 1 (in use); a good name goes to step 3 (monsters)
 ; or 2 (the player). (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5::
+RunNameEntryStateWhenNotFading_CheckName_CheckRejected::
     ld a, [wArg1]
     and a
-    jp z, .call_run_name_entry_state_when_not_fading2
-    call RunNameEntryStateWhenNotFading_CheckName_ReadArg1
+    jp z, .call_is_name_rejected2
+    call IsNameRejected
     cp $ff
     jr z, .read_name_entry_step
     call RunNameEntryStateWhenNotFading_ScanNameEntryText
     cp $ff
     jr z, .read_name_entry_step
-    call RunNameEntryStateWhenNotFading_CheckName_WriteRAMG2AndRAMB
+    call RunNameEntryStateWhenNotFading_CheckName_NameInUse
     cp $ff
-    jr nz, .call_run_name_entry_state_when_not_fading
+    jr nz, .call_is_name_rejected
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
@@ -5116,8 +5113,8 @@ RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5::
     ld [wArg5], a
     ret
 
-.call_run_name_entry_state_when_not_fading:
-    call RunNameEntryStateWhenNotFading_CheckName_ReadArg1
+.call_is_name_rejected:
+    call IsNameRejected
     cp $ff
     jr z, .read_name_entry_step
     call RunNameEntryStateWhenNotFading_ScanNameEntryText
@@ -5130,8 +5127,8 @@ RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5::
     ld [wArg5], a
     ret
 
-.call_run_name_entry_state_when_not_fading2:
-    call RunNameEntryStateWhenNotFading_CheckName_ReadArg1
+.call_is_name_rejected2:
+    call IsNameRejected
     cp $ff
     jr z, .read_name_entry_step
     call RunNameEntryStateWhenNotFading_ScanNameEntryText
@@ -5155,7 +5152,7 @@ RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5::
 
 ; Name entry checks, step 1: shows message 2 (the name is in use) and goes on two steps. (C1,
 ; E-0357)
-RunNameEntryStateWhenNotFading_CheckName_WriteStringCategoryAndStringIndexEtc::
+RunNameEntryStateWhenNotFading_CheckName_ShowInUse::
     xor a
     ld [wStringCategory], a
     ld a, $02
@@ -5175,16 +5172,16 @@ RunNameEntryStateWhenNotFading_CheckName_WriteStringCategoryAndStringIndexEtc::
 
 ; Name entry checks, step 2: points DE at wTextBuf0 and copies the name there (step 3's copy). (C1,
 ; E-0357)
-RunNameEntryStateWhenNotFading_CheckName_SetNameEntryStep::
+RunNameEntryStateWhenNotFading_CheckName_CopyNameStep::
     ld de, wTextBuf0
     ld a, [wNameEntryStep]
     inc a
     ld [wNameEntryStep], a
-    jp RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5_2
+    jp RunNameEntryStateWhenNotFading_CheckName_CopyName
 
 ; Name entry checks, step 3: copies the entered name (without the end marks $9F) into wTextBuf0.
 ; (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5_2::
+RunNameEntryStateWhenNotFading_CheckName_CopyName::
     ld hl, wNameEntryText
     ld de, wTextBuf0
 
@@ -5211,7 +5208,7 @@ RunNameEntryStateWhenNotFading_CheckName_WriteNameEntryStepAndArg5_2::
 
 ; Name entry checks, step 4: shows message 0 (the confirmation) and goes on to the yes/no box. (C1,
 ; E-0357)
-RunNameEntryStateWhenNotFading_CheckName_3::
+RunNameEntryStateWhenNotFading_CheckName_ShowConfirm::
     xor a
     ld [wStringCategory], a
     ld [wStringIndex], a
@@ -5229,7 +5226,7 @@ RunNameEntryStateWhenNotFading_CheckName_3::
 
 ; Name entry, state 4: draws the 6 x 5 yes/no box and plays sound $6C. (C1, E-0357)
 RunNameEntryStateWhenNotFading_DrawYesNo::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+    call RunNameEntryStateWhenNotFading_DrawSprites
     call BGMapAddressAtScroll_Bank14_2
     ld de, $010e
     add hl, de
@@ -5260,9 +5257,9 @@ RunNameEntryStateWhenNotFading_DrawYesNo::
 
 ; Name entry, state 5: the yes/no cursor: yes goes on to finish (state 6); no or B goes two states
 ; on (back to the keyboard). (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
-    call RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14
+RunNameEntryStateWhenNotFading_YesNoCursor::
+    call RunNameEntryStateWhenNotFading_DrawSprites
+    call RunNameEntryStateWhenNotFading_YesNoCursor_BlinkCursorNameEntryBlink_Bank14
     and a
     ret z
     cp $fe
@@ -5296,7 +5293,7 @@ RunNameEntryStateWhenNotFading_WriteNameEntryStateAndNameEntryMenuCursorEtc::
 ; Name entry, state 6: blanks the BG map, then finishes
 ; (RunNameEntryStateWhenNotFading_FinishNameEntry). (C1, E-0357)
 RunNameEntryStateWhenNotFading_Finish::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+    call RunNameEntryStateWhenNotFading_DrawSprites
     ld a, [wNameEntryStep]
     jumptable
     dw RunNameEntryStateWhenNotFading_Finish_Blank
@@ -5378,7 +5375,7 @@ RunNameEntryStateWhenNotFading_FinishNameEntry::
 ; Name entry, state 7 (after a no): redraws the keyboard area and returns to the keyboard (sub-state
 ; 0, or 5 with the other glyph set). (C1, E-0357)
 RunNameEntryStateWhenNotFading_RedrawKeyboard::
-    call RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc
+    call RunNameEntryStateWhenNotFading_DrawSprites
     call BGMapAddressAtScroll_Bank14_2
     ld de, $0100
     add hl, de
@@ -5420,7 +5417,7 @@ RunNameEntryStateWhenNotFading_RedrawKeyboard::
 
 ; Draws the name entry's sprites, keeping wArg1-wArg8: the field sprites for the player's name,
 ; otherwise the monster's metasprite from wArg4/wArg5 at (16, 24). (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteArg1AndArg2Etc::
+RunNameEntryStateWhenNotFading_DrawSprites::
     ld hl, wArg1
     ld de, wCounterPtr0Lo
     ld a, [hli]
@@ -5558,7 +5555,7 @@ IsHLByteInList_2_Data::
 
 ; The yes/no cursor of the name entry: Up/Down switch, A returns $FF, B returns $FE, a move $FD; the
 ; cursor blinks. (C1, E-0357)
-RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14::
+RunNameEntryStateWhenNotFading_YesNoCursor_BlinkCursorNameEntryBlink_Bank14::
     ld a, [wJoypadPressedRepeat]
     bit 6, a
     jr nz, .call_draw_blank_tile_c3_3
@@ -5614,7 +5611,7 @@ RunNameEntryStateWhenNotFading_BlinkCursorNameEntryBlink_Bank14::
 .call_queue_sound_effect:
     ld a, $69
     call QueueSoundEffect
-    call RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2
+    call RunNameEntryStateWhenNotFading_YesNoCursor_BGMapAddressAtScroll_Bank14_2
     ld a, $ff
     ld [wMenuInputResult], a
     ret
@@ -5648,14 +5645,14 @@ DrawBlankTileC3_3::
     jr RunNameEntryStateWhenNotFading_ReadNameEntryMenuCursor
 
 ; Draws the chosen tile ($BC) at the name entry's yes/no cursor. (C1, E-0357)
-RunNameEntryStateWhenNotFading_BGMapAddressAtScroll_Bank14_2_2::
+RunNameEntryStateWhenNotFading_YesNoCursor_BGMapAddressAtScroll_Bank14_2::
     ld b, $bc
 
 ; Writes tile B at the name entry's yes/no cursor place, waiting for VRAM access. (C1, E-0357)
 RunNameEntryStateWhenNotFading_ReadNameEntryMenuCursor::
     ld a, [wNameEntryMenuCursor]
     add a
-    ld hl, RunNameEntryStateWhenNotFading_Data
+    ld hl, RunNameEntryStateWhenNotFading_YesNoCursor_Data
     add_a_to_hl
     ld e, [hl]
     inc hl
@@ -5672,7 +5669,7 @@ RunNameEntryStateWhenNotFading_ReadNameEntryMenuCursor::
     ret
 
 ; data read by RunNameEntryStateWhenNotFading (4 bytes) (E-0347)
-RunNameEntryStateWhenNotFading_Data::
+RunNameEntryStateWhenNotFading_YesNoCursor_Data::
     db $2f, $01, $6f, $01
 
 ; Copies 16 bytes from [HL] to [DE]; each byte is written with interrupts off after waiting for
@@ -5792,7 +5789,7 @@ RunNameEntryStateWhenNotFading_ClearNameEntryText::
 ; Checks for a name already in use: compares the entered name with each farm record's name (30
 ; records of $A5 bytes); returns $FF when one matches, except the party monster being renamed (wArg1
 ; 3). (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckName_WriteRAMG2AndRAMB::
+RunNameEntryStateWhenNotFading_CheckName_NameInUse::
     ld hl, sRecords
     ld a, $0a
     ld [rRAMG2], a
@@ -5883,7 +5880,7 @@ RunNameEntryStateWhenNotFading_CheckName_WriteRAMG2AndRAMB::
 
 ; Checks RejectedNameList (10-byte names, ending $FF): returns $FF when the entered name matches
 ; one, otherwise 0 (the wArg1 test before the end changes nothing). (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckName_ReadArg1::
+IsNameRejected::
     ld hl, RejectedNameList
     ld c, $00
 
@@ -6082,7 +6079,7 @@ RunNameEntryStateWhenNotFading_CheckName_FillTilesFromRequest::
     jr .call_begin_string_display2
 
 .call_begin_string_display:
-    ld de, RunNameEntryStateWhenNotFading_CheckName_FillTilesFromRequest_2
+    ld de, RunNameEntryStateWhenNotFading_CheckName_2
 
 .call_begin_string_display2:
     call BeginStringDisplay
@@ -6140,7 +6137,7 @@ BGMapAddressAtScroll_Bank14_2::
 
 ; Copies glyph tiles from a pair of tile lists to VRAM, all in one call, until the list ends;
 ; returns $FF. (C1, E-0357)
-RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2::
+CopyGlyphTilesFromListsAtOnce::
     push hl
     push de
     ld a, [wNameEntryTimer]
@@ -6180,7 +6177,7 @@ RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2::
     ld a, [wNameEntryTimer]
     inc a
     ld [wNameEntryTimer], a
-    jr RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2
+    jr CopyGlyphTilesFromListsAtOnce
 
 .restore:
     pop de
@@ -6217,7 +6214,7 @@ CopyTileForNameEntryLength_Data2::
 ; Fills an empty name: the player gets the default name; a monster gets a random suggestion:
 ; wRandomLo mod $4D picks one of 7 names from DefaultMonsterNameTable (by wArg3 & $0F and wArg2) or
 ; one of 70 from NameEntrySuggestionTable (by wArg2 & 1). (C1, E-0357)
-RunNameEntryStateWhenNotFading_CheckArg1::
+RunNameEntryStateWhenNotFading_KeyEnd_CheckArg1::
     ld a, [wArg1]
     or a
     jp z, CopyF0StringAndRedrawNameEntry_CheckArg2
@@ -6385,10 +6382,9 @@ CopyF0StringAndRedrawNameEntry_CheckArg2::
 .skip2:
     jr CopyF0StringAndRedrawNameEntry_CallWriteTileBAtScrollOffset47PlusNameEntryL
 
-; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2 copies 16 bytes from bank $1F
-; for each destination word (until a low byte of $FF) from the parallel source list in DE;
-; CloseHibernateMenu_RestoreGlyphs also passes $6D84, entry 23 of this list, to
-; LoadTileListSixPerCall (E-0224, C1)
+; CopyGlyphTilesFromListsAtOnce copies 16 bytes from bank $1F for each destination word (until a low
+; byte of $FF) from the parallel source list in DE; CloseHibernateMenu_RestoreGlyphs also passes
+; $6D84, entry 23 of this list, to LoadTileListSixPerCall (E-0224, C1)
 ; record: 79 VRAM destinations, then $FFFF
 NameEntryTileDestList::
     dw vTiles2 + $20, vTiles2 + $30, vTiles2 + $40, vTiles2 + $50, vTiles2 + $60, vTiles2 + $70, vTiles2 + $80, vTiles2 + $90 ; entry 0
@@ -6403,15 +6399,14 @@ NameEntryTileDestList::
     dw vTiles2 + $4a0, vTiles2 + $4b0, vTiles2 + $500, vTiles2 + $510, vTiles2 + $520, vTiles2 + $530, vTiles2 + $540, rIE
 
 ; RunNameEntryStateWhenNotFading_SwapGlyphs and _Case09 pass this list to
-; RunNameEntryStateWhenNotFading_WriteNameEntryTimerAndNameEntryTimer2, which therefore copies
-; nothing (E-0224, C1)
+; CopyGlyphTilesFromListsAtOnce, which therefore copies nothing (E-0224, C1)
 ; record: $FFFF: no destinations
 NameEntryTileDestListEmpty::
     dw $ffff ; entry 0
 
 ; the source list paired with NameEntryTileDestList
-; (RunNameEntryStateWhenNotFading_Setup_WriteNameEntrySubStateAndArg5) and with the empty list
-; (RunNameEntryStateWhenNotFading_WriteNameEntrySubStateAndArg5) (E-0224, C1)
+; (RunNameEntryStateWhenNotFading_Setup_CopyGlyphs) and with the empty list
+; (RunNameEntryStateWhenNotFading_SwapGlyphsBack) (E-0224, C1)
 ; record: 80 bank-$1F tile sources (the last is $FFFF)
 NameEntryTileSrcListA::
     dw $40b0, $40c0, $40d0, $40e0, $40f0, $4100, $4110, $4120 ; entry 0
@@ -6490,11 +6485,10 @@ Text_SorryThatNameCant::
     db "can't be used.<WAIT>"
     db "@"
 
-RunNameEntryStateWhenNotFading_CheckName_FillTilesFromRequest_2::
+RunNameEntryStateWhenNotFading_CheckName_2::
     dw StringList_CheckName_FillTilesFromRequest_StringCategories_2_0 ; id 0
 
-; category list of RunNameEntryStateWhenNotFading_CheckName_FillTilesFromRequest_2; one pointer per
-; wStringIndex (E-0217)
+; category list of RunNameEntryStateWhenNotFading_CheckName_2; one pointer per wStringIndex (E-0217)
 StringList_CheckName_FillTilesFromRequest_StringCategories_2_0::
     dw Text_IsOK ; id 0
     dw Text_IsOK_2 ; id 1
@@ -6519,9 +6513,9 @@ Text_ThatNameCantBe::
     db "another name.<WAIT>"
     db "@"
 
-; RunNameEntryStateWhenNotFading_CheckName_ReadArg1 walks 10-byte records from $70F0 until a first
-; byte of $FF, comparing each with wNameEntryText (skipping $9F bytes) up to its $F0; 84 records,
-; each in mixed case and capitals, then the $FF terminator (E-0191, C1)
+; IsNameRejected walks 10-byte records from $70F0 until a first byte of $FF, comparing each with
+; wNameEntryText (skipping $9F bytes) up to its $F0; 84 records, each in mixed case and capitals,
+; then the $FF terminator (E-0191, C1)
 ; record: a name the name entry screen refuses: text ending in $F0, zero padded to 10 bytes
 RejectedNameList::
     db "Ass@", $00, $00, $00, $00, $00, $00 ; id 0
@@ -6610,8 +6604,8 @@ RejectedNameList::
     db "SUCK@", $00, $00, $00, $00, $00 ; id 83
     db $ff ; end
 
-; the code before RunNameEntryStateWhenNotFading_CheckArg1.skip3 indexes it with wArg3 & $0F (the
-; family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6
+; the code before RunNameEntryStateWhenNotFading_KeyEnd_CheckArg1.skip3 indexes it with wArg3 & $0F
+; (the family as StringTable_MonsterFamilies: 0 Slime, 1 Dragon, 2 Beast, 3 Bird, 4 Plant, 5 Bug, 6
 ; Demon, 7 Zombie, 8 Material, 9 Water, 10 '????' (boss)) and then takes name 7 * wArg2 + n;
 ; CreateMonsterRecordOfKindTemp1_ReadWorkBuf indexes it with wWorkBuf and wWorkBuf + 1 and copies
 ; the name (up to $F0, with $9F handled) to the address in wWorkBuf + 2/3; 11 families of 14 names
